@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#003A70">
+<title>Brackett Service Tool</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <button id="backBtn" class="back-btn hidden">←</button>
+    <span class="brand-name" id="screenTitle">Brackett Service Tool</span>
+  </div>
+  <div class="topbar-right">
+    <span class="status-pill" id="netStatus">●</span>
+    <button id="addBtn" class="icon-btn hidden">+ Add</button>
+  </div>
+</header>
+
+<!-- HOME -->
+<section id="homeScreen" class="screen">
+  <img class="home-logo" src="icons/brackett-logo.png" alt="Brackett Heating · Air · Plumbing">
+  <div class="home-tiles">
+    <button class="tile tile-codes" data-screen="codes">
+      <span class="tile-icon">⚡</span>
+      <span class="tile-label">Error Codes</span>
+      <span class="tile-sub">Look up a flash/fault code</span>
+    </button>
+    <button class="tile tile-diag" data-screen="diagnostics">
+      <span class="tile-icon">🩺</span>
+      <span class="tile-label">Diagnostic Help</span>
+      <span class="tile-sub">Troubleshoot by symptom</span>
+    </button>
+    <button class="tile tile-manuals" data-screen="manuals">
+      <span class="tile-icon">📄</span>
+      <span class="tile-label">Manuals</span>
+      <span class="tile-sub">Stored PDFs, works offline</span>
+    </button>
+    <button class="tile tile-toolbox" data-screen="toolbox">
+      <span class="tile-icon">🧰</span>
+      <span class="tile-label">Toolbox</span>
+      <span class="tile-sub">Board tools — CoolCloud, Data Loader</span>
+    </button>
+  </div>
+  <div class="home-footer">
+    <span id="homeNetNote"></span>
+    <span id="appVersion" class="app-version"></span>
+  </div>
+</section>
+
+<!-- ERROR CODES -->
+<section id="codesScreen" class="screen hidden">
+  <div class="disclaimer">Starter data — verify against manufacturer docs. Entries marked <span class="tag verify">verify</span> are model-specific; confirm before field use.</div>
+  <div class="controls">
+    <input id="codesSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search code, symptom, or brand…" autocomplete="off">
+    <div class="filter-row">
+      <select id="brandChips" class="filter-select" aria-label="Filter by brand"></select>
+      <select id="equipChips" class="filter-select" aria-label="Filter by equipment"></select>
+    </div>
+  </div>
+  <main id="codesResults"></main>
+  <div id="codesEmptyState" class="empty-state hidden">No matching codes. Try a different search, or add this one.</div>
+</section>
+
+<!-- DIAGNOSTIC HELP -->
+<section id="diagScreen" class="screen hidden">
+  <div class="disclaimer">Starter troubleshooting flows — use judgment, confirm safety-critical steps in the field.</div>
+  <div class="controls">
+    <input id="diagSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search a symptom…" autocomplete="off">
+    <div class="filter-row">
+      <select id="diagEquipChips" class="filter-select" aria-label="Filter by equipment"></select>
+    </div>
+  </div>
+  <main id="diagResults"></main>
+  <div id="diagEmptyState" class="empty-state hidden">No matching symptoms. Try a different search, or add this one.</div>
+</section>
+
+<!-- MANUALS -->
+<section id="manualsScreen" class="screen hidden">
+  <div class="disclaimer">Stored on this device. Add a PDF from your phone's downloads/files — it stays available with no signal after that.</div>
+  <div class="controls">
+    <input id="manualSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search brand, model, or title…" autocomplete="off">
+    <div class="breadcrumb" id="manualBreadcrumb"></div>
+  </div>
+  <main id="manualResults"></main>
+  <div id="manualEmptyState" class="empty-state hidden">No manuals saved yet. Tap + Add to upload a PDF from this phone.</div>
+</section>
+
+<!-- TOOLBOX -->
+<section id="toolboxScreen" class="screen hidden">
+  <div class="disclaimer">Board programming tools and when to use them. Confirm exact app/menu steps still match — vendor apps update their UI over time.</div>
+  <div class="controls">
+    <input id="toolboxSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search tool, brand, or board…" autocomplete="off">
+    <div class="filter-row">
+      <select id="toolboxBrandChips" class="filter-select" aria-label="Filter by brand"></select>
+    </div>
+  </div>
+  <main id="toolboxResults"></main>
+  <div id="toolboxEmptyState" class="empty-state hidden">No matching tools. Try a different search, or add one.</div>
+</section>
+
+<div id="installBanner" class="install-banner hidden">
+  <span>Install this app on your phone for offline use.</span>
+  <button id="installBtn">Install</button>
+  <button id="dismissInstall" class="ghost">Not now</button>
+</div>
+
+<!-- Detail / Edit modal -->
+<div id="modalBackdrop" class="modal-backdrop hidden">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="symptoms.js"></script>
+<script src="toolbox.js"></script>
+<script src="manuals-seed/seed-index.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

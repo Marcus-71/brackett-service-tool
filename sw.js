@@ -1,0 +1,57 @@
+const CACHE_NAME = "bfc-cache-v38";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./style.css",
+  "./app.js",
+  "./data.js",
+  "./symptoms.js",
+  "./toolbox.js",
+  "./manuals-seed/seed-index.js",
+  "./manifest.json",
+  "./icons/brackett-logo.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/icon-maskable-512.png",
+];
+
+self.addEventListener("install", (event) => {
+  // Fetch with {cache:"reload"} instead of cache.addAll() — addAll() honors the
+  // browser's regular HTTP cache, so a stale HTTP-cache entry for any shell file
+  // would keep getting baked into every new cache version forever. Forcing a
+  // real network hit here means a version bump always picks up real changes.
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(APP_SHELL.map((url) =>
+        fetch(url, { cache: "reload" }).then((response) => cache.put(url, response))
+      ))
+    )
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((names) =>
+      Promise.all(names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
+    )
+  );
+  self.clients.claim();
+});
+
+// Cache-first for app shell, so the tool works with zero signal in the field.
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => cached);
+    })
+  );
+});
