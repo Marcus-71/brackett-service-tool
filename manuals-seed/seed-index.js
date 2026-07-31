@@ -6,6 +6,11 @@
  */
 
 const MANUAL_SEEDS = [
+  { file: "manuals-seed/daikin-dozp-zone-panel-install.pdf", brand: "Daikin", model: "DOZP-6-A Zone Control Panel", title: "Zone Control Panel (DOZP-6-ADA-A kit) — Installation Instructions with Troubleshooting", notes: "Source: Daikin official. Full error-code table (25, 31-36, 81-87, 88-8D, 90-95) extracted into Error Codes. Includes differential pressure sensor and auto-weight troubleshooting." },
+  { file: "manuals-seed/daikin-dozp-trc15-training.pdf", brand: "Daikin", model: "DOZP-6-A Zone Control Panel", title: "Technical Training Module TRC-15 — Zone Control features, install, commissioning, dealer navigation", notes: "Source: Daikin official (daikincity training), 05/2026" },
+  { file: "manuals-seed/daikin-zoning-launch-presentation.pdf", brand: "Daikin", model: "DOZP-6-A Zone Control Panel", title: "Daikin Zoning Launch Presentation", notes: "Provided by Brackett Comfort — Daikin dealer material" },
+  { file: "manuals-seed/daikin-dozp-zoning-kit-pmn.pdf", brand: "Daikin", model: "DOZP-6-A Zone Control Panel", title: "Product Marketing Notice — New Zone Panel & Zoning Kit for Residential Unitary Inverter Ducted Systems (D-NP-PC-3073)", notes: "Source: Daikin official" },
+  { file: "manuals-seed/daikin-one-wireless-rht-sensor-pmn.pdf", brand: "Daikin", model: "Daikin One+ Thermostat", title: "Product Marketing Notice — New Daikin ONE Wireless RHT Sensor for One+ Smart Thermostat (D-NP-PC-3022)", notes: "Source: Daikin official" },
   { file: "manuals-seed/daikin-dfve-airhandler-install.pdf", brand: "Daikin", model: "DFVE / DMVE (FIT air handler)", title: "EEV-Series Multi-Position Variable-Speed Air Handler — Install Instructions (IM-IOD-4039B)", notes: "Source: daikincomfort.com (official). The FIT-system communicating air handler." },
   { file: "manuals-seed/daikin-dm96vc-furnace-install.pdf", brand: "Daikin", model: "DM96VC / DC96VC", title: "Two-Stage Variable-Speed Gas Furnace — Install Instructions", notes: "Source: daikincomfort.com (official)" },
   { file: "manuals-seed/daikin-dm96sn-furnace-install.pdf", brand: "Daikin", model: "DM92SN / DM96SN / DC96SN", title: "Single-Stage Gas Furnace — Install Instructions (IOD-2029)", notes: "Source: daikincomfort.com (official)" },
