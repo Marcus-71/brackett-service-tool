@@ -916,8 +916,11 @@ const MODEL_PATTERNS = [
   { re: /^9[0-9]{2}[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Bryant 9xx-series gas furnace", notes: ["Bryant = Carrier; the Bryant/Payne flash codes in Error Codes apply."] },
   // --- Lennox ---
   { re: /^SLP9[89]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox SLP98/SLP99 variable-capacity communicating furnace", notes: ["Full E-code table (E105-E409) is in Error Codes.", "Alert-code guide for the whole communicating system is in Manuals → Lennox."] },
-  { re: /^EL296|^EL196/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Elite two-stage/single-stage furnace", notes: ["EL296UHV install manual is in Manuals → Lennox."] },
+  { re: /^G71MPP/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G71MPP variable-capacity communicating furnace (2004-2011 era)", notes: ["Uses the same integrated-control E-code table (E105-E409) as SLP99 — see Lennox codes in Error Codes.", "Install + homeowner manuals are in Manuals → Lennox → G71MPP."] },
+  { re: /^EL296|^EL196|^EL180/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Elite gas furnace (EL296/EL196/EL180)", notes: ["EL296UHV install manual and EL180UHE spec sheet are in Manuals → Lennox."] },
+  { re: /^SL297/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox SL297NV ultra-low-NOx two-stage furnace (Dave Lennox Signature)", notes: ["DLSC furnace spec sheet is in Manuals → Lennox."] },
   { re: /^(ML1[89]0|ML29[67]|SL280)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit/Signature gas furnace", notes: [] },
+  { re: /^EL(18|22)KCV/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Elite R-454B variable-capacity communicating AC (EL18KCV/EL22KCV)", notes: ["Communicating — Lennox alert codes 400-446 in Error Codes apply (shown on S30/S40 thermostat).", "R-454B is an A2L refrigerant: paired indoor units carry leak-detection sensors — related furnace codes E150-E164 are in Error Codes.", "Spec sheets are in Manuals → Lennox."] },
   { re: /^(SL25XPV|SL25XCV|XP2[05]|XC2[015]|EL18XCV|EL16X)/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox communicating AC/heat pump", notes: ["Alert codes 400-446 for these outdoor units are in Error Codes (shown on the S40 thermostat)."] },
   { re: /^1[346]ACX|^14HPX|^ML1[46]XC/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Merit AC/heat pump", notes: [] },
   { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: [] },
@@ -1279,7 +1282,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v44";
+const APP_VERSION = "v45";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
