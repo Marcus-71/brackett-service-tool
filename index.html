@@ -47,6 +47,11 @@
       <span class="tile-label">Toolbox</span>
       <span class="tile-sub">Board tools — CoolCloud, Data Loader</span>
     </button>
+    <button class="tile tile-scanner" data-screen="scanner">
+      <span class="tile-icon">📷</span>
+      <span class="tile-label">Tag Scanner</span>
+      <span class="tile-sub">Snap the data plate — identify the unit</span>
+    </button>
   </div>
   <div class="home-footer">
     <span id="homeNetNote"></span>
@@ -103,6 +108,23 @@
   </div>
   <main id="toolboxResults"></main>
   <div id="toolboxEmptyState" class="empty-state hidden">No matching tools. Try a different search, or add one.</div>
+</section>
+
+<!-- TAG SCANNER -->
+<section id="scannerScreen" class="screen hidden">
+  <div class="disclaimer">Photograph the unit's data plate straight-on in good light. Reading happens on this phone — no signal needed. Always double-check the model/serial it reads before trusting it.</div>
+  <main>
+    <label class="scan-btn" for="tagPhotoInput">📷 Take photo of the model tag</label>
+    <input type="file" id="tagPhotoInput" accept="image/*" capture="environment" class="hidden">
+    <div id="scanStatus" class="scan-status hidden"></div>
+    <img id="scanPreview" class="scan-preview hidden" alt="Tag photo preview">
+    <div class="scan-fields">
+      <label>Model #<input id="scanModelInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="or type it here"></label>
+      <label>Serial #<input id="scanSerialInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="optional"></label>
+      <button id="scanIdentifyBtn" class="scan-identify">Identify unit</button>
+    </div>
+    <div id="scanResult"></div>
+  </main>
 </section>
 
 <div id="installBanner" class="install-banner hidden">

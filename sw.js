@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v40";
+const CACHE_NAME = "bfc-cache-v41";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -9,6 +9,13 @@ const APP_SHELL = [
   "./toolbox.js",
   "./manuals-seed/seed-index.js",
   "./manifest.json",
+  "./vendor/tesseract.min.js",
+  "./vendor/worker.min.js",
+  "./vendor/tesseract-core.wasm.js",
+  "./vendor/tesseract-core-simd.wasm.js",
+  "./vendor/tesseract-core-lstm.wasm.js",
+  "./vendor/tesseract-core-simd-lstm.wasm.js",
+  "./vendor/eng.traineddata.gz",
   "./icons/brackett-logo.png",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

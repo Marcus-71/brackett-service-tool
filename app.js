@@ -59,6 +59,7 @@ const SCREEN_TITLES = {
   diagnostics: "Diagnostic Help",
   manuals: "Manuals",
   toolbox: "Toolbox",
+  scanner: "Tag Scanner",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -74,16 +75,16 @@ let currentScreen = "home";
 
 function showScreen(name) {
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
 
   const addBtn = document.getElementById("addBtn");
-  if (name === "home") {
+  if (name === "home" || !ADD_HANDLERS[name]) {
     addBtn.classList.add("hidden");
   } else {
     addBtn.classList.remove("hidden");
@@ -878,6 +879,293 @@ async function seedManualsIfNeeded() {
 }
 
 // ============================================================
+// Tag Scanner — photo → on-device OCR → model/serial → unit ID
+// ============================================================
+
+// Model-number pattern table. Order matters: more specific patterns first.
+// brand/equipment strings must match the values used in data.js so the
+// jump-to-codes buttons land on real filter selections.
+const MODEL_PATTERNS = [
+  // --- Daikin residential unitary ---
+  { re: /^D[MC]97MC/, brand: "Daikin", equipment: "Gas Furnace", series: "DM97MC/DC97MC modulating gas furnace (ComfortNet communicating)", notes: ["Fault codes for this exact family are in Error Codes (E0-b9)."] },
+  { re: /^D[MC]96VC/, brand: "Daikin", equipment: "Gas Furnace", series: "DM96VC/DC96VC two-stage variable-speed gas furnace", notes: ["Install manual is in Manuals → Daikin."] },
+  { re: /^D[MC]9[26]SN/, brand: "Daikin", equipment: "Gas Furnace", series: "DM92SN/DM96SN/DC96SN single-stage gas furnace", notes: ["Shares the Goodman GM9S80-style E-code board family."] },
+  { re: /^D[XZ]1[68]TC/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "DX/DZ 16-18TC condenser or heat pump (ComfortNet)", notes: ["Comfort Alert codes 01-09 for this family are in Error Codes.", "DZ = heat pump, DX = straight cool."] },
+  { re: /^D[CHZ][679]VS/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin FIT inverter outdoor unit (DC/DH/DZ 6-9VS)", notes: ["Full FIT E-code table is in Error Codes.", "Communicating system — check Data 1/2 bus (0.6-0.9VDC bias) on comm issues."] },
+  { re: /^D[FM]VE/, brand: "Daikin", equipment: "Air Handler", series: "DFVE/DMVE EEV-series communicating air handler (Daikin FIT indoor)", notes: ["Air-handler diagnostic codes (EC/EE/EF, d, b series) are in Error Codes."] },
+  { re: /^DOZP/, brand: "Daikin", equipment: "Other", series: "Daikin One zone panel (DOZP)", notes: ["Zone error codes 25-95 and DOZP troubleshooting flows are in Diagnostic Help (search 'DOZP')."] },
+  { re: /^(FTXS|FDXS|RXS|FTX|RX)[0-9]/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin single-zone wall-mount mini-split", notes: ["Full two-character error code table (U/A/C/E/F/H/J/L/P) is in Error Codes."] },
+  { re: /^(RMXS|[234]MXS|MXS)[0-9]?/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin multi-zone mini-split outdoor unit", notes: ["Multi-zone code table is in Error Codes; branch provider issues are in Diagnostic Help."] },
+  // --- Goodman / Amana ---
+  { re: /^AVZC1[68]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Amana/Goodman AVZC inverter heat pump (ClimateTalk communicating)", notes: ["Its full diagnostic code table (EE/Eb/b/d/7x) is in Error Codes."] },
+  { re: /^(GSXV|GSZV|ASXV|ASZV)/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman/Amana side-discharge inverter condenser or heat pump", notes: ["Inverter unit — CoolCloud app connects to the board for diagnostics (see Toolbox)."] },
+  { re: /^(GSX|ASX|DSX|SSX|ANX|VSX)[0-9]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman/Amana single-speed AC condenser", notes: ["Service manual RS6200006 (covers this family) is in Manuals → Goodman.", "Comfort Alert-style codes 01-09 apply if a monitor module is fitted."] },
+  { re: /^(GSZ|ASZ|DSZ|SSZ|ANZ|VSZ)[0-9]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman/Amana heat pump", notes: ["Service manual RS6200006 (covers this family) is in Manuals → Goodman."] },
+  { re: /^(GM9C96|GC9C96|AM9C96|AC9C96)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 96% two-stage furnace (9-speed ECM)", notes: ["Service manual RS6612020 is in Manuals → Goodman — fault codes are on its pages 35-36."] },
+  { re: /^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 80/96% single-stage furnace", notes: ["E-codes (E0/E1/E2/Eb/EC) + flash codes are in Error Codes."] },
+  { re: /^(GMVC|GCVC|AMVC|ACVC)9[67]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana two-stage variable-speed furnace (ComfortNet)", notes: ["Uses the shared ComfortNet dual 7-segment code set — see Goodman codes in Error Codes."] },
+  { re: /^(AMST|ARUF|ASPT|AVPTC|AWUF)/, brand: "Goodman", equipment: "Air Handler", series: "Goodman/Amana air handler", notes: ["PCBJA-board diagnostic codes (EC/EE/EF, d, b series) in Error Codes apply to the communicating models."] },
+  // --- Carrier / Bryant / Payne ---
+  { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["Full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'."] },
+  { re: /^59TP6/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96 two-stage furnace (59TP6)", notes: ["Install/service manual is in Manuals → Carrier."] },
+  { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["Uses the standard Carrier flash-code board — see Bryant/Payne flash codes in Error Codes."] },
+  { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Standard flash-code list in Error Codes applies to most non-communicating models."] },
+  { re: /^2[45]VNA/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity variable-speed AC/HP (24VNA9/25VNA8)", notes: ["Full 39-code fault table for this family is in Error Codes."] },
+  { re: /^24[A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier AC condenser", notes: [] },
+  { re: /^25[A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier heat pump", notes: [] },
+  { re: /^9[0-9]{2}[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Bryant 9xx-series gas furnace", notes: ["Bryant = Carrier; the Bryant/Payne flash codes in Error Codes apply."] },
+  // --- Lennox ---
+  { re: /^SLP9[89]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox SLP98/SLP99 variable-capacity communicating furnace", notes: ["Full E-code table (E105-E409) is in Error Codes.", "Alert-code guide for the whole communicating system is in Manuals → Lennox."] },
+  { re: /^EL296|^EL196/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Elite two-stage/single-stage furnace", notes: ["EL296UHV install manual is in Manuals → Lennox."] },
+  { re: /^(ML1[89]0|ML29[67]|SL280)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit/Signature gas furnace", notes: [] },
+  { re: /^(SL25XPV|SL25XCV|XP2[05]|XC2[015]|EL18XCV|EL16X)/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox communicating AC/heat pump", notes: ["Alert codes 400-446 for these outdoor units are in Error Codes (shown on the S40 thermostat)."] },
+  { re: /^1[346]ACX|^14HPX|^ML1[46]XC/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Merit AC/heat pump", notes: [] },
+  { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: [] },
+  // --- Trane / American Standard ---
+  { re: /^S9V2|^S9X2|^S8X2|^S9B1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
+  { re: /^(TUD|TUH|TDD|TUE|TME|AUD|ADD)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
+  { re: /^4TT[RXBZ][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX)", notes: ["Condensing unit installer's guide is in Manuals → Trane."] },
+  { re: /^4TW[RXBZ][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX)", notes: [] },
+  { re: /^4A7|^4A6/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "American Standard AC/heat pump", notes: ["American Standard = Trane."] },
+  { re: /^(TEM[468]|TAM[4-9]|GAM[45])/, brand: "Trane", equipment: "Air Handler", series: "Trane air handler", notes: [] },
+  { re: /^(M5THS|MSTHS)/, brand: "Trane", equipment: "Mini-Split", series: "Trane ductless mini-split", notes: ["E/P error code table is in Error Codes."] },
+  // --- York / JCI family ---
+  { re: /^DGA[AH]/, brand: "York", equipment: "Gas Furnace", series: "York/Coleman DGAA/DGAH mobile-home furnace", notes: ["Its flash-code table is in Error Codes; service manual in Manuals → York."] },
+  { re: /^TM9V|^TM9E|^TM8|^TG9S|^TG8S/, brand: "York", equipment: "Gas Furnace", series: "York/Luxaire/Coleman TM/TG gas furnace", notes: ["TM9V install manual is in Manuals → York."] },
+  { re: /^YC[JGESD]|^YFK|^YCG/, brand: "York", equipment: "Condenser/Heat Pump", series: "York AC condenser", notes: [] },
+  { re: /^Y[HZ][JGEF]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York heat pump", notes: [] },
+  // --- Rheem / Ruud ---
+  { re: /^R9[2567][TVP]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud R9x condensing gas furnace", notes: ["PlusOne 7-segment diagnostics on board; EcoNet-capable models report codes to the EcoNet stat."] },
+  { re: /^R80[12]V|^R801T/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud 80% gas furnace", notes: [] },
+  { re: /^RA1[3-7]|^WA1[3-7]|^RA20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud AC condenser", notes: [] },
+  { re: /^RP1[4-7]|^WP1[4-7]|^RP20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud heat pump", notes: ["RP17 install manual is in Manuals → Rheem."] },
+  { re: /^RH[12]T|^RH[12]V/, brand: "Rheem", equipment: "Air Handler", series: "Rheem/Ruud air handler", notes: [] },
+  // --- Mitsubishi ---
+  { re: /^MSZ|^MFZ|^MLZ|^SEZ|^SVZ|^PKA|^PEAD/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi indoor unit", notes: ["Check indoor LED blink pattern; MXZ outdoor service manual is in Manuals → Mitsubishi."] },
+  { re: /^MUZ|^MXZ|^MUFZ|^PUZ/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi outdoor unit (MXZ = multi-zone)", notes: ["MXZ service manual with check codes is in Manuals → Mitsubishi."] },
+];
+
+// Nominal capacity from the digits embedded in most model numbers.
+// Keyed off equipment type: cooling gear embeds tonnage codes (BTU/12),
+// furnaces embed input BTU, mini-splits embed BTU in thousands directly.
+function decodeCapacity(model, equipment) {
+  if (equipment === "Gas Furnace") {
+    const f = model.match(/(040|045|060|070|080|090|100|110|115|120|130|140)(?=[A-Z0-9]|$)/);
+    if (f) return `~${parseInt(f[1],10)},000 BTU/h input (furnace sizes are input BTU)`;
+    return null;
+  }
+  if (equipment === "Mini-Split") {
+    const s = model.match(/^[A-Z]+-?[0-9]?[A-Z]*?(09|12|15|18|24|30|36|42|48)(?=[A-Z0-9]|$)/);
+    if (s) return `~${parseInt(s[1],10)},000 BTU/h nominal`;
+    return null;
+  }
+  let m = model.match(/(018|024|030|036|042|048|060)(?=[A-Z0-9-]|$)/);
+  // Some brands (Carrier 24VNA936, 25VNA836) embed 2-digit tonnage codes instead.
+  if (!m) m = model.match(/(18|24|30|36|42|48|60)(?=[A-Z])/);
+  if (m) {
+    const btu = parseInt(m[1], 10);
+    const tons = Math.round((btu / 12) * 2) / 2;
+    return `~${tons} ton (${btu},000 BTU/h nominal)`;
+  }
+  return null;
+}
+
+// Manufacture-date estimate from serial number, by brand convention.
+// These are estimates — conventions changed over the years.
+function decodeSerialAge(brand, serial) {
+  if (!serial) return null;
+  const s = serial.replace(/[^A-Z0-9]/g, "");
+  let m;
+  if (brand === "Goodman" || brand === "Daikin") {
+    if ((m = s.match(/^([0-2][0-9])(0[1-9]|1[0-2])/))) return `Made ${m[2]}/20${m[1]} (Goodman/Daikin serials start YYMM — estimate)`;
+  }
+  if (brand === "Carrier") {
+    if ((m = s.match(/^([0-4][0-9]|5[0-3])([0-2][0-9])/))) return `Made week ${m[1]} of 20${m[2]} (Carrier serials start WWYY — estimate)`;
+  }
+  if (brand === "Trane") {
+    if ((m = s.match(/^([0-2][0-9])[0-9]/))) return `Made 20${m[1]} (Trane serials since ~2010 start with the year — estimate)`;
+  }
+  if (brand === "Lennox") {
+    if ((m = s.match(/^[0-9]{2}([0-2][0-9])[A-Z]/))) return `Made 20${m[1]} (Lennox serials: digits 3-4 are the year — estimate)`;
+  }
+  if (brand === "Rheem") {
+    if ((m = s.match(/^[A-Z]?([0-4][0-9]|5[0-3])([0-2][0-9])/))) return `Made week ${m[1]} of 20${m[2]} (Rheem serials embed WWYY — estimate)`;
+  }
+  return null;
+}
+
+function identifyModel(rawModel, rawSerial) {
+  const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
+  if (!model) return null;
+  for (const p of MODEL_PATTERNS) {
+    if (p.re.test(model)) {
+      return {
+        model, serial: (rawSerial || "").toUpperCase().trim(),
+        brand: p.brand, equipment: p.equipment, series: p.series,
+        capacity: decodeCapacity(model, p.equipment),
+        age: decodeSerialAge(p.brand, (rawSerial || "").toUpperCase().trim()),
+        notes: p.notes,
+      };
+    }
+  }
+  return { model, serial: (rawSerial || "").toUpperCase().trim(), brand: null };
+}
+
+// Pull likely model/serial strings out of raw OCR text.
+function extractTagFields(text) {
+  const up = text.toUpperCase();
+  const lines = up.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  let model = "", serial = "";
+  const modelLabel = /(?:MODEL|MODLE|M\/N|MOD|M0DEL)[.:# ]*\s*([A-Z0-9][A-Z0-9./-]{4,24})/;
+  const serialLabel = /(?:SERIAL|SER|S\/N|5\/N)[.:# NO]*\s*([A-Z0-9][A-Z0-9-]{5,24})/;
+  for (const line of lines) {
+    if (!model) { const m = line.match(modelLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) model = m[1]; }
+    if (!serial) { const m = line.match(serialLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) serial = m[1]; }
+  }
+  // No labels found — look for any token matching a known model pattern.
+  if (!model) {
+    const tokens = up.match(/[A-Z0-9./-]{5,24}/g) || [];
+    for (const t of tokens) {
+      const cleaned = t.replace(/[./]/g, "");
+      if (MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; break; }
+    }
+  }
+  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, "") };
+}
+
+let tessWorkerPromise = null;
+function loadTesseract() {
+  if (window.Tesseract) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "vendor/tesseract.min.js";
+    s.onload = resolve;
+    s.onerror = () => reject(new Error("Could not load the OCR engine files."));
+    document.head.appendChild(s);
+  });
+}
+async function getTessWorker(onStatus) {
+  await loadTesseract();
+  if (!tessWorkerPromise) {
+    const base = new URL(".", location.href).href;
+    tessWorkerPromise = Tesseract.createWorker("eng", 1, {
+      workerPath: base + "vendor/worker.min.js",
+      corePath: base + "vendor/",
+      langPath: base + "vendor",
+      gzip: true,
+      logger: (m) => { if (m.status && onStatus) onStatus(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
+    });
+  }
+  return tessWorkerPromise;
+}
+
+// Downscale the photo before OCR — phone photos are huge and slow to process.
+async function preprocessPhoto(file) {
+  const bmp = await createImageBitmap(file);
+  const maxDim = 1600;
+  const scale = Math.min(1, maxDim / Math.max(bmp.width, bmp.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bmp.width * scale);
+  canvas.height = Math.round(bmp.height * scale);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+  return canvas;
+}
+
+function scanStatus(msg) {
+  const el = document.getElementById("scanStatus");
+  if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
+  else el.classList.add("hidden");
+}
+
+async function scanTagPhoto(file) {
+  const preview = document.getElementById("scanPreview");
+  preview.src = URL.createObjectURL(file);
+  preview.classList.remove("hidden");
+  document.getElementById("scanResult").innerHTML = "";
+  try {
+    scanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
+    const canvas = await preprocessPhoto(file);
+    const worker = await getTessWorker(scanStatus);
+    const { data } = await worker.recognize(canvas);
+    scanStatus(null);
+    const fields = extractTagFields(data.text || "");
+    document.getElementById("scanModelInput").value = fields.model;
+    document.getElementById("scanSerialInput").value = fields.serial;
+    if (!fields.model) {
+      scanStatus("Couldn't confidently find a model number in the photo. Try a straighter, closer, better-lit shot — or type the model number below.");
+    } else {
+      renderScanResult(identifyModel(fields.model, fields.serial));
+    }
+  } catch (err) {
+    scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
+  }
+}
+
+function renderScanResult(info) {
+  scanStatus(null);
+  const box = document.getElementById("scanResult");
+  if (!info) { box.innerHTML = ""; return; }
+  const facts = [];
+  if (info.brand) {
+    facts.push(["Brand", info.brand]);
+    facts.push(["Equipment type", info.equipment]);
+    facts.push(["Series", info.series]);
+    if (info.capacity) facts.push(["Capacity", info.capacity]);
+  }
+  if (info.age) facts.push(["Age", info.age]);
+  const codeCount = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment).length : 0;
+  const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
+  const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
+  const unknown = !info.brand ? `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the pattern library yet. Use the buttons below to search, and tell the office so it gets added.</p>` : "";
+  const webSearch = navigator.onLine ? `<a href="https://www.google.com/search?q=${encodeURIComponent(info.model + " hvac specifications")}" target="_blank" rel="noopener">🔍 Search the web for ${escapeHtml(info.model)}</a>` : "";
+  box.innerHTML = `
+    <div class="scan-id-card">
+      <div class="card">
+        <div class="card-top"><div><div class="card-code">${escapeHtml(info.model)}</div>${info.serial ? `<div class="card-sub">S/N ${escapeHtml(info.serial)}</div>` : ""}</div></div>
+        ${unknown}
+        <ul class="scan-id-facts">${factsHtml}${notes}</ul>
+        <div class="scan-actions">
+          ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
+          <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
+          ${info.brand ? `<button id="scanGoManuals">📄 ${escapeHtml(info.brand)} manuals</button>` : ""}
+          ${webSearch}
+        </div>
+      </div>
+    </div>`;
+  const goCodes = document.getElementById("scanGoCodes");
+  if (goCodes) goCodes.onclick = () => {
+    codesState.brand = info.brand; codesState.equipment = info.equipment; codesState.search = "";
+    document.getElementById("codesSearchInput").value = "";
+    showScreen("codes");
+  };
+  document.getElementById("scanGoDiag").onclick = () => {
+    diagState.equipment = info.equipment || "All"; diagState.search = "";
+    document.getElementById("diagSearchInput").value = "";
+    showScreen("diagnostics");
+  };
+  const goManuals = document.getElementById("scanGoManuals");
+  if (goManuals) goManuals.onclick = () => {
+    manualsState.brand = info.brand; manualsState.model = null; manualsState.search = "";
+    document.getElementById("manualSearchInput").value = "";
+    showScreen("manuals");
+  };
+}
+
+document.getElementById("tagPhotoInput").addEventListener("change", (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (file) scanTagPhoto(file);
+  e.target.value = "";
+});
+document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
+  const model = document.getElementById("scanModelInput").value.trim();
+  const serial = document.getElementById("scanSerialInput").value.trim();
+  if (!model) { scanStatus("Type or scan a model number first."); return; }
+  scanStatus(null);
+  renderScanResult(identifyModel(model, serial));
+});
+
+// ============================================================
 // Network status
 // ============================================================
 
@@ -926,7 +1214,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v40";
+const APP_VERSION = "v41";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");

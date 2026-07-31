@@ -396,6 +396,88 @@ main {
 .tile-manuals { border-left: 5px solid var(--brand-sage); }
 .tile-toolbox { border-left: 5px solid var(--brand-olive); }
 
+/* ---------------- Tag Scanner ---------------- */
+
+.tile-scanner { border-left: 5px solid var(--brand-navy); }
+
+.scan-btn {
+  display: block;
+  text-align: center;
+  background: var(--brand-navy);
+  color: #f2ede2;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 2px solid var(--brand-orange);
+}
+
+.scan-status {
+  margin-top: 0.7rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.scan-preview {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  margin-top: 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #000;
+}
+
+.scan-fields { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.scan-fields label { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); display: flex; flex-direction: column; gap: 0.25rem; }
+.scan-fields input {
+  font-size: 1.05rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  text-transform: uppercase;
+}
+.scan-identify {
+  background: var(--accent-2);
+  color: #06202e;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.scan-id-card { margin-top: 1rem; }
+.scan-id-card .card { cursor: default; }
+.scan-id-facts { margin: 0.5rem 0 0; padding: 0; list-style: none; }
+.scan-id-facts li { padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+.scan-id-facts li:last-child { border-bottom: none; }
+.scan-id-facts .k { color: var(--text-dim); font-size: 0.8rem; display: block; }
+.scan-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.8rem; }
+.scan-actions button, .scan-actions a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+.scan-actions .primary-act { background: var(--brand-navy); color: #f2ede2; border-color: var(--brand-orange); }
+
 .home-logo {
   display: block;
   width: min(70%, 340px);
