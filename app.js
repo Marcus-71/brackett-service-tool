@@ -1037,8 +1037,12 @@ function extractTagFields(text) {
   const up = text.toUpperCase();
   const lines = up.split(/\n+/).map(l => l.trim()).filter(Boolean);
   let model = "", serial = "";
-  const modelLabel = /(?:MODEL|MODLE|M\/N|MOD|M0DEL)[.:# ]*\s*([A-Z0-9][A-Z0-9./-]{4,24})/;
-  const serialLabel = /(?:SERIAL|SER|S\/N|5\/N)[.:# NO]*\s*([A-Z0-9][A-Z0-9-]{5,24})/;
+  // "(?:NUMBER|NO...)?" explicitly eats the filler word in "MODEL NUMBER" /
+  // "SERIAL NUMBER" / "SERIAL NO." so the capture lands on the actual value —
+  // otherwise the word NUMBER itself gets captured, rejected, and the real
+  // serial on that line is lost.
+  const modelLabel = /(?:MODEL|MODLE|M\/N|MOD|M0DEL)(?:\s*(?:NUMBER|NUM|N[O0]\.?))?[.:# ]*\s*([A-Z0-9][A-Z0-9./-]{4,24})/;
+  const serialLabel = /(?:SERIAL|SER|S\/N|5\/N)(?:\s*(?:NUMBER|NUM|N[O0]\.?))?[.:# ]*\s*([A-Z0-9][A-Z0-9-]{5,24})/;
   for (const line of lines) {
     if (!model) { const m = line.match(modelLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) model = m[1]; }
     if (!serial) { const m = line.match(serialLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) serial = m[1]; }
@@ -1050,6 +1054,14 @@ function extractTagFields(text) {
       const cleaned = t.replace(/[./]/g, "");
       if (MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; break; }
     }
+  }
+  // Serial fallback: many brands (Goodman/Daikin/Amana) use an all-digit
+  // serial — grab the longest 8-16 digit run that isn't part of the model.
+  if (!serial) {
+    const digitRuns = (up.match(/(?<![A-Z0-9])[0-9]{8,16}(?![A-Z0-9])/g) || [])
+      .filter(t => !model.includes(t))
+      .sort((a, b) => b.length - a.length);
+    if (digitRuns.length) serial = digitRuns[0];
   }
   return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), brandHint: detectBrandInText(up) };
 }
@@ -1267,7 +1279,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v43";
+const APP_VERSION = "v44";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
