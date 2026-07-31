@@ -477,6 +477,14 @@ main {
   color: var(--text);
 }
 .scan-actions .primary-act { background: var(--brand-navy); color: #f2ede2; border-color: var(--brand-orange); }
+.scan-offline-note {
+  padding: 0.7rem 0.85rem;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  text-align: center;
+}
 
 .home-logo {
   display: block;

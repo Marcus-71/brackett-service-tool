@@ -994,21 +994,42 @@ function decodeSerialAge(brand, serial) {
   return null;
 }
 
-function identifyModel(rawModel, rawSerial) {
+function identifyModel(rawModel, rawSerial, brandHint) {
   const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
   if (!model) return null;
+  const serial = (rawSerial || "").toUpperCase().trim();
   for (const p of MODEL_PATTERNS) {
     if (p.re.test(model)) {
       return {
-        model, serial: (rawSerial || "").toUpperCase().trim(),
+        model, serial,
         brand: p.brand, equipment: p.equipment, series: p.series,
         capacity: decodeCapacity(model, p.equipment),
-        age: decodeSerialAge(p.brand, (rawSerial || "").toUpperCase().trim()),
+        age: decodeSerialAge(p.brand, serial),
         notes: p.notes,
       };
     }
   }
-  return { model, serial: (rawSerial || "").toUpperCase().trim(), brand: null };
+  // Not in the offline library — keep whatever the tag itself told us so the
+  // tech still gets a brand, an age estimate, and targeted internet lookups.
+  return {
+    model, serial, brand: null,
+    brandGuess: brandHint || null,
+    age: brandHint ? decodeSerialAge(brandHint, serial) : null,
+  };
+}
+
+// Brand names as printed on data plates → the brand string used in data.js.
+// Lets us salvage a brand ID (and serial-age decode) even when the model
+// number itself isn't in MODEL_PATTERNS yet.
+const BRAND_NAME_HINTS = [
+  ["AMERICAN STANDARD", "Trane"], ["GOODMAN", "Goodman"], ["AMANA", "Goodman"],
+  ["DAIKIN", "Daikin"], ["CARRIER", "Carrier"], ["BRYANT", "Carrier"], ["PAYNE", "Carrier"],
+  ["LENNOX", "Lennox"], ["TRANE", "Trane"], ["YORK", "York"], ["COLEMAN", "York"],
+  ["LUXAIRE", "York"], ["RHEEM", "Rheem"], ["RUUD", "Rheem"], ["MITSUBISHI", "Mitsubishi"],
+];
+function detectBrandInText(up) {
+  for (const [word, brand] of BRAND_NAME_HINTS) if (up.includes(word)) return brand;
+  return null;
 }
 
 // Pull likely model/serial strings out of raw OCR text.
@@ -1030,7 +1051,7 @@ function extractTagFields(text) {
       if (MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; break; }
     }
   }
-  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, "") };
+  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), brandHint: detectBrandInText(up) };
 }
 
 let tessWorkerPromise = null;
@@ -1095,15 +1116,39 @@ async function scanTagPhoto(file) {
     if (!fields.model) {
       scanStatus("Couldn't confidently find a model number in the photo. Try a straighter, closer, better-lit shot — or type the model number below.");
     } else {
-      renderScanResult(identifyModel(fields.model, fields.serial));
+      renderScanResult(identifyModel(fields.model, fields.serial, fields.brandHint));
     }
   } catch (err) {
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
   }
 }
 
+// Internet lookup buttons — the fallback when the offline library doesn't
+// have the unit (and a handy extra when it does). Each opens the phone's
+// browser with a prefilled search; no data leaves the app otherwise.
+function scanWebLinks(info) {
+  if (!navigator.onLine) {
+    return `<div class="scan-offline-note">📵 No signal right now — when you're back online, buttons to pull this model's info from the internet will appear here automatically.</div>`;
+  }
+  const g = (q) => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+  const brand = info.brand || info.brandGuess || "";
+  const links = [];
+  if (!info.brand) {
+    links.push(`<a href="${g(`"${info.model}" hvac model number`)}" target="_blank" rel="noopener">🌐 Web: what is this unit?</a>`);
+  }
+  links.push(`<a href="${g(`${brand} ${info.model} hvac specifications`.trim())}" target="_blank" rel="noopener">🔍 Web: ${escapeHtml(info.model)} specs</a>`);
+  links.push(`<a href="${g(`"${info.model}" installation OR service manual pdf`)}" target="_blank" rel="noopener">📄 Web: find the manual (PDF)</a>`);
+  if (info.serial && !info.age) {
+    links.push(`<a href="${g(`${brand || "hvac"} serial number ${info.serial} manufacture date`)}" target="_blank" rel="noopener">📅 Web: unit age from serial</a>`);
+  }
+  return links.join("");
+}
+
+let lastScanInfo = null;
+
 function renderScanResult(info) {
   scanStatus(null);
+  lastScanInfo = info;
   const box = document.getElementById("scanResult");
   if (!info) { box.innerHTML = ""; return; }
   const facts = [];
@@ -1112,13 +1157,15 @@ function renderScanResult(info) {
     facts.push(["Equipment type", info.equipment]);
     facts.push(["Series", info.series]);
     if (info.capacity) facts.push(["Capacity", info.capacity]);
+  } else if (info.brandGuess) {
+    facts.push(["Brand", info.brandGuess + " (read off the tag)"]);
   }
   if (info.age) facts.push(["Age", info.age]);
   const codeCount = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment).length : 0;
   const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
-  const unknown = !info.brand ? `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the pattern library yet. Use the buttons below to search, and tell the office so it gets added.</p>` : "";
-  const webSearch = navigator.onLine ? `<a href="https://www.google.com/search?q=${encodeURIComponent(info.model + " hvac specifications")}" target="_blank" rel="noopener">🔍 Search the web for ${escapeHtml(info.model)}</a>` : "";
+  const unknown = !info.brand ? `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>` : "";
+  const manualsBrand = info.brand || info.brandGuess;
   box.innerHTML = `
     <div class="scan-id-card">
       <div class="card">
@@ -1128,8 +1175,8 @@ function renderScanResult(info) {
         <div class="scan-actions">
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
-          ${info.brand ? `<button id="scanGoManuals">📄 ${escapeHtml(info.brand)} manuals</button>` : ""}
-          ${webSearch}
+          ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
+          ${scanWebLinks(info)}
         </div>
       </div>
     </div>`;
@@ -1146,11 +1193,17 @@ function renderScanResult(info) {
   };
   const goManuals = document.getElementById("scanGoManuals");
   if (goManuals) goManuals.onclick = () => {
-    manualsState.brand = info.brand; manualsState.model = null; manualsState.search = "";
+    manualsState.brand = manualsBrand; manualsState.model = null; manualsState.search = "";
     document.getElementById("manualSearchInput").value = "";
     showScreen("manuals");
   };
 }
+
+// If the tech scanned with no signal and then gets coverage, swap the
+// "no signal" note for the live internet lookup buttons on the spot.
+window.addEventListener("online", () => {
+  if (lastScanInfo && document.getElementById("scanResult").innerHTML) renderScanResult(lastScanInfo);
+});
 
 document.getElementById("tagPhotoInput").addEventListener("change", (e) => {
   const file = e.target.files && e.target.files[0];
@@ -1214,7 +1267,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v42";
+const APP_VERSION = "v43";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
