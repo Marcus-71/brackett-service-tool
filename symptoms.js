@@ -3428,4 +3428,21 @@ const SYMPTOMS = [
   "Frequent-fault codes latch from repeated events — after fixing the cause, clear the fault history via the outdoor unit's mode display so you can confirm the condition stopped recurring",
   "If the matching E-code is already in history, the system has been hard-faulting too — pull the full history before deciding how urgent the repair pitch is",
 ], confidence:"common" },
+{ id:"s-daikin-one-system-tests", equipment:"Condenser/Heat Pump", title:"Daikin One+ / One Touch — running system tests, charge verification, and error history from the thermostat (v3.9 menus)", summary:"On unitary Daikin systems the thermostat's System Optimization menu is the test bench: System Test, Charge Verification Mode with live status codes, forced-run Optional Tests, and the stored Error History. Know the paths before opening a panel.", steps:[
+  "System Optimization (setup step 4) holds: System Test, Charge Verification Mode, Optional Tests, Error History, Calibration, Status, and Remote Sensors",
+  "System Test (inverter AC/HP only): status 0 = 'System test required', 1 = 'Initial test successful' — a brand-new install that never ran the test will sit at 0",
+  "Charge Verification Mode (separate R-410A and R-32 versions): watch the live status — 1 = outdoor temp out of range (use gauges instead), 2 = system stabilizing, 3 = outdoor fan speed not in range, 4 = compressor speed not in range, 5 = indoor superheat not in range, 6 = in range with the SubCool value displayed, 7 = subcool in range/confirming — it tells you the charge verdict without hooking gauges when conditions allow",
+  "Refrigerant Leak Test lives under Optional Tests on R-32 EEV air handlers only — run it after any A2L sensor or coil work",
+  "Optional Tests also force-run Cooling, Fan, Heat Pump Heat, Gas Heat, and Electric Heat — each runs until you press Stop (or setup completes), which is the clean way to hold a mode for measurements",
+  "Pump Down test appears on all-climate heat pumps, Enhanced 5-ton, and some older inverter models — use it instead of trying to pump down an inverter manually",
+  "Error History shows date/time, code, equipment, and description for each stored fault, with a clear option — pull it before clearing anything; menu availability varies by equipment and software version (this outline is v3.9)",
+], confidence:"common" },
+{ id:"s-daikin-one-status-live-data", equipment:"Condenser/Heat Pump", title:"Daikin One+ / One Touch — using the Status pages as live gauges (EEV %, superheat, CFM, current errors)", summary:"The thermostat's Status pages stream live equipment data — often enough to diagnose airflow, EEV, and charge behavior before connecting a single tool.", steps:[
+  "Status shows 'current critical error' and 'current minor error' directly — check these first; the minor-error slot is where the early-warning codes (14/16/33/52-57) live",
+  "Airflow: compare current indoor CFM against current/requested fan demand — a big gap points at duct restriction or motor cutback before you ever drop a static probe",
+  "Refrigeration: OD EEV opening % (FIT / 20-SEER models), liquid EEV opening %, and indoor superheat (EEV air handlers, in cooling) give you live circuit behavior; refrigerant type and a 'refrigerant leak detected' flag show on R-32 EEV air handlers",
+  "Heat side: requested vs current heat demand, electric heat stages (R-32 EEV air handlers), and powerful-heating status (R-32 inverters)",
+  "Cold-climate hardware states are visible too: crankcase heater, drain pan heater, preheat and preheat wattage, ID coil freeze protection (FIT / late-'22 20-SEER models)",
+  "Fields appear only when the equipment supports them — a missing field usually means that model/software doesn't report it, not a fault; this outline is v3.9 software",
+], confidence:"common" },
 ];
