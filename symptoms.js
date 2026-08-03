@@ -3420,4 +3420,12 @@ const SYMPTOMS = [
   "Wire unused conductors together to minimize electrical interference with the sensor electronics",
   "Verify the zone address was set correctly at first power-up (2, 3, or 4), and on a replacement, that the new sensor matches the old sensor's address",
 ], confidence:"common" },
+{ id:"s-daikin-fit-early-warning-codes", equipment:"Condenser/Heat Pump", title:"Daikin FIT — thermostat shows a plain number code (14, 16, 33, 52-57) but the unit keeps running", summary:"FIT inverters run paired fault codes: the E-code (E13, E15, E21...) is the critical shutdown, and a plain-number twin (14, 16, 54...) means the same condition is happening 'frequently' but the control decided it can keep running. Those numbers are your early warning — the cheapest repair happens before the E-code lockout.", steps:[
+  "Know the pairs: 14 = frequent high-pressure (E13's warning), 16 = frequent low-pressure (E15), 52 = frequent compressor faults, 53 = frequent fan/board faults, 54 = frequent low discharge-superheat (E21), 55 = frequent high discharge-temp, 33 = board running hot, 57 = board cooling loop sweating",
+  "These plain-number codes show on the thermostat ONLY — the outdoor board LED shows nothing, so don't rule out the complaint just because the board display is clean",
+  "Treat each one as the underlying refrigeration problem it names: check stop valves fully open, coil cleanliness, charge level, line restrictions, and the sensors involved — not as a nuisance alert to clear",
+  "On 3.5-5.0 ton FIT (and 3.0-4.0 ton Enhanced Capacity), the control board is refrigerant-cooled: codes 33 and 57 point at the cooling bracket hardware — thermal grease, bracket screws, and flow through the board cooling circuit",
+  "Frequent-fault codes latch from repeated events — after fixing the cause, clear the fault history via the outdoor unit's mode display so you can confirm the condition stopped recurring",
+  "If the matching E-code is already in history, the system has been hard-faulting too — pull the full history before deciding how urgent the repair pitch is",
+], confidence:"common" },
 ];
