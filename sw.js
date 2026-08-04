@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v51";
+const CACHE_NAME = "bfc-cache-v52";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -49,6 +49,10 @@ self.addEventListener("activate", (event) => {
 // Cache-first for app shell, so the tool works with zero signal in the field.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // Manual PDFs are on-demand: the app stores them in IndexedDB itself, so
+  // caching them here too would double the storage. Let them hit the network.
+  const path = new URL(event.request.url).pathname;
+  if (path.includes("/manuals-seed/") && path.endsWith(".pdf")) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;

@@ -689,7 +689,7 @@ function buildFolderCard(icon, title, meta, onClick) {
 }
 
 async function renderManuals() {
-  const all = await manualsGetAll();
+  const all = await manualCatalog();
   const results = document.getElementById("manualResults");
   const empty = document.getElementById("manualEmptyState");
   results.innerHTML = "";
@@ -750,42 +750,72 @@ function buildManualCard(m) {
   const card = document.createElement("div");
   card.className = "manual-card";
   card.onclick = () => openManualDetail(m.id);
+  const stateTxt = m.downloaded ? formatBytes(m.size) + " · on this phone" : "☁ tap to download";
   card.innerHTML = `
-    <div class="manual-icon">📄</div>
+    <div class="manual-icon">${m.downloaded ? "📄" : "☁️"}</div>
     <div class="manual-info">
       <div class="manual-title">${escapeHtml(m.title || m.filename)}</div>
-      <div class="manual-meta">${[m.brand, m.model].filter(Boolean).map(escapeHtml).join(" · ")}${m.brand||m.model ? " · " : ""}${formatBytes(m.size)}</div>
+      <div class="manual-meta">${[m.brand, m.model].filter(Boolean).map(escapeHtml).join(" · ")}${m.brand||m.model ? " · " : ""}${stateTxt}</div>
     </div>
   `;
   return card;
 }
 
 async function openManualDetail(id) {
-  const all = await manualsGetAll();
-  const m = all.find(x => x.id === id);
+  const all = await manualCatalog();
+  let m = all.find(x => x.id === id);
   if (!m) return;
   const modal = document.getElementById("modal");
+  const header = `
+    <h2>${escapeHtml(m.title || m.filename)}</h2>
+    <div class="sub">${[m.brand, m.model].filter(Boolean).map(escapeHtml).join(" · ")}</div>
+    ${m.notes ? `<div class="detail-section"><p>${escapeHtml(m.notes)}</p></div>` : ""}`;
+
+  // Not on this phone yet — download it now (needs signal once), then reopen.
+  if (!m.downloaded) {
+    if (!navigator.onLine) {
+      modal.innerHTML = `${header}
+        <div class="detail-section"><p>📵 This manual isn't stored on this phone yet, and there's no signal to download it. Get to coverage and tap it again — after that first download it works offline forever.</p></div>
+        <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+      document.getElementById("closeModalBtn").onclick = closeModal;
+      document.getElementById("modalBackdrop").classList.remove("hidden");
+      return;
+    }
+    modal.innerHTML = `${header}
+      <div class="detail-section"><p id="manualDlStatus">Downloading… stay online, this can take a minute on big manuals.</p></div>
+      <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+    document.getElementById("closeModalBtn").onclick = closeModal;
+    document.getElementById("modalBackdrop").classList.remove("hidden");
+    try {
+      m = await downloadSeedManual(m);
+    } catch (err) {
+      const st = document.getElementById("manualDlStatus");
+      if (st) st.textContent = "Download failed (" + (err && err.message ? err.message : err) + ") — check signal and tap the manual again.";
+      return;
+    }
+    renderManuals();
+  }
+
   if (currentPdfObjectUrl) { URL.revokeObjectURL(currentPdfObjectUrl); currentPdfObjectUrl = null; }
   currentPdfObjectUrl = URL.createObjectURL(m.blob);
+  const isSeed = m.id.startsWith("manual-seed-");
   modal.innerHTML = `
     <h2>${escapeHtml(m.title || m.filename)}</h2>
-    <div class="sub">${[m.brand, m.model].filter(Boolean).map(escapeHtml).join(" · ")}${m.brand||m.model ? " · " : ""}${formatBytes(m.size)}</div>
+    <div class="sub">${[m.brand, m.model].filter(Boolean).map(escapeHtml).join(" · ")}${m.brand||m.model ? " · " : ""}${formatBytes(m.size)} · on this phone</div>
     ${m.notes ? `<div class="detail-section"><p>${escapeHtml(m.notes)}</p></div>` : ""}
     <iframe class="pdf-frame" src="${currentPdfObjectUrl}"></iframe>
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
-      <a id="downloadBtn" class="primary" style="display:flex;align-items:center;justify-content:center;text-decoration:none;" href="${currentPdfObjectUrl}" download="${escapeHtml(m.filename || "manual.pdf")}">Download</a>
-      <button class="danger" id="deleteManualBtn">Delete</button>
+      <a id="downloadBtn" class="primary" style="display:flex;align-items:center;justify-content:center;text-decoration:none;" href="${currentPdfObjectUrl}" download="${escapeHtml(m.filename || "manual.pdf")}">Save copy</a>
+      <button class="danger" id="deleteManualBtn">${isSeed ? "Remove download" : "Delete"}</button>
     </div>
   `;
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("deleteManualBtn").onclick = async () => {
-    if (!confirm("Delete this manual from the device?")) return;
-    // Remember deleted seed manuals so the seed top-up doesn't re-download them
-    if (m.id.startsWith("manual-seed-")) {
-      const gone = JSON.parse(localStorage.getItem(MANUALS_SEED_DELETED_KEY) || "[]");
-      if (!gone.includes(m.id)) { gone.push(m.id); localStorage.setItem(MANUALS_SEED_DELETED_KEY, JSON.stringify(gone)); }
-    }
+    const msg = isSeed
+      ? "Remove this manual's downloaded copy to free space? It stays listed and can be re-downloaded anytime."
+      : "Delete this manual from the device?";
+    if (!confirm(msg)) return;
     await manualsDelete(m.id);
     closeModal(); renderManuals();
   };
@@ -847,35 +877,46 @@ function openManualEditForm(prefill) {
 
 document.getElementById("manualSearchInput").addEventListener("input", (e) => { manualsState.search = e.target.value; renderManuals(); });
 
-const MANUALS_SEED_FLAG = "bfc_manuals_seed_v1"; // legacy one-shot flag, no longer consulted
-const MANUALS_SEED_DELETED_KEY = "bfc_manuals_seed_deleted_v1";
-async function seedManualsIfNeeded() {
-  if (typeof MANUAL_SEEDS === "undefined" || !navigator.onLine) return;
-  // Top-up, not one-shot: every online launch, fetch any seed manual this device
-  // doesn't have yet. A device that seeded before new manuals were added to the
-  // list would otherwise never receive them (the old MANUALS_SEED_FLAG bug).
-  try {
-    const existing = new Set((await manualsGetAll()).map(m => m.id));
-    const deleted = new Set(JSON.parse(localStorage.getItem(MANUALS_SEED_DELETED_KEY) || "[]"));
-    let added = 0;
+function seedIdOf(seed) { return "manual-seed-" + seed.file.split("/").pop().replace(/\.pdf$/i, ""); }
+
+// On-demand manuals: every seed manual is always LISTED, but its PDF stays on
+// the server until the tech opens it — first open downloads and stores it on
+// this device, after which it works offline like everything else. This keeps
+// first install small now that the library is hundreds of MB. Devices that
+// already downloaded manuals under the old seed-everything model keep them.
+async function manualCatalog() {
+  const local = await manualsGetAll();
+  const localById = new Map(local.map(m => [m.id, m]));
+  const out = [];
+  if (typeof MANUAL_SEEDS !== "undefined") {
     for (const seed of MANUAL_SEEDS) {
-      const filename = seed.file.split("/").pop();
-      const id = "manual-seed-" + filename.replace(/\.pdf$/i, "");
-      if (existing.has(id) || deleted.has(id)) continue;
-      const resp = await fetch(seed.file);
-      if (!resp.ok) continue;
-      const blob = await resp.blob();
-      await manualsPut({
-        id,
-        brand: seed.brand, model: seed.model, title: seed.title, notes: seed.notes,
-        filename, mimeType: "application/pdf", size: blob.size, blob, addedAt: Date.now(),
-      });
-      added++;
+      const id = seedIdOf(seed);
+      const rec = localById.get(id);
+      if (rec) {
+        rec.seedFile = seed.file; rec.downloaded = true;
+        // keep listing metadata fresh from the index even for stored copies
+        rec.brand = seed.brand; rec.model = seed.model; rec.title = seed.title; rec.notes = seed.notes;
+        out.push(rec); localById.delete(id);
+      } else {
+        out.push({ id, brand: seed.brand, model: seed.model, title: seed.title, notes: seed.notes, filename: seed.file.split("/").pop(), seedFile: seed.file, downloaded: false });
+      }
     }
-    if (added && currentScreen === "manuals") renderManuals();
-  } catch (err) {
-    // offline or fetch failed mid-way — missing files retry on next launch while online
   }
+  for (const rec of localById.values()) { rec.downloaded = true; out.push(rec); }
+  return out;
+}
+
+async function downloadSeedManual(m, onStatus) {
+  if (onStatus) onStatus("Downloading… stay online, this can take a minute on big manuals.");
+  const resp = await fetch(m.seedFile);
+  if (!resp.ok) throw new Error("Server returned " + resp.status);
+  const blob = await resp.blob();
+  const record = {
+    id: m.id, brand: m.brand, model: m.model, title: m.title, notes: m.notes,
+    filename: m.filename, mimeType: "application/pdf", size: blob.size, blob, addedAt: Date.now(),
+  };
+  await manualsPut(record);
+  return record;
 }
 
 // ============================================================
@@ -1292,17 +1333,17 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v51";
+const APP_VERSION = "v52";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
   if (!el) return;
   let manualCount = "";
-  try { manualCount = " · " + (await manualsGetAll()).length + " manuals"; } catch (e) {}
+  try { manualCount = " · " + (await manualCatalog()).length + " manuals"; } catch (e) {}
   el.textContent = APP_VERSION + " · " + getAllCodes().length + " codes · " + getAllSymptoms().length + " scenarios" + manualCount;
 }
 
 updateNetStatus();
 showScreen("home");
 renderVersionFooter();
-seedManualsIfNeeded().then(renderVersionFooter);
+renderVersionFooter();
