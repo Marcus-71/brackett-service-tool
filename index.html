@@ -57,6 +57,11 @@
       <span class="tile-label">Toolbox</span>
       <span class="tile-sub">Board tools — CoolCloud, Data Loader</span>
     </button>
+    <button class="tile tile-request" data-screen="request">
+      <span class="tile-icon">💬</span>
+      <span class="tile-label">Request Info</span>
+      <span class="tile-sub">Missing a code, manual, or unit? Tell the office</span>
+    </button>
   </div>
   <div class="home-footer">
     <span id="homeNetNote"></span>
@@ -113,6 +118,30 @@
   </div>
   <main id="toolboxResults"></main>
   <div id="toolboxEmptyState" class="empty-state hidden">No matching tools. Try a different search, or add one.</div>
+</section>
+
+<!-- REQUEST INFO -->
+<section id="requestScreen" class="screen hidden">
+  <div class="disclaimer">Missing a code table, a manual, a unit, or found something wrong? Send it in — this is how the app gets better. The Send button opens your email app with everything filled in; just hit send there (needs signal).</div>
+  <main>
+    <div class="charge-form">
+      <div class="form-field"><label>Your name</label><input id="rq-name" type="text" autocomplete="name" placeholder="so the office knows who to call back"></div>
+      <div class="form-field"><label>What kind of request?</label>
+        <select id="rq-type">
+          <option>Missing error code</option>
+          <option>Missing manual</option>
+          <option>Missing unit / model</option>
+          <option>Missing diagnostic scenario</option>
+          <option>Something in the app is wrong</option>
+          <option>App idea / improvement</option>
+          <option>Other</option>
+        </select></div>
+      <div class="form-field"><label>Brand / model (if it's about a unit)</label><input id="rq-model" type="text" autocapitalize="characters" placeholder="e.g. Daikin DZ6VSA2410AB"></div>
+      <div class="form-field"><label>Tell the office what you need</label><textarea id="rq-msg" rows="5" placeholder="What were you looking for? What did the unit show? What would have helped on this call?"></textarea></div>
+      <button id="rq-send" class="scan-identify">📧 Send to the office</button>
+      <div id="rq-note" class="scan-status hidden"></div>
+    </div>
+  </main>
 </section>
 
 <!-- CHARGING CALC -->

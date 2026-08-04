@@ -480,6 +480,7 @@ main {
 .charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; }
 .charge-form { margin-bottom: 1rem; }
 .tile-charge { border-color: var(--brand-orange); }
+.tile-request { border-color: var(--brand-navy); }
 .cc-card { cursor: default; }
 .cc-line { display: flex; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
 .cc-line:last-child { border-bottom: none; }

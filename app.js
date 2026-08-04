@@ -61,6 +61,7 @@ const SCREEN_TITLES = {
   toolbox: "Toolbox",
   scanner: "Tag Scanner",
   charge: "Charging Calc",
+  request: "Request Info",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -76,10 +77,10 @@ let currentScreen = "home";
 
 function showScreen(name) {
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen", request: "requestScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -922,6 +923,35 @@ async function downloadSeedManual(m, onStatus) {
 }
 
 // ============================================================
+// Request Info — techs email gaps/ideas to the office (mailto:,
+// no backend needed; the phone's mail app does the sending)
+// ============================================================
+
+const REQUEST_EMAIL = "andy@brackettcomfort.com";
+document.getElementById("rq-send").addEventListener("click", () => {
+  const name = document.getElementById("rq-name").value.trim();
+  const type = document.getElementById("rq-type").value;
+  const model = document.getElementById("rq-model").value.trim();
+  const msg = document.getElementById("rq-msg").value.trim();
+  const note = document.getElementById("rq-note");
+  if (!msg) {
+    note.textContent = "Type what you need first — even one line helps.";
+    note.classList.remove("hidden");
+    return;
+  }
+  const subject = `[Service Tool] ${type}${model ? " — " + model : ""}`;
+  const body =
+    `Request type: ${type}\n` +
+    (model ? `Brand/model: ${model}\n` : "") +
+    (name ? `From: ${name}\n` : "") +
+    `\n${msg}\n\n` +
+    `—\nSent from Brackett Service Tool ${APP_VERSION}`;
+  window.location.href = `mailto:${REQUEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  note.textContent = "Your email app should be opening with everything filled in — hit Send there and it goes to the office.";
+  note.classList.remove("hidden");
+});
+
+// ============================================================
 // Charging Calculator — gauge readings → sat temps → verdicts
 // PT data from official charts (see pt-data.js). Targets are the
 // standard field rules of thumb, clearly labeled as such.
@@ -1455,7 +1485,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v53";
+const APP_VERSION = "v54";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
