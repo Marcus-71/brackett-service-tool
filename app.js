@@ -1485,7 +1485,90 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v54";
+const APP_VERSION = "v55";
+
+// ============================================================
+// Usage tracking — silent, posts to the office's Google Form
+// ============================================================
+// Each app open is logged (tech name, real open time, app version) to the
+// "App Usage" Google Form, which lands in Andy's responses sheet. Opens with
+// no signal queue up in localStorage and flush next time the phone is online,
+// keeping their original open time. The tech name is asked ONCE per phone
+// (picker below), then remembered forever.
+
+const TRACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfZ9Dv1jlj3h4uzomWlHsgS-OcaDMhb0sbaE2YbXLCP2swsQQ/formResponse";
+const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", version: "entry.872662639" };
+const TECH_NAMES = ["James", "Gus", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Andy"];
+const TECH_KEY = "bfc-tech-name";
+const TRACK_QUEUE_KEY = "bfc-track-queue";
+
+function getTechName() { return localStorage.getItem(TECH_KEY) || ""; }
+
+function readTrackQueue() {
+  try { return JSON.parse(localStorage.getItem(TRACK_QUEUE_KEY) || "[]"); } catch (e) { return []; }
+}
+
+function trackEvent(eventName) {
+  let queue = readTrackQueue();
+  queue.push({ e: eventName, t: new Date().toLocaleString(), v: APP_VERSION });
+  if (queue.length > 200) queue = queue.slice(-200);
+  localStorage.setItem(TRACK_QUEUE_KEY, JSON.stringify(queue));
+  flushTrackQueue();
+}
+
+let trackFlushing = false;
+async function flushTrackQueue() {
+  if (trackFlushing || !navigator.onLine) return;
+  const tech = getTechName();
+  if (!tech) return;
+  trackFlushing = true;
+  try {
+    while (readTrackQueue().length) {
+      const item = readTrackQueue()[0];
+      const body = new URLSearchParams();
+      body.set(TRACK_FIELDS.tech, tech);
+      body.set(TRACK_FIELDS.event, item.e + " @ " + item.t);
+      body.set(TRACK_FIELDS.version, item.v || APP_VERSION);
+      // no-cors: Google Forms accepts the POST but the response is opaque.
+      // A network failure still rejects, which leaves the item queued.
+      await fetch(TRACK_URL, { method: "POST", mode: "no-cors", body });
+      const queue = readTrackQueue();
+      queue.shift();
+      localStorage.setItem(TRACK_QUEUE_KEY, JSON.stringify(queue));
+    }
+  } catch (e) { /* offline or blocked — events stay queued for next time */ }
+  trackFlushing = false;
+}
+window.addEventListener("online", flushTrackQueue);
+
+function showTechPicker() {
+  const ov = document.createElement("div");
+  ov.className = "tech-picker-overlay";
+  const nameBtns = TECH_NAMES.map((n) =>
+    `<button class="tech-name-btn" data-name="${n}">${n}</button>`).join("");
+  ov.innerHTML =
+    `<div class="tech-picker">
+      <img src="icons/icon-192.png" alt="" class="tech-picker-logo">
+      <h2>Whose phone is this?</h2>
+      <p>One-time setup — tap your name so the office knows who's using the app. You'll never see this again.</p>
+      <div class="tech-picker-names">${nameBtns}</div>
+      <div class="tech-picker-other">
+        <input id="techOtherInput" type="text" autocomplete="name" placeholder="Not listed? Type your name">
+        <button id="techOtherBtn">That's me</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  const pick = (name) => {
+    localStorage.setItem(TECH_KEY, name);
+    ov.remove();
+    trackEvent("app opened");
+  };
+  ov.querySelectorAll(".tech-name-btn").forEach((b) => { b.onclick = () => pick(b.dataset.name); });
+  ov.querySelector("#techOtherBtn").onclick = () => {
+    const v = ov.querySelector("#techOtherInput").value.trim();
+    if (v) pick(v);
+  };
+}
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
@@ -1498,4 +1581,6 @@ async function renderVersionFooter() {
 updateNetStatus();
 showScreen("home");
 renderVersionFooter();
-renderVersionFooter();
+
+if (getTechName()) trackEvent("app opened");
+else showTechPicker();
