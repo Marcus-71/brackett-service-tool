@@ -1,9 +1,10 @@
-const CACHE_NAME = "bfc-cache-v52";
+const CACHE_NAME = "bfc-cache-v53";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
+  "./pt-data.js",
   "./data.js",
   "./symptoms.js",
   "./toolbox.js",

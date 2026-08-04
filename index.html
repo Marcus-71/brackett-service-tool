@@ -42,6 +42,11 @@
       <span class="tile-label">Diagnostic Help</span>
       <span class="tile-sub">Troubleshoot by symptom</span>
     </button>
+    <button class="tile tile-charge" data-screen="charge">
+      <span class="tile-icon">🌡️</span>
+      <span class="tile-label">Charging Calc</span>
+      <span class="tile-sub">Read head/suction/SH/SC — R-410A · R-32 · R-454B</span>
+    </button>
     <button class="tile tile-manuals" data-screen="manuals">
       <span class="tile-icon">📄</span>
       <span class="tile-label">Manuals</span>
@@ -110,6 +115,34 @@
   <div id="toolboxEmptyState" class="empty-state hidden">No matching tools. Try a different search, or add one.</div>
 </section>
 
+<!-- CHARGING CALC -->
+<section id="chargeScreen" class="screen hidden">
+  <div class="disclaimer">Rule-of-thumb targets for fixed-speed systems — the unit's charging chart/nameplate always wins. ⚠️ Inverter/variable-speed units (Daikin FIT, DZ20VC, GSXV…): gauge targets DON'T apply — use the manufacturer charge mode instead.</div>
+  <main>
+    <div class="charge-form">
+      <div class="form-field"><label>Refrigerant</label>
+        <select id="cc-refrig"><option>R-410A</option><option>R-32</option><option>R-454B</option></select></div>
+      <div class="charge-grid">
+        <div class="form-field"><label>Metering</label>
+          <select id="cc-meter"><option value="txv">TXV / EEV</option><option value="orifice">Fixed orifice / piston</option></select></div>
+        <div class="form-field"><label>Condenser type</label>
+          <select id="cc-eff"><option value="std">Standard (up to ~14 SEER)</option><option value="high">High-efficiency (15+ SEER)</option></select></div>
+        <div class="form-field"><label>Outdoor temp °F</label><input id="cc-od" type="number" inputmode="decimal" placeholder="e.g. 95"></div>
+        <div class="form-field"><label>Indoor return °F</label><input id="cc-id" type="number" inputmode="decimal" placeholder="e.g. 75"></div>
+        <div class="form-field"><label>Suction psig</label><input id="cc-suct" type="number" inputmode="decimal" placeholder="e.g. 120"></div>
+        <div class="form-field"><label>Head psig</label><input id="cc-head" type="number" inputmode="decimal" placeholder="e.g. 410"></div>
+        <div class="form-field"><label>Superheat °F</label><input id="cc-sh" type="number" inputmode="decimal" placeholder="or use line temp →"></div>
+        <div class="form-field"><label>Suction line temp °F</label><input id="cc-slt" type="number" inputmode="decimal" placeholder="computes SH"></div>
+        <div class="form-field"><label>Subcooling °F</label><input id="cc-sc" type="number" inputmode="decimal" placeholder="or use line temp →"></div>
+        <div class="form-field"><label>Liquid line temp °F</label><input id="cc-llt" type="number" inputmode="decimal" placeholder="computes SC"></div>
+        <div class="form-field"><label>Nameplate subcool target °F</label><input id="cc-sctarget" type="number" inputmode="decimal" placeholder="from data plate (10 if unknown)"></div>
+        <div class="form-field"><label>Indoor wet bulb °F</label><input id="cc-wb" type="number" inputmode="decimal" placeholder="needed for orifice SH target"></div>
+      </div>
+    </div>
+    <div id="cc-results"></div>
+  </main>
+</section>
+
 <!-- TAG SCANNER -->
 <section id="scannerScreen" class="screen hidden">
   <div class="disclaimer">Photograph the unit's data plate straight-on in good light. Reading happens on this phone — no signal needed. Always double-check the model/serial it reads before trusting it.</div>
@@ -138,6 +171,7 @@
   <div class="modal" id="modal"></div>
 </div>
 
+<script src="pt-data.js"></script>
 <script src="data.js"></script>
 <script src="symptoms.js"></script>
 <script src="toolbox.js"></script>

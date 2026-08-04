@@ -477,6 +477,16 @@ main {
   color: var(--text);
 }
 .scan-actions .primary-act { background: var(--brand-navy); color: #f2ede2; border-color: var(--brand-orange); }
+.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; }
+.charge-form { margin-bottom: 1rem; }
+.tile-charge { border-color: var(--brand-orange); }
+.cc-card { cursor: default; }
+.cc-line { display: flex; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+.cc-line:last-child { border-bottom: none; }
+.cc-flag { flex: 0 0 auto; }
+.cc-hint { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.25rem; }
+.cc-need { color: var(--text-dim); }
+.cc-pattern { margin-top: 0.7rem; padding: 0.7rem 0.85rem; border: 1px solid var(--brand-orange); border-radius: 10px; font-weight: 600; }
 .scan-offline-note {
   padding: 0.7rem 0.85rem;
   border: 1px dashed var(--border);

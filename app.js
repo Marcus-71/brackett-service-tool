@@ -60,6 +60,7 @@ const SCREEN_TITLES = {
   manuals: "Manuals",
   toolbox: "Toolbox",
   scanner: "Tag Scanner",
+  charge: "Charging Calc",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -75,10 +76,10 @@ let currentScreen = "home";
 
 function showScreen(name) {
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -95,6 +96,7 @@ function showScreen(name) {
   if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
+  if (name === "charge") renderChargeCalc();
 
   // Toggling the back/add buttons changes the topbar's own height (its tallest
   // child differs per screen), which should retrigger ResizeObserver — but that
@@ -920,6 +922,126 @@ async function downloadSeedManual(m, onStatus) {
 }
 
 // ============================================================
+// Charging Calculator — gauge readings → sat temps → verdicts
+// PT data from official charts (see pt-data.js). Targets are the
+// standard field rules of thumb, clearly labeled as such.
+// ============================================================
+
+function ccNum(id) {
+  const v = document.getElementById(id).value.trim();
+  return v === "" ? null : parseFloat(v);
+}
+
+function ccVerdict(kind, txt, hint) {
+  const cls = kind === "ok" ? "cc-ok" : kind === "warn" ? "cc-warn" : kind === "bad" ? "cc-bad" : "cc-need";
+  return `<div class="cc-line ${cls}"><span class="cc-flag">${kind === "ok" ? "✅" : kind === "warn" ? "⚠️" : kind === "bad" ? "🔴" : "✏️"}</span><div>${txt}${hint ? `<div class="cc-hint">${hint}</div>` : ""}</div></div>`;
+}
+
+function renderChargeCalc() {
+  const refrig = document.getElementById("cc-refrig").value;
+  const chart = PT_CHARTS[refrig];
+  const meter = document.getElementById("cc-meter").value;
+  const eff = document.getElementById("cc-eff").value;
+  const od = ccNum("cc-od"), id_ = ccNum("cc-id");
+  const suct = ccNum("cc-suct"), head = ccNum("cc-head");
+  let sh = ccNum("cc-sh"); const slt = ccNum("cc-slt");
+  let sc = ccNum("cc-sc"); const llt = ccNum("cc-llt");
+  const scTarget = ccNum("cc-sctarget") ?? 10;
+  const wb = ccNum("cc-wb");
+  const out = [];
+  const flags = { lowCharge: 0, overcharge: 0, restriction: 0, airflow: 0 };
+
+  const evapSat = suct != null ? ptInterp(chart.dew, suct) : null;
+  const condSat = head != null ? ptInterp(chart.bubble, head) : null;
+  if (sh == null && slt != null && evapSat != null) sh = slt - evapSat;
+  if (sc == null && llt != null && condSat != null) sc = condSat - llt;
+
+  // --- Suction / evaporator ---
+  if (suct == null) {
+    out.push(ccVerdict("need", "<strong>Suction pressure:</strong> enter suction psig to read the evaporator."));
+  } else if (evapSat == null) {
+    out.push(ccVerdict("bad", `<strong>Suction ${suct} psig is outside the ${refrig} chart</strong> — double-check the reading and the refrigerant selection.`));
+  } else {
+    let txt = `<strong>Suction ${suct} psig → evaporator saturating at ${evapSat.toFixed(0)}°F</strong> (${refrig}${chart.glide ? ", dew point" : ""}).`;
+    if (id_ == null) {
+      out.push(ccVerdict("need", txt, "Enter the indoor return temp to judge whether that's normal (typical evap runs ~35°F below return air)."));
+    } else {
+      const dtd = id_ - evapSat;
+      if (dtd >= 30 && dtd <= 42) out.push(ccVerdict("ok", txt + ` That's ${dtd.toFixed(0)}°F below the ${id_}°F return — normal range (~30-42°F).`));
+      else if (dtd > 42) { flags.lowCharge++; flags.airflow++; out.push(ccVerdict("bad", txt + ` That's ${dtd.toFixed(0)}°F below the ${id_}°F return — LOW suction.`, "Common causes: low charge, low indoor airflow (filter/coil/blower), metering device underfeeding, liquid-line restriction.")); }
+      else if (dtd < 20) out.push(ccVerdict("bad", txt + ` Only ${dtd.toFixed(0)}°F below the ${id_}°F return — HIGH suction.`, "Common causes: high load/high return temp, metering overfeeding, or a compressor that isn't pumping (check compression ratio)."));
+      else out.push(ccVerdict("warn", txt + ` ${dtd.toFixed(0)}°F below the ${id_}°F return — slightly high side of normal.`, "Recheck with a stable indoor temp; high load pulls suction up."));
+    }
+  }
+
+  // --- Head / condenser ---
+  if (head == null) {
+    out.push(ccVerdict("need", "<strong>Head pressure:</strong> enter head psig to read the condenser."));
+  } else if (condSat == null) {
+    out.push(ccVerdict("bad", `<strong>Head ${head} psig is outside the ${refrig} chart</strong> — double-check the reading and the refrigerant selection.`));
+  } else {
+    let txt = `<strong>Head ${head} psig → condensing at ${condSat.toFixed(0)}°F</strong>${chart.glide ? " (bubble point)" : ""}.`;
+    if (od == null) {
+      out.push(ccVerdict("need", txt, "Enter the outdoor temp to judge it — condensers typically run 15-30°F over ambient depending on efficiency."));
+    } else {
+      const ctoa = condSat - od;
+      const [lo, hi] = eff === "high" ? [12, 22] : [18, 30];
+      if (ctoa >= lo && ctoa <= hi) out.push(ccVerdict("ok", txt + ` ${ctoa.toFixed(0)}°F over the ${od}°F outdoor — normal for a ${eff === "high" ? "high-efficiency" : "standard"} condenser (~${lo}-${hi}°F over).`));
+      else if (ctoa > hi) { flags.overcharge++; flags.restriction++; out.push(ccVerdict("bad", txt + ` ${ctoa.toFixed(0)}°F over the ${od}°F outdoor — HIGH head.`, "Common causes: dirty/blocked condenser coil, condenser fan problem, overcharge, air/non-condensables in the system, recirculating discharge air.")); }
+      else { flags.lowCharge++; out.push(ccVerdict("bad", txt + ` Only ${ctoa.toFixed(0)}°F over the ${od}°F outdoor — LOW head.`, "Common causes: low charge, mild weather (verify with subcooling), or a compressor not building pressure.")); }
+    }
+  }
+
+  // --- Subcooling ---
+  if (sc == null) {
+    out.push(ccVerdict("need", "<strong>Subcooling:</strong> enter it directly, or give head psig + liquid line temp and it computes here."));
+  } else {
+    let txt = `<strong>Subcooling ${sc.toFixed(0)}°F</strong> (target ~${scTarget}°F${ccNum("cc-sctarget") == null ? " — using 10°F default, check the nameplate" : " from nameplate"}).`;
+    if (Math.abs(sc - scTarget) <= 3) out.push(ccVerdict("ok", txt + " On target."));
+    else if (sc > scTarget + 3) {
+      flags.overcharge++; flags.restriction++;
+      out.push(ccVerdict("bad", txt + " HIGH — liquid is backing up in the condenser.", "Common causes: overcharge, liquid-line restriction (drier, kinked line), TXV/EEV underfeeding. Pair with suction: low suction + high SC points at restriction/underfeed; normal suction + high SC points at overcharge."));
+    } else if (sc < 4) { flags.lowCharge++; out.push(ccVerdict("bad", txt + " LOW — not enough liquid seal in the condenser.", "Common causes: undercharge/leak. Low SC + high SH + low suction is the classic low-charge signature.")); }
+    else out.push(ccVerdict("warn", txt + " A little low — verify charge against the nameplate value before adding."));
+  }
+
+  // --- Superheat ---
+  if (sh == null) {
+    out.push(ccVerdict("need", "<strong>Superheat:</strong> enter it directly, or give suction psig + suction line temp and it computes here."));
+  } else {
+    let txt = `<strong>Superheat ${sh.toFixed(0)}°F</strong> at the suction line${chart.glide ? " (vs dew point — correct for " + refrig + ")" : ""}.`;
+    if (meter === "orifice") {
+      if (od != null && wb != null) {
+        const target = ((3 * wb) - 80 - od) / 2;
+        if (target < 5) out.push(ccVerdict("warn", txt + ` Target superheat computes to ${target.toFixed(0)}°F for ${od}°F outdoor / ${wb}°F indoor WB — too low to charge by superheat in these conditions.`, "Don't add charge on a cool/dry day using superheat — recover conditions or weigh the charge."));
+        else if (Math.abs(sh - target) <= 4) out.push(ccVerdict("ok", txt + ` Target ≈ ${target.toFixed(0)}°F for these conditions — on target.`));
+        else if (sh > target + 4) { flags.lowCharge++; out.push(ccVerdict("bad", txt + ` Target ≈ ${target.toFixed(0)}°F — HIGH superheat, coil is being starved.`, "Common causes: low charge, restriction, low indoor load.")); }
+        else { flags.overcharge++; out.push(ccVerdict("bad", txt + ` Target ≈ ${target.toFixed(0)}°F — LOW superheat, risk of flooding the compressor.`, "Common causes: overcharge on a fixed orifice, high indoor load/humidity. Below ~5°F, stop and recover charge before running.")); }
+      } else {
+        out.push(ccVerdict("need", txt, "Fixed-orifice target superheat needs outdoor temp AND indoor wet bulb — enter both and the target computes here."));
+      }
+    } else {
+      if (sh >= 6 && sh <= 15) out.push(ccVerdict("ok", txt + " Normal for TXV/EEV (~6-15°F at the condensing unit; the valve controls superheat — charge to subcooling)."));
+      else if (sh > 15) { flags.lowCharge++; flags.restriction++; out.push(ccVerdict("bad", txt + " HIGH for a TXV system.", "Common causes: low charge (check SC), plugged drier/restriction, TXV starving (lost bulb charge, plugged inlet screen).")); }
+      else out.push(ccVerdict("bad", txt + " LOW — flood risk.", "Common causes: TXV overfeeding (bulb loose/uninsulated), massive overcharge. Below ~5°F protect the compressor first.")); }
+  }
+
+  // --- Pattern read ---
+  const patterns = [];
+  if (flags.lowCharge >= 2 && flags.overcharge === 0) patterns.push("Multiple readings point at LOW CHARGE — leak-search before topping off.");
+  if (flags.overcharge >= 2 && flags.lowCharge === 0) patterns.push("Multiple readings point at OVERCHARGE — recover, don't vent.");
+  if (flags.restriction >= 2) patterns.push("High subcool with starved low side is the classic LIQUID-LINE RESTRICTION / underfeed pattern — check the filter-drier temperature drop.");
+  if (patterns.length) out.push(`<div class="cc-pattern">🧭 ${patterns.map(escapeHtml).join("<br>")}</div>`);
+
+  document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${out.join("")}</div>`;
+}
+
+for (const fid of ["cc-refrig","cc-meter","cc-eff","cc-od","cc-id","cc-suct","cc-head","cc-sh","cc-slt","cc-sc","cc-llt","cc-sctarget","cc-wb"]) {
+  document.getElementById(fid).addEventListener("input", renderChargeCalc);
+  document.getElementById(fid).addEventListener("change", renderChargeCalc);
+}
+
+// ============================================================
 // Tag Scanner — photo → on-device OCR → model/serial → unit ID
 // ============================================================
 
@@ -1333,7 +1455,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v52";
+const APP_VERSION = "v53";
 
 async function renderVersionFooter() {
   const el = document.getElementById("appVersion");
