@@ -975,6 +975,71 @@ function ccVerdict(kind, txt, hint) {
   return `<div class="cc-line ${cls}"><span class="cc-flag">${kind === "ok" ? "✅" : kind === "warn" ? "⚠️" : kind === "bad" ? "🔴" : "✏️"}</span><div>${txt}${hint ? `<div class="cc-hint">${hint}</div>` : ""}</div></div>`;
 }
 
+function ccTargetBox(label, value, sub) {
+  return `<div class="cc-target-box"><div class="cc-target-label">${escapeHtml(label)}</div><div class="cc-target-value">${value}</div>${sub ? `<div class="cc-target-sub">${sub}</div>` : ""}</div>`;
+}
+
+// Tells the tech what to expect BEFORE they read the gauges — target suction/
+// head psig (from the same rule-of-thumb DTD/CTOA ranges the verdicts below
+// use, run backward through the PT chart) plus target superheat/subcooling.
+// This is deliberately built only from the industry rule-of-thumb ranges
+// already cited elsewhere in this file, not invented per-model numbers — a
+// real per-model charging chart from the unit's own literature always wins.
+function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, scTargetIsDefault) {
+  const boxes = [];
+
+  // Target suction, from the 30-42°F DTD rule the suction verdict uses below.
+  if (id_ == null) {
+    boxes.push(ccTargetBox("Target suction", "—", "enter indoor return temp"));
+  } else {
+    const evapLo = id_ - 42, evapHi = id_ - 30;
+    const suctLo = ptInvert(chart.dew, evapLo), suctHi = ptInvert(chart.dew, evapHi);
+    if (suctLo == null || suctHi == null) {
+      boxes.push(ccTargetBox("Target suction", "off chart", "check the indoor return reading"));
+    } else {
+      boxes.push(ccTargetBox("Target suction", `${Math.round(suctLo)}-${Math.round(suctHi)} psig`, `evap ${Math.round(evapLo)}-${Math.round(evapHi)}°F`));
+    }
+  }
+
+  // Target head, from the CTOA rule the head verdict uses below.
+  if (od == null) {
+    boxes.push(ccTargetBox("Target head", "—", "enter outdoor temp"));
+  } else {
+    const [ctoaLo, ctoaHi] = eff === "high" ? [12, 22] : [18, 30];
+    const condLo = od + ctoaLo, condHi = od + ctoaHi;
+    const headLo = ptInvert(chart.bubble, condLo), headHi = ptInvert(chart.bubble, condHi);
+    if (headLo == null || headHi == null) {
+      boxes.push(ccTargetBox("Target head", "off chart", "check the outdoor temp reading"));
+    } else {
+      const effLabel = eff === "high" ? "high-eff" : "standard";
+      boxes.push(ccTargetBox("Target head", `${Math.round(headLo)}-${Math.round(headHi)} psig`, `${effLabel} condenser, ${od}°F out`));
+    }
+  }
+
+  // Target superheat — orifice needs a real formula (od + indoor wet bulb);
+  // TXV/EEV self-manages superheat, so the real target lives in subcooling.
+  if (meter === "orifice") {
+    if (od == null || wb == null) {
+      boxes.push(ccTargetBox("Target superheat", "—", "orifice needs outdoor temp + indoor wet bulb"));
+    } else {
+      const target = ((3 * wb) - 80 - od) / 2;
+      if (target < 5) {
+        boxes.push(ccTargetBox("Target superheat", "too low to use", "cool/dry conditions — weigh the charge instead"));
+      } else {
+        boxes.push(ccTargetBox("Target superheat", `~${Math.round(target)}°F`, `fixed-orifice, ${od}°F out / ${wb}°F WB in`));
+      }
+    }
+  } else {
+    boxes.push(ccTargetBox("Target superheat", "6-15°F", "TXV/EEV self-manages SH — charge to subcooling"));
+  }
+
+  // Target subcooling — nameplate value always wins; 10°F is a fallback only.
+  boxes.push(ccTargetBox("Target subcooling", `${scTarget}°F`, scTargetIsDefault ? "10°F default — check the nameplate" : "from nameplate"));
+
+  document.getElementById("cc-targets").innerHTML =
+    `<div class="cc-section-label">🎯 Targets for this call</div><div class="cc-target-grid">${boxes.join("")}</div>`;
+}
+
 function renderChargeCalc() {
   const refrig = document.getElementById("cc-refrig").value;
   const chart = PT_CHARTS[refrig];
@@ -984,8 +1049,12 @@ function renderChargeCalc() {
   const suct = ccNum("cc-suct"), head = ccNum("cc-head");
   let sh = ccNum("cc-sh"); const slt = ccNum("cc-slt");
   let sc = ccNum("cc-sc"); const llt = ccNum("cc-llt");
-  const scTarget = ccNum("cc-sctarget") ?? 10;
+  const scTargetRaw = ccNum("cc-sctarget");
+  const scTarget = scTargetRaw ?? 10;
   const wb = ccNum("cc-wb");
+
+  renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, scTargetRaw == null);
+
   const out = [];
   const flags = { lowCharge: 0, overcharge: 0, restriction: 0, airflow: 0 };
 
@@ -1195,29 +1264,55 @@ function decodeCapacity(model, equipment) {
 
 // Manufacture-date estimate from serial number, by brand convention.
 // These are estimates — conventions changed over the years.
+//
+// Sanity guards matter more than coverage here: a mis-read data plate must NOT
+// produce a confident-looking date. A tech uses this for warranty decisions, so
+// "no decode" is always better than a wrong year.
+const SERIAL_YEAR_MAX = new Date().getFullYear() + 1;   // allow a little stock lead time
+function plausibleYear(yy) {
+  const y = 2000 + Number(yy);
+  return y >= 1990 && y <= SERIAL_YEAR_MAX ? y : null;
+}
+function plausibleWeek(ww) {
+  const w = Number(ww);
+  return w >= 1 && w <= 53 ? w : null;   // there is no week 00
+}
 function decodeSerialAge(brand, serial) {
   if (!serial) return null;
   const s = serial.replace(/[^A-Z0-9]/g, "");
-  let m;
+  // Too short, or a degenerate string like 0000000000 / 1111111111 that usually
+  // means the OCR grabbed a border or a run of repeated characters.
+  if (s.length < 6) return null;
+  if (/^(.)\1+$/.test(s)) return null;
+  if (/^0+$/.test(s.replace(/[A-Z]/g, ""))) return null;
+  let m, y, w;
   if (brand === "Goodman" || brand === "Daikin") {
-    if ((m = s.match(/^([0-2][0-9])(0[1-9]|1[0-2])/))) return `Made ${m[2]}/20${m[1]} (Goodman/Daikin serials start YYMM — estimate)`;
+    if ((m = s.match(/^([0-9]{2})(0[1-9]|1[0-2])/)) && (y = plausibleYear(m[1])))
+      return `Made ${m[2]}/${y} (Goodman/Daikin serials start YYMM — estimate)`;
   }
-  if (brand === "Carrier") {
-    if ((m = s.match(/^([0-4][0-9]|5[0-3])([0-2][0-9])/))) return `Made week ${m[1]} of 20${m[2]} (Carrier serials start WWYY — estimate)`;
+  if (brand === "Carrier" || brand === "Bryant" || brand === "Payne") {
+    if ((m = s.match(/^([0-9]{2})([0-9]{2})/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
+      return `Made week ${w} of ${y} (Carrier/Bryant/Payne serials start WWYY — estimate)`;
   }
-  if (brand === "Trane") {
-    if ((m = s.match(/^([0-2][0-9])[0-9]/))) return `Made 20${m[1]} (Trane serials since ~2010 start with the year — estimate)`;
+  if (brand === "Trane" || brand === "American Standard") {
+    // Year only. Trane serials carry more than the year, but no official source
+    // on hand states the field order, so don't imply a week we can't back up.
+    if ((m = s.match(/^([0-9]{2})[0-9]/)) && (y = plausibleYear(m[1])))
+      return `Made ${y} (Trane/American Standard serials since ~2010 start with the year — estimate)`;
   }
   if (brand === "Lennox") {
     // Confirmed against Lennox alert code guide 100017: the nameplate serial is
     // PPYYMNNNNN — plant, year, month letter, sequence (their own example, 5817F,
     // reads as plant 58 / 2017 / month F). Lennox doesn't publish the month-letter
     // map in that doc, so show the letter rather than guess at a month.
-    if ((m = s.match(/^[0-9]{2}([0-2][0-9])([A-Z])/))) return `Made 20${m[1]}, month code ${m[2]} (Lennox nameplate serial is PPYYM… — plant, year, month)`;
-    if ((m = s.match(/^[0-9]{2}([0-2][0-9])[0-9]/))) return `Made 20${m[1]} (Lennox nameplate serial is PPYYM… — digits 3-4 are the year)`;
+    if ((m = s.match(/^[0-9]{2}([0-9]{2})([A-Z])/)) && (y = plausibleYear(m[1])))
+      return `Made ${y}, month code ${m[2]} (Lennox nameplate serial is PPYYM… — plant, year, month)`;
+    if ((m = s.match(/^[0-9]{2}([0-9]{2})[0-9]/)) && (y = plausibleYear(m[1])))
+      return `Made ${y} (Lennox nameplate serial is PPYYM… — digits 3-4 are the year)`;
   }
-  if (brand === "Rheem") {
-    if ((m = s.match(/^[A-Z]?([0-4][0-9]|5[0-3])([0-2][0-9])/))) return `Made week ${m[1]} of 20${m[2]} (Rheem serials embed WWYY — estimate)`;
+  if (brand === "Rheem" || brand === "Ruud") {
+    if ((m = s.match(/^[A-Z]?([0-9]{2})([0-9]{2})/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
+      return `Made week ${w} of ${y} (Rheem/Ruud serials embed WWYY — estimate)`;
   }
   return null;
 }
@@ -1509,7 +1604,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v60";
+const APP_VERSION = "v61";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -477,8 +477,18 @@ main {
   color: var(--text);
 }
 .scan-actions .primary-act { background: var(--brand-navy); color: #f2ede2; border-color: var(--brand-orange); }
-.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; }
+.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.9rem; }
 .charge-form { margin-bottom: 1rem; }
+.cc-section-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dim); margin: 0.9rem 0 0.4rem; }
+.cc-section-label:first-child { margin-top: 0; }
+.cc-optional { font-weight: 400; text-transform: none; letter-spacing: normal; color: var(--text-dim); font-size: 0.78rem; }
+.cc-span2 { grid-column: 1 / -1; }
+.cc-targets { margin-bottom: 1rem; }
+.cc-target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.5rem; }
+.cc-target-box { background: var(--bg, #f4f6f8); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.7rem; }
+.cc-target-box .cc-target-label { font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.03em; }
+.cc-target-box .cc-target-value { font-size: 1.15rem; font-weight: 700; margin-top: 0.15rem; }
+.cc-target-box .cc-target-sub { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.1rem; }
 .tile-charge { border-color: var(--brand-orange); }
 .tile-request { border-color: var(--brand-navy); }
 .cc-card { cursor: default; }

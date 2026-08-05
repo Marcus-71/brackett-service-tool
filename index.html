@@ -149,25 +149,37 @@
   <div class="disclaimer">Rule-of-thumb targets for fixed-speed systems — the unit's charging chart/nameplate always wins. ⚠️ Inverter/variable-speed units (Daikin FIT, DZ20VC, GSXV…): gauge targets DON'T apply — use the manufacturer charge mode instead.</div>
   <main>
     <div class="charge-form">
-      <div class="form-field"><label>Refrigerant</label>
-        <select id="cc-refrig"><option>R-410A</option><option>R-32</option><option>R-454B</option></select></div>
+
+      <div class="cc-section-label">System</div>
       <div class="charge-grid">
+        <div class="form-field"><label>Refrigerant</label>
+          <select id="cc-refrig"><option>R-410A</option><option>R-32</option><option>R-454B</option></select></div>
         <div class="form-field"><label>Metering</label>
-          <select id="cc-meter"><option value="txv">TXV / EEV</option><option value="orifice">Fixed orifice / piston</option></select></div>
+          <select id="cc-meter"><option value="txv">TXV / EEV</option><option value="orifice">Fixed orifice / piston (rare on newer systems)</option></select></div>
         <div class="form-field"><label>Condenser type</label>
           <select id="cc-eff"><option value="std">Standard (up to ~14 SEER)</option><option value="high">High-efficiency (15+ SEER)</option></select></div>
-        <div class="form-field"><label>Outdoor temp °F</label><input id="cc-od" type="number" inputmode="decimal" placeholder="e.g. 95"></div>
-        <div class="form-field"><label>Indoor return °F</label><input id="cc-id" type="number" inputmode="decimal" placeholder="e.g. 75"></div>
-        <div class="form-field"><label>Suction psig</label><input id="cc-suct" type="number" inputmode="decimal" placeholder="e.g. 120"></div>
-        <div class="form-field"><label>Head psig</label><input id="cc-head" type="number" inputmode="decimal" placeholder="e.g. 410"></div>
-        <div class="form-field"><label>Superheat °F</label><input id="cc-sh" type="number" inputmode="decimal" placeholder="or use line temp →"></div>
-        <div class="form-field"><label>Suction line temp °F</label><input id="cc-slt" type="number" inputmode="decimal" placeholder="computes SH"></div>
-        <div class="form-field"><label>Subcooling °F</label><input id="cc-sc" type="number" inputmode="decimal" placeholder="or use line temp →"></div>
-        <div class="form-field"><label>Liquid line temp °F</label><input id="cc-llt" type="number" inputmode="decimal" placeholder="computes SC"></div>
         <div class="form-field"><label>Nameplate subcool target °F</label><input id="cc-sctarget" type="number" inputmode="decimal" placeholder="from data plate (10 if unknown)"></div>
-        <div class="form-field"><label>Indoor wet bulb °F</label><input id="cc-wb" type="number" inputmode="decimal" placeholder="needed for orifice SH target"></div>
       </div>
+
+      <div class="cc-section-label">Temperatures</div>
+      <div class="charge-grid">
+        <div class="form-field"><label>Outdoor temp °F</label><input id="cc-od" type="number" inputmode="decimal" placeholder="e.g. 95"></div>
+        <div class="form-field"><label>Indoor return (dry bulb) °F</label><input id="cc-id" type="number" inputmode="decimal" placeholder="e.g. 75"></div>
+        <div class="form-field"><label>Indoor wet bulb °F <span class="cc-optional">(fixed-orifice only)</span></label><input id="cc-wb" type="number" inputmode="decimal" placeholder="only needed for orifice target SH"></div>
+        <div class="form-field"><label>Suction line temp °F</label><input id="cc-slt" type="number" inputmode="decimal" placeholder="computes superheat"></div>
+        <div class="form-field"><label>Liquid line temp °F</label><input id="cc-llt" type="number" inputmode="decimal" placeholder="computes subcooling"></div>
+      </div>
+
+      <div class="cc-section-label">Gauge readings</div>
+      <div class="charge-grid">
+        <div class="form-field"><label>Suction (low side) psig</label><input id="cc-suct" type="number" inputmode="decimal" placeholder="e.g. 120"></div>
+        <div class="form-field"><label>Head (high side) psig</label><input id="cc-head" type="number" inputmode="decimal" placeholder="e.g. 410"></div>
+        <div class="form-field"><label>Superheat °F <span class="cc-optional">(or use line temp above)</span></label><input id="cc-sh" type="number" inputmode="decimal" placeholder="auto-computes from suction + line temp"></div>
+        <div class="form-field"><label>Subcooling °F <span class="cc-optional">(or use line temp above)</span></label><input id="cc-sc" type="number" inputmode="decimal" placeholder="auto-computes from head + line temp"></div>
+      </div>
+
     </div>
+    <div id="cc-targets"></div>
     <div id="cc-results"></div>
   </main>
 </section>
