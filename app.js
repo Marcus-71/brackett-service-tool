@@ -884,6 +884,10 @@ document.getElementById("manualSearchInput").addEventListener("input", (e) => { 
 
 function seedIdOf(seed) { return "manual-seed-" + seed.file.split("/").pop().replace(/\.pdf$/i, ""); }
 
+// Seeds may point at a manufacturer CDN instead of a file in this repo (the
+// Lennox library is hosted on Adobe Scene7 and serves CORS *), which keeps
+// hundreds of MB of PDFs out of the repo while still working on-demand.
+
 // On-demand manuals: every seed manual is always LISTED, but its PDF stays on
 // the server until the tech opens it — first open downloads and stores it on
 // this device, after which it works offline like everything else. This keeps
@@ -903,7 +907,7 @@ async function manualCatalog() {
         rec.brand = seed.brand; rec.model = seed.model; rec.title = seed.title; rec.notes = seed.notes;
         out.push(rec); localById.delete(id);
       } else {
-        out.push({ id, brand: seed.brand, model: seed.model, title: seed.title, notes: seed.notes, filename: seed.file.split("/").pop(), seedFile: seed.file, downloaded: false });
+        out.push({ id, brand: seed.brand, model: seed.model, title: seed.title, notes: seed.notes, filename: seed.filename || seed.file.split("/").pop(), seedFile: seed.file, downloaded: false });
       }
     }
   }
@@ -1491,7 +1495,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v57";
+const APP_VERSION = "v58";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
