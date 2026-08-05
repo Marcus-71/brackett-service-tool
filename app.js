@@ -99,6 +99,8 @@ function showScreen(name) {
   if (name === "toolbox") renderToolbox();
   if (name === "charge") renderChargeCalc();
 
+  if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
+
   // Toggling the back/add buttons changes the topbar's own height (its tallest
   // child differs per screen), which should retrigger ResizeObserver — but that
   // firing isn't reliable on every device/browser, so resync explicitly here too.
@@ -919,6 +921,7 @@ async function downloadSeedManual(m, onStatus) {
     filename: m.filename, mimeType: "application/pdf", size: blob.size, blob, addedAt: Date.now(),
   };
   await manualsPut(record);
+  trackEvent("downloaded manual: " + m.title);
   return record;
 }
 
@@ -947,6 +950,7 @@ document.getElementById("rq-send").addEventListener("click", () => {
     `\n${msg}\n\n` +
     `—\nSent from Brackett Service Tool ${APP_VERSION}`;
   window.location.href = `mailto:${REQUEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  trackEvent("sent info request: " + type);
   note.textContent = "Your email app should be opening with everything filled in — hit Send there and it goes to the office.";
   note.classList.remove("hidden");
 });
@@ -1318,6 +1322,7 @@ function scanStatus(msg) {
 }
 
 async function scanTagPhoto(file) {
+  trackEvent("scanned a tag photo");
   const preview = document.getElementById("scanPreview");
   preview.src = URL.createObjectURL(file);
   preview.classList.remove("hidden");
@@ -1433,6 +1438,7 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   const serial = document.getElementById("scanSerialInput").value.trim();
   if (!model) { scanStatus("Type or scan a model number first."); return; }
   scanStatus(null);
+  trackEvent("identified unit: " + model);
   renderScanResult(identifyModel(model, serial));
 });
 
@@ -1485,7 +1491,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v56";
+const APP_VERSION = "v57";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -1540,6 +1546,25 @@ async function flushTrackQueue() {
   trackFlushing = false;
 }
 window.addEventListener("online", flushTrackQueue);
+
+// Log what techs search for, 2 seconds after they stop typing — tells the
+// office which lookups matter and which come up empty. Skips repeats.
+function logSearches(inputId, label) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  let timer, last = "";
+  el.addEventListener("input", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const v = el.value.trim();
+      if (v.length >= 2 && v !== last) { last = v; trackEvent(label + ": " + v); }
+    }, 2000);
+  });
+}
+logSearches("codesSearchInput", "searched codes");
+logSearches("diagSearchInput", "searched diagnostics");
+logSearches("manualSearchInput", "searched manuals");
+logSearches("toolboxSearchInput", "searched toolbox");
 
 function showTechPicker() {
   const ov = document.createElement("div");
