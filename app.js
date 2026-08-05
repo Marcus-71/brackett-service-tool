@@ -28,14 +28,113 @@ if ("ResizeObserver" in window) {
   window.addEventListener("resize", syncTopbarHeight);
 }
 syncTopbarHeight();
+// A tech in the field types a real sentence ("ac compressor is showing the
+// same pressure on suction as head"), not a keyword list. Requiring every
+// single word to match — including "is", "the", "on", "as" — made long
+// sentences fail almost by design: those filler words rarely all appear
+// together in any one card's text, so a perfectly good query returned
+// nothing (or worse, matched some unrelated card that happened to contain
+// enough of the filler words). Strip common English stopwords before
+// matching so only the words that actually carry meaning have to line up.
+const SEARCH_STOPWORDS = new Set([
+  "a","an","the","is","are","was","were","be","been","being","to","of","in","on","at","for","with",
+  "as","by","from","it","its","this","that","these","those","and","or","but","not","so","than","then",
+  "too","very","just","also","if","i","im","my","me","we","our","you","your","he","she","they","them",
+  "their","his","her","do","does","did","doing","has","have","had","having","will","would","can","could",
+  "should","shall","must","may","might","up","down","out","about","into","over","again","once","here",
+  "there","when","where","why","how","all","any","both","each","more","most","other","only","own","same",
+  "get","got","showing","show","shows","seems","seem",
+  // Near-zero discriminating power in an HVAC-only corpus — almost every
+  // scenario in here IS about "ac"/"the unit"/"the system", so the word
+  // itself never narrows anything down. The equipment filter chip is the
+  // real tool for that distinction, not a free-text keyword.
+  "ac","hvac","unit","units","system","systems",
+  // Generic fault-adjectives a tech says out loud ("cap is bad", "sounds
+  // wrong") but this app's own scenario text almost never uses — it says
+  // "failed", "shorted", "leaking", "worn" instead. Requiring the literal
+  // word "bad" excluded the correct capacitor-test scenario just because it
+  // never happened to use that exact word. Drop these as REQUIRED terms;
+  // they add noise, not precision, in this corpus.
+  "bad","broken","wrong","messed","funky","faulty","problem","problems",
+  "issue","issues","trouble","malfunctioning","weird","acting",
+]);
+// Field slang and trade shorthand that means the same thing as a term this
+// app's own text uses. A tech typing "low side" needs to find scenarios
+// written around "suction" — exact wording is not how techs talk on a call.
+// Each group is a set of interchangeable phrases; matching ANY one phrase in
+// a group satisfies that whole concept (longest phrase checked first so a
+// multi-word alias is consumed before its component words are).
+const SEARCH_ALIAS_GROUPS = [
+  ["low side", "suction"],
+  ["high side", "head pressure", "discharge pressure", "head", "discharge"],
+  ["not starting", "wont start", "won't start", "doesn't start", "does not start", "not coming on", "wont kick on", "won't kick on", "not turning on", "no start"],
+  ["not shutting off", "wont turn off", "won't turn off", "runs constantly", "runs non stop", "runs nonstop", "never stops", "won't shut off", "wont shut off", "doesn't shut off", "never shuts off", "runs continuously", "runs all the time", "keeps running"],
+  ["short cycling", "short cycles", "cycling on and off", "turns on and off", "kicks on and off"],
+  ["frozen", "iced up", "ice up", "icing up", "icing", "frosted", "frost"],
+  ["compressor", "comp"],
+  ["capacitor", "cap"],
+  ["condenser fan", "outdoor fan", "outside fan"],
+  ["blower", "indoor fan", "squirrel cage"],
+  ["breaker", "circuit breaker", "tripping the breaker", "trips the breaker"],
+  ["refrigerant", "freon", "charge"],
+  ["humming", "hums", "buzzing"],
+  ["not draining", "wont drain", "won't drain", "backed up", "overflowing", "backing up"],
+  ["musty smell", "musty", "mildew smell"],
+  ["burning smell", "electrical smell", "smells like burning", "smells hot"],
+  ["low airflow", "weak airflow", "not enough air", "weak air", "poor airflow"],
+  ["reversing valve", "4 way valve", "four way valve", "changeover valve", "4-way valve"],
+  ["expansion valve", "txv", "metering device", "piston", "orifice"],
+  ["same pressure", "equal pressure", "equalized pressure", "pressures are the same", "pressures equalized", "matching pressure", "even pressure"],
+];
+
+// Break a query into match "units" — each unit is either an alias group (any
+// one of its phrases counts as a hit) or a single leftover meaningful word.
+function buildSearchUnits(q) {
+  let text = " " + q.toLowerCase().trim() + " ";
+  const units = [];
+  for (const group of SEARCH_ALIAS_GROUPS) {
+    const sorted = [...group].sort((a, b) => b.length - a.length);
+    for (const phrase of sorted) {
+      const idx = text.indexOf(" " + phrase + " ");
+      if (idx !== -1) {
+        units.push({ alts: group });
+        text = text.slice(0, idx) + " " + text.slice(idx + phrase.length + 2);
+        break;   // one hit per concept group, even if more than one alias appears
+      }
+    }
+  }
+  const leftover = text.split(/\s+/).filter(Boolean).filter(w => !SEARCH_STOPWORDS.has(w));
+  leftover.forEach(w => units.push({ alts: [w] }));
+  if (!units.length) q.toLowerCase().split(/\s+/).filter(Boolean).forEach(w => units.push({ alts: [w] }));
+  return units;
+}
+// Plain substring matching lets a short alias bleed into an unrelated word
+// that happens to contain the same letters — "cap" (meant as capacitor
+// shorthand) silently matched inside "capacity", "capable", "cap tube".
+// Word-boundary matching (with an optional trailing "s" for simple plurals)
+// keeps "comp" finding "compressor/compressors" while no longer matching
+// "company" or "complete".
+const termRegexCache = new Map();
+function hayHasTerm(hay, term) {
+  let re = termRegexCache.get(term);
+  if (!re) {
+    re = new RegExp("\\b" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "s?\\b");
+    termRegexCache.set(term, re);
+  }
+  return re.test(hay);
+}
 function textIncludes(fields, q) {
   if (!q) return true;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  // Match each typed word independently (AND, any order) rather than the whole
-  // query as one literal phrase — "high head low suction" should find "high
-  // HEAD pressure + LOW SUCTION pressure" even though "pressure" sits between them.
-  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-  return words.every(w => hay.includes(w));
+  return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a)));
+}
+// Count of query concepts a card actually contains — used to surface the
+// closest matches when a strict all-units search comes up empty, so a
+// well-typed sentence never hits a hard dead end.
+function searchScore(fields, q) {
+  if (!q) return 0;
+  const hay = fields.filter(Boolean).join(" ").toLowerCase();
+  return buildSearchUnits(q).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
 }
 
 function closeModal() {
@@ -310,16 +409,63 @@ function renderSymptoms() {
   const equips = ["All", ...uniqueSorted(all.map(s => s.equipment))];
   renderChips("diagEquipChips", equips, diagState.equipment, (v) => { diagState.equipment = v; renderSymptoms(); }, "All Equipment");
 
-  const filtered = all.filter(s =>
-    (diagState.equipment === "All" || s.equipment === diagState.equipment) &&
-    textIncludes([s.title, s.summary, s.equipment, ...(s.steps||[])], diagState.search)
-  ).sort((a, b) => a.title.localeCompare(b.title));
+  const scoped = all.filter(s => diagState.equipment === "All" || s.equipment === diagState.equipment);
+  const fields = (s) => [s.title, s.summary, s.equipment, ...(s.steps || [])];
+  const query = diagState.search.trim();
+
+  let filtered, usedFallback = false;
+  if (!query) {
+    filtered = scoped.slice().sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    // Score every candidate once against the same concept units, then both
+    // decide strict pass/fail AND rank by relevance from that one pass —
+    // matches are real answers to a search, not a browse list, so the best
+    // one should be first, not buried alphabetically behind an 8th-best hit.
+    const units = buildSearchUnits(query);
+    const scored = scoped.map(s => {
+      const title = (s.title || "").toLowerCase();
+      const hay = fields(s).filter(Boolean).join(" ").toLowerCase();
+      let score = 0, titleBonus = 0;
+      for (const u of units) {
+        if (!u.alts.some(a => hayHasTerm(hay, a))) continue;
+        score++;
+        // Same strict/fallback tier, but a concept that shows up in the TITLE
+        // outranks one that only happens to appear somewhere in the steps —
+        // "cap is bad" should lead with a capacitor scenario, not whichever
+        // unrelated card alphabetically happens to mention "bad" first.
+        if (u.alts.some(a => hayHasTerm(title, a))) titleBonus += 0.5;
+      }
+      return { s, score, rank: score + titleBonus };
+    });
+    const ranked = (rows) => rows.sort((a, b) => b.rank - a.rank || a.s.title.localeCompare(b.s.title)).map(x => x.s);
+
+    const strict = scored.filter(x => x.score === units.length);
+    if (strict.length) {
+      filtered = ranked(strict);
+    } else {
+      // A real sentence with several concepts can legitimately fail a strict
+      // all-of-them match. Rather than a dead end, fall back to whatever
+      // shares the most concepts with the query. Short queries (1-2 concepts
+      // total) only need ONE hit to be worth showing — requiring 2 out of 2
+      // would reject every partial match a short search could ever produce.
+      const threshold = units.length <= 2 ? 1 : 2;
+      const fallback = scored.filter(x => x.score >= threshold);
+      if (fallback.length) { filtered = ranked(fallback).slice(0, 8); usedFallback = true; }
+      else filtered = [];
+    }
+  }
 
   const results = document.getElementById("diagResults");
   const empty = document.getElementById("diagEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
-  if (filtered.length === 0) renderDiagEmptyState();
+  if (filtered.length === 0) { renderDiagEmptyState(); return; }
+  if (usedFallback) {
+    const note = document.createElement("div");
+    note.className = "diag-fallback-note";
+    note.textContent = `No exact match for "${diagState.search.trim()}" — closest topics below.`;
+    results.appendChild(note);
+  }
   for (const s of filtered) results.appendChild(buildSymptomCard(s));
 }
 
@@ -1604,7 +1750,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v61";
+const APP_VERSION = "v62";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -10845,4 +10845,21 @@ const SYMPTOMS = [
     ],
     confidence: "verify",
   },
+  {
+    id: "s-compressor-suction-head-equalized",
+    equipment: "Condenser/Heat Pump",
+    title: "Suction and head pressure equalized (or close to it) with the compressor confirmed running",
+    summary: "When the low side and high side gauges read close to the same pressure while the compressor is actually turning, no real compression is happening. That points at a mechanically failed compressor — but a badly overfeeding metering device (TXV stuck open, wrong piston) can produce a similar high-suction/low-head pattern that looks deceptively close to equalized. Pressure alone doesn't separate the two; amp draw does.",
+    steps: [
+      "Confirm the compressor is actually turning, not just energized — clamp the amps on a compressor lead. A seized/locked compressor pulls roughly 3-7x rated load amps (RLA) for a few seconds before the internal overload or breaker trips; that's a different problem (electrical/mechanical lockup), not this one.",
+      "If amp draw is well under RLA (commonly under half of nameplate) while pressures are equalized or close to it: the compressor is spinning but not doing compression work. That's consistent with a broken/leaking valve plate (reciprocating), a broken scroll set, or a sheared internal coupling — the compressor has failed internally.",
+      "If amp draw looks closer to normal running range, don't jump to 'must be the compressor' — check superheat and subcooling. Both crashing toward zero points at a metering device flooding the low side (stuck-open TXV, wrong/oversized orifice, failed EEV), not a dead compressor. That pattern can look similar to equalized pressure at a glance.",
+      "On a heat pump, rule out an internally bypassing reversing valve before condemning the compressor: feel or measure all four valve line temperatures. The two hot lines should be within a few degrees of each other, and the two cold lines within a few degrees of each other — more than about 2°F difference across the discharge-port pair means the valve itself is leaking internally and mimicking a weak compressor. A hot discharge line from a genuinely damaged compressor can also conduct heat into the valve body and fake this reading, so weigh it together with the amp draw check, not alone.",
+      "Rule out a tripped or stuck internal discharge bypass/safety before condemning anything: kill power, let the system sit and pressures fully equalize off-cycle, then restart and re-check. A stuck internal safety can look exactly like a dead compressor until it's cycled.",
+      "On 3-phase scroll compressors, confirm rotation direction — a scroll wired backward won't build pressure and can look like a failed compressor, but it's a wiring fix, not a replacement. Tell: high suction line temperature, low discharge line temperature, and unusually loud/rattling operation.",
+      "Once genuinely confirmed (low amp draw relative to RLA, reversing valve checked out, correct rotation confirmed on 3-phase), this is a compressor replacement.",
+    ],
+    safety: "Recover refrigerant per EPA 608 regulations before opening the system for compressor replacement.",
+    confidence: "common",
+  },
 ];
