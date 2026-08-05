@@ -1817,7 +1817,7 @@ const APP_VERSION = "v64";
 
 const TRACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfZ9Dv1jlj3h4uzomWlHsgS-OcaDMhb0sbaE2YbXLCP2swsQQ/formResponse";
 const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", version: "entry.872662639" };
-const TECH_NAMES = ["James", "Gus", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Andy"];
+const TECH_NAMES = ["James", "Gus", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Andy", "Kenny", "Adam", "Joey", "Mark", "Vern", "Damien"];
 const TECH_KEY = "bfc-tech-name";
 const TRACK_QUEUE_KEY = "bfc-track-queue";
 
