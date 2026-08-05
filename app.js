@@ -1128,13 +1128,22 @@ const MODEL_PATTERNS = [
   // --- Lennox ---
   { re: /^SLP9[89]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox SLP98/SLP99 variable-capacity communicating furnace", notes: ["Full E-code table (E105-E409) is in Error Codes.", "Alert-code guide for the whole communicating system is in Manuals → Lennox."] },
   { re: /^G71MPP/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G71MPP variable-capacity communicating furnace (2004-2011 era)", notes: ["Uses the same integrated-control E-code table (E105-E409) as SLP99 — see Lennox codes in Error Codes.", "Install + homeowner manuals are in Manuals → Lennox → G71MPP."] },
-  { re: /^EL296|^EL196|^EL180/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Elite gas furnace (EL296/EL196/EL180)", notes: ["EL296UHV install manual and EL180UHE spec sheet are in Manuals → Lennox."] },
-  { re: /^SL297/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox SL297NV ultra-low-NOx two-stage furnace (Dave Lennox Signature)", notes: ["DLSC furnace spec sheet is in Manuals → Lennox."] },
-  { re: /^(ML1[89]0|ML29[67]|SL280)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit/Signature gas furnace", notes: [] },
-  { re: /^EL(18|22)KCV/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Elite R-454B variable-capacity communicating AC (EL18KCV/EL22KCV)", notes: ["Communicating — Lennox alert codes 400-446 in Error Codes apply (shown on S30/S40 thermostat).", "R-454B is an A2L refrigerant: paired indoor units carry leak-detection sensors — related furnace codes E150-E164 are in Error Codes.", "Spec sheets are in Manuals → Lennox."] },
-  { re: /^(SL25XPV|SL25XCV|XP2[05]|XC2[015]|EL18XCV|EL16X)/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox communicating AC/heat pump", notes: ["Alert codes 400-446 for these outdoor units are in Error Codes (shown on the S40 thermostat)."] },
-  { re: /^1[346]ACX|^14HPX|^ML1[46]XC/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Merit AC/heat pump", notes: [] },
-  { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: [] },
+  { re: /^EL(29[67]|19[56]|280|180)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Elite gas furnace (EL180/EL195/EL196/EL280/EL296/EL297)", notes: ["Service manual for this exact model is in Manuals → Lennox — tap the model folder.", "Communicating models report the numbered alert codes (105-4xx) in Error Codes."] },
+  { re: /^SL(29[78]|280)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Dave Lennox Signature gas furnace (SL280/SL297)", notes: ["Service manual is in Manuals → Lennox.", "SL280UHNV/EL180UHNE have a service note on incorrect manifold pressure/orifice info (H-19-04) — see Manuals → Lennox."] },
+  { re: /^ML(1[89][036]|29[67])/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit gas furnace (ML180/ML193/ML196/ML296)", notes: ["Service manual is in Manuals → Lennox.", "ML296V + Harmony III zoning has its own service note in Manuals → Lennox."] },
+  { re: /^EL(18|22)KCV/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Elite R-454B variable-capacity communicating AC (EL18KCV/EL22KCV)", notes: ["Communicating — Lennox alert codes 400-446 in Error Codes apply (shown on S30/S40 thermostat).", "R-454B is an A2L refrigerant: paired indoor units carry leak-detection sensors — refrigerant detection codes 150-164 are in Error Codes.", "Spec sheets are in Manuals → Lennox."] },
+  { re: /^(SL22KLV|ML1[56]K[SP])/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox R-454B heat pump (SL22KLV / ML15KSPV / ML16KP2)", notes: ["R-454B (A2L) — the indoor side carries refrigerant detection; codes 150-164 are in Error Codes.", "Service manual is in Manuals → Lennox.", "Inverter-driven: gauge-pressure charging targets don't apply the same way — check the unit's charging procedure."] },
+  { re: /^(SL25XPV|SL25XCV|SL28XCV|XP2[015]|XC2[0145]|EL1[678]X|EL22XPV)/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox communicating AC/heat pump", notes: ["Alert codes 400-446 for these outdoor units are in Error Codes (shown on the S30/S40 thermostat).", "Inverter units: alert code 427 during defrost has a known inverter software fix — units after serial 5817F already have it."] },
+  { re: /^1[346]ACX|^14HPX|^ML1[467]X/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Merit AC/heat pump", notes: [] },
+  { re: /^LRP1[46]/, brand: "Lennox", equipment: "Other", series: "Lennox LRP14/LRP16 residential packaged unit (gas-electric or heat pump)", notes: ["Service manual is in Manuals → Lennox → LRP14/LRP16.", "LRP14HP: nuisance low-pressure lockouts below 30°F are usually the defrost timer left on the 90-minute default — see Diagnostic Help.", "LRP14HP has a known incorrect-wiring-diagram notice; LRP16HP has a 9-pin relay mis-wiring notice — both in Manuals → Lennox."] },
+  // Mini-splits. Current families are MWLD/MWPD/MWHD (indoor) and MMPD/MMLD
+  // (outdoor, single and multi-zone); the older platform is MLB/MPC/3PC/3PB
+  // plus the MCF/MFM/MMD/MWM/3WM indoor heads and M22A/M33C.
+  { re: /^(MWLD|MWPD|MWHD|MMPD|MMLD)/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split / multi-split (current MW/MM platform)", notes: ["Full E-code list with Lennox's own troubleshooting steps is in Error Codes — search the E-number.", "E101/C101 (comm error) is the most common: F1/F2 must be 16/2 stranded shielded, straight run, 0.1-0.9 VDC — see Diagnostic Help.", "Service manual 100227 is in Manuals → Lennox."] },
+  { re: /^(MLB|MPC|3PC|3PB|MCF[AB]|MFMA|MMD[AB]|MWMC|3WMC|M22A|M33C)/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split (MLB/MPC/3PC legacy platform)", notes: ["This platform uses EC/EH/EL/PC/F-prefix display codes — the code tables are in the service manual, Manuals → Lennox → 3PC/MLB/MPC.", "Outdoor boards have a point check (spot check) function that reads sensor values directly — see Diagnostic Help."] },
+  { re: /^(ML[AB]|MP[AB]|MSA|MHA)[0-9]/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split", notes: ["Mini-split error codes are in Error Codes; service manuals are in Manuals → Lennox."] },
+  { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: ["Service manual for CBA27UHE and CBK48MVT (R-454B) is in Manuals → Lennox.", "Communicating air handlers report the numbered alert codes in Error Codes."] },
+  { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Diagnostic Help."] },
   // --- Trane / American Standard ---
   { re: /^S9V2|^S9X2|^S8X2|^S9B1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
   { re: /^(TUD|TUH|TDD|TUE|TME|AUD|ADD)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
@@ -1200,7 +1209,12 @@ function decodeSerialAge(brand, serial) {
     if ((m = s.match(/^([0-2][0-9])[0-9]/))) return `Made 20${m[1]} (Trane serials since ~2010 start with the year — estimate)`;
   }
   if (brand === "Lennox") {
-    if ((m = s.match(/^[0-9]{2}([0-2][0-9])[A-Z]/))) return `Made 20${m[1]} (Lennox serials: digits 3-4 are the year — estimate)`;
+    // Confirmed against Lennox alert code guide 100017: the nameplate serial is
+    // PPYYMNNNNN — plant, year, month letter, sequence (their own example, 5817F,
+    // reads as plant 58 / 2017 / month F). Lennox doesn't publish the month-letter
+    // map in that doc, so show the letter rather than guess at a month.
+    if ((m = s.match(/^[0-9]{2}([0-2][0-9])([A-Z])/))) return `Made 20${m[1]}, month code ${m[2]} (Lennox nameplate serial is PPYYM… — plant, year, month)`;
+    if ((m = s.match(/^[0-9]{2}([0-2][0-9])[0-9]/))) return `Made 20${m[1]} (Lennox nameplate serial is PPYYM… — digits 3-4 are the year)`;
   }
   if (brand === "Rheem") {
     if ((m = s.match(/^[A-Z]?([0-4][0-9]|5[0-3])([0-2][0-9])/))) return `Made week ${m[1]} of 20${m[2]} (Rheem serials embed WWYY — estimate)`;
@@ -1495,7 +1509,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v58";
+const APP_VERSION = "v59";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
