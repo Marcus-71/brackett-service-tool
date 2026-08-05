@@ -1336,10 +1336,28 @@ const MODEL_PATTERNS = [
   { re: /^59TP6/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96 two-stage furnace (59TP6)", notes: ["Install/service manual is in Manuals → Carrier."] },
   { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["Uses the standard Carrier flash-code board — see Bryant/Payne flash codes in Error Codes."] },
   { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Standard flash-code list in Error Codes applies to most non-communicating models."] },
-  { re: /^2[45]VNA/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity variable-speed AC/HP (24VNA9/25VNA8)", notes: ["Full 39-code fault table for this family is in Error Codes."] },
-  { re: /^24[A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier AC condenser", notes: [] },
-  { re: /^25[A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier heat pump", notes: [] },
-  { re: /^9[0-9]{2}[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Bryant 9xx-series gas furnace", notes: ["Bryant = Carrier; the Bryant/Payne flash codes in Error Codes apply."] },
+  // Payne-branded — same Carrier Corp platform, one standard tier (no
+  // good/better/best split). No official Payne serial-date format exists
+  // (checked payne.com/hvacpartners.com/shareddocs.com directly) — the age
+  // field will come back blank for these, and that's correct, not a bug.
+  { re: /^PG(9[0-9]|8[0-9])[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Payne-branded gas furnace (Carrier platform)", notes: ["Payne = Carrier — the standard Carrier/Bryant/Payne flash-code list in Error Codes applies.", "No official source documents a Payne serial date format — the tag's own date/warranty info is more reliable than a guess."] },
+  { re: /^2[4567][A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity/Performance/Comfort AC or heat pump (24/25/26/27-series)", notes: ["24VNA9/25VNA8: full 39-code fault table is in Error Codes."] },
+  { re: /^P[AH](8T|5S|4S|13|14|15|16)[A-Z]/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Payne-branded AC or heat pump (Carrier platform)", notes: ["Payne = Carrier — standard fault-code list in Error Codes applies where the board matches."] },
+  // Bryant-branded furnaces use a bare 3-digit-plus-letter model number (no
+  // brand prefix at all), confirmed against Bryant's own product literature —
+  // widened from the original 9xx-only pattern once the research turned up
+  // just as many 8xx-prefix Bryant furnaces (880TA, 830CA, 820T...).
+  { re: /^[89][0-9]{2}[A-Z]{1,2}[0-9]?/, brand: "Carrier", equipment: "Gas Furnace", series: "Bryant-branded gas furnace (Carrier platform)", notes: ["Bryant = Carrier — the standard Carrier/Bryant/Payne flash-code list in Error Codes applies."] },
+  // Bryant-branded condensers/heat pumps: 3-digit-prefix + T/S/V + AN suffix
+  // (191VAN, 148TAN, 146SAN...). Confirmed against Carrier's own serial-format
+  // service manual, which documents Bryant units on the same numbering.
+  { re: /^(1[0-9]{2}|2[0-9]{2})[TSV]AN/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant-branded AC or heat pump (Carrier platform)", notes: ["Bryant = Carrier — standard fault-code list in Error Codes applies where the board matches."] },
+  // Mini-split platform shared across Carrier/Bryant/Payne badges.
+  { re: /^(3[78]M|40M|45M|538K|615[AP]HA|DHM|D5MAHA)/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier/Bryant/Payne-branded ductless mini-split", notes: ["Same underlying mini-split platform is sold under all three badges."] },
+  { re: /^(F[EJTM]5|FE4A|FE5A|FV4C|FX4D|FB4C|PF5M)[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne air handler", notes: [] },
+  // Confirmed against Carrier's own residential AC/HP service manual (24-25-2SM)
+  // and a matching Bryant install manual — the serial format below is real,
+  // scoped to split AC/HP units 2006+, and now implemented in decodeSerialAge.
   // --- Lennox ---
   { re: /^SLP9[89]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox SLP98/SLP99 variable-capacity communicating furnace", notes: ["Full E-code table (E105-E409) is in Error Codes.", "Alert-code guide for the whole communicating system is in Manuals → Lennox."] },
   { re: /^G71MPP/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G71MPP variable-capacity communicating furnace (2004-2011 era)", notes: ["Uses the same integrated-control E-code table (E105-E409) as SLP99 — see Lennox codes in Error Codes.", "Install + homeowner manuals are in Manuals → Lennox → G71MPP."] },
@@ -1360,27 +1378,46 @@ const MODEL_PATTERNS = [
   { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: ["Service manual for CBA27UHE and CBK48MVT (R-454B) is in Manuals → Lennox.", "Communicating air handlers report the numbered alert codes in Error Codes."] },
   { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Diagnostic Help."] },
   // --- Trane / American Standard ---
-  { re: /^S9V2|^S9X2|^S8X2|^S9B1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
-  { re: /^(TUD|TUH|TDD|TUE|TME|AUD|ADD)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
+  { re: /^S[89][VXB][12]|^L9X1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
+  { re: /^(TUD|TUH|TDD|TDH|TUX|TUC|TDC|TUE|TME|AUD|ADD)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
   { re: /^4TT[RXBZ][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX)", notes: ["Condensing unit installer's guide is in Manuals → Trane."] },
   { re: /^4TW[RXBZ][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX)", notes: [] },
   { re: /^4A7|^4A6/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "American Standard AC/heat pump", notes: ["American Standard = Trane."] },
-  { re: /^(TEM[468]|TAM[4-9]|GAM[45])/, brand: "Trane", equipment: "Air Handler", series: "Trane air handler", notes: [] },
-  { re: /^(M5THS|MSTHS)/, brand: "Trane", equipment: "Mini-Split", series: "Trane ductless mini-split", notes: ["E/P error code table is in Error Codes."] },
+  { re: /^(TEM[468]|TAM[4-9]X?|GAM[45]|TMM[45])/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard air handler", notes: [] },
+  // Trane/American Standard packaged units + coils — confirmed families, no
+  // prior coverage at all for this equipment class under this brand.
+  { re: /^4[TWY]C[CYZ][0-9]|^4DC[YZ][0-9]|^4WHC[0-9]/, brand: "Trane", equipment: "Other", series: "Trane/American Standard packaged unit (gas-electric / AC / heat pump)", notes: [] },
+  { re: /^4[TP]XC|^4AXA|^4PXFH/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard evaporator coil", notes: [] },
+  { re: /^(M5THS|MSTHS|4TXK|4MXW)/, brand: "Trane", equipment: "Mini-Split", series: "Trane ductless mini-split", notes: ["E/P error code table is in Error Codes.", "No official Trane source confirms this is a Mitsubishi-built platform, despite that being commonly repeated — treat that claim as unconfirmed."] },
   // --- York / JCI family ---
   { re: /^DGA[AH]/, brand: "York", equipment: "Gas Furnace", series: "York/Coleman DGAA/DGAH mobile-home furnace", notes: ["Its flash-code table is in Error Codes; service manual in Manuals → York."] },
   { re: /^TM9V|^TM9E|^TM8|^TG9S|^TG8S/, brand: "York", equipment: "Gas Furnace", series: "York/Luxaire/Coleman TM/TG gas furnace", notes: ["TM9V install manual is in Manuals → York."] },
   { re: /^YC[JGESD]|^YFK|^YCG/, brand: "York", equipment: "Condenser/Heat Pump", series: "York AC condenser", notes: [] },
   { re: /^Y[HZ][JGEF]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York heat pump", notes: [] },
   // --- Rheem / Ruud ---
-  { re: /^R9[2567][TVP]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud R9x condensing gas furnace", notes: ["PlusOne 7-segment diagnostics on board; EcoNet-capable models report codes to the EcoNet stat."] },
-  { re: /^R80[12]V|^R801T/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud 80% gas furnace", notes: [] },
-  { re: /^RA1[3-7]|^WA1[3-7]|^RA20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud AC condenser", notes: [] },
-  { re: /^RP1[4-7]|^WP1[4-7]|^RP20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud heat pump", notes: ["RP17 install manual is in Manuals → Rheem."] },
-  { re: /^RH[12]T|^RH[12]V/, brand: "Rheem", equipment: "Air Handler", series: "Rheem/Ruud air handler", notes: [] },
+  { re: /^R9[2567][0-9]?[TVMP]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud R9x condensing gas furnace", notes: ["PlusOne 7-segment diagnostics on board; EcoNet-capable models report codes to the EcoNet stat."] },
+  { re: /^R80[12][TV]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud 80% gas furnace", notes: [] },
+  // Ruud's own top ("Ultra"/"Achiever Plus") tier gets a distinct U-prefix not
+  // shared with Rheem — everything else Ruud sells uses the SAME R/W-prefix
+  // letters as Rheem (no simple letter swap, despite that being commonly
+  // assumed — confirmed against rheem.com and ruud.com directly).
+  { re: /^U(9[78]M?V|802V)/, brand: "Rheem", equipment: "Gas Furnace", series: "Ruud Ultra Series modulating gas furnace (Rheem platform, Ruud-exclusive tier)", notes: [] },
+  { re: /^U[AP]1[6-9]/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Ruud Ultra/Achiever Plus AC or heat pump (Rheem platform, Ruud-exclusive tier)", notes: [] },
+  { re: /^RA1[3-9]|^WA1[3-5]|^RA20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud AC condenser", notes: [] },
+  { re: /^R[PD]1[4-8]|^WP1[4-5]|^WSP?14|^RP(19|20)/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud heat pump", notes: ["RP17 install manual is in Manuals → Rheem."] },
+  { re: /^R[HF][12][TVP]|^RB2T|^RHMV|^WH1[TP]/, brand: "Rheem", equipment: "Air Handler", series: "Rheem/Ruud air handler", notes: [] },
+  { re: /^RCF[YZ]?/, brand: "Rheem", equipment: "Other", series: "Rheem/Ruud evaporator coil", notes: [] },
+  { re: /^RQ[NPR]M/, brand: "Rheem", equipment: "Other", series: "Rheem Classic Series packaged heat pump", notes: [] },
+  { re: /^(FAH[FSM]W|FSHSR|FPH[SFM]R)/, brand: "Rheem", equipment: "Mini-Split", series: "Rheem Floating Air ductless mini-split", notes: [] },
+  // No official Rheem or Ruud source states a serial date-code format — both
+  // rheem.com and ruud.com's own "find your serial number" pages show only
+  // where the tag is, not how to read it. The commonly repeated WWYY rule
+  // (and the equally common MMYY claim) are both unconfirmed either way, so
+  // decodeSerialAge deliberately returns nothing for this brand.
   // --- Mitsubishi ---
-  { re: /^MSZ|^MFZ|^MLZ|^SEZ|^SVZ|^PKA|^PEAD/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi indoor unit", notes: ["Check indoor LED blink pattern; MXZ outdoor service manual is in Manuals → Mitsubishi."] },
-  { re: /^MUZ|^MXZ|^MUFZ|^PUZ/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi outdoor unit (MXZ = multi-zone)", notes: ["MXZ service manual with check codes is in Manuals → Mitsubishi."] },
+  { re: /^MSZ|^MFZ|^MLZ|^SLZ|^SEZ|^SVZ|^PKA|^PLA|^PCA|^PEAD|^PVA/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi indoor unit", notes: ["Check indoor LED blink pattern; MXZ outdoor service manual is in Manuals → Mitsubishi."] },
+  { re: /^MUZ|^MXZ|^MUFZ|^PUZ|^SUZ/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi outdoor unit — heat pump (MXZ = multi-zone)", notes: ["MXZ service manual with check codes is in Manuals → Mitsubishi.", "Officially confirmed 3rd-letter convention: Z = heat pump, Y = cooling only (e.g. MUZ vs MUY, PUZ vs PUY)."] },
+  { re: /^MUY|^PUY/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi outdoor unit — cooling only", notes: ["Cooling-only: no heating mode. Check the indoor head's own capability before assuming heat is available.", "MXZ service manual with check codes is in Manuals → Mitsubishi."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -1423,7 +1460,7 @@ function plausibleWeek(ww) {
   const w = Number(ww);
   return w >= 1 && w <= 53 ? w : null;   // there is no week 00
 }
-function decodeSerialAge(brand, serial) {
+function decodeSerialAge(brand, serial, equipment) {
   if (!serial) return null;
   const s = serial.replace(/[^A-Z0-9]/g, "");
   // Too short, or a degenerate string like 0000000000 / 1111111111 that usually
@@ -1436,15 +1473,29 @@ function decodeSerialAge(brand, serial) {
     if ((m = s.match(/^([0-9]{2})(0[1-9]|1[0-2])/)) && (y = plausibleYear(m[1])))
       return `Made ${m[2]}/${y} (Goodman/Daikin serials start YYMM — estimate)`;
   }
-  if (brand === "Carrier" || brand === "Bryant" || brand === "Payne") {
-    if ((m = s.match(/^([0-9]{2})([0-9]{2})/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
-      return `Made week ${w} of ${y} (Carrier/Bryant/Payne serials start WWYY — estimate)`;
+  if (brand === "Carrier") {
+    // Confirmed against Carrier's own residential AC/HP service manual
+    // (catalog 24-25-2SM) and a matching Bryant install manual (Bryant is
+    // built on the same Carrier Corp line): WW YY [plant] NNNNN, units 2006+.
+    // Document explicitly scopes this to split-system AC/HP — not confirmed
+    // for furnaces or air handlers, so only decode there.
+    if (equipment === "Condenser/Heat Pump") {
+      if ((m = s.match(/^([0-9]{2})([0-9]{2})([A-Z])/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
+        return `Made week ${w} of ${y}, plant ${m[3]} (confirmed Carrier/Bryant format, 2006+ split AC/HP)`;
+      if ((m = s.match(/^([0-9]{2})([0-9]{2})/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
+        return `Made week ${w} of ${y} (confirmed Carrier/Bryant format, 2006+ split AC/HP)`;
+    }
+    // Furnaces/air handlers on this platform (including Payne, which has no
+    // official serial documentation at all): no confirmed source — don't guess.
   }
-  if (brand === "Trane" || brand === "American Standard") {
-    // Year only. Trane serials carry more than the year, but no official source
-    // on hand states the field order, so don't imply a week we can't back up.
-    if ((m = s.match(/^([0-9]{2})[0-9]/)) && (y = plausibleYear(m[1])))
-      return `Made ${y} (Trane/American Standard serials since ~2010 start with the year — estimate)`;
+  if (brand === "Trane") {
+    // No official Trane/American Standard document states a residential serial
+    // date format (the light-commercial WWYY format they DO publish explicitly
+    // excludes residential equipment). What IS confirmed: Trane/American
+    // Standard data plates print an explicit date field — furnaces say "DATE OF
+    // MANUFACTURE: MM/YY", coils/air handlers say "MFG DATE"/"MFR. DATE". Point
+    // the tech at that instead of a serial guess.
+    return "Not decoded from serial — Trane/American Standard plates print an explicit manufacture date field (look for \"DATE OF MANUFACTURE\" or \"MFG DATE\" on the tag)";
   }
   if (brand === "Lennox") {
     // Confirmed against Lennox alert code guide 100017: the nameplate serial is
@@ -1456,10 +1507,13 @@ function decodeSerialAge(brand, serial) {
     if ((m = s.match(/^[0-9]{2}([0-9]{2})[0-9]/)) && (y = plausibleYear(m[1])))
       return `Made ${y} (Lennox nameplate serial is PPYYM… — digits 3-4 are the year)`;
   }
-  if (brand === "Rheem" || brand === "Ruud") {
-    if ((m = s.match(/^[A-Z]?([0-9]{2})([0-9]{2})/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
-      return `Made week ${w} of ${y} (Rheem/Ruud serials embed WWYY — estimate)`;
-  }
+  // Rheem/Ruud: checked directly against rheem.com's and ruud.com's own serial
+  // pages — both show only where the tag is, no decode. Neither WWYY nor MMYY
+  // (both circulate as "common knowledge") is officially confirmed either way,
+  // so — unlike the brands above — deliberately no decode here at all.
+  // York/Luxaire/Coleman and Mitsubishi: same story, no official date format
+  // found; York/JCI's own resolution path is their serial lookup tool
+  // (m.upgnet.com/SN/<serial>), not a local decode.
   return null;
 }
 
@@ -1473,7 +1527,7 @@ function identifyModel(rawModel, rawSerial, brandHint) {
         model, serial,
         brand: p.brand, equipment: p.equipment, series: p.series,
         capacity: decodeCapacity(model, p.equipment),
-        age: decodeSerialAge(p.brand, serial),
+        age: decodeSerialAge(p.brand, serial, p.equipment),
         notes: p.notes,
       };
     }
@@ -1750,7 +1804,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v63";
+const APP_VERSION = "v64";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
