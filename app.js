@@ -473,6 +473,21 @@ function renderSymptoms() {
 // online, offer a plain web search — no API key, no backend, no ongoing cost.
 // (Deliberately not an AI-generated answer: that would need a server to hold
 // a secret key, since anything embedded in this static app's JS is public.)
+// Report a dead-end search once the tech has stopped typing. This is the other
+// half of the feedback loop: a question the tool couldn't answer is exactly the
+// content that should exist, so it goes into the daily digest to be researched
+// and added rather than dying silently on someone's phone.
+let unansweredTimer = null, lastUnanswered = "";
+function reportUnanswered(query) {
+  clearTimeout(unansweredTimer);
+  unansweredTimer = setTimeout(() => {
+    const q = query.trim();
+    if (q.length < 4 || q === lastUnanswered) return;
+    lastUnanswered = q;
+    trackEvent("NO ANSWER FOR: " + q.slice(0, 90));
+  }, 3000);
+}
+
 function renderDiagEmptyState() {
   const empty = document.getElementById("diagEmptyState");
   const query = diagState.search.trim();
@@ -480,6 +495,7 @@ function renderDiagEmptyState() {
     empty.innerHTML = `No matching symptoms. Try a different search, or add this one.`;
     return;
   }
+  reportUnanswered(query);
   if (!navigator.onLine) {
     empty.innerHTML = `No matching symptoms for "${escapeHtml(query)}". Try a different search, or add this one. (You're offline — web search isn't available right now.)`;
     return;
@@ -505,7 +521,10 @@ function buildSymptomCard(s) {
         <div class="card-title">${escapeHtml(s.title)}</div>
       </div>
     </div>
-    <div class="card-meta"><span>${escapeHtml(s.equipment)}</span></div>
+    <div class="card-meta">
+      <span>${escapeHtml(s.equipment)}</span>
+      ${getFollowups(s.id) ? `<span class="fu-badge">Guided</span>` : ""}
+    </div>
     ${s.summary ? `<div class="card-meta">${escapeHtml(s.summary)}</div>` : ""}
   `;
   return card;
@@ -520,6 +539,7 @@ function openSymptomDetail(id) {
     <h2>${escapeHtml(s.title)}</h2>
     <div class="sub">${escapeHtml(s.equipment)}</div>
     ${s.summary ? `<div class="detail-section"><p>${escapeHtml(s.summary)}</p></div>` : ""}
+    <div id="followupBox"></div>
     ${steps ? `<div class="detail-section"><h3>Checklist</h3><ol>${steps}</ol></div>` : ""}
     ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
     <div class="modal-actions">
@@ -527,9 +547,157 @@ function openSymptomDetail(id) {
       <button class="primary" id="editSymptomBtn">Edit / correct</button>
     </div>
   `;
+  startFollowups(s);
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editSymptomBtn").onclick = () => openSymptomEditForm(s);
   document.getElementById("modalBackdrop").classList.remove("hidden");
+}
+
+// ---- Follow-up narrowing questions --------------------------------------
+// Finding the right scenario still leaves a tech choosing between the two or
+// three causes it lists. These walk that last step: ask for the one reading
+// that separates them, then say plainly what it means and what to do — so a
+// newer tech gets to an actual answer instead of a checklist to interpret.
+const fuState = { symptom: null, questions: null, index: 0, history: [], verdict: null };
+
+function getFollowups(id) {
+  if (typeof SYMPTOM_FOLLOWUPS === "undefined") return null;
+  const list = SYMPTOM_FOLLOWUPS[id];
+  return Array.isArray(list) && list.length ? list : null;
+}
+
+function startFollowups(s) {
+  const questions = getFollowups(s.id);
+  fuState.symptom = s;
+  fuState.questions = questions;
+  fuState.index = 0;
+  fuState.history = [];
+  fuState.verdict = null;
+  renderFollowups();
+}
+
+// Both choice options and number bands answer the same way: land on a verdict,
+// hand off to a later question, or both (a verdict that still has more to check).
+function answerFollowup(outcome, chosenLabel) {
+  const q = fuState.questions[fuState.index];
+  fuState.history.push({ ask: q.ask, answer: chosenLabel, verdict: outcome.verdict || "" });
+  if (typeof outcome.next === "number" && outcome.next > fuState.index && outcome.next < fuState.questions.length) {
+    fuState.index = outcome.next;
+    fuState.verdict = null;
+  } else {
+    fuState.verdict = outcome.verdict || "";
+  }
+  renderFollowups();
+  if (fuState.verdict) trackEvent("narrowed a diagnosis: " + (fuState.symptom.title || "").slice(0, 60));
+}
+
+function renderFollowups() {
+  const box = document.getElementById("followupBox");
+  if (!box) return;
+  if (!fuState.questions) { box.innerHTML = ""; return; }
+
+  // The final answer's verdict gets its own callout below, so don't repeat it
+  // inside the trail — the tech should see one conclusion, not the same
+  // paragraph twice.
+  const history = fuState.history.map((h, i) => {
+    const isLast = i === fuState.history.length - 1;
+    const showVerdict = h.verdict && !(isLast && fuState.verdict);
+    return `
+    <div class="fu-answered">
+      <div class="fu-answered-q">${escapeHtml(h.ask)}</div>
+      <div class="fu-answered-a">${escapeHtml(h.answer)}</div>
+      ${showVerdict ? `<div class="fu-answered-v">${escapeHtml(h.verdict)}</div>` : ""}
+    </div>
+  `;
+  }).join("");
+
+  let body = "";
+  if (fuState.verdict) {
+    body = `
+      <div class="fu-verdict"><strong>What it points to</strong><p>${escapeHtml(fuState.verdict)}</p></div>
+      <button class="fu-restart" id="fuRestartBtn">Start these questions over</button>
+    `;
+  } else {
+    const q = fuState.questions[fuState.index];
+    body = `<div class="fu-ask">${escapeHtml(q.ask)}</div>` + (q.type === "number" ? renderFollowupNumber(q) : renderFollowupChoice(q));
+  }
+
+  box.innerHTML = `
+    <div class="fu-wrap">
+      <div class="fu-head">Narrow it down</div>
+      ${history}
+      ${body}
+    </div>
+  `;
+
+  const restart = document.getElementById("fuRestartBtn");
+  if (restart) restart.onclick = () => startFollowups(fuState.symptom);
+  if (fuState.verdict) return;
+
+  const q = fuState.questions[fuState.index];
+  if (q.type === "number") {
+    document.getElementById("fuCalcBtn").onclick = () => submitFollowupNumber(q);
+    const skip = document.getElementById("fuSkipBtn");
+    if (skip) skip.onclick = () => answerFollowup(skipOutcome(q), "Could not measure it");
+  } else {
+    box.querySelectorAll(".fu-opt").forEach((btn, i) => {
+      btn.onclick = () => answerFollowup(q.options[i], q.options[i].label);
+    });
+  }
+}
+
+function renderFollowupChoice(q) {
+  return `<div class="fu-opts">` + (q.options || []).map(o =>
+    `<button class="fu-opt">${escapeHtml(o.label)}</button>`
+  ).join("") + `</div>`;
+}
+
+function renderFollowupNumber(q) {
+  const fields = (q.fields || []).map(f => `
+    <label class="fu-field">
+      <span>${escapeHtml(f.label)}</span>
+      <input type="number" step="any" inputmode="decimal" id="fu-f-${escapeHtml(f.key)}" placeholder="${escapeHtml(f.placeholder || "")}">
+    </label>
+  `).join("");
+  return `
+    <div class="fu-fields">${fields}</div>
+    <div class="fu-num-actions">
+      <button class="fu-opt fu-calc" id="fuCalcBtn">Check it</button>
+      <button class="fu-skip" id="fuSkipBtn">I can't measure this</button>
+    </div>
+    <div class="fu-err hidden" id="fuErr"></div>
+  `;
+}
+
+// A tech who can't get the reading shouldn't hit a dead end — jump to the next
+// question if there is one, otherwise fall through to the checklist below.
+function skipOutcome(q) {
+  const rest = fuState.index + 1;
+  if (rest < fuState.questions.length) return { next: rest };
+  return { verdict: "No reading to go on — work the checklist below in order; it covers the same causes the long way." };
+}
+
+function submitFollowupNumber(q) {
+  const vals = (q.fields || []).map(f => parseFloat((document.getElementById("fu-f-" + f.key) || {}).value));
+  const err = document.getElementById("fuErr");
+  if (vals.some(v => !isFinite(v))) {
+    err.textContent = "Fill in both numbers, or tap \"I can't measure this\".";
+    err.classList.remove("hidden");
+    return;
+  }
+  let metric;
+  if (q.compare === "ratio") {
+    if (!vals[1]) { err.textContent = "The second number can't be zero."; err.classList.remove("hidden"); return; }
+    metric = vals[0] / vals[1];
+  } else {
+    metric = vals[0];
+  }
+  const band = (q.bands || []).find(b => typeof b.under !== "number" || metric < b.under) || (q.bands || [])[q.bands.length - 1];
+  if (!band) return;
+  const shown = q.compare === "ratio"
+    ? `${vals[0]} vs ${vals[1]} (${Math.round(metric * 100)}%) — ${band.label}`
+    : `${vals[0]} — ${band.label}`;
+  answerFollowup(band, shown);
 }
 
 function openSymptomEditForm(existing) {
@@ -1534,6 +1702,9 @@ function identifyModel(rawModel, rawSerial, brandHint) {
   }
   // Not in the offline library — keep whatever the tag itself told us so the
   // tech still gets a brand, an age estimate, and targeted internet lookups.
+  // Also report the miss: an unrecognized model is the clearest signal of what
+  // the library is missing, and it costs the tech nothing to send.
+  trackEvent("MODEL NOT IN LIBRARY: " + model + (brandHint ? " (" + brandHint + ")" : ""));
   return {
     model, serial, brand: null,
     brandGuess: brandHint || null,
@@ -1804,7 +1975,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v65";
+const APP_VERSION = "v66";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -1817,7 +1988,7 @@ const APP_VERSION = "v65";
 
 const TRACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfZ9Dv1jlj3h4uzomWlHsgS-OcaDMhb0sbaE2YbXLCP2swsQQ/formResponse";
 const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", version: "entry.872662639" };
-const TECH_NAMES = ["James", "Gus", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Andy", "Kenny", "Adam", "Joey", "Mark", "Vern", "Damien"];
+const TECH_NAMES = ["James", "Gus", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Andy"];
 const TECH_KEY = "bfc-tech-name";
 const TRACK_QUEUE_KEY = "bfc-track-queue";
 
