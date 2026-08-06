@@ -42,6 +42,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-ac-coil-drain-interfering-furnace-drain": [
+    {
+      ask: "With the furnace trap confirmed clean and undamaged and the furnace sloped correctly for its orientation, trace the AC coil drain. Where does it go?",
+      options: [
+        { label: "Coil drain ties into, terminates into, or restricts the furnace drain path", verdict: "That is your backfeed. Separate the two drains or re-pipe so the coil drain cannot backfeed or surcharge the furnace drain, and give each its own trap and its own slope." },
+        { label: "Coil drain runs completely separate from the furnace drain", verdict: "The drains are not fighting each other. Go back and re-verify the furnace trap condition and the furnace slope for its installed orientation." },
+      ],
+    },
+    {
+      ask: "Run the furnace and the cooling system one at a time and re-check for water in the furnace cabinet.",
+      options: [
+        { label: "Each drains freely on its own and the cabinet stays dry", verdict: "The re-pipe fixed it. Confirm each drain still has its own trap appropriate to its pressure condition and its own slope away from the equipment." },
+        { label: "Cabinet is still wet after one of them runs", verdict: "Whichever one wets the cabinet is the one to chase - re-check that drain's trap, its slope, and whether it is restricted downstream." },
+      ],
+    },
+  ],
   "s-acid-test-after-compressor-failure": [
     {
       ask: "Pull a clean oil sample and run an acid test kit per its instructions. What does the color change show?",
@@ -53,6 +69,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-afterservice-worse-than-before": [
+    {
+      ask: "Before assuming a new unrelated failure, check what the last visit touched. Which do you find?",
+      options: [
+        { label: "A panel or door is not fully seated on its safety interlock switch", verdict: "Reinstall the panel so the interlock fully engages, then retest. An unseated door switch shuts the system down in a way that looks like a brand new failure." },
+        { label: "A disconnect, service valve, or shutoff is not back in its normal position", verdict: "Restore it to its normal operating position and retest before diagnosing anything further." },
+        { label: "Thermostat was left in a diagnostic or test mode", verdict: "Take it out of test or diagnostic mode and back to normal operation, then confirm the complaint is gone." },
+        { label: "Panels, valves, and thermostat all check out", next: 1 },
+      ],
+    },
+    {
+      ask: "Ask whether refrigerant was recovered or recharged during that visit. Which is it?",
+      options: [
+        { label: "Yes, refrigerant work was done on the visit", verdict: "Let the system run and stabilize, then recheck subcooling and superheat. Judging refrigerant numbers right after a charge change gives you a false picture." },
+        { label: "No refrigerant work was done", verdict: "Go item by item through everything that was touched on that visit and verify each one specifically, rather than assuming the new symptom is an unrelated coincidence." },
+      ],
+    },
+  ],
   "s-air-bypassing-around-the-coil": [
     {
       ask: "Take leaving air temperature at several points across the coil face. What do you see?",
@@ -60,6 +94,40 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Some spots are cold and others are near return air temperature", verdict: "Air is bypassing the coil at those spots. Seal the gaps, filler panels, and rack, then re-measure the split before evaluating charge." },
         { label: "Leaving air is uniformly warm across the whole face", verdict: "The whole coil is underperforming. Move on to airflow verification and the refrigerant side - superheat, subcooling, and metering device." },
         { label: "Leaving air is uniformly cold at the coil but the plenum reading is much warmer", verdict: "You are picking up leakage or bypass between the coil and your plenum probe. Check the plenum joints, the cabinet-to-plenum connection, and any unsealed penetration." },
+      ],
+    },
+  ],
+  "s-air-handler-board-motor-control-voltage": [
+    {
+      ask: "With power restored, measure DC voltage between pins 1 and 4 at the 4-wire motor connector on the air handler control board. What do you read?",
+      options: [
+        { label: "Between 9 and 15 VDC", verdict: "The control is doing its job. Move on to the motor power and control harnesses and the motor itself." },
+        { label: "Outside the 9 to 15 VDC window", verdict: "Replace the control - that output is outside its published range." },
+      ],
+    },
+    {
+      ask: "Check the control's diagnostic LED before condemning parts. What is it reporting?",
+      options: [
+        { label: "Heater kit selection or an open fuse", verdict: "Fix that first or it will keep you chasing the blower. Verify the heater kit setting, and find what popped the fuse before replacing it." },
+        { label: "Internal control fault", verdict: "Replace the control." },
+        { label: "Blower motor fault", verdict: "The board is pointing at the motor. Check the motor power and control harnesses and the motor itself." },
+        { label: "Nothing reported on the LED", verdict: "No stored complaint from the board. Use the pin 1 to 4 voltage to split board from motor. If a heat stage is missing instead, confirm the control puts 24VAC out to each electric heat sequencer on a heat demand." },
+      ],
+    },
+  ],
+  "s-air-handler-esp-one-vs-two-piece": [
+    {
+      ask: "Look at the equipment before you place any probes. Is this a single-piece air handler or a two-piece coil-plus-blower arrangement?",
+      options: [
+        { label: "Single-piece - coil and blower in one cabinet", verdict: "Read negative in the return duct at the inlet of the air handler and positive in the supply duct at the outlet, then add the two for total external static." },
+        { label: "Two-piece - separate evaporator coil on top of the blower unit", verdict: "Take the negative reading between the outlet of the evaporator coil and the inlet of the air handler, NOT in the return duct. Positive still goes in the supply duct at the outlet of the unit." },
+      ],
+    },
+    {
+      ask: "Look your total external static up in the air handler airflow chart for that model. Does the CFM it gives you look believable for this system?",
+      options: [
+        { label: "CFM off the chart lines up with what this system should move", verdict: "Your probe placement was right. Record which configuration you measured, since the same numeric total means different things on the two arrangements." },
+        { label: "CFM is way off from what this system should move", verdict: "Wrong probe placement is the most common reason a static reading does not match the airflow chart. Re-check that your negative probe is in the right spot for this arrangement, then re-read." },
       ],
     },
   ],
@@ -101,6 +169,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Water standing in the secondary pan", verdict: "The sensor is doing its job of stopping the unit before a ceiling leak, so do not bypass it. Trace the water back to the primary drain system failure: a clogged primary drain, a cracked primary pan, or a unit that is not level." },
         { label: "Pan is dry but the sensor still reads tripped", verdict: "Check the sensor or float switch itself for a stuck or corroded contact, and inspect its wiring harness for damage from the attic environment, such as heat or rodents." },
         { label: "Primary drain issue already corrected and the pan is now dry", verdict: "Confirm the secondary pan is draining through its own independent drain, often routed to a visible location like above a window, before returning the system to service." },
+      ],
+    },
+  ],
+  "s-avzc18-ctk04-pump-down": [
+    {
+      ask: "Before starting pump down, check the setup items. What state is the system in?",
+      options: [
+        { label: "Fan trim, delay and profile at default, heater or furnace stopped, gas and liquid valves open", verdict: "Ready to go. Use the 7-segment display method on the outdoor unit as the manufacturer recommends." },
+        { label: "System is in Cool ON or Heat ON mode", verdict: "Do not use Cool ON or Heat ON mode to enter PUMP DOWN. Get out of those modes first, then set up the rest." },
+        { label: "A service valve is closed, or a heater or furnace is still operating", verdict: "Fix that first. Both the gas service valve and the liquid service valve must be open, and any electric heater or gas furnace operation must be stopped." },
+      ],
+    },
+    {
+      ask: "Try the 7-segment display pump down method on the outdoor unit. How does it go?",
+      options: [
+        { label: "The sequence starts from the 7-segment display", verdict: "Stay with it - that is the manufacturer's recommended route. Monitor pressures throughout the pump down." },
+        { label: "The display method gives trouble", verdict: "Now use the thermostat: HOME, MENU, COMFORTNET USER MENU, installer password (the date code found at the bottom of the EQUIPMENT STATUS menu), then follow the on-screen sequence and monitor pressures." },
       ],
     },
   ],
@@ -218,6 +303,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-blower-wheel-centering-replacement": [
+    {
+      ask: "After the motor or wheel swap, rotate the wheel by hand before you tighten anything down. What happens?",
+      options: [
+        { label: "Wheel turns freely with no interference", verdict: "Placement is good. Align the set screw with the flat on the motor shaft and tighten to the torque called out for the unit - Goodman and Daikin ECM literature specifies 165 in-lbs minimum on the shaft flat." },
+        { label: "Wheel rubs the housing or contacts the motor", verdict: "The wheel is not centered. Loosen it, center it in the blower housing per the placement figure in the unit's manual, then retighten with the set screw on the shaft flat." },
+      ],
+    },
+    {
+      ask: "Run the blower, check airflow against the model's blower table, and listen for vibration.",
+      options: [
+        { label: "Airflow matches the blower table and the vibration is gone", verdict: "Done - the assembly is placed correctly and back in balance." },
+        { label: "Still noisy or vibrating", verdict: "Inspect for broken or loose blades and a cracked or loose motor mounting bracket, and confirm the set screw is seated on the flat of the shaft and not on the round." },
+        { label: "Airflow is still down", verdict: "Re-check that the wheel is centered in the housing per the placement figure - an off-center wheel costs airflow even when it spins free." },
+      ],
+    },
+  ],
   "s-blower-wont-run-any-mode": [
     {
       ask: "With a call present, meter for line voltage at the blower motor connector.",
@@ -314,6 +416,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Scorch marks or melted insulation at wiring, relay, or contactor", verdict: "You found the source. Repair or replace the burned component and do not re-energize until it is corrected." },
         { label: "Wiring looks clean but a motor is hot or its bearing is seized", verdict: "Overheating motor - a seized bearing is a common cause. Replace it before re-energizing." },
         { label: "Nothing found yet", verdict: "Do not re-energize - a burning smell means fire risk. Keep working the wiring, relays, contactor, and each motor (blower, inducer, condenser fan) until you find it." },
+      ],
+    },
+  ],
+  "s-burnout-cleanup-procedure": [
+    {
+      ask: "Remove the failed compressor and check the oil and odor at the fitting. What do you find?",
+      options: [
+        { label: "Strong burnt odor, dark oil, and soot-like residue at the compressor fitting", verdict: "Burnout contamination has spread into the line set and coils. Recover per EPA 608 and do not reuse that refrigerant. Plan the full cleanup, not a straight compressor swap." },
+        { label: "Oil looks clean with no burnt odor", verdict: "Burnout contamination is not confirmed. Verify the actual failure mode before committing to the full burnout cleanup procedure." },
+      ],
+    },
+    {
+      ask: "You are reassembling after a confirmed burnout. Check what driers are going in. Which is it?",
+      options: [
+        { label: "A new correctly sized suction line drier plus a fresh liquid line drier", verdict: "That is what the cleanup calls for. After brazing in the new compressor, evacuate to a deep vacuum and hold it to confirm no leaks and adequate moisture removal before charging." },
+        { label: "Only the liquid line drier is being replaced", verdict: "Not enough after a burnout. Add a correctly sized suction line drier too, then evacuate deep and hold before weighing in the nameplate charge." },
+      ],
+    },
+    {
+      ask: "At the follow-up visit, check drier pressure drop and pull an oil/acid sample. What do you get?",
+      options: [
+        { label: "Noticeable pressure drop across the drier, or acid still showing in the sample", verdict: "Contamination is still circulating. Change the driers again per the burnout drier-change schedule and keep the follow-up cycle going." },
+        { label: "Minimal drier pressure drop and a clean acid sample", verdict: "The cleanup is working. Keep listening for abnormal compressor sound and plan a final check before considering the job complete." },
       ],
     },
   ],
@@ -460,6 +585,113 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-carrier-24vna9-service-valve-subcool-charging": [
+    {
+      ask: "Check conditions before charging by subcool. What are the outdoor and indoor temperatures?",
+      options: [
+        { label: "Outdoor between 65 F and 100 F and indoor between 70 F and 80 F", verdict: "Conditions are favorable. On a communicating system the Service Valve Subcool option becomes selectable - select start and the system runs a preset mode until you select done." },
+        { label: "Indoor below 70 F, or outdoor outside the 65 to 100 F window", verdict: "Do not chase a subcool number now. Adjust charge for line set length only and come back when conditions allow a real subcool check." },
+      ],
+    },
+    {
+      ask: "Measure the actual line set length. What do you have?",
+      options: [
+        { label: "About 15 ft of line set", verdict: "That is the factory charge length, so no line set adjustment is needed. Move on to the subcool check." },
+        { label: "Longer or shorter than 15 ft", verdict: "Adjust 0.6 oz per foot of 3/8 in. liquid line - add above 15 ft, remove below - then verify with subcool once conditions allow." },
+      ],
+    },
+    {
+      ask: "Check subcooling at the service valve against the target chart on the back of the control box door. What do you have?",
+      options: [
+        { label: "Run 25 minutes or more on a line set 80 ft or less, and subcool is on target within -3/+0 degrees", verdict: "The charge is correct. Do your final checks and you are done." },
+        { label: "Subcool is off the target shown on the chart", verdict: "Add or remove charge slowly - no greater than 0.5 lb per minute - then let it run 25 minutes to stabilize before you declare the charge correct." },
+        { label: "Readings taken before 25 minutes of run time", verdict: "Too early to trust. For standard line lengths (80 ft or less), let it run in cooling at least 25 minutes before taking readings." },
+      ],
+    },
+  ],
+  "s-carrier-25vna-cooling-subcool-window": [
+    {
+      ask: "Force high-stage cooling with a large room-to-setpoint differential, then check with a multimeter for 24 VAC between C and the Y1/Y2 terminals at the outdoor unit. What do you read?",
+      options: [
+        { label: "24 VAC present between C and Y1/Y2", next: 1 },
+        { label: "No 24 VAC at Y1/Y2", verdict: "The high-stage call is not reaching the outdoor unit. Fix that before you try to read subcooling - the unit is not in high stage, so any reading you take is meaningless." },
+      ],
+    },
+    {
+      ask: "Check whether conditions are favorable: outdoor 65 F to 100 F and indoor 70 F to 80 F. Where are you?",
+      options: [
+        { label: "Both inside those ranges", verdict: "Conditions are favorable. On line sets of 80 ft or less, let the system run in cooling at least 25 minutes, then compare subcooling to the target chart on the back of the control box door - not the nameplate." },
+        { label: "Indoor below 70 F, or outdoor outside 65 F to 100 F", verdict: "Do not verify subcooling today. Adjust charge only for line set length and the indoor coil per Tables 1 and 2, then return to verify subcooling when conditions are favorable." },
+        { label: "Line set over 80 ft, or more than 20 ft of vertical separation", verdict: "Use the Long Line guideline for the special charging requirements instead of the standard subcooling routine." },
+      ],
+    },
+    {
+      ask: "Compare measured subcooling to the target subcooling chart on the back of the control box door. How does it read?",
+      options: [
+        { label: "Matches the chart target", verdict: "Charge is right. Confirm the 0.6 oz/ft (17.7 g/m) adjustment was made for line set above or below the 15 ft factory basis before you close out." },
+        { label: "Off the chart target", verdict: "Adjust charge slowly and allow another 25 minutes of operation to stabilize before you read it again and declare the system properly charged." },
+      ],
+    },
+  ],
+  "s-carrier-25vna-heating-weigh-in": [
+    {
+      ask: "At the user interface, go to Installation and Service, enter Refrigerant Charging mode and look for Heating Check Charge Method. Is it offered?",
+      options: [
+        { label: "Heating Check Charge Method is available", verdict: "Conditions are right for a heating-mode check. Run Defrost CHECKOUT first to clear ice or frost from the outdoor coil, then run in stage 5 through the stabilization countdown - or Y1+Y2 high stage on a non-communicating system." },
+        { label: "It is not offered on the menu", verdict: "Conditions are not right for a heating-mode check. Charge by weigh-in: rating plate base charge plus the Table 1 indoor coil adjustment plus 0.6 oz/ft (17.74 g/m) of 3/8 in. liquid line above or below 15 ft." },
+      ],
+    },
+    {
+      ask: "Compare your pressures to the Heating Pressure Check Chart for the actual outdoor unit size at the measured ambient. Add 12 psig if you took high pressure at the liquid service valve. How do they compare?",
+      options: [
+        { label: "Pressure and temperature match the chart", verdict: "The charge is consistent. Leave it alone - the chart only confirms consistency, it is not a charging tool on this unit." },
+        { label: "Pressure and temperature do not match the chart", verdict: "Do not add or remove refrigerant based on the chart. Correct the charge by weighing it in per the rating plate plus the line set adjustment - weigh-in is the required method in heating on this unit." },
+      ],
+    },
+  ],
+  "s-carrier-59mn7c-annual-maintenance": [
+    {
+      ask: "Inspect the burner compartment before this heating season. What is in there?",
+      options: [
+        { label: "Rust, corrosion, soot, or excessive dust", verdict: "The furnace and burners need to be serviced before it runs another season - this is a combustion safety item, not a cosmetic one. Do not just close it back up." },
+        { label: "Compartment is clean", verdict: "Move on. Check the blower motor and wheel for cleanliness and clean as necessary, and check electrical connections for tightness." },
+      ],
+    },
+    {
+      ask: "Inspect the vent pipe and vent system before the heating season.",
+      options: [
+        { label: "Water leakage, sagging pipes, or broken fittings", verdict: "The vent system has to be serviced before the furnace runs. Do not leave a sagging or broken vent in place over a heating season." },
+        { label: "Vent is dry, supported, and the fittings are intact", verdict: "Vent is good. Finish the visit with a combustion analysis and a CO check in the equipment space." },
+      ],
+    },
+    {
+      ask: "Where is the filter on this furnace and what condition is it in?",
+      options: [
+        { label: "External filter, dirty or torn", verdict: "Replace it. This furnace has no internal filter provision, so the external filter is the only one - tell the owner to check it monthly or more often as conditions require." },
+        { label: "External filter, clean", verdict: "Leave it and tell the owner to check it monthly. Also confirm nothing flammable or combustible is stored on, near, or against the furnace." },
+        { label: "You are looking for an internal filter and cannot find one", verdict: "There is none - this furnace has no internal filter provision. The filter is external to the casing." },
+      ],
+    },
+  ],
+  "s-carrier-59mn7c-component-self-test": [
+    {
+      ask: "With the R wire off and the door switch held in, select component test (Ct) from the menu select buttons. What does the display do?",
+      options: [
+        { label: "Shows Err and the test never starts", verdict: "The control could not start from idle. Check for remaining thermostat inputs (W, Y, G) or an active fault, confirm the system status is Idle, then retry." },
+        { label: "Shows End for 6 seconds and quits partway through", verdict: "A thermostat input was detected or a fault activated during the test. Clear it and run Ct again." },
+        { label: "Runs tSt, PUr, the gas valve check, HSi and Fn all the way to End", next: 1 },
+      ],
+    },
+    {
+      ask: "Watch each component during its own segment of the sequence. Which one failed to respond?",
+      options: [
+        { label: "Inducer does not run during the 10 second PUr segment on high", verdict: "The inducer circuit is your problem - the control commanded it and nothing happened. Chase the inducer and its wiring, not the rest of the sequence." },
+        { label: "Hot surface igniter does not glow during the 15 second HSi segment", verdict: "The igniter circuit is your problem. Chase the igniter and its wiring, then rerun Ct to confirm." },
+        { label: "Blower does not run during the 10 second Fn segment at 50 percent torque", verdict: "The blower circuit is your problem. Chase the blower motor and its wiring, then rerun Ct to confirm." },
+        { label: "Every component responded in its own segment", verdict: "No dead component - the control exercised them all and they answered. Reconnect the thermostat wire to R, reinstall the blower door, then verify normal shutdown and restart at the thermostat." },
+      ],
+    },
+  ],
   "s-carrier-59mn7c-manifold-two-tables": [
     {
       ask: "Read the exact model number off the rating plate before you touch the gas valve. What is it?",
@@ -474,6 +706,93 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Maximum Heat first, set so input is within plus or minus 2 percent of the rating plate input rate", verdict: "Correct order. Then drive the furnace to Minimum Heat and set Minimum Heat manifold pressure." },
         { label: "Minimum Heat first", verdict: "Wrong order. Maximum Heat has to be set first, then Minimum Heat second." },
         { label: "Trying to adjust Intermediate Heat", verdict: "Intermediate Heat manifold pressure is not adjustable. It is only checked as part of the temperature rise." },
+      ],
+    },
+  ],
+  "s-carrier-59mn7c-model-program-number": [
+    {
+      ask: "The furnace runs but overheats or acts odd after a board swap. Compare the programmed Model Program Number to the furnace rating plate. What do you find?",
+      options: [
+        { label: "The programmed number does not match the rating plate", verdict: "Reprogram it with exactly the rating plate number. A different number loads parameter options that do not match the design values - the manual flags that as a furnace overheating hazard and it shortens furnace life." },
+        { label: "Control settings are in an unknown state", verdict: "Use the rSt (Reset) menu item to return settings to factory default, then reprogram from the rating plate - not from memory or a similar unit." },
+        { label: "It matches the rating plate exactly", verdict: "Programming is right. Move on to 115-V polarity, gas supply pressure, and the manual-reset switches." },
+      ],
+    },
+    {
+      ask: "Check the 115-V wiring, ground, and the diagnostic light. What do you see?",
+      options: [
+        { label: "Rapid flashing diagnostic light with status code 10.1 and the furnace will not run", verdict: "Improper 115-V polarity. Correct the polarity and ground and it will operate." },
+        { label: "Polarity and ground are correct", verdict: "Move on: confirm the thermostat wires land on the 24-V terminal block, check all manual-reset switches for continuity, and make sure the blower door is in place - it completes the 115-V circuit that powers the furnace." },
+      ],
+    },
+    {
+      ask: "Measure gas supply pressure. Where does it land?",
+      options: [
+        { label: "Greater than 4.5 in. w.c. and not over 14 in. w.c.", verdict: "Supply pressure is acceptable. Nothing to change here." },
+        { label: "At or below 4.5 in. w.c.", verdict: "Too low - it must be greater than 4.5 in. w.c. (0.16 psig). Correct the gas supply before starting the unit." },
+        { label: "Above 14 in. w.c.", verdict: "Too high - it must not exceed 14 in. w.c. (0.5 psig). Correct the supply pressure before starting the unit." },
+      ],
+    },
+  ],
+  "s-carrier-59mn7c-post-install-required-checks": [
+    {
+      ask: "Measure manifold pressure at the gas valve for the fuel and stage being fired. How does it compare with the rating plate value?",
+      options: [
+        { label: "Matches the rating plate value for that fuel and stage", verdict: "Good. Now clock the gas meter to verify the actual firing rate - manifold pressure alone does not prove the rate." },
+        { label: "Off the rating plate value", verdict: "Correct the manifold pressure to the rating plate value for that fuel and stage before going any further, then clock the meter to confirm the firing rate." },
+      ],
+    },
+    {
+      ask: "Measure temperature rise across the furnace and compare it with the range on the rating plate. Where does it land?",
+      options: [
+        { label: "Inside the rating plate range", verdict: "Airflow is right. Finish by verifying a complete cycle - shutdown when the thermostat is lowered and restart when it is raised." },
+        { label: "Above or below the rating plate range", verdict: "Correct airflow until the rise falls inside the rating plate range. Do not leave it out of range, then verify a complete cycle." },
+      ],
+    },
+    {
+      ask: "Look at the blower access door and its switch before you leave. What do you find?",
+      options: [
+        { label: "Door properly installed and the switch closes on its own", verdict: "Correct. No component can operate unless that switch is closed, so leave it that way. Warn the customer about temporary smoke or odor at start-up and recommend doors and windows open for the first heat cycle." },
+        { label: "Door not seated, or the switch is taped or permanently bypassed", verdict: "Fix it now. The door switch opens 115-V power to the control. Remove any tape or bypass and install the door properly - depress the switch by hand, one hand only, while using the service buttons." },
+      ],
+    },
+  ],
+  "s-carrier-59mn7c-stage-lock-rise": [
+    {
+      ask: "Set Htt to 2St-LHt, jumper R to W/W1, let the supply temperature stabilize, then read rise against the rating plate range. What did you get?",
+      options: [
+        { label: "Rise is inside the rating plate range at minimum heat", verdict: "Minimum heat is set. Move on - Htt to 2St-iHt with R jumpered to W/W1 for intermediate heat, then R jumpered to W/W1 and W2 for maximum heat." },
+        { label: "Rise is outside the rating plate range at minimum heat", verdict: "Remove the jumper, wait out the blower off delay, turn 115 VAC power off, adjust blower speed per the control programming section, restore power, and re-check. Do not move to the other rates until minimum heat is in range." },
+      ],
+    },
+    {
+      ask: "After checking intermediate heat (2St-iHt) and maximum heat (R to W/W1 and W2), how many of the three firing rates read inside the rating plate range?",
+      options: [
+        { label: "All three rates read in range", verdict: "Rise is verified. Remove the jumpers, let the blower off delay complete, and set Htt to 1St, 2St-LHt, or 2St-iHt to match the installed thermostat and intended operating mode." },
+        { label: "One or more rates are still outside the range", verdict: "Each rate has to be checked separately. Go back to the one that failed, power down, adjust blower speed per the control programming section, then re-verify all three - a speed change moves the others too." },
+      ],
+    },
+  ],
+  "s-carrier-59tp6-clean-burners-flame-sensor": [
+    {
+      ask: "You are disconnecting the gas pipe from the gas valve. How are you holding the valve?",
+      options: [
+        { label: "Back-up wrench on the valve so it cannot rotate on the manifold", verdict: "Correct - that keeps the valve from rotating on the manifold or wrecking its mounting. Pull the pipe out of the furnace casing and carry on." },
+        { label: "One wrench on the pipe only", verdict: "Stop. Put a back-up wrench on the valve first or you will rotate it on the manifold and damage the mounting - that turns a cleaning into a gas valve replacement." },
+      ],
+    },
+    {
+      ask: "With the manifold off, inspect the burners, the flame sensor, and the orifices.",
+      options: [
+        { label: "Light dirt or dust on the burners and a coated flame sensor", verdict: "Clean both. Check the orifices for obstruction while you are in there, but do not redrill anything." },
+        { label: "An orifice is obstructed", verdict: "Clear the obstruction without redrilling the orifice. Then reassemble in reverse, noting where the green/yellow ground wire lands so it goes back correctly." },
+      ],
+    },
+    {
+      ask: "After reassembly, soap every gas joint you opened, before and after restoring the heat call. What do you see?",
+      options: [
+        { label: "No bubbles at any joint", verdict: "Leak check is clean. Run a full heat cycle, verify a stable flame signal, and finish with a combustion/CO check." },
+        { label: "Bubbles forming at a joint", verdict: "Shut off the gas and repair that joint immediately - do not run the furnace. Re-soap it after the repair before you restore the heat call." },
       ],
     },
   ],
@@ -512,6 +831,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-carrier-59tp6-hum-terminal-and-staging-wiring": [
+    {
+      ask: "The humidifier runs when it should not. Check the thermostat and the humidifier. What do you have?",
+      options: [
+        { label: "The thermostat has its own 24 volt humidifier output", verdict: "Remove any connection to the furnace HUM terminal. Never land a wire there when the stat drives the humidifier itself - that is the trap the install instructions call out." },
+        { label: "The humidifier has its own internal power supply", verdict: "Install a field-supplied isolation relay rather than driving it directly from the control." },
+        { label: "The complaint is staging, not the humidifier", verdict: "Move to the compressor staging configuration - decide whether the thermostat or the furnace control handles staging." },
+      ],
+    },
+    {
+      ask: "The outdoor unit never stages. What equipment is out there?",
+      options: [
+        { label: "Two-stage AC or heat pump", verdict: "Decide who stages: configure the thermostat for two-stage compressor operation, or configure it single-stage and let the furnace control handle staging. Pick one, and verify outputs against the thermostat's own installation instructions." },
+        { label: "Single-stage AC or heat pump", verdict: "Configure the thermostat for single-stage compressor operation. There is no staging to chase." },
+        { label: "HYBRID HEAT dual fuel", verdict: "Configure the thermostat for dual fuel operation and confirm the heat pump has a high pressure switch - the manual states it is required for dual fuel. Check the outdoor equipment instructions for the outdoor-side setup too." },
+      ],
+    },
+  ],
   "s-carrier-59tp6-inlet-gas-pressure": [
     {
       ask: "With the manometer on the inlet pressure tap and R jumpered to W/W1 and W2 to force maximum heat, read inlet gas pressure once the main burners ignite. What do you read?",
@@ -519,6 +856,47 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Between 4.5 and 13.6 in. w.c. and holding steady under load", verdict: "Supply is good at full fire on natural gas. The manifold pressure problem is not the supply - work the furnace regulator and orifice side." },
         { label: "Drops below 4.5 in. w.c. under load", verdict: "The supply piping or the meter/regulator is the problem, not the furnace regulator. You will never set the correct input rate until the supply holds up under full fire." },
         { label: "Above 13.6 in. w.c.", verdict: "Inlet pressure is outside the range for natural gas on this furnace. Correct the supply before attempting to set manifold pressure." },
+      ],
+    },
+  ],
+  "s-carrier-59tp6-stage-lock-rise": [
+    {
+      ask: "With Htt set to 2St and R jumpered to W/W1, let the supply temperature stabilize and read the temperature rise. How does it compare to the range printed on the furnace rating plate?",
+      options: [
+        { label: "Rise falls inside the range on the rating plate", verdict: "Low heat is good. Remove the jumper, then jumper R to W/W1 and W2 and verify high heat rise the same way." },
+        { label: "Rise is above the range on the rating plate", verdict: "Not enough airflow for the fire rate. Remove the jumper, wait out the blower off delay, pull the blower door, and raise blower speed per the furnace control programming section, then re-check low heat rise." },
+        { label: "Rise is below the range on the rating plate", verdict: "Too much airflow for the fire rate. Remove the jumper, wait out the blower off delay, pull the blower door, and lower blower speed per the control programming section, then re-check." },
+      ],
+    },
+    {
+      ask: "Now jumper R to W/W1 and W2 for high heat, let the burners light and the blower come on, and read rise against the same rating plate range.",
+      options: [
+        { label: "High heat rise is inside the rating plate range", verdict: "Both stages check out. Remove all jumpers, let the blower off delay complete, and return Htt to 1St or 2St to match the installed thermostat." },
+        { label: "High heat rise is outside the rating plate range", verdict: "Adjust blower speed per the control programming section with the blower door off, then re-check BOTH stages - a speed change moves low heat rise too. Do not leave until both read in range." },
+      ],
+    },
+  ],
+  "s-carrier-59tp6-startup-blower-rotation": [
+    {
+      ask: "What is the outdoor temperature right now, before you run the furnace in the cooling cycle?",
+      options: [
+        { label: "Below 70 F", verdict: "Turn off the circuit breaker to the outdoor unit before you run the cooling cycle, then turn it back on afterward. Running the condenser cold can hurt it." },
+        { label: "70 F or above", verdict: "You can run the cooling cycle normally. Jumper R to G and then R to Y/Y2 at the furnace control thermostat terminals to check blower rotation and the speed change." },
+      ],
+    },
+    {
+      ask: "Holding the blower door switch closed by hand, jumper R to G and then R to Y/Y2 and watch the blower.",
+      options: [
+        { label: "Blower runs, speed changes between the two jumpers, and it rotates the correct direction", verdict: "That is what you want. Perform the component self-test shown at the bottom of the SERVICE label on the blower door, then remove all jumpers and replace the door." },
+        { label: "Blower rotates the wrong direction", verdict: "Do not leave it - correct rotation is the check the manual asks you to make visually. Fix the motor rotation before running the furnace through a heating cycle." },
+        { label: "Blower does not change speed between the two jumpers", verdict: "The speed taps are not doing what they should. Run the component self-test on the blower door SERVICE label and sort out the blower speed wiring before you finish the startup." },
+      ],
+    },
+    {
+      ask: "You jumpered R to W/W1 and the blower ran with no burners for a while. How long?",
+      options: [
+        { label: "About 90 seconds, then the heating cycle began", verdict: "Normal, not a fault. That 90 second blower run happens when R to W/W1 is jumpered at the moment the blower door switch is closed. Let it go." },
+        { label: "Well past 90 seconds with no heating cycle at all", verdict: "That is beyond the normal delay. Remove the jumpers, turn on the gas supply, and run one complete heating cycle to see where the sequence actually stops." },
       ],
     },
   ],
@@ -539,6 +917,41 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-carrier-condensate-trap-clean": [
+    {
+      ask: "Before you loosen anything, check the service kit and the truck. Do you have a new condensate trap gasket on hand?",
+      options: [
+        { label: "New trap gasket is in hand", verdict: "You are clear to pull the trap. Kill power and gas, turn the electric switch on the gas valve OFF, then disconnect the external drain and the relief hose before removing the trap screw." },
+        { label: "No trap gasket available", verdict: "Stop - removing the trap requires a new gasket and the old one gets discarded. Get one from the distributor before you start, or the job stalls with the furnace apart." },
+      ],
+    },
+    {
+      ask: "After cleaning and reassembling with the new gasket, run the furnace through two complete heating cycles. What do you see?",
+      options: [
+        { label: "Both cycles run normally, the trap drains, and the cabinet stays dry", verdict: "Job is done. Install the control door and close out." },
+        { label: "Still slow drainage or a pressure switch fault", verdict: "The trap was not the whole story. Look at the collector box relief and pressure switch ports - they scale and plug separately from the trap and have to be picked clear." },
+        { label: "Trap is weeping at the collector box joint", verdict: "The new gasket is not sealing. Power down, pull the trap, confirm the gasket is seated squarely on the collector box, align the trap with the drain opening, and re-secure with the screw." },
+      ],
+    },
+  ],
+  "s-carrier-flash-led-reading": [
+    {
+      ask: "Watch through the blower door sight glass with the door ON. What is the LED doing?",
+      options: [
+        { label: "Countable short amber flashes then red flashes, repeating after a pause", verdict: "That is a real code - amber count is the first digit, red count the second (3 amber plus 1 red equals 31). Look it up in Error Codes." },
+        { label: "Rapid continuous flashing you cannot count", verdict: "Not a countable code. It means line voltage polarity is reversed or there is no ground. Fix the power problem first." },
+        { label: "Steady ON with no flashing and no operation", verdict: "The board has power but no call, or the board has failed. Verify the thermostat call actually reaches the board before condemning it." },
+        { label: "It was flashing, then stopped when you pulled the door", verdict: "You opened the door switch and killed the board mid-code. Put the door back on and read through the sight glass." },
+      ],
+    },
+    {
+      ask: "The fault is not active now. Briefly cycle the door switch, or use the recall procedure on newer boards. What replays?",
+      options: [
+        { label: "A stored code replays on the LEDs", verdict: "That is the last fault the board saw. Count it and look it up before you power cycle anything else." },
+        { label: "Nothing replays", verdict: "The code cleared with the condition and nothing is stored. Run the unit and try to reproduce the fault while you watch the LED through the sight glass." },
+      ],
+    },
+  ],
   "s-carrier-hsi-resistance-and-replacement": [
     {
       ask: "With gas and electrical supplies off and the igniter wire disconnected, ohm across both igniter leads in the connector. What do you read?",
@@ -556,6 +969,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Htt left on a stage lock selection that does not match the installed thermostat", verdict: "That pins the furnace at one firing rate regardless of the thermostat. Set Htt to match - 1St for single stage, or the appropriate 2St selection - then run a full heat call and confirm it stages normally." },
         { label: "A jumper still across R, W/W1, or W2 at the furnace thermostat terminals", verdict: "Left over from a rise or gas pressure check. Remove it, let the blower off delay complete, and re-run a full heat call." },
         { label: "Htt matches the installed thermostat and no jumpers left behind", verdict: "The setup parameters are not the cause. Re-verify temperature rise against the rating plate range before going further." },
+      ],
+    },
+  ],
+  "s-carrier-infinity-ui-codes": [
+    {
+      ask: "Enter the Infinity/Evolution wall control service menus and read the event list newest first. What does the pattern look like?",
+      options: [
+        { label: "One event at an odd hour during a cold snap, nothing since", verdict: "That is a condition-driven event, not a failing part - the weather loaded the system. Note the code, match it to the Carrier Infinity table, and look for the load or airflow condition instead of swapping parts." },
+        { label: "The same code logging every cycle", verdict: "That is an active, repeating fault. Match the major.minor code (like 31.4 or 41.2) against the Carrier Infinity table in Error Codes and work it now." },
+        { label: "The wall control display itself is blank or suspect", verdict: "Read the code off the furnace board's amber and green status LEDs instead - the board flashes the same code." },
+      ],
+    },
+    {
+      ask: "After the repair, clear the history and run a full heat cycle. What logs?",
+      options: [
+        { label: "No new events logged", verdict: "Repair confirmed and the next tech starts clean. You are done." },
+        { label: "The same code logs again", verdict: "The repair did not take. Go back to that fault - the timestamped event just told you it is still live." },
       ],
     },
   ],
@@ -587,6 +1017,62 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-carrier-return-to-service-after-burner-work": [
+    {
+      ask: "Before you fire it, check the two wires that came off during the burner work.",
+      options: [
+        { label: "Flame sensor wire and hot surface igniter wire are both reconnected", verdict: "Good - those two get missed constantly. Move on to piping the gas valve and the leak check." },
+        { label: "One of them is still hanging loose", verdict: "Land it before you go any further. Without the flame sensor wire the furnace will light and drop out; without the igniter wire it will never light at all." },
+      ],
+    },
+    {
+      ask: "How is the gas pipe going back onto the gas valve?",
+      options: [
+        { label: "Propane-resistant pipe dope on the threads", verdict: "That is the correct sealant for this connection. Do not add PTFE thread-seal tape." },
+        { label: "PTFE thread-seal tape on the threads", verdict: "Take it off and use propane-resistant pipe dope instead - the manual specifically says do NOT use PTFE thread-seal tape here." },
+      ],
+    },
+    {
+      ask: "Turn gas on at the valve switch and the external shut-off, then check the joints with a soap solution made specifically for leak detection.",
+      options: [
+        { label: "No bubbles at any joint", verdict: "Turn power on at the external disconnect, run the furnace through two complete heating cycles to check for proper operation, then install the control door." },
+        { label: "Bubbles at a joint", verdict: "Shut the gas back off and redo that joint with propane-resistant dope before you power up. Do not run the furnace on a leaking connection." },
+      ],
+    },
+  ],
+  "s-carrier-service-tool-at-outdoor-unit": [
+    {
+      ask: "With A and B landed on the AOC terminal strip and the tool powered by its external adapter, watch the indoor controls. What happens?",
+      options: [
+        { label: "Indoor communicating controls go to sleep and the service tool takes control", verdict: "You are set. Run the diagnostic checkouts and charging modes right at the outdoor unit instead of walking back and forth." },
+        { label: "Indoor controls stay awake and the tool does not take over", verdict: "Recheck the C and D wires. They must NOT land on the terminals marked C and D - connect them to 24V and C on ST1 as shown in Fig. 34, and confirm the tool has external adapter power." },
+      ],
+    },
+    {
+      ask: "You are finished and have removed the service tool from the communicating bus. Are the indoor controls back in charge?",
+      options: [
+        { label: "Indoor controls have regained control", verdict: "Good to leave the job. That handback normally takes about two minutes after the tool comes off the bus." },
+        { label: "Indoor controls have not come back yet", verdict: "Allow about two minutes for the indoor communicating controls to regain control before leaving. Do not start rewiring - that wait is normal." },
+      ],
+    },
+  ],
+  "s-cassette-drain-pan-pour-water-test": [
+    {
+      ask: "Remove the drain plug and pour water into the evaporator drain pan. What happens?",
+      options: [
+        { label: "Water drains away and the internal condensate pump runs", verdict: "The drain and pump check passes. Reinstall the drain plug and record the check as part of commissioning." },
+        { label: "Water drains but the condensate pump does not run", verdict: "The pump is not responding. Chase it before you leave - on a cassette the water lands on a finished ceiling." },
+        { label: "Water backs up in the pan or drains slowly", verdict: "Recheck the drain: at least 1/4 inch per foot slope, supported about every 3 ft (1 m), no droops or kinks, and a 2 inch (51 mm) space at the termination. If the pump lifts into the drain, confirm the lift does not exceed the maximum in the installation figure." },
+      ],
+    },
+    {
+      ask: "Walk the full drain run while the water is flowing. Do you see any leaks?",
+      options: [
+        { label: "No leaks anywhere along the run", verdict: "Good. Reinstall the drain plug and record that the drain and pump check was completed as part of commissioning." },
+        { label: "Water leaking at a joint or along the line", verdict: "Shut down power to the unit at once and do not restore power until the problem has been resolved. Repair the joint - check that the hose clamp at the drain line stub is snug but not over-tightened, since over-tightening damages the stub." },
+      ],
+    },
+  ],
   "s-charge-check-conditions": [
     {
       ask: "Let it run and watch the readings. What are superheat and subcooling doing?",
@@ -595,6 +1081,30 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Stable, but the house is already at setpoint with almost no load", verdict: "The numbers are real but they do not represent design conditions. Charging here will leave you wrong when the load returns. Build load or weigh the charge in instead." },
         { label: "Stable, conditions inside the chart window", verdict: "Now the readings mean something. Compare against the OEM target and adjust in small amounts, re-stabilizing between each change." },
         { label: "Stable but airflow was never verified", verdict: "Stop. Charge decisions made on top of an airflow problem are wrong by definition. Fix the airflow, then come back to the charge." },
+      ],
+    },
+  ],
+  "s-charging-blends-liquid-only-fractionation": [
+    {
+      ask: "Find out how this system was charged the last time. What did the previous tech do?",
+      options: [
+        { label: "Charged vapor off the cylinder", verdict: "The composition in the system is wrong and you cannot fix it by adding more. Recover, evacuate, and weigh in a fresh charge as liquid." },
+        { label: "Charged liquid with the cylinder inverted or off the liquid port", verdict: "That is correct for a blend. Verify the weighed amount against the required charge before you go looking for other causes." },
+      ],
+    },
+    {
+      ask: "How are you getting liquid into this system?",
+      options: [
+        { label: "Liquid into the high side with the system off", verdict: "That is the safe way. Weigh it in on a scale rather than guessing, and record the amount." },
+        { label: "Metered into the suction side through a flash/restrictor valve or a cracked manifold so it flashes to vapor first", verdict: "Acceptable, as long as it truly flashes before it reaches the compressor. Keep it metered and weigh the charge in on a scale." },
+        { label: "Straight liquid into the suction port with the compressor running", verdict: "Stop - that slugs the compressor and can destroy it. Charge into the high side with the system off, or meter it through a restrictor so it flashes first." },
+      ],
+    },
+    {
+      ask: "What cylinder are you charging from?",
+      options: [
+        { label: "Full or nearly full cylinder, liquid drawn only", verdict: "Fine for a critical charge. Weigh the charge in and record the amount." },
+        { label: "Partially used cylinder that has had vapor drawn off it", verdict: "Treat it as suspect for a critical charge - the mix left in the tank is off spec. Use a fresh cylinder, and never mix refrigerants in a system or a cylinder to stretch a short supply." },
       ],
     },
   ],
@@ -708,6 +1218,39 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-collector-box-orifice-burrs": [
+    {
+      ask: "Before chasing anything mechanical, check manifold gas pressure against the range stated on the furnace rating plate.",
+      options: [
+        { label: "Manifold pressure is inside the rating plate range", verdict: "Gas is set correctly, so move on to the mechanical causes. Remove the draft inducer and inspect the gasket and the collector box orifice." },
+        { label: "Manifold pressure is outside the rating plate range", verdict: "Set manifold pressure into the rating plate range first and re-take your combustion readings. Do not pull the inducer until the gas side is right." },
+      ],
+    },
+    {
+      ask: "Remove the draft inducer and inspect the gasket between the inducer and the collector box cover, and the orifice hole in the collector box.",
+      options: [
+        { label: "Gasket is damaged, hardened, or misaligned", verdict: "Any air leak there has a negative effect on combustion. Replace the gasket rather than reusing it, reassemble the inducer squarely against it, and re-take combustion readings." },
+        { label: "Orifice hole in the collector box has burrs on one or both sides", verdict: "The hole must be free of burrs on both sides. Deburr it or replace as needed, reassemble the inducer squarely against the gasket, and re-run the combustion readings." },
+        { label: "Gasket is good and the orifice is clean and burr free", verdict: "Neither of these is your cause. Reassemble the inducer squarely against the gasket and go back over the gas and airflow side." },
+      ],
+    },
+  ],
+  "s-collector-box-port-cleaning": [
+    {
+      ask: "With power and gas off, pull the pressure switch tube off the collector box and pick the port clear with a small wire. What came out?",
+      options: [
+        { label: "Scale or debris cleared out of the pressure switch port", verdict: "That is a likely cause of the nuisance trips. Shake water out of the tube, reconnect it to the switch and the collector box port, then do the relief port and trap the same way." },
+        { label: "Pressure switch port was already clear", verdict: "Move on to the relief side - pull the relief tube off the collector box port and off the trap and clean both with a small wire." },
+      ],
+    },
+    {
+      ask: "With all the ports cleaned and the tubes reconnected, run two complete heating cycles. What does the pressure switch do?",
+      options: [
+        { label: "Pressure switch proves and holds through both cycles and the trap drains", verdict: "The plugged ports were the fault and it is fixed. Close up." },
+        { label: "Pressure switch still trips, or the trap still drains slowly", verdict: "Ports are not the only restriction. Go back to the trap itself and the condensate drain lines, and confirm every tube is dry and reconnected to the right port." },
+      ],
+    },
+  ],
   "s-combination-fan-limit-control": [
     {
       ask: "Pop the cover off the fan/limit control, run a heat call, and watch where the rotating dial pointer sits when the blower starts and stops. What happens?",
@@ -728,6 +1271,116 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-comfort-alert-solid-red-trip": [
+    {
+      ask: "Look at the module LEDs. What are they doing?",
+      options: [
+        { label: "Solid yellow RUN and solid red TRIP", next: 1 },
+        { label: "TRIP and ALERT flashing at the same time", verdict: "Control circuit voltage is too low for operation. Check the control transformer and line voltage instead of chasing the compressor." },
+        { label: "Yellow ALERT flashing code 6", verdict: "The fault is in the start circuit - a failed run capacitor or open start wiring." },
+        { label: "Yellow ALERT flashing code 7", verdict: "The fault is in the run circuit - open run wiring or a damaged run winding." },
+      ],
+    },
+    {
+      ask: "Solid red TRIP means the Y demand is present but the compressor is not running. Check the power side at the outdoor unit. What do you find?",
+      options: [
+        { label: "Outdoor unit power disconnect open, or compressor breaker or fuses open", verdict: "There is your answer. Restore it and find out why it opened - the thermostat demand was there the whole time." },
+        { label: "Power is present but the compressor contactor has failed open", verdict: "Replace the contactor. The demand was getting there and the contactor was not passing it through." },
+        { label: "Power and contactor both check good", verdict: "Check whether the compressor protector is open - look at head pressure and compressor supply voltage - then check the high pressure switch if the system has one, and look for a broken wire or a connector not making contact." },
+      ],
+    },
+  ],
+  "s-comfort-drafts-perceived-as-temp-problem": [
+    {
+      ask: "Measure actual room temperature with a separate thermometer at several points, including near exterior walls and windows. What do you get?",
+      options: [
+        { label: "Room is genuinely at setpoint but still feels cold", next: 1 },
+        { label: "Room really is below setpoint", verdict: "This is an HVAC delivery problem after all. Check duct CFM and supply air temperature at that register before looking at the building envelope." },
+      ],
+    },
+    {
+      ask: "Check for air movement in the room and look at where the supply register blows. What do you find?",
+      options: [
+        { label: "Drafts at windows, exterior doors, outlets on exterior walls, or recessed lights", verdict: "Air movement makes a room feel colder than its actual temperature. Sealing and insulation work is the fix, not HVAC adjustment. Recommend a qualified insulation or weatherization contractor." },
+        { label: "Supply register blows directly across a seating area or bed", verdict: "Occupants feel that as a draft even when the air is at a normal temperature. Redirect or diffuse the register before anyone touches the equipment." },
+        { label: "No drafts and register throw looks fine", verdict: "Confirm duct CFM and supply air temperature at that room's register are within normal range before ruling out an HVAC-side cause entirely." },
+      ],
+    },
+  ],
+  "s-comfort-humidity-oversized-shortcycle": [
+    {
+      ask: "Confirm the complaint against the thermostat reading. Which is it?",
+      options: [
+        { label: "Space reads at setpoint but feels humid and clammy", next: 1 },
+        { label: "Space is not reaching setpoint", verdict: "That is a cooling capacity complaint, not the oversizing and runtime pattern. Diagnose it as a normal cooling problem." },
+      ],
+    },
+    {
+      ask: "Verify charge and airflow first, then time the run cycles. What do you find?",
+      options: [
+        { label: "Charge or airflow is off", verdict: "Low airflow can look similar but is a different fix. Correct charge and airflow first, then re-evaluate the humidity complaint." },
+        { label: "Charge and airflow are good, and it runs only a few minutes before satisfying", next: 2 },
+      ],
+    },
+    {
+      ask: "With short run times confirmed and charge and airflow good, compare equipment capacity against the actual cooling load. What do you find?",
+      options: [
+        { label: "Equipment is oversized for the load", verdict: "Short cycles never let the coil get cold and wet long enough to condense moisture. The real options are a dehumidification-capable/variable-speed system, a standalone dehumidifier, or a smaller replacement. A lower setpoint makes short cycling worse, not better." },
+        { label: "Equipment matches the calculated load", verdict: "With sizing, charge, and airflow all confirmed, a standalone dehumidifier is the practical option to discuss with the customer." },
+      ],
+    },
+  ],
+  "s-comfort-roomtoroom-duct-design": [
+    {
+      ask: "Measure supply CFM at the problem room's register and compare against a well-performing room of similar size. What do you find?",
+      options: [
+        { label: "A real shortfall compared to the good room", next: 1 },
+        { label: "CFM is comparable to the good room", verdict: "Airflow is not the problem. Check that room's exposure: west-facing glass, over a garage, or the end of the house. Some rooms need more capacity than a standard duct design gives them." },
+      ],
+    },
+    {
+      ask: "Trace the duct run to that room. What do you see?",
+      options: [
+        { label: "Long run with several 90-degree turns", verdict: "That delivers less CFM than the same size duct running straight to a nearer room. Duct modification is the real fix, not an equipment repair." },
+        { label: "Undersized duct, or flex overly long for its diameter or poorly supported", verdict: "Correct the size, length, and support. This is a duct design problem, not an equipment fault." },
+        { label: "Duct modification is not practical in this house", verdict: "Discuss realistic options: a booster fan, a dedicated small zone, or a mini-split for that room, rather than implying the main system is broken." },
+      ],
+    },
+  ],
+  "s-comfort-single-zone-multistory-thermostat-limitation": [
+    {
+      ask: "Count the thermostats or sensors controlling this system. What do you find?",
+      options: [
+        { label: "One thermostat controls the whole house", next: 1 },
+        { label: "Multiple thermostats or sensors are in play", verdict: "This is not the single-sensor limitation. Diagnose the zoning or sensor setup instead." },
+      ],
+    },
+    {
+      ask: "Look at where that thermostat is located relative to the complaint areas. What do you see?",
+      options: [
+        { label: "On a shaded wall, not representative of the problem areas", verdict: "The system does exactly what that one sensor tells it. Present options: a ducted zoning system, a thermostat with remote sensor averaging, or supplemental equipment for the problem areas." },
+        { label: "Near a sunny stairwell or another spot that skews its reading", verdict: "Its reading does not represent the house, so the whole system responds to the wrong conditions. Discuss remote sensor averaging or relocation along with zoning options." },
+        { label: "Location looks reasonable for the house", verdict: "This is a fundamental limitation of single-zone control, not a fault to repair. Set that expectation before proposing work, and do not imply a thermostat swap or airflow tweak will fix it." },
+      ],
+    },
+  ],
+  "s-comfort-stratification-twostory": [
+    {
+      ask: "Confirm the shape of the complaint. Which is it?",
+      options: [
+        { label: "A whole floor is off compared to the other floor", next: 1 },
+        { label: "One specific room is off", verdict: "That points to duct balancing in that area rather than stratification between floors. Diagnose it as a room-level airflow problem." },
+      ],
+    },
+    {
+      ask: "Check how the system is controlled and where the returns are located. What do you find?",
+      options: [
+        { label: "Single zone with one thermostat, usually on the main floor", verdict: "One thermostat can only satisfy the level it is on, leaving the other floor over- or under-conditioned. Explain that and present realistic options rather than implying a fault." },
+        { label: "Only main-floor returns with no upstairs return", verdict: "That exaggerates stratification significantly. Discuss adding return air upstairs along with the other options." },
+        { label: "Already zoned with returns on both floors", verdict: "The obvious design causes are covered. Discuss supply damper adjustments, a ceiling fan strategy, or accepting some difference as normal for this home's design." },
+      ],
+    },
+  ],
   "s-comfortnet-oat-oct-sensor-ohm-check": [
     {
       ask: "Match the complaint to the right sensor before pulling anything. What is the unit actually doing wrong?",
@@ -735,6 +1388,97 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Defrosting at the wrong times", verdict: "The outdoor coil temperature (OCT) sensor is what determines defrost cycles. Ohm that one." },
         { label: "Staging auxiliary heat incorrectly on a heat pump or dual fuel system", verdict: "The outdoor air temperature (OAT) sensor provides the balance point temperature. Ohm that one." },
         { label: "It is an air conditioner model, not a heat pump", verdict: "Air conditioner models carry the OAT sensor only - there is no OCT on that unit to check." },
+      ],
+    },
+  ],
+  "s-commbus-daisychain-homerun-topology": [
+    {
+      ask: "Check the manufacturer's install documentation for the required bus topology, then compare it against the as-built wiring. What do you find?",
+      options: [
+        { label: "System requires a daisy chain but devices are home-run back to one point", verdict: "A star on a daisy-chain system can pass a continuity check while causing signal integrity problems. Rewire so each device's terminals pass through to the next." },
+        { label: "System requires home-run/star but devices are chained together", verdict: "Rewire to the required topology. This is a wiring architecture problem that better cable or termination changes will not fix." },
+        { label: "As-built topology matches what the manufacturer requires", next: 1 },
+      ],
+    },
+    {
+      ask: "Measure total bus length and count connection points and devices against the manufacturer's documented maximum. What do you find?",
+      options: [
+        { label: "Bus length or connection-point count exceeds the documented maximum", verdict: "Even correctly matched topology fails past those limits. Shorten the run or reduce connection points to get back inside the manufacturer's spec." },
+        { label: "A mid-bus splice or junction was added instead of routing through each device's terminals", verdict: "Treat that as a topology violation even if it was done with good intentions. Rewire it through the device pass-through terminals as designed." },
+        { label: "Everything is within the documented limits", next: 2 },
+      ],
+    },
+    {
+      ask: "Watch when the communication drops out relative to how many devices are active on the bus. What is the pattern?",
+      options: [
+        { label: "Works with fewer devices active and degrades as more zones or thermostats join", verdict: "That is the signature of a signal integrity problem from topology or length. Go back over the as-built wiring closely against the required topology, since something was missed." },
+        { label: "Dropouts are unrelated to how many devices are active", verdict: "Topology is likely not the cause. Look at polarity, termination, shielding, and EMI sources instead." },
+      ],
+    },
+  ],
+  "s-commbus-emi-rfi-interference": [
+    {
+      ask: "Ask when the comm faults happen and whether they line up with any nearby equipment cycling on or off. What is the pattern?",
+      options: [
+        { label: "Faults line up with a VFD, generator, solar inverter, or other device turning on/off", verdict: "That timing points strongly at EMI rather than a wiring defect. Next look at how the comm wiring is routed relative to that source." },
+        { label: "No correlation with any nearby device cycling", verdict: "EMI is less likely. Go back to wiring-side causes such as polarity, termination, topology, and cable type." },
+      ],
+    },
+    {
+      ask: "Look at where the communication wiring runs relative to the suspected EMI source. What do you see?",
+      options: [
+        { label: "Comm wiring runs parallel and close to VFD output leads, inverter conductors, or generator wiring", verdict: "Increase separation or reroute away from that parallel run. Even properly shielded cable has limits when routed this close." },
+        { label: "Rerouting is not practical in this install", verdict: "Confirm shielded cable is used with the shield grounded at one end only. That is what specifically rejects EMI that unshielded cable will not." },
+        { label: "Wiring is already well separated and correctly shielded", verdict: "For VFDs and solar inverters, some units have adjustable switching frequency or built-in EMI filtering. Coordinate with that equipment's installer about filtering or an output reactor to fix it at the source." },
+      ],
+    },
+  ],
+  "s-commbus-shielded-vs-unshielded": [
+    {
+      ask: "Check what this system requires for the communication pair, then look at what is actually installed. What do you find?",
+      options: [
+        { label: "Standard unshielded thermostat cable where shielded twisted pair was required", verdict: "A likely root cause of intermittent, hard-to-reproduce comm errors, especially near line-voltage wiring, dimmers, or other EMI sources. Replace the communication pair with the correct shielded cable." },
+        { label: "Correct shielded cable is installed for the communication pair", next: 1 },
+      ],
+    },
+    {
+      ask: "Trace the cable shield or drain wire at both ends. How is it landed?",
+      options: [
+        { label: "Shield grounded at both ends", verdict: "That creates a ground loop that induces noise rather than rejecting it. Land the shield at one end only, per the manufacturer's instructions." },
+        { label: "Shield cut back and taped off, not connected anywhere", verdict: "That gives no EMI protection at all even though the right cable was used. Land the drain wire at the one end the manufacturer specifies." },
+        { label: "Shield landed at one end per the manufacturer's instructions", next: 2 },
+      ],
+    },
+    {
+      ask: "Look at how the communication run is routed relative to line-voltage wiring. What do you see?",
+      options: [
+        { label: "It runs parallel and close to line-voltage wiring for some distance", verdict: "Maintain the separation the code and manufacturer call for, or reroute that section. Shielded cable helps but has limits when run alongside line voltage." },
+        { label: "It is well separated from line-voltage wiring", verdict: "Cable type and routing check out. Look elsewhere for the comm fault, such as polarity, termination, or bus topology." },
+      ],
+    },
+  ],
+  "s-commbus-termination-polarity": [
+    {
+      ask: "Check polarity of the 2-wire comm pair at the indoor unit, outdoor unit, and thermostat or zone panel. What do you find?",
+      options: [
+        { label: "Polarity reversed at one or more connection points", verdict: "One of the most common causes of a no-communication fault on an otherwise correct install. Correct it, then power-cycle the full system, not just the thermostat, since some boards latch the fault." },
+        { label: "Polarity is correct at every connection point", next: 1 },
+      ],
+    },
+    {
+      ask: "Check whether this system requires end-of-line termination, and how it is actually set. What do you find?",
+      options: [
+        { label: "System requires termination but none is enabled", verdict: "Enable the termination resistor or dip switch at the last device on the bus, then power-cycle the full system and recheck communication." },
+        { label: "Termination is enabled at more than one point on the bus", verdict: "That causes the same kind of instability as no termination at all. Leave it enabled only at the last device, then power-cycle the full system." },
+        { label: "Termination is set correctly for this system", next: 2 },
+      ],
+    },
+    {
+      ask: "Look at how the bus is physically run, and meter the bus DC bias or signal levels against the manufacturer's expected range. What do you find?",
+      options: [
+        { label: "Devices are home-run/star wired on a system that expects a daisy chain", verdict: "Rewire so each device's terminals pass through to the next if this system does not support a star topology, then power-cycle the full system." },
+        { label: "Extra splices or junctions were added in the run", verdict: "Many communicating systems specify a maximum number of connection points and total wire length. Remove the added junctions and recheck against the manufacturer's limits." },
+        { label: "Bus bias or signal levels are outside the manufacturer's documented range", verdict: "A bus can be fully continuous and still be malfunctioning from bad bias or termination. Work the termination and wiring against the manufacturer's spec rather than trusting a continuity check." },
       ],
     },
   ],
@@ -846,6 +1590,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-compressor-ground-test-after-trip-2": [
+    {
+      ask: "With the compressor terminal protective cover in place, replace the fuse or reset the breaker ONE time only. What happens?",
+      options: [
+        { label: "It holds", verdict: "It was a nuisance opening. Confirm the circuit protective device rating matches the maximum rating marked on the equipment nameplate before you leave." },
+        { label: "It opens again", verdict: "Stop resetting - do not continue to reset. Disconnect all power to the unit, make sure all power legs are open, and ground-test the compressor." },
+      ],
+    },
+    {
+      ask: "Power off, protective cover left on, three compressor leads disconnected at the nearest point. Ohm each lead separately to ground on the R x 10,000 or highest scale. What do you read?",
+      options: [
+        { label: "Infinity on all three leads", verdict: "No ground fault at the compressor. It is not the reason the device opened - keep looking at the rest of the electrical circuit." },
+        { label: "A reading on the meter from any lead to ground", next: 2 },
+      ],
+    },
+    {
+      ask: "Carefully remove the compressor terminal protective cover and inspect. What do you see?",
+      options: [
+        { label: "Loose leads or insulation breaks in the lead wires", verdict: "There is your ground path. Repair the leads - the compressor itself may be fine." },
+        { label: "Nothing shows visually", verdict: "Carefully remove the leads at the compressor terminals and retest for ground directly between the terminals and ground. Improper removal can damage the glass embedded terminals and result in terminal and hot oil discharging." },
+        { label: "Retested at the terminals and still reading to ground", verdict: "Any reading means there is continuity to ground - the compressor should be considered defective. Replace it." },
+      ],
+    },
+  ],
   "s-compressor-grounded-only-when-hot": [
     {
       ask: "With the compressor leads disconnected and insulated, energize the unit and let it run. What does the breaker do?",
@@ -891,6 +1659,46 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-compressor-open-winding-overload-reset": [
+    {
+      ask: "With all power disconnected and all power legs open, ohm each compressor winding. What do you read?",
+      options: [
+        { label: "Both windings test continuous", verdict: "Windings are fine. If a fuse, breaker or ground fault device also tripped, treat that as a separate electrical problem to find and correct, and verify the protective device rating matches the equipment nameplate." },
+        { label: "One winding reads open", next: 1 },
+      ],
+    },
+    {
+      ask: "An internally protected compressor reads open while the overload is tripped. Allow ample time for the shell to cool and the overload to reset, then retest. What do you get?",
+      options: [
+        { label: "Winding reads continuous once the compressor has cooled", verdict: "It was a hot, tripped protector - not a bad compressor. Find out why it was overheating instead of selling a compressor." },
+        { label: "Winding is still open after the overload has had time to reset", verdict: "Now you can replace the compressor. The protector has had its chance to reset and the winding is genuinely open." },
+      ],
+    },
+    {
+      ask: "Run a ground test too: power off, terminal cover in place, three leads off at the nearest point, each ohmed separately to ground on the highest scale. What do you read?",
+      options: [
+        { label: "Infinity on all three leads", verdict: "No ground fault. Judge the compressor on the winding readings alone." },
+        { label: "Any reading from a lead to ground", verdict: "That is continuity to ground - the compressor should be considered defective. Replace it." },
+      ],
+    },
+  ],
+  "s-compressor-pumping-test-scroll-flanks": [
+    {
+      ask: "With gauges on both sides and the charge verified correct against the evaporator serial plate, run a cooling performance test. Which picture do you have?",
+      options: [
+        { label: "All four: high side below normal, low side above normal, low coil temperature difference, low compressor amps", verdict: "That is the full pattern for broken or damaged scroll flanks. With the charge known correct, the compressor is faulty - replace it." },
+        { label: "High suction pressure with a cold suction line and possible liquid slugging", verdict: "Rule out an overfeeding TXV before condemning the compressor: check for an overcharge, test the power element, and check for a restricted or plugged equalizer tube." },
+        { label: "Only some of the four symptoms line up", verdict: "Do not condemn the compressor. All four have to line up with a known-correct charge. Re-verify the charge against the maximum permissible charge on the evaporator serial plate and keep looking." },
+      ],
+    },
+    {
+      ask: "Clamp the compressor amps while it runs and compare that with the rest of the picture. What do you see?",
+      options: [
+        { label: "Amp draw is low and the coil temperature difference is also low", verdict: "Consistent with a compressor that cannot pump vapor. Confirm the other two symptoms - below normal high side and above normal low side - before you replace it." },
+        { label: "Amp draw is normal or high", verdict: "That does not fit worn scroll flanks. Look somewhere else - the four-symptom pattern requires a low amp reading." },
+      ],
+    },
+  ],
   "s-compressor-suction-head-equalized": [
     {
       ask: "Clamp the amps on a compressor lead while it runs, and read the RLA off the nameplate. Enter both and I'll tell you what it means.",
@@ -919,6 +1727,45 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Both crashing toward zero", verdict: "That points at the metering device flooding the low side - stuck-open TXV, wrong or oversized orifice, or a failed EEV - not a dead compressor. Chase the metering device before you quote a compressor." },
         { label: "Superheat and subcooling are not both at zero", verdict: "Kill power, let the system sit until pressures fully equalize off-cycle, then restart and re-check. A stuck internal discharge bypass or safety looks exactly like a dead compressor until it is cycled." },
+      ],
+    },
+  ],
+  "s-compressor-terminal-cover-location": [
+    {
+      ask: "Read the tonnage off the nameplate before you open anything. What is it?",
+      options: [
+        { label: "2, 3, or 4 ton", verdict: "Expect the compressor terminal on TOP. Disconnect all power and confirm every leg is open - multiple power sources may be present - then observe the terminal cover warnings before removing it." },
+        { label: "5 ton", verdict: "On the 5 ton the terminal is on the SIDE, not the top. Plan your access from the side, kill all power, and observe the terminal cover warnings before removing the cover." },
+      ],
+    },
+    {
+      ask: "You are removing the leads from the compressor terminals. How are they coming off?",
+      options: [
+        { label: "Coming off cleanly with the right tool", verdict: "Good. Verify the U/V/W wiring connections against the terminal label so you can put them back correctly, and reinstall the protective terminal cover before restoring power." },
+        { label: "Stuck, and you are tempted to pry or pull hard", verdict: "Stop. Improper removal can damage the glass embedded terminals and discharge hot oil. Work them off carefully instead." },
+      ],
+    },
+  ],
+  "s-compressor-terminal-plate-leak": [
+    {
+      ask: "You see oil around the compressor terminal box. Before you touch anything, what state is the system in?",
+      options: [
+        { label: "Still under pressure and possibly energized", verdict: "Stay out of line with the terminal box and do not pry, pull, or tug on the terminal plug. Kill power at the disconnect and lock it out, then recover the charge fully before removing the plug or box cover." },
+        { label: "Power locked out and the charge fully recovered", verdict: "Now it is safe to inspect. Look at the terminal pins and the fusite for burning, pitting, and pushed-back pins." },
+      ],
+    },
+    {
+      ask: "With the charge recovered and power locked out, inspect the terminal area.",
+      options: [
+        { label: "Oil film in the terminal box, discolored or burned pins, or a swollen or cracked terminal plate", verdict: "The terminal has lost its seal. That is a compressor replacement, not a terminal repair." },
+        { label: "Pins clean, plate intact, no oil inside the box", verdict: "The terminal is not the leak. Keep searching the normal fitting and braze joint locations." },
+      ],
+    },
+    {
+      ask: "Any electrical history on this compressor?",
+      options: [
+        { label: "Compressor was recently struck by a fault or a short", verdict: "Suspect terminal damage rather than a simple fitting leak. If the terminal burned electrically, treat it as a possible burnout - run an oil/acid test and follow the cleanup and drier procedure." },
+        { label: "No known electrical event", verdict: "Still inspect the terminal for burning, pitting, and pushed-back pins once the charge is recovered, but a plain fitting leak is the more likely find." },
       ],
     },
   ],
@@ -1025,6 +1872,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Water backed up from a clogged drain", verdict: "Clear the actual clog before resetting or bypassing anything. The switch is doing its job; the drain clog is the real problem." },
         { label: "Water level is normal but the switch is still open", verdict: "Test the switch itself - the float should move freely and the contacts should open and close correctly - so it will properly protect the system going forward." },
+      ],
+    },
+  ],
+  "s-condensate-heat-pad-check": [
+    {
+      ask: "What is the coldest the ambient around this furnace gets?",
+      options: [
+        { label: "Can hit 32 F or lower", verdict: "Freeze protection is required here. Verify the heat pad is wrapped around the condensate drain trap - there is no need for heat tape inside the furnace casing." },
+        { label: "Stays above freezing year round", verdict: "Freeze protection measures are not required for this application. Note it and move on." },
+      ],
+    },
+    {
+      ask: "Inspect the heat tape on the condensate drain trap. What do you find?",
+      options: [
+        { label: "Nicks, cuts, abrasions, or gnawing by animals", verdict: "Replace the heat tape. Physical damage is a replace condition on its own, whether or not you can prove it heats." },
+        { label: "Heat tape insulation is discolored", verdict: "Discolored insulation is also a replace condition. Put new heat tape on." },
+        { label: "Tape is undamaged and the insulation color looks normal", verdict: "Leave it and verify the heat tape power supply circuit is on. A temperature-activated tape cannot be practically verified as heating in warm conditions - document the inspection instead of guessing." },
       ],
     },
   ],
@@ -1178,6 +2042,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-condenser-unit-vibration-noise": [
+    {
+      ask: "With the unit running, check the compressor mounts, the fan blade, and how the unit sits on its pad. What do you find?",
+      options: [
+        { label: "Compressor isolation grommets are worn or missing", verdict: "Replace the rubber isolation grommets and mounts. That is the most direct fix for a compressor shaking the cabinet." },
+        { label: "Fan blade is bent or out of balance", verdict: "Replace the fan blade. A bent or unbalanced blade shakes the whole unit and will wear the motor bearings if left alone." },
+        { label: "Unit is not level, or the pad has settled or cracked", verdict: "Re-level the unit and repair or replace the pad so it sits flat and fully supported, then recheck for vibration." },
+        { label: "Mounts, blade, and pad all check out", next: 1 },
+      ],
+    },
+    {
+      ask: "Follow the line set from the unit into the structure, and ask the customer how long this has been happening. Which fits?",
+      options: [
+        { label: "Refrigerant lines are clamped rigidly to the structure", verdict: "Rigid clamping transmits compressor vibration straight into the house. Add proper line set isolation at the attachment points, then recheck what the customer hears inside." },
+        { label: "Vibration is new and recent with mounts, blade, and pad all good", verdict: "Do not assume mounting. Check for a developing internal compressor mechanical problem, since a new noise with good mounts points that direction." },
+      ],
+    },
+  ],
   "s-condensing-furnace-hot-flue-little-condensate": [
     {
       ask: "Watch the condensate at the drain through a full cycle and note the flue temperature. Which pattern fits?",
@@ -1278,6 +2160,62 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-cools-then-quits-moisture-freezing-at-metering-device": [
+    {
+      ask: "Get the customer's timeline. How long does it run before it quits, and how long does it need to sit before it works again?",
+      options: [
+        { label: "Runs 20-30 minutes, capacity dies, then works again after sitting off a while", verdict: "That on-again pattern with a slow onset points to moisture freezing at the metering device orifice. Run it on gauges and watch suction and superheat drift over the whole run, not just a snapshot." },
+        { label: "Poor from the moment it starts and never recovers", verdict: "That is not a freeze pattern - a pure mechanical restriction does not come and go. Look for a fixed restriction instead." },
+      ],
+    },
+    {
+      ask: "When it goes down, stop the system and warm the metering device area with a warm rag or your hand.",
+      options: [
+        { label: "It recovers quickly after warming", verdict: "That supports an ice restriction. Recover the charge, replace the liquid line filter drier, and consider a suction drier if the contamination looks heavy." },
+        { label: "No change after warming it", verdict: "Ice at the metering device is not it. Rule out the copycats: an evaporator icing over from low airflow, and a TXV bulb that has lost its charge." },
+      ],
+    },
+    {
+      ask: "You pulled a deep vacuum with the cores removed, isolated the pump, and are watching the micron gauge.",
+      options: [
+        { label: "Reading climbs then levels off", verdict: "Remaining moisture - keep pulling. Do not charge it back up until it holds where you want it." },
+        { label: "Reading holds down where you want it", verdict: "The system is dry. Weigh in a fresh charge and re-verify superheat and subcooling over a full run cycle before you leave." },
+      ],
+    },
+  ],
+  "s-coresense-alert-module": [
+    {
+      ask: "Find the CoreSense module near the contactor and read its indicators. What do you see?",
+      options: [
+        { label: "The run/alert LED is flashing a pattern", verdict: "That is the alert code. It follows the Comfort Alert numbering - look it up under the Daikin alert codes 01-09 in Error Codes (compressor thermal trip, open circuits, contactor and electrical faults)." },
+        { label: "The red trip/lockout LED is lit", verdict: "The module tripped the circuit. Read the alert code off the run/alert LED to find out why before you reset anything." },
+        { label: "No indication at all from either LED", verdict: "Confirm which module you have - the 3-wire self-contained version on DC4SEA/DC5SEA/DH4SEA/DH5SEA, or the 2-wire version on some models. Full tables for both are in the R-32 single-stage service manual RS6200301." },
+      ],
+    },
+    {
+      ask: "You are on a no-cool call and the unit runs fine now. Did you read the module's code before cycling power?",
+      options: [
+        { label: "Yes - a code is showing on the module", verdict: "That is the whole value of this module: it monitors continuously and saw what happened at 2 AM even though the unit runs now. Work that code." },
+        { label: "No - power was already cycled before you got the code", verdict: "You may have lost the evidence. Let it run and try to reproduce the fault, and pull the code before cycling power next time." },
+      ],
+    },
+  ],
+  "s-cracked-condensate-trap-handling": [
+    {
+      ask: "You found unexplained water in the cabinet. Inspect the trap body and the ports where the hoses attach. What do you see?",
+      options: [
+        { label: "Hairline crack or a snapped fitting on the trap", verdict: "Replace the trap - do not try to seal it, because the trap is part of the flue gas seal. Prime the new trap with water before restarting the furnace." },
+        { label: "Trap is intact, no cracks at the fittings or ports", verdict: "The trap is not your leak. Keep looking - and when you do pull hoses off it, hold the trap by hand so you do not create the crack yourself." },
+      ],
+    },
+    {
+      ask: "How are you getting the hoses off the trap?",
+      options: [
+        { label: "Pulling the hoses while the trap hangs on the furnace", verdict: "That is exactly how these break. Hold the trap with your hand while pulling, or remove the trap from the furnace first and take the hoses off on the bench." },
+        { label: "Trap and bracket removed as an assembly, hoses off on the bench", verdict: "Right approach - the stress stays off the plastic. Do not pry the trap off its bracket either; keep them together." },
+      ],
+    },
+  ],
   "s-crankcase-heater-continuity": [
     {
       ask: "With power off and the heater lead-in wires disconnected, ohm the crankcase heater.",
@@ -1292,6 +2230,29 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Slugging continues", verdict: "The heater prevents migration and off-cycle accumulation, not compressor damage from floodback or an overcharge. Investigate charge level and the metering device." },
         { label: "No further complaint", verdict: "Reconnect the heater and energize it a minimum of four hours before operating the condensing unit." },
+      ],
+    },
+  ],
+  "s-crankcase-heater-energize-before-start": [
+    {
+      ask: "Look up the required pre-energize time for the model in front of you. Which does the manual state?",
+      options: [
+        { label: "DX20VC/DZ20VC - minimum of two hours", verdict: "Leave the disconnect on for the full two hours before allowing a compressor call. Explain to the customer why you are not starting the compressor right away." },
+        { label: "This manual family - minimum of four hours", verdict: "Leave the disconnect on for the full four hours before allowing a compressor call. Explain the wait to the customer so it does not look like a stall." },
+      ],
+    },
+    {
+      ask: "Check heater operation with an ohmmeter continuity check before returning the unit to service. What do you read?",
+      options: [
+        { label: "Continuous", verdict: "The heater is good. Give it the manual's required pre-energize time before the compressor is allowed to run." },
+        { label: "Open - no continuity", verdict: "The heater is not working. Correct it before running the compressor - without it, refrigerant migrates into the crankcase and you get liquid slugging or oil pumping on start up." },
+      ],
+    },
+    {
+      ask: "The compressor is suspected of liquid damage. Is the crankcase heater to blame?",
+      options: [
+        { label: "Heater tests continuous and had its full required run time", verdict: "Then the heater is not your answer - the manual states it will not prevent compressor damage from a floodback or overcharge condition. Investigate charge level and metering device operation." },
+        { label: "Heater was open, or never got its pre-energize time", verdict: "Migration during the off cycle is in play. Correct the heater and its run time - but still check charge level and metering device operation, since the heater does not cover floodback or overcharge." },
       ],
     },
   ],
@@ -1357,6 +2318,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-6vs-e34-current-spike": [
+    {
+      ask: "E34 CURRENT SPIKE is logged. Check the power supply for in-rush current at start-up and in steady state, and check the stop valve opening. What do you find?",
+      options: [
+        { label: "Stop valve is not full open", verdict: "Open it fully, or repair or replace it. A partly closed stop valve loads the compressor and shows up here - fix it before assuming a shorted compressor." },
+        { label: "Power supply shows a problem during in-rush or steady state", verdict: "Correct the supply problem first. The board is logging a high current condition, so a bad supply will keep setting the code no matter what you replace." },
+        { label: "Supply and stop valve both check good", next: 1 },
+      ],
+    },
+    {
+      ask: "Kill power and check the wire between the control board and the compressor, then test the compressor itself. What turns up?",
+      options: [
+        { label: "A lost phase in the wire to the compressor", verdict: "Repair that wiring, restore power, watch a full start-up, and confirm E34 does not repeat." },
+        { label: "Compressor tests faulty", verdict: "Repair or replace the compressor - only now that the supply, stop valve and wiring have all been proven good." },
+        { label: "Wiring and compressor both check good", verdict: "Replace the control board. If E35 HIGH CURRENT is also present, additionally check installation clearances and the refrigerant charge level for an overcharge first." },
+      ],
+    },
+  ],
   "s-daikin-6vs-incomplete-defrost-causes": [
     {
       ask: "Start at the top of the manufacturer cause list: check the liquid stop valve and the gas stop valve. Are both fully open?",
@@ -1408,6 +2387,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-bp-unit-address-redundancy": [
+    {
+      ask: "With power off to the outdoor unit and every BP unit, open each BP unit and compare the DS2 DIP switch settings against each other.",
+      options: [
+        { label: "Two or more BP units are set the same", verdict: "That is your address redundancy. Using the DS2 table in the service manual, set each BP unit to a different address - the order does not matter, only that no two match." },
+        { label: "DS1 through DS4 are all still OFF at the factory setting on every unit", verdict: "They are all sharing the factory address. Set each BP unit to its own address off the DS2 table for BP unit 1, 2 and 3 - read the table, do not guess a position." },
+        { label: "Every BP unit already has a different DS2 setting", verdict: "Addressing is not the fault. Restore power to the outdoor and BP units together, read the error code at the indoor, BP, or outdoor unit, and look it up by code and description." },
+      ],
+    },
+    {
+      ask: "Restore power to the outdoor unit and the BP units together, then check for errors.",
+      options: [
+        { label: "No error code at any indoor unit, BP unit, or the outdoor unit", verdict: "Addressing is sorted and the system is clean. Close up." },
+        { label: "An error code still shows somewhere", verdict: "Do not start flipping switches again. Look the code up by its code and description in the service manual before you change any switch." },
+      ],
+    },
+  ],
   "s-daikin-bp-unit-leds-and-terminals": [
     {
       ask: "Confirm power at X1M L1/L2 on the BP unit (60 Hz, 208 to 230 V) and then look at the board. What do you have?",
@@ -1434,6 +2430,46 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-capea-serial-plate-test-pressure": [
+    {
+      ask: "With all refrigerant line connections complete, pressurize with dry nitrogen to 150 PSIG and hold 3 minutes. What does the gauge do?",
+      options: [
+        { label: "Holds steady for the full 3 minutes", verdict: "Move up to 325 PSIG and hold 5 minutes. Use dry nitrogen or dry helium only - no refrigerant may be used for pressure testing." },
+        { label: "Pressure drops", verdict: "You have a leak. Locate and repair it, then repeat the test from step 1. Do not move up in pressure with a known leak." },
+      ],
+    },
+    {
+      ask: "Read the Maximum Allowable Pressure from the serial plate for the final step. Can you isolate the high side from the low side?",
+      options: [
+        { label: "Yes - high and low side can be isolated", verdict: "Test each side to its own Maximum Allowable Pressure: the low side minimum is the low side MAP and the high side minimum is the high side MAP. Hold 1 hour, 4 hours recommended, and take extreme care not to over-pressurize." },
+        { label: "No - the high side cannot be isolated from the low side", verdict: "Test the entire system to the low side Maximum Allowable Pressure instead. Guessing at this step risks over-pressurizing the coil." },
+      ],
+    },
+    {
+      ask: "After evacuating to 500 microns or less through both service valves, close the pump valve and hold 10 minutes. What does the gauge do?",
+      options: [
+        { label: "Vacuum holds steady for the full 10 minutes", verdict: "Evacuation is good. Conduct a follow-up leak test before you leave the site." },
+        { label: "Vacuum rises", verdict: "The vacuum is not holding. Repeat the full pressure test, repair what you find, and only proceed to evacuation again when no leaks exist." },
+      ],
+    },
+  ],
+  "s-daikin-capea-transformer-tap-selection": [
+    {
+      ask: "Measure the actual supply voltage feeding the gas furnace or blower unit, then look at which transformer tap is landed. Do they match?",
+      options: [
+        { label: "Transformer is on the tap matching the measured supply voltage", verdict: "The power supply side is right. Now compare selector switches DS1 through DS6 against the factory positions shown on the unit wiring diagram, and do not move them unless the instructions call for it." },
+        { label: "Transformer is on a different tap than the supply you measured", verdict: "That is why the control will not power up or behaves oddly. Power down and move the transformer to the tap matching the supply voltage you actually measured." },
+      ],
+    },
+    {
+      ask: "Restore power and read the LEDs on the board.",
+      options: [
+        { label: "Red status LED on and green Rx LED blinking", verdict: "The board is powered and seeing network traffic - red is network status, green Rx is traffic. To recall the last 6 faults, press FAULT RECALL more than 2 seconds while in standby with no thermostat inputs." },
+        { label: "No LED activity at all", verdict: "The board still is not getting power. Re-check the transformer tap against the measured supply voltage and the low voltage connections before going further." },
+        { label: "Red status LED on but the green Rx LED never blinks", verdict: "Powered but no network traffic. Confirm the low-voltage interconnects are N.E.C. Class 2 wire and the unit is permanently grounded, then use the LEARN button to reset the network." },
+      ],
+    },
+  ],
   "s-daikin-check-operation-outdoor-pcb": [
     {
       ask: "With the front panel mounted, hold TEST (BS4) on the outdoor PCB for 5 seconds and let it run without interrupting power. What do the outdoor PCB LEDs show?",
@@ -1441,6 +2477,70 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "H3P on at completion", verdict: "Normal completion - the wiring and stop valve checks passed." },
         { label: "H2P and H3P both on at completion", verdict: "Abnormal completion. Read the error code at the indoor remote controller, correct the fault, and re-run check operation." },
         { label: "H2P still blinking and the remote still shows the test operation indication", verdict: "It is still running - do not interrupt power. Judgments come within 15 minutes and up to about 30 minutes maximum." },
+      ],
+    },
+  ],
+  "s-daikin-comfortnet-defrost-test-recall": [
+    {
+      ask: "With the thermostat calling for heating, press TEST and RECALL together for about 3 seconds and release. What happens?",
+      options: [
+        { label: "System goes into defrost immediately", verdict: "Good. Watch the coil - the frost should gradually melt off and the compressor should stay running while it defrosts." },
+        { label: "Nothing happens - the system does not go into defrost", verdict: "The board is not responding to the forced defrost. Confirm the thermostat is really calling for heating; if it still will not force, replace the control board." },
+      ],
+    },
+    {
+      ask: "Is this system fully communicating?",
+      options: [
+        { label: "Fully communicating", verdict: "Skip the C to O check - there is no O signal to read on a fully communicating system. Go straight to checking 'W2' to 'C' for 24 volts." },
+        { label: "Not fully communicating", verdict: "Check for 24 volts across terminals 'C' and 'O' with your VOM. If it is not there, replace the control board." },
+      ],
+    },
+    {
+      ask: "Watch the coil and check across 'W2' and 'C' with your VOM while it is in defrost.",
+      options: [
+        { label: "Frost melting off, compressor running, and 24 volts across W2 and C", verdict: "The board is sequencing correctly. Set the thermostat to off and disconnect power before removing any jumpers or wires." },
+        { label: "No 24 volts across W2 and C", verdict: "The board is not calling auxiliary heat in defrost. Replace the control board." },
+        { label: "Frost is not melting, or the compressor is not running", verdict: "The unit is not actually defrosting even though the board went into defrost. Confirm the compressor is running before you condemn anything else." },
+      ],
+    },
+  ],
+  "s-daikin-ctxg-pcb-jumper-caution": [
+    {
+      ask: "What is the actual complaint on this CTXG indoor unit?",
+      options: [
+        { label: "Fan behavior after the room satisfies and the compressor stops", verdict: "That is JB - the jumper that sets fan speed when the compressor stops for thermostat off. Change JB only per the setting table in the service manual for this model, and leave every other jumper alone." },
+        { label: "Something other than fan behavior on thermostat off", verdict: "Do not touch any jumper. The PCB jumpers are part of the electronic circuit, not field options - cut a wrong one and the board must be replaced. Check the plug-in connectors and transmission leads instead." },
+      ],
+    },
+    {
+      ask: "With the board exposed and power off, check the plug-in connectors and the terminal strip.",
+      options: [
+        { label: "One of S32, S41, S46, or S200 is loose or not seated", verdict: "Reseat it - S32 is the indoor heat exchanger thermistor, S41 the swing motors, S46 the display and signal receiver PCB, S200 the DC fan motor. Then reassemble, restore power, and re-run the complaint." },
+        { label: "H1, H2, H3 or the FG frame ground is not landed on the terminal strip", verdict: "Land the missing transmission lead or the frame ground on the terminal strip, then reassemble and re-run the complaint." },
+        { label: "All four connectors seated and all leads landed", verdict: "Wiring is not it. Reassemble, restore power, and re-run the complaint to confirm whether fan behavior matches the selected setting." },
+      ],
+    },
+  ],
+  "s-daikin-dc6vs-valves-closed-low-suction-damage": [
+    {
+      ask: "Before you touch anything, check the outdoor service valves. What state are they in?",
+      options: [
+        { label: "Still closed with caps installed, as shipped", verdict: "Correct - they hold the factory charge. Do NOT open them until the indoor unit and line set have been evacuated to 500 microns or less through both service valves." },
+        { label: "Already opened before the system was evacuated", verdict: "The charge is now contaminated with whatever was in the line set. Recover, evacuate properly, and recharge - do not just pull a vacuum and hope." },
+      ],
+    },
+    {
+      ask: "Evacuate to 500 microns or less through both service valves, close the pump valve, and hold vacuum 10 minutes. What does it do?",
+      options: [
+        { label: "Steady at 500 microns or less", verdict: "The system is considered leak-free. Proceed to start-up." },
+        { label: "Rises above 500 microns", verdict: "Suspect moisture, non-condensables, or a small leak. Repeat the evacuation, and leak-check and repair if the result repeats." },
+      ],
+    },
+    {
+      ask: "Once it is running, watch suction pressure closely. What do you see?",
+      options: [
+        { label: "Suction drops below 20 psig", verdict: "Shut it down now. Running below 20 psig for more than 5 seconds overheats the compressor and may cause permanent damage - do not let it run while you think about it." },
+        { label: "Suction stays above 20 psig", verdict: "You are clear on that risk - continue start-up. Disconnect ALL power before any further servicing; multiple power sources may be present." },
       ],
     },
   ],
@@ -1551,6 +2651,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-dm96sn-cabinet-sealing-at-startup": [
+    {
+      ask: "Look at the bottom panel of the cabinet before the furnace is fired. What is its condition?",
+      options: [
+        { label: "Bottom panel was removed for a return duct connection", verdict: "That is fine - the return is ducted through it. Move on to the plugs, grommets and door gaskets." },
+        { label: "Bottom panel still in place with knockouts or perforations open", verdict: "Seal all bottom panel perforations with duct sealant compound or another suitable method. Open perforations leak air into the cabinet and undermine both airflow and combustion safety." },
+      ],
+    },
+    {
+      ask: "Check the cabinet sealing components and the door gaskets. What do you find?",
+      options: [
+        { label: "All plugs, grommets and gaskets in place, door gaskets in good shape", verdict: "Cabinet sealing is proven. Also confirm the furnace has a properly connected and grounded 115 VAC supply with correct polarity." },
+        { label: "A door gasket is damaged or missing", verdict: "Replace it before firing. Damaged or missing door gaskets have to be replaced, not taped over." },
+        { label: "A plug or grommet is missing", verdict: "Fit it before firing. Every sealing component has to be in place before the unit is started." },
+      ],
+    },
+    {
+      ask: "Check the drain trap before startup. What state is it in?",
+      options: [
+        { label: "Both sides filled with water", verdict: "Primed correctly. That ensures drainage and prevents flue gases escaping through the drain system. Purge gas lines per NFPA 54 (B149.1-15 in Canada) and leak check with an approved method before firing." },
+        { label: "Trap is dry", verdict: "Prime it now by filling both sides with water. A dry trap can let flue gases escape through the drain system - do not fire the furnace until it is primed." },
+      ],
+    },
+  ],
   "s-daikin-dm96sn-pressure-switch-must-prove-open": [
     {
       ask: "With the heat call in and before the inducer runs, read Pin 5 of the 12-pin connector.",
@@ -1565,6 +2689,39 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "No 24 VAC on W with the thermostat contacts closed", verdict: "The heat call is not reaching the board. Work the thermostat side." },
         { label: "24 VAC on W but no 24 VAC on Pin 8", verdict: "The limit switch is not proving closed. Fix the limit circuit - the control will not move on without it." },
         { label: "24 VAC on W and Pin 8 with Pin 5 open", verdict: "All three gates are satisfied. Let the control finish its gas valve circuitry check, then watch the inducer energize and Pin 5 change to 24 VAC as the pressure switch proves - that transition starts pre-purge." },
+      ],
+    },
+  ],
+  "s-daikin-dm96vc-ft-gas-pressure-test": [
+    {
+      ask: "With the manometer already on the gas valve outlet tap, press and hold FAULT RECALL and LEARN more than 1 second and release within 5 seconds. What does the display do?",
+      options: [
+        { label: "Ft flashes on the display", verdict: "Test mode entered. Wait for Ft to go solid, which means 100 percent firing rate is reached and the 5-minute timer has started, before you read anything." },
+        { label: "Display returns to normal with no Ft", verdict: "One button was held past 5 seconds, so the mode did not activate. Press and hold both again for more than 1 second and release both within 5 seconds." },
+        { label: "Ft is showing solid, not flashing", verdict: "100 percent firing rate has been reached and the 5-minute timer is running. Read and adjust manifold pressure now." },
+      ],
+    },
+    {
+      ask: "With Ft solid, read manifold pressure against the value on the rating plate for this model and fuel.",
+      options: [
+        { label: "Manifold pressure matches the rating plate value", verdict: "Gas is set right. Exit test mode, remove the manometer, reseal the pressure tap, leak check with soap solution, and verify normal operation." },
+        { label: "Manifold pressure is off the rating plate value", verdict: "Adjust it during the 5-minute window while Ft is solid. If the timer runs out before you finish, re-enter test mode rather than reading at a lower firing rate." },
+      ],
+    },
+  ],
+  "s-daikin-dm96vc-gas-pressure-test-mode": [
+    {
+      ask: "Press and hold both FAULT RECALL and LEARN for more than 1 second, then release both within 5 seconds. What does the display do?",
+      options: [
+        { label: "Ft flashes on the display", verdict: "You are in test mode. Wait for Ft to stop flashing - that means 100 percent capacity is reached and the 5 minute timer has started." },
+        { label: "Display goes back to normal with no Ft", verdict: "One of the buttons was not released within 5 seconds, so test mode never activated. Try again - hold both more than 1 second, then release both together inside 5 seconds." },
+      ],
+    },
+    {
+      ask: "Ft is showing on the display. Is it still flashing, or has it gone steady?",
+      options: [
+        { label: "Ft is still flashing", verdict: "The furnace has not reached 100 percent capacity yet. Wait for it to stop flashing before you read gas pressure, or you are reading at the wrong firing rate." },
+        { label: "Ft has stopped flashing", verdict: "100 percent capacity is reached and the 5 minute timer is running. Take your gas pressure reading now - the test runs the full time even if a heat call is added or removed." },
       ],
     },
   ],
@@ -1669,6 +2826,153 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-dx16tc-test-recall-defrost": [
+    {
+      ask: "Power ON with the unit not running and the thermostat calling for heat, press TEST and RECALL together for about 3 seconds and release. What happens?",
+      options: [
+        { label: "The system goes into defrost immediately", verdict: "Good. Now take your readings - 24 volts across C and O (skip this if the system is fully communicating), 24 volts across W2 and C - and watch the frost melt with the compressor still running." },
+        { label: "Nothing happens", verdict: "The board is not responding to the forced defrost command. Confirm power is ON with the unit not running and the thermostat calling for heat, then take the control board as the suspect." },
+      ],
+    },
+    {
+      ask: "With defrost running, take the readings and watch the coil. What is missing?",
+      options: [
+        { label: "All good: 24V C to O, 24V W2 to C, frost gradually melting, compressor still running", verdict: "The board checks out. Set the thermostat to the off position and disconnect power before removing any jumpers or wires." },
+        { label: "No 24 volts across C and O on a non-communicating system", verdict: "Replace the control board." },
+        { label: "No 24 volts across W2 and C", verdict: "Replace the control board." },
+        { label: "Frost is not melting, or the compressor has stopped", verdict: "The forced defrost is not doing its job. If the outputs do not check out as described, replace the control board." },
+      ],
+    },
+  ],
+  "s-daikin-dx16tc-valve-caps-txv-light-load": [
+    {
+      ask: "Check the outdoor conditions before you touch the TXV stem. What are you working in?",
+      options: [
+        { label: "Light load conditions of 55 to 60 F", verdict: "Do not adjust the TXV here. An adjustment made at light load will be wrong at design conditions - come back when the load is representative." },
+        { label: "Outside those light load conditions", verdict: "You can work the charge. Purge the gauge lines, connect to the base-valve service ports, and run in low stage at least 10 minutes to stabilize." },
+      ],
+    },
+    {
+      ask: "Identify the metering device on the indoor coil. Which is it?",
+      options: [
+        { label: "Non-adjustable TXV", verdict: "Charge by subcooling only on this coil. Do not chase superheat." },
+        { label: "Adjustable TXV", verdict: "Target 5 to 7 F subcooling and 7 to 9 F superheat for a TXV application on this model, with insulated thermometers on the liquid line at the service valve and 4 to 6 inches from the compressor on the suction line." },
+      ],
+    },
+    {
+      ask: "The refrigerant charge has bled in and you have opened the liquid service valve. How is the service valve cap going back on?",
+      options: [
+        { label: "Cleaned, refrigerant oil on the threads and sealing surface, finger tight plus 1/6 turn", verdict: "Correct. That cap is the secondary seal, and one wrench flat past finger tight is what seats the sealing surfaces." },
+        { label: "Just spun on hand tight, dry threads", verdict: "Redo it. Clean the cap, apply refrigerant oil to the threads and the sealing surface inside the cap, then tighten finger tight plus an additional 1/6 of a turn." },
+      ],
+    },
+  ],
+  "s-daikin-dx20vc-e35-high-current": [
+    {
+      ask: "E35 HIGH CURRENT is logged. Check the installation clearances around the outdoor unit and the stop valve opening. What do you find?",
+      options: [
+        { label: "Clearances are tight or the unit is recirculating its own air", verdict: "Correct the restricted airflow. On E35 the cause list includes installation clearances - this can be an airflow problem wearing an electrical fault's clothes." },
+        { label: "Stop valve is not full open", verdict: "Open it fully, or repair or replace it, then rerun and see whether E35 returns." },
+        { label: "Clearances and stop valve both good", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the refrigerant charge level. Where is it?",
+      options: [
+        { label: "System is overcharged", verdict: "Adjust the charge down. Overcharge is a listed E35 cause and it drives current up - this one can be a charge problem masquerading as an electrical fault." },
+        { label: "Charge level is correct", verdict: "Kill power and check the wire between the control board and the compressor for a lost phase or short circuit condition, then check the compressor. Replace the control board only if all of that checks good." },
+      ],
+    },
+    {
+      ask: "Look at the outdoor unit display for a second code alongside E35. Is E34 CURRENT SPIKE also present?",
+      options: [
+        { label: "Yes, E34 is showing as well", verdict: "Work the current spike causes too. On a system using the CTK04 thermostat these messages are displayed at the thermostat as well as the outdoor unit." },
+        { label: "E35 only", verdict: "Stay on the E35 list in order: clearances, stop valve, overcharge, compressor wiring, compressor, then the board." },
+      ],
+    },
+  ],
+  "s-daikin-dz20vc-e17-compressor-fail": [
+    {
+      ask: "E17 COMPRESSOR FAIL is logged. Record the error history, then check the opening of the stop valve. What do you find?",
+      options: [
+        { label: "Stop valve is not fully open", verdict: "There is a listed cause. Open it fully, or repair or replace it, then rerun and see if E17 returns before you touch the compressor." },
+        { label: "Stop valve is fully open", next: 1 },
+      ],
+    },
+    {
+      ask: "Kill power at the disconnect and inspect the wiring between the control board and the compressor. What do you find?",
+      options: [
+        { label: "A lost phase, a loose lug, or a damaged conductor", verdict: "Repair that wiring. A lost phase looks exactly like a failing compressor on this code - fix it and rerun before condemning anything expensive." },
+        { label: "Wiring is tight and undamaged", verdict: "Now test the compressor motor itself. Replace the compressor only if it actually tests bad; if it tests good, the control board is the remaining suspect. Confirm the code does not return before leaving." },
+      ],
+    },
+  ],
+  "s-daikin-dz20vc-e38-comp-voltage": [
+    {
+      ask: "Record the code, then measure incoming line voltage at the disconnect both at rest and under load. What do you read?",
+      options: [
+        { label: "Voltage reads low or high", verdict: "Correct the low or high line voltage condition. If the supply itself is out of range, contact the local utility - do not order a board on this." },
+        { label: "Voltage is good at rest and under load", next: 1 },
+      ],
+    },
+    {
+      ask: "Kill power and check the wiring between the control board and the compressor. What do you find?",
+      options: [
+        { label: "A lost phase, or a loose or damaged conductor", verdict: "Repair that wiring and rerun. This is the second listed cause of E38 and it is far cheaper than a board." },
+        { label: "Wiring checks out good", verdict: "With line voltage and compressor wiring both proven, replace the control board. Restore power and confirm the compressor starts and the code stays clear." },
+      ],
+    },
+    {
+      ask: "Check the display for any adjacent codes alongside E38. What else is showing?",
+      options: [
+        { label: "E39 as well", verdict: "E39 points to inoperable or improperly connected thermistors. Check those connections and repair or replace as needed." },
+        { label: "E40 COMP MISMATCH as well", verdict: "Verify the memory card data against the actual air conditioner model - a control board mismatch is what produces E40." },
+        { label: "E38 by itself", verdict: "Stay on the E38 path in order: line voltage first, then the compressor wiring, then the board." },
+      ],
+    },
+  ],
+  "s-daikin-dz20vc-e38-e40-codes": [
+    {
+      ask: "Read the code and its exact description from the display. Which one is showing?",
+      options: [
+        { label: "E38 COMP VOLTAGE", next: 1 },
+        { label: "E40 COMP MISMATCH", verdict: "The control's compressor requirement does not match the compressor capability. Check the memory card data against the air conditioner model - a wrong memory card is a listed cause after a board replacement - and verify the control board size. Replace the board only if it is genuinely mismatched." },
+        { label: "E37 OD CTRL FAIL4 or E39 OD CTRL FAIL5", verdict: "E37: check the wiring from the outdoor fan motor to the control board and repair it; replace the board only if the wiring is good. E39: check the thermistor connections and repair or replace any that are inoperable or improperly connected." },
+        { label: "E41 LOW REFRIGERANT", verdict: "Treat this as a low refrigerant condition, not an electrical fault. Look for a leak or a low charge instead of chasing boards." },
+      ],
+    },
+    {
+      ask: "Measure the incoming supply voltage under load. What do you have?",
+      options: [
+        { label: "Supply reads high or low under load", verdict: "Correct the high or low line voltage condition. If the supply itself is out of range, contact the utility. Do not order a board on this reading." },
+        { label: "Supply voltage is in range under load", verdict: "Move to the wiring between the control board and the compressor and look for a lost phase before you replace the board." },
+      ],
+    },
+    {
+      ask: "The code mentions a blocked or restricted outdoor coil or lines. Look at the outdoor coil and lines. What do you find?",
+      options: [
+        { label: "Coil or lines are dirty, blocked, or restricted", verdict: "Clean the coil and lines before condemning any electrical component. A restricted coil sets electrical-looking codes on this control." },
+        { label: "Coil and lines are clean and clear", verdict: "Airflow is not your problem. Stay on the electrical path for the code you have - supply voltage and compressor wiring for E38, memory card and board size for E40." },
+      ],
+    },
+  ],
+  "s-daikin-dz20vc-lineset-charge-subcool": [
+    {
+      ask: "Read the factory charge from the serial plate, then measure the actual line set length. How does it compare with the 15 foot factory basis?",
+      options: [
+        { label: "15 feet or less", verdict: "No line set adder needed. Let the system stabilize 20 minutes and go straight to verifying subcooling." },
+        { label: "Longer than 15 feet", verdict: "Add 0.6 ounces per additional foot, using the manual's equivalent-length values for elbow fittings. Total = factory charge + (0.6 oz/ft x additional feet). Then allow 20 minutes to stabilize." },
+      ],
+    },
+    {
+      ask: "With dedicated PVE gauges connected and the unit at 100 percent capacity, subtract liquid line temperature from the converted saturation temperature. How does subcooling compare with the manual's table?",
+      options: [
+        { label: "Subcooling is low compared with the table", verdict: "On an EEV indoor unit, add charge. Allow time to stabilize between adjustments before you read it again." },
+        { label: "Subcooling is high compared with the table", verdict: "On an EEV indoor unit, remove charge. Allow time to stabilize between adjustments before you read it again." },
+        { label: "Subcooling matches the table", verdict: "Charge is right. Disconnect and keep those PVE-dedicated gauges and hoses off other refrigerant systems - cross-contaminating hoses is a real risk on these inverter units." },
+      ],
+    },
+  ],
   "s-daikin-ecm-fan-relay-pin-voltages": [
     {
       ask: "With power restored, measure voltage between the black and brown motor leads. What do you read?",
@@ -1689,6 +2993,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Same voltages present at the motor end", verdict: "High voltage and both stage commands are reaching the motor - the motor is defective and needs to be replaced." },
         { label: "Voltage at the board pins but missing at the motor end", verdict: "There is a broken wire in the harness between the board and the motor. Repair the harness rather than replacing the motor." },
+      ],
+    },
+  ],
+  "s-daikin-ecm-fan-relay-pins": [
+    {
+      ask: "Power down, open the control area, then restore power and measure between the black and brown motor leads. What do you read?",
+      options: [
+        { label: "208/230 volts, matching the supply", next: 1 },
+        { label: "No voltage, or well below the 208/230 the supply should give", verdict: "The motor is not getting its line power, so it can never run. Chase the line voltage feed to the motor before you look at any 24VAC control signal or condemn the motor." },
+      ],
+    },
+    {
+      ask: "Unplug the fan motor harness at the UC board, energize the system in low stage, and check pin 5 (blue) to pin 3 (yellow). What do you get?",
+      options: [
+        { label: "24VAC between pin 5 and pin 3 in low stage", next: 2 },
+        { label: "No 24VAC between pin 5 and pin 3 in low stage", verdict: "The UC board is not sending the low stage fan signal, so the motor was never told to run. Do not replace the motor - the board is the problem." },
+      ],
+    },
+    {
+      ask: "Energize in high stage and check pin 5 (blue) to pin 3 (yellow) and pin 5 (blue) to pin 1 (white) at the board, then plug the harness back in and repeat all the readings at the motor end.",
+      options: [
+        { label: "24VAC on both pairs at the board and again at the motor end", verdict: "Every voltage the board is supposed to send is reaching the motor and it still will not run - replace the motor." },
+        { label: "24VAC at the board but missing at the motor end", verdict: "You have a broken wire or bad connection in the fan harness between the board and the motor. Repair or replace the harness and re-test before touching the motor." },
+        { label: "One or both pairs missing 24VAC at the board in high stage", verdict: "The UC board is not driving high stage out to the fan. Replace the board, not the motor." },
       ],
     },
   ],
@@ -1715,6 +3043,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "About 208 VAC service with the red wires on the 230 V terminal", verdict: "That is the miss. Kill power and move the red wires to the 208 V terminal of the transformer for 208 VAC operation, then measure secondary voltage to confirm it is back in range." },
         { label: "About 208 VAC with the red wires already on the 208 V terminal", verdict: "The tap is already correct. Measure secondary voltage to confirm it is in range and look elsewhere for the fault or dropout." },
         { label: "230 VAC service", verdict: "The 208 V tap change does not apply on a 230 VAC service. Leave the red wires where they are." },
+      ],
+    },
+  ],
+  "s-daikin-fit-9vs-e39-inverter-thermistor": [
+    {
+      ask: "With power killed at the disconnect, find the thermistor for the inverter module and check its connection at the A1P board. What do you find?",
+      options: [
+        { label: "Connector loose or unseated, or the harness is chafed or pinched", verdict: "There is your E39. Reseat or repair it - a loose plug generates this same code. Restore power and confirm it clears through a full run cycle." },
+        { label: "Thermistor tests inoperable", verdict: "Replace the thermistor. Do not order the A1P board yet." },
+        { label: "Thermistor and its connection both check good", verdict: "Now replace the A1P control board - that is the board called out for E39 on the DH9VS/DC9VS once the thermistor is proven good." },
+      ],
+    },
+    {
+      ask: "Check the fault history for other codes alongside E39. What else is there?",
+      options: [
+        { label: "E36 is also present", verdict: "Check for a blocked or restricted outdoor unit coil and lines, and check the wire between the control board and the compressor for a lost phase." },
+        { label: "E38 is also present", verdict: "Correct any low or high line voltage condition, and contact the utility if the supply itself is out of range." },
+        { label: "E39 by itself", verdict: "Stay on the thermistor path: connection first, thermistor second, A1P board last." },
       ],
     },
   ],
@@ -1753,6 +3099,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-fit-aux-alarm-condensate-switch": [
+    {
+      ask: "Kill power, open the control compartment, and look at the AUX alarm switch terminals on the FIT board. What is landed there?",
+      options: [
+        { label: "Short red circuiting wire still installed from the factory", verdict: "That factory jumper has to come out before a float switch will do anything. Remove the short red circuiting wire and land the condensate switch leads in its place." },
+        { label: "Red circuiting wire is gone and the condensate switch leads are landed", verdict: "Wiring is right. Restore power and manually trip the float switch to confirm the board actually responds." },
+      ],
+    },
+    {
+      ask: "Restore power and manually trip the float switch. What does the board do?",
+      options: [
+        { label: "Board responds to the trip, and normal operation returns when you reset the switch", verdict: "The alarm input works. Route the switch wiring clear of line voltage, secure it so it cannot chafe, and close up." },
+        { label: "Nothing happens when you trip the switch", verdict: "The board is not seeing the switch. Re-check that the short red circuiting wire was actually removed and that both switch leads are landed on the AUX alarm terminals, then re-test." },
+      ],
+    },
+  ],
   "s-daikin-fit-comm-dipswitch": [
     {
       ask: "With the wiring confirmed 1-to-1 and 2-to-2 and no more than two wires per terminal, look at the board comm LEDs. What are they doing?",
@@ -1786,6 +3148,25 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Steady flash", verdict: "No network found. Look for a broken communication wire, or a legacy non-communicating install." },
         { label: "Rapid flash", verdict: "That is normal traffic. Do a continuity check on the comm wires and try flipping both DS1 dip switches on the outdoor board to the opposite position before condemning a board." },
         { label: "Solid ON", verdict: "Terminal 1 and 2 are miswired or shorted to C or R. Recheck those terminations at both ends." },
+      ],
+    },
+  ],
+  "s-daikin-fit-e40-shared-data-after-board-swap": [
+    {
+      ask: "Read the code on the outdoor unit after the A1P board replacement. Which is it?",
+      options: [
+        { label: "E40 - compressor requirement differs from compressor capability", next: 1 },
+        { label: "E39", verdict: "Check the connection to the thermistor for the inverter module and repair or replace it before condemning the board." },
+        { label: "E38", verdict: "Correct any high or low line voltage condition, then check the wiring between the control board and the compressor for a lost phase." },
+        { label: "E37", verdict: "Check the wiring from the outdoor fan motor to the control board and repair it before replacing the A1P board." },
+      ],
+    },
+    {
+      ask: "Compare the flashed shared data and the control board part number against the outdoor unit model. What do you find?",
+      options: [
+        { label: "Shared data does not match the outdoor unit model", verdict: "That is your E40. Reflash the correct shared data. Do not touch anything mechanical and do not order a compressor - this is not a bad compressor." },
+        { label: "Board part number does not belong on this model", verdict: "Wrong board. Replace the A1P control board with the correct part number for this outdoor unit." },
+        { label: "Both the shared data and the part number match the model", verdict: "Look at the other listed causes: a blocked or restricted outdoor coil or lines, or an inconsistent compressor load. Clean the coil and lines and verify airflow before ordering more electronics." },
       ],
     },
   ],
@@ -1856,6 +3237,91 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-fit-r32-compressor-pressure-test": [
+    {
+      ask: "Check the ambient temperature before you run this test. Where is it?",
+      options: [
+        { label: "Between 65 F and 115 F", verdict: "You can use the Charge Verification Test for the compressor check. Note that subcooling adjustment with this test is only valid from 65 F to 105 F ambient." },
+        { label: "Outside 65 F to 115 F", verdict: "Do not use this test to judge the compressor today. The manual limits it to 65 F to 115 F ambient for this purpose." },
+      ],
+    },
+    {
+      ask: "Check the thermostat display and head pressure while the Charge Verification Test runs. What do you see?",
+      options: [
+        { label: "'Comp speed out of range' message on the thermostat", verdict: "Stop here and work the Charge Verification Test troubleshooting section before you judge the compressor." },
+        { label: "Head pressure abnormally high during normal operation", verdict: "Suspect non-condensables instead of a weak compressor. Remove the charge, replace or install a liquid line drier, evacuate, and recharge." },
+        { label: "No message and head pressure looks normal", verdict: "Carry on with the pressure comparison against ambient and indoor temperature. R-32 is an A2L refrigerant - handle accordingly if you open the circuit." },
+      ],
+    },
+    {
+      ask: "Give it 20 to 25 minutes to stabilize, then convert high side and low side pressures to temperature on the R-32 chart. How do they compare?",
+      options: [
+        { label: "High side at least 10 F above ambient (5 F on a 1.5 ton) and low side at least 15 F below indoor", verdict: "Both criteria pass - the compressor is pumping. Look elsewhere for the complaint." },
+        { label: "High side is not at least 10 F above ambient (5 F on a 1.5 ton)", verdict: "That criterion fails, so the compressor may be faulty. If a burnout is suspected, confirm it by analyzing an oil sample with an acid test kit before replacing the compressor." },
+        { label: "Low side is not at least 15 F below indoor, measured about 12 in. from the indoor unit inlet", verdict: "That criterion fails, so the compressor may be faulty. Confirm with an oil sample and acid test kit if a burnout is suspected before you order a compressor." },
+      ],
+    },
+  ],
+  "s-daikin-fit-r32-e36-startup-error": [
+    {
+      ask: "E36 means startup did not complete. Check the outdoor solenoid valve coil and the valve itself first. What do you find?",
+      options: [
+        { label: "Solenoid valve coil is faulty", verdict: "Repair or replace the coil. On the FIT R-32 the cause list starts here - do not jump to the board." },
+        { label: "The outdoor solenoid valve itself is faulty", verdict: "Replace or repair the valve, then restart and watch a full startup sequence to confirm E36 does not repeat." },
+        { label: "Coil and valve both check good", next: 1 },
+      ],
+    },
+    {
+      ask: "Look at the outdoor coil and lines, then kill power and check the wire between the control board and the compressor. What turns up?",
+      options: [
+        { label: "Outdoor unit coil or lines are blocked or restricted", verdict: "Clean the coil and lines. R-32 is an A2L refrigerant, so apply your A2L handling practices for any refrigerant-side work." },
+        { label: "A lost phase in the wire between the control board and the compressor", verdict: "Repair that wiring before condemning the board, then restart and watch a full startup sequence." },
+        { label: "Coil, lines and wiring all check out", verdict: "Consider inconsistent compressor load, which the manual lists as a cause, before condemning parts. Then replace the control board and confirm the code does not repeat." },
+      ],
+    },
+  ],
+  "s-daikin-fit-r32-insulation-30-megohm": [
+    {
+      ask: "Check the manual for the exact system in front of you before judging any insulation reading. Which family is it?",
+      options: [
+        { label: "FIT R-32 system", next: 1 },
+        { label: "FIT R-410A system", verdict: "Different criterion entirely. That manual calls for replacement if insulation resistance is anything different from infinity - do not apply the 30 megohm number here." },
+      ],
+    },
+    {
+      ask: "With all power off and all legs open, test winding insulation resistance at the compressor terminals on top of the compressor. What do you read?",
+      options: [
+        { label: "Less than 30 megohms", verdict: "Replace the compressor. That is the hard number for the FIT R-32 system." },
+        { label: "30 megohms or more", verdict: "Insulation passes. Follow up with the ground test before you clear the compressor." },
+      ],
+    },
+    {
+      ask: "Ground test: terminal protective cover still in place, three leads disconnected at the nearest point, each ohmed to ground on the R x 10,000 or highest scale. What do you read?",
+      options: [
+        { label: "No continuity to ground on any lead", verdict: "The compressor is clear on both tests. Handle R-32 as an A2L refrigerant for any work that opens the refrigerant circuit." },
+        { label: "A ground is indicated", verdict: "Inspect for loose leads or insulation breaks before removing anything further - improper lead removal can damage the glass embedded terminals and result in terminal and hot oil discharging. Any continuity to ground means the compressor is defective." },
+      ],
+    },
+  ],
+  "s-daikin-fit-r32-refrigerant-leak-test-mode": [
+    {
+      ask: "With the Refrigerant leak test set to Run test, watch all four leak-response actions. Which one did not respond?",
+      options: [
+        { label: "All four respond: blower runs, electric heater off, damper fully opens, UV light off", verdict: "Leak response is proven. Set the Refrigerant leak test back to Stop when you are finished. It also turns off on its own after 1 hour if you forget." },
+        { label: "The blower does not run", verdict: "That is your fault. The blower did not answer the leak-response command, so chase the blower side of the leak response. The other three actions proved out." },
+        { label: "The electric heater stays on, or the zoning damper does not fully open", verdict: "That action is your fault. The heater shutoff or the damper open command is not getting through - chase that circuit before you leave." },
+        { label: "The UV light stays on", verdict: "The UV light shutoff is your fault. Chase that circuit. The rest of the leak response worked, so do not condemn the whole system." },
+      ],
+    },
+    {
+      ask: "With the indoor control in Standby Mode and no thermostat inputs, press and hold FAULT RECALL for 2 to 5 seconds. What does the 7 segment display do?",
+      options: [
+        { label: "Solid double dash, then the most recent fault when you release", verdict: "Working normally. Press again to step back through earlier faults. The double dash returns and the control goes back to standby at the end of the list. Repeated faults show a maximum of three times." },
+        { label: "Control drops straight back to standby with no fault shown", verdict: "You let go too soon. Hold until the solid double dash appears before releasing, and confirm the control really is in Standby Mode with no thermostat inputs." },
+        { label: "Display blinks the double dash and then shows 88", verdict: "You held it into the clear range and the fault history is now erased. Nothing is broken, but the history is gone - run the system and log any new faults." },
+      ],
+    },
+  ],
   "s-daikin-fit-refrigerant-leak-test-outputs": [
     {
       ask: "With power on and no error code on the 7-segment display, start the Refrigerant leak test from the thermostat and watch the outputs. What happens?",
@@ -1879,6 +3345,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Coil fails", verdict: "Replace the coil, then run a heating and a cooling cycle and confirm the fault does not return." },
         { label: "Coil is good", verdict: "Move to the reversing valve body and replace it if needed." },
+      ],
+    },
+  ],
+  "s-daikin-fit-three-step-nitrogen-and-evac": [
+    {
+      ask: "Run the three-step nitrogen test: 150 PSIG for 3 minutes, 325 PSIG for 5 minutes, 460 PSIG for 1 hour (4 hours recommended). What happened?",
+      options: [
+        { label: "Held pressure at all three steps", verdict: "The system is tight. Leave the outdoor liquid and suction valves closed - they hold the factory charge - and move on to evacuation." },
+        { label: "Pressure dropped at one of the steps", verdict: "Find and repair the leak, then repeat from step 1. The whole three-step test starts over, not just the step that failed." },
+      ],
+    },
+    {
+      ask: "Evacuate to 500 microns or less through BOTH service ports, close the pump valve, and hold 10 minutes. What does the gauge do?",
+      options: [
+        { label: "Rises to 500 microns or less and stays steady", verdict: "The system is considered leak-free. Proceed to start-up, and do a follow-up leak test after charging before you leave the site." },
+        { label: "Rises above 500 microns", verdict: "Suspect moisture, non-condensables, or a small leak. Repeat the evacuation; if the result repeats, leak-check and repair before evacuating again." },
+        { label: "You only pulled through one service port", verdict: "Redo it through both the suction AND liquid ports - using both is required on this platform, and a single-port pull will not get the line set and indoor coil down." },
       ],
     },
   ],
@@ -1994,6 +3477,24 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "A wiring error, or damaged connection wires", verdict: "Correct the wiring error, or replace the connection wires between the indoor and outdoor units." },
         { label: "Wiring correct but still no communication", verdict: "With LED A blinking and the wiring correct, replace the indoor unit PCB (control PCB)." },
+      ],
+    },
+  ],
+  "s-daikin-ms-no-cool-heat": [
+    {
+      ask: "Set the unit to cooling, check the liquid line temperature to see if the EEV is modulating, and compare port pressures and running current to the charge chart. What do you find?",
+      options: [
+        { label: "Liquid line temperature does not change, so the EEV is not modulating", verdict: "The electronic expansion valve is not controlling refrigerant flow. Check the EEV coil and its wiring back to the board and follow the Daikin service manual for that valve before touching charge." },
+        { label: "Pressures and running current show signs of refrigerant shortage on the charge chart", verdict: "Points to a refrigerant shortage. Leak search and correct the charge per the Daikin charge chart rather than just adding refrigerant to a number." },
+        { label: "EEV modulates and the charge matches the chart", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the wiring and refrigerant piping connections between indoor and outdoor, and check how the thermistors are mounted. What do you find?",
+      options: [
+        { label: "A wiring or piping connection between indoor and outdoor is wrong", verdict: "Correct the connection error against the Daikin wiring and piping diagram. Crossed connections let a unit run normally while delivering poor capacity." },
+        { label: "A thermistor is loose in its holder", verdict: "Reseat the thermistor securely. A loose thermistor reads incorrectly and skews control without necessarily throwing a fault code." },
+        { label: "Complaint is noise or vibration rather than capacity", verdict: "Check the power module output voltage and confirm the unit has the manufacturer-specified installation clearances. Both are listed causes of abnormal noise and vibration on this unit." },
       ],
     },
   ],
@@ -2155,6 +3656,47 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-rmxs-charging-mode": [
+    {
+      ask: "With the units stopped and the hose on the additional-charging service port, set the refrigerant additional charging operation (A) to ON in setting mode 2. What happens?",
+      options: [
+        { label: "H1P turns on, H2P flickers, remote shows Test Operation and Under Centralized Control", verdict: "The charging operation started normally. Charge the specified quantity, then press the RETURN (BS3) button to stop the operation and disconnect the hose." },
+        { label: "The operation stops soon after it starts", verdict: "Suspect an overcharge and stop. Never charge extra refrigerant - do not force more in. Disconnect the charge hose and check the system charge." },
+        { label: "The operation stops after about 30 minutes with charge still to go", verdict: "That is the automatic 30 minute cutoff, not a fault. Set and run the additional charging operation again to continue." },
+      ],
+    },
+    {
+      ask: "You need to vacuum this unit instead of charging it. How are you setting it up?",
+      options: [
+        { label: "Item No. 21 set to ON in setting mode 2 so the indoor and outdoor expansion valves open fully", verdict: "Correct. Run the vacuum pump, then press MODE (BS1) once to reset setting mode 2 - do not cancel setting mode 2 until vacuuming is complete." },
+        { label: "Just hooked up the pump without entering setting mode 2", verdict: "Set item No. 21 (refrigerant recovery / vacuuming mode) to ON in setting mode 2 first, so the indoor and outdoor expansion valves open fully. Otherwise you are not pulling on the whole system." },
+      ],
+    },
+  ],
+  "s-daikin-split-trial-operation-remote": [
+    {
+      ask: "Measure supply voltage at the unit before you run any test. Where does it sit?",
+      options: [
+        { label: "Within the range specified for the unit", verdict: "Good to test. Now pick the button sequence for the remote you actually have - the ARC452 and ARC466 are different." },
+        { label: "Outside the range specified for the unit", verdict: "Fix the power problem before running a trial operation. Test results taken on out-of-range voltage will send you chasing the wrong part." },
+      ],
+    },
+    {
+      ask: "Which wireless remote is on this job?",
+      options: [
+        { label: "ARC452", verdict: "Press ON/OFF, then press both TEMP buttons and the MODE button at the same time, press MODE twice until T is displayed, then press MODE and select the operation mode." },
+        { label: "ARC466", verdict: "Press On/Off, press the center of the Temp button and the Mode button together, select T with the Temp buttons, press Mode to start, then press Mode and select the operation mode." },
+      ],
+    },
+    {
+      ask: "You entered the sequence. What is the unit doing?",
+      options: [
+        { label: "Sat still about 3 minutes after being turned off, then started", verdict: "That is the normal protection delay, not a fault - do not chase it. Let the trial run about 30 minutes and verify flap movement and that all functions and parts operate properly." },
+        { label: "Trial operation will not run in the mode you selected", verdict: "Trial operation may be disabled in one mode depending on room temperature. Try the other mode, and to load the system pick the lowest programmable temperature in cooling or the highest in heating." },
+        { label: "Trial started and is running in the mode you picked", verdict: "Verify flap movement and all functions while it runs. Let it end on its own at about 30 minutes or press ON/OFF to quit, then return the setpoint to a normal level before leaving." },
+      ],
+    },
+  ],
   "s-daikin-sw1-field-test-mode": [
     {
       ask: "With the furnace powered and the thermostat satisfied, press and hold SW1 at least 10 seconds but not more than 15, until the LED blinks AMBER, then release and watch the sequence. What happens?",
@@ -2229,6 +3771,42 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-daikin-wireless-remote-service-check-function": [
+    {
+      ask: "Point the remote at the indoor unit and hold the timer cancel button for 5 seconds. What shows on the temperature display?",
+      options: [
+        { label: "00 is displayed", verdict: "You are in the service check function. Press the timer cancel button repeatedly to step through the code list, watching the display." },
+        { label: "Nothing shows on the temperature display", verdict: "The remote is not entering the mode. Point it directly at the indoor unit and hold the timer cancel button down a full 5 seconds." },
+      ],
+    },
+    {
+      ask: "Step through the code list with the timer cancel button. What are you hearing?",
+      options: [
+        { label: "A LONG beep on one of the codes", verdict: "That is the code the unit is reporting. Write it down as displayed before exiting the mode." },
+        { label: "Short beeps and two consecutive beeps only", verdict: "Those indicate non-corresponding codes - keep pressing timer cancel and stepping through the list until you get a long beep." },
+        { label: "Stepped through the whole list with no long beep", verdict: "Not every error code is displayed by this method. Use the alternate check method documented in that unit's service manual." },
+      ],
+    },
+  ],
+  "s-dcvk-concentric-vent-clearances": [
+    {
+      ask: "Measure this DCVK termination against the clearances in the furnace installation instructions and the kit figures. Which one, if any, fails?",
+      options: [
+        { label: "Less than 12 in. above ground or above expected snow accumulation", verdict: "Fails. The termination has to be at least 12 in. above ground or above normally expected snow levels - correct it rather than leaving it as found." },
+        { label: "Less than 4 ft horizontal from an electric meter, gas meter, regulator, or relief equipment", verdict: "Fails a US installation requirement. Relocate the termination to get at least 4 ft horizontal from all of those, and document what you found." },
+        { label: "Less than 3 ft above a forced air inlet that is within 10 ft", verdict: "Fails. The termination must be at least 3 ft above any forced air inlet located within 10 ft - raise it or move it." },
+        { label: "All the listed clearances check out", verdict: "Location is acceptable. Also confirm it does not discharge over a public walkway and is not where condensate causes problems - above planters or patios, or next to a window it can fog." },
+      ],
+    },
+    {
+      ask: "Look at what else terminates near this one.",
+      options: [
+        { label: "Another appliance's combustion air intake is closer than 10 ft", verdict: "That fails the 10 ft requirement unless it is another direct vent furnace intake. Relocate to get the 10 ft and document the existing condition." },
+        { label: "The nearest one is another direct vent furnace intake", verdict: "That is the stated exception to the 10 ft rule - no correction needed on that count." },
+        { label: "Nothing else terminates within 10 ft", verdict: "Clear on that requirement. Finish the rest of the clearance checks and correct anything that fails rather than leaving it." },
+      ],
+    },
+  ],
   "s-defrost-cycle-time-measured-to-50f": [
     {
       ask: "You raised the defrost termination temperature setpoint. Run the system and see what actually changed.",
@@ -2236,6 +3814,16 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Defrost interval and accumulation time did not change at all", verdict: "Expected on these controls. The defrost cycle time the adaptive logic uses is counted from defrost initiation until coil temperature reaches 50 F, not until the termination setpoint is reached, so the setpoint jumper does not move it." },
         { label: "Coil still is not clearing after the change", verdict: "Stop moving the setpoint. Address charge, airflow, and coil cleanliness instead." },
         { label: "Outdoor coil sensor reads off when you check it", verdict: "Correct that first. The 50 F reference the cycle time is measured to depends entirely on that sensor." },
+      ],
+    },
+  ],
+  "s-defrost-low-pressure-ignore-window": [
+    {
+      ask: "Note the exact times defrost initiates and terminates while you monitor the low pressure switch on R-PS1 and PS2. When does it open?",
+      options: [
+        { label: "Within 5 minutes of defrost initiation or termination, and the unit keeps running", verdict: "Expected. The control deliberately ignores the switch during those two 5 minute windows - that is not a bypassed safety and not a board fault." },
+        { label: "Well away from defrost, and the unit trips", verdict: "The board is acting on the switch the way it should. Chase charge, airflow, or a restriction - not the board." },
+        { label: "It never opens at all", verdict: "Test the switch outside the two 5 minute defrost windows so the board is actually acting on it. Do not bypass R-PS1/PS2 to prove the switch - that is the compressor protection." },
       ],
     },
   ],
@@ -2283,6 +3871,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-defrost-thermostat-part-number-temps": [
+    {
+      ask: "Read the part number stamped on the defrost thermostat. Which is it?",
+      options: [
+        { label: "0130M00009P (2 and 2.5 ton)", verdict: "It should close at 34 F plus or minus 5 F and open at 60 F plus or minus 5 F. Test against those numbers, not a remembered figure." },
+        { label: "0130M00001P or B1370803 (3 through 5 ton)", verdict: "It should close at 31 F plus or minus 3 F and open at 75 F plus or minus 6 F. Test against those numbers." },
+        { label: "0130M00085 (units with 5 mm coils)", verdict: "It should close at 30 F plus or minus 5 F and open at 60 F plus or minus 5 F. Test against those numbers." },
+      ],
+    },
+    {
+      ask: "With a thermocouple test lead on the tube next to the control and the contact point insulated, lower then raise the temperature. Where do the contacts close and open?",
+      options: [
+        { label: "Both points inside the range for that part number", verdict: "The control is good. If you replace it later, match the replacement part number to the original." },
+        { label: "Close or open point outside the range for that part number", verdict: "Replace the control. Match the replacement part number to the original - a 3 to 5 ton control installed on a 2 ton unit will change defrost behavior." },
+      ],
+    },
+  ],
   "s-defrost-thermostat-vs-thermistor": [
     {
       ask: "Identify which coil sensor this system uses and test it the matching way.",
@@ -2302,6 +3907,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Demand defrost, and frost builds with no defrost cycle", verdict: "There is usually no simple interval to adjust on demand defrost. Suspect a failed or miscalibrated sensor input instead." },
         { label: "Demand defrost with cycles happening at irregular intervals", verdict: "That is normal, expected behavior for that control type - it defrosts only when the coil actually needs it. Explain it rather than troubleshoot it." },
         { label: "Defrost initiates fine but does not terminate properly", verdict: "That is a separate issue, typically the defrost termination sensor/thermostat, not the initiation logic." },
+      ],
+    },
+  ],
+  "s-defrost-twelve-minute-override": [
+    {
+      ask: "Time the defrost cycle from initiation to termination and look at the coil at the end. What happens?",
+      options: [
+        { label: "Runs about twelve minutes then quits with ice still on the coil", verdict: "That is the twelve minute override interrupting the defrost period, not a short-cycling board. Defrost should terminate when the sensor opens - find out why it never did." },
+        { label: "Terminates before twelve minutes with the coil clear", verdict: "Normal - the sensor opened and ended defrost the way it should. No override involved." },
+      ],
+    },
+    {
+      ask: "Check the defrost sensor clamped to the feeder tube, then raise its temperature and watch the DFT circuit. What do you find?",
+      options: [
+        { label: "Sensor loose, poorly clamped, or not insulated at the point of contact", verdict: "Fix the mounting - good contact, tight clamping, and insulation at the point of contact. A sensor that cannot read the tube will never open, so defrost always rides the override out." },
+        { label: "Sensor will not open at its rated temperature", verdict: "Replace the defrost thermostat." },
+        { label: "Sensor mounted well and opens as it should", verdict: "Check the charge and the outdoor fan operation. A defrost that cannot raise coil temperature will always ride the override out." },
       ],
     },
   ],
@@ -2380,6 +4002,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-discharge-capacitor-before-handling": [
+    {
+      ask: "With all power off, discharge the capacitor through a 20 to 30 ohm resistor, then check the terminals with your meter. What do you read?",
+      options: [
+        { label: "Zero volts at the terminals", verdict: "Safe to handle. Remove it from the circuit before testing capacitance." },
+        { label: "Still showing voltage", verdict: "Do not touch the terminals. Discharge it again through the resistor - never a direct short - and re-verify at zero before handling it." },
+      ],
+    },
+    {
+      ask: "With the capacitor out of the circuit and the meter on capacitance mode, read it. How does it compare to the value printed on the can?",
+      options: [
+        { label: "At or near the printed value, or slightly lower", verdict: "The capacitor is good - a slightly lower reading is expected. Discharge it again before reinstalling it." },
+        { label: "Significantly lower than printed, or no reading at all", verdict: "Replace the capacitor. Discharge it again before disposing of it." },
+      ],
+    },
+  ],
   "s-discharge-line-temperature": [
     {
       ask: "Read discharge line temperature 6 inches off the compressor with the system stable. What did you get?",
@@ -2388,6 +4026,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Over 225 F, with high head and normal superheat", verdict: "Heat rejection is the problem. Look at condenser coil, fan, recirculation, non-condensables, or a severe overcharge." },
         { label: "Unusually cool discharge line, low superheat", verdict: "Liquid is returning to the compressor. Find out whether it is flood back during running (metering device or low evaporator load) versus a flooded start after an off cycle, and fix the cause before the bearings wash out." },
         { label: "In the normal band with everything else in range", verdict: "The compressor is not being stressed thermally. Move your diagnosis to the air side, controls, or capacity against the load." },
+      ],
+    },
+  ],
+  "s-disconnect-aluminum-copper-connection": [
+    {
+      ask: "Identify the conductors at the disconnect (aluminum is dull gray and larger for its ampacity) and read the connector markings. What do you find?",
+      options: [
+        { label: "Aluminum landing on a connector NOT marked AL/CU or CO/ALR", verdict: "A copper-only connector is not sufficient for a direct aluminum landing and will fail prematurely. Correct it with a properly rated connector rather than just cleaning and re-landing." },
+        { label: "Aluminum on a connector properly marked AL/CU or CO/ALR", next: 1 },
+        { label: "All copper conductors, no aluminum present", verdict: "This failure mode does not apply. Look elsewhere for the overheating." },
+      ],
+    },
+    {
+      ask: "Look closely at the aluminum termination and check the torque. What do you see?",
+      options: [
+        { label: "Discoloration, pitting, or melted insulation right at the aluminum termination", verdict: "Classic sign of a connection that has been resistively heating. Aluminum connection failures are a recognized fire risk. De-energize and correct the termination, do not just clean it up." },
+        { label: "Connection looks clean but is loose when checked", verdict: "Aluminum cold-flows under pressure, so connections correct at install loosen years later. Re-torque to the connector manufacturer's spec." },
+        { label: "No antioxidant joint compound where the connector instructions require it", verdict: "Its absence accelerates oxidation and resistive heating at the joint. Apply the appropriate compound per the connector instructions and re-torque." },
       ],
     },
   ],
@@ -2402,6 +4058,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-dm96sn-blower-speed-select": [
+    {
+      ask: "Press the center switch to commit the speed number you picked, then run a cooling call. Does the blower run at the new speed?",
+      options: [
+        { label: "Blower runs at the new speed number you selected", verdict: "The selection took. Now run a heat call and re-verify temperature rise against the range on the furnace rating plate." },
+        { label: "Blower still runs at the old speed", verdict: "The selection was never committed. Rotate back to the speed number you want with the left or right switch, then press the center switch to select it, and re-run the cooling call." },
+      ],
+    },
+    {
+      ask: "Run a heat call and read temperature rise against the range on the furnace rating plate.",
+      options: [
+        { label: "Rise falls inside the rating plate range", verdict: "Both modes check out - you are done." },
+        { label: "Rise is outside the rating plate range", verdict: "Go back to the control, rotate to a different speed number with the left/right switches, press center to commit, and re-check rise. All 9 speeds are available to you." },
+      ],
+    },
+  ],
   "s-dm96sn-inlet-gas-pressure": [
     {
       ask: "With the manometer on the inlet tap or drip leg, the burners firing, and every other gas appliance on that supply line running, read supply pressure. What do you get?",
@@ -2412,12 +4084,164 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-dm96vc-adjust-taps": [
+    {
+      ask: "With the base cooling tap already set on switches 1 and 2, set the adjust tap on switches 3 and 4, restore power, and read the display. Which way did the airflow move?",
+      options: [
+        { label: "Airflow moved the direction you intended and is now at target", verdict: "The trim worked. Re-check heating temperature rise against the rating plate range, since the change affects heating airflow too." },
+        { label: "Airflow moved the wrong direction", verdict: "You picked the opposite trim. Disconnect power and reset switches 3 and 4 for the other sign - the taps give -5, +5, -10, or +10 percent - then re-read the display." },
+        { label: "Airflow moved the right way but is still short of target", verdict: "Step up to the larger trim in the same direction (10 percent instead of 5), or move the base tap on switches 1 and 2 and re-trim from there." },
+      ],
+    },
+  ],
+  "s-dm96vc-airflow-display": [
+    {
+      ask: "With the blower at steady speed, read the airflow number off the display (12 is about 1225 CFM, 13 about 1275). How does it compare to the blower table for the tap you selected?",
+      options: [
+        { label: "Displayed airflow matches the blower table for the selected tap", verdict: "The blower is delivering what it should. Compare that number against the target CFM for the installed cooling tonnage or the required heating rise and move on." },
+        { label: "Displayed airflow is far below the blower table for the selected tap", verdict: "Do not re-tap blindly. A big shortfall points to a restriction - check the filter, the coil, and duct static before you change the speed setting." },
+        { label: "Display is off target by less than 100 CFM", verdict: "That is inside the display's own rounding - it reads to the nearest 100 CFM. Do not chase a difference that small; leave the tap alone." },
+      ],
+    },
+  ],
+  "s-dm96vc-cooling-speed-dip": [
+    {
+      ask: "Work out target CFM from the installed tonnage (350 to 450 CFM per ton, most makers about 400), then run a cooling call and read delivered airflow on the dual 7-segment display. How does it compare?",
+      options: [
+        { label: "Displayed airflow is at the target CFM for the installed tonnage", verdict: "Cooling speed is set. Now run a heat call and re-verify temperature rise against the rating plate, since a blower speed change affects heating too." },
+        { label: "Displayed airflow is below the target CFM", verdict: "Disconnect power and move the cooling speed tap up on switches 1 and 2 of S3, using the high stage cooling airflow chart in the Specification Sheet for this model, then re-read the display." },
+        { label: "Displayed airflow is above the target CFM", verdict: "Disconnect power and move the cooling speed tap down on switches 1 and 2 of S3 per the high stage cooling airflow chart for this model, then re-read the display on a cooling call." },
+      ],
+    },
+    {
+      ask: "Is there an electronic air cleaner or similar accessory in this system?",
+      options: [
+        { label: "Yes - an accessory with its own airflow requirement", verdict: "Its requirement can override your CFM-per-ton target. Check the accessory instructions and pick a speed tap that satisfies both it and the cooling equipment." },
+        { label: "No accessory in the airstream", verdict: "Size purely off the cooling equipment's own instructions and the model's high stage cooling airflow chart." },
+      ],
+    },
+  ],
   "s-do-not-oil-motors": [
     {
       ask: "For the noise complaint, kill power and manually rotate the outdoor fan and the indoor blower. What do you feel?",
       options: [
         { label: "Both turn freely with no play", verdict: "Do not add oil - these motors are permanently lubricated and oil leads to premature failure. Look for a loose or unbalanced wheel, a loose set screw, or wheel-to-housing interference, and check the fan blade balance weights and blade setscrew on the outdoor unit." },
         { label: "Real play in the shaft or grinding", verdict: "Replace the motor rather than trying to lubricate it." },
+      ],
+    },
+  ],
+  "s-dozp-a2l-all-dampers": [
+    {
+      ask: "Blower running and dampers open regardless of calls, with zone board error 81, is A2L mitigation. After ventilating and clearing ignition sources, check the alarm wiring path. What do you find?",
+      options: [
+        { label: "A shorted alarm wire in the run between indoor unit and zone board", verdict: "A shorted alarm wire mimics a leak alarm. Repair that run before replacing any sensors, then recheck." },
+        { label: "Furnace Alarm pin voltage, or air handler CTL_COM/CTL_NO and 24VAC at the detector, all check out", verdict: "Wiring and detector are good. Power cycle the system. If error 81 persists with no system alert, replace the zone board." },
+        { label: "The indoor unit is reporting a real refrigerant alert too", verdict: "Treat it as a genuine leak. Keep the space ventilated, no ignition sources, and follow the indoor unit's A2L troubleshooting and R-32 service procedures and local code." },
+      ],
+    },
+  ],
+  "s-dozp-autoweight-fails": [
+    {
+      ask: "Read the auto-weight status message on the One+ thermostat. Which one does it show?",
+      options: [
+        { label: "Pressure sensor not connected", verdict: "Enable the sensor in the thermostat menu and check its wiring at the zone board, then retry auto-weight." },
+        { label: "Waiting for system fan to stop, for over 5 minutes", verdict: "That is a communication issue. Power cycle the thermostat and retry auto-weight." },
+        { label: "Auto-weight stop due to fan fault", verdict: "The indoor blower is not operational. Diagnose the fan first - auto-weight will keep aborting until the blower runs." },
+        { label: "Less than 2 zones enabled", verdict: "Enable more zones on the enable-zones screen, or confirm the dampers are actually being detected, then retry." },
+      ],
+    },
+    {
+      ask: "If the message was about zone or duct size instead, which one did you get?",
+      options: [
+        { label: "May be inaccurate due to large zone size", verdict: "Check for an open indoor unit door or a duct leak, then rerun auto-weight." },
+        { label: "Cannot complete due to small duct size", verdict: "Check the zone sizing and look for a stuck damper on that zone." },
+        { label: "Neither - it keeps aborting with no clear message", verdict: "Verify the differential pressure sensor: at 0 Pa it should output 1.0 VDC between SIGNAL and GND. Check it with a meter before doing anything else." },
+      ],
+    },
+  ],
+  "s-dozp-bus-bias-check": [
+    {
+      ask: "Look at the BUS LED on the zone panel first. What is it doing?",
+      options: [
+        { label: "Alternating fast and slow flashing", verdict: "That is normal bus traffic - the bus is communicating. Look elsewhere for the fault." },
+        { label: "Solid ON, solid OFF, or flashing at a fixed rate", verdict: "Not communicating. Move on to Data 1/Data 2 polarity and the bias voltage measurement." },
+      ],
+    },
+    {
+      ask: "Measure DC bias voltage across the data pair. What do you read?",
+      options: [
+        { label: "0.6 to 0.9 VDC across the pair", verdict: "Bus voltage is healthy. Go back over Data 1/Data 2 polarity at the zone board, thermostats, and indoor unit - a swap anywhere in the chain breaks it." },
+        { label: "Near zero volts", verdict: "That points to a short or a dead node. Check conductors run by run - splices and backstabs are the usual culprits on this 18 AWG wiring." },
+        { label: "Up near rail voltage", verdict: "That points to an open or a dead node. Check for broken conductors run by run and confirm every node is powered." },
+      ],
+    },
+    {
+      ask: "Check the indoor unit and the thermostat for related codes. What is showing?",
+      options: [
+        { label: "E77 at the indoor unit plus zone errors 25 or 36 on the stat", verdict: "All of those point at the same wire. Fix the bus wiring - do not start replacing boards." },
+        { label: "No E77 and no comm errors on the stat", verdict: "The bus is likely fine end to end. Reconsider the original complaint before you start pulling wire." },
+      ],
+    },
+  ],
+  "s-dozp-damper-click-normal": [
+    {
+      ask: "Watch the zone panel's green status LEDs during one of the clicking events. What do they do?",
+      options: [
+        { label: "Every zone's green LED lights, click lasts about a second, quiet for about 10 minutes", verdict: "That is normal damper detection - the controller checks all zones every 10 minutes by design. No fault. Tell the customer it supervises the dampers and cannot be disabled without losing damper fault detection." },
+        { label: "One zone's green LED does not light during detection", verdict: "That zone has a damper wiring problem, matching error codes 82-87. Check that zone's damper wiring." },
+        { label: "Clicking is constant, or a zone LED flickers in and out", verdict: "That points at a loose damper connection. Check the wiring on that zone." },
+      ],
+    },
+  ],
+  "s-dozp-pressure-sensor-install": [
+    {
+      ask: "Check the sensor's green power LED with 5VDC present at the connector. What do you see?",
+      options: [
+        { label: "Green LED off with 5VDC present at the connector", verdict: "Open 5V wiring or a failed sensor. Check the three-wire connection at both the sensor and the zone board end before ordering the part." },
+        { label: "Green LED is on", verdict: "The sensor has power. Move on to its output voltage and the tubing." },
+      ],
+    },
+    {
+      ask: "With the system off (zero flow), measure between SIGNAL and GND. What do you read?",
+      options: [
+        { label: "1.0 VDC at zero flow", verdict: "The zero reading is correct. If auto-weight still fails, go back to the physical install - pitot tube placement and orientation per the quick-start guide, and silicone tubing free of kinks and condensation traps." },
+        { label: "Something other than 1.0 VDC at zero flow", verdict: "Either the tubing is on the wrong sensor ports or the sensor has drifted. Verify the tubing routing first, then replace the sensor." },
+      ],
+    },
+    {
+      ask: "Check the One+ dealer screen for error 90. Is it there?",
+      options: [
+        { label: "Yes, error 90 is showing", verdict: "That is sensor input open or shorted. Check the three-wire connection (5V, SIGNAL, C) at the sensor AND at the zone board end." },
+        { label: "No error 90", verdict: "The sensor input wiring is intact. Stay on placement, tubing, and the zero-flow output check." },
+      ],
+    },
+  ],
+  "s-dozp-wireless-rht-sensor": [
+    {
+      ask: "Open the One+ thermostat's sensor screen. What does this sensor show?",
+      options: [
+        { label: "Not listed at all", verdict: "It was never paired, or it lost pairing. Pair it through the thermostat's sensor menu and confirm it shows a reading before you leave the wall." },
+        { label: "Listed but drops offline on and off", verdict: "Range problem. Wireless drops through metal duct chases and multiple walls - relocate it closer or remove the obstruction. Check the battery level on the same screen, since a dying battery reads as an intermittent sensor." },
+        { label: "Listed with a reading, but the temperature looks wrong for the room", verdict: "Placement. Same rules as any stat: interior wall, away from supply registers, sunlight, lamps, and kitchen or bath humidity spikes. Move it." },
+        { label: "Listed and accurate, but the zone still does not feel right", verdict: "If the zone averages multiple sensors, check the averaging configuration. A sensor in an unused room dragging the average is a settings fix, not a hardware fix." },
+      ],
+    },
+  ],
+  "s-dozp-zone-merge-behavior": [
+    {
+      ask: "Open the One+ dealer error list before you touch any dampers. What is showing?",
+      options: [
+        { label: "An error in the 31-35 range for that zone's thermostat", verdict: "That thermostat dropped off the ClimateTalk bus and the DOZP merged its zone into zone 1 on purpose so the space still gets conditioned. Restore the thermostat and the merge clears on its own." },
+        { label: "No thermostat errors listed", verdict: "This is not merge behavior. The zone following zone 1 has another cause - check that zone's damper and its wiring." },
+      ],
+    },
+    {
+      ask: "Work the offline thermostat in order: power, then Data 1/Data 2 polarity and wiring, then bus bias. Where does it fail?",
+      options: [
+        { label: "No power at the thermostat", verdict: "Restore its power first. Everything else is downstream of that." },
+        { label: "Powered, but Data 1 and Data 2 are swapped or the wiring is damaged", verdict: "Correct the polarity and repair the wiring. Once communication returns the merge clears automatically." },
+        { label: "Powered and wired right, but bus bias is outside 0.6-0.9 VDC", verdict: "That is a bus problem, not the thermostat. Chase the bus wiring before replacing the stat." },
+        { label: "Communication is back and the error cleared", verdict: "Verify the zone responds to its own thermostat again and the error is gone from the dealer menu before you leave." },
       ],
     },
   ],
@@ -2476,6 +4300,33 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "At boots and registers, staining the ceiling drywall", verdict: "Room air leaking around the boot is the usual cause. Seal the boot-to-drywall gap and insulate the boot." },
         { label: "On the air handler cabinet itself", verdict: "Verify airflow first - low airflow means a colder coil and a colder cabinet. Consider raising blower CFM within spec before wrapping the cabinet." },
         { label: "Everywhere, in a vented crawlspace or open attic during a humid spell", verdict: "The space itself is carrying the humidity load. Address the space with vapor barrier and sealing as much as the duct." },
+      ],
+    },
+  ],
+  "s-duct-flexduct-crushed-kinked": [
+    {
+      ask: "Get into the attic or crawlspace and physically inspect the flex run to that specific room. What do you find?",
+      options: [
+        { label: "A crushed or sharply kinked section", verdict: "That is your restriction. Correct the routing and support so the run has gentle curves, rather than just noting reduced airflow at the register." },
+        { label: "Duct compressed under stored items, insulation, or from foot traffic", verdict: "Free the duct and reroute or protect it so it cannot be compressed again, then recheck airflow at that register." },
+        { label: "Excessive sag between supports", verdict: "Sag creates an effective kink even with no external crushing. Add straps and supports so the run is properly held up with gentle curves." },
+        { label: "Run is straight, supported, and undamaged", verdict: "This run is not the cause. Look at the rest of the airflow path for why that one room is short on air." },
+      ],
+    },
+  ],
+  "s-duct-leakage-conditioned-vs-unconditioned": [
+    {
+      ask: "Compare measured supply CFM at the equipment against what you measure at the registers. What is the picture?",
+      options: [
+        { label: "Registers add up to noticeably less than what the equipment is moving", verdict: "That gap quantifies what is being lost into the attic, crawlspace, or garage. Next, hunt the accessible joints, boots, and plenum connections." },
+        { label: "Register total is close to what the equipment is moving", verdict: "Duct leakage into the unconditioned space is not the main problem here. Look elsewhere for the complaint." },
+      ],
+    },
+    {
+      ask: "Inspect the accessible duct joints, boots, and plenum connections in the unconditioned space. What do you find?",
+      options: [
+        { label: "A disconnected section, or clearly failed old mastic or tape at accessible joints", verdict: "Reconnect what has come apart and reseal with mastic or proper foil tape. Do not use standard cloth-backed duct tape, which fails again over time." },
+        { label: "Leakage looks widespread and beyond what you can reach", verdict: "Do not just patch the few you can reach. Discuss a proper duct blaster test and comprehensive sealing with the customer." },
       ],
     },
   ],
@@ -2574,6 +4425,57 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-ductsizing-manuald-field-mismatch": [
+    {
+      ask: "Ask whether the ductwork was actually designed with Manual D or sizing software, and check the equipment history. Which fits?",
+      options: [
+        { label: "No real duct design, sized by rule of thumb or experience", verdict: "Common on older and budget installs. Measure static pressure and room-by-room airflow to quantify the mismatch rather than estimating duct size by eye." },
+        { label: "Ducts sized for smaller/older equipment that was later replaced with higher capacity", verdict: "The duct system was never resized for the new equipment. That is a very common root cause of chronic high static pressure. Quantify it with static pressure and room airflow measurements." },
+        { label: "A real duct design exists and matches the current equipment", verdict: "Duct design is not the root cause. Look at the equipment and the rest of the airflow path for the complaint." },
+      ],
+    },
+    {
+      ask: "With static pressure and room airflow measured, compare trunk and branch sizes against rated CFM and the room-by-room loads. What do you see?",
+      options: [
+        { label: "Trunks are clearly undersized for the equipment's rated CFM", verdict: "Undersized trunks are a very common cause of chronic high static pressure. A redesign is the real fix, so document it clearly for the customer." },
+        { label: "Only specific branch runs are short on air", verdict: "Identify those specific undersized runs causing the worst symptoms and prioritize them for correction rather than treating the whole system as one problem." },
+      ],
+    },
+  ],
+  "s-dx20vc-crankcase-heater-specs": [
+    {
+      ask: "Confirm the unit before comparing any reading. What size DX20VC/DZ20VC is this?",
+      options: [
+        { label: "5 ton", verdict: "It has a crankcase heater - it is a 5 ton only item on this family. The required pre-energize time here is a minimum of 2 hours, not the 4 hours used on several other models." },
+        { label: "Not a 5 ton", verdict: "No crankcase heater is fitted on this one - it is a 5 ton only item on this family. Stop looking for it and chase the complaint elsewhere." },
+      ],
+    },
+    {
+      ask: "All power disconnected and heater lead-in wires off, ohm the heater. What do you read?",
+      options: [
+        { label: "Open - not continuous", verdict: "Replace the heater. Then reconnect the leads, restore power, and let it run the required 2 hours before allowing the compressor to start." },
+        { label: "Continuous and near 1745 ohms with the compressor cold", verdict: "That matches this model's 33 watt, 240 volt PTC heater. It is good - do not compare it to the 40 watt, 265 volt, 1800 ohm heater used on other units." },
+        { label: "Continuous but reading higher than 1745 ohms on a warm compressor", verdict: "Normal. Resistance becomes greater as the compressor shell temperature increases - do not condemn a heater on a warm reading." },
+      ],
+    },
+  ],
+  "s-dx20vc-thermistors-and-eev-coil": [
+    {
+      ask: "Identify the suspect sensor by function - Ta outdoor air, Tm outdoor coil, Tl outdoor liquid, Td discharge, Tgi indoor gas, Tli indoor liquid - then disconnect it and ohm it. What do you read?",
+      options: [
+        { label: "Open or shorted", verdict: "Replace the sensor. An open or shorted thermistor will not compare against the chart at all." },
+        { label: "Resistance matches the chart at the sensor's actual temperature", verdict: "The sensor is good. Reconnect it and look elsewhere for the code - check the connector and harness before ordering parts." },
+        { label: "Resistance is outside the valid range for the sensor's actual temperature", verdict: "Replace the sensor. Compare against the THERMISTOR RESISTANCE AND TEMPERATURE CHARACTERISTICS table at the temperature the sensor is actually seeing, not room temperature." },
+      ],
+    },
+    {
+      ask: "Disconnect the EEV cable from the control board and read resistance between the connector pins. How does it compare with the manual's specified values?",
+      options: [
+        { label: "Matches the specified values", verdict: "The EEV coil is good. Reconnect everything, restore power, and confirm the related fault code clears." },
+        { label: "Off the specified values", verdict: "The EEV coil is bad. Replace it, then restore power and confirm the related fault code clears." },
+      ],
+    },
+  ],
   "s-eac-not-cleaning": [
     {
       ask: "De-energize, pull the cells and look at them, and characterize the odor.",
@@ -2616,6 +4518,22 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "24 volts at the transformer but nothing at pin 15 (G) with the thermostat set to Fan-On", verdict: "The fan demand is not reaching the motor. Work back from the G terminal to the board and thermostat." },
         { label: "Pins 1 and 3 do not ohm continuous to transformer neutral or the thermostat C terminal", verdict: "An open neutral here makes the motor run erratically. Repair the common before condemning the motor." },
         { label: "All power and signals present, including 24 volts at pin 6 and/or 14 on a cool call and pin 2 and/or 11 on a heat call", verdict: "Everything the motor needs is there and it still will not run. Condemn the motor." },
+      ],
+    },
+  ],
+  "s-ecm-ac-line-precautions": [
+    {
+      ask: "Trace the ECM motor AC line feed back to its source. Is anything switching it?",
+      options: [
+        { label: "Motor line runs direct with no contactor or relay in series", next: 1 },
+        { label: "A contactor or relay is wired in series with the motor line", verdict: "That switching device will damage the motor - the control is designed to be powered continuously for reliable start-up. Remove it and re-land the motor on a continuous feed, then confirm normal ramp on a fan call." },
+      ],
+    },
+    {
+      ask: "With power OFF, look at the polarized power connector against the motor plug before you seat it.",
+      options: [
+        { label: "Connector lines up with the plug and seats without force", verdict: "Good. Seat it with power off, keep voltage off terminals 1 and 2, then restore power and confirm the motor ramps normally on a fan call." },
+        { label: "Connector only goes in if you force it, or it looks backwards", verdict: "Stop - never force the plug. Re-verify and re-verify the orientation of the polarized connector with the power off. Forcing it in backwards damages the motor." },
       ],
     },
   ],
@@ -2703,6 +4621,29 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-ecm-replacement-motor-generic-programming": [
+    {
+      ask: "Check the motor tag. Is this a true OEM motor or a universal/aftermarket ECM replacement?",
+      options: [
+        { label: "Universal or aftermarket ECM replacement motor", next: 1 },
+        { label: "True OEM replacement motor", verdict: "Generic default programming is not your problem here. Look elsewhere in the airflow path for the complaint." },
+      ],
+    },
+    {
+      ask: "Compare the replacement motor's programming module or dip switches against the equipment maker's required CFM-per-speed-tap chart for this exact model. What do you find?",
+      options: [
+        { label: "Settings do not match the required profile for this model", verdict: "That is your cause. Reprogram to the correct profile using the replacement manufacturer's cross-reference and setup procedure for this furnace or air handler." },
+        { label: "Settings match the chart for this model", next: 2 },
+      ],
+    },
+    {
+      ask: "Run the system and take an actual static pressure and temperature rise reading. What do they show?",
+      options: [
+        { label: "Temperature rise out of spec, or airflow clearly weak or excessive", verdict: "The chart setting is not delivering in this application. Recheck the profile selection and correct it, then re-verify with static pressure and temperature rise, not just the chart." },
+        { label: "Static pressure and temperature rise are within spec", verdict: "Airflow is confirmed good by measurement. The motor programming is not causing the complaint, so look elsewhere." },
+      ],
+    },
+  ],
   "s-ecm-rough-shaft-is-normal-cogging": [
     {
       ask: "With power killed at the disconnect and the motor circuit verified dead, turn the shaft by hand. What does it feel like?",
@@ -2744,6 +4685,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Something blocking the module's own cooling airflow inside the cabinet", verdict: "ECM modules have heat sinks that depend on airflow across them. Clear the obstruction and confirm the mounting/ventilation." },
         { label: "Hot attic or closet around the air handler, and this happens seasonally", verdict: "High ambient around the air handler reduces the module's thermal headroom. Address the space temperature or ventilation." },
         { label: "Airflow and ventilation both confirmed correct and it still thermal cycles", verdict: "That points to a genuine module fault rather than an environmental cause. Replace the module." },
+      ],
+    },
+  ],
+  "s-eev-coil-and-thermistor-resistance": [
+    {
+      ask: "With all power off and the EEV cable off the control board, read resistance between the EEV connector pins per the manual's measuring point diagram. What do you get?",
+      options: [
+        { label: "Inside the 40 to 50 ohm range", verdict: "The coil is good. Move on to the control board and wiring rather than replacing the coil." },
+        { label: "Outside the 40 to 50 ohm range", verdict: "Replace the EEV coil." },
+      ],
+    },
+    {
+      ask: "Disconnect the thermistor connector from the control board and ohm across the terminals. How does it compare to the resistance and temperature table?",
+      options: [
+        { label: "Reads open or shorted", verdict: "Replace that thermistor. A lying temperature input keeps superheat uncontrolled no matter what the valve does." },
+        { label: "Reads out of range for the temperature it is seeing", verdict: "Replace it - the board is getting bad temperature data." },
+        { label: "Reads in range for the actual temperature", verdict: "The thermistor is good. Move to the EEV coil resistance check to split the coil from the board." },
       ],
     },
   ],
@@ -3020,6 +4978,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Board-level low-voltage control fuse (glass, usually 3-5A) keeps blowing", verdict: "Treat it as a short in the low-voltage field wiring. Replacing it repeatedly with a higher-amp fuse just moves the failure point downstream to the transformer or board." },
         { label: "Line-voltage breaker trips on inrush at motor or compressor start but the equipment runs fine otherwise", verdict: "The correct fix is a slower-tripping HACR-rated breaker sized to spec, not a larger-than-spec breaker." },
         { label: "Installed line-voltage protection does not match the nameplate MCA and MOCP", verdict: "Size it to the equipment's rating plate. Undersized protection nuisance-trips, and oversized protection leaves the branch circuit wiring unprotected. Document any change from the rating plate." },
+      ],
+    },
+  ],
+  "s-elec-megger-insulation-resistance-test": [
+    {
+      ask: "Before you trust any megger reading, check your test setup. Which is true?",
+      options: [
+        { label: "The component was still connected to the rest of the circuit", verdict: "The reading is false or misleading through parallel paths. Isolate the item under test, then re-run the megger test." },
+        { label: "Test voltage was higher than the equipment or wiring is rated for", verdict: "Too high a test voltage can damage delicate electronics and low-voltage-rated wiring. Select the correct test voltage per the megger and equipment manufacturer guidance." },
+        { label: "Component fully isolated and correct test voltage selected", next: 1 },
+      ],
+    },
+    {
+      ask: "Test each winding or conductor to ground and record the reading. What do you get?",
+      options: [
+        { label: "Near zero or very low megohms", verdict: "Insulation is degraded or failing even if a standard ohmmeter shows the winding intact and not fully grounded. Plan on replacing the motor, compressor, or damaged wiring rather than returning it to service." },
+        { label: "Dropped significantly compared to a known baseline from a prior test", verdict: "Progressive insulation breakdown, often from moisture or overheating, before it causes an outright ground fault trip. Flag it and plan replacement rather than waiting for the trip." },
+        { label: "High insulation resistance with no baseline available to compare", verdict: "Insulation looks acceptable right now. Record the reading as a baseline for future tests and look elsewhere for the fault." },
       ],
     },
   ],
@@ -3427,6 +5403,59 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-first-startup-cool-season": [
+    {
+      ask: "Check the thermostat and the outdoor disconnect first. Where does it stop?",
+      options: [
+        { label: "Thermostat is not on Cool, or setpoint is not below room temperature", verdict: "Set it to Cool with the setpoint below current room temperature and retry. The system will not call at all until the setpoint is actually below room temp." },
+        { label: "Outdoor disconnect was left pulled from winter service", verdict: "Reinstall the disconnect and retry the cool call before diagnosing anything else." },
+        { label: "Thermostat and disconnect are both correct", next: 1 },
+      ],
+    },
+    {
+      ask: "Look over the outdoor unit and how it has been sitting all winter. What applies?",
+      options: [
+        { label: "Leaves, dirt, or ice remnants in and around the outdoor unit", verdict: "Clear the debris out of and off the unit, then run it in cooling and recheck operation." },
+        { label: "Compressor sat off a long time in cold weather and the unit has a crankcase heater", verdict: "Give the crankcase heater time to warm the compressor per the manufacturer guidance before a demanding first start, then try again." },
+        { label: "Unit is clean, and it is a heat pump that heated fine all winter", verdict: "Do not assume heating operation proves the whole system is good. Run it in cooling specifically and diagnose from what you see in that mode." },
+      ],
+    },
+  ],
+  "s-first-startup-heat-season": [
+    {
+      ask: "Start at the thermostat and the power. Where does the sequence stop?",
+      options: [
+        { label: "Thermostat is still set to Cool or Off from summer", verdict: "Set it to Heat and try the call again. On a first seasonal heat call this is the most common find, and no further diagnosis is needed if it fires normally." },
+        { label: "Furnace switch or breaker was left off from summer service", verdict: "Restore power at the switch and breaker, then retry the heat call before opening anything else." },
+        { label: "Thermostat and power are both correct but nothing happens", next: 1 },
+      ],
+    },
+    {
+      ask: "Pull the panel and check the filter, burner, and inducer area. What do you find?",
+      options: [
+        { label: "Filter is severely loaded from sitting unchanged since spring", verdict: "Replace the filter and retry. A filter that sat all summer is often loaded enough by fall to cause a no-heat or limit trips right at the first call." },
+        { label: "Nesting material or debris in the burner or inducer area", verdict: "Clean the nesting material and debris out completely before running it. Debris in the burner or inducer path is a combustion and safety issue, not just a nuisance." },
+        { label: "It fires, but the first ignition is rough with a dust burn-off smell", verdict: "That is expected on the first burn of the season. Let it run the dust burn-off and confirm it settles into a normal cycle before condemning any component." },
+      ],
+    },
+  ],
+  "s-fit-communicating-wire-layout": [
+    {
+      ask: "Count the wires actually run on this communicating FIT system. What do you have?",
+      options: [
+        { label: "Two between indoor and outdoor, four between indoor and the thermostat", verdict: "That is correct - data 1 and data 2 to the outdoor unit, and data 1, data 2, R (24 VAC hot) and C (24 VAC common) to the stat. Move on to run lengths and wire condition." },
+        { label: "A different wire count than that on either run", verdict: "A miscount here is what causes comm faults that look like board failures. Correct the wiring to match the figure for your indoor arrangement before condemning anything." },
+      ],
+    },
+    {
+      ask: "Identify the indoor arrangement, then compare each segment to the maximum length marked in that arrangement's wiring figure. What do you find?",
+      options: [
+        { label: "Every run is inside the marked maximum for this arrangement", verdict: "Length is fine. Inspect the wire visually for overheating, damaged insulation, and loose connections, then ohm any suspect run for continuity." },
+        { label: "A run is longer than the maximum marked for this arrangement", verdict: "That is your comm fault. Allowable length differs between EEV air handler, EEV cased coil, and gas furnace arrangements - shorten or reroute the run to get inside the figure's limit." },
+        { label: "A wire shows overheating or damaged insulation", verdict: "Replace it with comparable gauge and insulation thickness, then re-test communication." },
+      ],
+    },
+  ],
   "s-fit-r32-hps-manual-reset": [
     {
       ask: "With power off, remove the wire on the PCB side of the high pressure switch wiring and ohm across the PCB side terminals.",
@@ -3458,6 +5487,46 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "No voltage anywhere from the unit back to the fused disconnect", verdict: "Open wiring, open fuses, or no power. Repair as needed." },
         { label: "Voltage present at the disconnect but not at the unit", verdict: "The break is between the disconnect and the unit - open wiring or an open fuse in that run." },
+      ],
+    },
+  ],
+  "s-fit-thermistor-identification": [
+    {
+      ask: "With all power off, label the sensors before unplugging anything. Which one did the fault code name?",
+      options: [
+        { label: "An outdoor sensor - Ta, Tm, Tl, Td, Tb, or Ts", verdict: "Those are outdoor air, outdoor coil, liquid, discharge, defrost, and suction, and they sit close together on the same board. Disconnect ONLY the one named by the fault and ohm across its terminals." },
+        { label: "An indoor sensor - Tgi or Tli on an EEV indoor unit", verdict: "Indoor gas and indoor liquid thermistors are at the indoor unit, not the outdoor board. Go there before you pull any outdoor connectors." },
+      ],
+    },
+    {
+      ask: "Compare the reading to the thermistor resistance and temperature characteristics table. How does it look?",
+      options: [
+        { label: "Reads open or shorted", verdict: "Replace that thermistor." },
+        { label: "Reads a value, but out of range for the temperature it is seeing", verdict: "Drifted sensor - replace it." },
+        { label: "Falls in range for the actual temperature", verdict: "The thermistor is good. Do not order it. Move on to the wiring to that sensor and to the control board." },
+      ],
+    },
+  ],
+  "s-fixed-orifice-charging-method": [
+    {
+      ask: "Confirm what metering device this system actually uses before you charge. Which is it?",
+      options: [
+        { label: "Fixed orifice or piston", next: 1 },
+        { label: "TXV", verdict: "Do not use the piston procedure here. Using piston chart targets on a TXV system leads to a wrong charge. Charge it as a TXV system instead." },
+      ],
+    },
+    {
+      ask: "Get the manufacturer's charging chart for this piston system, then measure outdoor dry bulb and indoor return wet bulb. Where do your conditions land?",
+      options: [
+        { label: "Both readings fall within the chart's range", verdict: "Charge to the chart's target using suction pressure and superheat as your primary reference, then confirm subcooling falls in a reasonable range only as a secondary check." },
+        { label: "Conditions are outside the chart's range (very low or high outdoor temp, extreme humidity)", verdict: "Use the closest chart values, then sanity-check with overall system performance such as temperature split and amp draw rather than forcing an exact chart match." },
+      ],
+    },
+    {
+      ask: "You charged to the chart, then rechecked later under different conditions. What do you see?",
+      options: [
+        { label: "Superheat has shifted noticeably with load and outdoor temperature", verdict: "That is normal on a properly charged piston system, unlike a TXV where superheat holds fairly steady. Leave the charge alone if it was set to the chart at measured conditions." },
+        { label: "Subcooling is outside a reasonable range", verdict: "Subcooling is only your secondary check on a piston system. Recheck the chart target at the current outdoor dry bulb and return wet bulb before adjusting charge." },
       ],
     },
   ],
@@ -3527,6 +5596,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-flexduct-excess-length-uncompressed": [
+    {
+      ask: "Inspect each flex run, comparing installed length against the straight-line distance it actually needs. What do you find?",
+      options: [
+        { label: "Extra coiled or bunched flex left beyond what the run needs", verdict: "That extra length acts like a lot of added highly restrictive duct. Cut back and properly re-terminate the run rather than just re-coiling it more neatly." },
+        { label: "Duct sagging between supports", verdict: "Sag restricts airflow and creates low points that can trap condensate. Pull the run reasonably taut and support it at the intervals in the manufacturer's install instructions." },
+        { label: "Runs are taut, supported, and no longer than needed", verdict: "Excess length is not the problem here. Look elsewhere in the duct system for the restriction." },
+      ],
+    },
+    {
+      ask: "After cutting back length and fixing support, recheck static pressure and airflow at that branch. What changed?",
+      options: [
+        { label: "Static pressure and airflow at that branch improved measurably", verdict: "The fix is confirmed. Document the before and after, since this issue is easy to under- or over-estimate by eye alone." },
+        { label: "No measurable change at that branch", verdict: "Excess length was not the main restriction on that run. Keep looking at the rest of that branch and the duct system." },
+      ],
+    },
+  ],
   "s-float-switch-types-testing": [
     {
       ask: "Identify the switch type and trip it by the correct method for that type, watching whether the circuit actually opens.",
@@ -3551,6 +5637,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "24 volts across C and O, 24 volts across W2 and C, frost melting and compressor running", verdict: "The board and its outputs are all good. Work the defrost complaint from the sensors and their placement instead." },
         { label: "One of those readings is missing, or frost is not melting", verdict: "Replace the control board. Set the thermostat to off and disconnect power before removing any jumpers or wires." },
+      ],
+    },
+  ],
+  "s-force-frost-by-pulling-df2-lead": [
+    {
+      ask: "Before you pull anything, run the unit in heating with the room thermostat calling and check it for proper charge. Where does the charge stand?",
+      options: [
+        { label: "Charge checks out", verdict: "Good - go ahead. Shut off power, remove the outdoor fan motor wire from terminal DF2, restore power, restart, and let frost accumulate on the outdoor coil." },
+        { label: "Charge not checked yet, or it reads off", verdict: "Check and correct the charge first with the thermostat calling for heat. A charge problem will change the frost pattern and confuse this whole test." },
+      ],
+    },
+    {
+      ask: "With the DF2 lead off and the unit running a few minutes, check for 24 volts between DFT and C. What do you read?",
+      options: [
+        { label: "24 volts between DFT and C", verdict: "The defrost thermostat has closed as it should. Carry on with the defrost test, then shut off power, replace the fan motor lead on terminal DF2, and turn power back on." },
+        { label: "No voltage and the thermostat temperature is less than 28 F", verdict: "The defrost thermostat is defective - replace it. It should have closed below 28 F." },
+        { label: "No voltage and the thermostat is not down to 28 F yet", verdict: "Not enough frost yet. Keep running with the DF2 lead off and recheck DFT to C in a few more minutes." },
       ],
     },
   ],
@@ -3589,6 +5692,39 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Stuck closed with the control signal confirmed present at the actuator", verdict: "Look at the actuator itself and check the linkage for seizing." },
         { label: "Stuck open, pulling outdoor air continuously", verdict: "That drives high humidity intrusion in summer or excess heating and cooling load in extreme weather. Check the actuator's spring-return function if equipped and confirm it is not binding mechanically." },
         { label: "Blade and linkage corroded or packed with debris", verdict: "Outdoor-facing dampers see far more weather and dust than indoor components, and that buildup alone can hold the blade in position. Clean and free it." },
+      ],
+    },
+  ],
+  "s-front-cover-pressure-switch-condensate": [
+    {
+      ask: "Inducer runs, high and low fire switches look fine, gas valve never opens. With power off, pull the burner door and count the pressure switches. What is there?",
+      options: [
+        { label: "Three switches - high fire, low fire, and a front cover switch in series with the gas valve", verdict: "That third switch blocks ignition when condensate backs up in the secondary heat exchanger. Inspect the condensate drains and drain tube for improper connection or plugging - that is what trips it." },
+        { label: "Only two switches, high fire and low fire", verdict: "This model does not have the front cover switch. Go back to the gas valve circuit and the two switches you do have." },
+      ],
+    },
+    {
+      ask: "Tee an inclined manometer into the hose for the switch you are testing, put an ohmmeter across its terminals, and run the inducer. What happens?",
+      options: [
+        { label: "Switch closes and shows a complete circuit", verdict: "That switch is good. Move to the next one in the string - and still correct the drain issue before returning the unit to service." },
+        { label: "Switch does not close, and the pressure is below the closing point specified for that switch", verdict: "The inducer and venting system are not producing enough pressure. Chase the drain blockage, the inducer, and the vent - not the switch." },
+        { label: "Switch does not close even though pressure meets its specified closing point", verdict: "The switch itself is defective. Replace it, and still correct the drain issue before returning the unit to service." },
+      ],
+    },
+  ],
+  "s-frost-bands-outdoor-coil-low-charge": [
+    {
+      ask: "With the unit running in heating and the thermostat calling, look at the outdoor coil before shutting anything down and photograph it. What is the frost pattern?",
+      options: [
+        { label: "Distinct bands of frost across the coil", verdict: "Banded frost is an indicator of low refrigerant charge. Check the unit for proper charge using the manufacturer procedure for that model before you touch the defrost control or defrost thermostat." },
+        { label: "Frost is uniform across the coil", verdict: "Not the low charge indicator. Move on to evaluating the defrost control and defrost thermostat." },
+      ],
+    },
+    {
+      ask: "You corrected the charge or leak. Re-run the heating cycle and look at the coil again. What do you see?",
+      options: [
+        { label: "Frost pattern has changed and is no longer banded", verdict: "That confirms the charge was the problem. Close it out." },
+        { label: "Frost is still in distinct bands", verdict: "The charge problem is not resolved. Recheck the charge against the manufacturer procedure for that model before evaluating the defrost control." },
       ],
     },
   ],
@@ -3642,6 +5778,22 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Furnace was downsized or replaced with a higher-efficiency unit and the vent was never resized", verdict: "The now-oversized B-vent runs cooler than designed, condenses inside, and corrodes. That is the root cause - resizing the vent for the actual connected load is the fix, not just replacing rusted sections." },
         { label: "Connected appliance load still matches what the vent was sized for", verdict: "Check where the vent passes through firestops, ceiling supports, roof jacks, and attic space for physical damage or gaps letting flue gas into unintended spaces." },
+      ],
+    },
+  ],
+  "s-furnace-clearance-violation-overheating": [
+    {
+      ask: "Watch when the limit trips during a heat cycle. When does it happen?",
+      options: [
+        { label: "Trips only after a long run time, once the cabinet has heat-soaked", verdict: "That heat-soak pattern fits a clearance problem, not a sensor or coil airflow problem. Check installed clearances on all sides, plus top and front service clearance, against the rating plate, and look for stored items or shelving added after the install." },
+        { label: "Trips right at startup, every cycle, even from cold", verdict: "That is not a heat-soak pattern, so clearance is probably not your cause. Look at airflow through the unit and at the limit and sensor circuit instead." },
+      ],
+    },
+    {
+      ask: "Feel the cabinet skin during a run cycle. How does the tight-clearance area compare to areas with proper clearance?",
+      options: [
+        { label: "Noticeably hotter skin near the tight spot", verdict: "That supports the clearance violation as a contributing cause. Correct it - relocate stored items or rebuild the enclosure to spec - then recheck limit behavior across a full cycle, since heat-soak trips may not show on one short test run." },
+        { label: "Cabinet feels about the same all the way around", verdict: "Clearance is likely not driving the heat. Still verify actual clearances against the rating plate, including front service clearance in a closet, but plan on chasing another cause." },
       ],
     },
   ],
@@ -3727,6 +5879,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-furnace-continuous-fan-comfort-setting": [
+    {
+      ask: "Watch the blower between heating and cooling calls. What speed is it running?",
+      options: [
+        { label: "Noticeably lower, quiet airflow between calls", next: 1 },
+        { label: "Full heating or cooling speed between calls, never dropping off", verdict: "That is not the circulation feature. Treat it as a genuine blower relay or control fault and diagnose it as a blower that will not shut off." },
+      ],
+    },
+    {
+      ask: "Check the thermostat fan settings beyond the basic Auto/On switch, and ask who set it up. What do you find?",
+      options: [
+        { label: "A continuous or low-speed circulation option is enabled", verdict: "That is a comfort feature working as designed, not a fault. Confirm whether the homeowner wants it, and disable it at the thermostat or board if not. Document the setting when you close out." },
+        { label: "The homeowner or a previous tech turned it on for filtration or air mixing", verdict: "Explain what they are hearing and let them decide. If they want it off, disable the setting rather than chasing a wiring or relay fault. Document it, since this is a common callback." },
+        { label: "No such setting is enabled anywhere", verdict: "Then the low-speed running is not the circulation feature. Look at the board and blower control for a genuine fault." },
+      ],
+    },
+  ],
   "s-furnace-control-board-relay-failure": [
     {
       ask: "During the call for the affected function, listen and feel for the relay while checking for output at the load side.",
@@ -3741,6 +5910,42 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Voltage present at the coil and nothing happens", verdict: "Confirms a coil or driver-circuit failure on the board rather than an upstream signal problem. Inspect the board for scorching, bulging capacitors, or corrosion near that relay and replace it." },
         { label: "No voltage at the coil during the call", verdict: "Upstream signal problem, not the relay. Work back toward the call, and check the board's diagnostic LED or display for a corresponding fault." },
+      ],
+    },
+  ],
+  "s-furnace-delayed-ignition-boom": [
+    {
+      ask: "Pull the burner compartment and look at the burners, orifices, and igniter. What stands out?",
+      options: [
+        { label: "Burners are dirty or misaligned", verdict: "Dirty or misaligned burners slow flame propagation across the burners, which is what builds the delayed light-off. Clean and realign the burners, then watch a full ignition." },
+        { label: "An orifice is partially blocked", verdict: "A partly blocked orifice gives uneven gas delivery across burners. Clear or replace the orifice, then confirm a smooth light-off." },
+        { label: "Igniter is out of position or glows weak or uneven", verdict: "A weak or off-position igniter delays actual light-off while gas keeps flowing, which is what makes the boom. Reposition or replace the igniter and recheck." },
+        { label: "Burners, orifices, and igniter all look correct", next: 1 },
+      ],
+    },
+    {
+      ask: "Check gas pressure against the rating plate. What do you read?",
+      options: [
+        { label: "Gas pressure is above what the rating plate calls for", verdict: "Too much gas lets a larger flame front build and ignite all at once. Set pressure to the rating plate spec and confirm a smooth light-off. Treat this as a combustion safety issue, not just noise." },
+        { label: "Gas pressure matches the rating plate", verdict: "Go back over burner alignment, cleanliness, orifice condition, and igniter position with the burners out, since one of those is still delaying the light-off. Do not leave a booming furnace in service." },
+      ],
+    },
+  ],
+  "s-furnace-dipswitch-staging-misconfigured": [
+    {
+      ask: "Photograph the current dip switch and jumper positions, then compare against the install manual's table for this exact furnace model and size. What do you find?",
+      options: [
+        { label: "Furnace size/input setting does not match the furnace actually installed", verdict: "The board misjudges blower CFM and staging timing even with every component good. Set it to the correct size, then verify airflow and temperature rise." },
+        { label: "Blower speed/CFM profile does not match the duct system design", verdict: "The wrong profile causes either comfort complaints or nuisance limit trips. Set it to the target the ductwork was designed for, then re-verify static pressure." },
+        { label: "Everything matches the manual's table for this model and size", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the second-stage timing/delay setting if this board allows adjustment, and find out whether the board was ever replaced. What applies?",
+      options: [
+        { label: "Long low-fire runs that the customer describes as weak heat", verdict: "Check the second-stage timing/delay setting. A default not suited to this home's load holds it on low fire too long before stepping up." },
+        { label: "The board was replaced and settings were never re-set to the original configuration", verdict: "Replacement boards ship at defaults that rarely match the prior field configuration. Re-set every dip switch and jumper to match this furnace and duct system." },
+        { label: "Timing suits the home and the board is original", verdict: "Configuration is not the cause. Put the dip switches back exactly as your photo shows and look elsewhere." },
       ],
     },
   ],
@@ -3813,6 +6018,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-furnace-esp-limit-port": [
+    {
+      ask: "With clean filters in, read the return static at the furnace inlet and the static through the limit switch opening, then add the two. How does the total compare to the allowable statics for this unit?",
+      options: [
+        { label: "Total is within the minimum and maximum allowable for the unit", verdict: "Airflow is in the workable window. Use the airflow tables for that model to convert the measured static to CFM, then reinstall the limit switch and confirm it is seated and wired before you leave." },
+        { label: "Total is above the maximum allowable for the unit", verdict: "The duct system is too restrictive. Check for closed dampers and registers, and for undersized, oversized, or poorly laid out ductwork, then re-measure." },
+        { label: "Total is below the minimum allowable for the unit", verdict: "Still out of spec - the unit has a minimum allowable static too. Check the duct layout and sizing the same way, and confirm your probes were really in the return and in the space between the furnace and the coil inlet." },
+      ],
+    },
+    {
+      ask: "Is a high efficiency air filter or an electronic air cleaner installed in this system?",
+      options: [
+        { label: "Yes, one is installed in the airstream", verdict: "Take the readings so those components are included in the measurement. Leave them out and your total reads low, and the CFM you look up will be wrong." },
+        { label: "No, plain filter only", verdict: "Nothing extra to include. Add the negative and positive readings and convert the total to CFM off the airflow tables for that model." },
+      ],
+    },
+  ],
   "s-furnace-flame-rectification-theory": [
     {
       ask: "Put a microammeter in series with the sensor lead, set to DC, and run the burner. What do you read?",
@@ -3828,6 +6050,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Line hot and neutral are reversed at the furnace disconnect", verdict: "Reversed polarity degrades rectification even with a clean rod and a good flame. Correct polarity and re-read microamps." },
         { label: "Ground/neutral bond path back to the board is poor", verdict: "Rectification needs a solid path back to the board - a poor ground gives a normal-looking flame with an insufficient sensed signal. Fix the ground." },
         { label: "Polarity and ground both check out", verdict: "Then look at the rod itself - an oversized or misplaced rod produces the same low reading as a dirty one, since rod-to-burner surface area is what makes rectification work." },
+      ],
+    },
+  ],
+  "s-furnace-flame-rollout-trips": [
+    {
+      ask: "Do not just reset it again. Pull the burner compartment and inspect the heat exchanger, flue, and burner area. What do you find?",
+      options: [
+        { label: "Heat exchanger or flue is blocked or restricted", verdict: "Flame is rolling out because it cannot draw up through the heat exchanger. Clear the blockage, or condemn a failed heat exchanger. Never bypass or jump out the rollout switch." },
+        { label: "Burners misaligned or the orifice/manifold assembly is not seated correctly", verdict: "Reseat and realign the burner and manifold assembly so flame carries up through the heat exchanger, then watch a full cycle before putting the furnace back in service." },
+        { label: "Heavy dirt, lint, or debris in the burner compartment", verdict: "That debris can ignite or disrupt the normal flame pattern. Clean the compartment thoroughly, find where the debris came from, then recheck operation." },
+        { label: "Burner area is clean and the flue path is clear", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the combustion air supply to the furnace compartment. What do you find?",
+      options: [
+        { label: "Combustion air supply to the space is blocked or clearly inadequate", verdict: "Insufficient combustion air makes flame roll out of the burner box. Correct the combustion air opening or supply, then verify a clean burn before returning the furnace to service." },
+        { label: "Combustion air supply looks adequate", verdict: "Do not put it back in service on a reset. Go back through heat exchanger and flue restriction and burner alignment carefully, because the rollout switch is responding to a real condition you have not found yet." },
       ],
     },
   ],
@@ -4195,6 +6435,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-furnace-modulating-hunting": [
+    {
+      ask: "Watch gas supply pressure while the furnace ramps up to a higher firing rate. What does it do?",
+      options: [
+        { label: "Supply pressure sags as the firing rate increases", verdict: "The modulation algorithm keeps chasing a supply that cannot hold up. Correct the gas supply so pressure stays steady under full load, then recheck for hunting." },
+        { label: "Supply pressure holds steady through the ramp", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the discharge air temperature sensor and the outdoor air temperature sensor against actual temperatures. What do you find?",
+      options: [
+        { label: "Discharge air sensor reads off from actual supply temperature", verdict: "Modulating controls target a supply air temperature, so a wrong reading makes the furnace hunt. Reseat or replace that sensor and recheck." },
+        { label: "Outdoor air sensor reads off from actual outdoor temperature", verdict: "A bad outdoor reading skews the target firing rate on staging logic. Replace or relocate that sensor and recheck the modulation behavior." },
+        { label: "Both sensors read accurately", next: 2 },
+      ],
+    },
+    {
+      ask: "Check duct static pressure at partial firing rates, then review the installer setup menu for min/max firing rate and CFM configuration. What do you find?",
+      options: [
+        { label: "Duct static pressure is out of range at partial firing rates", verdict: "Airflow and firing rate are linked on a modulating system, so a duct static problem shows up as hunting. Correct the duct restriction, then recheck." },
+        { label: "Min/max firing rate or CFM configuration does not match the installed ductwork", verdict: "Set the installer menu values to what this furnace and duct system call for, then watch a full ramp to confirm the firing rate settles." },
+      ],
+    },
+  ],
   "s-furnace-negative-pressure-starving-combustion-air": [
     {
       ask: "Identify every exhaust device that can run with the furnace, then test draft/spillage with them off and again with them running.",
@@ -4232,6 +6496,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-furnace-oversized-shortcycling-install-defect": [
+    {
+      ask: "Work the standard short-cycle causes first: airflow restriction, flame sensor, thermostat location and anticipator. What did you find?",
+      options: [
+        { label: "One of those standard checks failed", verdict: "Fix that first. Sizing is a diagnosis of exclusion, only reached after the normal causes check out fine." },
+        { label: "All of the standard causes check out fine", next: 1 },
+      ],
+    },
+    {
+      ask: "On a moderately cold day, watch cycle length and, on a two-stage furnace, whether it ever reaches high fire. What do you see?",
+      options: [
+        { label: "Very short cycles in mild-to-moderate weather", verdict: "An oversized furnace reaches setpoint almost immediately, which is when short cycling is most obvious. Compare its output capacity against a proper heat loss calculation for the home." },
+        { label: "Two-stage furnace that satisfies almost entirely on low fire and rarely reaches high fire", verdict: "That is a sizing indicator. Compare output capacity against a heat loss calculation before concluding anything." },
+        { label: "Cycles look normal for the weather", verdict: "Sizing is not the issue on this visit. Go back through the standard short-cycling causes." },
+      ],
+    },
+    {
+      ask: "You have confirmed the furnace is sized well above the calculated heat loss. What options does this equipment give you?",
+      options: [
+        { label: "Staging or modulation settings can hold longer low-fire runs or a longer minimum run timer", verdict: "Use that as a lower-cost interim step, and still document the sizing mismatch clearly for the customer." },
+        { label: "No staging or minimum run timing adjustment available on this furnace", verdict: "Document the sizing mismatch clearly. Correcting it is a replacement or redesign conversation, not a warranty repair, since no component failed." },
+      ],
+    },
+  ],
   "s-furnace-pilot-wont-stay-lit": [
     {
       ask: "Light the pilot and look at the flame itself.",
@@ -4246,6 +6534,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Connection at the gas valve is loose", verdict: "A loose connection reads as insufficient millivolt output. Tighten it and retest." },
         { label: "Millivolt output is low with a good flame and a clean thermocouple", verdict: "Replace the thermocouple/thermopile." },
         { label: "Millivolt output is at spec", verdict: "Clean the thermocouple and recheck its flame impingement position before replacing anything." },
+      ],
+    },
+  ],
+  "s-furnace-plenum-transition-defect": [
+    {
+      ask: "Inspect the transition piece right at the furnace outlet. What do you see?",
+      options: [
+        { label: "Abrupt size reduction, sharp offset, or opening smaller than the furnace's rated outlet", verdict: "A common installer shortcut when the old trunk does not match the new furnace. Recommend a properly fabricated transition sized to the actual outlet rather than patching the existing piece." },
+        { label: "Hard 90-degree turn right at the outlet with no turning vanes or radius", verdict: "That creates turbulence and effective restriction beyond what static pressure alone suggests. Add turning vanes or a properly radiused transition." },
+        { label: "Mismatched materials, excess sealant bridging a gap, or crimping to force a fit", verdict: "Physical evidence the transition was an afterthought. Have it refabricated to the furnace's actual outlet size." },
+        { label: "Transition looks properly fabricated and sized to the outlet", next: 1 },
+      ],
+    },
+    {
+      ask: "Measure external static pressure on both supply and return, and compare the total to the furnace's rated maximum. What do you find?",
+      options: [
+        { label: "Supply-side static unexpectedly high while the rest of the duct system looks reasonably sized", verdict: "That is the signature of a transition defect. Correlate the limit trips or short cycling with duct geometry rather than condemning a control." },
+        { label: "Total static is within the furnace's rated maximum", verdict: "Airflow is not being choked at the transition. Look elsewhere for the limit trips or comfort complaint." },
       ],
     },
   ],
@@ -4409,6 +6715,54 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-furnace-undersized-return-negative-pressure-heat-exchanger": [
+    {
+      ask: "Measure static pressure on the return side specifically, not just total external static. What do you find?",
+      options: [
+        { label: "Return-side static dominates the total reading", next: 1 },
+        { label: "Return static is a reasonable share of the total", verdict: "The return is not the restriction. Look at the supply side and the rest of the duct system." },
+      ],
+    },
+    {
+      ask: "Look at the return grille and duct serving this furnace, and at how the house is actually used. What do you find?",
+      options: [
+        { label: "A single undersized return grille or duct for a furnace that needs more return area", verdict: "Common in additions or converted spaces where the return was never properly extended. Recommend enlarging the return with an added grille, larger duct, or a dedicated return rather than just changing blower speed." },
+        { label: "Closed interior doors compounding an already-marginal return design", verdict: "That starves the system further during normal use. Address the doors along with enlarging the return." },
+      ],
+    },
+    {
+      ask: "On a non-sealed-combustion furnace, check cabinet pressure at the burner compartment and any draft or spillage complaints. What do you see?",
+      options: [
+        { label: "Flame shape or draft at the burners is disturbed, or there are spillage complaints", verdict: "An undersized return can pull enough negative pressure to cause the same spillage symptoms as an outdoor competing-exhaust issue. Correct the return, do not just chase the draft." },
+        { label: "Flame and draft look normal", verdict: "The return restriction is showing up only as an airflow and temperature-rise problem. Still enlarge the return, since a blower speed change only masks the restriction." },
+      ],
+    },
+  ],
+  "s-furnace-vent-slope-length-mistakes": [
+    {
+      ask: "Sight along the whole vent run and check its slope. What do you find?",
+      options: [
+        { label: "Condensing/plastic vent not sloping back toward the furnace, or sagging sections", verdict: "Sags and reverse slope trap condensate and restrict flow over time. Correct the pitch and add support so it drains as designed." },
+        { label: "Atmospheric metal vent not running continuously upward toward termination", verdict: "Correct the slope so it rises continuously to the termination. Low spots restrict flow even if it passed a quick visual at install." },
+        { label: "Slope is correct throughout the run", next: 1 },
+      ],
+    },
+    {
+      ask: "Add up total equivalent vent length including elbow equivalents, and compare against the manufacturer's maximum for the pipe diameter used. What do you get?",
+      options: [
+        { label: "Over the maximum equivalent length, or more elbows than allowed", verdict: "A common cause of pressure switch faults that only appear intermittently or in certain weather. Reduce length or elbow count, or go to the larger diameter the manufacturer allows." },
+        { label: "Within the manufacturer's maximum", next: 2 },
+      ],
+    },
+    {
+      ask: "Inspect the supports, the fittings used, and the termination location. What do you find?",
+      options: [
+        { label: "Not enough hangers or support along horizontal runs", verdict: "Unsupported plastic pipe sags over time and creates new low points that were not there at install. Add supports at the required intervals." },
+        { label: "Cheater fittings, bushings, or field modifications instead of kit components", verdict: "Replace them with the kit components as designed. Field-modified vent connections are a combustion safety issue, not just sloppy workmanship." },
+        { label: "Termination too close to grade, a window, door, soffit, or property line", verdict: "A well-sloped, airtight vent can still cause odor complaints and condensate icing when terminated in the wrong spot. Relocate the termination to the required clearances." },
+      ],
+    },
+  ],
   "s-furnace-venting-category-mismatch": [
     {
       ask: "Get the furnace's vent category from its rating plate or manual, then compare it against the vent material actually installed.",
@@ -4434,6 +6788,41 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Condensate trap is partially clogged", verdict: "A partly clogged trap still passes some condensate while causing intermittent pressure switch nuisance trips. Clean it." },
         { label: "Terminations are spaced wrong from each other or from windows/soffits", verdict: "Correct the termination spacing per code and the manufacturer's requirements." },
         { label: "Ice built up at the vent termination", verdict: "Ice at the termination restricts flow on very cold days. Clear it and address why it is forming." },
+      ],
+    },
+  ],
+  "s-furnace-yellow-flame": [
+    {
+      ask: "Look at the burner ports, the burner compartment, and the primary air shutter. What do you find?",
+      options: [
+        { label: "Burner ports blocked with dirt, lint, rust, or spider webs", verdict: "Very common real-world cause. Clean the burner ports, relight, and confirm the flame comes back blue." },
+        { label: "Primary air shutter is closed down or set wrong", verdict: "Set the adjustable air shutter correctly and recheck flame color. Starving primary air gives a lazy yellow flame." },
+        { label: "Dirty burner compartment or inadequate room air supply", verdict: "Insufficient combustion air is the most common cause. Clean the compartment and correct the air supply to the space, then recheck the flame." },
+        { label: "Burners, ports, and shutter all look right", next: 1 },
+      ],
+    },
+    {
+      ask: "Check gas pressure against the rating plate, then run a combustion analysis for O2 and CO. What do the numbers show?",
+      options: [
+        { label: "Gas pressure reads above the rating plate value", verdict: "Pressure too high produces a yellow-tipped, lazy flame. Set manifold pressure to the rating plate, then re-run the combustion analysis to confirm." },
+        { label: "Gas pressure is correct but the analyzer shows poor combustion", verdict: "Trust the analyzer over your eye. Keep working combustion air and burner cleanliness until O2 and CO land where the manufacturer calls for." },
+        { label: "Gas pressure is correct and combustion numbers are within the manufacturer range", verdict: "The flame appearance is not backed up by the analyzer. Document the readings and recheck if it is reported again, since yellow flame often correlates with elevated CO." },
+      ],
+    },
+  ],
+  "s-gas-line-binding-burner-distortion": [
+    {
+      ask: "Look at the burner assembly alignment relative to the heat exchanger inlets. How does it sit?",
+      options: [
+        { label: "Burners sit square and evenly spaced", verdict: "Alignment is not your problem, so the uneven flame is coming from somewhere else. Still look at the field gas line for strain where it enters the furnace before you move on." },
+        { label: "Assembly sits crooked or the burners are not evenly spaced", verdict: "Check whether the field installed gas line is binding or under strain where it enters the furnace - a strained line can push or twist the valve and burner assembly out of position." },
+      ],
+    },
+    {
+      ask: "Loosen the gas line supports and watch the burner assembly.",
+      options: [
+        { label: "Assembly relaxes back into position when the supports come loose", verdict: "That confirms the gas line was doing it. Re-pipe or re-support the line so it enters without applying force to the valve or manifold, re-secure the burner assembly, then leak check every joint you disturbed." },
+        { label: "Assembly stays crooked with the supports loose", verdict: "The gas line is not the cause. Re-secure the burner assembly per the manual, confirm it is seated correctly, and fire the furnace to see whether the flames even out." },
       ],
     },
   ],
@@ -4518,6 +6907,98 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-generator-power-hvac-issues": [
+    {
+      ask: "Ask whether the symptom also happens on normal utility power, or only when the generator is running. Which is it?",
+      options: [
+        { label: "Only during an outage or a generator test run", next: 1 },
+        { label: "It happens on normal utility power too", verdict: "This is not a generator power quality issue. Diagnose it as a normal equipment fault." },
+      ],
+    },
+    {
+      ask: "With the generator running, measure voltage (and frequency if your meter reads it) at the equipment, and check generator sizing against the HVAC starting load. What do you find?",
+      options: [
+        { label: "Voltage sags hard when the compressor or motor tries to start", verdict: "The generator is undersized for the starting load, which trips protective controls or prevents starting. The fix is adequate generator sizing, or sequencing so HVAC does not start with other large loads." },
+        { label: "Frequency is not holding steady at 60Hz", verdict: "Motor speed and some control timing are frequency dependent, so off-frequency power makes ECM/variable-speed motors and communicating boards act erratically even with voltage in range. This is a generator problem." },
+        { label: "Voltage and frequency are both within the equipment's rated tolerance", next: 2 },
+      ],
+    },
+    {
+      ask: "Check what kind of HVAC equipment this is. Which applies?",
+      options: [
+        { label: "It has a soft-start device or an inverter-driven variable-speed compressor", verdict: "This equipment is often more sensitive to generator power quality than a standard PSC system. Confirm with the manufacturer whether it is generator-compatible and what restrictions apply." },
+        { label: "It is a standard single-speed PSC system", verdict: "With voltage and frequency in range, a power quality issue is less likely on this equipment. Diagnose it as a normal equipment fault." },
+      ],
+    },
+  ],
+  "s-goodman-7seg-reading": [
+    {
+      ask: "Find the arrow printed next to the display to confirm which way is up, then read the two characters. What is it doing?",
+      options: [
+        { label: "A code showing continuously, never alternating", verdict: "That is a major fault. Look it up on the unit's wiring diagram or in Error Codes and work that fault now." },
+        { label: "A code that alternates with the operating status", verdict: "That is a minor fault. An intermittently-appearing code is still a real code - look it up and address it." },
+        { label: "Only an operating status like C2 or H, no code", verdict: "That is normal operating status, not an error. During normal operation the display shows what the unit is doing - do not chase it." },
+      ],
+    },
+    {
+      ask: "Before you cycle power, pull the stored faults with the board's fault-recall function. What happened?",
+      options: [
+        { label: "Stored codes came up and you wrote them down", verdict: "Good - a power cycle would have erased the story. Watch for look-alike characters when you look them up: lowercase b (blower codes b0-b9) versus 6, d (data codes d0-d4) versus 0, and E versus F." },
+        { label: "Display looks upside down, or the characters match no code in the table", verdict: "Recheck the orientation arrow - an upside-down 9b reads as q6. Compare the characters against the code list on the unit's wiring diagram, not from memory." },
+      ],
+    },
+  ],
+  "s-goodman-96-furnace-full-capacity-charging": [
+    {
+      ask: "With power on at both the indoor and outdoor units, provide a cooling call (Y, or Y plus G). Is the outdoor unit running at full capacity?",
+      options: [
+        { label: "Yes - full capacity on the first cooling call after power up", verdict: "Leave the call in place while you charge. Removing the call ends the full capacity mode." },
+        { label: "No - it is running low stage cooling", verdict: "Cycle power to the system and provide a cool call again. It is the initial cooling call after power up that runs the outdoor unit at full capacity." },
+      ],
+    },
+    {
+      ask: "Check how the thermostat is configured before you trust the staging. What is it set to?",
+      options: [
+        { label: "Single stage heat / single stage cool mode", verdict: "That is the required setting. Carry on, and use the CoolCloudHVAC phone application to test the rest of the indoor and outdoor unit operations." },
+        { label: "Set to heat pump mode or multi stage mode", verdict: "Change it to single stage heat / single stage cool mode. In heat pump or multi stage mode you will not get the full capacity behavior you are counting on for charging." },
+      ],
+    },
+  ],
+  "s-goodman-avzc18-airflow-codes": [
+    {
+      ask: "Read the code, then watch the indoor blower during a call. What do you have?",
+      options: [
+        { label: "Eb0 near zero CFM and the blower is not physically turning", verdict: "Nothing is moving air. Check the indoor fan motor wiring and connectors first, then the motor itself - replace the motor only if it has failed." },
+        { label: "Eb9 below required CFM with the blower turning", verdict: "The blower runs but cannot make the airflow. Check for too much static pressure - inspect the filter, coil and duct system - before you touch the motor." },
+        { label: "Blower turning normally and the code is still up", verdict: "Both codes share the same cause list. Work the wiring and connectors, then static pressure, and only then the motor." },
+      ],
+    },
+    {
+      ask: "Check for too much static pressure and inspect the filter, coil and duct system. What do you find?",
+      options: [
+        { label: "Dirty filter, dirty coil, or a restricted duct system", verdict: "Correct the restriction and rerun the system to see whether the estimated airflow recovers. A filter or duct problem throws what looks like a motor code." },
+        { label: "Filter, coil and ducts are clean and static is acceptable", verdict: "Go back to the indoor fan motor wiring and connectors, and replace the motor only if it has failed - after the static pressure and wiring checks are clean." },
+      ],
+    },
+  ],
+  "s-goodman-avzc18-code16-low-pressure-m": [
+    {
+      ask: "Code 16 LOW PRESSURE M is showing and the unit is still running. Check the stop valve opening and the refrigerant lines. What do you find?",
+      options: [
+        { label: "Stop valve is not full open", verdict: "Open it fully, or repair or replace it. A partly closed stop valve drives the low side down and sets this code." },
+        { label: "A restriction in the refrigerant lines", verdict: "Repair or replace the restricted line, then recheck the low side. Treat this code as an early warning - the customer may not have complained yet." },
+        { label: "Stop valve full open and lines clear", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the charge, run the leak test procedure, then look at the low pressure sensor connection. What turns up?",
+      options: [
+        { label: "Charge reads low, or the leak test finds a leak", verdict: "Repair the leak and correct the charge. That is the most common reason the control keeps seeing low pressure faults." },
+        { label: "Bad connection at the low pressure sensor, or the sensor is inoperable", verdict: "Repair the connection or replace the sensor. The low side may be fine and the control simply mis-reading it." },
+        { label: "Charge, leak test and sensor all check out", verdict: "Move to the TXV - replace it if faulty - and the indoor blower motor and wiring, since an indoor fan that is not moving air drives the low side down. Replace the control board only after all of that checks out." },
+      ],
+    },
+  ],
   "s-goodman-avzc18-ds1-bus-bias-check": [
     {
       ask: "With the system powered and the bus DS1 dip switches ON at the outdoor control, measure Data 1 and Data 2. What do you read?",
@@ -4534,6 +7015,103 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "1 flash", verdict: "Communications failure from an unknown packet. Depress the learn button." },
         { label: "2 flashes", verdict: "Out-of-box reset. Press the LEARN button about 5 seconds to reset the network, and use the green receive LED to confirm traffic." },
         { label: "No LED at all", verdict: "No power or a communications error. Check circuit breakers and fuses to the outdoor unit and inspect the data 1 and data 2 wires before replacing anything." },
+      ],
+    },
+  ],
+  "s-goodman-avzc18-e18-e19-board-fan": [
+    {
+      ask: "E18 or E19 is showing. Watch the outdoor fan during a call - is it turning?",
+      options: [
+        { label: "Not turning, and there is debris in the grille or fan area", verdict: "Kill power and clean the grille and fan area. On E19 an obstruction alone will set the code - clear it and rerun before ordering anything." },
+        { label: "Not turning and the grille and fan area are clear", next: 1 },
+        { label: "Fan is turning normally", verdict: "Check the wiring from the outdoor fan motor to the control board, confirm the connector is properly seated, and check for electrical noise sources near the control wiring - the manual lists noise as a cause for both codes." },
+      ],
+    },
+    {
+      ask: "With power off at the disconnect, check the fan motor wiring, the connector seating, and the motor itself. What do you find?",
+      options: [
+        { label: "Connector unseated, or wiring damaged", verdict: "Reseat or repair it, restore power, and confirm the fan runs and the code stays cleared. Do not order a board." },
+        { label: "Wiring good but the fan motor tests failed", verdict: "Replace the outdoor fan motor, then restore power and confirm the fan runs and the code stays cleared." },
+        { label: "Wiring, connectors and motor all check good", verdict: "Now the control board is the remaining suspect. Replace it only after the fan motor, connectors and obstruction checks have all come back clean." },
+      ],
+    },
+  ],
+  "s-goodman-avzc18-e56-and-loop-sweat": [
+    {
+      ask: "Read the code from the display. Which is present?",
+      options: [
+        { label: "E56 SUCT TEMP FAIL only", verdict: "Straightforward sensor fault. Check the connection to the outdoor suction thermistor and repair or replace the thermistor if it is inoperable or not properly connected." },
+        { label: "Code 57 CL LOOP SWEAT only", next: 1 },
+        { label: "Both E56 and code 57", verdict: "Fix the suction thermistor connection first so the control is reading correctly, then work the code 57 list - leak test, charge level, indoor EEV and EEV coil." },
+      ],
+    },
+    {
+      ask: "Code 57 means the control is sensing sweating on the cooling loop. Run the leak test procedure and check the charge level. What turns up?",
+      options: [
+        { label: "Leak test finds a leak, or the charge reads low", verdict: "Repair the leak and correct the charge. The manual ties code 57 to a refrigerant leak or low charge, not just room humidity." },
+        { label: "No leak and the charge is correct", verdict: "Move to the indoor EEV and its coil and replace either if faulty. Then check the remaining thermistor connections and repair or replace any that are inoperable or improperly connected." },
+      ],
+    },
+  ],
+  "s-goodman-avzc18-ed2-system-mismatch": [
+    {
+      ask: "Read the exact code on the AVZC18. Which of the three is it?",
+      options: [
+        { label: "Ed2 SYSTEM MISMATCH", next: 1 },
+        { label: "Ed0 NO NET DATA", verdict: "The integrated control module has no shared data on a communicating heat pump. Replace the control board if necessary." },
+        { label: "Ed1 INVALID DATA", verdict: "The module contains invalid shared data, or the network data is invalid for the module. Replace the control board if necessary." },
+      ],
+    },
+    {
+      ask: "Compare the outdoor unit's airflow requirement against the rated airflow capability of the installed indoor unit. What do you find?",
+      options: [
+        { label: "Indoor unit is not an approved match for this outdoor unit", verdict: "That is the mismatch. Change the indoor match - this is a system matching problem, not a failed part, so do not order a board." },
+        { label: "Indoor unit is an approved match", verdict: "Look for anything artificially capping indoor airflow. The control is comparing required CFM against what the indoor subsystem can actually deliver - correct the configuration rather than clearing the code and leaving." },
+      ],
+    },
+  ],
+  "s-goodman-avzc18-winding-insulation-limit": [
+    {
+      ask: "Find the compressor terminals for this tonnage - top on 2, 3 and 4 ton, side on 5 ton - then with all power off measure winding insulation resistance U, V and W to ground. What do you read?",
+      options: [
+        { label: "Less than 100k ohms on any of the three", verdict: "Replace the compressor. That is this manual's threshold - do not carry a remembered number over from another Daikin or Goodman model." },
+        { label: "100k ohms or more on all three", verdict: "Insulation passes. Follow up with the ground test before you clear the compressor." },
+      ],
+    },
+    {
+      ask: "Ground test: protective terminal cover left in place, three leads off at the nearest point, each ohmed separately to ground on the R x 10,000 or highest scale. What do you read?",
+      options: [
+        { label: "Infinity on all three", verdict: "No ground. Judge the compressor on the insulation reading alone." },
+        { label: "A ground shows on any lead", verdict: "Remove the terminal cover and inspect for loose leads or insulation breaks before disconnecting anything at the terminals - improper lead removal can damage the glass embedded terminals and result in terminal and hot oil discharging." },
+        { label: "Still reads to ground when retested directly at the terminals", verdict: "Any reading means the compressor should be considered defective. Replace it." },
+      ],
+    },
+  ],
+  "s-goodman-comfort-alert-yellow-codes": [
+    {
+      ask: "Count the yellow ALERT flashes - flashes, then a pause, then repeated. How many?",
+      options: [
+        { label: "5 flashes - open circuit", verdict: "Check the power disconnect, the compressor breaker or fuse, a contactor failed open, a high pressure switch open needing manual reset, an open circuit in the compressor supply wiring, an unusually long protector reset time in extreme ambient, and damaged compressor windings." },
+        { label: "6 flashes - open start circuit, current only in run circuit", verdict: "Check the run capacitor for failure, the compressor start wiring and connections for an open, and the start winding for damage." },
+        { label: "7 flashes - open run circuit, current only in start circuit", verdict: "Check the compressor run wiring and connections for an open, and the run winding for damage." },
+        { label: "A different flash count", next: 1 },
+      ],
+    },
+    {
+      ask: "Which of the remaining flash counts do you have?",
+      options: [
+        { label: "1 flash - long run time", verdict: "Work the low capacity list: low charge, evaporator blower not running, frozen evaporator coil, faulty metering device, dirty condenser coil, liquid line restriction or blocked drier, or a malfunctioning thermostat." },
+        { label: "2 flashes - system pressure trip", verdict: "Chase high head pressure: poor condenser coil air circulation from dirt, blockage or damage, condenser fan not running, or substantial return duct leakage." },
+        { label: "3 flashes - short cycling", verdict: "Look for an intermittent thermostat demand signal, or a defective time delay relay or control board." },
+        { label: "4 flashes - locked rotor", verdict: "Check the run capacitor, check line voltage at the disconnect and contact the utility if it is low, and look for excessive liquid refrigerant in the compressor or seized compressor bearings." },
+      ],
+    },
+    {
+      ask: "Look at the TRIP and ALERT LEDs together. What are they doing?",
+      options: [
+        { label: "ALERT flashing 9 times - low voltage", verdict: "The control circuit is under 17 VAC. Check for an overloaded control circuit transformer or low line voltage." },
+        { label: "TRIP and ALERT flashing at the same time", verdict: "Control voltage is too low to operate. Check the control transformer and line voltage before chasing anything else on the unit." },
+        { label: "Only the ALERT LED flashing a code", verdict: "Read the flash count and work that code's list. Remember the last alert flash code is displayed for 1 minute after the module powers on." },
       ],
     },
   ],
@@ -4558,6 +7136,83 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "No 120 volts from Line 1 (hot) to Line 2 (neutral)", verdict: "Check door switch connections and harness continuity." },
         { label: "120 volts present but no 24 volts from W1 to C on a heat call", verdict: "Check the transformer and its associated wiring." },
         { label: "Both voltages present and the display is still dark", verdict: "Do not attempt a board repair - this control is not field repairable and must be replaced as a unit." },
+      ],
+    },
+  ],
+  "s-goodman-coolcloud-inverter": [
+    {
+      ask: "Connect CoolCloud to the unit's board over Bluetooth and pull the codes. What comes up?",
+      options: [
+        { label: "Active fault codes with full descriptions", verdict: "Work those codes directly instead of counting LED flashes, then watch the live data - compressor Hz, EEV position, inverter bus voltage, thermistors - while it runs." },
+        { label: "Only stored codes; the unit runs fine right now", verdict: "Intermittent fault. Use the app's forced-operation modes to command specific compressor speeds and try to reproduce it before you leave." },
+        { label: "No codes, but a thermistor reading looks off", verdict: "Compare that reading against your own gauges or thermometer. If they disagree you have found a drifted sensor - no meter on the board would have shown you that." },
+      ],
+    },
+    {
+      ask: "Check the board's firmware version in the app. What do you find?",
+      options: [
+        { label: "Firmware is behind the current release", verdict: "Update it through the app before condemning the board. Several nuisance-fault issues on early inverter boards were resolved by firmware." },
+        { label: "Firmware is already current", verdict: "Firmware is not your problem. Stay on the fault codes and the live operating data." },
+      ],
+    },
+  ],
+  "s-goodman-defrost-board-forced-sequence-test": [
+    {
+      ask: "With the DFT jumper in, the test pins jumped and released, and defrost forced, check voltage across terminals 'C' and 'O' with your VOM.",
+      options: [
+        { label: "24 volts across C and O", verdict: "Reversing valve output is good. Move on and check across fan terminals DF1 and DF2 on the board." },
+        { label: "No 24 volts across C and O", verdict: "The board is not driving the reversing valve in defrost. Replace the control board." },
+      ],
+    },
+    {
+      ask: "Check for voltage across fan terminals DF1 and DF2 on the defrost control board.",
+      options: [
+        { label: "Line voltage, 208-230 VAC, across DF1 and DF2", verdict: "That indicates the relay is open in defrost mode, which is correct. Now check across the 'W' (or 'W2') and 'C' terminals." },
+        { label: "No line voltage across DF1 and DF2", verdict: "The fan relay is not opening in defrost, so the outdoor fan keeps running and the coil will not clear. Replace the control board." },
+      ],
+    },
+    {
+      ask: "Check for voltage across the 'W' (or 'W2') and 'C' terminals on the board.",
+      options: [
+        { label: "24 volts across W and C", verdict: "All three readings are as they should be - the board is sequencing correctly. Set the thermostat off, disconnect power, remove the DFT jumper, and put the timer jumper back on the desired defrost interval." },
+        { label: "No 24 volts across W and C", verdict: "The board is not calling auxiliary heat during defrost. Replace the control board and re-run the sequence test to confirm." },
+      ],
+    },
+  ],
+  "s-goodman-defrost-board-sequence-test": [
+    {
+      ask: "Power ON with the unit not running, jumper across DFT and R (or R-DFT), a proper jumper across the board test pins, then set the thermostat to call for heating. What happens?",
+      options: [
+        { label: "Goes into defrost within 21 seconds", verdict: "Remove the jumper from the test pins immediately, then take your three meter readings across C to O, DF1 to DF2, and W (or W2) to C." },
+        { label: "No defrost after 21 seconds", verdict: "The board is not initiating with a simulated closed defrost thermostat and the test pins shorted. Confirm you used a proper jumper - not a screwdriver or a shop-made wire - then take the board as the suspect." },
+      ],
+    },
+    {
+      ask: "With defrost running, take all three readings with a VOM. Which one is missing?",
+      options: [
+        { label: "All three good: 24V across C and O, 208-230 VAC across DF1 and DF2, 24V across W (or W2) and C", verdict: "The board is sequencing correctly. Set the thermostat off, disconnect power, remove the DFT jumper, and reinstall the timer jumper at the desired defrost interval." },
+        { label: "No 24 volts across C and O", verdict: "The reversing valve is not being energized for defrost. Replace the control board." },
+        { label: "No line voltage across DF1 and DF2", verdict: "The fan relay is not opening for defrost mode. Replace the control board." },
+        { label: "No 24 volts across W (or W2) and C", verdict: "The auxiliary heat output is not being made. Replace the control board." },
+      ],
+    },
+  ],
+  "s-goodman-ebtdr-blower-delays-electric-heat": [
+    {
+      ask: "The complaint is blower timing in cooling. Time it against the demand. What do you see?",
+      options: [
+        { label: "Blower starts about 7 seconds after the compressor and condenser fan", verdict: "Normal - the EBTDR relay energizes after a 7 second on delay. Nothing to fix." },
+        { label: "Blower runs on about 65 seconds after the demand drops", verdict: "Normal delay-off before the EBTDR relay drops out. Explain it to the customer." },
+        { label: "Blower never starts on a cooling demand", verdict: "Confirm the thermostat energizes G and Y, that 24VAC reaches Y at the condensing unit and G at the EBTDR board, then chase the EBTDR relay." },
+      ],
+    },
+    {
+      ask: "Now run an electric heat demand and watch the strips and the blower. What happens?",
+      options: [
+        { label: "Strips energize but the blower does not run", verdict: "Trace the EBTDR normally closed contacts connected to sequencer terminal M1 - in heating that is the blower path, not the G circuit." },
+        { label: "Neither strips nor blower come on", verdict: "Confirm 24VAC reaches heat sequencer HR1 on the heater assembly. Nothing downstream happens without it." },
+        { label: "Element #1 comes on but not element #2", verdict: "HR1 has a second contact set, M3/M4, for element #2. Verify M1/M2 closed within 10 to 20 seconds, then check the M3/M4 side." },
+        { label: "First two elements work but higher stages do not", verdict: "Heater assemblies with more than two elements use a second sequencer, HR2. Verify HR2 picks up on the higher stage demand, and expect its contacts to open 30 to 70 seconds after the demand is removed." },
       ],
     },
   ],
@@ -4593,6 +7248,25 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "1 to 3 microamps", verdict: "Low signal - the control flashes 1 amber light at this level. Check for high resistance wiring connections, the sensor-to-burner gap, a dirty flame sensor, and poor grounding." },
         { label: "Below 1 microamp", verdict: "The unit will shut down at this level. Work the same list - connections, sensor gap, dirty sensor, grounding - and clean the sensor with steel wool if a contamination coating is suspected." },
         { label: "Absolutely no reading at all", verdict: "Check continuity on all components in the sense circuit. If they are good, replace the ignition control module." },
+      ],
+    },
+  ],
+  "s-goodman-gaspack-fan-delays-normal": [
+    {
+      ask: "Put the thermostat in fan-on with no heat or cool call and time the blower. What happens?",
+      options: [
+        { label: "Starts after about 7 seconds and runs on the HEAT speed tap", verdict: "That is exactly right - 7 second delay on make, HEAT tap on a fan-only call. No fault. Expect a 60 second delay on break when you remove the fan call." },
+        { label: "Starts after about 7 seconds but runs on the COOL speed tap", verdict: "Inspect the Configuration tab on the control - a broken tab produces exactly that behavior with the same 7 and 60 second delays. That one is a real defect." },
+        { label: "Blower does not start at all", verdict: "That is not a delay issue. Chase the G call to the control and the blower circuit." },
+      ],
+    },
+    {
+      ask: "The customer describes something else about timing. Which complaint is it?",
+      options: [
+        { label: "Compressor waits before starting on a cooling call", verdict: "Allow for the 3 minute anti-short-cycle protection. It only starts immediately if it has already been off 3 or more minutes - do not condemn the compressor." },
+        { label: "Fan stays off when G is energized while Y is energized", verdict: "That is priority logic during the cooling fan on delay, not a stuck relay. The fan comes on when the 7 second delay expires." },
+        { label: "Blower keeps running after the thermostat satisfies in cooling", verdict: "Normal 60 second cooling off delay. Nothing to fix." },
+        { label: "Customer says heat does not work but the fan and cooling do", verdict: "Check whether the control is in heat mode lockout - continuous fan and cooling fan operation both keep working during heat lockout, which is why the complaint sounds partial." },
       ],
     },
   ],
@@ -4658,6 +7332,29 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-goodman-gpt-menu-high-fire": [
+    {
+      ask: "With the manometer on the outlet tap and the gas supply on, navigate to gPt on the 7-segment display and select YES. What does the furnace do?",
+      options: [
+        { label: "Goes to high fire and holds there", verdict: "You have 5 minutes, or until you press any of the 3 onboard pushbuttons. Read manifold pressure with the burners firing and compare it to the value on the unit rating plate for this model and fuel." },
+        { label: "Does not go to high fire", verdict: "Confirm the gas supply is actually turned on and that you selected YES at the gPt menu, then re-enter the Gas Pressure Test menu with the onboard pushbuttons." },
+      ],
+    },
+    {
+      ask: "Read manifold pressure at high fire against the value on the unit rating plate for this model and fuel.",
+      options: [
+        { label: "Matches the rating plate value", verdict: "Gas is set. Shut off power and gas, remove the manometer, reseal the outlet pressure tap, then leak check the tap with soap solution and finish with a combustion/CO analysis." },
+        { label: "Off the rating plate value", verdict: "Make only small corrections at the regulator, then re-read at high fire. Do not make one big adjustment and overshoot." },
+      ],
+    },
+    {
+      ask: "Is the 5 minute window long enough for the test you actually need to do?",
+      options: [
+        { label: "Yes - the pressure check fits inside the window", verdict: "Stay with gPt. Let it time out or press one of the 3 pushbuttons to exit when you are finished." },
+        { label: "No - you need longer for a full combustion workup", verdict: "Exit and use the longer-term W-call method instead of repeatedly retriggering gPt." },
+      ],
+    },
+  ],
   "s-goodman-gpu14-manifold-leak-check": [
     {
       ask: "With the manometer connected to the White-Rodgers outlet tap, gas and power restored and R to W closed for a heat call, immediately check the outlet pressure tap screw with leak detection solution or soap suds. What do you see?",
@@ -4679,6 +7376,68 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "No bubbles at the resealed tap", verdict: "Sealed properly. Finish with a flame inspection and a combustion/CO check." },
         { label: "Bubbles at the resealed tap", verdict: "Shut off the gas and repair immediately. The outlet test screw is the leak point - do not leave it." },
+      ],
+    },
+  ],
+  "s-goodman-gsx-gsz-sc-sh-table": [
+    {
+      ask: "Confirm which indoor coil you have before you read anything. What kind of TXV is on it?",
+      options: [
+        { label: "Non-adjustable TXV", verdict: "Charge by subcooling only on this one. Do not chase superheat and do not try to turn a stem that does not adjust." },
+        { label: "Adjustable TXV", next: 1 },
+      ],
+    },
+    {
+      ask: "Run in low stage at least 10 minutes, then read subcooling and superheat. This manual calls for 5 to 7 F subcooling and 7 to 9 F superheat. Which pair do you have?",
+      options: [
+        { label: "Both subcooling and superheat low", verdict: "Adjust the TXV to 7 to 9 F superheat - stem clockwise increases superheat, counterclockwise decreases - then recheck subcooling." },
+        { label: "Subcooling low, superheat high", verdict: "Add charge to raise subcooling to 5 to 7 F, then recheck superheat." },
+        { label: "Both subcooling and superheat high", verdict: "Adjust the TXV to 7 to 9 F superheat, then recheck subcooling." },
+        { label: "Subcooling high, superheat low", verdict: "Adjust the TXV to 7 to 9 F superheat and remove charge to bring subcooling down to 5 to 7 F. Do not adjust charge based on suction pressure unless there is a gross undercharge." },
+      ],
+    },
+  ],
+  "s-goodman-ignition-control-5pin-voltage-walk": [
+    {
+      ask: "Walk the heat sequence with a meter at the ignition control. Where does it stop?",
+      options: [
+        { label: "No 120V from Line 1 to Line 2 at the ignition control", verdict: "The board has no power. Check the door switch connections and the wire harness for continuity." },
+        { label: "No 24V from W1 to C with the thermostat calling", verdict: "Check the transformer, room thermostat, and wiring. If you read 24V off the transformer but only about 13V between C and R at the terminal board, look for a blown fuse." },
+        { label: "Power and call are good but the inducer never runs", next: 1 },
+        { label: "Inducer runs but the ignitor never glows", verdict: "Check for 120V to the ignitor during preheat between Pin 1 and Pin 5 of the 5-pin connector. No voltage there points at the low- and high-stage pressure switches or the control board." },
+      ],
+    },
+    {
+      ask: "Check the inducer outputs at the 5-pin connector: Pin 3 to Pin 4 for low stage, Pin 2 to Pin 4 for high stage. What do you read?",
+      options: [
+        { label: "120V present on the stage that is calling", verdict: "The board is putting out power, so the inducer motor or its wiring is the problem - not the control." },
+        { label: "No 120V on either output", verdict: "Check the 5-pin connector for a loose connection, confirm there really is a high-stage call, then consider replacing the ignition control." },
+      ],
+    },
+    {
+      ask: "Ignitor warmed up. What happens at the gas valve and after?",
+      options: [
+        { label: "24V at the valve, flame proves, but the circulator blower never comes on", verdict: "Before condemning the ECM motor assembly or end bell, test the motor with a Goodman UTT-01 UltraCheck-EZ tool - if it runs on the tool the motor is good. Two-stage variable speed furnaces should have 120V at the motor at all times; commands come through the low-voltage harness." },
+        { label: "24V at the gas valve for about seven seconds, then it drops out", verdict: "That is the control giving up because flame was never proven - the valve output only holds seven seconds without proof of flame. Chase the flame sense circuit and the gas supply." },
+        { label: "No 24V at the gas valve at all after warm-up", verdict: "The control never commanded the valve. Go back up the sequence - pressure switches and the control board - before touching the valve." },
+      ],
+    },
+  ],
+  "s-goodman-mbe-aepf-pj4-third-fourth-strips": [
+    {
+      ask: "Count the heater elements and check which aux stages already work. What do you have?",
+      options: [
+        { label: "More than two elements, with first and second stage aux working", verdict: "There is a second sequencer, HR2, on the heater assembly for elements 3 and 4. Force a third stage demand and check for 24VAC at W/W2 on the MBE/AEPF - that is what the VSTB uses to drive HR2." },
+        { label: "Only two elements total", verdict: "Two elements run off HR1 alone, so there is no HR2 to find. Verify HR1 contacts M1/M2 close within 10 to 20 seconds for element #1 and M3/M4 for element #2, then look elsewhere for the capacity shortfall." },
+        { label: "Even first stage aux does not work", verdict: "Start earlier: on a W2 demand, 24VAC should reach E/W1 of the MBE/AEPF and the VSTB should feed sequencer HR1. Chase that before worrying about HR2." },
+      ],
+    },
+    {
+      ask: "Force a third stage demand, check W/W2 at the MBE/AEPF, and watch HR2. What happens?",
+      options: [
+        { label: "24VAC present at W/W2 but HR2 never pulls in", verdict: "Inspect the PJ4 jumper on the VSTB inside the MBE/AEPF - it must be CUT for elements #3 and #4 to operate on a third stage demand. It is routinely left intact at install." },
+        { label: "No 24VAC at W/W2", verdict: "The third stage demand is not arriving. Check the thermostat's staging and the wiring to W/W2 - on most digital thermostats the highest stage stays energized until the first stage Y demand is satisfied, so time your reading accordingly." },
+        { label: "HR2 pulls in and elements 3 and 4 come on", verdict: "Staging works. When you drop the demand, expect HR2's contacts to open between 30 and 70 seconds - that lag is normal." },
       ],
     },
   ],
@@ -4741,6 +7500,64 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-goodman-mbe-single-stage-condenser-dip4": [
+    {
+      ask: "Restore power, place a cooling call, and check for 24Vac at Y at the condenser.",
+      options: [
+        { label: "24Vac present at Y and the blower ramps to the programmed speed", verdict: "Wiring and configuration are working. Verify the cooling blower speed selected on DIP switches 5 and 6 matches the condenser tonnage from the airflow table." },
+        { label: "No 24Vac at Y at the condenser", verdict: "Follow the yellow Y/Y2 conductors - thermostat Y must land on the Y/Y2 wire in the bundle marked Thermostat, and the Y/Y2 wire in the bundle marked Outdoor Unit must land on Y at the condenser." },
+      ],
+    },
+    {
+      ask: "Power down and look at the VSTB inside the MBE/AEPF. What do you find at DIP switch 4 and the orange jumper?",
+      options: [
+        { label: "DIP switch 4 is OFF", verdict: "A single-stage condenser needs DIP 4 ON. Set it ON and confirm against the DIP switch table printed on the unit, since board revisions differ." },
+        { label: "The orange jumper from Y1 to O has been removed", verdict: "It must remain connected in this application. Re-land the orange Y1-to-O jumper on the VSTB." },
+        { label: "DIP 4 is ON and the orange Y1-to-O jumper is connected", verdict: "Board configuration is correct. Move on to verifying the cooling blower speed on DIP switches 5 and 6 against the airflow table for the condenser tonnage." },
+      ],
+    },
+  ],
+  "s-goodman-mbe-single-stage-condenser-dipswitch": [
+    {
+      ask: "Single-stage GSX, SSX, ASX, or VSX condenser on an MBE/AEPF. Check the three setup items on the VSTB. What is wrong?",
+      options: [
+        { label: "Dip switch #4 is not in the ON position", verdict: "Set dip switch #4 to ON on the VSTB inside the MBE/AEPF - that is the single-stage condenser setup." },
+        { label: "Thermostat Y is landed somewhere other than the yellow Y/Y2 wire", verdict: "Land the thermostat Y output on the yellow wire labeled Y/Y2 in the bundle marked Thermostat, and land the Y/Y2 wire from the Outdoor Unit bundle on the Y terminal at the condenser." },
+        { label: "The factory orange jumper from Y1 to O on the VSTB is missing", verdict: "Reconnect it - that jumper must remain in place on this setup." },
+        { label: "All three items check out correctly", verdict: "Setup is right. Verify cooling airflow on dip switches 5 and 6 and electric heat airflow on 1 and 2, then confirm the blower ramps to that programmed speed on a call." },
+      ],
+    },
+    {
+      ask: "On a cooling demand, check 24VAC at the air handler and at the condenser. What do you find?",
+      options: [
+        { label: "G and Y/Y2 both see 24VAC and the VSTB passes 24VAC to Y at the condenser", verdict: "Signal path is good. When the demand satisfies, expect the blower to ramp down over the time and rate programmed in the motor rather than stopping abruptly - that is normal." },
+        { label: "24VAC at the air handler but nothing reaches Y at the condenser", verdict: "The VSTB is not passing the call. Recheck dip switch 4 and the Y1-to-O orange jumper, then the outdoor wiring." },
+      ],
+    },
+  ],
+  "s-goodman-mbe-single-stage-heatpump-dip4": [
+    {
+      ask: "Confirm the outdoor unit model first. What is out there?",
+      options: [
+        { label: "Single-stage GSZ, SSZ, ANZ, ASZ, or VSZ heat pump", verdict: "This configuration applies. Power down and set DIP switch 4 ON on the VSTB inside the MBE, verifying against the DIP switch table on the unit." },
+        { label: "Something other than one of those single-stage heat pumps", verdict: "This DIP 4 setting is specifically for a single-stage GSZ/SSZ/ANZ/ASZ/VSZ heat pump. Identify the actual outdoor unit and use the configuration for it before you change any switch." },
+      ],
+    },
+    {
+      ask: "Restore power and run a heating call and then a cooling call.",
+      options: [
+        { label: "Heat pump runs and blower speed changes appropriately between heating and cooling", verdict: "Staging and airflow are behaving. Verify the heating and cooling speed selections on DIP switches 1 and 2 and switches 5 and 6 against the airflow table for the installed tonnage." },
+        { label: "Blower speed does not change between modes, or staging is wrong", verdict: "Re-check that DIP switch 4 is ON and that thermostat Y is routed through the yellow Y/Y2 conductors in both the Thermostat bundle and the Outdoor Unit bundle." },
+      ],
+    },
+    {
+      ask: "Is electric backup heat installed on this air handler?",
+      options: [
+        { label: "Yes, electric backup heat is installed", verdict: "Before you leave, determine whether the application requires the PJ4 jumper to be cut for the third and fourth elements." },
+        { label: "No electric heat installed", verdict: "Nothing to do with PJ4. Finish by confirming the blower speed selections against the airflow table for the installed tonnage." },
+      ],
+    },
+  ],
   "s-goodman-mbe-two-stage-cooling-blower-speed": [
     {
       ask: "Restore power, place a Y1-only cooling call, add Y2, then drop Y2 while keeping Y1. How does the blower behave?",
@@ -4749,6 +7566,156 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Blower never changes speed when Y2 is added", verdict: "The high-stage side is not working. Confirm the VSTB supplies 24Vac to Y/Y2 at the condenser and verify the Y2 call is reaching the board." },
         { label: "Blower changes on Y2 but the programmed speed looks wrong for the tonnage", verdict: "Check the cooling airflow selection on DIP switches 5 and 6 against the CFM table printed on the unit or in the installation instructions for the condenser tonnage." },
         { label: "Blower stops instantly when the call is satisfied", verdict: "The motor is supposed to ramp down to a complete stop on its programmed rate. Verify the VSTB configuration rather than the motor." },
+      ],
+    },
+  ],
+  "s-goodman-mbe-two-stage-hp-60-percent-cfm": [
+    {
+      ask: "On a first stage heat demand, verify 24VAC at G and Ylo/Y1 on the MBE/AEPF and watch the blower. What is it doing?",
+      options: [
+        { label: "Ramps to the dip switch 1 and 2 speed but delivers only about 60 percent of it", verdict: "That is by design in first stage - the VSTB runs 60 percent of the programmed high-speed heating CFM while the outdoor unit is on low stage. Not a fault by itself." },
+        { label: "No 24VAC at G or Ylo/Y1", verdict: "The demand is not arriving. Chase the thermostat and its wiring before you look at airflow." },
+        { label: "Blower does not ramp to the dip switch speed at all", verdict: "Check dip switches 1 and 2 for the programmed heating speed, then the VSTB and motor. This is not the 60 percent behavior." },
+      ],
+    },
+    {
+      ask: "Force a second stage heat demand and watch the whole system. What happens?",
+      options: [
+        { label: "24VAC at Y/Y2, blower to full high-speed heating CFM, outdoor fan high, compressor high stage", verdict: "The system is working correctly. Drop the Y2 demand and confirm the blower returns to 60 percent and the outdoor fan to low speed." },
+        { label: "No 24VAC appears at Y/Y2", verdict: "The thermostat is not providing a Y2 heating demand. Check its staging setup - and remember on most digital thermostats Y2 stays energized until the Y1 demand is satisfied." },
+        { label: "24VAC at Y/Y2 but nothing steps up", verdict: "The demand is arriving and nothing responds. Diagnose the VSTB and the heat pump's staging." },
+      ],
+    },
+    {
+      ask: "The heat pump still cannot satisfy the demand. Check the aux heat path. What do you find?",
+      options: [
+        { label: "24VAC reaches E/W1 of the VSTB and HR1 picks up, M1/M2 closing in 10 to 20 seconds", verdict: "Aux heat is working. The shortfall is heat pump capacity or building load, not a wiring fault." },
+        { label: "W2/W3 never drives 24VAC to E/W1", verdict: "Aux heat is never being called. Fix the thermostat's aux staging and the wiring to E/W1." },
+      ],
+    },
+  ],
+  "s-goodman-mod97-prime-trap-purge-gas": [
+    {
+      ask: "Run the startup smell check: gas off, power off, thermostat lowest, burner door off, gas valve manual control OFF. Wait five minutes and smell near the floor. What do you find?",
+      options: [
+        { label: "No gas smell after five minutes", verdict: "Proceed: move the gas valve manual control to ON, replace the burner compartment door, open the external manual gas shutoff, restore power, and raise the thermostat above room temperature. Do not try to light the burner by hand - this furnace has automatic ignition." },
+        { label: "You smell gas", verdict: "Stop right there and follow the manual's safety instructions. Do not restore power or open the gas. You check near the floor because some gases are heavier than air." },
+      ],
+    },
+    {
+      ask: "Before first fire, check the drain trap and the electrical connection. What did you find?",
+      options: [
+        { label: "The drain trap is dry - it was never primed", verdict: "Fill BOTH sides of the trap with water before startup. That ensures drainage and blocks flue gas escaping through the drain system - skipping it is what causes the odor and wet cabinet callback." },
+        { label: "115 VAC polarity is reversed or the ground is not solid", verdict: "Correct it before firing. Polarity matters for correct operation on this control." },
+        { label: "Trap primed and power correct and grounded", verdict: "Good. Verify any required kits (propane, high altitude) are installed, purge gas lines per NFPA 54 or CAN/CSA B149.1-15 without purging into an enclosed burner compartment, and leak check with approved chloride-free soap solution or an electronic combustible gas detector." },
+      ],
+    },
+  ],
+  "s-goodman-modulating-hold-100-percent-w-call": [
+    {
+      ask: "Do you have the CoolCloud app available for this furnace?",
+      options: [
+        { label: "Yes, CoolCloud is available", verdict: "Use it for the functional test - the manual recommends the app over manual methods, and you get your steady high fire without pulling communicating wiring." },
+        { label: "No app - you are testing manually", verdict: "Turn the furnace off first, then isolate the communicating connections before you apply a W call." },
+      ],
+    },
+    {
+      ask: "Look at how this furnace is controlled before you isolate it.",
+      options: [
+        { label: "Communicating fossil fuel system with wires landed on 1, 2, R, C", verdict: "Remove those 1, 2, R, C terminal connections, restore power, and apply a thermostat W call - the system runs continuously at 100 percent firing rate." },
+        { label: "An accessory module is controlling a non-communicating heat pump", verdict: "Disconnect the RJ12 jack from the furnace, then restore power and apply a W call to hold 100 percent firing rate for as long as you need." },
+        { label: "Nothing landed on 1, 2, R, C and no accessory module", verdict: "Nothing to isolate. Restore power and apply a plain W call - the furnace holds 100 percent firing rate while you take manifold pressure and combustion readings." },
+      ],
+    },
+    {
+      ask: "Read manifold pressure during that steady high fire and compare it to the rating plate for this model and fuel.",
+      options: [
+        { label: "Pressure matches the rating plate value", verdict: "Remove the W call to shut it down, reconnect the 1, 2, R, C wiring and the RJ12 jack, then confirm the system communicates and stages normally before leaving." },
+        { label: "Pressure is off the rating plate value", verdict: "Correct it while the furnace is holding 100 percent firing rate, then remove the W call and put the communicating wiring and RJ12 jack back before you leave." },
+      ],
+    },
+  ],
+  "s-goodman-package-charge-high-stage": [
+    {
+      ask: "Complete the airflow measurements and adjustments first, then identify the metering device on this package unit. Which is it?",
+      options: [
+        { label: "Two-stage unit with a TXV", next: 1 },
+        { label: "Fixed-orifice package unit", verdict: "Charge by the superheat method measured at the compressor suction line, then confirm with subcooling at the condenser coil liquid line out, using the superheat and subcooling charts for that specific model." },
+      ],
+    },
+    {
+      ask: "On high stage, run at least 10 minutes with an insulated thermometer on the liquid line, then compare subcooling and superheat to the chart for that model. Which pair do you have?",
+      options: [
+        { label: "Both subcooling and superheat low", verdict: "Adjust TXV superheat - stem clockwise to increase, counterclockwise to decrease - then recheck subcooling." },
+        { label: "Subcooling low, superheat high", verdict: "Add charge to raise subcooling, then recheck superheat." },
+        { label: "Both subcooling and superheat high", verdict: "Adjust the TXV superheat, then recheck subcooling." },
+        { label: "Subcooling high, superheat low", verdict: "Adjust the TXV superheat and remove charge to lower subcooling. Do not adjust charge based on suction pressure unless there is a gross undercharge." },
+      ],
+    },
+  ],
+  "s-goodman-package-cooling-startup-checklist": [
+    {
+      ask: "With the registers open and power on, move the fan switch to ON, then back to Auto. How does the blower behave?",
+      options: [
+        { label: "Starts after a 7 second delay and stops 65 seconds after Auto", verdict: "Those are the designed delays, not faults. Move on - slowly lower the cooling temperature until the unit starts." },
+        { label: "Blower starts and stops immediately with no delay", verdict: "The delays are not being applied. Note it before going further - this unit is supposed to hold 7 seconds coming on and 65 seconds going off." },
+        { label: "Blower never runs with the fan switch on ON", verdict: "No blower at all. Stop the cooling checkout and chase the blower before you run the unit in cooling." },
+      ],
+    },
+    {
+      ask: "Slowly lower the cooling temperature until the unit starts and let it run 10 minutes. What do you have?",
+      options: [
+        { label: "Compressor, blower and outdoor fan all run and cool air is being supplied", verdict: "Start-up checks out. Raise the temperature setting to the highest position to stop the unit and confirm the indoor blower continues for 65 seconds." },
+        { label: "Unit runs but the air is not cool after 10 minutes", verdict: "It is running without producing cooling. Do not sign off - keep the unit on the call and diagnose the cooling side." },
+        { label: "Compressor or outdoor fan does not run", verdict: "One of the three did not start. Chase that component - the checkout is not complete until compressor, blower and fan all run." },
+      ],
+    },
+  ],
+  "s-goodman-package-crankcase-heater-thermostat": [
+    {
+      ask: "Confirm whether this model actually has a crankcase heater thermostat on the discharge line. Does it?",
+      options: [
+        { label: "Yes, there is a crankcase heater thermostat", next: 1 },
+        { label: "No thermostat fitted on this model", verdict: "Nothing to test there - not all models with crankcase heaters have one. Go straight to the heater: all power off, lead-in wires disconnected, check continuity with an ohmmeter." },
+      ],
+    },
+    {
+      ask: "With a thermocouple test lead on the discharge line next to the control, lower the temperature to find the close point and raise it to find the open point. Where do they land?",
+      options: [
+        { label: "Closes near 67 F and opens near 85 F, both within plus or minus 5 F", verdict: "The control is good. Move on and check the heater itself for continuity with all power off and the lead-in wires disconnected." },
+        { label: "Close point outside 67 F plus or minus 5 F", verdict: "Replace the control - the close point is out of spec, so the heater will switch at the wrong temperature." },
+        { label: "Open point outside 85 F plus or minus 5 F", verdict: "Replace the control - the open point is out of spec, so the heater will not shut off when it should." },
+      ],
+    },
+    {
+      ask: "With the thermostat proven, disconnect all power and the heater lead-in wires and ohm the heater itself. What do you read?",
+      options: [
+        { label: "Continuous", verdict: "The heater is good. Restore power and allow it the required pre-energize time before running the compressor." },
+        { label: "Not continuous", verdict: "Replace the heater. Then restore power and give it the required pre-energize time before the compressor runs." },
+      ],
+    },
+  ],
+  "s-goodman-package-forced-defrost-test": [
+    {
+      ask: "With the DF2 fan lead pulled and frost built on the coil, check for 24 volts between DFT and C. What do you read?",
+      options: [
+        { label: "24 volts between DFT and C", verdict: "The defrost thermostat has closed. Short the test pins until the reversing valve shifts - up to 22 seconds depending on the selected timing period - then remove the short instantly or the defrost period lasts only 3 seconds." },
+        { label: "No voltage and the thermostat temperature is less than 28 F", verdict: "The defrost thermostat is still open below 28 F, so it is defective. Replace it." },
+        { label: "No voltage and the thermostat is not down to 28 F yet", verdict: "Not enough frost on the coil yet. Keep running with the DF2 lead off and recheck DFT to C in a few more minutes." },
+      ],
+    },
+    {
+      ask: "Once defrost is running, watch the compressor contactor. What does it do?",
+      options: [
+        { label: "Drops out for 30 seconds at defrost initiation and again at termination", verdict: "That is the factory compressor-delay setting doing its job, not a failing contactor. Let the cycle finish." },
+        { label: "Compressor runs straight through initiation and termination", verdict: "The board is on the Normal jumper setting. That is expected there - and on Normal the low pressure switch at R-PS1/PS2 is ignored for 5 minutes after initiation and after termination." },
+      ],
+    },
+    {
+      ask: "After the defrost thermostat terminates, recheck DFT to C. What do you read?",
+      options: [
+        { label: "0 volts", verdict: "Correct - the sensor has opened. Shut off power, reconnect the outdoor fan motor lead to DF2, and restore power." },
+        { label: "Still reading 24 volts", verdict: "The defrost thermostat has not opened after termination. Suspect the defrost thermostat and replace it if it will not open." },
       ],
     },
   ],
@@ -4815,6 +7782,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-goodman-package-hp-heat-mode-checkout": [
+    {
+      ask: "Set the system switch to HEAT and fan to AUTO, then slowly raise the setpoint until first stage heat makes contact. What happens?",
+      options: [
+        { label: "Compressor, blower, and fan run with the reversing valve de-energized, and heated air comes out", verdict: "Heat mode checks out. Raise the setpoint further until second stage makes contact and confirm supplemental resistance heat, if installed, energizes and operates." },
+        { label: "Compressor stops on high pressure and outdoor ambient is above 80 F", verdict: "Above 80 F outdoor the unit may trip its high pressure cutout in heating. Postpone the heating test to a day with suitable conditions - but do NOT skip it, or you get the first-cold-day callback." },
+        { label: "Nothing runs at all on the heat call", verdict: "Go back and confirm cooling works: the reversing valve should click when you select cooling and the contactor should pull in. If cooling works and heat does not, chase the heat call path." },
+      ],
+    },
+    {
+      ask: "Raise to second stage. Do the supplemental heaters come on?",
+      options: [
+        { label: "Heaters energize and operate properly", verdict: "Supplemental heat confirmed. Now test the emergency heat switch at the bottom of the thermostat." },
+        { label: "Heaters do not come on and outdoor thermostats are installed", verdict: "Outdoor ambient must be below the outdoor thermostats' setpoint for the heaters to run. In mild weather, jumper them to verify heater operation." },
+      ],
+    },
+    {
+      ask: "Flip the emergency heat switch at the bottom of the thermostat. What happens?",
+      options: [
+        { label: "Heat pump stops, blower keeps running, all heaters come on, emergency heat light illuminates", verdict: "Emergency heat is correct. Commissioning is complete." },
+        { label: "Any one of those four does not happen", verdict: "Emergency heat is not fully working. Chase the missing piece now - this is the customer's backup on the coldest night of the year." },
+      ],
+    },
+  ],
   "s-goodman-pcbdm133-defrost-delays-normal": [
     {
       ask: "With the control identified as a PCBDM133, check the compressor delay jumper and time what the compressor is actually doing. What did you find?",
@@ -4823,6 +7814,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Compressor stays off about three minutes between runs", verdict: "That is the board's three minute compressor off-cycle delay - wait it out before condemning the compressor, contactor, or control." },
         { label: "Jumper set to Normal but the compressor still drops out at defrost initiation or termination", verdict: "On Normal the compressor should run straight through initiation and termination. The behavior does not match the jumper position, so this one is worth pursuing as a fault." },
         { label: "The complaint is a low pressure or low charge reading taken within 5 minutes of defrost initiation or termination", verdict: "The control ignores the low pressure switch on R-PS1 and PS2 for 5 minutes after defrost initiation and 5 minutes after termination. Do not chase a low-charge complaint using observations taken inside those windows." },
+      ],
+    },
+  ],
+  "s-goodman-sharedata-memorycard": [
+    {
+      ask: "You have a fresh ComfortNet board that will not run the equipment right. What is the display showing?",
+      options: [
+        { label: "d0 - no data", verdict: "The board has no shared data. Power OFF, insert the yellow memory card for the EXACT model, then power ON - the board loads the data and the code clears." },
+        { label: "d1 - invalid data", verdict: "Wrong or corrupted data set. Get the correct model-specific yellow card, power OFF, insert it, then power ON to reload." },
+        { label: "d4 - invalid memory card", verdict: "That card is not for this model - the data set is model-specific. Source the right yellow card from the old board's slot, the unit's literature bag, or order it by model number." },
+        { label: "No d code, but blower CFM or staging is wrong", verdict: "Wrong-model data loads without throwing any code. Verify the card matches this exact model, reload it, then run a full cycle and confirm airflow and staging behave per the model." },
+      ],
+    },
+    {
+      ask: "You are about to insert or remove the memory card. What is the state of the unit?",
+      options: [
+        { label: "Power is off at the disconnect", verdict: "Correct. Insert the card, power ON to load, then power OFF again before removing it - or leave it in permanently, which many techs do." },
+        { label: "Unit is still powered up", verdict: "Kill power first. Hot-plugging the memory card corrupts the data load and you will be doing this twice." },
       ],
     },
   ],
@@ -4963,6 +7972,22 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Visible break in the wire or a broken insulator", verdict: "The visual check found it before the meter did. Replace the element rather than attempting a repair." },
         { label: "No reading on the ohmmeter", verdict: "The element is open. Replace it, reinstall, and verify each stage energizes." },
         { label: "Element reads continuous and looks intact", verdict: "The element itself is not the problem. With the control side already proved calling, move to the sequencer and the limit." },
+      ],
+    },
+  ],
+  "s-heater-limit-control-check": [
+    {
+      ask: "With all power off and the wiring removed, check continuity across the limit's normally closed contacts. What do you read?",
+      options: [
+        { label: "No reading - the control is open", verdict: "Let it cool well below its reset point. It closes at about 110 degrees F, so if it is cold and still open, replace it. Never wire around it." },
+        { label: "Good continuity across the contacts", verdict: "The limit is closed and is not what is missing your heat stage. Look at the element, the sequencer, and the control wiring for that stage." },
+      ],
+    },
+    {
+      ask: "The limit was open. What did you find on the airflow side?",
+      options: [
+        { label: "Dirty filter, blocked duct, or a blower not running right", verdict: "That is why it opened - these limits protect against low airflow. Fix the airflow, replace the control if needed, and verify normal temperature rise after the repair." },
+        { label: "Airflow checks out fine and the control stays open when cold", verdict: "The control itself failed - it opens at about 150 to 160 degrees F and should close by about 110. Replace it, and never wire around it." },
       ],
     },
   ],
@@ -5205,6 +8230,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Reversing valve is not energized or positioned for heat", verdict: "The system is not actually in heating. Correct the reversing valve signal and position." },
         { label: "Outdoor coil is iced up and not clearing", verdict: "Defrost problem - see the defrost entry in this list." },
         { label: "Reversing valve and outdoor coil both look right", verdict: "Check refrigerant charge, since undercharge is often more noticeable in heating than cooling, and confirm auxiliary/emergency heat is wired and staging in as expected on a cold day." },
+      ],
+    },
+  ],
+  "s-hp-outdoor-temp-sensor-staging": [
+    {
+      ask: "Find the dedicated outdoor air temperature sensor and compare its reading to a real thermometer at the same location. What do you get?",
+      options: [
+        { label: "Sensor reads noticeably off from the actual outdoor temperature", next: 1 },
+        { label: "Sensor reading matches the actual outdoor temperature", verdict: "Still ohm-check it against the manufacturer's resistance-vs-temperature table if one is available, since a board can display a plausible but wrong value from a degraded sensor." },
+      ],
+    },
+    {
+      ask: "Look at where the sensor is mounted and check its wiring and connector. What do you find?",
+      options: [
+        { label: "Mounted in direct sun, or in the condenser's own discharge air", verdict: "A mechanically fine sensor in a bad location gives the same symptom as a failed one. Relocate it somewhere representative of actual outdoor conditions." },
+        { label: "Corroded or loose connector or wiring at the sensor", verdict: "An intermittent connection here makes staging work sometimes and not others, which is easy to blame on a flaky board. Repair the connection and re-verify." },
+        { label: "Mounting location and wiring both look good", verdict: "Ohm-check the sensor against the manufacturer's resistance-vs-temperature spec and replace it if it is out. Then re-verify balance point and lockout staging across a range of outdoor conditions, not one spot check." },
       ],
     },
   ],
@@ -5535,6 +8577,15 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-inverter-compressor-insulation-resistance": [
+    {
+      ask: "With all power off and the leads off the compressor terminals, measure insulation resistance between each terminal and unpainted refrigerant piping. What do you read?",
+      options: [
+        { label: "Less than 30M ohms on any terminal", verdict: "Replace the compressor - that is below this platform's threshold. Do not replace the drive first." },
+        { label: "30M ohms or more on all terminals", verdict: "Insulation is acceptable, so the compressor is not grounded. Move on to the drive and control board diagnostics. Verify U/V/W against the terminal label on the compressor and reinstall the terminal cover before restoring power." },
+      ],
+    },
+  ],
   "s-inverter-compressor-soft-start-behavior": [
     {
       ask: "Watch the whole ramp from the start of a call, using the outdoor unit or thermostat speed/frequency display if it has one.",
@@ -5565,6 +8616,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Ramps up and runs, then trips after several minutes", verdict: "This is a load problem. Check head pressure, outdoor coil cleanliness, the outdoor fan, and clearances, then verify charge before you touch the drive." },
         { label: "Trips only in heating, never in cooling", verdict: "Look at the indoor side in heating - indoor airflow, a dirty indoor coil, or a reversing valve that is not fully shifting will all drive the compressor into protection." },
         { label: "Trips at random and supply voltage dips at the same moment", verdict: "Chase the supply first. Undersized conductors, a loose lug at the disconnect, or a shared circuit can starve the drive and trip protection." },
+      ],
+    },
+  ],
+  "s-leak-only-shows-under-operating-pressure": [
+    {
+      ask: "Ask the customer when the loss actually happens. What do they tell you?",
+      options: [
+        { label: "Only seasonal, or only after a hot spell, or only after the heat pump switches modes", verdict: "Leak search while the system is running at full operating pressure and temperature, and on a heat pump run it in the mode they report so the suspect section is actually pressurized." },
+        { label: "Loses charge steadily year round", verdict: "Repeat the standing test at a higher pressure, within the equipment's stated maximum allowable pressure, and run it long enough to cross a temperature swing." },
+      ],
+    },
+    {
+      ask: "The standing test held but the system still loses charge in operation. Where are you searching?",
+      options: [
+        { label: "High side while it is hot - compressor braze joints, discharge line, condenser inlet, reversing valve, service valves", verdict: "That is where operating-pressure leaks live. Search there with the system running and up to full pressure and temperature." },
+        { label: "Only searching while the system is sitting off", verdict: "You will miss it. Some leaks only open at real operating pressure, temperature, or with the vibration of a running compressor - search it running." },
+      ],
+    },
+    {
+      ask: "The leak is slow enough that a single visit may not catch it. What now?",
+      options: [
+        { label: "Nothing found on this visit", verdict: "Consider injecting an approved trace dye or leaving a detector in place, and document the search so the next visit picks up where this one left off instead of starting over." },
+        { label: "Found and confirmed the leak on this visit", verdict: "Repair it, then document what you found and where, so a future call does not repeat the whole search." },
       ],
     },
   ],
@@ -5633,6 +8707,56 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "No 24VAC on W, or the S10 primary or S21 secondary limit is open", verdict: "The call or the limit string is stopping it. Prove 24VAC at W and both limits closed." },
         { label: "Inducer B6 runs but the S18 combustion air pressure switch never closes", verdict: "The 15 second pre-purge does not start until S18 closes. Chase the pressure switch circuit." },
         { label: "Ignitor R33 warms 20 seconds and GV1 opens for a 4 second trial", verdict: "That is the normal sequence. After flame proof the blower comes on at heat speed 30 seconds later, with a 5 second inducer post-purge and the selected blower off delay on satisfaction." },
+      ],
+    },
+  ],
+  "s-lennox-a92-rollout-gates-thermostat-power": [
+    {
+      ask: "Line voltage is at L1 and N and T1 is energized, but the thermostat is dead. Check for 24V at the R terminal of the A92 control. What do you read?",
+      options: [
+        { label: "No 24V at the R terminal", verdict: "On this control 24V only leaves R if the S47 rollout switch or switches are closed. Check continuity across them - a tripped rollout looks exactly like a dead thermostat." },
+        { label: "24V present at R", verdict: "The rollout is not gating power. Chase the thermostat and its wiring instead." },
+      ],
+    },
+    {
+      ask: "You found the S47 rollout open. What did you do about it?",
+      options: [
+        { label: "Found and corrected the cause before resetting it", verdict: "Right call - never just reset and leave. With thermostat power restored, start a heat call and confirm W1 at the stat energizes W on the furnace control with 24VAC." },
+        { label: "Reset it without finding a cause", verdict: "Go back. A rollout trips for a reason - find and correct it, or you will be back and the next failure may be worse." },
+      ],
+    },
+    {
+      ask: "With power restored and a heat call in, follow the sequence. Where does it stop?",
+      options: [
+        { label: "Combustion air inducer B6 never energizes", verdict: "Confirm the control's self-check passed and that the S10 primary limit and S21 secondary limit contacts are closed - those have to be made first." },
+        { label: "Inducer runs but the S18 combustion air pressure switch never closes", verdict: "No 15 second pre-purge starts without it. Work the pressure switch, its hose, and the inducer and venting." },
+        { label: "Ignitor R33 warms up 20 seconds, GV1 opens 4 seconds, but no flame is proven", verdict: "That is the trial for ignition timing out. Chase gas supply, the burner, and the flame sense circuit." },
+        { label: "Flame proves and the indoor blower comes on 30 seconds later", verdict: "Sequence is normal. On satisfaction expect a 5 second inducer post-purge plus the selected blower off delay." },
+      ],
+    },
+  ],
+  "s-lennox-alert-priority-triage": [
+    {
+      ask: "Read the priority tag on the alert code in the dealer control center. What does it say?",
+      options: [
+        { label: "Service Urgent", verdict: "Act now - the equipment is impaired. Work this code before anything else on the call." },
+        { label: "Service Soon", verdict: "The system is degraded but running. Schedule the repair rather than tearing into it today." },
+        { label: "Information Only - Dealer, or Minor", verdict: "Logged for the dealer, or a notification only - usually no action needed. Do not chase it." },
+      ],
+    },
+    {
+      ask: "Check whether the code is still active and what clears it. Which case is this?",
+      options: [
+        { label: "Code is displayed but the condition is gone", verdict: "Most codes auto-clear once the system sees the condition is gone. Do not assume a displayed code is still live - compare the ACTIVE and CLEARED lists, since intermittents often only show in the cleared list." },
+        { label: "Code 41 - control board replaced", verdict: "Informational, and it always requires a manual clear: menu, settings, advanced settings, view dealer control center, notifications, select the code, press clear. It appears any time a communicating control is swapped." },
+        { label: "Code 105 or 124", verdict: "Communication codes are wiring-first faults. Check the shielded cable and the electrical wiring before you replace any control." },
+      ],
+    },
+    {
+      ask: "You just added or replaced a piece of equipment. What does the system show?",
+      options: [
+        { label: "The new equipment is detected and listed correctly", verdict: "Nothing more needed. Review both active and cleared alerts once more before you leave." },
+        { label: "The system does not see the new equipment properly", verdict: "Run menu, settings, advanced settings, view dealer control center, equipment, reset all equipment so the system re-detects everything." },
       ],
     },
   ],
@@ -5823,6 +8947,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-el280-blower-speed-taps-park": [
+    {
+      ask: "Restore power and run heat, cool, and fan only. What is the blower doing?",
+      options: [
+        { label: "Wrong speed runs in one mode only", verdict: "That mode's lead is on the wrong speed tap. Power down and move it to the 3/16 inch quick connect terminal matching the airflow required for that mode - LO COOL, HI COOL, LO HEAT, HI HEAT, or FAN." },
+        { label: "Blower speed changes correctly with every mode", verdict: "Speed taps are landed right. Now make sure no unused motor speed tap leads are hanging loose in the cabinet." },
+      ],
+    },
+    {
+      ask: "Power down and look for unused motor speed tap leads inside the cabinet.",
+      options: [
+        { label: "One or more unused leads are loose in the cabinet", verdict: "Move them onto the PARK terminals - there are 3 PARK terminals provided for exactly this. Do not leave a live tap lead loose in the cabinet." },
+        { label: "Unused leads are already parked", verdict: "Wiring is tidy. While you are in there, verify the 1/4 inch line voltage terminals - LINE, XFMR, CIRC, ACC, and neutrals - and that the humidifier is on 120V HUM or 24V HUM to match its voltage." },
+      ],
+    },
+  ],
   "s-lennox-el280-line-voltage-error-codes": [
     {
       ask: "Read the code off the seven-segment diagnostic LED before resetting anything. Which one is showing?",
@@ -5878,6 +9018,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-el280dfek-diagnostic-pushbutton": [
+    {
+      ask: "You are at the seven-segment LED and the diagnostic push button beside it. What are you trying to get?",
+      options: [
+        { label: "Stored fault codes on an intermittent complaint", verdict: "Hold the push button and release on the Error Code Recall E item - a new menu item appears every five seconds. Compare each stored code against the diagnostic LED code table in the manual." },
+        { label: "A live flame signal while the burners are firing", verdict: "Hold the button and release on the Flame Signal F item. That reads the live flame signal without breaking into the sensor lead with a meter." },
+        { label: "The display already shows something and you are not sure what", verdict: "This display shows operating status, target airflow, and error codes in the same place. Check the manual's code table before you treat a status number as a fault." },
+      ],
+    },
+    {
+      ask: "You are tracing wiring at the control. Which quick-connect terminals are you on?",
+      options: [
+        { label: "The 1/4 inch quick-connects", verdict: "Those carry 120 VAC - line, transformer primary, blower, accessory, and humidifier. Treat them as line voltage." },
+        { label: "The 3/16 inch quick-connects", verdict: "Those carry the 24 VAC motor speed taps and common. Park any unused speed taps on the three PARK terminals rather than leaving them loose." },
+      ],
+    },
+  ],
   "s-lennox-el280dfek-ignition-error-codes": [
     {
       ask: "Read the two-part status error code during the failed trial for ignition.",
@@ -5894,6 +9051,25 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Flame is not proven within 4 seconds and the gas valve drops with the inducer still running", verdict: "Count the tries - five consecutive failures during a single heat demand is the flow chart's lockout branch." },
         { label: "Flame proves, then a 4 second stabilization and the rectification current check runs", verdict: "That is the normal sequence. Compare the measured flame current against the flow chart reference of 0.19 microamps and the diagnostic table in the manual for that unit before condemning the sensor." },
         { label: "Pressure switch closes and a 15 second pre-purge or inter-purge runs with a heartbeat on the status LED", verdict: "Normal - a 15 second combustion air inducer pre-purge, or a 15 second inter-purge on a retry. Keep watching the 20 second ignitor warm-up next." },
+      ],
+    },
+  ],
+  "s-lennox-el280dfek-lgwp-test-button": [
+    {
+      ask: "With power restored, the five minute purge finished, and a cooling demand running, press the LGWP Test button. What happens?",
+      options: [
+        { label: "Leak detection LED appears, blower powers up, outdoor compressor powers down", verdict: "Cooling response is correct. Cross-reference the LED against the ignition control diagnostic code table, press the button again to end the simulated mode, then repeat on a heating demand." },
+        { label: "Blower does not power up", verdict: "The blower side of the leak response failed. Chase that circuit before you call the board installation complete." },
+        { label: "Outdoor compressor keeps running", verdict: "The compressor shutdown part of the leak response failed. Chase that before you call the board installation complete." },
+        { label: "No leak detection LED indicator at all", verdict: "The board is not entering the simulated Leak Detected mode. Confirm power was restored and the system finished its five minute purge sequence before testing, then press the button again." },
+      ],
+    },
+    {
+      ask: "Now prompt a heating demand and press the LGWP Test button the same way. What happens?",
+      options: [
+        { label: "LED appears, blower powers up, gas burners power down, compressor powers down", verdict: "Heating response is correct. Press the LGWP Test button to end the simulated mode and confirm the system returns to normal operation - the board installation is complete." },
+        { label: "Gas burners keep firing", verdict: "The burner shutdown part of the leak response failed. That is the piece heating adds over cooling - chase it before you sign off." },
+        { label: "Blower does not power up, or the compressor keeps running", verdict: "Same failure you would see in cooling. Chase the blower or compressor side of the leak response before signing off." },
       ],
     },
   ],
@@ -6030,6 +9206,46 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-g71mpp-clean-burner-assembly": [
+    {
+      ask: "Check the model tag before you pull the burner box. What size G71MPP is this?",
+      options: [
+        { label: "G71MPP-135", verdict: "This size has two additional screws holding the burner box to the vestibule panel - remove those first, then the four screws securing the box to the vest panel." },
+        { label: "Any other G71MPP size", verdict: "Just the burner box cover and the four screws securing the burner box to the vest panel. No extra vestibule screws on this size." },
+      ],
+    },
+    {
+      ask: "With the burner box out, vacuum the burner faces with the soft brush attachment and look inside the burners and crossovers.",
+      options: [
+        { label: "Burners clean up and the crossovers are clear", verdict: "Reinstall the box with the existing four screws, making sure the burners line up in the center of the burner ports, then reconnect the sensor wire and the igniter 2-pin plug." },
+        { label: "Blockage inside a burner or a crossover", verdict: "Remove the blockage before reassembly - a blocked crossover will not carry flame across the burners. Then reinstall with the burners centered in the burner ports." },
+      ],
+    },
+    {
+      ask: "After restoring gas and power, soap every gas joint you opened and run the furnace 5 minutes.",
+      options: [
+        { label: "No bubbles and the furnace runs 5 minutes normally", verdict: "The heat exchanger is clean and dry and the furnace operates properly. Replace the heating compartment panel and perform a CO check." },
+        { label: "Bubbles at a joint", verdict: "Shut the gas off and repair that joint before running the furnace any further, then re-soap it and re-test." },
+      ],
+    },
+  ],
+  "s-lennox-g71mpp-continuous-fan-speed": [
+    {
+      ask: "Set the thermostat fan to ON with no heat or cool demand, then take a total external static reading before changing anything. What do you have?",
+      options: [
+        { label: "Blower runs continuously and static reads normal", verdict: "The complaint is the speed setting. Power down and select the continuous fan speed on switches 6 and 7 using the continuous fan speed table in the G71MPP installation instructions." },
+        { label: "Blower runs but static reads high", verdict: "That is a duct problem. Fix the restriction first - changing the fan speed just masks the reading you took." },
+        { label: "Blower does not run continuously", verdict: "Nothing to set yet. Confirm the thermostat fan is actually in ON and the blower has power before opening the control." },
+      ],
+    },
+    {
+      ask: "Switches 6 and 7 ship set for medium low (2) speed. Which way does this one need to go?",
+      options: [
+        { label: "Airflow too weak at the registers", verdict: "Raise the continuous fan speed off the G71MPP table, rerun continuous fan, and confirm at the registers. Run a heat call and a cool call before leaving to confirm those speeds were not disturbed." },
+        { label: "Too noisy at the registers", verdict: "Lower the continuous fan speed off the G71MPP table, confirm at the registers, then run heat and cool calls to make sure those speeds are untouched." },
+      ],
+    },
+  ],
   "s-lennox-g71mpp-watchguard-reset": [
     {
       ask: "Pull the stored error codes from the integrated control before disturbing anything. What is in there?",
@@ -6148,6 +9364,29 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Inducer speed changes between first and second stage heat", verdict: "Correct operation. Before leaving, verify the vent and intake terminations are clear and perform a CO check in the equipment space." },
         { label: "Inducer stays at one speed through both stages", verdict: "It is not following the stage change. Confirm the 120VAC combustion air inducer is being controlled by integrated control A92 on this model family and check for a miswired inducer circuit." },
+      ],
+    },
+  ],
+  "s-lennox-inverter-led-flash": [
+    {
+      ask: "Find the red and green status LEDs in the outdoor control panel and read them as red-count then green-count. What is the pattern?",
+      options: [
+        { label: "Red ON solid, green OFF", verdict: "That is normal operation for this inverter. The drive is not faulting right now - look elsewhere for the complaint." },
+        { label: "A countable red count then green count", verdict: "That is the inverter code - 2 red plus 3 green equals code 23, DC link low voltage. Look your combination up in the alert-code guide in Manuals, Lennox." },
+      ],
+    },
+    {
+      ask: "Compare the inverter flash code against the thermostat's 400-series alert. Do they pair up?",
+      options: [
+        { label: "They match (429 with 23, 427 with 21, 433 with 29, 434 with 53)", verdict: "Matching both confirms the diagnosis. Before replacing an inverter for a voltage code, check U/V/W connections, compressor winding resistance, compressor-to-ground, and incoming line voltage - most inverter faults are compressor or supply problems." },
+        { label: "They do not match", verdict: "Look again. Recount the flashes and recheck the alert number - a mismatch means one of the two readings is wrong, and you do not want to order off it." },
+      ],
+    },
+    {
+      ask: "Check whether the unit is still retrying or fully locked out.",
+      options: [
+        { label: "Still auto-retrying, alert reads service soon", verdict: "It has not hit its strike count yet. Find the cause now - it will lock out if it keeps striking within an hour." },
+        { label: "Locked out, alert reads service urgent", verdict: "Fix the cause first, then clear it by removing power to the OUTDOOR unit - not just the thermostat. Inverter capacitors hold lethal charge, so wait the labeled discharge time and verify with a meter before touching drive components." },
       ],
     },
   ],
@@ -6283,6 +9522,57 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-minisplit-e464-overcurrent": [
+    {
+      ask: "Before going into the board, inspect the compressor wiring and ohm the compressor windings. What do you find?",
+      options: [
+        { label: "Wiring damaged, or a winding reads bad", verdict: "Deal with that first. E464 is overcurrent on compressor 1 - a wiring or winding problem will keep setting it no matter what board you fit." },
+        { label: "Compressor wiring and windings both check good", next: 1 },
+      ],
+    },
+    {
+      ask: "With power supplied, do the diode check on the back of the inverter PCB: U(24), V(25), W(26) to P(27), and N(23-21) to U, V, W. What do the readings show?",
+      options: [
+        { label: "Every pair reads 0.3 to 0.7 V", next: 2 },
+        { label: "Any pair is outside 0.3 to 0.7 V", verdict: "Replace the inverter PCB. Verify the test points against documentation for the exact model first - test point locations vary from model to model." },
+      ],
+    },
+    {
+      ask: "Run the resistance check across those same pairs, then the DC link test: power off 15 to 20 minutes to discharge the bus caps, fan motor plug off, power back on, line voltage x 1.41. What do you get?",
+      options: [
+        { label: "Resistance reads 500k or less on any pair", verdict: "Replace the inverter PCB - each pair should read more than 500k." },
+        { label: "DC voltage does not match line voltage x 1.41", verdict: "The DC bus is not what it should be. Verify the test points against documentation for the exact model before condemning the board." },
+        { label: "All pairs over 500k and DC matches line voltage x 1.41", verdict: "The inverter power section checks out. Do not replace the board on E464 alone - go back over the compressor wiring and windings." },
+      ],
+    },
+  ],
+  "s-lennox-minisplit-inverter-pcb-codes": [
+    {
+      ask: "Record the exact E code before clearing anything, and confirm the service valves are fully open with the piping and wiring correct. Which code is showing?",
+      options: [
+        { label: "E465 compressor Vlimit error", next: 1 },
+        { label: "E163, E470 or E471 (EEPROM option, read-write, or OTP error)", verdict: "EEPROM problem, not a compressor problem. E163: reset the options. E470/E471: upload EEPROM data to the outdoor unit main PCB, or insert the correct EEPROM for the model name." },
+        { label: "E198 temperature fuse error", verdict: "Check the wiring connector for the temperature fuse. If the terminal box temperature rise fuse is disconnected, replace the PCB." },
+        { label: "E381 inverter PBA overheating", verdict: "Visually inspect the inverter PBA and replace it if there is any damage." },
+      ],
+    },
+    {
+      ask: "Watch the compressor while E465 is present. How is it running?",
+      options: [
+        { label: "Compressor is running abnormally", verdict: "Replace the compressor and confirm normal operation afterward. E465 is the one code on this list that actually leads to a compressor replacement." },
+        { label: "Compressor runs normally", verdict: "Do not touch the compressor. Check the assembly between the heatproof plate and the inverter PCB, and if nothing is wrong there, replace the inverter PCB." },
+      ],
+    },
+    {
+      ask: "If the code is not one of the above, check it against this second group. Which one matches?",
+      options: [
+        { label: "E469 DC link voltage sensor", verdict: "Read the DC link value when the error occurs - normal is 280 to 320 VDC - and check the reactor for a disconnection." },
+        { label: "E485 input current sensor", verdict: "Power cycle the unit. If E485 repeats, replace the inverter PCB." },
+        { label: "E424 3-phase power wire disconnection", verdict: "Check for an open 3-phase leg and a blown EMI PBA fuse." },
+        { label: "E556 capacity inconsistency, or E403/E404 freeze or overload at compressor stop", verdict: "E556: verify the indoor and outdoor model names and re-enter the indoor option code. E403/E404: check fan, fan motor, and EEV operation." },
+      ],
+    },
+  ],
   "s-lennox-minisplit-point-check": [
     {
       ask: "Run the point check (spot check) function on the outdoor control board and compare each sensor value against the resistance tables in the service manual.",
@@ -6290,6 +9580,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "One sensor reads wildly out of range and its connector is good", verdict: "That is your sensor. Sensor faults are the most common mini-split codes - replace it." },
         { label: "One sensor is out of range but its connector is loose or dirty", verdict: "Reseat and clean the connector, then re-read the point check before ordering a sensor." },
         { label: "All sensor values track the tables", verdict: "The sensors are good, so use the rest of the point check operating data instead of back-probing. On multi-zone outdoor units the manual documents a separate multi-zone spot check function." },
+      ],
+    },
+  ],
+  "s-lennox-ml-el-flame-signal-meter-hookup": [
+    {
+      ask: "With the meter in series - negative clip on the flame sensor lead, positive on the flame sensor terminal on the control - call for heat and read as soon as the burner lights.",
+      options: [
+        { label: "Reading is at or above the minimum flame signal listed in this model's service literature", verdict: "Flame sense is good. Power down before removing the clips and re-landing the flame sensor wire on the integrated control." },
+        { label: "Reading is below the minimum listed for this model", verdict: "Weak flame signal. Power down, pull the sensor and clean it, then re-read. If it stays low, look at sensor position and the ground path." },
+        { label: "Meter reads nothing at all with the burner lit", verdict: "Check your hookup. Negative goes on the flame sensor lead, positive on the flame sensor terminal on the control - polarity matters for a rectified DC microamp reading." },
+      ],
+    },
+    {
+      ask: "Does the burner stay lit while you are metering?",
+      options: [
+        { label: "Burner lights and stays lit", verdict: "Read the microamps as soon as it lights and compare against the minimum flame signal in this model's service literature." },
+        { label: "Burner lights then drops out after a few seconds", verdict: "The control is not seeing enough flame signal to prove flame. Catch the microamp reading in the seconds it is lit and compare it to the minimum in the service literature for this model." },
       ],
     },
   ],
@@ -6462,6 +9769,29 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-ml296dfv-blower-ramp-profile": [
+    {
+      ask: "The customer says airflow builds in stages. Time the circulating blower after ignition. What do you see?",
+      options: [
+        { label: "50 percent for a minute, then 75 percent for a minute, then full first stage heat speed", verdict: "That is the programmed ramp - do not report it as a hunting blower. Note the blower energizes 30 seconds after ignition and the combustion blower drops to low speed 45 seconds after ignition is confirmed." },
+        { label: "Blower speed wanders with no repeating pattern", verdict: "That is not the programmed ramp, which is three clean steps. Chase the motor and the control." },
+      ],
+    },
+    {
+      ask: "The customer says the blower runs a long time after the burners stop. Time it. What happens?",
+      options: [
+        { label: "Runs about two minutes at 82 percent of the selected heating speed, then ramps down", verdict: "Programmed behavior. Also expect the combustion blower to run an additional 15 seconds after the gas valve shuts. Nothing to fix." },
+        { label: "Blower never stops", verdict: "That is not the programmed off ramp. Diagnose the blower circuit and the control." },
+      ],
+    },
+    {
+      ask: "The unit lost ignition. What does it do?",
+      options: [
+        { label: "Recycles and retries, up to five attempts, then locks out for 1 hour", verdict: "That is the designed response - now find why ignition is failing. To reset manually, remove power from the control for more than 1 second or remove the thermostat heat call for more than 3 seconds." },
+        { label: "Locks out on the first failed attempt", verdict: "It should get up to five recycle attempts. Locking out immediately points at a hard safety fault rather than an ignition problem - check the safeties." },
+      ],
+    },
+  ],
   "s-lennox-multizone-isolate-indoor-comm-fault": [
     {
       ask: "After 15 minutes with power off and the required pipe check complete, strip the condenser terminal block to ONE set of indoor F1/F2 wires, restore power and watch the display. Work through every pair one at a time. What did you find?",
@@ -6530,6 +9860,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-outdoor-sensor-e221-e320": [
+    {
+      ask: "Read the code on the outdoor unit. Which one is it?",
+      options: [
+        { label: "E221", verdict: "Outside temperature sensor, open or short. Turn the system off, inspect that sensor's connector and harness, then replace the sensor." },
+        { label: "E237", verdict: "Condenser temperature sensor, open or short. Turn the system off, inspect its connector and harness, then replace that sensor." },
+        { label: "E251", verdict: "Compressor discharge temperature sensor, open or short. Replace it, and make sure the new one goes in the discharge position - discharge and condenser sensors are not interchangeable." },
+        { label: "E320", verdict: "Compressor OLP sensor, open or short. Turn the system off, inspect the connector and harness, then replace that sensor." },
+      ],
+    },
+    {
+      ask: "Before you condemn the sensor, inspect its connector and harness.",
+      options: [
+        { label: "Connector is loose or corroded, or the harness is damaged", verdict: "Fix that first and re-check. The code is an open or short, and a bad connector or harness produces the same fault as a bad sensor." },
+        { label: "Connector and harness are both good", verdict: "Replace the sensor the code points to, confirm it is mounted in the correct location, restore power, and confirm the code does not return." },
+      ],
+    },
+  ],
   "s-lennox-outdoor-will-not-power-up": [
     {
       ask: "Measure outdoor power L to N at the terminal block and check whether the LEDs on the outdoor main PCB and inverter PCB are on. What do you have?",
@@ -6537,6 +9885,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "220V at the terminal block but no LEDs lit on the PCBs", verdict: "Power is reaching the unit but not the boards - work the connection between the terminal block and the PCB." },
         { label: "No 220V at the terminal block", verdict: "Confirm the AC power is connected correctly at the terminal block and work the supply. Turn the main power switch or breaker off, wait 30 seconds, turn it back on and re-measure." },
         { label: "220V present and the PCB LEDs are on", verdict: "The outdoor unit is powered. Confirm the indoor unit input power is 220V and that the wired remote controller is connected correctly." },
+      ],
+    },
+  ],
+  "s-lennox-point-check-decoding-values": [
+    {
+      ask: "Write the raw reading down before you interpret it. What is the display actually showing?",
+      options: [
+        { label: "A letter prefix such as A1, B1, or C1", verdict: "That is a value above 99: A1 is 101, B1 is 111, C1 is 121. Decode it before you judge the reading, or you will misdiagnose a perfectly normal pressure." },
+        { label: "A trailing dot, such as 01.", verdict: "The trailing dot is a negative sign - 01. means -1 F, not 1 F. Read it as a negative value." },
+        { label: "A plain two-digit number at item 4, opening of EXV", verdict: "Item 4 is the actual value divided by 10 and rounded, so it does not read straight off as a percentage. Multiply it back out before you interpret it." },
+      ],
+    },
+    {
+      ask: "Step to item 16 on the point check list. What is showing?",
+      options: [
+        { label: "ER is displayed at item 16", verdict: "A malfunction exists. Read item 17 for the current fault code, then stop at item 18, the end mark. Do not change any dip switch settings unless directed to." },
+        { label: "Item 16 is skipped entirely", verdict: "No malfunction - item 16 only shows ER when one exists, and item 17 is skipped too. Carry on to item 18, the end mark." },
       ],
     },
   ],
@@ -6617,12 +9982,45 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-s30-add-zoning-reconfigure": [
+    {
+      ask: "Do the zoning screens show up at all when you walk the commissioning path?",
+      options: [
+        { label: "Smart Zoning and Verify Airflow Per Zone screens both come up", verdict: "The thermostat found the zoning. Rename each zone, press done, then make the required CFM adjustment for each zone on the Verify Airflow Per Zone screen." },
+        { label: "Neither zoning screen appears", verdict: "The system was never rescanned. Go to the three line icon, Settings, Advanced Settings, View Support Service Control Center, Equipment Settings, Reset, then Re-Configure System." },
+      ],
+    },
+    {
+      ask: "After running Re-Configure System, navigate to Equipment Found. Is the Zone Control icon present?",
+      options: [
+        { label: "Zone Control icon is present", verdict: "The thermostat sees the zoning now. Continue on and rename each zone on the Lennox Smart Zoning screen, press done, then press continue." },
+        { label: "No Zone Control icon on the Equipment Found screen", verdict: "The thermostat still cannot see it. Recheck the damper control module and its wiring, then run Re-Configure System again." },
+      ],
+    },
+  ],
   "s-lennox-s40-comm-error": [
     {
       ask: "With only the R wire connected at the indoor board, meter every other disconnected wire back to 24V Common. What is the highest reading?",
       options: [
         { label: "All disconnected wires read 0.7 VAC or less", verdict: "No inductive bleed at that board. Repeat the same check at the outdoor unit and at the thermostat, then verify R to C reads normal 24VAC and check the I+/I- pair at all three points." },
         { label: "One or more wires read above 0.7 VAC", verdict: "That is inductive voltage bleeding onto the communication bus and it will cause comm errors. Re-run or re-bundle that conductor away from line-voltage wiring, or replace the run if damaged." },
+      ],
+    },
+  ],
+  "s-lennox-s40-dealer-diagnostics": [
+    {
+      ask: "Open the dealer control center on the S40 (menu, settings, advanced settings) and check Notifications. What is listed?",
+      options: [
+        { label: "Active alert codes with timestamps", verdict: "Match the code numbers against the Lennox alert tables in Error Codes - E-prefixed on furnace displays, plain numbers on the stat - and work the active fault first." },
+        { label: "Only cleared alerts, nothing active", verdict: "That is where intermittent faults hide. Note the codes and timestamps, then use Diagnostics live data to try to catch it happening." },
+        { label: "No alerts at all", verdict: "Go to Diagnostics and compare live data - compressor Hz, coil and discharge temps, CFM targets - against what you actually measure. That is how you find a lying sensor." },
+      ],
+    },
+    {
+      ask: "Check each device's About screen, especially after a board swap. What do you see?",
+      options: [
+        { label: "Model, serial, and firmware all look right and current", verdict: "Nothing to fix here. Use the dealer menu's built-in tests to force stages instead of jumpering - the system logs the results and respects the safeties." },
+        { label: "Mismatched or outdated firmware on one device", verdict: "That causes phantom communication alerts after a board swap. Let the auto-update run, then recheck the alerts before replacing anything." },
       ],
     },
   ],
@@ -6661,6 +10059,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-s40-zone-control-not-detected": [
+    {
+      ask: "Step to the Equipment Found screen during commissioning. What is listed?",
+      options: [
+        { label: "No Zone Control icon at all", verdict: "The thermostat did not detect the damper control module. Verify the module is installed, check all of its wiring connections, then run Re-Configure System so the stat rescans." },
+        { label: "Zone Control is there but one zone is missing from the list", verdict: "Verify that zone sensor's wiring and confirm the zone address is set correctly on that sensor, then rescan." },
+        { label: "Zone Control and every zone are listed", verdict: "Detection is complete. Name each zone on the Smart Zoning screen, then continue to Verify Airflow Per Zone and make the required CFM adjustment for each zone." },
+      ],
+    },
+    {
+      ask: "After correcting the wiring you ran Re-Configure System (menu, Settings, Advanced Settings, View Support Service Control Center, Equipment Settings, Reset). What shows now?",
+      options: [
+        { label: "Everything is detected on the equipment list", verdict: "Continue through zone naming and the Verify Airflow Per Zone screen and finish commissioning." },
+        { label: "The list is still incomplete", verdict: "Do not accept a partial list and move on - a zone that was never detected will not be controllable later. Go back to the damper control module and zone sensor wiring and recheck the zone addresses." },
+      ],
+    },
+  ],
   "s-lennox-s40-zone-control-not-detected-2": [
     {
       ask: "Work through the commissioning screens to the Equipment Found screen. Is a Zone Control icon listed?",
@@ -6686,6 +10101,29 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-sensor-voltage-window": [
+    {
+      ask: "Read the code and identify which sensor it points to.",
+      options: [
+        { label: "T2 indoor coil outlet, T3 outdoor coil, or T4 outdoor ambient", verdict: "When you get to the resistance check, compare it against the manual's temperature sensor resistance table for T1 through T4." },
+        { label: "T5 compressor discharge", verdict: "T5 gets compared against the separate discharge temperature sensor table, not the T1 through T4 table. Use the right table or you will condemn a good sensor." },
+      ],
+    },
+    {
+      ask: "Check the connections between that temperature sensor and the outdoor unit main control.",
+      options: [
+        { label: "Connection is loose, corroded, or mis-seated", verdict: "That is most often the whole fault - the board flags the sensor when its voltage drops below 0.06V or rises above 4.94V, and a bad connection does exactly that. Correct it and re-test before going further." },
+        { label: "Connections are clean, tight, and seated", verdict: "Move on - disconnect the sensor and measure its resistance value." },
+      ],
+    },
+    {
+      ask: "Disconnect the sensor and measure its resistance, comparing it against the manual's table.",
+      options: [
+        { label: "Resistance is out of range on the table", verdict: "Replace the sensor. That is the fault and the board is fine." },
+        { label: "Resistance is normal and the connections were good", verdict: "Sensor and wiring both check out, so the fault is upstream. Replace the indoor or outdoor main control as applicable." },
+      ],
+    },
+  ],
   "s-lennox-shielded-comm-cable": [
     {
       ask: "On this S30/E30/S40, iHarmony, or PCO3S system, look at what the communication pair is actually wired with.",
@@ -6700,6 +10138,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Shield landed at both ends", verdict: "Land the shield/drain wire on the indoor unit's C terminal only and cut it off at the other end so it is grounded at one point." },
         { label: "Comm pair bundled or in a raceway with line-voltage conductors", verdict: "Separate them physically. Running the communication pair alongside line voltage produces the same intermittent faults." },
         { label: "Shield landed at C only and the pair kept clear of line voltage", verdict: "The wiring is proven, which is exactly what Lennox asks for before a control is replaced. A good board on bad wire looks identical to a bad board, and you have ruled the wire out." },
+      ],
+    },
+  ],
+  "s-lennox-sl22klv-charge-mode-jumper": [
+    {
+      ask: "Measure outdoor ambient temperature before you check the charge. What is it?",
+      options: [
+        { label: "60 F (15 C) or above", verdict: "Use cooling mode for the check. Bring indoor return air into the 70 to 80 F (21 to 27 C) range the sticker targets are based on, operating heating first if you have to." },
+        { label: "Below 60 F", verdict: "Cooling mode is the check method at 60 F (15 C) and above. Do not judge the charge from a cooling check below that." },
+      ],
+    },
+    {
+      ask: "Set a cooling demand at maximum capacity with the CHARGE MODE jumper on the outdoor control, let pressures stabilize, then compare liquid and vapor line pressures to the applicable charging sticker. How do they read?",
+      options: [
+        { label: "Close to the sticker values, minor variation only", verdict: "Expected - minor variation is normal. Now record liquid line temperature as LIQ, convert liquid line pressure to saturation temperature as SAT, and subtract LIQ from SAT for subcooling." },
+        { label: "Significantly different from the sticker values", verdict: "Significant differences mean improper charge or another system problem. Do not just add refrigerant - work out subcooling and compare it to the sticker before adjusting anything." },
+      ],
+    },
+    {
+      ask: "Subtract LIQ from SAT to get subcooling and compare it to the applicable charging sticker, allowing for the line set and indoor match-up adder. Where does it land?",
+      options: [
+        { label: "Matches the sticker value", verdict: "Charge is correct. Insulate the liquid line where it runs through areas hotter than the liquid line, or where pressure drop is 20 psig or greater." },
+        { label: "Off the sticker value", verdict: "Adjust the charge per the sticker. Start from the nameplate charge plus the line set adder - the factory basis for 3/8 in. line is 0.60 oz/ft x 15 ft = 9.0 ounces." },
       ],
     },
   ],
@@ -6727,6 +10188,30 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Outdoor unit is dirty or the charge is high", verdict: "Clean the outdoor unit and confirm the charge. Also check for a clogged TXV or refrigerant filter." },
         { label: "Blockage at the indoor blower", verdict: "Clear the blockage at the indoor blower - it is a listed high pressure cause." },
         { label: "Trips happen in heating with indoor or zone CFM set low", verdict: "Low indoor CFM, or low zone CFM on a zoned system, is a listed cause of high pressure trips on these units. Raise the airflow setting." },
+      ],
+    },
+  ],
+  "s-lennox-sl22klv-hps-and-suction-transducer-check": [
+    {
+      ask: "Disconnect the S4 high pressure switch terminals from the control board and read resistance across them with normal system pressure. What do you get?",
+      options: [
+        { label: "0 ohms - closed", verdict: "The switch is good. It trips at 590 psig and resets at 418 psig, so with normal pressure it should read closed. Move on to the suction pressure transducer." },
+        { label: "Open reading with normal system pressure", verdict: "The switch is the problem, not the system. Replace it." },
+      ],
+    },
+    {
+      ask: "Leave the transducer on the Suct/Liq 4-pin connector, set the meter to VDC, and measure Pin 1 (red) to Pin 3 (black). What do you read?",
+      options: [
+        { label: "5 VDC continuously", verdict: "The supply is good, so the transducer's output is meaningful. Measure Pin 2 (blue) to Pin 3 next." },
+        { label: "Supply is missing or unsteady", verdict: "Stop - without a good 5VDC supply the transducer reading means nothing. Fix the supply from the control board first." },
+      ],
+    },
+    {
+      ask: "Measure Pin 2 (blue) to Pin 3 with a gauge on the suction port. What do you read?",
+      options: [
+        { label: "0.5 to 4.5 VDC and it tracks the table (about 2.49 VDC at 100 psig, 4.49 VDC at 200 psig)", verdict: "The transducer is reporting accurately. The low suction trip at 25 psig is real - chase the refrigerant side, not the sensor." },
+        { label: "Outside 0.5 to 4.5 VDC, or it does not move with suction pressure", verdict: "The transducer is bad. Replace it - it emulates a low pressure switch, so a bad one trips protection falsely." },
+        { label: "The reading is borderline against the manual's numbers", verdict: "The manual gives the low-pressure reset in more than one place - 90 psig in the switch section and 80 psig in the alert code table. Confirm against the manual shipped with THIS unit before calling a borderline reading bad." },
       ],
     },
   ],
@@ -6763,6 +10248,51 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Trap or clean-out is plugged", verdict: "That is the restriction that started the backup. Pull and clean the trap and clean-out, then prime the trap with water before startup." },
         { label: "Line slopes less than 1/4 inch per foot from furnace to trap", verdict: "Re-slope the line to a minimum of 1/4 inch per foot. The trap may sit up to 5 feet from the furnace on PVC." },
         { label: "Trap, clean-out, and slope all check out", verdict: "Check the shared line itself for the restriction - the combined primary drain is what backs water into the heat exchanger." },
+      ],
+    },
+  ],
+  "s-lennox-slp99-continuous-fan-speed": [
+    {
+      ask: "Put the thermostat in continuous fan with no heat or cool call, then take a total external static reading before you change anything. What do you have?",
+      options: [
+        { label: "Blower runs and static reads normal for this system", verdict: "The complaint is the speed setting, not the ducts. Power down and select the speed on switches 6 and 7 using the continuous fan speed table in the installation instructions for this control." },
+        { label: "Blower runs but static reads high", verdict: "You have a duct restriction, not just a speed setting. Correct the restriction first - a speed change here only masks what you just measured." },
+        { label: "Blower does not run in continuous fan at all", verdict: "Nothing to set yet. Confirm the thermostat is really calling for continuous fan and that the blower has power before you touch switches 6 and 7." },
+      ],
+    },
+    {
+      ask: "Switches 6 and 7 ship set for medium low (2) speed. Which way does this customer need it to go?",
+      options: [
+        { label: "Not enough air movement in continuous fan", verdict: "Raise the continuous fan speed using the table in the installation instructions for this control - do not assume switch positions from another model. Then rerun and confirm at the registers." },
+        { label: "Too noisy in continuous fan", verdict: "Verify the return is not undersized before you raise or lower speed further, then lower the continuous fan speed per the table for this control and confirm at the registers." },
+      ],
+    },
+  ],
+  "s-lennox-slp99-field-test-mode": [
+    {
+      ask: "You are in Field Test mode (hold the diagnostic button, release when the LED flashes a dash). Which jumper did you set and what did the furnace do?",
+      options: [
+        { label: "R to W1 - it ignited and is holding LOW fire", verdict: "Low fire is held steady. Set your low-fire gas pressure and run combustion analysis here. Apply then remove an R to W1+W2 jumper to step the rate low, mid, high." },
+        { label: "R to W2 - it ignited and is holding MID fire", verdict: "Mid fire is held. Use the display to read current firing rate, blower CFM, and flame signal while you test - no need to break into the sensor circuit." },
+        { label: "R to W1+W2 - it ignited and is holding HIGH fire", verdict: "High fire is held. Set high-fire pressure here. All safety switches stay live in this mode and blower behavior follows the DIP settings, so your readings reflect real operation." },
+        { label: "It ignited but will not hold any rate", verdict: "Confirm you actually entered Field Test - hold the diagnostic button and release when the LED flashes the dash. Note it also auto-exits after 45 minutes, and cycling main power exits." },
+      ],
+    },
+  ],
+  "s-lennox-slp99-harmony-link-pwm": [
+    {
+      ask: "Confirm what is actually connected to this SLP99 before you touch the board.",
+      options: [
+        { label: "A Harmony III zone control", verdict: "The on-board link for that input has to be cut, or the PWM signal from the Harmony III is blocked and control damage can result. Identify the link from the board legend and this model's installation instructions." },
+        { label: "A thermostat which features humidity control", verdict: "Same deal - the clippable on-board link for that input has to be cut per the installation instructions, or the furnace keeps ignoring the signal." },
+        { label: "Neither - plain thermostat, no zoning, no humidity control", verdict: "Do not cut anything. No link needs clipping for a plain application, and cutting one you do not need cannot be undone." },
+      ],
+    },
+    {
+      ask: "Can you positively identify the clippable on-board link for that input?",
+      options: [
+        { label: "Yes - board legend and installation instructions both confirm which link it is", verdict: "Power down, confirm zero volts, cut that link, then restore power and command a zone or humidity call to confirm the furnace responds. Document which links you cut for the next board change." },
+        { label: "Not sure which link it is", verdict: "Do not clip a link you cannot positively identify. Get the installation instructions for this exact model and match them against the board legend before cutting anything." },
       ],
     },
   ],
@@ -6855,6 +10385,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-smart-zoning-zone-airflow-setup": [
+    {
+      ask: "On the Lennox Smart Zoning screen, compare the zone list against the zones actually installed.",
+      options: [
+        { label: "Every installed zone appears in the list", verdict: "Rename each zone using a predefined or custom name, press done, then press continue to reach the Verify Airflow Per Zone screen." },
+        { label: "A zone is missing from the list", verdict: "Stop here. Verify that zone sensor's wiring and address before continuing - commission past it and the equipment will never have a CFM target for that zone." },
+      ],
+    },
+    {
+      ask: "Enter the CFM for each zone on the Verify Airflow Per Zone screen, press continue, then run a call in each zone and watch equipment airflow.",
+      options: [
+        { label: "Equipment airflow matches the CFM you entered for each zone", verdict: "Zoning commissioning is complete - the equipment has a real target per zone instead of a default." },
+        { label: "Airflow comes up at a default instead of what you entered", verdict: "The settings did not save. Go back into Verify Airflow Per Zone, make the CFM adjustment for each zone based on the duct actually serving it, and press continue to save." },
+      ],
+    },
+  ],
   "s-lennox-soft-disable-two-bars": [
     {
       ask: "Read what the Lennox control is actually displaying. Which is it?",
@@ -6868,6 +10414,55 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Two bars gone and the device is recognized", verdict: "The thermostat re-discovered the device and it is out of soft disable. Verify normal operation before leaving." },
         { label: "Still showing two horizontal bars", verdict: "On the thermostat go to Setup > System Devices > Thermostat > Edit and press 'reset'. If needed, repeat and press 'resetAll' to rebuild the whole device list." },
+      ],
+    },
+  ],
+  "s-lennox-surelight-error-recall": [
+    {
+      ask: "Press and hold the diagnostic button by the 7-segment LED and release on solid E to enter Error Code Recall. What plays back?",
+      options: [
+        { label: "A list of stored codes plays back", verdict: "Write every one down and look each up in Error Codes, Lennox. On an intermittent no-heat this is what actually happened at 2 AM - work the pattern before you touch anything else." },
+        { label: "Nothing stored plays back", verdict: "No history to work from. Run the unit, watch the display live, and get the customer's timeline for when it fails." },
+      ],
+    },
+    {
+      ask: "You are finished with the repair and want to clear the history. What is on the display now?",
+      options: [
+        { label: "You released the button on solid c and it is flashing", verdict: "Press and release once more within about 10 seconds to confirm the clear. A cleared history cannot be recovered, so only do this after you have recorded the codes and finished the repair." },
+        { label: "You have not recorded the codes yet", verdict: "Do not clear. Write the 10 codes down first - once cleared they are gone for good. Exit recall by holding the button until the three horizontal bars show, then release." },
+      ],
+    },
+  ],
+  "s-lennox-unit-size-code-e203": [
+    {
+      ask: "Power up the SurePlus control and read the display. What comes up?",
+      options: [
+        { label: "Three horizontal bars, then E203", verdict: "The control does not recognize the unit size code and will not run until it is configured. Follow the unit-size-code pushbutton procedure on the wiring diagram or install manual and pick the code matching THIS furnace." },
+        { label: "Normal status display and the furnace runs", verdict: "The size code is already configured. If airflow or firing rate still seems wrong, verify the entered code matches this model - a wrong code runs wrong airflow and firing rates with no error code at all." },
+      ],
+    },
+    {
+      ask: "After entering the size code, run a full heat cycle and check the system. What do you find?",
+      options: [
+        { label: "Furnace runs and staging and CFM match spec through a full cycle", verdict: "Configuration is done. On a communicating S40/iComfort system, confirm the thermostat re-discovered the furnace and shows the right model in its About or dealer screens." },
+        { label: "Furnace runs but the thermostat shows the wrong model or does not see it", verdict: "Re-discovery did not happen. Make the S40/iComfort re-detect the furnace and verify the dealer screens before you leave." },
+      ],
+    },
+  ],
+  "s-lennox-verify-airflow-per-zone": [
+    {
+      ask: "Open Verify Airflow Per Zone under Dealer Control Center, Tests. What does the list show?",
+      options: [
+        { label: "Every zone is listed", verdict: "Make the required CFM adjustment for each zone and press continue. Then rename each zone on the Smart Zoning screen so a later complaint can be matched to the right zone." },
+        { label: "A zone is missing from the list", verdict: "Verify that zone's sensor wiring and confirm the zone number address is set correctly - on systems with both sensor types this applies to the 17A30 and the 10C17. Then rescan." },
+        { label: "The zoning equipment is not listed at all", verdict: "Verify the damper control module installation and all wiring connections, correct anything found, then rerun the scan." },
+      ],
+    },
+    {
+      ask: "After correcting wiring, rescan through Reset then Re-Configure System and step back to the Equipment Found screen. Is the Zone Control icon there?",
+      options: [
+        { label: "Zone Control icon is present", verdict: "The system sees the zoning now. Continue through the commissioning screens and set the per-zone CFM in Verify Airflow Per Zone." },
+        { label: "Still no Zone Control icon", verdict: "The damper control module still is not being seen. Go back over its installation and every wiring connection before continuing - do not commission the system without it." },
       ],
     },
   ],
@@ -6934,6 +10529,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lennox-zone-sensor-placement": [
+    {
+      ask: "The zone reads hot or cold. Check the install against the checklist. What do you find?",
+      options: [
+        { label: "The wire hole in the wall behind the sensor is not sealed", verdict: "That is the top checklist item. Drafts entering the sensor case skew its internal temperature sensor. Seal the hole with suitable material and recheck." },
+        { label: "Mounted on an exterior wall, near a ventilation output, a doorway, or in direct sunlight", verdict: "Bad location - relocate it. None of those spots read the room's real temperature." },
+        { label: "Location is fine and the hole is sealed, but readings are erratic", verdict: "Check the sensor is mounted solidly to a stud or wall, every terminal is connected and tight with proper thermostat wire gauge, and unused conductors are wired together to cut electrical interference." },
+      ],
+    },
+    {
+      ask: "Check the zone address set on the sensor. What is it?",
+      options: [
+        { label: "Address matches the zone it is supposed to control (2, 3, or 4)", verdict: "Addressing is right, so this is a placement or sealing problem, not a configuration one." },
+        { label: "Address does not match, or a replacement sensor is set differently than the old one", verdict: "The panel is reading the wrong sensor for that zone. Set the address correctly - on a replacement it must match the old sensor's address." },
+      ],
+    },
+  ],
   "s-lennox-zoning-central-mode": [
     {
       ask: "Pull the alert list on the thermostat and check the zone sensor addresses. What do you find?",
@@ -6948,6 +10560,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Zoning returns on its own", verdict: "Comm restoration alone returns it to zone operation. Verify each zone actually responds before leaving." },
         { label: "Still stuck in central mode with zoning disabled", verdict: "Re-addressing needs the re-configure procedure. Run it from Zone Control Settings on the thermostat so the system re-discovers the sensors." },
+      ],
+    },
+  ],
+  "s-lennox-zoning-changeover-timing": [
+    {
+      ask: "One zone wants heat and another wants cool. Watch and time the equipment. What is it doing?",
+      options: [
+        { label: "Runs one demand up to about 20 minutes, shuts off, waits about 5 minutes, then serves the other", verdict: "That is the designed changeover cycle, not short-cycling. It repeats as long as opposing demands exist. Explain it to the customer - the timing is not adjustable at the panel." },
+        { label: "Shuts off and never comes back to serve the opposing demand", verdict: "That is not normal changeover. The opposing demand is not being served at all - diagnose the zone panel and the calls, not the timing." },
+        { label: "Cycles off and back on faster than 5 minutes", verdict: "Every terminated demand starts a 5-minute minimum off-time delay. If it restarts faster than that, something is bypassing the delay - look at the panel." },
+      ],
+    },
+    {
+      ask: "Watch for second-stage staging. What do you see?",
+      options: [
+        { label: "Second stage cooling comes on when discharge air runs 7 degrees F above the cooling-stage setpoint", verdict: "That is the designed staging trigger - nothing wrong. If capacity still seems off, check the stage setpoints on the S40." },
+        { label: "Second stage never comes on even with discharge air well past the stage setpoint", verdict: "Staging is not responding. Check the heating and cooling stage setpoints configured on the S40 first, then the equipment's own staging." },
+      ],
+    },
+    {
+      ask: "The customer is unhappy about the alternation itself. What is behind it?",
+      options: [
+        { label: "A real load imbalance - hot upstairs, cold downstairs on the same day", verdict: "Address the load: setpoints, duct balance, zone layout. The changeover timing itself is not adjustable at the panel, so that is the only lever you have." },
+        { label: "Setpoints in different zones are simply fighting each other", verdict: "Widen or align the setpoints so the zones stop calling for opposite modes. That removes the opposing demand and the alternation stops on its own." },
       ],
     },
   ],
@@ -6991,6 +10627,54 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-line-set-rub-through-leak": [
+    {
+      ask: "Trace the whole line set and slit the insulation at every point where copper touches something solid or the two lines touch each other. What did you find?",
+      options: [
+        { label: "A shiny worn flat or a wear groove in the copper at a contact point", verdict: "That is your rub-through. Test that exact spot with bubble solution or a detector to confirm before you cut anything." },
+        { label: "Nothing obvious on the run you can see", verdict: "Keep looking where it hides: through the wall or band joist, inside the outdoor cabinet near the base pan and panels, and any hard-strapped run in an attic where the strap has cut into the pipe." },
+      ],
+    },
+    {
+      ask: "You have a suspect contact point. How are you testing it?",
+      options: [
+        { label: "Bubble solution or a detector right at that contact point", verdict: "That is the way - test point by point instead of sweeping the whole line. It is the only reliable way to pin one of these down." },
+        { label: "Sweeping the whole line set at once with the detector", verdict: "Too noisy to be useful on a slow leak. Slit the insulation at each contact point and test them one at a time." },
+      ],
+    },
+    {
+      ask: "You repaired the leak. What is left to do before you close up?",
+      options: [
+        { label: "Just re-tape the insulation and go", verdict: "Not enough. Add isolation - foam, cushion clamps, or a reroute - so the same spot does not wear through again, and vapor seal the suction line insulation properly." },
+        { label: "Isolate the contact point and re-insulate with a proper vapor seal", verdict: "That is the complete repair. Without the isolation you will be back at the same spot in a few years." },
+      ],
+    },
+  ],
+  "s-linevoltage-phase-polarity-240v": [
+    {
+      ask: "Measure L1 to L2 at the disconnect. How does it compare to the equipment's rated voltage window?",
+      options: [
+        { label: "Roughly 240V (or 208V on a multifamily/commercial service), inside the rated window", next: 1 },
+        { label: "Well outside the equipment's rated voltage window", verdict: "Do not go further into the equipment until the supply is right. Check the disconnect, fuses, and upstream feed, and involve an electrician if it is a service-side problem." },
+        { label: "Only one leg is energized", verdict: "The equipment is single-phased. Check for a blown fuse, a partially open disconnect blade, or one failed pole on the contactor. A single-phased compressor will hum and try to start without running." },
+      ],
+    },
+    {
+      ask: "Measure L1 to ground and L2 to ground separately. How do they compare?",
+      options: [
+        { label: "Each leg reads roughly half of the L1-L2 reading", next: 2 },
+        { label: "The two legs are badly unbalanced relative to ground", verdict: "That can indicate a service-side or grounding problem. Flag it for a licensed electrician rather than continuing to chase it as an equipment fault." },
+      ],
+    },
+    {
+      ask: "Measure again with the equipment actually trying to run, and check voltage at the equipment's own terminals. What do you see?",
+      options: [
+        { label: "Reads fine idle but sags significantly under load", verdict: "Points to a loose or corroded connection somewhere upstream, not a supply problem. Find and correct the bad connection." },
+        { label: "Good at the disconnect but wrong or missing at the equipment terminals", verdict: "Trace the whip and internal wiring between the disconnect and the equipment rather than blaming the supply." },
+        { label: "Voltage holds steady under load at the equipment terminals", verdict: "The supply checks out. Note that most straight 240V single-phase compressor and heat strip loads are not polarity-sensitive between L1 and L2, so move on to the equipment itself." },
+      ],
+    },
+  ],
   "s-liquid-line-lift-pressure-drop": [
     {
       ask: "Compare liquid line temperature at the outdoor unit against liquid line temperature at the indoor unit before the metering device.",
@@ -7030,6 +10714,30 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Low at the panel even before the equipment starts", verdict: "Utility-side low voltage, not a component-level HVAC fault. Document the actual readings and advise the customer to contact their utility." },
         { label: "Normal at idle but it sags once the equipment loads up", verdict: "Check for undersized wiring or a loose connection on the customer's side causing the drop. That is a fixable HVAC-side issue, distinct from a true utility brownout." },
         { label: "Voltage stays inside the rated range under load", verdict: "Voltage is not the cause here. Look elsewhere." },
+      ],
+    },
+  ],
+  "s-low-temperature-split-with-normal-gauges": [
+    {
+      ask: "Confirm superheat and subcooling before you touch anything else. Where are they?",
+      options: [
+        { label: "Both in range", verdict: "Do not touch the charge. A low split with correct refrigerant numbers points to too much air over the coil, a high humidity load, or air bypassing the coil." },
+        { label: "One or both out of range", verdict: "The refrigerant side really is off - sort that out first, because a split reading stacked on top of a charge problem tells you nothing." },
+      ],
+    },
+    {
+      ask: "Take a return wet bulb or relative humidity reading along with your dry bulbs.",
+      options: [
+        { label: "Return air is very humid", verdict: "Much of the capacity is going into removing moisture, so the dry bulb split legitimately drops. That may be all this is - do not add refrigerant over it." },
+        { label: "Return humidity is normal for the space", verdict: "Latent load is not the explanation. Measure total external static and compare to the blower table, or use a flow hood or anemometer, to see whether airflow is too high." },
+      ],
+    },
+    {
+      ask: "Check the airflow setting and look for bypass around the coil.",
+      options: [
+        { label: "Blower speed tap or ECM airflow setting is oversized for the installed tonnage", verdict: "Too much air over the coil drops the split. Set airflow to match the tonnage, then re-check the split - do not adjust charge on a split reading alone." },
+        { label: "Gaps at the coil case, unsealed filter rack, or an open return in an unconditioned space", verdict: "Air is bypassing the coil or hot air is being pulled in. Seal it up, then re-check the split." },
+        { label: "Airflow matches the tonnage and no bypass found", verdict: "Then take the return wet bulb seriously - on a very humid day the dry bulb split legitimately drops. Do not adjust the charge on the strength of a split reading alone." },
       ],
     },
   ],
@@ -7091,6 +10799,115 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Fuse holds once one specific on-board load is unplugged", verdict: "That load or its harness is the short. Repair or replace it and re-test." },
         { label: "Fuse still blows with every on-board load unplugged", verdict: "The short is on the board itself or the transformer secondary wiring. Work back from there." },
+      ],
+    },
+  ],
+  "s-maint-capacity-loss-seasonal-dirt": [
+    {
+      ask: "Compare current temperature split and subcooling against what a clean, correctly charged system should produce, then check the coils and blower. What do you find?",
+      options: [
+        { label: "Outdoor coil fins matted with grass clippings, cottonwood fluff, or dust", verdict: "Wash it from the inside out with a coil cleaner rated for the fin material, then recheck the numbers before concluding anything about refrigerant." },
+        { label: "Indoor filter and evaporator coil loaded with gradual dust buildup", verdict: "Clean them up and address filter quality, since a low-quality filter lets dust through slowly over time. Recheck the numbers after cleaning." },
+        { label: "Blower wheel has a film of dust on the blades", verdict: "Even at correct motor speed a dusty wheel cuts delivered CFM. Clean the wheel, then recheck airflow and capacity." },
+        { label: "Coils, filter, and blower are all clean", verdict: "Dirt is not the cause here. Take the charge and airflow numbers seriously and diagnose a real refrigerant or component issue." },
+      ],
+    },
+    {
+      ask: "After cleaning, recheck charge and airflow numbers. Where do they land?",
+      options: [
+        { label: "Numbers came back to where a clean, correctly charged system should be", verdict: "The lost capacity was dirt, not a failure. Document the before and after readings so the customer sees what the visit accomplished." },
+        { label: "Numbers are still off after cleaning", verdict: "Now it is worth investigating a refrigerant or component issue, since cleaning ruled out the most common cause." },
+      ],
+    },
+  ],
+  "s-maint-condensate-algae-preventive": [
+    {
+      ask: "Look inside the drain line and trap even though water is still draining. What do you see?",
+      options: [
+        { label: "Darkened slimy coating inside the line, or a buildup collar at the trap low point", verdict: "That is the early stage of a future full blockage, and the trap collar is where the clog will actually form. Flush with a wet/dry vac from the outside termination, treat the line, and recommend a treatment schedule." },
+        { label: "Line and trap are clean inside", next: 1 },
+      ],
+    },
+    {
+      ask: "Test the float switch, if this system has one. What happens?",
+      options: [
+        { label: "Float switch trips the system off when tested", verdict: "Good. A future clog will shut the system down before it overflows. Note the finding on the ticket even though there is no active leak." },
+        { label: "Float switch does not trip the system, or none is installed", verdict: "A future clog would cause silent water damage instead of a shutdown. Replace the failed switch, or recommend adding one." },
+      ],
+    },
+  ],
+  "s-maint-contactor-pitting-found": [
+    {
+      ask: "Pull the cover and look at the contactor's contact faces. What do you see?",
+      options: [
+        { label: "Pitted, carbon-built-up, or blackened rough contact faces", next: 1 },
+        { label: "Smooth, clean contact faces", verdict: "No proactive replacement needed based on contact condition. Note it and move on with the rest of the maintenance." },
+      ],
+    },
+    {
+      ask: "Watch the pull-in and measure voltage drop across the closed contacts under load. What do you find?",
+      options: [
+        { label: "Noticeable voltage drop across the closed contacts under load", verdict: "That confirms failing contacts even though the unit still runs. Recommend replacement now: a contactor that welds shut can leave the compressor running with no way to shut it off." },
+        { label: "It buzzes, chatters, or hesitates on pull-in", next: 2 },
+        { label: "No measurable drop and it pulls in cleanly", verdict: "Contacts are worn but still doing the job. Document the condition and re-inspect at the next visit." },
+      ],
+    },
+    {
+      ask: "Check the coil voltage and control side before blaming the contacts. What do you read?",
+      options: [
+        { label: "Weak 24V at the coil, or a marginal transformer", verdict: "The hesitation is a control-side problem, not the contacts. Correct the control voltage issue first, then re-evaluate the contactor." },
+        { label: "Control voltage at the coil is solid", verdict: "Then the chatter is the contactor itself. Recommend replacement and explain the asymmetry: one that welds shut leaves the compressor running with no shutoff, while one that fails open just causes a no-run." },
+      ],
+    },
+  ],
+  "s-maint-drain-pan-rust-preventive": [
+    {
+      ask: "Inspect the pan at the seams, screw penetrations, and around the drain fitting, then press gently on any rusted area. What do you find?",
+      options: [
+        { label: "Rust spots but the metal still feels firm", next: 1 },
+        { label: "Rusted area feels soft or spongy under gentle pressure", verdict: "A pan that feels spongy is close to perforating. Recommend replacement now and document it with a photo, since the real liability is ceiling and floor damage." },
+        { label: "Pan is clean with no rust", verdict: "Nothing to flag on the pan. Move on with the rest of the maintenance." },
+      ],
+    },
+    {
+      ask: "Watch whether the pan fully drains after a cycle, and check what protection is under the unit. What do you find?",
+      options: [
+        { label: "Pan holds standing water after the cycle", verdict: "Standing water accelerates the corrosion. Correct the drainage so the pan empties fully, which slows the rust down." },
+        { label: "No secondary drain pan or float switch under an attic or upper-floor unit", verdict: "Recommend adding one. The real risk if this pan fails is ceiling and floor damage, not just an HVAC repair." },
+        { label: "Pan drains fully and a secondary pan or float switch is already in place", verdict: "Document the surface rust with a photo for the customer's records and re-check it at the next visit." },
+      ],
+    },
+  ],
+  "s-maint-evap-coil-fin-damage-preventive": [
+    {
+      ask: "Look closely at the coil face. What do you see?",
+      options: [
+        { label: "Fins bent over from a past rough filter change or coil cleaning", verdict: "Comb them back into alignment with a fin comb sized to the fin spacing. Do not force it, since damaged fins tear." },
+        { label: "A felted layer of dust or pet hair matting the fins together", verdict: "Matted debris usually goes deeper into the fin pack than it looks from the face. Clean the coil per manufacturer guidance rather than just brushing the surface." },
+        { label: "Coil face is clean with straight fins", verdict: "No fin work needed here. Look elsewhere for any capacity complaint." },
+      ],
+    },
+    {
+      ask: "Measure static pressure and/or temperature split before and after the coil work, and check the service history. What is the picture?",
+      options: [
+        { label: "Numbers improved and this is the first time it has been found", verdict: "Show the customer the before and after to quantify the improvement, and note the finding for the next visit." },
+        { label: "Numbers improved but this coil has matted like this before", verdict: "Repeat fin matting is usually a filtration or interval problem, not a one-time event. Recommend a filter and maintenance interval that matches this home's dust and pet load." },
+      ],
+    },
+  ],
+  "s-maint-refrigerant-slow-leak-drift": [
+    {
+      ask: "Compare this year's subcooling and superheat readings against prior service records. What do they show?",
+      options: [
+        { label: "A gradual downward trend across several visits", verdict: "That trend is the signature of a slow leak, not measurement noise. Leak search all fittings, the coil, and braze joints before adding anything." },
+        { label: "No prior records available to compare against", verdict: "Record today's readings as a baseline. Still leak search, since a real charge deficit does not come from refrigerant wearing out or being consumed." },
+      ],
+    },
+    {
+      ask: "Leak search with an electronic detector even though there is no visible oil staining. What do you find?",
+      options: [
+        { label: "Detector finds a leak point", verdict: "Repair it, then evacuate and weigh in the full nameplate charge rather than adding refrigerant to bring pressures back. Recover per EPA 608 before opening the system." },
+        { label: "No leak point found despite a real charge deficit", verdict: "Consider formicary/ant-nest corrosion in the evaporator coil, which makes pinholes too small to find without specialized methods and may require coil replacement." },
       ],
     },
   ],
@@ -7228,6 +11045,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-branchbox-distribution-imbalance": [
+    {
+      ask: "Test each indoor unit individually first for airflow, EEV operation, and sensors. What do you find?",
+      options: [
+        { label: "One indoor unit fails its own checks", verdict: "Fix that unit first. Distribution imbalance is only the suspect once every zone tests acceptably on its own." },
+        { label: "Every zone tests acceptably alone, but real-world performance is uneven", next: 1 },
+      ],
+    },
+    {
+      ask: "Verify total system charge, then run a simultaneous multi-zone call and read pressures and line temperatures leaving the branch box to each zone. What do you see?",
+      options: [
+        { label: "Overall system charge is off", verdict: "Correct the base charge first. An incorrect total charge produces distribution-like symptoms across zones that clear up once charge is right." },
+        { label: "One or more circuits run notably different subcooling/superheat than the others", next: 2 },
+        { label: "All circuits read similar to each other", verdict: "Distribution is even. Look elsewhere for the uneven performance complaint." },
+      ],
+    },
+    {
+      ask: "Check the branch box mounting, and where the manufacturer's documentation allows, its internal distributor/orifice components. What do you find?",
+      options: [
+        { label: "Box is not level or not mounted per the manufacturer's orientation requirements", verdict: "Some distributor designs are orientation-sensitive and distribute unevenly by design when mounted wrong. Remount it correctly and recheck." },
+        { label: "One branch circuit is visibly restricted compared to the others", verdict: "Debris or a defect in that specific branch. Follow the manufacturer's branch box service procedure rather than continuing to service the indoor and outdoor units." },
+        { label: "Mounting is correct and nothing looks restricted", verdict: "With charge confirmed, level mounting, and clean indoor units, treat the branch box itself as the suspect and consult the manufacturer's service documentation for that box." },
+      ],
+    },
+  ],
   "s-minisplit-breaker-trips-at-compressor-start": [
     {
       ask: "With the compressor leads disconnected at the drive and insulated, energize the unit. What happens?",
@@ -7239,6 +11081,57 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-builtin-condensate-pump-fail": [
+    {
+      ask: "Confirm from the manual that this indoor unit has a built-in lift pump, then listen during a cooling call with water in the pan. What happens?",
+      options: [
+        { label: "It is a gravity drain, no built-in pump", verdict: "Different failure modes apply. Diagnose drain line slope and clogs instead of pump problems." },
+        { label: "Pump never runs even with water in the pan", verdict: "Usually a failed pump motor or a tripped internal float safety. Check for a condensate float fault code, then replace the pump or address the float per the service manual." },
+        { label: "Pump runs but no water moves", next: 1 },
+        { label: "Pump runs constantly at low water level, or never shuts off", verdict: "That pattern usually means a failed internal float or level sensor. Replace that assembly per the manufacturer's part breakdown." },
+      ],
+    },
+    {
+      ask: "The pump runs but is not moving water. Check the small discharge tubing and the pan intake screen. What do you find?",
+      options: [
+        { label: "Kink, clog, or a high point trapping air in the discharge tubing", verdict: "These pumps move very little water and airlock easily. Correct the tubing routing to remove the kink or high point, then retest by pouring water into the pan slowly." },
+        { label: "Algae or debris on the pan and pump intake screen", verdict: "These small passages clog more easily than a standard condensate pump. Clean the pan and intake screen, then pour water in slowly and confirm the pump activates and fully empties the pan." },
+      ],
+    },
+  ],
+  "s-minisplit-condensate-pump-in-comm-run": [
+    {
+      ask: "Trace the F1/F2 pair end to end from the condensing unit to the indoor unit. Is anything wired in series with it?",
+      options: [
+        { label: "A condensate pump or float switch contact is in the F1/F2 run", verdict: "That is your comm fault - every time the contact opens, communication drops. Remove it from the comm pair and re-terminate F1/F2 as a continuous run." },
+        { label: "F1/F2 is a straight shot with no device, break, or splice in it", verdict: "The pump is not your problem. Confirm the cable is 16/2 stranded shielded and that polarity at F1 and F2 is correct." },
+      ],
+    },
+    {
+      ask: "You took the condensate safety off the comm pair. Where did it land?",
+      options: [
+        { label: "On a dedicated safety or alarm input", verdict: "That is where it belongs. Cycle power and run the system long enough for the pump to cycle, verifying the comm error does not come back." },
+        { label: "Still spliced into the F1/F2 run somewhere", verdict: "It cannot break F1/F2 anywhere along the run. Get it completely off the comm pair and onto a dedicated safety or alarm input." },
+      ],
+    },
+  ],
+  "s-minisplit-crankcase-preheat-logic": [
+    {
+      ask: "The heater is drawing power with nothing calling. Measure outdoor ambient (T4) and compare it to the control's thresholds. What is it?",
+      options: [
+        { label: "Below 37.4 F (3 C)", verdict: "Designed behavior, not a fault. The heater becomes active below 37.4 F within 5 seconds of the unit being plugged in, and also below 37.4 F when the compressor has not run for 3 hours." },
+        { label: "Above 41 F (5 C)", verdict: "The heater should have stopped - it stops when T4 rises above 41 F, or when the indoor unit has a capacity demand. Heater operation above that is worth investigating." },
+        { label: "Between 37.4 F and 41 F", verdict: "You are between the on and off points, so the heater may still be carrying over from colder conditions. Watch it as T4 rises above 41 F - it should stop there." },
+      ],
+    },
+    {
+      ask: "You want to verify operating pressures afterward. What are you comparing your readings against?",
+      options: [
+        { label: "The manual's cooling and heating service port pressure charts at the temperatures measured on site", verdict: "Correct. Read the chart value for the actual indoor and outdoor temperatures you measure - the charts are indexed by indoor temperature against outdoor temperature." },
+        { label: "A pressure you remember from another job", verdict: "Do not do that. The values change substantially across the range, so look them up for the conditions actually on site. Explain the heater behavior to the customer rather than disconnecting it." },
+      ],
+    },
+  ],
   "s-minisplit-dry-contacts-onoff-alarm": [
     {
       ask: "A head will not run at all. Look at the two dry contacts used for remote on/off on the indoor unit main board - what is landed there and what state is it in?",
@@ -7247,6 +11140,40 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Nothing landed on the remote on/off contacts", verdict: "Nothing external is holding it off. Do not confuse those contacts with the separate alarm dry contacts or the XYE central control ports on the same board." },
         { label: "An alarm light or buzzer is on", verdict: "Trace it back to the alarm dry contact - a separate pair from the remote on/off contacts - before assuming an equipment fault." },
         { label: "A powered output was landed on the contacts", verdict: "Anything landed there has to be a true dry contact, not a powered output. Correct that before chasing anything else." },
+      ],
+    },
+  ],
+  "s-minisplit-ducted-drain-slope-air-gap": [
+    {
+      ask: "Put a level on the drain line and look at the termination. What do you have?",
+      options: [
+        { label: "At least 1/4 inch per foot of slope away from the unit and a 2 inch space at the termination", verdict: "Drain layout is right. Support it with straps at roughly 3 ft (1 m) intervals so it cannot sag, then run the leak and drainage check." },
+        { label: "Slope is less than 1/4 inch per foot, or the line droops or kinks", verdict: "Rework the drain now. It must slope not less than 1/4 inch per foot, stay as short as possible with no droops or kinks, use approved resistant pipe, and be supported about every 3 ft." },
+        { label: "Less than a 2 inch space between the drain end and the termination point", verdict: "Open that gap to 2 inches. Without it the line will not drain freely and you will be back on a water leak." },
+      ],
+    },
+    {
+      ask: "Run the drainage and leak check, including any field-provided condensate pump. What happens?",
+      options: [
+        { label: "Water flows away, no leaks, and the pump runs correctly", verdict: "The drain part of commissioning is done. Record it and move on." },
+        { label: "Water backs up or drains slowly", verdict: "Recheck the slope, the 2 inch termination gap, and the run for droops, kinks or sags between supports. On multiple indoor units sharing one gravity drain, confirm each unit has its own individual outlet into the sloped main." },
+        { label: "Leak at the connection to the supplied flexible drain piping", verdict: "Redo that joint water-tight between the field-provided condensate drain extension and the flexible drain piping supplied with the unit, then recheck for leaks." },
+      ],
+    },
+  ],
+  "s-minisplit-evacuation-30-20-50": [
+    {
+      ask: "With both valves closed and the manifold suction side fully open, run the vacuum pump 30 minutes. Has the compound gauge reached -0.1 MPa (14.5 psi as printed)?",
+      options: [
+        { label: "Yes - the gauge shows -0.1 MPa", next: 1 },
+        { label: "No - not there yet at 30 minutes", verdict: "Continue for 20 more minutes. If it still has not reached -0.1 MPa at 50 minutes total, stop and check for leaks - brush soapy water or a neutral liquid detergent on the flare connections and look for bubbles." },
+      ],
+    },
+    {
+      ask: "Close the suction side of the manifold fully, shut off the pump, and wait 5 minutes. What does the gauge needle do?",
+      options: [
+        { label: "Needle has not moved", verdict: "The vacuum holds. Turn the flare nut on the suction side valve 45 degrees counterclockwise for 6 to 7 seconds, retighten once gas begins to escape, confirm the pressure indicator reads above atmospheric, then remove the charge hose." },
+        { label: "Needle moves back toward atmospheric", verdict: "You have a leak. Leak check the flare connections with soapy water or a neutral liquid detergent - bubbles mean the joint is leaking. Repair it and re-evacuate." },
       ],
     },
   ],
@@ -7308,6 +11235,45 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-inverter-power-down-wait": [
+    {
+      ask: "What kind of outdoor unit is this, before you set your wait timer?",
+      options: [
+        { label: "460V heat pump or heat recovery unit", verdict: "Leave it powered off 15 to 20 minutes before reconnecting harnesses or the DC link - longer than the standard wait on these units." },
+        { label: "Standard mini-split inverter outdoor unit", verdict: "Wait a minimum of 15 minutes powered off before disconnecting or reconnecting any wire harness or PCB." },
+      ],
+    },
+    {
+      ask: "Open the disconnect and check with a meter at the terminal block.",
+      options: [
+        { label: "Line voltage is gone at the terminal block", verdict: "Start your wait clock now. Do not touch harnesses or boards until it has elapsed, and check the DC link test point if the procedure gives you one." },
+        { label: "Still reading line voltage at the terminal block", verdict: "The unit is not isolated. Find and open the correct disconnect and re-verify zero volts before you go anywhere near the inverter section." },
+      ],
+    },
+  ],
+  "s-minisplit-ipm-and-fan-motor-check": [
+    {
+      ask: "Power off, large electrolytic capacitors fully discharged, IPM unplugged. Measure resistance between P and U, V, W, N, and between U, V, W and N. What do you read?",
+      options: [
+        { label: "Several megohms across the pairs, matching the manual's table", verdict: "The IPM checks out - the manual notes any megohm reading is good. Move on to the AC fan motor test to look at the main control board." },
+        { label: "No megohm reading on one or more pairs", verdict: "That pair is out of range against the manual's table. The power module is your suspect rather than the main board." },
+      ],
+    },
+    {
+      ask: "Power on, run the unit in fan mode at high fan speed, and after 15 seconds measure the voltage between pin 1 and pin 2 at the AC fan motor. What do you read?",
+      options: [
+        { label: "Less than 100V on a 208-240V supply, or less than 50V on a 115V supply", verdict: "The main control board may be at fault and will need to be replaced. Cross-check the fan motor winding resistance against the manual's table for the specific part number and brand first." },
+        { label: "At or above those values for the supply you have", verdict: "The board is putting out what it should at those pins. Cross-check fan motor winding resistance against the manual's table for the specific part number and brand - values differ by motor manufacturer." },
+      ],
+    },
+    {
+      ask: "Measure the resistance value of each compressor winding with a meter. What does it show?",
+      options: [
+        { label: "Windings read as expected with no shorts", verdict: "The compressor windings are fine. This same measurement also identifies the terminals when the markings are no longer legible." },
+        { label: "A winding reads shorted", verdict: "The resistance check has found a shorted winding. That is a compressor problem, not a board problem." },
+      ],
+    },
+  ],
   "s-minisplit-leaking-indoor": [
     {
       ask: "Look at the indoor coil and the drain line before anything else.",
@@ -7316,6 +11282,66 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Drain line is clogged, algae growth visible", verdict: "Clear the drain. Common on units that have run a long time without cleaning." },
         { label: "Drain is clear but has lost slope under the lineset cover", verdict: "Ductless drain lines often lose slope over time or were never sloped right. Re-slope the run." },
         { label: "Drain and coil fine, but the head looks tilted", verdict: "Even a mini-split will overflow its internal pan if mounted slightly off level. Also confirm the built-in condensate pump, if equipped, is running and not jammed." },
+      ],
+    },
+  ],
+  "s-minisplit-lineset-charge-adder": [
+    {
+      ask: "Read the outdoor unit size in kBtu from the nameplate and measure the actual pipe length. What do you have?",
+      options: [
+        { label: "Pipe run is 25 ft (7.5 m) or less", verdict: "No additional charge is required by this table. Move on and leak check the flare connections." },
+        { label: "Over 25 ft on an 18 kBtu outdoor unit", verdict: "Add 0.16 oz/ft (15 g/m) for the run beyond 25 ft. Weigh the calculated amount in rather than estimating, and record it on the invoice and the unit." },
+        { label: "Over 25 ft on a 24, 36, 48 or 60 kBtu outdoor unit", verdict: "Add 0.32 oz/ft (30 g/m) for the run beyond 25 ft. Weigh the calculated amount in rather than estimating, and record it on the invoice and the unit." },
+      ],
+    },
+    {
+      ask: "Cross-check the table answer against the liquid line diameter on the job. Which line is installed?",
+      options: [
+        { label: "1/4 in. liquid line", verdict: "That confirms 0.16 oz/ft. If the table answer disagreed, recheck the outdoor unit size on the nameplate before weighing anything in." },
+        { label: "3/8 in. liquid line", verdict: "That confirms 0.32 oz/ft. If the table answer disagreed, recheck the outdoor unit size on the nameplate before weighing anything in." },
+      ],
+    },
+    {
+      ask: "Brush soapy water or a neutral liquid detergent on every flare connection with a soft brush. What do you see?",
+      options: [
+        { label: "No bubbles at any flare", verdict: "The joints are tight. Confirm the system was leak tested and evacuated before the added charge went in." },
+        { label: "Bubbles at a flare joint", verdict: "That joint is leaking - repair it before charging. Air and moisture raise system pressure and operating current, cut capacity, freeze capillary passages, and corrode system parts." },
+      ],
+    },
+  ],
+  "s-minisplit-lineset-insulation-condensation": [
+    {
+      ask: "Walk the full accessible line set looking at the insulation, especially at the flare connections near both units. What do you find?",
+      options: [
+        { label: "Bare copper at the flare fittings where insulation was left off for service access", verdict: "Installers often leave fittings bare, and that is exactly where it sweats. Re-insulate the fittings with correctly sized closed-cell insulation, sealed at the seams." },
+        { label: "Insulation has slid, shrunk, or split open exposing bare copper", verdict: "That spot condenses even if the rest of the line set is fine. Replace that section with correctly sized, sealed closed-cell insulation rather than a quick patch." },
+        { label: "Insulation looks continuous everywhere you can see", next: 1 },
+      ],
+    },
+    {
+      ask: "Check the wall or attic penetration, look inside any line set cover, and check the insulation wall thickness for this climate. What do you find?",
+      options: [
+        { label: "No proper vapor barrier or seal where the line set passes through the wall or attic", verdict: "Moist air reaching the cold line there condenses and can migrate into wall cavities, showing up as a stain far from the actual defect. Seal the penetration with a proper vapor barrier." },
+        { label: "A gap hidden inside the line set cover or channel", verdict: "Covers hide gaps that are actively condensing and causing damage. Re-insulate continuously through the cover, not just at the exposed sections." },
+        { label: "Insulation is thinner than this humidity level calls for", verdict: "Thin foam that works in a dry climate still sweats in high humidity. Re-insulate the full run with correctly sized, sealed insulation rather than patching one section." },
+      ],
+    },
+  ],
+  "s-minisplit-long-shutdown-restart": [
+    {
+      ask: "Before restarting a system that has sat idle for months, work through the restart checks. What did you find?",
+      options: [
+        { label: "Unit and filter screen are dirty", verdict: "Clean the unit and the filter screen before you run it. That is a restart step, not an optional one, and it is a common cause of a nuisance no-cool call." },
+        { label: "Obstruction at an air inlet or outlet on the indoor or outdoor unit", verdict: "Clear it before you run the unit. Blocked inlets or outlets will have you back out here on the first hot day." },
+        { label: "Drain pipe is not clear or does not drain freely", verdict: "Clear the drain before running the unit in cooling, or the first cooling run turns into a water call." },
+        { label: "Everything clean, clear, and draining", verdict: "Reinstall the remote controller batteries, verify power is restored, then run the unit in both cooling and heating briefly and listen for anything unusual before leaving." },
+      ],
+    },
+    {
+      ask: "This one is going out of service for an extended period. What are you doing with the remote?",
+      options: [
+        { label: "Batteries pulled out of the remote controller", verdict: "Right - that keeps them from leaking into it while the system sits. Then disconnect the power supply to the system." },
+        { label: "Batteries left in the remote", verdict: "Take them out. Batteries left in over a long shutdown can leak into the remote, and you will be buying a new one at restart." },
       ],
     },
   ],
@@ -7337,6 +11363,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-multizone-oversubscribed": [
+    {
+      ask: "Run several zones at once and see how they perform. What is the pattern?",
+      options: [
+        { label: "All or most zones under-deliver, especially with several running together", next: 1 },
+        { label: "Only one zone underperforms while the others are fine", verdict: "That points to an indoor unit or branch-specific issue, not oversubscription. Diagnose that zone on its own." },
+      ],
+    },
+    {
+      ask: "Add up the rated capacity of every connected indoor unit and compare against the outdoor unit's rated maximum combination capacity and branch count. What do you find?",
+      options: [
+        { label: "Total connected indoor capacity exceeds the outdoor unit's rated combination limit", verdict: "The system is oversubscribed. There is generally no control setting that fixes this: relocate a zone to another outdoor unit, or replace the outdoor unit with one rated for the actual connected capacity." },
+        { label: "Number of connected indoor units exceeds the outdoor unit's maximum branch count", verdict: "Some systems limit by port count independent of total capacity. That also requires right-sizing rather than a setting change." },
+        { label: "Both total capacity and branch count are within the outdoor unit's limits", verdict: "Not oversubscription. Look for a system-wide cause such as overall charge or the outdoor unit itself." },
+      ],
+    },
+  ],
   "s-minisplit-outdoor-not-running": [
     {
       ask: "Check for line voltage at the outdoor unit and inspect the communication wiring between indoor and outdoor.",
@@ -7352,6 +11395,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Blown fuse on the outdoor board", verdict: "Replace the fuse and find out what blew it." },
         { label: "Indoor unit is set to fan-only", verdict: "No call is being made. Set it to cooling or heating and retest." },
         { label: "Fuse good and the unit is genuinely calling", verdict: "On a Daikin, go to the Daikin mini-split communication-failure entry in this list for LED-based diagnosis." },
+      ],
+    },
+  ],
+  "s-minisplit-power-cord-gauge-by-drive": [
+    {
+      ask: "Identify the outdoor unit by how many indoor units it drives. Which is it?",
+      options: [
+        { label: "1 drive 2 or 1 drive 3 (18K or 27K outdoor unit)", verdict: "14 gauge power cord for both of those. Check it against the unit's own rating plate and local code before you pull wire." },
+        { label: "1 drive 4 (36K outdoor unit)", verdict: "12 gauge power cord. Verify against the rating plate and local code before pulling wire." },
+        { label: "1 drive 5 (48K outdoor unit)", verdict: "10 gauge power cord. Verify against the rating plate and local code before pulling wire." },
+      ],
+    },
+    {
+      ask: "Where is this outdoor unit actually installed?",
+      options: [
+        { label: "Open outdoor location, not enclosed", verdict: "That is what the manual requires. Size the cord off the drive count and verify against the rating plate and local code." },
+        { label: "Inside a closet, garage, or other enclosure", verdict: "The manual requires the outdoor unit to be installed in an unenclosed outdoor environment. Sort that out before you worry about cord sizing." },
       ],
     },
   ],
@@ -7388,6 +11448,65 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-short-lineset-shortcycle": [
+    {
+      ask: "Measure the installed line set length and compare it to the manufacturer's MINIMUM length spec for this model. Where does it land?",
+      options: [
+        { label: "Shorter than the published minimum length", next: 1 },
+        { label: "At or above the published minimum length", verdict: "Line set length is not the issue. Diagnose the short-cycling as a charge or control problem instead." },
+        { label: "No minimum length guidance published for this model", verdict: "Do not guess at a charge adjustment. Consult the manufacturer's technical support, since arbitrarily removing refrigerant on a short run risks undercharging the system." },
+      ],
+    },
+    {
+      ask: "Check subcooling and superheat first, then watch the actual fault pattern. What do you see?",
+      options: [
+        { label: "Readings look like an overcharge", verdict: "A short line set with a factory precharge intended for a longer run acts a lot like an overcharge. Compare against the manufacturer's de-rate table for the actual length before removing anything." },
+        { label: "Rapid pressure swings, short-cycling shortly after startup, or EEV hunting", verdict: "Consistent with a line set too short for the charge and control algorithm to settle. Check what the manufacturer requires below minimum length: a charge adjustment, added coiled length, or a statement that the run is unsupported." },
+      ],
+    },
+  ],
+  "s-minisplit-smell-musty": [
+    {
+      ask: "Pull the cover and look at the indoor coil, drain pan, and washable filter. What do you find?",
+      options: [
+        { label: "Visible mold or mildew growth, or buildup on the coil fins themselves", verdict: "A filter rinse will not fix this. Do a proper coil cleaning per the manufacturer instructions, then talk with the customer about keeping the coil dry between cycles." },
+        { label: "Standing water or slow drainage in the pan and drain line", verdict: "Standing water feeds microbial growth. Clear the drain line and pan so they drain fully, then clean the pan and coil." },
+        { label: "Only the washable filter is loaded, coil and pan look clean", verdict: "Clean the washable filter per the manufacturer instructions and recheck. If the smell returns, take a harder look at the coil and pan." },
+      ],
+    },
+    {
+      ask: "Ask whether this odor has come back after previous cleanings. Which is it?",
+      options: [
+        { label: "First time it has been reported", verdict: "Clean it up and note the finding on the ticket. Watch for it recurring at the next visit before recommending anything further." },
+        { label: "It keeps coming back after cleaning", verdict: "Discuss a post-cooling fan-only drying cycle if this model offers one. Letting the coil dry between cycles is what breaks the regrowth pattern on a ductless head." },
+      ],
+    },
+  ],
+  "s-minisplit-swing-louver-motor": [
+    {
+      ask: "Confirm the complaint is the louver and not the blower, then power cycle the unit and watch the louver's homing routine at startup. What happens?",
+      options: [
+        { label: "Blower runs fine but the louver does not move at all during homing", verdict: "Points at the louver motor or its linkage rather than a settings issue. Next check for a bent louver, an obstruction, or a popped-off linkage clip before condemning the motor." },
+        { label: "Louver motor hums or twitches but the louver does not move", verdict: "Suspect a stripped gear in the small stepper motor gearbox. That is a wear item and normally a motor assembly replacement, not a repair." },
+        { label: "Louver drives to its home position normally at startup", verdict: "The louver motor is working. Go back to the customer on what the actual complaint is, since the unit can run normally with an unrelated issue." },
+      ],
+    },
+    {
+      ask: "Power off and manually move the louver through its full range. What do you feel?",
+      options: [
+        { label: "Linkage arm or clip has popped off the motor shaft", verdict: "Reattach the linkage. No motor replacement is needed if it moves freely once reconnected." },
+        { label: "Louver is bent or binds somewhere in its travel", verdict: "Free the obstruction or replace the bent louver. A bound louver stalls a good motor and looks exactly like a motor failure." },
+        { label: "It moves freely through the full range", verdict: "Mechanically it is fine, so the fault is electrical. Check for a swing/louver-specific fault code first, since some units flag this as a distinct non-critical fault while still heating and cooling normally." },
+      ],
+    },
+    {
+      ask: "You are ordering the replacement motor. What position is the failed one in?",
+      options: [
+        { label: "Horizontal louver, or the left side on a dual-louver model", verdict: "Order the part specific to that position. Horizontal and vertical, and left and right on dual-louver models, are frequently not interchangeable." },
+        { label: "Vertical louver, or the right side on a dual-louver model", verdict: "Order the part specific to that position rather than assuming any louver motor for this model will fit, since they are frequently not interchangeable." },
+      ],
+    },
+  ],
   "s-minisplit-thermistor-swap-test": [
     {
       ask: "Swap the suspect thermistor with an identical one on the same board, clear the code, and run the unit again.",
@@ -7399,6 +11518,48 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-wall-sleeve-sealing": [
+    {
+      ask: "Go outside and inspect the wall sleeve/penetration around its full circumference. What do you find?",
+      options: [
+        { label: "No sealant or escutcheon, sleeve just pushed through the hole", verdict: "Wind-driven rain tracks inside along the line set. Reseal with an exterior-rated sealant compatible with the sleeve and fully seat the cover plate on both sides." },
+        { label: "Sleeve is level or slopes inward", verdict: "Water pools and migrates indoors. Correct it so the penetration sheds water outward, then reseal properly." },
+        { label: "Sleeve is sealed all the way around and slopes outward", next: 1 },
+      ],
+    },
+    {
+      ask: "Look inside the sleeve at the line set, condensate tubing, and control wiring, and check for pests. What do you find?",
+      options: [
+        { label: "Gaps around the individual tubes and conductors inside the sleeve", verdict: "A commonly overlooked leak path even when the sleeve itself is sealed. Bundle and seal them where they exit the sleeve." },
+        { label: "Signs of insect or rodent entry, especially at an older foam or unsealed sleeve", verdict: "Pests follow the warm line set into the wall cavity. Reseal the sleeve with exterior-rated sealant and confirm both escutcheon plates are fully seated, not just placed over the gap." },
+        { label: "Customer reports a draft or energy loss near the indoor unit", verdict: "Check whether the sleeve and penetration are the actual source rather than the indoor unit's fit against the wall, then seal accordingly." },
+      ],
+    },
+  ],
+  "s-minisplit-wallsleeve-drain-slope": [
+    {
+      ask: "Confirm the drain method on this indoor unit before diagnosing. Which is it?",
+      options: [
+        { label: "Gravity drain with no built-in pump", next: 1 },
+        { label: "Indoor unit has a built-in condensate pump", verdict: "Different failure modes apply. Diagnose the pump, its float, and its discharge tubing rather than chasing drain slope." },
+      ],
+    },
+    {
+      ask: "Clear and flush the drain line first, then run the unit and watch what happens.",
+      options: [
+        { label: "Found and cleared an actual clog, and it drains fine now", verdict: "A clog is more common than a slope defect, so this is likely your fix. Note it on the ticket so a repeat gets a closer look at slope." },
+        { label: "Pan refills and overflows again shortly after clearing, with no clog found", next: 2 },
+      ],
+    },
+    {
+      ask: "Follow the drain line from the indoor unit through the wall sleeve to its exterior termination. What do you find?",
+      options: [
+        { label: "A level or uphill section, often right at the wall sleeve penetration", verdict: "Even a short flat or reverse-pitched section traps water and backs the pan up over time. Correct the pitch so it falls continuously to the outside." },
+        { label: "Exterior termination sits at or above the indoor unit's drain outlet", verdict: "Gravity cannot work against that even with correct pitch on the visible run. Lower the termination or change the routing." },
+        { label: "Slope cannot be corrected within the existing sleeve and routing", verdict: "Add a condensate pump rather than repeatedly re-servicing a gravity run that will never drain properly." },
+      ],
+    },
+  ],
   "s-minisplit-xye-central-control-wiring": [
     {
       ask: "One head is missing from the central controller. Does that head respond to local control?",
@@ -7406,6 +11567,47 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Yes, it runs normally on local control", verdict: "Check its XYE landing on the indoor main board before its indoor-to-outdoor communication. Verify X to X, Y to Y and E to E on every unit on the bus." },
         { label: "No, it does not respond to local control either", verdict: "Confirm each head responds to local control before blaming the central controller - this is not a central control problem yet." },
         { label: "Its bus wires are landed on the remote on/off dry contact ports", verdict: "Those are different connection points from the XYE central control ports on the same board. Move the centralized controller or gateway onto X, Y and E." },
+      ],
+    },
+  ],
+  "s-mismatched-condenser-and-indoor-coil": [
+    {
+      ask: "Pull both model numbers and check whether the combination appears as a rated match in the manufacturer's AHRI listing.",
+      options: [
+        { label: "Combination appears as a rated match", verdict: "It is a legitimate match, so the problem is elsewhere. Verify airflow against the new equipment's requirement before you judge the refrigerant numbers." },
+        { label: "Combination is not listed as a rated match", verdict: "You will not charge your way out of this. Check the coil's refrigerant and design pressure rating, its tonnage and face area, and the metering device against what the new outdoor unit expects." },
+      ],
+    },
+    {
+      ask: "Identify the indoor metering device - TXV or piston, type, and size.",
+      options: [
+        { label: "Not the type the new outdoor unit expects, or not sized for the new tonnage", verdict: "That alone will keep the system off its numbers. Look for a factory-supplied metering device kit that should have been installed with the new condenser and was not." },
+        { label: "Correct type and sized for the new tonnage", verdict: "Metering is not the issue. Compare the coil's rated tonnage and face area to the outdoor unit - a coil a size small runs low suction and poor latent removal no matter what you do with the charge." },
+      ],
+    },
+    {
+      ask: "Check the indoor coil's ratings against the new outdoor unit.",
+      options: [
+        { label: "Coil is not rated for the refrigerant or design pressure of the new outdoor unit", verdict: "The coil has to change. Document the performance you can actually measure and explain to the customer why - and note that an unrated match can affect warranty and efficiency claims." },
+        { label: "Coil is rated for the refrigerant and pressure and its tonnage matches", verdict: "Ratings are OK. Verify airflow against the new equipment's requirement before you judge the refrigerant numbers." },
+      ],
+    },
+  ],
+  "s-mitsubishi-led-selfdiagnosis": [
+    {
+      ask: "Use the remote's check/self-diagnosis mode - the unit beeps when the displayed code matches the stored fault. Which family is the code in?",
+      options: [
+        { label: "A P code, like P8", verdict: "P codes are protection trips - pressure or temperature. Put gauges on it and inspect the refrigerant side and airflow." },
+        { label: "A U code, like U6", verdict: "U codes are system or communication faults. Chase wiring and communication between units, not the refrigerant circuit." },
+        { label: "An E or F code, like E6", verdict: "Board-level fault. Focus on the control boards and the connections between them." },
+      ],
+    },
+    {
+      ask: "On an MXZ multi-zone system, where did you read the fault from?",
+      options: [
+        { label: "Only the indoor unit's blink pattern", verdict: "That will not tell you which branch failed. Check the outdoor board LEDs too - outdoor faults report per-port." },
+        { label: "The outdoor board LEDs, showing which port", verdict: "Good - that names the branch. Inspect that circuit specifically instead of the whole system." },
+        { label: "Single-zone unit, not an MXZ", verdict: "The indoor blink pattern plus the remote check code is enough here. Just make sure you recorded them before any power cycle - a restart clears the active display and can temporarily hide inverter faults." },
       ],
     },
   ],
@@ -7427,6 +11629,22 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "The system comes up normally with one specific head's S3 lifted", verdict: "That branch is loading the bus. Read S2-S3 at that indoor unit - signal present at the head points at the indoor board, signal missing points at the run." },
         { label: "The fault stays no matter which single head is lifted", verdict: "The problem is on the outdoor side. Verify the outdoor unit's own supply, then suspect the outdoor control board." },
         { label: "It only comes up with every head lifted, and faults again as soon as any one is landed", verdict: "Look for something common to all the runs - a shared junction box, a damaged multi-conductor cable, or comm conductors bundled with line-voltage wiring." },
+      ],
+    },
+  ],
+  "s-mitsubishi-mxz-lev-coil-removal": [
+    {
+      ask: "Power off. Before you open any brazed joint on the expansion valves, decide how the refrigerant comes out. Can this unit be pumped down?",
+      options: [
+        { label: "Yes - the unit pumps down", verdict: "Gas recovery is not required if the unit is pumped down. Carry on: top panel and service panel off, power supply cord and indoor/outdoor connecting wires disconnected." },
+        { label: "No - it will not pump down", verdict: "The refrigerant has to come out before you open any brazed joint on the expansion valves and pipes. Do not braze on a charged system." },
+      ],
+    },
+    {
+      ask: "You are reassembling and putting the LEV coils back on the expansion valve bodies. How are they secured?",
+      options: [
+        { label: "Metal clips fitted, each coil in its correct position on the pipe", verdict: "Correct. The metal clips are what hold each coil in the right position." },
+        { label: "Coils slid on without the metal clips", verdict: "Fit the clips. Without them the coils will not stay in the correct position on the pipe." },
       ],
     },
   ],
@@ -7523,6 +11741,40 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-nameplate-model-decode": [
+    {
+      ask: "Look at the model number on the data plate. What kind of equipment is it?",
+      options: [
+        { label: "Cooling equipment - AC, heat pump, or air handler", verdict: "Find the 2-3 digit group divisible by 6: 018 is 1.5 ton, 024 is 2, 030 is 2.5, 036 is 3, 042 is 3.5, 048 is 4, 060 is 5. That is BTU thousands divided by 12. Coil widths often ride along in the same model number." },
+        { label: "A furnace", verdict: "The embedded number is INPUT BTU in thousands (040, 060, 080, 100, 115). Output is input times AFUE, and that output is what actually heats the house. Letters usually encode AFUE and staging too." },
+        { label: "You cannot find a number that fits either pattern", verdict: "Brand conventions differ. Snap the data plate into the Tag Scanner tab - it extracts model and serial, identifies the unit, and links you straight to its codes and manuals." },
+      ],
+    },
+  ],
+  "s-neutral-ground-bond-subpanel": [
+    {
+      ask: "Identify whether the panel feeding this HVAC equipment is the main service panel or a sub-panel. Which is it?",
+      options: [
+        { label: "Sub-panel", next: 1 },
+        { label: "Main service panel", verdict: "Neutral and ground are supposed to be bonded there at the main bonding jumper. This is not your problem, so look elsewhere." },
+      ],
+    },
+    {
+      ask: "In the sub-panel, look for a bonding screw or strap, and measure voltage between the neutral bus and ground bus with the main breaker on and normal loads running. What do you find?",
+      options: [
+        { label: "A bonding screw or strap installed in the sub-panel", verdict: "That ties neutral and ground downstream of the main bond and puts neutral current on the grounding system. Do not remove it yourself. Flag it clearly for a licensed electrician." },
+        { label: "Significant voltage between the neutral bus and ground bus", verdict: "Points to that bonding error or a shared/miswired neutral. This is outside HVAC scope, so refer it to a licensed electrician instead of chasing it as an equipment fault." },
+        { label: "Neutral and ground properly isolated with no significant voltage between them", verdict: "Bonding checks out here. Go back to HVAC-side diagnosis for the complaint." },
+      ],
+    },
+    {
+      ask: "Does the symptom pattern match this kind of bonding error?",
+      options: [
+        { label: "Nuisance GFCI/AFCI trips on that panel, or mild tingling from equipment cabinets", verdict: "That is the classic pattern. Have a licensed electrician correct the panel bonding, then recheck the HVAC equipment's own grounding and bonding afterward." },
+        { label: "No trips or tingling reported", verdict: "Less likely to be a bonding issue. Keep working the HVAC-side causes, but keep this in mind if equipment-side troubleshooting keeps coming up clean." },
+      ],
+    },
+  ],
   "s-new-install-static-too-high": [
     {
       ask: "Put a manometer on the supply and return and read total external static pressure. How does it compare to the equipment's rated maximum?",
@@ -7541,6 +11793,167 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-newconstruction-combustion-analysis-skipped": [
+    {
+      ask: "Look for startup documentation or a sticker showing combustion readings on this furnace. What do you find?",
+      options: [
+        { label: "No combustion readings recorded, at most a visual flame check", verdict: "Close the gap now. Run a combustion analysis with the probe at the manufacturer's test port: CO, O2, and stack temperature at high fire, and at low fire too on a two-stage or modulating unit." },
+        { label: "Documented startup combustion readings exist", verdict: "The commissioning gap is closed. Re-verify only if a symptom warrants it." },
+      ],
+    },
+    {
+      ask: "Compare your CO/O2/stack readings against the manufacturer's acceptable range for this model, and check manifold pressure against the rating plate. What do you find?",
+      options: [
+        { label: "Readings outside the manufacturer's acceptable range", verdict: "Treat it as a real combustion problem to correct through burner adjustment, gas pressure, or venting, not something to just document. Elevated CO is a real hazard even on a furnace that seems to run fine." },
+        { label: "Manifold pressure is off the rating plate value", verdict: "Incorrect gas pressure is a common root cause of readings landing out of range. Set it to the rating plate, then re-run the analysis." },
+        { label: "Readings and manifold pressure are both within spec", verdict: "Document them so the record exists for future service, and you are done." },
+      ],
+    },
+  ],
+  "s-newconstruction-duct-leakage-not-tested": [
+    {
+      ask: "Look for duct leakage test documentation for this house. What do you find?",
+      options: [
+        { label: "No test documentation exists", next: 1 },
+        { label: "A documented leakage test exists", verdict: "The system's leakage rate is known. Compare it against the jurisdiction's requirement rather than assuming a problem." },
+      ],
+    },
+    {
+      ask: "Without a test, look for accessible signs of leakage. What do you see?",
+      options: [
+        { label: "Disconnected boots at registers, unsealed can-lights or chases used as returns, or gaps at plenum connections", verdict: "Seal them with mastic or UL-181 rated tape, not standard cloth duct tape, which fails over time." },
+        { label: "The suspect runs are now behind finished surfaces", verdict: "Focus on what is still reachable: attic and crawlspace runs, the equipment closet, and any exposed trunk. Document what you could not reach." },
+        { label: "Accessible ductwork looks well sealed", verdict: "Note that overall leakage is still unquantified without a test. Document that for the builder and customer rather than declaring the system tight." },
+      ],
+    },
+    {
+      ask: "How much leakage into unconditioned space is left after sealing what you could reach?",
+      options: [
+        { label: "Significant leakage remains that cannot be corrected post-drywall", verdict: "Document it for the builder and customer as an ongoing efficiency and comfort issue rather than something the HVAC contractor can fully resolve now." },
+        { label: "Accessible leaks are sealed and what remains looks minor", verdict: "Note the work performed and the areas you could not access on the ticket." },
+      ],
+    },
+  ],
+  "s-newconstruction-duct-never-balanced": [
+    {
+      ask: "Look through the duct system for balancing dampers. What do you find?",
+      options: [
+        { label: "No balancing dampers anywhere in the system", verdict: "That limits how much can be corrected without adding some. Explain that to the customer before promising a balancing result." },
+        { label: "Dampers exist but are still fully open or in their as-installed default", verdict: "Nobody balanced this system. Measure supply CFM at each register with a flow hood or the traverse method, compare against design CFM per room, then start adjusting." },
+      ],
+    },
+    {
+      ask: "Adjust dampers starting from the rooms furthest from the air handler, re-measuring after each change. What happens?",
+      options: [
+        { label: "Rooms you already set drift off as you adjust others", verdict: "Normal. Duct systems interact, so keep working around and re-measuring after each adjustment until every room lands near design CFM." },
+        { label: "Rooms land at design CFM and hold", verdict: "Balancing is done. Confirm whether balancing was actually in their contract or commissioning scope before treating this as free follow-up work." },
+      ],
+    },
+  ],
+  "s-newconstruction-load-mismatch-actual-vs-design": [
+    {
+      ask: "Watch how the system actually runs. Which pattern do you see?",
+      options: [
+        { label: "Runs nearly constantly on design days", next: 1 },
+        { label: "Short cycles and the house struggles with humidity", verdict: "Check for oversizing, a common result of rounding up to be safe rather than sizing to the actual calculated load. Confirm against the load calc before recommending anything." },
+      ],
+    },
+    {
+      ask: "Pull the original Manual J load calculation and compare its assumptions against how the home was actually built and used. What do you find?",
+      options: [
+        { label: "Envelope changed during construction, or the calc used unrealistic assumptions", verdict: "That is a true undersize. This becomes a replacement or redesign conversation with the customer and builder, not a repair." },
+        { label: "The load calc matches how the home was actually built", next: 2 },
+      ],
+    },
+    {
+      ask: "Compare the duct design's CFM per room against the equipment's rated airflow. What do you find?",
+      options: [
+        { label: "Duct system delivers less than the equipment's rated airflow", verdict: "A correctly sized system on an undersized duct system looks exactly like an equipment sizing problem, and this one is often correctable. Fix the ducts before talking about equipment." },
+        { label: "Duct airflow matches the equipment's rating", verdict: "Ducts are not masking it. Treat this as an equipment sizing problem, which means replacement or redesign, and say so clearly to the customer and builder." },
+      ],
+    },
+  ],
+  "s-newconstruction-refrigerant-charge-not-verified-startup": [
+    {
+      ask: "Measure the actual installed line set length and elevation change, then compare to the length the factory charge accounts for. What do you find?",
+      options: [
+        { label: "Line set is longer or shorter than the factory-charged length, or has significant elevation change", verdict: "The charge needs adjusting per the manufacturer's charging chart. Recover, evacuate, and weigh in correctly rather than topping off toward better-looking gauge numbers." },
+        { label: "Line set matches the factory-charged length with no significant elevation change", next: 1 },
+      ],
+    },
+    {
+      ask: "Check subcooling and superheat against target, and look for signs of a rushed startup. What do you find?",
+      options: [
+        { label: "Subcooling and superheat are off target", verdict: "The charge was never actually verified, even at the standard length. Correct it properly: recover, evacuate, and weigh in per the chart." },
+        { label: "No gauges ever connected, no vacuum documentation, or charge added/removed without weighing", verdict: "All signs of a rushed startup with an unverified charge. Verify it now against the chart rather than assuming the factory charge is right just because the system cools somewhat." },
+        { label: "Readings are on target and startup documentation exists", verdict: "Charge is verified. Look elsewhere for the performance complaint." },
+      ],
+    },
+  ],
+  "s-newconstruction-startup-checklist-skipped": [
+    {
+      ask: "Look for startup and commissioning documentation on this system. How much is there?",
+      options: [
+        { label: "Several checklist items have no record at all", verdict: "Treat the whole system as uncommissioned and work through a full startup checklist rather than chasing symptoms one at a time." },
+        { label: "Only one or two items are missing", next: 1 },
+      ],
+    },
+    {
+      ask: "Which specific startup item has no record?",
+      options: [
+        { label: "Refrigerant charge was never verified against actual line set length", verdict: "Check this first on any new system with unexplained performance issues. Verify subcooling and superheat against the actual measured line set length instead of trusting the factory precharge." },
+        { label: "Total external static pressure was never measured", verdict: "Measure it now against the equipment's rated maximum. High static causes exactly the early-life airflow and comfort complaints you are being called about." },
+        { label: "No combustion analysis on gas equipment", verdict: "Perform CO/O2 readings and check gas pressure now. This is a required startup step that was skipped, not an optional extra." },
+        { label: "No record the ducts were pressure-tested or balanced", verdict: "Find out whether the duct system was actually tested and balanced or only visually inspected, then test and balance what is accessible." },
+      ],
+    },
+  ],
+  "s-newconstruction-thermostat-installer-defaults": [
+    {
+      ask: "Check the thermostat's equipment type configuration against what is actually installed. What do you find?",
+      options: [
+        { label: "Configured for the wrong equipment type or staging (single vs two-stage, heat pump vs straight AC, aux heat)", verdict: "A common commissioning miss. Set it to match the installed equipment, then recheck operation across all stages." },
+        { label: "Equipment type and staging are configured correctly", next: 1 },
+      ],
+    },
+    {
+      ask: "On a heat pump, check the defrost termination temperature, balance points, and aux heat lockout. What do you find?",
+      options: [
+        { label: "Still sitting at factory defaults", verdict: "Defaults are rarely correct for every climate and almost never change unless someone does it deliberately. Set them for this climate and this equipment." },
+        { label: "They were set for this specific installation", next: 2 },
+      ],
+    },
+    {
+      ask: "Check the swing/differential, fan settings, C-wire/power source, and humidity control settings. What do you find?",
+      options: [
+        { label: "Some are blank or still at factory default", verdict: "Configure them for this home and equipment, then walk the customer through their settings and document what you changed from default." },
+        { label: "All configured for this home and equipment", verdict: "The thermostat is properly commissioned. Document the settings for future service reference." },
+      ],
+    },
+  ],
+  "s-nitrogen-test-pressure-dropped-overnight": [
+    {
+      ask: "Do you have both the pressure AND the ambient temperature from when you pressurized and from when you read it back?",
+      options: [
+        { label: "Yes - both pressures and both temperatures recorded", verdict: "Good. Convert both temperatures to absolute and both pressures to PSIA and compare the ratios, using a nitrogen pressure change calculator or the gas law rather than a rule of thumb." },
+        { label: "Only the pressures - no temperatures recorded", verdict: "You cannot interpret the result without them. Re-pressurize with dry nitrogen through a regulator and record pressure and ambient temperature at both ends of the test." },
+      ],
+    },
+    {
+      ask: "Run the math. How does the measured drop compare to what temperature alone predicts?",
+      options: [
+        { label: "Measured drop matches the predicted temperature effect", verdict: "The system held - there is no leak. Do not start soaping joints over it." },
+        { label: "It dropped more than temperature accounts for", verdict: "You have a leak. Leave it pressurized and soap or sniff the joints while the pressure is still on it." },
+      ],
+    },
+    {
+      ask: "How was the test set up between the two readings?",
+      options: [
+        { label: "Both readings off the same gauge in the same position, system shaded and stable", verdict: "Clean test - gauge error cancels out and you can trust the comparison." },
+        { label: "Different gauges, or sun on the line set or coil between the readings", verdict: "That can create a swing big enough to look like a leak. Re-run the test off one gauge in shaded, stable conditions, staying within the equipment's maximum allowable test pressure." },
+      ],
+    },
+  ],
   "s-no-aux-heat-during-defrost": [
     {
       ask: "Force a defrost with the board test procedure and read across W (or W2) and C on the board. What do you measure?",
@@ -7555,6 +11968,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "24 volts across C and O, so it is in defrost, and still nothing at W (or W2)", verdict: "The board is in defrost and not calling auxiliary heat. Replace the defrost control board." },
         { label: "No 24 volts across C and O", verdict: "The unit is not actually in defrost, so a missing W call proves nothing. Re-run the board test procedure, confirm defrost, then read W again." },
+      ],
+    },
+  ],
+  "s-no-megger-verdict-on-scroll": [
+    {
+      ask: "Power off and all legs open, terminal cover left in place, three leads disconnected at the nearest point. Ohm each lead to ground on the R x 10,000 or highest scale. What do you read?",
+      options: [
+        { label: "Infinity on all three leads", verdict: "No ground. Do not condemn this compressor on a megohm number - there is no industry recognized megohm specification for small tonnage compressors, and scroll motor winding end-turns sit in the oil, which reads lower to ground even on a healthy compressor." },
+        { label: "A reading to ground on any lead", next: 1 },
+      ],
+    },
+    {
+      ask: "Carefully remove the terminal protective cover and inspect the lead wires. What do you see?",
+      options: [
+        { label: "Loose leads or insulation breaks in the lead wires", verdict: "That is your ground path, not a bad motor. Repair the leads and retest." },
+        { label: "Nothing visible", verdict: "Carefully remove the leads at the compressor terminals and retest for ground directly between the terminals and ground. The reading should be infinity." },
+        { label: "Still reads to ground with the leads off at the terminals", verdict: "That is a confirmed direct-to-ground reading. Condemn the compressor on this, not on the megohm number." },
       ],
     },
   ],
@@ -7656,6 +12086,58 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-observe-full-defrost-at-commissioning": [
+    {
+      ask: "Run the unit in heating until the outdoor coil is cold enough to trip the defrost control, then watch one full cycle from initiation to termination. What happened?",
+      options: [
+        { label: "Unit went into defrost and the coil cleared completely, then terminated", verdict: "That is what you want to see. Move on to confirming the reversing valve shift, then finish the grille balance, duct leak, and rattle checks before setting the thermostat and instructing the owner." },
+        { label: "Unit went into defrost but the coil was still partly iced when defrost terminated", verdict: "A partial defrost is a fail - do not sign the start-up off. Stay and watch another cycle, and get the defrost control and coil condition sorted before you leave, or you will get the callback on the first icy night." },
+        { label: "Coil never got cold enough to actuate the defrost control while you were there", verdict: "You cannot verify defrost today. Mark it unverified on the start-up sheet instead of checking the box, and plan to come back on a cold day and watch a complete cycle." },
+      ],
+    },
+    {
+      ask: "Listen and feel the reversing valve during the defrost cycle you watched. What did it do?",
+      options: [
+        { label: "Valve shifted into defrost and shifted back at termination", verdict: "Correct operation. Finish the start-up: adjust and balance the supply and return grilles, check the ductwork for air leaks, confirm no rattles or tubing rubbing, then set the thermostat and instruct the owner." },
+        { label: "Valve shifted into defrost but did not shift back at termination", verdict: "The unit is not returning to heating after defrost. Do not sign off - get the reversing valve and its solenoid circuit checked before the start-up is closed out." },
+        { label: "Valve never shifted - no change in sound or line temperature at defrost", verdict: "Defrost is being called but the valve is not shifting, so the coil will never clear. Check the reversing valve and its solenoid circuit before you leave." },
+      ],
+    },
+  ],
+  "s-odor-newequipment-chemical-smell": [
+    {
+      ask: "Confirm the timing and have the customer describe the smell. Which fits?",
+      options: [
+        { label: "Brand new equipment on its first runs, mild plastic or chemical smell", next: 1 },
+        { label: "An established system that suddenly developed a new smell", verdict: "This is not new-equipment off-gassing. Diagnose it as a new odor complaint on an existing system." },
+        { label: "Acrid burning or electrical smell that persists or worsens", verdict: "Do not write this off as off-gassing. Treat it as a burning-smell complaint and shut the equipment down until you find the source." },
+      ],
+    },
+    {
+      ask: "How is the smell trending over the first several hours to days of run time?",
+      options: [
+        { label: "Gradually fading as the equipment gets run time", verdict: "Normal off-gassing of protective coatings, adhesives, insulation, and paint as parts heat up for the first time. Suggest extra ventilation and follow up in a few days to confirm it has faded." },
+        { label: "Getting stronger, or turning acrid", verdict: "Stop treating it as normal off-gassing. Handle it as a burning-smell complaint and find the source." },
+      ],
+    },
+  ],
+  "s-odor-pet-circulating": [
+    {
+      ask: "Ask whether the odor is noticeably stronger at supply registers or right when the blower kicks on. What is the answer?",
+      options: [
+        { label: "Yes, strongest at the supply registers and when the blower starts", next: 1 },
+        { label: "No connection to the blower running", verdict: "The system is not the distribution path for this odor. The source is elsewhere in the home." },
+      ],
+    },
+    {
+      ask: "Check the filter, return grille, and evaporator coil. What do you find?",
+      options: [
+        { label: "Pet hair and dander embedded in the filter and return grille", verdict: "That material is being blown back into the airspace instead of filtered out. Recommend a filter rated for pet households, changed more frequently." },
+        { label: "Pet hair and dander accumulated on the evaporator coil", verdict: "A damp coil with organic material on it develops its own musty smell. Clean the coil, then upgrade filtration so it does not come back." },
+        { label: "Filter and coil are clean but the odor is severe and long-standing", verdict: "Duct cleaning is worth discussing, but set expectations: it addresses accumulated material, not the ongoing source. The odor returns without a filtration and cleaning routine." },
+      ],
+    },
+  ],
   "s-odor-sewer-gas-ptrap": [
     {
       ask: "Ask when the smell shows up, then run the blower. Does the odor track with air movement or stay in one spot?",
@@ -7696,6 +12178,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Struggles on every start regardless of how long it sat", verdict: "That is not equalization. Rule out a marginal capacitor and the windings instead." },
         { label: "Short cycling traced to a flaky thermostat call, power fluctuations, or an over-sensitive control setting", verdict: "Fix that root cause rather than adding a hard-start kit to mask the symptom." },
         { label: "TXV or EEV system being restarted quickly", verdict: "These equalize slower than piston or cap tube systems because the valve holds back flow. Expected equalization time varies by metering device, so do not assume one universal wait time." },
+      ],
+    },
+  ],
+  "s-oil-not-returning-risers-traps-slope": [
+    {
+      ask: "Compare the installed suction line diameter against the manufacturer's line sizing table for this length and lift.",
+      options: [
+        { label: "Suction line is larger than the table calls for", verdict: "Oversized suction line is a more common oil-return killer than undersized - velocity is too low to carry oil back. Re-pipe to the size the table gives for this length and lift." },
+        { label: "Suction line is smaller than the table calls for", verdict: "Still wrong, and it costs capacity. Correct the piping to the size the table gives for this length and lift." },
+        { label: "Suction line matches the table", verdict: "Size is not it. Look for sags, bellies, and low spots in horizontal runs where oil can pool, especially in crawlspaces and attics." },
+      ],
+    },
+    {
+      ask: "Map the actual line set - total length, vertical rise or drop, and which unit sits above the other. What have you got?",
+      options: [
+        { label: "Long vertical rise with the outdoor unit well below the indoor coil", verdict: "Check whether the manufacturer's instructions call for oil traps or a specific pitch on vertical risers for this application, and whether they actually exist." },
+        { label: "Mostly horizontal with sags or low spots in a crawlspace or attic", verdict: "Oil is pooling in those bellies. Re-support the run so it pitches back toward the compressor where the instructions require it." },
+        { label: "Short, clean line set with no rise and no low spots", verdict: "Piping is not stranding the oil. On a variable-capacity system, check whether the equipment spends nearly all its time at minimum speed - very low velocity worsens oil return." },
+      ],
+    },
+    {
+      ask: "Somebody suggests just adding oil to make up for what is logged in the lines. What do you do?",
+      options: [
+        { label: "Add oil to the system", verdict: "Do not. Adding oil to a system that is logging it makes the flooding worse. Correct the piping instead." },
+        { label: "Correct the piping and evaluate the compressor", verdict: "Right call. If the compressor has already been run oil-starved, evaluate it for damage before you recommission the system." },
       ],
     },
   ],
@@ -7783,6 +12290,23 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Inducer runs the 30 second pre-purge but never transitions to light-off", verdict: "The pre-purge should close the pressure sensor contacts, and only then does the control transition the inducer to its light-off setting. Work the pressure sensor side." },
         { label: "Spark igniter and gas valve energize for 4 seconds but the burner does not stay lit", verdict: "The gas valve stays open only if flame is detected, so work the flame proving side. Note this control uses a spark igniter - do not look for a glowing hot surface igniter." },
         { label: "Burners light and stay lit but the blower timing looks wrong", verdict: "Compare against the published timings: blower starts after a 5 second HEAT FAN ON delay following light-off, then at the end of the call a 30 second inducer post purge and the HEAT FAN OFF delay of approximately 90/120/150/180 seconds, factory set at 150." },
+      ],
+    },
+  ],
+  "s-package-unit-condensate-pm-check": [
+    {
+      ask: "Inspect and flush the condensate line coming off the evaporator coil. How does it flow?",
+      options: [
+        { label: "Line flows clear and the external trap holds a liquid seal", verdict: "Condensate side is good. Move on to cleaning the indoor and outdoor coils, the cabinet, and the drain pan." },
+        { label: "Line is partly blocked or slow", verdict: "Clear it and flush the line now, before it becomes a full clog and a mid-season water call. Then confirm the external trap is intact and holding its seal." },
+        { label: "External trap is damaged or not holding a liquid seal", verdict: "Repair or replace the trap - without a liquid seal the drain will not carry condensate correctly. Then re-flush the line and re-check." },
+      ],
+    },
+    {
+      ask: "Pull the compressor contactor and look at the contacts.",
+      options: [
+        { label: "Contacts are burned or pitted", verdict: "Replace the contactor. Burned or pitted contacts will not carry the compressor reliably." },
+        { label: "Contacts are clean and the connections are tight", verdict: "Leave it. Finish by checking control panel wiring, compressor connections, and insulation, and manually rotate the outdoor fan and indoor blower to confirm they run free - do not oil them, they are permanently lubricated." },
       ],
     },
   ],
@@ -7895,6 +12419,51 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-pcbdm133-compressor-delay-defrost": [
+    {
+      ask: "Confirm the outdoor board is a PCBDM133, then watch a defrost initiation and termination and time the compressor off period. What do you get?",
+      options: [
+        { label: "Off for about 30 seconds at initiation and again at termination", verdict: "That is the factory-selected compressor delay option doing exactly what it should. Do not replace the contactor or the compressor over it." },
+        { label: "Compressor runs straight through initiation and termination", verdict: "The compressor delay jumper is set to Normal. That is also normal behavior for that setting - note which setting the unit is on before condemning parts." },
+        { label: "Off period does not match either behavior", verdict: "Now it is worth investigating the contactor or the compressor. The timing does not match what this board is supposed to do." },
+      ],
+    },
+  ],
+  "s-pcbdm133-defrost-jumper-behavior": [
+    {
+      ask: "Identify the defrost control, then look at the compressor delay jumper. What have you got?",
+      options: [
+        { label: "PCBDM133 with the compressor delay option selected - the factory setting", verdict: "Expect the compressor contactor to de-energize for 30 seconds at defrost initiation and again at termination. That drop-out is normal, not a failing contactor." },
+        { label: "PCBDM133 with the jumper set to Normal", verdict: "Expect the compressor to run straight through defrost initiation and termination. If it is dropping out anyway, the jumper is not where you think it is - recheck it." },
+        { label: "Not a PCBDM133 board", verdict: "Do not apply these timings. Identify the actual defrost control before interpreting any of its timing behavior." },
+      ],
+    },
+    {
+      ask: "Which complaint are you actually looking at on this control?",
+      options: [
+        { label: "Unit will not restart right after it shuts down", verdict: "That is the three minute compressor off-cycle delay on this control. Wait it out before chasing a lockout." },
+        { label: "Low pressure switch opens near defrost and nothing shuts down", verdict: "The control ignores the switch on R-PS1 and PS2 for 5 minutes after defrost initiation and 5 minutes after termination. Designed behavior, not a bypassed safety." },
+        { label: "Compressor drops out briefly entering and leaving defrost", verdict: "That is the factory compressor delay option - 30 seconds at initiation and 30 seconds at termination. Not a fault." },
+      ],
+    },
+    {
+      ask: "To check sequencing, leave power ON with the unit not running, jumper DFT to R (or R-DFT) at the board, then call for heating. What does the board do?",
+      options: [
+        { label: "Follows the expected defrost sequence", verdict: "The board is sequencing correctly. Remove the jumper and restore normal wiring before leaving." },
+        { label: "Does not go into defrost", verdict: "The board is not responding to a simulated closed defrost thermostat. Remove the jumper, restore normal wiring, and take the board as the suspect." },
+      ],
+    },
+  ],
+  "s-pcbdm133-three-minute-off-delay": [
+    {
+      ask: "Verify the outdoor control is a PCBDM133, note the time the compressor stopped, re-create the heat call, and wait the full three minute off-cycle delay. What happens?",
+      options: [
+        { label: "Compressor starts when the three minutes expires", verdict: "The board is behaving normally - that off-cycle delay protects the compressor. Document it and move on." },
+        { label: "Nothing happens after the full three minutes", verdict: "Now keep troubleshooting. Check for 24V at the contactor coil and continue down the call path." },
+        { label: "You have not waited the full three minutes yet", verdict: "Wait it out before deciding the unit is unresponsive. Do not jumper around the board to speed up testing - the delay protects the compressor." },
+      ],
+    },
+  ],
   "s-pest-birds-nesting-vent-termination-combustion": [
     {
       ask: "Before assuming a control fault, inspect the vent termination and the combustion air intake termination from outside.",
@@ -7947,6 +12516,46 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-poe-pve-oil-left-open-to-atmosphere": [
+    {
+      ask: "How long was the system or component actually open, and to what conditions?",
+      options: [
+        { label: "Hours open to humid outdoor air", verdict: "The synthetic oil has been pulling moisture the whole time, and a long evacuation alone will not undo it. Install a properly sized liquid line filter drier and consider a suction drier too." },
+        { label: "Briefly open in a dry conditioned space", verdict: "Lower risk, but check the equipment's installation instructions for a stated maximum open time - several manufacturers publish one and tie the warranty to it." },
+      ],
+    },
+    {
+      ask: "Pull a deep vacuum with the cores removed, isolate the pump, and watch the micron gauge.",
+      options: [
+        { label: "Reading rises then levels off", verdict: "That points to remaining moisture, not a leak. Keep pulling, and replace the liquid line filter drier before you charge." },
+        { label: "Reading keeps climbing and never levels off", verdict: "That points to a leak rather than moisture. Stop evacuating and find the leak first." },
+        { label: "Reading holds steady where you want it", verdict: "The system is dry and tight. Weigh in the charge - and if any oil is added, use only oil out of a sealed metal container." },
+      ],
+    },
+    {
+      ask: "Has this system already been running since the exposure?",
+      options: [
+        { label: "Yes, it has been running on the suspect oil", verdict: "Pull an oil/acid test before deciding whether more cleanup is needed - the moisture reacts with the oil to form acid over time." },
+        { label: "No, it has not run since it was open", verdict: "Change the liquid line filter drier, evacuate properly, and from here on cap every open line immediately when you stop work and purge with dry nitrogen while brazing." },
+      ],
+    },
+  ],
+  "s-pressure-sensor-voltage-check": [
+    {
+      ask: "These are sensors, not switches, so ohming them tells you nothing. With power on, read voltage across the black and white leads while the system runs steadily. What do you get?",
+      options: [
+        { label: "A voltage matching the manual's table for the pressure your gauges show", verdict: "The sensor is reporting accurately. If the system still faults, move on to the control board and wiring - not the sensor." },
+        { label: "A valid-looking voltage that does not match the table for the gauge pressure", verdict: "The sensor is lying. Replace it." },
+      ],
+    },
+    {
+      ask: "Which pressure is this sensor actually reading right now?",
+      options: [
+        { label: "System is in cooling", verdict: "It senses SUCTION pressure in cooling. Compare its output against your suction gauge when you use the manual's voltage table." },
+        { label: "System is in heating", verdict: "It senses DISCHARGE pressure in heating. Compare against your discharge gauge, not suction, or the table will look wrong and you will condemn a good sensor." },
+      ],
+    },
+  ],
   "s-pressure-switch-drops-out-mid-cycle": [
     {
       ask: "Back-probe across the pressure switch with the meter on volts and watch a full cycle, noting the elapsed time to dropout. What happens at the moment the burners quit?",
@@ -7967,6 +12576,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Draft falls off as the unit heats up", verdict: "That is a weak inducer wheel or a leaking gasket showing up under heat. Inspect the inducer and collector box gaskets and vent joints for leaks that open with thermal expansion, and check the outside terminations for partial blockage." },
         { label: "Draft holds steady all the way through the cycle and the switch still opens", verdict: "The switch itself has drifted - replace it with the exact part number and setpoint." },
+      ],
+    },
+  ],
+  "s-prime-condensate-trap-startup": [
+    {
+      ask: "Before starting the furnace, fill the drain trap with water to prime it. What does it do?",
+      options: [
+        { label: "Trap holds the water and nothing weeps at the connections", verdict: "The water seal is good. Verify the downstream drain line is connected and routed with no sags or secondary traps, then bring the furnace up on a heat call." },
+        { label: "Water runs straight through and the trap will not hold a seal", verdict: "No water seal means flue gases can escape through the drain system. Confirm the trap is installed per the drain trap section for this unit's orientation before you fire the furnace." },
+        { label: "Trap holds water but is weeping at a connection", verdict: "Fix that connection before startup. A trap that weeps will lose its seal and let flue gas out through the drain system." },
+      ],
+    },
+    {
+      ask: "After the first heating cycles, check the drain and the trap seal.",
+      options: [
+        { label: "Condensate is reaching the drain and the trap seal is holding", verdict: "Startup is good. Remember to re-prime the trap any time it is removed, cleaned, or drained for service." },
+        { label: "No condensate reaching the drain, or the trap has lost its seal", verdict: "Go back through it - confirm the trap is installed per the manual for this orientation and that the downstream line has no sags or secondary traps, then re-prime and re-run." },
       ],
     },
   ],
@@ -8011,6 +12637,44 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-r32-alert-flash-1-long-run": [
+    {
+      ask: "Yellow ALERT code 1 confirmed by flash count. Check the evaporator blower and look at the evaporator coil. What do you find?",
+      options: [
+        { label: "Evaporator blower is not actually running", verdict: "That alone makes the compressor run long. Check the blower relay coil and contacts, the blower motor capacitor, the motor for failure or blockage, the blower wiring and connectors, the indoor blower control board, and the thermostat wiring for an open circuit." },
+        { label: "Blower runs but the evaporator coil is iced", verdict: "Chase the ice: low suction pressure, an excessively low thermostat setting, restricted evaporator airflow from a blocked coil or dirty return filter, and blocked ductwork or registers." },
+        { label: "Blower runs and the coil is clear", next: 1 },
+      ],
+    },
+    {
+      ask: "Now check the refrigerant charge and the metering device. What turns up?",
+      options: [
+        { label: "Charge reads low", verdict: "Test for leaks and correct the charge. R-32 is an A2L refrigerant - follow your A2L handling and leak-check practices before opening the system." },
+        { label: "TXV bulb is the wrong size, in the wrong spot, or not making contact with the suction line", verdict: "Correct the bulb size, location and contact with the suction line. A bulb that cannot read the suction line starves the coil and makes the compressor run long." },
+        { label: "TXV or fixed orifice is stuck closed or defective", verdict: "Replace the metering device. A device stuck closed cuts capacity and produces exactly this long-run-time code." },
+        { label: "Charge and metering device both check out", verdict: "Look for a liquid line restriction, including a blocked filter drier if one is installed. Then rule out the thermostat - check the sub-base and wiring for a short circuit and confirm the thermostat location and level." },
+      ],
+    },
+  ],
+  "s-r32-red-lock-flash-codes": [
+    {
+      ask: "Count the red LOCK flashes with the yellow LED off. How many?",
+      options: [
+        { label: "2 flashes - pressure trip", next: 1 },
+        { label: "3 flashes - short cycling", verdict: "Locked out after 10 consecutive short cycles. Check for an intermittent thermostat demand signal and a defective time delay relay or control board. If the system has a high pressure switch, also work the LOCK 2 list." },
+        { label: "4 flashes - locked rotor", verdict: "Locked out after 10 locked rotor events. Check the run capacitor, check for low line voltage at the disconnect and contact the utility if it is low, and check the wiring connections. Then look for excessive liquid refrigerant in the compressor and seized bearings - measure the compressor oil level." },
+        { label: "5 flashes - compressor moderate run trip", verdict: "Locked out after 4 consecutive or 10 total events. Find the underlying run condition rather than resetting the lockout again." },
+      ],
+    },
+    {
+      ask: "LOCK 2 is a pressure trip, locked out after 4 consecutive or 10 total trips. Watch the condenser fan while the unit tries to run. What does it do?",
+      options: [
+        { label: "Condenser fan does not run", verdict: "There is your high head. Check the fan capacitor, the fan wiring and connectors, and the fan motor for failure or blockage." },
+        { label: "Fan runs but head pressure is high", verdict: "Work the high head list: check the high pressure switch if the system has one, check whether the system is overcharged, check for non-condensables, and inspect the condenser coil for dirt, blockage, or damage." },
+        { label: "Fan runs and head pressure looks normal right now", verdict: "The trip is not happening at this moment. Check the high pressure switch if the system has one and leave the gauges on through a full cycle to catch the pressure trip when it occurs." },
+      ],
+    },
+  ],
   "s-readings-change-with-the-blower-door-off": [
     {
       ask: "How much did total external static pressure change between door on and door off?",
@@ -8039,6 +12703,72 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Amps noticeably lower than the load suggests, low head pressure, suction staying higher than it should", verdict: "That is the classic leaking reed valve pattern - refrigerant slipping back past the valve instead of being pushed to the high side. On a welded hermetic, diagnose on this pattern and plan on replacement." },
         { label: "Same low-head/high-suction pattern, but amps are normal or high", verdict: "A reversing valve internal bypass or a stuck-open metering device can mimic that pressure pattern. The amp draw is what separates them, so rule those out first." },
         { label: "Sound has a hissing/blowing quality mixed into the normal running sound rather than a mechanical knock", verdict: "That supports a valve plate failure. Confirm with the amp and pressure pattern, then treat it as a compressor replacement rather than a charge or metering problem." },
+      ],
+    },
+  ],
+  "s-recovery-taking-forever-and-cylinder-limits": [
+    {
+      ask: "Look at your hookup before you blame the machine.",
+      options: [
+        { label: "Recovering through Schrader cores on small hoses", verdict: "That is your speed limit, not the machine's rating. Pull the cores with core tools and use short, large-diameter hoses - the biggest single speed gain available." },
+        { label: "Cores removed, short large-diameter hoses, recovering vapor", verdict: "Recover liquid first where the system and machine allow it, then switch to vapor for the pull-down." },
+      ],
+    },
+    {
+      ask: "Where is the recovery cylinder and what condition was it in when you started?",
+      options: [
+        { label: "Sitting in the sun and warm to the touch", verdict: "A hot cylinder fights the machine. Move it to the coolest place you have and keep it out of the sun." },
+        { label: "Cylinder was not evacuated before you started", verdict: "Air in the tank slows everything down and contaminates the recovered refrigerant. Evacuate the recovery cylinder before recovering into it." },
+        { label: "Cool, shaded, and evacuated before the job", verdict: "The cylinder side is right. Check the machine's own filter or strainer - a clogged inlet filter is common on a shop machine." },
+      ],
+    },
+    {
+      ask: "The cylinder is on a scale. How full is it getting?",
+      options: [
+        { label: "At or under 80 percent of the cylinder's rated capacity", verdict: "Keep going, but stop at 80 percent. Do not exceed the tare-plus-rated-net weight, and label the cylinder with the refrigerant type." },
+        { label: "Approaching or past 80 percent of rated capacity", verdict: "Stop and swap cylinders. Overfilling can rupture the cylinder from hydrostatic pressure with only a small temperature rise." },
+        { label: "Not weighing it - relying on the machine's full-tank float", verdict: "Put it on a scale for the whole job. Never rely on the machine's float as your only protection against overfilling." },
+      ],
+    },
+  ],
+  "s-refrig-a2l-handling": [
+    {
+      ask: "Check the nameplate for the refrigerant type. What does this system use?",
+      options: [
+        { label: "An A2L refrigerant such as R32 or R454B", next: 1 },
+        { label: "R410A, R22, or another A1 refrigerant", verdict: "Standard A1 handling applies and the extra A2L requirements here do not. Still work from the manufacturer's manual for that specific equipment." },
+      ],
+    },
+    {
+      ask: "On this A2L system, check your tools and the immediate work area before opening anything. What do you find?",
+      options: [
+        { label: "Gauges or recovery equipment are not rated for A2L", verdict: "Stop and get A2L-rated tools. Standard R410A-only equipment may not meet A2L flammability requirements." },
+        { label: "Ignition sources present or poor ventilation in the work area", verdict: "Eliminate open flame and sparking equipment and get ventilation going before recovering, evacuating, or charging. A2L vapor must not build up in an enclosed space." },
+        { label: "Tools are A2L-rated and the area is ventilated and clear of ignition sources", next: 2 },
+      ],
+    },
+    {
+      ask: "Check this equipment's own A2L leak-detection and mitigation features against the manufacturer's A2L service bulletin. What do you find?",
+      options: [
+        { label: "The required leak sensor or automatic mitigation response is not working as designed", verdict: "Repair the leak detection and mitigation system, not just the refrigerant level. On A2L equipment that feature is part of the safety design." },
+        { label: "Leak detection and mitigation function as designed", verdict: "Proceed with service following the manufacturer's specific A2L service bulletin for this equipment rather than assuming standard R410A procedures carry over unchanged." },
+      ],
+    },
+  ],
+  "s-refrig-brazing-nitrogen-purge": [
+    {
+      ask: "When you open a component on this system, look at the inside of the copper. What do you see?",
+      options: [
+        { label: "Black or dark oxide scale inside the line from earlier brazing", verdict: "Somebody brazed without a nitrogen purge. Treat it as a warning that debris may already be circulating: change the filter drier and check screens even at points you did not work on." },
+        { label: "Copper is clean inside", next: 1 },
+      ],
+    },
+    {
+      ask: "Set up your own nitrogen purge before you braze. How is it actually flowing?",
+      options: [
+        { label: "Low steady flow with the far end capped or restricted so it passes the joint", verdict: "That is correct. The purge keeps oxide scale from forming inside the copper, which is what later plugs filter driers and TXV screens and can damage a compressor." },
+        { label: "Nitrogen escapes out the nearest opening instead of past the joint", verdict: "Cap or restrict the open end so the nitrogen actually flows through the joint area, otherwise the purge is doing nothing at all." },
+        { label: "Flow is high pressure rather than a low steady trickle", verdict: "Turn it down. Too much flow can blow molten filler material through the joint. You only need enough to prevent oxidation." },
       ],
     },
   ],
@@ -8089,6 +12819,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-refrig-recovery-procedure": [
+    {
+      ask: "Before you hook up, confirm the refrigerant type and check your recovery tank. What is the situation?",
+      options: [
+        { label: "Tank already has a different refrigerant in it", verdict: "Do not recover into it. Mixing refrigerants in a recovery tank is a serious contamination issue. Get a tank and equipment appropriate for this specific refrigerant." },
+        { label: "Tank is at or near its rated fill limit on the scale", verdict: "Swap to a tank with room. Fill by weight against the tank rated limit using a scale, never by feel or by volume alone." },
+        { label: "Correct dedicated tank with room to fill, verified on a scale", next: 1 },
+      ],
+    },
+    {
+      ask: "Run the recovery per your machine's liquid and vapor procedure, and watch system pressure. Where does it end up?",
+      options: [
+        { label: "System pressure reaches 0 psig, or the EPA-required level for this equipment size", verdict: "Recovery is complete. Log it per your company's and EPA 608 recordkeeping requirements before opening the system." },
+        { label: "Pressure stalls above that level", verdict: "Recovery is not done. Keep going per your recovery machine's liquid versus vapor procedure until it reaches the required level, and do not open the system early." },
+      ],
+    },
+  ],
   "s-refrig-weighing-in-charge": [
     {
       ask: "What state is this system actually in right now?",
@@ -8106,6 +12853,24 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Plate says R-22 and static reads about 121 psig at 70F", verdict: "Label and pressure agree - R-22 with mineral oil. Never top it with 410A; that creates an unrateable mixture." },
         { label: "Static pressure is wildly off from what the plate refrigerant calls for", verdict: "Suspect a mixed or mislabeled system. A contaminated system must be recovered completely into a dedicated cylinder, not topped off." },
         { label: "Plate says R-32 or R-454B", verdict: "A2L mildly flammable refrigerant. Verify your recovery machine, hoses, detector, and cylinders are A2L rated before opening the system, and keep open flame away from a charged circuit." },
+      ],
+    },
+  ],
+  "s-refrigerant-leak-search": [
+    {
+      ask: "Start at the schrader valve cores and caps, then the flare and flange fittings at the service valves. What do you find?",
+      options: [
+        { label: "Detector hits at a schrader core or its cap", verdict: "That is probably the single most common leak point in the trade and the easiest fix. Recover per EPA 608, replace the core and cap, then evacuate and recharge." },
+        { label: "Detector hits at a flare, flange, or field-brazed joint", verdict: "Repair that joint. Recover refrigerant per EPA 608 first, then evacuate and weigh in the charge after the repair." },
+        { label: "Nothing at the fittings", next: 1 },
+      ],
+    },
+    {
+      ask: "Work the electronic detector slowly across the evaporator and condenser coils in still air, or check for UV dye that has had a full run cycle. What do you see?",
+      options: [
+        { label: "Hit on the evaporator coil, or dye showing there", verdict: "Evaporator coils commonly develop pinhole leaks from formicary corrosion. Document it and plan a coil repair or replacement instead of topping off again." },
+        { label: "Hit on the condenser coil, or dye showing there", verdict: "Condenser coil leak. Document the finding and repair or replace the coil rather than repeatedly adding refrigerant." },
+        { label: "Nothing found on either coil", verdict: "Slow down and go again with nearby fans killed so the air is still, and give UV dye at least one full run cycle to circulate. Document everything you check before repairing." },
       ],
     },
   ],
@@ -8156,6 +12921,49 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-relay-contact-form-mismatch": [
+    {
+      ask: "Compare the installed relay's contact form and coil rating against what the circuit needs: NO vs NC, single vs double pole. What do you find?",
+      options: [
+        { label: "Contact form does not match what this application requires", verdict: "Replace it with the correct contact form and coil rating, not just something that fits the base. Many bases accept internal configurations that look identical from outside the socket." },
+        { label: "The old relay's markings are unreadable or missing", verdict: "Meter the contacts for continuity with the coil de-energized to determine the actual contact state before ordering a replacement, instead of guessing from what seems right." },
+        { label: "Contact form and coil voltage/current rating match the application", next: 1 },
+      ],
+    },
+    {
+      ask: "Test the real circuit, not just a bench click. De-energize the coil and watch what the controlled load does. What happens?",
+      options: [
+        { label: "The load de-energizes to the safe state when the coil drops out", verdict: "Fail-safe behavior confirmed. Also verify the load energizes at the correct point in the sequence, then you are done." },
+        { label: "The load stays energized with the coil de-energized", verdict: "This relay is fail-unsafe for a safety interlock application. Correct the contact form now even if it has been working, since it will fail in the wrong direction under a real fault." },
+      ],
+    },
+  ],
+  "s-replacement-wire-spec-furnace": [
+    {
+      ask: "With all power off, inspect the wiring in the furnace cabinet. What did you find?",
+      options: [
+        { label: "Discolored insulation or other signs of overheating", verdict: "Replace that wire with AWM, 105 degrees C, 2/64 inch thick insulation of the same gauge or equivalent - a hot cabinet demands that rating. Route it clear of hot surfaces and moving parts." },
+        { label: "A loose connection with the wire itself intact", verdict: "Re-terminate it securely, then restore power and verify proper operation through a full cycle." },
+        { label: "Wire looks fine but you suspect it is open", verdict: "Ohm it for continuity. If it is open, replace it with the same AWM, 105 degrees C, 2/64 inch insulation spec in matching gauge." },
+      ],
+    },
+  ],
+  "s-restore-unit-after-defrost-testing": [
+    {
+      ask: "After the defrost thermostat has terminated, check for voltage between DFT and C. What do you read?",
+      options: [
+        { label: "0 volts", verdict: "Correct - that indicates an open sensor. Set the thermostat off, shut off power, remove the jumper across the defrost thermostat terminals, reinstall the timer jumper at the desired interval, and put the fan lead back on DF2." },
+        { label: "Still reading voltage", verdict: "The sensor has not opened. Sort that out before closing the unit up - but still remove the jumpers and reinstall the DF2 lead before power goes back on." },
+      ],
+    },
+    {
+      ask: "Restore power and run a full heating cycle. What does the outdoor fan do?",
+      options: [
+        { label: "Runs normally through the heating cycle", verdict: "The DF2 lead is landed properly and the unit is back in service. You are done." },
+        { label: "Outdoor fan does not run", verdict: "The fan motor lead is not landed correctly on terminal DF2. Shut off power and reseat it - never leave the site with that lead off the board." },
+      ],
+    },
+  ],
   "s-return-air-insufficient": [
     {
       ask: "Measure static pressure with the interior doors open, then again with them closed.",
@@ -8185,6 +12993,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-reusing-the-existing-line-set": [
+    {
+      ask: "Measure the actual liquid and suction line diameters and check them against the new equipment's line sizing table for the installed length and lift.",
+      options: [
+        { label: "Sizes match the new equipment's table", verdict: "Size is OK. Now check condition - kinks, crush spots, corrosion, and prior repairs all disqualify it, as does the pressure rating." },
+        { label: "Sizes do not match the table", verdict: "The line set has to be replaced. You cannot charge or adjust your way around wrong line sizing on the new equipment." },
+      ],
+    },
+    {
+      ask: "What refrigerant and oil did the old system use?",
+      options: [
+        { label: "R-22 with mineral oil", verdict: "Mineral oil left in the copper will not mix with the new POE or PVE oil - it hangs up and can plug the metering device. Flush the line set with an approved flushing agent and dry nitrogen, or replace it." },
+        { label: "Same oil type as the new equipment", verdict: "Less risk, but still pressure test the reused line set with dry nitrogen before evacuation - old copper is exactly where you find leaks." },
+      ],
+    },
+    {
+      ask: "You are flushing the line set. How is it going?",
+      options: [
+        { label: "Flush ran clean at the far end and all solvent is blown out and dried with nitrogen", verdict: "Good. Replace the liquid line filter drier with one sized for the new equipment, pressure test with nitrogen, evacuate deeply, then weigh in the factory charge plus the line length adder." },
+        { label: "Flush is still coming out dirty at the far end", verdict: "Keep flushing or replace the line set. Leftover oil and debris drops capacity and can plug the new metering device." },
+        { label: "Flushing through the indoor coil and metering device to save time", verdict: "Stop - never flush through the new indoor coil, the metering device, or the compressor. Isolate the line set and flush it alone." },
+      ],
+    },
+  ],
   "s-reversing-valve-coil-24v-and-tap-test": [
     {
       ask: "Put the system on the COOLING cycle and measure at the reversing valve coil terminals. What do you read?",
@@ -8208,6 +13040,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-reversing-valve-coil-click-test": [
+    {
+      ask: "Place the unit into cooling mode and test for 24 volts at the solenoid. What do you read?",
+      options: [
+        { label: "24 volts present at the coil", next: 1 },
+        { label: "No voltage present at the coil", verdict: "Check the control voltage circuit. There is nothing to learn from the coil until it is actually being energized." },
+      ],
+    },
+    {
+      ask: "Loosen the nut on top of the coil and begin sliding the energized coil off the stem. What do you feel and hear?",
+      options: [
+        { label: "Slight resistance sliding off, then an audible click", verdict: "The pilot valve plunger is moving as it should. Reinstall the coil and secure the nut, then look elsewhere for the shift problem." },
+        { label: "Slight resistance but no clicking sound at all", verdict: "The plunger is stuck. Try raising head pressure by blocking the fan exhaust in cooling mode, then cycle between cooling and heating to try to free the piston." },
+        { label: "No resistance at all as it slides off", verdict: "You are not getting the pull you should. Recheck that 24 volts is actually present at the coil terminals with the system on the cooling cycle before judging the plunger." },
+      ],
+    },
+  ],
   "s-reversing-valve-coil-pull-and-click": [
     {
       ask: "With the unit in cooling and 24 volts confirmed at the solenoid, loosen the nut on top of the coil and begin sliding it off. What do you feel and hear?",
@@ -8215,6 +13064,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Slight resistance from the magnetic field and an audible click as the coil comes off", verdict: "The coil is magnetized and the click is the pilot valve plunger moving. Reinstall the coil and retighten the nut." },
         { label: "Resistance but no clicking sound at all", verdict: "The absence of a click indicates the pilot valve plunger is stuck." },
         { label: "No voltage present at the coil to begin with", verdict: "Do not judge the coil yet. Check the control voltage first." },
+      ],
+    },
+  ],
+  "s-reversing-valve-internal-leak-4-degrees": [
+    {
+      ask: "Find the center tube on the reversing valve - it is always the suction line - and feel it while the system runs. What is it doing?",
+      options: [
+        { label: "Cold, as suction should be", verdict: "That is what you want. Now measure true suction upstream of the valve and the suction line after the valve, and compare the two." },
+        { label: "Warm instead of cold", verdict: "Discharge gas may be getting into the suction side. Confirm it by comparing true suction upstream of the valve with the suction line after the valve." },
+      ],
+    },
+    {
+      ask: "Compare true suction upstream of the valve with the suction line temperature after the valve. What is the difference?",
+      options: [
+        { label: "4 degrees or less", verdict: "No internal leak through the valve. This test clears the reversing valve - look elsewhere for the capacity problem." },
+        { label: "More than 4 degrees", next: 2 },
+      ],
+    },
+    {
+      ask: "A rise over 4 degrees means discharge gas is leaking into the suction side. Raise head pressure by blocking the fan exhaust in cooling mode, then cycle between cooling and heating. What happens?",
+      options: [
+        { label: "Piston frees up and the temperature difference drops to 4 degrees or less", verdict: "The valve was stuck, not failed. The compressor is not your problem - keep an eye on the valve." },
+        { label: "Temperature difference persists with the valve energized and shifting", verdict: "Replace the reversing valve, not the compressor. The gauge readings that looked like bad compressor valves or broken scroll flanks were coming from the leaking valve." },
       ],
     },
   ],
@@ -8268,6 +13140,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-reversing-valve-stuck-mid-position": [
+    {
+      ask: "Run the system on the COOLING cycle and test for 24V at the reversing valve coil terminals. What do you read?",
+      options: [
+        { label: "24V present at the coil terminals", next: 1 },
+        { label: "No voltage at the coil on a standard or legacy-wired heat pump", verdict: "The call is not reaching the valve. Check thermostat operation and the continuity of the wiring from the thermostat O terminal to the unit." },
+        { label: "No voltage at the coil on a ComfortNet heat pump", verdict: "Check for 24 VAC at the non-insulated terminal E22 on the UC control board (silkscreened RVS) and at the C terminal on the 7-pin or 4-pin connector on the UC control." },
+      ],
+    },
+    {
+      ask: "With voltage present at the coil, tap the valve body lightly while switching the system between HEATING and COOLING. What happens?",
+      options: [
+        { label: "The valve shifts when you tap it", verdict: "It is a sticking valve. Plan on replacement rather than calling it repaired - a valve that only moves when tapped will strand the customer again." },
+        { label: "The valve still will not shift", next: 2 },
+      ],
+    },
+    {
+      ask: "Remove the coil connector cap and test continuity of the reversing valve solenoid coil. What do you get?",
+      options: [
+        { label: "Coil does not test continuous", verdict: "Replace the coil. The valve body may be fine." },
+        { label: "Coil tests continuous with 24 volts present at the terminals", verdict: "The valve is inoperative - replace it. A suction line temperature increase measured through the valve supports that call." },
+      ],
+    },
+  ],
   "s-reversing-valve-stuck-mid-position-2": [
     {
       ask: "Connect gauges and measure suction line temperature entering and leaving the reversing valve. What do you see?",
@@ -8282,6 +13178,39 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "No 24V at the valve coil terminals", verdict: "The valve is not being commanded. Work the control side before condemning the valve." },
         { label: "Tapping the body frees it and it shifts", verdict: "The valve is sticking mechanically rather than being un-commanded - it is not holding position on its own." },
         { label: "Coil tests continuous, 24 volts present, and the valve stays put", verdict: "The valve is inoperative. Replace it." },
+      ],
+    },
+  ],
+  "s-reversing-valve-tap-and-ohm-coil": [
+    {
+      ask: "With 24 volts confirmed at the reversing valve coil terminals on the cooling cycle, tap the valve body lightly while switching from HEATING to COOLING and back. What happens?",
+      options: [
+        { label: "The valve moves when you tap it", verdict: "Treat it as a sticking valve and plan on replacement rather than calling it repaired. It will strand the customer again." },
+        { label: "The valve still will not move", next: 1 },
+      ],
+    },
+    {
+      ask: "Remove the coil connector cap and test the continuity of the reversing valve solenoid coil. What do you get?",
+      options: [
+        { label: "Coil does not test continuous", verdict: "Replace the coil. The valve body may be perfectly good." },
+        { label: "Coil tests continuous with 24 volts present at the coil terminals", verdict: "The valve is inoperative - replace the reversing valve." },
+      ],
+    },
+  ],
+  "s-rheem-plusone-display": [
+    {
+      ask: "Read the 7-segment display and check the code legend on the blower door or wiring diagram. What kind of code is it?",
+      options: [
+        { label: "A drain-related code", verdict: "Rheem's blocked drain sensor stopped the furnace BEFORE water damaged the secondary heat exchanger. Check the condensate trap, drain slope, and termination for blockage." },
+        { label: "A pressure switch code", verdict: "Check the trap first - a dry trap causes pressure-switch faults that mimic venting problems. Then verify vent and intake length and slope against the install manual tables." },
+        { label: "Something else on the legend", verdict: "Work it from the legend printed on the unit. On EcoNet systems the same codes and alerts appear with plain-text descriptions on the thermostat or app, including history - check there too." },
+      ],
+    },
+    {
+      ask: "After clearing the drain issue and restarting, what happens?",
+      options: [
+        { label: "Furnace runs normally through a full cycle", verdict: "Drain issue resolved. Make sure you primed the trap per the install manual - a dry trap will bring you back on a pressure-switch code." },
+        { label: "Now it throws a pressure-switch code", verdict: "Likely a dry trap after the drain work. Prime the trap per the install manual and recheck. If it repeats, verify vent and intake length and slope against the manual's tables." },
       ],
     },
   ],
@@ -8404,6 +13333,29 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-schrader-core-and-port-cap-leaks": [
+    {
+      ask: "Pull the caps at both service ports, check for oil residue in the cap and around the port, then put bubble solution or a detector right on the open port.",
+      options: [
+        { label: "Oil residue in the cap or around the port, and a slow seep at the open port", verdict: "That core is your leak. Replace it using a core removal tool so you do not have to recover the charge for the swap." },
+        { label: "Clean and dry with no seep at either port", verdict: "The ports are not it. Check the valve stem packing under the stem cap, and the flare or braze joints at the service valves." },
+      ],
+    },
+    {
+      ask: "Depress and release the core a couple of times, then re-check with bubble solution.",
+      options: [
+        { label: "Seep stops after cycling the core", verdict: "Debris under the seat was holding it open, and that sometimes clears. Confirm the cap has an intact gasket and install it snug so it seals, then recheck on a later visit." },
+        { label: "Still seeping after cycling the core", verdict: "Replace the core with a core removal tool, then fit a cap with an intact gasket or O-ring and install it snug - the cap is the actual second seal." },
+      ],
+    },
+    {
+      ask: "What condition are the service port caps in?",
+      options: [
+        { label: "Cap gasket or O-ring is missing or hardened, or the cap was only hand-snugged", verdict: "That is what turns a weeping core into a slow charge loss over a season. Fit caps with intact gaskets and install them snug so they seal." },
+        { label: "Caps have good gaskets and were installed snug", verdict: "The cap seal was doing its job, so the loss is somewhere else. Weigh in what you add, document it, and recheck the system on a later visit to confirm the loss stopped." },
+      ],
+    },
+  ],
   "s-scroll-compressor-flooded-start-damage": [
     {
       ask: "Listen right at startup after a long off-cycle in cool weather.",
@@ -8472,6 +13424,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-service-valve-not-fully-open": [
+    {
+      ask: "Before anything else, pull the valve caps and check both service valves for full stem or ball travel with the correct hex or wrench - do not judge by the cap position.",
+      options: [
+        { label: "Stem is fully backseated, or the ball is fully rotated open", verdict: "The valves are open. Let the system run and re-take pressures, superheat, and subcooling before drawing any conclusion about charge." },
+        { label: "Stem or ball is not at full travel", verdict: "There is your restriction - a partly open valve meters refrigerant exactly like a stuck metering device. Open it fully, then re-take all your readings before diagnosing anything else." },
+        { label: "Ball valve handle reads open but the stem turns without moving anything", verdict: "Stripped stem - the handle indicator is lying to you. The ball is not actually open, so the valve has to be freed or replaced before you judge the system." },
+      ],
+    },
+    {
+      ask: "With the system running, feel for a temperature difference across the valve body.",
+      options: [
+        { label: "Noticeably colder on the downstream side of the valve", verdict: "Refrigerant is dropping pressure across the valve, so it is not fully open. Open it fully, and check the Schrader depressor in the port for holding the valve or restricting flow." },
+        { label: "Same temperature on both sides of the valve body", verdict: "No restriction at the valve. Re-take pressures, superheat, and subcooling and look elsewhere, then reinstall the valve caps with their seals - the cap is a sealing surface, not just a dust cover." },
+      ],
+    },
+  ],
   "s-setting-defrost-interval-jumper": [
     {
       ask: "Run the unit in heating and watch the outdoor coil through a full timing period. Which one are you seeing?",
@@ -8488,6 +13457,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Noticeable temperature drop across the drier", verdict: "The drier is restricted. Replace it, then recheck superheat and subcooling - both should normalize toward spec without touching the charge." },
         { label: "Same temperature in and out of the drier", verdict: "Keep working downstream: a kinked or crushed liquid line, a partially closed liquid line service valve, or debris on the TXV inlet screen." },
+      ],
+    },
+  ],
+  "s-sh-sc-high-low": [
+    {
+      ask: "You have high superheat and low subcooling. Now read head and suction pressures. What do they show?",
+      options: [
+        { label: "Head and suction pressures also read low", verdict: "That second data point confirms a true undercharge. Do not add refrigerant yet. Leak search first, repair what you find, then evacuate and weigh in the full nameplate charge." },
+        { label: "Head and suction pressures do not read low", verdict: "The undercharge picture is not confirmed. Recheck your superheat and subcooling measurements and the rest of the system before treating this as a refrigerant shortage." },
+      ],
+    },
+    {
+      ask: "Leak search the flare fittings, schrader cores, braze joints, and evaporator coil with an electronic detector or UV dye. What turns up?",
+      options: [
+        { label: "Leak found at a schrader core, flare fitting, or braze joint", verdict: "Repair that joint. Recover per EPA 608 before opening anything, then evacuate to a proper vacuum and weigh in the full nameplate charge." },
+        { label: "Leak found in the evaporator coil", verdict: "Evaporator coils are a common slow-leak point. Repair or replace the coil, then evacuate and weigh in the full nameplate charge rather than topping off." },
+        { label: "No leak found yet", verdict: "Keep searching before adding any refrigerant. Topping off a leaking system is a temporary fix and a compliance problem, not a repair." },
       ],
     },
   ],
@@ -8610,6 +13596,53 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-solar-inverter-hvac-interaction": [
+    {
+      ask: "Ask when the symptom happens, and try switching off or isolating the inverter for a test. What is the pattern?",
+      options: [
+        { label: "Only during mid-day sunny production, and it changes when the inverter is off", next: 1 },
+        { label: "It also happens at night or on cloudy days", verdict: "Not a solar interaction. Diagnose it as a normal equipment fault." },
+      ],
+    },
+    {
+      ask: "Check what kind of HVAC equipment it is, then measure voltage at the equipment during active solar production. What do you find?",
+      options: [
+        { label: "Inverter-driven or communicating equipment, with voltage pushed toward the high end during production", verdict: "That type of equipment is more susceptible to power quality issues. Document measured voltage during production versus non-production before pursuing it further." },
+        { label: "Simple single-speed PSC equipment with voltage in the normal range", verdict: "Much less likely to be the inverter. Keep working the equipment-side causes." },
+      ],
+    },
+    {
+      ask: "If you have a power quality meter, check THD on the HVAC circuit during production versus non-production, and look at inverter and comm wiring routing. What do you find?",
+      options: [
+        { label: "Excessive harmonic distortion during production, or comm wiring routed close to inverter conductors", verdict: "Now you have measured evidence, not just timing. Coordinate with the solar installer, since inverter settings, filtering, or wiring changes are outside HVAC scope." },
+        { label: "THD looks normal and wiring is well separated", verdict: "Do not pursue the inverter on timing correlation alone. Go back to equipment-side diagnosis." },
+      ],
+    },
+  ],
+  "s-solidstate-vs-electromechanical-relay": [
+    {
+      ask: "Identify the relay type first. What do you see and hear when it is supposed to switch?",
+      options: [
+        { label: "Audible click with visible mechanical contacts", next: 1 },
+        { label: "No click, sealed module with an LED indicator, no moving parts", next: 2 },
+      ],
+    },
+    {
+      ask: "On this electromechanical relay, pull it and inspect the contacts and coil. What do you find?",
+      options: [
+        { label: "Welded, pitted, or blackened contacts with arcing marks", verdict: "Classic electromechanical failure. Replace the relay, matching contact form and coil voltage/current rating." },
+        { label: "Coil failed open, or the armature is mechanically stuck", verdict: "Coil or mechanical failure. Replace the relay rather than trying to free a stuck armature." },
+      ],
+    },
+    {
+      ask: "On this solid-state relay, compare the control signal against what the load actually does. What do you see?",
+      options: [
+        { label: "Load stays energized with the control signal removed", verdict: "Shorted SSR output. It looks like a welded contact but there is nothing mechanical to free or clean, so replace the relay." },
+        { label: "Load never energizes despite a good control signal", verdict: "Open SSR output. Replace it, matching voltage and current rating and the load type (resistive vs inductive) if specified." },
+        { label: "It switches correctly but the module runs hot", verdict: "Check heat sinking and the ambient location. SSRs generate real heat across the output junction and fail early when under-heat-sinked or mounted somewhere hot." },
+      ],
+    },
+  ],
   "s-stack-temperature-high-non-condensing": [
     {
       ask: "Clock the meter and take the temperature rise. Which combination do you have?",
@@ -8658,6 +13691,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-static-probe-placement-with-filter": [
+    {
+      ask: "There is a filter installed. Where did you put the return static probe?",
+      options: [
+        { label: "Between the filter and the air handler", verdict: "Correct for this platform - that separates equipment static from filter loss. Take the return as a negative and the supply as a positive, then add the absolute values." },
+        { label: "On the upstream side of the filter", verdict: "That reading includes the filter loss and will read wrong. Move the probe between the filter and the air handler and retake it." },
+        { label: "You are measuring on a furnace with an A coil, not an air handler", verdict: "For airflow on a furnace, take the SUPPLY reading between the A coil and the furnace, not above the coil." },
+      ],
+    },
+    {
+      ask: "Add the absolute values of return and supply (for example 0.30 plus 0.20 equals 0.50 in wc) and compare to the allowable duct static in the specs. Where does it land?",
+      options: [
+        { label: "Inside the minimum and maximum allowable", verdict: "Static is acceptable. Use the CFM versus static table to find the actual airflow." },
+        { label: "Outside the allowable range", verdict: "Check for closed dampers, dirty filters, and undersized or poorly laid out ductwork before you look at anything else." },
+      ],
+    },
+  ],
   "s-static-reading-unstable-or-backwards": [
     {
       ask: "After zeroing and repositioning the probe, is the reading stable?",
@@ -8665,6 +13715,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Steady now, and the sign makes sense on each side", verdict: "Good reading. Record it door-on and go to work on the actual restriction." },
         { label: "Still bouncing, and the blower is a variable speed unit still ramping", verdict: "Wait for the blower to settle at its target airflow. If it never settles, that is a separate problem - the motor is hunting, which points at programming, a control signal issue, or a system it cannot satisfy." },
         { label: "Still bouncing on a fixed speed blower", verdict: "The probe is in turbulence or too close to a fitting. Relocate it further from transitions and the blower discharge, and re-read." },
+      ],
+    },
+  ],
+  "s-static-shock-sensation-vs-real-fault": [
+    {
+      ask: "Do not dismiss it as static yet. Meter for voltage between the suspect metal surface and a known good ground, with loads off. What do you read?",
+      options: [
+        { label: "Any measurable voltage to ground with loads off", verdict: "Do not call this static. Perform the full grounding and bonding investigation before telling the customer anything." },
+        { label: "No measurable voltage to ground", next: 1 },
+      ],
+    },
+    {
+      ask: "Get specifics from the customer on when and how the shock happens. Which pattern fits?",
+      options: [
+        { label: "Only after walking on carpet, only in dry winter weather, one brief spark on first touch", verdict: "Those are the hallmarks of ordinary static discharge. Check indoor relative humidity and explain this is a comfort and humidity issue, not an HVAC electrical fault. Humidification reduces it." },
+        { label: "Happens repeatedly, is stronger than a typical spark, or has no carpet/dry-air pattern", verdict: "Treat it as a genuine electrical safety complaint and run the full ground and bonding verification procedure rather than assuming static." },
+      ],
+    },
+    {
+      ask: "Check the bonding on the metal ductwork and unit cabinets. What do you find?",
+      options: [
+        { label: "Sections of metal duct or cabinet are ungrounded or unbonded", verdict: "Isolated metal accumulates static charge and discharges more noticeably when touched. Bond it properly. It is a bonding fix even though the underlying cause is static." },
+        { label: "Everything is properly grounded and bonded", verdict: "Document clearly for the customer which explanation applies, since confusing ordinary static with a wiring fault either alarms them needlessly or hides a real hazard." },
       ],
     },
   ],
@@ -8709,6 +13782,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-superheat-number-looks-impossible-check-probe": [
+    {
+      ask: "Before you touch the charge, look at exactly where your clamp probe is sitting.",
+      options: [
+        { label: "On a fitting, elbow, or braze joint, or sitting on top of the insulation", verdict: "That is why the number is wrong. Move it to clean bare copper on a straight run of suction line and clamp it tight so the sensing element contacts the pipe." },
+        { label: "On bare copper but in direct sunlight or in the condenser fan discharge", verdict: "Ambient is reading through it. Get the probe out of the sun and out of the fan stream, then insulate over the probe and the pipe." },
+        { label: "Clamped tight on clean bare copper, straight run, insulated over", verdict: "Placement is right. Give it a couple of minutes to settle - clamp probes do not read instantly - then sanity check against a second thermometer on the same pipe." },
+      ],
+    },
+    {
+      ask: "Give it a couple of minutes and watch the reading.",
+      options: [
+        { label: "Reading settles and holds steady", verdict: "Now you can trust it. Verify the pressure side too, then interpret the superheat and act on it." },
+        { label: "Reading still swings every time you look at it", verdict: "Do not act on it. Sanity check the sensor against a second thermometer, or against another probe on the same pipe, before you interpret anything." },
+      ],
+    },
+    {
+      ask: "Check the pressure side of your setup too.",
+      options: [
+        { label: "Schrader depressor is only partly opening the core, or the hose has a plugged core", verdict: "That reads low and throws the superheat off. Fix the connection and re-take the pressure before you judge the system." },
+        { label: "Gauge port and hoses are clear and reading properly", verdict: "The pressure side is trustworthy. Once the temperature reading is stable, interpret the superheat and act on it." },
+      ],
+    },
+  ],
   "s-surge-damage-after-storm": [
     {
       ask: "Check the control board fuse first.",
@@ -8724,6 +13821,54 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Outdoor components dead but indoor fine, or the reverse", verdict: "A nearby strike can take out one and not the other. Diagnose them separately." },
         { label: "Communicating system acting erratic", verdict: "Check the communication boards and modules - they are especially surge-sensitive." },
         { label: "This has happened before at this property", verdict: "Discuss surge protection options with the customer rather than replacing the same part again." },
+      ],
+    },
+  ],
+  "s-surge-protector-hvac-interaction": [
+    {
+      ask: "Ask when the whole-home SPD was installed or replaced relative to when the HVAC electrical complaint started. What is the timing?",
+      options: [
+        { label: "SPD went in right around when the problem started", next: 1 },
+        { label: "SPD has been in place a long time with no recent change", verdict: "Timing does not point at the SPD. Check equipment supply voltage directly at the HVAC disconnect and work the equipment-side causes, which are far more common." },
+      ],
+    },
+    {
+      ask: "Check the SPD's status indicator and how it is installed, then meter supply voltage at the HVAC disconnect. What do you find?",
+      options: [
+        { label: "SPD status light shows failed or degraded", verdict: "It has absorbed an event and no longer protects downstream equipment. Report it to the customer and their electrician for replacement." },
+        { label: "SPD is on the wrong breaker rating, or its ground or connection is loose", verdict: "An improperly grounded or loose SPD can put voltage noise onto the panel instead of suppressing it. This is panel-level work, so coordinate with a licensed electrician." },
+        { label: "Voltage at the disconnect is outside the equipment's rated range", verdict: "Document the readings, and use a recording meter for intermittent issues. Normal utility variation or an equipment-side problem is still more likely than a faulty SPD." },
+      ],
+    },
+    {
+      ask: "If this equipment has its own dedicated surge protection device at the condenser or air handler, check its condition. What do you find?",
+      options: [
+        { label: "It shows a failed or sacrificed state after a surge event", verdict: "These are typically wired in series with the equipment and can fail open, cutting power entirely. Replace the device and retest." },
+        { label: "It reads normal", verdict: "Rule it out and go back to measuring supply voltage quality at the disconnect and checking equipment-side causes." },
+      ],
+    },
+  ],
+  "s-temperature-drop-at-the-filter-drier": [
+    {
+      ask: "With the system running and stabilized, take temperatures on the liquid line immediately upstream and immediately downstream of the filter drier.",
+      options: [
+        { label: "Same temperature on both sides", verdict: "A healthy drier reads the same both sides, so it is not restricted. Do the same upstream/downstream check at a sight glass, a solenoid, or the metering device inlet screen." },
+        { label: "Noticeably cooler downstream, or sweating or frosting on or just after the drier", verdict: "That temperature drop is refrigerant flashing through a restriction - the drier is plugged. Recover, replace it with the correct type and size, pull a proper vacuum, and weigh the charge back in." },
+      ],
+    },
+    {
+      ask: "Check the subcooling and the drier's flow arrow while you are there.",
+      options: [
+        { label: "Subcooling is high while the low side runs starved", verdict: "That is the classic signature of a restriction downstream of the condenser, and it fits the drier being plugged." },
+        { label: "The flow arrow points against the actual direction of liquid flow", verdict: "It is installed backwards. Correct it before you chase anything else - that alone can restrict the system." },
+        { label: "Subcooling is normal and the arrow is correct", verdict: "The drier probably is not your restriction. Check the other suspect points - sight glass, solenoid, metering device inlet screen - the same way." },
+      ],
+    },
+    {
+      ask: "You are about to replace a restricted drier. What else do you do?",
+      options: [
+        { label: "Swap the drier and recharge", verdict: "Not enough - ask why it plugged. Debris, a prior burnout, or moisture will just plug the new one too." },
+        { label: "Find why it plugged first - debris, prior burnout, or moisture", verdict: "Right. Address the source, then recover, replace the drier with the correct type and size, pull a proper vacuum, and weigh the charge back in." },
       ],
     },
   ],
@@ -8747,6 +13892,48 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-terminal-block-corrosion-intermittent": [
+    {
+      ask: "Inspect the thermostat back-plate, board terminal strips, and wire nut splices. What do you see?",
+      options: [
+        { label: "Green or white corrosion on the wire or terminal screws", verdict: "That high-resistance connection can pass a no-load voltage check and still fail under actual current. Clean the conductor and terminal thoroughly and re-torque, rather than re-landing the wire on top of corrosion." },
+        { label: "A discolored terminal, or a wire that pulls out with unusually little force", verdict: "Corrosion has weakened the mechanical grip as well as adding resistance. Clean, re-terminate, and re-torque that connection." },
+        { label: "Terminals and conductors look clean and tight", verdict: "Corrosion is not the cause of this intermittent fault. Look elsewhere." },
+      ],
+    },
+    {
+      ask: "Look at the environment around the board and terminal blocks. What do you find?",
+      options: [
+        { label: "Damp basement, crawlspace, or coastal location, or an active drain leak dripping near the board", verdict: "Address the moisture source, not just the terminals. Repeated cleaning is only temporary if the location stays wet." },
+        { label: "Chronic damp that cannot practically be fixed", verdict: "Consider a corrosion-inhibiting terminal treatment, or relocating the board or terminal block to a drier location, since repeated cleaning will not hold." },
+        { label: "Location is dry and this looks like a one-time find", verdict: "Clean it up, re-torque, and note the finding. No moisture remediation needed here." },
+      ],
+    },
+  ],
+  "s-testing-ptc-crankcase-heater": [
+    {
+      ask: "With ALL power disconnected and the heater lead-in wires off, check heater continuity with an ohmmeter. What do you get?",
+      options: [
+        { label: "Open - no continuity", verdict: "The heater is bad. Replace it, then reconnect the leads, restore power, and allow the manual's required pre-energize time before letting the compressor run." },
+        { label: "Tests continuous", next: 1 },
+      ],
+    },
+    {
+      ask: "This is a PTC heater with a cool resistance of about 1800 ohms on this model. Feel the compressor shell, then compare your reading against that.",
+      options: [
+        { label: "Compressor cold and the reading is near 1800 ohms", verdict: "That matches the spec for this 40 watt, 265 volt heater. It is good - reconnect the leads and restore power." },
+        { label: "Compressor warm and the reading is well above 1800 ohms", verdict: "Normal for a PTC heater - resistance becomes greater as the compressor shell temperature increases. Do not condemn it on a high reading from a warm compressor." },
+        { label: "Compressor cold but the reading is far below 1800 ohms", verdict: "That does not match the cool resistance for this heater. Recheck with the lead-in wires fully disconnected before you decide anything." },
+      ],
+    },
+    {
+      ask: "The compressor shows liquid damage. What does the heater test tell you?",
+      options: [
+        { label: "Heater tested continuous and got its required pre-energize time", verdict: "Keep looking. The heater will not prevent compressor damage from floodback or an overcharge - chase charge level and metering device operation." },
+        { label: "Heater tested open", verdict: "Replace it and give it the manual's required pre-energize time before the compressor runs - but still check the charge and the metering device, since the heater does not cover floodback or overcharge." },
+      ],
+    },
+  ],
   "s-thermostat-communicating-vs-conventional-swap": [
     {
       ask: "Look at what actually lands on the thermostat before quoting any swap. What wiring do you find?",
@@ -8760,6 +13947,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "A legacy/24V mode exists via jumpers or settings", verdict: "It will run reduced staging off a conventional stat, but you lose modulation and communication features. Confirm staging, defrost, and airflow behavior before leaving - 'it runs' is not 'it runs right'." },
         { label: "No fallback mode listed for this equipment", verdict: "Do not promise the swap. The brand's own smart stat - S40, Infinity/Evolution touch, Daikin One+ - is the answer, with app control and full system function." },
+      ],
+    },
+  ],
+  "s-thermostat-firmware-update-stuck": [
+    {
+      ask: "Look at the thermostat display before calling it a hardware fault. What is on the screen?",
+      options: [
+        { label: "An update-in-progress indicator, progress bar, or update message", next: 1 },
+        { label: "Blank or frozen with no update indicator at all", verdict: "Do not assume hardware yet. Look up the manufacturer's recommended recovery method for this model before doing a generic hard reset that could wipe programming." },
+      ],
+    },
+    {
+      ask: "How long has it been sitting on that update screen compared to the update's normal expected duration?",
+      options: [
+        { label: "Still within the normal expected update time", verdict: "Leave it alone and let it finish. Interrupting a firmware update creates more problems than it solves." },
+        { label: "Well past the expected duration with no progress", verdict: "Follow the manufacturer's recommended recovery, which is often a specific button-hold reset or a power cycle at the equipment breaker, not a generic hard reset." },
+      ],
+    },
+    {
+      ask: "Once the update completes, go back through the installer and equipment settings. What do you find?",
+      options: [
+        { label: "Equipment type, staging, C-wire, or heat pump balance point/lockout settings were reset or changed", verdict: "Some updates alter these rather than only user-facing features. Reset them to match the installed equipment, then check the schedule and any smart or occupancy features too." },
+        { label: "Settings survived but the thermostat is off the network", verdict: "It may need to be manually reconnected to Wi-Fi and the cloud account rather than resuming automatically after the update." },
+        { label: "Everything came back correctly", verdict: "Record the firmware version before and after. If this recurs, check the manufacturer's release notes and known issues for that version before re-diagnosing." },
       ],
     },
   ],
@@ -8912,6 +14123,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-trane-charging-below-55f": [
+    {
+      ask: "Weigh in the worksheet amount, run the system at least 20 minutes, then check liquid line temperature and liquid gauge pressure in heating. What subcooling do you get?",
+      options: [
+        { label: "At least 10 degrees subcooling", verdict: "That is the heating-mode floor for this method. Leave the charge alone and schedule a return visit in spring or summer to charge accurately in cooling mode with outdoor ambient above 55 F." },
+        { label: "Less than 10 degrees subcooling", verdict: "Add charge until you reach at least 10 degrees. The nameplate charge plus the additional charge already added was not enough. Still schedule the warm-weather return visit to finish the job properly." },
+      ],
+    },
+  ],
+  "s-trane-condensate-switch-tubing-sag": [
+    {
+      ask: "Trace the condensate pressure switch tubing from the switch to the pressure port on the trap. What does the run look like?",
+      options: [
+        { label: "There is a sag, loop, or low point in the run", verdict: "That low spot holds water and forms an unintended trap, which the switch reads as a blockage. Trim the tubing to length so there is no sag, and secure it so it cannot settle back." },
+        { label: "Tubing runs clean with no low point", verdict: "Check the rain gutter condensate hose between the rain gutter and the lower port of the condensate trap the same way - it sags just as easily." },
+      ],
+    },
+    {
+      ask: "After trimming and securing the tubing, run two complete heating cycles.",
+      options: [
+        { label: "Condensate pressure switch proves and holds through both cycles", verdict: "The sag was the fault. Make sure all tubing is secured so it cannot settle back into a low spot, then close out." },
+        { label: "Switch still trips intermittently", verdict: "Blow the standing water out of the tubing - never blow into a tube while it is still connected to the switch - and re-check the rain gutter hose and the trap for a low spot you missed." },
+      ],
+    },
+  ],
   "s-trane-condenser-no-diagnostics": [
     {
       ask: "With a cooling call in, read 24V between Y and C at the condenser low-voltage connections. What do you have?",
@@ -8956,6 +14192,146 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-trane-horizontal-trap-relocation": [
+    {
+      ask: "How are you getting the condensate trap off this furnace?",
+      options: [
+        { label: "Removing the bracket screws and taking bracket and trap out as one assembly", verdict: "That is the right way - do not separate the trap from its bracket. Hold the trap by hand while pulling hoses so the plastic does not break." },
+        { label: "Pulling the hoses off the trap while it is still mounted in the furnace", verdict: "Hold the trap by hand while you pull hoses or you will break it. Better yet, remove the bracket screws and take the bracket and trap out as an assembly first." },
+      ],
+    },
+    {
+      ask: "With the trap bracket assembly off, look inside the cold header at the trap connection. Did you find the small plastic adapter with O-rings?",
+      options: [
+        { label: "Adapter with O-rings is in hand and set aside", verdict: "Hang on to it - it must be reinstalled in the cold header before the trap bracket goes back on, or the reassembled trap connection leaks. Now pull the 3 in. plug from the new side and fit the trap grommet." },
+        { label: "No adapter found in the cold header", verdict: "Stop and hunt for it. It hides inside the cold header held in place by the trap bracket, and reassembling without it means a leaking trap connection." },
+      ],
+    },
+  ],
+  "s-trane-ifc-code-retrieval": [
+    {
+      ask: "Read the code on the Trane IFC display exactly, including any sub-digit. What is it?",
+      options: [
+        { label: "e2.2", verdict: "Pressure switch stuck OPEN. The control never saw the switch close - chase the inducer, venting, hoses, and the switch itself." },
+        { label: "e2.3", verdict: "Pressure switch stuck CLOSED - the opposite problem. The control saw the switch closed when it expected open. Check for a jumpered or welded switch." },
+        { label: "A code with no sub-digit, e01 through e12 style", verdict: "Look it up in the Trane table in Error Codes. Watch the segments - a 5 can render like an S - so compare against the code list, not intuition." },
+      ],
+    },
+    {
+      ask: "Before you kill power, use the board's recall function for stored faults. What did you get?",
+      options: [
+        { label: "Stored recent faults came up", verdict: "Good - power cycling would have erased them. Work the pattern, then clear stored codes after the repair and watch one full cycle so the history you leave behind is clean." },
+        { label: "Recall shows nothing stored", verdict: "No history to work from. Run the unit and watch the display live through a full cycle to catch the fault as it happens." },
+      ],
+    },
+  ],
+  "s-trane-ifc-limit-string-before-pressure-switch": [
+    {
+      ask: "No inducer on a heat call. Read 24VAC from W1 to B/C at the IFC and check the LED. What do you have?",
+      options: [
+        { label: "24VAC present and the LED shows Xt for gas heating", verdict: "The call is good. Now prove the limit string before you blame the pressure switch - the IFC powers that switch through the limit string." },
+        { label: "No 24VAC from W1 to B/C", verdict: "The thermostat call is not reaching the control. Fix that first; nothing downstream will run." },
+      ],
+    },
+    {
+      ask: "The IFC sends 24VAC out HLO. Which input does not get it back?",
+      options: [
+        { label: "ILI does not return it", verdict: "The condensate pressure switch or the inducer limit switch is open. Check those two." },
+        { label: "HLI does not return it", verdict: "A flame rollout switch (FRS1 or FRS2), the main thermal limit (TCO), or a reverse air flow (RAF) switch is open. Find which one, and why, before resetting it." },
+        { label: "Both return fine", verdict: "The limit string is intact. The control expects PS1 OPEN at this point - confirm that, then watch for the inducer relay to close and the motor to run." },
+      ],
+    },
+    {
+      ask: "Check for 24VAC at the pressure switch. What do you find?",
+      options: [
+        { label: "No 24VAC at the pressure switch at all", verdict: "Do not condemn the switch. The IFC feeds it through the limit string, so no voltage there means an open thermal limit upstream. Go back and chase the limit string." },
+        { label: "24VAC present, and PS closes as the inducer ramps up", verdict: "Switch and inducer are doing their job. Confirm the ignitor relay closes and the ignitor energizes - warm-up is about 17 seconds - then the gas valve relay closes at the end of warm-up." },
+        { label: "24VAC present but PS never closes with the inducer running", verdict: "Now the pressure switch is a fair suspect, along with the inducer, hoses, and venting. Work that circuit." },
+      ],
+    },
+  ],
+  "s-trane-inducer-rotation-drain-plug": [
+    {
+      ask: "After you reattach the inducer, look at which way the elbow points for the new orientation.",
+      options: [
+        { label: "Elbow points the direction the new orientation requires", verdict: "Correct. Torque the three inducer screws to 30 in.-lbs - do not overtighten - then fit the vent outlet gasket and outlet and the vent inlet gasket and inlet." },
+        { label: "Elbow is still pointing the way it did in upflow", verdict: "Back the three inducer screws out, rotate the inducer 180 degrees so the elbow points the way the new orientation needs, then retorque to 30 in.-lbs." },
+      ],
+    },
+    {
+      ask: "Run the furnace after the conversion and watch the cold header. Is it draining?",
+      options: [
+        { label: "Cold header drains and the trap fills as expected", verdict: "The conversion is good. Confirm the PVC is fully inserted into the inducer outlet - twist it to be sure - and that both clamps are tight." },
+        { label: "Cold header holds condensate and will not drain", verdict: "The drain plug is likely still in the top right location. Move it to the cold header outlet at the bottom left so the low point for this orientation actually drains." },
+      ],
+    },
+  ],
+  "s-trane-minisplit-decommissioning-recovery": [
+    {
+      ask: "Before you start pulling refrigerant, check what samples you have. Did you take an oil and refrigerant sample?",
+      options: [
+        { label: "Oil and refrigerant sample taken", verdict: "Good - that sample is what allows analysis prior to reuse of the reclaimed refrigerant. Carry on with the decommissioning." },
+        { label: "No sample taken yet", verdict: "Take one now, before decommissioning. Without it you cannot have the refrigerant analyzed prior to reuse." },
+      ],
+    },
+    {
+      ask: "With the unit still powered and PPE and handling equipment on site, try to pump the refrigerant system down. Can you pull a vacuum on it?",
+      options: [
+        { label: "Yes - the system pumps down", verdict: "Good. Confirm the cylinder is sitting on the scales, then start the recovery machine and operate it per its manufacturer's instructions." },
+        { label: "No - a vacuum is not possible", verdict: "Make a manifold so refrigerant can be removed from the various parts of the system, then recover with the cylinder on the scales." },
+      ],
+    },
+    {
+      ask: "Watch the scales while the recovery cylinder fills. Where are you?",
+      options: [
+        { label: "Below 80 percent volume liquid charge and under the cylinder maximum working pressure", verdict: "Keep going. Make sure you have enough correctly designated and labeled cylinders for the total system charge." },
+        { label: "Approaching 80 percent volume liquid charge, or pressure near the cylinder maximum", verdict: "Stop filling that cylinder and switch to another. Never overfill past 80 percent volume liquid charge and never exceed the cylinder maximum working pressure, even temporarily." },
+        { label: "Recovery complete", verdict: "Close off all isolation valves on the equipment and remove the cylinders and equipment from site promptly. Label the equipment as decommissioned and emptied of refrigerant, dated and signed." },
+      ],
+    },
+  ],
+  "s-trane-minisplit-flare-torque": [
+    {
+      ask: "Read the model, then identify the flare you are about to torque. Which size is it?",
+      options: [
+        { label: "1/4 in. (6.35 mm) liquid - all models in this table", verdict: "Torque to 15 to 20 N-m (11.1 to 14.8 lbf-ft, 1.5 to 2.0 kgf-m)." },
+        { label: "3/8 in. (9.52 mm) gas - 9K and 12K", verdict: "Torque to 31 to 35 N-m (22.9 to 25.8 lbf-ft, 3.2 to 3.6 kgf-m)." },
+        { label: "1/2 in. (12.7 mm) gas - 18K", verdict: "Torque to 45 to 50 N-m (33.2 to 36.9 lbf-ft, 4.6 to 5.1 kgf-m)." },
+        { label: "5/8 in. (15.88 mm) gas - 24K and 36K", verdict: "Torque to 60 to 65 N-m (44.3 to 48.0 lbf-ft, 6.1 to 6.6 kgf-m)." },
+      ],
+    },
+    {
+      ask: "Leak check every flare after torquing, before evacuating. What do you find?",
+      options: [
+        { label: "No leaks at any flare", verdict: "Go ahead and evacuate. Then read the additional refrigerant charge rate for the actual model from the manual's table and weigh in the calculated amount." },
+        { label: "A flare is leaking", verdict: "Do not evacuate yet. Redo that flare to the torque spec for its size - under-torqued flares leak and over-torqued flares crack - then recheck before moving on." },
+      ],
+    },
+    {
+      ask: "Measure the vertical separation between the indoor and outdoor units. How does it compare with the model's maximum height difference?",
+      options: [
+        { label: "Within the model's maximum", verdict: "The layout is acceptable. The maximums in this table run from 33 ft to 65 ft depending on the model." },
+        { label: "Beyond the model's maximum height difference", verdict: "The install is outside spec for this model. Relocate a unit or change the model - do not just add charge and hope it works out." },
+      ],
+    },
+  ],
+  "s-trane-pressure-curve-check": [
+    {
+      ask: "Check the outdoor temperature before you start. What is it?",
+      options: [
+        { label: "Above 65 F", verdict: "You can check cooling performance. Select the proper indoor CFM for the match and let the system run until pressures stabilize." },
+        { label: "65 F or below", verdict: "Cooling performance can only be checked above 65 F. Do not judge this system on the pressure curves today - come back when it is warmer." },
+      ],
+    },
+    {
+      ask: "On the plot for the actual matched model, find outdoor temperature, then indoor wet bulb, and read the expected pressures. How do your measured readings compare?",
+      options: [
+        { label: "Discharge within +/- 10 psi and suction within +/- 3 psig of the chart", verdict: "The system is performing. Remove the gauges and replace the service port caps finger tight plus an additional 1/6 turn to prevent leaks." },
+        { label: "Discharge is more than 10 psi off the chart value", verdict: "Outside tolerance. If you are charging by subcooling, recover refrigerant when the liquid gauge pressure is higher than the charging chart value, and wait 20 minutes for conditions to stabilize between adjustments." },
+        { label: "Suction is more than 3 psig off the chart value", verdict: "Outside tolerance. Confirm you used the curve for the actual matched pair and the proper indoor CFM, then work the charge against the charging chart - the system is charged when liquid line temperature and gauge pressure approximately match it." },
+      ],
+    },
+  ],
   "s-trane-s9v2-vent-equivalent-length": [
     {
       ask: "Measure the straight pipe on the vent and the inlet separately, count every elbow including the termination tee or bend, add the equivalent lengths and the termination kit allowance (5 ft for BAYAIR30AVENTA or BAYAIR30CNVENT, 0 ft for BAYVENT200B or BAYVENTCN200B). How does each pipe compare to the Table 31 maximum for this model, pipe size and altitude?",
@@ -8983,6 +14359,41 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-trane-s9v2vs-annual-inspection-items": [
+    {
+      ask: "Go past the filter on this maintenance visit and work the periodic servicing list. What did the inspection turn up?",
+      options: [
+        { label: "Vent screen or flue path obstructed", verdict: "Clear it. Also confirm the vent connector is in place, slopes upward, and is physically sound with no holes or excessive corrosion." },
+        { label: "Return duct not sealed to the furnace, or terminating inside the furnace's own space", verdict: "Fix that - the return connection must be physically sound, sealed to the furnace, and terminate outside the space containing the furnace." },
+        { label: "Sagging support, cracks, or gaps around the cabinet base", verdict: "The seal between the support and the base is compromised. Repair the support so that seal is intact." },
+        { label: "All of those check out fine", verdict: "Finish the rest: clean the blower wheel and housing annually, and with gas and electric power OFF clean the burners with brushes and a vacuum - the burner bottom plate comes off with two screws." },
+      ],
+    },
+    {
+      ask: "Watch the burner flame and ignition through a run cycle. What do you see?",
+      options: [
+        { label: "Clean ignition and normal flame", verdict: "Maintenance items only. Replace or clean filters - clean only high velocity filters - and advise the customer to check them monthly, more often in midsummer and midwinter." },
+        { label: "Yellowing flame or delayed ignition", verdict: "Treat that as a service condition, not a maintenance note. Diagnose it now instead of writing it up. Handle the hot surface igniter carefully - it is fragile and extremely hot right after a cycle." },
+      ],
+    },
+  ],
+  "s-trane-s9v2vs-duct-flange-by-orientation": [
+    {
+      ask: "Identify the furnace orientation and whether a coil is installed before you touch the flanges. Which do you have?",
+      options: [
+        { label: "Upflow with coil", verdict: "Bend the furnace flanges UP, set the coil on top of the furnace, then screw through the coil cabinet into the furnace flange using the guide holes located on the coil." },
+        { label: "Horizontal left, or horizontal right with an A coil", verdict: "Look that exact orientation up in the supply duct connections table and follow only its listed steps and figures - the step order differs by orientation. Using the upflow procedure here is what causes leaks and poor coil joints." },
+        { label: "Downflow with coil, or horizontal right/downflow without a coil", verdict: "Same rule - find your exact orientation in the supply duct connections table and follow only its steps and figures. Then seal the supply duct connection per local codes." },
+      ],
+    },
+    {
+      ask: "Check the coil-to-furnace joint you made. How is it fastened?",
+      options: [
+        { label: "Screwed through the guide holes in the coil cabinet", verdict: "Correct. Seal the supply duct connection per local codes, and document the orientation used so a later service tech does not apply the wrong drain, limit, or duct assumptions." },
+        { label: "Screwed through improvised locations", verdict: "Redo it through the guide holes on the coil - the joint is designed around them. Then seal the connection per local codes." },
+      ],
+    },
+  ],
   "s-trane-s9v2vs-ht2-w1-w2-jumper": [
     {
       ask: "Open the furnace, look at the W1 and W2 terminals on the low voltage terminal strip, and confirm what thermostat is installed. What do you have?",
@@ -8990,6 +14401,32 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Jumper between W1 and W2 with a single stage heating thermostat", verdict: "That jumper is required with a single stage heating thermostat, and HT2 will be displayed at all times with it in. Nothing to fix - second stage still begins only after the interstage delay has completed." },
         { label: "No jumper between W1 and W2 with a single stage heating thermostat", verdict: "A single stage heating thermostat requires that jumper at the low voltage terminal strip. Install it." },
         { label: "Outdoor unit is variable speed", verdict: "Refer to the relay panel instructions. Variable speed outdoor systems require different connections for correct LED readout and defrost operation." },
+      ],
+    },
+  ],
+  "s-trane-s9v2vs-ifc-selfcheck-stall": [
+    {
+      ask: "Read 24VAC from W1 to B/C at the IFC and check the seven-segment LED. What do you have?",
+      options: [
+        { label: "24VAC present and the LED reads Xt1", verdict: "The call is real and first stage heat is being processed. Move on to the safety string - 24VAC out HLO must come back on ILI." },
+        { label: "24VAC present and the LED reads Xt2", verdict: "Normal on a simultaneous W1 and W2 call - the IFC still processes first stage heat first. Do not treat that as a fault; keep working the sequence." },
+        { label: "No 24VAC from W1 to B/C", verdict: "The thermostat is not calling. Fix the call and the thermostat wiring before you touch anything at the furnace." },
+      ],
+    },
+    {
+      ask: "The IFC sends 24VAC out HLO and reads it back through the safety string. Which input is missing it?",
+      options: [
+        { label: "ILI does not get it back", verdict: "The condensate pressure switch or the inducer limit switch is open. Check those two." },
+        { label: "HLI does not get it back", verdict: "A flame rollout switch (FRS1 or FRS2), the main thermal limit (TCO), or a reverse air flow (RAF) switch is open. Downflow units have one RAF switch, upflow units have two - check them all." },
+        { label: "Both ILI and HLI return fine", verdict: "The safety string is intact. Confirm PS1 and PS2 read OPEN at this point, then watch the variable speed inducer energize at its factory default first stage speed." },
+      ],
+    },
+    {
+      ask: "Check PS1 and PS2 at this point in the sequence. What do you find?",
+      options: [
+        { label: "Both read OPEN, then the inducer starts and PS1 closes as it ramps up", verdict: "Sequence is on track. With PS1 closed confirm the ignitor energizes - warm-up is about 20 seconds - then the first stage gas valve, burner light and crossover, and flame sense within 4 seconds." },
+        { label: "No 24VAC at either pressure switch at all", verdict: "A thermal limit upstream is open - if a limit is open there is no 24VAC at either switch. Chase the limit string first, not the switches." },
+        { label: "A pressure switch reads CLOSED when the control expects it open", verdict: "That stalls the self-check. Check that switch and its hose - the control expects both open at this point." },
       ],
     },
   ],
@@ -9019,6 +14456,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "e3.1, shorted pressure switch stuck closed", verdict: "Check the switch itself and whether its hose is disconnected or its contacts are welded." },
         { label: "e3.2, open pressure switch that will not prove", verdict: "Check the vent, the condensate/drain path, the hose for water or cracks, and the inducer." },
         { label: "e09, open inducer limit switch or condensate pressure switch", verdict: "Look for a blocked or full condensate path on a condensing model." },
+      ],
+    },
+  ],
+  "s-transformer-parallel-backfeed-48v": [
+    {
+      ask: "On this multi-transformer system, meter actual voltage at the suspect terminal block instead of assuming 24V. What do you read?",
+      options: [
+        { label: "Noticeably higher than 24V, approaching double", verdict: "That confirms a backfeed or series condition between the two transformers, not a utility overvoltage. Verify with a meter before touching bare terminals, since this is both a damage and a shock risk on 24V-rated wiring." },
+        { label: "Right around 24V", verdict: "No backfeed condition here. Look elsewhere for what failed the board, thermostat, or relay." },
+      ],
+    },
+    {
+      ask: "Trace the commons. How are the two transformer secondaries actually tied together?",
+      options: [
+        { label: "The common of one transformer is not tied to the common of the other", verdict: "That can put the secondaries in series so their voltages add. Check the manufacturer guidance on whether these should share a common, then tie the shared commons together at one point." },
+        { label: "An isolated accessory secondary got bridged into the main system common", verdict: "Some zone panels and humidifier controls require their own isolated transformer specifically to prevent this. Restore the isolation per that device's documentation instead of adding jumpers to make readings look normal." },
+      ],
+    },
+    {
+      ask: "After correcting the wiring, check every 24V component that was in circuit during the overvoltage. What do you find?",
+      options: [
+        { label: "A thermostat, relay, valve, or sensor now behaves abnormally", verdict: "Replace it. Components exposed to roughly double voltage are damaged even when they partly still work." },
+        { label: "Everything appears to still function normally", verdict: "Check each one specifically before closing out anyway. Components exposed to roughly double their rated voltage may be damaged even if they appear to still function." },
       ],
     },
   ],
@@ -9125,6 +14585,31 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Clear temperature drop across the drier", verdict: "That is the restriction. Replace the drier and clear the liquid line before suspecting the valve." },
         { label: "No temperature drop across the drier", verdict: "Move to the power element. Install insulated, well-contacted thermometers at the liquid line service valve and 4 to 6 inches from the compressor on the suction line and compare superheat against the 7 to 9 degree factory setting." },
+      ],
+    },
+  ],
+  "s-txv-sensing-bulb-mounting-and-insulation": [
+    {
+      ask: "Find the TXV sensing bulb and look at where it is mounted.",
+      options: [
+        { label: "On a clean horizontal run of suction line close to the evaporator outlet", verdict: "Location is right. Take the strap off and check for corrosion, scale, or paint between the bulb and the copper." },
+        { label: "On a fitting, a trap, or a vertical riser", verdict: "Liquid can pool against it there and the valve controls to the wrong thing. Move it to a clean horizontal run close to the evaporator outlet." },
+        { label: "On or after the accumulator", verdict: "Wrong side entirely. Move it to a clean horizontal run of suction line close to the evaporator outlet, upstream of anything that lets liquid lie against it." },
+      ],
+    },
+    {
+      ask: "Take the strap off and look at the contact surfaces between the bulb and the pipe.",
+      options: [
+        { label: "Corrosion, scale, or paint between the bulb and the copper", verdict: "The bulb needs solid metal-to-metal contact. Clean both surfaces, remount with the proper clamp, and torque it snug so the bulb sits flush along its length." },
+        { label: "Clean metal and the bulb sits flush along its length", verdict: "Contact is good. Set the clock position per the manufacturer's guidance for the line size - on larger suction lines the bulb is typically kept off the bottom of the pipe." },
+      ],
+    },
+    {
+      ask: "Check the insulation over the bulb and the external equalizer line if there is one.",
+      options: [
+        { label: "Bulb and clamp are bare, especially in an attic or a windy outdoor cabinet", verdict: "It is sensing air, not pipe temperature. Insulate over the bulb and clamp, let the system stabilize, and re-take superheat before judging the valve." },
+        { label: "External equalizer line is kinked, plugged, or capped", verdict: "The valve cannot control without it. Correct the equalizer connection, then let the system run and stabilize and re-take superheat." },
+        { label: "Insulated over the bulb, and the equalizer is connected and clear", verdict: "Mounting checks out. Let it run and stabilize, then re-take superheat before you make any judgment about the valve itself." },
       ],
     },
   ],
@@ -9303,6 +14788,29 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-vacuum-stalls-and-will-not-pull-down": [
+    {
+      ask: "Blank off the pump and check what it pulls on its own with the micron gauge right at the pump.",
+      options: [
+        { label: "Pump will not pull down even blanked off", verdict: "The pump or its oil is the problem, not the system. Change the vacuum pump oil - oil that has been pulling moisture all day cannot reach a deep vacuum." },
+        { label: "Pump pulls down fine on its own", verdict: "Then it is your connection to the system. Remove the Schrader cores with core tools and use short, large-diameter vacuum-rated hoses off both the high and low side." },
+      ],
+    },
+    {
+      ask: "Look at how you are actually hooked to the system.",
+      options: [
+        { label: "Pulling through Schrader cores and a small manifold on one port", verdict: "That is the single biggest field restriction. Pull the cores with core removal tools and evacuate from both the high and low side with short, large-diameter hoses." },
+        { label: "Cores removed, short large hoses on both sides, micron gauge on the system away from the pump", verdict: "Your setup is right, so believe the reading. Isolate the pump and watch the decay to tell moisture from a leak." },
+      ],
+    },
+    {
+      ask: "Isolate the pump and watch the micron gauge decay.",
+      options: [
+        { label: "A rise that levels off", verdict: "Remaining moisture. Keep pulling, add gentle heat to the system if appropriate, or break the vacuum with dry nitrogen and pull again." },
+        { label: "A rise that keeps climbing", verdict: "You have a leak. Stop evacuating, pressurize with dry nitrogen, and find it - you will never pull a leaking system down." },
+      ],
+    },
+  ],
   "s-vapor-injection-heat-pump": [
     {
       ask: "At low outdoor temperature, what is the discharge line temperature and what does the control report for the injection circuit?",
@@ -9375,6 +14883,22 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-vrf-system-basics": [
+    {
+      ask: "Before troubleshooting, confirm with the customer or the plans what is actually installed. Which is it?",
+      options: [
+        { label: "True VRF: many indoor units on one outdoor unit with a dedicated proprietary control bus", verdict: "Work from that manufacturer's VRF service documentation. VRF diagnostics are far more manufacturer and model specific than residential mini-splits." },
+        { label: "A larger residential multi-zone mini-split marketed with similar terms", verdict: "Use the residential multi-zone manual and failure patterns. Do not apply VRF procedures to it." },
+      ],
+    },
+    {
+      ask: "On a confirmed VRF, ask whether some zones can heat while others cool at the same time. What is the answer?",
+      options: [
+        { label: "Yes, some zones heat while others cool simultaneously", verdict: "This is a heat-recovery VRF with branch selector (BS) units. Each BS unit has its own solenoids and sensors that can fault independently of any indoor or outdoor unit, so include it in your diagnosis." },
+        { label: "No, the whole system is all-heat or all-cool at once", verdict: "No branch selectors to chase. Focus on the outdoor unit, the indoor units, and the communication bus per that manufacturer's VRF documentation." },
+      ],
+    },
+  ],
   "s-warmair-ac": [
     {
       ask: "Go outside while the thermostat is calling for cool. Is the outdoor unit running?",
@@ -9417,6 +14941,29 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Part carries a later date code than the unit - it was replaced at some point", verdict: "That component's warranty clock may have been reset independent of the unit's original date, which happens with compressors replaced under warranty. Verify with the manufacturer or distributor before quoting." },
         { label: "Part's date code matches the original unit", verdict: "Coverage rides on the unit's own manufacture/install date and the stated terms. Make clear to the customer that even a covered part often does not include labor." },
+      ],
+    },
+  ],
+  "s-warranty-reading-nameplate-rating-plate": [
+    {
+      ask: "Find the nameplate inside the front panel, or inside the outdoor unit's service panel rather than an exterior sticker. What condition is it in?",
+      options: [
+        { label: "Readable nameplate with model and serial number", next: 1 },
+        { label: "Faded, painted over, or missing", verdict: "Do not assume the information is unrecoverable. Check the manufacturer's model and serial lookup tools before giving up on it." },
+      ],
+    },
+    {
+      ask: "You are separating model from serial and decoding the manufacture date. What are you working from?",
+      options: [
+        { label: "That manufacturer's own serial number decoding reference", verdict: "Correct. The week/year position and format are manufacturer-specific, so a general rule of thumb gives you a wrong date." },
+        { label: "A general rule about where the date sits in the serial number", verdict: "Stop and look up that manufacturer's decoding reference. Guessing the format leads to wrong warranty and parts decisions." },
+      ],
+    },
+    {
+      ask: "You are checking warranty and ordering parts. What are you using for dates and ratings?",
+      options: [
+        { label: "Manufacture date from the serial, used as the warranty start date", verdict: "Careful. Manufacture date is not install date. A unit can sit in distribution for months, and warranty start-date calculations may use install date instead." },
+        { label: "Electrical ratings and refrigerant charge/type read directly off the nameplate", verdict: "Right approach. Voltage, MCA, MOCP, RLA/LRA, and charge are unit-specific and matter for correct breaker sizing and charging, so never work from memory or a general spec sheet." },
       ],
     },
   ],
@@ -9481,6 +15028,25 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-weakairflow": [
+    {
+      ask: "Pull the filter and look at the evaporator coil. What do you find?",
+      options: [
+        { label: "Filter is dirty or clogged", verdict: "Replace the filter and run the system again. A loaded filter is the most common cause of weak airflow everywhere in the house. If airflow is still weak with a clean filter, keep going with the blower and duct checks." },
+        { label: "Coil is iced up or heavily loaded with dirt", verdict: "A restricted coil chokes airflow. Shut the system off and let any ice melt completely, then clean the coil. Once it is clear, recheck airflow before looking anywhere else." },
+        { label: "Filter and coil both look clean", next: 1 },
+      ],
+    },
+    {
+      ask: "With a clean filter and coil, check the blower, the speed tap, and the duct runs. What do you see?",
+      options: [
+        { label: "Blower wheel is caked with dirt", verdict: "A dirty blower wheel cannot move rated air even at the right speed. Pull and clean the wheel, then recheck airflow at the registers." },
+        { label: "Blower speed tap does not match what the system requires", verdict: "Set the blower to the speed tap the equipment calls for and recheck. A wrong tap gives weak airflow with everything else healthy." },
+        { label: "Flex duct in the attic or crawlspace is collapsed or disconnected", verdict: "Repair or reconnect that section. Collapsed or disconnected flex dumps or blocks air before it ever reaches the registers." },
+        { label: "Supply or return registers and dampers were found closed", verdict: "Open all supply and return registers and dampers, then recheck. Closed registers alone can make airflow feel weak throughout the house." },
+      ],
+    },
+  ],
   "s-wire-splice-failure-thermal-cycling": [
     {
       ask: "With power off, wiggle-test the suspect splices while watching continuity, and look them over closely.",
@@ -9516,6 +15082,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-wrong-txv-or-cartridge-installed": [
+    {
+      ask: "Pull the valve or cartridge part number and check it against the equipment manufacturer's parts list for this exact model and tonnage.",
+      options: [
+        { label: "Part number does not appear for this model and tonnage", verdict: "Wrong valve. Put the correct part in rather than assuming a second defective valve - and if the equipment came with a factory-matched valve or piston, use the factory part, not a universal substitute." },
+        { label: "Part number matches the parts list", verdict: "Right part, so look at the mounting. A correct valve mounted wrong still fails - check the bulb location, its contact with the pipe, and its insulation." },
+      ],
+    },
+    {
+      ask: "How does the valve misbehave under load?",
+      options: [
+        { label: "Starves at full load", verdict: "Points to an undersized valve. Check the capacity rating against the system tonnage before you replace it with another of the same size." },
+        { label: "Hunts and overfeeds at low load", verdict: "Points to an oversized valve. Check the capacity rating against the system tonnage on the parts list." },
+      ],
+    },
+    {
+      ask: "Check the refrigerant rating and the equalizer requirement for this valve.",
+      options: [
+        { label: "Valve is rated for a different refrigerant than the system has", verdict: "It will not meter this refrigerant correctly. Replace it with a valve rated for what is actually in the system, and replace the liquid line drier while you are in there." },
+        { label: "Application calls for an externally equalized valve but the equalizer is not piped", verdict: "The valve cannot control without it. Pipe the equalizer correctly before you condemn the valve." },
+        { label: "Correct refrigerant and the equalizer is piped as required", verdict: "Valve selection looks right. On a heat pump, confirm the valve arrangement and check valve/bypass configuration for reverse flow before looking further." },
+      ],
+    },
+  ],
   "s-x13-tap-swap-proof": [
     {
       ask: "In the failing mode, read motor common to the tap the diagram calls for, then move a known-live 24V to a different tap and watch the motor.",
@@ -9523,6 +15113,50 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "No 24V on the tap the diagram calls for", verdict: "The motor is not being asked to run. Chase the board output, the thermostat call, or the low-voltage wiring for that mode. This is not the motor's fault." },
         { label: "24V is present on the tap, and the motor also does nothing on a known-good tap", verdict: "The call is arriving and the motor is not responding. Verify line voltage at the motor and that the wheel spins free, then condemn the motor or its module." },
         { label: "The motor runs when you move 24V to a different tap", verdict: "The motor and module are good. The original tap input or the wiring to it is the problem - recheck the connector pins and the board output for that mode." },
+      ],
+    },
+  ],
+  "s-york-dgaa-three-retries-one-hour-lockout": [
+    {
+      ask: "Watch the ignition attempt at the burner. What exactly happens?",
+      options: [
+        { label: "Gas valve opens but no flame is detected within 2 seconds", verdict: "The valve shuts off and a retry begins. Chase ignition - ignitor, gas supply, burner alignment - the control never saw flame." },
+        { label: "Flame lights then drops out during the 10 second stabilization", verdict: "Flame loss for 2 seconds also shuts the valve and starts a retry. Look at gas supply, flame blowout, and the flame probe circuit." },
+        { label: "Flame establishes, runs a while, then drops out", verdict: "The control senses the loss within 0.8 seconds, de-energizes the valve, and recycles after a 15 second inter-purge. Same suspects: gas supply, flame blowout, or the flame probe circuit." },
+        { label: "Ignitor never warms up, or the pressure switch never makes", verdict: "Go earlier in the sequence: R to W must close and, with proper combustion air, the pressure switch activates the ignition control. Fix that before counting retries." },
+      ],
+    },
+    {
+      ask: "The customer says heat comes back on its own about an hour later. Count the retries in one heat call. What did you see?",
+      options: [
+        { label: "Three retries, then the furnace shut down", verdict: "That is the designed one hour shutdown after three retries in a single heat call - not a random fault. Find why ignition or flame is failing. It starts a normal cycle on the next call after the hour." },
+        { label: "Retries happening with a different ignitor warm-up time", verdict: "On a retry the ventor runs a 15 second inter-purge and the ignitor warm-up is 27 seconds instead of the 30 second first attempt. The manual calls that normal on a retry - it is not a weak ignitor." },
+        { label: "Fewer than three retries and it keeps trying", verdict: "It has not hit the shutdown threshold yet. Keep watching - three retries in one heat call is what triggers the one hour shutdown." },
+      ],
+    },
+    {
+      ask: "If the complaint is only about blower behavior in cooling, time the fan off. What do you get?",
+      options: [
+        { label: "Blower runs about 60 seconds after the cooling call ends", verdict: "That is fixed at 60 seconds for SEER enhancement. Do not adjust anything - it is not a setting." },
+        { label: "Blower behaves some other way in cooling", verdict: "Since the 60 second fan off is fixed, anything else points at the fan circuit or the thermostat, not a setting to change." },
+      ],
+    },
+  ],
+  "s-york-flash-code-reading": [
+    {
+      ask: "Read the single LED through the sight glass with the door in place. What is it doing?",
+      options: [
+        { label: "Counted flashes with pauses between them", verdict: "The count is the code. Look it up in the York DGAA/DGAH table in Error Codes for that family, or on the unit's own wiring diagram for other models." },
+        { label: "Rapid continuous flash", verdict: "Not a countable code. This commonly means reversed line polarity or flame sensed out of sequence. Fix the power or polarity issue first." },
+        { label: "Steady ON, steady OFF, or a heartbeat flash", verdict: "Those are distinct states, not counted codes. Check the wiring diagram on the unit for what that state means on this board." },
+        { label: "No LED at all, with 24V present at the board", verdict: "Check the board's fuse first, then the door switch, then the board itself." },
+      ],
+    },
+    {
+      ask: "Compare what you counted against the code table on the unit's own wiring diagram. Does it match?",
+      options: [
+        { label: "The diagram's table lists your count", verdict: "Trust it and work that code. The same flash count can mean different things across board generations." },
+        { label: "Your count is not in the table, or this is a twinned or older unit", verdict: "Verify which board revision you have and use the table on this unit's wiring diagram over memory or a generic table before ordering parts." },
       ],
     },
   ],
@@ -9563,6 +15197,102 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-zone-damper-actuator-slip": [
+    {
+      ask: "Mark the damper shaft and the actuator hub with a pen line, run the zone open and closed, and watch the marks. What happens?",
+      options: [
+        { label: "Actuator hub turns but the shaft mark stays put", verdict: "The set screw is slipping on the shaft. Tighten it against the shaft flat. On a round shaft with no flat it will re-slip - seat the screw harder or file a flat on the shaft." },
+        { label: "Motor hums and the hub does not turn, or turns with no resistance", verdict: "Stripped gear train inside the actuator. Replace the actuator." },
+        { label: "Hub and shaft move together but zone airflow still does not change", verdict: "The motion is being lost further down. On jackshaft or linkage-driven dampers, check every linkage joint for a loose ball joint or a bent rod between the actuator and the blade." },
+      ],
+    },
+    {
+      ask: "After the repair, drive the damper both directions and watch the blade. How far does it travel?",
+      options: [
+        { label: "Full travel to the stop in both directions", verdict: "Repair is good. Zone airflow will be right in both modes." },
+        { label: "Only travels part way in one direction", verdict: "Not finished. A blade that only goes halfway leaves the zone airflow wrong in that mode. Recheck the set screw, the linkage, and whether the blade is binding before you leave." },
+      ],
+    },
+  ],
+  "s-zone-damper-actuator-spring-vs-powered": [
+    {
+      ask: "Identify the actuator type before you diagnose a stuck damper. Which is it?",
+      options: [
+        { label: "Spring-return: powered one direction, internal spring returns it the other way", next: 1 },
+        { label: "Powered-open/powered-closed: driven electrically both directions, no spring", next: 2 },
+      ],
+    },
+    {
+      ask: "On this spring-return actuator, meter for power at the actuator during a call. What do you find?",
+      options: [
+        { label: "No power present at the actuator during the call", verdict: "A damper sitting in its spring position with no power is normal, expected behavior. Chase the missing control voltage back to the zone panel rather than condemning the actuator." },
+        { label: "Voltage confirmed at the actuator but the damper will not move to the powered position", verdict: "Points to a failed motor or a mechanically bound spring/gear train, not a wiring issue. Replace the actuator, matching the spring-return fail-safe behavior." },
+      ],
+    },
+    {
+      ask: "On this powered-open/powered-closed actuator, call it both directions, then power off and work the damper by hand. What do you find?",
+      options: [
+        { label: "Stuck in one position regardless of direction called, and the blade moves freely by hand", verdict: "With no spring to explain a directional bias, this points at the actuator itself, motor or internal switch. Replace it with a matching powered-both-directions type." },
+        { label: "Damper blade or shaft binds mechanically when moved by hand", verdict: "A bound damper stalls a good actuator and looks like an actuator failure. Free the blade and shaft first, then retest the actuator." },
+      ],
+    },
+  ],
+  "s-zone-damper-bench-test": [
+    {
+      ask: "Disconnect the damper from the zone panel and apply 24VAC directly to the actuator per its wiring type. What does it do?",
+      options: [
+        { label: "Full smooth travel to the end stop and back", verdict: "The damper is good, so the problem is upstream. Check the zone panel relay, the panel fuse, and voltage at the panel's zone terminals during a call." },
+        { label: "Hesitates, buzzes, or stops part way", verdict: "Failing motor or a binding blade. Pull the actuator and turn the blade by hand - if it binds, fix that first or it will kill the replacement actuator too." },
+        { label: "Does nothing at all on direct power", verdict: "Dead actuator, or a jammed blade. Pull the actuator and confirm the blade turns freely by hand before you order a new actuator." },
+      ],
+    },
+    {
+      ask: "Count how many damper actuators are wired to this one zone output.",
+      options: [
+        { label: "Just one actuator on the zone", verdict: "Load is not your issue. Stay with the damper-versus-panel split you just tested." },
+        { label: "Two or more actuators in parallel on the same zone", verdict: "Add up their VA. Actuators in parallel can exceed the panel's per-zone rating or the transformer, which makes dampers act weak or erratic. Check the ratings before condemning parts." },
+      ],
+    },
+  ],
+  "s-zone-damper-leakage-closed": [
+    {
+      ask: "With the zone commanded closed, check whether the blade reaches its stop and how the damper fits the duct. What do you find?",
+      options: [
+        { label: "Blade reaches its stop and it is a round retrofit damper passing a little air", verdict: "Some leakage is normal. Many round retrofit dampers pass 5-10 percent when closed, and some brands do it on purpose to relieve pressure. Check the zone panel's setup notes before trying to fix it." },
+        { label: "Damper is a size small for the duct, or sitting in oval-crushed flex", verdict: "It is leaking around the frame, not past the blade. No blade adjustment will fix that - refit the damper to the duct." },
+        { label: "Blade closes tight and the fit is good, but the zone still gets real airflow", verdict: "Look for a duct path that bypasses the damper. A branch teed off upstream of the damper feeding the same zone is a common retrofit mistake - trace the duct." },
+      ],
+    },
+    {
+      ask: "Measure static pressure with this zone closed and the system running. How does it compare to the system's normal range?",
+      options: [
+        { label: "Very high pressure across the closed dampers", verdict: "Pressure is forcing air past the blade seal. Fix the pressure problem - a missing or undersized bypass, or capacity control - not the damper." },
+        { label: "Pressure looks normal for this system", verdict: "Pressure is not driving the leak. Stay on damper fit, blade travel, and bypass duct paths." },
+      ],
+    },
+  ],
+  "s-zone-damper-no-vs-nc-choice": [
+    {
+      ask: "Kill power to the zone panel and watch what every damper does.",
+      options: [
+        { label: "They all spring open - full airflow everywhere", verdict: "Power-closed/spring-open, the common residential choice. A dead panel still heats and cools the whole house, so this is the safer failure mode. Nothing to change." },
+        { label: "They all spring closed - no airflow anywhere", verdict: "Power-open/spring-closed. A panel failure chokes airflow completely - flag it. This also explains a complaint that the system quit entirely during a power event." },
+        { label: "They stay right where they were", verdict: "3-wire stay-in-place dampers. Note which position each zone parked in, because the system's behavior during a fault depends on it." },
+        { label: "Mixed - some open, some close", verdict: "Dampers were replaced with mixed types over the years, so zones behave inconsistently during faults. Standardize them, or document which zone is which before someone condemns a board." },
+      ],
+    },
+  ],
+  "s-zone-damper-noise-slam": [
+    {
+      ask: "Listen and pin down exactly when the noise happens. Which is it?",
+      options: [
+        { label: "A single thump right at zone changeover", verdict: "That is the blade hitting its stop under high duct pressure. Measure static with one zone calling and verify the bypass, or the equipment's airflow reduction, is actually working." },
+        { label: "Chattering the whole time the system runs", verdict: "Usually a failing actuator or an unstable control signal. Measure the 24V at the actuator during the noise - a sagging supply from an overloaded transformer makes actuators hunt. Add up the total VA load." },
+        { label: "A rattle from a blade loose in the airstream", verdict: "Loose blade on its shaft. Tighten it to the shaft or replace the damper." },
+        { label: "A flutter from the barometric bypass damper", verdict: "Barometric bypass dampers flutter when the weight arm is set wrong. Adjust it per the zone panel's static setup procedure." },
+      ],
+    },
+  ],
   "s-zone-damper-stuck": [
     {
       ask: "Call that zone and check the damper motor's low-voltage connection. Is it getting a signal to open?",
@@ -9576,6 +15306,23 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Actuator is seized and will not move freely", verdict: "Many are spring-return and seize over time. Replace the actuator." },
         { label: "Actuator moves freely but static is very high with the other zones closed", verdict: "Static may be too high for the damper motor to overcome. That often points to an undersized or missing bypass duct." },
+      ],
+    },
+  ],
+  "s-zone-damper-stuck-open": [
+    {
+      ask: "With only another zone calling, feel the problem zone's registers. What airflow do you get?",
+      options: [
+        { label: "Steady full airflow, like the zone is calling", next: 1 },
+        { label: "Little or no airflow at those registers", verdict: "The damper is doing its job - this is not a stuck-open damper. Look at duct crossover or re-check the original comfort complaint before changing any parts." },
+      ],
+    },
+    {
+      ask: "Measure voltage at the damper terminals during another zone's call, and check the damper label for its type. What do you find?",
+      options: [
+        { label: "Panel is powering the damper correctly but the blade never moves", verdict: "Power is getting there, so the actuator or linkage is at fault. Mark the shaft and hub with a pen line and watch whether they move together - a slipped set screw lets the actuator turn while the blade stays put." },
+        { label: "Panel holds 24V on a power-open damper, or drops it on a power-closed one, at the wrong time", verdict: "The board is commanding wrong - a stuck zone relay on the panel, not a bad damper. Diagnose the zone panel." },
+        { label: "No power at the actuator at all, and it is a power-closed/spring-open damper", verdict: "That type fails OPEN by design, so this is really a no-power problem. Check that zone's fuse and the field wiring back to the panel, not the damper." },
       ],
     },
   ],
@@ -9597,6 +15344,169 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-zone-damper-wiring-2wire-3wire": [
+    {
+      ask: "Run each zone individually and physically watch that damper's blade in both the calling and the non-calling state. What do you see?",
+      options: [
+        { label: "Blade does the opposite of what the call wants, on every zone", verdict: "On a 3-wire damper that is swapped open and close conductors. With the blade visible, verify which terminal drives which direction and re-land them." },
+        { label: "Damper stays open all the time no matter what the panel does", verdict: "Check that the panel's zone output type matches the damper. An output built for power-closed dampers holds constant 24V, which holds a power-open damper open forever." },
+        { label: "Movement is erratic, partial, or nothing at all", verdict: "On a 3-wire actuator that usually means a bad common. Verify a solid common back to the panel or transformer before condemning the actuator." },
+        { label: "Blade opens on the call and closes when the zone is satisfied", verdict: "Wiring is correct for this damper. Repeat the check on every remaining zone before you leave." },
+      ],
+    },
+    {
+      ask: "Read the damper's own label before touching wiring. Which type is it?",
+      options: [
+        { label: "2-wire spring-return: one hot plus a common", verdict: "Power drives it one way and the spring returns it. Confirm the panel's zone output type matches that direction before you rewire anything." },
+        { label: "3-wire: common, power-open, and power-close", verdict: "Verify with the blade visible which terminal drives which direction, and confirm the common runs solid back to the panel or transformer. Those are the two mistakes on 3-wire dampers." },
+      ],
+    },
+  ],
+  "s-zone-dump-zone-nobypass": [
+    {
+      ask: "Look at what this system was designed with instead of a bypass. What do you see?",
+      options: [
+        { label: "Modulating or multi-stage equipment with capacity control, or oversized zone ducts", verdict: "The designer left the bypass out on purpose. Do not add one - on an inverter or communicating system a bypass fights the equipment's own airflow management. Leave the design alone." },
+        { label: "A designated dump zone that opens when only a few zones call", verdict: "That is the relief strategy. Verify the dump zone's damper logic actually works rather than assuming that damper is stuck open." },
+        { label: "Single-stage equipment retrofitted onto tight ducts with no relief at all", verdict: "This one may genuinely need a bypass, or generous damper leakage settings. The right answer depends on the equipment's turndown - check the panel manual's bypass and capacity-control philosophy first." },
+      ],
+    },
+  ],
+  "s-zone-heatpump-ob-misconfig": [
+    {
+      ask: "Put the system in cooling and check whether the reversing valve solenoid is energized at the equipment. Compare that to what this brand expects.",
+      options: [
+        { label: "Solenoid not energized in cooling on equipment that expects O energized in cool", verdict: "The changeover convention disagrees somewhere. Check the panel's heat pump configuration dip switch or menu and set it for O, since most brands energize in cool." },
+        { label: "Solenoid follows cooling correctly, but one zone still blows the wrong temperature", verdict: "Look for a mixed thermostat setting - one stat set to B on an O system flips the valve wrong whenever that zone leads the call. Set every zone stat to the same convention." },
+        { label: "Solenoid follows the call correctly no matter which zone leads", verdict: "The O/B logic is right end to end. Look elsewhere for the comfort complaint." },
+      ],
+    },
+    {
+      ask: "After correcting the setting, run heat and cool from EVERY zone thermostat. What happens?",
+      options: [
+        { label: "All zones deliver the right temperature in both modes", verdict: "Done - thermostats, panel, and equipment agree. Note the convention used so the next tech does not flip it back." },
+        { label: "One zone still reverses the mode", verdict: "That stat's O/B setting still disagrees with the panel and equipment. Fix that thermostat - changeover bugs hide in whichever zone did not get tested." },
+      ],
+    },
+  ],
+  "s-zone-lat-sensor-cutout": [
+    {
+      ask: "Watch the failure happen. What exactly does the equipment do?",
+      options: [
+        { label: "Equipment shuts off mid-call but the blower keeps going", verdict: "On a zoned system that is very often the LAT cutout doing its job. The real problem is airflow - a small zone calling or a closed bypass - not the panel. Log which zones were calling when it tripped." },
+        { label: "Everything shuts down together, blower included", verdict: "That is not the classic LAT cutout signature. Diagnose the equipment and the call path instead." },
+      ],
+    },
+    {
+      ask: "Compare the panel's displayed LAT reading against a probe thermometer in the same duct. How close are they?",
+      options: [
+        { label: "Panel reading and probe match closely", verdict: "The sensor is honest, so the cutout is real - fix the airflow. Typical defaults are heat cutout about 140-160 degrees F and cool cutout about 40-45 degrees F; check what this panel is set to." },
+        { label: "Panel reads well off from the probe", verdict: "Drifted sensor. It will cut the equipment out early or never at all. Replace it and recheck the configured cutout limits in the panel setup." },
+        { label: "Sensor is mounted right at the heat exchanger or coil", verdict: "That location reads hot and cold spikes and false-trips. Relocate it downstream per the panel manual before condemning anything." },
+      ],
+    },
+  ],
+  "s-zone-onezone-whistle": [
+    {
+      ask: "Measure static pressure with all zones open, then with only the noisy zone calling. How do the two compare?",
+      options: [
+        { label: "Big jump in static when one zone runs alone", verdict: "The relief strategy is not doing its job. Check the bypass damper's operation and sizing, or on capacity-controlled equipment the low-stage airflow settings." },
+        { label: "Static barely changes between the two", verdict: "Pressure is not the driver. Listen at the dampers and look at the registers in the small zone instead." },
+      ],
+    },
+    {
+      ask: "Track down where the noise is loudest. Where is it?",
+      options: [
+        { label: "At a damper that is barely cracked open", verdict: "A barely-open damper is a whistle machine. If the panel has an adjustable minimum-open setting, trade a little bleed for quiet." },
+        { label: "At the registers in the small zone", verdict: "High-throw registers at high velocity are the loudest point. Larger registers or grilles in that zone drop the noise fast." },
+        { label: "Whole duct roars on small calls, and it is a communicating inverter system", verdict: "Verify the zoning airflow settings or auto-weight completed properly. If they did not, the equipment never reduces CFM for small calls." },
+      ],
+    },
+  ],
+  "s-zone-overshoot-one-zone": [
+    {
+      ask: "After that zone satisfies, hold your hand at its registers while other zones run. What do you feel?",
+      options: [
+        { label: "Supply air still coming out of that zone's registers", verdict: "Chase damper leakage or a stuck or miswired damper on that zone. Also trace the duct - a shared trunk downstream of the dampers lets another zone's air spill in." },
+        { label: "No airflow at its registers once it satisfies", verdict: "Air delivery is right, so the overshoot is coming from the sensing side or the building. Check the thermostat location next." },
+      ],
+    },
+    {
+      ask: "Look at where that zone's thermostat or sensor is mounted. What is around it?",
+      options: [
+        { label: "Near a supply register, or on a sun-load wall", verdict: "It satisfies early and the room mass keeps drifting past setpoint. Relocate the stat or add a remote sensor." },
+        { label: "Good interior location, away from registers and sun", verdict: "Check the panel settings for an intentional bleed - some panels crack all dampers a set percentage, and it may be set higher than the design needs." },
+        { label: "Good location, but the zone opens to a stairwell or shares a big return path", verdict: "Thermal coupling between zones. Air moves between those spaces and no damper can stop it. Set the customer's expectations instead of chasing parts." },
+      ],
+    },
+  ],
+  "s-zone-panel-call-passthrough-check": [
+    {
+      ask: "Work the signal path in order: stat, panel input, panel logic, panel output, equipment. Where does the call stop?",
+      options: [
+        { label: "No zone call LED and no 24V at the zone's Y or W input", verdict: "The call never reaches the panel. The problem is the zone thermostat or its wiring, not the panel." },
+        { label: "Call is in, but no 24V out on the panel's equipment Y or W terminals", next: 1 },
+        { label: "Panel outputs the call but nothing arrives at the equipment board", verdict: "Broken wiring between the panel output and the equipment's low-voltage terminals. Check that run and verify the same call arrives at the furnace or air handler board." },
+        { label: "Equipment gets the call and still does not run", verdict: "Zoning has done its job. Leave the panel alone and diagnose the equipment itself." },
+      ],
+    },
+    {
+      ask: "With the call at the input but no output, check the panel's timers and settings. What do you find?",
+      options: [
+        { label: "A lockout, short-cycle timer, changeover conflict, or priority setting is suppressing this zone", verdict: "Panel logic is holding the call on purpose - another zone may be holding the opposite mode. Resolve the conflict or wait out the timer. Nothing is broken." },
+        { label: "No timer or conflict, and the panel fuse is blown", verdict: "Replace the fuse, but find what popped it first - usually a shorted damper or thermostat wire." },
+        { label: "No timer, no conflict, and the fuse is good", verdict: "An input with no output and nothing holding it means panel logic or relay failure. Replace the panel." },
+      ],
+    },
+  ],
+  "s-zone-panel-led-diagnostics": [
+    {
+      ask: "Read the panel's LED legend, then compare what is calling against what is being output. What do you see?",
+      options: [
+        { label: "Zone call LEDs lit but no equipment output LED", verdict: "The fault is inside the panel - logic or a limit is holding the call. Check the status and fault LEDs and any blink pattern in the panel manual next." },
+        { label: "Equipment output LED lit but the equipment is not running", verdict: "The panel did its job. The problem is downstream - the wiring from panel to equipment, or the equipment itself." },
+        { label: "A status or fault LED blinking a pattern", verdict: "Look the pattern up in the panel manual - many boards blink codes for high supply temp cutout, low temp cutout, comm loss, or staging lockout. Photograph the LED state before anything gets power cycled." },
+        { label: "No zone call LEDs lit at all", verdict: "No thermostat call is reaching the panel. Chase the zone thermostats and their wiring." },
+      ],
+    },
+  ],
+  "s-zone-panel-purge-delay": [
+    {
+      ask: "Time what the blower and dampers do after the zone satisfies. Does it stop on its own?",
+      options: [
+        { label: "Blower runs a short while with dampers open, then stops by itself", verdict: "That is a normal purge cycle - the panel moves leftover heat or cool out of the duct. No fault. Explain it to the homeowner; this is often a no-fault visit." },
+        { label: "Blower never stops at all", verdict: "A purge ends on its own; this does not. Diagnose the panel's fan relay and check the thermostat's fan setting." },
+        { label: "Runs far longer than expected but does eventually stop", verdict: "Two delays may be stacking - the panel's purge plus the equipment's own blower-off delay (furnace heat-off delay or air handler delay tap). Check both settings in the panel and equipment documentation." },
+      ],
+    },
+  ],
+  "s-zone-panel-transformer-sizing": [
+    {
+      ask: "Measure the 24V under worst load - all dampers driving plus an equipment call. What do you read?",
+      options: [
+        { label: "Below about 22V under load", verdict: "The transformer is browning out. Expect relay chatter, comm dropouts, and random resets. Add up the real VA - equipment board, thermostats, panel, and every actuator at 3-10VA each - and install the dedicated transformer the panel manual calls for." },
+        { label: "Holds up near 24V under load", verdict: "Supply is fine under load. Stop chasing power and look elsewhere for the intermittent fault." },
+      ],
+    },
+    {
+      ask: "Check the panel manual against how this transformer is actually fed. What is the setup?",
+      options: [
+        { label: "Manual calls for a dedicated transformer but the panel shares the equipment's", verdict: "Install a separate transformer per the manual, and land the commons exactly as the panel manual shows. Shared versus isolated commons is the number one wiring mistake on two-transformer zone jobs." },
+        { label: "Two transformers already paralleled onto one common", verdict: "Stop and confirm this follows the panel's isolation instructions. Out-of-phase paralleling puts about 48V on the control circuit and burns every board on it. Kill power before touching it." },
+        { label: "Panel already has its own transformer wired per the manual", verdict: "Power setup is right. Move on to the actual fault." },
+      ],
+    },
+  ],
+  "s-zone-retrofit-uneven-rooms": [
+    {
+      ask: "With only that zone calling, compare airflow room to room inside the zone. What do you find?",
+      options: [
+        { label: "Some rooms in the zone get much less air than others", verdict: "Zone dampers control the zone as a unit - room-to-room balance still comes from branch dampers and registers, exactly like a non-zoned system. Balance the branches with only that zone calling." },
+        { label: "Airflow is even room to room but one room still feels off", verdict: "Check whether the retrofit moved the thermostat to a room that does not represent the zone. The stat's room always wins - relocate it or add a sensor." },
+        { label: "Every room in the zone is weak, worst run worst of all", verdict: "Watch static pressure with that zone calling alone. Retrofit zones on old duct sometimes need more supply than their branches can deliver - the branch capacity is the fix, not the damper." },
+      ],
+    },
+  ],
   "s-zone-sensor-remote-placement": [
     {
       ask: "Confirm which sensor is actually controlling that zone, then temporarily place a reference thermometer next to it.",
@@ -9605,6 +15515,39 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Sensor reads noticeably off the reference", verdict: "The sensor itself is the problem. Confirm that before relocating anything." },
         { label: "The zone is actually controlled by a different sensor than intended, such as the thermostat's built-in or an averaged set", verdict: "Verify the intended configuration matches what is actually assigned on the zoning system before chasing the damper or equipment." },
         { label: "Wireless sensor with weak signal or a dead or low battery", verdict: "The zone can fall back to a default or last-known reading instead of live data. Restore the signal or battery and re-verify." },
+      ],
+    },
+  ],
+  "s-zone-smallzone-limit-trip": [
+    {
+      ask: "Run only the smallest zone and measure supply temp and static pressure. What happens?",
+      options: [
+        { label: "Supply temp climbs toward the limit in heat, or coil temp falls in cool", verdict: "That confirms airflow starvation from the small zone, not an equipment fault. Check the bypass next - is there one, is it sized right, and is it actually opening?" },
+        { label: "Supply temp and static both stay in normal range", verdict: "Not a small-zone airflow problem. Diagnose the equipment's limit circuit and the airflow through the coil instead." },
+      ],
+    },
+    {
+      ask: "Check the relief strategy on this system while the small zone runs alone. What do you find?",
+      options: [
+        { label: "There is a bypass damper and it is failed closed", verdict: "That turns every small-zone call into a limit trip. Repair or replace the bypass damper and retest with only the small zone calling." },
+        { label: "No bypass, and the panel does not stage the equipment down on single-zone calls", verdict: "Check whether the panel supports capacity control - low fire, low stage, or reduced CFM on single-zone calls is the modern fix, especially on communicating systems." },
+        { label: "Relief looks right but the equipment still runs up to the limit", verdict: "Check the panel's supply-air temperature sensor and its cutout settings. A mis-set or failed LAT sensor disables the protection that would shed the equipment or open more dampers. Repeated limit trips crack heat exchangers, so do not leave it." },
+      ],
+    },
+  ],
+  "s-zoned-daikin-inverter-system-test": [
+    {
+      ask: "Which thermostat are you standing at?",
+      options: [
+        { label: "The Daikin ONE+ connected to Zone 1", verdict: "That is the only one that can start the System Test. Go to Dealer Edit, enter the password, Installer Wizard, Begin Full Setup, Equipment Setup, then System Test." },
+        { label: "A thermostat on a zone other than Zone 1", verdict: "The other zones cannot reach these menus. Go to the Zone 1 thermostat - the System Test has to be run before normal operation or the system operates incorrectly." },
+      ],
+    },
+    {
+      ask: "You selected the arrow and it turned into a spinning wheel. What happened next?",
+      options: [
+        { label: "Test ran its full 5 to 15 minutes and completed", verdict: "Good. Return to that screen and select Charge Mode to confirm the refrigerant level in the system is correct." },
+        { label: "Test was interrupted before it finished", verdict: "An interrupted test leaves the system operating incorrectly. Start the System Test again from the Zone 1 thermostat and let it run the full 5 to 15 minutes without interruption." },
       ],
     },
   ],
@@ -9650,6 +15593,22 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Held off within the documented delay (commonly up to 20-30 minutes)", verdict: "That is normal, expected zoning behavior, not a fault. This is an education conversation with the customer, not a repair." },
         { label: "Held off far longer than the panel's documented conflict delay", verdict: "Now treat it as an actual fault - look at a stuck damper or a panel logic problem." },
         { label: "Panel's conflict-resolution setting is configurable and set differently than the customer expects", verdict: "Check the panel manual's logic and settings, since this varies by manufacturer. Adjust if appropriate and explain the behavior." },
+      ],
+    },
+  ],
+  "s-zoning-panel-zone-count-config": [
+    {
+      ask: "After the board swap, compare the panel's zone count setting against the number of physical zones actually installed. What do you find?",
+      options: [
+        { label: "Zone count is set lower than the number of installed zones", verdict: "That explains dead zones past the configured count. Set it to the actual zone count before troubleshooting those zones as wiring or damper faults. Boards often ship at a different default." },
+        { label: "Zone count matches the installed zones", next: 1 },
+      ],
+    },
+    {
+      ask: "Call each zone one at a time and watch which damper actually moves. What happens?",
+      options: [
+        { label: "A zone's call opens the wrong damper, or that zone seems completely unresponsive", verdict: "That thermostat is mapped to the wrong zone number on the new board. Correct the mapping and retest each zone individually." },
+        { label: "Every zone's call opens the correct damper", verdict: "Zone mapping is good. Now recheck the board's equipment-type and staging configuration too, since a full board replacement resets all settings to factory default, not just zone count. Document the final zone mapping." },
       ],
     },
   ],
