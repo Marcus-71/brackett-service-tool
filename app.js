@@ -1967,6 +1967,37 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   });
+
+  // A new version installs and takes over in the background, but the page a
+  // tech is looking at is still running the old code — so without this they'd
+  // keep seeing the old version until the next time they open the app. Offer a
+  // reload instead of forcing one: an automatic refresh mid-job would wipe out
+  // whatever they were part-way through on screen.
+  // Distinguish "a worker just took control for the first time" from "a newer
+  // worker replaced the one we had". Only the second is an update worth
+  // reloading for. A page loaded before its worker claimed it starts with no
+  // controller, so the first handover there is the initial claim, not an
+  // update — track that rather than snapshotting once, or every later update
+  // on that install gets swallowed.
+  let haveBaselineController = !!navigator.serviceWorker.controller;
+  let updateOffered = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!haveBaselineController) { haveBaselineController = true; return; }
+    if (updateOffered) return;
+    updateOffered = true;
+    showUpdatePill();
+  });
+}
+
+function showUpdatePill() {
+  if (document.getElementById("updatePill")) return;
+  const pill = document.createElement("button");
+  pill.id = "updatePill";
+  pill.className = "update-pill";
+  pill.type = "button";
+  pill.innerHTML = `<span>Update ready</span><span class="update-pill-cta">Tap to reload</span>`;
+  pill.onclick = () => { trackEvent("took an update"); location.reload(); };
+  document.body.appendChild(pill);
 }
 
 // ============================================================
@@ -1975,7 +2006,7 @@ if ("serviceWorker" in navigator) {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v67";
+const APP_VERSION = "v68";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
