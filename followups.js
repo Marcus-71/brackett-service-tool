@@ -9,6 +9,31 @@
 // appears here is grounded in the parent scenario's own text - nothing is
 // invented, because a tech will measure against it in the field.
 const SYMPTOM_FOLLOWUPS = {
+  "s-208v-vs-240v-transformer-tap": [
+    {
+      ask: "Measure the actual supply voltage phase-to-phase at the disconnect under load and compare against the utilization voltage range printed on the nameplate. What is the service?",
+      options: [
+        { label: "Measures near 208V", verdict: "Now find the control transformer and read which primary tap the lead is actually landed on." },
+        { label: "Measures near 240V", verdict: "The 208V tap issue is not your problem. Confirm the transformer is on the 240V tap and look elsewhere for the chatter and resets." },
+        { label: "Measures outside the nameplate utilization range entirely", verdict: "This is a supply problem, not a tap problem. Get the supply voltage corrected before chasing controls." },
+      ],
+    },
+    {
+      ask: "Read the transformer's primary tap markings and see which one the primary lead is landed on. What do you find?",
+      options: [
+        { label: "Lead is on the 240V tap with a 208V supply", verdict: "That is the fault - low control voltage shows up as contactor chatter, board resets, and weak low-voltage components. Kill power and lock out, move the lead to the 208V tap, and secure the unused lead per the instructions." },
+        { label: "Lead is already on the tap matching the measured supply", verdict: "Tap is correct. Measure the secondary under load anyway, then check the blower and heater-kit 208V settings." },
+      ],
+    },
+    {
+      ask: "With the correct tap and power restored, measure the transformer secondary with the system calling, and check the other 208V-specific settings on the unit. What do you see?",
+      options: [
+        { label: "Secondary holds within the expected control voltage range under load and the misbehaving components are normal now", verdict: "Fixed. Note the corrected configuration on the ticket and inside the cabinet so the next tech does not undo it." },
+        { label: "Secondary still low under load", verdict: "Recheck the tap landing and add up the load on the transformer - the tap may not be the only problem." },
+        { label: "Blower motor or heater-kit taps are still set for the other voltage", verdict: "Correct those too. The transformer is not always the only 208V-specific setting on the unit." },
+      ],
+    },
+  ],
   "s-24v-at-thermostat-and-heater-relays": [
     {
       ask: "With the thermostat calling for cooling, check for 24 volts at thermostat wires C and R in the indoor unit control panel.",
@@ -42,6 +67,103 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-a2l-brazing-and-hot-work": [
+    {
+      ask: "Before the torch comes out, check the state of the system. Where is the refrigerant?",
+      options: [
+        { label: "Full charge recovered with an A2L-rated machine, piping purged with dry nitrogen", verdict: "That is the right starting point. Keep a low-flow nitrogen purge running through the joint while you braze." },
+        { label: "System still holds refrigerant, or it was only partly recovered", verdict: "Do not strike a torch. Recover the full charge with an A2L-rated machine and purge the section with dry nitrogen first - never braze on a charged A2L system." },
+      ],
+    },
+    {
+      ask: "Look at where you are working. What kind of space is it?",
+      options: [
+        { label: "Basement, closet, attic, crawlspace, or other low or enclosed area", verdict: "This is the high-risk case. R-32 and R-454B are heavier than air and pool at floor level. Ventilate, give pooled vapor time to clear, and confirm the area reads clear on an A2L-rated detector before any flame." },
+        { label: "Open, well ventilated area at or above grade", verdict: "Lower risk, but still ventilate and confirm clear with a rated detector. Then move on to controlling ignition sources." },
+      ],
+    },
+    {
+      ask: "Scan the space for ignition sources and check your egress before lighting off. What do you find?",
+      options: [
+        { label: "Pilot lights, water heater, electric heater, or non-rated electrical tools in the same space", verdict: "Shut those down or clear them out and de-energize the equipment before striking the torch. Then re-check the area with the detector." },
+        { label: "Ignition sources controlled, extinguisher in reach, clear egress path", verdict: "You are ready to braze. Afterward, pressure test with dry nitrogen, evacuate deeply, and weigh in the correct charge per the OEM service instructions for that model." },
+      ],
+    },
+  ],
+  "s-a2l-charge-limit-and-room-size": [
+    {
+      ask: "Total the system charge including the line set adder, then look up the OEM minimum room area (A-min) for that model and charge. How does the smallest room the system serves compare?",
+      options: [
+        { label: "Room is at or above the OEM minimum area", verdict: "The install passes on room size. Next check whether the charge level triggers a refrigerant detection requirement." },
+        { label: "Room is smaller than the OEM minimum area", verdict: "This install does not comply. Do not proceed - the equipment selection or the application has to change. Document the room area and the charge." },
+        { label: "You have been sizing off the whole house on a ductless job", verdict: "Re-measure. On ductless it is the room the head is in that governs, not the whole house." },
+      ],
+    },
+    {
+      ask: "Check the charge against the OEM instructions and your adopted code for a detection requirement. Reported guidance puts the general trigger around 4 pounds of A2L charge under UL 60335-2-40, but the OEM number governs. What applies?",
+      options: [
+        { label: "Charge is below the threshold in the OEM instructions and adopted code", verdict: "No detection system required. Document the charge, the room area, and the detection status on the job ticket." },
+        { label: "At or above the threshold, and a detection system is installed", verdict: "Confirm it is wired to the equipment control and functionally tested - blower run, compressor shutdown, ignition sources de-energized - before you leave." },
+        { label: "At or above the threshold, and no detection system is installed", verdict: "The system cannot be left this way. Detection and mitigation have to be added before the equipment runs in that space." },
+      ],
+    },
+    {
+      ask: "The line set is long and someone wants to add charge to compensate. Check the model's line set allowance first. What does the manual say?",
+      options: [
+        { label: "Line set length is within the model's published allowance", verdict: "Add only the OEM per-foot adder, no more, and recheck the total charge against the room area limit." },
+        { label: "Line set is longer than the model allows", verdict: "Do not add charge to compensate. An over-length run is an installation problem - correct the run or select different equipment." },
+      ],
+    },
+  ],
+  "s-a2l-do-i-need-different-tools": [
+    {
+      ask: "Read the labels on your recovery machine and vacuum pump. Are they rated or certified for A2L / mildly flammable refrigerants?",
+      options: [
+        { label: "Both are labeled or certified for A2L service", verdict: "You are covered on the two that matter most. Next confirm your leak detector is A2L-rated and your gauges list R-32 and R-454B." },
+        { label: "One or both are standard A1 equipment only", verdict: "Stop. A standard A1 machine or pump is not an acceptable substitute - it puts an ignition source in a flammable refrigerant stream. Get A2L-rated equipment before you open the system." },
+      ],
+    },
+    {
+      ask: "Check your leak detection and your gauges. What do you have on the truck?",
+      options: [
+        { label: "Electronic detector rated for A2L, and gauges that list R-32 and R-454B", verdict: "You are set. Wrenches, tube cutters, benders, and scales all carry over from A1 work with no change." },
+        { label: "Only a standard electronic detector that is not A2L rated", verdict: "Fall back to bubble solution for this job and get a rated detector. Never use a halide torch on these refrigerants." },
+        { label: "Gauges do not have R-32 or R-454B in the refrigerant list", verdict: "Your saturation temperatures will be wrong. Get a manifold or digital probes that carry those refrigerants before you judge superheat or subcooling." },
+      ],
+    },
+    {
+      ask: "Look at the recovery cylinder you plan to use. What is in it and what is it rated for?",
+      options: [
+        { label: "Correct cylinder type for this refrigerant, empty or holding the same refrigerant", verdict: "Good to recover. Also check your state and local requirements, since A2L code adoption varies by jurisdiction." },
+        { label: "Cylinder holds a different refrigerant, or is not the correct type for this one", verdict: "Do not recover into it. Mixing A2L into a cylinder holding another refrigerant contaminates both - get the correct cylinder first." },
+      ],
+    },
+  ],
+  "s-a2l-sensor-fault-no-actual-leak": [
+    {
+      ask: "Read the exact fault the equipment posted. Most controls tell these apart. Which is it?",
+      options: [
+        { label: "A detected-refrigerant event", verdict: "Treat it as real until proven otherwise. Verify the charge with pressures and subcooling and do an independent leak search around the indoor coil and connections with a rated detector." },
+        { label: "A sensor fault or open-circuit condition", next: 1 },
+      ],
+    },
+    {
+      ask: "With the charge confirmed intact, inspect the sensor and its circuit. What do you find?",
+      options: [
+        { label: "Loose pin, pinched wire, or moisture in the sensor connector", verdict: "That is the most common cause of a phantom fault. Repair the connection, then follow the OEM reset procedure exactly." },
+        { label: "Supply voltage missing, or a jumper or shorting link not in the state the OEM requires", verdict: "Correct it per the OEM instructions, including removing any shorting link that must come out when a device is added, then reset." },
+        { label: "Wiring and voltage good, but the sensor is at or past its published service life", verdict: "Replace the sensor. These have a rated life and the control cannot tell an aged sensor from a real event." },
+        { label: "Wiring good, sensor not old, but solvents or refrigerant were used nearby", verdict: "Contamination can trip a detector with no system leak. Clear and ventilate the area, then run the OEM reset procedure." },
+      ],
+    },
+    {
+      ask: "Follow the OEM reset procedure exactly - some faults need a power cycle, some clear only after the sensor reads clean for a set period. What happens?",
+      options: [
+        { label: "Fault clears and stays clear through a full cycle", verdict: "Document what you found and corrected. Leave the sensor fully in service - no jumpers, no disconnected leads." },
+        { label: "Fault comes right back or will not clear", verdict: "The sensor gets replaced, and the system stays down until it is. Never bypass, jumper out, or disconnect it to get cooling running - that removes the mitigation that makes an A2L install safe." },
+      ],
+    },
+  ],
   "s-ac-coil-drain-interfering-furnace-drain": [
     {
       ask: "With the furnace trap confirmed clean and undamaged and the furnace sloped correctly for its orientation, trace the AC coil drain. Where does it go?",
@@ -55,6 +177,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Each drains freely on its own and the cabinet stays dry", verdict: "The re-pipe fixed it. Confirm each drain still has its own trap appropriate to its pressure condition and its own slope away from the equipment." },
         { label: "Cabinet is still wet after one of them runs", verdict: "Whichever one wets the cabinet is the one to chase - re-check that drain's trap, its slope, and whether it is restricted downstream." },
+      ],
+    },
+  ],
+  "s-accessory-overloads-24v-board-output": [
+    {
+      ask: "Identify every accessory landed on the board, then measure the actual current draw of the suspect one with it energized. How does it compare to the board's published rating for that specific terminal?",
+      options: [
+        { label: "Draw is above the board's published rating for that terminal", verdict: "Install an isolation relay - the board output drives only the relay coil, and the relay contacts switch the accessory from its own supply." },
+        { label: "Holding current is under the rating but inrush is well above it", verdict: "Inrush on a solenoid or damper motor can be several times the holding current, and it still kills the relay. Use an isolation relay." },
+        { label: "Draw is comfortably inside the terminal rating", verdict: "That output is not the problem. Total the VA on the transformer next." },
+      ],
+    },
+    {
+      ask: "Add up total VA on the transformer - contactor coil, gas valve, board, thermostat, and every accessory - and compare to the transformer's VA rating. What do you get?",
+      options: [
+        { label: "Total is within the transformer rating", verdict: "Transformer is fine. Focus on the individual board output and its isolation relay." },
+        { label: "Total exceeds the transformer rating", verdict: "Give the accessory a dedicated transformer or upsize the existing one. If two transformers end up in the system, keep their secondaries strictly isolated so they cannot backfeed each other." },
+      ],
+    },
+    {
+      ask: "Remove the accessory load and check that board output with nothing on it. Is the terminal alive?",
+      options: [
+        { label: "Output works again with the load removed", verdict: "The board survived. Add the isolation relay, confirm the low-voltage fuse rating matches what the equipment calls for, and put it back in service." },
+        { label: "Terminal is dead with no load on it", verdict: "That relay is already damaged, so the board needs replacement. Fix the overload first or the new board goes the same way." },
       ],
     },
   ],
@@ -128,6 +274,24 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "CFM off the chart lines up with what this system should move", verdict: "Your probe placement was right. Record which configuration you measured, since the same numeric total means different things on the two arrangements." },
         { label: "CFM is way off from what this system should move", verdict: "Wrong probe placement is the most common reason a static reading does not match the airflow chart. Re-check that your negative probe is in the right spot for this arrangement, then re-read." },
+      ],
+    },
+  ],
+  "s-airflow-by-electric-heat-temp-rise": [
+    {
+      ask: "With all strips energized and temperatures stable, measure heater volts under load, clamp each energized circuit, and take return and supply temps. Work CFM = (volts x amps x 3.41) / (rise x 1.08). How does it compare to the blower table?",
+      options: [
+        { label: "Calculated CFM is close to the blower table value for that speed setting", verdict: "Airflow is where it should be for the installed tonnage. Document the number and move on to your other checks." },
+        { label: "Calculated CFM comes in low", verdict: "Take total external static and start finding the restriction. Do not just bump the blower speed to chase the number." },
+        { label: "Calculated CFM comes in high", verdict: "Recheck your inputs first - actual measured voltage under load and all energized circuits totaled - then compare against the blower table again." },
+      ],
+    },
+    {
+      ask: "Check how you took the readings that feed the calculation. What was your setup?",
+      options: [
+        { label: "Supply probe out of line of sight of the elements, return probe just entering the blower compartment", verdict: "Correct placement. Your temperature rise is usable and the calculated CFM stands." },
+        { label: "Supply probe could see the heating elements directly", verdict: "Radiant heat skews that reading high, which makes calculated CFM read low. Move the probe out of line of sight and redo it." },
+        { label: "You used the nominal heater rating instead of measured volts and clamped amps", verdict: "Redo it with actual measured voltage under load and the clamped amperage. The nameplate rating is not what the elements are really drawing." },
       ],
     },
   ],
@@ -507,6 +671,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-capacitor-check-under-load-amp-clamp": [
+    {
+      ask: "With the unit running, clamp the start (aux) lead going to the capacitor - one wire, centered in the jaw - and measure AC volts across the capacitor. On 60 Hz, MFD = (amps x 2652) / volts. How does it compare to the printed value?",
+      options: [
+        { label: "Within roughly plus or minus 6 percent of the printed value", verdict: "The capacitor is delivering its rating. If the motor still runs poorly or hot, the fault is in the motor, the load, or the supply voltage - move on." },
+        { label: "Meaningfully below the printed value", verdict: "The capacitor is collapsing under load even if it bench-tests fine. Replace it and repeat this measurement on the new part." },
+        { label: "You are working on 50 Hz power", verdict: "Do not use 2652 - that constant is for 60 Hz only. Use the 50 Hz constant before you judge this capacitor." },
+      ],
+    },
+    {
+      ask: "You replaced the capacitor. Repeat the calculation on the new part with the unit running. What do you get?",
+      options: [
+        { label: "New part calculates in range and the motor runs normally", verdict: "Done. Note the measured value on the ticket so the next tech has a baseline." },
+        { label: "New part calculates in range but the motor still runs poorly or hot", verdict: "The capacitor is not your problem. Look at the motor, the load it is driving, and the supply voltage." },
+        { label: "New part also calculates low", verdict: "Recheck your setup - one conductor centered in the clamp jaw, and volts read from the start terminal to common. A wrong reading is more likely than two bad capacitors." },
+      ],
+    },
+  ],
   "s-capacitor-in-circuit-false-reading": [
     {
       ask: "Read the capacitor with the leads on, then pull both leads and read it again. How do the two numbers compare?",
@@ -537,6 +719,31 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Needle swings to zero and stops there", verdict: "Shorted - replace it." },
         { label: "Needle settles at a fixed resistance instead of returning to infinity on a start capacitor", verdict: "That is the bleed resistor, not a fault - a start capacitor with a bleed resistor settles at the resistor's resistance." },
+      ],
+    },
+  ],
+  "s-capacitor-voltage-rating-substitution": [
+    {
+      ask: "Read the microfarads off the original capacitor and off the one on your truck. How do the MFD values compare?",
+      options: [
+        { label: "MFD matches exactly", verdict: "Good. Now compare the voltage ratings before you install it." },
+        { label: "Truck capacitor is a lower MFD than the original", verdict: "Do not install it. MFD has no flexibility - get the matching value." },
+        { label: "Truck capacitor is a big jump higher in MFD", verdict: "Do not install it just because it is what you have. Match the MFD value." },
+      ],
+    },
+    {
+      ask: "Now compare the voltage ratings stamped on both capacitors. What do you have?",
+      options: [
+        { label: "Original 370V, replacement marked 440V or 370/440V", verdict: "That is a legal substitution. Voltage is a not-to-exceed rating, so higher is fine - many makers stamp 370/440V for exactly this reason." },
+        { label: "Original 440V, replacement marked 370V", verdict: "Never install a lower voltage rating. Get a 440V or 370/440V part." },
+        { label: "Both marked the same voltage", verdict: "Straight replacement. Move on to checking the physical fit." },
+      ],
+    },
+    {
+      ask: "Test fit the replacement in the bracket and look at the terminal style. How does it sit?",
+      options: [
+        { label: "Fits the strap and the terminals hold securely", verdict: "Install it, then verify motor amp draw against nameplate FLA and check the capacitor under load." },
+        { label: "Taller or wider can that cannot be strapped down", verdict: "Do not leave it loose - it will fail from vibration. Get a can that mounts properly or add the correct bracket." },
       ],
     },
   ],
@@ -1130,6 +1337,55 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Measured input is at or below the rated input", verdict: "The unit is not overfired. Relight every other appliance you shut off and confirm each pilot burner is operating, then follow up with a temperature rise check and a combustion/CO analysis." },
         { label: "Measured input is greater than the rated input", verdict: "Overfired - measured input must not be greater than the rating plate input. Correct it, then relight the other appliances and confirm their pilots before leaving." },
+      ],
+    },
+  ],
+  "s-closed-door-room-pressurization": [
+    {
+      ask: "Blower on its highest speed, all interior doors closed, manometer hose under the suspect door. What does the room read with respect to the main body of the house?",
+      options: [
+        { label: "Within roughly 3 Pascals of the main body", verdict: "That is inside the target energy programs commonly require. Pressure is not your complaint - verify register airflow with the door open and closed and look elsewhere." },
+        { label: "Positive by more than roughly 3 Pascals", verdict: "The return path is blocked - supply keeps entering with nowhere to go. Recommend a transfer grille, jump duct, dedicated return, or at minimum a proper door undercut." },
+        { label: "Negative by more than roughly 3 Pascals", verdict: "That room is supply starved rather than return blocked, so the fix is different. Check the supply run to that room before adding a relief path." },
+      ],
+    },
+    {
+      ask: "Check the door undercut and whether that room has its own return grille. What do you find?",
+      options: [
+        { label: "Undercut blocked by carpet, a threshold, or a rug", verdict: "That is the relief path the builder counted on. Clear it or add a transfer grille or jump duct, then re-measure." },
+        { label: "No return grille in that room at all", verdict: "With a single central return and a closed door, that room has no path back. Add a transfer grille, jump duct, or a dedicated return." },
+        { label: "Return grille exists but is undersized or closed", verdict: "Open it or size it up, then re-measure the room-to-house pressure with the door closed." },
+      ],
+    },
+    {
+      ask: "Measure register airflow into the room with the door open and again with it closed. What happens?",
+      options: [
+        { label: "Airflow drops noticeably when the door closes", verdict: "Show the customer that number - it is exactly why the room is fine by day and miserable at night. Install the relief path and re-measure the pressure with the door closed." },
+        { label: "Airflow is about the same either way", verdict: "The door is not choking it. Look at the branch duct serving that room and at the room's actual load." },
+      ],
+    },
+  ],
+  "s-closed-registers-unused-rooms-raise-static": [
+    {
+      ask: "Take total external static as-found, then open every register and read it again. How do both readings compare to the nameplate rated maximum external static?",
+      options: [
+        { label: "As-found is over the rated maximum and drops into range with everything open", verdict: "The closed registers are the problem. Leave them open, verify the complaint rooms actually improve, and explain that closing registers raises static and cuts total airflow." },
+        { label: "Still over the rated maximum with everything open", verdict: "The closed registers were only one contributor. Treat this as a duct restriction and keep going upstream - filter, coil, return sizing, kinked flex." },
+        { label: "Under the rated maximum both ways", verdict: "Static is not the story. Check filter and coil pressure drops and look at the complaint rooms individually." },
+      ],
+    },
+    {
+      ask: "Walk the house and confirm what is actually closed or blocked, counting furniture, rugs, and magnetic covers. What did you find?",
+      options: [
+        { label: "More closed or blocked registers than the customer remembered", verdict: "Open them all and re-read static. Customers routinely forget some, and every one adds to the restriction." },
+        { label: "Everything is already open and clear", verdict: "Then the restriction is elsewhere. Check the filter and coil pressure drops and the return side." },
+      ],
+    },
+    {
+      ask: "The customer's real goal was less conditioning in that room. Inspect the closed-off room and decide what to tell them. What do you find?",
+      options: [
+        { label: "Condensation, musty odor, or a cold exterior wall in the closed room", verdict: "An unconditioned room inside a conditioned house grows a moisture problem. Explain that, and do the reduction properly at the takeoff damper or with zoning." },
+        { label: "Room looks fine, they just want it different from the rest of the house", verdict: "Balance it at the branch takeoff damper or zone it. Closing registers is not a balancing method - document the before and after static so it does not come back next season." },
       ],
     },
   ],
@@ -1746,6 +2002,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-compressor-terminal-identification-ohms": [
+    {
+      ask: "Power off, locked out, capacitors discharged, all leads off the three terminals. Measure resistance between each pair - three readings. What is the pattern?",
+      options: [
+        { label: "Three readings, one clearly the largest", verdict: "That largest reading is start-to-run, so the terminal not involved in it is COMMON. Of the two readings from common, the higher goes to START and the lower goes to RUN." },
+        { label: "One or more readings come up open", verdict: "Let the compressor sit long enough for an internal overload to reset, then re-read. If it is still open, suspect a failed winding." },
+        { label: "A reading is near zero", verdict: "That is a shorted winding. The compressor is bad - do not rewire it and restart it." },
+      ],
+    },
+    {
+      ask: "Sanity-check the numbers: on a single-phase compressor the start-to-run reading should be roughly the sum of the other two. Does it add up?",
+      options: [
+        { label: "Yes, start-to-run is about the sum of the other two", verdict: "Your terminal identification is good. Check each terminal to the compressor housing for a ground fault before reconnecting anything." },
+        { label: "No, the numbers do not add up", verdict: "Suspect a failed winding. Do not wire it up on those readings - verify the compressor before going any further." },
+      ],
+    },
+    {
+      ask: "Check each terminal to the compressor housing. What do you read?",
+      options: [
+        { label: "No continuity to the housing from any terminal", verdict: "No ground fault. Rewire per the unit's diagram - common from the contactor, run to the run capacitor connection, start to the capacitor's HERM side - and verify amp draw against nameplate RLA on restart." },
+        { label: "Continuity from any terminal to the housing", verdict: "Grounded compressor. It is done - do not energize it." },
+      ],
+    },
+  ],
   "s-compressor-terminal-plate-leak": [
     {
       ask: "You see oil around the compressor terminal box. Before you touch anything, what state is the system in?",
@@ -2088,6 +2368,24 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-contactor-coil-voltage-mismatch": [
+    {
+      ask: "Power off and locked out. Read the coil voltage printed on the coil body - not the contact rating on the housing - and compare it to the control voltage the wiring diagram says feeds it. What do you find?",
+      options: [
+        { label: "Coil voltage matches the control circuit feeding it", verdict: "Correct part. Restore power and confirm it pulls in cleanly and holds without chatter." },
+        { label: "A line-voltage coil where the circuit is 24V", verdict: "It will simply never pull in on 24V. Install a contactor with a 24V coil and a contact rating that meets or exceeds the load." },
+        { label: "A 24V coil where the circuit is line voltage", verdict: "That coil is destroyed almost immediately. Inspect for a burned or melted coil and check whether the low-voltage circuit or transformer took damage too before installing the right part." },
+      ],
+    },
+    {
+      ask: "With the correct contactor in and power restored, watch it pull in and read voltage across the closed contacts on each pole. What do you see?",
+      options: [
+        { label: "Pulls in cleanly, holds without chatter, essentially no voltage across the closed contacts", verdict: "Good repair. Close it up." },
+        { label: "A meaningful voltage drop across one of the closed contacts", verdict: "That pole is pitted or not making. Replace the contactor rather than leaving it to heat up and fail." },
+        { label: "Coil buzzes or chatters", verdict: "Recheck the coil voltage against the control circuit, and confirm the control voltage holds up under load before blaming the contactor." },
+      ],
+    },
+  ],
   "s-contactor-pole-voltage-drop": [
     {
       ask: "With the contactor closed and the unit calling, read across each pole line side to load side, then read T1 to T2. What do you get?",
@@ -2112,6 +2410,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Contacts are melted or fused and it will not open by hand", verdict: "Welded contactor from arcing and pitting, common after repeated hard starts or a marginal capacitor. Replace it - do not try to free it, it will fail again." },
         { label: "Contactor opens normally with power off", verdict: "Look for a shorted low-voltage wire holding the contactor coil energized without a real thermostat call." },
+      ],
+    },
+  ],
+  "s-contactor-wont-pull-in-voltage-collapses": [
+    {
+      ask: "Measure control voltage right at the coil terminals with the cooling call active and the coil still connected - not with a lead lifted. What does the reading do?",
+      options: [
+        { label: "Holds steady and the contactor still does not pull in", next: 1 },
+        { label: "Collapses when the coil tries to pull in", next: 2 },
+      ],
+    },
+    {
+      ask: "Voltage holds at the coil but nothing happens. Kill power, ohm the coil, and check the contactor mechanically. What do you find?",
+      options: [
+        { label: "Coil reads open or shorted", verdict: "Replace the contactor." },
+        { label: "Coil ohms fine but the armature is mechanically bound or there is debris in the contactor", verdict: "Free it or replace the contactor. The coil is being told to pull in and physically cannot move." },
+        { label: "Coil and mechanics both check out", verdict: "Suspect a phantom reading on a long control run. Re-read using the meter's low-impedance (LoZ) setting before going further." },
+      ],
+    },
+    {
+      ask: "The voltage sags under load. Move upstream and measure at the equipment's low-voltage terminal board and at the transformer secondary under that same load. Where does it hold up?",
+      options: [
+        { label: "Solid at the transformer but sagging out at the condenser", verdict: "The loss is in the run. Check for undersized or damaged thermostat wire, corroded splices, wire nuts backed off, and any buried or outdoor junction. Keep hands clear - the compressor may start the instant you fix it." },
+        { label: "Sags right at the transformer secondary", verdict: "The transformer cannot deliver the current. Total the VA of everything it carries against its rating - accessories added after install are the usual cause - then resize or offload it." },
       ],
     },
   ],
@@ -2157,6 +2479,31 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Line voltage at the primary and the wiring and splices are good", verdict: "The transformer is inoperative - replace it." },
         { label: "No line voltage at the primary, or a bad splice or bad wiring feeding it", verdict: "The transformer is not being fed. Repair the wiring or the splices rather than replacing the transformer." },
+      ],
+    },
+  ],
+  "s-cooling-temperature-split-airflow-screen": [
+    {
+      ask: "Let it stabilize, measure return dry bulb and wet bulb at the return grille and supply dry bulb in the plenum, then look up the target split for those actual return conditions. How does your measured split compare?",
+      options: [
+        { label: "Measured split is higher than the target for those conditions", verdict: "Suspect low airflow first - dirty filter, dirty coil, dirty blower wheel, wrong blower speed, or duct restriction. Verify airflow before touching the charge." },
+        { label: "Measured split is lower than the target for those conditions", verdict: "Suspect too much airflow, low capacity, or a refrigerant-side problem, and confirm with superheat and subcooling before deciding anything." },
+        { label: "Measured split is close to the target", verdict: "The screen passes. Remember the split is a screening tool, not a charging method - move on to your other checks." },
+      ],
+    },
+    {
+      ask: "You were comparing against the common 18 to 22 degree expectation. What are the actual indoor conditions?",
+      options: [
+        { label: "Indoor relative humidity is in the roughly 45 to 55 percent range", verdict: "That is where the 18 to 22 expectation lines up, so your comparison is reasonable - but still use a target-split chart for the exact return conditions." },
+        { label: "Indoor humidity is above that range", verdict: "The target split drops as indoor humidity rises, because the coil is doing more latent work. Look up the real target before calling the split wrong." },
+        { label: "Indoor humidity is below that range", verdict: "The target split rises as indoor humidity falls. Look up the real target for those conditions instead of using the remembered number." },
+      ],
+    },
+    {
+      ask: "Check the return path before you trust your entering conditions. What do you find?",
+      options: [
+        { label: "A leaky return pulling attic or crawlspace air in ahead of your probe", verdict: "Fix that first. Your entering conditions are wrong until you do, and every number downstream of them is wrong too." },
+        { label: "Return path is tight and inside the envelope", verdict: "Your readings are valid. Verify airflow independently and never adjust refrigerant based on the temperature split alone." },
       ],
     },
   ],
@@ -2315,6 +2662,30 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Bonding conductor smaller than 6 AWG copper, longer than 75 feet, or not landed on the grounding electrode system", verdict: "The bond does not meet the requirement. Refer the correction to a licensed electrician and document it." },
         { label: "Clamp squeezed onto the corrugated tubing itself", verdict: "The clamp has to be listed for the purpose and installed on rigid pipe or a CSST fitting, not on the corrugated tubing. Refer the correction to a licensed electrician." },
         { label: "Bond present, correct size, length and landing", verdict: "The CSST bonding checks out. While you are there, verify the furnace's own equipment ground is intact and check line polarity - loose grounding shows up as erratic flame sensing." },
+      ],
+    },
+  ],
+  "s-customer-wants-annual-topoff": [
+    {
+      ask: "Pull the service history and total up how much refrigerant has been added and over what period. What does it show?",
+      options: [
+        { label: "A documented pattern of refrigerant added every season", verdict: "That is a leak, plain and simple - refrigerant does not wear out or get used up. Do a real leak search instead of another top-off and show the customer the numbers." },
+        { label: "No records, only what the customer remembers", verdict: "Get the actual service history before you agree to anything. You need a real loss rate, not a memory, to price the repair honestly." },
+      ],
+    },
+    {
+      ask: "Do a real leak search - coils, service ports, valve stems, braze joints, line set contact points, and the compressor area. Where does it show up?",
+      options: [
+        { label: "Service port, valve stem, or an accessible braze joint", verdict: "That is a repairable leak. Fix it, weigh in what you add, and document the amount on the invoice." },
+        { label: "Evaporator coil or a microchannel condenser coil", verdict: "Price the coil or the system honestly rather than selling repeat visits. Explain the collateral damage - a low-side leak pulls in air and moisture, which forms acid, plugs metering devices, and shortens compressor life." },
+        { label: "No leak found on this visit", verdict: "Say so plainly and document it. Weigh in anything you add and set a follow-up, but do not sell a top-off plan - knowingly leaving a system to vent is not a service plan." },
+      ],
+    },
+    {
+      ask: "The customer still wants you to just fill it every spring. What are you leaving them with?",
+      options: [
+        { label: "A written comparison of repeat top-off cost versus repair or replacement", verdict: "Right call. The decision is theirs with real numbers, and you have documented that intentional venting is prohibited under EPA Section 608." },
+        { label: "An agreement to keep topping it off, nothing in writing", verdict: "Do not. Venting refrigerant is prohibited under EPA Section 608, and the moisture and non-condensables coming in the low side are killing the compressor. Put the comparison in writing instead." },
       ],
     },
   ],
@@ -3993,6 +4364,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-dirty-blower-wheel-gradual-airflow-loss": [
+    {
+      ask: "Take total external static pressure before you open anything, and compare it against what you feel at the registers. What is the picture?",
+      options: [
+        { label: "Low or normal static but obviously poor airflow at the registers", verdict: "That points at the blower or a duct disconnect, not a restriction. Kill power, lock out, and pull the blower out to see the wheel from the inlet side." },
+        { label: "High static with poor airflow", verdict: "That is a restriction, not a dirty wheel. Chase filter, coil, and duct pressure drops instead." },
+      ],
+    },
+    {
+      ask: "Slide the blower out and shine a light into the cup of the individual blades from the inlet side. What do you see?",
+      options: [
+        { label: "Blade cups packed with dirt even though the outside of the wheel looks fine", verdict: "That is your airflow loss. Pull the wheel and clean it properly, off the motor if possible - in-place cleaning drives dirt into the motor and misses the blade cups." },
+        { label: "Blades clean and sharp", verdict: "The wheel is not it. Check the wheel for a loose hub or set screw and rub marks, then go looking for a duct disconnect." },
+      ],
+    },
+    {
+      ask: "While the blower is out, inspect the wheel, the housing cutoff plate, and the filter path. What do you find?",
+      options: [
+        { label: "Missing balance weights, a loose hub or set screw, or rub marks against the housing", verdict: "Correct that before reinstalling. Set the wheel to the manufacturer's position on the shaft with the set screw on the flat and re-torque." },
+        { label: "Damaged cutoff plate, or a filter bypass path that let the dirt in", verdict: "Fix the bypass or you will be cleaning this wheel again. Repair the cutoff plate and seal the filter path." },
+        { label: "Everything else looks good", verdict: "Reinstall, then re-read static and register airflow and compare against your first reading." },
+      ],
+    },
+  ],
   "s-dirty-sock-syndrome": [
     {
       ask: "Run the system and note the timing of the smell, or have the customer describe it.",
@@ -4255,6 +4650,23 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-dual-run-capacitor-terminals-swapped": [
+    {
+      ask: "Power off, locked out, both sections discharged. Read the terminal markings on the capacitor body and trace where each lead lands against the unit's wiring diagram. What do you find?",
+      options: [
+        { label: "Compressor start lead on HERM, fan lead on FAN, C fed per the diagram", verdict: "Wiring is correct. Restore power and check amp draw on the compressor and fan against their nameplate RLA and FLA." },
+        { label: "HERM and FAN leads are swapped", verdict: "That puts the wrong capacitance on each motor - exactly why the fan runs slow or the compressor hums and trips. Correct the leads and confirm each section's MFD matches the compressor and fan ratings." },
+        { label: "The C (common) lead is not on the C terminal per the diagram", verdict: "C is the shared terminal feeding both sections. Land it per the unit's wiring diagram before you power anything up." },
+      ],
+    },
+    {
+      ask: "With the wiring confirmed correct and power restored, clamp the compressor and the condenser fan. How do they read against nameplate RLA and FLA?",
+      options: [
+        { label: "Both at or below nameplate", verdict: "You fixed it. Note the corrected wiring on the ticket so the next tech is not chasing it again." },
+        { label: "Fan or compressor still misbehaving - high amps, humming, or a slow fan", verdict: "Verify the capacitor's actual capacitance under load before condemning a motor. A capacitor can bench-test fine and collapse under load." },
+      ],
+    },
+  ],
   "s-dualfuel-lockout-temp-misconfigured": [
     {
       ask: "Write down both lockout values - heat pump low-temperature lockout and furnace high-temperature lockout - and compare them against each other.",
@@ -4282,6 +4694,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Cooling condensate line running uninsulated through the cold attic, near a soffit or gable vent", verdict: "Cold air infiltrating directly onto an uninsulated line is a straightforward install oversight. Insulate or reroute that section rather than just clearing the ice, or it recurs on the next cold snap." },
         { label: "Humidifier drain, or a summer-leftover trap still full of water", verdict: "Cooling condensate should not normally be an issue in heating mode, but a humidifier drain or a trap still holding water can freeze and back up during the heating season. Address that line specifically." },
+      ],
+    },
+  ],
+  "s-duct-booster-fan-not-helping": [
+    {
+      ask: "Take total external static and compare it to the equipment nameplate rating before you evaluate the booster at all. Where does it sit?",
+      options: [
+        { label: "Total static is above the nameplate rating", verdict: "The whole system is short on airflow, so the booster was never going to work. Check filter drop, coil drop, and return static and fix the system before touching the branch." },
+        { label: "Total static is in range", verdict: "The system has air to give. Now measure what the booster is actually doing at the registers." },
+      ],
+    },
+    {
+      ask: "Measure register airflow in the problem room with the booster running and again with it off, and do the neighboring rooms both ways too. What happens?",
+      options: [
+        { label: "Problem room improves but the neighbors drop off", verdict: "The booster is robbing the rooms next door. It does not add air to the system, it just takes a bigger share - fix the branch instead." },
+        { label: "Problem room barely changes either way", verdict: "The branch itself is the limit. Inspect for undersized duct, crushed or kinked flex, excess length, or a closed takeoff damper." },
+        { label: "Problem room improves and the neighbors are unchanged", verdict: "The booster is doing its job. Confirm it is properly interlocked and accessible, and document that it is a bandage over a duct design issue." },
+      ],
+    },
+    {
+      ask: "Check how the booster is controlled. What is it tied to?",
+      options: [
+        { label: "A sail switch or current sensor tied to the blower", verdict: "That is correct interlocking. Also confirm the booster is not creating a leak or an obstruction in the branch when it is off." },
+        { label: "It runs independently of the air handler", verdict: "Wrong. It will pull unconditioned air through the duct when the blower is off. Interlock it to the blower or remove it." },
       ],
     },
   ],
@@ -5247,6 +5683,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-evap-coil-upstream-face-dirt": [
+    {
+      ask: "Before opening anything, take a pressure drop across the coil alone and compare it to the manufacturer's published coil drop at the airflow the system is actually moving. What do you get?",
+      options: [
+        { label: "Drop is above the published value at that airflow", verdict: "The coil is loaded on the entering-air face even if the visible side looks clean. Kill power, lock out, and get a mirror and light on the entering side." },
+        { label: "Drop is at or below the published value", verdict: "The coil is not your restriction. Take the drops across the filter and each half of the duct system instead." },
+      ],
+    },
+    {
+      ask: "Power off and locked out, inspect the entering-air face with a mirror and light - on an A-coil that means looking up into the underside of the slabs. What do you see?",
+      options: [
+        { label: "Matted dirt on the entering face while the leaving side looks spotless", verdict: "Classic. Plan a proper cleaning that reaches the entering face, which usually means removing the coil or the access panel rather than spraying through the leaving side." },
+        { label: "Heavy dirt and biofilm at the bottom of the coil right above the drain pan", verdict: "That is where it collects first. Clean it, and inspect the drain pan and drain while the coil is exposed since the same debris ends up there." },
+        { label: "Entering face is genuinely clean", verdict: "Then something else is causing the drop. Recheck your probe locations and the airflow you compared against." },
+      ],
+    },
+    {
+      ask: "Look for how unfiltered air reached the coil in the first place. What do you find?",
+      options: [
+        { label: "Gaps at the filter rack, an undersized filter, or an open cabinet seam", verdict: "Fix that bypass or you will be back. Seal the rack and fit the correct filter before you leave." },
+        { label: "Filtration path is tight with no bypass", verdict: "Note it, clean the coil, then retake the coil pressure drop and total external static and compare to your starting numbers." },
+      ],
+    },
+  ],
   "s-evap-vs-compressor-superheat": [
     {
       ask: "Take superheat at the evaporator outlet and again at the compressor. How do the two compare?",
@@ -5293,6 +5753,54 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Measured CFM above the blower table for the installed tonnage and coil", verdict: "Excess airflow. Select a lower blower speed for the installed tonnage, then re-verify CFM and re-check for carryover. Check blower motor amp draw against the nameplate too, since excess air can push the motor into overload." },
         { label: "Static abnormally low across the board", verdict: "Flag the duct system as part of the problem rather than only re-tapping the blower." },
         { label: "Measured CFM in line with the blower table", verdict: "Excess airflow is not the story. Inspect the coil face and drain pan for water being carried past the pan lip and re-check the humidity complaint." },
+      ],
+    },
+  ],
+  "s-fan-on-raises-indoor-humidity": [
+    {
+      ask: "Check the thermostat fan setting and ask when it was changed relative to the complaint. What do you find?",
+      options: [
+        { label: "Set to ON or CIRCULATE, and the complaint started after the change", verdict: "That is very likely it. A blower that keeps running after the compressor stops re-evaporates the wet coil and pan back into the house. Set it to AUTO and compare humidity over a day or more." },
+        { label: "Already on AUTO", verdict: "Continuous fan is not your cause. Measure indoor RH and dew point, then look at the blower off-delay, the airflow setting, and the coil and pan." },
+      ],
+    },
+    {
+      ask: "Set the fan back to AUTO, let the house run a full day or more, and compare the humidity readings. What happened?",
+      options: [
+        { label: "Indoor humidity came down and the clammy feeling improved", verdict: "That was it. If the customer wants circulation, offer a low-speed circulate setting with a duty cycle instead of continuous fan and explain the tradeoff." },
+        { label: "Humidity is still high with the fan on AUTO", verdict: "Move on to the real dehumidification questions - system sizing, run time, and whether a dedicated dehumidifier is needed." },
+      ],
+    },
+    {
+      ask: "Check the blower-off delay, the airflow setting, and the coil and drain pan. What do you find?",
+      options: [
+        { label: "A long blower-off delay", verdict: "Same mechanism on a smaller scale. Shorten it in a humid climate to cut re-evaporation." },
+        { label: "Airflow set too high for the conditions", verdict: "Excessive airflow across the coil raises coil temperature and cuts latent removal, and can blow condensate off the coil. Dial it back." },
+        { label: "Standing water and biofilm in the pan, or a wet dirty coil", verdict: "That extends how long the coil stays wet after a cycle. Clean the coil and pan and confirm the drain flows freely." },
+      ],
+    },
+  ],
+  "s-filter-bowing-sucked-into-blower": [
+    {
+      ask: "Before pulling it, note the filter's orientation and condition and check it against the rack. What do you find?",
+      options: [
+        { label: "Filter is undersized for the rack, with gaps at the edges or loose enough to tip", verdict: "That is why it got pulled in. Fit the correct size and seal the rack so air cannot bypass around it." },
+        { label: "Correct size but bowed into a U or collapsed", verdict: "The return-side pressure drop is far above what that filter was built for. Check whether it needs a proper retaining rack or wire support, and measure the drop with a correct clean filter." },
+        { label: "Airflow arrow was pointing away from the blower", verdict: "Reinstall with the arrow toward the blower, but still measure the pressure drop - a displaced filter usually means the drop is too high." },
+      ],
+    },
+    {
+      ask: "Install a correctly fitted clean filter of the same type and take total external static and the filter pressure drop. How does the drop compare to that filter's published rating at your airflow?",
+      options: [
+        { label: "Filter drop is above its published rating for the airflow the system needs", verdict: "The fix is more filter area, not a cheaper filter. Size up the grille, add a second return, or go to a deeper media cabinet." },
+        { label: "Filter drop is within its published rating", verdict: "Then it was displaced for a mechanical reason - fit and support. Make sure it is retained properly and the rack is sealed." },
+      ],
+    },
+    {
+      ask: "Inspect the coil and blower wheel for the dirt that got past while the filter was displaced. What do you find?",
+      options: [
+        { label: "Coil face or blower wheel loaded with dirt", verdict: "Plan to clean both. The system has been running unfiltered for however long the filter was out of place." },
+        { label: "Coil and wheel still clean", verdict: "Caught it early. Reinstall with the arrow toward the blower, seal the rack, and confirm the door gasket closes on the filter frame." },
       ],
     },
   ],
@@ -6931,6 +7439,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-ghost-voltage-loz-meter": [
+    {
+      ask: "You read unexpected voltage on a conductor that should be dead. Switch the meter to its low-impedance (LoZ) setting and read again. What happens?",
+      options: [
+        { label: "The voltage collapses to near zero", verdict: "That was capacitively coupled ghost voltage, not a real source - common where wires share a conduit, raceway, or long bundled run. Stop chasing it." },
+        { label: "The voltage holds up on LoZ", verdict: "That is a real source. Investigate it as a genuine backfeed, a crossed conductor, or an unexpected supply." },
+        { label: "Your meter has no LoZ setting", next: 1 },
+      ],
+    },
+    {
+      ask: "No LoZ on your meter, so put a known load across the reading instead - a solenoid, a wiggy-type solenoid tester, or a load rated for the voltage. What does the voltage do?",
+      options: [
+        { label: "Collapses as soon as the load is applied", verdict: "Ghost voltage. If it keeps confusing low-voltage diagnosis on this job, consider re-routing or separating the control wiring from the line-voltage run." },
+        { label: "Survives the load and holds its value", verdict: "Real voltage. Treat it as a backfeed or crossed conductor and trace it out." },
+      ],
+    },
+    {
+      ask: "Now you want to work on that conductor. What is your proof the circuit is dead?",
+      options: [
+        { label: "A low or zero reading on the meter", verdict: "Not good enough. Ghost voltage is not proof of dead either - lock out and use live-dead-live with a known live source before and after." },
+        { label: "Live-dead-live with a proven meter, disconnect locked out", verdict: "That is the standard. Never conclude a circuit is safe from a meter reading alone." },
+      ],
+    },
+  ],
   "s-goodman-7seg-reading": [
     {
       ask: "Find the arrow printed next to the display to confirm which way is up, then read the two characters. What is it doing?",
@@ -7965,6 +8497,82 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-hard-start-kit-potential-relay": [
+    {
+      ask: "Power off, locked out, both capacitors discharged, all wires off the relay. Ohm terminals 1 to 2. What do you read?",
+      options: [
+        { label: "Essentially zero ohms - contacts closed at rest", verdict: "Contacts are good. Now ohm the coil between terminals 2 and 5 on a high ohms scale." },
+        { label: "An open reading between 1 and 2", verdict: "The relay contacts are burnt open, so the start capacitor never gets into the circuit. Replace the relay with one matched to this compressor." },
+      ],
+    },
+    {
+      ask: "Ohm the coil between terminals 2 and 5. It is a high-resistance coil, so use a high ohms scale. What do you get?",
+      options: [
+        { label: "Continuity - a high but readable resistance", verdict: "The coil is intact. Inspect the start capacitor and its bleed resistor next." },
+        { label: "Infinity - no continuity at all", verdict: "Open coil. The start capacitor will stay in the circuit and cook. Replace the relay with one matched to the compressor, not a universal kit grabbed blindly." },
+      ],
+    },
+    {
+      ask: "Now check the start capacitor and the basics the kit may be masking. What do you find?",
+      options: [
+        { label: "Start capacitor case bulged or ruptured, or the bleed resistor missing or broken", verdict: "Replace the start capacitor and make sure the bleed resistor across its terminals is present and intact." },
+        { label: "Supply voltage at the contactor under load is outside the nameplate range", verdict: "That is your real fault. A hard start kit does not fix low voltage - correct the supply before blaming the compressor." },
+        { label: "Run capacitor weak under load, or dirty condenser and high head pressure", verdict: "Fix that. The kit was masking it, and the compressor dies anyway if you leave it." },
+        { label: "Everything checks out and the compressor still needs the kit to break away", verdict: "Treat that as a symptom, not a fix. Document why the kit is on the unit and keep investigating - a compressor that did not need a kit when new is telling you something." },
+      ],
+    },
+  ],
+  "s-heat-pump-charge-check-in-winter": [
+    {
+      ask: "Before you touch refrigerant, pull the literature for this exact model. Does the manufacturer publish a heating-mode charging chart or checking-charge procedure?",
+      options: [
+        { label: "Yes, there is a heating-mode chart or procedure for this model", verdict: "Use it exactly as written, including its stated conditions. That chart is the only charge check that means anything in heating mode." },
+        { label: "No chart, or it says weigh-in only below a stated ambient", verdict: "Skip the gauges. Recover, evacuate, and weigh in the factory charge plus the line set adder from the installation instructions. That is the defensible answer in cold weather." },
+        { label: "Manual allows a cooling-mode check on a mild day with the condenser partly blocked", verdict: "Follow their procedure exactly and do not improvise it. If the weather will not cooperate, fall back to weighing the charge in." },
+      ],
+    },
+    {
+      ask: "Before blaming the charge, rule out the things that mimic low charge in heat mode. Which one do you actually have?",
+      options: [
+        { label: "Defrost cycle in progress, or you just came out of one", verdict: "Your readings mean nothing right now. Let the system stabilize well away from defrost, then read again." },
+        { label: "Snow or ice blocking the outdoor coil, or low indoor airflow", verdict: "Fix the airflow problem first. A blocked outdoor coil or a starved indoor blower reads exactly like low charge - clear it, then re-evaluate." },
+        { label: "Reversing valve only partly shifted", verdict: "That is your fault, not the charge. Chase the reversing valve before you add any refrigerant." },
+        { label: "None of those - unit is clear and running stable", verdict: "Good. Now look at the frost pattern on the outdoor coil and record outdoor dry bulb and indoor conditions with any readings you take." },
+      ],
+    },
+    {
+      ask: "Look at the frost pattern across the outdoor coil. What do you see?",
+      options: [
+        { label: "Even light frost across the whole coil", verdict: "That is normal in heating mode. Record the outdoor dry bulb and indoor conditions with your readings and document whether charge was verified by weight or estimated." },
+        { label: "Frost in bands, or only on part of the coil", verdict: "That suggests a charge or refrigerant distribution problem. Do not guess at it with gauges in cold weather - recover, evacuate, and weigh the charge in." },
+      ],
+    },
+  ],
+  "s-heat-pump-on-conventional-thermostat": [
+    {
+      ask: "Confirm what is outside before anything else - look for a reversing valve on the outdoor unit and check the model number and nameplate, not the customer's description. What is it?",
+      options: [
+        { label: "It is a heat pump", verdict: "Now read the installed thermostat's model and configuration and find out whether it supports heat pump operation at all." },
+        { label: "It is a straight AC condenser, not a heat pump", verdict: "Then a conventional thermostat is correct here. Look elsewhere for the heating complaint." },
+      ],
+    },
+    {
+      ask: "Read the thermostat model and configuration and look at its terminal block. What do you find?",
+      options: [
+        { label: "Thermostat has no heat pump mode at all", verdict: "Replace it with one that does. Do not try to fake heat pump operation with jumpers on a conventional stat." },
+        { label: "It supports heat pump but is not set to heat pump mode", verdict: "Set it to heat pump and configure the compressor and aux stage count to match the equipment." },
+        { label: "The O/B conductor is present at the equipment but unlanded or capped at the thermostat", verdict: "That is your problem. Land it on O/B and set the thermostat's O/B configuration to match this manufacturer." },
+      ],
+    },
+    {
+      ask: "Set the O/B configuration to match how this manufacturer energizes the reversing valve, confirm against the equipment wiring diagram, then test both modes. What happens?",
+      options: [
+        { label: "Cold supply air in cooling, warm supply air from the compressor alone in heating", verdict: "Configuration is right. Now confirm aux and emergency heat each behave correctly on their own terminals." },
+        { label: "Heating and cooling are backwards", verdict: "The O/B setting is inverted - some makers energize O in cooling, some energize B in heating. Flip the thermostat's O/B configuration and retest." },
+        { label: "Compressor never runs for heat, or aux heat runs constantly", verdict: "Check the aux and emergency heat terminals and the configured stage count. That is where a conventional-stat conversion usually goes wrong." },
+      ],
+    },
+  ],
   "s-heat-strip-element-continuity": [
     {
       ask: "With all power off and confirmed dead, remove the heating element from the cabinet, inspect it, and ohm it.",
@@ -8031,6 +8639,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-high-leg-delta-control-transformer": [
+    {
+      ask: "With the dead-front removed by someone qualified to remove it, measure each phase to neutral or ground. What do you read?",
+      options: [
+        { label: "Two legs at a nominal 120V to neutral and one considerably higher, roughly 1.73 times the others", verdict: "That is a 4-wire high-leg delta. Identify that high leg by measurement and keep every 120V load off it." },
+        { label: "All three legs read about the same to neutral or ground", verdict: "Not a high-leg delta. Confirm the service type before wiring, but the wild-leg problem is not what you are chasing here." },
+        { label: "You are not qualified or authorized to remove the dead-front", verdict: "Stop and get a licensed electrician. Do not guess at phase identification on a live panel." },
+      ],
+    },
+    {
+      ask: "Find where the 120V control transformer primary or the failing 120V accessory is landed. What is it fed from?",
+      options: [
+        { label: "One of the two normal legs and neutral", verdict: "That is correct. Verify the phase-to-phase voltages all read the nominal system value and look elsewhere for the failure." },
+        { label: "The high leg", verdict: "That is what destroyed it. Move it to one of the two normal legs and neutral, and inspect every other 120V accessory - condensate pumps, controls, receptacles - because they may all be fed from the wrong leg." },
+        { label: "Transformer primary is rated for phase-to-phase voltage instead of 120V", verdict: "Then confirm the actual measured phase-to-phase voltage falls inside its rated range before energizing it." },
+      ],
+    },
+    {
+      ask: "Check how the high leg is identified in the panel against what you measured. What do you find?",
+      options: [
+        { label: "Marked, commonly orange, and it matches your measurement", verdict: "Good. Still work from your measurements rather than the marking alone, and note the phase identification on the ticket." },
+        { label: "Missing, wrong, or it does not match what you measured", verdict: "Do not guess. Get a licensed electrician involved to identify and mark the service correctly before anything else is landed." },
+      ],
+    },
+  ],
   "s-high-o2-low-co2-on-the-analyzer": [
     {
       ask: "Reseal the port and move the probe further upstream toward the heat exchanger outlet. What happens to O2 and CO2?",
@@ -8054,6 +8687,29 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Cuts out below the specified range - the DX20VC lists a nominal cut-out near 605 PSIG", verdict: "It is nuisance-tripping early. Remove the cardboard as soon as it trips and replace the control." },
         { label: "Trips at the correct point", verdict: "The switch is telling the truth. Remove the cardboard and work the causes of high head pressure instead." },
+      ],
+    },
+  ],
+  "s-hopscotch-voltage-open-circuit": [
+    {
+      ask: "With the wiring diagram in hand and one meter lead parked on the circuit's common reference point, check the starting point of the string. What do you read?",
+      options: [
+        { label: "Full source voltage at the start of the string", verdict: "Good starting point. Now step the other lead one connection at a time toward the load with the call active." },
+        { label: "No voltage at the starting point", verdict: "The problem is upstream of the string. Go back to the source, the transformer, or the control that feeds it before walking the safeties." },
+      ],
+    },
+    {
+      ask: "Step the free lead along the path toward the load, one connection at a time, with the call active. Where does the voltage disappear?",
+      options: [
+        { label: "Voltage holds all the way to the load", verdict: "The circuit is intact to the load, so the open is not in the string. Look at the load itself and its return path to common." },
+        { label: "Voltage disappears at one point in the string", verdict: "The component or connection between your last good reading and that one is the open. Confirm by reading directly across the suspect device." },
+      ],
+    },
+    {
+      ask: "Read directly across the suspect device with the call active. What do you see?",
+      options: [
+        { label: "Full applied voltage dropped across it", verdict: "That device is open. Before condemning it, decide whether it is faulty or correctly doing its job - a limit, pressure switch, rollout, or float may be responding to a real condition. Never leave a safety jumpered out." },
+        { label: "Essentially no voltage across it", verdict: "That device is closed and passing. Keep hopscotching - your open is somewhere else along the path." },
       ],
     },
   ],
@@ -8140,6 +8796,60 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-hp-base-pan-not-draining-ice-under-coil": [
+    {
+      ask: "Inspect the base pan drain openings. What do you find?",
+      options: [
+        { label: "Blocked with leaves, mud, or ice", verdict: "Clear them. Every defrost adds meltwater that has to leave the cabinet immediately or it builds into a block." },
+        { label: "A shipping plug still in place that the manual says to remove for heat pump service", verdict: "That is it. Check the installation manual for what this model requires and open the drains accordingly." },
+        { label: "Drains are open and clear", verdict: "Then look at what the unit sits on and how it is pitched." },
+      ],
+    },
+    {
+      ask: "Check what the unit sits on and how it is pitched. What do you see?",
+      options: [
+        { label: "Pad flush to grade, unit set in a low spot, or a stand that seals the bottom off", verdict: "Water is being held under the cabinet. Raise the unit on a proper stand or brackets to a height that clears local snow and standing water, and add a gravel drainage bed." },
+        { label: "Unit is not level or pitched the way the manual specifies", verdict: "Correct the pitch per the manual so meltwater actually runs out and away." },
+        { label: "Mounting and pitch are correct with clearance underneath", verdict: "Look for an extra water source and check the pan heater next." },
+      ],
+    },
+    {
+      ask: "Check for a base pan heater and for any external water source adding to the volume. What do you find?",
+      options: [
+        { label: "Model has or supports a pan heater, and the installed one has no power or no continuity", verdict: "A dead pan heater in a cold climate reproduces this every winter. Repair or replace it." },
+        { label: "Roof runoff, downspout discharge, or snow melt draining onto the unit", verdict: "That is adding volume the pan was never meant to shed. Divert it." },
+        { label: "No pan heater support and no external water source", verdict: "Clear the existing ice by running the system in cooling or a supported defrost test rather than chipping, inspect the lower coil, fan blade, and base pan for damage, and document the recommendation to raise the unit." },
+      ],
+    },
+  ],
+  "s-hp-coil-encased-in-solid-ice-clearing": [
+    {
+      ask: "The outdoor coil is a block of ice. How are you going to clear it?",
+      options: [
+        { label: "Run the system in cooling, or force a defrost with the manufacturer's test procedure, so hot gas melts it from the inside out", verdict: "That is the right way. Kill the call for heat and get power to the outdoor unit restored and stable first." },
+        { label: "Chip, pry, or pound at the ice", verdict: "Do not. You will puncture tubing and bend fins, and a refrigerant leak is the usual outcome." },
+        { label: "Torch or heat gun on the coil", verdict: "Never. Fin and tube damage and a leak are the result. Melt it with the equipment's own heat instead." },
+        { label: "Hot water or a pressure washer", verdict: "No. If you supplement at all, use plain cool or lukewarm water from a hose at low pressure and keep water out of the electrical compartment." },
+      ],
+    },
+    {
+      ask: "With the coil clear, inspect what the ice did. What do you find?",
+      options: [
+        { label: "Bent or torn fins, a damaged fan blade, or a cracked base pan", verdict: "Repair or replace those before restarting. Ice loads bend blades and crack pans." },
+        { label: "Line insulation torn away", verdict: "Replace it. Bare lines cost capacity in heating and sweat in cooling." },
+        { label: "No physical damage", verdict: "Good. Now find the root cause - a unit iced this badly usually has a second fault behind it." },
+      ],
+    },
+    {
+      ask: "Now find out why it got that far. What do you find?",
+      options: [
+        { label: "Low charge, dirty outdoor coil, or restricted outdoor airflow", verdict: "Correct it. All three lower the coil temperature and produce genuine heavy frosting." },
+        { label: "Defrost control or coil sensor not initiating or terminating properly", verdict: "Chase the control and its sensor, then watch at least one complete normal defrost cycle from start to termination before you leave." },
+        { label: "Outdoor fan not running during or after defrost, or the reversing valve not shifting", verdict: "That is why defrost never cleared the coil. Repair it, then confirm a full defrost cycle." },
+        { label: "It followed a power outage or long lockout and everything else checks out", verdict: "Confirm the base pan drains and meltwater leaves the unit, then watch one complete normal defrost before leaving." },
+      ],
+    },
+  ],
   "s-hp-cold-blow-normal-temps": [
     {
       ask: "Probe supply and return air with a real thermometer and figure the rise. What did you get?",
@@ -8196,6 +8906,79 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-hp-defrost-steam-cloud-normal": [
+    {
+      ask: "Get the customer clear of the unit and check it yourself. Is it steam or is it smoke?",
+      options: [
+        { label: "White vapor, no burning smell, no flame, no scorched wiring", verdict: "That is defrost, not fire. Confirm the indicators - outdoor fan stopped, coil warming rather than icing, reversing valve shifted, and backup heat on indoors." },
+        { label: "Burning smell, dark smoke, or visible scorched wiring", verdict: "That is not defrost. Kill power at the disconnect and treat it as an electrical failure." },
+      ],
+    },
+    {
+      ask: "Time the cycle and watch it terminate. What happens?",
+      options: [
+        { label: "Coil comes clean of ice, fan restarts, unit returns to heating with supply air coming back up", verdict: "Normal. Explain to the customer that steam and a whoosh in cold weather are expected, and may happen several times on a damp cold day." },
+        { label: "Runs to its maximum time without clearing the coil, or repeats back to back", verdict: "Work it as an incomplete defrost - charge, outdoor coil cleanliness and airflow, coil sensor, and defrost control." },
+        { label: "Fan restarts but the reversing valve does not shift back and supply air stays cold", verdict: "The reversing valve is not completing its shift. Chase the valve - coil voltage, coil continuity, and body temperature readings." },
+      ],
+    },
+    {
+      ask: "Look at the base of the unit after the cycle. What do you see?",
+      options: [
+        { label: "Meltwater draining away from the base", verdict: "Good. Note on the ticket what you observed, including defrost duration, so a repeat call has a comparison." },
+        { label: "Meltwater pooling and refreezing into a block under the coil", verdict: "That forces repeated defrosts and eventually packs the base. Correct the drainage under the unit." },
+      ],
+    },
+  ],
+  "s-hp-defrost-whoosh-bang-changeover": [
+    {
+      ask: "Establish the timing of the noise and what follows it. What is the pattern?",
+      options: [
+        { label: "Every 30 to 90 minutes in cold weather, followed by the outdoor fan stopping", verdict: "That is defrost changeover - the reversing valve shifting under pressure. Normal, but be present for one event and confirm the valve completes the shift both directions." },
+        { label: "Random, unrelated to cold weather, with the fan continuing to run", verdict: "Not defrost changeover. Look for a different source before assuming the reversing valve." },
+      ],
+    },
+    {
+      ask: "Be present for one event, listen at the valve body and feel the line temperatures swap. What happens?",
+      options: [
+        { label: "Valve completes the shift both directions and the lines swap cleanly", verdict: "Normal operation. Explain the sequence to the customer and note it on the ticket." },
+        { label: "Valve hangs mid-position - high suction pressure, poor capacity, warm suction line", verdict: "The shift is incomplete. Run the reversing valve checks - coil voltage, coil continuity, pilot valve click, and body temperature readings." },
+      ],
+    },
+    {
+      ask: "The bang is unusually loud. Check whether pressures equalize at changeover and how the lines are supported. What do you find?",
+      options: [
+        { label: "Suction and discharge pressures are far apart at changeover instead of equalizing", verdict: "That points at charge or a restriction. An overcharge exaggerates the pressure differential - verify the charge." },
+        { label: "Line set or valve body unsupported and slapping a wall", verdict: "That turns a normal shift into a bang inside the house. Secure and isolate the lines properly." },
+        { label: "Pressures equalize normally and the lines are supported", verdict: "The noise is only startling, not a fault. Explain the sequence to the customer and document it." },
+      ],
+    },
+  ],
+  "s-hp-defrosting-too-often-mild-wet-weather": [
+    {
+      ask: "Look at the outdoor coil right before a defrost starts. What does it look like?",
+      options: [
+        { label: "Genuinely frosted over", verdict: "The system is doing its job - damp weather just above freezing is the worst frosting condition there is. Log the pattern and check charge and coil cleanliness before changing anything." },
+        { label: "Clean, with little or no frost on it", verdict: "That is the problem. The control is initiating without need - find out whether it is time-initiated or demand-based." },
+      ],
+    },
+    {
+      ask: "Determine whether the defrost control is time-initiated or demand-based, and check it accordingly. What do you find?",
+      options: [
+        { label: "Time-initiated, with an interval jumper or setting that does not match what the manual recommends for this climate", verdict: "Set the interval per the manual. A time-initiated board defrosts on schedule whether the coil needs it or not." },
+        { label: "Demand-based, and the coil or outdoor ambient sensor does not match its resistance table at a measured temperature", verdict: "Replace that sensor. A sensor reading low makes the control think the coil is frosted." },
+        { label: "Sensor reads correctly but is loose or mounted somewhere other than what the manual calls for", verdict: "Remount it per the manual with good contact on the tubing. A loose or relocated sensor is a common cause." },
+      ],
+    },
+    {
+      ask: "Check the charge, the outdoor airflow, and how each defrost is terminating. What do you see?",
+      options: [
+        { label: "Low charge or a dirty outdoor coil", verdict: "Both lower the coil temperature and produce genuine frequent frosting. Correct them before touching the defrost settings." },
+        { label: "Defrost terminates on time every cycle rather than on temperature", verdict: "The coil or the sensor is not reaching termination temperature. Chase that before adjusting the interval." },
+        { label: "Charge and airflow good, and defrost terminates on temperature", verdict: "That is a healthy system in bad frosting weather. Explain to the customer what normal frosting weather looks like and leave the settings alone." },
+      ],
+    },
+  ],
   "s-hp-hot-gas-bypass-issue": [
     {
       ask: "First confirm the system actually has hot gas reheat/bypass, then compare supply air temperature and cooling performance with the compressor running.",
@@ -8247,6 +9030,30 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Mounted in direct sun, or in the condenser's own discharge air", verdict: "A mechanically fine sensor in a bad location gives the same symptom as a failed one. Relocate it somewhere representative of actual outdoor conditions." },
         { label: "Corroded or loose connector or wiring at the sensor", verdict: "An intermittent connection here makes staging work sometimes and not others, which is easy to blame on a flaky board. Repair the connection and re-verify." },
         { label: "Mounting location and wiring both look good", verdict: "Ohm-check the sensor against the manufacturer's resistance-vs-temperature spec and replace it if it is out. Then re-verify balance point and lockout staging across a range of outdoor conditions, not one spot check." },
+      ],
+    },
+  ],
+  "s-hp-outdoor-unit-roof-runoff-icing": [
+    {
+      ask: "Before opening gauges, stand back and look at where the ice actually is on the unit. What is the pattern?",
+      options: [
+        { label: "Ice on the top, the fan guard, and the cabinet rather than only on the coil face", verdict: "Water is arriving from outside the system. Look up - roof line, gutter, downspout, valley, or a deck or landing shedding water onto the unit." },
+        { label: "Ice only on the coil face", verdict: "That is a system-side frost pattern. Check charge and outdoor coil cleanliness and verify defrost is working." },
+      ],
+    },
+    {
+      ask: "Check what is above and around the unit and what is under it. What do you find?",
+      options: [
+        { label: "A roof valley, missing or overflowing gutter, or a downspout discharging at the pad", verdict: "No defrost strategy beats a continuous water supply. Recommend a gutter or diverter above the unit and move the downspout discharge." },
+        { label: "Standing water or a low spot the unit sits in", verdict: "Correct the grade and add a gravel drainage bed, or raise the unit. Meltwater has to leave, not pool." },
+        { label: "Nothing overhead and the ground drains fine", verdict: "Then look at the base pan drainage and the defrost cycle itself." },
+      ],
+    },
+    {
+      ask: "Watch or force one full defrost cycle and check the base pan. What happens?",
+      options: [
+        { label: "Defrost runs and terminates normally and the base pan drains", verdict: "The control is fine - this is an external water source. Photograph the water source and the ice pattern for the ticket, since this is a building repair recommendation rather than an equipment repair." },
+        { label: "Defrost does not terminate normally, or meltwater pools and refreezes under the coil", verdict: "Now you have an equipment issue too. Check charge, outdoor coil cleanliness, and base pan drainage along with the water source above." },
       ],
     },
   ],
@@ -8332,6 +9139,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-humidifier-bypass-damper-wrong-season": [
+    {
+      ask: "Find the manual damper on the bypass duct between supply and return and confirm the blade position against its own summer and winter markings. Where is it actually set?",
+      options: [
+        { label: "Open, and the complaint is poor cooling or high summer humidity", verdict: "That is it. The open bypass short-circuits supply air back to the return, cutting delivered cooling and working against dehumidification. Close it and re-verify cooling and the supply-to-return temperature difference." },
+        { label: "Closed, and the complaint is dry air in winter", verdict: "That is why there is no humidity. Open it, then verify the humidifier is actually getting water and a call." },
+        { label: "Blade position already matches the season", verdict: "The damper is not your problem. Check the humidifier's own controls and water supply." },
+      ],
+    },
+    {
+      ask: "With the damper open for heating, check supply and return temperatures with the blower running. What do you see?",
+      options: [
+        { label: "Return temperature is being pulled up noticeably by the bypass", verdict: "The bypass may be oversized and short-circuiting too much supply air. Check it against the manufacturer's sizing before leaving it wide open." },
+        { label: "Supply and return temperatures look reasonable", verdict: "Bypass sizing is fine. Move on to the humidifier's own controls." },
+      ],
+    },
+    {
+      ask: "With a humidity call active, check the humidifier's controls and water supply. What do you find?",
+      options: [
+        { label: "Water supply valve closed, or the solenoid not energizing on a call", verdict: "Open the valve or chase the solenoid circuit. The damper position was only half the problem." },
+        { label: "Humidistat or thermostat humidity control set wrong", verdict: "Set it correctly and confirm a call produces water flow and evaporation off the pad." },
+        { label: "Controls working and water flowing correctly", verdict: "Show the homeowner where the damper is and which way is which, and note the seasonal change on the service ticket." },
+      ],
+    },
+  ],
   "s-humidifier-fanpowered-fan-not-running": [
     {
       ask: "Confirm the unit is the fan-powered type with its own motor, then check for voltage at the booster fan motor during an active humidification call.",
@@ -8400,6 +9232,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Bypass flow-through: wetted pad and bypass duct, no fan of its own", verdict: "Check that the bypass damper opens on a call and that there is adequate pressure differential between supply and return to actually drive airflow through the bypass." },
         { label: "Fan-powered: has its own dedicated fan across the pad", verdict: "Check the booster fan itself. Do not assume the unit is dead just because the main blower is not running, since it is not supposed to depend on it." },
         { label: "Steam: boils water in a canister using electric elements or electrodes", verdict: "Check power to the canister, water level and fill valve operation, and the canister's condition. Airflow and bypass damper checks do not apply to this type." },
+      ],
+    },
+  ],
+  "s-humidifier-water-running-to-drain-or-flooding": [
+    {
+      ask: "Watch the unit through a full cycle. With no call for humidity, what does the water do?",
+      options: [
+        { label: "Water stops completely and the solenoid closes", verdict: "That part is normal - some flow to drain during a call is by design on a flow-through unit. Look at the distribution tray, the pad, and the drain instead." },
+        { label: "Water keeps running with no call", next: 1 },
+      ],
+    },
+    {
+      ask: "Water is running with no call. Check for 24V at the solenoid. What do you read?",
+      options: [
+        { label: "24V present at the solenoid", verdict: "The control or the wiring is calling when it should not. Chase the control circuit and verify the interlock so the humidifier can only run with the blower running and a heat call present." },
+        { label: "No voltage at the solenoid and water still flowing", verdict: "The solenoid valve is stuck open. Replace it." },
+      ],
+    },
+    {
+      ask: "Check the distribution tray, the pad, the drain, and what is below the humidifier. What do you find?",
+      options: [
+        { label: "Mineral scale in the distribution tray or its orifice", verdict: "A plugged tray sends water down one channel straight to the drain instead of spreading across the pad. Clean or replace the tray." },
+        { label: "Pad collapsed, scaled, or misinstalled", verdict: "It will pass water without evaporating it. Replace the pad and confirm it seats correctly." },
+        { label: "Drain line or drain spud partly clogged, or backing up into the cabinet", verdict: "Clear it and confirm proper slope. Also verify inlet water pressure and the saddle valve against the manufacturer's range, and replace any weeping pierce-type saddle valve." },
+        { label: "Rust, water staining, or standing water in the plenum, furnace cabinet, or coil pan below", verdict: "That is the damage this failure causes. Document it, correct the water source, and assess whether the affected parts need replacement. Run a full call afterward and confirm water starts and stops cleanly." },
       ],
     },
   ],
@@ -10707,6 +11564,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-lockout-tagout-hvac-electrical": [
+    {
+      ask: "List every energy source feeding this equipment before you start. What do you actually find?",
+      options: [
+        { label: "Only the one line-voltage disconnect", verdict: "Look again for a separate heat-kit or auxiliary circuit, a 120V service receptacle circuit, and low voltage fed from the indoor unit. Those are the ones that get missed." },
+        { label: "Multiple circuits - line voltage plus a heat kit, receptacle, or indoor-fed low voltage", verdict: "Every one gets opened, locked, and tagged. A single-pole contactor or an indoor-fed 24V circuit leaves part of the equipment live with the outdoor disconnect open." },
+      ],
+    },
+    {
+      ask: "You go to lock out each source. What will the disconnect accept?",
+      options: [
+        { label: "It takes your lock and tag directly", verdict: "Apply your own lock and tag and keep the key on you. If other techs are on the job, each one applies their own lock, and only the person who applied a lock removes it." },
+        { label: "It will not accept a lock", verdict: "Use a breaker lockout device or physically retain the pullout. Leaving a pullout sitting on the pad is not lockout." },
+      ],
+    },
+    {
+      ask: "Verify dead at the point of work with live-dead-live referenced to ground, then check the capacitors with the meter. What do you have?",
+      options: [
+        { label: "Circuit proves dead and the capacitors read discharged", verdict: "Safe to work. Before restoring power, put panels and covers back on, clear tools from the equipment, and confirm nobody is in contact with the unit." },
+        { label: "Capacitors still holding a charge", verdict: "Discharge them through an appropriate resistor and confirm with the meter before you touch the terminals." },
+        { label: "You still read voltage at the point of work", verdict: "You have not found every source. Stop and go back through the energy sources - something is still feeding this equipment." },
+      ],
+    },
+  ],
   "s-low-line-voltage-brownout": [
     {
       ask: "Measure incoming line voltage at the disconnect/panel while the equipment is actually running, and compare against the rated range (commonly 197-253V for 240V-nominal equipment).",
@@ -10714,6 +11595,32 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Low at the panel even before the equipment starts", verdict: "Utility-side low voltage, not a component-level HVAC fault. Document the actual readings and advise the customer to contact their utility." },
         { label: "Normal at idle but it sags once the equipment loads up", verdict: "Check for undersized wiring or a loose connection on the customer's side causing the drop. That is a fixable HVAC-side issue, distinct from a true utility brownout." },
         { label: "Voltage stays inside the rated range under load", verdict: "Voltage is not the cause here. Look elsewhere." },
+      ],
+    },
+  ],
+  "s-low-static-pressure-but-poor-airflow": [
+    {
+      ask: "Before believing a low static reading, check how you took it. What is the setup?",
+      options: [
+        { label: "Probes correctly between blower and supply duct and between return duct and blower, all panels closed, full airflow", verdict: "The reading is real. Move on to whether the blower is actually turning at speed." },
+        { label: "A panel or the blower door was off, or you are testing on a low continuous-fan setting", verdict: "That reading is meaningless. Close everything up, run at the speed you intend to test, and re-read." },
+        { label: "Probes are on the wrong side of the filter or coil for the reading you think you are taking", verdict: "Reposition the probes and re-read before drawing any conclusion." },
+      ],
+    },
+    {
+      ask: "With probe placement confirmed, check whether the blower is actually moving air. What do you find?",
+      options: [
+        { label: "Wrong speed tap or ECM airflow programming for the application", verdict: "Set it correctly and re-read static and register airflow." },
+        { label: "Slipping or dirty blower wheel, or motor amps below nameplate", verdict: "The blower is not doing its job. Clean or repair the wheel and confirm the motor is running at speed." },
+        { label: "Blower checks out at the right speed and normal amps", verdict: "Then the air is escaping before it reaches the registers. Go looking for leakage." },
+      ],
+    },
+    {
+      ask: "Go find where the air is going. What do you find?",
+      options: [
+        { label: "A disconnected trunk or a large duct leak dumping into an attic or crawlspace", verdict: "That is the signature - low static plus weak registers. Reconnect and seal the plenum takeoffs and any hidden trunk joints." },
+        { label: "Open or missing return grille, unsealed return plenum, or filter door left open", verdict: "Those short-circuit the return and lower your reading. Close and seal them, then re-read." },
+        { label: "On a zoned system, the bypass damper is wide open recirculating supply back to the return", verdict: "That is your short circuit. Correct the bypass setup, then retake static and verify at the registers." },
       ],
     },
   ],
@@ -10931,6 +11838,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-mca-mocp-breaker-wire-sizing": [
+    {
+      ask: "Read MCA and MOCP off the equipment nameplate, plus whether it specifies fuse or HACR breaker. Compare the installed overcurrent device. Where does it land?",
+      options: [
+        { label: "Device is larger than the MOCP", verdict: "That is a real violation. It has to be corrected down to the MOCP or below." },
+        { label: "Device is between the MCA and the MOCP", verdict: "Not automatically wrong. That is generally acceptable if the conductors and terminations are rated for it - verify it actually holds through startup before changing anything." },
+        { label: "Device is below the MCA", verdict: "The circuit is undersized for the equipment and will nuisance trip. That one does need correcting." },
+      ],
+    },
+    {
+      ask: "Now size the conductor, accounting for conductor material, temperature rating, and the actual run length. How does it compare to the MCA?",
+      options: [
+        { label: "Conductor is rated at least the MCA", verdict: "Wire is fine. Also confirm the installed device type matches what the nameplate specifies - fuse or HACR-type breaker." },
+        { label: "Conductor is below the MCA", verdict: "The circuit needs resizing. Panel, conductor, and terminations are all in scope - bring in a licensed electrician rather than swapping a breaker." },
+      ],
+    },
+    {
+      ask: "This is a replacement unit going on an existing circuit. Compare the new nameplate to the old equipment's. What do you see?",
+      options: [
+        { label: "New MCA is higher than the old unit's", verdict: "Do not assume the old circuit still works. Newer equipment, particularly A2L units built to the current UL standard, often carries a higher MCA - resize the circuit." },
+        { label: "New MCA and MOCP are the same or lower than the old unit's", verdict: "The existing circuit is likely fine, but still verify the conductor meets MCA and the device does not exceed MOCP." },
+      ],
+    },
+  ],
   "s-mediacabinet-door-seal-bypass": [
     {
       ask: "Open and close the cabinet door and inspect the gasket, the latch, and the perimeter.",
@@ -10956,6 +11887,31 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Door gasket or latch is not sealing tightly", verdict: "Media cabinets depend on a properly sealing door in a way a simple 1-inch slot filter does not. Address the gasket and latch." },
         { label: "System was recently converted from a 1-inch slot to this cabinet", verdict: "Confirm the cabinet was actually plumbed into the full return airflow path correctly and is not just added awkwardly alongside the old opening." },
+      ],
+    },
+  ],
+  "s-meter-verification-live-dead-live": [
+    {
+      ask: "You just did a dead check. Now test the meter again on the same known live source you proved it on first. What happens?",
+      options: [
+        { label: "Meter still reads the known live source correctly", verdict: "Your dead reading is valid. Proceed with the work." },
+        { label: "Meter will not read the known live source now", verdict: "Your dead reading was worthless. Check the leads, the battery, and the meter itself, then redo the whole check with a known-good meter." },
+      ],
+    },
+    {
+      ask: "Your amp reading looks impossible - zero on a running motor, or the meter is dead only in current mode. What do you check?",
+      options: [
+        { label: "The meter's internal current-input fuse", verdict: "That is the one. A blown current fuse is silent - the meter otherwise works normally. Replace it and re-read." },
+        { label: "Whether more than one conductor is in the clamp jaws", verdict: "Right - two conductors of the same circuit cancel and read near zero. Get one conductor centered in the jaws and read again." },
+        { label: "Meter battery condition", verdict: "Worth doing. A weak battery gives drifting, low, or unstable readings that look like a real fault. Replace it and re-read." },
+      ],
+    },
+    {
+      ask: "Inspect your leads and check the meter's CAT and voltage rating against where you are working. What do you find?",
+      options: [
+        { label: "Cracked insulation, exposed metal at the boot, or bent or loose probe tips", verdict: "Take those leads out of service. Bad leads produce false readings and are a shock hazard." },
+        { label: "Meter CAT or voltage rating is below what this location demands", verdict: "Do not use it here. Panel and service-entrance work demands a higher category than a low-voltage board." },
+        { label: "Leads and ratings both good", verdict: "You are set. Keep a second known-good meter or a proving unit on the truck so you can settle a suspect reading instead of arguing with it." },
       ],
     },
   ],
@@ -11203,6 +12159,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-flare-leak-bad-flare-vs-loose-nut": [
+    {
+      ask: "Confirm the leak location with an electronic detector and bubbles before touching anything. Where is it actually leaking?",
+      options: [
+        { label: "At the flare joint itself", verdict: "Recover or pump down as appropriate, break the joint, and inspect the flare face under good light before you decide anything." },
+        { label: "At a service port or valve stem, not the flare", verdict: "Deal with that instead. Do not break a good flare chasing a port or stem leak." },
+      ],
+    },
+    {
+      ask: "With the joint broken, inspect the flare face and the nut under good light. What do you find?",
+      options: [
+        { label: "Cracks, ridges from a dull cutter, or chatter marks on the flare face", verdict: "Cut it off and remake it - sharp tubing cutter, deburr with the tube pointed down, do not over-ream, then form with a clutch-type or orbital flaring tool. Retightening a bad flare buys weeks at best." },
+        { label: "Flare is off-center, or too small or too large for the seat", verdict: "Same answer - cut it off and remake it correctly. A mis-formed flare will not seal no matter how hard you torque it." },
+        { label: "Flare looks clean but the nut has thread damage or is not the one supplied with the equipment", verdict: "Use the manufacturer's nut rather than the one that came on the line set, and replace any damaged nut." },
+        { label: "Flare and nut both look good and the joint was simply loose", verdict: "Oil the mating surfaces, run the nut up finger tight, and torque to the value in that unit's installation manual." },
+      ],
+    },
+    {
+      ask: "How are you putting the joint back together?",
+      options: [
+        { label: "Drop of the correct refrigerant oil or approved sealant on the mating surfaces, then torque with a torque wrench to that manual's value", verdict: "That is right. Then nitrogen pressure test, evacuate deeply, and confirm it holds before opening the service valves. Recheck with a detector after a heat/cool cycle." },
+        { label: "Dry, tightened by feel, or using a torque spec from another brand", verdict: "Do not. A dry joint twists as you torque and relaxes back off after the wrench comes off, and specs do not carry over between brands. Oil it and use that unit's own manual value." },
+      ],
+    },
+  ],
   "s-minisplit-forced-cool-test": [
     {
       ask: "Start forced/test cooling from the indoor unit's manual button (or the remote key combo for the brand). How does the unit behave compared to normal thermostat-driven mode?",
@@ -11210,6 +12191,79 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Forced cooling runs fine, but normal mode still will not start", verdict: "That separates control from mechanical: the issue is sensors, remote, or settings, not the sealed system. Leave the refrigerant circuit alone and work the control side." },
         { label: "Forced cooling runs the same poor way normal mode does", verdict: "Now the compressor is at a defined fixed speed, so gauge readings mean something. Check operating pressures and charge inside the 30-minute forced window before it auto-exits." },
         { label: "Unit will not enter forced mode at all", verdict: "Confirm the brand's entry method before calling it a control failure - Daikin ON/OFF button 5 seconds, Mitsubishi emergency operation button, others per the manual." },
+      ],
+    },
+  ],
+  "s-minisplit-gravity-drain-clog-hunt": [
+    {
+      ask: "Pour clean water slowly into the indoor drain pan and watch what happens. What do you get?",
+      options: [
+        { label: "Water exits outside normally", verdict: "The drain is clear right now. The dripping or gurgling is coming from somewhere else - check the coil, the blower wheel, and how the customer runs the head." },
+        { label: "Water backs up or spills out of the head", verdict: "You have a restriction. Trace the drain hose from the pan through the wall penetration to the exterior." },
+      ],
+    },
+    {
+      ask: "Trace the drain hose and check the fall from the pan all the way outside. What do you find?",
+      options: [
+        { label: "A kink where the line set turns, or a strap pulled too tight", verdict: "Relieve it and re-support the run. That is the classic hidden failure inside the line set wrap." },
+        { label: "A belly or an upward section in the run", verdict: "Any upward section holds water. Get continuous downhill fall - code minimum is generally 1/8 inch per foot, and 1/4 inch per foot is the safer field practice." },
+        { label: "Outdoor end blocked, crushed, insect nested, or stuffed into soil or gravel", verdict: "Clear it and get the end up out of the dirt. A buried end siphons dirt back up the hose." },
+        { label: "Run falls continuously and both ends are clear", verdict: "Then it is a slime plug inside. Clear the line from the outdoor end so debris goes out rather than back into the pan and the indoor blower." },
+      ],
+    },
+    {
+      ask: "You are about to blow the line clear with nitrogen or air. How are you doing it?",
+      options: [
+        { label: "From the outdoor end, at low pressure", verdict: "Right - push the debris out, not back into the pan and blower. Then clean the pan and drain elbow and check the wheel and coil for the slime feeding the clog, or it comes right back." },
+        { label: "From the indoor end, blowing toward the outside", verdict: "Be careful - blowing back toward the head can force water into the electronics, and the pan and hose barb are plastic. Work from the outdoor end when you can and keep the pressure low." },
+      ],
+    },
+  ],
+  "s-minisplit-idle-head-blows-conditioned-air": [
+    {
+      ask: "Feel the idle head's coil, measure discharge air, and note whether its indoor fan is running. What is actually happening?",
+      options: [
+        { label: "Indoor fan running on low with the head commanded off", verdict: "Check the manual for that model's off-cycle behavior first. Some units intentionally run a brief low fan, a dry or anti-mold routine, or a preheat, and that is not a fault." },
+        { label: "Fan off but cold air drifting off the coil by convection", verdict: "That points at refrigerant bleeding past this head's expansion valve. Feel both refrigerant lines at the head next." },
+        { label: "Nothing measurable - discharge air matches room temperature", verdict: "No bleed-through right now. Note whether other heads were running when the customer noticed it, since bleed only shows up then." },
+      ],
+    },
+    {
+      ask: "With another zone running, feel both refrigerant lines at the idle head. What do you find?",
+      options: [
+        { label: "Both lines approach ambient", verdict: "That valve is sealing. The complaint is something else - check the model's normal off-cycle routines." },
+        { label: "Liquid line is cold at the idle head", verdict: "That valve is not sealing. Test the valve coil - check its resistance and connector at the outdoor unit or branch box, and confirm the coil is fully seated on the valve body." },
+      ],
+    },
+    {
+      ask: "Swap or move the valve coil to a known-good circuit to see what follows. What happens?",
+      options: [
+        { label: "The fault follows the coil", verdict: "Replace the coil per the manufacturer's procedure, then verify the idle head goes neutral with another zone running." },
+        { label: "The fault stays with the same circuit", verdict: "The valve needle is mechanically stuck or the wiring to that circuit is bad. Check the wiring first, then replace the valve per the manufacturer's procedure." },
+      ],
+    },
+  ],
+  "s-minisplit-indoor-fan-stops-during-defrost": [
+    {
+      ask: "Go outside during the event and look at the outdoor unit. What is it doing?",
+      options: [
+        { label: "Outdoor fan stopped, coil warming, steam or meltwater coming off it", verdict: "That is a normal defrost - the indoor fan is deliberately held off so it does not blow cold air into the room. Time the cycle and confirm it terminates." },
+        { label: "Outdoor unit is not running at all and the head is simply off", verdict: "This is not defrost. Work it as a no-operation call on the outdoor unit." },
+      ],
+    },
+    {
+      ask: "Check the head's display and time the full event from start to restart. What do you get?",
+      options: [
+        { label: "Brand's defrost indication showing, fan restarts, and warm air returns after a few minutes", verdict: "Normal by design. Explain it to the customer - a ductless head has no strip heat covering the gap the way a ducted heat pump usually does." },
+        { label: "A fault code rather than a defrost status indication", verdict: "Read the code and work it as a fault. Do not write it off as defrost." },
+        { label: "Pause is very long, repeats back to back, or the coil is still iced when the fan restarts", verdict: "Treat it as an incomplete defrost - check charge, outdoor coil condition, airflow, and the outdoor coil sensor." },
+      ],
+    },
+    {
+      ask: "Look under and around the outdoor unit after the cycle. What do you find?",
+      options: [
+        { label: "Meltwater draining away from the unit", verdict: "Good. Document the defrost duration and frequency you observed so a future call has a baseline." },
+        { label: "Meltwater refreezing under the coil and re-icing it", verdict: "That forces repeated defrosts. Correct the drainage under the unit before chasing the defrost control." },
       ],
     },
   ],
@@ -11282,6 +12336,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Drain line is clogged, algae growth visible", verdict: "Clear the drain. Common on units that have run a long time without cleaning." },
         { label: "Drain is clear but has lost slope under the lineset cover", verdict: "Ductless drain lines often lose slope over time or were never sloped right. Re-slope the run." },
         { label: "Drain and coil fine, but the head looks tilted", verdict: "Even a mini-split will overflow its internal pan if mounted slightly off level. Also confirm the built-in condensate pump, if equipped, is running and not jammed." },
+      ],
+    },
+  ],
+  "s-minisplit-line-set-length-and-lift-limits": [
+    {
+      ask: "Measure the installed line set length and the vertical height difference between the units, then pull that exact model's installation manual. How does the install compare to its published limits?",
+      options: [
+        { label: "Within both the maximum total length and the maximum height difference", verdict: "The install is legal. Now check whether the charge adder was ever added for the length beyond the pre-charge." },
+        { label: "Over the maximum total length, or over the maximum height difference", verdict: "Say so plainly in your write-up. No amount of charge adjustment fixes an over-length or over-lift installation." },
+        { label: "You are working from a limit you remember from another job", verdict: "Do not. Limits are model specific, and some differ depending on whether the outdoor unit sits above or below the indoor unit. Get this model's manual." },
+      ],
+    },
+    {
+      ask: "Check the charge against the pre-charge length and the manufacturer's per-foot adder. What do you find?",
+      options: [
+        { label: "Run is longer than the pre-charge length and no adder was ever added", verdict: "That is a very common cause of this complaint. Weigh in the adder per the manual and recheck operation in both modes." },
+        { label: "Adder was added and documented correctly", verdict: "Charge is accounted for. Look at line diameters and coiled excess next." },
+      ],
+    },
+    {
+      ask: "Look at the line diameters and the physical run. What do you see?",
+      options: [
+        { label: "Line diameters do not match what the manual specifies for that head and length", verdict: "That is a real problem, especially on a multi-zone where one size was run for every head. Correct the piping - charge will not fix it." },
+        { label: "Excess line set coiled up", verdict: "Excess coil stores oil and adds pressure drop, and on a multi-zone it skews the charge. Address it per the manual." },
+        { label: "Manual calls for an oil trap and none was installed", verdict: "Add the trap per the manual. Document actual length, lift, and final charge on the unit and the ticket so the next tech is not guessing." },
       ],
     },
   ],
@@ -11380,6 +12459,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-multizone-simultaneous-heat-cool-request": [
+    {
+      ask: "Ask which heads are calling and in which modes at the moment of the complaint. What is happening?",
+      options: [
+        { label: "One head calling heat while another calls cool on the same outdoor unit", verdict: "That is the diagnosis, not a fault. A standard multi-zone shares one refrigerant circuit, so every head must run the same mode." },
+        { label: "One or more heads are left in AUTO", verdict: "AUTO on one head can seize the system mode and lock the others out - a frequent source of this complaint. Set every head to a fixed mode." },
+        { label: "All heads are already set to the same mode", verdict: "Mode conflict is not it. Verify there is a genuine fault by confirming the affected head runs normally on its own." },
+      ],
+    },
+    {
+      ask: "Confirm the equipment type before you promise the customer anything. What is it?",
+      options: [
+        { label: "Standard multi-zone heat pump, not heat recovery", verdict: "All heads share one mode, period. Set them to a fixed mode for the season and explain the seasonal switch. Simultaneous heat and cool needs heat recovery equipment or separate single-zone systems." },
+        { label: "A heat recovery system", verdict: "It should be able to run heating and cooling zones at once, so a head that will not follow its own mode is a real fault rather than normal behavior." },
+      ],
+    },
+    {
+      ask: "Remove the conflicting call and watch the head that was not running. What happens?",
+      options: [
+        { label: "It runs normally once the conflict is gone", verdict: "No fault found. Document the brand's mode priority behavior so the next call is not chased as a failure." },
+        { label: "It still will not run with no conflicting call", verdict: "Now you have a real fault. Work it as a normal no-operation diagnosis on that head and its circuit." },
+      ],
+    },
+  ],
   "s-minisplit-outdoor-not-running": [
     {
       ask: "Check for line voltage at the outdoor unit and inspect the communication wiring between indoor and outdoor.",
@@ -11395,6 +12498,57 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Blown fuse on the outdoor board", verdict: "Replace the fuse and find out what blew it." },
         { label: "Indoor unit is set to fan-only", verdict: "No call is being made. Set it to cooling or heating and retest." },
         { label: "Fuse good and the unit is genuinely calling", verdict: "On a Daikin, go to the Daikin mini-split communication-failure entry in this list for LED-based diagnosis." },
+      ],
+    },
+  ],
+  "s-minisplit-outdoor-unit-winter-mounting-height": [
+    {
+      ask: "Look at the unit's height above grade and above the typical local snow depth, and check for ice already built up under the base pan and in the fan discharge. What do you see?",
+      options: [
+        { label: "Unit sits low on a slab or a bracket tight to the siding, with ice packed under the base", verdict: "Meltwater from every defrost has nowhere to go and refreezes. Recommend raising it on a proper stand or wall bracket that clears the snow line, with gravel or a drainage bed underneath." },
+        { label: "Unit is well above grade and snow line with clear space underneath", verdict: "Height is not the issue. Look at the base pan drains, roof runoff, and clearances instead." },
+      ],
+    },
+    {
+      ask: "Check the base pan drain openings and what sits above the unit. What do you find?",
+      options: [
+        { label: "Base pan drains blocked, or shipping plugs and knockouts not handled the way the manual specifies for heat pump service", verdict: "Open them per the manual. A heat pump has to shed meltwater at every defrost." },
+        { label: "Unit sits under a roof edge, valley, gutter overflow, or dripping eave", verdict: "Runoff onto the coil freezes faster than any defrost cycle can clear it. Divert the water or move the unit." },
+        { label: "Drains clear and nothing overhead", verdict: "Check clearances around the coil and above the fan discharge against the installation manual - the wall, shrubs, and the snow drift line all count." },
+      ],
+    },
+    {
+      ask: "Check whether this model supports a base pan heater and whether one is installed, then decide how to clear the existing ice. What is the situation?",
+      options: [
+        { label: "Model supports a pan heater and one is installed", verdict: "Verify it is actually energized. A dead pan heater in a cold climate reproduces this every winter." },
+        { label: "Model supports one, the climate needed it, and none was installed", verdict: "Recommend adding it along with the mounting height correction." },
+        { label: "The existing ice needs clearing right now", verdict: "Run the unit in cooling or a manufacturer-supported defrost/test mode rather than chipping at it, and note the pattern in your write-up." },
+      ],
+    },
+  ],
+  "s-minisplit-oversized-head-short-cycles-overshoots": [
+    {
+      ask: "Watch a full cycle and note the run time and the compressor speed. What do you see?",
+      options: [
+        { label: "Very short runs with big temperature swings at a low compressor speed", verdict: "That is minimum-capacity cycling, not a component failure - an inverter turns down a long way but not to zero. Rule out the easy causes, then treat it as a sizing finding." },
+        { label: "Long runs that never satisfy", verdict: "That is not minimum-capacity cycling. Look at capacity, charge, and airflow instead." },
+        { label: "Cycling with a fault or protection code posted", verdict: "Read the code first. An overcharged or airflow-starved head cycles on internal protections and looks just like oversizing." },
+      ],
+    },
+    {
+      ask: "Rule out the easy causes before calling it sizing. What do you find?",
+      options: [
+        { label: "Return air short circuiting back into the head, or an obstruction near it", verdict: "Fix that and watch another cycle. It makes the head satisfy its own sensor long before the room is comfortable." },
+        { label: "Remote sensing mode picking up a hot or cold spot, or a return sensor misreading", verdict: "Correct the sensing source first. That alone produces short cycling and overshoot." },
+        { label: "A setpoint or schedule fighting the customer", verdict: "Sort the setpoint strategy - a steady setpoint runs an inverter better than deep setbacks that force full-capacity recovery followed by cycling." },
+        { label: "Sensing, airflow, and charge all check out", verdict: "Check the multi-zone combination ratio and whether the connected head capacity is badly mismatched to the outdoor unit's turndown." },
+      ],
+    },
+    {
+      ask: "The head really is oversized for the room. What is your move?",
+      options: [
+        { label: "Document it as a sizing finding and set the fan to continuous or auto rather than off between calls", verdict: "Right. Continuous fan helps sensing and reduces swing, and any low-capacity or comfort setting the brand offers is worth setting. Stop replacing parts." },
+        { label: "Keep replacing control parts to chase the cycling", verdict: "Do not. Nothing you replace changes the equipment's minimum capacity - this is a selection issue and it belongs in the write-up." },
       ],
     },
   ],
@@ -11415,6 +12569,80 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-minisplit-purged-not-evacuated-signs": [
+    {
+      ask: "Look for install tell-tales - written vacuum readings, a noted nitrogen test, valve caps, flare condition. What do you find?",
+      options: [
+        { label: "No vacuum readings, no nitrogen test noted, a cap never resealed, or wrench marks with no torque discipline", verdict: "Strong sign it was purged instead of evacuated. Check for moisture and non-condensable symptoms next." },
+        { label: "Documented vacuum and nitrogen test from the install", verdict: "Evacuation was probably done properly. Look elsewhere for the failure cause before assuming contamination." },
+      ],
+    },
+    {
+      ask: "Check the operating symptoms against the conditions. What do you see?",
+      options: [
+        { label: "Head pressure higher than expected for the conditions", verdict: "That is the non-condensables signature. Recover a sample and run an acid/moisture test, especially before quoting a compressor." },
+        { label: "Restriction behavior at the EEV, or an intermittent freeze-and-clear pattern", verdict: "That points at moisture in the system. Run the acid and moisture test before quoting any parts." },
+        { label: "No moisture or restriction symptoms at all", verdict: "Contamination may not be the story here. Keep the flares and line set in mind but look for another cause." },
+      ],
+    },
+    {
+      ask: "You are opening the system. How are you evacuating it?",
+      options: [
+        { label: "Nitrogen pressure test, then evacuate with the service valves open and properly sized hoses, holding a deep vacuum with a decay test", verdict: "Correct - 500 microns is the usual industry target. Then weigh in the full charge per the nameplate plus the line length adder." },
+        { label: "Pull the vacuum with the service valves shut", verdict: "That only evacuates the line set and indoor coil, not the factory charge side. When the valves open, the contamination goes into the whole system. Open the valves and evacuate everything." },
+        { label: "Crack the valves and let refrigerant push the air out", verdict: "That is exactly what caused this failure. Never purge in place of evacuating - and warn the customer in writing that a contaminated system can fail again." },
+      ],
+    },
+  ],
+  "s-minisplit-refrigerant-flow-noise-normal": [
+    {
+      ask: "Pin down exactly when the noise happens. When is it?",
+      options: [
+        { label: "Only at first start, at mode change, or around defrost", verdict: "That is normal refrigerant redistribution and valve stepping on inverter and multi-zone equipment. Listen to a second head for comparison and reassure the customer." },
+        { label: "Only when another head starts", verdict: "Also normal redistribution as the system reallocates refrigerant. Compare against another head to confirm." },
+        { label: "Continuously during steady operation", verdict: "That is the suspicious one. Check superheat and subcooling against the manufacturer's expected values for the conditions." },
+      ],
+    },
+    {
+      ask: "Rule out a condensate cause before going further. What do you find?",
+      options: [
+        { label: "A gurgling drain, an airlocked or double-trapped drain line, or a condensate pump cycling", verdict: "That is your noise, not refrigerant. Correct the drain or the pump." },
+        { label: "Drain flows quietly and there is no pump", verdict: "Then read the line temperatures at the head and watch for swinging superheat." },
+      ],
+    },
+    {
+      ask: "Read the line temperatures and superheat at the head, and note whether the noise follows one head. What do you see?",
+      options: [
+        { label: "Swinging superheat along with the noise", verdict: "A hunting expansion valve or an undercharged circuit. Confirm the charge, then work the valve for that circuit." },
+        { label: "The noise follows one specific head", verdict: "That points at that circuit's expansion valve. Focus there rather than on the whole system." },
+        { label: "Superheat and subcooling both measure correctly and the noise moves around", verdict: "Tell the customer plainly this is normal operating sound. Check for excess coiled line set or line set strapped hard against framing, which amplifies it into the room, and note your readings on the ticket." },
+      ],
+    },
+  ],
+  "s-minisplit-remote-sensor-follow-me-mode": [
+    {
+      ask: "Check the remote's display and manual for a remote-sensing feature - brands call it follow-me, I feel, and similar. Is it on, and where does the remote actually live?",
+      options: [
+        { label: "Feature is on and the remote sits in sun, under a lamp, in a drawer, or in another room", verdict: "The head is controlling to that spot, not the room. Turn the feature off or move the remote somewhere sensible, then watch a cycle." },
+        { label: "Feature is on and the remote sits in a reasonable location", verdict: "Compare the head's reported room temperature and a thermometer at the remote against a calibrated reference before going further." },
+        { label: "Feature is not enabled at all", verdict: "Then the head is sensing at its own return air sensor. Check that sensor's mounting and resistance." },
+      ],
+    },
+    {
+      ask: "Turn the remote sensing feature off and watch the head control from its own return air sensor. What happens?",
+      options: [
+        { label: "Head starts controlling sensibly to the room", verdict: "That was it. If the customer wants remote sensing back, keep the remote out of sun, off heat sources, not buried, and confirm it stays in range and transmitting." },
+        { label: "Head still runs to the wrong temperature", verdict: "Now suspect the return air sensor. Check its mounting and resistance - a sensor hanging loose in the airstream or resting on the coil reads wrong." },
+      ],
+    },
+    {
+      ask: "On a multi-head job, check how the remotes are paired or addressed. What do you find?",
+      options: [
+        { label: "Each remote is paired or addressed to its own head", verdict: "Good. Set the mode and setpoint the way the customer will actually use it and confirm a full cycle before you leave." },
+        { label: "One remote is commanding more than one head", verdict: "Re-address or re-pair them so each remote controls only its own head." },
+      ],
+    },
+  ],
   "s-minisplit-remote-unresponsive": [
     {
       ask: "Operate the unit directly from the manual/auto switch on the indoor unit itself.",
@@ -11429,6 +12657,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Fresh batteries fix it", verdict: "Dead remote batteries are the most common cause by far." },
         { label: "Something is blocking the line of sight to the receiver window", verdict: "Clear the obstruction between the remote and the indoor unit's receiver." },
         { label: "There is another wireless remote or a wired controller on the same unit", verdict: "The second controller may be overriding or conflicting with commands. Sort out which one has control." },
+      ],
+    },
+  ],
+  "s-minisplit-reusing-existing-line-set": [
+    {
+      ask: "Compare the new unit's required liquid and suction line diameters against what is already installed. How do they match?",
+      options: [
+        { label: "Both diameters match what the new model specifies", verdict: "Reuse is on the table. Next check the run length and lift against the new equipment's limits and get the charge adder rule." },
+        { label: "One or both diameters are wrong for the new equipment", verdict: "Do not reuse it. Ductless line sizes are model specific and a size mismatch is a common reason reuse fails - replace the line set." },
+      ],
+    },
+    {
+      ask: "Identify what refrigerant and oil were in the old system and inspect the whole visible run. What do you find?",
+      options: [
+        { label: "Old system used mineral oil and the new one is POE or PVE", verdict: "Mineral oil residue in a POE or PVE system is a known failure path - general guidance is no more than about 5 percent residual by volume. Flush it properly or replace the line set." },
+        { label: "The old system had a burnout", verdict: "Replace the line set. Do not carry burnout contamination into new equipment." },
+        { label: "Kinks, crushed sections, degraded insulation, or green corrosion", verdict: "Replace it. Ductless line sets run outdoors and corrode where the wrap fails, and you cannot see inside a kink." },
+        { label: "Same oil family and the copper is clean and intact", verdict: "Reuse is reasonable. Verify length and lift are within the new equipment's published limits and get the charge adder rule for that model." },
+      ],
+    },
+    {
+      ask: "You are keeping the line set. How are you finishing the job?",
+      options: [
+        { label: "Cut off both old flares, make fresh ones with a proper flaring tool, using the nuts supplied with the new equipment", verdict: "Correct. Then nitrogen pressure test the reused line set and the new indoor unit, evacuate to a deep vacuum with a decay test, and weigh in the factory charge plus the length adder. Write on the unit that the line set was reused." },
+        { label: "Reuse the existing flares and nuts", verdict: "Do not. Old flares will not seal and the old nuts are not the ones the manufacturer wants. Cut them off and remake them." },
       ],
     },
   ],
@@ -11557,6 +12810,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "A level or uphill section, often right at the wall sleeve penetration", verdict: "Even a short flat or reverse-pitched section traps water and backs the pan up over time. Correct the pitch so it falls continuously to the outside." },
         { label: "Exterior termination sits at or above the indoor unit's drain outlet", verdict: "Gravity cannot work against that even with correct pitch on the visible run. Lower the termination or change the routing." },
         { label: "Slope cannot be corrected within the existing sleeve and routing", verdict: "Add a condensate pump rather than repeatedly re-servicing a gravity run that will never drain properly." },
+      ],
+    },
+  ],
+  "s-minisplit-water-spitting-off-louvers": [
+    {
+      ask: "Pour water into the pan to confirm the drain actually flows. What happens?",
+      options: [
+        { label: "Water drains normally and the pan is not overflowing", verdict: "Stop chasing the drain. This is condensate blown off the coil or forming on the louvers - look at settings, louver position, and cleanliness." },
+        { label: "Water backs up or the pan overflows", verdict: "This is a drain problem after all. Clear the drain before looking at anything else." },
+      ],
+    },
+    {
+      ask: "Note how the customer actually runs the head and where the louver is parked. What do you find?",
+      options: [
+        { label: "Very low setpoint plus lowest fan speed in a humid room", verdict: "That is the classic combination that makes a head sweat and spit. Run it at a normal setpoint and medium fan and see whether it stops." },
+        { label: "Louver blade parked to blow straight down at a wall or into still air", verdict: "It is condensing on itself. Move it to horizontal or auto sweep - that usually stops it." },
+        { label: "Settings and louver position both look normal", verdict: "Then look at cleanliness and charge." },
+      ],
+    },
+    {
+      ask: "Inspect the coil face and blower wheel and look at the room around the head. What do you find?",
+      options: [
+        { label: "Coil face or blower wheel loaded with dirt", verdict: "A loaded wheel drops airflow, drops coil temperature, and starts blowing water off the fins. Clean the coil and wheel, then retest at a normal setpoint." },
+        { label: "Return air short circuit or an obstruction close to the head", verdict: "It is recirculating cold, wet air. Clear the obstruction or move what is blocking the return path." },
+        { label: "Coil and wheel clean, room clear", verdict: "Verify charge and superheat - a low-charge head running very cold in one section of the coil will sweat and drip. Then set the customer's expectation on setpoint and fan speed and note it on the ticket." },
       ],
     },
   ],
@@ -11971,6 +13249,33 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-no-mechanical-ventilation-stuffy-house": [
+    {
+      ask: "Walk the system and look for any outdoor air source - an ERV or HRV, a fresh air duct with a motorized damper into the return, or a ventilating dehumidifier. What is there?",
+      options: [
+        { label: "Nothing - the system only recirculates", verdict: "No filter fixes a lack of fresh air. If the house is reasonably tight, whole-house ventilation is the fix - size it to the residential ventilation standard your jurisdiction uses." },
+        { label: "A fresh air duct with a motorized damper", verdict: "Verify the damper is actually opening on schedule and that the intake and its screen are not blocked by debris, insects, or a nest." },
+        { label: "An ERV or HRV is installed", verdict: "Confirm it is powered and running, its filters and core are not fouled, and its supply and exhaust airflows are balanced." },
+      ],
+    },
+    {
+      ask: "Before selling ventilation, rule out the things that mimic stale air. What do you find?",
+      options: [
+        { label: "Plugged filter or low system airflow", verdict: "Fix that first - it reads as stuffy long before a ventilation shortfall does." },
+        { label: "Mold on the coil, a dry P-trap, or a damp unconditioned crawlspace", verdict: "That is your odor source. Correct it before adding outdoor air." },
+        { label: "Indoor relative humidity measures high", verdict: "Air that is too humid reads as stuffy at normal temperature. Address humidity first, since outdoor air brings more latent load in." },
+        { label: "Bath fans or range hood do not work, or vent into an attic", verdict: "Fix or reroute them to vent outdoors. That is basic spot ventilation and it is missing." },
+      ],
+    },
+    {
+      ask: "You are going to add or increase outdoor air. What else has to be checked before you do?",
+      options: [
+        { label: "There are combustion appliances in the house", verdict: "Verify the change does not create depressurization or backdrafting. Check it with the system running before you leave." },
+        { label: "Humid climate with no dehumidification in place", verdict: "Size and control the ventilation so it does not create a humidity complaint - outdoor air brings latent load with it." },
+        { label: "Tight house, no combustion appliances, humidity under control", verdict: "Proceed with whole-house ventilation sized to the residential ventilation standard your jurisdiction uses." },
+      ],
+    },
+  ],
   "s-no-megger-verdict-on-scroll": [
     {
       ask: "Power off and all legs open, terminal cover left in place, three leads disconnected at the nearest point. Ohm each lead to ground on the R x 10,000 or highest scale. What do you read?",
@@ -12206,6 +13511,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-one-blown-fuse-240v-disconnect": [
+    {
+      ask: "Pull and lock out the disconnect, then ohm each fuse individually out of the holder. Do not judge them by looking. What do you get?",
+      options: [
+        { label: "One fuse reads infinite, the other reads continuity", verdict: "One open fuse - that is your half-dead unit. Do not just replace it; find the cause first." },
+        { label: "Both fuses read continuity", verdict: "Fuses are good. With power restored, measure L1 to ground and L2 to ground at the load side of the disconnect to find where the path goes dead." },
+        { label: "Both fuses read infinite", verdict: "That points to a hard fault. Check the compressor for a ground fault and look for a shorted or chafed line-voltage conductor before replacing anything." },
+      ],
+    },
+    {
+      ask: "Inspect the fuse clips and holder. What do you see?",
+      options: [
+        { label: "Discoloration, heat damage, or spring tension lost", verdict: "A loose clip generates heat and takes out the next fuse too. Replace the holder or the disconnect, not just the fuse." },
+        { label: "Clips clean and tight", verdict: "Move on to checking the fuse sizing against the nameplate and clamping the load." },
+      ],
+    },
+    {
+      ask: "Before replacing fuses, check the sizing against the nameplate MOCP and clamp the load on the remaining leg. What do you find?",
+      options: [
+        { label: "Installed fuses are smaller than what the nameplate MOCP allows for this equipment", verdict: "Undersized fuses keep blowing regardless of what else you fix. Install the correct type and rating per the nameplate." },
+        { label: "High current on the remaining leg, or the compressor shows a ground fault", verdict: "That is your cause. Do not power it back up on new fuses until the compressor or the shorted conductor is dealt with." },
+        { label: "Sizing correct and current normal on the remaining leg", verdict: "Replace both fuses as a set with the correct type and rating, restore power, and verify balanced current on both legs against nameplate RLA and FLA." },
+      ],
+    },
+  ],
   "s-open-common-24v-to-chassis": [
     {
       ask: "Read R to C and R to chassis at the equipment, then repeat both at the thermostat. What is the pattern?",
@@ -12419,6 +13749,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-panned-joist-cavity-return": [
+    {
+      ask: "Pull the return grille and look at what the return is actually built from. What do you see?",
+      options: [
+        { label: "Exposed wood framing, subfloor, or drywall instead of a sealed metal or ducted pathway", verdict: "That is a building cavity return - panned joists or a stud bay. Modern codes and energy programs do not accept it, and it is one of the largest leakage sources in older homes." },
+        { label: "Sealed sheet metal or real duct the whole way", verdict: "Not a cavity return. Look elsewhere for the leakage or restriction." },
+      ],
+    },
+    {
+      ask: "With the blower running, check the air at the return grille and compare return air temperature to the actual house temperature. What do you get?",
+      options: [
+        { label: "Air feels cold or smells like outdoors, and return temp differs noticeably from house temp", verdict: "The cavity is pulling from outside the envelope, usually an unsealed rim joist or band board. Recommend sealing the cavity at the rim and all framing joints, or replacing it with real sealed duct." },
+        { label: "Return air matches house temperature", verdict: "It may still leak, but it is not obviously pulling outside air. Take return-side and total external static to see whether the cavity is also acting as a restriction." },
+      ],
+    },
+    {
+      ask: "Check the mechanical room and the coil face while the blower runs. What do you find?",
+      options: [
+        { label: "A fuel-burning appliance shares the space and shows backdrafting with the blower on", verdict: "Deal with that first. A leaky cavity return can depressurize the mechanical room - that is a safety issue, not a comfort issue." },
+        { label: "Fiberglass, dust, or debris on the coil face", verdict: "Confirmation the return has been feeding unfiltered building air. Quote the sealing or duct replacement and clean the coil." },
+        { label: "No backdrafting and the coil is clean", verdict: "Still quote the correct repair. Retake return static and return air temperature after sealing to show the improvement." },
+      ],
+    },
+  ],
   "s-pcbdm133-compressor-delay-defrost": [
     {
       ask: "Confirm the outdoor board is a PCBDM133, then watch a defrost initiation and termination and time the compressor off period. What do you get?",
@@ -12540,6 +13894,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-pressure-pan-duct-leak-locate": [
+    {
+      ask: "With the blower door depressurizing the house to your protocol's reference pressure, the air handler off, and returns handled per protocol, pan each supply register in turn. What do the readings look like?",
+      options: [
+        { label: "One or a few registers read much higher than the rest", verdict: "Those are your leakiest or most exposed runs, typically the ones passing through attic, crawlspace, or garage. Go inspect those takeoffs, boots, and plenum joints specifically." },
+        { label: "All readings are near zero", verdict: "Those runs are essentially inside the pressure boundary. Do the returns if your protocol calls for it, and look for the leakage elsewhere." },
+        { label: "Everything reads high", verdict: "Either the whole duct system is outside the envelope or the setup is wrong. Recheck that the air handler is off and the returns are sealed per protocol before drawing conclusions." },
+      ],
+    },
+    {
+      ask: "Go to the physical location of the worst runs and inspect them. What do you find?",
+      options: [
+        { label: "Open takeoffs, loose boot connections, or unsealed plenum joints", verdict: "Seal them with mastic or approved materials, then repeat the pan readings on those runs to confirm the improvement." },
+        { label: "Nothing visible at the register end", verdict: "Follow the run through the attic or crawlspace back to the trunk. The leak is on the part of the path you cannot see from the room." },
+      ],
+    },
+    {
+      ask: "The customer or the program wants a total duct leakage number. Does this test give you that?",
+      options: [
+        { label: "Yes - add up the pan readings", verdict: "No. A pressure pan locates leaks, it does not quantify them. Run a duct leakage test if you need a total number for code or a program." },
+        { label: "No - run a duct leakage test for the total", verdict: "Correct. Use the pan readings to target repairs and the leakage test for the number." },
+      ],
+    },
+  ],
   "s-pressure-sensor-voltage-check": [
     {
       ask: "These are sensors, not switches, so ohming them tells you nothing. With power on, read voltage across the black and white leads while the system runs steadily. What do you get?",
@@ -12579,6 +13957,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-pressure-test-never-oxygen-or-shop-air": [
+    {
+      ask: "Somebody on the job offers you a bottle or the shop compressor to find the leak. What is being offered?",
+      options: [
+        { label: "Dry nitrogen with a two-stage regulator and relief", verdict: "That is the only correct test gas. Look up the equipment's maximum allowable test pressure on the data plate or install instructions and stay at or under it, high side and low side." },
+        { label: "An oxygen bottle, or acetylene", verdict: "Absolutely not. Oxygen under pressure in contact with refrigerant oil can detonate. Refuse it and get dry nitrogen." },
+        { label: "Shop air from a compressor", verdict: "No. Shop air drives moisture and compressor oil into a system you are trying to keep dry, and it will contaminate the charge." },
+        { label: "Nitrogen, but no regulator or only a single-stage with no relief", verdict: "Do not open that bottle onto the system. A nitrogen cylinder holds pressures far above anything the equipment survives - use a two-stage regulator with a relief." },
+      ],
+    },
+    {
+      ask: "Look up the maximum allowable test pressure and check what is actually in the circuit you are about to pressurize. What is the situation?",
+      options: [
+        { label: "Everything in the circuit is rated at or above your planned test pressure", verdict: "Bring the pressure up gradually and stand clear while it rises, then close the cylinder valve and let it stand." },
+        { label: "Something in the circuit is not rated for that pressure, or the instructions do not permit testing through the compressor", verdict: "Isolate that component before you pressurize. Do not pressure test through the compressor unless the instructions specifically permit it." },
+      ],
+    },
+    {
+      ask: "It has stood at pressure with the cylinder valve closed and you recorded both the pressure and the ambient temperature. What happened?",
+      options: [
+        { label: "Pressure held, with no drop beyond what the temperature change explains", verdict: "No leak at test pressure. Bleed the nitrogen off in a controlled way before opening the system." },
+        { label: "Pressure dropped more than the temperature change accounts for", verdict: "You have a leak. Find and repair it, then retest. Never leave a system pressurized and unattended without tagging it." },
+      ],
+    },
+  ],
   "s-prime-condensate-trap-startup": [
     {
       ask: "Before starting the furnace, fill the drain trap with water to prime it. What does it do?",
@@ -12593,6 +13996,29 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Condensate is reaching the drain and the trap seal is holding", verdict: "Startup is good. Remember to re-prime the trap any time it is removed, cleaned, or drained for service." },
         { label: "No condensate reaching the drain, or the trap has lost its seal", verdict: "Go back through it - confirm the trap is installed per the manual for this orientation and that the downstream line has no sags or secondary traps, then re-prime and re-run." },
+      ],
+    },
+  ],
+  "s-proportional-balancing-takeoff-dampers": [
+    {
+      ask: "Before balancing anything, confirm total system airflow and total external static. Where do they sit?",
+      options: [
+        { label: "Total airflow and static are both in range", verdict: "Now open every balancing damper and every register fully, run at the speed the system will use for this season, and measure airflow at each supply register." },
+        { label: "Total airflow is short, or static is above the rated maximum", verdict: "Do not balance yet. Balancing a system short on total air just moves the shortage around - fix the restriction first." },
+      ],
+    },
+    {
+      ask: "With everything wide open, measure airflow at each register with a flow hood or an anemometer and compare to the room's design airflow, or to room loads and floor area if there is no design. What is the picture?",
+      options: [
+        { label: "Some runs clearly over-delivering, usually the short runs closest to the air handler", verdict: "Start there. Throttle the takeoff dampers on the over-delivering runs, and re-measure the whole set after each meaningful adjustment - closing one damper changes every other run." },
+        { label: "Everything already reads roughly proportional", verdict: "There is little to gain from balancing. Look at the individual complaint room's duct and load instead." },
+      ],
+    },
+    {
+      ask: "You are tempted to pinch register louvers to finish it off. What are you going to do?",
+      options: [
+        { label: "Throttle at the branch takeoff dampers and leave the louvers wide open", verdict: "Right. Louvers are for throw direction, not volume. Mark each damper's final position on the duct and recheck total external static when you are done." },
+        { label: "Close the louvers at the over-delivering grilles", verdict: "Do not. It makes noise and turbulence right where the occupant stands and does very little upstream. Do the work at the takeoff dampers." },
       ],
     },
   ],
@@ -12901,6 +14327,57 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-register-face-condensation-ceiling-stains": [
+    {
+      ask: "Before opening any ceiling, rule out a real leak. Check the drain pan, the secondary pan, and any plumbing above the stained area. What do you find?",
+      options: [
+        { label: "Water in a drain pan, or evidence of a plumbing leak above", verdict: "That is your source. Fix the drain or the plumbing before chasing condensation." },
+        { label: "Pans dry and no plumbing above", verdict: "It is condensation. Pull the register and inspect the boot and the ceiling penetration." },
+      ],
+    },
+    {
+      ask: "Pull the register and inspect the boot and where it meets the drywall. What do you see?",
+      options: [
+        { label: "No insulation on the boot exterior, or an unsealed joint between boot and duct", verdict: "That is where the moisture is forming. Seal the boot to the duct and to the drywall, and insulate the boot exterior to the required R-value with a continuous vapor barrier on the warm side." },
+        { label: "Attic air moving past the boot into the room cavity", verdict: "That is the case where the ceiling stains without a drop ever coming out of the grille. Air seal the boot to the drywall and insulate it." },
+        { label: "Boot is sealed and insulated properly", verdict: "Then look at the air side - measure indoor humidity and dew point against the supply air temperature at the grille." },
+      ],
+    },
+    {
+      ask: "Measure indoor relative humidity and dew point and compare them to the supply air temperature at the grille face. What do you get?",
+      options: [
+        { label: "Supply air is below the room dew point at the grille face", verdict: "Surface condensation is expected under those conditions. Check whether system airflow is too low, which drives supply temperature down, and correct it." },
+        { label: "Room dew point is high - humidifier running, oversized system short cycling, or no dehumidification", verdict: "Fix the humidity source. Sealing the boot alone will not hold if the room dew point stays that high." },
+        { label: "Supply temperature is well above the room dew point", verdict: "The condensation is happening at the boot from attic air, not at the grille face. Focus on sealing and insulating the boot." },
+      ],
+    },
+  ],
+  "s-register-no-air-disconnected-duct": [
+    {
+      ask: "Pull the register grille and look and feel up into the boot. What do you see?",
+      options: [
+        { label: "The flex run has come off the boot - visible right there", verdict: "That is your answer. Reconnect with proper mechanical fastening and mastic or approved tape at the collar, and support the run so it cannot pull off again." },
+        { label: "Boot connected, but there is a balancing damper at the register", verdict: "Check the actual blade position, not just the handle position. A damper closed years ago and forgotten is common." },
+        { label: "Boot connected, no damper, still almost no air", verdict: "Follow the run back to the trunk takeoff and inspect the whole path." },
+      ],
+    },
+    {
+      ask: "Follow the run through the attic, crawlspace, or basement back to the trunk takeoff. What do you find?",
+      options: [
+        { label: "Separated collar, torn inner liner, or a crushed section", verdict: "Repair or replace that section, fasten it mechanically, seal with mastic or approved tape, and support the run properly." },
+        { label: "Run buried under insulation and pinched, or sagging with sharp bends", verdict: "Free it, pull the flex tight, and support it without sharp bends, then recheck airflow at the register." },
+        { label: "A damper at the takeoff is closed, or the takeoff was never cut open properly at install", verdict: "Open the damper or open the takeoff correctly. An uncut takeoff gives exactly this complaint from day one." },
+        { label: "Run looks intact and open the whole way", verdict: "Check the inner liner for a collapsed or twisted section, and feel the attic or crawlspace air near the run for a blast of conditioned air that marks a hidden disconnect." },
+      ],
+    },
+    {
+      ask: "After the repair, check airflow at that register and at the neighboring ones. What happened?",
+      options: [
+        { label: "Problem register delivers and the neighbors are unchanged", verdict: "Job done. Note the repair on the ticket." },
+        { label: "Problem register improved but neighboring rooms dropped off", verdict: "Your fix changed the balance. Rebalance the neighboring runs at their takeoff dampers." },
+      ],
+    },
+  ],
   "s-register-throw-pattern-mismatch": [
     {
       ask: "Flow hood the room's total CFM and ask when the complaint started relative to any furniture, renovation, or room-use changes.",
@@ -12938,6 +14415,33 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-replacement-board-fails-again": [
+    {
+      ask: "Before installing anything, inspect the failed board and note exactly what burned. What do you see?",
+      options: [
+        { label: "A specific relay on the board", verdict: "Follow that relay's circuit. Measure the current draw of the 24V load it switches and compare it to the board's published rating for that terminal." },
+        { label: "The board fuse", verdict: "Something is overloading or shorting the low-voltage circuit. Total the VA on the transformer and inspect for chafed thermostat wire before you install anything." },
+        { label: "A connector or a burnt trace", verdict: "Trace the damage back to its circuit - that tells you which load did it. Check that circuit's load and the wiring in its harness." },
+        { label: "Nothing visible - the board just quit", verdict: "Look for surge evidence: a nearby lightning event, other damaged electronics in the house, or a missing or failed surge protective device." },
+      ],
+    },
+    {
+      ask: "Measure the current draw of every 24V load the board switches and total the VA on the transformer. How do the numbers land?",
+      options: [
+        { label: "One load exceeds the board's published rating for its terminal", verdict: "That is what killed the relay. Add an isolation relay so the board output drives only a coil, then install the new board." },
+        { label: "Total VA exceeds the transformer rating, usually from accessories added after install", verdict: "Upsize the transformer or give the accessory its own supply before the new board goes in." },
+        { label: "Everything is within rating", verdict: "Look at the outdoor contactor next. A coil drawing high current, a bound armature, or a chattering contactor hammers the board relay that drives it." },
+      ],
+    },
+    {
+      ask: "Check line-voltage supply polarity, equipment grounding, and the low-voltage wire routing. What do you find?",
+      options: [
+        { label: "Reversed line-voltage polarity or a poor equipment ground", verdict: "Correct it. That causes flame-sense and control anomalies and can damage the board outright." },
+        { label: "Chafed low-voltage wire at a sheet-metal edge, the disconnect whip, or where thermostat wire enters the cabinet", verdict: "That intermittent short repeats until you find it. Repair and re-route the wire before the new board goes in." },
+        { label: "Polarity, ground, and wiring all check out", verdict: "Correct whatever load or contactor issue you found earlier, then install the new board." },
+      ],
+    },
+  ],
   "s-replacement-wire-spec-furnace": [
     {
       ask: "With all power off, inspect the wiring in the furnace cabinet. What did you find?",
@@ -12945,6 +14449,30 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Discolored insulation or other signs of overheating", verdict: "Replace that wire with AWM, 105 degrees C, 2/64 inch thick insulation of the same gauge or equivalent - a hot cabinet demands that rating. Route it clear of hot surfaces and moving parts." },
         { label: "A loose connection with the wire itself intact", verdict: "Re-terminate it securely, then restore power and verify proper operation through a full cycle." },
         { label: "Wire looks fine but you suspect it is open", verdict: "Ohm it for continuity. If it is open, replace it with the same AWM, 105 degrees C, 2/64 inch insulation spec in matching gauge." },
+      ],
+    },
+  ],
+  "s-repurposing-spare-wire-as-common": [
+    {
+      ask: "Pull the cable at the thermostat and count every conductor, not just the landed ones, then check the equipment end. What do you have?",
+      options: [
+        { label: "The same spare conductors are present and unlanded at both ends", verdict: "You can repurpose one. With power off, ring it out end to end to prove it is the same wire before you land it." },
+        { label: "Spare exists at the thermostat but not at the equipment", verdict: "The cable is spliced somewhere or you are looking at two different cables. Find that out before you land anything on it." },
+        { label: "No spare conductors at all", verdict: "Do not force a workaround - using G as a common ties fan operation to thermostat power. Pull new cable or use a manufacturer-supported common-wire adapter kit per its instructions for this equipment." },
+      ],
+    },
+    {
+      ask: "With power off, ring the spare out end to end and check it against the other conductors and ground. What do you find?",
+      options: [
+        { label: "Continuity end to end, no short to any other conductor or to ground", verdict: "Land it on the equipment's C terminal at the board and on C at the thermostat. Do not create a common by jumpering it to another function terminal." },
+        { label: "Shorted to another conductor or to ground", verdict: "That conductor is not usable. Look for another spare, pull new cable, or use a manufacturer-supported adapter kit." },
+      ],
+    },
+    {
+      ask: "Restore power and measure between R and C at the thermostat while the equipment cycles. What do you read?",
+      options: [
+        { label: "Approximately the nominal control voltage, and it holds up through the cycle", verdict: "Good common. Label both ends of the newly used conductor and verify every mode, including fan-only and any staging, before you leave." },
+        { label: "Voltage low, or dropping out when the equipment cycles", verdict: "Do not leave it like that. Recheck both landing points and look for a marginal connection or an overloaded transformer before calling it done." },
       ],
     },
   ],
@@ -12980,6 +14508,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Grille matches the room, but the plenum at the unit has shifted toward attic or crawl temperature", verdict: "Return duct or plenum leakage between the grille and the unit. Seal the return drop, plenum seams, and cabinet joints, then re-take your temperature readings." },
         { label: "Grille air is already off from the room temperature", verdict: "The leak is upstream of the grille - a panned joist or wall cavity return, or a leaky return boot pulling from a wall or floor cavity. Seal the cavity or convert it to real duct." },
         { label: "All three readings agree but the thermostat disagrees with all of them", verdict: "The equipment is seeing correct air. Look at thermostat placement, sensor calibration, and drafts through the thermostat's own wire hole." },
+      ],
+    },
+  ],
+  "s-return-leak-garage-crawlspace-attic": [
+    {
+      ask: "Map the entire return path and note every section that passes through unconditioned or garage space, including the air handler cabinet itself. Where does it run?",
+      options: [
+        { label: "Return duct or the air handler itself sits in a garage", verdict: "Treat this as a safety item, not just comfort - vehicle exhaust and stored chemicals get pulled straight to the occupants. Smoke test the whole return path and the cabinet." },
+        { label: "Return runs through an attic or crawlspace only", verdict: "Smoke test the duct seams, filter rack, cabinet panel joints, and every wire or refrigerant line penetration with the blower running." },
+        { label: "The whole return path is inside the conditioned envelope", verdict: "Return-side importing is unlikely. Compare return air temperature at the air handler against the return grilles anyway to confirm." },
+      ],
+    },
+    {
+      ask: "With the blower running, run a smoke pencil or incense stick along the return seams, filter rack, cabinet joints, and penetrations. What happens?",
+      options: [
+        { label: "Smoke pulls into one or more duct seams or penetrations", verdict: "Those are your leaks. Seal them with mastic or approved tape, including the filter rack and any panel that does not gasket properly." },
+        { label: "Cabinet seams or the blower door gasket pull smoke in", verdict: "A leaking cabinet in a garage is the same as an open return grille in that garage. Seal the cabinet and replace the door gasket." },
+        { label: "No smoke pulls in anywhere", verdict: "Compare return air temperature at the air handler against the return grilles inside the house. A meaningful difference still means unconditioned air is getting in somewhere." },
+      ],
+    },
+    {
+      ask: "Check where the return grille itself is located. Where is it?",
+      options: [
+        { label: "Inside the conditioned space", verdict: "Good. Seal what you found, re-smoke-test after sealing, and note the results for the customer." },
+        { label: "In the garage or a crawlspace", verdict: "That is a code and safety issue, not a sealing issue. It needs to be relocated inside the conditioned envelope." },
       ],
     },
   ],
@@ -13531,6 +15084,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-single-phasing-three-phase": [
+    {
+      ask: "With the unit calling, measure phase-to-phase voltage on all three combinations at the line side of the disconnect: L1-L2, L2-L3, L1-L3. What do you get?",
+      options: [
+        { label: "One pair reads near zero or badly low", verdict: "You lost a leg upstream of the disconnect. Work back into the panel and the utility side, and do not run the equipment until it is restored." },
+        { label: "All three pairs read the nominal system voltage", next: 1 },
+      ],
+    },
+    {
+      ask: "Repeat those three readings at the load side of the disconnect and again at the load side of the contactor. Where do the readings go bad?",
+      options: [
+        { label: "Good at the line side, bad at the load side of the disconnect", verdict: "The loss is in the disconnect or its fuses. Lock out and ohm each fuse individually, and inspect for a burnt lug or a loose clip." },
+        { label: "Good through the disconnect, bad at the load side of the contactor", verdict: "A contactor pole is not making. Replace the contactor and check the lug terminations for heat damage while you are in there." },
+        { label: "All three read good all the way to the contactor load side", verdict: "Clamp all three legs and compare currents. A severe imbalance still points at a lost leg or a winding problem downstream." },
+      ],
+    },
+    {
+      ask: "You found an open fuse. What is your next move?",
+      options: [
+        { label: "Replace it and leave", verdict: "Do not. Find why it opened - a failing winding, a loose lug generating heat, or a mechanical problem loading the motor - or you will be back." },
+        { label: "Clamp all three legs, inspect the lugs for heat, and check the motor before replacing", verdict: "Right approach. Also verify any phase monitor or phase-loss relay is functional, and recommend adding protection if a compressor has already been lost this way." },
+      ],
+    },
+  ],
   "s-single-point-supply-and-return-duct-pressures": [
     {
       ask: "Which single-point reading is carrying most of the total?",
@@ -13538,6 +15115,29 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Return duct pressure is the larger of the two", verdict: "Work the return: undersized or single central return, undersized return drop, restrictive filter grille, panned joist or wall cavity returns, and crushed flex." },
         { label: "Supply duct pressure is the larger of the two", verdict: "Supply-side design or install problem: undersized trunk, too many branches off a small plenum, sharp transitions right off the blower, closed balancing dampers, or crushed flex runs." },
         { label: "Both sides are modest but total static is still high", verdict: "The restriction is inside the cabinet, not the ducts. Take filter and coil pressure drops separately - those live between your two probes." },
+      ],
+    },
+  ],
+  "s-single-pole-contactor-hot-leg": [
+    {
+      ask: "Before you assume anything, count the poles on the contactor. What is there?",
+      options: [
+        { label: "One movable contact set plus a solid strap or direct connection on the other side", verdict: "Single-pole. One line leg stays connected all the way through the compressor and fan windings with the contactor open. Open and lock out the disconnect before any work." },
+        { label: "Two movable contact sets", verdict: "Two-pole - both legs break at the contactor. You still lock out the disconnect for service, but this is not the single-pole trap." },
+      ],
+    },
+    {
+      ask: "You need to prove the compressor terminals are dead. How are you taking that reading?",
+      options: [
+        { label: "Between two load-side terminals", verdict: "That reading is worthless here - both points can be energized and still read near zero between them. Reference to ground or a known neutral instead." },
+        { label: "Referenced to ground or a known neutral, using live-dead-live with a proven meter", verdict: "That is the right method. Prove the meter on a known live source, test the circuit, then prove the meter again." },
+      ],
+    },
+    {
+      ask: "Someone wants to swap the single-pole for a two-pole contactor. Check how the crankcase heater is fed. What do you find?",
+      options: [
+        { label: "Crankcase heater is powered through the always-hot leg during the off cycle", verdict: "That is why the unit is built this way. Do not just swap in a two-pole - follow the manufacturer's or kit's wiring so the heater stays energized when the compressor is off, typically through a relay." },
+        { label: "No crankcase heater on this unit", verdict: "The swap is simpler, but still follow the manufacturer's wiring guidance for the change before you make it." },
       ],
     },
   ],
@@ -13674,6 +15274,31 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-static-pressure-component-breakdown": [
+    {
+      ask: "With the nameplate rated maximum in hand, all panels on, a clean filter, and full airflow, take the pressure drop across the filter alone and across the coil alone. Which is bigger?",
+      options: [
+        { label: "The filter drop is the largest", verdict: "Compare it to the manufacturer's published pressure drop for that filter at your airflow. If it is over, the fix is more filter area - a larger grille, a second return, or a deeper media cabinet." },
+        { label: "The coil drop is the largest", verdict: "Compare it to the published coil pressure drop at your airflow. If it is over, the coil is loaded - plan a proper cleaning that reaches the entering-air face." },
+        { label: "Both are inside the published data for that filter and coil", verdict: "The loss is in the ducts. Read supply-side and return-side static separately to find which half carries it." },
+      ],
+    },
+    {
+      ask: "Read supply-side static and return-side static separately. Which half carries the bigger loss?",
+      options: [
+        { label: "Return side is the bigger number", verdict: "Look at return sizing - a too-small filter grille, an undersized return trunk, or a crushed return run." },
+        { label: "Supply side is the bigger number", verdict: "Look at the supply trunk and branches - a crushed trunk, undersized takeoffs, or kinked flex." },
+        { label: "Both halves are roughly equal and both are high", verdict: "You have more than one contributor. Fix the biggest single drop first, then retest and work down the list." },
+      ],
+    },
+    {
+      ask: "You fixed the biggest drop and retook total external static. Where does it sit now?",
+      options: [
+        { label: "At or under the nameplate rated maximum", verdict: "Done. Record every reading on the invoice so the next tech starts from data instead of starting over." },
+        { label: "Came down but still above the rated maximum", verdict: "Normal - high-static systems usually have two or three contributors. Break it down again, fix the next largest drop, and retest." },
+      ],
+    },
+  ],
   "s-static-pressure-methodology": [
     {
       ask: "Take manometer readings immediately downstream of the equipment on the supply side and immediately upstream on the return side after the filter, add them (return reads negative, so add its absolute value), and compare the total against the equipment's rated maximum for the speed in use.",
@@ -13803,6 +15428,31 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Schrader depressor is only partly opening the core, or the hose has a plugged core", verdict: "That reads low and throws the superheat off. Fix the connection and re-take the pressure before you judge the system." },
         { label: "Gauge port and hoses are clear and reading properly", verdict: "The pressure side is trustworthy. Once the temperature reading is stable, interpret the superheat and act on it." },
+      ],
+    },
+  ],
+  "s-supply-temp-loss-plenum-to-register": [
+    {
+      ask: "Run the system in the complaint mode, let it stabilize, then measure supply air in the plenum and at the face of the problem register with the same instrument. How do they compare?",
+      options: [
+        { label: "Register air is noticeably warmer than the plenum in cooling, or cooler in heating", verdict: "The run is losing capacity to the space it passes through. Measure the attic or crawlspace temperature and inspect the run's insulation and path." },
+        { label: "Register temperature is close to the plenum temperature", verdict: "This is not a temperature loss problem. Measure register airflow - a volume problem looks identical to the customer but needs a different fix." },
+      ],
+    },
+    {
+      ask: "Inspect that run's insulation and its path through the unconditioned space. What do you find?",
+      options: [
+        { label: "Compressed sections, torn jacket, or missing vapor barrier", verdict: "Re-insulate to the required R-value with the vapor barrier intact. That is where the capacity is going." },
+        { label: "Duct laying directly on hot roof deck or sitting in standing water", verdict: "Get it up off the deck or out of the water and re-insulate. That contact is a direct heat path." },
+        { label: "Excess coiled flex, sags, or a longer route than necessary", verdict: "Shorten, straighten, and support the run. Excess length costs you both heat gain and pressure loss." },
+        { label: "Insulation and path both look correct", verdict: "Then look at volume. Verify register airflow and compare it against the neighboring runs." },
+      ],
+    },
+    {
+      ask: "Measure register airflow at that same register while you are there. What do you have?",
+      options: [
+        { label: "Airflow is weak at that register too", verdict: "You have both a volume and a temperature problem. Fix the leakage and the run geometry, then re-measure plenum-to-register temperature." },
+        { label: "Airflow is normal", verdict: "It is purely a duct gain and loss problem. Recommend repairs by what you measured - re-insulate, seal the run and boot, shorten and support it - then re-measure." },
       ],
     },
   ],
@@ -14035,6 +15685,30 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-thermostat-placement-and-wall-draft": [
+    {
+      ask: "Put a calibrated reference thermometer right next to the thermostat, then take a reading in the middle of the same room. What is the picture?",
+      options: [
+        { label: "Thermostat matches the reference beside it, but that spot differs from the rest of the room", verdict: "The sensor is fine - this is placement. Look for direct sun, a supply register aimed at it, a nearby lamp, TV, or appliance, and whether it sits on an exterior wall." },
+        { label: "Thermostat reads different from the reference sitting right beside it", verdict: "That is a sensor or calibration issue in the stat itself, not placement. Address the thermostat." },
+        { label: "Thermostat and its surroundings match the rest of the room", verdict: "The reading is fine where it is. Look elsewhere for the comfort complaint." },
+      ],
+    },
+    {
+      ask: "Pull the thermostat off its subbase and feel the wiring hole, and check the temperature of any air coming out of it. What do you find?",
+      options: [
+        { label: "Air moving out of the hole at a different temperature than the room", verdict: "That is the one that gets missed - an open stud bay to an attic, crawlspace, or garage blowing outside-temperature air across the sensor. Seal the hole with fire-rated caulk or foam around the wire bundle and confirm the draft is gone." },
+        { label: "No air movement at the wiring hole", verdict: "Not a draft. Look at sun exposure, nearby heat sources, register aim, and whether it is on an exterior wall." },
+      ],
+    },
+    {
+      ask: "You sealed the hole or ruled it out, but the placement is still wrong - exterior wall, sun, dead-end hallway, or over a return grille. What can you do here?",
+      options: [
+        { label: "Relocating to an interior wall in a representative room is practical", verdict: "Do that, away from registers and heat sources. Then recheck against the reference thermometer in the same conditions that produced the original complaint." },
+        { label: "Relocation is not practical", verdict: "Use a remote or wireless room sensor and configure the thermostat to control from that sensor instead." },
+      ],
+    },
+  ],
   "s-thermostat-schedule-occupancy-conflict": [
     {
       ask: "Take one specific complaint about the temperature changing on its own and line the time up against the programmed schedule and the occupancy sensor activity log if the thermostat stores one.",
@@ -14078,6 +15752,32 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-thermostat-wire-colors-not-standard": [
+    {
+      ask: "Photograph and write down both ends - which color lands on which letter at the thermostat and at the equipment. Do the two ends agree?",
+      options: [
+        { label: "Both ends agree and every conductor is accounted for", verdict: "You can trust the wiring on this job. Move on to identifying the system type before you land the new stat." },
+        { label: "The ends disagree, or conductors are unlabeled", verdict: "Ring out each conductor end to end - short one to a known reference at the equipment and check continuity at the thermostat, one wire at a time. Do not wire by color." },
+        { label: "Two whites, or an odd color on a terminal like blue on Y", verdict: "Color is a convention, not a standard. Ring the wires out and land the new stat by function." },
+      ],
+    },
+    {
+      ask: "Identify the system type before deciding what each wire should do. What is it?",
+      options: [
+        { label: "Heat pump with an O or B reversing valve conductor", verdict: "You need to know which way this manufacturer energizes the valve, plus the right aux and emergency heat terminals and the compressor and aux stage count. Configure the stat to match." },
+        { label: "Conventional heat/cool with no reversing valve", verdict: "Straightforward. Land by function, set the stat's equipment type and stage count, and label both ends." },
+        { label: "You cannot tell from the wiring alone", verdict: "Go to the equipment - model number, nameplate, and wiring diagram. Do not guess the system type from wire colors." },
+      ],
+    },
+    {
+      ask: "After wiring, test every mode - cool, heat, fan-only, and on a heat pump both the reversing valve and the aux/emergency call. What happens?",
+      options: [
+        { label: "Every mode behaves correctly", verdict: "Label both ends of the wiring with what each conductor actually does so the next tech does not repeat this, then close it up." },
+        { label: "Heat pump runs backwards - cold air on a heat call", verdict: "The O/B configuration or that conductor is wrong. Recheck which way this manufacturer energizes the reversing valve against the equipment wiring diagram." },
+        { label: "Aux heat runs constantly, or a mode does not respond", verdict: "Recheck the stage count configuration and the aux/emergency terminals. That is the classic result of wiring by color." },
+      ],
+    },
+  ],
   "s-thermostat-wrong-swing-setting": [
     {
       ask: "Watch several cycles against setpoint. Which way is it off?",
@@ -14085,6 +15785,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Turns on and off frequently, short cycling", verdict: "That is a very tight differential/swing setting. Widen it, but set expectations with the customer about the comfort and cycling tradeoff first." },
         { label: "Long temperature swings and the customer says it is not keeping up", verdict: "That is a wide differential. Tightening it will cycle more often - explain the tradeoff before changing the number." },
         { label: "Cycling does not track the differential setting at all", verdict: "Check for a minimum on-time/off-time or compressor short-cycle protection setting interacting with the differential in ways the customer would not expect." },
+      ],
+    },
+  ],
+  "s-three-phase-voltage-imbalance": [
+    {
+      ask: "Running under load, measure all three phase-to-phase voltages. Average them, take the largest deviation from that average, and divide by the average. What percent imbalance do you get?",
+      options: [
+        { label: "About 1 percent or less", verdict: "That is where NEMA recommends holding it. Voltage is not your problem - clamp all three legs and look at current instead." },
+        { label: "Between about 1 and 5 percent", verdict: "Above NEMA's recommendation. NEMA publishes derating in this range - correct the supply rather than letting the motor run hot." },
+        { label: "Above about 5 percent", verdict: "NEMA does not recommend operating here at all. Shut it down and get the supply corrected before the windings cook." },
+      ],
+    },
+    {
+      ask: "Clamp all three legs while running and compare the currents to each other and to the nameplate FLA. What is the picture?",
+      options: [
+        { label: "Currents badly imbalanced but the voltages measured balanced", verdict: "Suspect the motor windings or the connections at the motor. Swap two legs at the load side of the contactor and see whether the high-current leg follows the wire or stays with the motor terminal." },
+        { label: "Current imbalance tracks the voltage imbalance you measured", verdict: "Work upstream - loose or corroded lug, aging fuse holder, poor connection at the disconnect, or unbalanced single-phase loading on the service." },
+        { label: "Currents balanced and at or below nameplate FLA", verdict: "The motor is loading evenly. Document the readings and look elsewhere for the overload trips." },
+      ],
+    },
+    {
+      ask: "You swapped two legs at the load side of the contactor. Where did the high current go?",
+      options: [
+        { label: "It followed the wire to the other motor terminal", verdict: "The problem is on the supply side, not the motor. Check lugs, fuse holders, the disconnect, and service loading, and involve the utility or an electrician if it is on the line side." },
+        { label: "It stayed with the same motor terminal", verdict: "The fault is in the motor windings or the connections at the motor. Document your before-and-after readings either way." },
       ],
     },
   ],
@@ -14103,6 +15828,24 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Delay is too short to prevent a restart against high head pressure", verdict: "It defeats the purpose of the device even though it technically works. Several minutes is typical for this application." },
         { label: "Installed relay is the wrong delay type, for example delay-on-break where delay-on-make is required", verdict: "It will pass a basic continuity test but behave wrong in the actual application. Replace it with a matching delay type and timing range." },
+      ],
+    },
+  ],
+  "s-time-delay-vs-fast-acting-fuses": [
+    {
+      ask: "Pull and lock out the disconnect, then read what is actually installed - class, amp rating, and whether it is time-delay (dual-element) or fast-acting - against what the nameplate specifies. What do you find?",
+      options: [
+        { label: "A fast-acting fuse where the nameplate calls for time-delay", verdict: "That alone explains blowing at startup - a fast-acting fuse cannot ride through normal locked-rotor inrush. Replace with the specified type at or below the MOCP rating." },
+        { label: "The correct time-delay fuse at or below MOCP, and it still blows", next: 1 },
+        { label: "Installed fuse is larger than the nameplate MOCP", verdict: "That is a violation and it is not the fix either. Install the specified type at or below MOCP and then find the real fault." },
+      ],
+    },
+    {
+      ask: "Measure inrush current on the compressor at start against nameplate LRA, and check supply voltage under load. What do you get?",
+      options: [
+        { label: "Inrush well above nameplate LRA", verdict: "The compressor has a real fault loading it at start. Do not upsize the fuse - diagnose the compressor." },
+        { label: "Supply voltage low under load", verdict: "Low voltage raises current and stretches the inrush period, pushing a correctly sized fuse past its curve. Correct the supply." },
+        { label: "Inrush and voltage both normal", verdict: "Inspect the fuse holder clips and lugs for heat damage. A high-resistance clip runs the fuse hot and opens it early even at normal current." },
       ],
     },
   ],
@@ -14778,6 +16521,56 @@ const SYMPTOM_FOLLOWUPS = {
       ],
     },
   ],
+  "s-uv-lamp-material-damage": [
+    {
+      ask: "Power off and locked out, inspect everything in the lamp's line of sight - drain pan, flex inner liner, wire insulation, plastic float switches, foam insulation, duct liner. What do you see?",
+      options: [
+        { label: "Chalking, discoloration, brittleness, or cracking worst on the side facing the lamp", verdict: "That is the UV damage signature. Flex it gently - degraded polymer cracks rather than bends. Anything degraded gets replaced outright." },
+        { label: "Materials look normal on all sides, including the side facing the lamp", verdict: "No damage yet. Still measure the distance from the lamp to the nearest non-metallic material against the published minimum clearance." },
+      ],
+    },
+    {
+      ask: "Measure the actual distance from the lamp to the nearest non-metallic material and compare it to the lamp manufacturer's published minimum clearance. Where does it land?",
+      options: [
+        { label: "Closer than the published minimum clearance", verdict: "Relocate the lamp or install the manufacturer's shielding so no polymer sits inside that clearance, and reroute any wiring that passes through the beam." },
+        { label: "At or beyond the published minimum clearance", verdict: "The install is acceptable on clearance. Note it on the ticket along with anything you replaced." },
+        { label: "The lamp has to stay where it is and material sits inside the clearance", verdict: "Use metal shielding or UV-resistant components rated for the application. Degraded polymer does not recover." },
+      ],
+    },
+    {
+      ask: "Which material is the one that has degraded?",
+      options: [
+        { label: "The drain pan", verdict: "Replace it. Cracked polymer will not hold water and a failed drain pan is the next call." },
+        { label: "Wire or control wiring insulation", verdict: "Replace the wiring and reroute it out of the beam. A shorted control wire in the cabinet damages boards and is a fire risk." },
+        { label: "Flex duct inner liner or duct liner", verdict: "Replace that duct section. A crumbling liner sheds into the airstream and will not seal. Note the damage and the correction on the ticket, especially if it was a prior installer's work." },
+      ],
+    },
+  ],
+  "s-uv-lamp-past-service-life": [
+    {
+      ask: "Find the install date and last lamp change on the housing sticker, the equipment, or the service history, and compare to the manufacturer's rated lamp life for that lamp. Where does it stand?",
+      options: [
+        { label: "At or past the rated replacement interval", verdict: "Replace the lamp. A glowing lamp proves nothing - germicidal output falls off well before visible light does. Handle the new lamp without touching the glass and dispose of the old one per instructions, since these contain mercury." },
+        { label: "Well inside the rated interval", verdict: "Lamp age is not the issue. Verify it is actually powered, then check the sleeve, the aim, and the coil for growth." },
+        { label: "No date recorded anywhere", verdict: "You cannot verify it is still in service life. Replace it and write the date on the housing so the next tech knows." },
+      ],
+    },
+    {
+      ask: "Verify the lamp is powered and the ballast or driver is energized. What do you find?",
+      options: [
+        { label: "Lamp is dark and the ballast is not energized", verdict: "Check the interlock switch on the access door first - it commonly holds the lamp off - then work back through the power supply." },
+        { label: "Lamp is lit and the ballast is energized", verdict: "Power is fine. Inspect the lamp or quartz sleeve surface and confirm where it is aimed." },
+      ],
+    },
+    {
+      ask: "Inspect the lamp surface, check where it is aimed, and look at the coil and drain pan. What do you find?",
+      options: [
+        { label: "Dust, biofilm, or condensate film on the lamp or quartz sleeve", verdict: "A coated lamp loses output even when it is new. Clean the sleeve, and do not touch the glass with bare hands." },
+        { label: "Lamp knocked out of position and no longer aimed at the coil surface and drain pan", verdict: "Re-aim it per the instructions. It only treats what it can see." },
+        { label: "Biological growth on the coil or in the drain pan", verdict: "That is your real performance evidence that the lamp is not doing its job. Replace the lamp if it is at or past interval, correct the aim, and clean the coil and pan." },
+      ],
+    },
+  ],
   "s-uvlight-not-working": [
     {
       ask: "With the blower running, check for voltage at the UV lamp connector and take a brief glance at the lamp.",
@@ -14880,6 +16673,31 @@ const SYMPTOM_FOLLOWUPS = {
         { label: "Frost or rime built up on the intake screen", verdict: "That commonly builds from the exhaust plume. Clear it, and check the manual for whether that model allows the screen to be removed or a different termination kit used - do not remove it on your own judgment." },
         { label: "Ice forming on the wall or ground below the termination", verdict: "The plume is condensing on a surface and freezing back toward the pipe. Clear it and check termination height and location against the installation manual." },
         { label: "Terminations clear and well above the snow", verdict: "Reset the furnace and watch a full cycle, verifying the pressure switch proves and stays proved, and check the condensate drain - a cold snap that ices a vent often ices a condensate line in an unconditioned space." },
+      ],
+    },
+  ],
+  "s-verify-airflow-before-adjusting-charge": [
+    {
+      ask: "Superheat and subcooling both read wrong. Before touching charge, measure total external static with probes on the return and supply side. How does it compare to the equipment's rated maximum?",
+      options: [
+        { label: "Above the rated maximum on the nameplate", verdict: "Airflow is your problem, not the charge. Use the blower table to estimate CFM at that static and speed, then find the restriction before you look at refrigerant again." },
+        { label: "At or under the rated maximum", next: 1 },
+      ],
+    },
+    {
+      ask: "With static in range, work the rest of the airflow path - filter, coil face, blower setting, dampers and registers. What do you find?",
+      options: [
+        { label: "Blower speed tap or ECM airflow setting does not match the installed tonnage", verdict: "Set it to what the tonnage and application call for, then re-take superheat and subcooling before deciding anything about charge." },
+        { label: "Dirty or matted evaporator coil face, or a filter the equipment cannot tolerate", verdict: "Clean the coil and correct the filter first. A coil restriction hides behind a clean filter and moves both superheat and subcooling." },
+        { label: "Closed dampers, collapsed flex run, blocked returns, or closed registers", verdict: "Open and repair those before blaming the equipment. They drop delivered CFM and skew every refrigerant-side number." },
+        { label: "Everything checks out - filter, coil, blower setting, dampers and registers", verdict: "Airflow is verified. Now clean the outdoor coil and check the condenser fan, then re-take superheat and subcooling and make your charge decision on those numbers." },
+      ],
+    },
+    {
+      ask: "Head pressure and subcooling still look high. Check the outdoor coil and condenser fan. What do you find?",
+      options: [
+        { label: "Outdoor coil dirty or condenser fan weak", verdict: "Poor condenser airflow drives head pressure and subcooling exactly like an overcharge. Clean the coil, fix the fan, then re-read before removing any refrigerant." },
+        { label: "Outdoor coil clean and fan running normally", verdict: "Airflow is verified on both sides. Re-take superheat and subcooling now and decide on the charge from those numbers." },
       ],
     },
   ],
@@ -15061,6 +16879,31 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Outdoor whip, condenser fan leads, or another weather- or vibration-exposed spot", verdict: "Use a sealed weatherproof connector, or a crimped and heat-shrunk butt splice, instead of a standard interior wire nut." },
         { label: "Indoor, low-vibration location", verdict: "Repair with a properly sized connector for the gauge and conductor count." },
+      ],
+    },
+  ],
+  "s-wrong-mfd-capacitor-installed": [
+    {
+      ask: "Power off, locked out, capacitor discharged. Read the MFD stamped on the installed capacitor and compare it to what the motor data tag or wiring diagram calls for. How do they compare?",
+      options: [
+        { label: "Installed MFD is lower than the rated value", verdict: "Wrong part. Never install a lower MFD than rated - put in a capacitor that matches the rated value." },
+        { label: "Installed MFD is above rated by more than the small tolerance trade sources allow", verdict: "Also wrong. Guidance allows only a small tolerance above rated, not an arbitrary bump. Install the rated value." },
+        { label: "Installed MFD matches the rating on the data tag or diagram", verdict: "The value is right. Now verify the capacitor actually delivers that capacitance under load and check the motor's amp draw." },
+      ],
+    },
+    {
+      ask: "With the correct capacitor in and power restored, clamp the motor's run and start (aux) leads. How do they read against the motor nameplate FLA?",
+      options: [
+        { label: "At or below nameplate FLA", verdict: "The motor is loading normally. Now find out why the original capacitor failed so the new one does not go the same way." },
+        { label: "Above nameplate FLA", verdict: "Do not stop at the capacitor. Look for high head pressure, restricted condenser airflow, or a hot electrical compartment loading the motor." },
+      ],
+    },
+    {
+      ask: "Look for the reason the first capacitor failed. What do you find?",
+      options: [
+        { label: "Restricted condenser airflow or high head pressure", verdict: "Correct that. A capacitor cooking in a high-head condition fails again no matter how good the replacement part is." },
+        { label: "Hot electrical compartment, or the prior repair used an undersized replacement", verdict: "Fix the heat source and confirm the correct MFD is now installed - that combination is what shortened the motor's life." },
+        { label: "Nothing obvious - conditions look normal", verdict: "Verify the capacitor's actual delivered capacitance under load rather than trusting the printed value, and note your findings on the ticket." },
       ],
     },
   ],
@@ -15548,6 +17391,30 @@ const SYMPTOM_FOLLOWUPS = {
       options: [
         { label: "Test ran its full 5 to 15 minutes and completed", verdict: "Good. Return to that screen and select Charge Mode to confirm the refrigerant level in the system is correct." },
         { label: "Test was interrupted before it finished", verdict: "An interrupted test leaves the system operating incorrectly. Start the System Test again from the Zone 1 thermostat and let it run the full 5 to 15 minutes without interruption." },
+      ],
+    },
+  ],
+  "s-zoned-fan-on-dumps-air-into-zones": [
+    {
+      ask: "Check every zone thermostat's fan setting, not just the one that is complaining. What do you find?",
+      options: [
+        { label: "One or more zones are set to fan ON or CIRCULATE", verdict: "That is the likely cause - most zone panels drive all dampers open on a fan-only call, so continuous fan sends whatever is in the ducts into satisfied zones too. Set them all to AUTO and watch for a day or two." },
+        { label: "All zones are already on AUTO", verdict: "Then look at the panel's purge or blower-off delay, and at whether the closed dampers are actually sealing." },
+      ],
+    },
+    {
+      ask: "Watch the damper positions during a fan-only period. What do the dampers do?",
+      options: [
+        { label: "All dampers drive open", verdict: "That is normal on most panels so the blower is not deadheaded. Check the zone panel documentation for a configurable fan-only damper position." },
+        { label: "Dampers stay in their called positions", verdict: "Then the drift is coming from somewhere else. Check the purge and blower-off delay, and whether closed dampers leak." },
+      ],
+    },
+    {
+      ask: "With a single zone calling, check the closed dampers and the bypass. What do you find?",
+      options: [
+        { label: "A closed damper is not sealing", verdict: "That produces the same complaint even on AUTO. Repair or replace the damper." },
+        { label: "Bypass damper is running wide open", verdict: "It is recirculating supply air back to the return and worsening the temperature drift. Correct the bypass setup." },
+        { label: "Dampers seal and the bypass is set correctly", verdict: "Then it is the fan setting and the purge delay. If the customer needs circulation, see whether the panel supports a timed circulate mode and set expectations about zone drift." },
       ],
     },
   ],
