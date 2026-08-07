@@ -16952,5 +16952,82 @@ const SYMPTOMS = [
    "A lockout means it tripped five times. Find the cause before resetting"
   ],
   "confidence": "common"
+ },
+ {
+  "id": "s-elec-path-outdoor",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Outdoor unit is dead — walk the power from the disconnect to the compressor (start here)",
+  "summary": "Nothing happens at the condenser. This walks the power path in order so you find where it stops instead of guessing at parts.",
+  "steps": [
+   "Work in order and do not skip ahead — the whole point is to find the FIRST place power stops",
+   "Kill power at the breaker AND the disconnect, then prove your meter live-dead-live before you trust any dead reading",
+   "Step 1: line side of the disconnect, L1 to L2 — is the power even getting to the unit?",
+   "Step 2: load side of the disconnect — this is where blown fuses and burnt lugs show up",
+   "Step 3: line side of the contactor — confirms the whip and lugs are intact",
+   "Step 4: 24V on the contactor coil with a cooling call — no 24V means the problem is indoors, not out here",
+   "Step 5: is the contactor actually pulled in, and does each pole pass voltage once it is?",
+   "Step 6: only after power reaches the load do you look at the capacitor, then the motor windings",
+   "Any time you find burnt, melted, or discolored wiring, stop and hand it off — do not re-energize it"
+  ],
+  "safety": "This is live 240V work. Prove your meter live-dead-live, use the right CAT-rated meter, and discharge the capacitor before touching it. If a breaker has already tripped, you get ONE reset — never a second.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-elec-path-furnace",
+  "equipment": "Gas Furnace",
+  "title": "Furnace is dead — walk the power from the breaker to the board (start here)",
+  "summary": "No lights, no blower, nothing on a call. This walks 115V in, through the transformer, to 24V at the board, in order.",
+  "steps": [
+   "Work in order — find the FIRST place power stops rather than swapping parts",
+   "Step 1: 115V at the furnace junction box, hot to neutral, with the door switch engaged or held in",
+   "Step 2: the board's diagnostic LED — a lit or flashing LED means the board has power and is telling you something, so read the code first",
+   "Step 3: if the board is dark, check line voltage at the transformer PRIMARY",
+   "Step 4: check the transformer SECONDARY for 24V",
+   "Step 5: check 24V at the board itself, R to C — 24V at the transformer but only about 13V at R-C is the classic blown board fuse",
+   "Step 6: with 24V confirmed, jumper R to W at the board to take the thermostat out of the picture",
+   "Step 7: if it still will not fire with R-W jumpered, the safety string is open — go to the limit/rollout/pressure switch walkthrough",
+   "Never leave a jumper on a safety. Use it to confirm a diagnosis, then take it off"
+  ],
+  "safety": "Line voltage is present with the door switch defeated. Prove your meter live-dead-live. If you smell gas, stop — evacuate and follow the gas leak procedure before any electrical work.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-elec-safety-string-walk",
+  "equipment": "Gas Furnace",
+  "title": "24V is good but the furnace still won't fire — walking the limit, rollout and pressure switch string",
+  "summary": "Power is proven to the board and a call is present, but nothing happens. The safeties are wired in series, so one open switch stops everything.",
+  "steps": [
+   "The safeties are a series string: limit, rollout, pressure switch, door switch. Any one open stops the whole thing",
+   "Put one meter lead on C and leave it there. Walk the other lead along the string with the call active — this is the hopscotch method",
+   "As long as you read 24V you are still upstream of the open. The moment it drops to zero, the open is between your last good reading and this one",
+   "Confirm by reading directly ACROSS the suspect switch: a closed switch drops essentially nothing, an open one drops the full 24V",
+   "Now the important part — decide whether that switch is FAILED or whether it is correctly doing its job",
+   "A limit that opened after a run is almost always airflow: filter, coil, blower, or closed-off duct",
+   "A rollout that tripped means flame left the burner box. That is a combustion problem, not a switch problem",
+   "A pressure switch that will not close is usually the inducer, the vent, or a blocked drain — not the switch",
+   "Do not jumper a safety to keep the equipment running"
+  ],
+  "safety": "A tripped rollout or a limit that keeps opening means the furnace was doing something unsafe. Find the cause. Never jumper a safety and walk away, and never reset a rollout repeatedly without finding why it tripped.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-elec-when-to-hand-off",
+  "equipment": "Other",
+  "title": "When to stop and hand an electrical problem to a senior tech",
+  "summary": "Knowing where your part ends is a skill, not a failure. These are the calls where being wrong is expensive or dangerous.",
+  "steps": [
+   "Breaker trips a second time — you get ONE reset. A breaker that trips again is telling you something is shorted or grounded, and repeated resets are how people get hurt and compressors get destroyed",
+   "Anything that looks or smells burnt — melted lug, scorched board, discolored wire, burnt smell. Do not re-energize it to 'see what happens'",
+   "Suspected grounded compressor, or anything that needs a megohmmeter — the reading is easy to take and easy to misread, and a compressor is the most expensive wrong call on the truck",
+   "Inverter or variable-speed drive boards — the DC bus capacitors hold a lethal charge after power-off. If you have not been trained on the discharge procedure, stop",
+   "Three-phase, high-leg (wild leg) delta, or anything at a panel or service entrance",
+   "A rollout or limit that tripped and you cannot find why — the switch did its job, and putting it back without the cause is handing the customer a hazard",
+   "Gas-side work beyond the electrical: manifold pressure, gas valve replacement, combustion adjustment",
+   "Any time the wiring itself looks wrong for the equipment — breaker or wire size that does not match the nameplate MCA and MOCP",
+   "What is NOT a handoff: you walked the power path, proved voltage reaches the load, and the load is dead. That is a normal parts call. Make it"
+  ],
+  "safety": "There is no penalty for calling. There is a real penalty for a second breaker reset, an undischarged drive capacitor, or a rollout put back without a cause.",
+  "confidence": "common"
  }
+
 ];

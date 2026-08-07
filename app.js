@@ -2069,7 +2069,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v73";
+const APP_VERSION = "v74";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
