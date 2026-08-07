@@ -1775,6 +1775,26 @@ function ccApplyScan() {
   const box = document.getElementById("ccScanResult");
   if (!outModel && !inModel) { box.innerHTML = ""; return; }
 
+  // Furnaces have no business in a refrigerant charging calc - a furnace
+  // model says nothing about the condenser, its refrigerant, or its charge.
+  // Catch them by the same pattern table the tag scanner uses and say so
+  // instead of half-matching something.
+  const isFurnace = (m) => {
+    if (!m) return false;
+    const id = identifyModel(m, "", null);
+    return !!(id && /Furnace/i.test(id.equipment || ""));
+  };
+  if (isFurnace(outModel)) {
+    box.innerHTML = `<div class="cc-scan-miss"><strong>${escapeHtml(outModel)}</strong> is a furnace — the charging scan needs the OUTDOOR unit's tag. Scan the condenser or heat pump data plate instead (and the indoor coil/air handler for matchup tables).</div>`;
+    trackEvent("charge scan rejected furnace: " + outModel);
+    return;
+  }
+  if (isFurnace(inModel)) {
+    box.innerHTML = `<div class="cc-scan-miss"><strong>${escapeHtml(inModel)}</strong> is a furnace — for the indoor side, scan the COIL or air-handler tag (that is what the matchup tables are keyed by), not the furnace.</div>`;
+    trackEvent("charge scan rejected furnace: " + inModel);
+    return;
+  }
+
   // What the model number alone already tells us, chart or no chart.
   const autoSet = [];
   const eff = ccInferEff(outModel);
@@ -2481,7 +2501,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v89";
+const APP_VERSION = "v90";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
