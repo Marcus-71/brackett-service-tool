@@ -1690,6 +1690,63 @@ function ccMatchRow(chart, outModel, inModel) {
   return bestIdx;
 }
 
+// Efficiency tier straight from the model number. Most residential families
+// embed the nominal SEER right after the family prefix (GSX16, RA14, XC13,
+// DX13SA); Trane single-digit tiers read 4TTR4 = 14. Inverter/variable-speed
+// families are high-efficiency by construction. Returns "std", "high", or
+// null when the model doesn't say - null means leave the picker alone.
+function ccInferEff(model) {
+  const m = ccNormModel(model);
+  if (!m) return null;
+  // inverter / variable-speed families - always high-efficiency condensers
+  if (/^(ML15KSPV|ML16KP|SL22KLV|SL25|SL28|XP2[0-9]|XC2[0-9]|EL18KCV|EL22|GSXV|GSZV|ASXV|ASZV|AVZC|GVZC|24VNA|25VNA|DX20VC|DZ20VC|D[CHZ][679]VS|DZ17VS|RA20|RP20)/.test(m)) return "high";
+  let n = null, x;
+  if ((x = m.match(/^(?:GSX|GSZ|ASX|ASZ|DSX|DSZ|SSX|SSZ|ANX|ANZ|VSX|VSZ|GSC|GSH|GLXS|GLZS)(\d{2})/))) n = +x[1];
+  else if ((x = m.match(/^D[XZ](\d{2})(?:S|TC)/))) n = +x[1];
+  else if ((x = m.match(/^(?:RA|WA|RP|WP|RD)(\d{2})/))) n = +x[1];
+  else if ((x = m.match(/^[45]T[TW][RXBZV](\d)/))) n = x[1] === "0" ? 20 : 10 + +x[1];
+  else if ((x = m.match(/^X[CP](\d{2})/))) n = +x[1];
+  else if ((x = m.match(/^(\d{2})(?:ACX|HPX)/))) n = +x[1];
+  else if ((x = m.match(/^EL(\d{2})X/))) n = +x[1];
+  else if ((x = m.match(/^ML(\d{2})X/))) n = +x[1];
+  if (n == null || n < 10 || n > 26) return null;
+  return n >= 15 ? "high" : "std";
+}
+
+// Refrigerant from the model family, for units with no chart in the library.
+// Conservative by design: only families whose refrigerant generation is
+// unambiguous. Trane's leading digit literally encodes it (4 = R-410A,
+// 5 = R-454B; the R-22 era was 2). R-22 families (GSC13/GSH13...) return
+// null - the calc has no R-22 tables and guessing would be worse.
+function ccInferRefrig(model) {
+  const m = ccNormModel(model);
+  if (!m) return null;
+  // R-454B era
+  if (/^(ML15KSPV|ML16KP|SL22KLV|EL18KCV|EL22KCV|5T[TW][RXW])/.test(m)) return "R-454B";
+  // R-32 era (outdoor units only - a furnace model like DR96 says nothing
+  // about which refrigerant the paired condenser runs)
+  if (/^(GLXS|GLZS|D[CH][345]S[QE]|DC6VS|DH6VS|DC9VS|DH7VS|DH9VS)/.test(m)) return "R-32";
+  // R-410A era
+  if (/^(GSX1|GSZ1|ASX1|ASZ1|DSX1|DSZ1|SSX1|SSZ1|ANX1|ANZ1|VSX1|VSZ1|GSXV|GSZV|ASXV|ASZV|AVZC|GVZC)/.test(m)) return "R-410A";
+  if (/^(DX1[3-8]|DZ1[3-8]|DX20VC|DZ20VC|DZ17VS)/.test(m)) return "R-410A";
+  if (/^4T[TW][RXBZV]/.test(m)) return "R-410A";
+  if (/^(X[CP]1[3-9]|X[CP]2[0-9]|1[346]ACX|14HPX|ML1[467]X|EL1[678]X|SL2[58]X)/.test(m)) return "R-410A";
+  if (/^(RA1[3-9]|RA20|RP1[4-9]|RP20|WA1[3-5]|WP1[4-5])/.test(m)) return "R-410A";
+  if (/^(24VNA|25VNA|24A[BC]|25H[BC])/.test(m)) return "R-410A";
+  if (/^Y[CH][JG]/.test(m)) return "R-410A";
+  return null;
+}
+
+// Metering from a matched chart's own meteringDevice line - only when the
+// document actually commits to one.
+function ccInferMeter(chart) {
+  const d = String(chart && chart.meteringDevice || "").toLowerCase();
+  if (!d || d.includes("both") || d.includes("not stated")) return null;
+  if (d.includes("orifice") || d.includes("piston")) return "orifice";
+  if (d.includes("txv") || d.includes("eev")) return "txv";
+  return null;
+}
+
 async function ccScanPhoto(which, file) {
   const st = document.getElementById("ccScanStatus");
   const show = (msg) => { if (msg) { st.textContent = msg; st.classList.remove("hidden"); } else st.classList.add("hidden"); };
@@ -1718,6 +1775,24 @@ function ccApplyScan() {
   const box = document.getElementById("ccScanResult");
   if (!outModel && !inModel) { box.innerHTML = ""; return; }
 
+  // What the model number alone already tells us, chart or no chart.
+  const autoSet = [];
+  const eff = ccInferEff(outModel);
+  if (eff) {
+    const effSel = document.getElementById("cc-eff");
+    if (effSel.value !== eff) { effSel.value = eff; }
+    autoSet.push("condenser type: " + (eff === "high" ? "high-efficiency (15+ SEER)" : "standard (up to ~14 SEER)") + " from the model number");
+  }
+  const refrigGuess = ccInferRefrig(outModel);
+  if (refrigGuess) {
+    const sel = document.getElementById("cc-refrig");
+    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(refrigGuess));
+    if (want && sel.value !== want.value) {
+      sel.value = want.value;
+      autoSet.push("refrigerant: " + refrigGuess + " from the model family");
+    }
+  }
+
   let hits = ccMatchCharts(outModel);
   // Indoor-only scan: offer any matchup chart whose rows mention this indoor.
   if (!hits.length && inModel) {
@@ -1726,9 +1801,27 @@ function ccApplyScan() {
       .map(c => ({ chart: c, score: 1 }));
   }
   if (!hits.length) {
-    box.innerHTML = `<div class="cc-scan-miss">No factory chart for <strong>${escapeHtml(outModel || inModel)}</strong> in the offline library — the rule-of-thumb targets below still apply. Check the unit's own charging sticker or nameplate subcool value and enter it above.</div>`;
+    box.innerHTML = `<div class="cc-scan-miss">No factory chart for <strong>${escapeHtml(outModel || inModel)}</strong> in the offline library — the rule-of-thumb targets below still apply. Check the unit's own charging sticker or nameplate subcool value and enter it above.</div>`
+      + (autoSet.length ? `<div class="cc-scan-applied">✅ Auto-set ${escapeHtml(autoSet.join("; "))}.</div>` : "");
     trackEvent("charge scan no chart: " + (outModel || inModel));
+    renderChargeCalc();
     return;
+  }
+  // Metering device, when the matched document commits to one.
+  const meter = ccInferMeter(hits[0].chart);
+  if (meter) {
+    document.getElementById("cc-meter").value = meter;
+    autoSet.push("metering: " + (meter === "txv" ? "TXV/EEV" : "fixed orifice/piston") + " from the factory chart");
+  }
+  // Refrigerant follows the BEST-matched chart - the document beats the
+  // model-family guess when both speak.
+  {
+    const sel = document.getElementById("cc-refrig");
+    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(hits[0].chart.refrigerant));
+    if (want && sel.value !== want.value) {
+      sel.value = want.value;
+      autoSet.push("refrigerant: " + hits[0].chart.refrigerant + " from the factory chart");
+    }
   }
 
   const cards = [];
@@ -1754,18 +1847,16 @@ function ccApplyScan() {
     } else {
       trackEvent("charge scan matched chart: " + chart.id);
     }
-    // Refrigerant follows the matched chart so the P/T math is right.
-    const sel = document.getElementById("cc-refrig");
-    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(chart.refrigerant));
-    if (want) sel.value = want.value;
     cards.push(`<div class="cc-scan-hit">
       <div><strong>${escapeHtml(chart.brand)}</strong> — ${escapeHtml(chart.refrigerant)} factory chart${rowIdx !== -1 ? "" : (inModel ? " (indoor model didn't match a row — open the chart and pick your matchup)" : " (scan or type the indoor model to pin your exact row)")}</div>
       ${rowHtml}
       <button class="cc-chart-link" data-chart="${escapeHtml(chart.id)}">📋 Open the full chart</button>
     </div>`);
   }
+  const notes = autoSet.slice();
+  if (applied) notes.push(`subcool target: <strong>${applied.n}°F</strong> from the factory table (${escapeHtml(applied.key)}) — the readings below now judge against the printed number, not the 10°F default`);
   box.innerHTML = cards.join("")
-    + (applied ? `<div class="cc-scan-applied">✅ Subcool target set to <strong>${applied.n}°F</strong> from the factory table (${escapeHtml(applied.key)}) — the readings below now judge against the printed number, not the 10°F default.</div>` : "");
+    + (notes.length ? `<div class="cc-scan-applied">✅ Auto-set — ${notes.map(n => /</.test(n) ? n : escapeHtml(n)).join("; ")}.</div>` : "");
   box.querySelectorAll(".cc-chart-link").forEach(b => { b.onclick = () => openChargingChart(b.dataset.chart); });
   renderChargeCalc();
 }
@@ -2390,7 +2481,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v88";
+const APP_VERSION = "v89";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
