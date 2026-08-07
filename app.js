@@ -1632,6 +1632,10 @@ const MODEL_PATTERNS = [
   { re: /^D[CHXZ](17|20)V[SC]/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin FIT/premium inverter outdoor (DZ17VSA / DX20VC / DZ20VC class)", notes: ["E-code table in Error Codes applies (DX20VC/DZ20VC service manual is in Manuals → Daikin — codes E31/E45 are specific to that platform)."] },
   { re: /^D[CH][345]S[QE]/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin R-32 single-stage AC/heat pump (DC3S/DC4S/DC5S/DH4S/DH5S)", notes: ["Copeland CoreSense/ComfortAlert diagnostics — alert codes 01-09 in Error Codes apply.", "R-32 single-stage service manual RS6200301 is in Manuals → Daikin."] },
   { re: /^DR96SN/, brand: "Daikin", equipment: "Gas Furnace", series: "Daikin DR96SN single-stage multi-speed 96-97% furnace (R-32-era lineup)", notes: [] },
+  // Prior-generation Daikin unitary, confirmed against Daikin's own spec
+  // sheets (SS-DX13SA on daikincomfort.com) and product pages (DP14GM/DP14HM).
+  { re: /^D[XZ]1[3-6]S[AN]/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin single-stage condenser or heat pump (DX/DZ 13-16 S-series — prior generation)", notes: ["Goodman GSX/GSZ platform — service manual RS6200006 in Manuals → Goodman applies.", "Comfort Alert-style codes 01-09 apply if a monitor module is fitted."] },
+  { re: /^DP1[3-6][GH][MEC]/, brand: "Daikin", equipment: "Other", series: "Daikin packaged unit (DP GM gas-electric / DP HM heat pump)", notes: ["Goodman package platform — the package-unit manuals in Manuals → Goodman → Packaged units apply."] },
   { re: /^DV[0-9]{2}[FP]EC/, brand: "Daikin", equipment: "Air Handler", series: "Daikin DV**FEC/PEC EEV air handler (R-32 FIT indoor)", notes: ["Air-handler code table (EE/Eb/Ed/E5/EF, d/b series, 70-77) in Error Codes applies.", "R-32 FIT system service manual is in Manuals → Daikin."] },
   { re: /^D[FM]VE/, brand: "Daikin", equipment: "Air Handler", series: "DFVE/DMVE EEV-series communicating air handler (Daikin FIT indoor)", notes: ["Air-handler diagnostic codes (EC/EE/EF, d, b series) are in Error Codes."] },
   { re: /^DOZP/, brand: "Daikin", equipment: "Other", series: "Daikin One zone panel (DOZP)", notes: ["Zone error codes 25-95 and DOZP troubleshooting flows are in Diagnostic Help (search 'DOZP')."] },
@@ -1650,6 +1654,11 @@ const MODEL_PATTERNS = [
   // manuals in our library cover the newer naming.
   { re: /^(GMSS|GCSS|GMES|GCES|GMEC|GCEC)9[26]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 92/96% furnace (GMSS/GMES single-stage, GMEC two-stage — prior generation)", notes: ["Flash codes and E-codes in Error Codes apply — same board families as the current lineup."] },
   { re: /^(GMS|GDS|GHS|GME|GMH|GDH)8[0-9]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 80% furnace (GMS8/GDS8/GHS8 single-stage, GME8/GMH8/GDH8 two-stage — prior generation)", notes: ["Goodman flash codes in Error Codes apply."] },
+  // 90-95% legacy lineup, confirmed against Goodman's own spec sheets
+  // (SS-GMV95, SS-GMH95, SS-GKS9) and install manual GMH95/GCH95/GME95/GCH9.
+  { re: /^(GMV9|GCV9|GMH9|GCH9|GME9|GKS9)[0-9]?/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 90-95% furnace (GKS9 single-stage, GMH95/GME95 two-stage, GMV95 variable-speed — prior generation)", notes: ["Goodman flash codes in Error Codes apply."] },
+  { re: /^(GSC1[3-6]|GSH1[3-6])/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman GSC/GSH condenser or heat pump (13-16 SEER — prior generation, R-22 and early R-410A)", notes: ["Service manual RS6200006 family applies; check the data plate for refrigerant type before gauging up."] },
+  { re: /^(CAPF|CAPT|CAUF|CHPF|CSCF)[0-9]/, brand: "Goodman", equipment: "Other", series: "Goodman/Amana/Daikin cased evaporator coil (CAPF/CAPT/CAUF/CHPF/CSCF)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs."] },
   { re: /^(GMVC|GCVC|AMVC|ACVC)9[67]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana two-stage variable-speed furnace (ComfortNet)", notes: ["Uses the shared ComfortNet dual 7-segment code set — see Goodman codes in Error Codes.", "Service manual RS6612014 is in Manuals → Goodman."] },
   { re: /^(GMVM|GCVM|AMVM|ACVM)9[78]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 97-98% modulating communicating furnace (Daikin DM97MC platform)", notes: ["Same code set as the Daikin DM97MC entries in Error Codes (E0-b9).", "Service manual RS6612015 is in Manuals → Goodman."] },
   { re: /^(GR9S|AR9S)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana GR9S/AR9S single-stage multi-speed 96-97% furnace (R-32-era lineup)", notes: [] },
@@ -1686,6 +1695,14 @@ const MODEL_PATTERNS = [
   // Mini-split platform shared across Carrier/Bryant/Payne badges.
   { re: /^(3[78]M|40M|45M|538K|615[AP]HA|DHM|D5MAHA)/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier/Bryant/Payne-branded ductless mini-split", notes: ["Same underlying mini-split platform is sold under all three badges."] },
   { re: /^(F[EJTM]5|FE4A|FE5A|FV4C|FX4D|FB4C|PF5M)[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne air handler", notes: [] },
+  // Prior-generation fan coils, confirmed against Carrier's own product data
+  // (FA4A-9PD covers FA4A/FB4A/FC4B; FY4A/FA4C product data on Carrier docs).
+  { re: /^(FA4[AC]|FB4[AB]|FC4[BC]|FY4[AC]|FX4[ABC])[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne fan coil (FA4/FB4/FC4/FY4/FX4 — prior generation)", notes: [] },
+  { re: /^CNPV[PTU][0-9]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant/Payne cased N coil (CNPVP/CNPVT)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs."] },
+  // Residential/light-commercial packaged units, confirmed against Carrier's
+  // own product data (48ES-05PD; shareddocs SUP covering 48/50 ES-EZ-VL-VT).
+  // 48TC/48HC rooftops carry the IGC board whose codes are in Error Codes.
+  { re: /^(48|50)(ES|EZ|VL|VT|VG|SD|GC|TC|HC|LC)[A-Z0-9-]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant packaged unit (48 = gas-electric, 50 = electric/heat pump)", notes: ["On 48TC/48HC/Bryant 580J rooftops, the IGC board flash codes (1-9, steady, off) are in Error Codes."] },
   // Confirmed against Carrier's own residential AC/HP service manual (24-25-2SM)
   // and a matching Bryant install manual — the serial format below is real,
   // scoped to split AC/HP units 2006+, and now implemented in decodeSerialAge.
@@ -1700,6 +1717,11 @@ const MODEL_PATTERNS = [
   { re: /^(SL22KLV|ML16K[SP])/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox R-454B heat pump (SL22KLV / ML16KP2)", notes: ["R-454B (A2L) — the indoor side carries refrigerant detection; codes 150-164 are in Error Codes.", "Service manual is in Manuals → Lennox.", "Inverter-driven: gauge-pressure charging targets don't apply the same way — check the unit's charging procedure."] },
   { re: /^(SL25XPV|SL25XCV|SL28XCV|XP2[015]|XC2[0145]|EL1[678]X|EL22XPV)/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox communicating AC/heat pump", notes: ["Alert codes 400-446 for these outdoor units are in Error Codes (shown on the S30/S40 thermostat).", "Inverter units: alert code 427 during defrost has a known inverter software fix — units after serial 5817F already have it."] },
   { re: /^1[346]ACX|^14HPX|^ML1[467]X/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Merit AC/heat pump", notes: [] },
+  // Prior-generation Elite outdoor units (lennox.com product-spec pages for
+  // XC13; Lennox's own XP14 literature) and legacy G-series furnaces
+  // (Lennox service literature: G40UH corp 0006-L3, G60UH corp 0204-L2).
+  { re: /^X[CP]1[3-9]/, brand: "Lennox", equipment: "Condenser/Heat Pump", series: "Lennox Elite XC (AC) / XP (heat pump) — prior generation", notes: ["Communicating-capable later models report numbered alert codes in Error Codes."] },
+  { re: /^G(40|50|51|60|61)[A-Z]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox legacy G-series gas furnace (G40/G50/G51/G60/G61)", notes: ["SureLight board era - two-LED flash diagnostics; service literature for several G-series models is in Manuals → Lennox."] },
   { re: /^LRP1[46]/, brand: "Lennox", equipment: "Other", series: "Lennox LRP14/LRP16 residential packaged unit (gas-electric or heat pump)", notes: ["Service manual is in Manuals → Lennox → LRP14/LRP16.", "LRP14HP: nuisance low-pressure lockouts below 30°F are usually the defrost timer left on the 90-minute default — see Diagnostic Help.", "LRP14HP has a known incorrect-wiring-diagram notice; LRP16HP has a 9-pin relay mis-wiring notice — both in Manuals → Lennox."] },
   // Mini-splits. Current families are MWLD/MWPD/MWHD (indoor) and MMPD/MMLD
   // (outdoor, single and multi-zone); the older platform is MLB/MPC/3PC/3PB
@@ -1730,9 +1752,20 @@ const MODEL_PATTERNS = [
   { re: /^TM9V|^TM9E|^TM8|^TG9S|^TG8S/, brand: "York", equipment: "Gas Furnace", series: "York/Luxaire/Coleman TM/TG gas furnace", notes: ["TM9V install manual is in Manuals → York."] },
   { re: /^YC[JGESD]|^YFK|^YCG/, brand: "York", equipment: "Condenser/Heat Pump", series: "York AC condenser", notes: [] },
   { re: /^Y[HZ][JGEF]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York heat pump", notes: [] },
+  // Air handlers confirmed against JCI's own literature: AHE single-piece
+  // 3-position (UIM 697883), AHR technical guide, AVC communicating
+  // (york.com), JHET fixed-speed (luxaire.com).
+  { re: /^(AH[ERVX]|AV[CV]|MVC|JHET)[0-9]/, brand: "York", equipment: "Air Handler", series: "York/Luxaire/Coleman air handler (AHE/AHR/AHV/AVC/AVV/MVC/JHET)", notes: [] },
+  // Coleman EB-series mobile-home electric furnace (EB10B-EB23B) — the
+  // companion to the DGAA/DGAH gas furnaces already covered.
+  { re: /^EB[12][0-9][A-Z]/, brand: "York", equipment: "Electric Furnace", series: "Coleman EB-series mobile-home electric furnace", notes: ["Work it with the electric furnace scenarios in Diagnostic Help - sequencers, limits, and element checks all apply.", "Same mobile-home platform as the DGAA/DGAH gas furnaces."] },
   // --- Rheem / Ruud ---
   { re: /^R9[2567][0-9]?[TVMP]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud R9x condensing gas furnace", notes: ["PlusOne 7-segment diagnostics on board; EcoNet-capable models report codes to the EcoNet stat."] },
   { re: /^R80[12][TV]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud 80% gas furnace", notes: [] },
+  // Legacy Classic-era furnaces, confirmed against Rheem's own literature
+  // (G11-518 RGPH spec, G11-532 RGRA/RGRB, and the pts.myrheem historical
+  // IO covering RGRA/RGRB/RGTA/RGRS/RGTS/RGRT).
+  { re: /^RG[PRT][AHBST]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud Classic-era gas furnace (RGPH/RGRA/RGRB/RGTA/RGRS/RGTS/RGRT — prior generation)", notes: ["Flash-code board era - the rh-f flash codes in Error Codes apply to most of these controls."] },
   // Ruud's own top ("Ultra"/"Achiever Plus") tier gets a distinct U-prefix not
   // shared with Rheem — everything else Ruud sells uses the SAME R/W-prefix
   // letters as Rheem (no simple letter swap, despite that being commonly
@@ -1754,6 +1787,10 @@ const MODEL_PATTERNS = [
   { re: /^MSZ|^MFZ|^MLZ|^SLZ|^SEZ|^SVZ|^PKA|^PLA|^PCA|^PEAD|^PVA/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi indoor unit", notes: ["Check indoor LED blink pattern; MXZ outdoor service manual is in Manuals → Mitsubishi."] },
   { re: /^MUZ|^MXZ|^MUFZ|^PUZ|^SUZ/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi outdoor unit — heat pump (MXZ = multi-zone)", notes: ["MXZ service manual with check codes is in Manuals → Mitsubishi.", "Officially confirmed 3rd-letter convention: Z = heat pump, Y = cooling only (e.g. MUZ vs MUY, PUZ vs PUY)."] },
   { re: /^MUY|^PUY/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi outdoor unit — cooling only", notes: ["Cooling-only: no heating mode. Check the indoor head's own capability before assuming heat is available.", "MXZ service manual with check codes is in Manuals → Mitsubishi."] },
+  // MVZ multi-position air handler (mylinkdrive/mitsubishicomfort official)
+  // and PUMY single-phase multi-zone outdoor (P-series on mylinkdrive).
+  { re: /^MVZ[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Air Handler", series: "Mitsubishi MVZ multi-position air handler (ducted indoor for MXZ multi-zone)", notes: ["Pairs with MXZ outdoor units - the MXZ LED1/LED2 codes in Error Codes cover the outdoor side."] },
+  { re: /^PUMY[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi PUMY multi-zone outdoor unit (P-series/CITY MULTI S)", notes: ["Check codes surface on the indoor controllers - see Mitsubishi codes in Error Codes."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -2185,7 +2222,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v84";
+const APP_VERSION = "v85";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
