@@ -34026,5 +34026,180 @@ const SYMPTOM_FOLLOWUPS = {
     }
    ]
   }
+ ],
+ "s-elec-path-minisplit": [
+  {
+   "ask": "Before you open anything - where are you at on safety?",
+   "options": [
+    {
+     "label": "Power killed at breaker and disconnect, meter proved live-dead-live, capacitor wait time observed",
+     "next": 1
+    },
+    {
+     "label": "Not yet",
+     "verdict": "Do that first. Kill power at BOTH the breaker and the outdoor disconnect, prove the meter live-dead-live, and observe the capacitor discharge wait time posted on the unit before touching the outdoor board. Inverter DC will hurt you after the power is off."
+    },
+    {
+     "label": "I can see burnt wire, a melted lug, or I smell something scorched",
+     "verdict": "HAND IT OFF. Do not re-energize it. Photograph it, leave it de-energized, and get a senior tech on it - the cause of the overheating is still there."
+    }
+   ]
+  },
+  {
+   "ask": "Step 1 - line side of the outdoor disconnect against the nameplate voltage. What do you have?",
+   "options": [
+    {
+     "label": "At or near nameplate voltage",
+     "next": 2
+    },
+    {
+     "label": "Zero or nowhere near it",
+     "verdict": "The problem is upstream of the disconnect - breaker, feeder, or panel. Check whether the breaker is tripped or the handle feels dead, and check for a double-tap or burnt feeder lug at the panel. If the breaker trips again on reset, stop resetting it and find the fault."
+    }
+   ]
+  },
+  {
+   "ask": "Step 2 - load side of the disconnect. Same reading as the line side?",
+   "options": [
+    {
+     "label": "Yes, full voltage passes through",
+     "next": 3
+    },
+    {
+     "label": "Voltage on line side but not load side",
+     "verdict": "The disconnect itself: a blown fuse, a burnt lug, or a failed pull-out. Pull the fuses and ohm them individually. Replace like-for-like and find out WHY a fuse blew before you walk away."
+    }
+   ]
+  },
+  {
+   "ask": "Step 3 - L1/L2 at the outdoor unit terminal block. Power arriving?",
+   "options": [
+    {
+     "label": "Yes, nameplate voltage at the terminal block",
+     "next": 4
+    },
+    {
+     "label": "No - dead at the terminal block",
+     "verdict": "The whip between the disconnect and the unit is the fault. Look for a chafed or crushed conductor, a wire pulled out of a wire nut, or a burnt termination at either end. Repair with proper connectors - do not tape a burnt lug back together."
+    }
+   ]
+  },
+  {
+   "ask": "Step 4 - power terminals for the indoor unit (1 and 2, or S1/S2) at the OUTDOOR terminal block. What do you read?",
+   "options": [
+    {
+     "label": "Nameplate voltage present on the indoor feed terminals",
+     "next": 5
+    },
+    {
+     "label": "Dead on the indoor feed terminals with L1/L2 hot",
+     "verdict": "Power reaches the outdoor unit but is not making it onto the indoor feed. On most ductless the indoor feed comes THROUGH the outdoor unit - check the outdoor board fuse and the terminal block jumpers/lugs. A blown board fuse usually has a reason: look for a scorched varistor or evidence of a surge before replacing it."
+    }
+   ]
+  },
+  {
+   "ask": "Step 5 - same terminals at the INDOOR unit. Did the power make the trip?",
+   "options": [
+    {
+     "label": "Yes - indoor terminals are hot but the head is still dead",
+     "verdict": "Power reaches the indoor unit, so the interunit cable is good. Suspect the indoor board: check its fuse first, then the connector between the terminal strip and the PCB. If the head has power and a good fuse but shows no sign of life at all, the indoor PCB is the likely failure - confirm with the brand's board LED/self-test procedure from Error Codes before replacing it."
+    },
+    {
+     "label": "No - hot outside, dead inside",
+     "verdict": "The interunit cable or its terminations. Check both ends for loose strands, wrong terminal order, and splices hidden in the line-set cover. Wire order matters: 1-to-1, 2-to-2, 3-to-3 (S1/S2/S3). A swapped 2 and 3 can also damage boards - verify before re-energizing."
+    }
+   ]
+  },
+  {
+   "ask": "Everything checks but the system still will not respond. Where does that leave you?",
+   "options": [
+    {
+     "label": "Show me what to check next",
+     "verdict": "Power is proven to both boards, so this is no longer a power problem - it is a control or communication problem. Look up the brand's blink/error code from the outdoor board LED in Error Codes, and check the signal wire terminations (3 / S3) at both ends. From here follow the brand-specific communication error scenario for this unit."
+    }
+   ]
+  }
+ ],
+ "s-comfortnet-rvs-output-terminal-e22": [
+  {
+   "ask": "With the system commanded to COOLING, measure 24 VAC between terminal E22 (RVS) and C on the UC board. What do you read?",
+   "options": [
+    {
+     "label": "24 VAC present at E22",
+     "next": 1
+    },
+    {
+     "label": "No voltage at E22",
+     "verdict": "The command is not being issued. On a communicating system that points at the control or the communicating command itself, not thermostat wiring. Verify the system is genuinely calling for cooling (check the shared data / mode on the thermostat), then check for control fault codes. If the call is confirmed and E22 stays dead, the UC board output has failed."
+    }
+   ]
+  },
+  {
+   "ask": "Is that same 24 V actually arriving at the reversing valve coil terminals?",
+   "options": [
+    {
+     "label": "Yes - 24 V at the coil",
+     "next": 2
+    },
+    {
+     "label": "No - present at E22, missing at the coil",
+     "verdict": "The wiring between the board and the coil is the fault. Check the connector and the run for a broken or chafed conductor, and confirm the coil connector cap is seated."
+    }
+   ]
+  },
+  {
+   "ask": "Ohm the solenoid coil (connector cap removed). What does it show?",
+   "options": [
+    {
+     "label": "Coil reads open",
+     "verdict": "Replace the solenoid coil - no continuity means it cannot shift the valve no matter what the board does."
+    },
+    {
+     "label": "Coil has continuity",
+     "verdict": "Coil good plus 24 V present means the valve BODY is the problem. Tap the valve body lightly while switching HEAT to COOL to try to free a stuck slide. If it still will not shift, the valve body is inoperative - that is a sealed-system repair: recover, replace the valve, and follow the brazing and drier rules."
+    }
+   ]
+  }
+ ],
+ "s-minisplit-blower-wheel-fouling-airflow-loss": [
+  {
+   "ask": "Power killed and proven dead, filters out, light shined DOWN into the blower wheel cups - what do you see?",
+   "options": [
+    {
+     "label": "Blade cups filled or filmed over with dirt",
+     "next": 1
+    },
+    {
+     "label": "Wheel looks genuinely clean",
+     "next": 2
+    }
+   ]
+  },
+  {
+   "ask": "That fouling is your airflow loss. How are you set up to clean it?",
+   "options": [
+    {
+     "label": "Bib kit and pump sprayer on hand",
+     "verdict": "Bag the electronics and control box first, then clean the coil, shroud, and wheel in place. Use a cleaner rated for the coil, rinse thoroughly, and flush the pan and drain so the loosened slime does not become a drain call. Leave the bib on for the first restart - a wet wheel slings water. Verify the fix by feel and discharge temperature split, and set a realistic cleaning interval with the customer."
+    },
+    {
+     "label": "No bib kit on this truck",
+     "verdict": "Pulling the wheel is the alternative: drop the pan, remove the set screw or retaining clip, and slide the wheel out for cleaning at the truck. It is slower but gets the cups fully clean. Do not run water into an unbagged head - flooding a ductless board is an expensive callback."
+    }
+   ]
+  },
+  {
+   "ask": "Wheel is clean but airflow is still down. Check the back face of the coil and the shroud with a mirror or borescope - what do you find?",
+   "options": [
+    {
+     "label": "Back of the coil or the shroud is loaded",
+     "verdict": "The front face hides it - the back of the coil and the shroud are often the dirtiest surfaces in the unit. Bib and clean as a full job, not a wipe-down."
+    },
+    {
+     "label": "All surfaces genuinely clean, airflow still weak",
+     "verdict": "Stop cleaning and start diagnosing: check that the fan is actually reaching speed (listen for hunting or a slow ramp), check the louver/vane positions, and compare against the brand's fan speed or airflow scenario in Error Codes. A motor that cannot reach speed on a clean wheel is a motor, Hall sensor, or board problem, not a dirt problem."
+    }
+   ]
+  }
  ]
 };

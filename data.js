@@ -720,6 +720,25 @@ const ERROR_CODES = [
     confidence: "common",
   },
   {
+    id: "car-f-34-8",
+    brand: "Carrier",
+    family: "Carrier Infinity",
+    equipment: "Gas Furnace",
+    code: "34.8",
+    title: "Flame loss after blower on-delay (high-heat slot)",
+    meaning: "After successful ignition (flame proven), flame was lost after the heating blower on-delay. NOTE: the 59MN7C manual's printed description for 34.8 repeats 34.7's low-heat wording; by the pattern of 34.5 (low) / 34.6 (high), this slot corresponds to high heat. Diagnose it the same way as 34.7.",
+    causes: [
+      "Dirty or weak flame sensor",
+      "Gas supply or valve problem at high fire",
+      "Venting or combustion-air problem that shows up at high fire",
+    ],
+    steps: [
+      "Follow the ignition-proving troubleshooting sequence (component test mode) to isolate an igniter, gas valve, or flame sensor fault",
+      "Because this variant appears after the blower starts, also check for flame disturbance when the blower kicks in - a cracked heat exchanger or combustion-air problem shows up exactly there",
+    ],
+    confidence: "common"
+  },
+  {
     id: "car-f-35-1",
     brand: "Carrier",
     family: "Carrier Infinity",
@@ -1276,9 +1295,9 @@ const ERROR_CODES = [
     brand: "Trane",
     family: "American Standard — A951X IFC (Integrated Furnace Control)",
     equipment: "Gas Furnace",
-    code: "e0s",
+    code: "e05",
     title: "Flame detected out of sequence",
-    meaning: "The IFC sensed flame present at a time in the sequence when no flame should be present.",
+    meaning: "The IFC sensed flame present at a time in the sequence when no flame should be present. The A951X installer's guide prints this code as e0s - on the 7-segment display the glyph for 5 and S is identical. The S9V2 IOM prints the same fault as E05.",
     causes: [
       "Flame detected, should not be present",
     ],
@@ -1426,6 +1445,229 @@ const ERROR_CODES = [
       "Check the fuse on the IFC board and inspect for a wiring short that caused it to open before replacing",
     ],
     confidence: "common",
+  },
+  {
+    id: "tr-f-e2-4",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e2.4",
+    title: "High-limit output relay not energized when it should be",
+    meaning: "The IFC did not sense 24VAC on the HLO (high limit output) circuit when the redundant relay should have been closed - checked and failed 10 times.",
+    causes: [
+      "Open or miswired HLO circuit",
+      "Failed redundant relay on the IFC",
+    ],
+    steps: [
+      "Confirm the code in the Err / Last 6 Faults (L6F) menu",
+      "Check the wiring and connections in the high-limit output relay circuit for an open or loose terminal",
+      "If the HLO circuit wiring checks good, the redundant relay on the control has failed - replace the IFC",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "tr-f-e3-3",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e3.3",
+    title: "Pressure switch shorted, 2nd stage",
+    meaning: "PS2 reads closed when it should be open. Per the IOM, in most cases the pressure switch itself is NOT the problem.",
+    causes: [
+      "Miswired pressure switch",
+      "Misrouted sensing tube",
+      "Welded switch contacts",
+      "IFC input fault",
+    ],
+    steps: [
+      "Verify PS2 wiring and sensing-tube routing are correct before condemning anything",
+      "Cycle power OFF to the furnace and remove the Brown wire from PS2",
+      "Measure across PS2: OL means the switch is open (good), 0 ohms means the contacts are closed",
+      "If PS2 reads 0 ohms with the furnace off, replace the pressure switch and verify operation",
+      "If PS2 reads open, verify the wiring - if the wiring is correct, replace the IFC",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "tr-f-e3-4",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e3.4",
+    title: "Pressure switch open, 2nd stage",
+    meaning: "PS2 reads open when it should be closed on a 2nd-stage call. Per the IOM, in most cases the pressure switch itself is NOT the problem.",
+    causes: [
+      "Blocked or misrouted sensing tube",
+      "Inducer not reaching 2nd-stage speed",
+      "Venting problem",
+      "Failed inducer assembly",
+    ],
+    steps: [
+      "Verify PS2 orientation, wiring, and sensing-tube routing are correct",
+      "Cycle power and make a call for 2nd-stage heat",
+      "Measure across PS2: 24 volts means the switch is open, 0 volts means it closed properly",
+      "If PS2 stays open, measure voltage at the inducer motor leads (RD-WH, BK-RD, BK-WH) while it should be at 2nd-stage speed",
+      "If the inducer voltages are missing or wrong, replace the inducer assembly",
+      "If the inducer runs correctly and PS2 still will not close, check venting and vent terminations for obstruction before replacing the switch",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "tr-f-e06",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e06",
+    title: "Reversed line polarity or bad ground (S9V2 display)",
+    meaning: "Voltage reversed polarity or bad grounding. On the A951X control the same conditions display separately as e6.1 (reversed polarity) and e6.2 (poor ground).",
+    causes: [
+      "Hot and neutral reversed at the furnace or an upstream junction",
+      "Missing or high-resistance equipment ground",
+    ],
+    steps: [
+      "Check 115 VAC hot-to-neutral polarity at the furnace against the disconnect - correct any reversal",
+      "Verify a solid equipment ground: tight green-wire connections and continuity from the IFC ground to the panel ground",
+      "Fix the supply problem - do not clear the code and walk away, flame sensing depends on that ground",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "tr-f-e7-2",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e7.2",
+    title: "High-limit output relay energized when it should NOT be",
+    meaning: "The IFC senses the redundant relay (HLO output) energized outside of a call - the opposite condition of e2.4.",
+    causes: [
+      "Welded redundant relay contacts on the IFC",
+      "24VAC backfeeding into the HLO circuit",
+    ],
+    steps: [
+      "Remove any heating call and confirm the condition persists",
+      "Check for 24VAC backfeeding into the HLO circuit from miswiring",
+      "If the wiring is clean and the relay is energized with no call, the relay has welded - replace the IFC",
+    ],
+    confidence: "verify"
+  },
+  {
+    id: "tr-f-e10",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e10",
+    title: "Internal control error - inducer/blower processor communication",
+    meaning: "Internal control board error: communication failure between the inducer and blower motor micro-processors on the IFC.",
+    causes: [
+      "Failed IFC",
+    ],
+    steps: [
+      "Cycle power to the furnace once to rule out a transient",
+      "If the code returns, the fault is internal to the control - replace the IFC",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "tr-f-e13",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e13",
+    title: "Blower HP / OEM ID mismatch with Personality Module",
+    meaning: "The blower motor's HP or OEM ID does not match the value programmed on the Personality Module (PM).",
+    causes: [
+      "Wrong PM for this furnace",
+      "Wrong replacement blower motor installed",
+    ],
+    steps: [
+      "Disconnect electrical power to the furnace",
+      "Check that the model and serial number on the PM match the furnace nameplate",
+      "If the PM does not match, replace the PM with the correct model/serial for this unit",
+      "If the PM matches, remove the blower vestibule panel and compare the blower motor HP against the product specification",
+      "If the motor HP is wrong, replace the motor with the correct HP",
+    ],
+    confidence: "verify"
+  },
+  {
+    id: "tr-f-e14",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e14",
+    title: "Personality Module missing and onboard copy bad",
+    meaning: "The PM is missing or unreadable and the control's local copy of the unit data cannot be read.",
+    causes: [
+      "PM not installed or not seated",
+      "PM not programmed",
+      "Faulty IFC",
+    ],
+    steps: [
+      "Disconnect power to the furnace",
+      "Check that the PM is installed and fully seated on the IFC",
+      "If seating it does not clear the fault, the PM is unprogrammed or the IFC is faulty - replace the PM first, then the IFC if the code persists",
+    ],
+    confidence: "verify"
+  },
+  {
+    id: "tr-f-e15",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e15",
+    title: "Unit data corrupt in both Personality Module and control",
+    meaning: "Both copies of the Unit Data File - the one on the PM and the local copy on the IFC - are corrupt.",
+    causes: [
+      "Corrupted PM",
+      "Faulty IFC",
+    ],
+    steps: [
+      "Disconnect power and reseat the PM",
+      "If the code returns, replace the PM",
+      "If a known-good PM does not clear it, replace the IFC",
+    ],
+    confidence: "verify"
+  },
+  {
+    id: "tr-f-e17",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e17",
+    title: "Blower motor not responding on communication",
+    meaning: "The IFC does not see a return signal from the blower motor.",
+    causes: [
+      "Unseated communication connector",
+      "Broken motor harness",
+      "Failed blower motor",
+    ],
+    steps: [
+      "Disconnect power before checking connectors",
+      "Check the 4-pin motor communication connector is installed and fully seated on the IFC",
+      "Check the 12-pin connector at the blower vestibule panel is fully seated",
+      "Check the 4-pin connector at the blower itself is fully seated",
+      "Verify continuity of all motor wiring between those points",
+      "If the connectors and harness check good, replace the blower motor",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "tr-f-e18",
+    brand: "Trane",
+    family: "Trane/American Standard — S9V2-VS IFC (IOM FNR-SVX001B-EN)",
+    equipment: "Gas Furnace",
+    code: "e18",
+    title: "Blower communication failure on the control",
+    meaning: "The IFC does not see its own send message on the blower communication line.",
+    causes: [
+      "Shorted motor harness dragging the line down",
+      "Failed IFC",
+    ],
+    steps: [
+      "With power on, remove the 4-pin motor connector from the IFC",
+      "If the error code changes to E17, the control is fine - verify the harness and wiring connection to the motor and follow the motor troubleshooting",
+      "If the code does NOT change to E17 with the motor disconnected, replace the IFC",
+    ],
+    confidence: "common"
   },
   {
     id: "tr-ms-e1",
@@ -6117,7 +6359,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-u0",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "U0",
     title: "Refrigerant shortage",
@@ -6141,7 +6383,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-u2",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "U2",
     title: "Low-voltage or over-voltage detection",
@@ -6167,7 +6409,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-u4",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "U4",
     title: "Signal transmission error (indoor/outdoor)",
@@ -6190,7 +6432,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-ua",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "UA",
     title: "Unspecified indoor/outdoor combination",
@@ -6213,7 +6455,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-u7",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "U7",
     title: "Signal transmission error on outdoor unit PCB",
@@ -6231,7 +6473,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-a1",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount); same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount; same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
     equipment: "Mini-Split",
     code: "A1",
     title: "Indoor unit PCB abnormality",
@@ -6253,7 +6495,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-a5",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount); same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount; same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
     equipment: "Mini-Split",
     code: "A5",
     title: "Freeze-up protection or heating peak-cut control",
@@ -6277,7 +6519,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-a6",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount); same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount; same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
     equipment: "Mini-Split",
     code: "A6",
     title: "Indoor fan motor or related abnormality",
@@ -6301,7 +6543,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-c4",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount); same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount; same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
     equipment: "Mini-Split",
     code: "C4",
     title: "Indoor heat exchanger thermistor abnormality",
@@ -6322,7 +6564,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-c9",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount); same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount; same causes documented for indoor heads on RMXS-L/MXS multi-zone systems",
     equipment: "Mini-Split",
     code: "C9",
     title: "Room temperature thermistor abnormality",
@@ -6343,7 +6585,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-e1",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "E1",
     title: "Outdoor unit PCB abnormality",
@@ -6364,7 +6606,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-e5",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "E5",
     title: "OL activation — compressor overload",
@@ -6390,7 +6632,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-e6",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "E6",
     title: "Compressor lock",
@@ -6409,7 +6651,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-e7",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "E7",
     title: "DC fan lock (outdoor)",
@@ -6430,7 +6672,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-e8",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "E8",
     title: "Input overcurrent detection",
@@ -6453,7 +6695,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-ea",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "EA",
     title: "Reversing (4-way) valve abnormality",
@@ -6479,7 +6721,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-f3",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "F3",
     title: "Discharge pipe temperature control (high discharge temp)",
@@ -6505,7 +6747,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-f6",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "F6",
     title: "High pressure control in cooling",
@@ -6531,7 +6773,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-h0",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "H0",
     title: "Compressor system sensor abnormality",
@@ -6552,7 +6794,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-h6",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "H6",
     title: "Position sensor abnormality (compressor start-up failure)",
@@ -6575,7 +6817,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-h8",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "H8",
     title: "DC voltage/current sensor or CT abnormality",
@@ -6595,7 +6837,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-h9",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "H9",
     title: "Outdoor temperature thermistor abnormality",
@@ -6615,7 +6857,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-j3",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "J3",
     title: "Discharge pipe thermistor abnormality",
@@ -6635,7 +6877,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-j6",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "J6",
     title: "Outdoor heat exchanger thermistor abnormality",
@@ -6655,7 +6897,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-l3",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "L3",
     title: "Electrical box temperature rise",
@@ -6678,7 +6920,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-l4",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "L4",
     title: "Radiation fin temperature rise",
@@ -6701,7 +6943,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-l5",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "L5",
     title: "Output overcurrent detection",
@@ -6727,7 +6969,7 @@ const ERROR_CODES = [
   {
     id: "dai-ms-p4",
     brand: "Daikin",
-    family: "FTXS-L/FDXS-L and RXS-FTXS H-Series (single-zone wall mount)",
+    family: "FTXS-L/FDXS-L, RXS-FTXS H-Series, and 19 Series (FTK/RK) single-zone wall mount - shared ductless code table",
     equipment: "Mini-Split",
     code: "P4",
     title: "Radiation fin thermistor abnormality",
@@ -9433,6 +9675,646 @@ const ERROR_CODES = [
     confidence: "common",
   },
   {
+    id: "mit-mxz-led-read",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "Reading LED1/LED2",
+    title: "How to read the MXZ outdoor board LEDs",
+    meaning: "The two LEDs on the outdoor control P.C. board are the primary diagnostic on MXZ multi-zone units. LED1 is red, LED2 is yellow. A blinking LED repeats a cycle: 2.5 seconds OFF, then the count of half-second blinks. Both LEDs steady lit = normal operation. Count at least two full cycles before trusting the number.",
+    causes: [
+      "Miscounted blink cycle",
+    ],
+    steps: [
+      "Open the service panel to see the outdoor control P.C. board - LED1 and LED2 are on the parts side",
+      "Watch through at least two full cycles: 2.5 seconds dark, then count the half-second blinks",
+      "Look up the LED1/LED2 combination in this family's codes",
+      "The indoor unit's OPERATION INDICATOR blink and the failure mode recall function give the same information from inside - use whichever end of the system you are at",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b1",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 1 blink",
+    title: "LEV or drain pump abnormality (reported by indoor unit)",
+    meaning: "The indoor unit detects an abnormality in the LEV (linear expansion valve) or drain pump. Outdoor unit does not operate.",
+    causes: [
+      "Failed LEV coil",
+      "Indoor drain pump fault",
+    ],
+    steps: [
+      "Check the LEV coil: measure resistance between lead pairs WHT-RED, RED-ORN, YLW-RED, RED-BLU - each should read 37.4 to 53.9 ohms at room temperature",
+      "Check the drain pump of the indoor unit",
+      "If the LEV windings and pump both check good, inspect the LEV connector seating at the indoor board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b2",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 2 blinks",
+    title: "Outdoor power system protection",
+    meaning: "Overcurrent protection cut-out operates 3 consecutive times within 1 minute of compressor start, or converter/bus-bar voltage protection cut-out operates 3 consecutive times within 3 minutes of startup. Outdoor unit does not operate.",
+    causes: [
+      "Compressor connecting wire loose",
+      "Failed compressor",
+      "Stop valve not fully open",
+      "Failed power module",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Check the connection of the compressor connecting wire at both ends",
+      "Check the stop (service) valves are fully open",
+      "Ohm the compressor windings phase-to-phase: 0.63-0.78k ohms (2C20NA2/NA3/NA4), 0.83-1.03 ohms (3C24/3C30/4C36NA series), 0.77-0.95 ohms (5C42NA and NAHZ series) - all three phases should match",
+      "If wiring, valves, and windings check good, follow the inverter/compressor check procedure before condemning the power board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b3",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 3 blinks",
+    title: "Discharge temperature thermistor open/short",
+    meaning: "A short circuit is detected in the discharge thermistor during operation, or an open circuit after 10 minutes of compressor runtime. Outdoor unit does not operate.",
+    causes: [
+      "Failed discharge thermistor (RT62)",
+      "Unseated thermistor connector",
+    ],
+    steps: [
+      "Check the discharge temperature thermistor (RT62) - unplug and measure resistance; warm it in your hand and watch the resistance move",
+      "Compare against the thermistor chart in the service manual test-point section",
+      "Reseat the connector - an open here is often the plug, not the sensor",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b4",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 4 blinks",
+    title: "Fin or board temperature thermistor open/short",
+    meaning: "A short or open circuit is detected in the fin temperature thermistor or the P.C. board temperature thermistor during operation. Outdoor unit does not operate.",
+    causes: [
+      "Failed fin thermistor (RT64)",
+      "Failed board-mounted thermistor",
+      "Failed outdoor control board",
+    ],
+    steps: [
+      "Check the fin temperature thermistor (RT64) resistance against the manual's chart",
+      "The board temperature thermistor is on the P.C. board itself - if the fin thermistor checks good, replace the outdoor control P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b5",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 5 blinks",
+    title: "Ambient, coil, or defrost thermistor open/short",
+    meaning: "A short or open circuit is detected in the ambient thermistor (RT65), outdoor heat exchanger thermistor (RT68), or defrost thermistor (RT61). Outdoor unit does not operate.",
+    causes: [
+      "Failed thermistor",
+      "Chafed thermistor lead",
+      "Unseated connector",
+    ],
+    steps: [
+      "Unplug and ohm each of the three thermistors: ambient (RT65), outdoor coil (RT68), defrost (RT61)",
+      "Compare readings against the thermistor chart in the manual's test-point section",
+      "Check the leads where they route through the panel - chafe shows up here before the sensor fails",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b6",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 6 blinks",
+    title: "Zero cross circuit fault (control board)",
+    meaning: "Zero cross signal cannot be detected by the outdoor control P.C. board. Outdoor unit does not operate.",
+    causes: [
+      "Failed outdoor control board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor control P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b7",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 7 blinks",
+    title: "Outdoor control board memory fault",
+    meaning: "The nonvolatile memory data on the outdoor control system cannot be read properly. Outdoor unit does not operate.",
+    causes: [
+      "Failed outdoor control board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor control P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b8",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 8 blinks",
+    title: "Current sensor fault",
+    meaning: "Current sensor protection cut-out operates 2 consecutive times (unit will not operate), or a short/open is detected in the current sensor while the compressor runs.",
+    causes: [
+      "Failed outdoor power board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor power P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b11",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 11 blinks",
+    title: "Board-to-board or M-NET communication error",
+    meaning: "Communication protection between the outdoor control board and outdoor power board has cut out (2 consecutive times, or more than 10 seconds during operation), or the M-NET adapter board detects a communication abnormality.",
+    causes: [
+      "Loose connecting wire between control and power boards",
+      "Loose M-NET adapter wiring or terminal block",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Check the connecting wire between the outdoor control P.C. board and the outdoor power P.C. board",
+      "If an M-NET adapter is fitted, check its connecting wire to the control board and the terminal block",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b12",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 12 blinks",
+    title: "Zero cross circuit fault (power board)",
+    meaning: "The zero cross detecting circuit on the outdoor power P.C. board has cut out 10 consecutive times, or the zero cross signal cannot be detected while the compressor operates.",
+    causes: [
+      "Failed outdoor power board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor power P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b13",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 13 blinks",
+    title: "Input current detection circuit fault",
+    meaning: "A short or open circuit is detected in the input current detection circuit during operation. Outdoor unit does not operate.",
+    causes: [
+      "Failed outdoor power board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor power P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b14",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 14 blinks",
+    title: "Input voltage detection circuit fault",
+    meaning: "A short or open circuit is detected in the input voltage detection circuit during operation. Outdoor unit does not operate.",
+    causes: [
+      "Failed outdoor power board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor power P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b15",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 15 blinks",
+    title: "Relay operation not detected",
+    meaning: "No relay operation is detected during operation. Outdoor unit does not operate.",
+    causes: [
+      "Failed outdoor power board",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Replace the outdoor power P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-l1-b21",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 21 blinks",
+    title: "4-way valve / R.V. coil fault",
+    meaning: "The R.V. (reversing valve) coil connector is disconnected, poorly connected, or the 4-way valve is faulty. Outdoor unit does not operate.",
+    causes: [
+      "Disconnected R.V. coil connector",
+      "Failed R.V. coil",
+      "Stuck 4-way valve",
+    ],
+    steps: [
+      "Reseat the R.V. coil connector",
+      "Ohm the R.V. coil: 1.26-1.62k ohms (2C20NA2/NA3/NA4), 1.20-1.77k ohms (3C24/3C30/4C36NA series), 1.24-1.86k ohms (5C42NA and NAHZ series)",
+      "If the coil checks good, check the 4-way valve body itself - a stuck slide is a sealed-system repair",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b2-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 2 blinks, LED2 not lit",
+    title: "IPM / lock protection - stop and 3-minute restart",
+    meaning: "Overcurrent detected after 30 seconds of compressor startup (IPM protection) or within 30 seconds (lock protection). The unit stops and restarts 3 minutes later, repeating.",
+    causes: [
+      "Loose compressor connector",
+      "Locked or failed compressor",
+      "Stop valve not fully open",
+      "Failed power module (PAM)",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Reconnect the compressor connector",
+      "Check the stop valves are fully open",
+      "Follow the inverter/compressor check procedure - ohm the windings and compare all three phases",
+      "If the compressor checks good, check the power module (PAM module)",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b3-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 3 blinks, LED2 not lit",
+    title: "High discharge temperature protection",
+    meaning: "Discharge temperature exceeded the model's limit (239F on 2C20NA2-NA4, 222.8F on 3C24/3C30/4C36NA series, 240.8F on NAHZ and 5C42NA series). Restarts when the discharge thermistor cools to the model's reset point. Stop-and-restart repeating.",
+    causes: [
+      "Low refrigerant charge",
+      "Restriction in the refrigerant circuit",
+      "LEV not feeding",
+    ],
+    steps: [
+      "Check the amount of refrigerant and the refrigerant circuit - high discharge temp on these is usually a starved compressor",
+      "Check the LEV per the manual procedure (coil pairs 37.4-53.9 ohms) and watch for it actually driving",
+      "Do not just reset it - the compressor is being cooked when this code repeats",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b4-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 4 blinks, LED2 not lit",
+    title: "Fin / board temperature protection",
+    meaning: "The fin temperature or P.C. board temperature exceeded its limit during operation. Stop-and-restart repeating.",
+    causes: [
+      "Dirty outdoor coil or blocked fin pack",
+      "Outdoor fan not moving air",
+      "Low refrigerant",
+    ],
+    steps: [
+      "Check the outdoor coil and fin pack are clean and the fan is moving proper air",
+      "Check the outdoor fan motor per the manual procedure",
+      "Check refrigerant circuit and charge",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b5-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 5 blinks, LED2 not lit",
+    title: "High pressure protection (HPS)",
+    meaning: "High pressure detected by the high pressure switch, or the outdoor heat exchanger exceeded 158F in cooling / indoor gas pipe exceeded 158F in heating. Stop-and-restart repeating.",
+    causes: [
+      "Dirty coil or blocked airflow",
+      "Overcharge",
+      "Stop valve not fully open",
+      "Non-condensables in the circuit",
+    ],
+    steps: [
+      "Check the gas charge and the refrigerant circuit",
+      "Check the stop valves are fully open",
+      "Check the condenser coil and airflow on whichever coil is rejecting heat in the current mode",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b6-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 6 blinks, LED2 not lit",
+    title: "Pre-heating overcurrent",
+    meaning: "Overcurrent is detected during compressor pre-heating. Stop-and-restart repeating.",
+    causes: [
+      "Loose compressor connector",
+      "Failed compressor winding",
+      "Failed power module",
+    ],
+    steps: [
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Reconnect the compressor connector",
+      "Follow the inverter/compressor check - ohm all three phases and compare",
+      "Check the power module",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b8-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 8 blinks, LED2 not lit",
+    title: "Converter protection",
+    meaning: "A failure is detected in the operation of the converter during operation. Stop-and-restart repeating.",
+    causes: [
+      "Supply voltage problem",
+      "Failed outdoor power board",
+    ],
+    steps: [
+      "Check the voltage of the power supply at the unit under load",
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "If supply checks good, replace the outdoor power P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b9-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 9 blinks, LED2 not lit",
+    title: "Bus-bar voltage out of range",
+    meaning: "The bus-bar (DC link) voltage exceeds 400 V or falls too low while the compressor operates. Stop-and-restart repeating.",
+    causes: [
+      "Supply voltage problem",
+      "Failed outdoor power board",
+      "Failed outdoor control board",
+    ],
+    steps: [
+      "Check the supply voltage at the unit while it tries to run",
+      "Power off at the disconnect and mind the smoothing capacitor residual voltage before touching either outdoor board - verify with a meter, do not trust elapsed time alone",
+      "Follow the bus-bar voltage check in the manual",
+      "If supply is clean, replace the outdoor power P.C. board; if the fault persists, the outdoor control P.C. board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b11-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 11 blinks, LED2 not lit",
+    title: "Low outside temperature protection",
+    meaning: "The unit stopped because ambient is below its operating limit: cooling below 10.4F; heating below 1.4F (standard NA models) or -18F (NAHZ hyper-heat models). Not a component failure.",
+    causes: [
+      "Operating outside the unit's rated ambient range",
+    ],
+    steps: [
+      "Verify the ambient against the model's operating range - this protection is doing its job",
+      "If the customer needs heat below the standard model's limit, that is an application conversation, not a repair",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b13-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 13 blinks, LED2 not lit",
+    title: "Outdoor fan motor failure",
+    meaning: "The outdoor fan failed 3 consecutive times within 30 seconds of starting. Stop-and-restart repeating.",
+    causes: [
+      "Failed fan motor",
+      "Obstructed fan",
+      "Failed board output",
+    ],
+    steps: [
+      "Check the fan spins freely by hand with power killed",
+      "Follow the outdoor fan motor check in the manual",
+      "Check the fan connector seating at the board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b14-off",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 14 blinks, LED2 not lit",
+    title: "4-way valve switching failure",
+    meaning: "The R.V. coil connector is disconnected or poorly connected, or the 4-way valve is faulty. Stop-and-restart repeating.",
+    causes: [
+      "Disconnected R.V. coil connector",
+      "Failed R.V. coil",
+      "Stuck 4-way valve",
+    ],
+    steps: [
+      "Reseat the R.V. coil connector",
+      "Ohm the R.V. coil: 1.26-1.62k ohms (2C20NA2/NA3/NA4), 1.20-1.77k ohms (3C24/3C30/4C36NA series), 1.24-1.86k ohms (5C42NA and NAHZ series)",
+      "If the coil checks good, check the 4-way valve body",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b1-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 1 blink, LED2 lit",
+    title: "Primary current limit (not a failure)",
+    meaning: "The input current reached the model's limit (15.0 A on 2C20NA2-NA4, 18.4 A on 3C24/3C30/4C36NA series, 26.8 A on NAHZ and 5C42NA series) and the unit is limiting itself. The manual states this does not mean a product abnormality.",
+    causes: [
+      "Clogged indoor filters",
+      "Low refrigerant",
+      "Short-cycled indoor or outdoor airflow",
+    ],
+    steps: [
+      "Check the indoor filters",
+      "Check for refrigerant shortage",
+      "Check that indoor and outdoor airflow is not short-cycling (recirculating its own discharge)",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b2-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 2 blinks, LED2 lit",
+    title: "High pressure control / defrost in cooling",
+    meaning: "In heating: the indoor gas pipe exceeded 113F and the unit is controlling high pressure. In cooling: the indoor gas pipe fell to 37.4F or below and the unit is defrosting the indoor coil. The unit continues operating.",
+    causes: [
+      "Reduced indoor airflow",
+      "Low charge (cooling icing)",
+    ],
+    steps: [
+      "Check indoor filters and blower operation",
+      "In cooling, treat repeated icing as an airflow or charge problem - check both before blaming the control",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b3-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 3 blinks, LED2 lit",
+    title: "Discharge temperature control active",
+    meaning: "The compressor has held 80 Hz or more while the discharge temperature stayed under 122F (cooling) / 104F (heating) for more than 40 minutes. The unit keeps operating with control intervention.",
+    causes: [
+      "Overcharge",
+      "LEV overfeeding",
+      "Thermistor drift",
+    ],
+    steps: [
+      "Check the refrigerant circuit and amount",
+      "Check the LEV per the manual procedure",
+      "Check the outdoor thermistors against the resistance chart",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b4-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 4 blinks, LED2 lit",
+    title: "Low discharge temperature protection",
+    meaning: "The compressor has held 80 Hz or more while the discharge temperature stayed under 102.2F for more than 20 minutes - liquid is likely returning to the compressor.",
+    causes: [
+      "LEV overfeeding",
+      "Overcharge",
+    ],
+    steps: [
+      "Check the LEV per the manual procedure",
+      "Check refrigerant circuit and amount - floodback at speed kills compressors",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b5-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 5 blinks, LED2 lit",
+    title: "Cooling high pressure control (not a failure)",
+    meaning: "The outdoor heat exchanger exceeded 136.4F during cooling and the unit is protecting itself. The manual states this does not mean a product abnormality.",
+    causes: [
+      "Clogged indoor filters",
+      "Low refrigerant",
+      "Short-cycled airflow",
+    ],
+    steps: [
+      "Check the indoor filters",
+      "Check for refrigerant shortage",
+      "Check that the outdoor unit is not recirculating its own discharge air",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b7-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 7 blinks, LED2 lit",
+    title: "Bypass valve control active (not a failure)",
+    meaning: "On NAHZ and 5C42NA-series units: the bypass valve is running one of its normal controls - evaporating temperature drop prevention in cooling, or high-pressure/compressor-oil control at heating startup. The manual states this does not mean a product abnormality.",
+    causes: [
+      "Normal control behavior",
+      "If persistent in cooling: clogged filters, low charge, short-cycled airflow",
+    ],
+    steps: [
+      "If seen briefly at heating startup or in mild-weather cooling, no action - this is normal control",
+      "If it persists in cooling, check filters, charge, and airflow short-cycling",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b8-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 8 blinks, LED2 lit",
+    title: "Cooling evaporating temperature protection (not a failure)",
+    meaning: "During cooling the indoor heat exchanger temperature dropped to the protection range and the unit is preventing coil freezing. The manual states this does not mean a product abnormality.",
+    causes: [
+      "Reduced indoor airflow",
+      "Low charge",
+    ],
+    steps: [
+      "Check indoor filters and blower speed",
+      "If it recurs on a clean system, check the charge - a starved coil runs cold",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-b9-lit",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 9 blinks, LED2 lit",
+    title: "Inverter check / emergency operation mode",
+    meaning: "The unit is being operated with the emergency operation switch - inverter check mode.",
+    causes: [
+      "Emergency switch left on",
+    ],
+    steps: [
+      "Return the unit to normal operation when testing is done - do not leave it running on the emergency switch",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "mit-mxz-normal",
+    brand: "Mitsubishi",
+    family: "MXZ-2C/3C/4C/5C multi-zone outdoor units - LED1 (red) / LED2 (yellow) on the outdoor control board, per service manual OBH702R",
+    equipment: "Mini-Split",
+    code: "LED1 lit, LED2 lit",
+    title: "Normal operation",
+    meaning: "Both LEDs steady lit is normal operation on the MXZ outdoor control board.",
+    steps: [
+      "No action - this is the normal indication",
+    ],
+    confidence: "common"
+  },
+  {
     id: "dai-tc-01",
     brand: "Daikin",
     family: "DX/DZ 16-18TC condensers & heat pumps (Goodman/Amana GSX/GSZ/ASX/ASZ equivalents) — Comfort Alert codes",
@@ -10969,6 +11851,63 @@ const ERROR_CODES = [
     confidence: "common",
   },
   {
+    id: "dai-fit-e76",
+    brand: "Daikin",
+    family: "FIT DC6VS / DZ6VS / DH6VS / DC9VS / DH9VS / DH7VS",
+    equipment: "Air Handler",
+    code: "E76",
+    title: "EEV indoor unit - no outdoor or indoor unit communications",
+    meaning: "Displayed by the EEV indoor unit (FIT air handler / cased coil): no communications with the outdoor unit or indoor unit. The FIT service manuals allow emergency mode operation if the equipment cannot be immediately fixed.",
+    causes: [
+      "Communication wiring open or loose",
+      "Failed board on either end",
+    ],
+    steps: [
+      "Check the communication terminal wiring between the EEV indoor unit and the outdoor unit - reseat and tighten both ends",
+      "Cycling power may temporarily clear the code without fixing the cause - find the wiring fault, do not just reset",
+      "If the equipment cannot be immediately repaired, the manual permits emergency (non-communicating) mode as a temporary measure - set it up per the FIT service manual and return to complete the repair",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "dai-fit-e77",
+    brand: "Daikin",
+    family: "FIT DC6VS / DZ6VS / DH6VS / DC9VS / DH9VS / DH7VS",
+    equipment: "Air Handler",
+    code: "E77",
+    title: "EEV indoor unit - no thermostat communications",
+    meaning: "Displayed by the EEV indoor unit: no communications with the thermostat.",
+    causes: [
+      "Thermostat communication wiring open or loose",
+      "Thermostat power loss",
+    ],
+    steps: [
+      "Check the communication wiring between the thermostat and the indoor unit - reseat and tighten",
+      "Verify the thermostat has power and is commissioned to the system",
+      "If the equipment cannot be immediately repaired, emergency mode is permitted as a temporary measure per the FIT service manual",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "dai-fit-e78",
+    brand: "Daikin",
+    family: "FIT DC6VS / DZ6VS / DH6VS / DC9VS / DH9VS / DH7VS",
+    equipment: "Air Handler",
+    code: "E78",
+    title: "EEV indoor unit - no outdoor or indoor unit communications",
+    meaning: "Displayed by the EEV indoor unit: no communications with the outdoor unit or indoor unit (companion code to E76 - the FIT service manuals list both with the same description).",
+    causes: [
+      "Communication wiring open or loose",
+      "Failed board on either end",
+    ],
+    steps: [
+      "Check the communication terminal wiring between the EEV indoor unit and the outdoor unit - reseat and tighten both ends",
+      "Cycling power may temporarily clear the code without fixing the cause - find the wiring fault, do not just reset",
+      "If the equipment cannot be immediately repaired, emergency mode is permitted as a temporary measure per the FIT service manual",
+    ],
+    confidence: "common"
+  },
+  {
     id: "dai-ah-eb",
     brand: "Daikin",
     family: "DFVE / DMVE EEV air handler (Daikin FIT indoor)",
@@ -12003,6 +12942,19 @@ const ERROR_CODES = [
       "Check the flame-sense circuit",
     ],
     confidence: "common",
+  },
+  {
+    id: "gpkg-t-amber-on",
+    brand: "Goodman",
+    family: "Packaged gas-electric — PCBAG127 two-stage control (RS6300012)",
+    equipment: "Other",
+    code: "Amber LED steady ON",
+    title: "Normal flame",
+    meaning: "Steady amber means normal flame is proven. Not a fault.",
+    steps: [
+      "No action - this is the normal flame indication on the amber flame-status LED",
+    ],
+    confidence: "common"
   },
   {
     id: "len-ac-10",
@@ -15019,6 +15971,190 @@ const ERROR_CODES = [
       "Check the furnace ground and 115 VAC polarity",
     ],
     confidence: "common",
+  },
+  {
+    id: "yk-f-8",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "8 flashes",
+    title: "Flame lost five times during the heating cycle",
+    meaning: "Flame was lost five times (four recycles) during the heating cycle. The furnace locks out for one hour and then restarts.",
+    causes: [
+      "Low gas pressure",
+      "Dirty or faulty flame sensor",
+      "Faulty gas valve",
+    ],
+    steps: [
+      "Check inlet and manifold gas pressure against the rating plate",
+      "Clean the flame sensor and re-test flame current",
+      "If pressure and flame sense are good and flame still drops out, suspect the gas valve",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-9",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "9 flashes",
+    title: "Reversed polarity or grounding problem",
+    meaning: "Reversed line voltage polarity, a grounding problem, or reversed low-voltage transformer wires. Heating AND cooling are affected, and the furnace will not start an ignition sequence until it is corrected.",
+    causes: [
+      "Hot and neutral reversed at the furnace or branch circuit",
+      "Poor furnace grounding",
+      "Reversed 24V transformer wires",
+      "Flame probe shorted to chassis",
+    ],
+    steps: [
+      "Check 115 VAC polarity at the furnace and at the branch circuit",
+      "Check the furnace grounding path",
+      "Check that the flame probe is not shorted to the chassis",
+      "Check the low-voltage transformer wiring for reversal",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-10",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "10 flashes",
+    title: "Gas valve energized with no call for heat",
+    meaning: "The control sees the gas valve energized with no call for heat. The main blower and inducer run, and no ignition sequence will start while this condition exists.",
+    causes: [
+      "Faulty gas valve",
+      "Miswired gas valve circuit",
+    ],
+    steps: [
+      "Check the gas valve wiring for a short or miswire feeding the valve outside a call",
+      "If the wiring is clean, replace the gas valve - never leave a valve that opens without a call in service",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-11",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "11 flashes",
+    title: "Limit circuit open 5 to 15 minutes (hard lockout)",
+    meaning: "The limit circuit stayed open for more than five minutes but less than fifteen. Usually a failed blower motor or blower wheel. Hard lockout - power must be cycled off and on to reset after the problem is corrected.",
+    causes: [
+      "Failed blower motor",
+      "Loose or damaged blower wheel",
+    ],
+    steps: [
+      "Verify the supply-air blower actually runs on a heat call",
+      "Check the blower wheel is tight on the shaft and intact",
+      "After the repair, cycle power off and on to clear the hard lockout",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-13",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "13 flashes",
+    title: "High-fire pressure switch open when it should be closed",
+    meaning: "The high-fire (second stage) pressure switch is open when it should be closed.",
+    causes: [
+      "Partially blocked vent pipe",
+      "Loose or disconnected pressure switch wire",
+      "Faulty pressure switch",
+    ],
+    steps: [
+      "Check the vent pipe for a partial blockage",
+      "Check for a loose or disconnected wire at the high-fire pressure switch",
+      "Only after vent and wiring check clean, replace the pressure switch",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-a4",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "4 amber flashes",
+    title: "Y call without G - thermostat wiring",
+    meaning: "The control is receiving a Y signal from the thermostat without a G signal. The furnace still operates normally in heating and cooling - this code exists to flag the wiring problem.",
+    causes: [
+      "G wire from the thermostat loose or not connected",
+    ],
+    steps: [
+      "Verify the G wire from the thermostat is connected properly at both ends",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-amber-cont",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "Continuous amber flash",
+    title: "Flame sense current below 1.5 microamps",
+    meaning: "Flame sense current is below 1.5 microamps. Some literature calls this state 'rapid amber flash'.",
+    causes: [
+      "Dirty flame sensor",
+      "Poor gas flow at the burner",
+    ],
+    steps: [
+      "Clean the flame sensor",
+      "Check for proper gas flow",
+      "Verify current is greater than 1.5 microamps at the flame current test pad",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-amber-slow",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "Slow amber flash",
+    title: "Normal operation with a call for heat",
+    meaning: "Normal operation while a heat call is active. Not a fault.",
+    steps: [
+      "No action - this is the normal heat-call indication on this control",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-steady-on",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "LED steady ON (any color)",
+    title: "Control failure",
+    meaning: "Control failure. The control board is not field-repairable.",
+    causes: [
+      "Failed control board",
+    ],
+    steps: [
+      "Turn power to the furnace off and back on",
+      "If the steady-on state returns, replace the control board",
+    ],
+    confidence: "common"
+  },
+  {
+    id: "yk-f-steady-off",
+    brand: "York",
+    family: "UTEC integrated furnace control - all single and two-stage gas furnaces (York / Luxaire / Coleman), per Service Tips ST-045-09",
+    equipment: "Gas Furnace",
+    code: "LED steady OFF",
+    title: "No power to the board or blown board fuse",
+    meaning: "The LED does not flash at all.",
+    causes: [
+      "No power to the board",
+      "Blown fuse on the board",
+      "Failed control board",
+    ],
+    steps: [
+      "Check for power to the board - walk the power path if it is dead",
+      "Check the board fuse - if it is blown, find what shorted the 24V circuit before replacing it",
+      "If the board is powered and the fuse is good with no LED, replace the control board",
+    ],
+    confidence: "common"
   },
   {
     id: "car-f-33",

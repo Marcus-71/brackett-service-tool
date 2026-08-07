@@ -16915,5 +16915,26 @@ const SYMPTOMS = [
   ],
   "safety": "Multiple circuits means multiple sources. Kill and verify EVERY feed before working, and prove your meter live-dead-live. Heat strips energizing without the blower is a fire hazard - do not leave that condition running.",
   "confidence": "common"
+ },
+ {
+  "id": "s-elec-path-minisplit",
+  "equipment": "Mini-Split",
+  "title": "Mini-split is completely dead - walk the power (start here)",
+  "summary": "No lights on the indoor head, no response to the remote, outdoor unit silent. On most ductless systems the indoor head is POWERED FROM THE OUTDOOR UNIT's terminal block, so a dead head usually traces back outside. This walks the path in order so you find the first place power stops.",
+  "steps": [
+   "Work in order and do not skip ahead - the point is to find the FIRST place power stops",
+   "Kill power at the breaker AND the outdoor disconnect, then prove your meter live-dead-live before trusting any dead reading",
+   "WAIT before opening the outdoor unit: inverter capacitors hold a charge. Follow the unit's posted wait time (typically 10 minutes or more) and verify with a meter before touching the board",
+   "Step 1: line side of the outdoor disconnect - is power arriving at the unit at all?",
+   "Step 2: load side of the disconnect - fuses and burnt lugs show up here",
+   "Step 3: outdoor unit terminal block L1/L2 - confirms the whip is intact",
+   "Step 4: check the interunit wiring at the outdoor terminal block - on most ductless the indoor head gets its power from terminals 1 and 2 (Mitsubishi S1/S2) out here, not from its own breaker",
+   "Step 5: same terminals at the INDOOR unit - power present outside but not inside means the interunit cable or its terminations",
+   "Step 6: only after power reaches both boards do you suspect a PCB - check the outdoor board fuse and look for a scorched varistor before condemning it",
+   "The signal wire (3 / S3) carries DC riding on the communication pair - do not expect it to read like a 24V control leg, and never megger or hi-pot the interunit cable with the boards connected",
+   "Any burnt, melted, or discolored wiring or terminals: stop, photograph it, leave it de-energized, and hand it off"
+  ],
+  "safety": "Inverter units store lethal DC in their capacitors after power is removed. Kill power at the disconnect, wait the posted time, and verify near-zero VDC across the DC link terminals with a meter before touching the outdoor board. Prove the meter live-dead-live.",
+  "confidence": "common"
  }
 ];

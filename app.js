@@ -1635,7 +1635,7 @@ const MODEL_PATTERNS = [
   { re: /^DV[0-9]{2}[FP]EC/, brand: "Daikin", equipment: "Air Handler", series: "Daikin DV**FEC/PEC EEV air handler (R-32 FIT indoor)", notes: ["Air-handler code table (EE/Eb/Ed/E5/EF, d/b series, 70-77) in Error Codes applies.", "R-32 FIT system service manual is in Manuals → Daikin."] },
   { re: /^D[FM]VE/, brand: "Daikin", equipment: "Air Handler", series: "DFVE/DMVE EEV-series communicating air handler (Daikin FIT indoor)", notes: ["Air-handler diagnostic codes (EC/EE/EF, d, b series) are in Error Codes."] },
   { re: /^DOZP/, brand: "Daikin", equipment: "Other", series: "Daikin One zone panel (DOZP)", notes: ["Zone error codes 25-95 and DOZP troubleshooting flows are in Diagnostic Help (search 'DOZP')."] },
-  { re: /^(FTXS|FDXS|RXS|FTX|FTK|RK|RX)[0-9BX]/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin single-zone wall-mount mini-split (incl. 19 Series FTK/RK)", notes: ["Full two-character error code table (U/A/C/E/F/H/J/L/P) is in Error Codes.", "19 Series service manual with per-code procedures is in Manuals → Daikin."] },
+  { re: /^(FTXS|FDXS|CTXS|CTXG|CDXS|FVXS|RXS|FTX|FTK|RK|RX)[0-9BX]/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin single-zone ductless indoor/outdoor (wall mount, floor console, slim duct; incl. 19 Series FTK/RK)", notes: ["Full two-character error code table (U/A/C/E/F/H/J/L/P) is in Error Codes.", "19 Series service manual with per-code procedures is in Manuals → Daikin.", "CTXG/CTXS/CDXS/FVXS head-specific checks (PCB jumpers, Hall IC, fan connector voltages) are in Diagnostic Help."] },
   { re: /^(RMXS|[234]MXS|MXS)[0-9]?/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin multi-zone mini-split outdoor unit", notes: ["Multi-zone code table is in Error Codes; branch provider issues are in Diagnostic Help."] },
   // --- Goodman / Amana ---
   { re: /^AVZC1[68]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Amana/Goodman AVZC inverter heat pump (ClimateTalk communicating)", notes: ["Its full diagnostic code table (EE/Eb/b/d/7x) is in Error Codes."] },
@@ -1644,6 +1644,12 @@ const MODEL_PATTERNS = [
   { re: /^(GSZ|ASZ|DSZ|SSZ|ANZ|VSZ)[0-9]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman/Amana heat pump", notes: ["Service manual RS6200006 (covers this family) is in Manuals → Goodman."] },
   { re: /^(GM9C96|GC9C96|AM9C96|AC9C96)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 96% two-stage furnace (9-speed ECM)", notes: ["Service manual RS6612020 is in Manuals → Goodman — fault codes are on its pages 35-36."] },
   { re: /^(GM9S|GC9S|AM9S|AC9S|VM9S|VC9S)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 80/96% single-stage furnace", notes: ["E-codes (E0/E1/E2/Eb/EC) + flash codes are in Error Codes."] },
+  // Previous-generation lineup, confirmed against Goodman's own spec/install
+  // literature (SS-GMEC96, SS-GME8, shared install manual GME8/GMH8/GDH8/
+  // GMS8/GDS8/GHS8). Field population is huge even though the current
+  // manuals in our library cover the newer naming.
+  { re: /^(GMSS|GCSS|GMES|GCES|GMEC|GCEC)9[26]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 92/96% furnace (GMSS/GMES single-stage, GMEC two-stage — prior generation)", notes: ["Flash codes and E-codes in Error Codes apply — same board families as the current lineup."] },
+  { re: /^(GMS|GDS|GHS|GME|GMH|GDH)8[0-9]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 80% furnace (GMS8/GDS8/GHS8 single-stage, GME8/GMH8/GDH8 two-stage — prior generation)", notes: ["Goodman flash codes in Error Codes apply."] },
   { re: /^(GMVC|GCVC|AMVC|ACVC)9[67]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana two-stage variable-speed furnace (ComfortNet)", notes: ["Uses the shared ComfortNet dual 7-segment code set — see Goodman codes in Error Codes.", "Service manual RS6612014 is in Manuals → Goodman."] },
   { re: /^(GMVM|GCVM|AMVM|ACVM)9[78]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 97-98% modulating communicating furnace (Daikin DM97MC platform)", notes: ["Same code set as the Daikin DM97MC entries in Error Codes (E0-b9).", "Service manual RS6612015 is in Manuals → Goodman."] },
   { re: /^(GR9S|AR9S)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana GR9S/AR9S single-stage multi-speed 96-97% furnace (R-32-era lineup)", notes: [] },
@@ -1652,6 +1658,10 @@ const MODEL_PATTERNS = [
   { re: /^(GP|AP)[GCHU][GMU0-9]/, brand: "Goodman", equipment: "Other", series: "Goodman/Amana packaged unit (gas-electric / AC / heat pump)", notes: ["Package-unit install + service manuals (IO-398E, IOG-3021B, RS6300012, RS6300014) are in Manuals → Goodman → Packaged units."] },
   { re: /^GVZC20/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman GVZC20 inverter heat pump (ComfortBridge)", notes: ["Inverter unit — CoolCloud app connects to the board for diagnostics (see Toolbox)."] },
   { re: /^(AMST|ARUF|ASPT|AVPTC|AWUF)/, brand: "Goodman", equipment: "Air Handler", series: "Goodman/Amana air handler", notes: ["PCBJA-board diagnostic codes (EC/EE/EF, d, b series) in Error Codes apply to the communicating models."] },
+  // Modular blowers (MBVC1200, MBVK12BP...) — named in the Daikin FIT system
+  // service manuals in our library. With a heat kit these ARE the electric
+  // furnace; the air-handler electrical path in Diagnostic Help covers them.
+  { re: /^MBV[CK][0-9]/, brand: "Goodman", equipment: "Air Handler", series: "Goodman/Daikin modular blower (MBVC/MBVK — electric heat or FIT indoor)", notes: ["With an electric heat kit installed, work it as an electric furnace — the air handler power-path and heat-strip scenarios in Diagnostic Help apply.", "On a Daikin FIT system the communicating code table in Error Codes applies."] },
   // --- Carrier / Bryant / Payne ---
   { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["Full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'."] },
   { re: /^59TP6/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96 two-stage furnace (59TP6)", notes: ["Install/service manual is in Manuals → Carrier."] },
@@ -1702,8 +1712,8 @@ const MODEL_PATTERNS = [
   // --- Trane / American Standard ---
   { re: /^S[89][VXB][12]|^L9X1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
   { re: /^(TUD|TUH|TDD|TDH|TUX|TUC|TDC|TUE|TME|AUD|ADD)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
-  { re: /^4TT[RXBZ][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX)", notes: ["Condensing unit installer's guide is in Manuals → Trane."] },
-  { re: /^4TW[RXBZ][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX)", notes: [] },
+  { re: /^4TT[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX; 4TTV = XV18/XV20i variable-speed)", notes: ["Condensing unit installer's guide is in Manuals → Trane.", "4TTV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
+  { re: /^4TW[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX; 4TWV = XV18/XV20i variable-speed)", notes: ["4TWV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4A7|^4A6/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "American Standard AC/heat pump", notes: ["American Standard = Trane."] },
   { re: /^(TEM[468]|TAM[4-9]X?|GAM[45]|TMM[45])/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard air handler", notes: [] },
   // Trane/American Standard packaged units + coils — confirmed families, no
@@ -2171,7 +2181,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v82";
+const APP_VERSION = "v83";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
