@@ -3536,51 +3536,6 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
- "s-compressor-ground-test-after-trip-2": [
-  {
-   "ask": "With the compressor terminal protective cover in place, replace the fuse or reset the breaker ONE time only. What happens?",
-   "options": [
-    {
-     "label": "It holds",
-     "verdict": "It was a nuisance opening. Confirm the circuit protective device rating matches the maximum rating marked on the equipment nameplate before you leave."
-    },
-    {
-     "label": "It opens again",
-     "verdict": "Stop resetting - do not continue to reset. Disconnect all power to the unit, make sure all power legs are open, and ground-test the compressor."
-    }
-   ]
-  },
-  {
-   "ask": "Power off, protective cover left on, three compressor leads disconnected at the nearest point. Ohm each lead separately to ground on the R x 10,000 or highest scale. What do you read?",
-   "options": [
-    {
-     "label": "Infinity on all three leads",
-     "verdict": "No ground fault at the compressor. It is not the reason the device opened - keep looking at the rest of the electrical circuit."
-    },
-    {
-     "label": "A reading on the meter from any lead to ground",
-     "next": 2
-    }
-   ]
-  },
-  {
-   "ask": "Carefully remove the compressor terminal protective cover and inspect. What do you see?",
-   "options": [
-    {
-     "label": "Loose leads or insulation breaks in the lead wires",
-     "verdict": "There is your ground path. Repair the leads - the compressor itself may be fine."
-    },
-    {
-     "label": "Nothing shows visually",
-     "verdict": "Carefully remove the leads at the compressor terminals and retest for ground directly between the terminals and ground. Improper removal can damage the glass embedded terminals and result in terminal and hot oil discharging."
-    },
-    {
-     "label": "Retested at the terminals and still reading to ground",
-     "verdict": "Any reading means there is continuity to ground - the compressor should be considered defective. Replace it."
-    }
-   ]
-  }
- ],
  "s-compressor-grounded-only-when-hot": [
   {
    "ask": "With the compressor leads disconnected and insulated, energize the unit and let it run. What does the breaker do?",
@@ -5433,51 +5388,6 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
- "s-daikin-comfortnet-defrost-test-recall": [
-  {
-   "ask": "With the thermostat calling for heating, press TEST and RECALL together for about 3 seconds and release. What happens?",
-   "options": [
-    {
-     "label": "System goes into defrost immediately",
-     "verdict": "Good. Watch the coil - the frost should gradually melt off and the compressor should stay running while it defrosts."
-    },
-    {
-     "label": "Nothing happens - the system does not go into defrost",
-     "verdict": "The board is not responding to the forced defrost. Confirm the thermostat is really calling for heating; if it still will not force, replace the control board."
-    }
-   ]
-  },
-  {
-   "ask": "Is this system fully communicating?",
-   "options": [
-    {
-     "label": "Fully communicating",
-     "verdict": "Skip the C to O check - there is no O signal to read on a fully communicating system. Go straight to checking 'W2' to 'C' for 24 volts."
-    },
-    {
-     "label": "Not fully communicating",
-     "verdict": "Check for 24 volts across terminals 'C' and 'O' with your VOM. If it is not there, replace the control board."
-    }
-   ]
-  },
-  {
-   "ask": "Watch the coil and check across 'W2' and 'C' with your VOM while it is in defrost.",
-   "options": [
-    {
-     "label": "Frost melting off, compressor running, and 24 volts across W2 and C",
-     "verdict": "The board is sequencing correctly. Set the thermostat to off and disconnect power before removing any jumpers or wires."
-    },
-    {
-     "label": "No 24 volts across W2 and C",
-     "verdict": "The board is not calling auxiliary heat in defrost. Replace the control board."
-    },
-    {
-     "label": "Frost is not melting, or the compressor is not running",
-     "verdict": "The unit is not actually defrosting even though the board went into defrost. Confirm the compressor is running before you condemn anything else."
-    }
-   ]
-  }
- ],
  "s-daikin-ctxg-pcb-jumper-caution": [
   {
    "ask": "What is the actual complaint on this CTXG indoor unit?",
@@ -5860,34 +5770,6 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
- "s-daikin-dm96vc-gas-pressure-test-mode": [
-  {
-   "ask": "Press and hold both FAULT RECALL and LEARN for more than 1 second, then release both within 5 seconds. What does the display do?",
-   "options": [
-    {
-     "label": "Ft flashes on the display",
-     "verdict": "You are in test mode. Wait for Ft to stop flashing - that means 100 percent capacity is reached and the 5 minute timer has started."
-    },
-    {
-     "label": "Display goes back to normal with no Ft",
-     "verdict": "One of the buttons was not released within 5 seconds, so test mode never activated. Try again - hold both more than 1 second, then release both together inside 5 seconds."
-    }
-   ]
-  },
-  {
-   "ask": "Ft is showing on the display. Is it still flashing, or has it gone steady?",
-   "options": [
-    {
-     "label": "Ft is still flashing",
-     "verdict": "The furnace has not reached 100 percent capacity yet. Wait for it to stop flashing before you read gas pressure, or you are reading at the wrong firing rate."
-    },
-    {
-     "label": "Ft has stopped flashing",
-     "verdict": "100 percent capacity is reached and the 5 minute timer is running. Take your gas pressure reading now - the test runs the full time even if a heat call is added or removed."
-    }
-   ]
-  }
- ],
  "s-daikin-dm96vc-two-stage-lo-hi-manifold": [
   {
    "ask": "Identify the gas valve before you connect anything. Which valve is on this furnace?",
@@ -6078,36 +5960,45 @@ const SYMPTOM_FOLLOWUPS = {
  ],
  "s-daikin-dx16tc-test-recall-defrost": [
   {
-   "ask": "Power ON with the unit not running and the thermostat calling for heat, press TEST and RECALL together for about 3 seconds and release. What happens?",
+   "ask": "With the thermostat calling for heating, press TEST and RECALL together for about 3 seconds and release. What happens?",
    "options": [
     {
-     "label": "The system goes into defrost immediately",
-     "verdict": "Good. Now take your readings - 24 volts across C and O (skip this if the system is fully communicating), 24 volts across W2 and C - and watch the frost melt with the compressor still running."
+     "label": "System goes into defrost immediately",
+     "verdict": "Good. Watch the coil - the frost should gradually melt off and the compressor should stay running while it defrosts."
     },
     {
-     "label": "Nothing happens",
-     "verdict": "The board is not responding to the forced defrost command. Confirm power is ON with the unit not running and the thermostat calling for heat, then take the control board as the suspect."
+     "label": "Nothing happens - the system does not go into defrost",
+     "verdict": "The board is not responding to the forced defrost. Confirm the thermostat is really calling for heating; if it still will not force, replace the control board."
     }
    ]
   },
   {
-   "ask": "With defrost running, take the readings and watch the coil. What is missing?",
+   "ask": "Is this system fully communicating?",
    "options": [
     {
-     "label": "All good: 24V C to O, 24V W2 to C, frost gradually melting, compressor still running",
-     "verdict": "The board checks out. Set the thermostat to the off position and disconnect power before removing any jumpers or wires."
+     "label": "Fully communicating",
+     "verdict": "Skip the C to O check - there is no O signal to read on a fully communicating system. Go straight to checking 'W2' to 'C' for 24 volts."
     },
     {
-     "label": "No 24 volts across C and O on a non-communicating system",
-     "verdict": "Replace the control board."
+     "label": "Not fully communicating",
+     "verdict": "Check for 24 volts across terminals 'C' and 'O' with your VOM. If it is not there, replace the control board."
+    }
+   ]
+  },
+  {
+   "ask": "Watch the coil and check across 'W2' and 'C' with your VOM while it is in defrost.",
+   "options": [
+    {
+     "label": "Frost melting off, compressor running, and 24 volts across W2 and C",
+     "verdict": "The board is sequencing correctly. Set the thermostat to off and disconnect power before removing any jumpers or wires."
     },
     {
      "label": "No 24 volts across W2 and C",
-     "verdict": "Replace the control board."
+     "verdict": "The board is not calling auxiliary heat in defrost. Replace the control board."
     },
     {
-     "label": "Frost is not melting, or the compressor has stopped",
-     "verdict": "The forced defrost is not doing its job. If the outputs do not check out as described, replace the control board."
+     "label": "Frost is not melting, or the compressor is not running",
+     "verdict": "The unit is not actually defrosting even though the board went into defrost. Confirm the compressor is running before you condemn anything else."
     }
    ]
   }
@@ -10005,7 +9896,7 @@ const SYMPTOM_FOLLOWUPS = {
     },
     {
      "label": "I cannot tell which device this is",
-     "verdict": "Identify it first - they fail differently. A bimetal sequencer is a heater element warming a bimetal strip, so it is slow by design and stages in over tens of seconds. An electronic time-delay relay switches cleanly at a set interval. See 'Electromechanical bimetal sequencer vs. electronic time-delay relay - different failure modes'."
+     "verdict": "Identify it first - they fail differently. A bimetal sequencer is a heater element warming a bimetal strip, so it is slow by design and stages in over tens of seconds. An electronic time-delay relay switches cleanly at a set interval. See 'Electromechanical bimetal sequencer vs. electronic time-delay relay - different failure patterns'."
     }
    ]
   },
@@ -15212,42 +15103,6 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
- "s-goodman-mbe-aepf-pj4-third-fourth-strips": [
-  {
-   "ask": "Count the heater elements and check which aux stages already work. What do you have?",
-   "options": [
-    {
-     "label": "More than two elements, with first and second stage aux working",
-     "verdict": "There is a second sequencer, HR2, on the heater assembly for elements 3 and 4. Force a third stage demand and check for 24VAC at W/W2 on the MBE/AEPF - that is what the VSTB uses to drive HR2."
-    },
-    {
-     "label": "Only two elements total",
-     "verdict": "Two elements run off HR1 alone, so there is no HR2 to find. Verify HR1 contacts M1/M2 close within 10 to 20 seconds for element #1 and M3/M4 for element #2, then look elsewhere for the capacity shortfall."
-    },
-    {
-     "label": "Even first stage aux does not work",
-     "verdict": "Start earlier: on a W2 demand, 24VAC should reach E/W1 of the MBE/AEPF and the VSTB should feed sequencer HR1. Chase that before worrying about HR2."
-    }
-   ]
-  },
-  {
-   "ask": "Force a third stage demand, check W/W2 at the MBE/AEPF, and watch HR2. What happens?",
-   "options": [
-    {
-     "label": "24VAC present at W/W2 but HR2 never pulls in",
-     "verdict": "Inspect the PJ4 jumper on the VSTB inside the MBE/AEPF - it must be CUT for elements #3 and #4 to operate on a third stage demand. It is routinely left intact at install."
-    },
-    {
-     "label": "No 24VAC at W/W2",
-     "verdict": "The third stage demand is not arriving. Check the thermostat's staging and the wiring to W/W2 - on most digital thermostats the highest stage stays energized until the first stage Y demand is satisfied, so time your reading accordingly."
-    },
-    {
-     "label": "HR2 pulls in and elements 3 and 4 come on",
-     "verdict": "Staging works. When you drop the demand, expect HR2's contacts to open between 30 and 70 seconds - that lag is normal."
-    }
-   ]
-  }
- ],
  "s-goodman-mbe-first-stage-heat-airflow": [
   {
    "ask": "With a two-stage heat pump confirmed, place a Y1-only heating call and measure supply airflow or blower speed, then force a Y2 demand and measure again. What happens?",
@@ -15995,34 +15850,6 @@ const SYMPTOM_FOLLOWUPS = {
     {
      "label": "Unit is still powered up",
      "verdict": "Kill power first. Hot-plugging the memory card corrupts the data load and you will be doing this twice."
-    }
-   ]
-  }
- ],
- "s-goodman-silicon-nitride-igniter-ohms-amps": [
-  {
-   "ask": "With all power off, the igniter cooled to room temperature (roughly 70 to 77 F) and disconnected from the ignition control, measure its resistance. What do you read?",
-   "options": [
-    {
-     "label": "37 to 68 ohms",
-     "next": 1
-    },
-    {
-     "label": "Outside 37 to 68 ohms",
-     "verdict": "Replace the igniter, then reinstall the burner compartment door and verify a full normal heat cycle."
-    }
-   ]
-  },
-  {
-   "ask": "Reconnect the igniter, restore power, place the unit in a heating cycle and clamp the igniter current during the preheat period. Keep hands and leads clear of the manifold. What do you read?",
-   "options": [
-    {
-     "label": "0.37 to 0.68 amps steady state at 120V",
-     "verdict": "Both readings are in range - the igniter is good. Look elsewhere for the no-light."
-    },
-    {
-     "label": "Outside 0.37 to 0.68 amps",
-     "verdict": "Marginal igniter even though it ohmed in range and may still glow. Replace it, reinstall the burner compartment door, and verify a full normal heat cycle."
     }
    ]
   }
@@ -19400,47 +19227,6 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
- "s-lennox-igniter-three-test-isolation": [
-  {
-   "ask": "Test 1, power off: remove the igniter plug at the integrated control and read ohms across the two igniter terminals identified for your model. What do you read?",
-   "options": [
-    {
-     "label": "39 to 70 ohms",
-     "next": 2
-    },
-    {
-     "label": "0 or infinity",
-     "next": 1
-    }
-   ]
-  },
-  {
-   "ask": "Test 2: separate the 2-pin jack-plug near the manifold and read the igniter itself. What do you read?",
-   "options": [
-    {
-     "label": "39 to 70 ohms at the igniter",
-     "verdict": "The igniter is good and the fault is in the wiring between the jack-plug and the control. Chase that harness instead of replacing the igniter."
-    },
-    {
-     "label": "Still 0 or infinity at the igniter",
-     "verdict": "Replace the igniter."
-    }
-   ]
-  },
-  {
-   "ask": "Test 3: reassemble the igniter circuit, restore power and read AC voltage at the control plug during the 20-second igniter warm up, using small diameter probes so the plug is not damaged. What do you read?",
-   "options": [
-    {
-     "label": "120 volts plus or minus 10 percent",
-     "verdict": "The whole circuit reads good. Reassemble, close the blower door interlock properly, and run a full heat cycle to confirm ignition and flame proving."
-    },
-    {
-     "label": "Below 120 volts minus 10 percent",
-     "verdict": "Check the supply voltage to the furnace rather than replacing parts."
-    }
-   ]
-  }
- ],
  "s-lennox-igniter-voltage-warmup-check": [
   {
    "ask": "With the igniter circuit connected and a heat call initiated, insert small diameter probes into the igniter terminals at the control plug and read AC volts during the 20 second warm up period. What do you read?",
@@ -20970,34 +20756,6 @@ const SYMPTOM_FOLLOWUPS = {
     {
      "label": "The list is still incomplete",
      "verdict": "Do not accept a partial list and move on - a zone that was never detected will not be controllable later. Go back to the damper control module and zone sensor wiring and recheck the zone addresses."
-    }
-   ]
-  }
- ],
- "s-lennox-s40-zone-control-not-detected-2": [
-  {
-   "ask": "Work through the commissioning screens to the Equipment Found screen. Is a Zone Control icon listed?",
-   "options": [
-    {
-     "label": "Zone Control icon is present",
-     "verdict": "The system has detected the damper control module. Press continue and proceed with commissioning."
-    },
-    {
-     "label": "Zoning control is not listed",
-     "next": 1
-    }
-   ]
-  },
-  {
-   "ask": "Verify the damper control module is actually installed and powered, check every wiring connection to it and correct anything wrong, then run Re-Configure System and recheck the Equipment Found screen. What now?",
-   "options": [
-    {
-     "label": "Zone Control icon now appears",
-     "verdict": "Power or wiring was the problem. Continue commissioning from that screen."
-    },
-    {
-     "label": "Still no Zone Control icon",
-     "verdict": "Confirm the module has power and status indication before replacing it. This is a hardware or wiring issue, not a thermostat setting."
     }
    ]
   }
@@ -23278,25 +23036,6 @@ const SYMPTOM_FOLLOWUPS = {
     {
      "label": "The pair reads through with the far end wire nutted",
      "verdict": "The cable checks good. Confirm the run is 16/2 stranded shielded, a straight run with no splices, and landed on F1 and F2 with correct polarity."
-    }
-   ]
-  }
- ],
- "s-minisplit-f1-f2-dc-signal-voltage": [
-  {
-   "ask": "With power off 15 minutes, the field comm wires off F1 and F2 at both ends, and power then restored, read DC volts across F1 and F2 at the indoor unit and at the outdoor unit with a true RMS meter. What do you get?",
-   "options": [
-    {
-     "label": "Both boards read between 0.1 and 0.9 vdc",
-     "verdict": "Both boards are producing their own signal. Remove power 15 minutes, run a temporary wire between indoor and outdoor, restore power, and confirm the comm error clears."
-    },
-    {
-     "label": "Indoor board reads outside 0.1 to 0.9 vdc",
-     "verdict": "Replace the indoor board - it is not putting out its DC signal."
-    },
-    {
-     "label": "Outdoor board reads outside 0.1 to 0.9 vdc",
-     "verdict": "Replace the outdoor board - it is not putting out its DC signal."
     }
    ]
   }
@@ -28062,34 +27801,6 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
- "s-reversing-valve-leak-mimics-bad-compressor": [
-  {
-   "ask": "Measure true suction temperature and the suction line temperature after the reversing valve. What is the difference?",
-   "options": [
-    {
-     "label": "Greater than 4 degrees",
-     "verdict": "The valve is leaking internally. Confirm with pressures - internal leakage shows up as excessively high suction pressure - and rule the valve in before condemning the compressor."
-    },
-    {
-     "label": "4 degrees or less",
-     "verdict": "The valve is not leaking internally by this check, so the compressor stays the suspect."
-    }
-   ]
-  },
-  {
-   "ask": "Compare discharge line temperature before and after the reversing valve. What do you read?",
-   "options": [
-    {
-     "label": "Same temperature after the valve",
-     "verdict": "That is what the discharge line should read through the valve."
-    },
-    {
-     "label": "Noticeably different after the valve",
-     "verdict": "The discharge line should be the same temperature after the valve. Take that alongside the suction temperature check as support for internal leakage rather than a failed compressor."
-    }
-   ]
-  }
- ],
  "s-reversing-valve-no-24v-at-coil": [
   {
    "ask": "Put the system on the COOLING cycle and test for 24V at the reversing valve coil terminals. What do you read?",
@@ -28195,38 +27906,6 @@ const SYMPTOM_FOLLOWUPS = {
     {
      "label": "Coil tests continuous with 24 volts present at the terminals",
      "verdict": "The valve is inoperative - replace it. A suction line temperature increase measured through the valve supports that call."
-    }
-   ]
-  }
- ],
- "s-reversing-valve-stuck-mid-position-2": [
-  {
-   "ask": "Connect gauges and measure suction line temperature entering and leaving the reversing valve. What do you see?",
-   "options": [
-    {
-     "label": "Excessively high suction pressure with a temperature increase through the valve",
-     "next": 1
-    },
-    {
-     "label": "Suction pressure normal with no temperature rise through the valve",
-     "verdict": "That is not the mid-position signature. Discharge gas is not being routed back to the suction side here, so look elsewhere for the capacity complaint."
-    }
-   ]
-  },
-  {
-   "ask": "Switch the system from COOLING to HEATING, test for 24V at the coil terminals on the cooling cycle, and tap the valve body lightly while switching. What happens?",
-   "options": [
-    {
-     "label": "No 24V at the valve coil terminals",
-     "verdict": "The valve is not being commanded. Work the control side before condemning the valve."
-    },
-    {
-     "label": "Tapping the body frees it and it shifts",
-     "verdict": "The valve is sticking mechanically rather than being un-commanded - it is not holding position on its own."
-    },
-    {
-     "label": "Coil tests continuous, 24 volts present, and the valve stays put",
-     "verdict": "The valve is inoperative. Replace it."
     }
    ]
   }
@@ -33986,7 +33665,7 @@ const SYMPTOM_FOLLOWUPS = {
     },
     {
      "label": "It trips the breaker as soon as it tries to start",
-     "verdict": "HAND IT OFF. You already used your one reset. A breaker tripping on start means a short or a ground, most often in the compressor. Do not keep resetting it - that is how compressors get destroyed and people get hurt. See 'Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor'."
+     "verdict": "HAND IT OFF. You already used your one reset. A breaker tripping on start means a short or a ground, most often in the compressor. Do not keep resetting it - that is how compressors get destroyed and people get hurt. See 'Breaker tripped - compressor ground test done safely'."
     }
    ]
   }
@@ -34209,7 +33888,7 @@ const SYMPTOM_FOLLOWUPS = {
    "options": [
     {
      "label": "The breaker tripped again after I reset it once",
-     "verdict": "HAND IT OFF. One reset is all you get. A breaker that trips again is reporting a short or a ground that is still there. Repeated resets destroy compressors and put you in front of a fault that is already proven to draw fault current. See 'Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor'."
+     "verdict": "HAND IT OFF. One reset is all you get. A breaker that trips again is reporting a short or a ground that is still there. Repeated resets destroy compressors and put you in front of a fault that is already proven to draw fault current. See 'Breaker tripped - compressor ground test done safely'."
     },
     {
      "label": "I think the compressor is grounded / I need a megger",
@@ -34331,7 +34010,7 @@ const SYMPTOM_FOLLOWUPS = {
    "options": [
     {
      "label": "24V at the board and the LED is lit or flashing",
-     "verdict": "The board has power and is reporting something - read the code before you meter anything else. On a Goodman/Daikin air handler see 'red fault LED, green CFM LED, and what fault recall shows'. On a Daikin FIT see 'reading the network status LEDs and using the LEARN button'."
+     "verdict": "The board has power and is reporting something - read the code before you meter anything else. On a Goodman/Daikin air handler see 'red fault LED, green CFM LED, and what fault recall will not show you'. On a Daikin FIT see 'reading the network status LEDs and using the LEARN button'."
     },
     {
      "label": "24V at the board but the LED is dark",

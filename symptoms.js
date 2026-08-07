@@ -7326,22 +7326,6 @@ const SYMPTOMS = [
   "confidence": "verify"
  },
  {
-  "id": "s-goodman-mbe-aepf-pj4-third-fourth-strips",
-  "equipment": "Air Handler",
-  "title": "Goodman MBE/AEPF air handler - third and fourth heat strips never energize (PJ4 jumper)",
-  "summary": "A Goodman MBE/AEPF air handler with a heat pump makes first and second stage aux heat but the house still cannot keep up on design days. Heater assemblies with more than two elements use a second sequencer, HR2, and on this board HR2 only responds to a third stage demand if the PJ4 jumper on the VSTB has been cut. That jumper is routinely left intact at install.",
-  "steps": [
-   "Confirm the aux heat staging that does work: on a W2 demand, 24VAC should reach E/W1 of the MBE/AEPF and the VSTB should feed heat sequencer HR1.",
-   "Verify HR1 contacts M1 and M2 close within 10 to 20 seconds to bring on element #1, and that a second contact set M3/M4 brings on element #2 if fitted.",
-   "Count the heater elements. If there are more than two, locate the second sequencer HR2 on the heater assembly.",
-   "Force a third stage demand and check for 24VAC at W/W2 on the MBE/AEPF, which is what the VSTB uses to drive HR2.",
-   "If W/W2 is present but HR2 never pulls in, inspect the PJ4 jumper on the VSTB inside the MBE/AEPF - it must be cut for elements #3 and #4 to operate on a third stage demand.",
-   "On removal of the third stage demand, expect HR2 contacts to open between 30 and 70 seconds; that lag is normal.",
-   "Note that on most digital thermostats the highest stage stays energized until the first stage Y demand is satisfied, then all demands drop together - time your readings accordingly."
-  ],
-  "confidence": "verify"
- },
- {
   "id": "s-trane-ifc-limit-string-before-pressure-switch",
   "equipment": "Gas Furnace",
   "title": "Trane single-stage IFC - prove the limit string before you blame the pressure switch",
@@ -8841,23 +8825,6 @@ const SYMPTOMS = [
   "confidence": "verify"
  },
  {
-  "id": "s-compressor-ground-test-after-trip-2",
-  "equipment": "Condenser/Heat Pump",
-  "title": "Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor",
-  "summary": "The fuse, breaker, or ground fault device on the outdoor unit has opened. That is a strong indication of a real electrical problem, and the manual allows exactly one reset to rule out a nuisance trip. If it opens again, stop resetting and ground-test the compressor.",
-  "steps": [
-   "Check the circuit protective device rating against the rating marked on the equipment nameplate - its maximum rating must match.",
-   "With the compressor terminal protective cover in place, replace the fuse or reset the breaker ONE TIME ONLY to see whether it was a nuisance opening. If it opens again, do not continue to reset.",
-   "Disconnect all power to the unit and make sure all power legs are open.",
-   "Do NOT remove the protective terminal cover; disconnect the three leads going to the compressor terminals at the nearest point to the compressor.",
-   "Identify the leads and, with the ohmmeter on the R x 10,000 scale or the highest resistance scale, check resistance from each of the three leads separately to ground, such as an unpainted tube on the compressor.",
-   "If a ground is indicated, carefully remove the compressor terminal protective cover and inspect for loose leads or insulation breaks in the lead wires.",
-   "If nothing shows visually, carefully remove the leads at the compressor terminals and retest for ground directly between the compressor terminals and ground - damage can occur to the glass embedded terminals if the leads are not properly removed, which can result in terminal and hot oil discharging.",
-   "The reading should be infinity; any reading on the meter means there is continuity to ground and the compressor should be considered defective - replace it."
-  ],
-  "confidence": "common"
- },
- {
   "id": "s-reversing-valve-coil-click-test",
   "equipment": "Condenser/Heat Pump",
   "title": "Reversing valve solenoid - listening for the pilot valve click when you pull the coil",
@@ -9564,21 +9531,6 @@ const SYMPTOMS = [
   "confidence": "common"
  },
  {
-  "id": "s-reversing-valve-stuck-mid-position-2",
-  "equipment": "Condenser/Heat Pump",
-  "title": "High suction pressure and a warm suction line - reversing valve stuck mid-position",
-  "summary": "Gauges show excessively high suction pressure and the system has poor capacity. A reversing valve stuck in the mid-position routes part of the discharge gas straight back to the suction side, which also shows up as a suction line temperature rise through the valve.",
-  "steps": [
-   "Connect gauges and note suction pressure - excessively high suction is the signature of a mid-position valve.",
-   "Measure suction line temperature entering and leaving the reversing valve and look for an increase through the valve.",
-   "Start the system and switch operation from COOLING to HEATING to see whether the valve will change position.",
-   "If it will not shift, test for 24V at the valve coil terminals while the system is on the COOLING cycle.",
-   "Tap the valve body lightly while switching modes to see if it frees up.",
-   "If the coil tests continuous and 24 volts is present but the valve stays put, the valve is inoperative - replace it."
-  ],
-  "confidence": "common"
- },
- {
   "id": "s-mitsubishi-mxz-4way-valve-removal",
   "equipment": "Mini-Split",
   "title": "Mitsubishi MXZ multi-zone - removing the compressor and 4-way valve",
@@ -9783,21 +9735,6 @@ const SYMPTOMS = [
    "Let the furnace control stage the indoor and outdoor units automatically based on those inputs."
   ],
   "confidence": "verify"
- },
- {
-  "id": "s-reversing-valve-leak-mimics-bad-compressor",
-  "equipment": "Condenser/Heat Pump",
-  "title": "Low capacity with gauges that look like a bad compressor - reversing valve internal leak",
-  "summary": "Compound gauges show what looks like failed compressor valves or broken scroll flanks. A reversing valve leaking discharge gas internally into the suction side gives the same picture, and a temperature check across the valve separates the two before you open the system.",
-  "steps": [
-   "Identify the center tube on the reversing valve - it is always the suction line and should be cold.",
-   "Measure true suction temperature and the suction line temperature after the valve.",
-   "If the difference is greater than 4 degrees, the valve is leaking internally.",
-   "Confirm with pressures: internal leakage shows up as excessively high suction pressure.",
-   "Compare discharge line temperature before and after the valve - the discharge line should be the same temperature after the valve.",
-   "Rule the reversing valve in or out this way before condemning the compressor."
-  ],
-  "confidence": "common"
  },
  {
   "id": "s-goodman-96-furnace-full-capacity-charging",
@@ -10835,22 +10772,6 @@ const SYMPTOMS = [
   "confidence": "common"
  },
  {
-  "id": "s-daikin-dm96vc-gas-pressure-test-mode",
-  "equipment": "Gas Furnace",
-  "title": "Daikin/Amana DM96VC - Ft field test mode to hold 100 percent firing rate",
-  "summary": "You need to check gas pressure at full fire but the furnace keeps modulating or staging down. The DM96VC control has a field test mode entered from the FAULT RECALL and LEARN push buttons that forces high capacity for a 5 minute window.",
-  "steps": [
-   "Confirm the furnace is powered and the control display is readable before starting.",
-   "Press and hold both the FAULT RECALL and LEARN push buttons for more than 1 second; the display blanks to indicate the buttons are pressed.",
-   "Release both buttons within 5 seconds. If either button is not released, test mode will not activate and the display returns to normal.",
-   "Watch for a flashing Ft confirming successful entry into test mode, then wait for it to stop flashing, which indicates 100 percent capacity has been reached and the 5 minute timer has started.",
-   "Take the gas pressure reading during the 5 minute window. The test runs the full time even if a heat call is added or removed.",
-   "To exit early, press both buttons again for more than 1 second and release within 5 seconds; otherwise the control returns to normal operation when the timer expires.",
-   "To shut the unit down after testing, move the furnace gas valve manual control to OFF, close the manual gas shutoff valve external to the furnace, and replace the burner compartment door."
-  ],
-  "confidence": "verify"
- },
- {
   "id": "s-goodman-package-high-stage-cooling-check",
   "equipment": "Other",
   "title": "Goodman packaged gas/electric - high-stage cooling never engages (two-stage board setting)",
@@ -11365,22 +11286,6 @@ const SYMPTOMS = [
   "confidence": "verify"
  },
  {
-  "id": "s-lennox-s40-zone-control-not-detected-2",
-  "equipment": "Other",
-  "title": "Lennox S40 commissioning - Zone Control icon missing from the Equipment Found screen",
-  "summary": "You are commissioning a new S40 system with Lennox Smart Zoning and the thermostat does not list zoning. The system only shows a Zone Control icon once it has detected the damper control module, so this is a hardware or wiring issue, not a thermostat setting.",
-  "steps": [
-   "Work through the commissioning screens until you reach the Equipment Found screen.",
-   "Look for a Zone Control icon. If it is present the system has detected the equipment - press continue to proceed.",
-   "If zoning control is not listed, stop and verify the damper control module is actually installed and powered.",
-   "Verify all wiring connections to the damper control module and make any corrections required.",
-   "Run the Re-Configure System feature again so the thermostat rescans for equipment.",
-   "Recheck the Equipment Found screen for the Zone Control icon.",
-   "If it still does not appear, confirm the module has power and status indication before replacing it."
-  ],
-  "confidence": "common"
- },
- {
   "id": "s-lennox-smart-zoning-zone-airflow-setup",
   "equipment": "Other",
   "title": "Lennox Smart Zoning - naming zones and completing Verify Airflow Per Zone at commissioning",
@@ -11673,23 +11578,6 @@ const SYMPTOMS = [
   "confidence": "verify"
  },
  {
-  "id": "s-goodman-silicon-nitride-igniter-ohms-amps",
-  "equipment": "Gas Furnace",
-  "title": "Goodman/Amana 120V silicon nitride igniter - resistance and current draw check",
-  "summary": "Furnace fails to light or the igniter looks weak on an Amana/Goodman A/GMVC96 or A/GCVC96. These use a 120V silicon nitride igniter, and the manual gives both a cold resistance range and a running current range, so you can catch a marginal igniter that still glows.",
-  "steps": [
-   "Disconnect all power to the furnace before servicing.",
-   "Remove the burner compartment door to reach the igniter.",
-   "Let the igniter cool to room temperature (roughly 70 to 77 F) before measuring.",
-   "Disconnect the igniter from the ignition control.",
-   "Measure igniter resistance with an ohmmeter: a 120V silicon nitride igniter should read 37 to 68 ohms.",
-   "Reconnect the igniter and restore power - line voltage is now present, so keep hands and meter leads clear of the manifold.",
-   "Place the unit in a heating cycle and clamp the igniter current during the preheat period: steady state at 120V should be 0.37 to 0.68 amps.",
-   "Replace the igniter if either reading is outside the range, then reinstall the burner compartment door and verify a full normal heat cycle."
-  ],
-  "confidence": "verify"
- },
- {
   "id": "s-carrier-59mn7c-manifold-two-tables",
   "equipment": "Gas Furnace",
   "title": "Carrier 59MN7C modulating - which manifold pressure table applies, and setting max before min heat",
@@ -11721,22 +11609,6 @@ const SYMPTOMS = [
    "Confirm the run also meets the 15 ft equivalent minimum vent length required for all models.",
    "If a listed polypropylene system (PolyPro, Z-DENS, InnoFlue, ECCO, Polyflue) is installed, use that vent manufacturer's fitting equivalents instead, since they differ.",
    "Correct any overlength run before returning the furnace to service, and verify draft and combustion after the repair."
-  ],
-  "confidence": "verify"
- },
- {
-  "id": "s-lennox-igniter-three-test-isolation",
-  "equipment": "Gas Furnace",
-  "title": "Lennox EL/ML furnace - three-test method to separate a bad igniter from bad harness wiring",
-  "summary": "No ignition on a Lennox EL296/EL297/ML296 furnace and you need to know whether to replace the igniter or chase the harness. The manual's three tests walk the circuit back from the control plug to the igniter's own jack-plug, so the fault gets isolated instead of guessed.",
-  "steps": [
-   "Kill power to the furnace before unplugging anything.",
-   "Test 1: remove the igniter plug at the integrated control and read ohms across the two igniter terminals identified for your model; 39 to 70 ohms means the whole circuit is good and no further test is needed.",
-   "Test 2: if Test 1 reads 0 or infinity, separate the 2-pin jack-plug near the manifold and read the igniter itself; 39 to 70 ohms here means the igniter is good and the fault is in the wiring between the jack-plug and the control.",
-   "If Test 2 is also out of range, replace the igniter.",
-   "Test 3: with the igniter circuit reassembled, restore power and read AC voltage at the control plug during the 20-second igniter warm up using small diameter probes so the plug is not damaged.",
-   "Expect 120 volts plus or minus 10 percent; if it is low, check the supply voltage to the furnace rather than replacing parts.",
-   "Reassemble, close the blower door interlock properly, and run a full heat cycle to confirm ignition and flame proving."
   ],
   "confidence": "verify"
  },
@@ -12622,22 +12494,6 @@ const SYMPTOMS = [
   "confidence": "verify"
  },
  {
-  "id": "s-daikin-comfortnet-defrost-test-recall",
-  "equipment": "Condenser/Heat Pump",
-  "title": "Daikin DX16TC/DZ18TC ComfortNet - forcing defrost with the TEST and RECALL buttons",
-  "summary": "Communicating models have no timer pins or DFT jumper to work with. Defrost is forced from the board's own buttons, and on a fully communicating system there is no O signal to read.",
-  "steps": [
-   "With power ON and the unit not running, set the thermostat to call for heating.",
-   "Press the TEST and RECALL buttons on the board simultaneously for approximately 3 seconds, then release them; the system should go into defrost immediately.",
-   "Using a VOM, check for voltage across terminals 'C' and 'O' - the meter should read 24 volts (skip this step if the system is fully communicating).",
-   "Visually inspect to confirm the frost is gradually melting off the coil and that the compressor is running.",
-   "Using a VOM, check for voltage across the 'W2' and 'C' terminals on the board - you should read 24 volts.",
-   "If any reading is not as above, replace the control board.",
-   "Set the thermostat to the off position and disconnect power before removing any jumpers or wires."
-  ],
-  "confidence": "verify"
- },
- {
   "id": "s-defrost-thermostat-close-open-temp-check",
   "equipment": "Condenser/Heat Pump",
   "title": "Checking a defrost thermostat's close and open temperatures with a thermocouple lead",
@@ -13165,22 +13021,6 @@ const SYMPTOMS = [
    "If you read no resistance, wire nut one end of the pair together and ohm the pair again from the other end.",
    "If you still read no resistance on the wire-nutted test, the run is open - replace the wires.",
    "Confirm the replacement is 16/2 stranded shielded, a straight run with no splices, and landed on F1 and F2 with correct polarity."
-  ],
-  "confidence": "verify"
- },
- {
-  "id": "s-minisplit-f1-f2-dc-signal-voltage",
-  "equipment": "Mini-Split",
-  "title": "Reading F1/F2 DC signal voltage with a true RMS meter (Lennox mini-split)",
-  "summary": "With the field comm wires removed, each Lennox mini-split board should still put out its own DC signal on F1/F2. This test tells you which board is dead instead of guessing between indoor and outdoor.",
-  "steps": [
-   "Remove power to the system for a minimum of 15 minutes.",
-   "Disconnect the field communication wires from F1 and F2 at both the indoor and the outdoor unit.",
-   "Reapply power to the system with the comm wires still removed.",
-   "With a true RMS meter on DC volts, measure across F1 and F2 at the indoor unit, then at the outdoor unit.",
-   "Each board must read between 0.1 and 0.9 vdc; if a reading is out of that range, replace that board.",
-   "Remove power again for a minimum of 15 minutes before reconnecting anything.",
-   "Run a temporary wire between indoor and outdoor, restore power, and confirm the comm error clears."
   ],
   "confidence": "verify"
  },
