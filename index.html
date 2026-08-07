@@ -267,7 +267,7 @@
 </section>
 
 <section id="warrantyScreen" class="screen hidden">
-  <div class="disclaimer">Warranty status lives on the MANUFACTURER'S site — this screen reads the tag and hands you their official lookup with the serial ready to paste. Registration status decides real coverage; the serial-decoded age is only an estimate.</div>
+  <div class="disclaimer">Scan the tag and this screen runs the maker's official lookup for you — in the app where the maker allows it, or with the serial copied and ready where their site demands a human. Registration status decides real coverage; the serial-decoded age is only an estimate.</div>
   <main>
     <label class="scan-btn" for="warrantyPhotoInput">📷 Take photo of the model tag</label>
     <input type="file" id="warrantyPhotoInput" accept="image/*" capture="environment" class="hidden">
@@ -276,7 +276,15 @@
     <div class="scan-fields">
       <label>Serial #<input id="warrantySerialInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="or type it here"></label>
       <label>Model #<input id="warrantyModelInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="some portals ask for it too"></label>
-      <button id="warrantyGoBtn" class="scan-identify">Find the warranty page</button>
+    </div>
+    <p class="warranty-needs">Homeowner info (optional) — some portals use it to show FULL registered coverage. Ask before you leave the kitchen table:</p>
+    <div class="warranty-owner-grid">
+      <label>Last name<input id="warrantyLastNameInput" type="text" autocomplete="off" spellcheck="false" placeholder="homeowner"></label>
+      <label>ZIP<input id="warrantyZipInput" type="text" inputmode="numeric" autocomplete="off" placeholder="ZIP"></label>
+      <label>State<input id="warrantyStateInput" type="text" autocapitalize="characters" autocomplete="off" maxlength="2" placeholder="NE"></label>
+    </div>
+    <div class="scan-fields">
+      <button id="warrantyGoBtn" class="scan-identify">Run the warranty check</button>
     </div>
     <div id="warrantyResult"></div>
   </main>
@@ -291,6 +299,16 @@
 <!-- Detail / Edit modal -->
 <div id="modalBackdrop" class="modal-backdrop hidden">
   <div class="modal" id="modal"></div>
+</div>
+
+<!-- Full-screen embedded warranty portal (for makers whose lookup allows embedding) -->
+<div id="portalViewer" class="pdf-viewer hidden">
+  <div class="pdf-viewer-bar">
+    <button id="portalCloseBtn" class="pdf-bar-btn" aria-label="Close">✕</button>
+    <div class="pdf-viewer-title" id="portalViewerTitle"></div>
+    <a id="portalExternalLink" class="pdf-bar-btn" target="_blank" rel="noopener" style="text-decoration:none;display:flex;align-items:center;" aria-label="Open in browser">↗</a>
+  </div>
+  <iframe id="portalFrame" class="portal-frame" title="Manufacturer warranty lookup"></iframe>
 </div>
 
 <!-- Full-screen PDF reader (manuals render on-screen; nothing to download) -->

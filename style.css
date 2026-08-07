@@ -986,3 +986,38 @@ main {
   padding: 2rem 1rem;
   font-size: 0.95rem;
 }
+
+/* Embedded warranty portal */
+.portal-frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #fff;
+}
+.warranty-owner-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.8fr;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.warranty-owner-grid label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+.warranty-secondary {
+  opacity: 0.75;
+  font-size: 0.85rem;
+}
+.warranty-owner-grid input {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 1rem;
+}

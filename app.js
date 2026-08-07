@@ -1560,6 +1560,9 @@ window.addEventListener("popstate", () => {
   if (!document.getElementById("pdfViewer").classList.contains("hidden")) {
     closePdfReader(true);
   }
+  if (!document.getElementById("portalViewer").classList.contains("hidden")) {
+    closePortalEmbed(true);
+  }
 });
 document.getElementById("pdfCloseBtn").onclick = () => closePdfReader(false);
 document.getElementById("pdfZoomInBtn").onclick = () => pdfSetZoom(pdfView.zoom * 1.3);
@@ -2768,21 +2771,27 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
 // goes to bryant.com, an American Standard to americanstandardair.
 // ============================================================
 
+// embed: Daikin-family's lookup page reads ?serial/&model/&lastname from the
+// URL, auto-runs the search on load, defaults Install Type to Residential, and
+// sends no frame-blocking headers — so it runs INSIDE the app, filled in.
+// jci: m.upgnet.com/SN/<serial> opens the results directly (no typing at all).
+// captcha: the maker's lookup sits behind a CAPTCHA, which no app is allowed
+// to fill for you — best legal automation is serial-copied + open their page.
 const WARRANTY_PORTALS = {
-  "GOODMAN":           { label: "Goodman warranty lookup", url: "https://www.goodmanmfg.com/warranty-lookup", needs: "serial number" },
-  "AMANA":             { label: "Amana warranty lookup", url: "https://www.amana-hac.com/warranty-lookup", needs: "serial number" },
-  "DAIKIN":            { label: "Daikin warranty lookup", url: "https://daikincomfort.com/warranty-lookup", needs: "model number + install type" },
-  "CARRIER":           { label: "Carrier warranty lookup", url: "https://www.carrier.com/residential/en/us/warranty-lookup/", needs: "serial number" },
-  "BRYANT":            { label: "Bryant warranty lookup", url: "https://www.bryant.com/en/us/warranty-lookup/", needs: "serial number" },
-  "PAYNE":             { label: "Payne registration & warranty", url: "https://www.payne.com/en/us/registration-warranty", needs: "serial number", note: "The Carrier lookup also accepts Payne serials if this page sends you in circles." },
-  "LENNOX":            { label: "Lennox warranty lookup", url: "https://www.lennox.com/residential/owners/assistance/warranty/", needs: "serial number (formats like 5817F04321 / A12A345678) - the lookup is right on the page", note: "Warranty CLAIMS still go through a Lennox dealer; the lookup is free to anyone." },
+  "GOODMAN":           { label: "Goodman warranty lookup", url: "https://www.goodmanmfg.com/warranty-lookup", needs: "serial number", embed: "https://warranty.goodmanmfg.com/entitlement/GenericEntitlementLookup.htm?site=Goodman" },
+  "AMANA":             { label: "Amana warranty lookup", url: "https://www.amana-hac.com/warranty-lookup", needs: "serial number", embed: "https://warranty.goodmanmfg.com/entitlement/GenericEntitlementLookup.htm?site=Amana" },
+  "DAIKIN":            { label: "Daikin warranty lookup", url: "https://daikincomfort.com/warranty-lookup", needs: "serial number", embed: "https://warranty.goodmanmfg.com/entitlement/GenericEntitlementLookup.htm?site=Daikin" },
+  "CARRIER":           { label: "Carrier warranty lookup", url: "https://www.carrier.com/residential/en/us/warranty-lookup/", needs: "serial number", captcha: true },
+  "BRYANT":            { label: "Bryant warranty lookup", url: "https://www.bryant.com/en/us/warranty-lookup/", needs: "serial number", captcha: true },
+  "PAYNE":             { label: "Payne registration & warranty", url: "https://www.payne.com/en/us/registration-warranty", needs: "serial number", captcha: true, note: "The Carrier lookup also accepts Payne serials if this page sends you in circles." },
+  "LENNOX":            { label: "Lennox warranty lookup", url: "https://www.lennox.com/residential/owners/assistance/warranty/", needs: "serial number (formats like 5817F04321 / A12A345678) - the lookup is right on the page", captcha: true, note: "Warranty CLAIMS still go through a Lennox dealer; the lookup is free to anyone." },
   "TRANE":             { label: "Trane warranty lookup", url: "https://www.trane.com/residential/en/resources/warranty-and-registration/lookup/", needs: "serial number (+ last name for the certificate)" },
   "AMERICAN STANDARD": { label: "American Standard warranty lookup", url: "https://www.americanstandardair.com/resources/warranty-and-registration/lookup/", needs: "serial number + customer last name" },
   "YORK":              { label: "York warranty & registration", url: "https://www.york.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
   "LUXAIRE":           { label: "Luxaire warranty & registration", url: "https://www.luxaire.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
   "COLEMAN":           { label: "Coleman warranty & registration", url: "https://www.colemanac.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
-  "RHEEM":             { label: "Rheem warranty verification", url: "https://www.rheem.com/warranties/warranty-verification/", needs: "serial number" },
-  "RUUD":              { label: "Ruud warranty verification", url: "https://www.ruud.com/verify/", needs: "serial number (no spaces)" },
+  "RHEEM":             { label: "Rheem warranty verification", url: "https://rheem.registermyunit.com/en-US/warranty/brand?brand=rheem", needs: "serial number - tap Verify existing Warranty; homeowner last name + state unlock the certificate", note: "Rheem moved verification to registermyunit.com; the old rheem.com page just points here now." },
+  "RUUD":              { label: "Ruud warranty verification", url: "https://ruud.registermyunit.com/en-US/warranty/brand?brand=ruud", needs: "serial number (no spaces) - tap Verify existing Warranty; homeowner last name + state unlock the certificate" },
   "MITSUBISHI":        { label: "Mitsubishi Electric warranties", url: "https://www.mitsubishicomfort.com/warranties", needs: "no public serial lookup - call 800-433-4822 with the serial", note: "METUS has no public serial lookup; registration status comes from customer care or the installing contractor's METUS account." },
 };
 // The literal badge printed on the tag decides the portal.
@@ -2832,6 +2841,36 @@ async function warrantyCopy(text, btn) {
   } catch { warrantyStatus("Couldn't copy — long-press the field to copy it by hand."); }
 }
 
+// Full-screen embedded portal (same shell as the PDF reader). Only used for
+// makers whose lookup page allows framing AND pre-fills itself from the URL.
+let portalOpen = false;
+function openPortalEmbed(url, title) {
+  const v = document.getElementById("portalViewer");
+  document.getElementById("portalViewerTitle").textContent = title;
+  document.getElementById("portalExternalLink").href = url;
+  document.getElementById("portalFrame").src = url;
+  v.classList.remove("hidden");
+  history.pushState({ bfcPortal: 1 }, "");
+  portalOpen = true;
+}
+function closePortalEmbed(fromPop) {
+  const v = document.getElementById("portalViewer");
+  if (v.classList.contains("hidden")) return;
+  v.classList.add("hidden");
+  document.getElementById("portalFrame").src = "about:blank";
+  if (portalOpen && !fromPop) history.back();
+  portalOpen = false;
+}
+document.getElementById("portalCloseBtn").onclick = () => closePortalEmbed(false);
+
+function warrantyOwnerFields() {
+  return {
+    lastName: document.getElementById("warrantyLastNameInput").value.trim(),
+    zip: document.getElementById("warrantyZipInput").value.trim(),
+    state: document.getElementById("warrantyStateInput").value.trim().toUpperCase(),
+  };
+}
+
 function renderWarrantyResult(model, serial, badgeFromTag) {
   const box = document.getElementById("warrantyResult");
   const info = model ? identifyModel(model, serial, null) : null;
@@ -2844,14 +2883,39 @@ function renderWarrantyResult(model, serial, badgeFromTag) {
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
 
   const offline = !navigator.onLine;
+  const owner = warrantyOwnerFields();
   let portalHtml = "";
   if (portal) {
-    const links = [`<a class="scan-btn warranty-portal" href="${portal.url}" target="_blank" rel="noopener"${offline ? ' aria-disabled="true"' : ""}>🛡️ ${escapeHtml(portal.label)}</a>`];
-    if (portal.jci && serial) {
-      links.push(`<a class="scan-btn warranty-portal" href="https://m.upgnet.com/SN/${encodeURIComponent(serial)}" target="_blank" rel="noopener">🔎 JCI serial lookup for ${escapeHtml(serial)}</a>`);
+    const links = [];
+    let needsLine = `That page asks for: <strong>${escapeHtml(portal.needs)}</strong>.${portal.note ? " " + escapeHtml(portal.note) : ""}`;
+    if (portal.embed && serial) {
+      // Daikin family: their page fills itself from these params and runs the
+      // search on load, Install Type already on Residential.
+      const embedUrl = portal.embed
+        + "&serial=" + encodeURIComponent(serial)
+        + "&model=" + encodeURIComponent(model || "")
+        + "&lastname=" + encodeURIComponent(owner.lastName);
+      links.push(`<button class="scan-btn warranty-portal" id="warrantyEmbedBtn" data-url="${escapeHtml(embedUrl)}">🛡️ Run the lookup — right here, filled in</button>`);
+      needsLine = `Serial${model ? " + model" : ""}${owner.lastName ? " + homeowner name" : ""} go in by themselves; Residential is pre-selected. ${owner.lastName ? "" : "Add the homeowner's last name above first if you want the FULL registered coverage table."}`;
+    } else if (portal.jci && serial) {
+      links.push(`<a class="scan-btn warranty-portal" href="https://m.upgnet.com/SN/${encodeURIComponent(serial)}" target="_blank" rel="noopener">🛡️ Open results for S/N ${escapeHtml(serial)} — no typing</a>`);
+      needsLine = `That link opens the JCI record for this exact serial — nothing to fill in.`;
+    }
+    // The maker's own page, always available (primary when nothing better exists).
+    // When we have a serial, tapping it also drops the serial on the clipboard.
+    const hasPrimary = links.length > 0;
+    const copyNote = serial && !hasPrimary ? ` data-copy="${escapeHtml(serial)}"` : "";
+    links.push(`<a class="scan-btn warranty-portal${hasPrimary ? " warranty-secondary" : ""}" href="${portal.url}" target="_blank" rel="noopener"${copyNote}${offline ? ' aria-disabled="true"' : ""}>${hasPrimary ? "↗ Or open the maker's page in the browser" : "🛡️ " + escapeHtml(portal.label)}</a>`);
+    if (portal.captcha && serial) {
+      needsLine += ` Their site runs a human-check (CAPTCHA), so no app is allowed to fill it for you — <strong>your serial goes on the clipboard when you tap; just paste it</strong>.`;
+    } else if (serial && !portal.embed && !portal.jci) {
+      needsLine += ` <strong>Your serial goes on the clipboard when you tap — just paste it.</strong>`;
+    }
+    if (/^(RHEEM|RUUD)$/.test(badge) && (owner.lastName || owner.state)) {
+      needsLine += ` For the certificate their form wants: last name <strong>${escapeHtml(owner.lastName || "—")}</strong>, state <strong>${escapeHtml(owner.state || "—")}</strong>.`;
     }
     portalHtml = `
-      <p class="warranty-needs">That page asks for: <strong>${escapeHtml(portal.needs)}</strong>.${portal.note ? " " + escapeHtml(portal.note) : ""}</p>
+      <p class="warranty-needs">${needsLine}</p>
       ${offline ? `<p class="warranty-needs">📵 No signal right now — the button will work once you're back in coverage.</p>` : ""}
       ${links.join("")}`;
   } else {
@@ -2875,6 +2939,20 @@ function renderWarrantyResult(model, serial, badgeFromTag) {
   if (cs) cs.onclick = () => warrantyCopy(serial, cs);
   const cm = document.getElementById("warrantyCopyModel");
   if (cm) cm.onclick = () => warrantyCopy(model, cm);
+  const eb = document.getElementById("warrantyEmbedBtn");
+  if (eb) eb.onclick = () => {
+    if (!navigator.onLine) { warrantyStatus("📵 The maker's lookup needs signal — try again in coverage."); return; }
+    trackEvent("warranty embed lookup: " + badge);
+    openPortalEmbed(eb.dataset.url, (portal ? portal.label : "Warranty lookup"));
+  };
+  // Copy-on-tap: portals we can't fill get the serial dropped on the clipboard
+  // as the tap opens them, so the tech only pastes.
+  box.querySelectorAll("[data-copy]").forEach(a => {
+    a.addEventListener("click", () => {
+      try { navigator.clipboard.writeText(a.dataset.copy); } catch {}
+      trackEvent("warranty portal opened w/ serial copied: " + badge);
+    });
+  });
   box.querySelectorAll(".warranty-badge").forEach(b => {
     b.onclick = () => { trackEvent("warranty badge picked: " + b.dataset.badge); renderWarrantyResult(model, serial, b.dataset.badge); };
   });
@@ -2974,7 +3052,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v93";
+const APP_VERSION = "v94";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
