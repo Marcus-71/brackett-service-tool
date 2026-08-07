@@ -1658,9 +1658,9 @@ const MODEL_PATTERNS = [
   // (SS-GMV95, SS-GMH95, SS-GKS9) and install manual GMH95/GCH95/GME95/GCH9.
   { re: /^(GMV9|GCV9|GMH9|GCH9|GME9|GKS9)[0-9]?/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 90-95% furnace (GKS9 single-stage, GMH95/GME95 two-stage, GMV95 variable-speed — prior generation)", notes: ["Goodman flash codes in Error Codes apply."] },
   { re: /^(GSC1[3-6]|GSH1[3-6])/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman GSC/GSH condenser or heat pump (13-16 SEER — prior generation, R-22 and early R-410A)", notes: ["Service manual RS6200006 family applies; check the data plate for refrigerant type before gauging up."] },
-  { re: /^(CAPF|CAPT|CAUF|CHPF|CSCF)[0-9]/, brand: "Goodman", equipment: "Other", series: "Goodman/Amana/Daikin cased evaporator coil (CAPF/CAPT/CAUF/CHPF/CSCF)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs."] },
+  { re: /^(CAPF|CAPT|CAUF|CHPF|CSCF)[0-9]/, brand: "Goodman", equipment: "Other", series: "Goodman/Amana/Daikin cased evaporator coil (CAPF/CAPT/CAUF/CHPF/CSCF)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs.", "Metering device decides the charging method: piston/fixed orifice = charge by SUPERHEAT (chart method in Diagnostic Help and the Charging Calc), TXV or EEV = charge by SUBCOOLING. Check which this coil actually has before pulling out gauges.", "CAPT models ship with a factory TXV (subcooling); the other families may be piston or field-added TXV - look at the liquid line entry."] },
   // Daikin-branded vertical cased coil — its install manual is in our library.
-  { re: /^CAPEA[0-9]/, brand: "Daikin", equipment: "Other", series: "Daikin CAPEA vertical cased coil (EEV, FIT indoor)", notes: ["Install manual is in Manuals → Daikin.", "Transformer supply tap and DS1 dip-switch setup for this coil are in Diagnostic Help (search 'CAPEA')."] },
+  { re: /^CAPEA[0-9]/, brand: "Daikin", equipment: "Other", series: "Daikin CAPEA vertical cased coil (EEV, FIT indoor)", notes: ["Install manual is in Manuals → Daikin.", "Transformer supply tap and DS1 dip-switch setup for this coil are in Diagnostic Help (search 'CAPEA').", "EEV coil - charge by SUBCOOLING against the Daikin FIT charging tables in the Charging Calc; on R-32 FIT systems use the Charge Verification test in Diagnostic Help."] },
   { re: /^(GMVC|GCVC|AMVC|ACVC)9[67]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana two-stage variable-speed furnace (ComfortNet)", notes: ["Uses the shared ComfortNet dual 7-segment code set — see Goodman codes in Error Codes.", "Service manual RS6612014 is in Manuals → Goodman."] },
   { re: /^(GMVM|GCVM|AMVM|ACVM)9[78]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 97-98% modulating communicating furnace (Daikin DM97MC platform)", notes: ["Same code set as the Daikin DM97MC entries in Error Codes (E0-b9).", "Service manual RS6612015 is in Manuals → Goodman."] },
   { re: /^(GR9S|AR9S)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana GR9S/AR9S single-stage multi-speed 96-97% furnace (R-32-era lineup)", notes: [] },
@@ -1700,7 +1700,7 @@ const MODEL_PATTERNS = [
   // Prior-generation fan coils, confirmed against Carrier's own product data
   // (FA4A-9PD covers FA4A/FB4A/FC4B; FY4A/FA4C product data on Carrier docs).
   { re: /^(FA4[AC]|FB4[AB]|FC4[BC]|FY4[AC]|FX4[ABC])[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne fan coil (FA4/FB4/FC4/FY4/FX4 — prior generation)", notes: [] },
-  { re: /^CNPV[PTU][0-9]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant/Payne cased N coil (CNPVP/CNPVT)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs."] },
+  { re: /^CNPV[PTU][0-9]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant/Payne cased N coil (CNPVP/CNPVT)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs.", "Metering device decides the charging method: piston/fixed orifice = charge by SUPERHEAT (chart method in the Charging Calc), TXV = charge by SUBCOOLING. Check which this coil actually has."] },
   // Residential/light-commercial packaged units, confirmed against Carrier's
   // own product data (48ES-05PD; shareddocs SUP covering 48/50 ES-EZ-VL-VT).
   // 48TC/48HC rooftops carry the IGC board whose codes are in Error Codes.
@@ -1731,7 +1731,7 @@ const MODEL_PATTERNS = [
   { re: /^(MWLD|MWPD|MWHD|MMPD|MMLD)/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split / multi-split (current MW/MM platform)", notes: ["Full E-code list with Lennox's own troubleshooting steps is in Error Codes — search the E-number.", "E101/C101 (comm error) is the most common: F1/F2 must be 16/2 stranded shielded, straight run, 0.1-0.9 VDC — see Diagnostic Help.", "Service manual 100227 is in Manuals → Lennox."] },
   { re: /^(MLB|MPC|3PC|3PB|MCF[AB]|MFMA|MMD[AB]|MWMC|3WMC|M22A|M33C)/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split (MLB/MPC/3PC legacy platform)", notes: ["This platform uses EC/EH/EL/PC/F-prefix display codes — the code tables are in the service manual, Manuals → Lennox → 3PC/MLB/MPC.", "Outdoor boards have a point check (spot check) function that reads sensor values directly — see Diagnostic Help."] },
   { re: /^(ML[AB]|MP[AB]|MSA|MHA)[0-9]/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split", notes: ["Mini-split error codes are in Error Codes; service manuals are in Manuals → Lennox."] },
-  { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: ["Service manual for CBA27UHE and CBK48MVT (R-454B) is in Manuals → Lennox.", "Communicating air handlers report the numbered alert codes in Error Codes."] },
+  { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: ["Service manual for CBA27UHE and CBK48MVT (R-454B) is in Manuals → Lennox.", "Communicating air handlers report the numbered alert codes in Error Codes.", "On ML15KSPV / ML16KP2 / SL22KLV systems the target subcooling is keyed by THIS indoor model - the matchup tables are in the Charging Calc."] },
   { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Diagnostic Help."] },
   // --- Trane / American Standard ---
   { re: /^S[89][VXB][12]|^L9X1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
@@ -1747,7 +1747,7 @@ const MODEL_PATTERNS = [
   // Trane/American Standard packaged units + coils — confirmed families, no
   // prior coverage at all for this equipment class under this brand.
   { re: /^4[TWY]C[CYZ][0-9]|^4DC[YZ][0-9]|^4WHC[0-9]/, brand: "Trane", equipment: "Other", series: "Trane/American Standard packaged unit (gas-electric / AC / heat pump)", notes: [] },
-  { re: /^4[TP]XC|^4AXA|^4PXFH/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard evaporator coil", notes: [] },
+  { re: /^4[TP]XC|^4AXA|^4PXFH/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard evaporator coil", notes: ["Metering device decides the charging method: piston/fixed orifice = charge by SUPERHEAT (chart method in the Charging Calc), TXV = charge by SUBCOOLING. Check which this coil actually has."] },
   { re: /^(M5THS|MSTHS|4TXK|4MXW)/, brand: "Trane", equipment: "Mini-Split", series: "Trane ductless mini-split", notes: ["E/P error code table is in Error Codes.", "No official Trane source confirms this is a Mitsubishi-built platform, despite that being commonly repeated — treat that claim as unconfirmed."] },
   // --- York / JCI family ---
   { re: /^DGA[AH]/, brand: "York", equipment: "Gas Furnace", series: "York/Coleman DGAA/DGAH mobile-home furnace", notes: ["Its flash-code table is in Error Codes; service manual in Manuals → York."] },
@@ -1777,7 +1777,7 @@ const MODEL_PATTERNS = [
   { re: /^RA1[3-9]|^WA1[3-5]|^RA20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud AC condenser", notes: [] },
   { re: /^R[PD]1[4-8]|^WP1[4-5]|^WSP?14|^RP(19|20)/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud heat pump", notes: ["RP17 install manual is in Manuals → Rheem."] },
   { re: /^R[HF][12][TVP]|^RB2T|^RHMV|^WH1[TP]/, brand: "Rheem", equipment: "Air Handler", series: "Rheem/Ruud air handler", notes: [] },
-  { re: /^RCF[YZ]?/, brand: "Rheem", equipment: "Other", series: "Rheem/Ruud evaporator coil", notes: [] },
+  { re: /^RCF[YZ]?/, brand: "Rheem", equipment: "Other", series: "Rheem/Ruud evaporator coil", notes: ["Metering device decides the charging method: piston/fixed orifice = charge by SUPERHEAT (chart method in the Charging Calc), TXV = charge by SUBCOOLING. Check which this coil actually has."] },
   { re: /^RQ[NPR]M/, brand: "Rheem", equipment: "Other", series: "Rheem Classic Series packaged heat pump", notes: [] },
   { re: /^(FAH[FSM]W|FSHSR|FPH[SFM]R)/, brand: "Rheem", equipment: "Mini-Split", series: "Rheem Floating Air ductless mini-split", notes: [] },
   // No official Rheem or Ruud source states a serial date-code format — both
@@ -2224,7 +2224,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v86";
+const APP_VERSION = "v87";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
