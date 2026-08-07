@@ -176,7 +176,7 @@ const SYMPTOMS = [
    "Check capacitor for a shorted condition",
    "Verify the breaker/fuse is correctly sized for the equipment's MCA/MOCP rating — undersized breakers nuisance-trip"
   ],
-  "safety": "Treat repeated trips as a potential short to ground — verify before re-energizing.",
+  "safety": "Treat repeated trips as a potential short to ground — verify before re-energizing. Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals.",
   "confidence": "common"
  },
  {
@@ -725,7 +725,8 @@ const SYMPTOMS = [
    "Verify the temperature rise measurement itself is taken correctly — supply and return readings taken far enough from the equipment to avoid duct radiant effects",
    "Compare the actual rise against the range printed on the furnace rating plate, not a generic number"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "If you open the manifold pressure tap, leak-check every joint you opened with soap solution or an electronic detector before you leave. Clocking means running with the other gas appliances off - turn them all back on before you leave. Never set gas above the manifold pressure on the rating plate."
  },
  {
   "id": "s-furnace-high-temp-rise",
@@ -838,7 +839,7 @@ const SYMPTOMS = [
    "Check for 240V present at the fan motor connector during a call",
    "Inspect fan motor wiring and connector for corrosion/damage"
   ],
-  "safety": "With head pressure rising rapidly with the compressor running and no condenser airflow, shut the unit down quickly to avoid a high-pressure trip or compressor damage — don't let it run while you go get parts.",
+  "safety": "With head pressure rising rapidly with the compressor running and no condenser airflow, shut the unit down quickly to avoid a high-pressure trip or compressor damage — don't let it run while you go get parts. Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals.",
   "confidence": "common"
  },
  {
@@ -852,7 +853,8 @@ const SYMPTOMS = [
    "Check for physical obstruction of the fan blade (debris, ice, bent blade catching the shroud)",
    "Check actual voltage at the motor under load — low voltage from a distant/undersized circuit can also cause weak starts"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-compressor-trips-breaker-hot-days",
@@ -866,7 +868,8 @@ const SYMPTOMS = [
    "Verify the breaker itself is correctly sized for the equipment's MCA/MOCP and not simply weakened/nuisance-tripping from age and heat-soak in a hot electrical panel",
    "Check for a hard-start kit if the compressor and capacitor otherwise check out fine but starting current is still marginal"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-hp-aux-heat-wont-engage",
@@ -1006,7 +1009,8 @@ const SYMPTOMS = [
    "Check the blower motor run capacitor (PSC motors) or the motor's module/control connections (ECM motors)",
    "Check the motor itself for a seized bearing (try spinning the wheel by hand with power off) before condemning the control side"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-blower-runs-cool-only-not-heat",
@@ -1533,7 +1537,7 @@ const SYMPTOMS = [
    "Check for a wiring fault bypassing the intended sequencing logic (a previous repair that miswired around the interlock)",
    "If the blower fails to start at all with strips energized, this is a limit-trip and potential fire-hazard combination — treat as urgent, not routine"
   ],
-  "safety": "Heat strips energizing without proper airflow is a fire safety issue — don't leave a system running in this state while sourcing parts.",
+  "safety": "Heat strips energizing without proper airflow is a fire safety issue — don't leave a system running in this state while sourcing parts. Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals.",
   "confidence": "common"
  },
  {
@@ -3191,7 +3195,7 @@ const SYMPTOMS = [
    "Check the fan motor's capacitor if it's a capacitor-start/run design, using the same approach as any small PSC motor",
    "Confirm the water solenoid/valve and pad are still functioning correctly even after the fan is repaired — a unit that's been running with a dead fan for a while can develop pad scaling or a stuck valve from lack of proper airflow drying it between cycles"
   ],
-  "safety": "De-energize before servicing the fan assembly — some fan-powered humidifiers are wired to line voltage, not just low voltage.",
+  "safety": "De-energize before servicing the fan assembly — some fan-powered humidifiers are wired to line voltage, not just low voltage. Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals.",
   "confidence": "common"
  },
  {
@@ -4824,7 +4828,8 @@ const SYMPTOMS = [
    "Measure actual gas input via clocking the meter (if accessible) against the furnace's derated input rating, not the nameplate low-elevation rating",
    "Don't assume altitude derate was handled at manufacture — many furnaces ship for standard elevation and require field conversion parts"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Shut the gas off before pulling an orifice, and leak-check every joint you opened with soap solution or an electronic detector before you leave. The wrong orifice for the fuel or the altitude makes CO, so verify combustion after the change."
  },
  {
   "id": "s-furnace-lp-ng-conversion-errors",
@@ -4902,7 +4907,8 @@ const SYMPTOMS = [
    "Inspect for debris or moisture contamination in the regulator vent (if externally vented) — a blocked regulator vent can cause erratic or drifting pressure",
    "If the regulator diaphragm has failed, replace the valve — regulators are not field-serviceable separately from the valve body on virtually all residential combination valves"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "You are working on the gas valve with the burners firing. Never set gas above the manifold pressure on the rating plate. Leak-check every joint you opened with soap solution or an electronic detector before you leave. If the regulator will not hold, replace the valve rather than forcing the adjustment."
  },
  {
   "id": "s-furnace-two-stage-valve-stuck-high-fire",
@@ -5362,7 +5368,8 @@ const SYMPTOMS = [
    "Correlate any draft/spillage complaints (if this is a non-sealed-combustion furnace) with return-side static specifically, since house/cabinet depressurization from an undersized return can contribute to the same spillage symptoms as an outdoor competing-exhaust issue",
    "Recommend enlarging the return (additional grille, larger duct, or a dedicated return added) as the actual fix rather than only adjusting blower speed to compensate for restriction"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Draft spillage on a non-sealed-combustion furnace means combustion products are entering the house. Test for CO before you put it back in service. Do not return a spilling furnace to service - correct the return-side pressure first."
  },
  {
   "id": "s-furnace-clearance-violation-overheating",
@@ -5950,7 +5957,8 @@ const SYMPTOMS = [
    "Motors: compressor and fan amp draws against RLA/FLA on the nameplate — use the Tag Scanner tab to decode the nameplate if it's faded",
    "Only then refrigerant: pressures, superheat/subcooling per the charging chart inside the service panel — jumping to gauges first wastes the visit on electrical failures"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-hp-defrost-board-force-test",
@@ -6804,7 +6812,8 @@ const SYMPTOMS = [
    "Also check for air leaking from around the heat exchanger into the burner compartment, or air leaking through the heat exchanger itself.",
    "Reinstall the burner compartment door and verify proper unit operation."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "A rollout that tripped means flame left the burner compartment. That is a combustion failure, not a switch problem. Never jumper it and never just reset it - find the cause, inspect the heat exchanger and flue, and test for CO before you put it back in service."
  },
  {
   "id": "s-ignition-control-board-power-and-ground",
@@ -6953,7 +6962,8 @@ const SYMPTOMS = [
    "Confirm orifice size is correct for the fuel and application - a wrong or obstructed orifice shows up as poor light-off.",
    "Reassemble, restore gas and power, and watch a full light-off to confirm even, prompt carryover across all burners."
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Shut the gas off before removing burners or orifices, and leak-check every joint you opened with soap solution or an electronic detector before you leave. Misaligned burners and delayed carryover are a combustion problem - test for CO before you put it back in service."
  },
  {
   "id": "s-high-pressure-switch-cardboard-test",
@@ -7295,7 +7305,8 @@ const SYMPTOMS = [
    "With PS1 closed, confirm the ignitor energizes; warm-up is approximately 20 seconds.",
    "Confirm the first stage gas valve solenoid energizes after warm-up, that the first burner lights and crosses over, and that flame sense is established within 4 seconds."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "If a rollout switch is the one that is open, flame left the burner compartment - find why before resetting it, and test for CO before you put it back in service. Do not jumper a safety to get the furnace running."
  },
  {
   "id": "s-goodman-gaspack-fan-delays-normal",
@@ -7345,7 +7356,8 @@ const SYMPTOMS = [
    "Confirm the ignitor relay closes and the ignitor energizes; warm-up is approximately 17 seconds.",
    "Confirm the gas valve relay closes at the end of warm-up to energize the gas valve solenoid."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "If the open device turns out to be a rollout, treat it as a combustion problem and find the cause before resetting. Do not jumper a safety to prove a diagnosis and then leave it in."
  },
  {
   "id": "s-goodman-ebtdr-blower-delays-electric-heat",
@@ -7445,7 +7457,8 @@ const SYMPTOMS = [
    "Confirm the R33 ignitor energizes for a 20 second warm-up, then the GV1 gas valve opens for a 4 second trial for ignition.",
    "After flame is sensed, expect the indoor blower on heat speed 30 seconds later, and on satisfaction a 5 second inducer post-purge plus the selected blower off delay."
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "This furnace gates 24V through the rollout switch, so an open rollout looks like a dead thermostat. Do not jumper around it to restore power - an open rollout means flame left the burner compartment. Find the cause and test for CO before you put it back in service."
  },
  {
   "id": "s-goodman-mbe-single-stage-condenser-dipswitch",
@@ -7647,7 +7660,8 @@ const SYMPTOMS = [
    "Repeat for second stage heat - the two learning routines are separate.",
    "Only after both routines complete should you take manifold pressure readings or make adjustments. Use the LED readout of IDL to confirm the furnace is idle with no thermostat demand between tests."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Setting manifold pressure means an open tap on a firing furnace. Never set gas above the manifold pressure on the rating plate. Leak-check every joint you opened with soap solution or an electronic detector before you leave."
  },
  {
   "id": "s-lennox-a92-code-1-reversed-polarity",
@@ -7697,7 +7711,8 @@ const SYMPTOMS = [
    "Confirm the indoor blower changes to its second stage heat speed once high fire is established.",
    "If a two-stage thermostat is installed, verify 24 VAC actually appears on W2 during a second stage call before working on the furnace side."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Checking the high-fire tap means opening a port on the gas valve. Leak-check every joint you opened with soap solution or an electronic detector before you leave."
  },
  {
   "id": "s-trane-s9v2vs-annual-inspection-items",
@@ -8056,7 +8071,8 @@ const SYMPTOMS = [
    "Confirm the blower access door is properly installed - the door switch opens 115-V power to the control and no component can operate unless the switch is closed.",
    "Do not tape or permanently bypass the door switch; depress it temporarily with one hand only while accessing service buttons, and do not touch uninsulated electrical components."
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "These checks open the manifold tap and run the furnace at full input. Never set gas above the manifold pressure on the rating plate. Clocking means running with the other gas appliances off - turn them all back on before you leave. Leak-check every joint you opened with soap solution or an electronic detector before you leave."
  },
  {
   "id": "s-daikin-capea-serial-plate-test-pressure",
@@ -8264,7 +8280,8 @@ const SYMPTOMS = [
    "Check for a liquid line restriction, including a blocked filter drier if one is installed.",
    "Rule out the thermostat: check the sub-base and wiring for a short circuit and confirm the thermostat location and level."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-r32-red-lock-flash-codes",
@@ -8280,7 +8297,8 @@ const SYMPTOMS = [
    "Still on LOCK 4, check for excessive liquid refrigerant in the compressor and for seized bearings - measure the compressor oil level.",
    "LOCK code 5 is a compressor moderate run trip lockout after 4 consecutive or 10 total events - treat it as a repeat trip and find the underlying run condition rather than resetting the lockout again."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-daikin-dz20vc-lineset-charge-subcool",
@@ -10365,7 +10383,8 @@ const SYMPTOMS = [
    "Turn OFF gas at the manual shutoff, disconnect the manometer, and reinstall the plug before turning the gas back on.",
    "Turn off any gas appliances you started for the test."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Reading inlet pressure means an open tap on the supply side with the burners firing. Leak-check every joint you opened with soap solution or an electronic detector before you leave. If inlet pressure is below spec, that is the gas supplier's problem, not something to compensate for at the valve."
  },
  {
   "id": "s-do-not-oil-motors",
@@ -10679,7 +10698,8 @@ const SYMPTOMS = [
    "Deburr or replace as needed, then reassemble the inducer squarely against the gasket.",
    "Re-run the furnace and re-take combustion readings to confirm the change."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "You are opening the combustion path. Reseal every gasket you disturb, and test for CO before you put it back in service. A leaking inducer gasket or collector box lets combustion products into the cabinet."
  },
  {
   "id": "s-gas-line-binding-burner-distortion",
@@ -11820,7 +11840,8 @@ const SYMPTOMS = [
    "Relight every other appliance you shut off and confirm each pilot burner is operating before you leave.",
    "Follow up with a temperature rise check and a combustion/CO analysis on the unit you tested."
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Clocking means running with the other gas appliances off - turn them all back on before you leave. Do not leave a water heater or range shut off. If you opened a pressure tap to go with it, leak-check every joint you opened with soap solution or an electronic detector before you leave."
  },
  {
   "id": "s-temperature-rise-thermometer-placement",
@@ -11852,7 +11873,8 @@ const SYMPTOMS = [
    "Verify orifice size is correct for the fuel and check each orifice for obstruction; never redrill an orifice.",
    "Recheck flame appearance and stability through a full cycle, then run a combustion/CO analysis before returning the unit to service."
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Flashback and delayed ignition are both combustion failures that can burn you and make CO. Shut the gas off before pulling orifices, leak-check every joint you opened with soap solution or an electronic detector before you leave. Test for CO before you put it back in service."
  },
  {
   "id": "s-lennox-igniter-plug-pin-count",
@@ -13012,7 +13034,8 @@ const SYMPTOMS = [
    "e09 indicates an open inducer limit switch or condensate pressure switch - look for a blocked or full condensate path on a condensing model.",
    "Correct the cause, clear the code, and verify through a full heating cycle before leaving."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Identify which safety actually opened before resetting anything. If it is a rollout, flame left the burner compartment - that is a combustion problem, and test for CO before you put it back in service."
  },
  {
   "id": "s-daikin-indoor-fan-motor-connector-check",
@@ -13461,7 +13484,8 @@ const SYMPTOMS = [
    "If voltage is as rated and the fan still will not turn, replace the fan motor.",
    "If the motor and capacitor check good but the voltage is not as rated, replace the indoor unit PCB."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Discharge capacitors safely before handling - they hold a charge after power is off. Use an insulated tool or a proper discharge resistor, never a bare screwdriver across the terminals."
  },
  {
   "id": "s-daikin-check-operation-outdoor-pcb",
@@ -13855,7 +13879,8 @@ const SYMPTOMS = [
    "On an atmospheric or Category I furnace, check the chimney cap and termination height above the roofline, and look for spillage at the draft hood while the unit runs.",
    "If the terminations are outside the manual's clearances or exposed to a wind-loaded wall, relocating or re-terminating per the manual is the repair - not a different pressure switch."
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Spillage at the draft hood means combustion products are coming into the house. Test for CO before you put it back in service. Wind-related shutdowns often trace to a termination or draft problem - do not dismiss them as nuisance trips."
  },
  {
   "id": "s-vent-termination-blocked-snow-ice",
@@ -16185,7 +16210,8 @@ const SYMPTOMS = [
    "Inspect the burners and any primary air shutters for the actual air setting and for debris",
    "Compare O2 against the manufacturer's stated range for that furnace before deciding it is out of range"
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Clocking means running with the other gas appliances off - turn them all back on before you leave. If you open the manifold tap, leak-check every joint you opened with soap solution or an electronic detector before you leave. Never set gas above the manifold pressure on the rating plate."
  },
  {
   "id": "s-stack-temperature-high-non-condensing",
@@ -16200,7 +16226,8 @@ const SYMPTOMS = [
    "Inspect the heat exchanger airside surfaces and the burners for soot, scale, or debris",
    "Recheck the stack temperature after correcting whatever you found"
   ],
-  "confidence": "verify"
+  "confidence": "verify",
+  "safety": "Clocking means running with the other gas appliances off - turn them all back on before you leave. High stack temperature on a non-condensing furnace also means checking the flue - test for CO before you put it back in service."
  },
  {
   "id": "s-condensing-furnace-hot-flue-little-condensate",
@@ -16246,7 +16273,8 @@ const SYMPTOMS = [
    "Divide output BTU per hour by 1.08 times the rise to get CFM",
    "Compare the result to the blower table for that unit at your measured total external static pressure"
   ],
-  "confidence": "common"
+  "confidence": "common",
+  "safety": "Clocking means running with the other gas appliances off - turn them all back on before you leave. Turn every appliance you shut off back on before you leave."
  },
  {
   "id": "s-rust-in-a-furnace-with-no-condensate-system",
@@ -17048,6 +17076,4 @@ const SYMPTOMS = [
   "safety": "Multiple circuits means multiple sources. Kill and verify EVERY feed before working, and prove your meter live-dead-live. Heat strips energizing without the blower is a fire hazard - do not leave that condition running.",
   "confidence": "common"
  }
-
-
 ];
