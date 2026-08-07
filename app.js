@@ -1715,7 +1715,11 @@ const MODEL_PATTERNS = [
   { re: /^4TT[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX; 4TTV = XV18/XV20i variable-speed)", notes: ["Condensing unit installer's guide is in Manuals → Trane.", "4TTV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4TW[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX; 4TWV = XV18/XV20i variable-speed)", notes: ["4TWV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4A7|^4A6/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "American Standard AC/heat pump", notes: ["American Standard = Trane."] },
-  { re: /^(TEM[468]|TAM[4-9]X?|GAM[45]|TMM[45])/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard air handler", notes: [] },
+  { re: /^(TEM[3468]|TAM[4-9]X?|GAM[45]|TMM[45])/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard air handler", notes: [] },
+  // Prior-generation air handlers, confirmed against Trane's own product
+  // literature (4TEC3F installer's guide 22-1774-18, TWE product data
+  // 22-1655-08): 4TEC convertible and TWE modular variable-speed.
+  { re: /^4TEC[0-9]|^TWE[0-9]/, brand: "Trane", equipment: "Air Handler", series: "Trane/American Standard air handler (4TEC convertible / TWE variable-speed — prior generation)", notes: [] },
   // Trane/American Standard packaged units + coils — confirmed families, no
   // prior coverage at all for this equipment class under this brand.
   { re: /^4[TWY]C[CYZ][0-9]|^4DC[YZ][0-9]|^4WHC[0-9]/, brand: "Trane", equipment: "Other", series: "Trane/American Standard packaged unit (gas-electric / AC / heat pump)", notes: [] },
@@ -2181,7 +2185,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v83";
+const APP_VERSION = "v84";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
