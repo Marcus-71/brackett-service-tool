@@ -2476,5 +2476,1093 @@ const CHARGING_CHARTS = [
   ],
   "notes": "TABLE 10 - Unit Cooling System Performance Values - LRP16GE. Printed condition: based on outdoor ambient temperature of 82 F and indoor entering air of 80 F db, 67 F wb. Manual states that for maximum cooling performance the operating temperatures and pressures should be checked and subcooling determined at Standard ARI test conditions of 82 F outdoor / 80 F indoor dry bulb / 67 F indoor wet bulb, and if the subcooling measurement deviates the charge should be adjusted accordingly.",
   "source": "29_LRP14_LRP16.pdf (Lennox LRP14HP/AC/GE/GN, LRP16GE/HP Service Literature, Corp. 100032, January 4 2024), TABLE 10, PDF page 34"
+ },
+ {
+  "id": "cc-lennox-ml15kspv-matchup-target-subcooling",
+  "brand": "Lennox",
+  "refrigerant": "R-454B",
+  "meteringDevice": "txv",
+  "models": "ML15KSPV-018/-024/-030/-036/-042/-048/-060 (-230) outdoor units matched to the listed Lennox indoor units",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "outdoor unit and indoor unit matchup",
+  "colAxis": "target subcool heating / target subcool cooling / additional charge",
+  "units": "F for subcool columns (heating +/-3F, cooling +/-1F); lb and oz for additional charge",
+  "rows": [
+   {
+    "row": "ML15KSPV-018 / CBK43UHE-018",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CBK43UHE-024",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 9 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CBK45UHVT-018",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CBK45UHET-024",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 9 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CBK45UHVT-024",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 9 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CBK47UHET-024",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 11 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CBK48MVT-018/024",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 11 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40[C,U]T-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 9 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40[C,U]T-24B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 9 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40[C,U]T-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 13 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40[C,U]T-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 13 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40HT-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 3 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40HT-24B",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40HT-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 3 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40HT-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 13 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40DT-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-018 / CK40DT-24B",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK43UHE-024",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK43UHE-030",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 4 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK45UHET-024",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK45UHVT-024",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK45UHET-030",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 4 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK45UHVT-030",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 4 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK47UHET-024",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 1 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK47UHET-030",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK48MVT-018/024",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 1 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CBK48MVT-030",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40[C,U]T-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40[C,U]T-24B",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40[C,U]T-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 4 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40[C,U]T-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 4 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40[C,U]T-36A",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40[C,U]T-36B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40HT-18A",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40HT-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 10 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40HT-24B",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40HT-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 10 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40HT-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40DT-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 14 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-024 / CK40DT-24B",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 14 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK43UHE-030",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK43UHE-036",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK45UHET-030",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK45UHVT-030",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK45UHET-036",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK45UHVT-036",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK47UHET-030",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK47UHET-036",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK48MVT-030",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CBK48MVT-036",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40[C,U]T-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 14 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40[C,U]T-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 14 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40[C,U]T-36A",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40[C,U]T-36B",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40HT-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 3 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40HT-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40HT-36A",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40HT-36B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40HT-36C",
+    "values": {
+     "target subcool heating (+/-3F)": "8",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40DT-24A",
+    "values": {
+     "target subcool heating (+/-3F)": "10",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40DT-30/36B",
+    "values": {
+     "target subcool heating (+/-3F)": "10",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 13 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-030 / CK40DT-42B",
+    "values": {
+     "target subcool heating (+/-3F)": "7",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK43UHE-036",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK43UHE-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK45UHET-036",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK45UHVT-036",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK45UHET-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK45UHVT-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK47UHET-036",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK47UHET-042",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "2 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK48MVT-036",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CBK48MVT-042",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "2 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40[C,U]T-30A",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 14 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40[C,U]T-30B",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 14 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40[C,U]T-36A",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40[C,U]T-36B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40[C,U]T-36C",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40HT-36A",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40HT-36B",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40HT-36C",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40DT-30/36B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 13 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40DT-30/36C",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 13 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40DT-42B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "6",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-036 / CK40DT-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "7",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 11 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK43UHE-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK43UHE-048",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK45UHET-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK45UHVT-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK45UHET-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK45UHVT-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK47UHET-042",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK47UHET-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK48MVT-042",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CBK48MVT-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40[C,U]T-48B",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40[C,U]T-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40[C,U]T-49C",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 11 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40HT-42B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40HT-42C",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40HT-48B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 1 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40HT-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40DT-42B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-042 / CK40DT-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK43UHE-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK43UHE-048",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK45UHET-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK45UHVT-042",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK45UHET-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK45UHVT-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK47UHET-042",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK47UHET-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK48MVT-042",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CBK48MVT-048",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "4",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40[C,U]T-48B",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40[C,U]T-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "6",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 6 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40[C,U]T-49C",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 11 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40HT-42B",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40HT-42C",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40HT-48B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 1 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40HT-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "4",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40DT-42B",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "3",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 2 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-048 / CK40DT-48C",
+    "values": {
+     "target subcool heating (+/-3F)": "3",
+     "target subcool cooling (+/-1F)": "5",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CBK43UHE-060",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 10 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CBK45UHET-060",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "10",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 10 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CBK45UHVT-060",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "10",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 10 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CBK47UHET-060",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CBK48MVT-060",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 7 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40[C,U]T-50/60C",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 0 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40[C,U]T-60C",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "9",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 10 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40[C,U]T-60D",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "10",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 5 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40HT-51/61C",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "10",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 3 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40HT-60D",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "8",
+     "additional charge, 15 ft line set (lb oz)": "1 lb 3 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40DT-50/60C",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "10",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   },
+   {
+    "row": "ML15KSPV-060 / CK40DT-60D",
+    "values": {
+     "target subcool heating (+/-3F)": "5",
+     "target subcool cooling (+/-1F)": "10",
+     "additional charge, 15 ft line set (lb oz)": "0 lb 8 oz"
+    }
+   }
+  ],
+  "notes": "Table 10 - Indoor Unit Matches and Sub-cooling Charge Levels (TXV System) and Additional Charge (15 ft. line set). Cooling mode: put SW1 on the display board into charge mode (Table 9 in the manual), run the system 10 minutes to stabilize, then read the subcooling the 2-segment display reports and compare it to the cooling column here. The display does the subcooling math for you in cooling. Heating mode: the display does NOT report subcooling. Connect a gauge and a pipe thermometer to the liquid line, convert the pressure to saturation temperature using Table 11 in the manual, subtract the measured liquid line temperature, and compare that to the heating column here. Additional charge is what to add beyond the factory charge on the nameplate, based on a 15 ft line set. R-454B is a zeotropic blend - charge liquid only, and use saturated LIQUID temperature for subcooling. As printed, the 42K and 48K sections of this table carry identical values for every matchup they share. Printed note: for AHRI certified system match-ups and expanded ratings, visit www.LennoxPros.com.",
+  "source": "Lennox ML15KSPV (R-454B) Series Outdoor Units Service Literature, Corp. 100230, June 2026 - Table 10, printed pages 59-60. Verified by two independent pdftotext modes (-table and -lineprinter); -layout misreads this table by one row and was rejected."
  }
+
 ];
