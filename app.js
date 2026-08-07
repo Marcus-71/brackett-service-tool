@@ -1659,6 +1659,8 @@ const MODEL_PATTERNS = [
   { re: /^(GMV9|GCV9|GMH9|GCH9|GME9|GKS9)[0-9]?/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 90-95% furnace (GKS9 single-stage, GMH95/GME95 two-stage, GMV95 variable-speed — prior generation)", notes: ["Goodman flash codes in Error Codes apply."] },
   { re: /^(GSC1[3-6]|GSH1[3-6])/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman GSC/GSH condenser or heat pump (13-16 SEER — prior generation, R-22 and early R-410A)", notes: ["Service manual RS6200006 family applies; check the data plate for refrigerant type before gauging up."] },
   { re: /^(CAPF|CAPT|CAUF|CHPF|CSCF)[0-9]/, brand: "Goodman", equipment: "Other", series: "Goodman/Amana/Daikin cased evaporator coil (CAPF/CAPT/CAUF/CHPF/CSCF)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs."] },
+  // Daikin-branded vertical cased coil — its install manual is in our library.
+  { re: /^CAPEA[0-9]/, brand: "Daikin", equipment: "Other", series: "Daikin CAPEA vertical cased coil (EEV, FIT indoor)", notes: ["Install manual is in Manuals → Daikin.", "Transformer supply tap and DS1 dip-switch setup for this coil are in Diagnostic Help (search 'CAPEA')."] },
   { re: /^(GMVC|GCVC|AMVC|ACVC)9[67]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana two-stage variable-speed furnace (ComfortNet)", notes: ["Uses the shared ComfortNet dual 7-segment code set — see Goodman codes in Error Codes.", "Service manual RS6612014 is in Manuals → Goodman."] },
   { re: /^(GMVM|GCVM|AMVM|ACVM)9[78]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana 97-98% modulating communicating furnace (Daikin DM97MC platform)", notes: ["Same code set as the Daikin DM97MC entries in Error Codes (E0-b9).", "Service manual RS6612015 is in Manuals → Goodman."] },
   { re: /^(GR9S|AR9S)/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman/Amana GR9S/AR9S single-stage multi-speed 96-97% furnace (R-32-era lineup)", notes: [] },
@@ -2222,7 +2224,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v85";
+const APP_VERSION = "v86";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
