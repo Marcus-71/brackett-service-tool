@@ -232,6 +232,34 @@ main {
   border-bottom: 1px dashed var(--border);
   margin-bottom: 0.4rem;
 }
+.cc-chart-links { display: flex; flex-direction: column; gap: 0.45rem; }
+.cc-chart-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+.cc-chart-link:active { border-color: var(--accent); }
+.cc-chart-brand { font-weight: 700; font-size: 0.92rem; }
+.cc-chart-models { font-size: 0.8rem; color: var(--text-dim); line-height: 1.3; }
+/* Charging tables are wide by nature - let the table scroll rather than the page. */
+.cc-chart-scroll { overflow-x: auto; margin-top: 0.9rem; -webkit-overflow-scrolling: touch; }
+.cc-chart-table { border-collapse: collapse; font-size: 0.85rem; min-width: 100%; }
+.cc-chart-table th, .cc-chart-table td {
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.55rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.cc-chart-table th { background: var(--card); font-weight: 700; position: sticky; left: 0; }
+.cc-chart-table tr:first-child th { position: static; }
+
 /* Sits above the bottom of the screen so it clears a phone's home indicator,
    and stays out of the way of the content a tech is reading. */
 .update-pill {

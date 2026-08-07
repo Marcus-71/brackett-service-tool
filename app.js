@@ -1351,7 +1351,51 @@ function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, s
   boxes.push(ccTargetBox("Target subcooling", `${scTarget}°F`, scTargetIsDefault ? "10°F default — check the nameplate" : "from nameplate"));
 
   document.getElementById("cc-targets").innerHTML =
-    `<div class="cc-section-label">🎯 Targets for this call</div><div class="cc-target-grid">${boxes.join("")}</div>`;
+    `<div class="cc-section-label">🎯 Targets for this call</div><div class="cc-target-grid">${boxes.join("")}</div>`
+    + renderChartLinks(refrig);
+}
+
+// The targets above are rules of thumb. When the manufacturer published a real
+// chart for this refrigerant, offer it — a tech should charge to the printed
+// table for the unit in front of them, not to a formula, whenever one exists.
+function renderChartLinks(refrig) {
+  if (typeof CHARGING_CHARTS === "undefined") return "";
+  const matches = CHARGING_CHARTS.filter(c => (c.refrigerant || "").toUpperCase().replace(/[^A-Z0-9]/g, "") === (refrig || "").toUpperCase().replace(/[^A-Z0-9]/g, ""));
+  if (!matches.length) return "";
+  const items = matches.map(c =>
+    `<button class="cc-chart-link" data-chart="${escapeHtml(c.id)}">
+       <span class="cc-chart-brand">${escapeHtml(c.brand)}</span>
+       <span class="cc-chart-models">${escapeHtml(String(c.models).slice(0, 70))}</span>
+     </button>`).join("");
+  return `<div class="cc-section-label">📋 Manufacturer charts for ${escapeHtml(refrig)}</div>
+    <div class="cc-chart-links">${items}</div>`;
+}
+
+function openChargingChart(id) {
+  const c = (typeof CHARGING_CHARTS !== "undefined" ? CHARGING_CHARTS : []).find(x => x.id === id);
+  if (!c) return;
+  const cols = c.colAxis ? Object.keys(c.rows[0].values || {}) : null;
+  const head = cols
+    ? `<tr><th>${escapeHtml(c.rowAxis)}</th>${cols.map(k => `<th>${escapeHtml(k)}</th>`).join("")}</tr>`
+    : `<tr><th>${escapeHtml(c.rowAxis)}</th><th>Value</th></tr>`;
+  const body = c.rows.map(r => cols
+    ? `<tr><th>${escapeHtml(r.row)}</th>${cols.map(k => `<td>${escapeHtml(String(r.values[k] ?? ""))}</td>`).join("")}</tr>`
+    : `<tr><th>${escapeHtml(r.row)}</th><td>${escapeHtml(String(Object.values(r.values || {})[0] ?? ""))}</td></tr>`
+  ).join("");
+  const modal = document.getElementById("modal");
+  modal.innerHTML = `
+    <h2>${escapeHtml(c.brand)} charging chart</h2>
+    <div class="sub">${escapeHtml(c.refrigerant)} · ${escapeHtml(c.meteringDevice || "")}</div>
+    <div class="detail-section"><p>${escapeHtml(c.models)}</p></div>
+    ${c.notes ? `<div class="detail-section"><p>${escapeHtml(c.notes)}</p></div>` : ""}
+    <div class="cc-chart-scroll"><table class="cc-chart-table">${head}${body}</table></div>
+    <div class="detail-section"><h3>Units</h3><p>${escapeHtml(c.units)}</p></div>
+    <div class="detail-section"><h3>Source</h3><p>${escapeHtml(c.source)}</p></div>
+    <div class="modal-actions"><button id="closeModalBtn">Close</button></div>
+  `;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+  trackEvent("opened charging chart: " + c.brand + " " + c.refrigerant);
 }
 
 function renderChargeCalc() {
@@ -1368,6 +1412,9 @@ function renderChargeCalc() {
   const wb = ccNum("cc-wb");
 
   renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, scTargetRaw == null);
+  document.querySelectorAll("#cc-targets .cc-chart-link").forEach(b => {
+    b.onclick = () => openChargingChart(b.dataset.chart);
+  });
 
   const out = [];
   const flags = { lowCharge: 0, overcharge: 0, restriction: 0, airflow: 0 };
@@ -2006,7 +2053,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v69";
+const APP_VERSION = "v70";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
