@@ -881,3 +881,19 @@ main {
 .cc-scan-rowhit { border-style: dashed; margin-top: 0.5rem; }
 .cc-scan-applied { border-color: var(--accent); }
 .cc-scan-miss { border-style: dashed; color: var(--text-dim); }
+
+/* Warranty Check */
+.warranty-portal { display: block; text-align: center; text-decoration: none; margin: 0.5rem 0; }
+.warranty-needs { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; margin: 0.5rem 0; }
+.warranty-badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+.warranty-badge {
+  padding: 0.55rem 0.3rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.warranty-badge:active { border-color: var(--accent); }

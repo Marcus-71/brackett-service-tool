@@ -52,6 +52,11 @@
       <span class="tile-label">Manuals</span>
       <span class="tile-sub">Stored PDFs, works offline</span>
     </button>
+    <button class="tile tile-warranty" data-screen="warranty">
+      <span class="tile-icon">🛡️</span>
+      <span class="tile-label">Warranty Check</span>
+      <span class="tile-sub">Scan the tag — jump to the maker's warranty page</span>
+    </button>
     <button class="tile tile-toolbox" data-screen="toolbox">
       <span class="tile-icon">🧰</span>
       <span class="tile-label">Toolbox</span>
@@ -212,6 +217,22 @@
       <button id="scanIdentifyBtn" class="scan-identify">Identify unit</button>
     </div>
     <div id="scanResult"></div>
+  </main>
+</section>
+
+<section id="warrantyScreen" class="screen hidden">
+  <div class="disclaimer">Warranty status lives on the MANUFACTURER'S site — this screen reads the tag and hands you their official lookup with the serial ready to paste. Registration status decides real coverage; the serial-decoded age is only an estimate.</div>
+  <main>
+    <label class="scan-btn" for="warrantyPhotoInput">📷 Take photo of the model tag</label>
+    <input type="file" id="warrantyPhotoInput" accept="image/*" capture="environment" class="hidden">
+    <div id="warrantyStatus" class="scan-status hidden"></div>
+    <img id="warrantyPreview" class="scan-preview hidden" alt="Tag photo preview">
+    <div class="scan-fields">
+      <label>Serial #<input id="warrantySerialInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="or type it here"></label>
+      <label>Model #<input id="warrantyModelInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="some portals ask for it too"></label>
+      <button id="warrantyGoBtn" class="scan-identify">Find the warranty page</button>
+    </div>
+    <div id="warrantyResult"></div>
   </main>
 </section>
 

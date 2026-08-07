@@ -208,6 +208,7 @@ const SCREEN_TITLES = {
   toolbox: "Toolbox",
   scanner: "Tag Scanner",
   charge: "Charging Calc",
+  warranty: "Warranty Check",
   request: "Request Info",
 };
 const ADD_HANDLERS = {
@@ -224,10 +225,10 @@ let currentScreen = "home";
 
 function showScreen(name) {
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "requestScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen", request: "requestScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", request: "requestScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -2422,6 +2423,140 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
 });
 
 // ============================================================
+// Warranty Check — scan the tag, jump to the maker's own warranty
+// lookup with the serial in hand. Every URL below was verified
+// against the manufacturer's live site (2026-08). Warranty follows
+// the BADGE on the tag, not the platform: a Bryant-badged Carrier
+// goes to bryant.com, an American Standard to americanstandardair.
+// ============================================================
+
+const WARRANTY_PORTALS = {
+  "GOODMAN":           { label: "Goodman warranty lookup", url: "https://www.goodmanmfg.com/warranty-lookup", needs: "serial number" },
+  "AMANA":             { label: "Amana warranty lookup", url: "https://www.amana-hac.com/warranty-lookup", needs: "serial number" },
+  "DAIKIN":            { label: "Daikin warranty lookup", url: "https://daikincomfort.com/warranty-lookup", needs: "model number + install type" },
+  "CARRIER":           { label: "Carrier warranty lookup", url: "https://www.carrier.com/residential/en/us/warranty-lookup/", needs: "serial number" },
+  "BRYANT":            { label: "Bryant warranty lookup", url: "https://www.bryant.com/en/us/warranty-lookup/", needs: "serial number" },
+  "PAYNE":             { label: "Payne registration & warranty", url: "https://www.payne.com/en/us/registration-warranty", needs: "serial number", note: "The Carrier lookup also accepts Payne serials if this page sends you in circles." },
+  "LENNOX":            { label: "Lennox warranty lookup", url: "https://www.lennox.com/residential/owners/assistance/warranty/", needs: "serial number" },
+  "TRANE":             { label: "Trane warranty lookup", url: "https://www.trane.com/residential/en/resources/warranty-and-registration/lookup/", needs: "serial number (+ last name for the certificate)" },
+  "AMERICAN STANDARD": { label: "American Standard warranty lookup", url: "https://www.americanstandardair.com/resources/warranty-and-registration/lookup/", needs: "serial number + customer last name" },
+  "YORK":              { label: "York warranty & registration", url: "https://www.york.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
+  "LUXAIRE":           { label: "Luxaire warranty & registration", url: "https://www.luxaire.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
+  "COLEMAN":           { label: "Coleman warranty & registration", url: "https://www.colemanac.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
+  "RHEEM":             { label: "Rheem warranty verification", url: "https://www.rheem.com/warranties/warranty-verification/", needs: "serial number" },
+  "RUUD":              { label: "Ruud warranty verification", url: "https://www.ruud.com/verify/", needs: "serial number (no spaces)" },
+  "MITSUBISHI":        { label: "Mitsubishi Electric warranties", url: "https://www.mitsubishicomfort.com/warranties", needs: "no public serial lookup - call 800-433-4822 with the serial", note: "METUS has no public serial lookup; registration status comes from customer care or the installing contractor's METUS account." },
+};
+// The literal badge printed on the tag decides the portal.
+function detectBadgeInText(up) {
+  for (const badge of Object.keys(WARRANTY_PORTALS)) if (up.includes(badge)) return badge;
+  return null;
+}
+// Model-pattern brand -> default badge when the tag text didn't say.
+const BRAND_TO_BADGE = { Goodman: "GOODMAN", Daikin: "DAIKIN", Carrier: "CARRIER", Lennox: "LENNOX", Trane: "TRANE", York: "YORK", Rheem: "RHEEM", Mitsubishi: "MITSUBISHI" };
+
+function warrantyStatus(msg) {
+  const el = document.getElementById("warrantyStatus");
+  if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
+  else el.classList.add("hidden");
+}
+
+async function warrantyScanPhoto(file) {
+  trackEvent("warranty scanned a tag");
+  const preview = document.getElementById("warrantyPreview");
+  preview.src = URL.createObjectURL(file);
+  preview.classList.remove("hidden");
+  document.getElementById("warrantyResult").innerHTML = "";
+  try {
+    warrantyStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
+    const canvas = await preprocessPhoto(file);
+    const worker = await getTessWorker(warrantyStatus);
+    const { data } = await worker.recognize(canvas);
+    warrantyStatus(null);
+    const fields = extractTagFields(data.text || "");
+    if (fields.serial) document.getElementById("warrantySerialInput").value = fields.serial;
+    if (fields.model) document.getElementById("warrantyModelInput").value = fields.model;
+    if (!fields.serial && !fields.model) {
+      warrantyStatus("Couldn't find a serial or model on the photo — try a straighter, closer shot, or type them below.");
+      return;
+    }
+    renderWarrantyResult(fields.model, fields.serial, detectBadgeInText((data.text || "").toUpperCase()));
+  } catch (err) {
+    warrantyStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can type the serial below.");
+  }
+}
+
+async function warrantyCopy(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const was = btn.textContent; btn.textContent = "✓ Copied";
+    setTimeout(() => { btn.textContent = was; }, 1500);
+  } catch { warrantyStatus("Couldn't copy — long-press the field to copy it by hand."); }
+}
+
+function renderWarrantyResult(model, serial, badgeFromTag) {
+  const box = document.getElementById("warrantyResult");
+  const info = model ? identifyModel(model, serial, null) : null;
+  let badge = badgeFromTag;
+  if (!badge && info && info.brand) badge = BRAND_TO_BADGE[info.brand] || null;
+  const portal = badge ? WARRANTY_PORTALS[badge] : null;
+
+  const facts = [];
+  if (info && info.brand) { facts.push(["Unit", info.brand + " " + (info.equipment || "")]); if (info.age) facts.push(["Age (from serial)", info.age]); }
+  const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
+
+  const offline = !navigator.onLine;
+  let portalHtml = "";
+  if (portal) {
+    const links = [`<a class="scan-btn warranty-portal" href="${portal.url}" target="_blank" rel="noopener"${offline ? ' aria-disabled="true"' : ""}>🛡️ ${escapeHtml(portal.label)}</a>`];
+    if (portal.jci && serial) {
+      links.push(`<a class="scan-btn warranty-portal" href="https://m.upgnet.com/SN/${encodeURIComponent(serial)}" target="_blank" rel="noopener">🔎 JCI serial lookup for ${escapeHtml(serial)}</a>`);
+    }
+    portalHtml = `
+      <p class="warranty-needs">That page asks for: <strong>${escapeHtml(portal.needs)}</strong>.${portal.note ? " " + escapeHtml(portal.note) : ""}</p>
+      ${offline ? `<p class="warranty-needs">📵 No signal right now — the button will work once you're back in coverage.</p>` : ""}
+      ${links.join("")}`;
+  } else {
+    portalHtml = `<p class="warranty-needs">Couldn't tell which badge is on the tag — pick the maker:</p>
+      <div class="warranty-badge-grid">${Object.entries(WARRANTY_PORTALS).map(([b, p]) =>
+        `<button class="warranty-badge" data-badge="${escapeHtml(b)}">${escapeHtml(b.charAt(0) + b.slice(1).toLowerCase())}</button>`).join("")}</div>`;
+  }
+
+  box.innerHTML = `
+    <div class="card">
+      ${serial ? `<div class="card-top"><div><div class="card-code">S/N ${escapeHtml(serial)}</div>${model ? `<div class="card-sub">${escapeHtml(model)}</div>` : ""}</div></div>` : (model ? `<div class="card-top"><div><div class="card-code">${escapeHtml(model)}</div></div></div>` : "")}
+      ${factsHtml ? `<ul class="scan-id-facts">${factsHtml}</ul>` : ""}
+      <div class="scan-actions">
+        ${serial ? `<button id="warrantyCopySerial">📋 Copy serial</button>` : ""}
+        ${model ? `<button id="warrantyCopyModel">📋 Copy model</button>` : ""}
+      </div>
+      ${portalHtml}
+      <p class="warranty-needs">Real coverage depends on REGISTRATION, not just age — if the portal shows nothing, the unit may be unregistered and on the shorter base warranty.</p>
+    </div>`;
+  const cs = document.getElementById("warrantyCopySerial");
+  if (cs) cs.onclick = () => warrantyCopy(serial, cs);
+  const cm = document.getElementById("warrantyCopyModel");
+  if (cm) cm.onclick = () => warrantyCopy(model, cm);
+  box.querySelectorAll(".warranty-badge").forEach(b => {
+    b.onclick = () => { trackEvent("warranty badge picked: " + b.dataset.badge); renderWarrantyResult(model, serial, b.dataset.badge); };
+  });
+  if (badge) trackEvent("warranty portal offered: " + badge);
+}
+
+document.getElementById("warrantyPhotoInput").addEventListener("change", (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (f) warrantyScanPhoto(f);
+  e.target.value = "";
+});
+document.getElementById("warrantyGoBtn").addEventListener("click", () => {
+  const serial = document.getElementById("warrantySerialInput").value.trim();
+  const model = document.getElementById("warrantyModelInput").value.trim();
+  if (!serial && !model) { warrantyStatus("Scan the tag or type a serial number first."); return; }
+  warrantyStatus(null);
+  renderWarrantyResult(model, serial, null);
+});
+
+// ============================================================
 // Network status
 // ============================================================
 
@@ -2501,7 +2636,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v90";
+const APP_VERSION = "v91";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
