@@ -447,7 +447,7 @@ main {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.55);
-  z-index: 50;
+  z-index: 90; /* above the PDF reader (80) so its ⓘ modal is reachable */
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -922,4 +922,67 @@ main {
   padding: 0.6rem 0.7rem;
   font-size: 0.92rem;
   line-height: 1.45;
+}
+
+/* Full-screen PDF reader */
+.pdf-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: #33383d;
+  display: flex;
+  flex-direction: column;
+}
+.pdf-viewer.hidden { display: none; }
+.pdf-viewer-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.55rem;
+  padding-top: max(0.45rem, env(safe-area-inset-top));
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+}
+.pdf-viewer-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pdf-bar-btn {
+  flex: 0 0 auto;
+  min-width: 2.3rem;
+  padding: 0.5rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pdf-page-btn { font-size: 0.8rem; min-width: 3.6rem; }
+.pdf-viewer-scroll {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 0 max(0.5rem, env(safe-area-inset-bottom));
+}
+.pdf-pages {
+  width: max-content;
+  min-width: 100%;
+}
+.pdf-page {
+  margin: 0 auto 0.5rem;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.45);
+}
+.pdf-viewer-msg {
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.95rem;
 }

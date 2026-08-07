@@ -1222,6 +1222,14 @@ async function openManualDetail(id) {
     renderManuals();
   }
 
+  closeModal();
+  openPdfReader(m);
+}
+
+// Detail actions (Save copy / Remove download) live behind the reader's info
+// button — reading happens on-screen, nothing has to go to the phone's Files.
+function openManualInfo(m) {
+  const modal = document.getElementById("modal");
   if (currentPdfObjectUrl) { URL.revokeObjectURL(currentPdfObjectUrl); currentPdfObjectUrl = null; }
   currentPdfObjectUrl = URL.createObjectURL(m.blob);
   const isSeed = m.id.startsWith("manual-seed-");
@@ -1229,7 +1237,6 @@ async function openManualDetail(id) {
     <h2>${escapeHtml(m.title || m.filename)}</h2>
     <div class="sub">${[m.brand, m.model].filter(Boolean).map(escapeHtml).join(" · ")}${m.brand||m.model ? " · " : ""}${formatBytes(m.size)} · on this phone</div>
     ${m.notes ? `<div class="detail-section"><p>${escapeHtml(m.notes)}</p></div>` : ""}
-    <iframe class="pdf-frame" src="${currentPdfObjectUrl}"></iframe>
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
       <a id="downloadBtn" class="primary" style="display:flex;align-items:center;justify-content:center;text-decoration:none;" href="${currentPdfObjectUrl}" download="${escapeHtml(m.filename || "manual.pdf")}">Save copy</a>
@@ -1243,7 +1250,7 @@ async function openManualDetail(id) {
       : "Delete this manual from the device?";
     if (!confirm(msg)) return;
     await manualsDelete(m.id);
-    closeModal(); renderManuals();
+    closeModal(); closePdfReader(); renderManuals();
   };
   document.getElementById("modalBackdrop").classList.remove("hidden");
 }
@@ -1349,6 +1356,252 @@ async function downloadSeedManual(m, onStatus) {
   trackEvent("downloaded manual: " + m.title);
   return record;
 }
+
+// ============================================================
+// In-app PDF reader (pdf.js rendered on canvas). Phones don't
+// render PDFs in iframes — this is why manuals looked "broken"
+// in the field. pdf.js is self-hosted and precached by the SW,
+// so reading works fully offline like everything else.
+// ============================================================
+
+let pdfJsPromise = null;
+function ensurePdfJs() {
+  if (window.pdfjsLib) return Promise.resolve();
+  if (pdfJsPromise) return pdfJsPromise;
+  pdfJsPromise = new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "pdfjs/pdf.min.js";
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = "pdfjs/pdf.worker.min.js";
+      resolve();
+    };
+    s.onerror = () => { pdfJsPromise = null; reject(new Error("couldn't load the PDF engine")); };
+    document.head.appendChild(s);
+  });
+  return pdfJsPromise;
+}
+
+const PDF_KEEP_RANGE = 4; // pages kept rendered on each side of the visible one
+const pdfView = {
+  doc: null, manual: null, holders: [], rendered: new Set(), rendering: new Set(),
+  zoom: 1, observer: null, current: 1, historyArmed: false,
+};
+
+async function openPdfReader(m) {
+  const viewer = document.getElementById("pdfViewer");
+  const scroll = document.getElementById("pdfScroll");
+  document.getElementById("pdfViewerTitle").textContent = m.title || m.filename || "Manual";
+  document.getElementById("pdfPageBtn").textContent = "–";
+  scroll.innerHTML = `<div class="pdf-viewer-msg">Opening…</div>`;
+  viewer.classList.remove("hidden");
+  // Android back gesture should close the reader, not exit the app.
+  history.pushState({ bfcPdf: 1 }, "");
+  pdfView.historyArmed = true;
+  pdfView.manual = m;
+  try {
+    await ensurePdfJs();
+    const data = await m.blob.arrayBuffer();
+    const doc = await pdfjsLib.getDocument({ data }).promise;
+    if (pdfView.manual !== m) { doc.destroy(); return; } // closed while loading
+    pdfView.doc = doc;
+    pdfView.zoom = 1;
+    pdfView.rendered = new Set();
+    pdfView.rendering = new Set();
+    pdfView.current = 1;
+    // Placeholder heights from page 1's aspect ratio; each page corrects its
+    // own holder to exact size on first render.
+    const p1 = await doc.getPage(1);
+    const vp1 = p1.getViewport({ scale: 1 });
+    const cssW = pdfBaseWidth();
+    const estH = Math.round(cssW * (vp1.height / vp1.width));
+    scroll.innerHTML = "";
+    // width:max-content wrapper — lets a zoomed-in page scroll all the way
+    // left instead of getting clipped by auto-margin centering
+    const wrap = document.createElement("div");
+    wrap.className = "pdf-pages";
+    scroll.appendChild(wrap);
+    pdfView.holders = [];
+    for (let n = 1; n <= doc.numPages; n++) {
+      const holder = document.createElement("div");
+      holder.className = "pdf-page";
+      holder.dataset.page = n;
+      holder.style.width = cssW + "px";
+      holder.style.height = estH + "px";
+      wrap.appendChild(holder);
+      pdfView.holders.push(holder);
+    }
+    document.getElementById("pdfPageBtn").textContent = "1 / " + doc.numPages;
+    if (pdfView.observer) pdfView.observer.disconnect();
+    pdfView.observer = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) pdfRenderPage(Number(e.target.dataset.page));
+      }
+    }, { root: scroll, rootMargin: "700px 0px" });
+    pdfView.holders.forEach(h => pdfView.observer.observe(h));
+    pdfKickstart();
+    trackEvent("read manual: " + (m.title || m.filename));
+  } catch (err) {
+    scroll.innerHTML = `<div class="pdf-viewer-msg">Couldn't open this manual (${escapeHtml(err && err.message ? err.message : String(err))}). Try removing the download from ⓘ and tapping it again.</div>`;
+  }
+}
+
+function pdfBaseWidth() {
+  // fit-width with a small gutter, capped for tablets/desktop
+  return Math.min(document.getElementById("pdfScroll").clientWidth - 12, 900);
+}
+
+// Observer callbacks can lag (throttled tabs, backgrounded PWA) — paint the
+// pages at the current position directly; the observer handles scrolling.
+function pdfKickstart() {
+  if (!pdfView.doc) return;
+  const from = Math.max(1, pdfView.current - 1);
+  const to = Math.min(pdfView.doc.numPages, pdfView.current + 2);
+  for (let n = from; n <= to; n++) pdfRenderPage(n);
+}
+
+async function pdfRenderPage(n) {
+  if (!pdfView.doc || pdfView.rendered.has(n) || pdfView.rendering.has(n)) return;
+  pdfView.rendering.add(n);
+  const doc = pdfView.doc;
+  try {
+    const page = await doc.getPage(n);
+    if (pdfView.doc !== doc) return;
+    const holder = pdfView.holders[n - 1];
+    const vp1 = page.getViewport({ scale: 1 });
+    const scale = (pdfBaseWidth() / vp1.width) * pdfView.zoom;
+    const vp = page.getViewport({ scale });
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.floor(vp.width * ratio);
+    canvas.height = Math.floor(vp.height * ratio);
+    canvas.style.width = Math.floor(vp.width) + "px";
+    canvas.style.height = Math.floor(vp.height) + "px";
+    holder.style.width = Math.floor(vp.width) + "px";
+    holder.style.height = Math.floor(vp.height) + "px";
+    await page.render({
+      canvasContext: canvas.getContext("2d"),
+      viewport: vp,
+      transform: ratio !== 1 ? [ratio, 0, 0, ratio, 0, 0] : null,
+    }).promise;
+    if (pdfView.doc !== doc) return;
+    holder.replaceChildren(canvas);
+    pdfView.rendered.add(n);
+    pdfTrimRendered();
+  } catch (err) {
+    // render errors on one page shouldn't kill the reader
+  } finally {
+    pdfView.rendering.delete(n);
+  }
+}
+
+// Big manuals would run a phone out of memory if every visited page kept its
+// canvas — blank out pages far from the current one (placeholder keeps height).
+function pdfTrimRendered() {
+  for (const n of [...pdfView.rendered]) {
+    if (Math.abs(n - pdfView.current) > PDF_KEEP_RANGE) {
+      pdfView.holders[n - 1].replaceChildren();
+      pdfView.rendered.delete(n);
+    }
+  }
+}
+
+function pdfUpdateCurrent() {
+  if (!pdfView.doc) return;
+  const scroll = document.getElementById("pdfScroll");
+  const mid = scroll.scrollTop + scroll.clientHeight / 2;
+  let cur = 1;
+  for (const h of pdfView.holders) {
+    if (h.offsetTop <= mid) cur = Number(h.dataset.page); else break;
+  }
+  if (cur !== pdfView.current) {
+    pdfView.current = cur;
+    document.getElementById("pdfPageBtn").textContent = cur + " / " + pdfView.doc.numPages;
+    pdfTrimRendered();
+  }
+}
+
+function pdfSetZoom(z) {
+  if (!pdfView.doc) return;
+  const scroll = document.getElementById("pdfScroll");
+  const old = pdfView.zoom;
+  pdfView.zoom = Math.min(4, Math.max(0.5, z));
+  if (pdfView.zoom === old) return;
+  const f = pdfView.zoom / old;
+  // scale placeholders + keep the same spot on the page under the viewport
+  const anchor = scroll.scrollTop + scroll.clientHeight / 2;
+  for (const h of pdfView.holders) {
+    h.style.width = Math.floor(parseFloat(h.style.width) * f) + "px";
+    h.style.height = Math.floor(parseFloat(h.style.height) * f) + "px";
+    h.replaceChildren();
+  }
+  pdfView.rendered.clear();
+  scroll.scrollTop = anchor * f - scroll.clientHeight / 2;
+  // re-render what's on screen now
+  pdfView.holders.forEach(h => pdfView.observer.unobserve(h));
+  pdfView.holders.forEach(h => pdfView.observer.observe(h));
+  pdfKickstart();
+}
+
+function closePdfReader(fromPop) {
+  const viewer = document.getElementById("pdfViewer");
+  if (viewer.classList.contains("hidden")) return;
+  viewer.classList.add("hidden");
+  if (pdfView.observer) { pdfView.observer.disconnect(); pdfView.observer = null; }
+  if (pdfView.doc) { pdfView.doc.destroy(); pdfView.doc = null; }
+  pdfView.manual = null;
+  pdfView.holders = [];
+  pdfView.rendered.clear();
+  document.getElementById("pdfScroll").innerHTML = "";
+  if (pdfView.historyArmed && !fromPop) history.back();
+  pdfView.historyArmed = false;
+}
+
+window.addEventListener("popstate", () => {
+  if (!document.getElementById("pdfViewer").classList.contains("hidden")) {
+    closePdfReader(true);
+  }
+});
+document.getElementById("pdfCloseBtn").onclick = () => closePdfReader(false);
+document.getElementById("pdfZoomInBtn").onclick = () => pdfSetZoom(pdfView.zoom * 1.3);
+document.getElementById("pdfZoomOutBtn").onclick = () => pdfSetZoom(pdfView.zoom / 1.3);
+document.getElementById("pdfInfoBtn").onclick = () => { if (pdfView.manual) openManualInfo(pdfView.manual); };
+document.getElementById("pdfPageBtn").onclick = () => {
+  if (!pdfView.doc) return;
+  const p = parseInt(prompt("Go to page (1-" + pdfView.doc.numPages + ")", pdfView.current), 10);
+  if (p >= 1 && p <= pdfView.doc.numPages) {
+    document.getElementById("pdfScroll").scrollTop = pdfView.holders[p - 1].offsetTop - 6;
+  }
+};
+let pdfScrollTick = false;
+document.getElementById("pdfScroll").addEventListener("scroll", () => {
+  if (pdfScrollTick) return;
+  pdfScrollTick = true;
+  requestAnimationFrame(() => { pdfScrollTick = false; pdfUpdateCurrent(); });
+});
+
+// Rotating the phone changes fit-width — re-lay pages out at the new width.
+// All holders share one width (height varies by aspect), so one factor works.
+let pdfResizeTimer = null;
+window.addEventListener("resize", () => {
+  if (!pdfView.doc || document.getElementById("pdfViewer").classList.contains("hidden")) return;
+  clearTimeout(pdfResizeTimer);
+  pdfResizeTimer = setTimeout(() => {
+    if (!pdfView.doc || !pdfView.holders.length) return;
+    const target = pdfBaseWidth() * pdfView.zoom;
+    const curW = parseFloat(pdfView.holders[0].style.width);
+    if (!curW || Math.abs(target - curW) < 2) return;
+    const f = target / curW;
+    for (const h of pdfView.holders) {
+      h.style.width = Math.floor(parseFloat(h.style.width) * f) + "px";
+      h.style.height = Math.floor(parseFloat(h.style.height) * f) + "px";
+      h.replaceChildren();
+    }
+    pdfView.rendered.clear();
+    pdfView.holders.forEach(h => pdfView.observer.unobserve(h));
+    pdfView.holders.forEach(h => pdfView.observer.observe(h));
+    pdfKickstart();
+  }, 250);
+});
 
 // ============================================================
 // Request Info — techs email gaps/ideas to the office (mailto:,
@@ -2721,7 +2974,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v92";
+const APP_VERSION = "v93";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -293,6 +293,19 @@
   <div class="modal" id="modal"></div>
 </div>
 
+<!-- Full-screen PDF reader (manuals render on-screen; nothing to download) -->
+<div id="pdfViewer" class="pdf-viewer hidden">
+  <div class="pdf-viewer-bar">
+    <button id="pdfCloseBtn" class="pdf-bar-btn" aria-label="Close">✕</button>
+    <div class="pdf-viewer-title" id="pdfViewerTitle"></div>
+    <button id="pdfPageBtn" class="pdf-bar-btn pdf-page-btn">–</button>
+    <button id="pdfZoomOutBtn" class="pdf-bar-btn" aria-label="Zoom out">−</button>
+    <button id="pdfZoomInBtn" class="pdf-bar-btn" aria-label="Zoom in">+</button>
+    <button id="pdfInfoBtn" class="pdf-bar-btn" aria-label="Manual options">ⓘ</button>
+  </div>
+  <div class="pdf-viewer-scroll" id="pdfScroll"></div>
+</div>
+
 <script src="pt-data.js"></script>
 <script src="data.js"></script>
 <script src="symptoms.js"></script>
