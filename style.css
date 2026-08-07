@@ -848,3 +848,36 @@ main {
   font-weight: 700;
   cursor: pointer;
 }
+
+/* Scan-to-chart in the Charging Calc */
+.cc-scan-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.cc-scan-row > button {
+  flex: 1 1 40%;
+  padding: 0.65rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+.cc-scan-row > button:active { border-color: var(--accent); }
+.cc-scan-row .form-field { flex: 1 1 40%; }
+#ccScanStatus {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding: 0.4rem 0.2rem;
+}
+.cc-scan-hit, .cc-scan-miss, .cc-scan-applied, .cc-scan-rowhit {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 0.65rem 0.75rem;
+  margin: 0.45rem 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+.cc-scan-hit .cc-chart-link { margin-top: 0.5rem; }
+.cc-scan-rowhit { border-style: dashed; margin-top: 0.5rem; }
+.cc-scan-applied { border-color: var(--accent); }
+.cc-scan-miss { border-style: dashed; color: var(--text-dim); }

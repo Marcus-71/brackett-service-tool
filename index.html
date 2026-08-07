@@ -150,6 +150,20 @@
   <main>
     <div class="charge-form">
 
+      <div class="cc-section-label">📸 Scan the tags — the factory chart beats every rule of thumb</div>
+      <div class="cc-scan-row">
+        <button id="ccScanOutBtn" type="button">📸 Scan OUTDOOR tag</button>
+        <button id="ccScanInBtn" type="button">📸 Scan INDOOR tag</button>
+        <input id="ccScanOutInput" type="file" accept="image/*" capture="environment" class="hidden">
+        <input id="ccScanInInput" type="file" accept="image/*" capture="environment" class="hidden">
+      </div>
+      <div class="cc-scan-row">
+        <div class="form-field"><label>Outdoor model</label><input id="ccOutModel" type="text" autocapitalize="characters" placeholder="scan or type, e.g. ML15KSPV-036"></div>
+        <div class="form-field"><label>Indoor model / coil</label><input id="ccInModel" type="text" autocapitalize="characters" placeholder="scan or type, e.g. CBK43UHE-036"></div>
+      </div>
+      <div id="ccScanStatus" class="hidden"></div>
+      <div id="ccScanResult"></div>
+
       <div class="cc-section-label">System</div>
       <div class="charge-grid">
         <div class="form-field"><label>Refrigerant</label>

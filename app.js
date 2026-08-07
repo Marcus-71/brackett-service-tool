@@ -1616,6 +1616,172 @@ for (const fid of ["cc-refrig","cc-meter","cc-eff","cc-od","cc-id","cc-suct","cc
 }
 
 // ============================================================
+// Scan-to-chart — photograph the outdoor and indoor tags and the
+// calc finds the manufacturer's own charging table for that exact
+// matchup, highlights the row, and feeds the printed subcool target
+// into the math instead of the 10°F default.
+// ============================================================
+
+function ccNormModel(s) {
+  return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+// Matchable tokens out of a chart's free-text `models` line. A token is a
+// model prefix like "ML16KP2-024", "DX6VS", "4TTX8", "GSX" — not prose.
+const CC_TOKEN_STOP = new Set(["AND","THE","FOR","WITH","TON","SEER","FIT","EEV","TXV","OUTDOOR","INDOOR","UNITS","LISTED","TABLE","HEAT","PUMP","GAS","AIR"]);
+function ccChartTokens(chart) {
+  const out = [];
+  for (const raw of String(chart.models || "").split(/[\s,()\/]+/)) {
+    // pattern strings like "DX6VS***1*A*" match by their literal prefix
+    const t = raw.split("*")[0].replace(/[^A-Za-z0-9-]/g, "");
+    if (!t || t !== t.toUpperCase()) continue;               // prose is mixed-case
+    const keep = (n) => {
+      if (!n || CC_TOKEN_STOP.has(n)) return;
+      if (!(n.length >= 4 && /\d/.test(n)) && !(n.length === 3 && /^[A-Z]{3}$/.test(n))) return;
+      out.push(n);
+    };
+    keep(ccNormModel(t));
+    // "ML15KSPV-018/-024/…" lists only carry the first size as a full token —
+    // the dash-prefix base (ML15KSPV) has to match the other sizes too.
+    if (t.includes("-")) keep(ccNormModel(t.split("-")[0]));
+  }
+  return [...new Set(out)];
+}
+
+// Rank charts for a scanned outdoor model — longest matching prefix wins.
+function ccMatchCharts(outModel) {
+  const m = ccNormModel(outModel);
+  if (!m || typeof CHARGING_CHARTS === "undefined") return [];
+  const hits = [];
+  for (const c of CHARGING_CHARTS) {
+    let best = 0;
+    for (const t of ccChartTokens(c)) if (m.startsWith(t) && t.length > best) best = t.length;
+    if (best) hits.push({ chart: c, score: best });
+  }
+  return hits.sort((a, b) => b.score - a.score);
+}
+
+// On a matchup chart (rows like "ML15KSPV-018 / CBK43UHE-018"), find the row
+// for this outdoor+indoor pair. Outdoor narrows first when it's present in
+// the row text; indoor then has to match the row's indoor half.
+function ccMatchRow(chart, outModel, inModel) {
+  const om = ccNormModel(outModel), im = ccNormModel(inModel);
+  if (!im) return -1;
+  let bestIdx = -1, bestLen = 0;
+  chart.rows.forEach((r, i) => {
+    const parts = String(r.row).split("/").map(p => ccNormModel(p));
+    if (parts.length < 2) return;                            // not a matchup row
+    const ro = parts[0];
+    if (om && ro && !(om.startsWith(ro) || ro.startsWith(om))) return;
+    // Indoor half may list several sizes: "CBK48MVT-018/024" splits into
+    // ["CBK48MVT018", "024"] — a bare-digit continuation inherits the alpha
+    // base of the model before it.
+    let base = "";
+    for (const part of parts.slice(1)) {
+      let cand = part;
+      if (/^\d+$/.test(part) && base) cand = base + part;
+      else { const m2 = part.match(/^(.*?[A-Z])\d+$/); base = m2 ? m2[1] : ""; }
+      if (!cand) continue;
+      if (im.startsWith(cand) || cand.startsWith(im)) {
+        if (cand.length > bestLen) { bestLen = cand.length; bestIdx = i; }
+      }
+    }
+  });
+  return bestIdx;
+}
+
+async function ccScanPhoto(which, file) {
+  const st = document.getElementById("ccScanStatus");
+  const show = (msg) => { if (msg) { st.textContent = msg; st.classList.remove("hidden"); } else st.classList.add("hidden"); };
+  trackEvent("charge calc scanned " + which + " tag");
+  try {
+    show("Reading the " + which + " tag… first scan on a phone takes ~15-30 seconds.");
+    const canvas = await preprocessPhoto(file);
+    const worker = await getTessWorker(show);
+    const { data } = await worker.recognize(canvas);
+    show(null);
+    const fields = extractTagFields(data.text || "");
+    if (!fields.model) {
+      show("Couldn't find a model number on the " + which + " tag — try a straighter, closer shot, or type it in the box.");
+      return;
+    }
+    document.getElementById(which === "outdoor" ? "ccOutModel" : "ccInModel").value = fields.model;
+    ccApplyScan();
+  } catch (err) {
+    show("Scan failed: " + (err && err.message ? err.message : err) + " — you can type the model instead.");
+  }
+}
+
+function ccApplyScan() {
+  const outModel = document.getElementById("ccOutModel").value.trim();
+  const inModel = document.getElementById("ccInModel").value.trim();
+  const box = document.getElementById("ccScanResult");
+  if (!outModel && !inModel) { box.innerHTML = ""; return; }
+
+  let hits = ccMatchCharts(outModel);
+  // Indoor-only scan: offer any matchup chart whose rows mention this indoor.
+  if (!hits.length && inModel) {
+    hits = (typeof CHARGING_CHARTS !== "undefined" ? CHARGING_CHARTS : [])
+      .filter(c => ccMatchRow(c, "", inModel) !== -1)
+      .map(c => ({ chart: c, score: 1 }));
+  }
+  if (!hits.length) {
+    box.innerHTML = `<div class="cc-scan-miss">No factory chart for <strong>${escapeHtml(outModel || inModel)}</strong> in the offline library — the rule-of-thumb targets below still apply. Check the unit's own charging sticker or nameplate subcool value and enter it above.</div>`;
+    trackEvent("charge scan no chart: " + (outModel || inModel));
+    return;
+  }
+
+  const cards = [];
+  let applied = null;
+  for (const { chart } of hits.slice(0, 3)) {
+    const rowIdx = ccMatchRow(chart, outModel, inModel);
+    let rowHtml = "";
+    if (rowIdx !== -1) {
+      const r = chart.rows[rowIdx];
+      const vals = Object.entries(r.values).map(([k, v]) =>
+        `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(String(v))}</li>`).join("");
+      rowHtml = `<div class="cc-scan-rowhit"><strong>Your matchup:</strong> ${escapeHtml(r.row)}<ul class="scan-id-facts">${vals}</ul></div>`;
+      // Feed the printed cooling subcool target into the calc once.
+      if (!applied && /subcool/i.test(chart.id)) {
+        const coolKey = Object.keys(r.values).find(k => /cool/i.test(k) && !/heat/i.test(k)) || Object.keys(r.values)[0];
+        const n = parseFloat(String(r.values[coolKey]).replace(/[^0-9.\-]/g, ""));
+        if (!isNaN(n)) {
+          document.getElementById("cc-sctarget").value = n;
+          applied = { chart, key: coolKey, n };
+        }
+      }
+      trackEvent("charge scan matched row: " + chart.id);
+    } else {
+      trackEvent("charge scan matched chart: " + chart.id);
+    }
+    // Refrigerant follows the matched chart so the P/T math is right.
+    const sel = document.getElementById("cc-refrig");
+    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(chart.refrigerant));
+    if (want) sel.value = want.value;
+    cards.push(`<div class="cc-scan-hit">
+      <div><strong>${escapeHtml(chart.brand)}</strong> — ${escapeHtml(chart.refrigerant)} factory chart${rowIdx !== -1 ? "" : (inModel ? " (indoor model didn't match a row — open the chart and pick your matchup)" : " (scan or type the indoor model to pin your exact row)")}</div>
+      ${rowHtml}
+      <button class="cc-chart-link" data-chart="${escapeHtml(chart.id)}">📋 Open the full chart</button>
+    </div>`);
+  }
+  box.innerHTML = cards.join("")
+    + (applied ? `<div class="cc-scan-applied">✅ Subcool target set to <strong>${applied.n}°F</strong> from the factory table (${escapeHtml(applied.key)}) — the readings below now judge against the printed number, not the 10°F default.</div>` : "");
+  box.querySelectorAll(".cc-chart-link").forEach(b => { b.onclick = () => openChargingChart(b.dataset.chart); });
+  renderChargeCalc();
+}
+
+document.getElementById("ccScanOutBtn").addEventListener("click", () => document.getElementById("ccScanOutInput").click());
+document.getElementById("ccScanInBtn").addEventListener("click", () => document.getElementById("ccScanInInput").click());
+document.getElementById("ccScanOutInput").addEventListener("change", (e) => {
+  const f = e.target.files && e.target.files[0]; if (f) ccScanPhoto("outdoor", f); e.target.value = "";
+});
+document.getElementById("ccScanInInput").addEventListener("change", (e) => {
+  const f = e.target.files && e.target.files[0]; if (f) ccScanPhoto("indoor", f); e.target.value = "";
+});
+document.getElementById("ccOutModel").addEventListener("change", ccApplyScan);
+document.getElementById("ccInModel").addEventListener("change", ccApplyScan);
+
+// ============================================================
 // Tag Scanner — photo → on-device OCR → model/serial → unit ID
 // ============================================================
 
@@ -2224,7 +2390,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v87";
+const APP_VERSION = "v88";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
