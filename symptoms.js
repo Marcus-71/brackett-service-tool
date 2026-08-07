@@ -17028,6 +17028,26 @@ const SYMPTOMS = [
   ],
   "safety": "There is no penalty for calling. There is a real penalty for a second breaker reset, an undischarged drive capacitor, or a rollout put back without a cause.",
   "confidence": "common"
+ },
+ {
+  "id": "s-elec-path-airhandler",
+  "equipment": "Air Handler",
+  "title": "Air handler or electric furnace is completely dead — walk the power (start here)",
+  "summary": "No blower, no lights, nothing on any call. Air handlers with electric heat often have MORE THAN ONE circuit, which is where this one catches people.",
+  "steps": [
+   "Before anything: this unit may be fed by more than one breaker. Killing one does not make it safe",
+   "Step 1: find out whether it is a single-point or multi-point electrical connection. Single-point means one feed lands on the heat kit and everything is fused inside it; multi-point means separate circuits for the blower and each heat bank",
+   "Step 2: check every breaker that feeds this unit, not just the one you found first",
+   "Step 3: check the fuses or small breakers INSIDE the heat kit - single-point kits carry their own protection and it is easy to miss",
+   "Step 4: confirm line voltage arriving at the air handler, then at the transformer primary",
+   "Step 5: check the transformer secondary for 24V",
+   "Step 6: check 24V at the board, R to C, and look at the board's LED",
+   "Step 7: confirm the blower door safety switch is fully engaged - most units are dead without it",
+   "If the unit is totally dead but the heat strips still get hot on a call, stop - that is a wiring fault that can energize strips without airflow"
+  ],
+  "safety": "Multiple circuits means multiple sources. Kill and verify EVERY feed before working, and prove your meter live-dead-live. Heat strips energizing without the blower is a fire hazard - do not leave that condition running.",
+  "confidence": "common"
  }
+
 
 ];

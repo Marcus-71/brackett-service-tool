@@ -912,41 +912,99 @@ const SYMPTOM_FOLLOWUPS = {
  ],
  "s-blower-wont-run-any-mode": [
   {
-   "ask": "With a call present, meter for line voltage at the blower motor connector.",
+   "ask": "Before you meter anything - what KIND of blower motor is this? Getting this wrong sends you down the wrong path entirely.",
    "options": [
     {
-     "label": "Line voltage present at the motor",
+     "label": "PSC - multi-speed, has a run capacitor, speed taps on the board",
      "next": 1
     },
     {
-     "label": "No line voltage at the motor",
-     "next": 2
+     "label": "Constant torque ECM - 5-pin line plug and a 16-pin low-voltage plug",
+     "next": 3
+    },
+    {
+     "label": "Variable speed / serial ECM - 5-pin line plug, 4-wire or serial comms",
+     "next": 4
+    },
+    {
+     "label": "I am not sure",
+     "verdict": "Settle this first. A PSC has a run capacitor and multiple colored speed taps landing on the board or a relay. An ECM has a big potted module on the back of the motor with a 5-pin line plug and a separate low-voltage plug. Critically: an ECM has LINE VOLTAGE AT THE 5-PIN ALL THE TIME and switches internally, so 'I have power at the motor' proves nothing on an ECM. See 'Identifying a 4-wire serial constant-CFM ECM before you troubleshoot it'."
     }
    ]
   },
   {
-   "ask": "The motor has power - check the motor side.",
+   "ask": "PSC motor. With a call present, is line voltage reaching the motor?",
    "options": [
     {
-     "label": "Wheel will not spin freely by hand with power off",
-     "verdict": "Seized bearing. Replace the motor rather than chasing the control side."
+     "label": "Yes, line voltage at the motor",
+     "next": 2
+    },
+    {
+     "label": "No line voltage at the motor",
+     "verdict": "Work back toward the source: the blower door safety switch first (most units are dead without it fully engaged), then the board's blower relay or speed tap, then power to the unit itself. If the whole unit is dead, use the air handler power-path walkthrough."
+    },
+    {
+     "label": "Voltage on the wrong speed tap",
+     "verdict": "Check which tap the board is energizing against the wiring diagram - a tap landed wrong, or an unused tap not parked properly, gives you a motor that does nothing on some calls. See 'Multi-speed PSC blower motor - wrong speed running, or speed tap wiring troubleshooting'."
+    }
+   ]
+  },
+  {
+   "ask": "PSC has power. Kill the power, discharge the capacitor, and spin the wheel by hand.",
+   "options": [
+    {
+     "label": "Wheel will not spin freely, feels rough or seized",
+     "verdict": "Seized bearings. Replace the motor. Also find out why - a wheel packed with dirt or a motor that has been overheating from restricted airflow will take the new one out too. Check the wheel and the filter situation before you leave."
     },
     {
      "label": "Wheel spins free",
-     "verdict": "Check the run capacitor on a PSC motor, or the module and control connections on an ECM."
+     "verdict": "Motor turns freely and has power, so test the run capacitor next - a dead capacitor gives you a humming motor that will not start. Discharge it first. See 'How to properly test a run/start capacitor' and 'PSC blower motor slow to start or humming'. If the capacitor is good, ohm the windings for open, shorted, or grounded."
+    },
+    {
+     "label": "It hums but will not start",
+     "verdict": "Classic weak or dead run capacitor. Discharge it, test it, and check it is the right MFD for this motor. See 'PSC blower motor slow to start or humming (non-ECM system)' and 'Wrong MFD capacitor installed'."
     }
    ]
   },
   {
-   "ask": "No power at the motor - work back toward the source.",
+   "ask": "Constant torque ECM. Check the 5-pin line plug and the 16-pin low-voltage plug separately.",
    "options": [
     {
-     "label": "Blower door safety switch is not fully engaged",
-     "verdict": "Most units will not run at all with the door open or the switch not depressed. Correct it and retest."
+     "label": "No line voltage at the 5-pin",
+     "verdict": "That is a genuine power problem - work back through the door safety switch and the board. Use the air handler power-path walkthrough."
     },
     {
-     "label": "No power at the air handler/furnace at all",
-     "verdict": "Check the disconnect and breaker feeding the unit."
+     "label": "Line voltage at the 5-pin, but no 24V on any tap at the 16-pin",
+     "verdict": "The motor is powered and simply is not being told to run. The board is not energizing a tap - check the board's outputs against the wiring diagram and confirm the call is reaching it. See 'ECM blower dead - checking power at the 5-pin and thermostat signals at the 16-pin connector'."
+    },
+    {
+     "label": "Line voltage at the 5-pin AND 24V on a tap, but nothing turns",
+     "verdict": "It has power and a command and still will not run - that points at the motor or its module. Before condemning it, run the manufacturer pre-checks and spin the shaft by hand for roughness. See 'Before condemning a variable-speed ECM blower - manufacturer pre-checks' and 'ECM motor shaft feels rough or notchy when turned by hand'."
+    },
+    {
+     "label": "It runs in fan-only but not in cooling",
+     "verdict": "That is a tap problem, not a dead motor. The 24V lead needs to be on the tap the board energizes for that call. See 'Constant torque ECM blower runs in fan-only but not in cooling - move the 24V lead'."
+    }
+   ]
+  },
+  {
+   "ask": "Variable speed / serial ECM. Do NOT ohm this like a PSC and do not apply line voltage to test it. Check the 5-pin for power and the comms connector for signal.",
+   "options": [
+    {
+     "label": "No line voltage at the 5-pin",
+     "verdict": "Genuine power problem. Work back through the door safety switch and the board using the air handler power-path walkthrough."
+    },
+    {
+     "label": "Line voltage present, no signal on the comms connector",
+     "verdict": "The motor is powered but receiving no command. On a 4-wire serial motor you are looking for a DC signal - on an MBVC air handler that is 9 to 15 VDC at the 4-wire connector. No signal means the board or the harness, not the motor. See 'MBVC air handler - blower dead: 9 to 15 VDC at the 4-wire motor connector'."
+    },
+    {
+     "label": "Power and signal are both present, motor does nothing",
+     "verdict": "Run the manufacturer pre-checks before condemning it, then bench-test if you have the tool. See 'Before condemning a variable-speed ECM blower - manufacturer pre-checks' and 'Bench-running an ECM motor with the UltraCheck-EZ (UTT-01) diagnostic tool'."
+    },
+    {
+     "label": "It starts, ramps, then shuts down and retries",
+     "verdict": "That is thermal protection cycling, not a dead motor - the motor is protecting itself, usually from restricted airflow or a failing bearing. See 'ECM blower motor shuts down and restarts repeatedly (thermal protection cycling)'."
     }
    ]
   }
@@ -9901,45 +9959,91 @@ const SYMPTOM_FOLLOWUPS = {
  ],
  "s-efurnace-no-heat-strips": [
   {
-   "ask": "Check the heat strip breaker and disconnect - these are usually a dedicated high-amp circuit separate from the air handler control breaker. What do you find?",
+   "ask": "Blower may run but no strips energize. Start at the heat circuit - these are usually a dedicated high-amp breaker separate from the air handler control power.",
    "options": [
     {
      "label": "Heat strip breaker tripped or disconnect open",
-     "verdict": "That is why no strips energize. Verify breaker sizing matches the nameplate before resetting, and do not keep resetting it if it trips again."
+     "verdict": "Reset it ONCE. If it trips again, stop: on a heat circuit that is a grounded element or a burnt connection, and repeated resets on a 60-amp circuit are how fires start. See 'Heat strip breaker trips repeatedly' and 'Burnt lug or terminal at the electric heat kit'."
     },
     {
-     "label": "Breaker on and power present at the heater assembly",
+     "label": "Breaker on, power confirmed at the heater assembly",
      "next": 1
+    },
+    {
+     "label": "Some strips work, others do not",
+     "verdict": "Partial heat is a different fault than no heat, and it is useful information: a single open element does NOT stop the others. Go to 'Only some heat strips energize' and check each element's amp draw against its kW rating. Also check for a staging problem - on Goodman MBE/AEPF the third and fourth strips depend on the PJ4 jumper."
     }
    ]
   },
   {
-   "ask": "With power confirmed, meter W at the air handler control board during a heat call. Is the call getting there?",
+   "ask": "Power is at the heater. Meter W at the control board during a heat call - is the call even arriving?",
    "options": [
     {
-     "label": "No W signal reaching the board",
-     "verdict": "The thermostat call is not making it to the air handler. Chase the thermostat and the wiring between it and the board before touching the heater assembly."
+     "label": "No W at the board",
+     "verdict": "The problem is upstream of the air handler: thermostat, the W conductor in the run, or an outdoor thermostat / lockout control that is holding the strips off on purpose. On a heat pump, aux heat is often locked out above a set outdoor temperature by design. See 'Outdoor thermostat / lockout control for electric backup heat stuck open or closed'."
     },
     {
-     "label": "W present at the board but no strips energize",
+     "label": "W present at the board, no strips energize",
      "next": 2
     }
    ]
   },
   {
-   "ask": "Watch the blower proving and sequencer side of the call. What happens?",
+   "ask": "The call is arriving. Now the sequencer or time-delay relay - is its COIL being energized?",
    "options": [
     {
-     "label": "Blower never proves airflow, or the time delay never elapses, so the sequencer is never allowed to energize the strips",
-     "verdict": "Most designs require proven airflow or an elapsed delay before the sequencer closes. Check the fan/limit control and the sequencer."
+     "label": "No voltage on the sequencer coil",
+     "verdict": "The board is not passing the call through to the sequencer. Check the board output against the wiring diagram, and check whether this design requires the blower to prove first - most require airflow or an elapsed time delay before the strips are allowed on. See 'Goodman MBR/AR air handler - EBTDR delays and the blower path through the heat sequencer'."
     },
     {
-     "label": "Sequencer closes but one element reads open on continuity",
-     "verdict": "A single open element by itself would not kill all heat, the others would still work. Replace it, but keep looking for the sequencer or limit fault stopping the rest."
+     "label": "Coil is energized but the contacts never close",
+     "next": 3
     },
     {
-     "label": "High limit switch on the heater assembly itself is open",
-     "verdict": "That heater-level high limit is separate from any furnace-level limit and will block the strips. Find out why it opened before resetting."
+     "label": "Coil energized, contacts close, still no heat",
+     "next": 4
+    },
+    {
+     "label": "I cannot tell which device this is",
+     "verdict": "Identify it first - they fail differently. A bimetal sequencer is a heater element warming a bimetal strip, so it is slow by design and stages in over tens of seconds. An electronic time-delay relay switches cleanly at a set interval. See 'Electromechanical bimetal sequencer vs. electronic time-delay relay - different failure modes'."
+    }
+   ]
+  },
+  {
+   "ask": "Coil energized, contacts not closing. Give a bimetal sequencer time - they are slow on purpose.",
+   "options": [
+    {
+     "label": "Waited and they still never close",
+     "verdict": "The sequencer has failed open. Replace it. On a Daikin/Goodman electric heat time delay relay you can confirm by checking the coil - see 'Electric heat time delay relay - 150 ohm coil check and make/break timing'."
+    },
+    {
+     "label": "They close after a long delay and heat comes on",
+     "verdict": "That is normal behavior for a bimetal sequencer, not a fault - they stage in deliberately so all the strips do not hit the circuit at once. If the customer complaint is 'slow to warm up', explain it rather than replacing parts. See 'Blower doesn't start with heat strips, or starts late'."
+    },
+    {
+     "label": "Contacts are welded closed - strips run all the time",
+     "verdict": "A sequencer stuck closed means the strips energize whenever there is power, which can run them without a blower call. Replace it, and confirm the limits and fusible links are intact since they have likely been protecting the unit. See 'Heat sequencer stuck open or closed'."
+    }
+   ]
+  },
+  {
+   "ask": "Contacts are closed and power should be on the elements. Work the safeties and the elements themselves.",
+   "options": [
+    {
+     "label": "The auto-reset limit is open",
+     "verdict": "That limit is almost certainly right. It opens on lack of airflow - filter, blower, closed registers, crushed duct. Fix the airflow, do not bypass the limit. See 'Electric heat limit control open - continuity test and why not to bypass it' and 'Electric furnace high limit trips repeatedly'."
+    },
+    {
+     "label": "The fusible link is open",
+     "verdict": "A fusible link is a ONE-TIME thermal safety - it will not reset and it is not a nuisance trip. It blew because the heater got too hot, which means airflow failed or the strips ran without the blower. Replace the link AND find the cause, or the new one goes too. See 'Electric furnace fusible link open - one-time thermal safety has already tripped'."
+    },
+    {
+     "label": "An element reads open on continuity",
+     "verdict": "Replace the open element. Remember a single open element gives PARTIAL heat, not no heat - if you have no heat at all with only one element open, keep looking. See 'Electric heat element open - continuity test on the heater element itself'."
+    },
+    {
+     "label": "Everything checks good but the strips still do not heat",
+     "verdict": "Prove it with an amp clamp rather than continuity. Each element should draw close to its rating - amps equals kW times 1000 divided by volts, so a 5 kW element on 240V should pull around 21 amps. A element reading zero amps with the contacts closed is not getting power; one reading low is degraded. See 'Checking each electric heat element's amp draw against its kW rating'."
     }
    ]
   }
@@ -33720,423 +33824,528 @@ const SYMPTOM_FOLLOWUPS = {
    ]
   }
  ],
-  "s-elec-path-outdoor": [
-   {
-    "ask": "Before you open anything — where are you at on safety?",
-    "options": [
-     {
-      "label": "Power killed at breaker and disconnect, meter proved live-dead-live",
-      "next": 1
-     },
-     {
-      "label": "Not yet",
-      "verdict": "Do that first. Kill power at BOTH the breaker and the disconnect, then test your meter on a known live source, test the circuit, and test the known live source again. If the meter fails that last step your dead reading was worthless. See 'Trusting your meter - live-dead-live' and the lockout/tagout scenario."
-     },
-     {
-      "label": "I can see burnt wire, a melted lug, or I smell something scorched",
-      "verdict": "HAND IT OFF. Do not re-energize it to see what happens. Burnt terminations mean something was drawing more than the connection could carry, and the cause is still there. Photograph it, leave it de-energized, and get a senior tech on it."
-     },
-     {
-      "label": "The breaker already tripped once and I reset it",
-      "next": 1
-     }
-    ]
-   },
-   {
-    "ask": "Step 1 — read the LINE side of the disconnect, L1 to L2. What do you get?",
-    "type": "number",
-    "fields": [
-     {
-      "key": "v",
-      "label": "Volts, L1 to L2 at the disconnect line side",
-      "placeholder": "e.g. 241"
-     }
-    ],
-    "bands": [
-     {
-      "under": 20,
-      "label": "essentially nothing",
-      "verdict": "No power arriving at the unit at all. The problem is upstream of the disconnect: the breaker, the feeder, or a lug at the panel. Check the breaker position and read at the panel. This is where you stop if you are not comfortable at the panel."
-     },
-     {
-      "under": 187,
-      "label": "below the usual nameplate minimum",
-      "verdict": "Low supply voltage. Most 208/230V nameplates print a minimum around 187V - check the rating plate on this unit for its exact range. Low voltage burns up compressors and contactors, so chase it before you replace anything: undersized or long wire runs, loose lugs, or a genuine utility problem. See 'Diagnosing voltage drop from undersized or long wire runs'."
-     },
-     {
-      "under": 254,
-      "label": "in the normal range",
-      "next": 2
-     },
-     {
-      "label": "above the usual nameplate maximum",
-      "verdict": "High supply voltage. Most 208/230V nameplates cap around 253V - confirm on this unit's rating plate. Sustained high voltage damages equipment and is the power company's problem to correct, not something you fix at the unit. Document your reading and report it."
-     }
-    ]
-   },
-   {
-    "ask": "Step 2 — now read the LOAD side of the disconnect (below the fuses or pull). What do you get?",
-    "options": [
-     {
-      "label": "Full voltage on both legs",
-      "next": 3
-     },
-     {
-      "label": "Voltage on one leg only",
-      "verdict": "One leg is open - a blown fuse in the disconnect, a burnt lug, or a bad pull. This is the classic 'half dead unit' that gives confusing meter readings: the compressor hums or does nothing and you can still read voltage in places you would not expect. See 'One blown fuse in a 240V disconnect' and 'Disconnect fuses keep blowing at startup'. Find out WHY the fuse went before you just replace it."
-     },
-     {
-      "label": "Nothing on either leg, but the line side was good",
-      "verdict": "The disconnect itself is the open - blown fuses, a bad pull, corroded or burnt lugs. Open it up and look. See 'Disconnect box and whip problems'. If the lugs are burnt or it is aluminum-to-copper and discolored, hand it off rather than just re-landing it."
-     }
-    ]
-   },
-   {
-    "ask": "Step 3 — read the LINE side of the contactor (the incoming lugs, L1 and L2). Voltage there?",
-    "options": [
-     {
-      "label": "Full voltage at the contactor line side",
-      "next": 4
-     },
-     {
-      "label": "Nothing, or one leg missing",
-      "verdict": "The break is in the whip between the disconnect and the contactor, or at the lugs on either end. Inspect the whip for chafing where it enters the cabinet and check both sets of lugs for heat damage. See 'Disconnect box and whip problems (corrosion, loose lugs, chafing)'."
-     }
-    ]
-   },
-   {
-    "ask": "Step 4 — put a cooling call in and read the contactor COIL, 24V side. What do you get?",
-    "options": [
-     {
-      "label": "About 24V at the coil",
-      "next": 5
-     },
-     {
-      "label": "No 24V at the coil",
-      "verdict": "The problem is on the low-voltage side, and on most split systems the control transformer lives in the INDOOR unit - not out here. Go inside and work the 24V path: transformer, board fuse, then the Y wire out to the condenser. See 'No 24V at the condensing unit - the transformer lives in the indoor unit' and the furnace power-path walkthrough."
-     },
-     {
-      "label": "24V is there but it drops out the moment I land the Y wire",
-      "verdict": "That is a shorted or overloaded low-voltage circuit pulling the transformer down - very often the contactor coil itself is shorted, or the Y wire is grounded somewhere in the run. See '24V at the Y wire with it disconnected, but the contactor drops out the second you land it'."
-     }
-    ]
-   },
-   {
-    "ask": "Step 5 — with 24V on the coil, is the contactor actually pulled in?",
-    "options": [
-     {
-      "label": "Yes, pulled in and holding",
-      "next": 6
-     },
-     {
-      "label": "No, it will not pull in even with 24V present",
-      "verdict": "Coil is open, or the contactor is mechanically stuck. Ohm the coil and check that the armature moves freely - insects and corrosion jam these. See '24V reads fine at the contactor but it still will not pull in' and 'Insects found in the outdoor unit's electrical compartment'."
-     },
-     {
-      "label": "It chatters or buzzes",
-      "verdict": "Chattering is usually low or unstable control voltage, an undersized transformer, or a failing coil - not a contactor that simply needs replacing. See 'Contactor chattering or buzzing'."
-     }
-    ]
-   },
-   {
-    "ask": "Step 6 — with it pulled in, read ACROSS each pole (L1 to T1, then L2 to T2). Not line to line. What is the highest reading across a closed pole?",
-    "type": "number",
-    "fields": [
-     {
-      "key": "drop",
-      "label": "Volts across the closed pole (highest of the two)",
-      "placeholder": "e.g. 0.4"
-     }
-    ],
-    "bands": [
-     {
-      "under": 2,
-      "label": "essentially nothing - contacts are good",
-      "next": 7
-     },
-     {
-      "under": 200,
-      "label": "dropping real voltage across a closed pole",
-      "verdict": "A closed contact should drop essentially nothing. Dropping this much across a pole that is supposed to be closed means pitted, burnt, or high-resistance contacts - the compressor is being starved of voltage. Open the disconnect and inspect the contact faces. See 'Contactor is pulled in but the compressor is dead or laboring' and 'Maintenance visit finds a pitted/worn contactor'."
-     },
-     {
-      "label": "essentially full line voltage - the pole is open",
-      "verdict": "Full line voltage across a pole that should be closed means that pole is not making at all, even though the contactor pulled in. Replace the contactor, and check the lugs and terminations for the heat damage that usually comes with it."
-     }
-    ]
-   },
-   {
-    "ask": "Power now reaches the load. What is the equipment actually doing?",
-    "options": [
-     {
-      "label": "Fan runs, compressor just hums",
-      "verdict": "Power is good, so this is start components or the compressor itself. Test the run capacitor - a hum with no start is the classic weak or dead capacitor. Discharge it first. See 'Condenser fan spins fine but the compressor only hums - test each half of the dual capacitor' and 'Compressor hums but won't start (trips on overload)'."
-     },
-     {
-      "label": "Nothing runs at all, but voltage is at the terminals",
-      "verdict": "Voltage is arriving and nothing moves. Check the capacitor, then ohm the motor windings for open, shorted, or grounded. See 'How to properly test a run/start capacitor' and 'Ohming out a motor for open, shorted, or grounded windings'. If a winding reads grounded, stop there and hand it off."
-     },
-     {
-      "label": "Compressor runs but the outdoor fan does not",
-      "verdict": "Isolate the fan side: its half of the dual capacitor, then the fan motor windings, then the fan relay if the board switches it. See 'Wrong MFD capacitor installed' and the fan relay scenarios for your platform."
-     },
-     {
-      "label": "It trips the breaker as soon as it tries to start",
-      "verdict": "HAND IT OFF. You already used your one reset. A breaker tripping on start means a short or a ground, most often in the compressor. Do not keep resetting it - that is how compressors get destroyed and people get hurt. See 'Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor'."
-     }
-    ]
-   }
-  ],
-  "s-elec-path-furnace": [
-   {
-    "ask": "Before you start — safety check.",
-    "options": [
-     {
-      "label": "Ready to work, meter proved live-dead-live",
-      "next": 1
-     },
-     {
-      "label": "Not yet",
-      "verdict": "Prove the meter first: known live source, then the circuit, then the known live source again. A meter that failed somewhere in the middle gives you a dead reading on a live circuit. See 'Trusting your meter - live-dead-live, CAT rating, and the blown meter fuse'."
-     },
-     {
-      "label": "I smell gas",
-      "verdict": "STOP. Do not flip any switch, do not use your meter, do not operate anything electrical. Evacuate and follow the gas leak procedure. Electrical troubleshooting comes after the gas issue is resolved."
-     },
-     {
-      "label": "Something is burnt or scorched inside",
-      "verdict": "HAND IT OFF. Do not re-energize it. Burnt terminations or a scorched board mean something drew more current than the connection could handle, and the cause is still in there. Also see 'New control board failed again within weeks - find what killed the first one'."
-     }
-    ]
-   },
-   {
-    "ask": "Step 1 — measure 115V at the furnace junction box, hot to neutral, with the door switch engaged or held in.",
-    "type": "number",
-    "fields": [
-     {
-      "key": "v",
-      "label": "Volts, hot to neutral",
-      "placeholder": "e.g. 118"
-     }
-    ],
-    "bands": [
-     {
-      "under": 20,
-      "label": "no supply voltage",
-      "verdict": "No power to the furnace. Work back: the furnace switch (the one that looks like a light switch), the breaker, the fused disconnect, and the door interlock switch. A door switch that is not being engaged is one of the most common 'dead furnace' calls. See 'Furnace dead or dropping out - verifying 115V supply and door interlock'."
-     },
-     {
-      "under": 104,
-      "label": "low - below 115V minus 10%",
-      "verdict": "Supply is low. Load it up: jumper R to G to run the blower and re-read. If it sags further, check the line wire size - long runs of undersized wire cause this. If wire size is adequate, the low supply is the power company's to correct. See 'Furnace dead or dropping out - verifying 115V supply and door interlock'."
-     },
-     {
-      "under": 127,
-      "label": "normal",
-      "next": 2
-     },
-     {
-      "label": "high",
-      "verdict": "Supply voltage above the normal band. Confirm your reading and your meter, then report it - sustained high voltage damages boards and motors, and correcting it is the utility's job, not something you fix at the furnace."
-     }
-    ]
-   },
-   {
-    "ask": "Step 2 — look at the board's diagnostic LED.",
-    "options": [
-     {
-      "label": "Lit or flashing a pattern",
-      "verdict": "The board has power and is telling you exactly what it sees. Stop guessing and read the code - count the flashes and look it up in Error Codes for this brand. That is a faster answer than any meter reading you are about to take."
-     },
-     {
-      "label": "Completely dark",
-      "next": 3
-     },
-     {
-      "label": "Dark, and the board fuse looks blown",
-      "verdict": "Do not just replace the fuse - find what blew it. A blown low-voltage fuse means a short on the 24V side, most often a chafed thermostat wire or a shorted accessory. See 'Hunting a low-voltage short methodically (3A/5A fuse keeps blowing)' and 'Low-voltage fuse keeps blowing but you cannot find a short'."
-     }
-    ]
-   },
-   {
-    "ask": "Step 3 — board is dark, so check line voltage at the transformer PRIMARY.",
-    "options": [
-     {
-      "label": "Line voltage present at the primary",
-      "next": 4
-     },
-     {
-      "label": "No line voltage at the primary",
-      "verdict": "Power stops between the junction box and the transformer. Check the door interlock switch, the wiring and splices in between, and any in-line fuse. The door switch is the usual culprit - it has to be fully engaged, not just resting closed."
-     }
-    ]
-   },
-   {
-    "ask": "Step 4 — read the transformer SECONDARY, 24V side.",
-    "type": "number",
-    "fields": [
-     {
-      "key": "v",
-      "label": "Volts at the transformer secondary",
-      "placeholder": "e.g. 26"
-     }
-    ],
-    "bands": [
-     {
-      "under": 5,
-      "label": "nothing on the secondary",
-      "verdict": "Line voltage on the primary and nothing on the secondary means the transformer is open - replace it. But before you leave, ask what killed it: a shorted 24V circuit or an overloaded transformer takes the new one out too. See 'Checking a 208/240-to-24 V control transformer at both the primary and the secondary' and 'Control transformer overloaded after adding accessories'."
-     },
-     {
-      "under": 20,
-      "label": "low - being dragged down",
-      "verdict": "The secondary is being loaded down. That is a short or an overload on the 24V side, not necessarily a bad transformer. Disconnect the secondary load and re-read: if it comes back up, the problem is downstream. See 'Hunting a low-voltage short methodically' and 'Accessory overloads a board's 24V output'."
-     },
-     {
-      "under": 30,
-      "label": "normal",
-      "next": 5
-     },
-     {
-      "label": "high",
-      "verdict": "Higher than expected on the secondary. Check whether the primary is landed on the right tap for the actual supply voltage - a 208V supply on the 240V tap (or the reverse) shows up here. See 'Equipment on a 208V supply - primary tap and nameplate voltage range'."
-     }
-    ]
-   },
-   {
-    "ask": "Step 5 — now read 24V at the BOARD itself, R to C.",
-    "options": [
-     {
-      "label": "About the same as the transformer secondary",
-      "next": 6
-     },
-     {
-      "label": "Much lower - around 13V",
-      "verdict": "That is the classic blown board fuse signature: good voltage at the transformer, roughly half of it at R-C. Find the short before replacing the fuse. See '24 V at the transformer but only about 13 volts at C and R - look for the blown board fuse'."
-     },
-     {
-      "label": "Nothing at R-C",
-      "verdict": "Power stops between the transformer secondary and the board. Check the board fuse, the wiring from the transformer, and the plug connections at the board. Also check whether a safety upstream gates 24V out of R on this model - some do, like the Lennox EL180UHNE where the rollout switch does exactly that."
-     }
-    ]
-   },
-   {
-    "ask": "Step 6 — jumper R to W at the board to take the thermostat out of the picture. What happens?",
-    "options": [
-     {
-      "label": "The furnace fires normally",
-      "verdict": "The furnace is fine - the problem is the thermostat or the wiring out to it. Check the thermostat wiring at both ends, look for a broken conductor in the run, and confirm the stat is configured for this equipment. See 'Is it the thermostat or the furnace? Jumper test at the integrated control'. Take your jumper off before you leave."
-     },
-     {
-      "label": "Still nothing",
-      "verdict": "24V is proven at the board and a call is present, so the safety string is open. Go to the walkthrough 'walking the limit, rollout and pressure switch string' and hopscotch it with your meter."
-     },
-     {
-      "label": "Inducer starts but it never lights",
-      "verdict": "You are past the power problem - this is now an ignition sequence problem, not an electrical supply one. Walk the ignition sequence: pressure switch proving, igniter, gas valve, flame sense. Search Diagnostic Help for the ignition walkthrough for this brand."
-     }
-    ]
-   }
-  ],
-  "s-elec-safety-string-walk": [
-   {
-    "ask": "Put one meter lead on C and leave it there. With a call active, walk the other lead along the safety string. Where does the 24V disappear?",
-    "options": [
-     {
-      "label": "It holds 24V all the way through - nothing is open",
-      "verdict": "The string is intact, so the safeties are not what is stopping you. Go back to the board: read the diagnostic LED, and check whether the board is getting the call and responding. If the inducer never starts, work that circuit next."
-     },
-     {
-      "label": "It drops out at one of the switches",
-      "next": 1
-     },
-     {
-      "label": "I am not sure which lead goes where",
-      "verdict": "Get the wiring diagram off the furnace door first and identify the source, the series string, and the load. One lead stays on the common reference and does not move. The other walks one connection at a time toward the load. See 'Hopscotch method - walking a meter through a circuit to find the open'."
-     }
-    ]
-   },
-   {
-    "ask": "Read directly ACROSS that switch to confirm - an open switch drops the full 24V, a closed one drops essentially nothing. Which switch is it?",
-    "options": [
-     {
-      "label": "Main limit",
-      "next": 2
-     },
-     {
-      "label": "Flame rollout switch",
-      "verdict": "HAND IT OFF. A rollout means flame came out of the burner box where it should never be. The switch did its job. Do NOT reset it and walk away, and never jumper it. The cause is a blocked heat exchanger, blocked flue, dirty burners, or insufficient combustion air - all of which need to be found and corrected. See 'Flame rollout switch keeps tripping' and 'Blower runs continuously with no heat - flame rollout control open'."
-     },
-     {
-      "label": "Pressure switch",
-      "verdict": "A pressure switch that will not close is usually telling the truth about the venting, not failing. Check the inducer is running at speed, the vent and intake for restriction, and the condensate drain and trap on a condensing furnace. Only after those check out do you suspect the switch. See 'Furnace runs a few minutes then quits' and 'What the inducer pressure switch actually senses on a restricted flue'."
-     },
-     {
-      "label": "Door interlock switch",
-      "verdict": "The door panel has to fully engage the switch - not just be leaning against it. Confirm the panel seats properly and the plunger is actually depressed. If the switch is broken, replace it. Do not tape or jumper it: it is what stops the blower from running with the panel off."
-     },
-     {
-      "label": "Someone has a jumper on one of them",
-      "verdict": "HAND IT OFF. Somebody jumpered a safety to keep the equipment running. That is a hazard, and it means whatever the safety was catching is probably still happening. Remove the jumper, find the original cause, and flag it. See 'Found a limit, rollout, or pressure switch jumpered out'."
-     }
-    ]
-   },
-   {
-    "ask": "The limit is open. Is it hot right now, or has the furnace been off a while?",
-    "options": [
-     {
-      "label": "It opened after the furnace ran a while - it is hot",
-      "verdict": "That is airflow, not a bad limit. The limit is doing exactly what it exists to do. Check the filter first, then the blower wheel and speed, then the evaporator coil, then closed registers or a crushed duct. Measure temperature rise against the rating plate. See 'Measuring furnace external static pressure using the limit switch opening'."
-     },
-     {
-      "label": "It is stone cold and still open",
-      "verdict": "A cold limit that reads open is either a failed limit or a manual-reset device that latched after a real overheat event. Check whether it is auto-reset or manual-reset before condemning it. If it is manual-reset and it latched, something overheated - find that cause before you reset it. On an electric furnace also check for an open fusible link, which is one-time and will not reset at all."
-     },
-     {
-      "label": "It opens and closes as the furnace cycles",
-      "verdict": "Cycling on the limit means it is riding right at its trip point - marginal airflow or over-firing. Measure temperature rise against the rating plate and clock the gas input. Fix the cause; a limit that is cycling will eventually fail from the repeated trips."
-     }
-    ]
-   }
-  ],
-  "s-elec-when-to-hand-off": [
-   {
-    "ask": "What are you looking at right now?",
-    "options": [
-     {
-      "label": "The breaker tripped again after I reset it once",
-      "verdict": "HAND IT OFF. One reset is all you get. A breaker that trips again is reporting a short or a ground that is still there. Repeated resets destroy compressors and put you in front of a fault that is already proven to draw fault current. See 'Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor'."
-     },
-     {
-      "label": "I think the compressor is grounded / I need a megger",
-      "verdict": "HAND IT OFF. Insulation testing is easy to take and easy to misread, and a compressor is the most expensive wrong call on the truck. There are real caveats - a scroll should not be condemned on a megohmmeter reading alone. Get a senior tech on it. See 'Do not condemn a scroll compressor from a megohmmeter reading alone'."
-     },
-     {
-      "label": "Inverter, variable speed drive, or a board with big capacitors",
-      "verdict": "HAND IT OFF. Drive capacitors hold a lethal charge after power is off. There is a required wait and a discharge procedure, and it differs by equipment. If you have not been trained on it for this unit, do not open it. See 'Required power-off wait before handling mini-split inverter boards'."
-     },
-     {
-      "label": "Burnt wire, melted lug, or a scorched board",
-      "verdict": "HAND IT OFF. Do not re-energize it. Something drew more current than the connection could carry and the cause is still present - putting power back on it risks a fire and destroys the evidence of what actually failed. Photograph it and leave it dead."
-     },
-     {
-      "label": "A rollout or limit tripped and I cannot find why",
-      "verdict": "HAND IT OFF. The safety worked. Putting it back without finding the cause hands the customer a hazard - rollout in particular means flame was somewhere it should not be. Get a senior tech to work the combustion side with you; it is worth watching once."
-     },
-     {
-      "label": "Three-phase, high-leg delta, or work at a panel",
-      "verdict": "HAND IT OFF. Different rules and different risk. High-leg (wild leg) services in particular will destroy a control transformer landed on the wrong phase, and panel work needs the right CAT rating and PPE. See 'High-leg (wild leg) delta service' and 'Three-phase voltage and current imbalance between legs'."
-     },
-     {
-      "label": "I proved power reaches the load and the load is dead",
-      "verdict": "That is NOT a handoff - that is you having done the job. You walked the power path, proved voltage arrives, and the component does not respond. Confirm the capacitor and the windings, then make the parts call. Write down your readings so the next person does not repeat them."
-     },
-     {
-      "label": "The breaker or wire does not match the nameplate",
-      "verdict": "HAND IT OFF. A breaker or conductor that does not match the nameplate MCA and MOCP is an installation defect, not a service repair - and correcting it may be someone else's scope entirely. Document what is installed versus what the plate calls for. See 'Breaker and wire do not match the nameplate MCA and MOCP'."
-     }
-    ]
-   }
-  ]
-
+ "s-elec-path-outdoor": [
+  {
+   "ask": "Before you open anything — where are you at on safety?",
+   "options": [
+    {
+     "label": "Power killed at breaker and disconnect, meter proved live-dead-live",
+     "next": 1
+    },
+    {
+     "label": "Not yet",
+     "verdict": "Do that first. Kill power at BOTH the breaker and the disconnect, then test your meter on a known live source, test the circuit, and test the known live source again. If the meter fails that last step your dead reading was worthless. See 'Trusting your meter - live-dead-live' and the lockout/tagout scenario."
+    },
+    {
+     "label": "I can see burnt wire, a melted lug, or I smell something scorched",
+     "verdict": "HAND IT OFF. Do not re-energize it to see what happens. Burnt terminations mean something was drawing more than the connection could carry, and the cause is still there. Photograph it, leave it de-energized, and get a senior tech on it."
+    },
+    {
+     "label": "The breaker already tripped once and I reset it",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "Step 1 — read the LINE side of the disconnect, L1 to L2. What do you get?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "v",
+     "label": "Volts, L1 to L2 at the disconnect line side",
+     "placeholder": "e.g. 241"
+    }
+   ],
+   "bands": [
+    {
+     "under": 20,
+     "label": "essentially nothing",
+     "verdict": "No power arriving at the unit at all. The problem is upstream of the disconnect: the breaker, the feeder, or a lug at the panel. Check the breaker position and read at the panel. This is where you stop if you are not comfortable at the panel."
+    },
+    {
+     "under": 187,
+     "label": "below the usual nameplate minimum",
+     "verdict": "Low supply voltage. Most 208/230V nameplates print a minimum around 187V - check the rating plate on this unit for its exact range. Low voltage burns up compressors and contactors, so chase it before you replace anything: undersized or long wire runs, loose lugs, or a genuine utility problem. See 'Diagnosing voltage drop from undersized or long wire runs'."
+    },
+    {
+     "under": 254,
+     "label": "in the normal range",
+     "next": 2
+    },
+    {
+     "label": "above the usual nameplate maximum",
+     "verdict": "High supply voltage. Most 208/230V nameplates cap around 253V - confirm on this unit's rating plate. Sustained high voltage damages equipment and is the power company's problem to correct, not something you fix at the unit. Document your reading and report it."
+    }
+   ]
+  },
+  {
+   "ask": "Step 2 — now read the LOAD side of the disconnect (below the fuses or pull). What do you get?",
+   "options": [
+    {
+     "label": "Full voltage on both legs",
+     "next": 3
+    },
+    {
+     "label": "Voltage on one leg only",
+     "verdict": "One leg is open - a blown fuse in the disconnect, a burnt lug, or a bad pull. This is the classic 'half dead unit' that gives confusing meter readings: the compressor hums or does nothing and you can still read voltage in places you would not expect. See 'One blown fuse in a 240V disconnect' and 'Disconnect fuses keep blowing at startup'. Find out WHY the fuse went before you just replace it."
+    },
+    {
+     "label": "Nothing on either leg, but the line side was good",
+     "verdict": "The disconnect itself is the open - blown fuses, a bad pull, corroded or burnt lugs. Open it up and look. See 'Disconnect box and whip problems'. If the lugs are burnt or it is aluminum-to-copper and discolored, hand it off rather than just re-landing it."
+    }
+   ]
+  },
+  {
+   "ask": "Step 3 — read the LINE side of the contactor (the incoming lugs, L1 and L2). Voltage there?",
+   "options": [
+    {
+     "label": "Full voltage at the contactor line side",
+     "next": 4
+    },
+    {
+     "label": "Nothing, or one leg missing",
+     "verdict": "The break is in the whip between the disconnect and the contactor, or at the lugs on either end. Inspect the whip for chafing where it enters the cabinet and check both sets of lugs for heat damage. See 'Disconnect box and whip problems (corrosion, loose lugs, chafing)'."
+    }
+   ]
+  },
+  {
+   "ask": "Step 4 — put a cooling call in and read the contactor COIL, 24V side. What do you get?",
+   "options": [
+    {
+     "label": "About 24V at the coil",
+     "next": 5
+    },
+    {
+     "label": "No 24V at the coil",
+     "verdict": "The problem is on the low-voltage side, and on most split systems the control transformer lives in the INDOOR unit - not out here. Go inside and work the 24V path: transformer, board fuse, then the Y wire out to the condenser. See 'No 24V at the condensing unit - the transformer lives in the indoor unit' and the furnace power-path walkthrough."
+    },
+    {
+     "label": "24V is there but it drops out the moment I land the Y wire",
+     "verdict": "That is a shorted or overloaded low-voltage circuit pulling the transformer down - very often the contactor coil itself is shorted, or the Y wire is grounded somewhere in the run. See '24V at the Y wire with it disconnected, but the contactor drops out the second you land it'."
+    }
+   ]
+  },
+  {
+   "ask": "Step 5 — with 24V on the coil, is the contactor actually pulled in?",
+   "options": [
+    {
+     "label": "Yes, pulled in and holding",
+     "next": 6
+    },
+    {
+     "label": "No, it will not pull in even with 24V present",
+     "verdict": "Coil is open, or the contactor is mechanically stuck. Ohm the coil and check that the armature moves freely - insects and corrosion jam these. See '24V reads fine at the contactor but it still will not pull in' and 'Insects found in the outdoor unit's electrical compartment'."
+    },
+    {
+     "label": "It chatters or buzzes",
+     "verdict": "Chattering is usually low or unstable control voltage, an undersized transformer, or a failing coil - not a contactor that simply needs replacing. See 'Contactor chattering or buzzing'."
+    }
+   ]
+  },
+  {
+   "ask": "Step 6 — with it pulled in, read ACROSS each pole (L1 to T1, then L2 to T2). Not line to line. What is the highest reading across a closed pole?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "drop",
+     "label": "Volts across the closed pole (highest of the two)",
+     "placeholder": "e.g. 0.4"
+    }
+   ],
+   "bands": [
+    {
+     "under": 2,
+     "label": "essentially nothing - contacts are good",
+     "next": 7
+    },
+    {
+     "under": 200,
+     "label": "dropping real voltage across a closed pole",
+     "verdict": "A closed contact should drop essentially nothing. Dropping this much across a pole that is supposed to be closed means pitted, burnt, or high-resistance contacts - the compressor is being starved of voltage. Open the disconnect and inspect the contact faces. See 'Contactor is pulled in but the compressor is dead or laboring' and 'Maintenance visit finds a pitted/worn contactor'."
+    },
+    {
+     "label": "essentially full line voltage - the pole is open",
+     "verdict": "Full line voltage across a pole that should be closed means that pole is not making at all, even though the contactor pulled in. Replace the contactor, and check the lugs and terminations for the heat damage that usually comes with it."
+    }
+   ]
+  },
+  {
+   "ask": "Power now reaches the load. What is the equipment actually doing?",
+   "options": [
+    {
+     "label": "Fan runs, compressor just hums",
+     "verdict": "Power is good, so this is start components or the compressor itself. Test the run capacitor - a hum with no start is the classic weak or dead capacitor. Discharge it first. See 'Condenser fan spins fine but the compressor only hums - test each half of the dual capacitor' and 'Compressor hums but won't start (trips on overload)'."
+    },
+    {
+     "label": "Nothing runs at all, but voltage is at the terminals",
+     "verdict": "Voltage is arriving and nothing moves. Check the capacitor, then ohm the motor windings for open, shorted, or grounded. See 'How to properly test a run/start capacitor' and 'Ohming out a motor for open, shorted, or grounded windings'. If a winding reads grounded, stop there and hand it off."
+    },
+    {
+     "label": "Compressor runs but the outdoor fan does not",
+     "verdict": "Isolate the fan side: its half of the dual capacitor, then the fan motor windings, then the fan relay if the board switches it. See 'Wrong MFD capacitor installed' and the fan relay scenarios for your platform."
+    },
+    {
+     "label": "It trips the breaker as soon as it tries to start",
+     "verdict": "HAND IT OFF. You already used your one reset. A breaker tripping on start means a short or a ground, most often in the compressor. Do not keep resetting it - that is how compressors get destroyed and people get hurt. See 'Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor'."
+    }
+   ]
+  }
+ ],
+ "s-elec-path-furnace": [
+  {
+   "ask": "Before you start — safety check.",
+   "options": [
+    {
+     "label": "Ready to work, meter proved live-dead-live",
+     "next": 1
+    },
+    {
+     "label": "Not yet",
+     "verdict": "Prove the meter first: known live source, then the circuit, then the known live source again. A meter that failed somewhere in the middle gives you a dead reading on a live circuit. See 'Trusting your meter - live-dead-live, CAT rating, and the blown meter fuse'."
+    },
+    {
+     "label": "I smell gas",
+     "verdict": "STOP. Do not flip any switch, do not use your meter, do not operate anything electrical. Evacuate and follow the gas leak procedure. Electrical troubleshooting comes after the gas issue is resolved."
+    },
+    {
+     "label": "Something is burnt or scorched inside",
+     "verdict": "HAND IT OFF. Do not re-energize it. Burnt terminations or a scorched board mean something drew more current than the connection could handle, and the cause is still in there. Also see 'New control board failed again within weeks - find what killed the first one'."
+    }
+   ]
+  },
+  {
+   "ask": "Step 1 — measure 115V at the furnace junction box, hot to neutral, with the door switch engaged or held in.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "v",
+     "label": "Volts, hot to neutral",
+     "placeholder": "e.g. 118"
+    }
+   ],
+   "bands": [
+    {
+     "under": 20,
+     "label": "no supply voltage",
+     "verdict": "No power to the furnace. Work back: the furnace switch (the one that looks like a light switch), the breaker, the fused disconnect, and the door interlock switch. A door switch that is not being engaged is one of the most common 'dead furnace' calls. See 'Furnace dead or dropping out - verifying 115V supply and door interlock'."
+    },
+    {
+     "under": 104,
+     "label": "low - below 115V minus 10%",
+     "verdict": "Supply is low. Load it up: jumper R to G to run the blower and re-read. If it sags further, check the line wire size - long runs of undersized wire cause this. If wire size is adequate, the low supply is the power company's to correct. See 'Furnace dead or dropping out - verifying 115V supply and door interlock'."
+    },
+    {
+     "under": 127,
+     "label": "normal",
+     "next": 2
+    },
+    {
+     "label": "high",
+     "verdict": "Supply voltage above the normal band. Confirm your reading and your meter, then report it - sustained high voltage damages boards and motors, and correcting it is the utility's job, not something you fix at the furnace."
+    }
+   ]
+  },
+  {
+   "ask": "Step 2 — look at the board's diagnostic LED.",
+   "options": [
+    {
+     "label": "Lit or flashing a pattern",
+     "verdict": "The board has power and is telling you exactly what it sees. Stop guessing and read the code - count the flashes and look it up in Error Codes for this brand. That is a faster answer than any meter reading you are about to take."
+    },
+    {
+     "label": "Completely dark",
+     "next": 3
+    },
+    {
+     "label": "Dark, and the board fuse looks blown",
+     "verdict": "Do not just replace the fuse - find what blew it. A blown low-voltage fuse means a short on the 24V side, most often a chafed thermostat wire or a shorted accessory. See 'Hunting a low-voltage short methodically (3A/5A fuse keeps blowing)' and 'Low-voltage fuse keeps blowing but you cannot find a short'."
+    }
+   ]
+  },
+  {
+   "ask": "Step 3 — board is dark, so check line voltage at the transformer PRIMARY.",
+   "options": [
+    {
+     "label": "Line voltage present at the primary",
+     "next": 4
+    },
+    {
+     "label": "No line voltage at the primary",
+     "verdict": "Power stops between the junction box and the transformer. Check the door interlock switch, the wiring and splices in between, and any in-line fuse. The door switch is the usual culprit - it has to be fully engaged, not just resting closed."
+    }
+   ]
+  },
+  {
+   "ask": "Step 4 — read the transformer SECONDARY, 24V side.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "v",
+     "label": "Volts at the transformer secondary",
+     "placeholder": "e.g. 26"
+    }
+   ],
+   "bands": [
+    {
+     "under": 5,
+     "label": "nothing on the secondary",
+     "verdict": "Line voltage on the primary and nothing on the secondary means the transformer is open - replace it. But before you leave, ask what killed it: a shorted 24V circuit or an overloaded transformer takes the new one out too. See 'Checking a 208/240-to-24 V control transformer at both the primary and the secondary' and 'Control transformer overloaded after adding accessories'."
+    },
+    {
+     "under": 20,
+     "label": "low - being dragged down",
+     "verdict": "The secondary is being loaded down. That is a short or an overload on the 24V side, not necessarily a bad transformer. Disconnect the secondary load and re-read: if it comes back up, the problem is downstream. See 'Hunting a low-voltage short methodically' and 'Accessory overloads a board's 24V output'."
+    },
+    {
+     "under": 30,
+     "label": "normal",
+     "next": 5
+    },
+    {
+     "label": "high",
+     "verdict": "Higher than expected on the secondary. Check whether the primary is landed on the right tap for the actual supply voltage - a 208V supply on the 240V tap (or the reverse) shows up here. See 'Equipment on a 208V supply - primary tap and nameplate voltage range'."
+    }
+   ]
+  },
+  {
+   "ask": "Step 5 — now read 24V at the BOARD itself, R to C.",
+   "options": [
+    {
+     "label": "About the same as the transformer secondary",
+     "next": 6
+    },
+    {
+     "label": "Much lower - around 13V",
+     "verdict": "That is the classic blown board fuse signature: good voltage at the transformer, roughly half of it at R-C. Find the short before replacing the fuse. See '24 V at the transformer but only about 13 volts at C and R - look for the blown board fuse'."
+    },
+    {
+     "label": "Nothing at R-C",
+     "verdict": "Power stops between the transformer secondary and the board. Check the board fuse, the wiring from the transformer, and the plug connections at the board. Also check whether a safety upstream gates 24V out of R on this model - some do, like the Lennox EL180UHNE where the rollout switch does exactly that."
+    }
+   ]
+  },
+  {
+   "ask": "Step 6 — jumper R to W at the board to take the thermostat out of the picture. What happens?",
+   "options": [
+    {
+     "label": "The furnace fires normally",
+     "verdict": "The furnace is fine - the problem is the thermostat or the wiring out to it. Check the thermostat wiring at both ends, look for a broken conductor in the run, and confirm the stat is configured for this equipment. See 'Is it the thermostat or the furnace? Jumper test at the integrated control'. Take your jumper off before you leave."
+    },
+    {
+     "label": "Still nothing",
+     "verdict": "24V is proven at the board and a call is present, so the safety string is open. Go to the walkthrough 'walking the limit, rollout and pressure switch string' and hopscotch it with your meter."
+    },
+    {
+     "label": "Inducer starts but it never lights",
+     "verdict": "You are past the power problem - this is now an ignition sequence problem, not an electrical supply one. Walk the ignition sequence: pressure switch proving, igniter, gas valve, flame sense. Search Diagnostic Help for the ignition walkthrough for this brand."
+    }
+   ]
+  }
+ ],
+ "s-elec-safety-string-walk": [
+  {
+   "ask": "Put one meter lead on C and leave it there. With a call active, walk the other lead along the safety string. Where does the 24V disappear?",
+   "options": [
+    {
+     "label": "It holds 24V all the way through - nothing is open",
+     "verdict": "The string is intact, so the safeties are not what is stopping you. Go back to the board: read the diagnostic LED, and check whether the board is getting the call and responding. If the inducer never starts, work that circuit next."
+    },
+    {
+     "label": "It drops out at one of the switches",
+     "next": 1
+    },
+    {
+     "label": "I am not sure which lead goes where",
+     "verdict": "Get the wiring diagram off the furnace door first and identify the source, the series string, and the load. One lead stays on the common reference and does not move. The other walks one connection at a time toward the load. See 'Hopscotch method - walking a meter through a circuit to find the open'."
+    }
+   ]
+  },
+  {
+   "ask": "Read directly ACROSS that switch to confirm - an open switch drops the full 24V, a closed one drops essentially nothing. Which switch is it?",
+   "options": [
+    {
+     "label": "Main limit",
+     "next": 2
+    },
+    {
+     "label": "Flame rollout switch",
+     "verdict": "HAND IT OFF. A rollout means flame came out of the burner box where it should never be. The switch did its job. Do NOT reset it and walk away, and never jumper it. The cause is a blocked heat exchanger, blocked flue, dirty burners, or insufficient combustion air - all of which need to be found and corrected. See 'Flame rollout switch keeps tripping' and 'Blower runs continuously with no heat - flame rollout control open'."
+    },
+    {
+     "label": "Pressure switch",
+     "verdict": "A pressure switch that will not close is usually telling the truth about the venting, not failing. Check the inducer is running at speed, the vent and intake for restriction, and the condensate drain and trap on a condensing furnace. Only after those check out do you suspect the switch. See 'Furnace runs a few minutes then quits' and 'What the inducer pressure switch actually senses on a restricted flue'."
+    },
+    {
+     "label": "Door interlock switch",
+     "verdict": "The door panel has to fully engage the switch - not just be leaning against it. Confirm the panel seats properly and the plunger is actually depressed. If the switch is broken, replace it. Do not tape or jumper it: it is what stops the blower from running with the panel off."
+    },
+    {
+     "label": "Someone has a jumper on one of them",
+     "verdict": "HAND IT OFF. Somebody jumpered a safety to keep the equipment running. That is a hazard, and it means whatever the safety was catching is probably still happening. Remove the jumper, find the original cause, and flag it. See 'Found a limit, rollout, or pressure switch jumpered out'."
+    }
+   ]
+  },
+  {
+   "ask": "The limit is open. Is it hot right now, or has the furnace been off a while?",
+   "options": [
+    {
+     "label": "It opened after the furnace ran a while - it is hot",
+     "verdict": "That is airflow, not a bad limit. The limit is doing exactly what it exists to do. Check the filter first, then the blower wheel and speed, then the evaporator coil, then closed registers or a crushed duct. Measure temperature rise against the rating plate. See 'Measuring furnace external static pressure using the limit switch opening'."
+    },
+    {
+     "label": "It is stone cold and still open",
+     "verdict": "A cold limit that reads open is either a failed limit or a manual-reset device that latched after a real overheat event. Check whether it is auto-reset or manual-reset before condemning it. If it is manual-reset and it latched, something overheated - find that cause before you reset it. On an electric furnace also check for an open fusible link, which is one-time and will not reset at all."
+    },
+    {
+     "label": "It opens and closes as the furnace cycles",
+     "verdict": "Cycling on the limit means it is riding right at its trip point - marginal airflow or over-firing. Measure temperature rise against the rating plate and clock the gas input. Fix the cause; a limit that is cycling will eventually fail from the repeated trips."
+    }
+   ]
+  }
+ ],
+ "s-elec-when-to-hand-off": [
+  {
+   "ask": "What are you looking at right now?",
+   "options": [
+    {
+     "label": "The breaker tripped again after I reset it once",
+     "verdict": "HAND IT OFF. One reset is all you get. A breaker that trips again is reporting a short or a ground that is still there. Repeated resets destroy compressors and put you in front of a fault that is already proven to draw fault current. See 'Breaker or fuse tripped on the condenser - one reset only, then ground-test the compressor'."
+    },
+    {
+     "label": "I think the compressor is grounded / I need a megger",
+     "verdict": "HAND IT OFF. Insulation testing is easy to take and easy to misread, and a compressor is the most expensive wrong call on the truck. There are real caveats - a scroll should not be condemned on a megohmmeter reading alone. Get a senior tech on it. See 'Do not condemn a scroll compressor from a megohmmeter reading alone'."
+    },
+    {
+     "label": "Inverter, variable speed drive, or a board with big capacitors",
+     "verdict": "HAND IT OFF. Drive capacitors hold a lethal charge after power is off. There is a required wait and a discharge procedure, and it differs by equipment. If you have not been trained on it for this unit, do not open it. See 'Required power-off wait before handling mini-split inverter boards'."
+    },
+    {
+     "label": "Burnt wire, melted lug, or a scorched board",
+     "verdict": "HAND IT OFF. Do not re-energize it. Something drew more current than the connection could carry and the cause is still present - putting power back on it risks a fire and destroys the evidence of what actually failed. Photograph it and leave it dead."
+    },
+    {
+     "label": "A rollout or limit tripped and I cannot find why",
+     "verdict": "HAND IT OFF. The safety worked. Putting it back without finding the cause hands the customer a hazard - rollout in particular means flame was somewhere it should not be. Get a senior tech to work the combustion side with you; it is worth watching once."
+    },
+    {
+     "label": "Three-phase, high-leg delta, or work at a panel",
+     "verdict": "HAND IT OFF. Different rules and different risk. High-leg (wild leg) services in particular will destroy a control transformer landed on the wrong phase, and panel work needs the right CAT rating and PPE. See 'High-leg (wild leg) delta service' and 'Three-phase voltage and current imbalance between legs'."
+    },
+    {
+     "label": "I proved power reaches the load and the load is dead",
+     "verdict": "That is NOT a handoff - that is you having done the job. You walked the power path, proved voltage arrives, and the component does not respond. Confirm the capacitor and the windings, then make the parts call. Write down your readings so the next person does not repeat them."
+    },
+    {
+     "label": "The breaker or wire does not match the nameplate",
+     "verdict": "HAND IT OFF. A breaker or conductor that does not match the nameplate MCA and MOCP is an installation defect, not a service repair - and correcting it may be someone else's scope entirely. Document what is installed versus what the plate calls for. See 'Breaker and wire do not match the nameplate MCA and MOCP'."
+    }
+   ]
+  }
+ ],
+ "s-elec-path-airhandler": [
+  {
+   "ask": "First thing on an air handler with electric heat: how many circuits feed this unit?",
+   "options": [
+    {
+     "label": "Single-point - one feed into the heat kit",
+     "next": 1
+    },
+    {
+     "label": "Multi-point - separate breakers for blower and heat",
+     "next": 1
+    },
+    {
+     "label": "I do not know yet",
+     "verdict": "Find out before you touch anything. Look at the heat kit label and count the field power connections. Single-point means one feed lands on the kit and everything downstream is fused inside it; multi-point means separate circuits, and killing one leaves the other live. See 'Single-point vs. multi-point electrical connection kit'. This is a safety question before it is a diagnostic one."
+    },
+    {
+     "label": "Blower is dead but the heat strips get hot on a call",
+     "verdict": "STOP and shut it off at every breaker feeding the unit. Strips energizing without a blower is a fire hazard - the limits and fusible links are the only thing standing between that and a fire. This is a wiring or sequencer fault, not something to leave running while you diagnose. Get a senior tech on it."
+    }
+   ]
+  },
+  {
+   "ask": "With every feed killed and verified dead, check the breakers. What do you find?",
+   "options": [
+    {
+     "label": "A breaker is off or tripped",
+     "verdict": "Reset it ONCE. If it trips again, stop - that is a short or a ground, and on a heat kit it is usually a grounded element or a burnt lug. See 'Heat strip breaker trips repeatedly'. Do not keep resetting a breaker on a 60-amp heat circuit."
+    },
+    {
+     "label": "All breakers on, but no power at the unit",
+     "next": 2
+    },
+    {
+     "label": "Power arrives at the unit",
+     "next": 3
+    }
+   ]
+  },
+  {
+   "ask": "Breakers are on but nothing arrives at the unit. Check inside the heat kit for its own fuses or breakers.",
+   "options": [
+    {
+     "label": "Found blown fuses or a tripped breaker in the kit",
+     "verdict": "That is the single-point kit's internal protection, and it is easy to miss because it is not at the panel. Find out WHY it opened before replacing it - check element resistance to ground and look for a burnt lug. See 'Burnt lug or terminal at the electric heat kit'."
+    },
+    {
+     "label": "No internal protection, or it is intact",
+     "verdict": "The break is between the panel and the unit: the feeder, the disconnect, or the lugs at either end. Work back with your meter. If you find discolored or melted lugs, hand it off rather than just re-landing the wire."
+    }
+   ]
+  },
+  {
+   "ask": "Power is at the unit. Check the transformer secondary for 24V.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "v",
+     "label": "Volts at the transformer secondary",
+     "placeholder": "e.g. 26"
+    }
+   ],
+   "bands": [
+    {
+     "under": 5,
+     "label": "nothing on the secondary",
+     "verdict": "Confirm line voltage on the PRIMARY first. If the primary is fed and the secondary is dead, the transformer is open - replace it, and find what killed it before you leave. Also check the primary tap: an air handler on a 208V supply with the leads left on the 230V terminal is a common miss. See 'Daikin FIT air handler on a 208V supply - red wires left on the 230V transformer terminal'."
+    },
+    {
+     "under": 20,
+     "label": "low - being dragged down",
+     "verdict": "Something is loading the 24V circuit down. Disconnect the secondary load and re-read - if it recovers, the short is downstream. See 'Hunting a low-voltage short methodically'."
+    },
+    {
+     "under": 30,
+     "label": "normal",
+     "next": 4
+    },
+    {
+     "label": "high",
+     "verdict": "Check the primary tap against the actual supply voltage - 208V supply on the 240V tap, or the reverse, shows up right here. See 'Equipment on a 208V supply - primary tap and nameplate voltage range'."
+    }
+   ]
+  },
+  {
+   "ask": "24V is good at the transformer. Now check the board, R to C, and look at its LED.",
+   "options": [
+    {
+     "label": "24V at the board and the LED is lit or flashing",
+     "verdict": "The board has power and is reporting something - read the code before you meter anything else. On a Goodman/Daikin air handler see 'red fault LED, green CFM LED, and what fault recall shows'. On a Daikin FIT see 'reading the network status LEDs and using the LEARN button'."
+    },
+    {
+     "label": "24V at the board but the LED is dark",
+     "verdict": "Board has power and shows nothing. Confirm the blower door safety switch is fully engaged - many units will not do anything with it open. If the switch is made and the board is still dark, the board is the suspect."
+    },
+    {
+     "label": "No 24V at the board",
+     "verdict": "Power stops between the transformer and the board. Check the board fuse, the wiring, and the plug connections. On a Daikin DFVE this reports as code E5 / BLOWN FUSE - see 'Daikin DFVE air handler - code E5 fuse open'. Find the short before replacing the fuse."
+    },
+    {
+     "label": "Door switch is not engaging",
+     "verdict": "That is the answer on most air handlers - the blower door switch has to be fully depressed, not just resting closed. Confirm the panel seats properly. Do not tape or jumper it: it is what keeps the blower from running with the door off."
+    }
+   ]
+  }
+ ]
 };

@@ -57,6 +57,16 @@ const SEARCH_STOPWORDS = new Set([
   // they add noise, not precision, in this corpus.
   "bad","broken","wrong","messed","funky","faulty","problem","problems",
   "issue","issues","trouble","malfunctioning","weird","acting",
+  // Negative contractions, with and without the apostrophe a phone may or may
+  // not insert. Their expansions ("will not", "does not", "is not") are
+  // already stopwords above, so "won't start" and "will not start" have to
+  // search the same. Before this, typing "why wont the blower start" returned
+  // NOTHING, because "wont" became a required term and the scenario text
+  // spells it "won't" or "will not".
+  "wont","won't","dont","don't","doesnt","doesn't","didnt","didn't",
+  "cant","can't","cannot","isnt","isn't","arent","aren't","wasnt","wasn't",
+  "hasnt","hasn't","havent","haven't","wouldnt","wouldn't","couldnt","couldn't",
+  "shouldnt","shouldn't","aint","ain't","thats","that's","whats","what's",
 ]);
 // Field slang and trade shorthand that means the same thing as a term this
 // app's own text uses. A tech typing "low side" needs to find scenarios
@@ -87,10 +97,33 @@ const SEARCH_ALIAS_GROUPS = [
   ["same pressure", "equal pressure", "equalized pressure", "pressures are the same", "pressures equalized", "matching pressure", "even pressure"],
 ];
 
+// A query typed the way a tech actually talks — "why won't the blower start?"
+// or "compressor hums, will not start" — used to return NOTHING at all.
+// Leftover words kept whatever punctuation was stuck to them, and the
+// word-boundary regex cannot match past it: \bstart?\b wants a word character
+// after the "?" and there never is one. Because textIncludes requires EVERY
+// unit to hit, a single comma or question mark killed the entire search.
+// Strip the punctuation that only ever ends up attached to a word, and keep
+// the characters that live INSIDE real terms — hyphens (live-dead-live,
+// R-410A), apostrophes (doesn't) and slashes (on/off, C/S/R).
+function normalizeQuery(q) {
+  const DOT = "";                              // stands in for a real decimal point
+  return String(q || "")
+    .toLowerCase()
+    .replace(/(\d)\.(\d)/g, "$1" + DOT + "$2")       // protect 0.5 before periods are stripped
+    .replace(/[‘’]/g, "'")                 // smart apostrophe off a phone keyboard
+    .replace(/[.,;:!?()\[\]{}"“”]+/g, " ") // sentence punctuation only
+    .split(/\s+/)
+    .map(w => w.replace(/^['\-\/]+|['\-\/]+$/g, "")) // trim edge dashes/quotes, keep inner ones
+    .filter(Boolean)
+    .join(" ")
+    .split(DOT).join(".")
+    .trim();
+}
 // Break a query into match "units" — each unit is either an alias group (any
 // one of its phrases counts as a hit) or a single leftover meaningful word.
 function buildSearchUnits(q) {
-  let text = " " + q.toLowerCase().trim() + " ";
+  let text = " " + normalizeQuery(q) + " ";
   const units = [];
   for (const group of SEARCH_ALIAS_GROUPS) {
     const sorted = [...group].sort((a, b) => b.length - a.length);
@@ -2069,7 +2102,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v74";
+const APP_VERSION = "v75";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
