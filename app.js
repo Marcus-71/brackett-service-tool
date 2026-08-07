@@ -114,6 +114,21 @@ function buildSearchUnits(q) {
 // Word-boundary matching (with an optional trailing "s" for simple plurals)
 // keeps "comp" finding "compressor/compressors" while no longer matching
 // "company" or "complete".
+// The same Lennox alert code is printed two ways depending on where you read
+// it: the 7-segment display and the service manuals show "E427", while the
+// LennoxPros code database (where most of our rows came from) lists a bare
+// "427". Word-boundary matching treats those as different tokens — "E480"
+// never matches "480" — so a tech typing exactly what is on the display
+// could miss the row. Feed both spellings into the haystack for any row whose
+// code is one of those forms.
+function codeSearchAliases(code) {
+  const c = String(code || "").trim();
+  let m = c.match(/^E(\d{2,4})$/i);
+  if (m) return [m[1]];
+  m = c.match(/^(\d{2,4})$/);
+  if (m) return ["E" + m[1]];
+  return [];
+}
 const termRegexCache = new Map();
 function hayHasTerm(hay, term) {
   let re = termRegexCache.get(term);
@@ -262,7 +277,7 @@ function renderCodes() {
   const filtered = all.filter(c =>
     (codesState.brand === "All" || c.brand === codesState.brand) &&
     (codesState.equipment === "All" || c.equipment === codesState.equipment) &&
-    textIncludes([c.brand, c.family, c.equipment, c.code, c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[])], codesState.search)
+    textIncludes([c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[])], codesState.search)
   ).sort((a, b) => a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
 
   const results = document.getElementById("codesResults");
@@ -2054,7 +2069,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v72";
+const APP_VERSION = "v73";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
