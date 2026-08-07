@@ -268,9 +268,15 @@ const CODES_DELETED_KEY = "bfc_deleted_ids_v1";
 let codesState = { search: "", brand: "All", equipment: "All" };
 
 function loadUserCodes() { try { return JSON.parse(localStorage.getItem(CODES_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserCodes(list) { localStorage.setItem(CODES_STORAGE_KEY, JSON.stringify(list)); }
+// Every read path was already try/catch guarded; the writes were not, so a
+// full or blocked store threw straight out of a Save button.
+function safeSet(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch (e) { return false; }
+}
+function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); }
 function loadDeletedCodeIds() { try { return JSON.parse(localStorage.getItem(CODES_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedCodeIds(list) { localStorage.setItem(CODES_DELETED_KEY, JSON.stringify(list)); }
+function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); }
 
 function getAllCodes() {
   const userCodes = loadUserCodes();
@@ -440,9 +446,9 @@ const DIAG_DELETED_KEY = "bfc_deleted_symptom_ids_v1";
 let diagState = { search: "", equipment: "All" };
 
 function loadUserSymptoms() { try { return JSON.parse(localStorage.getItem(DIAG_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserSymptoms(list) { localStorage.setItem(DIAG_STORAGE_KEY, JSON.stringify(list)); }
+function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); }
 function loadDeletedSymptomIds() { try { return JSON.parse(localStorage.getItem(DIAG_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedSymptomIds(list) { localStorage.setItem(DIAG_DELETED_KEY, JSON.stringify(list)); }
+function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); }
 
 function getAllSymptoms() {
   const userSymptoms = loadUserSymptoms();
@@ -606,7 +612,7 @@ function openSymptomDetail(id) {
 // three causes it lists. These walk that last step: ask for the one reading
 // that separates them, then say plainly what it means and what to do — so a
 // newer tech gets to an actual answer instead of a checklist to interpret.
-const fuState = { symptom: null, questions: null, index: 0, history: [], verdict: null };
+const fuState = { symptom: null, questions: null, index: 0, history: [], verdict: null, seen: [] };
 
 function getFollowups(id) {
   if (typeof SYMPTOM_FOLLOWUPS === "undefined") return null;
@@ -621,7 +627,24 @@ function startFollowups(s) {
   fuState.index = 0;
   fuState.history = [];
   fuState.verdict = null;
+  fuState.seen = [0];
   renderFollowups();
+}
+
+// The lowest question in this chain that nothing links to and the tech hasn't
+// been shown yet, or null. "Linked" means some option or band anywhere in the
+// chain carries `next: i` — those are reachable by answering, so they must not
+// be offered as leftovers.
+function nextOrphanQuestion() {
+  const qs = fuState.questions || [];
+  const linked = new Set();
+  qs.forEach(q => (q.options || q.bands || []).forEach(o => {
+    if (typeof o.next === "number") linked.add(o.next);
+  }));
+  for (let i = 1; i < qs.length; i++) {
+    if (!linked.has(i) && !fuState.seen.includes(i)) return i;
+  }
+  return null;
 }
 
 // Both choice options and number bands answer the same way: land on a verdict,
@@ -631,6 +654,7 @@ function answerFollowup(outcome, chosenLabel) {
   fuState.history.push({ ask: q.ask, answer: chosenLabel, verdict: outcome.verdict || "" });
   if (typeof outcome.next === "number" && outcome.next > fuState.index && outcome.next < fuState.questions.length) {
     fuState.index = outcome.next;
+    fuState.seen.push(outcome.next);
     fuState.verdict = null;
   } else {
     fuState.verdict = outcome.verdict || "";
@@ -661,8 +685,19 @@ function renderFollowups() {
 
   let body = "";
   if (fuState.verdict) {
+    // 499 questions across 364 chains were unreachable: they were authored as
+    // sequential procedures, but the engine only advances on an explicit
+    // `next`, so the first verdict ended the chain and everything after it was
+    // dead. 52 of those buried questions carry safety content — A2L
+    // ventilation and ignition-source checks before hot work, CO checks, leak
+    // checks after gas work, the compressor ground test. Rather than rewrite
+    // hundreds of chains, offer the rest of the procedure after the verdict.
+    // Chains where every question is properly linked have nothing orphaned and
+    // are completely unaffected.
+    const more = nextOrphanQuestion();
     body = `
       <div class="fu-verdict"><strong>What it points to</strong><p>${escapeHtml(fuState.verdict)}</p></div>
+      ${more !== null ? `<button class="fu-more" id="fuMoreBtn">There's more to check on this one →</button>` : ""}
       <button class="fu-restart" id="fuRestartBtn">Start these questions over</button>
     `;
   } else {
@@ -680,6 +715,15 @@ function renderFollowups() {
 
   const restart = document.getElementById("fuRestartBtn");
   if (restart) restart.onclick = () => startFollowups(fuState.symptom);
+  const moreBtn = document.getElementById("fuMoreBtn");
+  if (moreBtn) moreBtn.onclick = () => {
+    const idx = nextOrphanQuestion();
+    if (idx === null) return;
+    fuState.seen.push(idx);
+    fuState.index = idx;
+    fuState.verdict = null;
+    renderFollowups();
+  };
   if (fuState.verdict) return;
 
   const q = fuState.questions[fuState.index];
@@ -726,22 +770,36 @@ function skipOutcome(q) {
 }
 
 function submitFollowupNumber(q) {
-  const vals = (q.fields || []).map(f => parseFloat((document.getElementById("fu-f-" + f.key) || {}).value));
+  const fields = q.fields || [];
+  const vals = fields.map(f => parseFloat((document.getElementById("fu-f-" + f.key) || {}).value));
   const err = document.getElementById("fuErr");
+  const showErr = (msg) => { if (err) { err.textContent = msg; err.classList.remove("hidden"); } };
   if (vals.some(v => !isFinite(v))) {
-    err.textContent = "Fill in both numbers, or tap \"I can't measure this\".";
-    err.classList.remove("hidden");
+    // Said "both numbers" on every question, but 7 of the 8 number questions
+    // have a single field — asking for a second number that isn't on screen.
+    showErr(fields.length > 1
+      ? "Fill in both numbers, or tap \"I can't measure this\"."
+      : "Enter a number, or tap \"I can't measure this\".");
     return;
   }
   let metric;
   if (q.compare === "ratio") {
-    if (!vals[1]) { err.textContent = "The second number can't be zero."; err.classList.remove("hidden"); return; }
+    if (fields.length !== 2) { showErr("This question is set up wrong — tell the office. Tap \"I can't measure this\" to keep going."); return; }
+    if (!vals[1]) { showErr("The second number can't be zero."); return; }
     metric = vals[0] / vals[1];
   } else {
     metric = vals[0];
   }
-  const band = (q.bands || []).find(b => typeof b.under !== "number" || metric < b.under) || (q.bands || [])[q.bands.length - 1];
-  if (!band) return;
+  // Fail LOUDLY on a malformed question. The old line read
+  // `(q.bands||[]).find(...) || (q.bands||[])[q.bands.length-1]`, which threw
+  // on undefined bands (so "Check it" just did nothing, with the error only in
+  // the console), silently no-opped on an empty bands array, and — worst —
+  // when no band matched it fell back to the LAST band and showed its label as
+  // if it had matched, i.e. a confidently wrong answer off a real measurement.
+  const bands = Array.isArray(q.bands) ? q.bands : [];
+  if (!bands.length) { showErr("This question is set up wrong — tell the office. Tap \"I can't measure this\" to keep going."); return; }
+  const band = bands.find(b => typeof b.under !== "number" || metric < b.under);
+  if (!band) { showErr("That reading is outside every range this question covers — tell the office. Tap \"I can't measure this\" to keep going."); return; }
   const shown = q.compare === "ratio"
     ? `${vals[0]} vs ${vals[1]} (${Math.round(metric * 100)}%) — ${band.label}`
     : `${vals[0]} — ${band.label}`;
@@ -808,9 +866,9 @@ const TOOLBOX_DELETED_KEY = "bfc_deleted_toolbox_ids_v1";
 let toolboxState = { search: "", brand: "All" };
 
 function loadUserToolbox() { try { return JSON.parse(localStorage.getItem(TOOLBOX_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserToolbox(list) { localStorage.setItem(TOOLBOX_STORAGE_KEY, JSON.stringify(list)); }
+function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); }
 function loadDeletedToolboxIds() { try { return JSON.parse(localStorage.getItem(TOOLBOX_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedToolboxIds(list) { localStorage.setItem(TOOLBOX_DELETED_KEY, JSON.stringify(list)); }
+function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); }
 
 function getAllToolboxEntries() {
   const userEntries = loadUserToolbox();
@@ -1848,10 +1906,21 @@ function extractTagFields(text) {
   // Serial fallback: many brands (Goodman/Daikin/Amana) use an all-digit
   // serial — grab the longest 8-16 digit run that isn't part of the model.
   if (!serial) {
-    const digitRuns = (up.match(/(?<![A-Z0-9])[0-9]{8,16}(?![A-Z0-9])/g) || [])
+    // Deliberately written WITHOUT lookbehind. Safari only gained lookbehind in
+    // 16.4, and an unsupported lookbehind is a PARSE-time SyntaxError — the
+    // whole of app.js would fail to execute, leaving a permanently blank app on
+    // any older iPhone rather than just breaking the scanner. Same result via a
+    // capture group: match an optional preceding character, then require it not
+    // be alphanumeric.
+    // Split on anything that isn't alphanumeric and keep the tokens that are
+    // ALL digits — a token boundary is exactly what the lookbehind/lookahead
+    // pair was expressing ("a digit run with no letter or digit glued to
+    // either end"), and it says it more plainly.
+    const best = up.split(/[^A-Z0-9]+/)
+      .filter(t => /^[0-9]{8,16}$/.test(t))
       .filter(t => !model.includes(t))
       .sort((a, b) => b.length - a.length);
-    if (digitRuns.length) serial = digitRuns[0];
+    if (best.length) serial = best[0];
   }
   return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), brandHint: detectBrandInText(up) };
 }
@@ -2102,7 +2171,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v75";
+const APP_VERSION = "v76";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -2129,7 +2198,7 @@ function trackEvent(eventName) {
   let queue = readTrackQueue();
   queue.push({ e: eventName, t: new Date().toLocaleString(), v: APP_VERSION });
   if (queue.length > 200) queue = queue.slice(-200);
-  localStorage.setItem(TRACK_QUEUE_KEY, JSON.stringify(queue));
+  safeSet(TRACK_QUEUE_KEY, queue);
   flushTrackQueue();
 }
 
@@ -2151,7 +2220,7 @@ async function flushTrackQueue() {
       await fetch(TRACK_URL, { method: "POST", mode: "no-cors", body });
       const queue = readTrackQueue();
       queue.shift();
-      localStorage.setItem(TRACK_QUEUE_KEY, JSON.stringify(queue));
+      safeSet(TRACK_QUEUE_KEY, queue);
     }
   } catch (e) { /* offline or blocked — events stay queued for next time */ }
   trackFlushing = false;
@@ -2195,7 +2264,12 @@ function showTechPicker() {
     </div>`;
   document.body.appendChild(ov);
   const pick = (name) => {
-    localStorage.setItem(TECH_KEY, name);
+    // The setItem used to come first and unguarded. If localStorage throws —
+    // storage full, or an old private-browsing mode — the overlay never came
+    // down and the app was unusable on first run, which is the worst possible
+    // moment to fail. Dismiss the overlay no matter what; a name we could not
+    // persist just means the picker asks again next launch.
+    try { localStorage.setItem(TECH_KEY, name); } catch (e) { /* not worth blocking on */ }
     ov.remove();
     trackEvent("app opened");
   };

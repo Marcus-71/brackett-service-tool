@@ -387,6 +387,23 @@ main {
   margin-bottom: 0.35rem;
 }
 .fu-verdict p { margin: 0; font-size: 0.98rem; line-height: 1.5; }
+/* Offered after a verdict when the chain still has un-shown steps — a real
+   action, so it reads as a button rather than the quiet restart link. */
+.fu-more {
+  display: block;
+  width: 100%;
+  margin-top: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--accent, #003A70);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.fu-more:active { filter: brightness(1.15); }
 .fu-restart {
   margin-top: 0.6rem;
   background: none;
