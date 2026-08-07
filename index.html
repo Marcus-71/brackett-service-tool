@@ -200,6 +200,52 @@
     </div>
     <div id="cc-targets"></div>
     <div id="cc-results"></div>
+
+    <div class="cc-section-label">🧮 Field calculators</div>
+
+    <details class="fc-tool">
+      <summary>⚖️ Weigh-in / line-set charge</summary>
+      <div class="charge-grid">
+        <div class="form-field"><label>Nameplate charge — lb</label><input id="fc-wi-lb" type="number" inputmode="decimal" placeholder="e.g. 7"></div>
+        <div class="form-field"><label>Nameplate charge — oz</label><input id="fc-wi-oz" type="number" inputmode="decimal" placeholder="e.g. 6"></div>
+        <div class="form-field"><label>Charge covers line length (ft)</label><input id="fc-wi-base" type="number" inputmode="decimal" value="15"></div>
+        <div class="form-field"><label>Actual line length (ft)</label><input id="fc-wi-len" type="number" inputmode="decimal" placeholder="measured, not guessed"></div>
+        <div class="form-field"><label>Liquid line size</label>
+          <select id="fc-wi-size">
+            <option value="0.40">5/16" — 0.40 oz/ft</option>
+            <option value="0.60" selected>3/8" — 0.60 oz/ft</option>
+            <option value="1.00">1/2" — 1.00 oz/ft</option>
+            <option value="custom">Custom oz/ft (ductless: manual's g/m ÷ 93)</option>
+          </select></div>
+        <div class="form-field"><label>Custom oz/ft</label><input id="fc-wi-custom" type="number" inputmode="decimal" step="0.01" placeholder="from the unit's install manual"></div>
+      </div>
+      <div id="fc-wi-out" class="fc-out"></div>
+      <p class="warranty-needs">Adders per Lennox install literature (5/16" 0.40 / 3/8" 0.60 / 1/2" 1.00 oz per ft); Goodman, Daikin and Trane publish the same 0.60 oz/ft for 3/8" liquid line. Nameplate charge and factory-covered length come off the unit's own data plate. Mini-splits state their own adder in g/m — use Custom.</p>
+    </details>
+
+    <details class="fc-tool">
+      <summary>⏱️ Clocking the gas meter (furnace input)</summary>
+      <div class="charge-grid">
+        <div class="form-field"><label>Test dial size (cu ft)</label>
+          <select id="fc-gm-dial"><option value="0.5">1/2 cu ft</option><option value="1" selected>1 cu ft</option><option value="2">2 cu ft</option><option value="5">5 cu ft</option></select></div>
+        <div class="form-field"><label>Seconds for ONE revolution</label><input id="fc-gm-sec" type="number" inputmode="decimal" placeholder="time it with all other gas off"></div>
+        <div class="form-field"><label>Gas heating value (BTU/cu ft)</label><input id="fc-gm-hv" type="number" inputmode="decimal" value="1000"></div>
+        <div class="form-field"><label>Furnace nameplate input (BTU/h)</label><input id="fc-gm-plate" type="number" inputmode="decimal" placeholder="e.g. 80000"></div>
+      </div>
+      <div id="fc-gm-out" class="fc-out"></div>
+      <p class="warranty-needs">Shut off every OTHER gas appliance first (water heater will ruin the reading). 1,000 BTU/cu ft is the usual natural-gas default — the utility can give the exact local heating value. Firing more than ~5% over nameplate: check manifold pressure and orifices before anything else.</p>
+    </details>
+
+    <details class="fc-tool">
+      <summary>🛢️ Refrigerant cylinder pressure check</summary>
+      <div class="charge-grid">
+        <div class="form-field"><label>Refrigerant</label>
+          <select id="fc-cyl-ref"><option>R-410A</option><option>R-32</option><option>R-454B</option></select></div>
+        <div class="form-field"><label>Cylinder temperature °F</label><input id="fc-cyl-temp" type="number" inputmode="decimal" placeholder="= air temp if it's been sitting out"></div>
+      </div>
+      <div id="fc-cyl-out" class="fc-out"></div>
+      <p class="warranty-needs">Valid only with LIQUID in the tank, settled to air temperature (not fresh out of a hot truck or sun). Reading well ABOVE the expected static pressure = air/non-condensables in the tank or it's hotter than you think. Well below = the tank is down to vapor. Recovery cylinders: never past 80% of rated capacity, BY WEIGHT, on a scale — never by pressure or by ear.</p>
+    </details>
   </main>
 </section>
 

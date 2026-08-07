@@ -897,3 +897,29 @@ main {
   cursor: pointer;
 }
 .warranty-badge:active { border-color: var(--accent); }
+
+/* Field calculators on the Charging Calc */
+.fc-tool {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  margin: 0.5rem 0;
+  padding: 0;
+}
+.fc-tool > summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.7rem 0.8rem;
+  list-style: none;
+}
+.fc-tool > summary::-webkit-details-marker { display: none; }
+.fc-tool > summary::after { content: " ▾"; color: var(--text-dim); }
+.fc-tool[open] > summary::after { content: " ▴"; }
+.fc-tool > .charge-grid, .fc-tool > .fc-out, .fc-tool > .warranty-needs { margin: 0 0.8rem 0.7rem; }
+.fc-out {
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}

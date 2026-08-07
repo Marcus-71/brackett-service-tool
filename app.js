@@ -1894,6 +1894,91 @@ document.getElementById("ccOutModel").addEventListener("change", ccApplyScan);
 document.getElementById("ccInModel").addEventListener("change", ccApplyScan);
 
 // ============================================================
+// Field calculators — weigh-in, gas meter clocking, cylinder check.
+// Pure arithmetic on numbers the tech reads off plates and dials;
+// the only built-in constants are the published line-set adders
+// (sourced in the on-screen note) and the P/T tables already in the app.
+// ============================================================
+
+const fcNum = (id) => {
+  const v = document.getElementById(id).value.trim();
+  if (v === "") return null;
+  const n = parseFloat(v);
+  return isNaN(n) ? null : n;
+};
+
+function fcWeighRender() {
+  const out = document.getElementById("fc-wi-out");
+  const lb = fcNum("fc-wi-lb") ?? 0, oz = fcNum("fc-wi-oz") ?? 0;
+  const base = fcNum("fc-wi-base"), len = fcNum("fc-wi-len");
+  const sizeSel = document.getElementById("fc-wi-size").value;
+  const perFt = sizeSel === "custom" ? fcNum("fc-wi-custom") : parseFloat(sizeSel);
+  document.getElementById("fc-wi-custom").parentElement.style.display = sizeSel === "custom" ? "" : "none";
+  if ((lb === 0 && oz === 0) || base == null || len == null || perFt == null) {
+    out.innerHTML = "Enter the nameplate charge, line length, and line size — the total to weigh in computes here.";
+    return;
+  }
+  const nameplateOz = lb * 16 + oz;
+  const adjOz = (len - base) * perFt;
+  const totalOz = nameplateOz + adjOz;
+  if (totalOz <= 0) { out.innerHTML = "That comes out at or below zero — recheck the numbers."; return; }
+  const tLb = Math.floor(totalOz / 16), tOz = totalOz - tLb * 16;
+  out.innerHTML = `<strong>Weigh in ${tLb} lb ${tOz.toFixed(1)} oz</strong> (${(totalOz / 16).toFixed(2)} lb total)<br>` +
+    `= nameplate ${lb} lb ${oz} oz ` +
+    (adjOz >= 0
+      ? `+ ${adjOz.toFixed(1)} oz for the ${(len - base).toFixed(0)} ft of liquid line past the ${base} ft the factory charge covers`
+      : `− ${Math.abs(adjOz).toFixed(1)} oz because the line set is ${(base - len).toFixed(0)} ft SHORTER than the factory charge covers`);
+}
+
+function fcClockRender() {
+  const out = document.getElementById("fc-gm-out");
+  const dial = parseFloat(document.getElementById("fc-gm-dial").value);
+  const sec = fcNum("fc-gm-sec"), hv = fcNum("fc-gm-hv") ?? 1000, plate = fcNum("fc-gm-plate");
+  if (sec == null || sec <= 0) {
+    out.innerHTML = "Time one full revolution of the test dial and the input BTU computes here.";
+    return;
+  }
+  const btuh = (3600 / sec) * dial * hv;
+  let verdict = "";
+  if (plate) {
+    const pct = (btuh / plate) * 100;
+    if (pct > 105) verdict = ` — <strong>${pct.toFixed(0)}% of nameplate: OVERFIRED.</strong> Check manifold pressure and orifice sizing before anything else.`;
+    else if (pct < 90) verdict = ` — ${pct.toFixed(0)}% of nameplate: underfired. Check gas pressure, orifices, and whether another appliance was still running during the clock.`;
+    else verdict = ` — ${pct.toFixed(0)}% of nameplate, within the normal range.`;
+  }
+  out.innerHTML = `<strong>${Math.round(btuh).toLocaleString()} BTU/h actual input</strong>${verdict}`;
+}
+
+function fcCylRender() {
+  const out = document.getElementById("fc-cyl-out");
+  const refrig = document.getElementById("fc-cyl-ref").value;
+  const t = fcNum("fc-cyl-temp");
+  if (t == null) { out.innerHTML = "Enter the cylinder temperature and the expected static pressure computes here."; return; }
+  const chart = PT_CHARTS[refrig];
+  const p = ptInvert(chart.bubble, t);
+  if (p == null) { out.innerHTML = "That temperature is outside the " + refrig + " table — double-check it."; return; }
+  out.innerHTML = `<strong>A ${refrig} cylinder at ${t}°F with liquid inside should sit at ~${Math.round(p)} psig static</strong>` +
+    (chart.glide ? "<br>(bubble-point pressure — on a zeotrope the tank rides the liquid's bubble line; a few psi of drift is normal as the blend fractionates)" : "");
+}
+
+for (const id of ["fc-wi-lb","fc-wi-oz","fc-wi-base","fc-wi-len","fc-wi-size","fc-wi-custom"]) {
+  document.getElementById(id).addEventListener("input", fcWeighRender);
+  document.getElementById(id).addEventListener("change", fcWeighRender);
+}
+for (const id of ["fc-gm-dial","fc-gm-sec","fc-gm-hv","fc-gm-plate"]) {
+  document.getElementById(id).addEventListener("input", fcClockRender);
+  document.getElementById(id).addEventListener("change", fcClockRender);
+}
+for (const id of ["fc-cyl-ref","fc-cyl-temp"]) {
+  document.getElementById(id).addEventListener("input", fcCylRender);
+  document.getElementById(id).addEventListener("change", fcCylRender);
+}
+document.querySelectorAll(".fc-tool").forEach(d => {
+  d.addEventListener("toggle", () => { if (d.open) trackEvent("opened field calc: " + d.querySelector("summary").textContent.trim()); });
+});
+fcWeighRender(); fcClockRender(); fcCylRender();
+
+// ============================================================
 // Tag Scanner — photo → on-device OCR → model/serial → unit ID
 // ============================================================
 
@@ -2437,7 +2522,7 @@ const WARRANTY_PORTALS = {
   "CARRIER":           { label: "Carrier warranty lookup", url: "https://www.carrier.com/residential/en/us/warranty-lookup/", needs: "serial number" },
   "BRYANT":            { label: "Bryant warranty lookup", url: "https://www.bryant.com/en/us/warranty-lookup/", needs: "serial number" },
   "PAYNE":             { label: "Payne registration & warranty", url: "https://www.payne.com/en/us/registration-warranty", needs: "serial number", note: "The Carrier lookup also accepts Payne serials if this page sends you in circles." },
-  "LENNOX":            { label: "Lennox warranty lookup", url: "https://www.lennox.com/residential/owners/assistance/warranty/", needs: "serial number" },
+  "LENNOX":            { label: "Lennox warranty lookup", url: "https://www.lennox.com/residential/owners/assistance/warranty/", needs: "serial number (formats like 5817F04321 / A12A345678) - the lookup is right on the page", note: "Warranty CLAIMS still go through a Lennox dealer; the lookup is free to anyone." },
   "TRANE":             { label: "Trane warranty lookup", url: "https://www.trane.com/residential/en/resources/warranty-and-registration/lookup/", needs: "serial number (+ last name for the certificate)" },
   "AMERICAN STANDARD": { label: "American Standard warranty lookup", url: "https://www.americanstandardair.com/resources/warranty-and-registration/lookup/", needs: "serial number + customer last name" },
   "YORK":              { label: "York warranty & registration", url: "https://www.york.com/residential-equipment/warranty-and-registration", needs: "serial number", jci: true },
@@ -2636,7 +2721,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v91";
+const APP_VERSION = "v92";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
