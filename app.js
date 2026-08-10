@@ -160,6 +160,12 @@ function codeSearchAliases(code) {
   if (m) return [m[1]];
   m = c.match(/^(\d{2,4})$/);
   if (m) return ["E" + m[1]];
+  // Bosch Climate 5000 G3 prints its long-scheme codes with a space ("EC 52").
+  // Techs type them both ways; feed the other spelling into the haystack.
+  m = c.match(/^([A-Za-z]{2})\s([0-9A-Za-z]{2})$/);
+  if (m) return [m[1] + m[2]];
+  m = c.match(/^([A-Za-z]{2})([0-9A-Za-z]{2})$/);
+  if (m) return [m[1] + " " + m[2]];
   return [];
 }
 const termRegexCache = new Map();
@@ -2412,6 +2418,29 @@ const MODEL_PATTERNS = [
   // and PUMY single-phase multi-zone outdoor (P-series on mylinkdrive).
   { re: /^MVZ[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Air Handler", series: "Mitsubishi MVZ multi-position air handler (ducted indoor for MXZ multi-zone)", notes: ["Pairs with MXZ outdoor units - the MXZ LED1/LED2 codes in Error Codes cover the outdoor side."] },
   { re: /^PUMY[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi PUMY multi-zone outdoor unit (P-series/CITY MULTI S)", notes: ["Check codes surface on the indoor controllers - see Mitsubishi codes in Error Codes."] },
+  // --- Bosch Home Comfort ---
+  // Nomenclature (from Bosch's own product-specification diagrams):
+  //   Brand(B) Application(O=Outdoor/I=Indoor/P=Packaged) UnitType(V=Vertical/W=Wall/
+  //   C=Ceiling/H|B=Packaged) Series(A|B) -- Capacity(kBTU) Performance(M=Max/R=Regular/
+  //   X=AC-only) Connected(T=Connected/C=Comm-capable/X=No) Refrigerant(B=R454B/N=R410A)
+  //   -- Power(M=208/230-1-60) Efficiency(SEER2 digits) Compressor(E=EVI/S=Standard/R/X)
+  // The refrigerant letter sits in the LAST position of the middle block, which is why
+  // ...MTB- reads R-454B and ...HDN1- reads R-410A. Keep the two specific patterns above
+  // the generic one - the loop takes the first match.
+  { re: /^BO[VWCHB][A-D]-\d{2}[A-Z]{2}B-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS R-454B outdoor unit (2026 Premium / Light / Ultra nameplate form, e.g. BOVA-60MTB-M19E)", notes: ["The B in the refrigerant position of the middle block means R-454B (A2L) - this one is safe to read off the model string.", "Fault codes are in Error Codes under 'Bosch IDS R-454B 2026'.", "b-prefix codes on the outdoor display are INDOOR faults - go to the air handler."] },
+  { re: /^BO[VWCHB][A-D]-\d{2}[A-Z]{1,3}N1?-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS R-410A outdoor unit (e.g. BOVA-36HDN1-M20G, BOVA-60HDN1-M20G)", notes: ["The N in the refrigerant position means R-410A - safe to read off the model string.", "Fault codes are in Error Codes under 'Bosch IDS R-410A'.", "IDS 2.0 service manual (07.2021) is in Manuals -> Bosch."] },
+  { re: /^BO[VWCHB][A-D]-\d{2}[A-Z0-9]{2,5}-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS outdoor unit (long nameplate form)", notes: ["Read the refrigerant letter in the last position of the middle block: B = R-454B, N = R-410A.", "Both the R-410A and R-454B IDS code tables are in Error Codes - the family label on each card names the refrigerant."] },
+  // Short tags printed on IOM covers and some cartons/labels. Anchored with $ so they do
+  // not swallow a full nameplate. Bosch is inconsistent about which number is capacity:
+  // the Ultra IOM prints both BOVB19-36 and BOVB36-19 for the same unit.
+  { re: /^BO[VWCHB][A-D]\d{2}-\d{2}$/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS outdoor unit (IOM short tag, e.g. BOVA24-15, BOVB15-36, BOVB19-60, BOVB36-20)", notes: ["This short form does NOT reliably tell you the refrigerant. BOVB20 is used for a 2023 R-410A unit AND a 2026 R-454B unit - read the nameplate.", "Bosch prints the two numbers in both orders (BOVB19-36 and BOVB36-19) for the same Ultra unit.", "15 = IDS Light R-410A era, 18/20 = IDS Connected R-410A era, 15/19/20 also appear on 2026 R-454B units - the refrigerant comes from the nameplate, not this tag."] },
+  { re: /^BVA-\d{2}WN1-M\d{2}/, brand: "Bosch", equipment: "Air Handler", series: "Bosch IDS R-410A air handler (BVA-24WN1-M20 / BVA-36WN1-M20 / BVA-48WN1-M20 / BVA-60WN1-M20)", notes: ["N1 in the model string means R-410A - safe to read here.", "The 05.2019 BVA install manual has NO fault-code content; codes for this system are on the OUTDOOR board - see the Bosch IDS R-410A family in Error Codes."] },
+  { re: /^BI[VC][AB]\d{2}(-\d{2})?/, brand: "Bosch", equipment: "Air Handler", series: "Bosch IDS air handler, current generation (BIVA15 / BIVA20 / BICA16 compact ceiling / BIVB19-36 / BIVB19-48 / BIVB19-60)", notes: ["On 2026 R-454B systems the indoor board reports faults as a single-LED FLASH COUNT - that table is in Error Codes.", "The same faults appear at the outdoor display as b-prefix codes.", "This pattern does not establish refrigerant on its own - check the nameplate."] },
+  { re: /^BPHA-\d{2}[A-Z]{2}B-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Other", series: "Bosch IDP R-454B packaged unit (current nomenclature, e.g. BPHA-36RCB-M16S)", notes: ["The B in the refrigerant position means R-454B (A2L).", "Fault codes are in Error Codes under 'Bosch IDP R-454B packaged unit' - note o37 and PF exist only on IDP.", "The outdoor board display is what Bosch calls the digital tube; indoor faults also show as LED1 flash counts."] },
+  { re: /^BRBA-\d{2}[A-Z0-9]+-M\d{2}/, brand: "Bosch", equipment: "Other", series: "Bosch IDP packaged unit, legacy R-410A (BRBA-36HWD1N1-M18 / BRBA-60HWD1N1-M18)", notes: ["N1 in the model string means R-410A.", "This is the pre-R-454B IDP Premium generation - the 2026 IDP code table in Error Codes is for the R-454B units and may not match this board."] },
+  { re: /^BMS500-AA[US]\d{3}-[01]AH[WCD]X[BC]/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch Climate 5000 ductless indoor head (W = wall, C = 4-way cassette, D = ducted)", notes: ["Trailing letter tells the generation: B = G2, C = G3. G2 also appears with a trailing A on some outdoor strings.", "REFRIGERANT IS NEVER STATED in any G2 or G3 Climate 5000 service manual - do not infer it from the model. Read the label on the outdoor unit.", "9k to 18k units have NO display - the RUN and TIMER lamp blink counts are the whole readout.", "Codes: use the short E/F/P family; G3 ducted and cassette units may also print the long EH/EL/EC/PC codes."] },
+  { re: /^BMS500-AAS\d{3}-[01]CSX[RHL][ABC]/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch Climate 5000 single-zone outdoor unit (R = Regular, H = Max Performance, L = light commercial 48k/60k)", notes: ["Trailing letter: C = G3, A or B = G2.", "REFRIGERANT IS NEVER STATED in the G2 or G3 manuals - read the label on the unit.", "On the light commercial L models (48k and 60k) the IPM board carries LED2 and LED3 - that table is in Error Codes.", "The 0-prefix capacity block (e.g. BMS500-AAS012-0CSXR*) is the 115V unit."] },
+  { re: /^BMS500-AAM\d{3}-1CSX[RH][ABC]/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch Climate 5000 multizone outdoor unit (18k / 27k / 36k / 48k, 2 to 5 zone)", notes: ["Trailing letter: C = G3, A or B = G2. THIS MATTERS - the G2 and G3 multizone code sets are completely different and are separate families in Error Codes.", "G2 multizone codes are E/F/P strings whose meanings differ from the single-zone codes of the same name; G3 multizone uses EC/PC strings.", "REFRIGERANT IS NEVER STATED in these manuals - read the label on the unit.", "Point check is entered with SW1 on both generations."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -2793,6 +2822,7 @@ const WARRANTY_PORTALS = {
   "RHEEM":             { label: "Rheem warranty verification", url: "https://rheem.registermyunit.com/en-US/warranty/brand?brand=rheem", needs: "serial number - tap Verify existing Warranty; homeowner last name + state unlock the certificate", note: "Rheem moved verification to registermyunit.com; the old rheem.com page just points here now." },
   "RUUD":              { label: "Ruud warranty verification", url: "https://ruud.registermyunit.com/en-US/warranty/brand?brand=ruud", needs: "serial number (no spaces) - tap Verify existing Warranty; homeowner last name + state unlock the certificate" },
   "MITSUBISHI":        { label: "Mitsubishi Electric warranties", url: "https://www.mitsubishicomfort.com/warranties", needs: "no public serial lookup - call 800-433-4822 with the serial", note: "METUS has no public serial lookup; registration status comes from customer care or the installing contractor's METUS account." },
+  "BOSCH":             { label: "Bosch warranty lookup (ARC Spare Parts Finder)", url: "https://arc.bosch-homecomfort.us/SparePartsFinder?type=material-serial&lang=en", needs: "serial number - the ARC material/serial search; a login control sits top-right but the search box rendered without a login wall", note: "Bosch has no standalone anonymous serial-lookup page on bosch-homecomfort.com - ARC (Aftermarket Resource Center) is the real tool. Bosch's own FAQ says the warranty START DATE is based on the MANUFACTURE date, so an unregistered unit's coverage is dated from the factory, not the install. Warranty phone 1-800-283-3787 (Mon-Thu 8-6 ET, Fri 8-5); warranty_returns@us.bosch.com." },
 };
 // The literal badge printed on the tag decides the portal.
 function detectBadgeInText(up) {
@@ -2800,7 +2830,7 @@ function detectBadgeInText(up) {
   return null;
 }
 // Model-pattern brand -> default badge when the tag text didn't say.
-const BRAND_TO_BADGE = { Goodman: "GOODMAN", Daikin: "DAIKIN", Carrier: "CARRIER", Lennox: "LENNOX", Trane: "TRANE", York: "YORK", Rheem: "RHEEM", Mitsubishi: "MITSUBISHI" };
+const BRAND_TO_BADGE = { Goodman: "GOODMAN", Daikin: "DAIKIN", Carrier: "CARRIER", Lennox: "LENNOX", Trane: "TRANE", York: "YORK", Rheem: "RHEEM", Mitsubishi: "MITSUBISHI", Bosch: "BOSCH" };
 
 function warrantyStatus(msg) {
   const el = document.getElementById("warrantyStatus");
@@ -3052,7 +3082,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v94";
+const APP_VERSION = "v95";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
