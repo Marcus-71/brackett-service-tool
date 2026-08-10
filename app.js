@@ -228,8 +228,15 @@ const ADD_HANDLERS = {
 };
 
 let currentScreen = "home";
+// Where the tech came FROM, so the swipe-back gesture can retrace one step at
+// a time (scanner -> codes -> swipe -> scanner) instead of dumping to Home.
+let screenHistory = [];
 
-function showScreen(name) {
+function showScreen(name, fromBack) {
+  if (!fromBack && name !== currentScreen) {
+    screenHistory.push(currentScreen);
+    if (screenHistory.length > 20) screenHistory.shift();
+  }
   currentScreen = name;
   for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
@@ -265,6 +272,63 @@ document.querySelectorAll(".tile").forEach(tile => {
   tile.addEventListener("click", () => showScreen(tile.dataset.screen));
 });
 document.getElementById("backBtn").addEventListener("click", () => showScreen("home"));
+
+// ---- Swipe right = back up ONE level ----
+// Peels the topmost layer only: open modal, then the PDF reader / warranty
+// portal, then a manuals folder level, then the previous screen. The topbar
+// back button still jumps straight Home for when that's what you want.
+function goBackOneStep() {
+  if (document.querySelector(".tech-picker-overlay")) return; // must pick a name first
+  if (!document.getElementById("modalBackdrop").classList.contains("hidden")) { closeModal(); return; }
+  if (!document.getElementById("pdfViewer").classList.contains("hidden")) { closePdfReader(false); return; }
+  if (!document.getElementById("portalViewer").classList.contains("hidden")) { closePortalEmbed(false); return; }
+  if (currentScreen === "manuals" && (manualsState.model || manualsState.brand)) {
+    if (manualsState.model) manualsState.model = null;
+    else manualsState.brand = null;
+    renderManuals();
+    return;
+  }
+  if (screenHistory.length) { showScreen(screenHistory.pop(), true); return; }
+  if (currentScreen !== "home") showScreen("home", true);
+}
+
+// The gesture works from anywhere on the screen, not just the edge — but a
+// touch that starts inside a form field or a sideways-scrollable strip (filter
+// chips, a zoomed PDF page) belongs to that element, so it never fires there.
+const SWIPE_MIN_X = 70;   // must travel this far right
+const SWIPE_MAX_Y = 60;   // more drift than this = it was a scroll
+let swipeTrack = null;
+function swipeBlockedAt(el) {
+  for (let n = el; n && n !== document.body; n = n.parentElement) {
+    if (n.tagName === "INPUT" || n.tagName === "TEXTAREA" || n.tagName === "SELECT") return true;
+    if (n.scrollWidth > n.clientWidth + 1) {
+      const ox = getComputedStyle(n).overflowX;
+      if (ox === "auto" || ox === "scroll") return true;
+    }
+  }
+  return false;
+}
+document.addEventListener("touchstart", (e) => {
+  if (e.touches.length !== 1 || swipeBlockedAt(e.target)) { swipeTrack = null; return; }
+  const t = e.touches[0];
+  swipeTrack = { x: t.clientX, y: t.clientY, lx: t.clientX, ly: t.clientY, t: Date.now() };
+}, { passive: true });
+document.addEventListener("touchmove", (e) => {
+  if (!swipeTrack) return;
+  const t = e.touches[0];
+  swipeTrack.lx = t.clientX;
+  swipeTrack.ly = t.clientY;
+  if (Math.abs(t.clientY - swipeTrack.y) > SWIPE_MAX_Y) swipeTrack = null;
+}, { passive: true });
+document.addEventListener("touchend", () => {
+  if (!swipeTrack) return;
+  const dx = swipeTrack.lx - swipeTrack.x;
+  const dy = Math.abs(swipeTrack.ly - swipeTrack.y);
+  const dt = Date.now() - swipeTrack.t;
+  swipeTrack = null;
+  if (dx >= SWIPE_MIN_X && dy <= SWIPE_MAX_Y && dx > 1.5 * dy && dt <= 800) goBackOneStep();
+}, { passive: true });
+document.addEventListener("touchcancel", () => { swipeTrack = null; }, { passive: true });
 
 // ============================================================
 // ERROR CODES
@@ -3082,7 +3146,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v95";
+const APP_VERSION = "v96";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
