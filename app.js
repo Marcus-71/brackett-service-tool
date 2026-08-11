@@ -105,6 +105,23 @@ const SEARCH_ALIAS_GROUPS = [
   ["emergency heat", "em heat", "e heat"],
   ["twinned", "twinning", "twin"],
   ["variable capacity", "variable speed", "inverter driven", "inverter"],
+  // Residential controls vocabulary. The zone-board group has to stay ABOVE the
+  // damper group: it owns "damper control" (the panel), and the loop consumes
+  // the longest phrase in the first group that matches, so the panel is claimed
+  // before bare "damper" below can swallow it. "zone damper" still lands in the
+  // damper group, which is what a tech asking about one means.
+  ["zone board", "zone panel", "zoning panel", "damper control", "zone control", "zoning board"],
+  // Bypass sits above the plain damper group for the same reason: otherwise
+  // "bypass damper" gets eaten as "damper" + a leftover "bypass" and becomes
+  // two separate concepts the row has to satisfy, instead of the one thing the
+  // tech actually asked about.
+  ["bypass damper", "bypass", "barometric bypass"],
+  ["damper", "dampers", "zone damper", "damper motor", "damper actuator"],
+  ["zone sensor", "smart sensor", "room sensor", "remote sensor", "remote room sensor"],
+  ["wall control", "system control", "infinity control", "infinity touch", "touch control"],
+  ["thermostat", "tstat", "stat", "wall stat"],
+  ["communicating", "comm bus", "abcd bus", "abcd", "data bus", "serial bus"],
+  ["firmware", "software version", "software update", "firmware update", "update the control"],
 ];
 
 // A query typed the way a tech actually talks — "why won't the blower start?"
@@ -1354,9 +1371,15 @@ function openManualInfo(m) {
 // sharing is ever loosened to link-anyone, this URL effectively publishes
 // documents stamped "Not For Further Distribution" and must come back out.
 const BULLETIN_PACK = {
-  version: 1,                    // bump to re-notify everyone
-  count: 100,                    // how many PDFs are waiting in the folder
-  label: "Carrier shop bulletins",
+  version: 2,                    // bump to re-notify everyone
+  // How many PDFs are waiting. Set it only when the number is actually known;
+  // null renders the pill and banner without a count rather than printing a
+  // stale one. Google Drive's file list is virtualised, so a folder that has
+  // grown past a hundred files cannot be counted reliably from the browser —
+  // a wrong number here reads as "I already added those" and the tech skips
+  // the batch.
+  count: null,
+  label: "Carrier and Payne shop bulletins",
   note: "Dealer bulletins - confidential, do not forward outside Brackett.",
   url: "https://drive.google.com/drive/folders/1MrkE0ABvpRoXeUDmnOxi7lq-_O3G-C3Z",
 };
@@ -1367,6 +1390,12 @@ function bulletinAckedVersion() {
     const v = JSON.parse(localStorage.getItem(BULLETIN_ACK_KEY));
     return typeof v === "number" && isFinite(v) ? v : 0;
   } catch (e) { return 0; }
+}
+// "100 " when the count is known, "" when it is not, so the pill and banner
+// read naturally either way instead of printing "null".
+function bulletinCountPrefix() {
+  const n = BULLETIN_PACK.count;
+  return typeof n === "number" && isFinite(n) && n > 0 ? n + " " : "";
 }
 function bulletinPackPending() {
   return !!BULLETIN_PACK.url && BULLETIN_PACK.version > bulletinAckedVersion();
@@ -1386,7 +1415,7 @@ function renderBulletinBanner() {
   if (!bulletinPackPending()) { el.classList.add("hidden"); el.innerHTML = ""; return; }
   el.classList.remove("hidden");
   el.innerHTML = `
-    <div class="bulletin-banner-title">${escapeHtml(BULLETIN_PACK.count)} ${escapeHtml(BULLETIN_PACK.label)} to add</div>
+    <div class="bulletin-banner-title">${escapeHtml(bulletinCountPrefix())}${escapeHtml(BULLETIN_PACK.label)} to add</div>
     <div class="bulletin-banner-body">These can't be stored on the app's server, so they come from the shop folder. Open it, download them to this phone, then tap + Add and pick them all at once. ${escapeHtml(BULLETIN_PACK.note)}</div>
     <div class="bulletin-banner-actions">
       <a class="bulletin-open" href="${escapeHtml(BULLETIN_PACK.url)}" target="_blank" rel="noopener">Open the shop folder</a>
@@ -1405,7 +1434,8 @@ function showBulletinPill() {
   // both waiting can still read and tap each one.
   pill.className = "update-pill bulletin-pill";
   pill.type = "button";
-  pill.innerHTML = `<span>${escapeHtml(BULLETIN_PACK.count)} new ${escapeHtml(BULLETIN_PACK.label)}</span><span class="update-pill-cta">Tap to add</span>`;
+  const lead = bulletinCountPrefix() ? bulletinCountPrefix() + "new " : "New ";
+  pill.innerHTML = `<span>${escapeHtml(lead)}${escapeHtml(BULLETIN_PACK.label)}</span><span class="update-pill-cta">Tap to add</span>`;
   pill.onclick = () => {
     pill.remove();
     showScreen("manuals");
@@ -3268,7 +3298,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v102";
+const APP_VERSION = "v103";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
