@@ -1348,12 +1348,17 @@ function openManualInfo(m) {
 // To publish a batch: drop the PDFs in the folder, then set `url`, bump
 // `version`, update `count`, and deploy. Every tech gets a pill on next open.
 // Leaving `url` empty keeps the whole feature dormant — no pill, no banner.
+// The folder link is safe to sit in this PUBLIC repo only because the folder is
+// shared with named Brackett accounts rather than "anyone with the link" —
+// Google enforces the permission, so the URL by itself grants nothing. If that
+// sharing is ever loosened to link-anyone, this URL effectively publishes
+// documents stamped "Not For Further Distribution" and must come back out.
 const BULLETIN_PACK = {
-  version: 0,                    // bump to re-notify everyone
-  count: 0,                      // how many PDFs are waiting in the folder
+  version: 1,                    // bump to re-notify everyone
+  count: 100,                    // how many PDFs are waiting in the folder
   label: "Carrier shop bulletins",
   note: "Dealer bulletins - confidential, do not forward outside Brackett.",
-  url: "",                       // shared folder link goes here
+  url: "https://drive.google.com/drive/folders/1MrkE0ABvpRoXeUDmnOxi7lq-_O3G-C3Z",
 };
 const BULLETIN_ACK_KEY = "bfc_bulletin_pack_ack";
 
@@ -3263,7 +3268,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v101";
+const APP_VERSION = "v102";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
