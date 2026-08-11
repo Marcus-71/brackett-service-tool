@@ -43643,5 +43643,1195 @@ const SYMPTOM_FOLLOWUPS = {
     }
    ]
   }
+ ],
+ // ===== Carrier / Payne (v98) =====
+ "s-car-58cv-status-recall": [
+  {
+   "ask": "With 115VAC on and the blower door closed, what is the amber LED doing right now?",
+   "options": [
+    {
+     "label": "Completely dark, no flashing at all",
+     "verdict": "No power at the control. Check for 115VAC at L1 and L2 and 24VAC at SEC-1 and SEC-2. Fix the power problem before chasing codes - a dark LED is not a stored code."
+    },
+    {
+     "label": "On steady, no pattern",
+     "next": 1
+    },
+    {
+     "label": "Flashing rapidly with no short/long pattern",
+     "verdict": "Line voltage polarity is reversed. Swap hot and neutral at the furnace and confirm a solid earth ground. The furnace will not heat until polarity and ground are correct."
+    },
+    {
+     "label": "Flashing a short/long pattern",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "Disconnect the R thermostat lead, reset power, put SW1-1 ON and count the codes until 11 flashes. What came out?",
+   "options": [
+    {
+     "label": "Only code 11",
+     "verdict": "No stored history. Either nothing has faulted or the codes aged out - stored codes erase automatically after 72 hours. Put SW1-1 back OFF, reconnect R, and run a full heat cycle while watching the LED live."
+    },
+    {
+     "label": "One or more codes before 11",
+     "verdict": "Write down every code in order, then look each one up against the 58CVA/CVX list. Clear the history by holding SW1-1 ON and jumpering R, W/W1 and Y/Y2 together until code 11 flashes, put SW1-1 OFF, then run a heat cycle and see which codes come back."
+    },
+    {
+     "label": "Nothing flashes at all with SW1-1 ON",
+     "verdict": "The R lead is probably still connected or a thermostat demand is present. Recall only works with R disconnected. Recheck the R lead, reset power, and try again; if it still does not flash, replace the furnace control."
+    }
+   ]
+  }
+ ],
+ "s-car-58cv-component-test": [
+  {
+   "ask": "Turn SW1-6 ON with no thermostat inputs. Which step of the sequence fails?",
+   "options": [
+    {
+     "label": "Inducer never starts",
+     "verdict": "The test stops at the first step. Check 115VAC to the inducer, the inducer motor itself, and the harness. Nothing downstream in this test is meaningful until the inducer runs."
+    },
+    {
+     "label": "Inducer runs but the igniter never glows in its 15 second window",
+     "verdict": "Igniter or igniter circuit. Unplug the igniter harness, restart the test, and check for 115V at the igniter output during the 15 second window. Voltage present means replace the igniter or its harness; no voltage means replace the furnace control."
+    },
+    {
+     "label": "Igniter is fine but the blower does not run for its 15 seconds",
+     "next": 1
+    },
+    {
+     "label": "All four steps run",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "What result code flashes when the test finishes?",
+   "options": [
+    {
+     "label": "11",
+     "verdict": "The blower motor tested OK. You still owe a visual check of the inducer motor and the hot surface igniter - code 11 does not cover those. Turn SW1-6 OFF."
+    },
+    {
+     "label": "25",
+     "verdict": "Setup error. Check whether SW1-1 is also ON, check the model plug number and its resistance against the wiring diagram, and confirm the board date code is 2103 or later if model plug 007 is fitted."
+    },
+    {
+     "label": "41",
+     "verdict": "The blower motor failed the test. Check the blower wheel for rubbing or looseness, check the motor wiring back to the control, then the furnace control itself. Replace the failing part and rerun the test by cycling SW1-6 OFF and ON."
+    }
+   ]
+  }
+ ],
+ "s-car-58cv-sw14-conflict": [
+  {
+   "ask": "Which 58CV manual revision or series matches the furnace in front of you?",
+   "options": [
+    {
+     "label": "58CV-11SI, Series 150/F",
+     "verdict": "Use the 11SI numbers: SW1-4 ON decreases Low Heat airflow by 16 percent and High Heat airflow by 10 percent. There is no SW4 bank on this series, so ignore any SW4-3 CFM-per-ton guidance. Verify by measuring temperature rise against the rating plate."
+    },
+    {
+     "label": "58CV-12SI, Series 160",
+     "verdict": "Use the 12SI numbers: SW1-4 ON decreases low heat airflow by 7 percent and high heat airflow by 10 percent. Note 12SI also adds an inducer clause to SW1-3 that the other revisions do not have. Verify by measuring temperature rise."
+    },
+    {
+     "label": "58CV-13SI, Series 160",
+     "verdict": "Use the 13SI numbers: SW1-4 ON decreases low heat airflow 20 percent for 90 percent models or 16 percent for 80 percent models, and high heat airflow 15 percent for 90 percent models or 10 percent for 80 percent models. Verify by measuring temperature rise."
+    },
+    {
+     "label": "Cannot tell which revision applies",
+     "verdict": "Do not pick a percentage. Set SW1-4 to its normal ON position, then measure actual temperature rise and adjust SW1-5 and SW4-3 CFM per ton until rise falls inside the rating plate range. The measured rise is the authority, not the printed percentage."
+    }
+   ]
+  }
+ ],
+ "s-car-58cv-manifold": [
+  {
+   "ask": "Which stage are you setting?",
+   "options": [
+    {
+     "label": "Low heat",
+     "next": 1
+    },
+    {
+     "label": "High heat",
+     "next": 2
+    }
+   ]
+  },
+  {
+   "ask": "Low heat manifold pressure on natural gas",
+   "type": "number",
+   "fields": [
+    {
+     "key": "low_wc",
+     "label": "Manifold pressure (in. w.c.)",
+     "placeholder": "e.g. 1.6"
+    }
+   ],
+   "bands": [
+    {
+     "under": 1.4,
+     "label": "Below 1.4 in. w.c.",
+     "verdict": "Below the printed floor. Raise it with the low-heat regulator; if you cannot reach 1.4 in. w.c., change the main burner orifices. Confirm inlet gas pressure is adequate before blaming the regulator."
+    },
+    {
+     "under": 1.7,
+     "label": "1.4 to 1.7 in. w.c.",
+     "verdict": "Inside the low-heat window. Clock the gas meter and confirm the input matches the rating plate, then set high heat."
+    },
+    {
+     "label": "1.7 in. w.c. and above",
+     "verdict": "Above the printed ceiling. Reduce it with the low-heat regulator; if you cannot get below 1.7 in. w.c., change the main burner orifices. Do not leave it high to gain capacity."
+    }
+   ]
+  },
+  {
+   "ask": "High heat manifold pressure on natural gas",
+   "type": "number",
+   "fields": [
+    {
+     "key": "high_wc",
+     "label": "Manifold pressure (in. w.c.)",
+     "placeholder": "e.g. 3.7"
+    }
+   ],
+   "bands": [
+    {
+     "under": 3.2,
+     "label": "Below 3.2 in. w.c.",
+     "verdict": "Below the printed floor. Raise it with the high-heat regulator; if you cannot reach 3.2 in. w.c., change the main burner orifices and recheck inlet gas pressure."
+    },
+    {
+     "under": 3.8,
+     "label": "3.2 to 3.8 in. w.c.",
+     "verdict": "Inside the high-heat window. Clock the gas meter against the rating plate input, leak check every fitting you opened, and reinstall the manometer port plug."
+    },
+    {
+     "label": "3.8 in. w.c. and above",
+     "verdict": "Above the printed ceiling. Reduce it with the high-heat regulator; if you cannot get below 3.8 in. w.c., change the main burner orifices."
+    }
+   ]
+  }
+ ],
+ "s-car-flashcode-flame-current": [
+  {
+   "ask": "Flame current measured in DC microamps during the trial for ignition",
+   "type": "number",
+   "fields": [
+    {
+     "key": "ua",
+     "label": "Flame current (microamps DC)",
+     "placeholder": "e.g. 4.5"
+    }
+   ],
+   "bands": [
+    {
+     "under": 0.5,
+     "label": "Below 0.5 microamps",
+     "verdict": "Below the failure threshold. Clean the flame sensor with fine steel wool and recheck. If still below 0.5, replace the electrode. Before that, confirm the Green/Yellow wire is landed on the furnace sheet metal, the flame sensor is not grounded, and line polarity is correct."
+    },
+    {
+     "under": 4,
+     "label": "0.5 to 4.0 microamps",
+     "verdict": "Reading but weak. Clean the flame sensor with fine steel wool and recheck against the 4.0 to 6.0 nominal. If it will not come up, replace the electrode; also check burner carryover and flame sensor position in the flame."
+    },
+    {
+     "under": 6,
+     "label": "4.0 to 6.0 microamps",
+     "verdict": "In the nominal band Carrier prints for these furnaces. The flame sensor is not your problem. If the burners still will not stay on, replace the furnace control - that is exactly what the manual's flowchart says to do next."
+    },
+    {
+     "label": "6.0 microamps and above",
+     "verdict": "Above nominal, which is not itself a fault. Confirm your meter is in series and reading DC microamps. If burners still drop out, work the control ground and the gas valve rather than the sensor."
+    }
+   ]
+  }
+ ],
+ "s-car-58mvc-inducer-42": [
+  {
+   "ask": "First, which board is this? Code 42 does not exist on every Carrier furnace.",
+   "options": [
+    {
+     "label": "58MVC or 59MN7B",
+     "next": 1
+    },
+    {
+     "label": "58CVA or 58CVX",
+     "verdict": "There is no code 42 on the 58CVA/CVX list. You are reading the wrong platform. Re-count the flashes - short flashes are the first digit, long flashes the second - and look the code up on the 58CV service label."
+    }
+   ]
+  },
+  {
+   "ask": "When does the inducer misbehave?",
+   "options": [
+    {
+     "label": "It never starts after a call for heat",
+     "verdict": "Code 42 set on the 20 second no-start condition. Check 115V to the inducer and the motor wiring for a miswire, then the inducer motor itself. Replace the inducer motor if it has power and does not turn."
+    },
+    {
+     "label": "It starts but the control faults out during prepurge",
+     "verdict": "Code 42 set on RPM outside its valid range. The control is measuring the vent system through inducer RPM. Check vent sizing against the manual, check for a restricted combustion air supply, and check for a blocked or sagging vent before condemning the motor."
+    },
+    {
+     "label": "It runs a while then the unit faults mid-cycle",
+     "verdict": "Code 42 set on loss of the RPM signal for 5 seconds. Check the inducer RPM feedback wiring and connector for an intermittent, then the inducer motor. A wiggle test on the motor harness during operation will usually find it."
+    },
+    {
+     "label": "It only shows up during the SW1-6 component self test",
+     "verdict": "Code 42 is one of the component-test result codes on the 58MVC (11, 25, 41 or 42). Treat it as a real inducer fault: check vent sizing, combustion air, motor wiring and the motor."
+    }
+   ]
+  }
+ ],
+ "s-car-59mn7b-component-test": [
+  {
+   "ask": "Which result code flashed at the end of the 59MN7B component test?",
+   "options": [
+    {
+     "label": "11",
+     "verdict": "Test passed. Turn SW1-6 OFF, reinstall the R wire and the blower door. Still eyeball the inducer and igniter - the result code does not certify them."
+    },
+    {
+     "label": "25",
+     "verdict": "Setup error. Check that SW1-1 is not also ON, confirm model plug PL4 is installed, and confirm the replacement board is a MODULATING board with software version V17 or later. A non-modulating board in a 59MN7B will not work."
+    },
+    {
+     "label": "35",
+     "verdict": "Modulating gas valve fault. Check the RED, YELLOW and ORANGE wires at the gas valve and at the PL8 connections for an intermittent. This step exists only on the modulating board - a two-stage 59TN6B will never report 35."
+    },
+    {
+     "label": "41",
+     "verdict": "Blower motor fault. Check 115VAC at PL14-5 to PL14-4, 12 VDC at PL13-1 red to PL13-4 green and at PL3-1 red to PL3-2 green, and 5 VDC at PL13-2 yellow to PL13-4 green and at PL3-3 yellow to PL3-2 green. Also check for a rubbing or loose blower wheel first."
+    },
+    {
+     "label": "42",
+     "verdict": "Inducer motor fault. Check vent sizing, restricted combustion air supply, and inducer motor wiring, then the inducer motor itself."
+    }
+   ]
+  }
+ ],
+ "s-car-59sc5b-single-fault-retrieval": [
+  {
+   "ask": "Before you touch a limit wire - is any thermostat signal or delay active?",
+   "options": [
+    {
+     "label": "Yes, there is 24V on W, Y or G, or a blower delay is running",
+     "verdict": "Fault codes cannot be retrieved on a 59SC5B while a thermostat signal is present or a delay such as the blower off-delay is active. Wait for all delays to expire and remove the demand, then retry."
+    },
+    {
+     "label": "No, the furnace is idle with no demand",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "Briefly disconnect and reconnect ONE main limit wire, then watch the LED. What happens?",
+   "options": [
+    {
+     "label": "It flashes a two-digit short/long code, then a component test runs",
+     "verdict": "That is the single most recent stored fault. Record it, let the component test sequence finish, then look the code up on the furnace Service Label. Note this board keeps stored codes through a power interruption, so the code may be old."
+    },
+    {
+     "label": "Nothing flashes and no test runs",
+     "verdict": "Either the limit wire interruption was too long or too short, or the control is not responding. Try again with a clean brief break. If it still does nothing, check for 115V and 24V at the board and consider replacing the control."
+    },
+    {
+     "label": "The LED just flashes rapidly",
+     "verdict": "Rapid flashing on this furnace means improper line voltage polarity, and the manual also prints status code (10.1) for the same condition. Correct hot and neutral and confirm the earth ground - the furnace will not operate until then."
+    }
+   ]
+  }
+ ],
+ "s-car-59sp5a-blower-off-jumper": [
+  {
+   "ask": "What is the complaint about the end of the heat cycle?",
+   "options": [
+    {
+     "label": "Cold air blows at the end of the call",
+     "verdict": "The blower off delay is too long. Move the jumper to a shorter pair: pins 1 and 2 give 90 seconds, pins 2 and 3 give 120 seconds. Factory setting is 120 seconds. Time the blower after the burners shut off to confirm."
+    },
+    {
+     "label": "Heat is left sitting in the ducts after the call",
+     "verdict": "The blower off delay is too short. Move the jumper to a longer pair: pins 3 and 4 give 150 seconds, pins 4 and 5 give 180 seconds. Time the blower after the burners shut off to confirm."
+    },
+    {
+     "label": "I cannot find the dip switches to change it",
+     "verdict": "There is no SW1 dip switch bank on a 59SP5A. Blower off delay is a four-position jumper only: 1-2 is 90 seconds, 2-3 is 120, 3-4 is 150, 4-5 is 180, factory 120."
+    },
+    {
+     "label": "The furnace trips the limit right after the call ends",
+     "verdict": "Lengthen the blower off delay toward 150 or 180 seconds so residual heat is cleared, then verify temperature rise and gas input are correct. A limit that trips after the call is usually residual heat plus marginal airflow."
+    }
+   ]
+  }
+ ],
+ "s-car-58mvc-medium-heat-manifold": [
+  {
+   "ask": "Which stage are you locked into right now?",
+   "options": [
+    {
+     "label": "Medium heat, SW4-2 is ON",
+     "next": 1
+    },
+    {
+     "label": "High heat, R to W/W1 to W2 jumpered",
+     "next": 2
+    },
+    {
+     "label": "Neither - the furnace keeps changing rate on me",
+     "verdict": "You cannot set manifold pressure on a modulating furnace that is free to step. Lock medium heat by turning SW4-2 ON, or lock high heat by jumpering R, W/W1 and W2 together, then read the manometer."
+    }
+   ]
+  },
+  {
+   "ask": "Medium heat manifold pressure on natural gas",
+   "type": "number",
+   "fields": [
+    {
+     "key": "med_wc",
+     "label": "Manifold pressure (in. wc)",
+     "placeholder": "e.g. 1.6"
+    }
+   ],
+   "bands": [
+    {
+     "under": 1.3,
+     "label": "Below 1.3 in. wc",
+     "verdict": "Below the printed floor. Raise it with the medium-heat adjustment; if you cannot reach 1.3 in. wc, change orifices. Then move SW4-2 back to OFF before setting high heat."
+    },
+    {
+     "under": 1.7,
+     "label": "1.3 to 1.7 in. wc",
+     "verdict": "Inside the medium-heat window. Move SW4-2 back to OFF, then jumper R, W/W1 and W2 to lock high heat and set that stage."
+    },
+    {
+     "label": "1.7 in. wc and above",
+     "verdict": "Above the printed ceiling. Reduce it; if you cannot get below 1.7 in. wc, change orifices. Do not leave it high."
+    }
+   ]
+  },
+  {
+   "ask": "High heat manifold pressure on natural gas",
+   "type": "number",
+   "fields": [
+    {
+     "key": "high_wc",
+     "label": "Manifold pressure (in. wc)",
+     "placeholder": "e.g. 3.8"
+    }
+   ],
+   "bands": [
+    {
+     "under": 3.2,
+     "label": "Below 3.2 in. wc",
+     "verdict": "Below the printed floor. Raise it with the high-heat adjustment; if you cannot reach 3.2 in. wc, change orifices and recheck inlet gas pressure."
+    },
+    {
+     "under": 3.8,
+     "label": "3.2 to 3.8 in. wc",
+     "verdict": "Inside the high-heat window. Remove the R to W/W1 to W2 jumper, leak check every fitting you opened, and verify temperature rise at each stage."
+    },
+    {
+     "label": "3.8 in. wc and above",
+     "verdict": "Above the printed ceiling. Reduce it; if you cannot get below 3.8 in. wc, change orifices."
+    }
+   ]
+  }
+ ],
+ "s-car-fe4a-read-status": [
+  {
+   "ask": "Which LED is telling you something on the FE4A/FE5A board?",
+   "options": [
+    {
+     "label": "Amber STATUS LED flashing a short/long pattern",
+     "next": 1
+    },
+    {
+     "label": "Green COMM LED is dark",
+     "verdict": "The fan coil is not communicating on the ABCD bus. Expect status code 16 and emergency-heat-only operation. Check the ABCD wiring at every device, confirm the color code is consistent, and use 18 AWG on runs over 25 ft."
+    },
+    {
+     "label": "Amber MOTOR LED lit and flashing but the motor is not running",
+     "verdict": "Check the STATUS LED at the same time. If STATUS shows 41, the manual states the harness and control are working - do not replace them. Ohm the motor leads to each other and check better than 100,000 ohms from any lead to the unpainted end bell."
+    }
+   ]
+  },
+  {
+   "ask": "You cleared one fault and a different code appeared. What now?",
+   "options": [
+    {
+     "label": "A new, different two-digit code is showing",
+     "verdict": "That is the next priority code surfacing, not damage you caused. The printed priority order highest to lowest is 45, 37, 44, 25, 27, 26, 36, 41, 16, 46, 53. Work down the list until the STATUS LED goes quiet."
+    },
+    {
+     "label": "No code at all now",
+     "verdict": "All faults cleared. Verify by running a full heat and cool cycle, and check the fault history at the User Interface to make sure nothing intermittent is still logging."
+    },
+    {
+     "label": "The same code came back immediately",
+     "verdict": "The underlying fault was not corrected. Go back to that specific code's checks - do not keep clearing it. Use the User Interface fault list to see everything active at once instead of counting flashes."
+    }
+   ]
+  }
+ ],
+ "s-car-fe4a-heater-idr": [
+  {
+   "ask": "Resistance measured across pins 5 and 8 of the heater harness connector, with the harness disconnected at the fan coil control heater header",
+   "type": "number",
+   "fields": [
+    {
+     "key": "idr_ohms",
+     "label": "Identifier resistor reading (ohms)",
+     "placeholder": "e.g. 12000"
+    }
+   ],
+   "bands": [
+    {
+     "under": 5000,
+     "label": "5000 ohms or less",
+     "verdict": "Below what the manual tells you to look for. Check pins 5 and 8 for a backed-out, bent or corroded terminal first, then the heater's identifier resistor itself. Until the IDR reads valid, the fan coil control will not operate the electric heater at all."
+    },
+    {
+     "label": "Greater than 5000 ohms",
+     "verdict": "The reading is in the range the manual has you confirm, so the resistor and harness look right. If code 26 persists, the fan coil control is not reading it - check the heater header pins on the control, then set the heater size through the User Interface as a stopgap, accepting that it will then run as a single stage heater with no staging."
+    }
+   ]
+  }
+ ],
+ "s-car-fe4a-ecm-motor": [
+  {
+   "ask": "Compare the three lead-to-lead readings and check the control's supply. What do you find?",
+   "options": [
+    {
+     "label": "One lead-to-lead reading is clearly different from the other two",
+     "verdict": "The motor has an open or shorted winding. Replace the ECM motor - the readings between any two motor leads are supposed to be similar to each other."
+    },
+    {
+     "label": "All three readings are similar but there is no 12 Vdc at motor header pins 1 (+) and 2 (-)",
+     "verdict": "The low voltage supply to the motor is missing at the control. Check the motor header connector and the control's 12 Vdc output; if the control is not producing 12 Vdc, replace the fan coil control."
+    },
+    {
+     "label": "All three readings are similar and 12 Vdc is present at pins 1 and 2",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "Resistance from any motor lead to the unpainted motor end bell",
+   "type": "number",
+   "fields": [
+    {
+     "key": "ground_ohms",
+     "label": "Lead to end bell resistance (ohms)",
+     "placeholder": "e.g. 250000"
+    }
+   ],
+   "bands": [
+    {
+     "under": 100000,
+     "label": "Below 100,000 ohms",
+     "verdict": "The motor windings are leaking to the end bell. Replace the ECM motor. Do not replace the fan coil control or the harness for this - the manual specifically says they are fine on a code 41."
+    },
+    {
+     "label": "100,000 ohms or more",
+     "verdict": "Motor insulation and supply both check out, so this is a communication problem rather than a dead motor. Work status code 44: the control talks to the motor at least every 5 seconds, and the motor shuts itself down if it hears nothing for more than 25 seconds. Wiggle-test the motor harness and reseat the connector at both ends."
+    }
+   ]
+  }
+ ],
+ "s-car-fe4a-emergency-heat": [
+  {
+   "ask": "You disconnected ABCD and waited. Did status code 16 appear and enable emergency heat?",
+   "options": [
+    {
+     "label": "Yes, code 16 is showing",
+     "next": 1
+    },
+    {
+     "label": "No code 16 after well over 2 minutes",
+     "verdict": "The control is not seeing the communication loss. Confirm you actually opened the ABCD bus at the fan coil and that the control is powered. If the STATUS LED is dead entirely, replace the fan coil control."
+    }
+   ]
+  },
+  {
+   "ask": "With R jumpered to W at the terminal strip, what do you measure on the heater stage outputs?",
+   "options": [
+    {
+     "label": "24VAC on both heater stage outputs and the heat works",
+     "verdict": "The outputs are good. Your original code 36 was intermittent or downstream - check the heater contactor coils, the heater harness and the element circuits. Reconnect ABCD and confirm the green COMM LED returns and code 16 clears."
+    },
+    {
+     "label": "No 24VAC on one or both outputs with them commanded on",
+     "verdict": "That is the code 36 condition confirmed at the control. Replace or repair the fan coil control heater output circuit. Reconnect ABCD when finished."
+    },
+    {
+     "label": "24VAC present on an output the control is NOT commanding",
+     "verdict": "That is code 37, a back-feed. Trace the heater stage wiring for a feed from another source or a welded relay contact. Expect the control to have forced a safe blower airflow while it was active."
+    }
+   ]
+  }
+ ],
+ "s-car-abcd-bus-wiring": [
+  {
+   "ask": "What does the ABCD wiring look like at the devices?",
+   "options": [
+    {
+     "label": "Colors are not the same at every device",
+     "verdict": "Rewire so every ABCD connector in the system matches. The recommended code is A green (Data A+), B yellow (Data B-), C white (24VAC common), D red (24VAC hot). The exact colors are not mandatory but consistency is."
+    },
+    {
+     "label": "Colors are consistent and it still will not communicate",
+     "next": 1
+    },
+    {
+     "label": "The outdoor unit has no C and D landed",
+     "verdict": "That may be correct. Some outdoor units, typically those with multiple compressor stages, provide their own low-voltage power and do not require the C and D connections. Confirm against that unit's own instructions before adding wires."
+    }
+   ]
+  },
+  {
+   "ask": "Isolate the bus: disconnect every device from ABCD and land the User Interface directly on the indoor unit with a short piece of thermostat wire. What happens?",
+   "options": [
+    {
+     "label": "It communicates with just the two devices",
+     "verdict": "The bus and both endpoints are fine. Add devices back one at a time until communication drops - the last device or the run of wire you just added is the fault. Check runs over 25 ft for wire smaller than 18 AWG."
+    },
+    {
+     "label": "It still will not communicate with only two devices",
+     "verdict": "Check for 24VAC between C and D at the wall control connector. If 24VAC is missing, check the fuse on the indoor unit circuit board and confirm the amber LED is lit on the indoor control. If 24VAC is present and it still fails, the indoor board or wall control is at fault."
+    },
+    {
+     "label": "The wall control will not even power up",
+     "verdict": "Check for 24VAC between the C and D terminals at the wall control connector and at the damper control module, and check the fuse on the indoor unit circuit board. Confirm power is applied to the indoor unit and its amber LED is lit."
+    }
+   ]
+  }
+ ],
+ "s-car-systxccitc-service-menu": [
+  {
+   "ask": "What are you trying to get out of the wall control?",
+   "options": [
+    {
+     "label": "The most recent fault plus likely causes",
+     "verdict": "Touch MENU, hold the SERVICE icon at least ten seconds until it turns green, then open Service Information and use View Diagnostics for the top 3 most likely root causes of the most recent fault. This is only available with compatible models."
+    },
+    {
+     "label": "A timeline of what has been happening",
+     "verdict": "Use Last 10 System Events. Each entry has a time and date and names the equipment that generated it. Clear it only from THERMOSTAT SETUP, RESET FACTORY DEFAULT, Last 10 Events."
+    },
+    {
+     "label": "Counts and run times stored in the equipment boards",
+     "verdict": "Use Run/Fault History for resettable fault counters per piece of equipment, cycle counters for heat, cool and power cycles, and lifetime run times in heating and cooling."
+    },
+    {
+     "label": "Model and serial numbers of everything on the bus",
+     "verdict": "Use Model/Serial Numbers. It shows model, serial and software version for every communicating device including the wall control. If a board has been replaced, its model and serial will no longer display - that itself tells you a board was swapped."
+    }
+   ]
+  },
+  {
+   "ask": "The SERVICE icon will not turn green when you hold it. What then?",
+   "options": [
+    {
+     "label": "Held it briefly and it just opened a normal screen",
+     "verdict": "Hold longer. The icon must be pressed and held for at least ten seconds before it turns green and the service screens unlock."
+    },
+    {
+     "label": "Held ten seconds or more with no change",
+     "verdict": "The control is not accepting the service entry. Confirm the control is on the current software; if the touchscreen is unresponsive in that area, the wall control needs replacement. Meanwhile pull fault information at the equipment board LEDs instead."
+    }
+   ]
+  }
+ ],
+ "s-car-vfd-jumpers-jw1-jw2": [
+  {
+   "ask": "Is the indoor fan running continuously and did anyone recently replace the VFD relay board?",
+   "options": [
+    {
+     "label": "Yes to both",
+     "verdict": "Cut both configuration jumpers JW1 and JW2 on the relay board. Service replacement boards ship with them intact; factory boards have them cut. Failure to cut them causes continuous fan motor operation. Lock out unit power first."
+    },
+    {
+     "label": "Fan runs continuously but no board was replaced",
+     "next": 1
+    },
+    {
+     "label": "Fan runs but only at one speed",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "Check the two-speed relay logic against the thermostat input. What do you see?",
+   "options": [
+    {
+     "label": "G or Y1 in, but the fan is at high speed",
+     "verdict": "G and Y1 should give relays K1 off, K2 off, K3 on, output K3, fan Low at 40 Hz. Check K3 and its coil circuit, and verify JW1 and JW2 are cut. If the drive itself is commanding 60 Hz on a Low input, check the drive parameters."
+    },
+    {
+     "label": "Y2 or W1 in, but the fan is at low speed",
+     "verdict": "Y2 should give K1 off, K2 on, K3 on, output K2, High at 60 Hz. W1 should give K1 on, K2 on, K3 on, output K1, High at 60 Hz. Check the K1 and K2 coils and their inputs at the relay board."
+    },
+    {
+     "label": "No thermostat input at all and the fan still runs",
+     "verdict": "With no input the fan should be off. Check JW1 and JW2 are both cut, then check for a welded K3 contact or a stray 24V feed on the relay board inputs."
+    }
+   ]
+  }
+ ],
+ "s-car-vfd-alarm-vs-fault": [
+  {
+   "ask": "Which LED state is the drive showing?",
+   "options": [
+    {
+     "label": "Green flashing",
+     "verdict": "That is an alarm, a warning that a trip may be near. Read the 2000-series code on the keypad. Shut off power to the VFD for five minutes, restore power and recheck the green LED. Fix the underlying cause - for example 2010 warns fault 9 motor overtemp is coming."
+    },
+    {
+     "label": "Red steady",
+     "next": 1
+    },
+    {
+     "label": "Red flashing",
+     "verdict": "A fault with a flashing red LED can only be reset by turning off power for 5 minutes. Before you do, read the code on the keypad and read parameters 0401, 0412 and 0413 for the last three fault numbers - the history is more useful than the live code."
+    },
+    {
+     "label": "Green steady only",
+     "verdict": "Power is on and there is no alarm or fault. If the fan is not running, look at the relay board inputs and the JW1/JW2 jumpers, not the drive."
+    }
+   ]
+  },
+  {
+   "ask": "You have a steady red fault LED. How do you want to clear it, and what did the history show?",
+   "options": [
+    {
+     "label": "Press RESET on the control panel",
+     "verdict": "A steady red fault can be reset from the panel. Record the code first. If it comes straight back, work the code rather than resetting again - repeated resets on an overcurrent or earth fault can damage the motor."
+    },
+    {
+     "label": "Power off for five minutes",
+     "verdict": "That works for either kind of fault. Wait the full five minutes - the DC bus holds charge. Record parameters 0401, 0412 and 0413 before clearing so you keep the last three fault numbers."
+    },
+    {
+     "label": "I want to wipe the history first",
+     "verdict": "In Parameters mode select 0401, press EDIT, press UP and DOWN simultaneously, then press SAVE. That clears all of Group 04. Write the codes down first - once cleared, the drive keeps no record of what tripped it."
+    }
+   ]
+  }
+ ],
+ "s-car-vfd-min-hz": [
+  {
+   "ask": "What frequency is the drive set to run on low speed?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "hz",
+     "label": "Low speed setting (Hz)",
+     "placeholder": "e.g. 40"
+    }
+   ],
+   "bands": [
+    {
+     "under": 40,
+     "label": "Below 40 Hz",
+     "verdict": "Below the printed minimum. Raise it back to 40 Hz now. Operating below 40 Hz, or below the minimum cfm in the unit's own tables, will result in damage to the unit. If the customer wants less air, address it with staging or ductwork."
+    },
+    {
+     "under": 61,
+     "label": "40 to 60 Hz",
+     "verdict": "Inside the normal SAV range - Low is 40 Hz and High is 60 Hz. If airflow is still wrong, check the relay logic: G or Y1 gives Low via K3, Y2 gives High via K2, W1 gives High via K1."
+    },
+    {
+     "label": "Above 60 Hz",
+     "verdict": "Above the design high speed of 60 Hz. Bring it back to 60 Hz and confirm nobody ran the ABB or Carrier start-up assistant on this drive - the manual specifically says not to, because it overwrites the SAV configuration."
+    }
+   ]
+  }
+ ],
+ "s-car-vfd-bypass": [
+  {
+   "ask": "Which unit are you on? The bypass procedure differs and one version requires a fuse change.",
+   "options": [
+    {
+     "label": "Fused unit: 48/50TC 07-14, 50TCQ 07-12, 48/50HC 07-12, 50HCQ 08-09 or 40RU",
+     "verdict": "Lock out power. Disconnect the fuse-to-VFD connector, the VFD-to-indoor-fan-motor connector and the ground wires at the base of the VFD, then remove the VFD if required. Replace the standard fuses with Slow Blow fuses. Connect the fuse lead to the indoor fan motor lead, ground the fan motor to the fan deck, restore power. The Slow Blow swap is mandatory."
+    },
+    {
+     "label": "Non-fused unit: 48/50TC 16-30, 50TCQ 14-24 or 48/50HC 17-28",
+     "verdict": "Lock out power. Disconnect the control-box-to-VFD connection, the fan-motor-to-VFD connection and the ground wires at the base of the VFD, then remove the VFD if required. Connect the control box lead to the indoor fan motor lead, attach the fan motor ground to the fan deck, restore power. No fuse change on this version."
+    },
+    {
+     "label": "Not sure which one I have",
+     "verdict": "Identify the drive before proceeding. ACS320 or ACH180 means fused, ACH550 or ACH580 means non-fused. Do not bypass without knowing, because the fused version requires Slow Blow fuses and skipping that leaves the motor unprotected."
+    }
+   ]
+  },
+  {
+   "ask": "After bypassing, what should you tell the customer about how the unit now runs?",
+   "options": [
+    {
+     "label": "Fan runs at full speed only",
+     "verdict": "Correct. The two-speed SAV function is gone until the drive is replaced. Expect higher airflow on what used to be low speed, more noise, and possibly different comfort behavior. Order the drive."
+    },
+    {
+     "label": "Fan should still stage between speeds",
+     "verdict": "It will not. With the VFD out of the circuit the motor runs across the line at full speed regardless of thermostat input. Do not chase the relay board or JW1/JW2 jumpers looking for the missing low speed."
+    }
+   ]
+  }
+ ],
+ "s-car-38mura-engineer-mode": [
+  {
+   "ask": "Which code are you trying to prove or disprove with live data?",
+   "options": [
+    {
+     "label": "A temperature sensor code such as EC 52, EC 53 or EC 54",
+     "verdict": "Enter engineer mode with On/Off plus Fan held 7 seconds, then scroll to code 3 for T3 condenser coil, code 4 for T4 outdoor ambient, or code 5 for TP discharge. Compare the displayed value to a clamp-on or infrared reading. If the board's number is wildly wrong, ohm that sensor and check its connector."
+    },
+    {
+     "label": "A compressor speed code such as PC 44 or PC 46",
+     "verdict": "Enter engineer mode and compare code 6, compressor target frequency FT, against code 7, compressor running frequency Fr. A target with no running frequency points at the compressor or drive; a running frequency that will not track target points at the drive board or supply voltage - check code 19 DC bus voltage."
+    },
+    {
+     "label": "A current or voltage code such as PC 08, PC 10 or PC 49",
+     "verdict": "Enter engineer mode and read code 8 current dL and code 9 AC voltage Uo, then compare both to your own clamp meter and voltmeter. If the board reads very differently from your meter, suspect the sampling circuit - that is code PC 41."
+    },
+    {
+     "label": "A pressure reading",
+     "verdict": "Read the display value remembering the scaling - a displayed 2.0 means 120. Two dashes means no pressure sensor is fitted. Compare to gauges before working codes PC 30, PC 31 or EC 5C."
+    }
+   ]
+  },
+  {
+   "ask": "Done reading. How do you get out of engineer mode?",
+   "options": [
+    {
+     "label": "Press On/Off plus Air speed for 2 seconds",
+     "verdict": "That is the printed exit. Confirm the display returns to normal operation before leaving."
+    },
+    {
+     "label": "Just walk away",
+     "verdict": "It will exit on its own - engineer mode ends after 60 seconds with no valid key operations. Still confirm the unit returns to normal display before you leave the job."
+    }
+   ]
+  }
+ ],
+ "s-car-gs-transducer-check": [
+  {
+   "ask": "DC voltage back-probed on the P1 or P2 transducer signal wire at the PCM",
+   "type": "number",
+   "fields": [
+    {
+     "key": "vdc",
+     "label": "Signal wire voltage (VDC)",
+     "placeholder": "e.g. 1.85"
+    }
+   ],
+   "bands": [
+    {
+     "under": 0.5,
+     "label": "Below 0.5 VDC",
+     "verdict": "Shorted transducer circuit - that is code 57-02 or 58-02, escalating to 57-42 or 58-42. Inspect the harness for a pinch or chafe to ground first, then swap the P1 and P2 harnesses: if the fault follows the harness, replace the transducer; if it stays on the channel, replace the PCM."
+    },
+    {
+     "under": 4.5,
+     "label": "0.5 to 4.5 VDC",
+     "verdict": "The signal is in the live measuring range, so the transducer circuit is not open or shorted. If a 57 or 58 code is still logged, it is historical or intermittent - wiggle-test the harness while watching the voltage."
+    },
+    {
+     "under": 4.84,
+     "label": "4.5 to 4.84 VDC",
+     "verdict": "Open transducer circuit - the PCM is pulling the line up. That is code 57-01 or 58-01, escalating to 57-41 or 58-41. Check the connector for a backed-out pin, then swap P1 and P2 harnesses to separate transducer from PCM channel."
+    },
+    {
+     "label": "4.84 VDC and above",
+     "verdict": "A reading in the 4.84 to 4.95 VDC window sets the sensor lockout code 57-43 or 58-43, which is a permanent lockout. Swap the P1 and P2 harnesses: if the fault follows the harness, replace that transducer; if it stays on the same channel, replace the PCM."
+    }
+   ]
+  }
+ ],
+ "s-car-gs-thermistor-ohms": [
+  {
+   "ask": "Which sensor does the base code point at?",
+   "options": [
+    {
+     "label": "51 OAT, 52 OCT/LLT, 53 OST, or 55 LLT",
+     "next": 1
+    },
+    {
+     "label": "54 ODT, the discharge thermistor",
+     "next": 2
+    }
+   ]
+  },
+  {
+   "ask": "Measured resistance of the OAT, OCT, OST or LLT thermistor",
+   "type": "number",
+   "fields": [
+    {
+     "key": "kohm",
+     "label": "Resistance (kilohms)",
+     "placeholder": "e.g. 22"
+    }
+   ],
+   "bands": [
+    {
+     "under": 1,
+     "label": "Below 1 kohm",
+     "verdict": "Reads shorted - that is the -02 or -42 expansion code. Check the harness for a short to ground before replacing the sensor. Remember an open or shorted OST puts the system on backup heat only and displays a substituted value of 47."
+    },
+    {
+     "under": 465,
+     "label": "1 to 465 kohm",
+     "verdict": "In the valid window, so the sensor itself is not open or shorted. Re-measure at the PCM connector as well as at the sensor body - if the two differ, the harness is the fault. If both are good, the code is intermittent or the PCM input is bad."
+    },
+    {
+     "label": "465 kohm and above",
+     "verdict": "Reads open - that is the -01 or -41 expansion code. Check the connector for a backed-out pin, then replace the sensor. Expect derates while it is active: an open OAT substitutes the OCT and caps the compressor at 2700 rpm."
+    }
+   ]
+  },
+  {
+   "ask": "Measured resistance of the ODT discharge thermistor",
+   "type": "number",
+   "fields": [
+    {
+     "key": "kohm_odt",
+     "label": "Resistance (kilohms)",
+     "placeholder": "e.g. 15"
+    }
+   ],
+   "bands": [
+    {
+     "under": 0.67,
+     "label": "Below 670 ohms (0.67 kohm)",
+     "verdict": "Reads shorted, code 54-02. Note this sensor uses 670 ohms, not the 1 kohm used by the other thermistors. Check the harness for a short, then replace the sensor."
+    },
+    {
+     "under": 310,
+     "label": "0.67 to 310 kohm",
+     "verdict": "In the valid window for the discharge thermistor. If code 54 is still logged, wiggle-test the harness and re-measure at the PCM connector. Do not judge this sensor against the 465 kohm figure used by the other thermistors."
+    },
+    {
+     "label": "310 kohm and above",
+     "verdict": "Reads open, code 54-01. The control substitutes 47 and runs the system at startup speed only until a valid reading returns. Check the connector, then replace the discharge thermistor."
+    }
+   ]
+  }
+ ],
+ "s-car-gs-vfd-relay-720": [
+  {
+   "ask": "VFD control relay coil resistance, measured with power off",
+   "type": "number",
+   "fields": [
+    {
+     "key": "ohms",
+     "label": "Relay coil resistance (ohms)",
+     "placeholder": "e.g. 718"
+    }
+   ],
+   "bands": [
+    {
+     "under": 100,
+     "label": "Below 100 ohms",
+     "verdict": "The coil is shorted - that is code 66-42. Replace the relay or the assembly carrying it, then confirm 12VDC is present from PCM pins 6 and 7 into VFD pins 5 and 6 before restarting."
+    },
+    {
+     "under": 650,
+     "label": "100 to 650 ohms",
+     "verdict": "Low against the approximately 720 ohm reference. Re-measure directly at the coil terminals to rule out a parallel path, then replace the relay if it still reads low."
+    },
+    {
+     "under": 800,
+     "label": "650 to 800 ohms",
+     "verdict": "This is the approximately 720 ohms the manual expects, so the coil is good. Check 12VDC from PCM pins 6 and 7 into VFD pins 5 and 6, and inspect those connector pins. If supply and coil are both good, the PCM output is the remaining suspect."
+    },
+    {
+     "label": "Above 800 ohms or open",
+     "verdict": "The coil is open - that is code 66-41. Replace the relay or the assembly carrying it, then verify 12VDC from PCM pins 6 and 7 into VFD pins 5 and 6."
+    }
+   ]
+  }
+ ],
+ "s-car-anb7-unloader": [
+  {
+   "ask": "Change in compressor amperage when you cycle from low to high stage (wait 5 seconds after staging before reading)",
+   "type": "number",
+   "fields": [
+    {
+     "key": "pct",
+     "label": "Amperage change (percent)",
+     "placeholder": "e.g. 24"
+    }
+   ],
+   "bands": [
+    {
+     "under": 20,
+     "label": "Less than 20 percent change",
+     "next": 1
+    },
+    {
+     "label": "20 percent or more",
+     "verdict": "The unloader is working - the manual expects at least a 20 percent change. If the customer still reports a staging complaint, look at the thermostat or the outdoor board staging logic instead of the compressor."
+    }
+   ]
+  },
+  {
+   "ask": "With the solenoid plug removed, the unit running and a high stage call, what does a DC voltmeter read at the plug?",
+   "options": [
+    {
+     "label": "Around 24 volts DC, as expected",
+     "next": 2
+    },
+    {
+     "label": "Well below 24 volts DC or nothing at all",
+     "verdict": "The control circuit is not delivering the expected 24 volts DC. Check that the molded plug has its internal rectifier - a plug without one converts nothing and will not work - then check the wiring back to the outdoor control and the control itself. Fix the command side before touching the compressor."
+    }
+   ]
+  },
+  {
+   "ask": "Compressor unloader coil resistance",
+   "type": "number",
+   "fields": [
+    {
+     "key": "coil_ohms",
+     "label": "Unloader coil resistance (ohms)",
+     "placeholder": "e.g. 330"
+    }
+   ],
+   "bands": [
+    {
+     "under": 100,
+     "label": "Below 100 ohms or grounded",
+     "verdict": "The coil is shorted or grounded. The compressor must be replaced - the unloader coil is internal and not serviceable."
+    },
+    {
+     "under": 500,
+     "label": "Around 330 ohms",
+     "verdict": "This is one of the two valid values - approximately 330 ohms depending on coil supplier. The coil is good. If the compressor still will not unload, the mechanical unloader inside the compressor has failed and the compressor must be replaced."
+    },
+    {
+     "under": 2000,
+     "label": "Around 1640 ohms",
+     "verdict": "This is the other valid value - approximately 1640 ohms depending on coil supplier. The coil is good. If the compressor still will not unload, the internal mechanism has failed and the compressor must be replaced."
+    },
+    {
+     "label": "Above 2000 ohms or reads open",
+     "verdict": "The coil is open. The compressor must be replaced - the manual states an infinite or grounded coil resistance means compressor replacement."
+    }
+   ]
+  }
+ ],
+ "s-car-anb7-brownout-toggle": [
+  {
+   "ask": "What flash pattern is the outdoor board showing?",
+   "options": [
+    {
+     "label": "5 with a pause",
+     "verdict": "Brownout protection is Disabled. That is a user selection, not a fault. If you want it active, run the toggle: remove the OAT and OCT connector, short the defrost pins from power up, wait 3 seconds, then restore."
+    },
+    {
+     "label": "6 with a pause",
+     "verdict": "Brownout protection is Active - the factory shipping state and normally what you want. No action. Expect a trip at line voltage below 187v for 4 seconds, with no restart until above 190v (code 46)."
+    },
+    {
+     "label": "It flashes 53 or 55 while I am doing the toggle",
+     "verdict": "Expected. As long as the short on the forced defrost pins remains, the OAT and OCT faults will not clear because you removed those sensors on purpose. Finish the toggle, power down, reinstall the sensor connector and remove the short, then recheck."
+    },
+    {
+     "label": "I toggled and it landed on the wrong state",
+     "verdict": "Do the toggle again. The manual says it may be necessary to toggle twice to cycle to the desired state. Confirm by reading the 5-pause or 6-pause pattern before you reinstall everything."
+    }
+   ]
+  }
+ ],
+ "s-car-25hcb6-defrost-default": [
+  {
+   "ask": "What is the complaint?",
+   "options": [
+    {
+     "label": "Coil ices up and defrost never seems to start",
+     "next": 1
+    },
+    {
+     "label": "The forced defrost test only ran about 30 seconds",
+     "verdict": "That is normal with Quiet Shift-2 OFF - the manual says you will only see a short 30 second defrost cycle. With Quiet Shift-2 ON the speedup sequence is about 3 minutes: 1 minute compressor off, 30 seconds of defrost with the compressor running, then another minute off returning to heating."
+    },
+    {
+     "label": "Defrost runs the full time every cycle",
+     "verdict": "Defrost terminates when the defrost thermostat opens or automatically after 10 minutes. Running to the 10 minute limit every time means the coil is not clearing or the defrost thermostat is not opening - check charge, the reversing valve shift, and the defrost thermostat itself."
+    }
+   ]
+  },
+  {
+   "ask": "Force a defrost: short the speedup pins J1 with a flat head screwdriver for 5 seconds and release. What happens?",
+   "options": [
+    {
+     "label": "Nothing at all",
+     "verdict": "The defrost thermostat is probably open. It closes at approximately 32F (0C) coil temperature and the timer only runs with DFT closed and the contactor energized. Get the coil cold enough, or check the defrost thermostat itself, then retry."
+    },
+    {
+     "label": "It goes into defrost normally",
+     "verdict": "The board and forced defrost work. The interval is your issue: choices are 30, 60, 90 or 120 minutes, and 25HCB6 is factory set to 90 minutes. Non-Quiet Shift-2 boards select the interval with quick connects at the board edge; Quiet Shift-2 boards use DIP switches. Shorten the interval if the coil loads up before defrost arrives."
+    },
+    {
+     "label": "It defrosts but the interval keeps changing on its own",
+     "verdict": "On HK32EA011 and later boards the setting is the initial period only and then varies with defrost length. If you need a fixed interval, note that on HK32EA012 and later, enabling Quiet Shift 2 with DIP switch 3 ON disables the variable interval - the 30, 60, 90 or 120 setting then holds until you change the switch and cycle power."
+    }
+   ]
+  }
+ ],
+ "s-car-24vna6-winding": [
+  {
+   "ask": "Compare your between-terminal readings at T1, T2 and T3 to the target for this size: 24 = 0.74 ohms, 36 = 0.453 ohms, 48 = 0.424 ohms, 60 = 0.424 ohms, measured at 68F plus or minus 20F.",
+   "options": [
+    {
+     "label": "One reading is clearly different from the other two",
+     "verdict": "The compressor has an open or unbalanced winding. Confirm at the compressor fusite terminals rather than only at the drive, then replace the compressor."
+    },
+    {
+     "label": "All three readings are similar but nothing like the target",
+     "verdict": "Check that you are using the right table. 24VNA6 and 25VNA4 use T1, T2, T3 with these values; 24VNA9 and 25VNA8 use U yellow, V red, W black with a completely different table (1.13, 0.59, 0.37 and 0.24 ohms by size). Confirm which platform you are on before condemning the compressor."
+    },
+    {
+     "label": "All three readings are similar and near the target for the size",
+     "next": 1
+    }
+   ]
+  },
+  {
+   "ask": "Resistance from any compressor terminal to ground",
+   "type": "number",
+   "fields": [
+    {
+     "key": "megohm",
+     "label": "Terminal to ground (megohms)",
+     "placeholder": "e.g. 50"
+    }
+   ],
+   "bands": [
+    {
+     "under": 1,
+     "label": "Below 1 megohm",
+     "verdict": "The compressor is grounded. The manual requires greater than 1 megohm on all sizes. Replace the compressor. Do not use a Meggar on this compressor - the manual prints that as an equipment damage hazard."
+    },
+    {
+     "label": "1 megohm or more",
+     "verdict": "The compressor windings and insulation both check good. Reconnect the leads to the correct terminals and move on to the inverter, the model plug and the fault code that sent you here."
+    }
+   ]
+  }
+ ],
+ "s-car-26vna1-a2l": [
+  {
+   "ask": "What is the 26VNA1 doing?",
+   "options": [
+    {
+     "label": "The System Control will not let the unit run at all",
+     "verdict": "Confirm a leak dissipation board is present and connected. The Infinity System Control will not allow unit operation without it. If the board is present, check its wiring and connector before looking anywhere else."
+    },
+    {
+     "label": "The cooling check charge menu is greyed out or unavailable",
+     "verdict": "clg check charge is available unless a dissipation fault is active or the outdoor ambient temperature is too low. Check for an active dissipation fault first, then check the outdoor ambient - the menu is doing what it is supposed to."
+    },
+    {
+     "label": "I need to verify the charge",
+     "verdict": "Compare current subcooling to the subcooling target on the charging screen. Nominal targets are 6 for 26VNA124, 6 for 26VNA136, 9 for 26VNA148 and 11.5 for 26VNA160, tolerance plus or minus 1F. Add or remove charge no faster than 0.5 lb per minute and let the system run at least 15 minutes to stabilize."
+    },
+    {
+     "label": "I need to recover refrigerant to open the system",
+     "verdict": "Use the Infinity System Control pump down function - the conventional pump down cannot be used on a VFD controlled compressor. Set the time period, default 20 minutes, start, then close the liquid service valve. The unit indicates pump down complete when suction drops below 20 psig; then close the vapor valve and recover the rest with a recovery machine."
+    }
+   ]
+  },
+  {
+   "ask": "Before you open the system, what tooling and coil requirements apply?",
+   "options": [
+    {
+     "label": "I have R-410A gauges and tools on the truck",
+     "verdict": "Do not use them. R-454B is a different refrigerant classification - do not use R-22 or R-410A service equipment or components on Puron Advance R-454B equipment. Use non-sparking tools and a leak detector designed for R-454B, and never use a flame to leak check."
+    },
+    {
+     "label": "The indoor coil is an existing R-410A coil with a piston",
+     "verdict": "That coil cannot be used. Do not convert a coil with a piston or an R-410A metering device. The coil must come from the factory with an R-454B TXV and an A2L dissipation device, and the unit must be installed with a rated R-454B indoor coil."
+    },
+    {
+     "label": "I have R-454B rated tools, detector and coil",
+     "verdict": "Proceed. Use the refrigerant detector before and during the work, keep ignition sources away, and follow the System Control pump down rather than a conventional pump down."
+    }
+   ]
+  }
+ ],
+ "s-car-59mn7c-limit-switch-bulletin": [
+  {
+   "ask": "Is this furnace actually covered by the limit switch bulletin?",
+   "options": [
+    {
+     "label": "59MN7 series C or Bryant 987M series C",
+     "next": 1
+    },
+    {
+     "label": "Major Series A or Major Series B modulating furnace",
+     "verdict": "The new limit switch part numbers may NOT be used to replace limit switches in previous Major Series A or Major Series B modulating furnaces. Do not fit them. Work the nuisance limit trip through gas input, return air temperature, airflow and blower off delay instead."
+    },
+    {
+     "label": "A two-stage or single-stage furnace, not modulating",
+     "verdict": "This bulletin does not apply. Work the limit trip normally: check the filter and duct system, blower wheel, gas input rate, temperature rise, and the limit switch and its gasket."
+    }
+   ]
+  },
+  {
+   "ask": "Have you completed the six corrective steps the bulletin requires before the switch swap?",
+   "options": [
+    {
+     "label": "No, not yet",
+     "verdict": "Do them first. Measure and adjust the gas input rate, confirm return air temperature is in the allowable range, adjust airflow to get proper temperature rise, load the updated control recipe if applicable, confirm a bypass humidifier is not raising return air temperature, and increase the blower off delay if the limit opens after the heat call ends. A higher rated switch is not a substitute for any of these."
+    },
+    {
+     "label": "Yes, all six are done and it still trips",
+     "verdict": "Now fit the newly certified limit switch assembly for the model: 59MN7C060C17--14 goes from 165 deg (338096-703) to 180 deg (338096-701); 59MN7C060C21--20 stays 160 deg (338096-704); 59MN7C080C17--14 goes from 165 deg (338085-417) to 175 deg (338096-714); 59MN7C080C21--20 goes from 185 deg (338096-713) to 190 deg (348224-716); 59MN7C100C21--22 goes from 170 deg (338096-702) to 175 deg (338096-714); 59MN7C120C24--22 goes from 150 deg (338096-712) to 155 deg (338096-705)."
+    },
+    {
+     "label": "The unit is newer than the production change",
+     "verdict": "Check the serial number. New switches entered production at serial 4725A and later, so a unit at or after that break already has the higher rated switch. Work the trip through gas input, return air temperature, airflow and blower off delay instead of swapping the switch again."
+    }
+   ]
+  }
+ ],
+ "s-car-bt-17-1-nuisance": [
+  {
+   "ask": "Does a Bluetooth module actually exist on this furnace control?",
+   "options": [
+    {
+     "label": "No module is fitted",
+     "next": 1
+    },
+    {
+     "label": "A Bluetooth module is fitted",
+     "verdict": "Then 17.1 is a real communication loss to a module that is present. Check the module and its connection at the control. Note that Carrier is discontinuing Bluetooth support, and after the Service Tech App update, accepting the offered recipe update will disable the Bluetooth input permanently and stop the code."
+    },
+    {
+     "label": "Cannot tell",
+     "verdict": "Look for the module on the control before doing anything else. Units manufactured as of March 18th no longer include one, and the whole diagnosis turns on whether the hardware is there."
+    }
+   ]
+  },
+  {
+   "ask": "Was the control recently replaced and commissioned with a Super Plug or the Service Tech App?",
+   "options": [
+    {
+     "label": "Yes, a replacement control was commissioned",
+     "verdict": "That is the cause. The replacement control was loaded with the existing run recipe, which enables the Bluetooth connection on hardware that does not have the module, so 17.1 displays any time power is applied. The bulletin states this does NOT affect furnace operation. Do not replace the control again. Load the updated recipe with Bluetooth disabled using the updated Service Tech App, or a new Super Plug containing the updated recipes."
+    },
+    {
+     "label": "No, nothing was replaced and the code just appeared",
+     "verdict": "Confirm the model is on the affected list (59MN7C, 59TN7A, 59TN6C, 59CU95B, 58TN1B, 58TN0B, 58CU0B, or Evolution 987MC, 987TA, 986TD, 935CB, 881TB, 880TB, 830CB). If it is, the fix is still the updated recipe with Bluetooth disabled. The furnace will keep operating normally with 17.1 displayed in the meantime."
+    }
+   ]
+  }
  ]
 };

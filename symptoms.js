@@ -19815,5 +19815,543 @@ const SYMPTOMS = [
    "These are R-410A pressures. R-410A runs higher operating pressures than R-32 at equivalent saturation temperatures - do not carry them onto an R-32 unit."
   ],
   "confidence": "verify"
+ },
+ // ===== Carrier / Payne diagnostic scenarios (v98) =====
+ {
+  "id": "s-car-58cv-status-recall",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58CVA/58CVX - pulling and clearing the stored status codes with SW1-1",
+  "summary": "The 58CV variable-speed board stores status codes and flashes them as two-digit short/long patterns. Recall and clear are both done with setup switch SW1-1, and the sequence ends on code 11.",
+  "steps": [
+   "Leave 115VAC on. Look at the amber LED through the blower door sight glass and note the current state: continuous OFF, continuous ON, rapid flashing, or a short/long code.",
+   "If the LED is continuous OFF, stop here and check for 115VAC at L1 and L2 and 24VAC at SEC-1 and SEC-2 before going further.",
+   "If the LED is rapid flashing, line voltage polarity is reversed - fix polarity and ground before reading codes.",
+   "To recall history: disconnect the R thermostat lead, reset power, then put setup switch SW1-1 in the ON position.",
+   "Count each code as short flashes then long flashes. Record every code until status code 11 flashes - 11 means no previous code and marks the end of the list.",
+   "To clear the history: with SW1-1 ON, jumper thermostat terminals R, W/W1 and Y/Y2 together until status code 11 is flashed, then put SW1-1 back OFF.",
+   "Codes clear themselves after 72 hours, so an empty history on a call-back does not prove nothing happened."
+  ],
+  "safety": "Leave 115VAC connected while reading the LED. Do not jumper thermostat terminals with the gas valve wiring disturbed.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-58cv-component-test",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58CVA/58CVX - running the SW1-6 component self test and reading the result code",
+  "summary": "The 58CV board will exercise inducer, igniter and blower on command so you can isolate a dead component without a heat call. Entry is a dip switch, and the test reports one of three result codes.",
+  "steps": [
+   "Make sure there are no thermostat inputs to the control and all time delays have expired.",
+   "Turn setup switch SW1-6 ON.",
+   "Step 1: the inducer motor runs at high-heat speed and stays on through step 3. Confirm it spins up.",
+   "Step 2: after 10 seconds the hot surface igniter comes on for 15 seconds then off. Watch it glow through the sight glass.",
+   "Step 3: the blower motor runs at mid-range airflow for 15 seconds then off.",
+   "Step 4: after the blower stops, the inducer switches to low-heat speed for 10 seconds then off.",
+   "Read the result code: 11 means the blower motor tested OK and you still need a visual check of the inducer motor and hot surface igniter; 25 means a setup error; 41 means the blower motor failed the test - check blower, wiring and furnace control.",
+   "To repeat the test, turn SW1-6 OFF and then back ON. Turn SW1-6 OFF when you are finished."
+  ],
+  "safety": "The blower and inducer start without warning during this test. Keep hands clear of the blower wheel.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-58cv-sw14-conflict",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58CVA/58CVX - SW1-4 Comfort/Efficiency airflow percentages differ by manual revision",
+  "summary": "Three printings of the same 58CV manual give three different airflow reduction percentages for setup switch SW1-4. If you are setting temperature rise from a number you remembered, you may be using the wrong one.",
+  "steps": [
+   "Identify the manual revision or the furnace series before trusting a percentage. 58CV-11SI is Series 150/F; 58CV-12SI and 58CV-13SI are Series 160.",
+   "58CV-11SI prints SW1-4 as: turn ON to decrease Low Heat airflow by 16 percent and High Heat airflow 10 percent.",
+   "58CV-12SI prints SW1-4 as: turn ON to decrease low heat airflow by 7 percent and high heat airflow 10 percent.",
+   "58CV-13SI prints SW1-4 as: turn ON to decrease low heat airflow 20 percent for 90 percent models or 16 percent for 80 percent models, and high heat airflow 15 percent for 90 percent models or 10 percent for 80 percent models.",
+   "Note SW1-4 normal position is ON, not OFF, on all three revisions.",
+   "Do not calculate expected CFM from a remembered percentage. Measure temperature rise on the unit and compare it to the rating plate.",
+   "Also check SW1-5 and SW4-3 together: 325 CFM per ton with SW4-3 ON and SW1-5 OFF, 350 with both OFF, 370 with both ON, 400 with SW1-5 ON and SW4-3 OFF. SW4-3 does not exist at all on 58CV-11SI Series 150/F."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-car-58cv-manifold",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58CVA/58CVX - the low-heat and high-heat manifold pressure windows",
+  "summary": "The 58CV two-stage furnace has two manifold pressure settings with hard limits. Outside those limits the fix is orifices, not more regulator adjustment.",
+  "steps": [
+   "Set up a manometer on the manifold tap and lock the furnace in low heat.",
+   "Low-heat natural gas: do NOT set manifold pressure less than 1.4 in. w.c. or more than 1.7 in. w.c.",
+   "Lock the furnace in high heat and read again.",
+   "High-heat natural gas: do NOT set manifold pressure less than 3.2 in. w.c. or more than 3.8 in. w.c.",
+   "If the required manifold pressure falls outside either range, change the main burner orifices - do not keep turning the regulator.",
+   "Worked example from the manual for a 22,000 Btuh per burner application: Orifice No. 43 with 3.7 in. w.c. high heat and 1.6 in. w.c. low heat.",
+   "Verify by clocking the gas meter and comparing to the rating plate input."
+  ],
+  "safety": "Leak check every fitting you opened before leaving. Never exceed the printed manifold pressure ceiling to gain capacity.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-flashcode-flame-current",
+  "equipment": "Gas Furnace",
+  "title": "Carrier flash-code furnaces - the flame sense microamp numbers that actually appear in the manuals",
+  "summary": "Across 58CVA/CVX, 58MVC, 59MN7B, 59TN6B, 59SP5A and 58SC0A, Carrier prints the same two flame current numbers. Knowing both stops you from condemning a sensor that is in spec.",
+  "steps": [
+   "Put the meter in series with the flame sensor lead and read DC microamps during the trial for ignition period.",
+   "Nominal flame current is 4.0 to 6.0 microamps DC on all of these platforms.",
+   "The 58CVA/CVX service label additionally prints a floor of 0.5 microamps DC minimum.",
+   "Below 0.5 microamps DC is the failure threshold the troubleshooting flowcharts use.",
+   "If the reading is low, clean the flame sensor with fine steel wool and recheck.",
+   "If it is still low after cleaning, replace the electrode.",
+   "If current is near the typical 4.0 to 6.0 value and the burners still will not stay on, replace the furnace control.",
+   "Before condemning anything, confirm the Green/Yellow wire is connected to the furnace sheet metal and the flame sensor is not grounded."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-58mvc-inducer-42",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58MVC and 59MN7B - status code 42 inducer motor fault (a code the 58CV list does not have)",
+  "summary": "Code 42 exists on the 58MVC modulating and 59MN7B modulating boards but not on the 58CVA/CVX list. It has three distinct trip conditions and each points somewhere different.",
+  "steps": [
+   "Confirm the platform first. If the unit is a 58CVA or 58CVX, there is no code 42 - you are reading the wrong list.",
+   "Code 42 sets if the inducer motor has not started within 20 seconds after a call for heat.",
+   "It also sets if the inducer motor RPM is outside its valid range of operation.",
+   "It also sets if the inducer RPM signal was lost for 5 seconds during operation.",
+   "Check vent sizing against the manual - the control is measuring the vent system through inducer RPM during prepurge.",
+   "Check for a restricted combustion air supply.",
+   "Check the inducer motor wiring for a miswire and the motor itself for failure.",
+   "On the 58MVC, code 42 is also one of the component-test result codes (11, 25, 41 or 42), so you can provoke it with the SW1-6 self test."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-59mn7b-component-test",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59MN7B - component self test including the modulating gas valve check",
+  "summary": "The 59MN7B self test adds a gas valve communication step the two-stage boards do not have, and reports five possible result codes.",
+  "steps": [
+   "Remove the blower door and remove the wire from the R terminal of the control board.",
+   "Turn setup switch SW1-6 ON, then manually close the blower door switch.",
+   "Step a: the inducer motor runs at medium speed and stays on through step d.",
+   "Step b: the control tests communication with the modulating gas valve.",
+   "Step c: after 15 seconds the hot surface igniter comes on for 15 seconds then off.",
+   "Step d: the blower runs at mid-range airflow for 15 seconds then off, then the inducer shuts off.",
+   "Read the result: one or more of status codes 11, 25, 35, 41 or 42 will flash. 35 points at the modulating gas valve, 41 at the blower, 42 at the inducer.",
+   "Turn SW1-6 OFF and reinstall the R wire and the blower door."
+  ],
+  "safety": "Manually closing the door switch defeats a safety interlock. Keep hands clear of the blower wheel and restore the door when finished.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-59sc5b-single-fault-retrieval",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59SC5B - the fault retrieval method is different from every other flash-code Carrier furnace",
+  "summary": "The 59SC5B has no SW1 dip switch bank. You get only the single most recent fault, and you get it by briefly interrupting a limit wire.",
+  "steps": [
+   "Do not look for setup switch SW1-1 on this furnace - there is no SW1 bank.",
+   "Confirm no thermostat signal is present. Fault codes cannot be retrieved with 24V on W, Y or G, or while any delay such as a blower off-delay is active.",
+   "Leave 115V power connected to the furnace.",
+   "Observe the status LED through the blower door indicator - on upflow that is the lower door.",
+   "Remove the Main/Control door - on upflow that is the upper door.",
+   "BRIEFLY disconnect and reconnect ONE of the main limit wires.",
+   "The LED flashes the last stored fault code as a two-digit short/long pattern. A component test sequence follows automatically.",
+   "Reinstall the Main/Control door. Note that stored codes on this board are NOT erased when 115V or 24V power is interrupted."
+  ],
+  "safety": "You are opening a limit circuit on a live furnace. Reconnect the limit wire immediately and confirm it is landed before leaving.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-59sp5a-blower-off-jumper",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59SP5A - blower off delay is a 4-position jumper, not a dip switch",
+  "summary": "On the 59SP5A there is no SW1 dip switch bank at all. Blower off delay is set by moving a jumper across one of four pin pairs.",
+  "steps": [
+   "Find the blower off delay jumper header on the control - four selectable pin pairs.",
+   "Pins 1 and 2 give 90 seconds.",
+   "Pins 2 and 3 give 120 seconds.",
+   "Pins 3 and 4 give 150 seconds.",
+   "Pins 4 and 5 give 180 seconds.",
+   "Factory setting is 120 seconds.",
+   "If the customer complains of cold air at the end of a heat call, shorten the delay; if they complain of heat left in the ducts, lengthen it.",
+   "Confirm the change by timing the blower after the burners shut off."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-58mvc-medium-heat-manifold",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58MVC - the medium-heat manifold pressure band the two-stage furnaces do not have",
+  "summary": "The 58MVC is a three-heat-stage furnace using a throttling valve. It has its own medium-heat manifold pressure window, and you lock the stage with SW4-2 to set it.",
+  "steps": [
+   "Set up a manometer on the manifold tap.",
+   "Move setup switch SW4-2 on the control center to the ON position. This keeps the furnace locked in medium-heat operation.",
+   "Medium-heat natural gas: do NOT set manifold pressure less than 1.3 in. wc or more than 1.7 in. wc.",
+   "Move SW4-2 back to OFF after completing the medium-heat adjustment.",
+   "Jumper R, W/W1 and W2 thermostat connections on the furnace control. This keeps the furnace locked in high-heat operation.",
+   "High-heat natural gas: do NOT set manifold pressure less than 3.2 in. wc or more than 3.8 in. wc.",
+   "Worked example from the manual at 0 to 2000 ft with 1050 Btu/cu ft heating value and 0.62 specific gravity: Orifice No. 45, 3.8 in. wc high heat, 1.6 in. wc medium heat, 0.6 in. wc low heat.",
+   "If a required pressure falls outside its band, change orifices rather than over-adjusting the regulator."
+  ],
+  "safety": "Leak check every fitting after adjustment. Remove the R to W/W1 to W2 jumper before leaving.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-fe4a-read-status",
+  "equipment": "Air Handler",
+  "title": "Carrier FE4A/FE5A fan coil - reading the STATUS LED and knowing which code you are seeing",
+  "summary": "The fan coil has three LEDs and shows only the highest priority active code. Clearing one fault makes the next one appear, which is easy to mistake for a new failure.",
+  "steps": [
+   "Identify the three LEDs: amber MOTOR LED at bottom center next to the motor harness plug, amber STATUS LED at upper right next to the ABCD system communications connector, green COMM LED just below STATUS.",
+   "Read the STATUS LED as a two-digit code: number of short flashes is the first digit, number of long flashes is the second.",
+   "Timing to count against: short flash is 0.25 seconds on, long flash is 1 second on, 0.25 seconds between flashes, 1 second between the last short and first long flash, LED off 2.5 seconds before repeating.",
+   "Only the highest priority active code is displayed. The priority order printed in the manual, highest first, is 45, 37, 44, 25, 27, 26, 36, 41, 16, 46, 53.",
+   "When you clear one fault and a different code appears, that is the next priority code surfacing - not a new failure you caused.",
+   "All existing faults and a fault history can be viewed at the User Interface instead of counting flashes.",
+   "Remember these meanings are fan-coil specific: fan coil 16 is a system communication fault, not any furnace code 16."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-fe4a-heater-idr",
+  "equipment": "Air Handler",
+  "title": "Carrier FE4A/FE5A - status code 26 invalid heater size and the identifier resistor check",
+  "summary": "The fan coil reads an identifier resistor in the electric heater to learn its size. A bad IDR blocks all electric heat operation and it has a specific measurable value.",
+  "steps": [
+   "Confirm the code is 26 on the STATUS LED - two short flashes then six long flashes.",
+   "The fan coil control reads the heater Identifier Resistor across pins 5 and 8 of the heater harness connector.",
+   "If no resistor is found, the User Interface will prompt you to verify that no heater is installed.",
+   "If the symptoms persist, disconnect the wiring harness at the fan coil control heater header and check for a resistance value greater than 5000 ohms.",
+   "The fan coil control will not operate the electric heater at all until this code is resolved.",
+   "If you set the heater size through the User Interface instead of by IDR, the heater is operated as a SINGLE stage heater. If staging is wanted, the IDR value must be read in by the fan coil control.",
+   "Check the heater harness connector for a backed-out or corroded pin at 5 or 8 before condemning the heater."
+  ],
+  "safety": "Kill power to the fan coil and the heater kit before pulling the heater harness.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-fe4a-ecm-motor",
+  "equipment": "Air Handler",
+  "title": "Carrier FE4A/FE5A - proving the ECM blower motor for codes 41 and 44",
+  "summary": "Codes 41 and 44 mean different things on this fan coil, and the manual explicitly tells you not to replace the harness or control for code 41. There are three measurable checks.",
+  "steps": [
+   "Look at the MOTOR LED and the STATUS LED together. MOTOR LED lit and flashing with the motor not running plus STATUS code 41 means the motor did not come up to speed within 30 seconds, or slowed below 250 rpm for more than 10 seconds after coming up to speed.",
+   "For code 41 the manual states the motor wiring harness and fan coil control are operating properly - do not replace them.",
+   "Measure resistance between any two motor leads. The readings should be similar to each other.",
+   "Measure resistance between any motor lead and the unpainted motor end bell. It should exceed 100,000 ohms.",
+   "Measure the 12 Vdc low voltage supply to the motor at pins 1 (+) and 2 (-) of the motor header connection on the fan coil control.",
+   "For code 44, motor communication fault, the control talks to the motor at least once every 5 seconds even when the motor is idle. If the control does not communicate for more than 25 seconds, the motor shuts itself down and waits.",
+   "Code 44 clears by itself as soon as the motor acknowledges, so an intermittent 44 points at the harness or connector rather than the motor."
+  ],
+  "safety": "Disconnect power and let the motor capacitors bleed before ohming motor leads.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-fe4a-emergency-heat",
+  "equipment": "Air Handler",
+  "title": "Carrier FE4A/FE5A - forcing emergency heat to troubleshoot the electric heater outputs",
+  "summary": "The fan coil manual gives a deliberate technique: force status code 16 to unlock emergency heat mode so both heater stages energize together and you can chase a code 36.",
+  "steps": [
+   "Confirm the complaint is a code 36, heater output not sensed when energized, or you otherwise need both heater stages on at once.",
+   "Disconnect the system communications at the ABCD connector. After 2 minutes without communication the control displays status code 16 and enables emergency heat mode.",
+   "In emergency heat mode both heater outputs are energized and de-energized together, rather than staged.",
+   "Connect terminal strip R to W at the fan coil control to turn on both electric heat outputs.",
+   "With the heaters commanded on, check for 24VAC on each heater stage output at the control. Missing 24VAC with the output commanded is what sets code 36.",
+   "For the reverse case, code 37, look for 24VAC present on a heater stage output when the control is not supplying it - that is a back-feed.",
+   "Reconnect the ABCD communications when finished and confirm the green COMM LED returns and code 16 clears.",
+   "Remember that with no communications the fan coil will only do emergency heating or cooling through the RGWYO terminal strip, and no fan coil troubleshooting data is available at the User Interface."
+  ],
+  "safety": "Electric heat elements draw heavy current. Confirm airflow is present before energizing both stages, and remove the R to W jumper before leaving.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-abcd-bus-wiring",
+  "equipment": "Other",
+  "title": "Carrier Infinity ABCD bus - the color code and the wire gauge rule",
+  "summary": "Every communicating Carrier device has a four-pin ABCD connector. The recommended color code and a length-based gauge rule are printed in the SYSTXCCITC manual and are the first things to check on a comm fault.",
+  "steps": [
+   "Confirm each device's ABCD connector: A is Data A+, B is Data B-, C is 24VAC common, D is 24VAC hot.",
+   "The recommended color code is A green, B yellow, C white, D red.",
+   "It is not mandatory to use that color code, but every ABCD connector in the system MUST be wired consistently.",
+   "Ordinary thermostat wire is acceptable, but continuous wire lengths over 25 ft should use 18 AWG wiring.",
+   "Run cable with more than four conductors even though only four are needed, so a damaged wire can be swapped without pulling new cable.",
+   "Some outdoor units, typically those with multiple compressor stages, provide their own low-voltage power source and do not require the C and D connections - do not chase a missing C or D on those.",
+   "To isolate a comm problem, disconnect accessories and all devices from ABCD and connect the User Interface directly to the indoor unit with a short piece of thermostat wire, then add devices back one at a time.",
+   "Check for 24VAC between the C and D terminals at the wall control connector and at the damper control module."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-systxccitc-service-menu",
+  "equipment": "Other",
+  "title": "Carrier SYSTXCCITC Infinity System Control - getting into the Service menu and what the fault screens actually give you",
+  "summary": "The Service menu is hidden behind a timed press, and there are three different fault screens that hold different information.",
+  "steps": [
+   "Touch MENU, then touch and HOLD the SERVICE icon for at least ten seconds until the icon turns green.",
+   "Note the service screens use degrees F only, regardless of the user's temperature unit selection.",
+   "Use Advanced Diagnostics - the View Diagnostics button on the Service Information screen - for the top 3 most likely root causes of the most recent fault. This is only available with compatible models.",
+   "Use Last 10 System Events for the last 10 events across the whole system, each with a time and date and the equipment that generated it.",
+   "Use Run/Fault History for data stored in the equipment circuit boards: resettable fault counters per piece of equipment, cycle counters for heat, cool and power cycles, and lifetime run times.",
+   "Use Model/Serial Numbers to see model, serial and control software version for every communicating device including the wall control. If an equipment circuit board has been replaced, the model and serial will no longer be displayed.",
+   "To clear the Last 10 Events, go to THERMOSTAT SETUP and use RESET FACTORY DEFAULT - Last 10 Events is one of the four reset options along with Program Schedule, User Settings and Install Settings.",
+   "Touch BACK to go up a screen and DONE to exit the Service menus."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-vfd-jumpers-jw1-jw2",
+  "equipment": "Other",
+  "title": "Carrier rooftop SAV option - service VFD relay board ships with JW1 and JW2 intact and the fan runs continuously",
+  "summary": "On the two-speed SAV indoor fan option, the relay board has two jumpers that the factory cuts. A service replacement board does not have them cut, and the symptom is a fan that never stops.",
+  "steps": [
+   "Confirm the complaint: indoor fan motor runs continuously regardless of thermostat state, after a relay board replacement.",
+   "Find the two configuration jumpers on the relay board, marked JW1 and JW2.",
+   "For this two-speed motor application, BOTH jumpers must be cut and open.",
+   "Factory-installed boards have these jumpers already cut. Service replacement boards ship with them intact.",
+   "Cut both jumpers and confirm they are open.",
+   "Verify normal two-speed logic afterward: input G gives relays K1 off, K2 off, K3 on, controlling output K3, fan motor speed Low at 40 Hz. Input Y1 gives the same, Low 40 Hz.",
+   "Input Y2 gives K1 off, K2 on, K3 on, controlling output K2, fan motor speed High at 60 Hz. Input W1 gives K1 on, K2 on, K3 on, controlling output K1, High at 60 Hz.",
+   "Do not use the ABB or Carrier start-up assistant on this VFD - it will overwrite the configuration."
+  ],
+  "safety": "Lock out unit power before working on the relay board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-vfd-alarm-vs-fault",
+  "equipment": "Other",
+  "title": "Carrier rooftop SAV option - telling an ABB drive alarm from a fault and pulling the fault history",
+  "summary": "The drive's LEDs only tell you alarm versus fault. The number lives on the keypad and in three parameters, and the reset method depends on whether the red LED is steady or flashing.",
+  "steps": [
+   "Read the front panel LEDs first. GREEN steady means power on. GREEN flashing means an alarm condition. RED on, steady or flashing, means a fault condition.",
+   "An alarm is a warning that a trip may be near - for example 2010 MOT OVERTEMP warns that fault 9 MOT OVERTEMP is coming.",
+   "To clear either the alarm LED or the fault LED, shut off power to the VFD for five minutes, restore power, and recheck that LED.",
+   "If the fault is shown by a FLASHING red LED, the only reset is turning off power for 5 minutes.",
+   "If the fault is shown by a STEADY red LED, you can press RESET on the control panel instead, or still use the 5 minute power-off.",
+   "Read the stored fault numbers in parameters 0401, 0412 and 0413 - most recent first.",
+   "For the most recent fault, parameters 0402 through 0411 hold supporting data; for example 0404 stores the motor speed at the time of the fault.",
+   "To clear the fault history: in Parameters mode select 0401, press EDIT, press UP and DOWN simultaneously, press SAVE."
+  ],
+  "safety": "Wait the full five minutes with power off. The drive DC bus holds charge.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-vfd-min-hz",
+  "equipment": "Other",
+  "title": "Carrier rooftop SAV option - never take the drive below 40 Hz or the minimum cfm",
+  "summary": "The two-speed SAV option runs Low at 40 Hz and High at 60 Hz. The manual prints a hard caution about going lower, and it is the most common way a well-meaning speed adjustment damages a unit.",
+  "steps": [
+   "Confirm the unit is a factory SAV two-speed indoor fan option on a 48/50TC, 50TCQ, 48/50HC, 50HCQ or 40RU.",
+   "Normal setpoints are Low = 40 Hz and High = 60 Hz.",
+   "Do NOT exceed the recommended minimum Hz or cfm settings. Operating below 40 Hz, or below the minimum cfm listed in the unit's own Tables 2 through 10, will result in damage to the unit.",
+   "If a customer complains of noise or over-cooling on low speed, fix it with staging or ductwork, not by lowering the Hz below 40.",
+   "Confirm the two-speed relay logic is intact: G or Y1 gives Low 40 Hz via K3; Y2 gives High 60 Hz via K2; W1 gives High 60 Hz via K1.",
+   "If the fan runs continuously, check the JW1 and JW2 jumpers on the relay board rather than the Hz setting.",
+   "Do not use the ABB or Carrier start-up assistant on this VFD."
+  ],
+  "safety": "Operating below the minimum airflow with heat or compressors running can trip limits or damage the unit.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-vfd-bypass",
+  "equipment": "Other",
+  "title": "Carrier rooftop SAV option - bypassing a failed VFD to get the indoor fan running",
+  "summary": "There are two different bypass procedures depending on whether the unit is fused, and one of them requires changing fuse type. Getting this wrong leaves the fan unprotected.",
+  "steps": [
+   "Identify the drive and unit size first. Fused units are 48/50TC 07-14, 50TCQ 07-12, 48/50HC 07-12, 50HCQ 08-09 and 40RU, and use the ACS320/ACH180. Non-fused units are 48/50TC 16-30, 50TCQ 14-24 and 48/50HC 17-28, and use the ACH550/580.",
+   "Turn off and lock out unit power for either procedure.",
+   "Fused units: disconnect the connector linking the fuse to the VFD, disconnect the connector between the VFD and the indoor fan motor, disconnect the ground wires at the base of the VFD, remove the VFD if required.",
+   "Fused units, critical step: replace the standard fuses with Slow Blow fuses before reconnecting.",
+   "Fused units: connect the lead from the fuse to the lead from the indoor fan motor, connect the ground wire from the indoor fan motor to the fan deck, restore power.",
+   "Non-fused units: disconnect the connection between the control box and the VFD, disconnect the connection between the indoor fan motor and the VFD, disconnect the ground wires at the base of the VFD, remove the VFD if required.",
+   "Non-fused units: connect the lead from the control box to the lead from the indoor fan motor, attach the ground wire from the fan motor to the fan deck, restore power.",
+   "Once bypassed the fan runs at full speed only - the two-speed SAV function is gone until the drive is replaced."
+  ],
+  "safety": "Lock out unit power for the whole procedure. On fused units the Slow Blow fuse swap is mandatory, not optional.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-38mura-engineer-mode",
+  "equipment": "Mini-Split",
+  "title": "Carrier 38MURA - entering engineer mode to read live sensor and inverter values from the remote",
+  "summary": "The 38MURA hides a diagnostic readout behind a remote key combination. It gives live temperatures, frequencies, current, voltage and EEV position, which turns most of the alphanumeric codes into a measurable check.",
+  "steps": [
+   "With the unit in power-on or standby and not locked, press the On/Off and Fan key combination on the hand held remote for 7 seconds.",
+   "Use the Up/Down keys to scroll the numeric code, range 0 to 30.",
+   "Code 0 shows the Error Code. Codes 1 through 5 show T1, T2, T3, T4 and TP temperatures.",
+   "Code 6 shows compressor target frequency FT and code 7 shows compressor running frequency Fr - compare them when chasing PC 44 or PC 46.",
+   "Code 8 shows current dL and code 9 shows current AC voltage Uo - use these for PC 08, PC 10 and PC 49.",
+   "Code 12 shows the outdoor fan set speed Pr, code 13 shows EEV opening Lr, code 14 shows actual indoor fan speed ir.",
+   "Code 15 shows indoor humidity Hu, code 16 shows set temperature TT after compensation, code 19 shows DC bus voltage, code 20 shows indoor target frequency oT.",
+   "Exit by pressing On/Off and Air speed together for 2 seconds, or wait - engineer mode ends after 60 seconds with no valid key operations."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-gs-transducer-check",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier Greenspeed PCM/VFD - proving a P1 or P2 pressure transducer by signal voltage",
+  "summary": "Codes 57-xx and 58-xx are decided purely by the DC voltage on the transducer signal wire, and there is a harness-swap trick that separates a bad transducer from a bad PCM channel.",
+  "steps": [
+   "Back-probe the transducer signal wire at the PCM with the system powered.",
+   "Above 4.5 VDC means the PCM is pulling the line up because the circuit is open - that is code 57-01 or 58-01, escalating to 57-41 or 58-41.",
+   "Below 0.5 VDC means shorted - that is code 57-02 or 58-02, escalating to 57-42 or 58-42.",
+   "A reading between 4.84 and 4.95 VDC is a specific sensor error and sets 57-43 or 58-43, which is a permanent lockout.",
+   "Before condemning the transducer, inspect the connector and harness - a chafed or pinched wire produces the same voltages.",
+   "Swap the P1 and P2 harnesses. If the fault follows the harness, the transducer is bad. If the fault stays on the same channel, the PCM channel is bad.",
+   "For a suction transducer on the older 24VNA9/25VNA8 AOC platform the math is different - that board uses Pressure (psig) = 50.0 x (DCV out - 0.5) with a 5 VDC supply. Do not apply that formula to a Greenspeed P1/P2 fault."
+  ],
+  "safety": "Back-probing on a live inverter unit - keep clear of the DC bus and high voltage terminals.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-gs-thermistor-ohms",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier Greenspeed PCM/VFD - thermistor open and short thresholds, and why the discharge sensor is different",
+  "summary": "Most sensors on this platform trip at 465 kohm open and 1 kohm shorted, but the discharge thermistor uses 310 kohm and 670 ohms. Using the wrong pair leads to condemning a good sensor.",
+  "steps": [
+   "Identify which sensor the code points at: 51 is OAT, 52 is OCT or LLT on AC, 53 is OST, 54 is ODT discharge, 55 is LLT on heat pumps.",
+   "For OAT (51), OCT/LLT (52), OST (53) and LLT (55): above 465 kohm for 1 second reads open, below 1 kohm for 1 second reads shorted.",
+   "For ODT discharge (54) ONLY: above 310 kohm for 1 second reads open, below 670 ohms for 1 second reads shorted.",
+   "Ohm the sensor at the PCM connector, then again at the sensor body, to separate a harness fault from a sensor fault.",
+   "Know the substituted defaults so you do not chase a fake reading: an open or shorted OST displays 47, an open ODT substitutes 47, and an open LLT reports 47F in heating and the OCT value in cooling.",
+   "Know the derates: with OAT open the OCT is substituted and the compressor is limited to 2700 rpm; with ODT open the system runs at startup speed only.",
+   "On a 27VPA, if both OAT and OCT fail at once you get 51-43 and the system shuts down entirely - suspect a shared harness or connector."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-gs-vfd-relay-720",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier Greenspeed PCM/VFD - codes 66-41 and 66-42, the VFD control relay coil",
+  "summary": "Both 66 codes are decided by one coil resistance and one supply voltage, both of which are printed numbers you can measure in a couple of minutes.",
+  "steps": [
+   "Confirm the code: 66-41 is VFD Control Relay Open Lockout, 66-42 is VFD Control Relay Shorted Lockout. Both are duration-of-event lockouts.",
+   "Measure the supply: 12VDC is fed from pins 6 and 7 of the PCM into pins 5 and 6 at the VFD.",
+   "With power off, ohm the VFD control relay coil. It should read approximately 720 ohms.",
+   "An open or very high reading confirms 66-41.",
+   "A near-zero reading confirms 66-42.",
+   "If the coil measures near 720 ohms and 12VDC is present at the VFD, look at the connector pins and the harness between PCM pins 6-7 and VFD pins 5-6.",
+   "If the coil and wiring both check good, the PCM output is the remaining suspect."
+  ],
+  "safety": "Power down and confirm the DC bus is at zero before ohming anything inside the control box.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-anb7-unloader",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24ANB7 / 25HNB6 / 25HCB6 - proving the two-stage compressor unloader",
+  "summary": "The unloader is a DC solenoid inside the compressor. There are three measurable checks and a normal behavior that looks like a fault.",
+  "steps": [
+   "Normal behavior first: the compressor will always start unloaded and stay unloaded for five seconds even when the thermostat is calling for high stage capacity. Do not call that a fault.",
+   "Operate the system and measure compressor amperage. Cycle the unloader on and off at 30 second plus intervals from low to high stage and back, waiting 5 seconds after staging to high before taking a reading.",
+   "The compressor amperage should go up or down at least 20 percent between stages.",
+   "If it does not, remove the solenoid plug from the compressor. With the unit running and calling for high stage, test the voltage output at the plug with a DC voltmeter. The reading should be 24 volts DC.",
+   "If the correct DC voltage is present at the control circuit molded plug, measure the compressor unloader coil resistance.",
+   "The resistance should be approximately 330 ohms or 1640 ohms depending on the unloader coil supplier - both are valid.",
+   "If the coil resistance is infinite or grounded, the compressor must be replaced.",
+   "Do not install a plug without an internal rectifier - the harness plug converts 24VAC to 24VDC and a plug without it will not work."
+  ],
+  "safety": "Measuring at the solenoid plug means working on a running unit. Keep leads clear of the fan and use a properly rated meter.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-anb7-brownout-toggle",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24ANB7 / 25HNB6 - toggling brownout protection and reading status codes 5 and 6",
+  "summary": "Brownout protection is toggled with an awkward power-up sequence, and the two flash patterns that report its state look like faults but are not.",
+  "steps": [
+   "Confirm the current state by the flash pattern: 5 with a pause means brownout protection is Disabled; 6 with a pause means brownout protection is Active. Both are user selections, not faults.",
+   "The control ships with brownout active.",
+   "To toggle: remove the OAT and OCT sensor connector, then short the defrost pins from power up.",
+   "After 3 seconds the control checks that the force defrost short is present and the OAT/OCT are open. If correct, the brownout setting toggles.",
+   "Read the resulting status code to confirm which state you landed on - it may be necessary to do the toggle twice to reach the state you want.",
+   "After setting the defeat, power down, reinstall the OAT/OCT sensor connector, and remove the short from the forced defrost pins.",
+   "As long as the forced defrost short remains, the OAT and OCT faults will not clear - so do not panic at codes 53 and 55 during this procedure.",
+   "For reference, with brownout active the unit trips at line voltage below 187v for at least 4 seconds and will not run until voltage is above 190v (status code 46)."
+  ],
+  "safety": "You are shorting board pins with power applied. Use an insulated jumper and keep clear of line voltage terminals.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-25hcb6-defrost-default",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 25HCB6 / 25SCA5 / 25HBC5 / 25HCE4 - defrost board interval, forced defrost, and Quiet Shift-2",
+  "summary": "These non-communicating defrost boards have a field-selectable interval, a factory default, and a forced defrost that behaves differently depending on whether Quiet Shift-2 is on.",
+  "steps": [
+   "Confirm the interval selection method. Non-Quiet Shift-2 boards select the interval with quick connects at the edge of the board; Quiet Shift-2 boards select it with DIP switches.",
+   "Interval choices are 30, 60, 90 or 120 minutes. The 25HCB6-5SI manual states the factory setting is 90 minutes.",
+   "The defrost thermostat closes at approximately 32F (0C) coil temperature, energizing DFT and starting the defrost timing sequence. The timer runs only when DFT is closed and the contactor is energized.",
+   "Defrost terminates when the defrost thermostat opens, or automatically after 10 minutes.",
+   "Quiet Shift-2 is field selectable and factory set OFF. Turn it on by placing DIP switch 3 on the defrost board in the ON position.",
+   "To force a defrost, short the speedup pins (J1) with a flat head screwdriver for 5 seconds and RELEASE.",
+   "With Quiet Shift-2 OFF you will only see a short 30 second defrost cycle. With Quiet Shift-2 ON the speedup sequence is approximately 3 minutes: 1 minute compressor off, then 30 seconds of defrost with compressor operation, then another minute off returning to heating.",
+   "On HK32EA011 and later boards the DIP setting is the initial period only and then varies with defrost length; on HK32EA012 and later, enabling Quiet Shift 2 disables the variable interval so the fixed 30/60/90/120 setting holds until you change the switch and cycle power."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-24vna6-winding",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA6 / 25VNA4 - variable speed compressor winding resistance (different values and terminals than 24VNA9)",
+  "summary": "The Greenspeed PCM/VFD platform uses T1/T2/T3 terminal naming and its own resistance table. Cross-applying the 24VNA9/25VNA8 numbers will make a good compressor look bad.",
+  "steps": [
+   "Confirm the platform. 24VNA6 and 25VNA4 use terminals T1, T2, T3. The older 24VNA9 and 25VNA8 use U (yellow), V (red), W (black) and a different table.",
+   "Power down and confirm the DC bus is at zero before disconnecting compressor leads.",
+   "Measure between terminals, winding resistance at 68F plus or minus 20F.",
+   "Size 24 should read 0.74 ohms between terminals; size 36 should read 0.453 ohms.",
+   "Size 48 should read 0.424 ohms; size 60 should read 0.424 ohms.",
+   "All three lead-to-lead readings should be similar to each other.",
+   "Measure between any terminal and ground - it must be greater than 1 megohm on all sizes.",
+   "Do not use a Meggar for measuring the winding resistance - the manual prints this as an equipment damage hazard."
+  ],
+  "safety": "Confirm the inverter DC bus is discharged to zero before touching compressor terminals.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-26vna1-a2l",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 26VNA1 R-454B - the leak dissipation board gates operation and the charging menu",
+  "summary": "The 26VNA1 is a Puron Advance A2L unit. A dissipation board must be present for the system to run at all, and a dissipation fault changes what the charging menus will let you do.",
+  "steps": [
+   "Confirm the refrigerant is Puron Advance R-454B and the unit is fitted with a dissipation control board.",
+   "A leak dissipation board must be present for the Infinity System Control to allow unit operation. No board, no operation.",
+   "The clg check charge menu remains available unless a dissipation fault is active or the outdoor ambient temperature is too low.",
+   "The installation manual does not print a fault code number or LED pattern for the dissipation fault itself - read that off the dissipation board IOM or the service manual rather than guessing.",
+   "Do not use R-22 or R-410A service equipment or components on R-454B equipment; the pressures are similar to R-410A but the equipment must be rated for A2L.",
+   "Use a refrigerant detector designed to detect R-454B before and during installation. Never use flames or ignition sources to leak check.",
+   "The indoor coil must come from the factory with an R-454B TXV and an A2L dissipation device. Do not convert a coil with a piston or an R-410A metering device.",
+   "Standard subcooling targets are 6 for 26VNA124, 6 for 26VNA136, 9 for 26VNA148 and 11.5 for 26VNA160, with a tolerance of plus or minus 1F."
+  ],
+  "safety": "A2L refrigerant. Use non-sparking tools, a R-454B-rated leak detector, and no ignition sources.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-59mn7c-limit-switch-bulletin",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59MN7 Series C modulating furnace - nuisance limit trips and the new higher-rated limit switches",
+  "summary": "Carrier issued a bulletin for increased nuisance limit trips and lockouts on Series C modulating furnaces, with a serial break and a specific list of replacement limit switches. There are six corrective steps to do BEFORE swapping the switch.",
+  "steps": [
+   "Confirm the model is a 59MN7 series C or a Bryant 987M series C. The new limit switch part numbers may NOT be used on previous Major Series A or Major Series B modulating furnaces.",
+   "New switches entered production at serial number 4725A and later. Units built before that change may be fitted with the newer, higher rated switches.",
+   "Step 1: properly measure and adjust the gas input rate.",
+   "Step 2: confirm return air temperatures are within the allowable range in the installation manual.",
+   "Step 3: adjust the airflow setting to achieve proper temperature rise through the furnace.",
+   "Step 4: load the updated furnace control recipe version if applicable. Step 5: confirm a bypass humidifier is not raising return air temperature above the allowable range. Step 6: increase the blower off delay if the limit opens after the heat call completes.",
+   "Step 7, only after the above: replace the limit switch with the newly certified assembly. 59MN7C060C17--14 goes from 165 deg (338096-703) to 180 deg (338096-701). 59MN7C060C21--20 stays 160 deg (338096-704).",
+   "59MN7C080C17--14 goes from 165 deg (338085-417) to 175 deg (338096-714). 59MN7C080C21--20 goes from 185 deg (338096-713) to 190 deg (348224-716). 59MN7C100C21--22 goes from 170 deg (338096-702) to 175 deg (338096-714). 59MN7C120C24--22 goes from 150 deg (338096-712) to 155 deg (338096-705)."
+  ],
+  "safety": "Do not fit a higher-rated limit switch as a substitute for correcting gas input, airflow or return air temperature.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car-bt-17-1-nuisance",
+  "equipment": "Gas Furnace",
+  "title": "Carrier Infinity furnaces - fault code 17.1 on a control that has no Bluetooth module",
+  "summary": "Carrier stopped installing Bluetooth modules on communicating gas furnaces. If a replacement control gets an older run recipe, it enables a Bluetooth connection that is not there and displays a nuisance 17.1 forever.",
+  "steps": [
+   "Confirm the model is one of the affected Infinity furnaces: 59MN7C, 59TN7A, 59TN6C, 59CU95B, 58TN1B, 58TN0B, 58CU0B - or Evolution 987MC, 987TA, 986TD, 935CB, 881TB, 880TB, 830CB.",
+   "Confirm the furnace was manufactured without a Bluetooth module. Manufacturing stopped including the module as of March 18th.",
+   "The trigger is a control failure where the replacement control was commissioned with an existing Super Plug or an out-of-date Service Tech App, loading the older run recipe that enables Bluetooth.",
+   "Without a Bluetooth module installed, the furnace control displays fault code 17.1 any time power is applied.",
+   "Confirm the fault is cosmetic: the bulletin states the display of this fault will NOT cause changes to or issues with the functional operation of the furnace.",
+   "Do not replace the control again chasing this code.",
+   "The fix is to load the updated recipe with Bluetooth disabled - via the updated Service Tech App, or a new Super Plug containing the updated recipes.",
+   "On an existing unit that does have a Bluetooth module, connecting through Bluetooth or NFC after the app update prompts a recipe update; accepting it disables the Bluetooth connection permanently."
+  ],
+  "confidence": "common"
  }
 ];

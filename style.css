@@ -282,6 +282,34 @@ main {
   cursor: pointer;
   animation: update-pill-in 0.25s ease-out;
 }
+/* Lifted above the update pill so both are readable and tappable at once. */
+.bulletin-pill { bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)); }
+
+.bulletin-banner {
+  margin: 0 var(--pad, 1rem) 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--accent, #c8102e);
+  border-left-width: 4px;
+  border-radius: 10px;
+  background: var(--card, #fff);
+}
+.bulletin-banner-title { font-weight: 700; margin-bottom: 0.25rem; }
+.bulletin-banner-body { font-size: 0.87rem; color: var(--text-dim, #555); margin-bottom: 0.7rem; }
+.bulletin-banner-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.bulletin-open,
+.bulletin-done {
+  flex: 1 1 auto;
+  min-width: 10rem;
+  text-align: center;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bulletin-open { background: var(--accent, #c8102e); color: #fff; text-decoration: none; border: 0; }
+.bulletin-done { background: transparent; border: 1px solid var(--border, #ccc); color: var(--text, #222); }
+
 .update-pill-cta {
   font-weight: 600;
   opacity: 0.85;

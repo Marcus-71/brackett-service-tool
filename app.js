@@ -1198,6 +1198,7 @@ async function renderManuals() {
   const all = await manualCatalog();
   const results = document.getElementById("manualResults");
   const empty = document.getElementById("manualEmptyState");
+  renderBulletinBanner();
   results.innerHTML = "";
   document.getElementById("manualBreadcrumb").classList.toggle("hidden", !!manualsState.search);
 
@@ -1335,13 +1336,88 @@ function openManualInfo(m) {
   document.getElementById("modalBackdrop").classList.remove("hidden");
 }
 
+// ============================================================
+// Shop bulletins — documents we are not allowed to host here
+// ============================================================
+// Carrier dealer bulletins are stamped "Not For Further Distribution", and this
+// repo is PUBLIC, so those PDFs must never be committed to it. Instead they live
+// in a Brackett-controlled shared folder and each phone imports them once. Once
+// imported they are ordinary manuals: stored offline in IndexedDB, listed under
+// their brand/model folders, searchable, and they open in the in-app reader.
+//
+// To publish a batch: drop the PDFs in the folder, then set `url`, bump
+// `version`, update `count`, and deploy. Every tech gets a pill on next open.
+// Leaving `url` empty keeps the whole feature dormant — no pill, no banner.
+const BULLETIN_PACK = {
+  version: 0,                    // bump to re-notify everyone
+  count: 0,                      // how many PDFs are waiting in the folder
+  label: "Carrier shop bulletins",
+  note: "Dealer bulletins - confidential, do not forward outside Brackett.",
+  url: "",                       // shared folder link goes here
+};
+const BULLETIN_ACK_KEY = "bfc_bulletin_pack_ack";
+
+function bulletinAckedVersion() {
+  try {
+    const v = JSON.parse(localStorage.getItem(BULLETIN_ACK_KEY));
+    return typeof v === "number" && isFinite(v) ? v : 0;
+  } catch (e) { return 0; }
+}
+function bulletinPackPending() {
+  return !!BULLETIN_PACK.url && BULLETIN_PACK.version > bulletinAckedVersion();
+}
+function ackBulletinPack() {
+  safeSet(BULLETIN_ACK_KEY, BULLETIN_PACK.version);
+  const pill = document.getElementById("bulletinPill");
+  if (pill) pill.remove();
+  renderBulletinBanner();
+  trackEvent("added shop bulletins");
+}
+
+// Sits on the Manuals screen so a tech who dismisses the pill can still find it.
+function renderBulletinBanner() {
+  const el = document.getElementById("bulletinBanner");
+  if (!el) return;
+  if (!bulletinPackPending()) { el.classList.add("hidden"); el.innerHTML = ""; return; }
+  el.classList.remove("hidden");
+  el.innerHTML = `
+    <div class="bulletin-banner-title">${escapeHtml(BULLETIN_PACK.count)} ${escapeHtml(BULLETIN_PACK.label)} to add</div>
+    <div class="bulletin-banner-body">These can't be stored on the app's server, so they come from the shop folder. Open it, download them to this phone, then tap + Add and pick them all at once. ${escapeHtml(BULLETIN_PACK.note)}</div>
+    <div class="bulletin-banner-actions">
+      <a class="bulletin-open" href="${escapeHtml(BULLETIN_PACK.url)}" target="_blank" rel="noopener">Open the shop folder</a>
+      <button class="bulletin-done" id="bulletinDoneBtn">Done, I added them</button>
+    </div>`;
+  const done = document.getElementById("bulletinDoneBtn");
+  if (done) done.onclick = ackBulletinPack;
+}
+
+function showBulletinPill() {
+  if (!bulletinPackPending()) return;
+  if (document.getElementById("bulletinPill")) return;
+  const pill = document.createElement("button");
+  pill.id = "bulletinPill";
+  // Same pill styling, but lifted clear of the update pill so a tech who has
+  // both waiting can still read and tap each one.
+  pill.className = "update-pill bulletin-pill";
+  pill.type = "button";
+  pill.innerHTML = `<span>${escapeHtml(BULLETIN_PACK.count)} new ${escapeHtml(BULLETIN_PACK.label)}</span><span class="update-pill-cta">Tap to add</span>`;
+  pill.onclick = () => {
+    pill.remove();
+    showScreen("manuals");
+    renderBulletinBanner();
+    const b = document.getElementById("bulletinBanner");
+    if (b) b.scrollIntoView({ block: "nearest" });
+  };
+  document.body.appendChild(pill);
+}
+
 function openManualEditForm(prefill) {
   const p = prefill || {};
   const modal = document.getElementById("modal");
   modal.innerHTML = `
     <h2>Add a manual</h2>
-    <div class="sub">Pick a PDF already saved on this phone (e.g. downloaded from a manufacturer site). It's stored on-device and works offline after that.</div>
-    <div class="form-field"><label>PDF file</label><input id="f-file" type="file" accept="application/pdf"></div>
+    <div class="sub">Pick a PDF already saved on this phone (e.g. downloaded from a manufacturer site). It's stored on-device and works offline after that. You can select several PDFs at once - each one is saved separately using its filename as the title.</div>
+    <div class="form-field"><label>PDF file(s)</label><input id="f-file" type="file" accept="application/pdf" multiple></div>
     <div class="form-field"><label>Brand</label><input id="f-brand" value="${escapeHtml(p.brand || "")}" placeholder="e.g. Carrier"></div>
     <div class="form-field"><label>Model / system (optional)</label><input id="f-model" value="${escapeHtml(p.model || "")}" placeholder="e.g. 58TP080"></div>
     <div class="form-field"><label>Title</label><input id="f-title" placeholder="e.g. Installation & service manual"></div>
@@ -1354,36 +1430,67 @@ function openManualEditForm(prefill) {
   `;
   document.getElementById("cancelEditBtn").onclick = closeModal;
   const fileInput = document.getElementById("f-file");
+  const progress = document.getElementById("uploadProgress");
   fileInput.addEventListener("change", () => {
-    const f = fileInput.files[0];
-    if (f && !document.getElementById("f-title").value) {
-      document.getElementById("f-title").value = f.name.replace(/\.pdf$/i, "");
+    // Count only the PDFs — a stray non-PDF in the selection is skipped at save
+    // time, so promising to add it here would just be wrong.
+    const pdfs = [...fileInput.files].filter(f => !f.type || f.type === "application/pdf");
+    const n = pdfs.length;
+    const titleField = document.getElementById("f-title");
+    if (n === 1 && !titleField.value) {
+      titleField.value = pdfs[0].name.replace(/\.pdf$/i, "");
+    }
+    // On a batch the per-file title box would be meaningless — each file keeps
+    // its own filename as the title, so say so instead of letting one typed
+    // title silently apply to all of them.
+    if (n > 1) {
+      titleField.value = "";
+      titleField.placeholder = n + " files selected - each keeps its own filename as the title";
+      progress.textContent = n + " PDFs ready to add. Brand, model and notes below apply to all of them.";
+    } else {
+      titleField.placeholder = "e.g. Installation & service manual";
+      progress.textContent = "";
     }
   });
   document.getElementById("saveManualBtn").onclick = async () => {
-    const file = fileInput.files[0];
-    if (!file) { alert("Choose a PDF file first."); return; }
-    if (file.type && file.type !== "application/pdf") { alert("Please choose a PDF file."); return; }
-    const record = {
-      id: "manual-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7),
-      brand: document.getElementById("f-brand").value.trim(),
-      model: document.getElementById("f-model").value.trim(),
-      title: document.getElementById("f-title").value.trim() || file.name,
-      notes: document.getElementById("f-notes").value.trim(),
-      filename: file.name,
-      mimeType: file.type || "application/pdf",
-      size: file.size,
-      blob: file,
-      addedAt: Date.now(),
-    };
-    document.getElementById("uploadProgress").textContent = "Saving…";
-    try {
-      await manualsPut(record);
-      closeModal();
-      renderManuals();
-    } catch (err) {
-      document.getElementById("uploadProgress").textContent = "Failed to save: " + err.message;
+    const files = [...fileInput.files];
+    if (!files.length) { alert("Choose a PDF file first."); return; }
+    const bad = files.filter(f => f.type && f.type !== "application/pdf");
+    if (bad.length === files.length) { alert("Please choose PDF files."); return; }
+    const brand = document.getElementById("f-brand").value.trim();
+    const model = document.getElementById("f-model").value.trim();
+    const notes = document.getElementById("f-notes").value.trim();
+    const typedTitle = document.getElementById("f-title").value.trim();
+    const good = files.filter(f => !f.type || f.type === "application/pdf");
+    let saved = 0;
+    const failed = [];
+    for (const file of good) {
+      progress.textContent = good.length > 1
+        ? "Saving " + (saved + 1) + " of " + good.length + "…"
+        : "Saving…";
+      try {
+        await manualsPut({
+          // Date.now() repeats inside a fast loop, so the index keeps ids unique.
+          id: "manual-" + Date.now() + "-" + saved + "-" + Math.random().toString(36).slice(2, 7),
+          brand, model, notes,
+          title: (good.length === 1 && typedTitle) ? typedTitle : file.name.replace(/\.pdf$/i, ""),
+          filename: file.name,
+          mimeType: file.type || "application/pdf",
+          size: file.size,
+          blob: file,
+          addedAt: Date.now(),
+        });
+        saved++;
+      } catch (err) {
+        // One bad file (or a full device) must not throw away the rest of the batch.
+        failed.push(file.name + " (" + err.message + ")");
+      }
     }
+    renderManuals();
+    if (!failed.length && !bad.length) { closeModal(); return; }
+    progress.textContent = "Saved " + saved + " of " + good.length + "."
+      + (bad.length ? " Skipped " + bad.length + " non-PDF file(s)." : "")
+      + (failed.length ? " Failed: " + failed.join(", ") : "");
   };
   document.getElementById("modalBackdrop").classList.remove("hidden");
 }
@@ -3156,7 +3263,7 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v97";
+const APP_VERSION = "v98";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -3279,3 +3386,7 @@ renderVersionFooter();
 
 if (getTechName()) trackEvent("app opened");
 else showTechPicker();
+
+// Only nudge a tech who has already picked their name — the picker overlay sits
+// above everything, so a pill fired underneath it would just be missed.
+if (getTechName()) showBulletinPill();
