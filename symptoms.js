@@ -20353,5 +20353,236 @@ const SYMPTOMS = [
    "On an existing unit that does have a Bluetooth module, connecting through Bluetooth or NFC after the app update prompts a recipe update; accepting it disables the Bluetooth connection permanently."
   ],
   "confidence": "common"
+ },
+ // ===== Carrier / Payne diagnostic scenarios (v99) =====
+ {
+  "id": "s-car2-py4g-igc-flash-read",
+  "equipment": "Other",
+  "title": "Payne PY4G packaged rooftop - reading the IGC flash code (bare flash count, not a two-digit code)",
+  "summary": "The IGC board in a Payne PY4G single-packaged gas/electric rooftop shows faults as a plain count of flashes on one LED, 1 through 9. There is no short-flash/long-flash two-digit scheme on this board, and the same flash counts mean different things on the Carrier 48TC/48HC commercial IGC. Get the count and the model right before you touch anything.",
+  "steps": [
+   "Remove the control access panel to see the IGC LED. During normal operation the LED is continuously on.",
+   "Count the flashes, wait for the pause, and count again to confirm. If more than one error code exists they will be displayed on the LED in sequence, so watch at least two full repeats and write down every count.",
+   "Read the model off the rating plate. PY4G--(E,F) is Standard or Low NOx; PY4G--(K) is Ultra Low NOx. The flash counts are identical between them EXCEPT 7 flashes.",
+   "Map the count: 1 = check fuse / low voltage circuit, 2 = limit switch fault, 3 = flame sense fault, 4 = four consecutive limit switch faults, 5 = ignition lockout fault, 6 = pressure switch fault, 7 = rollout switch (Standard/Low NOx) or Burner Thermal Switch (Ultra Low NOx), 8 = internal control fault, 9 = temporary 1 hr auto reset.",
+   "Do not read these against a Carrier 48TC/48HC IGC list, where 1 flash is indoor fan delay modified and 6 flashes is induced-draft motor fault.",
+   "Do not read these against a split-system furnace two-digit code either - a PY4G has no short/long pattern to decode.",
+   "Reset at the unit disconnect once the cause is corrected. Note that when W is energized the burners will remain on for a minimum of 60 sec.",
+   "Ground yourself to dissipate any electrical charge before handling a replacement IGC - it is sensitive to static electricity."
+  ],
+  "safety": "Gas-fired rooftop equipment. Kill power at the unit disconnect before removing panels or touching the IGC. Do not reset a rollout or Burner Thermal Switch trip without inspecting the heat exchanger and the induced-draft blower first.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-py4g-code7-uln-vs-std",
+  "equipment": "Other",
+  "title": "Payne PY4G showing 7 flashes - rollout switch or Burner Thermal Switch depends on the NOx model",
+  "summary": "Seven flashes on a PY4G IGC means two different things on two different builds of the same rooftop. On Standard and Low NOx PY4G--(E,F) it is a rollout switch fault. On Ultra Low NOx PY4G--(K) the identical 7 flashes is a Burner Thermal Switch (BTS) fault. Carrier states outright that the BTS has the same FAULT CODE (7 flashes) on the ignition board as the rollout switch on standard units.",
+  "steps": [
+   "Get the model number off the rating plate before doing anything else - PY4G--(E,F) is Standard/Low NOx, PY4G--(K) is Ultra Low NOx.",
+   "On a Standard or Low NOx unit, find the rollout switch. It will automatically reset on its own, but the IGC will continue to lock out the unit until you reset at the unit disconnect.",
+   "On an Ultra Low NOx unit, find the Burner Thermal Switch on top of the burner box. It functions similar to a rollout switch but also provides protection against a blocked burner, so a plugged or misaligned burner will trip it with no visible rollout.",
+   "Both builds: check gas valve operation and ensure the induced-draft blower wheel is properly secured to the motor shaft.",
+   "Standard and Low NOx only: inspect the heat exchanger.",
+   "Ultra Low NOx only: verify the gas orifices are properly sized for the application, and verify that the intake tube, the perforated holes on the burner box top, and the burner box baffle are aligned.",
+   "Reset the unit at the unit disconnect once the cause is corrected - the switch resetting itself is not enough to clear the IGC lockout.",
+   "Note the ULN heating sequence for context: 30 second pre-purge at intermediate inducer speed, igniter on 5 sec with flame sensed for 2 sec at the end of the trial, four ignition attempts, then a 1 hr lockout."
+  ],
+  "safety": "A 7-flash code means a heat or blocked-burner safety opened. Do not jumper it out and do not reset repeatedly without finding the cause - inspect the heat exchanger on Standard/Low NOx units and the burner box alignment on Ultra Low NOx units first.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-59sc-major-minor-read",
+  "equipment": "Other",
+  "title": "Carrier 59SC2E / 59SC6A - reading the major.minor status code",
+  "summary": "These furnaces use a two-part major.minor code. The major status code is displayed in the first 2 digits of the 3-digit display and the minor status code in the third digit. The major code is also flashed on the LED through the door, first digit = number of short flashes, second digit = number of long flashes. This is not the same as the single two-digit sight-glass code on 58TN0A/58SP0A and not the same as a Payne PY4G bare flash count.",
+  "steps": [
+   "Read the 3-digit display first if you can get to it - the whole code is there. First two digits are the major, third digit is the minor.",
+   "If you are working through the door, count short flashes for the first digit of the major and long flashes for the second digit. The minor digit is not available on the LED.",
+   "A rapid flash that will not resolve into a short/long pattern is major 10, minor 1: W on at power up, or an L1 polarity fault.",
+   "Use the SYSTEM STATUS quick codes to tell an operating mode from a fault: CFn = continuous fan, bLr = heat pump defrost secondary blower, CL = cooling, HT = heating, iDL = idle/standby, and ##.# = an active status code.",
+   "For the full meanings, scan the QR code on the service label or use the troubleshooting guide in the installation manual - the status code table itself prints the meaning only, with no cause or remedy column for most codes.",
+   "To isolate a dead component, run the test sequence: tSt = test start, PUr = purge with inducer ON 10 sec, HSi = hot surface igniter ON 15 sec then OFF, Fn = blower ON at 50 percent torque 10 sec then OFF, End = all off except inducer 10 sec more.",
+   "Err during the test sequence means the test could not start - check the thermostat inputs and any active faults, the system must be Idle.",
+   "Remember ignition-lockout will occur after four consecutive unsuccessful trials-for-ignition on this platform."
+  ],
+  "safety": "Line voltage is present at the control while you read the display. Keep the blower door switch in mind - do not defeat it with the blower spinning.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-58tn0a-sightglass-codes",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 58TN0A / 58TP0A / 58SP0A - pulling and erasing status codes at the blower door sight glass",
+  "summary": "This platform flashes one two-digit code on an amber LED that you read through a sight glass in the blower access door - first digit is short flashes, second digit is long flashes. Codes 11 through 45. It is not split into major.minor like 59SC2E/59SC6A, and the two-stage list (58TN0A/58TP0A) is not the same as the single-stage list (58SP0A/59SC2D/59SP6A).",
+  "steps": [
+   "Leave 115-v power to the furnace turned on. Remove the outer access door and look into the blower access door sight glass for the current LED status.",
+   "No thermostat signal may be present at the control, and all blower-OFF delays must be completed, or the codes will not play back.",
+   "Remove the blower access door, turn Setup Switch SW1-1 ON, then manually close the blower access door switch.",
+   "The control will flash up to 7 status codes. The last status code, or 8th code, will always be code 11.",
+   "Turn SW1-1 OFF when you are done. The amber LED will be continuously lit, which indicates proper operation.",
+   "The status codes cannot be retrieved by disconnecting the limit switch or the draft safeguard switch - do not try it.",
+   "To erase on a two-stage 58TN0A/58TP0A: put SW1-1 ON and jumper R, W/W1 and Y/Y2 simultaneously until status code 11 is flashed. Codes also erase on their own after 72 hours.",
+   "On single-stage 58SP0A/59SC2D/59SP6A red-LED boards, stored codes are also erased whenever power (115V or 24V) is interrupted - read them before you kill power."
+  ],
+  "safety": "You are holding the blower door switch closed with the door off and line voltage present. Keep hands and leads clear of the blower wheel.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-qr-service-label-platform",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59TN7A / 59TP7A / 59SP6B / 58TN0B / 58TP0B / 58SP0B / 58CU0B - the fault code list is only on the unit's QR service label",
+  "summary": "On this newest Carrier furnace platform the 3-digit display shows an active status code as ##.# and stores the last 7 faults, but the meanings of those numbers are NOT printed anywhere in the installation manual. The manual points you at the furnace service label and its QR code. Do not look these numbers up against any other Carrier furnace code list.",
+  "steps": [
+   "Confirm the model first. This applies to 59TN7A, 59TP7A, 59SP6B, 58TN0B, 58TP0B, 58SP0B and 58CU0B.",
+   "Read the 3-digit display. If it shows iDl, Ht, Ht1, Ht2, CL1, CL2, Hpd, Cfn, CF2, CF3 or BLR, that is an operating mode, not a fault.",
+   "Mode meanings: iDl = idle/standby with no active demands; Ht2 and Ht1 = high and low gas heating; CL2 and CL1 = high and low cooling or heat pump; Hpd = gas heating cycle active during a heat pump defrost cycle; Cfn, CF2, CF3 = continuous fan; BLR = system connected to a communicating thermostat and running in cooling, heating, continuous fan or DHUM mode.",
+   "A reading in the form ##.# is an active status code. Its meaning is on the furnace service label - scan the QR code on the label with a phone, or read the printed table on the label itself.",
+   "For history, use the FLt menu. The fault code menu stores the 7 latest faults in memory. If there are no faults, None (non) is displayed.",
+   "To clear the fault history, scroll to Clear (Clr) and press MENU/SELECT.",
+   "Run the component test if you need to isolate a part: tSt = test confirms start, PUr = inducer ON high 10 sec, HSi = hot surface igniter ON 15 sec then OFF, Fn = blower ON 50 percent torque 10 sec then OFF, End = all off except inducer ON low 10 sec.",
+   "Err means the component test could not start - the system must be Idle, so clear thermostat inputs and any active fault first."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-car2-r454b-defrost-sequence",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier / Payne R-454B heat pump (HK32EA012 / HK32EA014) - defrost sequence and forcing a defrost",
+  "summary": "The HK32EA012 defrost control is used in most Performance Series heat pumps with Puron Advance (R-454B). It is a demand defrost control with selectable 30, 60, 90 and 120 minute intervals, Quiet Shift, a compressor time delay and defrost speed up. The HK32EA014 is the same board for outdoor ECM motors, using 24v at the ODF terminal.",
+  "steps": [
+   "Know the delay before you condemn anything: this control features a 5-minute time delay to protect the compressor from short cycling. It begins counting when the low voltage is interrupted and at the end of a heating or cooling cycle.",
+   "Understand the interval logic. The DIP switch settings of 30, 60, 90 and 120 minutes apply only to the INITIAL defrost interval. When a defrost cycle completes quickly (1-3 minutes) the next interval is increased; when it takes a long time (7-10 minutes) the next interval is decreased.",
+   "Turning ON quiet shift (DIP switch 3) turns OFF demand defrost and reverts the board to a time/temperature control with field selectable 30, 60, 90 and 120 minute settings.",
+   "The defrost thermostat closes at approximately 32 deg F and starts the timing sequence at the DFT terminal. If the defrost thermostat opens before the timer expires, the timing sequence is reset.",
+   "Defrost is terminated when the defrost thermostat opens at about 65 deg F, or automatically after 10 minutes.",
+   "To force a defrost, short the speedup pins (J1) with a flat head screwdriver for 5 seconds and RELEASE. Forcing a defrost resets the defrost interval to the DIP switch setting.",
+   "To defeat the compressor time delay only, short the speed up pins for 1 second - be sure not to short more than 1 second.",
+   "For a full board test: jumper DFT to R, disconnect the outdoor fan motor lead from OF2 and tape it off, run in heating until the liquid line drops below about 32 deg F, then short the speed-up terminals - that reduces the timing sequence to 1/256 of original time. Check C to W2 for 24v to confirm the defrost relay closed."
+  ],
+  "safety": "R-454B is an A2L refrigerant. Ensure service equipment is rated for Puron Advance (R-454B) and never install a suction-line filter drier in the liquid-line of an R-454B system.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-r454b-pressure-switches",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier / Payne R-454B (Puron Advance) - pressure switch cut-out and cut-in setpoints",
+  "summary": "R-454B systems operate at different and sometimes higher pressures than other refrigerants, and the pressure switch setpoints are specific to Puron Advance. R-22 pressure switches must NOT be used as replacements on an R-454B system.",
+  "steps": [
+   "Identify which switch you are working: low-pressure (AC only), high-pressure (AC and HP), or loss of charge (HP only).",
+   "Low-pressure switch, AC only: it opens on a pressure drop at about 50 psig for Puron Advance (R-454B).",
+   "High-pressure switch, AC and HP: it opens around 610 or 670 (+/- 10) psig for R-454B. Switches close at 420 or 470 (+/- 25) psig.",
+   "Loss of charge switch, HP only: operates identically to the low-pressure switch except it opens at 23 (+/- 5) psig and closes at 55 (+/- 5) psig for R-454B.",
+   "On heat pumps with InteliSense technology there is no factory installed high pressure switch - only the loss of charge pressure switch is factory installed. Do not go looking for a high pressure switch that was never fitted.",
+   "Defrost thermostat for reference on the same equipment: closed at 32 +/- 3 deg F and open at 65 +/- 5 deg F. Defrost thermostats are used in Builder, Comfort and Performance models; a coil temperature thermistor is used in Preferred and Infinity series units.",
+   "Never fit an R-22 pressure switch as a replacement, and never install a suction-line filter drier in the liquid-line of an R-454B system.",
+   "Ensure your gauges and recovery equipment are rated for Puron Advance (R-454B) before connecting."
+  ],
+  "safety": "R-454B is an A2L mildly flammable refrigerant and runs at higher pressures than R-410A. Use only R-454B rated service equipment and follow the leak detection requirements for the installation.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-intelisense-no-data",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier InteliSense (HK32EA013) - thermostat or cloud not receiving outdoor unit data",
+  "summary": "The HK32EA013 InteliSense AC/HP Sensor Communication Module sends sensor data and fault code information to the InteliSense-enabled thermostat over the Y1 and C conductors in the normal thermostat bundle. Two LEDs on the module tell you whether the problem is power or communication.",
+  "steps": [
+   "Read the two LEDs first. The amber LED is illuminated solid when there is power to the product. The green LED is illuminated solid when there is communication between the control board and the InteliSense-enabled thermostat.",
+   "Amber dark means no power - check if the 1A fuse on the board is blown.",
+   "Amber solid and green dark means power is fine but the data link is down - the InteliSense data bus rides on the Y1 and C conductors typically found in a thermostat wiring bundle.",
+   "Check if Y1 is approximately 24VAC when energized.",
+   "Verify all connections are secure at both ends of the Y1 and C run - a high resistance splice anywhere in that pair kills the data bus.",
+   "If only one sensor is not reporting correctly, replace that sensor rather than the module. The sensors are Liquid Service Valve Pressure (LSVP), Liquid Service Valve Temperature (LSVT), Outside Air Temperature (OAT), Vapor Service Valve Pressure (VSVP) and Vapor Service Valve Temperature (VSVT) - two pressure transducers and three temperature thermistors routed directly to the control board.",
+   "Do not chase the outdoor temperature reading: the outdoor temperature sensor does not show up on this new thermostat display, so it should not be used for troubleshooting or charging.",
+   "Remember HP units with InteliSense do not come with a factory installed high pressure switch - only the loss of charge pressure switch is factory installed."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-payne-defrost-dip-interval",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Payne PH14 / PH15 / PH16 heat pump - setting the defrost interval, Quiet Shift-2, and the 60 vs 90 minute default conflict",
+  "summary": "Payne split-system heat pumps use a time/temperature defrost control with field selectable intervals of 30, 60, 90 or 120 minutes. Older boards use quick connects at the edge of the board; Quiet Shift 2 boards use DIP switches. There is no numeric fault code table on any of these boards - the LED tells you nothing, so you have to test the logic directly.",
+  "steps": [
+   "Identify the board: for non-Quiet Shift 2 boards the time period is selected using quick connects located at the edge of the board; for Quiet Shift 2 boards the time period is selected using DIP switches on the board.",
+   "Note the conflict on PH16NA before you trust a default: the installation manual IM-PH16NA-05 says the control is factory set to 90 minutes, while the PH16NA-01WD wiring diagram board silkscreen lists 60 MINUTES (DEFAULT). Read what is physically set on the board in front of you.",
+   "Quiet Shift-2 is a field selectable defrost mode, factory set to OFF, selected by placing DIP switch 3 on the defrost board in the ON position. With it ON, the compressor is de-energized for approximately 1 minute, then the reversing valve is energized, then a few seconds later the compressor is re-energized and the normal defrost cycle starts - and the same in reverse at termination.",
+   "The defrost thermostat senses coil temperature throughout the heating cycle. When the coil reaches approximately 32 deg F (0 C) it closes, energizes the DFT terminal and begins the defrost timing sequence. The timer starts only when the defrost thermostat is closed and the contactor is energized.",
+   "Defrost is terminated when the defrost thermostat opens, or automatically after 10 minutes.",
+   "To force a defrost on a non-Quiet-Shift-2 board: turn off power, disconnect the outdoor fan motor lead from OF2 (PSC motors) or the ODF terminal (ECM motors) and tape it off, restart in heating and let frost build. After a few minutes the liquid line should drop below the closing point of about 30 deg F (-1.11 C).",
+   "Short between the speedup terminals with a flat-blade screwdriver - this reduces the timing sequence to 1/25th of original time. Speedup nominal times: 7 sec for a 30-minute cycle, 12 sec for 50-minute, 21 sec for 90-minute, 2 sec for 10-minute, 1 sec for 5 minutes.",
+   "When you hear the reversing valve change position, remove the screwdriver immediately - otherwise the control will terminate the normal 10-minute defrost cycle in approximately 2 seconds. The unit stays in defrost until the defrost thermostat reopens at approximately 65 deg F (18.33 C)."
+  ],
+  "safety": "Power off the outdoor unit before disconnecting the fan motor lead, and tape the lead to prevent grounding. Reconnect it before leaving.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-3phase-reverse-rotation",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Payne PA-series / Carrier 27SCA5 three-phase - phase monitor LED flashing, compressor will not start",
+  "summary": "Three-phase units get a small factory-installed circuit board that monitors line voltage. It has one small LED with exactly three states - OFF, FLASHING, ON. Three-phase scroll compressors are rotation sensitive, and a flashing LED means reverse rotation. The monitor will not allow the contactor to be energized, so the unit is simply dead until the phasing is corrected.",
+  "steps": [
+   "Find the small phase monitor circuit board in the control box - it is factory installed on 3-phase units only.",
+   "Read the LED. OFF means no call for compressor operation. FLASHING means reversed phase. ON means normal. There is no flash-count code on this board - do not try to count it into a number.",
+   "Also check for code descriptions printed on the monitor itself, which some boards carry locally.",
+   "If the LED is flashing, disconnect power to the unit.",
+   "Interchange 2 field-wiring leads on the unit contactor.",
+   "Restore power and confirm the LED goes solid ON and the contactor pulls in.",
+   "If it still flashes after swapping one pair, power down and try a different pair of the three leads. If every combination flashes, check for a lost phase or badly unbalanced supply before condemning the monitor.",
+   "If the compressor was allowed to run backwards before the monitor caught it, check the compressor - reverse rotation is a listed unit damage hazard on this equipment."
+  ],
+  "safety": "Three-phase line voltage. Disconnect and lock out power before interchanging leads at the contactor, and verify zero volts before touching the terminals.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-27vpa9-false-fault-bulletin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 27VPA9 with IntelliSense - fault codes that are not real (software v3.00 vs v4.00)",
+  "summary": "Carrier bulletin TIC2026-0016 dated 07/14/2026 documents a software update for residential variable speed outdoor units with IntelliSense - Carrier 27VPA9 and Bryant 249VAN. Version 4.00 (July 2026) explicitly eliminates false fault code reporting. Version 3.00 PRODUCTION (June 2026) was the initial release. If you are chasing a code on a v3.00 unit, the code itself may not be real.",
+  "steps": [
+   "Confirm the unit is a Carrier 27VPA9 or its Bryant twin 249VAN with IntelliSense - the bulletin applies only to residential variable speed outdoor units with IntelliSense.",
+   "Read the software version loaded in the outdoor unit before you order a part on the strength of a code.",
+   "Version 3.00 PRODUCTION (June 2026) was the initial release. Version 4.00 (July 2026) eliminates false fault code reporting and enables the ability to use advanced smart control to be released in future.",
+   "Version 4.00 is available for download on HVACPartners under the product tab.",
+   "Load version 4.00, then clear the code and run the system to see whether it comes back before replacing anything.",
+   "If the same code returns on v4.00, treat it as a real fault and work it against the 27VPA9 code list.",
+   "Do not cross-reference a 27VPA9 code against the 27VNA0/27VNA1/27VNA3 list - they are different lists. 27VPA9 carries codes such as 31-56 High Pressure Switch Activated, 38-55 Compressor Physical Malfunction and 84-51 IPM Overtemp that do not appear on the 27VNA list at all.",
+   "Note the paperwork discrepancy: the catalog record calls this PTC2026-0016 while the document itself is titled TIC2026-0016 - same bulletin, two numbers."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-car2-27vna-lockout-durations",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 27VNA0 / 27VNA1 / 27VNA3 and 27VPA9 - recalling the stored code and how long the lockout lasts",
+  "summary": "These inverter units flash a two-digit code with short and long flashes on the amber status light, and show the same codes on a 5x7 LED display on the PCM. Each malfunction has a published lockout duration - some clear in 30 minutes, some in 4 hours, and some are permanent. Knowing the duration stops you from replacing a part on a unit that was going to clear itself.",
+  "steps": [
+   "Read the code from the 5x7 LED display on the PCM if the unit is powered. It displays the 4 highest priority diagnostic codes in a scrolling fashion with 2 seconds between each, and a 5 second pause before the list repeats.",
+   "If you are counting flashes on the amber status light: short flashes indicate the first digit, long flashes indicate the second. Short flash is 0.25 seconds ON, long flash is 1.0 second ON, 0.25 seconds between flashes, 1.0 second between the short flashes and the first long flash, and 2.5 seconds with the LED off between repeats. Example: 3 short flashes followed by 2 long flashes is a 32 code.",
+   "If nothing is displaying, use Status Code Recall Mode: turn the unit OFF, short the force defrost connector (labeled J2 on the board) with a clip wire, then power ON the unit. Active status codes are stored in memory even when power is absent.",
+   "Recall mode continues as long as the force defrost terminals remain shorted, and the unit will not attempt to heat or cool while they are shorted. Once the code is read, power down the unit and remove the short.",
+   "Check the model before looking up the number. 27VPA9 has its own malfunction lockout list that is not the same as the 27VNA0/27VNA1/27VNA3 list.",
+   "Duration groups on the 27VNA list: 30 minutes for 38-54 Compressor No Pump and 39-58 Fan Motor Malfunction; 1 hour for 39-53 Fan Start, 83-57 Compressor Under speed, 85-54 DC Over Voltage and 86-46 VFD Communication.",
+   "Two hours covers most pressure, temperature and VFD voltage codes; 4 hours covers 38-53 Compressor Starting, 38-71 VFD Estimator, 39-55 Unexpected Fan Shutdown, 81-54 Unbalanced PFCM, 81-58 VFD System Wiring Error, 87-53 VFD Initialization and the 88-7x VFD internal sensor malfunctions.",
+   "Permanent lockouts marked unlikely to clear on their own: 13-53 System Control Upgrade Required, 25-63 VFD Model Mismatch, 28-71 Fuse 1 Open, 28-72 Fuse 2 Open, 32-59 Low Pressure Disable, 57-43 P1 Sensor and 58-43 P2 Sensor Malfunction. On 27VPA9 also 25-62 Model Plug Missing and 51-43 OAT Faulted with No Valid Substitution."
+  ],
+  "safety": "High voltage is stored in the VFD DC capacitors. The R1 red LED on the VFD indicates a DC voltage greater than 40V is present - do not work in the drive while it is lit.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-car2-33zc-zone-sensor-e-codes",
+  "equipment": "Other",
+  "title": "Carrier 33ZC T58 zone sensor showing E1 through E4",
+  "summary": "The 33ZC T58 is a CCN zone temperature sensor and thermostat, not a furnace or outdoor unit. It shows its own E1 to E4 error codes on its display for up to 5-10 seconds, then reverts to the default space temperature display. Do not read these against any equipment code list.",
+  "steps": [
+   "Watch the display through a full cycle - the error code displays for up to 5-10 seconds then reverts to the space temperature, so it is easy to miss.",
+   "E1 is a malfunctioning on-board thermistor. It occurs when air temperature is below 0 F (-17 C) or above 146 F (63 C) for 15 seconds or more, and it clears once the thermistor is in range.",
+   "For E1, measure the actual space temperature first. If the space is inside the 0 F to 146 F window, the thermistor is reading wrong and the sensor needs replacing.",
+   "E2 means the T58 is not attached to a valid device. It occurs when a CCN communication is requested and the configured destination address is 0 or the destination device type is 0.",
+   "For E2, go into Installer Options and configure a valid destination address and device type. No data will go out to the CCN until the Installer Options have been correctly configured to a valid device on the network.",
+   "E3 is a CCN communication failure - the T58 initiated a communication and it did not complete successfully. Check the CCN bus wiring, terminations and polarity, and confirm the far-end device is powered and on the network.",
+   "E4 is a command rejection - the attached device rejected a command from the T58. The bus is working, so check what the attached device is configured to accept and confirm the T58 is pointed at the right device type and address.",
+   "Do not replace the sensor for E2, E3 or E4 - those are configuration or network faults, not sensor faults."
+  ],
+  "confidence": "common"
  }
 ];

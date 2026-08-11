@@ -44833,5 +44833,845 @@ const SYMPTOM_FOLLOWUPS = {
     }
    ]
   }
+ ],
+ // ===== Carrier / Payne (v99) =====
+ "s-car2-py4g-igc-flash-read": [
+  {
+   "ask": "Count the flashes on the IGC LED, pause, and count again. What are you seeing?",
+   "options": [
+    {
+     "label": "Steady on, no flashing",
+     "verdict": "Normal operation. The manual states the LED indicates acceptable operation - do not change the ignition control board. Chase the complaint somewhere other than the gas control."
+    },
+    {
+     "label": "LED completely dark",
+     "verdict": "No power or hardware failure. Check the 5-amp fuse on the IGC, power to the unit, the 24-v circuit breaker and the transformer. Units without a 24-v circuit breaker have an internal overload in the 24-v transformer - if the overload trips, allow 10 minutes for automatic reset before condemning the board."
+    },
+    {
+     "label": "A repeating count of 1 to 9 flashes",
+     "next": 1
+    },
+    {
+     "label": "Different counts on different repeats",
+     "verdict": "If more than one error code exists they will be displayed on the LED in sequence. Write down each count in order, then work them one at a time - start with any 7 (rollout / Burner Thermal Switch) or 5 (ignition lockout) before the rest."
+    }
+   ]
+  },
+  {
+   "ask": "Read the rating plate. Which PY4G is it?",
+   "options": [
+    {
+     "label": "PY4G--(E,F) Standard or Low NOx",
+     "next": 2
+    },
+    {
+     "label": "PY4G--(K) Ultra Low NOx",
+     "verdict": "Use the Ultra Low NOx flash list. Every count matches the Standard list except 7 flashes, which is a Burner Thermal Switch fault - blocked-burner protection on top of the burner box - not a plain rollout. On ULN units also verify the intake tube, the perforated holes on the burner box top, and the burner box baffle are aligned, then reset at the unit disconnect."
+    },
+    {
+     "label": "Cannot read the rating plate",
+     "verdict": "Stop and get the model number. On a PY4G, 7 flashes is the one code that decides whether you are hunting a rollout switch or a Burner Thermal Switch, and every other count is identical between the two builds. Do not guess."
+    }
+   ]
+  },
+  {
+   "ask": "Standard or Low NOx PY4G. Which flash count are you reading?",
+   "options": [
+    {
+     "label": "1 flash",
+     "verdict": "Check fuse, low voltage circuit. The fuse is blown or missing, or there is a short circuit in the secondary 24VAC wiring. Replace the fuse if needed and verify no short circuit in the low voltage 24 VAC wiring before you power back up."
+    },
+    {
+     "label": "2 flashes",
+     "verdict": "Limit switch fault - the high temperature limit switch is open. Check the operation of the indoor (evaporator) fan motor, ensure the supply-air temperature rise is within the range on the unit nameplate, and clean or replace filters."
+    },
+    {
+     "label": "3 flashes",
+     "verdict": "Flame sense fault - the IGC sensed flame that should not be present. Reset the unit; if the problem persists, replace the control board. There is no microamp spec published for this platform, so do not chase a flame current number."
+    },
+    {
+     "label": "4 flashes",
+     "verdict": "Four consecutive limit switch faults - inadequate airflow to the unit. Check the indoor (evaporator) fan motor and confirm supply-air temperature rise agrees with the nameplate range: 25-55 deg F (14-31 C) on sizes 24040/24060/30040/30060/36060/42060, 35-65 deg F (19-36 C) on 36090/42090/48090/48130/60090/60130, and 30-60 deg F (17-33 C) on 48115 and 60115."
+    },
+    {
+     "label": "5 flashes",
+     "next": 3
+    },
+    {
+     "label": "6 flashes",
+     "verdict": "Pressure switch fault - open pressure switch. Verify wiring to the pressure switch and inducer motor, verify the pressure switch hose is tight at both the inducer housing and the switch, verify the inducer wheel is properly attached to the motor shaft, and verify the shaft is turning."
+    },
+    {
+     "label": "7 flashes",
+     "verdict": "Rollout switch fault on a Standard or Low NOx unit. The rollout switch will automatically reset but the IGC will continue to lock out the unit. Check gas valve operation, ensure the induced-draft blower wheel is properly secured to the motor shaft, inspect the heat exchanger, then reset the unit at the unit disconnect."
+    },
+    {
+     "label": "8 flashes",
+     "verdict": "Internal control fault - the microprocessor sensed an error in software or hardware. If the code is not cleared by resetting unit power, replace the IGC. Ground yourself before handling the new board."
+    },
+    {
+     "label": "9 flashes",
+     "verdict": "Temporary 1 hr auto reset. Reset 24-v to the control board or cycle the thermostat off then on; the fault will automatically reset itself in one (1) hour on its own. It is caused by electrical interference or stray RF signals, so look for an RF source nearby if it repeats. Do not replace the board on a single event."
+    }
+   ]
+  },
+  {
+   "ask": "Ignition lockout - the unit unsuccessfully attempted ignition for 15 minutes. Clock the manifold pressure on natural gas with the burners firing.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "manifold",
+     "label": "Manifold pressure (IN. W.C.)",
+     "placeholder": "e.g. 3.5"
+    }
+   ],
+   "bands": [
+    {
+     "under": 3.2,
+     "label": "Below 3.2 IN. W.C.",
+     "verdict": "Manifold pressure is under the 3.2 IN. W.C. minimum. Adjust the gas valve regulator up into the 3.2 to 3.8 IN. W.C. band, and check inlet supply pressure while you are there - natural gas supply must be 4.0 to 13.0 IN. W.C. on 40,000 and 60,000 Btuh inputs and 4.5 to 13.0 IN. W.C. on 90,000, 115,000 and 130,000 Btuh inputs. Starved gas is a common cause of the 5-flash lockout."
+    },
+    {
+     "under": 3.8,
+     "label": "3.2 to just under 3.8 IN. W.C.",
+     "verdict": "Manifold pressure is inside the required 3.2 to 3.8 IN. W.C. band, so gas pressure is not your ignition lockout. Move to the igniter and flame sensor - check electrode spacing and gaps, and make sure the flame sense and ignition wires are properly terminated."
+    },
+    {
+     "label": "3.8 IN. W.C. or higher",
+     "verdict": "Manifold pressure is at or above the 3.8 IN. W.C. maximum. The manual warns that unsafe operation of the unit may result if manifold pressure is outside this range - turn the regulator down into the 3.2 to 3.8 IN. W.C. band before running the unit any further. On propane the manifold band is 10.0 to 11.0 IN. W.C."
+    }
+   ]
+  }
+ ],
+ "s-car2-py4g-code7-uln-vs-std": [
+  {
+   "ask": "Read the model number off the rating plate. Which PY4G is it?",
+   "options": [
+    {
+     "label": "PY4G--(E,F) Standard or Low NOx",
+     "next": 1
+    },
+    {
+     "label": "PY4G--(K) Ultra Low NOx",
+     "verdict": "Seven flashes on this unit is a Burner Thermal Switch (BTS) fault, not a plain rollout. The BTS is on top of the burner box and protects against a blocked burner. Check gas valve operation, verify the gas orifices are properly sized for the application, ensure the induced-draft blower wheel is properly secured to the motor shaft, and verify that the intake tube, the perforated holes on the burner box top, and the burner box baffle are aligned. Reset the unit at the unit disconnect."
+    },
+    {
+     "label": "Rating plate is unreadable or missing",
+     "verdict": "Stop and identify the unit before working this code. Open the burner compartment: if there is a thermal switch mounted on top of the burner box, treat it as an Ultra Low NOx unit and check burner box alignment and orifice sizing. If there is a conventional rollout switch at the burner face, treat it as Standard/Low NOx and inspect the heat exchanger. Do not work both cause lists at once."
+    }
+   ]
+  },
+  {
+   "ask": "On this Standard or Low NOx unit, what is the rollout switch doing right now?",
+   "options": [
+    {
+     "label": "Switch has reset itself but the board is still locked out",
+     "verdict": "That is exactly how this code behaves - the rollout switch will automatically reset, but the IGC will continue to lock out the unit. Check gas valve operation, ensure the induced-draft blower wheel is properly secured to the motor shaft, inspect the heat exchanger, then reset the unit at the unit disconnect."
+    },
+    {
+     "label": "Switch is still open",
+     "verdict": "The rollout switch itself is open. Find why it tripped before doing anything else - a failed induced-draft blower, a blocked or cracked heat exchanger, or a gas valve that is not closing. Replace the switch only if it will not reset after the cause is corrected."
+    },
+    {
+     "label": "There is no rollout switch, there is a thermal switch on top of the burner box",
+     "verdict": "This is an Ultra Low NOx build regardless of what you read on the plate. Work it as a Burner Thermal Switch fault: verify the intake tube, the perforated holes on the burner box top, and the burner box baffle are aligned, verify the gas orifices are properly sized for the application, check gas valve operation, then reset at the unit disconnect."
+    }
+   ]
+  }
+ ],
+ "s-car2-59sc-major-minor-read": [
+  {
+   "ask": "How is the code presenting on this 59SC2E or 59SC6A?",
+   "options": [
+    {
+     "label": "A 3-digit reading like 31.2 on the control display",
+     "next": 2
+    },
+    {
+     "label": "Short flashes then long flashes on the LED through the door",
+     "next": 1
+    },
+    {
+     "label": "A rapid flash that will not resolve into short then long",
+     "verdict": "Rapid flash is major 10, minor 1 - W on at power up, or an L1 polarity fault. Check whether the thermostat is holding a W call at the moment power comes up, and check L1 polarity at the furnace line connection and at whatever feeds it."
+    },
+    {
+     "label": "Display is blank and the LED is dark",
+     "verdict": "No power at the control. Check 115v at the furnace, the blower door switch, the low voltage fuse on the control, and the transformer before you open any code list."
+    }
+   ]
+  },
+  {
+   "ask": "Count the short flashes, then the long flashes. The short count is the first digit of the major code and the long count is the second. What did you get?",
+   "options": [
+    {
+     "label": "A clean two-digit major code",
+     "next": 2
+    },
+    {
+     "label": "The counts change from one repeat to the next",
+     "verdict": "Get to the 3-digit display instead of counting at the door. The display gives you the major and the minor digit together and removes the guesswork. If the display is unreachable, count at least three full repeats and take the count that agrees twice."
+    },
+    {
+     "label": "Long flashes only, no short flashes",
+     "verdict": "You are miscounting the start of the pattern. The pattern always leads with the short flashes for the first digit. Wait for the gap between repeats, then start counting at the first flash after the gap."
+    }
+   ]
+  },
+  {
+   "ask": "Which major code do you have?",
+   "options": [
+    {
+     "label": "10 - rapid flash",
+     "verdict": "Major 10, minor 1: W on at power up, or an L1 polarity fault. Check for a stuck W call at power up and check L1 polarity at the furnace."
+    },
+    {
+     "label": "12, 13 or 33 - lockout or ignition fault",
+     "verdict": "12.1 is a limit lockout - a switch open longer than 3 minutes in the Main Limit circuit; work airflow first (filter, blower wheel, duct restriction). 13.1 is ignition lockout after 4 consecutive ignition tries. 33.1 is the ignition fault during those four consecutive trials - check gas supply, igniter and flame sensor before the fourth trial locks it out."
+    },
+    {
+     "label": "14 - flame loss",
+     "verdict": "14.2 is flame lost 3 times after 70s of heating; 14.3 is a lockout after 7 loss-of-flame events during a heat request. Flame is lighting, so work the flame-proving side: clean the flame sensor, confirm its ground path, and check for a restricted vent or a weak inducer."
+    },
+    {
+     "label": "21 or 22 - gas valve or false flame",
+     "verdict": "21.1 is 24VAC sensed on the gas valve when it should not be - look for a miswire or a short into the gas valve circuit, or a stuck gas valve relay in the control. 22.1 is false flame - check for a leaking or slow-closing gas valve, or a short on the flame sensor lead."
+    },
+    {
+     "label": "23 - stuck closed pressure switch",
+     "verdict": "23.1 is a stuck closed Main pressure switch and 23.2 is a stuck closed secondary pressure switch. With the inducer off, the switch should read open. Check its pressure tube for water or a pinch holding it made, and replace the switch if it will not open."
+    },
+    {
+     "label": "24 - fuse fault",
+     "verdict": "24.1 is a fuse fault. Disconnect the thermostat leads to isolate the short before you put a new fuse in, and check the 24v harness where it passes the blower deck and cabinet edges."
+    },
+    {
+     "label": "25 or 27 - program, model plug or super plug",
+     "verdict": "25.1 no program info in micro (no heating operation); 25.2 corrupted program file - reprogram using the service app or super plug; 25.3 twinned units not identical, program numbers do not match - the main unit will not operate heating. 27.1 super plug program missing or corrupted - remove the super plug and retry, try a different super plug, then replace the control; 27.2 installer settings corrupted - reselect installer settings, control runs on defaults meanwhile; 27.3 wrong program for the control used - reprogram so the program matches the control. Get the program number from the rating plate."
+    },
+    {
+     "label": "31 - open pressure switch",
+     "verdict": "31.1 is an open Main pressure switch (LPS), 31.2 is an open secondary pressure switch (HPS), and 31.3 is a secondary PS lockout after failing to close on three trials. Check the inducer is moving air, the pressure tubes are clear and connected, the condensate trap and drain are open, and the vent is not restricted."
+    },
+    {
+     "label": "32 - Main Limit circuit open",
+     "verdict": "32.1 means a switch has opened in the Main Limit circuit. Work airflow first - filter, blower wheel, duct restriction. Fix it before it sits open 3 minutes and escalates to a 12.1 limit lockout."
+    },
+    {
+     "label": "34 - flame loss around the blower delay",
+     "verdict": "34.2 is flame loss after successful ignition but before the heating blower on delay; 34.3 is flame loss after the blower on delay. If it drops out when the blower starts (34.3), suspect a cracked heat exchanger or a blower compartment leak. Check the blower door seal and manifold pressure with the blower running versus off."
+    },
+    {
+     "label": "45 - control failure",
+     "verdict": "45.1 flame circuit fault, memory mismatch or sequence error; 45.2 gas valve relay will not close; 45.3 EEPROM memory issue. The printed action for the 45 family is: cycle power, and if code 45 repeats, replace the control. Have the program number from the rating plate before you fit a replacement."
+    },
+    {
+     "label": "46 - momentary loss of power",
+     "verdict": "46.1 is a momentary loss of power - a history record, not a failed part. Only chase it if it repeats, and then check the line connections, the disconnect and the breaker for a loose or arcing connection, or a shared circuit dropping out."
+    }
+   ]
+  }
+ ],
+ "s-car2-58tn0a-sightglass-codes": [
+  {
+   "ask": "Before reading: is there any thermostat signal at the control, and have all blower-OFF delays finished?",
+   "options": [
+    {
+     "label": "No thermostat signal, all delays completed",
+     "next": 1
+    },
+    {
+     "label": "There is still a thermostat call or a blower delay running",
+     "verdict": "Codes will not play back yet. Clear the thermostat call and let every blower-OFF delay finish - the selectable heating blower off delays on this platform are 90, 120, 150 or 180 seconds set by SW1-7 and SW1-8. Then look into the blower access door sight glass. Do not try to force it by disconnecting the limit switch or draft safeguard switch; the status codes cannot be retrieved that way."
+    },
+    {
+     "label": "I cannot see the sight glass",
+     "verdict": "Remove the outer access door first - the sight glass is in the blower access door and you read it with the blower door still on. Leave 115-v power to the furnace turned on while you do this."
+    }
+   ]
+  },
+  {
+   "ask": "With SW1-1 turned ON and the blower access door switch manually closed, what plays back?",
+   "options": [
+    {
+     "label": "Several codes, ending with code 11",
+     "verdict": "That is the normal playback - the control flashes up to 7 status codes and the last, or 8th, code is always code 11. Write them down in order, turn SW1-1 OFF, and confirm the amber LED goes continuously lit. Work the lockout codes first: 13 limit circuit lockout, 14 ignition lockout, 15 blower motor lockout, 21 gas heating lockout, 45 control circuitry lockout."
+    },
+    {
+     "label": "Only code 11",
+     "verdict": "Code 11 is no previous code - the history is empty. On two-stage 58TN0A/58TP0A, status codes erase after 72 hours. On single-stage 58SP0A/59SC2D/59SP6A red-LED boards, stored codes also erase whenever power (115V or 24V) is interrupted, so if anyone killed power before you arrived the history is gone. Turn SW1-1 OFF and run the system through a low-heat, high-heat or cooling cycle to make the fault come back."
+    },
+    {
+     "label": "Amber LED continuously lit, nothing flashing",
+     "verdict": "A continuously lit amber LED indicates proper operation. Turn SW1-1 OFF and close the doors. If the complaint is real, run the system through a low-heat, high-heat or cooling cycle and watch the sight glass live rather than reading history."
+    },
+    {
+     "label": "Code 14 or code 34 - ignition",
+     "next": 2
+    },
+    {
+     "label": "Code 25",
+     "verdict": "Count the flashes carefully. If code 25 only flashes 4 times on power-up, the control is missing its model plug PL4 and is defaulting to the model stored in memory. If code 25 flashes continuously, either model plug PL4 is missing with no valid model in permanent memory - the usual cause is forgetting the model plug on a service replacement control - or you have a thermostat call with SW1-1 ON, a thermostat call with SW1-6 ON, or SW1-1 and SW1-6 both ON. On 58TP0A the list also includes two different furnace models twinned and using the wrong control version (V## on the control board)."
+    }
+   ]
+  },
+  {
+   "ask": "Repeat the call for heat and check flame sensor current during the trial for ignition period.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "microamps",
+     "label": "Flame sensor current (DC microamps)",
+     "placeholder": "e.g. 4.5"
+    }
+   ],
+   "bands": [
+    {
+     "under": 0.5,
+     "label": "Below 0.5 DC microamps",
+     "verdict": "Below the 0.5 microamp threshold the manual calls out. Clean the flame sensor with fine steel wool and recheck the current - nominal current is 4.0 to 6.0 microamps. If it will not come up, confirm the Green/Yellow wire is connected to furnace sheet metal and that the flame sensor is not grounded."
+    },
+    {
+     "under": 4,
+     "label": "0.5 to just under 4.0 DC microamps",
+     "verdict": "You are proving flame but sitting below the 4.0 to 6.0 microamp nominal band. Clean the sensor and check its ground path, then check for inadequate flame carryover or rough ignition, low inlet gas pressure, proper firing rate, and a blocked or incorrect carry-over gap (.045 in. nominal)."
+    },
+    {
+     "under": 6,
+     "label": "4.0 to just under 6.0 DC microamps",
+     "verdict": "Flame current is in the nominal 4.0 to 6.0 microamp band, so the sensing circuit is good. The ignition failure is upstream - check that the gas valve and manual shut-off valve are open, check inlet gas pressure, and check the igniter. Remember the control repeats the ignition sequence 3 more times before lockout code 14."
+    },
+    {
+     "label": "6.0 DC microamps or higher",
+     "verdict": "Above the 4.0 to 6.0 nominal band. Confirm the meter is in series with the sensor lead and set to DC microamps. If the reading is real, sensing is not the problem - work the gas and igniter side, and consider a control with a flame circuit fault, which is one of the listed causes of code 45."
+    }
+   ]
+  }
+ ],
+ "s-car2-qr-service-label-platform": [
+  {
+   "ask": "Which model is on the rating plate?",
+   "options": [
+    {
+     "label": "59TN7A, 59TP7A, 59SP6B, 58TN0B, 58TP0B, 58SP0B or 58CU0B",
+     "next": 1
+    },
+    {
+     "label": "A different Carrier furnace",
+     "verdict": "This does not apply to your unit. Pick the code list that matches the actual model: 59SC2E and 59SC6A use a major.minor code on a 3-digit display, 58TN0A/58TP0A/58SP0A/59SC2D/59SP6A use a single two-digit code read at the blower door sight glass, and Payne PY4G packaged rooftops use a bare flash count on the IGC."
+    },
+    {
+     "label": "A Payne packaged rooftop",
+     "verdict": "Wrong platform entirely. A Payne PY4G rooftop uses the IGC board and a bare flash count of 1 to 9 flashes on one LED - there is no 3-digit display and no QR code list."
+    }
+   ]
+  },
+  {
+   "ask": "What is the 3-digit display showing?",
+   "options": [
+    {
+     "label": "iDl, Ht, Ht1, Ht2, CL1, CL2, Hpd, Cfn, CF2, CF3 or BLR",
+     "verdict": "That is an operating mode, not a fault, and no repair is needed. iDl is idle/standby with no active demands, Ht2 and Ht1 are high and low gas heating, CL2 and CL1 are high and low cooling or heat pump, Hpd is a gas heating cycle running during a heat pump defrost cycle, Cfn/CF2/CF3 are continuous fan, and BLR means the system is connected to a communicating thermostat and running in cooling, heating, continuous fan or DHUM mode."
+    },
+    {
+     "label": "A number in the form ##.#",
+     "verdict": "That is an active status code, and on this platform the meanings are not printed in the installation manual at all. Scan the QR code on the furnace service label, or read the code table printed on that label. Do not translate the number using a 59SC2E/59SC6A major.minor list or a 58TN0A two-digit list - this platform does not share their numbering."
+    },
+    {
+     "label": "I need the fault history instead",
+     "verdict": "Use the FLt menu - it stores the 7 latest faults in memory, and shows None (non) if there are no faults. To clear the fault history, scroll to Clear (Clr) and press MENU/SELECT. The meanings of those stored numbers are still only on the service label or its QR code."
+    },
+    {
+     "label": "Err while trying to run a component test",
+     "verdict": "Err means the component test could not start. The system must be Idle - clear any thermostat input and any active fault, then retry. When it runs you should see tSt (test start), PUr (inducer ON high 10 sec), HSi (hot surface igniter ON 15 sec then OFF), Fn (blower ON 50 percent torque 10 sec then OFF) and End (all off except inducer ON low 10 sec)."
+    }
+   ]
+  }
+ ],
+ "s-car2-r454b-defrost-sequence": [
+  {
+   "ask": "What is the actual complaint on this R-454B heat pump?",
+   "options": [
+    {
+     "label": "Outdoor unit will not run at all",
+     "next": 1
+    },
+    {
+     "label": "Runs but never goes into defrost",
+     "next": 2
+    },
+    {
+     "label": "Defrost interval keeps changing on its own",
+     "verdict": "That is demand defrost working as designed, not a fault. The DIP switch setting only sets the INITIAL interval. When a defrost cycle completes quickly (1-3 minutes) the next interval is increased, and when it takes a long time (7-10 minutes) the next interval is decreased. If you want fixed behavior, turn ON quiet shift at DIP switch 3 - that turns OFF demand defrost and reverts to a time/temperature control with 30, 60, 90 and 120 minute settings."
+    },
+    {
+     "label": "Compressor drops out for about a minute entering and leaving defrost",
+     "verdict": "That is Quiet Shift-2, not a fault. It is field selectable, factory set to OFF, and turned on with DIP switch 3. With it ON the compressor is de-energized for approximately 1 minute, then the reversing valve is energized, then a few seconds later the compressor is re-energized and the normal defrost cycle starts - and the same sequence runs in reverse when defrost terminates."
+    }
+   ]
+  },
+  {
+   "ask": "Y input has 24 volts from the thermostat. What do you find at the contactor coil?",
+   "options": [
+    {
+     "label": "No voltage at the contactor coil",
+     "verdict": "Check for an opened pressure switch. The Y spade output runs through the pressure switches and back to the T1 input to energize the time delay and defrost timing circuit. Also remember the 5 minute compressor delay may still be active - defeat it by shorting the speed up pins for 1 second, and be sure not to short more than 1 second."
+    },
+    {
+     "label": "24v present but the contactor is open",
+     "verdict": "The contactor may be defective - replace the contactor. Before you do, confirm the coil reads between 20v and 30v; the contactor should pull in if voltage is correct and the coil is good."
+    },
+    {
+     "label": "Contactor is closed and the unit still will not run",
+     "verdict": "Check the capacitor and the compressor. Capacitance (mfd) = (2650 x amps) / volts. If the value is not within plus or minus 10 percent of the value stated on the capacitor, replace the capacitor."
+    },
+    {
+     "label": "No 24 volts at the Y input",
+     "verdict": "Check the thermostat or the wire. Nothing downstream of Y will energize - the T1 input, the time delay and the defrost timing circuit all depend on it."
+    }
+   ]
+  },
+  {
+   "ask": "Force a defrost by shorting the speedup pins (J1) with a flat head screwdriver. How long did you hold the short?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "seconds",
+     "label": "Seconds the speedup pins were shorted",
+     "placeholder": "e.g. 5"
+    }
+   ],
+   "bands": [
+    {
+     "under": 1,
+     "label": "Under 1 second",
+     "verdict": "Too brief. A momentary short only bypasses the compressor off delay. To force a defrost, the speedup pins (J1) must be shorted for 5 seconds and released."
+    },
+    {
+     "under": 5,
+     "label": "1 to just under 5 seconds",
+     "verdict": "Still short of the forced defrost threshold. A 1 second short is only for defeating the compressor time delay - and the manual warns not to short more than 1 second for that purpose. Hold it a full 5 seconds and release to force a defrost."
+    },
+    {
+     "label": "5 seconds or more, then released",
+     "verdict": "That is the correct forced defrost. If the defrost thermostat is open you will only see a short cycle - 30 seconds with Quiet Shift off, or a one minute sequence with Quiet Shift ON. If the unit will go into defrost with the speed up but will not on its own, the defrost thermostat is the suspect: it should read zero ohms (closed) with the liquid line near 32 deg F and infinite resistance (open) at approximately 65 deg F."
+    }
+   ]
+  }
+ ],
+ "s-car2-r454b-pressure-switches": [
+  {
+   "ask": "Which switch are you chasing on this R-454B system?",
+   "options": [
+    {
+     "label": "High pressure switch (AC or heat pump)",
+     "next": 1
+    },
+    {
+     "label": "Low pressure switch (AC only)",
+     "verdict": "The low-pressure switch on an R-454B air conditioner opens on a pressure drop at about 50 psig for Puron Advance. If it is tripping, work the charge and airflow side. Do not substitute an R-22 pressure switch - R-22 switches must not be used as replacements on R-454B systems."
+    },
+    {
+     "label": "Loss of charge switch (heat pump only)",
+     "verdict": "The loss of charge switch operates identically to the low-pressure switch except it opens at 23 (+/- 5) psig and closes at 55 (+/- 5) psig for Puron Advance (R-454B). If it is open, you have lost charge - leak check before adding refrigerant. Note that HP units with InteliSense technology come with only this switch factory installed, no high pressure switch."
+    },
+    {
+     "label": "I cannot find a high pressure switch on a heat pump",
+     "verdict": "That is expected on an InteliSense heat pump. HP units with InteliSense technology do not come with a factory installed high pressure switch - only the loss of charge pressure switch is factory installed. High pressure protection is handled through the control and its pressure transducers instead."
+    }
+   ]
+  },
+  {
+   "ask": "What did the high side read at the moment of the trip or lockout?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "psig",
+     "label": "High side pressure at trip (psig)",
+     "placeholder": "e.g. 640"
+    }
+   ],
+   "bands": [
+    {
+     "under": 420,
+     "label": "Below 420 psig",
+     "verdict": "Below the lowest reset point. R-454B high pressure switches close at 420 or 470 (+/- 25) psig, so a switch still open down here is failed open or has lost a connection. Ohm it out cold and replace it if it reads open."
+    },
+    {
+     "under": 470,
+     "label": "420 to just under 470 psig",
+     "verdict": "You are inside the 420 (+/- 25) psig close band. If the switch is still open, it is the 470 psig version - let head pressure fall further, or ohm the switch out cold to confirm it is good before replacing it."
+    },
+    {
+     "under": 610,
+     "label": "470 to just under 610 psig",
+     "verdict": "Both close points (420 and 470 +/- 25 psig) are below this and both cut-outs (610 and 670 +/- 10 psig) are above it, so the high pressure switch should be closed. If the unit is locked out at this pressure, the trip came from the control side, not the mechanical switch - read the stored diagnostic code."
+    },
+    {
+     "under": 670,
+     "label": "610 to just under 670 psig",
+     "verdict": "You are at or past the 610 (+/- 10) psig cut-out for the lower-set high pressure switch. Find the head pressure cause before resetting: dirty condenser coil, failed or slow condenser fan, overcharge, or non-condensables in the system."
+    },
+    {
+     "label": "670 psig or higher",
+     "verdict": "At or past the 670 (+/- 10) psig cut-out. On a 27VNA inverter, when this switch opens the VFD loses line power and the compressor and fan motor will not operate, and the PCM sets a diagnostic code - so a dead unit here is expected, not a second failure. That switch closes again at 470 (+/- 25) psig. Clear the head pressure cause first."
+    }
+   ]
+  }
+ ],
+ "s-car2-intelisense-no-data": [
+  {
+   "ask": "What are the two LEDs on the HK32EA013 module doing?",
+   "options": [
+    {
+     "label": "Amber solid, green solid",
+     "verdict": "The link is up - amber solid means there is power to the product and green solid means there is communication between the control board and the InteliSense-enabled thermostat. If a single value looks wrong at the thermostat, replace that individual sensor: if only one sensor is not reporting correctly, replace the sensor."
+    },
+    {
+     "label": "Amber solid, green dark",
+     "next": 1
+    },
+    {
+     "label": "Both LEDs dark",
+     "verdict": "No power at the module. Check if the 1A fuse on the board is blown, then check the 24v feed and every connection into the module before replacing anything."
+    },
+    {
+     "label": "LEDs look fine but the outdoor temperature looks wrong",
+     "verdict": "Do not chase it. The outdoor temperature sensor does not show up on this new thermostat display, so it should not be used for troubleshooting or charging. Use a separate thermometer if you need outdoor ambient for a charging decision."
+    }
+   ]
+  },
+  {
+   "ask": "Measure Y1 to common at the module with the system energized.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "volts",
+     "label": "Y1 to common (VAC)",
+     "placeholder": "e.g. 24"
+    }
+   ],
+   "bands": [
+    {
+     "under": 20,
+     "label": "Under 20 VAC",
+     "verdict": "Too low. Y1 should be approximately 24VAC when energized, and the InteliSense data bus uses the Y1 and C conductors in the thermostat bundle - so a weak Y1 takes the data with it. Check if the 1A fuse on the board is blown, then work the thermostat wiring for a high resistance splice, a corroded terminal, or a run that is too long and too small."
+    },
+    {
+     "under": 30,
+     "label": "20 to just under 30 VAC",
+     "verdict": "Y1 is in range at approximately 24VAC, so power and the call are good and the fault is in the data path. Verify all connections are secure at both ends of the Y1 and C pair. If only one sensor is not reporting correctly, replace that sensor rather than the HK32EA013 module."
+    },
+    {
+     "label": "30 VAC or higher",
+     "verdict": "Higher than expected. Re-check your meter reference and confirm you are on the module's Y1 terminal and not another 24v source. If the reading is genuine, look for a crossed 24v circuit in the thermostat bundle before replacing the module - a miswire that pushes extra voltage onto Y1 will take out the 1A fuse next."
+    }
+   ]
+  }
+ ],
+ "s-car2-payne-defrost-dip-interval": [
+  {
+   "ask": "Which Payne heat pump is on the rating plate?",
+   "options": [
+    {
+     "label": "PH16NA two-stage",
+     "next": 1
+    },
+    {
+     "label": "PH14*B, PH15NB, PH16NC, PH13NB or PH14NB single-stage",
+     "next": 1
+    },
+    {
+     "label": "Not sure",
+     "verdict": "Get the model number before touching the interval. All of these boards are field selectable at 30, 60, 90 or 120 minutes, but the documented factory default is contradictory on PH16NA and unstated on the PH14-16 family - so you cannot assume what the previous tech left it on. Read the physical setting on the board."
+    }
+   ]
+  },
+  {
+   "ask": "How is the defrost interval selected on this board?",
+   "options": [
+    {
+     "label": "DIP switches on the board",
+     "next": 2
+    },
+    {
+     "label": "Quick connects at the edge of the board",
+     "verdict": "That is a non-Quiet Shift 2 board - the time period between defrost cycles is selected using quick connects located at the edge of the board (30, 60, 90 or 120 minutes) and there is no DIP switch 3 Quiet Shift-2 option. To force a defrost: power off, disconnect the outdoor fan motor lead from OF2 for PSC motors or the ODF terminal for ECM motors and tape it off, restart in heating, then short the speedup terminals - that reduces the timing sequence to 1/25th of original time. Remove the screwdriver as soon as the reversing valve shifts, or the control terminates the 10-minute defrost in about 2 seconds."
+    },
+    {
+     "label": "Both DIP switches and quick connects are present",
+     "next": 2
+    }
+   ]
+  },
+  {
+   "ask": "What are you trying to sort out on this board?",
+   "options": [
+    {
+     "label": "PH16NA - the manual and the board silkscreen disagree on the default",
+     "verdict": "Both values are printed in Payne literature and they contradict each other. IM-PH16NA-05 states the defrost control is factory set to 90 minutes. The PH16NA-01WD wiring diagram board silkscreen lists 60 MINUTES (DEFAULT). Neither is wrong on paper - trust what is physically set on the board in front of you, set it to suit the climate, and write down which interval you left it on."
+    },
+    {
+     "label": "Quiet Shift-2 (DIP switch 3) is ON and the compressor keeps dropping out",
+     "verdict": "That is Quiet Shift-2 working, not a fault. It is factory set to OFF and turned on by placing DIP switch 3 in the ON position. With it ON the compressor is de-energized for approximately 1 minute, then the reversing valve is energized, then a few seconds later the compressor is re-energized and the normal defrost cycle starts - and the same sequence runs in reverse at termination. Turn DIP switch 3 OFF if the customer does not want the pause."
+    },
+    {
+     "label": "Interval is set but the coil still ices up",
+     "next": 3
+    },
+    {
+     "label": "Compressor will not restart after a power blip",
+     "verdict": "Normal. The defrost control board is equipped with a 5 minute lockout timer that is initiated upon any interruption of power, and the OF2 relay and T2 terminal will not energize until the compressor has been off for 5 minutes or power has not been cycled for 5 minutes. Wait out the 5 minute time guard before condemning the board."
+    }
+   ]
+  },
+  {
+   "ask": "Put a thermocouple on the liquid line at the defrost thermostat and run the unit in heating.",
+   "type": "number",
+   "fields": [
+    {
+     "key": "linetemp",
+     "label": "Liquid line temperature at the defrost thermostat (deg F)",
+     "placeholder": "e.g. 28"
+    }
+   ],
+   "bands": [
+    {
+     "under": 30,
+     "label": "Below 30 deg F",
+     "verdict": "You are below the approximate 30 deg F (-1.11 C) closing point, so the defrost thermostat should be closed and the DFT terminal energized. If the timing sequence is not running, the defrost thermostat or its wiring is open - ohm it out, it should read near zero closed. Remember the timer starts only when the defrost thermostat is closed and the contactor is energized."
+    },
+    {
+     "under": 32,
+     "label": "30 to just under 32 deg F",
+     "verdict": "You are right at the closing point - the defrost thermostat closes at approximately 32 deg F (0 C). Let the coil cool a few more degrees and confirm the DFT terminal energizes and the defrost timing sequence starts. If it will not close by 30 deg F (-1.11 C), replace the defrost thermostat."
+    },
+    {
+     "under": 65,
+     "label": "32 to just under 65 deg F",
+     "verdict": "Between the close and open points. The thermostat should be closed and the timer should be counting toward the selected 30, 60, 90 or 120 minute interval. If the unit never initiates defrost at the end of that interval with the thermostat closed, replace the defrost control board."
+    },
+    {
+     "label": "65 deg F or higher",
+     "verdict": "At or above the approximate 65 deg F (18.33 C) opening point, so the defrost thermostat is open and the timing sequence is reset - that is why it never defrosts. Check where the sensor is clamped: if it is not on the liquid line in good contact, it will never see the coil get cold. The unit also stays in defrost only until the thermostat reopens at approximately 65 deg F (18.33 C), so a mislocated sensor cuts defrost short too."
+    }
+   ]
+  }
+ ],
+ "s-car2-3phase-reverse-rotation": [
+  {
+   "ask": "What is the small LED on the phase monitor board doing?",
+   "options": [
+    {
+     "label": "Flashing",
+     "next": 1
+    },
+    {
+     "label": "Solid ON",
+     "verdict": "Phase rotation is correct and the monitor is allowing the contactor to be energized. The problem is elsewhere - check the contactor, the low voltage call reaching it, and the compressor windings. The phase monitor has cleared this unit."
+    },
+    {
+     "label": "OFF with a cooling call present at the unit",
+     "verdict": "OFF on this board means no call for compressor operation, so with a live call the board is either not seeing the call or is not powered. Confirm 24v at the board and confirm the Y call actually reaches the control box before touching the phase leads."
+    },
+    {
+     "label": "OFF with no cooling call",
+     "verdict": "Normal. OFF simply means no call for compressor operation on this three-state monitor. Nothing to fix - make a call for cooling and read the LED again."
+    }
+   ]
+  },
+  {
+   "ask": "A flashing LED means reversed phase. What is the situation?",
+   "options": [
+    {
+     "label": "Ready to correct it now",
+     "verdict": "Disconnect power to the unit and interchange 2 field-wiring leads on the unit contactor. Restore power and confirm the LED goes solid ON and the contactor pulls in. Three-phase scroll compressors are rotation sensitive, and the monitor will not allow the contactor to be energized until the phasing is right."
+    },
+    {
+     "label": "Already swapped two leads and it still flashes",
+     "verdict": "Power down and swap a different pair of the three field-wiring leads at the unit contactor. If every combination still flashes, you likely have a lost phase or badly unbalanced supply voltage - measure all three legs at the disconnect before condemning the monitor board."
+    },
+    {
+     "label": "The compressor ran backwards for a while before anyone noticed",
+     "verdict": "Correct the rotation first: power off, interchange 2 field-wiring leads on the unit contactor, confirm the LED goes solid. Then evaluate the compressor - running a three-phase scroll backwards is a listed unit damage hazard, so check amp draw, pumping and noise before you call the job done."
+    },
+    {
+     "label": "This unit is single phase",
+     "verdict": "There is no phase monitor board on a single phase unit and nothing here applies. A flashing LED on a single phase unit belongs to a different board - identify the board and use the right code list."
+    }
+   ]
+  }
+ ],
+ "s-car2-27vpa9-false-fault-bulletin": [
+  {
+   "ask": "Is this a Carrier 27VPA9, or the Bryant 249VAN, with IntelliSense?",
+   "options": [
+    {
+     "label": "Yes",
+     "next": 1
+    },
+    {
+     "label": "No, a different model",
+     "verdict": "The false fault code defect documented in TIC2026-0016 applies only to residential variable speed outdoor units with IntelliSense - Carrier 27VPA9 and Bryant 249VAN. On any other model, work your code as a real fault against that model's own list."
+    },
+    {
+     "label": "It is a 27VNA0, 27VNA1 or 27VNA3",
+     "verdict": "The bulletin does not list these models. Work the code as real, using the 27VNA0/27VNA1/27VNA3 malfunction list - and remember that list is not the same as the 27VPA9 list, so do not read one against the other."
+    }
+   ]
+  },
+  {
+   "ask": "What software version is loaded in the outdoor unit?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "version",
+     "label": "Outdoor unit software version",
+     "placeholder": "e.g. 3.00"
+    }
+   ],
+   "bands": [
+    {
+     "under": 4,
+     "label": "Below 4.00",
+     "verdict": "You are on version 3.00 PRODUCTION (June 2026) or earlier, and version 4.00 (July 2026) exists specifically because it eliminates false fault code reporting. The code you are chasing may not be a real fault. Download version 4.00 from HVACPartners under the product tab, load it, clear the code, and run the system before you replace any part."
+    },
+    {
+     "label": "4.00 or newer",
+     "verdict": "You are on version 4.00 (July 2026) or newer, which eliminates false fault code reporting. Treat the code as a real fault and work it against the 27VPA9 malfunction list - not the 27VNA0/27VNA1/27VNA3 list, which uses different codes for different faults."
+    }
+   ]
+  }
+ ],
+ "s-car2-27vna-lockout-durations": [
+  {
+   "ask": "How are you trying to get the code out of this unit?",
+   "options": [
+    {
+     "label": "Reading the 5x7 LED display on the PCM",
+     "next": 1
+    },
+    {
+     "label": "Counting short and long flashes on the amber status light",
+     "next": 1
+    },
+    {
+     "label": "Nothing is displaying and the unit appears dead",
+     "verdict": "Use Status Code Recall Mode. Turn the unit OFF first, short the force defrost connector (labeled J2 on the board) with a clip wire, then power ON the unit. Active status codes are stored in memory even when power is absent. Recall mode continues as long as the terminals remain shorted and the unit will not heat or cool meanwhile. Read the code, power down, and remove the short."
+    },
+    {
+     "label": "The amber status light is doing something other than a countable code",
+     "verdict": "Read the mode instead of a code: off means power is removed from the PCM or there is a fundamental PCM fault; on means standby with no diagnostic conditions; 1 slow flash means operating at low capacity; 2 slow flashes means operating at high capacity; continuous slow flash means operation has been interrupted or is being limited; continuous fast flash means a lockout condition or Diagnostic Code Recall mode."
+    }
+   ]
+  },
+  {
+   "ask": "Which unit is it? The two families use different malfunction lists.",
+   "options": [
+    {
+     "label": "27VNA0, 27VNA1 or 27VNA3",
+     "next": 2
+    },
+    {
+     "label": "27VPA9",
+     "next": 2
+    },
+    {
+     "label": "Not sure",
+     "verdict": "Get the model number before looking the code up. The 27VPA9 malfunction list is NOT the same as the 27VNA0/27VNA1/27VNA3 list - 27VPA9 carries 31-56 High Pressure Switch Activated, 38-55 Compressor Physical Malfunction, 82-58 IGBT Short Detection and 84-51 IPM Overtemp, none of which appear on the 27VNA list, and it uses 38-71 for a Sensor-less Control Stall rather than a VFD Estimator malfunction. Reading one list against the other sends you after the wrong part."
+    }
+   ]
+  },
+  {
+   "ask": "How long has the unit been sitting locked out?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "minutes",
+     "label": "Time since the lockout started (minutes)",
+     "placeholder": "e.g. 45"
+    }
+   ],
+   "bands": [
+    {
+     "under": 30,
+     "label": "Under 30 minutes",
+     "verdict": "Too early to judge. The shortest published lockouts on this platform are 30 minutes - 38-54 Compressor No Pump on both lists, and 39-58 Fan Motor Malfunction on the 27VNA list. Give it the full duration and see whether it clears on its own before you start pulling parts."
+    },
+    {
+     "under": 60,
+     "label": "30 minutes to just under 1 hour",
+     "verdict": "Any 30 minute lockout should have cleared by now. Still down means you are on a 1 hour, 2 hour, 4 hour or permanent lockout. Read the actual code and look up its published duration rather than cycling power repeatedly."
+    },
+    {
+     "under": 120,
+     "label": "1 hour to just under 2 hours",
+     "verdict": "The 1 hour lockouts should have cleared - 39-53 Fan Start Malfunction, 83-57 Compressor Under speed Shutdown, 85-54 DC Over Voltage and 86-46 VFD Communication Malfunction on the 27VNA list, plus 88-81 MOSFET Open and 91-46 Reported Compressor Speed on the 27VPA9 list. Still locked out means a 2 hour, 4 hour or permanent code."
+    },
+    {
+     "under": 240,
+     "label": "2 hours to just under 4 hours",
+     "verdict": "The 2 hour lockouts should have cleared - that group covers most of the pressure, temperature and VFD voltage codes including 31-58, 32-55, 33-55, 34-58, 35-58, 36-55, 61-53, 81-53, 82-56, 82-57, 83-55, 83-56, 84-58 and 85-53. If it is still down you are on a 4 hour lockout or a permanent one."
+    },
+    {
+     "label": "4 hours or more",
+     "verdict": "The 4 hour lockouts have had time to clear - 38-53 Compressor Starting, 38-71 VFD Estimator, 39-55 Unexpected Fan Shutdown, 81-54 Unbalanced PFCM, 81-58 VFD System Wiring Error, 87-53 VFD Initialization and the 88-7x VFD internal sensor malfunctions. A unit still locked out past 4 hours is on a permanent lockout, which the manual marks as unlikely to clear on its own: 13-53 System Control Upgrade Required, 25-63 VFD Model Mismatch, 28-71 Fuse 1 Open, 28-72 Fuse 2 Open, 32-59 Low Pressure Disable, 57-43 P1 Sensor and 58-43 P2 Sensor Malfunction. Fix the underlying cause and follow the service manual troubleshooting steps - power cycling will not clear these."
+    }
+   ]
+  }
+ ],
+ "s-car2-33zc-zone-sensor-e-codes": [
+  {
+   "ask": "Which E code is showing on the T58 display?",
+   "options": [
+    {
+     "label": "E1",
+     "next": 1
+    },
+    {
+     "label": "E2",
+     "verdict": "The T58 is not attached to a valid device. This occurs when a CCN communication is requested and the configured destination address is 0 or the destination device type is 0. Go into Installer Options and set a real destination address and device type. No data will go out to the CCN until the Installer Options have been correctly configured to a valid device on the network. Do not replace the sensor."
+    },
+    {
+     "label": "E3",
+     "verdict": "CCN communication failure - the T58 initiated a CCN communication and there was not a successful completion. Check the CCN bus wiring, terminations and polarity between the T58 and the destination device, and confirm the far-end device is powered and on the network. This is a bus problem, not a sensor problem."
+    },
+    {
+     "label": "E4",
+     "verdict": "Command rejection - the attached device rejected a command from the T58. The bus itself is working, so check what the attached device is configured to accept and confirm the T58 is pointed at the correct device type and address in Installer Options. Do not replace the sensor."
+    },
+    {
+     "label": "The code flashes and disappears before I can read it",
+     "verdict": "That is normal behavior - the error code displays for up to 5-10 seconds then reverts to the default space temperature display. Watch through a full cycle, or trigger the condition again, to catch which E code it is."
+    }
+   ]
+  },
+  {
+   "ask": "E1 is thermistor out of range. What is the actual air temperature at the sensor?",
+   "type": "number",
+   "fields": [
+    {
+     "key": "degf",
+     "label": "Measured air temperature at the sensor (deg F)",
+     "placeholder": "e.g. 72"
+    }
+   ],
+   "bands": [
+    {
+     "under": 0,
+     "label": "Below 0 deg F",
+     "verdict": "E1 is legitimate. The on-board thermistor errors when air temperature is below 0 F (-17 C) or above 146 F (63 C) for 15 seconds or more. There is nothing to replace - the space really is out of range. The error will clear once the thermistor is in range, the valid temperature will be displayed and the error indicator will disappear."
+    },
+    {
+     "under": 146,
+     "label": "0 to just under 146 deg F",
+     "verdict": "The space is inside the valid 0 F (-17 C) to 146 F (63 C) window, so the on-board thermistor is reading wrong. Replace the 33ZC T58 zone sensor."
+    },
+    {
+     "label": "146 deg F or higher",
+     "verdict": "E1 is legitimate - at or above the 146 F (63 C) limit held for 15 seconds or more. Find the heat source before blaming the sensor. The error will clear once the thermistor is back in range and the valid temperature will be displayed again."
+    }
+   ]
+  }
  ]
 };
