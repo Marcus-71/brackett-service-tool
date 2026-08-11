@@ -16936,5 +16936,1169 @@ const SYMPTOMS = [
   ],
   "safety": "Inverter units store lethal DC in their capacitors after power is removed. Kill power at the disconnect, wait the posted time, and verify near-zero VDC across the DC link terminals with a meter before touching the outdoor board. Prove the meter live-dead-live.",
   "confidence": "common"
+ },
+ // ===== Bosch Home Comfort diagnostic scenarios (added v97, from the 23 official manuals mined for v95) =====
+ {
+  "id": "s-bosch-ids-r410a-display-blank",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - outdoor display is blank but the board has power",
+  "summary": "High voltage is present at the outdoor unit but the two-character LED display shows nothing at all.",
+  "steps": [
+   "Confirm high voltage at the outdoor terminal block L1-L: normal band is 172-270V(AC). Anything outside that band is the fault, not the board.",
+   "Ask whether power has been cycled repeatedly inside a 3 minute window. The manual says to power off and wait at least 3 minutes before powering back on.",
+   "Check the outdoor board fuse (250V/30A). A blown fuse kills the display and is usually a symptom of a failed ODU motor or compressor, not a standalone failure.",
+   "Compare the low voltage wiring against the unit wiring diagram before unplugging anything.",
+   "Unplug the outdoor blower motor wire at CN3 and power up. If the display now works, the motor is dragging the board down - replace the motor.",
+   "If still dead, unplug the pressure transducer at CN16 and power up. If the display now works, replace the transducer.",
+   "If the display is still dead with both loads unplugged, check the compressor per the winding test, then replace the control board."
+  ],
+  "safety": "Line voltage and a 380 VDC inverter bus. Kill power, wait 3 minutes, and verify less than 42 VDC at inverter test points P-N before touching the board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-no-start-no-code",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - thermostat is calling but nothing starts, no fault code",
+  "summary": "Power is on, the stat is calling, the display shows no fault, and the unit just sits there.",
+  "steps": [
+   "Rule out the built-in delays first: after any high voltage interruption the compressor always waits at least 3 minutes before it will start on a Y call.",
+   "In cooling there is at least a 6 minute delay between the stat being satisfied and the compressor restarting; in heating that delay is at least 3 minutes. The outdoor fan starts immediately on a Y call in both cases.",
+   "Measure 230V(AC) at the high voltage terminal. If it is missing, fix the power supply before anything else.",
+   "Measure between Y and C and between B and C at the outdoor low voltage terminals: you should read 18-28V(AC) and 0V(DC) with a call present.",
+   "If the low voltage is missing or wrong, correct the thermostat wiring or replace the thermostat.",
+   "With voltage confirmed, verify the compressor wire harness is landed - a disconnected compressor harness gives exactly this no-start, no-code picture.",
+   "Power off, wait at least 3 minutes, power on and re-test."
+  ],
+  "safety": "Line voltage present at the terminal block. Verify the disconnect state before probing.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-e5-voltage",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - E5 high/low voltage protection",
+  "summary": "The outdoor display shows E5 and the compressor is locked out on a supply voltage problem.",
+  "steps": [
+   "Measure the incoming supply at the outdoor terminal block. The unit trips E5 above 270V or below 172V.",
+   "If the supply is above 270V or below 172V, this is a utility or service-conductor problem - correct the power supply or call the utility provider.",
+   "If supply voltage sits between 180 and 210V the board shows a U** system protection code instead and limits compressor frequency to 50 Hz or less. That is a limited-run state, not an E5 lockout.",
+   "With the supply in band, check the PFC/DC bus: power the unit on and with the fan running measure between P and N at CN3.",
+   "Less than 310V(DC) at P-N with the unit running points at the control board.",
+   "Normal DC bus at P-N when the compressor starts is 370-385V(DC).",
+   "On BOVB18 the E5 chart instead checks for 380V DC at P and N with the compressor running, and also calls for checking wire gauge and nearby high-power equipment."
+  ],
+  "safety": "380 VDC on the inverter bus. Wait 3 minutes after disconnecting power and confirm less than 42 VDC at P-N before touching the board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-odu-fan-e6-p8",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - E6 or P8 outdoor DC fan motor fault",
+  "summary": "The outdoor fan is not running right and the board is posting E6 (fan fault) or P8 (fan protection).",
+  "steps": [
+   "Look at the fan blade first: damage or foreign matter blocking the blade is the top cause. Power off and clear it.",
+   "P8 is specifically the high-wind/severe weather protection. If it is blowing hard, power off until conditions subside - no parts needed.",
+   "Confirm the ODU fan motor harness is seated (CN3 on the Service Manual boards, CN32 on BOVA15).",
+   "Power off at the breaker, wait 3 minutes, unplug the motor harness and measure the resistance table: P-N (Red-Black) 0.603M, +15V-N (White-Black) 46.0K, Vsp-N (Yellow-Black) 40.0K, FG-N (Blue-Black) 1M, all within +/- 10%.",
+   "On BOVA15 the E6 chart instead calls for 25-40 ohm between any two of U2/V2/W2 at CN32 and more than 10M to ground, plus motor insulation resistance above 100K. The BOVA15 P8 chart prints more than 36 ohm for the same measurement - the IOM is inconsistent, so read your unit's own table.",
+   "Reconnect at CN3, run the unit and check the drive voltages: P-N 370-385V(DC), +15V-N 14-18V(DC), VSP-N 1.9-5.1V(DC). Any one out of band points at the control board.",
+   "On BOVB18 the E6 code only exists on 48K and 60K models, and an occasional E6 self-clears after 6 minutes with no action needed."
+  ],
+  "safety": "380 VDC bus and line voltage. Power off at the breaker, wait 3 minutes, verify less than 42 VDC at P-N before measuring.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids-r410a-p2-h5-low-pressure",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - P2 low pressure protection, or H5 hard lockout",
+  "summary": "The unit keeps shutting down on P2, or it has already latched to H5 and will not restart on its own.",
+  "steps": [
+   "Know the escalation: P2 five times inside 100 minutes latches H5, and H5 is the one fault code in this family that requires a hard restart at the breaker.",
+   "Confirm both service valves are fully open before anything else - closed valves produce this exact code.",
+   "Run the unit and compare gauge suction pressure to the board's own reading: press CHECK and read point 9 in cooling or point 10 in heating. They should agree within 50 PSI.",
+   "If the board reading and the gauge disagree by more than 50 PSI, replace the pressure transducer.",
+   "If they agree and pressure really is low, look for undercharge, then for restriction and poor heat exchange: dirty coils, plugged filter, failed indoor fan in cooling or outdoor fan in heating.",
+   "Protection setpoint for reference: low pressure below 43.5 PSI for 5 minutes in cooling stops the compressor and outdoor fan, and the system retries after 6 minutes.",
+   "In heating the unit also stops if condensing temperature Tc falls below outdoor ambient T4."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-p1-f1-high-pressure",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - P1 or F1 high pressure protection",
+  "summary": "The unit trips on high pressure, usually in cooling on a hot day or in heating with a starved indoor coil.",
+  "steps": [
+   "If you put the unit in Force mode, quit Force mode first - forced 100 percent capacity will trip high pressure on its own.",
+   "Check outdoor ambient. Above 120F the flowchart calls this out-of-range operation with no service required.",
+   "Power off at the breaker and ohm the high pressure switch at the harness. A healthy closed switch reads less than 1 ohm.",
+   "Reference setpoints: the mechanical high pressure switch opens above 580 PSIG and recloses below 435 PSIG.",
+   "With the switch good, check for overcharge and correct per the charging procedure.",
+   "If charge is right, work the poor-heat-exchange list on the high side: blocked or dirty coil (outdoor in cooling, indoor in heating), failed fan motor, closed service valves, restricted TXV/EEV or bi-flow drier.",
+   "Restart and confirm the code does not return."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-p3-overcurrent",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - P3 compressor over current protection",
+  "summary": "The compressor pulls too much current and the board drops it on P3.",
+  "steps": [
+   "Quit Force mode if you are in it, and check outdoor ambient - above 120F the chart treats this as out-of-range operation.",
+   "Power off at the breaker and ohm the high pressure switch: it should read 1 ohm or less and be wired correctly.",
+   "Confirm both service valves are open.",
+   "Clamp compressor current while it is running. The BOVA15 IOM trips on more than 11.5A for 2/3 ton and more than 15.5A for 4/5 ton. The BOVB18 IOM prints more than 15A for 2/3 ton and more than 20A for 4/5 ton for the same check - the two manuals do not agree, so read the table in your own unit's IOM.",
+   "The board's own current reading is available at CHECK point 19 (compressor current in amps) for a second opinion.",
+   "If current is high, work abnormal pressure: overcharge, blockage, dirty coils, failed fan.",
+   "Power off and measure compressor windings before condemning it: U-V, V-W, W-U less than 1.5 ohm on 3 ton and less than 1 ohm on 5 ton, each winding to ground more than 10M.",
+   "The BOVB18 chart also checks compressor insulation resistance greater than 100K and, in Force mode after 10 minutes, a high-to-low pressure difference greater than 30 PSI before condemning the board."
+  ],
+  "safety": "Clamping current means working in a live inverter cabinet. Treat the DC bus as 380 VDC and keep hands clear of the P and N terminals.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids-r410a-compressor-test",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - is the compressor actually bad? (winding and insulation test)",
+  "summary": "You are about to condemn an inverter compressor and want the manual's own pass/fail numbers first.",
+  "steps": [
+   "Confirm the supply is 172-270V before testing anything - bad power fakes a bad compressor.",
+   "Confirm 24V(AC) between Y and C at the control board with a call present.",
+   "With the unit running, check the DC bus between P and N at CN3. Below 310V(DC) points at the control board, not the compressor.",
+   "Restart, give a call, wait 5 minutes and listen. If it runs quietly with no fault code, no service is required.",
+   "If there is an active fault code, follow that code's procedure instead of condemning the compressor.",
+   "Power off, unplug the compressor leads and measure: U-V, V-W and W-U less than 1.5 ohm on 3 ton and less than 1 ohm on 5 ton. Values shift +/- 0.5 ohm with equipment and temperature.",
+   "Measure each winding to ground: more than 10M is the pass value.",
+   "If windings pass, verify superheat and subcool and correct the charge before replacing the compressor."
+  ],
+  "safety": "380 VDC bus. Power off at the breaker, wait 3 minutes, confirm less than 42 VDC at P-N before unplugging compressor leads.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-sensor-test",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - E4, C3 or E7 sensor faults (how to prove a thermistor)",
+  "summary": "The board is calling a temperature sensor bad and you want to confirm it before ordering parts.",
+  "steps": [
+   "Check ambient first. Below -4F the E4 chart says the unit is simply out of operating range and no service is required.",
+   "Check for the classic wiring mistake: T5 and Tf swapped at the control board is the common cause behind E7 and P0.",
+   "For C3, check sensor location: a T3 sensor out of its clip or a heat source near T3/T4 reads wrong without being electrically bad.",
+   "Satisfy the thermostat and let the unit sit in standby 10-15 minutes, then press CHECK and write down the sensor temperature the board is reporting. Skipping the wait makes the comparison meaningless.",
+   "Power off at the breaker, unplug the sensor and measure resistance at the harness.",
+   "Convert with the resistance table and compare: the reading must be within +/- 15F of the check point value. Outside that, replace the sensor.",
+   "A reading of 0 ohms (shorted) or an extremely high reading (open) means replace the sensor regardless.",
+   "T3/T4/T3L anchors: 60F = 15.648 kOhm, 75F = 10.527 kOhm, 90F = 7.225 kOhm. T5 anchors: 60F = 84.465 kOhm, 75F = 57.634 kOhm, 90F = 40.152 kOhm. Do not cross-apply the two curves."
+  ],
+  "safety": "Power off at the breaker before unplugging sensors; the inverter bus holds 380 VDC for up to 3 minutes.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-transducer-h8",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - H8 pressure transducer fault, or the board's pressure looks wrong",
+  "summary": "H8 is posted, or the board's reported pressure does not match your gauges.",
+  "steps": [
+   "Run the unit in heating or cooling and write down suction pressure from your gauges.",
+   "Press CHECK and record the board's pressure: point 9 in cooling, point 10 in heating.",
+   "At CN16 on the control board, measure DC voltage between the Red and Black wires. The supply should be 5V(DC); anything else points at the control board.",
+   "Measure DC voltage between White and Black at CN16 (that is the signal line) and convert with the voltage/pressure graph in the manual.",
+   "Compare graph-derived pressure to gauge pressure. Outside +/- 50 psi, replace the transducer.",
+   "Compare the CHECK point value to gauge pressure. Outside 50 PSI, replace the transducer.",
+   "If both comparisons pass and the wiring is secure, restart the system - no service required."
+  ],
+  "safety": "Handle the transducer carefully for static, especially in dry weather, and treat the board as live at 380 VDC until proven otherwise.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-force-mode-charge",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - using Force mode to verify charge",
+  "summary": "The only approved way to check charge on these units is cooling Force mode, and the target numbers change by model family.",
+  "steps": [
+   "Confirm conditions: outdoor 55F to 120F and indoor held between 70F and 80F. Outside that, weigh the charge in instead.",
+   "Start in cooling, then short-press FORCE (SW2 on the Service Manual boards) for 1 second. The display shows a bar-and-digits pattern for Force mode. It can take 10 minutes to ramp.",
+   "Confirm the unit reached 100 percent capacity by comparing compressor Hz to the model table. BOVA15: 46/66/54/60 Hz for 2/3/4/5 ton. BOVA20, BOVC20, BOVB20, BOVD20 and the BOVA2.0 Service Manual: 48/72/54/62 Hz. BOVB18: 56/76/56/66 Hz. Match your own model's table.",
+   "Run at least 20 minutes at 100 percent before touching the charge, and 5 minutes after every adjustment.",
+   "Measure and calculate superheat and subcooling. BOVA15 design subcooling: 6-12F for 2 ton, 8-15F for 3 ton, 6-12F for 4 and 5 ton, with 6-18F superheat. BOVA20/BOVC20/BOVB20/BOVD20 use a two-row optimized/standard table instead (for example 24K/36K subcool 8-12F optimized or 6-10F standard).",
+   "The board can back-check subcool with no gauges: CHECK point 7 (T3L liquid line) minus point 3 (T3 coil) lands within 2 degrees of gauge subcool.",
+   "If superheat and subcool will not come in, check the filter, then the blower speed taps (SW6-1/SW6-2) before adding refrigerant.",
+   "If CHECK point 16 (compressor discharge superheat) is above 40F, the chart says recover the charge and evacuate rather than keep adding."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids-r410a-check-point",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - reading live values off the board with the CHECK button",
+  "summary": "You are standing at the outdoor unit and want sensor and system data without back-probing anything.",
+  "steps": [
+   "Press the CHECK button on the outdoor control board. The first press shows the point number; one second later it shows that point's value.",
+   "Press again to step to the next point. After 20 seconds on the same point the display returns to normal status.",
+   "Normal status itself is meaningful: in standby the last two digits are outdoor ambient temperature, and while running they are compressor operating frequency.",
+   "Key points on the BOVA2.0 Service Manual board: 0 capacity, 1 mode (0 standby, 2 cooling, 3 heating), 2 set compressor Hz, 3 T3 coil, 4 T4 ambient, 5 T5 discharge, 9 Pe suction pressure, 10 Pc head pressure, 16 discharge superheat, 17 EEV opening, 19 compressor amps, 20 AC volts, 21 DC bus volts, 23 last fault code.",
+   "Point 6 differs by model: T6 compressor suction temperature on the Service Manual board, but Reserve on BOVA15 - do not assume.",
+   "Bosch recommends verifying point 0 (capacity), point 1 (mode) and subcooling as point 7 minus point 3 before leaving the job.",
+   "If the first digit shows a letter instead of a number, the unit is running in a limited condition, not faulted."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-defrost-normal",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - display shows dF and the unit looks like it quit heating",
+  "summary": "Steam off the outdoor coil, indoor air feels cool, and the display reads dF - that is a normal defrost cycle.",
+  "steps": [
+   "Read the display. dF with no fault code is normal defrost. The digits after dF are compressor Hz.",
+   "Defrost enters on any one of three conditions, all based on outdoor coil T3 versus ambient T4 held for 3 minutes.",
+   "Delta T thresholds differ by model family. BOVA2.0 Service Manual and BOVA20/BOVC20/BOVB20/BOVD20: T4 at or above 39F needs 18F delta, at or above 30F needs 16F, at or above 19F needs 14F. BOVA15 prints 21F/19F/17F for the same three bands - verify against your own unit's IOM.",
+   "Below 19F ambient with T3 under 9F, defrost enters on accumulated compressor run time of 80 minutes or more.",
+   "Minimum run time also forces defrost: 4 hours when T4 is below 23F, 2 hours when T4 is 23F to 42F. So does high pressure saturation temperature below 82F for 20 minutes.",
+   "Defrost terminates when T3 reaches 64F for 1 minute, or after 8 minutes, whichever comes first.",
+   "To prove defrost works without waiting: with a heat call and at least 8 minutes of run time, hold FORCE for 6 seconds, wait about 40 seconds and watch for dF. It ends by itself; wait 5 minutes before repeating.",
+   "SW5-1 ON reduces operating time by 10 percent (enters defrost sooner) and SW5-2 ON extends defrost by 60 seconds. Both default OFF."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids-r410a-status-letters",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - display shows a letter and digits, is it broken?",
+  "summary": "The outdoor LED shows something like P56, A, U or a bar pattern and the customer thinks it is a fault code.",
+  "steps": [
+   "Split the display: fault codes shut the compressor off, limited-condition codes leave it running at reduced frequency.",
+   "P followed by digits means the compressor is running under a compression-ratio limit - typically low temperature and low load. The manual says no service is required.",
+   "A followed by digits means oil return mode after a long low-speed run. Normal.",
+   "dF means defrost. Normal.",
+   "A bar-and-digits pattern means Force mode - somebody pressed FORCE. It auto-quits after 2 hours or on a second press.",
+   "U** means the supply is between 180 and 210V and compressor frequency is limited to 50 Hz or less. That is a power problem, not an equipment failure.",
+   "Only if the condition worsens does the board post a real fault code and stop the compressor. H5 is the single code that needs a hard restart at the breaker."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-r410a-atl",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A heat pump - AtL ambient temperature limited",
+  "summary": "The display shows AtL and the unit will not make capacity; usually weather, sometimes a backwards O/B setting.",
+  "steps": [
+   "Read outdoor ambient and compare to your model's printed operating range - and be aware the ranges differ between IOMs.",
+   "BOVA2.0 Service Manual and the BOVA20/BOVC20/BOVB20/BOVD20 AtL charts print cooling 15 to 125F and heating -4 to 86F.",
+   "BOVA15 prints cooling 40 to 120F and heating 5 to 86F.",
+   "BOVB18 is internally inconsistent: its AtL chart prints cooling 23 to 125F and heating -4 to 86F, while its own Protection Functions section prints cooling 40 to 125F and heating 5 to 86F. Read the table in the unit in front of you.",
+   "If ambient is genuinely out of range, no service is required - it clears when the weather does.",
+   "If ambient is in range, check the thermostat's O/B logic. These units energize the reversing valve in HEATING (the IOM wires O/B to the B terminal and states the valve energizes in heating) - a thermostat set to energize O/B in cooling is backwards here and posts AtL. Correct the setting so O/B energizes on heat calls.",
+   "If the stat is right, confirm the T4 sensor is seated in its holder and wired per the diagram, then ohm it against the resistance table and replace if out of range."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids-r410a-poor-dehum",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS R-410A system - runs and cools but the house stays clammy",
+  "summary": "No fault code, temperature is satisfied, but humidity never comes down; the manual has a step-down remediation ladder for this.",
+  "steps": [
+   "Confirm the unit is sized correctly for the load - do the load calculation before touching settings.",
+   "Confirm the ductwork was installed properly and per local code.",
+   "Confirm charge is correct using cooling Force mode and the design subcool table for your model.",
+   "If it is still clammy, set SW4-4 to ON on the outdoor board. That reduces target coil temperature by 4F in cooling.",
+   "Also drop indoor fan speed with SW6-1 and SW6-2 on the indoor board (each step down moves the low/high taps one position).",
+   "If still clammy, disconnect Y2 so only Y1 is connected - that keeps the system on low stage.",
+   "If it is still clammy after all of that, the manual's own answer is a third-party dehumidifier in the conditioned space.",
+   "Separately: if a DH wire from a humidistat is not connected, the passive dehumidification function simply will not run. That is not a fault."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bva-blower-no-run",
+  "equipment": "Air Handler",
+  "title": "Bosch BVA2.0 air handler - blower will not run on a call",
+  "summary": "The indoor blower does nothing on a G, Y or W call and you need the board's staged voltage checks.",
+  "steps": [
+   "Rule out the anti-cold-air delay first: in heating mode the blower is supposed to hold off until the indoor coil warms. That is the one legitimate no-blower condition.",
+   "Measure 230V(AC) supply at the indoor unit. Missing supply means fix the wiring or power before anything else.",
+   "Measure 18-28V(AC) across CN33 on the indoor board. Missing means replace the transformer.",
+   "Measure 18-28V(AC) between R and C on the indoor board. Missing means fix the low voltage wiring or replace the thermostat.",
+   "Look at the indoor board LED (LED 4). If it is dark and not flashing with power present, replace the control board.",
+   "With a low-stage call, measure 28V(AC) between Y1 and C on the indoor board. Missing means replace the control board.",
+   "Measure 230V(AC) between CN39 and the black transformer wire, then 24V(AC) at the CN35 speed pins (measure speed pin to C, the brown wire).",
+   "If every voltage is present and the motor still will not turn, replace the motor. If Y1 and Y2 are jumpered the unit will only ever run high stage - that is by design, not a fault."
+  ],
+  "safety": "Line voltage at 230V(AC) inside the air handler cabinet. Confirm the disconnect before probing CN39.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bva-anti-cold-air",
+  "equipment": "Air Handler",
+  "title": "Bosch BVA2.0 air handler - no air at the start of a heat call (anti-cold air delay)",
+  "summary": "Customer says the heat takes forever to come on; the blower is being held off on purpose by the coil sensor.",
+  "steps": [
+   "Check SW6-3 on the indoor board. ON (the factory default) enables the anti-cold air fan delay driven by the T2 indoor coil sensor.",
+   "With SW6-3 ON, all three entry conditions must be true for the delay to hold the blower: indoor coil T2 below 82.4F, electric heat kit off, and a Y1 call present.",
+   "The delay releases on any one of: T2 at or above 89.6F, heater kit energized, or the system leaving heat mode - and it always releases after 15 minutes of heating operation.",
+   "Note the source conflict: the same manual's field-settings section describes SW6-3 with coil temperatures of 89.6F to release and 100.4F to exit rather than 82.4F/89.6F. Verify against the table printed in your unit.",
+   "If the entry conditions are met and held for 120 seconds, the blower comes on in first-stage speed - so expect low airflow first, not full airflow.",
+   "With SW6-3 OFF instead, there is a flat 90 second blower delay on a heat call with speed set by Y1 or Y2.",
+   "Only after ruling this out should you chase the blower motor or board."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-bva-board-fuses",
+  "equipment": "Air Handler",
+  "title": "Bosch BVA2.0 air handler - indoor board fuse keeps blowing",
+  "summary": "One of the two fuses on the indoor control board is open and you need to find the short before replacing it again.",
+  "steps": [
+   "Identify which fuse: Fuse #1 is 32V/3A, Fuse #2 is 230V/3.15A. Both protect the control board.",
+   "For a blown Fuse #1, check the thermostat wiring against the wiring diagram - a miswired or shorted stat circuit is the cause the manual names.",
+   "Correct the thermostat wiring, replace Fuse #1 and restart.",
+   "For a blown Fuse #2, power off and measure resistance between CN39 and ground. More than 1M is the pass value.",
+   "A low reading at CN39 to ground means a short on the high voltage side - correct the wiring before replacing anything.",
+   "If CN39 to ground reads above 1M and Fuse #2 still blows, replace the indoor control board.",
+   "Reference the board component table while you are in there: thermostat connections at CN5 and CN4 should read 18-30V(AC) on a call, and CN33 should read 18-30V(AC) whenever the unit has power."
+  ],
+  "safety": "230V(AC) is present on the indoor board. Kill power at the disconnect before any resistance measurement.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-dc-bus-safety",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - safe shutdown before you meter anything",
+  "summary": "Before any resistance or board work on an R-454B IDS condenser, the DC bus has to be proven dead.",
+  "steps": [
+   "Open the disconnect and confirm the unit is de-energized at the terminal block.",
+   "On the R-454B Premium, Light and Ultra units, wait 5 minutes after disconnecting power. The older R-410A gateway wiring page prints 3 minutes - use the 5 minute figure on R-454B equipment.",
+   "Set your meter to DC volts and measure at the inverter test points labeled P-N.",
+   "Do not touch board components until P-N reads less than 42 VDC. These components store up to 380 VDC.",
+   "Every fault-code flowchart in these IOMs carries the same banner: when measuring resistance, make sure the unit is powered off and wait 3 minutes before taking the measurement.",
+   "Remember the refrigerant side is A2L. No open flame, no ignition sources, and use R-454B rated recovery and leak detection equipment.",
+   "The system uses POE oil. If the system has been open to atmosphere more than 4 hours the compressor oil must be replaced, and driers get changed any time the system is opened."
+  ],
+  "safety": "380 VDC stored on the inverter bus and A2L refrigerant in the circuit. Wait 5 minutes, verify less than 42 VDC at P-N, and control ignition sources before any refrigerant work.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-e51-e52-voltage",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - E51 input voltage or E52 DC bus voltage protection",
+  "summary": "The outdoor display shows E51 or E52 and the compressor will not run.",
+  "steps": [
+   "For E51, measure the incoming high voltage supply. The chart trips at 270V or above, and at 172V or below - both are utility or service-conductor problems.",
+   "On Premium and Light, if supply is in band, check the DC bus at P-N (CN3) with the unit running: below 310V points at the control board. The Ultra E51 chart goes straight to control board replacement instead.",
+   "For E52, first confirm the input power wiring is landed correctly.",
+   "Confirm input power is not below 172VAC or above 270VAC. The target operating window the chart calls for is 187VAC to 253VAC.",
+   "Check whether the fault is present in standby mode. If it is, replace the outdoor control board.",
+   "Power off, wait 5 minutes and confirm less than 42 VDC at P-N, then ohm the outdoor fan motor: any two of U2/V2/W2 must read less than 50 ohm on Premium and Light, or less than 21 ohm on Ultra, and any connector to ground must read more than 1M ohm. Out of spec means replace the fan motor.",
+   "Then ohm the compressor: any two of U/V/W less than 1 ohm, and any connector to ground more than 1M ohm. Out of spec means replace the compressor.",
+   "If both motors pass, replace the outdoor unit control board."
+  ],
+  "safety": "380 VDC bus. Wait 5 minutes after disconnecting power and verify less than 42 VDC at P-N before measuring windings.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-p21-f2-low-pressure",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - P21 low pressure protection or F2 lockout",
+  "summary": "The unit keeps dropping out on P21, or it has latched F2 after five trips in 100 minutes.",
+  "steps": [
+   "F2 is the lockout: P21 five times inside 100 minutes. F2 requires a hard restart.",
+   "Confirm both service valves are open before anything else.",
+   "Check for abnormal pressure - blockage in the refrigerant circuit, or poor heat exchange from airflow restriction or a failed motor.",
+   "Check for undercharge and correct it per the charging procedure.",
+   "Run the unit and compare gauge suction pressure to the board's own value. Premium and Light flowcharts say checkpoint No.9 in cooling or No.10 in heating; Ultra says No.15 in cooling or No.16 in heating. They must agree within 50 PSI or the transducer gets replaced.",
+   "Note the Premium IOM inconsistency: its P21 chart cites No.9/No.10 but its own Parameter Point Check table lists 12 as Pe and 13 as Pc. Step the CHECK button to the point labeled Pe or Pc rather than trusting the number.",
+   "Trip setpoints differ by series - Premium: below 21.8 PSIG for 3 seconds in cooling, below 10.2 PSIG for 3 seconds in heating. Light: below 22 psig for 3 seconds in cooling. Ultra: below 29 PSI in cooling, below 10.2 psig in heating. All retry after 6 minutes.",
+   "The Light series also has a dedicated o37 code for lack of refrigerant in heating: valves open, lines undamaged, transducer good, T4/T5 good, then charge."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids2026-p1-p11-high-pressure",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - P1 high pressure switch or P11 high pressure protection",
+  "summary": "The unit trips on the high side and you need to separate hot-weather out-of-range operation from a real fault.",
+  "steps": [
+   "Check the service valves and the line set first: closed valves or a bent or blocked line produce this trip.",
+   "Check ambient against the out-of-range clause the charts print: cooling above 125F (120F while in Force mode), or heating above 86F. In those conditions the chart says no service is needed.",
+   "For P1, test the high pressure switch. Reference setpoints: it opens at 580 PSIG or above and closes below 435 PSIG.",
+   "Check for overcharge and for non-condensable gas - the F1 chart names both.",
+   "Check for poor heat exchange on the high pressure side, and replace the fan motor if it is the cause.",
+   "For P11 (transducer-based) the chart also has you confirm the Pc sensor did not fail before landing on undercharge (Premium and Light) or overcharge (Ultra).",
+   "The high pressure switch connector is CN10 on Premium and Light, CN18 on Ultra."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-p31-p32-overcurrent",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - P31 input over current or P32 compressor over current",
+  "summary": "The board is calling an over-current condition and you want to prove whether it is the compressor or the board.",
+  "steps": [
+   "Check whether the fault is present in standby mode. If it is, replace the outdoor control board.",
+   "Confirm the service valves are open and the compressor wiring is landed per the wiring nameplate.",
+   "For P32, check the ODU and IDU coils for blockage and the fans for abnormal operation before going electrical.",
+   "For P31, clamp actual outdoor unit input current and compare it to the board's own point check value: Premium point 25, Light point 21, Ultra point 29. If they match, that is normal operation.",
+   "Power off, wait 5 minutes, verify less than 42 VDC at P-N, then ohm the compressor: any two of U/V/W less than 1 ohm, and each connector to ground more than 1M ohm.",
+   "Out of spec windings means replace the compressor.",
+   "If windings pass, replace the ODU control board and restart. Note the Light and Ultra P32 charts print the final branch inverted relative to their own P31 charts - work the logic, not the arrow.",
+   "Ultra prints the same winding test with the comparison written the other way round (less than 1 ohm and more than 1M ohm as the replace-the-compressor branch) - use the physical meaning: shorted windings or low insulation is a bad compressor."
+  ],
+  "safety": "380 VDC bus. Wait 5 minutes after disconnecting power and verify less than 42 VDC at P-N before unplugging compressor leads.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids2026-p0-ipm-temp",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - P0 compressor IPM temperature protection",
+  "summary": "The inverter module is overheating and shutting the unit down; on these units it is almost always a mounting or airflow problem.",
+  "steps": [
+   "Check whether the fault is present in standby mode. If it is, replace the outdoor control board and restart.",
+   "Check the compressor module IPM1 mounting screws. Loose screws break the thermal path - tighten them.",
+   "Check the radiator air duct in the electric control box for dirt or blockage and clean it.",
+   "Pull the board and look at the back: components must be evenly coated with thermal paste. If the paste is missing or patchy, apply it correctly and reinstall the board.",
+   "If mounting, duct and paste are all correct, replace the control board and restart.",
+   "For reference, the Light series stops the compressor and outdoor fan on control board temperature and restarts when it drops back - the same physical causes apply.",
+   "Confirm the outdoor fan is actually running before calling the board bad; a dead fan will cook the module."
+  ],
+  "safety": "Removing the board means working at the inverter. Wait 5 minutes after disconnecting power and verify less than 42 VDC at P-N first.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-sensor-test",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - E41 to E45 or C3 sensor faults",
+  "summary": "The board is reporting a thermistor fault and you want to prove it at the harness.",
+  "steps": [
+   "Identify the sensor from the code: E41 is T3 coil, E42 is T3L coil outlet, E43 is T4 ambient, E44 is T5 discharge, E45 is Th suction.",
+   "Check the connector for that sensor. Premium and Light: T3 at CN19, T3L at CN20, T4 at CN23, T5 at CN14, Th at CN21. Ultra: T3 at CN4, T3L at CN47, T4 at CN5, T5 at CN7, Th at CN8.",
+   "Check for an open or short at the sensor - either one means replace it.",
+   "Ohm the sensor and compare to the printed table. T3, T4, Th and T3L share one curve: 60F = 15.65 kOhm, 70F = 11.99 kOhm, 80F = 9.27 kOhm.",
+   "T5 uses a completely different curve: 60F = 84.47 kOhm, 70F = 65.41 kOhm, 80F = 50.90 kOhm. Do not cross-apply.",
+   "For C3, also check whether T4 is exposed to a heat source and whether T3 is in the wrong location before condemning either sensor.",
+   "If the sensor checks good and the wiring is right, replace the control board.",
+   "Note: the Premium IOM prints these tables with a VOLTS DC column header even though every flowchart uses them as a resistance table."
+  ],
+  "safety": "Power off and confirm less than 42 VDC at the inverter P-N test points before unplugging sensors.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-atl",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - AtL ambient temperature limited",
+  "summary": "AtL on the display: usually weather, sometimes a thermostat that has O/B backwards.",
+  "steps": [
+   "Compare outdoor ambient to your series' printed range. Premium and Light AtL charts: cooling 15 to 125F, heating -4 to 86F. Ultra: cooling 14 to 125F, heating -13 to 86F.",
+   "Watch for the Premium IOM inconsistency: its Protection Functions section prints heating permission as 4F to 86F while its AtL flowchart prints -4 to 86F. Verify against the table in your unit before telling a customer the unit is out of range.",
+   "If ambient is genuinely outside the range, no service is required - wait for the weather.",
+   "If ambient is in range, check the thermostat's O/B logic. These units energize the reversing valve in HEATING (the IOM wires O/B to the B terminal and states the valve energizes in heating) - a thermostat set to energize O/B in cooling is backwards here and posts AtL.",
+   "Correct the setting so O/B energizes on heat calls - on a BCC100/BCC110 that is Reversing Valve Energize Method set to Heat, the factory default.",
+   "If the stat is right, confirm the T4 sensor is seated correctly and wired per the diagram.",
+   "Ohm T4 against the resistance table (70F = 11.99 kOhm) and replace it if out of range, then restart the system."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids2026-defrost-normal",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - dF on the display and the heat seems to stop",
+  "summary": "Steam off the coil, indoor air goes cool, display reads dF - normal defrost on an R-454B IDS unit.",
+  "steps": [
+   "dF alone, with no digits after it, is defrost mode. That is the one status code that shows without a frequency behind it.",
+   "Entry is any one of three conditions. Premium and Ultra print: T4 at or above 36F needs 18F delta T, at or above 30F needs 16F, at or above 19F needs 14F, each held 3 minutes.",
+   "Below 19F ambient with T3 under 9F: Premium and Ultra enter after 95 minutes of accumulated compressor run time; the Light IOM prints 80 minutes for the same condition.",
+   "Minimum run time also forces defrost: 4 hours below 23F ambient, 2 hours from 23F to 40F, and 50 minutes if the last defrost cycle ran the full 8 minutes.",
+   "Third path: high pressure saturation temperature below 82F for 20 minutes while ambient is 14F to 29F.",
+   "Defrost ends when outdoor coil T3 reaches 64F for 1 minute, or when defrost reaches 8 minutes.",
+   "To force a defrost test: with a heat call and at least 8 minutes of run time, press FORCE for 6 seconds, wait about 40 seconds and watch for dF. It ends by itself; wait 5 minutes before repeating.",
+   "SW5-2 extends defrost when ON, but the Premium IOM prints 60 seconds in its Table 20 and 120 seconds on the wiring diagram reference page. Light prints 120 seconds; Ultra prints 60 seconds. Verify against your unit before adjusting."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids2026-status-letters",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - the display shows a letter before the frequency",
+  "summary": "The outdoor board shows a letter followed by two digits and the customer wants to know what is broken.",
+  "steps": [
+   "First rule: if the first digit is a protection letter followed by two numeric digits, those digits are the current compressor frequency in Hz and the unit is still running, just limited.",
+   "A means running under return-oil mode. Normal.",
+   "C means running under a current limit. d means running under a T5 discharge temperature limit. F means running under a compressor IPM temperature limit.",
+   "r means running under a compression-ratio limit. U means running under a low voltage limit.",
+   "On the Light series the list also includes L, running under a T3 coil temperature limit.",
+   "dF is defrost and is the one code that displays with no digits after it.",
+   "A blank or bar-only code with digits means Forced operation mode - somebody pressed FORCE.",
+   "Only alphanumeric fault codes (E, P, b, F, H, J, n families) stop the compressor and need a procedure."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-force-check-buttons",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS 2026 R-454B condenser - FORCE and CHECK buttons, and reading point check data",
+  "summary": "How to drive these boards by hand: force charge mode, force defrost, and step through live parameters.",
+  "steps": [
+   "FORCE is SW1 and CHECK is SW2 on the outdoor control board.",
+   "Press FORCE for 1 second for forced cooling/heating (charge mode). Press FORCE for 6 seconds for forced defrosting.",
+   "Press CHECK for 1 second to step through system parameters. A 6 second CHECK press is labeled Test mode and the manuals explicitly print Not used.",
+   "First CHECK press shows the point number; one second later it shows that point's value. After 20 seconds on the same point the display reverts to normal status.",
+   "Normal status itself: in standby the last two digits are outdoor ambient temperature; while running they are compressor frequency. If a protection is active the first digit shows the status letter.",
+   "The point numbering is NOT the same across series. Premium: 6 is T3, 8 is T4, 9 is T5, 12 is Pe, 13 is Pc, 24 is compressor amps, 25 is ODU input amps, 27 is DC bus volts. Light: 4 is T3, 6 is T4, 7 is T5, 9 is Pe, 10 is Pc, 20 is compressor amps, 21 is ODU input amps. Ultra: 6 is T3, 8 is T4, 9 is T5, 15 is Pe, 16 is Pc, 28 is compressor amps, 29 is ODU input amps.",
+   "Charge verification uses force cooling. Ultra: outdoor 50F to 120F, indoor 70F to 80F, short-press FORCE, allow 10 minutes to ramp and 20 minutes to stabilize, then adjust; force mode frequency 46 Hz for 3 ton and 60 Hz for 4 and 5 ton.",
+   "Premium force-mode frequency: 52 Hz for 2 ton, 75 Hz for 3 ton, 58 Hz for 4 ton, 66 Hz for 5 ton."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids-ultra-e49-basepan",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Bosch IDS Ultra R-454B - E49 baseplate heating fault, or ice building in the base pan",
+  "summary": "Ultra-only code: the base pan heater circuit is not doing its job and the pan can ice up in heating.",
+  "steps": [
+   "Know the normal behavior first: the baseplate heater energizes when outdoor ambient T4 is below 36F in heating and it has been off 10 minutes; it de-energizes when T4 is at or above 39F for more than 1 minute, or on a switch to cooling.",
+   "Confirm the base pan heating coil is plugged into CN42.",
+   "Power off, wait 5 minutes and confirm less than 42 VDC at P-N, then unplug the base pan heater and measure its resistance. The pass band is 290 to 325 ohm.",
+   "Out of that band means replace the base pan heater.",
+   "If the heater ohms good, replace the current sensor connected to CN15 and see whether the code clears.",
+   "If it does not, measure supplied line voltage at L1 and L2: it must be between 187V and 253V.",
+   "With line voltage good, wait until outdoor temperature is below 35F (confirm on check point 6) and measure at CN42 - it should read between 187V and 253V. If it does not, replace the outdoor control board."
+  ],
+  "safety": "Line voltage at CN42 and a 380 VDC inverter bus. Wait 5 minutes after disconnecting power and verify less than 42 VDC at P-N before any resistance measurement.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-a2l-leak-b7",
+  "equipment": "Air Handler",
+  "title": "Bosch IDS 2026 R-454B air handler - leak sensor tripped: blower on full, compressor locked out (b7)",
+  "summary": "The indoor LED is flashing continuously, the blower is roaring at maximum and cooling is dead - that is the A2L leak response, not a blower fault.",
+  "steps": [
+   "Understand the designed response before touching anything: when the R-454B leakage sensor detects refrigerant, the fan is driven to maximum and the compressor stops. Ventilate and treat the area as a possible leak.",
+   "The outdoor board posts b7 and the indoor LED1 flashes continuously for this condition.",
+   "Leak-check the line set and coil properly with A2L-rated equipment. If you find a leak, recover the charge and repair or replace the line set.",
+   "If there is no refrigerant leak, check for other flammable gases in the space - the flowchart names this explicitly. Open a window or ventilate.",
+   "If neither, the sensor itself is the suspect: replace the R-454B refrigerant sensor and restart the system.",
+   "Verify the charge is actually correct before you conclude the sensor was lying - see the generic scenario on an A2L sensor faulting with no actual leak for the wider checklist.",
+   "Never defeat or unplug the sensor to keep the system running. The manual requires the unit to remain powered except during service."
+  ],
+  "safety": "A2L refrigerant may be present in the space. No ignition sources, ventilate, and use R-454B rated leak detection and recovery equipment. Line voltage is present at the air handler board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-a2l-sensor-faults",
+  "equipment": "Air Handler",
+  "title": "Bosch IDS 2026 R-454B air handler - A2L sensor faults b3, b4 and b8 (no actual leak)",
+  "summary": "The leak sensor itself is faulted, miswired or expired rather than smelling refrigerant.",
+  "steps": [
+   "Separate the three codes: b3 is a sensor fault (3 flashes), b4 is a sensor communication or wiring fault (4 flashes), b8 is a sensor past service life (8 flashes).",
+   "For b3, measure ambient temperature around the A2L sensor. Above 140F is outside the sensor's operating range and the chart says no service is needed - fix the heat source, not the sensor.",
+   "If ambient at the sensor is below 140F and b3 persists, replace the A2L refrigerant sensor and power the unit back up.",
+   "For b4, confirm the sensor is seated normally in its holder and its plug is fully home. Reinstall it and re-power.",
+   "If b4 persists after reseating, replace the A2L refrigerant sensor and power the unit back up.",
+   "For b8, there is nothing to test: sensor service life is 15 years, and the fix is replacing the sensor and powering back up.",
+   "After any sensor replacement, confirm the sensor is mounted in the correct position for the cabinet orientation - converting an upflow unit to downflow or horizontal left requires physically relocating the A2L sensor."
+  ],
+  "safety": "A2L system. Do not run the unit with the sensor unplugged, and keep ignition sources away from the coil compartment.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids2026-b5-comm",
+  "equipment": "Air Handler",
+  "title": "Bosch IDS 2026 R-454B system - b5 communication fault between indoor and outdoor unit",
+  "summary": "Indoor LED shows 5 flashes and the outdoor board posts b5; the two boards are not talking.",
+  "steps": [
+   "Identify the communication wiring for your series. Premium and Light use P and Q: CN12 on the outdoor board and CN30 on the indoor board. Ultra uses Hyper-Link M1 and M2: CN10 on the outdoor board and CN26 on the indoor board.",
+   "Check whether the P/Q (or M1/M2) wires are landed on the correct terminals at both ends, and correct them if not.",
+   "Check the dip switches that select communicating mode: outdoor SW5-4 and indoor SW7-1 must both be in the correct (ON) position for communicating operation.",
+   "Check whether the communication wire is shorted or touching sheet metal, and dress it away from other wires and the cabinet.",
+   "On multi-system sites, confirm the low voltage wires actually run to the unit sharing the same refrigerant lines - crossed pairs between two systems in the same mechanical room produce this fault.",
+   "If wiring and dip switches are correct, replace the indoor control board and restart, then check whether the fault cleared.",
+   "If it did not clear, replace the outdoor control board and restart.",
+   "Note: the air handler's own 5-flash chart prints the dip switch branch inverted relative to the condenser IOM's b5 chart. Work the physical check (both switches in communicating position) rather than following the arrow."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-ids2026-ah-led-flash",
+  "equipment": "Air Handler",
+  "title": "Bosch IDS 2026 R-454B air handler - reading LED1 on the indoor board",
+  "summary": "No display on the air handler, just one status LED - here is what its states mean.",
+  "steps": [
+   "Steady ON is normal operation. That is the baseline to compare against.",
+   "LED OFF with power present means a power supply failure to the board - check the transformer and line side.",
+   "Continuous flashing (no countable pattern) means refrigerant leak protection is active: blower to maximum, compressor stopped. Treat it as an A2L event.",
+   "2 flashes per cycle is an indoor T2 coil sensor fault. This code exists on the Premium air handler; the Light air handler's legend does not define it.",
+   "3 flashes is an R-454B refrigerant sensor fault, 4 flashes is a refrigerant sensor communication fault, 8 flashes is the sensor being past its service life.",
+   "5 flashes is a communication fault between the indoor and outdoor unit.",
+   "Codes 1, 6 and 7 are not defined anywhere in the Light air handler documentation - do not assume a meaning for them.",
+   "For a 2-flash T2 fault: check the sensor is seated, then ohm it. A reading of 0 or a very high reading means replace the sensor; if it reads correctly, restart and if the fault returns replace the indoor control board."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-gateway-fault-blinks",
+  "equipment": "Other",
+  "title": "Bosch IDS Heat Pump Gateway - red fault LED is blinking",
+  "summary": "The gateway's red Fault LED is flashing a repeating pattern with a 2 second pause and the system is not reporting to the cloud.",
+  "steps": [
+   "Count the flashes between the 2 second pauses - the count is the fault code.",
+   "1 blink is no Modbus response from the IDS control board: check that gateway connections are tight, especially the CN11 port, then soft reset. If it persists, press and hold the WiFi/SW1 button on the heat pump control board for 5 seconds and restart the gateway.",
+   "2 blinks is unacceptable cellular signal strength: check the CN11 and SMA antenna connections, reposition the antenna as far as possible from the building wall, then soft reset.",
+   "3 blinks means the device could not send data to the cloud last night: soft reset, then wait 24 hours and recheck before escalating.",
+   "4 blinks is a gateway hardware (memory) error and 5 blinks is a cellular communication error. Both start with a soft reset and end in gateway assembly replacement if they persist.",
+   "Always work the reset ladder in order: Soft reset (hold Reset 3 seconds with the unit powered), then Hard reset (power off, unplug the gateway at CN11, wait 15 seconds, reconnect, power on), then Factory reset (hold Factory 10 seconds with power on).",
+   "You can force a self-test: hold Factory 3 to 5 seconds, then press Connect to run full diagnostics. Any faults flash on the Fault LED.",
+   "If a replacement is needed, the gateway assembly and antenna have model-specific part numbers - get the model number off the unit before ordering."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-ids-gateway-pairing",
+  "equipment": "Other",
+  "title": "Bosch IDS Heat Pump Gateway - phone will not connect, or the LEDs look wrong at startup",
+  "summary": "The EasyAir app will not pair with the gateway, or the LEDs are doing something odd right after power-up.",
+  "steps": [
+   "Check the green Power LED first. Solid ON is normal. Two flashes per cycle means the gateway is rebooting - normal boot behavior can persist for a minute and can take up to 25 minutes.",
+   "One flash per cycle on the green LED means abnormal gateway input voltage: below 3V to 4.5V, or above 5.5V. Verify voltage to the IDS outdoor unit, and if it persists replace the outdoor control board.",
+   "If all four LEDs are cycling on in sequence (green, amber, blue, red, then all off, repeating), a firmware update is running. All buttons are disabled during the update, it usually takes 6 minutes and can take up to an hour, and you must not disconnect power.",
+   "To pair: press and hold the Connect button for at least 4 seconds to enter Bluetooth pairing mode. The blue LED flashes once per second in pairing mode.",
+   "Pairing mode times out after 2 minutes - if you took too long in the app, press and hold Connect again.",
+   "Blue LED solid ON means a phone is connected. Two flashes per cycle means advertising mode: a previously paired phone dropped off and can reconnect automatically through the app.",
+   "Amber Cellular LED flashing once every 2 seconds means weak signal. The manual says no corrective measures are required for that state alone - it is the red 2-blink fault code that requires action.",
+   "If the site has no SIM or an unactivated SIM, hold Connect while applying power to skip the cellular network search and reach the local Bluetooth functions faster."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g2-single-point-check",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 single-zone - reading live sensor values with the remote (point check)",
+  "summary": "Compact cassettes and ducted heads have no usable display; the remote can pull live sensor data out of the board.",
+  "steps": [
+   "Point the remote at the indoor unit. Press LED DISPLAY (or LED, or MUTE) three times, then press AIR DIRECTION (or SWING) three times, all within ten seconds. The buzzer sounds for two seconds when it enters information enquiry mode.",
+   "Step through items with the LED DISPLAY or AIR DIRECTION button. Each item shows its two-letter code for 2 seconds, then its value for the next 25 seconds.",
+   "Item codes: T1 room, T2 indoor coil, T3 condenser coil, T4 outdoor ambient, Tb evaporator coil, TP compressor discharge, TH compressor suction, FT target frequency, FR actual frequency, IF indoor fan speed, OF outdoor fan speed, LA EXV opening, CT compressor run time, ST cause of compressor stop.",
+   "All temperatures display in Celsius regardless of remote setting. Display range is -25 to 70 for T1/T2/T3/T4/Tb and -20 to 130 for TP. Out-of-range values clip to the limit.",
+   "Values above 99 are letter-coded: A0-A9 is 100-109, b0-b9 is 110-119, c0-c9 is 120-129, d0-d9 is 130-139, E0-E9 is 140-149, F0-F9 is 150-159.",
+   "Fan speed 0 is off; 1 through 4 are low/medium/high/turbo on large motors. On small motors the hex value times 10 is RPM (range 200-2550 RPM).",
+   "EXV opening angle: convert the hex display to decimal and multiply by 2. Compressor run time is 0-255 minutes.",
+   "Use this before back-probing sensors - it is the fastest way to see whether a thermistor is lying."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g2-multi-sw1-point-check",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 multizone - SW1 point check at the outdoor board",
+  "summary": "On a multizone you can read every zone's temperatures, demand and EXV position from the outdoor PCB without touching an indoor head.",
+  "steps": [
+   "Find SW1 on the outdoor PCB. Each press advances the digital display to the next item while the unit runs.",
+   "Press 0 is normal display (running frequency, state, or malfunction code). Press 1 is the number of indoor units with a working connection - use this to confirm zone count (2 for two zones, 3 for three, 4 for four, 5 for five).",
+   "Press 2 is outdoor running mode: 0 off, 1 fan only, 2 cooling, 3 heating, 4 forced cooling, A forced defrost.",
+   "Presses 17-21 are each zone's evaporator outlet temperature T2B, 22-26 are each zone's room temperature T1, 27-31 are each zone's evaporator temperature T2. Compare zones against each other - the outlier zone is usually the problem zone.",
+   "Press 32 is condenser pipe T3, 33 is outdoor ambient T4, 34 is compressor discharge TP (30-129C, where a display of 0.5 means 105C).",
+   "Press 42 is the frequency-limit bitmask in hex: Bit7 IGBT radiator, Bit6 PFC, Bit5 T4, Bit4 T2, Bit3 T3, Bit2 T5, Bit1 current, Bit0 voltage. A display of 2A means bits 5, 3 and 1 are set - limiting on T4, T3 or current.",
+   "Press 44 is outdoor fan state (0 off, 1 high, 2 med, 3 low, 4 breeze, 5 super breeze) and press 45 is the last error or protection code, where 00 means none.",
+   "Presses 37-41 are the EXV opening angle per zone: displayed value times 4 gives pulses, so a display of 2.0 is 120 x 4 = 480 pulse."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g2-single-e1-comm",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 single-zone - E1 indoor/outdoor communication error",
+  "summary": "The head shows E1 and you need to work out which end of the link is at fault before pulling boards.",
+  "steps": [
+   "Power off and restart the unit 2 minutes later. If E1 clears, you are done.",
+   "Set the meter to DC volts and measure between port 2 and port 3 at the outdoor unit, red probe on 2 and black on 3.",
+   "Normal communication swings alternately between -25VDC and +25VDC. That is the pass signature.",
+   "A voltage that swings but stays positive points at the outdoor unit. A voltage that sits at a fixed value points at the indoor unit.",
+   "If the reading is alternating normally, check the outdoor wiring connections, correct or replace wires, then check the reactor: with the capacitor disconnected its resistance should be around zero ohms. Otherwise replace the reactor, then the outdoor main PCB.",
+   "If the reading does not alternate, check the indoor wiring connections and correct them, then replace the indoor main PCB, and only then the outdoor main PCB.",
+   "On Cassette 36K-48K and Ducted 36K-60K the E1 tree is different: it starts with interference (too many lamps, transformers, long signal wire), then shielded cable and shield grounding, then a broken signal wire, then connector seating, before board replacement.",
+   "Fault threshold for reference: on the smaller models E1 posts when the indoor unit gets no feedback for 110 seconds four times in a row; on the larger models it is 60 seconds indoor-side or 120 seconds outdoor-side."
+  ],
+  "safety": "Line voltage present at the terminal block. Capacitors hold a charge after power off - discharge before handling boards.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g2-multi-e5-voltage",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 MULTIZONE - E5 is high/low voltage, not a sensor fault",
+  "summary": "On a G2 multizone, E5 means a voltage protection. On a G2 single-zone the same letters mean a temperature sensor - do not cross-apply the fix.",
+  "steps": [
+   "Confirm you are on a multizone outdoor unit before using this procedure. On single-zone G2 systems E5 belongs to the open/short temperature sensor family instead.",
+   "Measure the outdoor supply between L(L1) and N(L2). The acceptable band the chart prints is 187 to 264VAC.",
+   "If supply is outside that band, fix the power supply - this is not an equipment fault.",
+   "With supply in band, measure the DC bus at the IPM board between P and N(GND). Normal is DC 277-356V on 18K and 27K models, and DC 277-410V on 36K and 48K models.",
+   "If the bus is out of band on a 48K, check and replace the bridge rectifier (it is only a separate replaceable part on 48K). Measure between + and - on it: normal is 190V to 250V.",
+   "On all other capacities the bridge rectifier is embedded in the PCB, so an out-of-band bus means replacing the outdoor PCB.",
+   "If the bus is in band, replace the IPM board and retest; if it still fails, replace the outdoor PCB."
+  ],
+  "safety": "Large electrolytic capacitors hold charge with power off. Discharge them before touching the IPM board; discharge resistor value the manual gives is between 1500 and 2000, and P3-P4 and P5-P6 on the outdoor PCB sit at about 310V.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g2-multi-p2-low-pressure",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 multizone - P2 pressure protection (manual heading disagrees with the chart)",
+  "summary": "P2 is posted on a multizone outdoor unit and the manual contradicts itself about which pressure it is.",
+  "steps": [
+   "Know the conflict before you start: the section heading calls P2 high pressure protection, but the flowchart graphic is titled Low pressure protection twice and every check in it is a low-pressure check. Treat P2 as low pressure based on the chart body, and verify against your own unit.",
+   "Check the wiring between the low pressure protector and the outdoor PCB and correct it if wrong.",
+   "Power off, disconnect the protector plug and measure its resistance. A healthy protector reads 0.",
+   "Not 0 means check whether the protector is damaged: replace it if so, otherwise replace the outdoor PCB.",
+   "If it reads 0, check that outdoor ambient is inside the system operating range. Outside range, stop the system - that is expected behavior.",
+   "In range, confirm the valve core of the high pressure valve is fully open.",
+   "Confirm the indoor fan runs properly in cooling mode; if not, work the E8 outdoor fan / fan speed procedure to find the cause.",
+   "If the fan is fine, confirm the system has the correct refrigerant charge and charge it per the IOM if it does not."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-g2-multi-p3-current",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 multizone - P3 current overload protection",
+  "summary": "The outdoor unit trips P3; the current limit depends on the exact model and the causes are mostly heat rejection.",
+  "steps": [
+   "Check outdoor ambient. The chart's first branch is whether ambient is above 50 (Celsius, as printed) - if it is not, stopping the system is the expected outcome.",
+   "Confirm the outdoor unit has proper ventilation and clearance.",
+   "Check for a refrigerant leak in the piping. If there is one, recover, blow the pipe with high pressure nitrogen or refrigerant, evacuate and recharge.",
+   "Check whether the heat exchanger is dirty and clean it.",
+   "Clamp compressor current and compare to the printed limit for your exact model: 15A on 18K Regular, 18.5A on 27K Regular and 18K Max Performance, 22.5A on 36K Regular and 27K Max Performance, 28A on 48K Regular and 36K Max Performance.",
+   "If measured current exceeds the model's limit with the coil clean and charge correct, the compressor or drive is the suspect.",
+   "If everything checks out, the chart lands on replacing the outdoor main board, then the electric control box."
+  ],
+  "safety": "Clamping current means working in a live cabinet with a charged DC bus. Discharge capacitors before any board work.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g2-compressor-winding",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 - compressor winding resistance by model",
+  "summary": "Before condemning a G2 inverter compressor, compare all three windings to the model's printed value.",
+  "steps": [
+   "Power off and let the large electrolytic capacitors discharge fully before touching anything.",
+   "Disconnect the compressor leads and measure resistance across each winding pair: Blue-Red, Blue-Black and Red-Black. The manual prints one value per model that applies to all three pairs - so all three should read the same.",
+   "Single-zone outdoor units: 115V-12K 2.25, 9K Regular 1.57, 12K Regular 2.25, 18K Regular 1.75, 24K Regular 0.75, 30K and 36K Light Commercial wall mounted 0.75.",
+   "Single-zone continued: 36K Light Commercial cassette and ducted 0.65, 48K Light Commercial 0.38, 60K Light Commercial 0.38, 9K and 12K Max Performance 1.87, 18K and 24K Max Performance 0.75.",
+   "Multizone outdoor units: 18K Regular 1.72, 27K Regular and 18K Max Performance 0.75, 36K Regular and 27K Max Performance 0.65, 48K Regular and 36K Max Performance 0.37.",
+   "The source tables print bare numbers with no unit label - read them as ohms but do not treat the exact figure as a calibrated spec.",
+   "Unequal readings between the three pairs is the real tell that the compressor is bad, regardless of the absolute value.",
+   "While you are in there, check the IPM: measure between P and each of U/V/W/N, and between each of U/V/W and N. Normal reads several megohms in both directions."
+  ],
+  "safety": "Electricity remains in the capacitors after the power supply is off. Confirm they are fully discharged before any resistance measurement.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-g2-normal-modes",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G2 - behavior that looks like a fault but is not",
+  "summary": "Delays, oil return, low-ambient lockout and defrost all look like failures to a customer standing in the room.",
+  "steps": [
+   "Compressor restart delay: 1 minute on the very first startup, 3 minutes on every restart after that. After a power failure the unit restores its prior settings within 3 minutes.",
+   "Oil return on multizone: if compressor frequency stays below 35 Hz for about 120 minutes, the unit raises frequency to 60 Hz for about 100 seconds with the EXV at 300 pulse, then returns. A periodic ramp under light load is normal.",
+   "LP on the multizone display is the low-ambient lockout: with the compressor off it trips when T4 stays below -35C for 10 seconds; with the compressor running it trips below -40C. It exits when T4 rises above -32C.",
+   "Defrost: the compressor runs while both fans stop and the defrost lamp lights. Multizone defrost is capped at 10 minutes; single-zone defrost is described with a 15 minute cap - do not cross-apply the two.",
+   "Anti-cold air in heating holds the indoor fan back based on indoor room temperature T1 and coil temperature T2 - low or no airflow at the start of a heat call is by design.",
+   "Indoor fan delay: on startup the louver moves immediately and the indoor fan starts 7 seconds later.",
+   "Compressor preheating activates when outdoor ambient T4 is at or below 37.4F (3C). A warm outdoor unit drawing power with nothing calling in cold weather is normal.",
+   "Anti-freezing on multizone: when indoor coil T2 is below 4C for 250 seconds or below 0C, zone capacity demand goes to zero and resumes when T2 rises above 8C, with at least 3 minutes of protection time."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-engineer-mode",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 - entering engineer mode from the remote to read live data",
+  "summary": "G3 uses a different entry sequence than G2; this is how you get sensor and frequency data off the board.",
+  "steps": [
+   "With the unit powered on or in standby and not key-locked, press and hold ON/OFF plus Air Speed together for 7 seconds.",
+   "The remote confirms engineer mode by showing the Auto, Cool, Dry and Heat icons plus the battery icon, with all other icons inactive and a numeric code displayed (0 on entry).",
+   "Step the code with the Up and Down keys. The range is 0 to 30.",
+   "Useful codes: 0 error code, 1 room temp T1, 2 indoor coil T2, 3 outdoor coil T3, 4 ambient T4, 5 discharge TP, 6 target compressor frequency, 7 running compressor frequency, 8 unit current, 9 outdoor AC voltage, 12 outdoor fan set speed, 13 EEV opening, 14 indoor fan actual speed, 15 indoor humidity, 16 compensated set temperature, 20 indoor target frequency.",
+   "Scaling matters: outdoor fan speed and indoor fan speed are the displayed value times 8, and EEV opening is the displayed value times 8.",
+   "All temperatures read in Celsius regardless of remote units. T1/T2/T3/T4/T2B display range is -25 to 70, TP is -20 to 130, frequency is 0 to 159 Hz, and out-of-range values clip.",
+   "Values above 99 use the letter encoding: A0-A9 is 100-109 through F0-F9 is 150-159.",
+   "Exit by holding ON/OFF plus Air Speed for 2 seconds, or just wait - it exits after 60 seconds with no valid key press."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-normal-display-codes",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 - display shows dF, CL, F, FP, FC, AP or CP",
+  "summary": "The manual's own table lists these as Normal Display, not error code - and customers report all of them as faults.",
+  "steps": [
+   "dF is defrost. The compressor runs while both fans stop and the defrost lamp lights.",
+   "CL has two meanings: a filter cleaning reminder shown for 15 seconds at power on, and an Active Clean cycle in progress. The manual gives no way to tell them apart from the display alone, but Active Clean runs 20 to 45 minutes then shuts the unit off by itself.",
+   "F shown for 15 seconds at power on is a filter replacement reminder.",
+   "FP means the unit is heating with room temperature under 8C (the 46.4F freeze-protection heating setting).",
+   "FC means forced cooling - somebody put the unit in forced operation. Forced cooling runs 30 minutes and then switches to auto mode at a 24C setpoint.",
+   "AP means the unit is in Wi-Fi AP setup mode.",
+   "CP means the unit was switched off through the external remote ON/OFF contact. On cassette and ducted units, if that contact is open but the wired or wireless controller is on, CP appears and the unit will not respond to controller commands - check the CN23 contact and the JR6 jumper before condemning the board.",
+   "On multizone outdoor boards the digital display adds: two dashes for standby, PH compressor preheating, RO oil return, LC low ambient cooling. Only E6 in that list is a real fault (PFC module protection three times in 15 minutes)."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-el01-comm",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 - EL 01 indoor/outdoor communication error",
+  "summary": "EL 01 on the head; the DC voltage on the signal line tells you which end to work on.",
+  "steps": [
+   "Power off, wait 2 minutes and restart. If EL 01 clears, you are done.",
+   "Measure DC voltage between N/L2 and S, black probe on N/L2 and red on S. Bosch also describes this as between port 2 and port 3 at the outdoor unit.",
+   "Normal communication swings alternately between -25VDC and +25VDC.",
+   "A value that is fixed and close to 0 points at the indoor side: check the wiring from the indoor terminal to the indoor PCB, correct it, then work the indoor board.",
+   "A value that alternates negative to positive points at the outdoor side: check indoor-to-outdoor wiring, then outdoor terminal to outdoor PCB wiring and board-to-board wiring.",
+   "On the outdoor side, unplug high voltage components one at a time (4-way valve, heater, AC fan) and check each for a short - a shorted component takes the board down with it.",
+   "Then unplug the electronic expansion valve and see whether the power LED comes back; if it does, replace the EXV coil.",
+   "On multizone, use the outdoor check point button to confirm the outdoor unit sees the right number of zones (2 for dual, 3 for tri, 4 for quad)."
+  ],
+  "safety": "Line voltage present. Discharge capacitors before handling boards.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-fan-out-of-control",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 - EH 03 indoor or EC 07 outdoor fan speed out of control",
+  "summary": "A fan is running too fast, too slow or not at all and the board shuts the unit down.",
+  "steps": [
+   "Power off, restart 2 minutes later and see whether the code returns.",
+   "With the power off, spin the fan by hand. If it binds, find the mechanical cause - blocked wheel, loose mounting screws, damaged bearing - and fix that.",
+   "Reference thresholds: the indoor fan trips below 200 RPM or above 2100 RPM sustained. The multizone outdoor fan section prints below 100 RPM or above 2400 RPM for 60 seconds in one place and below 300 RPM or above 2400 RPM in another - the manual is inconsistent on the low end.",
+   "If the fan spins freely, check the motor wiring at the board and correct any connection problems.",
+   "For a DC motor with the control chip inside the motor: power on, unit in standby, measure at the motor connector. On 220-240V units pin1 Red Vs/Vm should be 280V-380V, pin3 Black GND 0V, pin4 White Vcc 14-17.5V, pin5 Yellow Vsp 0-5.6V, pin6 Blue FG 14-17.5V.",
+   "On 115V units the only change is pin1 Red Vs/Vm at 140V-190V. On multizone outdoor motors the spec is pin1 200-380V, pin4 13.5-16.5V, pin5 0-6.5V, pin6 13.5-16.5V.",
+   "Any of those voltages out of band means the PCB is the problem and gets replaced.",
+   "For a DC motor with the control chip on the PCB: release the UVW connector and measure U-V, U-W and V-W. If the three are not equal, replace the motor; if they are equal, replace the PCB."
+  ],
+  "safety": "Live measurements at the motor connector with line voltage present on pin1. Use proper probes and keep clear of the DC bus.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-g3-pc02-high-pressure",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 single-zone - PC 02 compressor top temp, IPM temp or high pressure",
+  "summary": "One code, three different faults; the manual gives three separate sub-flows and you have to pick the right one.",
+  "steps": [
+   "Identify which branch applies. PC 02 covers overload protector (compressor top) temperature, high IPM module temperature, and on models with a high pressure switch, a high pressure trip above 4.4 MPa.",
+   "Compressor top branch: check whether indoor and outdoor airflow is obstructed and clear the inlet, outlet and heat exchangers.",
+   "Then turn the power off, wait 10 minutes and check whether compressor top temperature is still above 90C. If it is, work the refrigerant system, and if that is normal replace the outdoor control PCB.",
+   "If it is below 90C, check the overload protector (OLP) connection, then measure between the OLP's two ports: 0 ohms is the pass value. Not zero means replace the OLP; zero means replace the outdoor control PCB.",
+   "IPM branch: check the fastening screws on the PCB and the IPM radiator. Loose means tighten them and apply silicon grease; already tight means replace the outdoor control PCB.",
+   "High pressure branch: confirm the high pressure switch is wired to the main board correctly, then disconnect the plug and measure the protector - 0 ohms is normal.",
+   "If the protector is fine, check whether outdoor ambient is above 50 (as printed), then outdoor ventilation, then a dirty heat exchanger, then the refrigerant system and outdoor fan operation before replacing the board."
+  ],
+  "safety": "Discharge the DC bus capacitors before any resistance measurement on the outdoor board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-pc03-low-pressure",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 single-zone - PC 03 low pressure protection",
+  "summary": "The outdoor pressure switch cut the system out on the low side.",
+  "steps": [
+   "Reference threshold: the outdoor pressure switch cuts the system out when low pressure falls below 0.13 MPa.",
+   "Check the high pressure valve core is fully open. Not fully open is the first branch in the chart.",
+   "Check that the indoor fan runs properly in cooling mode - a dead indoor fan starves the evaporator and trips this. If it does not run, work the fan speed out of control procedure.",
+   "Check whether the refrigerant system is otherwise okay. If it is not, stop the unit and address it.",
+   "Check the wiring between the low pressure protector and the outdoor PCB and connect it properly if loose.",
+   "Disconnect the low pressure protector and measure its resistance. A healthy protector reads 0.",
+   "Not 0 means replace the low pressure protector.",
+   "If it reads 0, check whether outdoor ambient is below the low end of the operating range - if it is, that is expected. Otherwise replace the outdoor PCB."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-sensor-resistance",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 - proving a temperature sensor (EC 52/53/54/56, EH 60/61)",
+  "summary": "The board is calling a sensor open or short; here is how to confirm it at the harness.",
+  "steps": [
+   "Identify the sensor from the code: EC 52 is T3 condenser coil, EC 53 is T4 outdoor ambient, EC 54 is TP compressor discharge, EC 56 is T2B evaporator coil outlet, EH 60 is T1 indoor room, EH 61 is T2 indoor coil.",
+   "Check the connection between the sensor and the PCB first and correct it if wrong.",
+   "Power off, disconnect the sensor from the PCB and measure resistance with a meter.",
+   "T1, T2, T3 and T4 share one curve. Anchors: 0C (32F) = 35.2024 kOhm, 25C (77F) = 10 kOhm, 50C (122F) = 3.45097 kOhm.",
+   "T5/TP (compressor discharge) uses a completely different curve: 0C (32F) = 180.9 kOhm, 25C (77F) = 54.89 kOhm, 50C (122F) = 19.69 kOhm.",
+   "If the reading does not agree with the table for the actual sensor temperature, replace the sensor.",
+   "If it does agree, replace the indoor or outdoor main PCB. On some models the outdoor PCB cannot be removed separately and the entire electric control box gets replaced.",
+   "On some models the outdoor unit uses a combination sensor where T3, T4 and TP are the same physical part - check before ordering."
+  ],
+  "safety": "Power off at the disconnect before unplugging sensors from the board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-g3-multizone-differences",
+  "equipment": "Mini-Split",
+  "title": "Bosch Climate 5000 G3 MULTIZONE - the outdoor code set is not the single-zone code set",
+  "summary": "Codes that look familiar mean different things on a G3 multizone outdoor unit; this is the orientation before you diagnose.",
+  "steps": [
+   "Scope first: the G3 multizone manual covers the OUTDOOR unit only. Indoor codes for the same system live in the wall, cassette or ducted single-zone manual - the manual says so explicitly.",
+   "Voltage faults are split three ways on multizone: PC 10 low AC voltage, PC 11 and PC 12 DC bus high voltage. Single-zone rolls these into PC 01.",
+   "Pressure faults are split: PC 30 high pressure and PC 31 low pressure, and both only apply to the M4OB-36HFN8-Q, M5OD-42HFN8-Q and M5OE-42HFN8-Q compressor models. Single-zone folds high pressure into PC 02 and low pressure into PC 03.",
+   "Compressor faults are finer grained: PC 43 lack phase, PC 44 zero speed, PC 45 IR chip drive failure, PC 46 speed out of control, PC 49 overcurrent, plus PC 08 overcurrent. Four of those (PC 08, PC 44, PC 46, PC 49) share one flowchart.",
+   "PC 0L is the low ambient lockout, displayed as LP or PC0L: it trips below -35C with the compressor off, below -40C with the compressor running, and exits when T4 is no lower than -32C.",
+   "The manual uses THREE code schemes: the long EC/EL/PC codes, a short E0-E8/P0-P6 scheme in the quick-check matrix, and per-section cross references. Inside one subsection it prints both P6 and PC 00 for the IPM fault.",
+   "The SW1 point check has two incompatible variants: one table for most models and a separate table for 18K Regular, with different press-to-content mapping past press 36, different frequency-limit bit assignments and different fan speed numbering. Confirm the model before reading SW1 results.",
+   "Compressor current limits by model: 15A on 18K Regular, 18.5A on 27K Regular and 18K Max Performance, 22.5A on 36K Regular and 27K Max Performance, 28A on 48K Regular and 36K Max Performance."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-idp-a2l-leak-b7",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - refrigerant leak sensor tripped, blower at maximum (b7)",
+  "summary": "The packaged unit's indoor LED is flashing continuously, the blower is at full speed and the compressor is off - the A2L leak response.",
+  "steps": [
+   "Understand the design first: on leak detection the fan is driven to maximum and the compressor stops. Ventilate the area and treat this as a possible live leak.",
+   "Confirm which unit you are on. IDP Premium has the sensor factory-installed on both 3 and 5 ton, located behind the evaporator coil under the return air plenum. IDP Plus has it factory-installed on the 5 ton only, located under the electric control box.",
+   "Verify the sensor is plugged into CN26 on the indoor control board.",
+   "Leak-check the line set, coil and connections with A2L-rated equipment. If you find a leak, recover the charge and repair or replace the affected section.",
+   "If there is no refrigerant leak, check for other flammable gases in the space and ventilate.",
+   "If neither, replace the R-454B refrigerant sensor and restart the system.",
+   "On IDP Premium the Alarm port (CN34) closes when refrigerant leakage protection triggers, rated 24 V AC/1 A, 30 V DC/1 A or 250 V AC/1 A with minimum AWG 18 wire. If a site alarm never fired during an event, test that switch separately from the sensor.",
+   "Never defeat the sensor. The unit must remain powered except during service."
+  ],
+  "safety": "A2L refrigerant may be present. No ignition sources, ventilate the space, and use R-454B rated equipment. Line voltage and a 380 VDC inverter bus are present in the unit.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-idp-a2l-sensor-config",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - A2L sensor codes b3, b4, b8 and the b9 dip switch mismatch",
+  "summary": "The leak sensor is faulted, unplugged, expired, or the dip switch does not match whether a sensor is fitted.",
+  "steps": [
+   "b3 is a sensor fault: measure ambient temperature around the A2L sensor. Above 140F is outside the sensor's operating range - the IDP chart says to replace the sensor above 140F, while the IDS 2026 chart says no service is needed at that temperature. Check the actual ambient before ordering a sensor.",
+   "b4 is a sensor communication fault: check that indoor dip switch SW7-2 is set to ON, then confirm the sensor is seated and its plug is home at CN26.",
+   "b8 is the sensor past its 15 year service life. Replace it and power the unit back up - there is nothing to test.",
+   "b9 is a configuration mismatch and requires a hard restart. Start by confirming outdoor dip switch SW4-1 is set to ON - it must always be ON on this platform.",
+   "Then determine whether a refrigerant sensor is physically installed.",
+   "If a sensor is installed: indoor dip switch SW7-2 must be ON for IDP Premium and 5 ton IDP Plus (SW7-2 ON means R-454B refrigerant sensor fitted).",
+   "If no sensor is installed: on a 3 ton IDP Plus, set SW7-2 to OFF. On IDP Premium and 5 ton IDP Plus, a sensor is required - install one.",
+   "Power cycle after any dip switch change and confirm the fault clears; if it does not, replace the R-454B refrigerant sensor and power cycle again."
+  ],
+  "safety": "A2L system with line voltage and a 380 VDC bus. Wait 5 minutes after disconnecting power and verify less than 42 VDC at P-N before working inside the control box.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-idp-force-check-buttons",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - FORCE and CHECK buttons on the outdoor board",
+  "summary": "Driving the packaged unit by hand: force 100 percent capacity, force defrost, and read live values.",
+  "steps": [
+   "FORCE is SW1 and CHECK is SW2 on the outdoor control board, next to the digital tube (the small numeric display).",
+   "Press FORCE 1 second for forced cooling/heating charge mode - a bar symbol appears and the unit ramps to 100 percent, which can take 10 minutes.",
+   "Press FORCE 6 seconds, with a heat call present and at least 8 minutes of run time, for forced defrost. Wait about 40 seconds for dF to appear. It ends by itself; wait 5 minutes before repeating.",
+   "Press CHECK 1 second to step through parameters. A 6 second CHECK press is labeled Test mode and printed as Not used.",
+   "The first CHECK press shows the point number, then one second later the value. After 20 seconds on the same point it reverts to normal status.",
+   "Useful points: 4 is T3 coil, 5 is T3L coil outlet, 6 is T4 ambient, 7 is T5 discharge, 10 is Pe suction pressure, 11 is Pc head pressure, 17 is discharge superheat, 19 is EEV opening, 22 is compressor current, 23 is outdoor input current, 24 is input voltage, 25 is DC bus voltage, 30 is T1 return air, 31 is T2 indoor coil.",
+   "No-gauge subcool check: read T3 (point 4) and T3L (point 5) and subtract - the manual explicitly offers this as an alternative to gauges.",
+   "Board LEDs: LED1 green solid means main board powered. LED2 red solid means compressor running; LED3 red solid means fan running. On either, a 2 second on / 2 second off blink is a communication fault with the main control chip, and a 0.2 second on / 0.2 second off blink is a driver fault."
+  ],
+  "safety": "Working at a live inverter board. Keep clear of the P and N test points, which hold up to 380 VDC.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-idp-charge-subcool",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - checking and adjusting charge by subcooling",
+  "summary": "The only recommended charging method above 55F outdoor on an IDP, plus the factory weights for a weigh-in.",
+  "steps": [
+   "Check outdoor ambient. Subcooling in cooling mode is the only recommended method above 55F; below 55F, weigh the charge in.",
+   "For a weigh-in, use the correct factory charge: IDP Plus 3 Ton is 3-14 lb-oz and 5 Ton is 6-6 lb-oz. IDP Premium 3 Ton is 6-3 lb-oz and 5 Ton is 10-9 lb-oz. These are very different numbers - confirm the product line first.",
+   "For best results hold indoor temperature between 70F and 80F during the check.",
+   "Start the system in cooling, then short-press FORCE. Allow up to 10 minutes to ramp, then run a minimum of 20 minutes at 100 percent capacity before adjusting anything.",
+   "Measure liquid line temperature and liquid line pressure and calculate subcooling. Design subcooling is 12F plus or minus 4F for both 3 ton and 5 ton on both product lines.",
+   "Add refrigerant if measured subcooling is below the design value; recover if it is above.",
+   "Wait 5 minutes between adjustments for conditions to stabilize, then re-measure.",
+   "R-454B is a blend - charge liquid only, and remember the POE oil rule: more than 4 hours open to atmosphere means the compressor oil must be replaced."
+  ],
+  "safety": "A2L refrigerant. Use R-454B rated gauges and recovery equipment and control ignition sources.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-idp-p21-low-pressure",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - P21 low pressure protection or F2 lockout",
+  "summary": "The unit trips P21, or has latched F2 after five trips in 100 minutes; the trip pressure differs sharply between Plus and Premium.",
+  "steps": [
+   "Confirm the product line first, because the low pressure trip point is very different: IDP Plus stops the compressor and outdoor fan when low pressure is below 21.8 PSI for 5 minutes in cooling; IDP Premium uses 43.5 PSI for 5 minutes. Both retry after 3 minutes.",
+   "F2 is the lockout: P21 occurring 5 times within 100 minutes. (The Premium IOM prints this note as P2 rather than P21 - same condition.)",
+   "Check that both service valves are open.",
+   "Check for undercharge and correct it using the subcooling procedure.",
+   "Check for abnormal pressure: clear any blockage in the refrigerant circuit and correct poor heat exchange from airflow restriction or a failed motor.",
+   "Run the unit and compare gauge suction pressure to the board's own value at checkpoint No.10 in cooling or No.11 in heating. They must agree within 50 PSI.",
+   "If they disagree by more than 50 PSI, replace the pressure transducer.",
+   "If they agree, restart the system and monitor."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-bosch-idp-overcurrent-windings",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - E52, P31 or P32: proving the compressor and fan windings",
+  "summary": "The board is calling a DC bus or over-current fault and you need the pass/fail resistance numbers before condemning a motor.",
+  "steps": [
+   "Check whether the fault is present in standby mode. If it is, replace the outdoor unit control board.",
+   "Check the input power wiring, then confirm supply is not below 172VAC or above 270VAC. The target window the chart prints is 187VAC to 253VAC.",
+   "For P32, check the ODU and IDU coils for blockage and the fans for abnormal operation before going electrical.",
+   "For P31, clamp actual ODU input current and compare to the board's point check value - the Premium chart cites point 23 and the Plus chart cites point 24, but both manuals list input current at point 23 and input voltage at point 24, so read the point labeled ODU input current.",
+   "Power off, wait 5 minutes and confirm less than 42 VDC at the inverter P-N test points.",
+   "Ohm the outdoor fan motor: any two of U2/V2/W2 less than 21 ohm, and each connector to ground more than 1M ohm. Out of spec means replace the fan motor.",
+   "Ohm the compressor: any two of U/V/W less than 1 ohm, and each connector to ground more than 1M ohm. Out of spec means replace the compressor.",
+   "If both pass, replace the outdoor unit control board and restart. Note the P31 and P32 charts print their final branch in opposite directions in the source - work the physical result, not the arrow."
+  ],
+  "safety": "380 VDC on the inverter bus. Wait 5 minutes after disconnecting power and verify less than 42 VDC at P-N before touching compressor or fan leads.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-idp-anti-cold-air",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - no warm air at the start of a heat call",
+  "summary": "The customer says the heat takes minutes to show up; the blower is being held off on purpose.",
+  "steps": [
+   "Check SW6-3 on the indoor board. ON is the factory default and enables the Anti-Cold Air Fan Delay driven by indoor coil sensor T2 and condensing pressure Pc.",
+   "With SW6-3 ON, all three entry conditions must be true for the blower to be held: indoor coil T2 below 83F, electric heat kit off, and a Y1 call present from the thermostat.",
+   "The delay releases if any one of these is true: T2 at or above 90F for more than 2 minutes, the heater kit turns on, the system leaves heat mode, the Y1 call goes away, or a communication fault appears between indoor and outdoor.",
+   "The blower comes on in first-stage speed as soon as T2 reaches 90F, Pc reaches 435 psi, or the delay has been active 15 minutes. Expect low airflow first, not full airflow.",
+   "With SW6-3 OFF instead, there is a flat 90 second blower delay with speed set by Y1 or Y2.",
+   "Also check the reversing valve behavior: on the first heat call the unit runs about 1 minute in cooling to build pressure so the valve can shift. Cool air for the first minute is normal.",
+   "Only after ruling all of this out should you chase the blower motor, the board or the reversing valve."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-idp-electric-heat-no-fire",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - electric heat kit will not energize",
+  "summary": "Compressor heat works but the electric heat kit never comes on; on a 3 ton IDP Plus the air pressure switch is the gatekeeper.",
+  "steps": [
+   "Confirm the model. A 3 Ton IDP Plus has a factory-installed air pressure switch on the blower housing that locks out the electric heat kit until indoor airflow meets minimum requirements.",
+   "Measure actual airflow and compare to the requirement: 300 to 450 cfm/ton for systems without an electric heater kit, and 350 to 450 cfm/ton for systems with one.",
+   "Measure external static pressure. Factory default maximum is 0.6 inches W.C.; above that the manual says to dial the blower code to Tap 5.",
+   "If airflow is low, fix the airflow first - the switch is doing its job. Check filter, coil, duct restriction, and the SW6-1/SW6-2/SW6-4 speed tap selection.",
+   "If airflow meets the requirement and the heat kit still will not fire, check the three items the manual names: the signal wire of the air pressure switch disconnected, the silicone tube bent or blocked, and physical damage to the switch.",
+   "Confirm the thermostat is actually sending W - the unit runs the blower in high speed setting whenever W/W1/W2 is present.",
+   "Remember the ambient handoff: IDP Plus provides 24V to energize electric heat when T4 is below 0F for 3 minutes; IDP Premium at T4 below 4F. Above that, the heat pump is expected to carry the load alone."
+  ],
+  "safety": "Electric heat kits are line voltage and high amperage. Confirm the disconnect is open before removing panels near the heater terminals.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-idp-pf-evap-freeze",
+  "equipment": "Other",
+  "title": "Bosch IDP packaged unit - PF evaporator freezing protection / iced indoor coil",
+  "summary": "The board posts PF and the indoor coil is icing; the chart is a short airflow-and-charge checklist.",
+  "steps": [
+   "Check whether the system is running at low speed. If it is not, the chart calls this out-of-range operation with no service needed.",
+   "Check the indoor blower: if it is not working, or heat exchange across the indoor coil is poor, replace the blower motor and/or clean the indoor coil.",
+   "Confirm airflow against the required range: 300 to 450 cfm/ton, or 350 to 450 cfm/ton with an electric heater kit installed.",
+   "Check whether the EEVA has failed and replace it if so.",
+   "Check whether the system is undercharged and correct the charge using the subcooling procedure.",
+   "If none of those apply, restart the system and monitor.",
+   "If the coil ices only in shoulder-season low-load conditions, verify the blower speed taps are not set below what the tonnage needs (SW6-4/SW6-1/SW6-2)."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bcc-ob-backwards",
+  "equipment": "Other",
+  "title": "Bosch BCC100/BCC110 - heat pump blows cold on a heat call (O/B setting backwards)",
+  "summary": "Wiring and reversing valve check out fine but the system runs backwards on every call; the thermostat's O/B logic setting is the usual cause.",
+  "steps": [
+   "Confirm the symptom is consistent: cold air on every heat call and/or warm air on every cool call, not intermittent.",
+   "Confirm the O/B wire is landed on the O/B terminal at the thermostat and at the equipment.",
+   "Prove the valve hardware separately: confirm 24V appears at the reversing valve coil in the mode that should energize it, and that the coil has continuity.",
+   "Now go to the setting: Main Menu, System Settings, Unit Configuration, Heat type (Heat Pump), Setup, Reversing Valve Energize Method.",
+   "Selecting Cool energizes the reversing valve during cooling (an O valve). Selecting Heat energizes it during heating (a B valve). The factory default is Heat.",
+   "Match the setting to the valve design in the equipment's IOM. Bosch IDS and IDP heat pumps energize the reversing valve in HEATING - their IOMs state 'reversing valve energizes in heating' outright - so on Bosch equipment the correct setting is Heat, which is also the factory default. The Cool option exists for other makers' O-design valves.",
+   "While in Unit Configuration, confirm the system type itself is set to Heat Pump and not Fossil Fuel or Electric.",
+   "Cycle a heat call and a cool call after the change to confirm the valve now shifts the right way."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bcc-system-type-wrong",
+  "equipment": "Other",
+  "title": "Bosch BCC100/BCC110 - wrong system type configured, equipment behaves nothing like it should",
+  "summary": "No heat, wrong staging, or aux heat running constantly because Unit Configuration does not match the installed equipment.",
+  "steps": [
+   "Open Main Menu, System Settings, Unit Configuration. The choices are Fossil Fuel, Heat Pump, Dual Fuel, Electric, and no Heating.",
+   "If Heat Pump is selected, confirm the sub-type: Bosch IDS/IDP, Bosch IDS Ultra Cold Climate, WSHP/Geothermal, or All Other. The sub-type changes which defaults and options appear.",
+   "A heat pump left configured as Fossil Fuel will not drive the reversing valve or aux heat logic correctly - that reads as no heat or backwards operation.",
+   "A conventional furnace configured as Heat Pump gets O/B and staging logic it has no hardware for.",
+   "Check Compressor Configuration (stages) against the actual equipment. A single-stage unit configured as 2-stage leaves the thermostat waiting for an upstage the equipment can never deliver, which looks like a capacity problem or a system that never satisfies.",
+   "For dual fuel, remember the changeover needs outdoor air temperature from the internet: the Dual Fuel feature is disabled when Wi-Fi is unavailable.",
+   "After any change, run a full heat call and a full cool call and watch the outputs before leaving.",
+   "If equipment behavior changed suddenly with no wiring work, ask whether a Factory Reset was performed - that returns every one of these settings to default."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bcc-staging-delays-normal",
+  "equipment": "Other",
+  "title": "Bosch BCC100/BCC110 - staging delays and minimum run times mistaken for a failure",
+  "summary": "The system will not upstage, will not shut off when satisfied, or will not restart right away; most of it is the thermostat's own timers.",
+  "steps": [
+   "Get into the values: Main Menu, Advanced Settings, enter professional access code 1886. Staging items sit under Installer Access with action code ST; timing items under Heating and Cooling.",
+   "Minimum Run Time keeps a call running after setpoint is reached. Default is 5 minutes, minimum 3 minutes, and its ceiling is tied to the Stage Delay setting. Equipment running on past satisfaction is normal.",
+   "Anti Short Cycle is the minimum off time before a new call. Default 5 minutes, range 0 to 5 minutes. A unit that will not restart immediately after a quick mode toggle is normal.",
+   "Cycle Time is the delay required between system mode changes. Default 180 seconds, range 60 to 300 seconds.",
+   "Stage Delay sets how long a continuous call must run before upstaging. Default 10 minutes, range 3 to 90 minutes. Upstaging is also blocked if indoor temperature is on the wrong side of Stage Temp or inside the Zero Energy Band.",
+   "Electric Heat Kit Stage Delay default is 40 minutes, ceiling 180 minutes. Aux electric heat is designed to wait that long before joining a heat pump call.",
+   "Latching (default Disable) means stages drop one at a time with a Stage Delay between them rather than all shutting off at once. Quick stage down uses a fixed 3 minute timer.",
+   "The Anti Short Cycle timer runs concurrently with the Fan Off Delay timer - useful when you are stopwatch-timing a restart and trying to decide which timer you are watching."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bcc-aux-heat-lockout",
+  "equipment": "Other",
+  "title": "Bosch BCC100/BCC110 - aux heat runs too much, or never runs at all",
+  "summary": "Electric backup heat comes on in mild weather (high bills) or refuses to help in genuinely cold weather.",
+  "steps": [
+   "Go to Main Menu, System Settings, Unit Configuration, Heat Type (Heat Pump), Setup, Auxiliary Heating.",
+   "Confirm the Enable/Disable toggle. Default is Enable. Disabled means aux will never assist regardless of weather.",
+   "Read the Aux Heat Max Outdoor Temperature. Range is 5F to 60F and the default is 40F. Below that outdoor temperature, auxiliary heat is allowed to run.",
+   "Aux running in mild weather usually means this value was left high (near 60F) - the compressor never gets a chance to carry the load alone.",
+   "Aux never running in cold weather usually means the value was set very low (near 5F), or the toggle is Disabled.",
+   "This function needs outdoor temperature. On a system that gets outdoor air temperature from the internet, confirm Wi-Fi is connected - dual fuel changeover in particular is disabled without it.",
+   "Check the Electric Heat Kit Stage Delay too (default 40 minutes): aux is designed to wait that long before joining a heat pump call, which reads as aux never coming on if you only watch for 10 minutes.",
+   "For emergency heat, remember the mode itself turns off all compressor stages and runs backup only - a dead compressor in Emergency Heat mode is expected."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bcc-wifi-pairing",
+  "equipment": "Other",
+  "title": "Bosch BCC100/BCC110 - thermostat will not connect to Wi-Fi or pair with the app",
+  "summary": "Setup fails at the network step, or the app cannot find the thermostat.",
+  "steps": [
+   "Confirm the network band. This thermostat only works on 2.4 GHz. A 5 GHz-only network or a 5 GHz-only band on a combined SSID will fail.",
+   "Check the SSID itself: a name containing spaces or non-ASCII characters is one of the six documented failure causes.",
+   "Check distance: the thermostat should be a maximum of 20 feet from the router or modem with no walls, floors or ceilings between them. Move them closer if not.",
+   "Power cycle in order: modem first, then router, then the thermostat.",
+   "Confirm the password, and confirm the internet itself is up - Wi-Fi can be fine while the WAN is down.",
+   "For pairing, scan the QR code on the Wi-Fi settings screen, or enter the MAC ID and temporary verification code manually. Both are found under Wi-Fi Settings, Registration button on the thermostat.",
+   "Only one account can be associated with a thermostat at a time - a second family member trying to add it will fail. Share the account instead.",
+   "After a connection loss the thermostat auto-retries at 5 minutes, then every 15 minutes for 24 hours. Manually reconfiguring the network cancels that retry cycle."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-bcc-blank-or-locked",
+  "equipment": "Other",
+  "title": "Bosch BCC100/BCC110 - blank or unresponsive screen, or equipment running with the mode set OFF",
+  "summary": "The thermostat is dark, will not take input, or the equipment runs when the display says Off.",
+  "steps": [
+   "For a dark screen, start with the C-wire. A dedicated common wire is required to power this thermostat; two-wire systems are not supported.",
+   "Confirm a C-wire is landed at both the thermostat wall plate and the equipment end. If the old thermostat did not have one, this is a compatibility problem, not a thermostat failure.",
+   "Confirm the old thermostat did not have line voltage wiring (wire nuts in the box). Line voltage thermostats, electric baseboard, millivolt systems, proprietary communicating thermostats and remote sensors are all unsupported.",
+   "Confirm the jumper position: most configurations keep the pre-installed jumper between RH and R/RC. The one documented exception is a separate furnace plus separate air conditioner, where the jumper is removed.",
+   "For a screen that lights but will not respond, check whether Screen Lock is on. It requires a 4-digit passcode set by the user, and there is no documented bypass - a forgotten code means a factory reset.",
+   "For equipment running with the mode set to Off, check Low Space Temperature Monitor (options 45F to 70F, default Off/50F) and High Space Temperature Monitor (70F to 99F, default Off/99F). Either one, when enabled and tripped, deliberately runs the equipment even in Off mode.",
+   "Also check Fan mode: On runs the fan continuously even with the system Off, and Circulation cycles the fan on and off around calls.",
+   "After a power outage all settings are retained in local memory except schedule setpoints, which live in the cloud - a thermostat that comes back without its schedule is waiting on a cloud connection, not broken."
+  ],
+  "confidence": "common"
  }
 ];
