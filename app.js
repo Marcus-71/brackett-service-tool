@@ -95,6 +95,16 @@ const SEARCH_ALIAS_GROUPS = [
   ["reversing valve", "4 way valve", "four way valve", "changeover valve", "4-way valve"],
   ["expansion valve", "txv", "metering device", "piston", "orifice"],
   ["same pressure", "equal pressure", "equalized pressure", "pressures are the same", "pressures equalized", "matching pressure", "even pressure"],
+  // Dual-fuel vocabulary. These must stay BELOW the reversing-valve group above,
+  // which owns "changeover valve" — the loop consumes the longest phrase in the
+  // first group that matches, so that one is claimed before bare "changeover"
+  // falls through to the balance-point group here.
+  ["dual fuel", "dual-fuel", "hybrid heat", "hybrid", "fossil fuel kit", "gas pack heat pump"],
+  ["balance point", "changeover", "change over", "switchover", "switch over", "changeover temperature", "crossover temp"],
+  ["aux heat", "auxiliary heat", "backup heat", "back up heat", "supplemental heat", "strip heat", "second stage heat"],
+  ["emergency heat", "em heat", "e heat"],
+  ["twinned", "twinning", "twin"],
+  ["variable capacity", "variable speed", "inverter driven", "inverter"],
 ];
 
 // A query typed the way a tech actually talks — "why won't the blower start?"

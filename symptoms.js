@@ -18100,5 +18100,1720 @@ const SYMPTOMS = [
    "After a power outage all settings are retained in local memory except schedule setpoints, which live in the cloud - a thermostat that comes back without its schedule is waiting on a cloud connection, not broken."
   ],
   "confidence": "common"
+ },
+ // ===== Furnace + newer heat pump deep dive, part A (v98): dual fuel, Rheem, newer Lennox, zoning/twinning =====
+ {
+  "id": "s-fh-df-lennox-w951-mismatch",
+  "equipment": "Gas Furnace",
+  "title": "Lennox dual fuel - E349 on the furnace, or alert 346 vs 349 at the thermostat, over the O-to-R link",
+  "summary": "On a Lennox furnace paired with a heat pump the on-board R-to-O link W951 has to match the actual equipment. Cut it when it should be intact and you get one code; leave it intact when it should be cut and you get the other. The two codes look almost identical and point opposite directions.",
+  "steps": [
+   "Read the code before touching anything. On a non-communicating G71MPP or SLP99 family integrated control, E349 prints as: no 24 volts between R and O with a non-communicating outdoor unit, dual fuel module required for heat pump application, configuration link R to O needs to be cut on control board.",
+   "On a communicating S30/S40 system, alert 346 (AH HP Jumper Not Removed) means the heat pump configuration link is not cut on the indoor control. The printed corrective action is literally: cut O to R. This applies only when a NON-communicating heat pump is matched to a Lennox communicating indoor unit.",
+   "Alert 349 (GF IFC Error, Check Jumper O To R) is the mirror image: it only applies in non-communicating mode, it means the O-to-R link has been cut when it should not have been, and the printed fix is to restore the link by hard-wiring R to O at the terminal strip.",
+   "With power on and a heat call up but no reversing valve demand, measure 24VAC between R and O at the furnace terminal strip. Link intact = O sits energized off R. Link cut = O is only energized by the thermostat O output.",
+   "Confirm the physical link. W951 is the clippable connection between R and O on the SureLight integrated control, labeled HEAT PUMP on the board and called out on the wiring diagram as: cut W951 jumper from O to R, labeled HEAT PUMP, at A92 control board, when used for dual fuel applications.",
+   "If the link is left intact on a real dual fuel job, terminal O stays energized and that eliminates HEAT MODE in the heat pump - the heat pump will only cool and the furnace does all the heating.",
+   "After cutting or restoring the link, both 346 and 349 clear automatically once the system sees the condition is gone. No manual clear is required."
+  ],
+  "safety": "Kill 120V power at the furnace disconnect before cutting or jumpering any on-board link.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-lennox-links-matrix",
+  "equipment": "Gas Furnace",
+  "title": "Lennox dual fuel - deciding which on-board links to cut (W951, W914, W915)",
+  "summary": "SLP99UHV, SLP99UHVK, EL296UHV and G71MPP all carry the same three clippable links. Which ones get cut depends on heat pump vs AC, one-stage vs two-stage outdoor, and whether the thermostat has a dehumidification output. The manual states this two different ways.",
+  "steps": [
+   "W951 is R to O, labeled HEAT PUMP. Cut it on every dual fuel job - it appears as CUT in every dual fuel row of the field wiring table.",
+   "W915 is Y1 to Y2, labeled 2 STAGE COMPR. Cut it if two-stage cooling or a two-stage outdoor unit will be used; if it is not cut, the outdoor unit will operate in second-stage cooling only.",
+   "W914 is DS to R, labeled DEHUM OR HARMONY. Cut it when the furnace is installed with Harmony III zone control or a thermostat that features humidity control. If left intact, the PWM signal from the Harmony III control is blocked and it can also lead to control damage.",
+   "Watch the contradiction on W914. The Dual Fuel rows of TABLE 15 show W914 as Intact, but the footer on TABLE 26 (single-stage outdoor) and TABLE 27 (two-stage outdoor) reads: with heat pump - cut W914 (R to DS) and W951 (R to O) on the SureLight control. Confirm against the table printed in the manual for the exact furnace in front of you before cutting W914.",
+   "Set DIP switch 1 to OFF for both dual fuel rows (single-stage heat pump and two-stage heat pump) on these controls.",
+   "Note the footnote under both dual fuel rows: connect W1 to W1 ONLY if using defrost tempering kit 67M41.",
+   "Note the warning printed directly below the table: do NOT make a wire connection between the room thermostat L terminal and the L terminal of the integrated control.",
+   "On EL296UHV the manual prints an explicit dual fuel plus dehumidification combination row that cuts W914 in addition to W951, and the two-stage dual fuel row that cuts W951, W914 and W915."
+  ],
+  "safety": "Cut links with power off. A cut link cannot be uncut - if you cut the wrong one you have to hard-wire the terminals back together at the terminal strip.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-df-lennox-transformer-27j32",
+  "equipment": "Gas Furnace",
+  "title": "Lennox furnace - 24V sagging or nuisance faults after adding dual fuel or zoning",
+  "summary": "The factory transformer in these furnaces is 40VA. Lennox recommends replacing it with kit 27J32 (75VA transformer) when the furnace is matched with zoning, dual fuel, or other 24V accessories.",
+  "steps": [
+   "Read the exact wording in the manual: when matching this gas furnace with zoning, dual fuel or other 24V accessories, it is recommended to replace the factory installed transformer with kit 27J32. Kit 27J32 contains a 75VA transformer, so you do not overload the original 40VA transformer.",
+   "Measure R to C at the furnace board with nothing calling. It should sit near nominal 24VAC.",
+   "Now force the worst case: heat call up, zone dampers driving, humidifier and any other 24V accessory energized. Measure R to C again at the furnace board during that moment.",
+   "Add up the actual 24V load: furnace control, dual fuel module or equipment relay board, zone panel, each damper motor, humidifier solenoid, condensate pump relay, UV lamp relay.",
+   "If the reading drops badly under load, install kit 27J32 rather than chasing the individual accessory - the symptom shows up as intermittent comm faults, dropped calls, or dampers that do not drive.",
+   "Do not power dampers off the furnace transformer on systems whose zoning manual calls for a separate damper transformer."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-lennox-balance-points",
+  "equipment": "Other",
+  "title": "Lennox S30/S40 dual fuel - setting and checking the high and low balance points",
+  "summary": "Balance Point Control is what decides heat pump vs gas furnace on a Lennox communicating dual fuel system. The defaults are 50 F high and 25 F low, and the manual's own guidance is to set them close together.",
+  "steps": [
+   "Get to the setting: Menu > Settings > Advanced Settings > View Support Service Control Center > Ok > Equipment Settings > Thermostat > Balance Point Control > Enabled > Back.",
+   "Confirm the decision logic as printed. When outdoor temp is above the High Balance Point, heat pump only. Between HBP and LBP, first stage heat is the heat pump and second stage heat turns the heat pump off and brings on the gas furnace. Below the Low Balance Point, gas furnace only.",
+   "Check the values against the defaults: High Balance Point default 50 F, adjustable -17 to 75 F. Low Balance Point default 25 F, adjustable -20 to 72 F.",
+   "Lennox's own troubleshooting guidance is to set the low and high balance points as close together as possible - the example printed is a 3 F difference, high balance point 25 F and low balance point 22 F.",
+   "Note the alert-code guide describes the band differently in one place: between the low and high balance point, the heat pump and furnace will heat the home. Expect both sources to be able to run in that band on this platform.",
+   "Also check HP Heating Lockout Time on the same equipment screen: default 120 minutes, selectable range 60 to 240 minutes. This is how long the heat pump stays locked off after the system decides it could not keep up.",
+   "Do not lock out the heat pump at any outdoor temperature when it is installed with an air handler using backup electric heat - the cheat sheet calls that out explicitly.",
+   "Record LOW and HIGH on the S40 checkout sheet - those two fields are on the printed commissioning form for a reason."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-lennox-eim-oat",
+  "equipment": "Other",
+  "title": "Lennox S40 dual fuel with a non-communicating heat pump - EIM and outdoor sensor are not optional",
+  "summary": "The S40 spec sheet's Heat Pump (Dual-Fuel) row is the only row in the system component table that requires a non-communicating outdoor unit AND an Equipment Interface Module. The outdoor air temperature sensor is required too.",
+  "steps": [
+   "Check the system component type actually configured. The Heat Pump (Dual-Fuel) row on the S40 lists the outdoor unit as Non-Communicating and lists Equipment Interface Module (EIM) Required for both the furnace path (EL297V, SL280V, SL280NV, SL297NV or SLP99V) and the air handler path (CBK48MVT).",
+   "Verify the EIM is present and configured. Catalog number for the EIM is 22X18.",
+   "Verify the outdoor air temperature sensor is installed and reading. The printed note reads: the Optional Outdoor Air Temperature Sensor is REQUIRED for dual-fuel applications with a non-communicating heat pump outdoor unit. Catalog number X2658.",
+   "On a communicating outdoor unit the sensor comes with the unit; on a conventional outdoor unit it must be added. It is also what lets the thermostat display outdoor temperature at all.",
+   "Without a valid outdoor temperature the balance point logic has nothing to decide on - that is the symptom to expect, not a hard fault code.",
+   "If the equipment list on the thermostat does not show the EIM, run the equipment re-detect: Menu > Settings > Advanced Settings > View Service Support Center > Equipment Setting > Reset > Reset Hvac Equipment."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-lennox-420-defrost",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox alert 420 - heat pump defrost cycle taking more than 20 minutes",
+  "summary": "AH EIM Defrost Out Of Cycle. Applies only to a communicating indoor unit paired with a non-communicating heat pump, which is exactly the dual fuel wiring arrangement.",
+  "steps": [
+   "Confirm the code applies: alert 420, priority Service Soon, reads that the heat pump defrost cycle has taken more than 20 minutes to complete, and is applicable only in a communicating indoor unit with a non-communicating heat pump.",
+   "Time an actual defrost from initiation to termination with a watch. Anything past 20 minutes is what triggers the code.",
+   "The alert clears specifically when the W1 signal is removed - that is, when the furnace heat call used for defrost tempering ends. If W1 is stuck on, the code will not clear.",
+   "Check the outdoor unit's own defrost termination: the heat pump control should terminate on coil temperature, not ride the time limit out.",
+   "Check the outdoor coil physically - heavy ice, a plugged coil, or a failed outdoor fan all stretch defrost past the limit.",
+   "Verify the coil temperature sensor is clipped to the correct tube on the outdoor coil. Location of the coil sensor is stated as important for proper defrost operation on these controls.",
+   "On a Lennox communicating heat pump, cross-check the S40 Defrost Termination Temp setting - factory default 50 F and the Lennox cheat sheet says it MUST be changed on heat pump installations, 90 F or 100 F suggested for cold climates."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-lennox-347-348",
+  "equipment": "Gas Furnace",
+  "title": "Lennox alert 347 or 348 - indoor unit or EIM Y1/Y2 relay not proving compressor demand",
+  "summary": "The thermostat sends a compressor demand to the indoor control and expects the indoor control to relay it to the outdoor unit. If the indoor control cannot see 24VAC on its own Y terminal, it posts 347 (stage 1) or 348 (stage 2). On a dual fuel job that reads as a heat pump that will not run.",
+  "steps": [
+   "Read the mechanism as printed: the Lennox communicating thermostat sends a Y1 compressor demand to the indoor control, the indoor communicating control verifies the presence of 24VAC between Y1 and C on its terminals, and if it does not detect 24VAC it triggers alert 347.",
+   "347 is Service Urgent and system operation stops. 348 is the Y2 second-stage analog and is Service Soon priority.",
+   "Force a compressor demand from the thermostat, then measure 24VAC between Y1 and C directly at the indoor unit terminals while the demand is up.",
+   "If there is no voltage, the printed causes are a failed Y1 relay on that component - either the furnace pilot relay contacts did not close, or the relay coil did not energize.",
+   "Note the printed caution: there is no input back to the applicable system component control, so the control cannot tell you anything more than that the voltage was missing.",
+   "Repeat the same measurement between Y2 and C for a 348.",
+   "The code clears automatically after reset once the Y1 input is sensed again - so prove your repair by re-running the demand and watching the code clear."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-trane-y1o-jumper",
+  "equipment": "Gas Furnace",
+  "title": "Trane S9V2-VS dual fuel - the Y1-O jumper on the IFC has to come off",
+  "summary": "Trane's equivalent of the Lennox W951. A factory Y1-O jumper on the integrated furnace control must be removed and the thermostat O output landed on the IFC O terminal whenever a heat pump is used.",
+  "steps": [
+   "Find the note on the field wiring diagram: for cooling only systems, leave Y1-O jumper in place on the IFC for correct LED readout.",
+   "For heat pump systems, remove the Y1-O jumper and connect O from the thermostat to O on the IFC low voltage terminal strip - the manual ties this directly to correct LED readout AND defrost operation.",
+   "The Figure 80 notes repeat it: remove Y1-O jumper for HP systems, O terminal must be connected as shown for gas heating operation during defrost. Leaving it in place breaks defrost tempering.",
+   "Verify Y1 and/or Y2 are landed from the thermostat to the IFC - the manual states they must be connected for proper airflow.",
+   "If the thermostat has no W2 or you are short on conductors, jumper W1 to W2 at the IFC (that is the manual's own instruction, and it also causes the display to sit on second-stage heat).",
+   "Do not confuse the Y1-O jumper with the BK jumper on the same board - BK is cut only for PWM-enabled thermostats and has nothing to do with heat pumps.",
+   "On the Figure 81 variant (single-stage AC or HP with 2-stage airflow) the thermostat must be set up for 2 stage OD and the IFC must also be set up for 2 stage OD using the menu/option buttons."
+  ],
+  "safety": "Power off before pulling jumpers on the IFC.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-trane-display-codes",
+  "equipment": "Gas Furnace",
+  "title": "Trane furnace IFC display - telling gas heat from heat pump heat and defrost tempering",
+  "summary": "On a dual fuel call, the Trane furnace control display tells you which heat source it thinks is running. Read it before you start metering.",
+  "steps": [
+   "Pull the code off the IFC display on the S9V2-VS: IdL is idle, Xt1 is first stage gas heating, Xt2 is second stage heating, Lr1 and Lr2 are the gas heat learning routines, CL1 and CL2 are cooling stages, aRF is calculated airflow followed by airflow times 10, C0F is continuous fan.",
+   "The heat pump states are separate: Xp1 is first stage heat pump, Xp2 is second stage heat pump.",
+   "dFt is defrost mode. The system status legend spells it out: demand for outdoor unit defrost, furnace running in gas heat mode.",
+   "On the simpler single-stage A951X control the same idea prints as text: IDL idle, Ht demand for 1st stage gas heat, CP1 demand for compressor cooling / heat pump, COF continuous fan, DFT demand for outdoor unit defrost with the furnace running in gas heat mode.",
+   "If you are standing at a dual fuel job and the display shows Xt1 or Xt2 when it should show Xp1, look at the balance point or changeover logic in the thermostat, not at the furnace.",
+   "If the display shows DFT the furnace is supposed to be firing - that is defrost tempering, not a wrong-heat-source complaint.",
+   "If the display never shows Xp1/Xp2 or DFT on a heat pump job, suspect the Y1-O jumper was never removed - the manual ties correct LED readout to that jumper."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-york-tm9v-jumpers",
+  "equipment": "Gas Furnace",
+  "title": "York TM9V dual fuel - two separate sets of jumpers, one on the furnace and one on the heat pump",
+  "summary": "Unlike Lennox and Trane, York splits the dual fuel configuration between boards. There is a HEAT PUMP jumper on the furnace control and F Fuel plus Hot Heat Pump jumpers on the heat pump's YORKGUARD VI control.",
+  "steps": [
+   "At the furnace: move the HEAT PUMP jumper on the two stage variable speed furnace control to YES. Move the DHUM jumper to YES only if a humidistat is used.",
+   "At the outdoor unit: change the F Fuel (fossil fuel) jumper on the heat pump control to ON. The wiring charts set F Fuel to ON in both the single-stage and two-stage heat pump diagrams - it is the base dual fuel enable.",
+   "Also on the heat pump control: change the Hot Heat Pump jumper to ON if Hot Heat Pump operation is desired. The figure titles read Hot Heat Pump or Conventional, and the manual does not define what Hot Heat Pump operation changes - do not guess, consult the YORKGUARD VI control documentation.",
+   "Do not look for the F Fuel or Hot Heat Pump jumper on the furnace board. They are on the outdoor control only.",
+   "Check the start-up sheet fields - the manual's own SECTION XIII start up sheet has an Other Jumpers block with De-humidistat Yes/No and Heat Pump Yes/No to be recorded at commissioning.",
+   "If a single stage room thermostat is used, the furnace staging jumper decides low-to-high fire timing: positions 10, 15 or 20 switch from low to high fire after that many minutes; left in OFF with a single stage thermostat the furnace will only operate at low fire.",
+   "These furnaces are not to be twinned. If more than one furnace is needed, each furnace must have its own complete duct system and its own wall thermostat."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-york-tm9v-tstat",
+  "equipment": "Other",
+  "title": "York TM9V dual fuel - the exact thermostat System Type and Changeover Valve selections",
+  "summary": "The York wiring charts print the specific installer setup menu numbers for the paired thermostat. Wrong System Type or wrong changeover polarity puts the reversing valve backwards or blocks staging.",
+  "steps": [
+   "Two-stage heat pump with the two stage variable speed furnace, DN22U00124 thermostat: Installer Setup item 1, System Type, must be set to 5 - 2 Heat/1 Heat Pump.",
+   "Same thermostat, Installer Setup item 2, Changeover Valve, must be set to 0 - O/B terminal Energized in Cooling.",
+   "Single-stage heat pump with the DP32H70124 thermostat: step 1 of the thermostat installer / configuration menu must be set to Heat Pump 1.",
+   "Prove the changeover polarity in the field rather than trusting the setting: put the system in cooling and confirm the reversing valve solenoid is energized, then switch to heating and confirm it drops out.",
+   "If heating blows cold and cooling blows warm, the changeover valve setting is the first suspect - not the reversing valve itself.",
+   "Confirm the furnace-side HEAT PUMP jumper is at YES at the same time; the thermostat setting alone does not configure the furnace board."
+  ],
+  "safety": "Reversing valve polarity errors will run the system in the wrong mode. Verify against the wiring diagram on the specific outdoor unit before changing the setting.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-carrier-hpd-tempering",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59TP6C/59MN7C shows Hpd - gas heat during heat pump defrost is normal",
+  "summary": "Carrier's furnace control has a dedicated status code for running gas heat while the paired heat pump defrosts, and a dedicated blower timing sequence for it. Techs read the simultaneous W and Y as a wiring fault.",
+  "steps": [
+   "Read the display code. Hpd on the furnace status display means Heat Pump Defrost Mode - gas heating cycle active during heat pump defrost cycle. It sits alongside iDl, Ht1, Ht2, CL1, CL2, Cfn and bLr.",
+   "Expect W/W1 and Y1 or Y/Y2 to be energized at the same time. The sequence of operation reads: whenever W/W1 is energized along with Y1 or Y/Y2, the furnace control CPU will transition to or bring on the blower at cooling airflow or low-heat airflow, whichever is lowest.",
+   "Watch the blower drop out for 25 seconds. The printed sequence is: the blower will remain on until the main burners ignite, then shut OFF and remain OFF for 25 seconds before coming back on at heating airflow. That short blower stop is designed, not a fault.",
+   "On the modulating 59MN7C the same logic reads cooling airflow, minimum-heat airflow, or the mid-range airflow, whichever is lowest, then back on at modulating heat airflow after the same 25 seconds.",
+   "When W/W1 drops, the control runs a normal inducer post-purge while it changes blower airflow, then transitions the blower to cooling airflow if Y/Y2 is still up, or low-cooling airflow if only Y1 is still up.",
+   "Confirm the hard requirement before you leave: the heat pump MUST have a high pressure switch for HYBRID HEAT dual fuel applications. That is a requirement, not a recommendation.",
+   "Configure the thermostat for HYBRID HEAT dual fuel operation per the thermostat instructions - this furnace manual defers all dual fuel programming to the thermostat.",
+   "With a standard non-communicating thermostat this furnace has no outdoor air temperature input of its own. The outside air thermistor (OAT) is used only with the communicating user interface, so balance point logic lives in the thermostat or outdoor control."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-goodman-afe18-kit",
+  "equipment": "Gas Furnace",
+  "title": "Goodman/Daikin fossil fuel kit AFE18-60A - what it does and where the wires land",
+  "summary": "On non-communicating single-stage heat pump installs the AFE18-60A is the external board that interlocks the two heat sources. It is not part of the furnace control.",
+  "steps": [
+   "Confirm the kit is present and mounted indoors near the furnace. The AFE18-60A control is designed for use where the indoor coil is located above/downstream of a gas or fossil fuel furnace when used with a heat pump, and it provides terminals for thermostat, furnace, and heat pump wiring.",
+   "Understand the interlock: the AFE18-60A control will turn the heat pump unit off when the furnace is turned on. If the heat pump keeps running while the burners are lit, that board or its wiring is the suspect.",
+   "It will operate with single and two stage heat pumps and single and two stage furnaces, but the furnace service manual states the AFE18-60A may be used with this furnace and a single stage heat pump.",
+   "Check where the furnace wires actually land: all furnace connections must be made to the furnace control board and to the FURNACE terminal strip on the fossil fuel control board. Wires landed straight from thermostat to furnace bypass the interlock.",
+   "For a two-stage furnace with a heat pump, a heat pump thermostat with three stages of heat is required - the Daikin manual states this alongside the same AFE18-60A part number.",
+   "On legacy non-communicating installs the balance point device is the OT18-60A outdoor thermostat, used to lock out the heat pump at a selected temperature. Check whether one is installed and what it is set to before chasing the changeover logic anywhere else.",
+   "The accessory description in the source is cut off after the words an anti-short cycle, so do not assume any specific anti-short-cycle timing from that sentence - read it off the kit's own instructions."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-goodman-strike-algorithm",
+  "equipment": "Gas Furnace",
+  "title": "Goodman/Daikin furnace - Dual Fuel Adjustment strike counting decides heat pump vs gas, not outdoor temperature",
+  "summary": "With a communicating heat pump (or a non-communicating heat pump plus an equipment relay board) these furnace controls run a self-tuning runtime algorithm. It is not an outdoor-temperature balance point, and it will look like random changeover to a tech who does not know it exists.",
+  "steps": [
+   "Find the Comfort Setting Menu (CFS) on the furnace control. There are 6 options, and they set both the System Target Runtime and the dual fuel adjustments. Dual fuel adjustments only apply if a communicating heat pump is installed, or a non-communicating heat pump is installed with an equipment relay board (the two-stage 80 manual omits the relay-board case and says communicating only).",
+   "Note the System Target Runtime by option: option 1 = 10 minutes, 2 = 15 minutes, 3 = 20 minutes, 4 = 25 minutes, 5 = 30 minutes. Default is Option 1.",
+   "Stage Up Percent (menu SUP) sets how far past target the heat pump runs before handing to gas. Example printed in the manual: 20 percent of a 20 minute target adds 4 minutes, so the system transitions to gas heat after 24 minutes if the call is still present. Each time that happens the system records a strike against the heat pump.",
+   "Over Target Threshold (menu Ott) is how many consecutive strikes it takes before the heat pump is temporarily locked out and the furnace becomes the primary heat source.",
+   "Stage Down Percent (menu SdP) only applies during that temporary lockout. Example printed: 15 percent of a 20 minute target means if low stage gas heat satisfies in under 17 minutes, a strike is recorded against the furnace.",
+   "Under Target Threshold (menu Utt) is how many consecutive furnace strikes it takes to remove the heat pump lockout and give the heat pump the next cycle.",
+   "Read the default table for Comfort Settings 1 through 5 - target time / stage up % / stage down % / Ott strikes / Utt strikes: 10/20/20/2/10, 15/20/20/4/8, 20/20/20/6/6, 25/20/20/8/4, 30/20/20/10/2.",
+   "Only Comfort Setting 6 unlocks full adjustment: Target Time (t9t) 1 to 240 minutes, default 60; Stage Up Percent (SUP) 0 to 100 percent, default 20; Stage Down Percent (SdP) 0 to 100 percent, default 20; Over Target Threshold (Ott) 1 to 254 strikes, default 20; Under Target Threshold (Utt) 1 to 254 strikes, default 20."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-goodman-defrost-menus",
+  "equipment": "Gas Furnace",
+  "title": "Goodman/Daikin furnace with a communicating heat pump - defrost gas stage, defrost interval, and balance point menus",
+  "summary": "Several dual fuel settings live in the furnace's own Outdoor AC/HP menu group and only appear once a communicating heat pump is detected.",
+  "steps": [
+   "Defrost Gas Heat Stage: selectable 1 or 2. It selects which gas heat stage runs as defrost-tempering heat during a heat pump defrost cycle. Cold-air-during-defrost complaints start here.",
+   "HP Defrost Interval: options 30, 60, 90, 120 minutes. These are the defrost options for compressor heating operation.",
+   "Compressor Delay: options 0, 5, 15, 30. This is the compressor delay for heating operation.",
+   "Compressor Balance Points: adjustable and defined in Shared Data. The actual numbers are programmed per outdoor unit model, so read the value off the menu on the job - the furnace manual does not print a universal number.",
+   "Backup Heat Balance Points: adjustable between a Min and Max also defined in Shared Data. This menu only shows up when a communicating heat pump is detected. If it is missing, the furnace has not detected the heat pump.",
+   "Understand the priority rule: for fossil fuel systems the heat pump is given priority when a compressor balance point lockout condition is not present. Both the compressor balance point lockout and the backup heat balance point lockout must be absent before the runtime-based Dual Fuel Adjustment algorithm is even allowed to run.",
+   "Expect full capacity on the first gas cycle: transitions from primary heat pump heating to backup gas heating result in full capacity operation during the first thermostat call, and the furnace PCB then adjusts stage times or percent capacity on later calls."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-goodman-no-o-wire",
+  "equipment": "Gas Furnace",
+  "title": "Goodman furnace with a heat pump - no O terminal, and the one wiring case where heat pump mode is allowed",
+  "summary": "These furnace controls have no O (reversing valve) input at all, so the usual dual fuel thermostat setup is wrong here - with exactly one documented exception.",
+  "steps": [
+   "Read the all-caps warning: this system does not contain an O wire input (reversing valve signal). If a heat pump is installed, the thermostat should be set up for single stage heat/single stage cool installs (W = heat call and Y = cool call). Setting the thermostat for heat pump control will result in incorrect performance.",
+   "The exception is the Non-Communicating Single Stage Heat Pump wiring diagram, which carries the note: this is the only case where setting the thermostat to heat pump mode is acceptable.",
+   "In that one case, the manual states the thermostat must be set up for dual fuel operation where the reversing valve is energized in cooling mode. Confirm that against the outdoor unit's own wiring diagram before you set it.",
+   "In both cases airflow must be selected using the tonnage menu, where airflow = 400 CFM x selected tonnage. Tonnage values range from 1 to 6 in 0.1 increments.",
+   "Verify the selected tonnage matches the actual outdoor unit tonnage, then verify delivered airflow against the 400 CFM per ton the menu is calculating from.",
+   "If the customer reports heat that blows cold, or a heat pump that runs backwards, and the thermostat is in heat pump mode on a directly wired Goodman furnace, that is the first thing to correct.",
+   "If a fossil fuel kit (AFE18-60A) is used instead, follow the kit's wiring guidelines and land the furnace side on the FURNACE terminal strip of the fossil fuel board."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-daikin-dm96vc-stage-count",
+  "equipment": "Gas Furnace",
+  "title": "Daikin DM96VC / DM97MC fossil fuel - the thermostat has to control enough stages of heat",
+  "summary": "A two-stage furnace plus a heat pump needs more heat stages at the thermostat than most techs wire. The manual gives the exact rule.",
+  "steps": [
+   "Read the DM96VC rule: to take full advantage of this 2 stage furnace the thermostat must have the ability to control three stages of heat (one stage for the heat pump and two for the furnace). If the heat pump has two stages then you will need a thermostat capable of controlling four stages of heat.",
+   "The DM97MC/DC97MC manual states the same thing in one line: a heat pump thermostat with three stages of heat is required to properly use a two-stage furnace in conjunction with a heat pump.",
+   "Count the stages actually available at the installed thermostat and compare. A three-heat-stage requirement cannot be met by a plain two-heat/one-cool stat.",
+   "Confirm the definition of the application: a fossil fuel application refers to a combined gas furnace and heat pump installation which uses an outdoor temperature sensor to determine the most cost efficient means of heating.",
+   "If a fossil fuel kit is used instead of a multi-stage thermostat, strictly follow the wiring guidelines in the fossil fuel kit installation instructions, and land all furnace connections on the furnace control board and on the FURNACE terminal strip of the fossil fuel control board.",
+   "On a Daikin communicating system the pairing is recognized automatically - the DM96VC manual states that if the furnace is installed with a communicating compatible heat pump, the system is recognized as a dual fuel system and the balance point temperature should be set via the thermostat.",
+   "In the communicating airflow demand table the furnace's role in a Heat Pump + Furnace system is labeled Auxiliary Heating, distinct from Heating Furnace in an AC + Furnace system."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-daikinone-balance-point",
+  "equipment": "Other",
+  "title": "Daikin One / One+ dual fuel - the balance point menu only appears on a true dual fuel setup",
+  "summary": "If the balance point row is missing from the Heat Pump Settings folder, the thermostat does not think it has a gas furnace and a heat pump configured as separate equipment.",
+  "steps": [
+   "Look for the row in the Heat Pump Settings folder: balance point, range -10 F to 75 F in 5 F steps, default 50 F, with the note only displayed for dual-fuel systems (HP and gas furnace).",
+   "The companion row is prioritize efficiency or prioritize comfort (radio buttons), default prioritize comfort, with the same only-displayed-for-dual-fuel note.",
+   "If neither row is shown, go back to equipment setup and confirm both a Heat Pump and a gas Furnace exist as separate equipment objects. An aux-heat-strip configuration will not show these rows.",
+   "Do not confuse these with heat pump lockout temp (-40 F to 65 F in 5 F steps, default -5 F) or supplemental heat lockout (-10 F to 75 F in 5 F steps, default 50 F) - those two only appear for systems with a heat pump and a heater kit.",
+   "Use the commissioning Optional Tests to force each source individually: Heat Pump Heat run test, Gas Heat run test, and Electric Heat run test are separate menu items, so you do not have to wait for a natural changeover to prove both sources.",
+   "On an inverter outdoor unit, the system test has to complete before setup can proceed - the system test is complete only when display code E11 clears from the seven segment LED display on the heat pump or air conditioner."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-daikinone-aux-lockout-10f",
+  "equipment": "Other",
+  "title": "Daikin One+ - heat pump lockout vs aux heat lockout and the 10 F rule",
+  "summary": "The thermostat enforces a minimum separation between the two lockout temperatures when the heat pump is the primary heat source. The published defaults do not agree between two Daikin documents, so read the values off the thermostat.",
+  "steps": [
+   "Find both settings. When the heat pump is primary, the aux heat source folder shows a heat pump lockout and an aux heat lockout with an Enable aux heat lockout checkbox that is disabled by default.",
+   "Read the enforced relationship as printed: the HP lockout must be at least 10 F less than the aux heat lockout. The thermostat will not accept a setting that violates it.",
+   "Note the conflicting defaults and do not pick a side from memory. The commissioning menu outline prints heat pump lockout temp default -5 F (-20 C) and supplemental heat lockout default 50 F (10 C). The One+ install deck prints heat pump lockout adjustable -20 F to 65 F in 5 F increments, default 15 F, and auxiliary heat lockout adjustable -10 F to 75 F in 5 F increments, default 50 F. Read the actual value off the thermostat in front of you.",
+   "Check the aux heat demand differentials when the heat pump is primary: T on differential adjustable -7 F to -3 F in 1 F increments, default -3 F; T off differential adjustable -4 F to 1 F in 1 F increments, default 1 F.",
+   "If aux heat is configured as the primary heat source instead, the values change: heat pump lockout -20 F to 65 F in 5 F increments default 15 F, setpoint differential selectable -9, -7, -4 or -2 F default -2 F, heat pump T on differential -1 F or -2 F default -1 F, T off differential fixed at 1 F.",
+   "Know which control path you are in. When the indoor unit itself is configured as a gas furnace or an air handler with a heater strip, that heat source is controlled around the heat setpoint by the demand-based algorithm; a separately added Aux heat source object is controlled independently by T on/T off.",
+   "Emergency Heat mode appears as a system mode only when connected to a heat pump, and its documented function is to directly turn on the aux heat source - it bypasses the normal demand algorithm."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-df-rheem-legacy-kit",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem legacy dual fuel kit - outdoor thermostat wiring and proving the reversing valve",
+  "summary": "The legacy Rheem dual fuel kit instructions are the only Rheem document in this set that states the reversing valve energize convention in plain text, and they give a specific ODT rewire step.",
+  "steps": [
+   "Land the outdoor thermostat correctly: the ODT must be connected between R and E. On heat pumps, remove the gray ODT wire from W2 and reconnect it to R.",
+   "Prove the reversing valve. Set the system mode switch to COOL or AUTO and gradually lower the cooling setpoint. The reversing valve solenoid should energize when the manual change-over thermostat is set to COOL, or when the first cooling bulb makes on an auto change-over thermostat.",
+   "Prove it drops out: set the thermostat system mode switch to OFF. The entire system will shut down, including de-energizing the reversing valve solenoid.",
+   "This confirms the legacy Rheem/Ruud energize-in-cooling convention on the O terminal for THIS platform only. Do not carry it onto a current-production RP17H - that manual does not state its convention anywhere.",
+   "Expect a compressor minimum off time of five minutes after a run period or a power interruption on systems with built-in short cycle protection.",
+   "To bypass that protection for service, the timer may be accelerated by jumpering the speed-up pins on the defrost board. Remove the jumper when you are done.",
+   "On the legacy defrost board, the outdoor thermostat prevents electrical auxiliary heat from operating above its set point - factory setting 40 F, adjustable from 45 F to 0 F."
+  ],
+  "safety": "Reversing valve polarity is model specific. Verify against the wiring diagram on the actual outdoor unit before rewiring O or B.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-rp17h-read-code",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem RP17H heat pump - retrieving and reading the inverter fault code",
+  "summary": "The RP17**H side-discharge inverter heat pump does not use a seven-segment display. The code comes off an LED cluster on the outdoor board and only appears after you press SW1 while the fault is active.",
+  "steps": [
+   "Confirm there is a fault: if an error occurs, the LED will light up to display the error location and the error code, and the ERROR LED blinks quickly.",
+   "Read the error location first. LEDs A to F of MONITOR light up and display the error location. In the case of an overall error, LEDs A to F of MONITOR do not light up.",
+   "Retrieve the code: while the error is occurring, briefly press SW1. The error code is then displayed.",
+   "Decode the blink pattern using the printed legend: blink is 0.5 s on / 0.5 s off, and for MONITOR A and B the letter positions are A = 10 blinks, C = 11 blinks, F = 12 blinks, J = 13 blinks, P = 14 blinks, U = 15 blinks.",
+   "Write the code down before cycling power. This board has no app or Bluetooth readout in this document, and no seven-segment display - once power drops you may lose the live indication.",
+   "Match the code against the printed 30-code table on page 34 of the manual (11.3 through A3.1). The table has exactly two columns, Error Code and Error Type - there is no recommended-action column in this manual, so do not expect a printed repair step per code.",
+   "Note the printed oddity at 76.1 and 76.2: both codes are grouped under the single description Valve sensor error, and 76.2 has no separate description text on the page.",
+   "This manual also contains no sequence of operation, no defrost timing table, no sensor resistance chart, and no DC bus discharge wait time. For component-level values you need the full service literature, not this document."
+  ],
+  "safety": "The inverter board carries stored DC bus energy. This manual gives no discharge wait time - use the outdoor unit service literature's own wait time before touching inverter components.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-rp17h-code-groups",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem RP17H - what each fault code group points at",
+  "summary": "The 30-code table groups cleanly by subsystem even though the manual prints no corrective actions. Use the group to decide where to meter first, and do not invent repairs the manual does not state.",
+  "steps": [
+   "Communication group: 11.3 serial communication error, 11.4 serial communication error during operation, 16.5 communication error between controller and outdoor unit. Check the control wiring between the thermostat/controller and the outdoor unit before anything else.",
+   "Configuration and memory group: 22.1 indoor unit capacity error, 5U.1 indoor unit error, 62.1 outdoor unit PCB model information error, 62.3 EEPROM access error, 62.8 EEPROM data corruption error. These point at mismatched or corrupted board configuration, not at a refrigerant problem.",
+   "Inverter and power group: 63.1 inverter error, 65.3 IPM error (trip terminal L error), 84.1 current sensor 1 error (stoppage permanently), 94.1 trip detection, 95.1 compressor motor control error (stoppage permanently). The two marked stoppage permanently will not self-recover.",
+   "Temperature sensor group: 71.1 discharge temperature sensor, 72.1 compressor temperature sensor, 73.2 heat exchanger middle temperature sensor, 73.3 heat exchanger liquid temperature sensor, 74.1 outdoor temperature sensor, 75.1 suction gas temperature sensor, 76.1 and 76.2 valve sensor, 77.1 heat sink temperature sensor.",
+   "Pressure and protection group: 86.1 discharge pressure sensor error, 86.4 outdoor unit high pressure switch1 error, A1.1 discharge temperature 1 error (stoppage permanently), A3.1 compressor 1 temperature error.",
+   "Actuator group: 97.3 fan motor 1 error (duty error), 98.3 fan motor 2 error (duty error), 99.1 4-way valve error, 9A.1 coil 1 (expansion valve 1) error.",
+   "For 86.4, cross-check the actual high pressure against the protection setpoints printed for that model pair - they are not the same for the 2/2.5 ton units and the 3/4 ton units.",
+   "For A1.1, A3.1 and 86.4, treat the reading as a system condition (airflow, charge, coil) before condemning the sensor - but note the manual itself prints no action for any code."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-rp17h-protection",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem RP17H - protection setpoints are different between the 2/2.5 ton and 3/4 ton boards",
+  "summary": "The Safety Devices page prints two separate sub-tables. The high pressure switch settings are genuinely different numbers, not a units conversion, so pick the sub-table that matches the model on the nameplate.",
+  "steps": [
+   "Read the model number first. RP1724HJVXA and RP1730HJVXA use one sub-table; RP1736HJVXA and RP1748HJVXA use the other.",
+   "RP1724/RP1730 high pressure protection pressure switch: activates at 4.2 +/- 0.1 MPa and stops the compressor, resets at 3.2 +/- 0.15 MPa and restarts the compressor.",
+   "RP1736/RP1748 high pressure protection: activates at 580 psi (4.0 MPa), resets at 471 psi (3.25 MPa). Note 4.2 MPa is roughly 609 psi, so these are two different setpoints - do not convert one and apply it to the other model.",
+   "Compressor thermal protection is close but not identical: RP1724/RP1730 activate at 226 F (108 C) and reset at 176 F (80 C); RP1736/RP1748 activate at 226.4 F (108 C) and reset at 176 F (80 C).",
+   "Discharge temperature protection: both activate at 230 F (110 C). RP1724/RP1730 restart after 7 minutes. RP1736/RP1748 restart after 3 minutes and only once discharge is below 230 F (110 C).",
+   "Fan motor thermal protection: RP1724/RP1730 stop at 302 +27 -18 F (150 +15 -10 C) and restart at 248 +27 -18 F (120 +15 -10 C). RP1736/RP1748 stop at 239 +/- 27 F (115 +/- 15 C) and restart at 158 F (70 C).",
+   "Circuit protection to check when the board is dead: RP1724/RP1730 use a 250 V 5 A x 2 filter PCB fuse and a 250 V 3.15 A x 2 main PCB fuse. RP1736/RP1748 use AC 250 V 5 A plus AC 250 V 10 A x 2 on the filter PCB, an AC 500 V 45 A protector, AC 250 V 3.15 A x 2 on the main PCB, and AC/DC 400 V 5 A on the INV PCB.",
+   "The outdoor temperature thermal protection row prints as -- (no value) in both sub-tables. There is no published outdoor-temperature cutout here."
+  ],
+  "safety": "Read pressures with the correct gauge set for the refrigerant in the unit and stand clear of the discharge side while the unit is running.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-rheem-rp17h-dips",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem RP17H - DIP switch positions, and the ones that must never be moved",
+  "summary": "Most of the DIP switches on this board are marked prohibited. Only three positions are legitimately field-settable, and each has a specific purpose.",
+  "steps": [
+   "Power down first: be sure to disconnect the power supply or turn off the breaker before changing the DIP switch setting.",
+   "SW1 is a push switch, not a DIP. It starts and stops the test run and starts and stops the pump down.",
+   "SET1-1 (DIP, factory OFF) selects cooling or heating during test operation. ON = heat test mode, OFF = cool test mode, and OFF is factory.",
+   "SET1-2 (DIP, factory OFF) switches SW1 operation - it is what puts SW1 into pump down mode. It is a temporary state for pump down only, not a standing configuration, and must be returned to OFF.",
+   "SET2-1 (DIP, factory OFF) selects the outdoor unit low noise operation function. ON = Lower, OFF = Low, and OFF is the factory default. Using this function requires the optional central remote controller.",
+   "If low noise is enabled, warn the customer: when the low noise operation function is working, cooling and heating capacity will decrease.",
+   "Every other position - SET1-3, SET1-4, SET2-2, SET2-3, SET2-4, SET3-1, SET3-2, SET3-3, SET3-4 - is printed as (Prohibited), OFF, do not change. If you find one moved, that is a finding.",
+   "Restore any switch you moved for testing before you leave and confirm normal operation afterward."
+  ],
+  "safety": "Disconnect power or turn off the breaker before changing any DIP switch on this board.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-rp17h-pumpdown",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem RP17H - pump down procedure using SET1-2 and SW1",
+  "summary": "Pump down on this platform is a board function, not a manual valve-and-watch job. The printed sequence has a specific pressure target and an automatic 15 minute stop.",
+  "steps": [
+   "Connect the pressure gauge to the charging port.",
+   "With power off, change the DIP switch on the board (SET1-2) to ON. The manual repeats: be sure the power supply is disconnected or the breaker is turned off when changing the DIP switch.",
+   "Start the operation: press the pump down switch (push switch SW1) for 3 seconds, or press after the power has been on for 3 minutes. During pump down the POWER/MODE LED will flash 3 times consecutively.",
+   "Close the liquid pipe valve.",
+   "Watch the gauge. When the value between 7.3 psi and 0 psi (0.05 MPa to 0 MPa) is shown, close the gas pipe valve.",
+   "Stop pump down by pressing the pump down switch for 3 seconds and confirm the LED changes to the 3-blink indication.",
+   "Disconnect the power supply or turn off the breaker, then return SET1-2 to OFF.",
+   "If you do not stop it manually, pump down stops automatically after 15 minutes. If it did not complete, open the liquid pipe valve and start again from the press-and-hold step. Also note: if SW1 is pressed during compressor operation, the compressor stops and operation restarts after about 3 minutes."
+  ],
+  "safety": "Do not let the system pull into a deep vacuum on the low side. Watch the gauge and close the gas pipe valve inside the printed 7.3 psi to 0 psi window.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-rp17h-rv-polarity",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem RP17H - do not assume the reversing valve energizes in cooling",
+  "summary": "The RP17H manual does not state the O-versus-B convention anywhere in text. A different, legacy Rheem accessory document does state energize-in-cooling, but that statement does not belong to this platform.",
+  "steps": [
+   "Do not carry the legacy convention forward. The energize-in-cooling statement in this brand's literature comes from a legacy Dual Fuel Kit document, not from the RP17H manual.",
+   "Read the polarity off the wiring diagram physically attached to the unit in front of you (the diagram pages in the manual are graphics and carry no extractable terminal text).",
+   "Prove it in the field before you commit the thermostat setting: put the system in cooling and check for 24VAC at the reversing valve solenoid, then switch to heating and check again. Whichever mode energizes the solenoid is that unit's convention.",
+   "Set the thermostat changeover option to match what you measured, not to what the brand usually does.",
+   "If the system heats when it should cool, or blows cold on a heat call, recheck this before touching refrigerant.",
+   "Note the related fault code: 99.1 is 4-way valve error on this platform. A code 99.1 is a valve fault, not a thermostat polarity problem.",
+   "Document what you found on the job ticket so the next tech does not have to re-derive it."
+  ],
+  "safety": "Reversing valve polarity is safety-critical for correct operation on a dual fuel or heat pump job. Verify against the unit's own wiring diagram - never assume brand convention.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-rheem-legacy-led-codes",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - reading the red status LED and the yellow flame LED",
+  "summary": "The RC92+/RL90+ condensing furnaces and the RA/RK 80+ furnaces all share one LED legend printed on the wiring diagram. Two LEDs, two different stories.",
+  "steps": [
+   "Read the red STATUS light: solid ON is power on; 1 flash is limit circuit open or external load on W; 2 flashes is pressure switch open with inducer on; 3 flashes is pressure switch closed with inducer off; 4 flashes is ignition failure (check ground); 5 flashes is 115 VAC and neutral reversed or no ground; continuous is false flame or gas valve relay shorted; OFF is power off.",
+   "Read the yellow FLAME light separately: continuous flash is low flame sensor signal, solid ON is flame present.",
+   "A 5-flash code is a line-side problem, not a furnace component - check polarity and ground at the furnace before anything else.",
+   "A 3-flash code means the switch was already closed before the inducer started - suspect a stuck closed switch or a shorted hose, not a venting restriction.",
+   "A 2-flash code means the switch never made with the inducer running - now you are looking at venting, the hose, the inducer, or the switch.",
+   "A 1-flash code covers two very different causes - an open limit string, or an external 24V load sitting on W. Check for an accessory or a zone panel back-feeding W before condemning a limit.",
+   "A yellow continuous flash with the furnace still running is the control warning about a weak flame signal - clean or replace the flame sensor before it turns into a lockout.",
+   "This same legend is printed word-for-word on the RC92+/RL90+ and both RA/RK 80+ platforms, so the codes read the same across all three."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-sequence",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - where in the ignition sequence it dies, with the printed timings",
+  "summary": "The heating sequence on these furnaces is printed step by step with exact timings including an adaptive ignitor warm-up that changes on its own. Knowing the numbers lets you catch the failure point live.",
+  "steps": [
+   "On a call for heat, 24VAC lands on W. The control first checks continuity of the 24VAC limit circuit (over-temperature limit, flame rollout switches and blocked vent switch in series). If a limit is open, the control energizes the inducer and the conditioned air blower, all other functions are inoperable, and the red LED pulses 1 blink.",
+   "The control then checks the pressure switch. If it is already closed the heat sequence will not continue; if it stays closed for 10 seconds the red LED blinks 3 times repetitively until it clears.",
+   "The inducer energizes. The pressure switch should close; if it does not close after 10 seconds the LED blinks 2 times repetitively and the inducer keeps running until the switch closes.",
+   "Pre-purge is 30 seconds, then the ignitor warms up. On initial power up the warm-up is 30 seconds before the gas valve opens, and the ignitor stays energized for 3 seconds after the valve opens.",
+   "After initial power up the warm-up is adaptive: successful ignition reduces warm-up by 3 seconds each subsequent call until a failure, and a failure increases it by 3 seconds on the next try. Minimum and maximum warm-up limits are 6 and 54 seconds.",
+   "Flame must be proven after the gas valve opens (see the flame-proving window scenario - the manuals print this window three different ways). No flame closes the gas valve immediately while the inducer keeps running, and a second trial begins.",
+   "On the fifth try for ignition the control locks out and the red LED blinks 4 times. The thermostat must be opened for at least ten seconds to reset, otherwise the furnace attempts another sequence in 1 hour.",
+   "The blower energizes on heating speed 30 seconds after the gas valve circuit is energized. At the end of the call the inducer post-purges 30 seconds and the blower runs 120 seconds factory set, field adjustable to 60, 90 or 180 seconds with the BLOWER OFF timing switch on the control board."
+  ],
+  "safety": "Never jumper a limit or a rollout switch to keep the sequence running.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-flame-window",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - the flame proving window is printed three different ways",
+  "summary": "Three closely related Rheem furnace IOMs give three different numbers for when flame must be proven. Do not time a job against the wrong one.",
+  "steps": [
+   "On the RC92+/RL90+ condensing furnace and on the full-size RA/RK 80+ furnace, the sequence step reads: the furnace control must prove flame via the flame sensor 5 seconds after the gas valve opens.",
+   "On the compact RA 80+ platform the same step reads: the furnace control must prove flame via the flame sensor between 3 and 5 seconds after the gas valve opens.",
+   "In the component description section of the full-size RA/RK document, the same event is framed differently again: if no flame is sensed, the furnace will shut down within 7 seconds of ignition.",
+   "The manuals do not reconcile the 5-second and 7-second statements - they may describe different points in the timing chain. Treat anything in the 3 to 7 second band as within published behavior for this family and diagnose on the flame signal, not the stopwatch.",
+   "Measure the actual flame signal with the burners lit rather than timing the dropout. A weak signal shows up as the yellow flame LED flashing continuously (low flame sensor signal).",
+   "Confirm which platform you are on before quoting a number: the compact platform's limit circuit description also omits the blocked vent switch, and its start-up checklist references a single roll-out manual reset switch with no vent safety switch.",
+   "If flame is being proven then lost, that is a different failure than never proving - watch which of the two the LED reports."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-rheem-legacy-manifold-altitude",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - manifold pressure by altitude and gas heating value",
+  "summary": "These manuals do not print one manifold pressure. Natural gas manifold pressure is banded by both elevation and the local gas heating value, and LP is banded by elevation only.",
+  "steps": [
+   "Get the local gas heating value from the utility before you set anything - the RA/RK and compact platforms print three separate natural gas tables by heating value.",
+   "Natural gas, 800 to 899 Btu/cu.ft.: 3.5 in WC from 0 to 1999 ft, 3.5 for 2000-4999, 3.5 for 5000-5999, 3.5 for 6000-7999, 3.0 for 8000-10000.",
+   "Natural gas, 900 to 999 Btu/cu.ft.: 3.5 / 3.5 / 3.5 / 3.2 / 2.8 across those same five elevation bands.",
+   "Natural gas, 1000 to 1100 Btu/cu.ft.: 3.5 / 3.5 / 3.0 / 2.8 / 2.5 across those same five bands.",
+   "LP/propane, heating value 2500 Btu/hr: 10.0 / 8.5 / 10.0 / 9.0 / 8.5 across the same five elevation bands. Note the non-monotonic 8.5 then 10.0 - that is how it prints.",
+   "On the RC92+/RL90+ table the natural gas row reads 3.5 / 3.5 / 3.5 / 3.2 / 2.8 with the footnote: based on heating value from 900 to 999 BTUH; for heating values less than 900 BTUH multiply manifold pressure by 1.1, for heating values greater than 1000 BTUH multiply by 0.9.",
+   "Set manifold pressure with the burners firing and confirm by clocking the meter, not by the regulator turns.",
+   "Check inlet supply pressure at the same visit: natural gas must not exceed 10.0 in WC (0.36 psig) and must not be less than 4.5 in WC (0.16 psig); LP must not exceed 14 in WC (0.51 psig) and must not be less than 11.0 in WC (0.40 psig)."
+  ],
+  "safety": "Leak-check every fitting you break loose to take a pressure reading before relighting.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-orifice",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - orifice drill sizes differ between the two 80+ platforms",
+  "summary": "The full-size RA/RK 80+ and the compact RA 80+ use genuinely different orifice sizes. Grabbing the number from the wrong manual puts the furnace badly off input.",
+  "steps": [
+   "Identify the platform from the rating plate model before you pick an orifice. The two 80+ families do not share sizes.",
+   "Full-size RA/RK 80+, 0 to 4999 ft, natural / LP by input: 45000 = 44/54, 60000 = 45/55, 72000 = 43/54, 96000 = 43/54, 120000 = 43/54, 135000 = 41/54, 144000 = 43/54.",
+   "Full-size RA/RK 80+, 5000 to 10000 ft: 45000 = 44/55, 60000 = 45/56, 72000 = 43/55, 96000 = 43/55, 120000 = 43/55, 135000 = 41/55, 144000 = 43/55.",
+   "Compact RA 80+, 0 to 4999 ft: 45000 = 50/57, 54000 = 47/56, 72000 = 47/56, 90000 = 47/56, 108000 = 47/56, 126000 = 47/56.",
+   "Compact RA 80+, 5000 to 10000 ft: 45000 = 50/61, and 54000 through 126000 all = 47/61.",
+   "RC92+/RL90+ condensing furnaces, 0 to 4999 ft: 40000 through 120000 all natural 45 / LP 55. At 5000 to 10000 ft: natural 45 for 40000-100000 and 46 for 120000, LP 56 across the range.",
+   "After changing orifices, clock the gas meter and verify input, then verify temperature rise against the rating plate.",
+   "The source flags a genuine layout ambiguity in the RC92+/RL90+ table between the combined natural gas and LP block - if the printed table in front of you is unclear, read the exact value off the unit's own table rather than assuming."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-rheem-legacy-temp-rise",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - verifying temperature rise the way the manual specifies",
+  "summary": "These manuals give no printed rise range in the text - they defer to the rating plate - but they do give a specific measurement procedure, including how long to run first.",
+  "steps": [
+   "Get the rise range off the furnace rating plate. The manual text states only that rise must be within the range specified on the furnace rating plate, and warns that rises outside the specified range could result in premature heat exchanger failure.",
+   "Place thermometers in the return and supply air stream as close to the furnace as possible.",
+   "Shield the supply-side thermometer from direct radiation from the heat exchanger to avoid false readings.",
+   "Adjust all registers and duct dampers to the desired position before you start.",
+   "Run the furnace before reading. The RC92+/RL90+ manual says run fifteen minutes; the RA/RK and compact 80+ manuals say ten to fifteen minutes. Use the longer number and you satisfy all three.",
+   "Temperature rise is supply air temperature minus return air temperature. Compare it to the plate range.",
+   "If rise is out of range, change blower speed: lower blower speeds increase the temperature rise, higher blower speeds decrease the temperature rise.",
+   "Check the blower off delay while you are there - factory wired for 120 seconds after the gas valve closes, changed with the BLOWER OFF timing switch opposite the terminal block on the control board (60, 90 or 180 seconds)."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-hialt-switch",
+  "equipment": "Gas Furnace",
+  "title": "Rheem compact RA 80+ - the pressure switch must be swapped above 5000 feet (kit 903853)",
+  "summary": "The factory pressure switch on this compact platform is only rated to 5000 feet. Above that it may have to be physically replaced with a kit part, which is easy to miss on a high altitude nuisance-trip call.",
+  "steps": [
+   "Read the statement: the pressure switch is factory equipped to operate between zero and 5000 feet above sea level. For higher altitude applications you may need to replace the pressure switch. The approved high altitude pressure switch kit is 903853.",
+   "Get the actual installation elevation before you decide - not the nearest city's elevation.",
+   "If the swap is required, follow the printed order: disconnect all electrical power, remove the access doors, turn the gas valve knob to OFF, and shut off the gas to the unit.",
+   "Disconnect the electrical leads at the pressure switch. It is not necessary to mark the leads - polarity does not matter across the switch.",
+   "Remove the hose from the pressure switch and remove the fasteners that secure the switch to the burner box, then discard the old switch.",
+   "Install the new high altitude switch from the kit using the same fasteners, reattach the hose to the same port in the same manner, and reattach the leads.",
+   "Restore power, turn the gas valve knob to ON, and run the full start-up procedure to verify proper operation after the conversion.",
+   "This kit procedure was not found in the RC92+/RL90+ or full-size RA/RK manuals - it is documented for the compact platform only."
+  ],
+  "safety": "Power off and gas off before removing the pressure switch. Never bypass a pressure switch to prove a high altitude complaint.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-supply-pressure",
+  "equipment": "Gas Furnace",
+  "title": "Rheem/Ruud legacy furnace - inlet gas supply pressure limits",
+  "summary": "Both the condensing and the 80+ furnace IOMs print the same inlet pressure window, and it is a start-up check item, not an optional one.",
+  "steps": [
+   "Read inlet (supply) pressure at the gas valve inlet tap, with the furnace firing on high fire and every other gas appliance on that line running.",
+   "Natural gas: the gas line service pressure does not exceed 10.0 in water column (0.36 psig) and is not less than 4.5 in water column (0.16 psig).",
+   "LP gas: the line service pressure must not exceed 14 in water column (0.51 psig) and must not be less than 11.0 in W.C. (0.40 psig).",
+   "A reading that is fine at idle and collapses when the furnace fires points at supply piping, the meter, or the regulator - not the furnace.",
+   "Do not set manifold pressure until inlet pressure is confirmed inside the window - manifold pressure set against a bad supply will not hold.",
+   "Re-check inlet pressure after any orifice change or altitude conversion.",
+   "Leak-check the inlet tap before relighting."
+  ],
+  "safety": "Shut off gas before breaking into the inlet tap, and leak-check afterwards with the burners lit.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-hp-defrost-test",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem legacy split heat pump - forcing a defrost test on the defrost board",
+  "summary": "The 12 SEER split system heat pump manual gives a complete four-step defrost test with jumper positions, timing windows and the exact conditions that end the test.",
+  "steps": [
+   "Confirm control power first: terminals R and C must have 18-30 V present between them for the time delay and defrost sequences to be initiated.",
+   "With the compressor running in heat mode, jump the T2 to DFT test pins. That tells the board the defrost thermostat is closed. The defrost thermostat closes at 32 degrees and opens at 68 degrees.",
+   "Next, jump the TEST pin to C on the terminal strip. This initiates the defrost test in 5, 10 or 15 seconds, determined by the 30, 60 or 90 minute defrost pin setting. Factory setting is 30 minutes.",
+   "When the reversing valve shifts to defrost, quickly remove the jumper from TEST to C. If the jumper is not removed within a 5 second period the defrost test will terminate.",
+   "The unit then stays in defrost until the board recognizes the defrost sensor has reached 68 degrees and opened, OR the T2 to DFT jumper is removed, OR 10 minutes have elapsed (board override).",
+   "If those steps will not initiate a defrost, replace the defrost board.",
+   "The defrost cycle timer sets the interval of the hot gas defrost after the defrost sensor closes and lives in the lower left corner of the board: 30, 60 or 90 minutes, shipped at 30. Maximum heating performance is achieved at 90 minutes; a 30 minute setting suits a moist climate, 90 minutes suits a dry one.",
+   "The 5 minute anti-short-cycle delay can be bypassed or shortened to 1 second by jumping TEST to C - but if that jumper is left on the TEST to common pins permanently, the defrost cycle becomes inoperable. Remove it before you leave."
+  ],
+  "safety": "Do not leave the TEST-to-C jumper installed. It disables defrost.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-hp-lps",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem legacy split heat pump - low pressure switch opens at 5 psig and closes at 20 psig",
+  "summary": "Only select models carry this switch. When it trips it interrupts the thermostat inputs, so the unit looks dead rather than reporting a fault.",
+  "steps": [
+   "Confirm the switch exists on this model - a low pressure switch is factory installed in select models only, located in the suction line internal to the outdoor unit.",
+   "Understand what it protects: it is designed to protect the compressor from a loss of charge, and under normal conditions the switch is closed.",
+   "Trip point: if the suction pressure falls below 5 psig the switch opens and de-energizes the outdoor unit.",
+   "Reset point: the switch will close again once the suction pressure increases above 20 psig.",
+   "Know the symptom: the switch interrupts the thermostat inputs to the unit, so when it opens and then closes there will be a 5 minute short cycling delay before the outdoor unit will energize.",
+   "Read actual suction pressure with gauges before condemning the switch, then ohm the switch out of circuit against the measured pressure.",
+   "A unit that comes back roughly 5 minutes after each trip is behaving exactly as designed - find the loss of charge or the airflow problem behind it."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-rheem-legacy-hp-odt",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Rheem legacy heat pump - outdoor thermostat locking out electric auxiliary heat",
+  "summary": "Both the single package and the split system legacy heat pumps use a simple outdoor thermostat to block electric aux heat above a set outdoor temperature. Complaints of no aux heat almost always land here.",
+  "steps": [
+   "Confirm one is fitted: the outdoor thermostat is listed as if supplied, so not every unit has one.",
+   "Read its function: the outdoor thermostat prevents the electrical auxiliary heat (if used) from operating above a desired set point.",
+   "Check the setting range and factory value: the thermostat is adjustable from 45 F to 0 F and the factory temperature setting is 40 F.",
+   "The split system manual states the same thing as a flat rule: the outdoor thermostat prevents the electrical auxiliary heat from operating when the outdoor temperature is above 40 F.",
+   "Measure actual outdoor temperature at the unit, then compare with the dial setting - a stat set at 40 F on a 45 F day is doing its job.",
+   "Selection of the set point is determined from the building design heat load, so a value other than 40 F may be intentional on a given job.",
+   "If aux heat never runs at any temperature, check whether the ODT contacts are stuck open before pulling elements or sequencers.",
+   "On a dual fuel kit install, note the different wiring: the ODT must be connected between R and E, and on heat pumps the gray ODT wire moves from W2 to R."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-sl25xpv-pressure-charge",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox SL25XPV - high pressure switch setpoints and holding the unit at 100 percent to charge",
+  "summary": "This variable-capacity unit will not sit still at a fixed capacity on its own. There is a documented test mode for charging, a documented pump down jumper, and a specific high pressure switch spec.",
+  "steps": [
+   "Force maximum capacity before charging. Start-up and testing should be performed with the unit operating at the maximum cooling capacity (100 percent capacity), entered at the thermostat or with the Lennox Dealer Setup App.",
+   "The S30 path is: Menu > Advanced Settings > View Dealer Control Center > Test, then select Cooling - Maximum Rate Test. The seven-segment display on the outdoor control will show the outdoor unit running capacity.",
+   "High pressure switch spec: the SPST normally closed switch on the liquid line opens when liquid line pressure rises above the factory setting of 590 +/- 15 psig and automatically resets at 418 +/- 15 psig.",
+   "For pump down: the control must be in the IDLE state and the pump down jumper placed across the two pump down pins. Pd will be displayed on the seven-segment display. Remove the jumper to deactivate.",
+   "Charge reference: the unit is factory charged for a 15-foot line set. With 3/8 in liquid line, adjust 3 ounces per 5 feet (85 g per 1.5 m) - add if longer than 15 ft, subtract if shorter.",
+   "For a weigh-in on a long line set use the per-foot figures: 5/16 in = 0.40 oz/ft, 3/8 in = 0.60 oz/ft, 1/2 in = 1.00 oz/ft. The manual's own example: 0.60 oz/ft x 15 = 9.0 ounces of factory charge on 3/8 in.",
+   "Use the start-up checklist's one printed anchor value: indoor coil temperature drop should be 18 to 22 deg F (return air temperature minus supply air temperature). Subcooling and approach targets are left blank on the form and must come off the unit's own information.",
+   "If suction drops below 20 psig you may hear a hiss from a scroll compressor unloading on its internal vacuum protector; it resets when low side pressure is raised above 40 psig. Do not replace the compressor for that."
+  ],
+  "safety": "590 psig class pressures. Use gauges rated for R-410A and keep clear of the liquid line while forcing maximum capacity.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-el18xpv-charge-mode",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox EL18XPV - Charge Mode jumper, and its 60 minute timeout",
+  "summary": "Charge Mode is the documented way to hold this variable-capacity heat pump at 100 percent for charging, checking charge, pump down, or any service that needs full output. The steps differ between a communicating and a conventional thermostat.",
+  "steps": [
+   "Install the jumper across the two Charge Mode pins (CHRG MODE) on the outdoor control. That is the printed way to initiate the function.",
+   "With an S30 communicating thermostat: installing the jumper starts the compressor and outdoor fan at 100 percent capacity and signals the indoor unit to run the blower at maximum cooling air volume. Remove the jumper to exit.",
+   "With a conventional 24VAC non-communicating thermostat: the jumper must be installed AFTER providing a Y1 cooling demand. In cooling mode O must also be provided with a 24V signal to place the reversing valve in the cool position. In heating mode only a Y1 compressor demand plus the blower demand for full cooling air volume is required.",
+   "To exit on a conventional thermostat, remove the Charge Mode jumper and remove both the Y1 cooling demand and the indoor blower demand.",
+   "Know the timeout: Charge Mode has a maximum time of 60 minutes and will exit automatically after 60 minutes even if the jumper is left in place. A unit that quietly drops off full capacity an hour in is doing this, not failing.",
+   "High pressure switch spec on this unit matches the SL25XPV: normally closed, on the liquid line, opens above the factory setting of 590 + 15 psig, resets at 418 + 15 psig.",
+   "Charge reference: factory charged for a 15-foot line set; with 3/8 in liquid line adjust 3 ounces per 5 feet from the 15 ft baseline.",
+   "Note the manual's own naming inconsistency: the cover and nearly all body text say EL18XPV, but one field-wiring caption says connect the 208/230 high voltage power supply from the disconnect to the EL18XCV contactor. Treat them as the same unit and confirm against the nameplate."
+  ],
+  "safety": "Charge Mode runs the unit at 100 percent regardless of demand. Do not leave the jumper installed after service.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-lennox-el18xpv-op-mode",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox EL18XPV on a conventional thermostat - the Operation Mode jumper sets the suction pressure target",
+  "summary": "With a non-communicating thermostat this unit controls capacity to a suction pressure setpoint, and a three-position jumper picks which setpoint. Two of the three are printed numbers.",
+  "steps": [
+   "Confirm the jumper even applies: the Operation Mode jumper is only used on applications installed with a conventional 24VAC non-communicating thermostat.",
+   "Read the three positions: Efficiency = jumper on pins 1 and 2, Normal = jumper on pins 2 and 3, Comfort = jumper removed. Factory default is Efficiency.",
+   "Efficiency mode uses a variable suction pressure setpoint that changes with outdoor temperature - as outdoor temperature increases the suction pressure setpoint decreases. The curve values are not printed in this manual.",
+   "Normal mode holds a suction pressure setpoint of 135 psig.",
+   "Comfort mode holds a suction pressure setpoint of 125 psig.",
+   "Measure actual suction pressure at steady state and compare against the mode that is jumpered. If the unit is holding a number that does not match the jumper, look at the jumper first.",
+   "Know the normal ramp behavior before calling a unit weak: with a two-stage stat, if the Y2 demand remains after 20 minutes the control ramps compressor capacity to maximum. With a single-stage stat (Y1 jumpered to Y2 at the outdoor control), if the demand remains after 20 minutes it ramps to maximum the same way. A unit that appears stuck at partial capacity for the first 20 minutes is normal.",
+   "Confirm the thermostat provides a compressor minimum on time of three minutes - the manual requires it to prevent short cycling and names the Lennox M30, ComfortSense 7500 and ComfortSense 3000 as thermostats that provide it."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-el18kcv-freezestat-rds",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox EL18KCV (R-454B) - freezestat setpoints and what the leak detection system does to the blower",
+  "summary": "Two easy misdiagnoses on this platform: a freezestat cycling the compressor off, and the refrigerant detection system stopping the compressor while forcing the blower to run.",
+  "steps": [
+   "Freezestat spec: the optional freezestat opens at 29 deg F and closes at 58 deg F, and installs on or near the discharge line of the evaporator or on the suction line. It cycles the compressor off when suction line temperature falls below setpoint.",
+   "Measure suction line temperature at the freezestat location before assuming the switch is bad - low or no airflow and low charge both drive it there legitimately.",
+   "Lennox recommends a freezestat for extra protection during low ambient operation; this air conditioner can operate down to 0 deg F outdoor air temperature.",
+   "Refrigerant detection system: if R-454B refrigerant is detected, the RDS stops compressor operation and operates the blower to reduce concentrations in the conditioned space, then resumes normal operation once safe levels are reached.",
+   "That means blower running with no cooling is an expected RDS mode on this equipment, not a random complaint - check for an RDS alert before chasing a blower or contactor.",
+   "The RDS is required for all systems using R-454B and consists of a detection sensor plus a mitigation control in the indoor unit, factory or field installed.",
+   "The onboard low pressure transducer also shuts off the unit if suction pressure falls below setting, protecting against low charge or low/no indoor airflow. The numeric trip point is not printed in this bulletin - read it off the unit service literature.",
+   "The control stores 100 alarm codes in non-volatile memory and displays the last 10 - pull that history on an intermittent complaint before power cycling."
+  ],
+  "safety": "R-454B is a mildly flammable A2L refrigerant. Do not defeat or bypass the refrigerant detection system.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-inverter-dclink",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox inverter alerts 429 and 432 - measuring DC link voltage",
+  "summary": "429 is DC link low voltage and 432 is DC link high voltage. Both have printed thresholds, and the low-voltage threshold is different for 2/3 ton than for 4/5 ton units.",
+  "steps": [
+   "Alert 429 (inverter flash code 23, red two flashes / green three flashes): on a call for compressor operation, if DC link power in the inverter does not rise above 180 VDC for 2- and 3-ton models, or 250 VDC for 4- and 5-ton models, within 30 seconds, the control displays a moderate code.",
+   "Escalation on 429: an anti-short cycle timer starts, and if the condition occurs 10 times within 60 consecutive minutes the system locks out - service urgent.",
+   "Alert 432 (inverter flash code 28, red two flashes / green eight flashes): the error occurs when the DC link capacitor voltage is greater than 480 VDC. Clear by disconnecting power to the outdoor unit and restarting.",
+   "Baseline the inverter LEDs first: normal operation with no error code present is red LED ON and green LED OFF.",
+   "Run the printed check sequence for both codes: check wire connections U, V and W at the inverter plug-in harness and at the compressor; check the resistance of the compressor windings and replace the compressor if out of range; check compressor to ground and replace if there is a ground issue.",
+   "Check input power: single phase 208/230 VAC +10 percent. If out of range, correct the main power problem before touching the inverter.",
+   "Check the DC link voltage and the MICOM sensing voltage. If out of range, replace the inverter; if OK, suspect a mechanical issue with the compressor.",
+   "Use the thermostat test function to drive the unit while measuring: Menu > Settings > Advanced Settings > View Dealer Control Center > Tests. Also check the input to the filter board and reactor before replacing the inverter board."
+  ],
+  "safety": "Wait for the bus capacitors to discharge before probing the inverter. The alert guide elsewhere states wait five minutes for all capacitors to discharge.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-inverter-433",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox alert 433 - inverter compressor over-current above 28 amps peak",
+  "summary": "433 has a specific current threshold, a startup grace period, and a documented software fix. It is frequently a startup event rather than a failed compressor.",
+  "steps": [
+   "Read the trigger: the error occurs when compressor peak phase current is greater than 28 amps. During initial startup a six minute time delay is implemented to prevent the alarm from occurring.",
+   "Expect the inverter to try to save itself first: it will issue inverter code 14 and slow down to try to reduce the current before 433 posts.",
+   "Escalation: if the condition occurs five times within 60 consecutive minutes the system locks out - service urgent.",
+   "Know the normal cold-weather behavior: the inverter automatically increases the compressor minimum speed below 45 deg F in heating mode, and above 115 deg F, to ensure compressor capacity is sufficient for oil return.",
+   "Check software level: Lennox outdoor control software versions 1.27 and later include a six minute delay in cooling mode and an 11 minute delay in heating mode after receiving alert code 433, which typically occurs during start-up.",
+   "If the system is not connected to the internet (so it cannot take the software update), replace the Lennox outdoor control with catalog number 17D27 or newer.",
+   "Clear the code by disconnecting power to BOTH the indoor and outdoor units, then reconnecting and restarting.",
+   "If 433 keeps returning after the software path, work the same electrical checks as 429: U/V/W connections, compressor winding resistance, compressor to ground, and 208/230 VAC +10 percent input."
+  ],
+  "safety": "Measure compressor current with a clamp rated for inverter output. Do not open the inverter enclosure until the bus has discharged.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-inverter-heatsink",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox alerts 440, 441 and 437 - inverter heat sink slowdown and sensor limits",
+  "summary": "440 and 441 are information-only slowdowns that are often normal. 436 and 437 are the real heat sink faults. The temperatures are printed, and they are readable from the thermostat.",
+  "steps": [
+   "Alert 440 (inverter flash code 13, red one flash / green three flashes): the inverter begins to briefly reduce compressor speed when heat sink temperature rises above 185 deg F, and resumes the requested speed once the heat sink reaches 176 deg F.",
+   "Typical 440 behavior is a minor speed reduction of 4 Hz (about a 5-6 percent reduction) for a brief period. At high outdoor temperatures above 110 deg F for 3 to 4 minutes this is normal and expected operation.",
+   "If 440 occurs frequently, especially at lower outdoor temperatures, check the finned aluminium heat sink on the back side of the inverter in the condenser air stream for debris or obstructions restricting air flow.",
+   "Read the live values rather than guessing: heat sink temperature, compressor speed in Hertz, and the Inverter Compressor Speed Reduction status (On/Off) are viewable under the outdoor unit Diagnostics section of the thermostat dealer control center.",
+   "Alert 441 (flash code 14, red one flash / green four flashes): when the inverter gets close to the current or heat sink limit it limits the ramp rate - instead of 1 Hz per second it changes to 5 Hz per 20 seconds. It typically occurs at startup and in most cases requires no service.",
+   "Alert 436 (flash code 62, red six flashes / green two flashes): heat sink temperature exceeds the inverter limit; inverter issues code 13 first and slows down, and if temperature stays high the outdoor unit stops both compressor and fan. A documented cause is loose screws holding the inverter to the inverter board causing poor contact - tighten them.",
+   "Alert 437 (flash code 65, red six flashes / green five flashes): heat sink temperature sensor fault, defined as temperature less than 4 deg F or greater than 264 deg F after 10 minutes of operation.",
+   "Clearing differs by priority: service soon conditions clear automatically when the inverter sends a clear message; service urgent conditions clear by disconnecting power to the outdoor unit and restarting."
+  ],
+  "safety": "Wait five minutes for all capacitors to discharge before checking the inverter heat sink screws.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-446-low-suction",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Lennox alert 446 - suction pressure below 40 psig in operation",
+  "summary": "446 escalates from service soon to service urgent after five strikes in a single thermostat demand, and the printed recommendation is to replace the low pressure switch - so confirm the actual pressure before you accept that.",
+  "steps": [
+   "Read the trigger: suction pressure less than 40 psig in operation. The code starts as service soon and escalates to service urgent, stopping system operation, after five strikes during a single thermostat demand.",
+   "Put gauges on and read actual suction pressure during operation before condemning anything - the control's own recommendation is replacement of the low pressure switch, which is only correct if the real pressure is normal.",
+   "If the real pressure is below 40 psig, work the causes: low charge, restricted metering device, low or no indoor airflow, a dirty indoor coil, or a stuck reversing valve.",
+   "Check indoor airflow specifically - a plugged filter or a failed blower drives suction down and looks identical to a charge problem on the gauge.",
+   "In heating mode on a heat pump, a frosted outdoor coil that is not defrosting will also pull suction below the threshold.",
+   "Cross-check for other alerts. Alert 422 (compressor top cap switch open) tells you to check condenser fan motor, TXV and indoor blower motor, and to check for a stuck reversing valve or a clogged refrigerant filter - the same failure set.",
+   "If the switch itself is suspect, verify it out of circuit against the measured pressure rather than swapping on the code alone."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-lennox-s40-voltage-bleed",
+  "equipment": "Other",
+  "title": "Lennox S40 - checking for inductive voltage bleed on the communication bus",
+  "summary": "The Lennox troubleshooting and checkout sheet gives one hard number for this test. It is the fastest way to separate a bad control from a wiring problem on a communicating system.",
+  "steps": [
+   "Set up the test as printed: with only R connected at the indoor board, measure the voltage on all disconnected wires to 24V common.",
+   "Do this at both ends - all wires disconnected at the outdoor unit, and the same check at the thermostat. The form has seven wire fields for each end.",
+   "The threshold is explicit: you should have no more than .7 VAC on any wire.",
+   "Anything above that is inductive voltage bleeding into the communication bus, which the sheet states will cause communication errors.",
+   "Record the normal voltage checks too, at all three points: R to C (VAC), I+ to C (VDC), and I- to C (VDC) at the thermostat, at the indoor board, and at the outdoor board.",
+   "If bleed is present, work the wiring options in order: Option 1 is 18AWG with the shield drain wire connected to the indoor unit common terminal; if alert code 105 is still present after troubleshooting steps 1 and 2, go to Option 2 (shielded 2-conductor between indoor, outdoor and thermostat -i and +i terminals) or Option 3 (unshielded 2-conductor between the same terminals).",
+   "On an S30, terminate every unused conductor: bundle the extra wires with wire nuts at each end and connect a single wire from the bundle to the C terminal at the indoor unit. Do not leave spares floating.",
+   "Keep communication wiring away from house electrical wiring and large appliances - recommended minimum distance is 15 feet (4.6 meters)."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-twinning-setup",
+  "equipment": "Other",
+  "title": "Daikin/EWC UT3000 twinning - the panel-to-panel steps that get missed",
+  "summary": "Twinning two UT3000 panels for a 4 or 5 zone communicating system has a specific 17-step procedure. Most field failures come from four of those steps.",
+  "steps": [
+   "Match the code levels: twinning requires both control panels to be at the same code level - both must be 1.86, 1.87 or 1.88.",
+   "Power both panels from ONE transformer: install a dedicated 24V 60VA listed transformer and run 24V power to both UT3000s. Do NOT use separate transformers. Do not power up yet.",
+   "Land the HVAC system wiring on Panel A only - connect the communicating HVAC system control wiring to Panel A's communicating SYSTEM block.",
+   "Run the twinning wires from Panel B's communicating SYSTEM output block to Panel A's communicating Zone 3 thermostat input. If Zone 3 on Panel A is already in use you may use Zone 2 instead. Do NOT use Zone 1 on Panel A for twinning.",
+   "Sensors go on Panel A only: install one Supply Air Sensor to the SAS terminals of Panel A. Do NOT connect an Outside Air sensor to Panel A - it retrieves outdoor temperature from the communicating outdoor unit. Panel B needs no sensors at all; it gets outdoor temperature from Panel A.",
+   "Panel A Zone 1 must be a communicating thermostat. Communicating thermostats are recommended on both panels, but only Zone 1 on Panel A can access the communicating HVAC system menus and activate maintenance functions.",
+   "Power up the HVAC system and both panels, then be patient - Panel A becomes Master and auto-configures itself, Panel B, and the thermostats on both panels. Typically 10 to 15 minutes.",
+   "Finish with the inverter System Test from the Zone 1 thermostat on Panel A, then Charge Mode, then clear all fault codes from the equipment diagnostic folders, then run the system in both heating and cooling to confirm operation."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-system-test-e11",
+  "equipment": "Other",
+  "title": "UT3000 zoned inverter system - cooling will not run at all and E11 is displayed",
+  "summary": "On Daikin FIT and Amana S inverter systems the factory System Test has to complete before normal cooling is allowed. On a zoned job it must be run from one specific thermostat with every other thermostat OFF.",
+  "steps": [
+   "Match the symptom: cooling will not run at all, an E11 fault code is displayed at the thermostat or outdoor unit, and the panel LEDs function normally.",
+   "Read the rule: some HVAC systems require a System Test prior to normal operation. Normal cooling operations are not allowed until this test is complete.",
+   "Check whether it was already done - if the System Test has already been performed with an existing Daikin One+ thermostat, there is no need to perform it again via the UT3000.",
+   "Run it from the right place: the system test must be performed via the Master Daikin One+ thermostat connected to the Zone 1 terminal block only.",
+   "Set every other zone thermostat to OFF during the test, including the One+ being used to initiate it. The manual prints this in all caps.",
+   "Navigate: Dealer Edit > password > Installer Wizard > Begin Full Setup > Equipment Setup > select Heat Pump or AC (or Furnace or Air Handler) > System Test > start.",
+   "The test may last 5 to 15 minutes and MUST NOT be interrupted. The arrow turns into a spinning wheel while it runs.",
+   "Afterward, clear all fault codes in the outdoor and indoor unit diagnostic menu folders, and optionally enter Charge Mode to confirm refrigerant level. On the Daikin One+ path the test is complete only when display code E11 clears from the seven segment LED on the outdoor unit."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-sas-limit",
+  "equipment": "Other",
+  "title": "UT3000 zoning - furnace cycling off on supply air temperature (OTC), and how that limit is calculated",
+  "summary": "This is the zone panel's own high limit. It is not the furnace limit, and it is calculated from two settings you can read on the LCD. It is the direct cause of small-zone-call cycling complaints on zoned furnaces.",
+  "steps": [
+   "Understand the calculation: if the supply air temperature exceeds any Target Set-Point plus or minus the Off-Set, the result is the Over Temperature Condition. The manual's own worked examples are SAS Gas Target 142 F plus O.T. Offset 8 F = Gas Heat Limit 150 F; SAS HP Target 112 F plus 8 F = HP Heat Limit 120 F; SAS Cool Target 47 F minus U.T. Offset 7 F = Cooling Limit 40 F.",
+   "Read the defaults from Table 1: SAS Gas TGT default 142 F, range 120 to 170 F. SAS HP TGT default 105 F, range 90 to 120 F. SAS Cool TGT default 47 F, range 40 to 60 F. O.T. Offset default 8 F, range 5 to 20 F. U.T. Offset default 7 F, range 5 to 12 F.",
+   "Know what happens on a trip: the UT3000 cycles the system off-line for 3 minutes while displaying the OTC or UTC screen. The Supply Air Limit Delay is 3 minutes, fixed.",
+   "Watch the LCD - the screens print as Supply TMP 127, Supply OTC* 151 System TOO HOT, and Supply UTC* 39 System TOO COLD.",
+   "Measure actual supply air temperature at the SAS with a thermometer and compare to what the panel is displaying. A misplaced or loose SAS reads high and trips early.",
+   "If the SAS is disconnected or fails, the panel displays the Bad Sensor screen and defaults to Timed Mode staging until the zone thermostat demands are satisfied - a different symptom set entirely.",
+   "If OTC trips only when one small zone calls, the airflow through the open damper is not enough for the firing rate. Work the zone weights and the PID setting, or raise the airflow available to that zone, before raising the SAS target.",
+   "Raising the target or the offset to stop nuisance trips is the last resort, not the first - the offset exists to provide a safe operating limit for the equipment."
+  ],
+  "safety": "Do not raise the SAS gas target or offset above the furnace's own rated supply temperature limits to stop nuisance tripping.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-pid-small-zone",
+  "equipment": "Other",
+  "title": "UT3000 zoning - one small zone drives the equipment too hard (Limit SAS PID and zone weights)",
+  "summary": "The UT3000 can triple the demand it sends to the equipment. On a system with one small zone and two large ones, that is what makes a single small zone call trip limits or short cycle.",
+  "steps": [
+   "Read the SYS line on the LCD - it shows the actual output percentage being sent to the equipment, e.g. SYS h035c000f015 means 35 percent heating capacity and 15 percent fan capacity.",
+   "Map output percent to staging: 01 to 50 percent output = Y1 heat pump, Y1 A/C, or W1 gas. 51 to 65 percent = Y2 heat pump, Y2 A/C, or W2 gas. W2 Threshold 65 to 95 percent = W2 heat pump.",
+   "Check the Limit SAS PID setting. Set to N (the default, PID loop active) the panel is allowed to boost - triple - the sum of the zone weight values multiplied by each active zone's demand. This is the recommended setting for Daikin communicating inverter AC/HP and gas modulating systems.",
+   "Set to Y, the panel limits the system demand to the base sum of the weighted zone demands with no tripling. This is the recommended setting for communicating two stage systems.",
+   "Work the math with the printed example: Zone 1 70 percent weight x 30 percent demand = 21, Zone 2 15 percent x 100 percent = 15, total 36 percent calculated demand, then x3 = 100 percent max system demand. A small zone example: Zone 2 at 35 percent weight x 30 percent demand = 11 percent, x3 = 33 percent.",
+   "Check the zone weights themselves: three zone default weights are 70/15/15 and two zone defaults are 60/40. Range is 0 to 100 percent per zone, and the sum may be 100 percent or less but not more.",
+   "If a small zone is calling alone and the equipment overshoots, either set Limit SAS PID to Y for a two stage system, or reduce that zone's weight. The manual notes it may be necessary to assign very low weight values to some or all zones in order to avoid air noise issues.",
+   "If a DAPC is installed, exclude the small zone from modulation: if one zone is quite small (low cfm) compared to the other two (high cfm), set that small zone to Do Not Float rather than letting it Float with SP."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-timers",
+  "equipment": "Other",
+  "title": "UT3000 zoning - the five fixed delay timers before you call anything a fault",
+  "summary": "Most 'the zone panel is not responding' calls on a UT3000 are one of five fixed timers doing exactly what it is supposed to do. None of them are adjustable.",
+  "steps": [
+   "Short Cycle Timer - 2 minutes, fixed. When all zones are satisfied, the UT3000 will not restart the same call for a minimum of 2 minutes.",
+   "Changeover Timer - 4 minutes, fixed. At the end of a call a 4 minute timer starts, and the panel will not switch to the opposite mode of system operation until it expires.",
+   "Opposing System Service Timer - 20 minutes, fixed. First-detected demand wins; an opposing-mode demand is queued behind a 20 minute clock, and when it expires service switches sides and the clock re-arms.",
+   "Purge Delay Timer - 210 seconds, fixed. At the end of any cooling or heating operation the panel holds the last calling zone's damper open for 210 seconds while others stay closed. Purge fan speed is separately selectable at 25, 50, 75 or 100 percent, default 50 percent - but the 210 second hold itself is not adjustable.",
+   "Supply Air Limit Delay - 3 minutes, fixed. If heating or cooling cycles down due to excessive supply air temperature, the panel will not restart the HVAC system for 3 minutes.",
+   "To get past a timer while troubleshooting: simultaneously press the Back and Forward buttons for 1 second to bypass any active time delay.",
+   "EWC recommends turning off all thermostat time delays and letting the UT3000 built-in delay timers protect the HVAC system - stacked delays make this look far worse than it is.",
+   "Note that the DMP DFLT setting interacts with purge: if you set idle damper default to CLOSE, make sure the HVAC system's own purge cycle is set for no longer than 90 seconds."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-w2-threshold",
+  "equipment": "Other",
+  "title": "UT3000 - auxiliary heat runs too much or never runs (W2 Threshold)",
+  "summary": "One setting decides when backup heat energizes on a zoned heat pump, and it has a hidden 5 percent differential that makes 99 percent mean off.",
+  "steps": [
+   "Find the setting: W2 Threshold, default 95 percent, range 65 to 99 percent, adjustable in 5 point increments.",
+   "Read what it does: it selects the value of System (SYS) output at which the auxiliary (W2) or back-up system energizes. Setting the value low means the auxiliary system operates more often; a high value means it operates less often.",
+   "Account for the differential: there is a 5 percent differential added to the value selected to prevent short cycling, so a value of 95 actually trips at 100 percent.",
+   "That is why 99 percent turns it off: a value of 99 would require the system output to reach 104 percent, which is invalid. Set W2 Threshold to 99 percent if you want the auxiliary system to energize on the Outside Air set-point (OAS SP) only.",
+   "Check OAS SP as well: default OFF, range OFF or 1 to 42 F.",
+   "Watch the SYS line on the LCD during a heat call to see what output percentage the panel is actually producing - that is the number the threshold is compared against.",
+   "If aux never comes on, check both W2 Threshold and whether the panel can even reach that output percentage given the zone weights in use.",
+   "On a system with an electric heat kit, also set the air handler DIP switches for the actual KW heater kit installed, then measure temperature rise and adjust the KW setting to achieve the desired delta T."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-ut3000-bias-switches",
+  "equipment": "Other",
+  "title": "UT3000 twinned system - BIAS and termination switches, and the conflicting published guidance",
+  "summary": "The twinning addendum gives two directly opposite instructions for the same BIAS switches on facing pages. Measure the bus rather than trusting either statement.",
+  "steps": [
+   "Measure DC voltage across Data terminals 1 and 2 at the panel. The addendum's stabilization page ties specific readings to specific states: 0.3 VDC is labeled network is unstable; 0.6 VDC appears for two of the stable combinations; 1.2 VDC is labeled most stable network.",
+   "Note the contradiction and do not silently pick a side. Page 5 reads: the preferred BIAS dip switch setting is outdoor unit DS1 both OFF and UT3000 BIAS both OFF; other BIAS dip switch settings are possible but may not be stable. Page 6 of the same document reads: BIAS switches 1 and 2 on the UT3000 should be set to ON.",
+   "The stabilization page labels three fixes: OLD GUIDANCE (Fix 1) with DS1 ON and biasing OFF reading 0.3 VDC and an unstable network; a both-OFF and a both-ON combination each reading 0.6 VDC and a stable network, with both-ON labeled NEW GUIDANCE (Fix 2) and called the easiest to achieve and recommended; and DS1 OFF with UT3000 ON reading 1.2 VDC labeled BEST GUIDANCE (Fix 3).",
+   "The exact per-switch positions in that figure are a graphic and could not be reconstructed from the source - read the switch positions off the panel and outdoor board silkscreen in front of you.",
+   "Also check bias to common. Published targets by equipment pairing: Data 1 to C = 2.8 VDC and Data 2 to C = 2.2 VDC for a modulating furnace or newer EEV air handlers; Data 1 to C = 1.9 VDC and Data 2 to C = 1.3 VDC for a 2 stage furnace or older TXV air handlers; Data 1 to C = 2.3 VDC and Data 2 to C = 1.7 VDC for a 2 stage furnace with a FIT inverter and CAPE/CAPEA or CHPE EEV coils.",
+   "On the DOZP zone board family the target is stated as a simple range instead: Data 1 / Data 2 DC bias voltage 0.6 VDC to 0.9 VDC, with the general wiring rule maintain a bias voltage of 0.6-0.9 VDC.",
+   "Do not use spare wires in the data cables for other 24V circuits or devices such as a UV lamp - that is called out as a cause of intermittent and nuisance faults.",
+   "Confirm the symptom set that points here: OAS Bad on the LCD, intermittent or nuisance faults, communicating thermostats displaying warnings, or being unable to achieve 0.6 VDC bias on the system data wires."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-dozp-pressure-relief",
+  "equipment": "Other",
+  "title": "Daikin DOZP - high airflow relief defaults are printed two different ways",
+  "summary": "The install manual and the training material give different default max/min static pressures for the same screen on the same product. Read what is actually set on the thermostat before adjusting.",
+  "steps": [
+   "Confirm the feature is even on: the pressure sensor is unchecked by default. The differential pressure sensor is used for both auto-weight and high airflow relief and has to be enabled on the wired sensors screen.",
+   "Read the algorithm: when the zone board static pressure is higher than the max pressure, the board reduces pressure by opening all dampers to 100 percent for 5 minutes. After 5 minutes it checks whether static is below the min pressure - if lower it resumes normal operation, if still high it keeps all dampers open for another 5 minutes before checking again.",
+   "Note the two published default sets. The DOZP install manual prints Max pressure 0.8 and Min pressure 0.6 for default, furnace + coil, and air handler. The TRC-15 training and the launch presentation both print Max 0.7 in wc and Min 0.5 in wc for the same three columns.",
+   "Do not average or pick one from memory. Read the actual values on the thermostat's Setup Wired Sensor screen for the job in front of you and work from those.",
+   "The training material also names two relief algorithms: a normal release algorithm where the thermostat reads indoor blower CFM, compares it to the max zone CFM, and opens another zone to bleed if blower CFM is too high; and an aggressive release algorithm where the zone pressure sensor reading higher than 0.7 opens all dampers to 100 percent.",
+   "Account for the filter. The install manual says to SUBTRACT the media filter pressure drop from the max and min pressure settings if the sensor installation includes it; the training material says to ADD it. Read both, then set based on where your pressure taps actually are.",
+   "Measure real static pressure with a manometer across the same points the sensor reads and compare to what the thermostat is reporting before adjusting any setpoint.",
+   "If the sensor reads open or short, error 90 posts: check for 5 VDC between C and 5V out at the pressure sensor connector. If 5 VDC is present but the sensor green power LED is not on, either the 5V wiring is open or the sensor has failed. If 5 VDC is present and the LED is on, ohm across the sensor leads with it disconnected - open or short means the sensor failed. Reference: 0 Pa (0 in.WC) should give 1.0 VDC between SIGNAL and GND."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-lennox-zoning-dat-staging",
+  "equipment": "Other",
+  "title": "Lennox Smart Zoning/iHarmony - second stage is driven by discharge air temperature, and small zones need a freezestat",
+  "summary": "On these zoned systems the discharge air temperature sensor, not the room sensors, decides when second stage energizes. That is the lever behind temperature rise and short cycling complaints on zoned furnaces.",
+  "steps": [
+   "Confirm the staging rule for cooling: second-stage cooling is energized when the discharge air temperature is 7 deg F higher than the cooling stage temperature setpoint on the S30 or S40 thermostat.",
+   "Confirm the staging rule for heating: second-stage heating is energized when the discharge air temperature is lower than the heating stage temperature setpoint on the thermostat.",
+   "Verify the discharge air temperature sensor (DATS) is installed correctly and reading a representative supply temperature - if it reads wrong, staging is wrong regardless of the zone sensors.",
+   "Know the termination rules: heating or cooling demand terminates when all zone demands are satisfied, OR when the demand has exceeded the heat/cool changeover time limit of 20 minutes while an opposing demand exists. Either way a 5-minute minimum off time delay is initiated.",
+   "On first power up expect a 5-minute minimum off-time delay during which only the fan output will respond, with the green status LED flashing to show the damper control module is working normally.",
+   "For a small zone with minimal airflow, install the freezestat: it is listed as only required for small zones with minimal airflow, installed on the indoor coil, opening at 29 F and closing at 58 F.",
+   "Check damper compatibility on this platform - any style 24VAC damper works, spring-open/power-close preferred, but modulating dampers may NOT be used. At least one damper per zone, up to 5 dampers per zone in parallel, not to exceed six dampers for the entire system.",
+   "If a zoning-related alert occurs the system defaults to Zoning Off mode with all dampers open. Read the DCM LEDs before condemning the panel: green for RSBus communication, status and zone sensor communication; red for damper closed operation, Zoning Off operation and pressure switch open."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-df-lennox-blower-and-transformer-checkout",
+  "equipment": "Gas Furnace",
+  "title": "Lennox dual fuel - blower ramp profile and defrost status on the furnace display",
+  "summary": "Two things on a Lennox dual fuel furnace look like faults and are not: a cooling ramp profile that only applies during heat pump operation, and a df status on the integrated control display.",
+  "steps": [
+   "Read the display legend on the SLP99UHVK integrated control: df means defrost mode, alongside . for idle, A for cfm, C for cooling stage, d for dehumidification, h for variable capacity heat, H for heat stage, and U for discharge air temp.",
+   "A df on the furnace display means the furnace control is tracking the paired heat pump's defrost cycle. On a communicating dual fuel system that is normal, not a furnace fault.",
+   "Understand the blower ramp note printed above the cooling mode blower speed ramping table: the OFF portion of the selected ramp profile only applies during heat pump operation in dual fuel applications.",
+   "That means a customer who reports the blower behaving differently in heat pump heating than in gas heating is describing designed behavior. Confirm which mode the display shows before chasing it.",
+   "The ramp profile itself is set by DIP switches 12 and 13 (options A through D) on that control.",
+   "If the furnace never shows df on a dual fuel system, check whether the outdoor unit is actually communicating - a non-communicating heat pump will not report defrost to the furnace.",
+   "While you are in the display, note the second stage heat ON delay on the EL296UHV family is DIP switch 2: OFF = 7 minutes, ON = 12 minutes. That is the setting behind furnace slow to reach second stage complaints.",
+   "Cutting the DS to R link (W914) is confirmed by Lennox not to cause communication interruption or an error code, so a float switch install that required that cut is not the source of a comm fault."
+  ],
+  "confidence": "common"
+ },
+ // ===== Furnace + newer heat pump deep dive, part B (v98): Carrier/Trane inverter + furnaces, Daikin/Goodman R-32 =====
+ {
+  "id": "s-fh-carrier-24vna9-dcbus-zero-verify",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - proving the inverter DC bus is at zero before you touch it",
+  "summary": "This platform uses no contactor, so the inverter is line-voltage hot any time the disconnect is closed. Before opening the control box or handling the inverter you have to wait out the capacitor discharge and measure zero DC volts at the inverter test points.",
+  "steps": [
+   "Open the outdoor disconnect. Leave the control box cover in place for a minimum of 2 minutes to let the inverter capacitors discharge.",
+   "Set the meter to DC volts and measure at the terminals marked DC + VOLTAGE and DC - VOLTAGE on the inverter, adjacent to the capacitors. The reading must be 0 volts DC before you service anything.",
+   "Leave the protective shield over the inverter capacitors in place - it is not removed from the inverter.",
+   "On sizes 13 and 24B, confirm MOC LED200 (red) is OFF. Steady on means the board is still powered with the DC bus at 40 volts or higher.",
+   "On sizes 25, 36, 37, 48, 49 and 60, confirm MOC LD1 (red) and LED1 (red) are both OFF. LD1 steady on means the DC bus is at 40 volts or greater.",
+   "If any DC voltage is still present after 2 minutes, stop and wait longer. Do not short the bus to drain it, and do not use power tools on the inverter input screw terminals."
+  ],
+  "safety": "Inverter DC bus work. Electrical components hold charge after the disconnect is opened. Verify zero volts DC at the inverter DC+ and DC- terminals before touching any electrical component. Line voltage is present at the inverter at all times while the disconnect is closed because this unit has no compressor contactor.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-status-recall-j2",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - pulling the stored status code off the outdoor board with the J2 jumper",
+  "summary": "The outdoor AOC board stores the most recent status code through a power loss. You get it back by shorting the force-defrost pins and powering up, then reading short and long flashes on the amber STATUS LED.",
+  "steps": [
+   "Turn the unit OFF at the disconnect first, then clip a jumper across the force defrost connector labeled J2 on the AOC board.",
+   "Power the unit back on. Status Code Recall Mode runs as long as J2 stays shorted, and the unit will not heat or cool during recall.",
+   "Read the amber STATUS LED: short flashes are the first digit, long flashes are the second digit. A short flash is 0.25 seconds on, a long flash is 1.0 second on, gap between flashes is 0.25 seconds.",
+   "The gap between the last short flash and the first long flash is 1.0 second, and the whole code repeats after 2.5 seconds with the LED off. Three short then two long equals code 32.",
+   "Power down and remove the jumper when you have the code. Leaving it on holds the unit out of operation.",
+   "Note whether the code is a Local/Event code or a System Malfunction. Local codes elevate to a lockout after repeats - 31 elevates to 84, 32 to 83, 33 to 48, 49 to 95, 59 to 74, 61 to 76, 63 to 86, 72 to 82, 79 to 88, 91 to 97, 92 to 96, 98 to 99."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-model-plug-code25",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - code 25 invalid model plug or inverter size",
+  "summary": "Code 25 means the AOC board cannot read a valid model plug, or the plug does not match the inverter that is installed. A replacement RCD AOC board ships with no model or serial information, so the original plug has to move over.",
+  "steps": [
+   "Confirm the plug is physically seated and aligned per the silkscreen layout on the board, and inspect it for corrosion or breakage.",
+   "Unplug the model plug and ohm pins 1-4 and pins 2-3, then compare to the plug table for that unit size.",
+   "25VNA8 pins 1-4 / pins 2-3: size 13 = 11K / 220K, 24B = 5.1K / 91K, 25 = 5.1K / 11K, 36 = 5.1K / 18K, 37 = 11K / 120K, 48 = 5.1K / 24K, 60 = 5.1K / 33K.",
+   "24VNA9 pins 1-4 / pins 2-3: size 13 = 11K / 180K, 24B = 5.1K / 120K, 25 = 5.1K / 150K, 36 = 5.1K / 180K, 37 = 11K / 91K, 48 = 5.1K / 220K, 49 = 11K / 150K, 60 = 5.1K / 270K.",
+   "If the plug ohms correct but code 25 stays, compare the plug tonnage to the inverter tonnage. A 2 ton plug on a 3 ton inverter throws code 25 - replace whichever one is wrong.",
+   "If the plug and inverter both check out and code 25 persists, the AOC control is damaged and gets replaced. Move the original model plug to the replacement board."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-compressor-winding",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - variable speed compressor winding resistance test",
+  "summary": "Before condemning the compressor on codes 67, 69, 95 or 99, ohm the three windings at the inverter MOC terminals and check each lead to ground. Do not use a megger on these windings.",
+  "steps": [
+   "Kill power, wait 2 minutes, and verify 0 volts DC at the inverter DC+ and DC- terminals before disconnecting anything.",
+   "Disconnect the three compressor power leads at the inverter MOC terminals U (yellow), V (red) and W (black).",
+   "Measure resistance yellow to red, yellow to black, and red to black. All three readings should be equal to each other.",
+   "Compare to the winding table at 70 F plus or minus 20 F: sizes 13 and 24B = 1.13 ohms, size 25 = 0.59 ohms, size 36 = 0.59 ohms, sizes 37 and 48 = 0.37 ohms, sizes 49 and 60 = 0.24 ohms.",
+   "Measure each lead to ground. Terminal to ground must read greater than 1 megohm.",
+   "Do not use a megger to measure the winding resistance on this compressor. If the windings are unequal or grounded, also cut the oil and check it - dark oil with a burn odor plus open or grounded windings is an electrical burnout, clean oil with excessive noise or no pumping is a mechanical failure."
+  ],
+  "safety": "Inverter DC bus and line voltage. Open the disconnect, wait a minimum of 2 minutes, and verify 0 volts DC at the inverter DC+ and DC- terminals before handling compressor leads.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-odfan-resistance",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - outdoor fan faults 61, 63, 66, 76 and 86",
+  "summary": "The outdoor fan is a brushless DC motor driven by the inverter, not a capacitor motor. Fan faults elevate to a 2 hour lockout, so ohm the motor before you replace the inverter.",
+  "steps": [
+   "Kill power, wait 2 minutes and verify 0 volts DC at the inverter DC+ and DC- terminals.",
+   "Disconnect the fan motor connector from the control board and measure resistance between any 2 of the 3 leads.",
+   "Sizes 13 and 24B should read 21.2 ohms. Sizes 25, 36, 37, 48, 49 and 60 should read 11.1 ohms.",
+   "Spin the blade by hand and check for a bent or out-of-balance blade, ice buildup, and blade clearance. Code 75 and code 86 both point at blade restriction or imbalance.",
+   "Check the harness plug for a positive lock between harness and board - an intermittent plug is a listed cause of code 86.",
+   "Normal behavior to not chase: this fan runs 400 to 1050 RPM, and at startup it makes a slight delay and a thrust in the reverse direction before ramping up."
+  ],
+  "safety": "Inverter DC bus. Verify 0 volts DC at the inverter DC+ and DC- terminals before unplugging the fan motor.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-brownout-voltage",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - supply voltage codes 46, 65, 96 and 97",
+  "summary": "This inverter watches incoming line voltage closely and has three different voltage thresholds it reacts to. Measure at the unit, not at the panel, and take the reading while the compressor is loaded.",
+  "steps": [
+   "Measure line voltage L1 to L2 at the outdoor unit with the compressor running at the highest stage you can force.",
+   "Brown-out protection: if line voltage stays under 187 volts for at least 4 seconds, the compressor and outdoor fan go to 0 RPM and the control flashes a fault. Operation is not allowed again until voltage is a minimum of 190 volts.",
+   "Code 46 brownout event: check for line voltage greater than approximately 180 volts. If it is less than 180 volts and persistent, that is a utility problem.",
+   "Code 65 DC volts low with speed limiting and code 96 VDC under voltage lockout both list low supply line voltage under 197 VAC as the cause.",
+   "Code 97 VDC over voltage lockout lists high supply line voltage above 253 VAC.",
+   "Check both the line side and load side connections at L1 and L2 for a loose or burnt lug before condemning the inverter. If the voltage is good at the unit and the codes stay, the inverter is not reading voltage properly and gets replaced."
+  ],
+  "safety": "Live line voltage measurement inside an energized control box on a unit with no compressor contactor. Use proper PPE and a meter rated for the circuit.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-spt-transducer",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - checking the suction pressure transducer against your gauges (code 57)",
+  "summary": "The suction pressure transducer can be verified in place on the AOC board using its supply and output voltage, then compared to a manifold gauge on the suction service port.",
+  "steps": [
+   "Connect a gauge manifold to the suction service valve gauge port and let the system run and stabilize.",
+   "At the AOC board, back the wire harness receptacle off just enough to expose part of the three pins.",
+   "Measure DC volts between ground and the supply (input) terminal. It must be 5 volts DC.",
+   "Measure DC volts between ground and the output terminal and record it.",
+   "Calculate: Pressure in psig = 50.0 x (DC volts out - 0.5). Example: 3.0 volts DC gives 50 x 2.5 = 125 psig.",
+   "Compare the calculated value to the manifold gauge. If they disagree, the transducer is bad - common causes are an electrical short that destroyed the transducer, or heat damage during brazing. Correct any electrical short in the system before installing the new transducer."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-thermistor-range",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - thermistor faults 53, 54, 55 and the 56 out-of-range comparison",
+  "summary": "Codes 53, 54 and 55 are individual sensor faults. Code 56 is different - it means the outdoor air and outdoor coil sensors disagree by more than the control allows, which can be a sensor mounting problem or a reversing valve problem.",
+  "steps": [
+   "Confirm the sensor plug is connected to the AOC control and check the harness for continuity and broken wires.",
+   "Ohm the sensor and compare to the table. The 10K thermistors (outdoor air OAT, outdoor coil OCT, suction OST) read 10.0 K-ohm plus or minus 2.3 percent at 77 F, 32.6 K-ohm plus or minus 3.2 percent at 32 F, and 85.5 K-ohm plus or minus 3.4 percent at -18.4 F.",
+   "The 50K thermistor (discharge ODT) reads 50.0 K-ohm plus or minus 2.3 percent at 77 F, 7.40 K-ohm plus or minus 2.0 percent at 167 F, and 1.7 K-ohm plus or minus 1.6 percent at 257 F.",
+   "Check mounting: the suction thermistor must be attached to the accumulator entry tube, the coil thermistor must be clipped to the distributor entry tube, and the OAT sensor body must not be touching sheet metal.",
+   "For code 56, apply the comparison rule. In cooling the sensors are out of range if outdoor air reads 10 F or more warmer than coil, or 25 F or more cooler than coil. In heating they are out of range if outdoor air reads 35 F or more warmer than coil, or 10 F or more cooler than coil.",
+   "On code 56 also check the AOC fuse, look for the unit heating when cooling was demanded (reversing valve or its wiring), and inspect the outdoor coil for obstructions. Expect degraded defrost while any thermistor fault is active - defrost will start at every interval but terminate after 2 minutes."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-hps-stagedown",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - code 31 high pressure trips and the stage-down before lockout 84",
+  "summary": "This control does not lock out on the first high pressure trip. It drops a stage each time and only elevates to the 4 hour lockout code 84 once it can no longer reduce speed, so a unit running at reduced capacity may have been tripping for a while.",
+  "steps": [
+   "Read the pressure switch spec: it opens at 600 psig plus or minus 5 psig and closes at 470 psig plus or minus 10 psig at 77 F.",
+   "After a trip the control waits 6 minutes, then on the next demand opens the PEV for 150 seconds to equalize, then ramps to the next lower stage. Reduced capacity clears only after 2 hours of continuous running at any stage without another trip.",
+   "Count the path: five consecutive trips starting from stage 5 demand gets you to code 84, but a single trip while already in stage 1 demand elevates immediately.",
+   "Put gauges on and take discharge pressure. If discharge is less than 600 plus or minus 20 psig and the switch is open, ohm the switch - it is faulty and gets replaced.",
+   "If pressure is genuinely high, work the cooling causes (outdoor coil clogged, overcharge, indoor TXV malfunction, restriction, EXV restriction on a long line set) or the heating causes (indoor airflow low, furnace stuck on and running with the heat pump, overcharge, reversing valve stuck in cooling).",
+   "Check the HPS harness, pins and the pressure switch connection at the inverter. Loose HPS harness leads and a switch disconnected from the inverter are both listed causes of code 84."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-lowpressure-lockout",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - code 32 low pressure trips and the 4 hour lockout 83",
+  "summary": "Low pressure protection on this platform uses transducer pressure thresholds rather than a switch, with separate cooling and heating values and a trip counter that resets itself after 15 minutes of good running.",
+  "steps": [
+   "Note the published thresholds. Cooling: 3 minute operation threshold at 33 psig or below, cooling resumes above 43 psig, and a no-operation level at 15 psig or below. Heating: 5 minute operation threshold at 33 psig or below with heating resuming above 35 psig.",
+   "Verify the transducer itself first using the 5 volt DC supply and the pressure formula before trusting the board's pressure number.",
+   "Three consecutive drops below the no-operation level lock the unit out for 4 hours as code 83. The trip counter resets to zero if 15 minutes of successful operation happens before the third trip is recorded.",
+   "In cooling, work through: service valve left closed (liquid or vapor), undercharge, indoor airflow low or off, and restriction in circuits or tubing.",
+   "In heating, work through: EXV malfunction, liquid service valve left closed, outdoor airflow low or off (coil clogged or iced), and undercharge checked by the heating check charge chart.",
+   "In both modes check for a temperature drop across the filter drier and replace it if restricted. On a short line set under 15 feet, troubleshoot the indoor TXV."
+  ],
+  "safety": "Refrigerant under pressure. Use gauges rated for the system and wear eye protection.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-normal-delays",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - normal delays, hissing and LED patterns that get reported as faults",
+  "summary": "This inverter platform has several built-in behaviors that look wrong to a tech used to contactor units: a long restart delay, an audible hiss at every shutdown, a fan that keeps spinning after the call ends, and a slow-blinking amber LED that is not a fault at all.",
+  "steps": [
+   "Restart delay: there is a 3.5 minute delay between compressor off and on cycles, on initial power up, and on return from brownout. Shorting and releasing the force defrost pins for 1 second bypasses it.",
+   "The additional delay after that cannot be bypassed. At the end of every compressor ON cycle the PEV opens for 150 seconds to equalize, then stays off 15 seconds before the next start. A hissing sound during equalization is normal.",
+   "There is a 10 minute sump warm-up delay at the beginning of each high voltage power up, and code 68 is simply that 10 minute stage 2 warm-up delay - no action required.",
+   "Outdoor fan at startup makes a slight delay and a thrust in the reverse direction before ramping up. Fan speed range is 400 to 1050 RPM.",
+   "Fan running with the compressor off can be code 75 mitigation: on an inverter over-temperature the unit finishes the demand, then the outdoor fan keeps running at 500 RPM until the inverter temperature drops below the threshold, and the compressor will not restart while the fault is active.",
+   "Amber STATUS LED patterns that are not faults: steady on with no flash is standby. On a communicating system, one flash then a pause is normal variable capacity operation, and one 2-second flash with a longer 1-second-off pause is speed limiting. On a non-communicating system, one flash is 2-stage low, two flashes is 2-stage high, four flashes is 2-stage reduced capacity speed limiting."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-24vna9-pumpdown-ui",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Carrier 24VNA9 / 25VNA8 - pump down and evacuation on an inverter unit with an EXV",
+  "summary": "The conventional pump-down does not work here because of the inverter compressor, the suction pressure transducer and the EXV. Carrier provides a Pumpdown routine in the wall control, and a separate Evacuation routine that forces the EXV open.",
+  "steps": [
+   "Put gauges on the liquid and vapor service valve ports before you start so you can watch pressures during and after the routine.",
+   "On a communicating 25VNA8 heat pump, go to the advanced menu: Checkout > Heat Pump > Pumpdown. Pick COOL to isolate refrigerant in the outdoor unit or HEAT to isolate it in the indoor coil and line set. Default time period is 120 minutes.",
+   "On a 24VNA9 AC-only unit the path is Checkout > Pumpdown with COOL as the only mode option.",
+   "Start the routine, let the unit begin running, then close the liquid service valve. The control declares pump down complete when suction pressure drops below 10 psig, with compressor protections still active.",
+   "When the system says complete or shuts down on a failure to complete, close the vapor service valve. Recover the charge left in the isolated section manually - it varies with ambient and total system charge.",
+   "Without a wall control (2-stage thermostat): force high stage, verify 24 VAC between C and Y1 and Y2 at the outdoor unit, close the liquid service valve, and let the unit run until a pressure switch opens, then close the vapor valve once the compressor stops.",
+   "For recovery and evacuation on a 25VNA8, use Checkout > Heat Pump > Evacuation (default 120 minutes) to open the EXV first. Power may be removed once the display reads READY TO EVACUATE and the EXV holds open. Without the UI, evacuation has to rely on the check valve as a bypass and will take longer or pull a poor vacuum."
+  ],
+  "safety": "Refrigerant under pressure and line-voltage inverter equipment. Service valve stem caps torque to 20 plus or minus 2 ft-lb and service port caps to 9 plus or minus 2 ft-lb on reassembly.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-trane-s9v2-run-test-mode",
+  "equipment": "Gas Furnace",
+  "title": "Trane S9V2-VS - using Run Test Mode to exercise the inducer, igniter and blower without firing",
+  "summary": "Run Test Mode drives each component in sequence so you can watch and measure. It deliberately does not light the burners and does not bring the outdoor unit on, so a furnace that never fires during this test is behaving correctly.",
+  "steps": [
+   "Scroll to run with the Menu key, then push the Option key. The LED flashes three times and the test begins.",
+   "Expected sequence: inducer on 1st stage 30 seconds, inducer on 2nd stage 30 seconds, igniter on 10 seconds, blower at 1st stage compressor speed 10 seconds, blower at 2nd stage compressor speed 10 seconds, blower at 1st stage gas heat speed 10 seconds, blower at 2nd stage gas heat speed 10 seconds.",
+   "The whole sequence repeats two more times unless you exit.",
+   "To hold a step so you can take a measurement, press the Option key during that step (HLD appears). The igniter step RU3 is the one exception and cannot be held.",
+   "Exit by momentarily pushing the Menu key, cycling power, or making a valid thermostat call for capacity or fan.",
+   "If a step is skipped or dead, that isolates the IFC, the inducer or the circulating blower - not the gas train, which this test never touches."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-trane-s9v2-inducer-learn-ps2-fail",
+  "equipment": "Gas Furnace",
+  "title": "Trane S9V2-VS - inducer hunting and LR1 / LR2 on the display, plus the 2nd stage retry loop",
+  "summary": "The variable speed inducer runs a learning routine to find its most efficient speed for each stage. A tech seeing LR1 or LR2 alternating with the heat mode, or an inducer that ramps down then back up right after ignition, is watching normal operation.",
+  "steps": [
+   "Confirm what is on the display. Xt1 alternating with LR1 is the 1st stage learning routine, HT2 alternating with LR2 is the 2nd stage learning routine.",
+   "Know when it runs: on initial commissioning, any time power to the furnace was interrupted, and after 150 first stage cycles or 100 second stage cycles.",
+   "Watch the mechanic of it. If the stage pressure switch closes at the factory default speed, the inducer speed is reduced every 2 seconds until the switch opens, the IFC stores that RPM, then raises speed every 3 seconds until the switch re-closes. That ramp down and back up is the learning routine, not a hunting fault.",
+   "If the pressure switch does not close at the default speed, the IFC increases inducer speed until either the maximum RPM for that stage is reached or the switch closes, then starts the routine.",
+   "The 2nd stage failure signature: if PS2 does not close after the inducer reaches maximum RPM, a PS2 open error is reported and the furnace keeps running in 1st stage for 10 minutes, then retries 2nd stage, repeating until the 2nd stage demand goes away. That is a real vent, tubing or PS2 problem, not a normal routine.",
+   "Do not take or adjust gas manifold measurements until the learning routine for that stage has completed successfully."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-trane-s9v2-igniter-37-70-ohms",
+  "equipment": "Gas Furnace",
+  "title": "Trane S9V2-VS - fault code 6.3 igniter relay or igniter circuit",
+  "summary": "Code 6.3 covers two conditions on this control: the igniter relay stuck closed, or the igniter circuit open or shorted. Ohming the igniter cold sorts them out.",
+  "steps": [
+   "Kill power to the furnace and disconnect the igniter from its harness.",
+   "Measure igniter resistance cold. It should read between 37 and 70 ohms at approximately 75 F.",
+   "An open or shorted reading condemns the igniter. A reading in range points back at the relay on the IFC.",
+   "Confirm the ignition timing while you are here: on this platform the igniter warm-up is approximately 20 seconds after PS1 closes, and proof of flame must be established within 4 seconds of the gas valve opening.",
+   "Do not carry the resistance spec across brands - the equivalent Carrier 59MN7C / 59TP6 hot surface igniter spec is a different number, so ohm to the spec printed for the furnace in front of you.",
+   "If the igniter is in range and the relay is suspect, replace the IFC - there is no field repair for a stuck igniter relay."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-trane-s9v2-personality-module-serial-motor",
+  "equipment": "Gas Furnace",
+  "title": "Trane S9V2-VS - codes 13, 14, 15, 17 and 18 (Personality Module and serial blower motor)",
+  "summary": "This furnace stores its blower configuration in a plug-in Personality Module and talks to the blower over a serial link. These five codes separate a wrong or missing PM from a broken communication path to the motor.",
+  "steps": [
+   "Code 13: the blower motor HP or OEM ID does not match the value programmed on the Personality Module. Confirm the PM model and serial match the nameplate, and confirm the blower motor HP matches the product specification for the model.",
+   "Code 14: the PM is missing and the onboard information cannot be read. Confirm the PM is installed and fully seated. Code 15: the PM and IFC information is corrupted - suspect a corrupted PM or a faulty IFC.",
+   "Code 17: the IFC does not see a return signal from the blower motor. Check that the 4 pin motor communication connector is fully seated at the IFC, the 12 pin connector at the blower vestibule panel is fully seated, and the 4 pin connector at the blower is fully seated.",
+   "Measure approximately 12 volts DC from terminals 1 (12V) and 3 (GND) at the IFC, and 120 VAC at the line voltage connector at the motor on the 5 pin connector terminals 4 and 5.",
+   "Bench the motor: remove the serial motor wiring harness at the IFC and apply 24 VAC to wires 3 and 4. If the motor runs, the motor is good and the fault is upstream.",
+   "Code 18: the IFC does not see a message it sent itself. With power on, remove the 4 pin motor connector from the IFC - if the code changes to E17, the IFC transmit path is proven and the fault is in the harness or motor.",
+   "If you are also chasing a dead board, code 12 is the onboard 5 amp fuse open or missing. Start the unit and clamp the transformer 24 VAC red wire with accessories off - amp draw should be less than 5 amps."
+  ],
+  "safety": "Line voltage present at the blower motor 5 pin connector. Take the 120 VAC reading with the proper meter and PPE, and de-energize before unplugging harnesses.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-trane-s9v2-ps2-second-stage",
+  "equipment": "Gas Furnace",
+  "title": "Trane S9V2-VS - codes 3.1 through 3.4 and reading the pressure switches correctly",
+  "summary": "This two-stage furnace has PS1 (orange wire) and PS2 (brown wire), each with a closed-when-it-should-be-open code and an open-when-it-should-be-closed code. The meter convention printed on the flowcharts trips people up.",
+  "steps": [
+   "Codes 3.1 and 3.2 are PS1. Codes 3.3 and 3.4 are the same logic applied to PS2 - to test those, cycle power and make a call for 2nd stage heat.",
+   "Resistance convention: OL means the switch is open, 0 ohms means the switch is closed. Cycle power off, remove the orange wire from PS1, and check for continuity across the switch.",
+   "Voltage convention on the open-when-it-should-be-closed codes: 24 volts across the switch means open, 0 volts means closed. These are opposite readings of the same condition, so pick one method and stay with it.",
+   "Before blaming the switch on a 3.2 or 3.4, know that the IFC responds to a switch that will not close by increasing voltage to the inducer motor to try to pull it closed.",
+   "Check the inducer drive itself: is voltage measured from RD-WH, BK-RD and BK-WH at the inducer motor.",
+   "PS1 open errors can occur on wind gusts. If the complaint is intermittent and weather-linked, look at the vent termination before condemning the switch.",
+   "Also confirm the switches were proven open at the start of the call - during the self check the IFC sends 24 VAC out HLO and expects PS1 and PS2 to read open. A stuck-closed switch stops the sequence before the inducer ever runs."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-trane-altitude-derate-4pct",
+  "equipment": "Gas Furnace",
+  "title": "Trane A951X and S9V2 - high altitude input derate and the manifold pressure window",
+  "summary": "Both Trane furnace families use the same derate rule and the same allowable manifold range for natural gas at altitude. Do not carry a Carrier derate rule onto a Trane furnace.",
+  "steps": [
+   "Confirm the installed elevation. Input ratings are based on sea level and are not changed at elevations up to 2,000 ft (610 m).",
+   "At 2,000 ft (610 m) or above, reduce furnace input rate 4 percent for each 1,000 ft above sea level.",
+   "Make the change by adjusting manifold pressure within the allowed natural gas range of minimum 3.0 to maximum 3.7 in. w.c., or by changing orifices. An orifice change is not always required.",
+   "Confirm the base manifold settings before you derate. Natural gas 2nd stage is 3.5 in. w.c. and 1st stage is 1.7 in. w.c. Propane is 10.0 in. w.c. 2nd stage and 6.0 in. w.c. 1st stage.",
+   "Check the inlet pressure while you are there: natural gas maximum 13.8 in. w.c. and minimum 5 in. w.c.; propane maximum 13.8 in. w.c. and minimum 11 in. w.c.",
+   "Clock the meter to confirm the actual input, and multiply by the heating value supplied by the utility. The final figure must not exceed the nameplate rating.",
+   "Adjust 2nd stage on the gas valve before attempting to adjust 1st stage. On an A951X you can set the Interstage Delay (ISD) to 000 with the Menu and Option buttons to make 2nd stage come on right after the 1st stage blower on delay, which is about 30 seconds after 1st stage flame is sensed."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-59mn7c-adaptive-rate-normal",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59MN7C and 59TP6 - the firing rate climbing on its own is the adaptive sequence, not a fault",
+  "summary": "Both of these Carrier furnaces change their own firing rate over the course of a call using stored history from previous cycles. A power blip erases that history and the furnace goes back to a fixed startup pattern, which reads to a customer as the furnace acting differently after an outage.",
+  "steps": [
+   "Identify the furnace first. The 59MN7C is modulating and shows Ht-% rate on the 3 digit display. The 59TP6 is two-stage and shows low or high heat only.",
+   "59MN7C normal sequence: the furnace starts in intermediate or maximum heat, runs 45 seconds at intermediate heat, then goes to minimum heat or the calculated modulating rate.",
+   "59MN7C after a power interruption: the stored rate is erased, so it runs intermediate heat for 45 seconds, minimum heat for 19 minutes, then switches to maximum heat as long as the thermostat keeps calling.",
+   "59MN7C when a rate between 40 and 99 percent is calculated: 45 seconds intermediate heat, then that calculated rate for up to 19 minutes, then maximum heat. At a calculated rate of 100 percent it runs maximum heat only.",
+   "59TP6 normal sequence: the control picks low or high heat from stored history and, if it starts in low heat, allows a low heat on-time of 0 to 16 minutes before switching to high heat. After a power interruption it uses low heat for up to 16 minutes then switches to high.",
+   "Do not read the two timing sets across platforms - the 59MN7C uses a 45 second / 19 minute pair and the 59TP6 uses a 0 to 16 minute window.",
+   "Blower on delay also differs by starting stage on the 59MN7C: 45 seconds after the gas valve opens at intermediate heat, 25 seconds after it opens at maximum heat."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-59mn7c-vs-59tp6-selftest-steps",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59MN7C vs 59TP6 - which steps the Component Self-Test should actually run",
+  "summary": "Both furnaces run a Ct component test from the 3 digit display, but the modulating 59MN7C has a gas valve communication step that the two-stage 59TP6 does not. A missing step on the wrong model sends techs chasing a fault that does not exist.",
+  "steps": [
+   "Set up either furnace the same way: remove the thermostat wire from the R terminal so no demands are present, temporarily depress the blower door switch to power the board, and confirm the control is in iDl before selecting Ct.",
+   "59MN7C expected sequence: tSt confirms test start, PUr runs the inducer on high 10 seconds and keeps the inducer on for the test duration, then after 15 seconds a gas valve communication check runs 15 seconds and displays as 5,9, then HSi runs the hot surface igniter 15 seconds, then Fn runs the blower at 50 percent torque 10 seconds, then End turns everything off except the inducer on low for 10 seconds and returns to iDl.",
+   "59TP6 expected sequence: tSt, PUr, HSi, Fn, End - the same steps with no gas valve communication step. That is correct for a fixed HI/LO valve and is not a missing component.",
+   "If the display shows End for 6 seconds partway through, a thermostat input was detected or a fault activated and the control aborted the test.",
+   "If the display shows Err, the test could not start. Check for thermostat inputs and active faults and confirm system status is iDl.",
+   "Use the test to split igniter from gas valve from flame sensor: run it and confirm the igniter glows orange or white by the end of the 15 second warm-up. If it does not, unplug the igniter harness, initiate another test, and check for 115 volts between pin 1 and NEUTRAL-L2 on the control.",
+   "Reconnect the R thermostat wire and reinstall the blower door when finished."
+  ],
+  "safety": "115 volt line voltage measurement at the control during the igniter test. De-energize before unplugging the igniter harness and use appropriate PPE for the live reading.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-59mn7c-inducer-rpm-vent",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59MN7C - the control measures your vent system during prepurge (codes 32.2, 31.6, 42.x)",
+  "summary": "On this modulating furnace the inducer RPM at the moment the medium pressure switch closes is used to evaluate vent system resistance, and that number sets inducer speed for the rest of the cycle. A restricted or oversized vent shows up as pressure switch and inducer RPM codes rather than an obvious blockage.",
+  "steps": [
+   "Understand the prepurge: the control turns on the inducer and slowly increases speed until the low pressure switch LPS closes, keeps increasing until the medium pressure switch MPS closes, notes that RPM, and then runs a 25 second prepurge.",
+   "That noted RPM sets the inducer speed for prepurge, for the first 45 seconds of intermediate heat, and for any modulating rate the furnace transitions to after the blower on-delay.",
+   "Code 32.2 open main pressure switch: if LPS is open longer than 5 minutes or has reopened, the inducer shuts off for 15 minutes before it retries. A furnace that appears dead for a quarter hour is in that retry timer.",
+   "Code 31.6 open HPS: the high heat pressure switch failed to close in 75 seconds while transitioning from low to high heat. Codes 31.1 and 31.2 are the medium heat pressure switch input being off when it should be on and on when it should be off.",
+   "Codes 23.4, 23.5 and 23.6 identify which switch the control is unhappy with - LPS, HPS and MPS respectively.",
+   "Inducer RPM codes: 42.1 no inducer RPM at startup, 42.2 no RPM while the inducer is running, 42.3 exceeding the inducer RPM limit. Code 43.1 means HPS closed before LPS, which is a tubing or switch wiring crossover.",
+   "Before condemning switches or the inducer, verify vent and termination lengths and clear any obstruction, and prime the condensate trap by pouring one quart of water into a 5/8 in. ID tube and funnel at the upper collector box drain connection."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-carrier-59tp6-intelisense-sat-rat",
+  "equipment": "Gas Furnace",
+  "title": "Carrier 59TP6 - InteliSense SAT and RAT sensors and the green COMM light",
+  "summary": "This furnace ships with a return air temperature sensor on the board and a supply air temperature sensor for field installation. Once enabled they give you a live temperature rise on the board display, and the green COMM light tells you whether the thermostat link is alive.",
+  "steps": [
+   "Confirm the SAT sensor was actually installed in the field - the RAT sensor comes installed on the control board, the SAT sensor does not.",
+   "Turn on the readout: on the 3 digit display navigate to t- and select F or C. Default is off.",
+   "With it enabled the display cycles through the current operating mode, SAT, RAT and the temperature differential during heating, cooling and heat pump operation. It will not display temperatures in any other mode.",
+   "Use that differential as your temperature rise reading without hanging thermometers, then compare it to the rise range on the rating plate.",
+   "Check the green COMM light on the furnace control. When InteliSense communication with an ecobee for Carrier smart thermostat is present, COMM is on. If it is not on when it should be, work the fault code 19.1 steps.",
+   "Fault code 19.1 will not be displayed until after InteliSense communication has been established for the first time, so a brand new install that never talked will show no code at all - do not read that as a healthy link.",
+   "Note that this furnace's on-board troubleshooting guide is a printed figure. Do not assume the 59TP6 status codes match the 59MN7C code set - they share control lineage but the code sets are not confirmed identical."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-carrier-altitude-derate-stacking",
+  "equipment": "Gas Furnace",
+  "title": "Carrier furnace at altitude - do the derate percentages stack on top of the manifold pressure table?",
+  "summary": "The two Carrier furnace manuals do not agree on this. One carries a general percent derate rule and the other states its manifold pressure table is already corrected for altitude and must not be derated again. Applying both gives you an underfired furnace.",
+  "steps": [
+   "Find both statements in the manual for the unit in front of you before touching the gas valve.",
+   "The general rule that appears in both 59MN7C and 59TP6 documentation: reduce input rate 2 percent for each 1,000 ft above sea level in the US, and 5 percent for 2,000 to 4,500 ft in Canada.",
+   "The 59TP6 conflicting statement: the natural gas manifold pressure adjustments in its Table 26 compensate for BOTH altitude AND gas heating value, do NOT apply an additional derate factor to those pressures, and those values are not referenced to sea level - they are as-measured at altitude.",
+   "Decide which path you are on. If you are setting manifold pressure directly from that table, do not also apply the percent derate. If you are derating from the sea level input rating, do not then look up the altitude table.",
+   "Get the expected in-season gas heating value from the gas supplier before making any adjustment for capacity or altitude - the heating content of natural gas at altitude may already provide part of the reduction.",
+   "Prove it by clocking the meter and calculating actual input rather than trusting either table, and compare the result to the nameplate rating.",
+   "Do not carry the Trane rule (4 percent per 1,000 ft above 2,000 ft) onto a Carrier furnace or the other way around."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-flamecurrent-carrier-vs-trane",
+  "equipment": "Gas Furnace",
+  "title": "Flame sensor microamps - Carrier and Trane specify very different normal ranges",
+  "summary": "A flame current reading that is perfectly normal on one platform is a lockout on the other. These are different flame rectification circuit designs, so read the spec for the brand in front of you and never quote one at the other.",
+  "steps": [
+   "Identify the platform before you take the reading.",
+   "Carrier 59MN7C: nominal flame current is 4.0 to 6.0 microamps DC. The flowchart asks whether DC microamps are below 0.5, and if the current is near the 4.0 to 6.0 typical value and the burners still will not stay on, the control gets replaced.",
+   "Trane A951X and S9V2-VS: typical flame current is 0.75 to 3.0 microamps. Trane code 2.2 recycle lockout asks whether flame current is greater than 0.75 microamps, and Trane code 8 is defined as flame sense current less than 0.5 microamps DC.",
+   "Meter method also differs by manual. On the Trane A951X there are two flame sense pads on the IFC marked FP and you read them with a VOM on DC volts, where 1 volt DC equals 1 microamp. On the Trane S9V2 flowchart the instruction is a VOM set to DC microamps connected in series with the flame sensor circuit.",
+   "Clean the sensor with fine steel wool and recheck before condemning anything, on either platform.",
+   "If cleaning does not fix it, work the shared cause list: dirty burners, poor grounding, sensor location, and wire connections. On the Carrier side also check for inadequate flame carryover or rough ignition, low inlet gas pressure, proper firing rate, and a blocked or incorrect carry-over gap (0.045 in. nominal).",
+   "Flame must be proved within 4 seconds on the Trane platforms. On the Carrier 59MN7C a 2 second flame proving period begins 5 seconds after the gas valve relay closes, and ignition lockout resets automatically after three hours."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-insulation-resistance-100k-vs-30m",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Inverter compressor insulation resistance - Goodman says 100k ohms, Daikin says 30 megohms",
+  "summary": "Two manuals for comparable inverter compressors give pass/fail insulation thresholds three hundred times apart, and they call for different test equipment. Do not carry either number to the other brand - use the manual for the unit you are working on.",
+  "steps": [
+   "Identify the exact unit and pull its own service manual before you condemn a compressor on an insulation reading.",
+   "Goodman AVZC18 (R-410A inverter): using a megohmmeter, one lead to ground, check U to ground, V to ground and W to ground. If insulation resistance is less than 100k ohms, replace the compressor.",
+   "Daikin FIT R-32 (S-17A): check insulation resistance between the compressor terminal and unpainted refrigerant piping. If it is less than 30 megohms, replace the compressor. Note that the Daikin manual's own revision history lists a 10/2024 correction of this criterion, so an older printing may show something different.",
+   "Note the equipment difference, because it can explain part of the gap. The Goodman procedure specifies a megohmmeter, which applies a much higher test voltage. The Daikin procedure describes an ohmmeter check.",
+   "Confirm the terminal location before you start. On the Daikin R-32 compressor the terminals are on the top. On the AVZC18 the 2, 3 and 4 ton compressors have terminals on top and the 5 ton has them on the side.",
+   "Separately from insulation, run the ground test: with all power off, ohm each of the three leads to an unpainted tube on the highest resistance scale. Reading should be infinity - any continuity to ground means the compressor is defective.",
+   "Do not megger the Carrier 24VNA9 / 25VNA8 variable speed compressor windings at all - that manual specifically says not to use a megger for measuring winding resistance."
+  ],
+  "safety": "Inverter DC bus and line voltage. De-energize, wait out the platform's capacitor discharge time, and verify the bus is discharged before removing leads from compressor terminals. Do not remove a compressor terminal protective cover on a unit that has tripped a breaker until you have followed the ground test steps.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-daikin-platform-triage",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin / Goodman / Amana - which fault-signaling system am I looking at?",
+  "summary": "These brands use three completely different diagnostic architectures on equipment that looks similar from the outside. Sorting the unit into the right one before you read any code or setpoint is the single most important step, because the code sets, pressure switch values and procedures do not transfer.",
+  "steps": [
+   "Open the outdoor control box and look for a 3-digit 7-segment display with TEST, RECALL and LEARN buttons. That is the Daikin FIT inverter platform (a): E-codes E11 through E58 on the outdoor board, E70 through E78 plus A0/A1/AF on the indoor EEV board, and the RECALL button walks Screens 0 through 4.",
+   "If instead you find a small plug-in module with a solid yellow RUN LED, a solid red TRIP LED and a yellow ALERT LED that flashes a count, that is the Copeland CoreSense / Comfort Alert platform (b) on a fixed-speed R-32 single-stage or 2-stage unit. Codes are flash counts 1 through 5 plus code 9, not E-numbers.",
+   "If the outdoor board itself carries four LEDs - green, yellow, red and a red Y1 - and the ComfortNet CTK04-series thermostat shows a text message with a two-digit number such as LOW SIDE FAULT 01, that is the unitary UC control platform (c), board family PCBHR101-103 / PBBGR101-102 on DX16TC / DX18TC / DZ16TC / DZ18TC.",
+   "Check the refrigerant on the data plate before applying any pressure number. R-32 is A2L. R-410A is not, and the R-410A units in this family have no built-in leak sensor codes at all.",
+   "On the indoor side, look for the A2L leak system. The FIT platform reports A0, A1 and AF on the indoor board's 7-segment display. The fixed-speed platform uses a separate standalone A2L PCB with a single LED viewed through a round glass window on the top access panel.",
+   "Once the platform is identified, only use setpoints from that platform. Example of why: the FIT high pressure switch cuts out at 4.2 MPa (605 psig) and cuts in at 3.2 MPa (465 psig) and is manual reset only, while the fixed-speed R-32 high pressure switch opens at 610 psig plus or minus 10 psig, closes at 420 psig plus or minus 25 psig and is automatic reset.",
+   "Confirm the same way for pump down, crankcase soak times, and insulation resistance thresholds - all three of those differ by platform."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-a0-a1-af-7pct-lfl",
+  "equipment": "Air Handler",
+  "title": "Daikin FIT R-32 - codes A0, A1 and AF: which one is an actual refrigerant leak",
+  "summary": "On the FIT platform (a), three separate A2L codes come off the indoor board and only one of them means refrigerant was detected. A0 is a real leak detection at 7 percent LFL. A1 and AF are sensor faults with no refrigerant involved.",
+  "steps": [
+   "Ventilate the space before doing anything else, and do not use any source of ignition. Leave the system powered so the fan and the leak detection output relay can keep mitigating.",
+   "Read the code on the indoor 7-segment display. A0 is A2L Refrigerant Leak Error, A1 is A2L Sensor Internal Error, AF is A2L Sensor Communication Error.",
+   "A0 trip point: the A2L sensor detected more than 7 percent LFL refrigerant, or the unit is inside its 5 minute mitigation mode. Do not confuse that 7 percent number with the 25 percent LFL figure used to calibrate a hand-held leak detector - they are different things.",
+   "Work the A0 branch. If the system has been running less than 5 minutes with the code, wait out the 5 minute mitigation and see if it clears. If the code stays past 5 minutes or repeats on and off about every 5 minutes, check the coil for a leak.",
+   "After addressing the coil leak, if A0 is still issued, replace the A2L sensor. If it is still issued after that, replace the control board.",
+   "AF: the sensor is not connected or is miswired. Check the A2L sensor connection first, then replace the sensor, then the control board. A1: replace the A2L sensor, then the control board.",
+   "Whichever code is active, the same actions fire: the fan runs to mitigate leaked refrigerant, and the leak detection output relay K4R is energized. Verify that relay at the terminal block - TB11 to TB12 is normally closed and opens on a code, TB11 to TB13 is normally open and closes on a code."
+  ],
+  "safety": "A2L (mildly flammable) refrigerant. Ventilate the room to avoid high refrigerant concentration, do not use any flame or ignition source, and leave the system powered so the blower and mitigation relay can operate. Do not shut the unit off to silence a leak alarm.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-a2l-25pct-lfl-detector-calibration",
+  "equipment": "Other",
+  "title": "R-32 leak detection - the 25 percent LFL detector calibration is not the unit's 7 percent LFL trip",
+  "summary": "Two different LFL percentages show up in A2L work and they are unrelated. 25 percent LFL is what your hand-held electronic leak detector gets calibrated to. 7 percent LFL is the built-in indoor sensor's trip point that shuts the system into mitigation.",
+  "steps": [
+   "Your hand-held detector: it must have a sensitivity of 5 grams per year of refrigerant or better under a pressure of at least 0.25 times the maximum allowable pressure.",
+   "Calibrate that detector to the percentage corresponding to 25 percent of the LFL of R-32, and calibrate it in a refrigerant-free area. The appropriate percentage of gas (25 percent maximum) must be confirmed.",
+   "Confirm the detector is suitable for A2L: non-sparking, adequately sealed or intrinsically safe, and not a potential source of ignition itself.",
+   "The unit's built-in A2L sensor is a separate system with a separate number - it issues code A0 when it detects more than 7 percent LFL. You cannot infer one number from the other and you cannot use your hand-held reading to decide whether the built-in sensor is right.",
+   "Check charge against room size while you are on site. The minimum room area (Amin) is stamped on the unit serial plate, not printed in the manual - do not back-calculate it.",
+   "At altitude, multiply that serial plate value: Amin adj = Amin (serial plate) x AF. AF is 1.00 at sea level, 1.05 at 1320 to 1970 ft, 1.09 at 2630 to 3290 ft, 1.15 at 4600 to 5250 ft, 1.21 at 6570 to 7220 ft, 1.26 at 7880 to 8540 ft, and 1.34 at 9850 to 10500 ft.",
+   "Before any hot work, have a dry powder or CO2 fire extinguisher adjacent to the charging area, survey the area for ignition sources, post No Smoking signage, and ventilate before breaking into the system and throughout the work."
+  ],
+  "safety": "A2L (mildly flammable) refrigerant. Only brazing techniques and approved mechanical joints may be used on A2L refrigerant tubing - non-approved mechanical connectors are not permitted. Keep all ignition sources away, ventilate continuously, and keep the vacuum pump outlet away from potential ignition sources.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-dcbus-50v",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin FIT and FIT-Q inverter - capacitor discharge check before touching the control box",
+  "summary": "The pass criterion on this platform is 50 volts or less at the DC+ and DC- test points, which is different from the Carrier inverter's requirement of a flat zero. There is also a fan blade step most techs skip that can recharge the capacitor after you measured it.",
+  "steps": [
+   "Shut down the power and leave the control box closed. The R-410A FIT-Q manual for this same chassis family specifies leaving it 10 minutes; the R-32 FIT manual's numbered steps did not extract legibly, so confirm the wait time on the unit's own manual or nameplate for an R-32 job.",
+   "Touch the earth ground terminal first to release static from your body and protect the PC board.",
+   "Measure residual voltage with a multimeter on the DC voltage range at the terminals marked C+ and C-, without touching the charged area. The reading must be 50 volts or less.",
+   "The same 50 volts or less criterion is printed for both chassis groups: 1.5 to 3.0 ton FIT plus 2.0 ton Enhanced Capacity / High Efficiency, and 3.5 to 5.0 ton FIT plus 3.0 to 4.0 ton Enhanced Capacity / High Efficiency.",
+   "Immediately after measuring, disconnect the outdoor fan motor connectors. If the fan blade turns in the wind the capacitor will be recharged and the shock hazard returns.",
+   "Never touch the charged area before confirming the residual voltage is 50 volts or less.",
+   "If you are on a Carrier 24VNA9 / 25VNA8 instead, do not use 50 volts as your pass criterion - that platform requires 0 volts DC at the inverter DC+ and DC- terminals after a minimum 2 minute wait."
+  ],
+  "safety": "Inverter DC bus. Do not touch the charged area until residual voltage measures 50 volts or less, and disconnect the outdoor fan motor connectors immediately after the measurement so wind cannot recharge the capacitor.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-powerup-soak",
+  "equipment": "Condenser/Heat Pump",
+  "title": "How long must it be powered before you start it - FIT 2 hour soak vs a 4 hour crankcase heater",
+  "summary": "Two different pre-start waiting periods exist on these product lines and they belong to different platforms. Starting a unit before the required soak is a real cause of nuisance faults and compressor damage after an outage or a fresh install.",
+  "steps": [
+   "Daikin FIT R-32 inverter (platform a): all units should have high voltage power supply connected 2 hours prior to startup. After a breaker trip or an outage, that clock restarts.",
+   "Daikin / Amana R-32 fixed-speed with an optional crankcase heater (platform b): the crankcase heater must be energized a minimum of 4 hours before the condensing unit is operated.",
+   "Do not treat those as interchangeable. Confirm which platform you are on before quoting a wait time to a customer.",
+   "Test the crankcase heater on the fixed-speed platform: disconnect the heater lead-in wires and ohm for continuity. It is a positive temperature coefficient 40 watt 265 volt heater with a cool resistance of approximately 1800 ohms, and resistance rises as the compressor shell warms.",
+   "A crankcase heater will not prevent compressor damage from floodback or overcharge, so do not stop investigating once you confirm it works.",
+   "For comparison on a third platform, the Trane condensing unit installer's guide calls for waiting 1 hour before starting the unit if a compressor crankcase heater accessory is used and outdoor ambient is below 70 F.",
+   "On the FIT platform, expect code E11 on initial power up - that is the required SYSTEM START-UP TEST prompt, not a failure. It clears once the test is run and passes, and the test takes approximately 5 to 7 minutes. Turn off the electric heater or gas furnace before starting it."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-charge-verify-messages",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin FIT R-32 - Charge Verification Test will not settle, and 'cha' keeps flashing",
+  "summary": "The Charge Verification Test runs the unit at about 50 percent capacity for two hours and should show a subcooling value after 20 to 25 minutes. If it does not, the thermostat prints a specific reason and the outdoor board flashes cha - each message points at a different set of causes.",
+  "steps": [
+   "Set expectations first. The test runs approximately 2 hours at about 50 percent capacity, and it takes about 20 to 25 minutes for the unit to stabilize and start displaying subcooling at the liquid service valve in Fahrenheit on the thermostat and on the outdoor PCB.",
+   "Confirm ambient is in range. Subcooling adjustment using the Charge Verification Test is only valid from 65 F to 105 F ambient. Using it to evaluate compressor efficiency is only advised from 65 F to 115 F.",
+   "Message 'Compressor speed out of range': the compressor is running at a lower or higher frequency than the specified charge verification frequency. Check outdoor unit clearances for air recirculation, re-confirm the weighed-in charge for the line set length, and confirm the ambient air, discharge, suction and heat exchanger thermistors are correctly installed, insulated and not touching the coil.",
+   "Message 'ID SH out of range': indoor coil outlet superheat is outside the specified range. Check for severe undercharge, confirm the indoor gas thermistor and discharge thermistor are secured and insulated, confirm the indoor EEV coil protrusion is clicked into the dimple on the EEV body, check ducting for obstructions or leaks, and check the indoor PCB dip switches.",
+   "Message 'Outdoor temp out of range - Please weigh in charge': ambient is not within 65 F to 105 F so charge must be weighed in. If that message appears falsely, look for air recirculation and an ambient thermistor touching the heat exchanger coil.",
+   "Do not adjust charge on suction pressure. Subcooling equals saturated liquid temperature minus liquid line temperature, taken at the liquid base valve service port with an insulated thermometer.",
+   "Add no more than 8 oz of refrigerant total to reach target subcooling, adding about 1 oz at a time and waiting 10 minutes to stabilize.",
+   "Subcooling targets are model specific. A DH9VS / DC9VS uses a single 11 plus or minus 1 F target across 65 F to 105 F with about a 30 minute stabilization wait, while a 2 ton DC6VSA / DC6VSS / DH6VSA target is 10 plus or minus 1 F below 80 F ambient. Look yours up rather than assuming."
+  ],
+  "safety": "A2L (R-32) refrigerant. Charging equipment must use dedicated PVE oil gauges and hoses, and the compressor PVE oil absorbs moisture readily - do not leave the system open to atmosphere any longer than necessary.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-indoor-sensor-codes",
+  "equipment": "Air Handler",
+  "title": "Daikin FIT R-32 - indoor codes E70, E73, E74 and E75 with the actual out-of-range limits",
+  "summary": "These four indoor EEV board codes each have a printed numeric limit the control is testing against, so you can ohm or measure the part and know immediately whether the board is right.",
+  "steps": [
+   "E70 EEV disconnection: the EEV connector was not detected. Check the indoor EEV coil connection at both the control board and the junction connector, then ohm the coil.",
+   "EEV coil pass range is 40 to 50 ohms. On the large chassis and indoor units measure pins 1-5, 2-5, 3-5 and 4-5; on the small chassis measure pins 1-6, 2-6, 3-6 and 4-6. A solenoid valve coil on the same platform should read 1,480 to 1,820 ohms.",
+   "E73 liquid side thermistor: measured at X5A pins 3 and 4. The control calls it open or shorted when the thermistor reads below about -43.6 C (-46.48 F) or above 90 C (194 F) for 20 continuous seconds, or when resistance is less than 1342 ohms or more than 1.7 megohms.",
+   "E74 gas side thermistor: measured at X5A pins 1 and 2. Out of range is below about -43.6 C (-46.48 F) or above 165 C (329 F) for 20 continuous seconds, or output voltage less than about 0.04 volts DC.",
+   "Check your ohm reading against the thermistor table: 20.00 K-ohm at 25 C (77 F), 25.01 K-ohm at 20 C (68 F), 16.10 K-ohm at 30 C (86 F), 65.84 K-ohm at 0 C (32 F), and 10.63 K-ohm at 40 C (104 F).",
+   "E75 pressure sensor: measured at X15A pins 3 and 1. Out of range is a sensor reading below -0.049 MPa (-7.11 psig) or above 4.41 MPa (640 psig) for 5 continuous minutes.",
+   "On any of these, the order is connection first, then resistance or voltage value, then replace the sensor, then replace the control board."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-e13-e15-pressure",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin FIT R-32 - E13 high pressure, E15 low pressure, E24 switch open: three different numbers",
+  "summary": "The FIT board watches pressure two different ways and has a third code for the mechanical switch itself. Each has its own threshold and a minor variant that lets the unit keep running, which is why a customer can report 'it works but the thermostat keeps showing a number'.",
+  "steps": [
+   "E13 high pressure error: triggered when pressure is higher than 4.2 MPa (605 psig). In cooling the control uses the heat exchanger thermistor; in heating it uses the indoor pressure sensor.",
+   "E15 low pressure error: triggered when pressure is less than 0.12 MPa (17 psig) for 5 minutes, in both cooling and heating.",
+   "E24 is separate - it is the mechanical high pressure switch reported open. That switch cuts out at 4.2 MPa (605 psig), cuts in at 3.2 MPa (465 psig), and is NOT automatically reset: main power has to be turned off to reset it. Ohm across the PCB side terminals with the PCB side wire removed.",
+   "Check the minor variants before you assume the unit is locked out. Thermostat code 14 is the minor version of E13 and code 16 is the minor version of E15 - the control has decided continued operation is acceptable.",
+   "The first branch point on the E13 flowchart is whether the manifold gauge shows the same high pressure the board does. If they disagree, suspect the outdoor PCB, the heat exchanger thermistor or the indoor pressure sensor rather than a real pressure problem.",
+   "If the gauge agrees, work the physical causes: stop valve not completely open, blocked or restricted outdoor coil and lines, overcharge, outdoor fan not running, high static or a failed indoor blower, and faulty indoor or outdoor EEV or EEV coil.",
+   "For E15, work stop valve not fully open, restriction in the refrigerant lines, low charge or a leak, pressure sensor not properly connected, indoor fan motor not running correctly, and faulty EEV or EEV coil.",
+   "Do not carry these numbers to a fixed-speed R-32 unit - that platform's switch opens at 610 psig plus or minus 10 psig and closes at 420 psig plus or minus 25 psig with automatic reset, and its low pressure control opens at 21 psig and auto resets at about 50 psig."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-e32-chassis-split",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin FIT R-32 - E32 inverter over temperature is detected differently on the two chassis sizes",
+  "summary": "E32 means the control board got too hot, but the small chassis senses it on an air-cooled fin and the large chassis senses it on a refrigerant-cooled plate. That changes the entire cause list, including a cooling loop that has to be bolted and greased correctly.",
+  "steps": [
+   "Identify the chassis. Small chassis is outdoor AC or HP 1.5 to 3.0 ton, plus 2.0 ton Enhanced HP and 2.0 ton High Efficiency AC. Large chassis is 3.5 to 5.0 ton, plus 3.0 to 4.0 ton Enhanced HP and High Efficiency AC.",
+   "Small chassis E32 is detected by a thermistor on the inverter cooling fin. Causes: ambient air conditions too high, poor cooling of the cooling fin, inlet or outlet of the air path clogged, and a dirty cooling fin. Clean the fin and clear the air path.",
+   "Large chassis E32 is detected by a thermistor on the inverter cooling plate, which is refrigerant cooled. Causes: ambient too high, stop valve not completely open, cooling bracket screws missing or not properly fastened, no or poor thermal grease between the cooling plumbing and the cooling bracket, and no or limited flow through the control board cooling circuit from a restriction or low charge.",
+   "On a large chassis, physically check the bracket screw tightening and the grease application before you order a board.",
+   "Confirm the stop valves are fully open - that is a listed E32 cause on the large chassis only because the cooling loop is refrigerant fed.",
+   "Check for low charge or a restriction in the cooling loop line, because either one starves the board cooling circuit.",
+   "Thermostat code 33 is the minor version of E32 - the unit keeps running. Cycle power and retry during a usable ambient temperature range, then verify the mechanical items above."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-emergency-mode-stuck",
+  "equipment": "Air Handler",
+  "title": "Daikin FIT R-32 - system cycles on its own schedule or runs at half capacity: left in Emergency Mode",
+  "summary": "Emergency Mode is a temporary workaround for broken communication wiring or a dead thermostat, and it is engaged with dip switches. If those switches are left set, the system runs to a fixed timer instead of a room setpoint and the thermostat shows nothing useful.",
+  "steps": [
+   "Look at the indoor 7-segment display. EE means Emergency Mode is active, and the operating status will not appear in the thermostat status menu or on the outdoor 7-segment displays.",
+   "Check dip switch bank DS-6 on the indoor board. Factory default for S-21 and S-22 is both OFF. S-21 ON with S-22 ON is Low Heat Level emergency, S-21 OFF with S-22 ON is High Heat Level emergency, and S-21 ON with S-22 OFF is cooling emergency / emergency indoor fan.",
+   "Match the symptom to the timer. High Heat Level runs 8 minutes on and 8 minutes off. Low Heat Level runs 7 minutes on and 15 minutes off.",
+   "Cooling emergency behavior: the compressor speed follows outdoor ambient. Above 95 F it can run 100 percent, below 70 F it runs 50 percent, and between 70 F and 95 F it scales linearly. Cool level is picked with dip bank DS-2 on the outdoor board.",
+   "Confirm this was a legitimate use. Emergency mode is appropriate only alongside E51 on the outdoor unit, or E76, E77 or E78 on the indoor unit, and only until the wiring or thermostat is repaired.",
+   "Fix the underlying comm fault, then return every switch to factory default: indoor DS-6 S-21 and S-22 OFF, outdoor DS-2 both to normal operation position, and reconnect all thermostat communication wiring that was removed.",
+   "If an Ed error appears on startup in emergency mode, the DS-3 heater kit dip switches (S-9 through S-12) do not match the installed electric heater kit. Setting them correctly clears the code."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-no-pumpdown",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Pump down on Daikin inverter units - the R-32 FIT has no pump down, the R-410A DX20VC does",
+  "summary": "These two platforms give opposite instructions and using the wrong one either wastes an hour or vents refrigerant. Check the refrigerant and the platform before you plan the job.",
+  "steps": [
+   "Daikin FIT R-32 (platform a): there is no specific pump down function. To remove or relocate the unit, recover all refrigerant from the system using the service ports on the stop valves - both of them. You may not recover all the refrigerant unless you use both service ports.",
+   "Daikin DX20VC / DZ20VC (R-410A variable capacity): a Pump Down Mode does exist. Confirm the data plate says R-410A before using it.",
+   "DX20VC 7-segment route: set the display to SCREEN 4 (Setting Mode 2), Setting No. 8, and change the display from -01 to -00. Do not use COOL ON mode to enter pump down. Before starting, return indoor fan trim, delay and profile to default and stop the electric heater and gas furnace, and leave both gas and liquid service valves open.",
+   "Approximately one minute later the compressor should start - confirm by clamping the compressor wiring. The unit displays error code E11 once pump down starts, which on this platform means pump down in progress, not the FIT platform's start-up test prompt.",
+   "Close the liquid service valve approximately two minutes after the compressor comes on. The compressor stops automatically - close the gas service valve immediately after it stops. E11 shows again on completion. The routine runs approximately 15 minutes.",
+   "CTK04 thermostat route on the same platform: MENU > COMFORTNET USER MENU > installer password (the thermostat Date Code, found at the bottom of the EQUIPMENT STATUS menu) > YES > AIR CONDITIONER > MAINTENANCE > PUMP DOWN > ON > DONE. Turn it off the same way.",
+   "Refrigerant will not collect fully in the outdoor unit if the system is overcharged or if you are slow closing the valves - recover the leftover with a recovery machine either way.",
+   "For a Carrier 24VNA9 / 25VNA8, use that platform's own UI Pumpdown routine - conventional pump down does not work there either because of the inverter compressor, suction transducer and EXV."
+  ],
+  "safety": "R-32 is an A2L refrigerant - recovery must be done with equipment listed or certified for A2L, into returnable cylinders rated at or above 400 psig with a hydrostatic test date within 5 years, never filled more than 80 percent full of liquid.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-fan-runs-unit-off",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin FIT - outdoor fan runs in winter with the system off, and nobody called for anything",
+  "summary": "A homeowner reporting the outdoor fan spinning when the system is off, including in cold weather, is usually seeing normal inverter board cooling rather than a stuck contactor or a bad thermostat.",
+  "steps": [
+   "Confirm the unit is connected to main power and that no heating or cooling demand is present at the thermostat.",
+   "Explain the mechanism: when the outdoor unit is connected to main power, a small current flows into the inverter control board so it is ready to operate. The board components have to be cooled even when the unit is not running, and for that cooling the outdoor fan may come on at any time, including in the winter months.",
+   "Confirm nothing is obstructing the fan. Any obstruction to the outdoor fan should be avoided at all times while the unit is powered, to prevent damage.",
+   "Rule out an actual fault by reading the outdoor 3-digit display for an active code, and check the error code history before assuming it is normal.",
+   "Distinguish it from the Carrier inverter equivalent. On a 24VNA9 / 25VNA8, a fan running with the compressor off can be code 75 mitigation - the outdoor fan runs at 500 RPM until inverter temperature drops below the threshold and the compressor will not restart while the fault is active.",
+   "If the customer wants the fan to stop, the only correct answer is removing power, and that has consequences - on an A2L system the leak detection system needs the unit powered except for service."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikinfit-r32-ecm-pin-voltages",
+  "equipment": "Air Handler",
+  "title": "Daikin FIT - indoor ECM blower motor checks: 3.3 / 3.3 / 15 volts DC and the 1 megohm end bell test",
+  "summary": "Codes b0, b1 and b3 point at the blower motor, but the four-wire control harness and five-circuit power connector have printed pass values that let you split motor from control board from end bell without guessing.",
+  "steps": [
+   "Low voltage control circuit, power on: measure between pins on the 4-wire motor control harness. Pins 1 to 4 should read 3.3 volts DC, pins 1 to 2 should read 3.3 volts DC, and pins 3 to 4 should read 15 volts DC.",
+   "High voltage power circuit: disconnect power, unplug the 5-circuit power connector, restore power, then measure pins 4 to 5 - it should equal the supply voltage to the indoor unit. Pins 4 to 3 and pins 5 to 3 should each read approximately half of that. Note pins 1 and 2 are only connected on a 115 volt supply.",
+   "If there is no voltage present, go back to supply voltage. Expected supply ranges: 208/230 volt air handler and modular blower 197 to 253, 115 volt air handler 103 to 126, gas furnace 115 volt 103 to 126, EEV cased coil 24 volt 22.6 to 25.5, and outdoor unit 208/230 volt 197 to 253.",
+   "Motor control / end bell inspection: disconnect power and wait 5 minutes for the motor's internal capacitors to discharge before opening it.",
+   "Inspect the NTC thermistor inside the control / end bell and replace the end bell if it is cracked or broken. Replace it if any of the large capacitors are bulging or swollen.",
+   "Ohm between each terminal in the 3-circuit connector in the control / end bell. 1 megohm or greater means the control / end bell is functioning properly - replace it if resistance is lower than 1 megohm.",
+   "Motor winding check: phase winding resistances should be equal to each other, and no phase winding should be shorted to the motor shell. Replace the motor if readings are unequal, open, shorted, or grounded to the shell.",
+   "If you have a Nidec UltraCheck-EZ, use the indicator table: power button on with green LED blinking and the motor rotating means motor and control/end bell are good; power on, green LED off, motor rotating means replace the control/end bell; power on, green blinking, motor not rotating means check the motor."
+  ],
+  "safety": "Line voltage at the 5-circuit motor power connector and stored charge in the motor end bell. De-energize to unplug, wait 5 minutes for the motor capacitors to discharge before opening the end bell, and use proper PPE for the live voltage readings.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikin-r32-1stage-a2l-pcb-led",
+  "equipment": "Air Handler",
+  "title": "Daikin / Amana R-32 fixed-speed - reading the standalone A2L PCB LED through the sight glass",
+  "summary": "On the fixed-speed R-32 platform (b) the leak detection system is a separate PCB with a single LED, not the E-code board. You read it through a round glass window on the top access panel and match the flash pattern to the label on the blower access panel.",
+  "steps": [
+   "Before servicing, read the LED flashing pattern through the round glass view on the top access panel and match it to the A2L PCB fault code label on the front of the blower access panel.",
+   "Slow flashing, 2 seconds on and 2 seconds off, is normal operation. No action.",
+   "Fast flashing is R-32 Leak Alarm - a leak is being detected right now. The controls and sensor are working properly. Identify where the leak is coming from and address it. If a leak alarm is observed, do NOT open the unit or turn it off.",
+   "LED on continuously is Delay Mode - the alarm cleared and the unit stays in mitigation for 5 minutes before returning to normal. Check cooling and heating performance and system pressures and lines for leaks, then re-check performance.",
+   "2 flashes then off for 5 seconds is a Control Board Internal Fault. 3 flashes then off for 5 seconds is R-32 Sensor Communication Fault. 4 flashes then off for 5 seconds is R-32 Sensor Fault.",
+   "Diagnostic sequence is the same for all three fault patterns: unplug and re-plug the R-32 sensor, cycle power, and see where you land. If it now reads normal or delay mode you are done.",
+   "If it still shows 2 flashes, replace the control. If after re-plugging it changed from 2 flashes to 3 flashes, replace the sensor. If it still shows 3 flashes, replace both the sensor and the PCB. If it still shows 4 flashes, replace the sensor.",
+   "System Verification Mode looks identical to a leak alarm (fast flashing). Enter it by pressing the button on the control 2 times within 5 seconds - it simulates an alarm for 5 minutes then returns to normal automatically, or press the button once to end early."
+  ],
+  "safety": "A2L (mildly flammable) R-32. If an R-32 leak alarm is observed, do not open the unit or turn it off - the leak detection system requires the unit to stay powered except for service. Ventilate and keep ignition sources away. Replace the R-32 sensor only with a sensor specified by the appliance manufacturer.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-coresense-timing-windows",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Copeland CoreSense on R-32 fixed-speed units - telling flash code 2 from 3 from 4 from 5 by timing",
+  "summary": "The yellow ALERT flash codes on this module are defined purely by how long the compressor ran before it tripped and how long the trip lasted. Timing the compressor with a watch tells you which code you should be seeing and whether the module is right.",
+  "steps": [
+   "Confirm the module is powered and reading correctly: solid yellow RUN means the module has power and is operating normally with supply voltage present at its terminals. TRIP and ALERT flashing at the same time means control circuit voltage is too low for operation.",
+   "Solid red TRIP means the Y demand signal is present but the compressor is not running. Check the compressor protector for an open (high head pressure, compressor supply voltage), the outdoor disconnect, the compressor breaker or fuses, a broken wire or connector, the high pressure switch if present, and a contactor failed open.",
+   "Flash code 1 Long Run Time: the compressor has been running more than 18 hours. This code is disabled in Heat Pump mode, so do not expect it on a heat pump call.",
+   "Flash code 2 Compressor (pressure) trip: the compressor ran 12 seconds to 15 minutes, then tripped for longer than 7 minutes. Locks out after 4 consecutive events and shows red flash 2 with yellow off.",
+   "Flash code 3 Pressure switch cycling / short cycling: the compressor ran 12 seconds to 15 minutes, then tripped for between 35 seconds and 7 minutes. Locks out after 4 consecutive or 10 total, shown as red flash 3.",
+   "Flash code 4 Locked rotor: the compressor trips within 12 seconds of run time and does not start within 35 seconds. Locks out after 10 consecutive events, shown as red flash 4. Check run capacitor, low line voltage, liquid refrigerant in the compressor, and seized bearings.",
+   "Flash code 5 Compressor (moderate run) trip: the compressor ran 15 minutes to 18 hours, then tripped for longer than 7 minutes. Locks out after 4 consecutive or 10 total, shown as red flash 5.",
+   "Red flash code 9 means current to the PROT terminal exceeded 2 amps for 40 milliseconds."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-daikin-r32-1stage-defrost-board-test",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin / Amana R-32 fixed-speed heat pump - forcing the defrost board and reading its outputs",
+  "summary": "The fixed-speed R-32 platform still uses a time and temperature defrost board with a DFT thermostat, and it can be forced with jumpers. Each output has a specific expected reading, so a board that goes into defrost but does not switch the valve or the fan is easy to pin down.",
+  "steps": [
+   "Jumper the defrost thermostat by placing a jumper across the DFT and R terminals at the defrost control board.",
+   "Remove the jumper from the timer pins and jumper across the test pins. Do not use a screwdriver or a field-supplied jumper to test the control.",
+   "Set the thermostat to call for heating. The system should go into defrost within 21 seconds. Immediately remove the jumper from the test pins.",
+   "Check voltage across C and O with a VOM - you should read 24 volts, proving the reversing valve output.",
+   "Check voltage across fan terminals DF1 and DF2 - you should read line voltage 208 to 230 VAC, indicating the relay is open in defrost so the outdoor fan is off.",
+   "Check voltage across W or W2 and C - you should read 24 volts, proving the auxiliary heat output during defrost.",
+   "If any of those readings are wrong, replace the control board. Remove the jumper across the defrost thermostat before returning the system to service."
+  ],
+  "safety": "Line voltage present at the DF1 and DF2 fan terminals during this test. Use a meter rated for the circuit and appropriate PPE.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-avzc18-e31-hi-leak-current",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Goodman AVZC18 / Daikin DX20VC - E31 HI LEAK CURRENT (and why the FIT platform never shows it)",
+  "summary": "E31 means the control has detected high leakage current on the compressor circuit. It exists on the R-410A ClimateTalk inverter platform and does not exist on the Daikin FIT R-32 platform, whose code table goes straight from E30 to E32.",
+  "steps": [
+   "Confirm the platform first. E31 HI LEAK CURRENT belongs to the DX20VC / DZ20VC and AVZC18 R-410A inverter boards. If you are on a FIT R-32 unit and think you read E31, re-read the display - that code is not in the FIT table.",
+   "Kill power and verify the DC bus is discharged before touching anything in the control box.",
+   "Check the ground path first. Improper ground is the first listed cause - inspect every ground screw and lug and all associated wiring, and repair or replace as needed.",
+   "Look for a wet, damaged or chafed compressor lead, especially where it passes through a grommet or under a clamp.",
+   "If ground and wiring are sound, check the compressor. A compressor with degraded winding insulation leaking to the shell is the second listed cause.",
+   "Use the correct insulation threshold for the brand in front of you. On an AVZC18, less than 100k ohms U, V or W to ground on a megohmmeter condemns the compressor. Do not apply the Daikin FIT R-32 30 megohm figure here.",
+   "Related codes to check while you are in the table: E34 CURRENT SPIKE points at in-rush current, a stop valve not fully open, or a lost compressor phase; E35 HIGH CURRENT points at air recirculation, stop valve, overcharge or the compressor."
+  ],
+  "safety": "Inverter DC bus, line voltage, and a suspected ground fault on the compressor circuit. De-energize, verify the bus is discharged, and do not re-energize with a known leakage-current fault present.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-avzc18-boost-charge-modes",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Goodman AVZC18 - unit got louder on the hottest day, or a commissioning test will not finish",
+  "summary": "This inverter heat pump has three special operating modes with hard trigger values. Two of them explain complaints that sound like faults: BOOST MODE making the unit louder above a set outdoor temperature, and the system verification test refusing to complete in cold weather.",
+  "steps": [
+   "BOOST MODE: it is ON by default and activates when the outdoor temperature reaches 105 F, driving the compressor above its rated maximum speed to meet load. Operational sound levels may increase while boosting - that is expected behavior, not a fault.",
+   "If the customer wants it quieter, the activation temperature is adjustable from 70 F to 105 F in the BOOST TEMP menu, there is an Always ON option, and disabling BOOST MODE gives the quietest and most efficient operation. Factory default is 105.",
+   "Note that BOOST MODE performance is most effective when paired with an EEV enabled indoor unit, so on a TXV match expect less benefit.",
+   "SYSTEM VERIFICATION TEST: it checks the equipment for approximately 5 to 15 minutes, and may exceed 15 minutes if there is an error.",
+   "If the test will not complete in winter, check ambient. Below 20 F the unit may not be able to finish the test due to low suction pressure - re-run it when ambient exceeds 20 F. That is a documented limitation, not a failed board.",
+   "CHARGE MODE: the system operates approximately one hour at full capacity, then ends and resumes normal operation. It will remain in charge mode at high speed for 60 minutes before timing out. Do not read the 60 minute timeout as a fault.",
+   "Charge mode can also be triggered through the CoolCloud HVAC phone application, so confirm nobody left it running remotely before diagnosing a unit that will not modulate down."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-dx20vc-txv-turn-table",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin DX20VC with a TXV kit - how many degrees of superheat each turn of the stem is worth",
+  "summary": "When a DX20VC is matched to a TXV rather than an EEV, the manual gives a per-turn superheat change rate and a turn count range from the factory static superheat setting, so you can calculate the shift before you turn the stem.",
+  "steps": [
+   "Confirm this unit actually has a mechanical TXV. The Daikin FIT R-32 covered models use EEVs and have no field-adjustable TXV stem procedure at all, so this does not apply there.",
+   "Confirm the refrigerant is R-410A on the data plate - the printed table also carries an R22 row for legacy cross-reference only.",
+   "Start from the factory static superheat setpoint, printed as SS = 2 C (3.6 F) or per specification.",
+   "Turn count range for R-410A: plus 9.5 turns from SS toward the tight spring, minus 2 turns from SS toward the loose spring. The R22 row is plus 7.25 and minus 4.25 and does not apply.",
+   "Rate of change for R-410A: 0.6 C per turn, which is 1.1 F per turn. Count your turns and calculate the expected superheat shift before you check it.",
+   "Maximum for R-410A is listed as 75 C (167 F).",
+   "Take a stabilized superheat reading between adjustments rather than chasing the number - measure, calculate turns needed, adjust, then let it stabilize before re-reading."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-pcbhr101-uc-message-codes",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin DX16TC / DZ18TC unitary control - four LEDs plus a numeric Message Code",
+  "summary": "On platform (c) the Copeland Comfort Alert diagnostics are built into the control board itself rather than a plug-in module. You read green, yellow, red and red Y1 LEDs together, and a ComfortNet CTK04-series thermostat adds a plain-text message with a number.",
+  "steps": [
+   "Confirm the board family - PCBHR101-103 or PBBGR101-102. These diagnostics apply to systems wired as 24 VAC traditional legacy systems and to systems wired as communicating with a CTK04-series thermostat.",
+   "Read all four LEDs as a set, not individually. Red Y1 simply follows the call: on if a call is present, off if there is no call.",
+   "Green off, yellow 1 flash, red off = Low Side Fault, message LOW SIDE FAULT 01. Symptoms are very long run time, four consecutive compressor protector trips with average run time between trips greater than 3 hours, compressor at high speed with the outdoor fan at low speed. Causes: low charge, liquid line restriction, indoor blower motor failure, thermostat set extremely low. It clears after 30 consecutive normal cycles or by cycling 24 VAC.",
+   "Green on, yellow 1 flash, red off = LPS OPEN, message LPS OPEN 01. Compressor and outdoor fan are off with a demand present. Same low-side cause list.",
+   "Green on, yellow 1 flash, red on = LPCO Lockout after 3 low pressure trips within the same thermostat demand, message LPS LOCKOUT 01. The ComfortNet thermostat lights Call for Service and scrolls Check Air Conditioner or Check Heat Pump.",
+   "Green off, yellow 4 flashes, red on = Locked Rotor, message LOCKED ROTOR 04. Compressor protector trips four consecutive times with average run time between trips less than 15 seconds. Causes: seized bearings, failed run capacitor, faulty run capacitor wiring, low line voltage. This one must be cleared by cycling 24 VAC.",
+   "Green off, yellow 5 flashes, red off = Open Circuit, message OPEN CIRCUIT 05. Compressor and outdoor fan off for greater than 4 hours with both low and high pressure switches closed. Causes: power disconnected, failed compressor protector, compressor not properly wired to control.",
+   "Do not read these LED combinations against the CoreSense module table or the FIT E-code table - the numbers overlap but mean different things."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-fh-dc6vs-cooling-analysis-thresholds",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin DC6VS / DZ6VS / DH6VS (R-410A) - working the Cooling Analysis Chart by measured value",
+  "summary": "This R-410A inverter platform ships a symptom matrix keyed to specific measured values rather than fault codes. Taking those five or six readings first narrows the cause list far faster than guessing, but the readings are only meaningful inside the chart's stated operating window.",
+  "steps": [
+   "Confirm you are inside the operating window before trusting anything. Outdoor normal temperature operating range for cooling analysis is 67 to 115 F and indoor normal range is 65 to 85 F. Outside that, the chart's own cause list includes 'outdoor ambient too high or too low' as the answer.",
+   "Confirm the refrigerant is R-410A. These thresholds are not transferable to an R-32 FIT unit, whose pressure fault thresholds are 605 psig and 17 psig.",
+   "Take compressor discharge temperature. The chart's flags are greater than 200 F and less than 105 F.",
+   "Take compressor discharge superheat. The flags are greater than 70 F and less than 20 F.",
+   "Take high side pressure. The flags are greater than 490 psig and less than 255 psig.",
+   "Take low side pressure. The flags are greater than 185 psig and less than 100 psig. Also take outdoor suction service valve superheat - flags are greater than 20 F and less than 4 F.",
+   "Work the mechanical cause list against those readings: liquid or gas stop valve not fully open, line set restriction, line set too long, blocked filter drier, indoor EEV or EEV coil failure, pressure or temperature sensor failure, outdoor or indoor recirculation, dirty coils, non-condensables, outdoor fan motor failure, overcharge, undercharge, leak, low indoor CFM, cooling loop not attached to the cold plate, and insufficient cooling loop grease.",
+   "On a DX20VC / DZ20VC variable-capacity unit the same chart adds two symptoms worth checking: liquid service valve subcooling greater than 12 F or less than 4 F, and requested percent demand not matching actual percent demand."
+  ],
+  "confidence": "verify"
+ },
+ {
+  "id": "s-fh-dc6vs-heating-analysis-thresholds",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin DC6VS / DZ6VS / DH6VS (R-410A) - Heating Analysis Chart values differ from cooling",
+  "summary": "The heating side of this chart uses a different set of thresholds and a different operating window than the cooling side, and it adds symptoms that only exist in heat: incomplete defrost and a sweating liquid line.",
+  "steps": [
+   "Confirm the window. Outdoor normal temperature operating range for heating analysis is 17 to 62 F, indoor normal range is 65 to 85 F. Note this is a completely different outdoor band than the cooling chart's 67 to 115 F.",
+   "Compressor discharge temperature flags are the same as cooling: greater than 200 F and less than 105 F.",
+   "Compressor discharge superheat flags change in heating: greater than 80 F (cooling uses 70 F) and less than 20 F.",
+   "High pressure flag is greater than 490 psig, same as cooling. But heating adds two separate low-side-of-high checks that cooling does not have: high pressure at the suction service valve less than 270 psig, and high pressure at the liquid service valve less than 270 psig.",
+   "Low pressure flag in heating is less than 40 psig, which is a very different number from the cooling chart's 100 to 185 psig band.",
+   "Add the heating-only causes to your list: outdoor EEV or EEV coil failure, check valve leakage, reversing valve failure, reversing valve coil failure, and defrost sensor or liquid temperature sensor failure.",
+   "Match the observed symptom column: incomplete defrost operation and sweating liquid line only appear on the heating chart, and both point back at EEV, check valve, reversing valve, sensor or charge problems.",
+   "These are R-410A pressures. R-410A runs higher operating pressures than R-32 at equivalent saturation temperatures - do not carry them onto an R-32 unit."
+  ],
+  "confidence": "verify"
  }
 ];
