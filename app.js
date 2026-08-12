@@ -3416,6 +3416,15 @@ const SQFT_COUNTIES = {
     countyFips: "18027",
     recordUrl: (p) => "https://engage.xsoftinc.com/daviess/map/getparcellist?search-envelop=" + encodeURIComponent(p),
   },
+  washington: {
+    label: "Washington Co (Salem), IN",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18175",
+    searchUrl: "https://washingtonin.wthgis.com/",
+    searchName: "Washington County GIS (Think GIS)",
+  },
   // Dubois is link-mode, not locate: the county submitted 34,837 parcels to
   // the statewide layer with NO property addresses on any of them (checked
   // 8/12/2026), so an address can't be resolved to a parcel from here. Their
@@ -3723,7 +3732,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v105";
+const APP_VERSION = "v106";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
