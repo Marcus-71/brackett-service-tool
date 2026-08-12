@@ -3423,6 +3423,13 @@ const SQFT_COUNTIES = {
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
     countyFips: "18051",
+    // Beacon accepts a direct parcel-report deep link (PageTypeID=4 +
+    // KeyValue, no PageID needed - verified in a real browser 8/12/2026 on
+    // parcel 26-04-25-102-000.393-020: the report's Residential Dwellings
+    // section lists each floor incl. the B = basement row with base/finished
+    // sq ft, plus finished area, heat type, beds/baths and year built).
+    recordUrl: (p) => "https://beacon.schneidercorp.com/Application.aspx?AppID=114&LayerID=1283&PageTypeID=4&KeyValue=" + encodeURIComponent(p),
+    recordTip: "On that report, <strong>Residential Dwellings</strong> lists each floor with its own square footage — the <strong>B</strong> row is the basement (base = footprint, finish = finished living area) — plus finished area, heat type, beds/baths and year built.",
     searchUrl: "https://beacon.schneidercorp.com/Application.aspx?AppID=114&LayerID=1283&PageTypeID=1&PageID=928",
     searchName: "Gibson County GIS (Beacon)",
   },
@@ -3757,7 +3764,7 @@ function sqftCardLocate(a, cfg) {
        <div class="sqft-sketch-tip">The card's <strong>Cost Ladder</strong> (page 2) lists every floor separately — <strong>Bsmt</strong> = basement, <strong>Crawl</strong> = crawl space — with base and finished sq ft for each, plus year built and the sketch. Card missing? <a href="${escapeHtml(engagePrcUrl(cfg.prcSlug, parcel, 1))}" target="_blank" rel="noopener">try last year's</a>, or <a href="${escapeHtml(cfg.recordUrl(parcel))}" target="_blank" rel="noopener">open the assessor's map record</a>.</div>`;
   } else if (deep) {
     dest = `<a class="sqft-open" href="${escapeHtml(cfg.recordUrl(parcel))}" target="_blank" rel="noopener">Open the ${escapeHtml(cfg.label)} assessor record →</a>
-       <div class="sqft-sketch-tip">On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.</div>`;
+       <div class="sqft-sketch-tip">${cfg.recordTip || `On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.`}</div>`;
   } else {
     dest = `<button class="sqft-open sqft-copy sqft-copybtn" type="button" data-copy="${escapeHtml(parcel)}">Copy the parcel number</button>
        <a class="sqft-open" href="${escapeHtml(cfg.searchUrl)}" target="_blank" rel="noopener">Open ${escapeHtml(cfg.searchName)} →</a>
@@ -3779,7 +3786,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v109";
+const APP_VERSION = "v110";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
