@@ -57,6 +57,11 @@
       <span class="tile-label">Warranty Check</span>
       <span class="tile-sub">Scan the tag — jump to the maker's warranty page</span>
     </button>
+    <button class="tile tile-sqft" data-screen="sqft">
+      <span class="tile-icon">📐</span>
+      <span class="tile-label">House Size</span>
+      <span class="tile-sub">Assessor square footage — tri-state counties</span>
+    </button>
     <button class="tile tile-toolbox" data-screen="toolbox">
       <span class="tile-icon">🧰</span>
       <span class="tile-label">Toolbox</span>
@@ -288,6 +293,29 @@
       <button id="warrantyGoBtn" class="scan-identify">Run the warranty check</button>
     </div>
     <div id="warrantyResult"></div>
+  </main>
+</section>
+
+<section id="sqftScreen" class="screen hidden">
+  <div class="disclaimer">Public assessor records, not a measurement. The square footage here is ABOVE-GRADE FINISHED LIVING AREA — basement, garage, porch and unfinished attic are not in that number. Add conditioned basement space yourself before you size anything.</div>
+  <main>
+    <div class="scan-fields">
+      <label>Address<input id="sqftAddrInput" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 10526 Stephanie Ln"></label>
+      <label>County
+        <select id="sqftCountySelect">
+          <option value="vanderburgh">Vanderburgh, IN</option>
+          <option value="warrick">Warrick, IN</option>
+          <option value="henderson">Henderson Co, KY</option>
+          <option value="white">Carmi (White Co, IL)</option>
+          <option value="wabash">Mt Carmel (Wabash Co, IL)</option>
+        </select>
+      </label>
+    </div>
+    <div class="scan-fields">
+      <button id="sqftGoBtn" class="scan-identify">Look up the house</button>
+    </div>
+    <div id="sqftStatus" class="scan-status hidden"></div>
+    <div id="sqftResult"></div>
   </main>
 </section>
 

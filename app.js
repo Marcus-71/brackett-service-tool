@@ -242,6 +242,7 @@ const SCREEN_TITLES = {
   scanner: "Tag Scanner",
   charge: "Charging Calc",
   warranty: "Warranty Check",
+  sqft: "House Size",
   request: "Request Info",
 };
 const ADD_HANDLERS = {
@@ -265,10 +266,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "requestScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", request: "requestScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -3218,6 +3219,11 @@ document.getElementById("warrantyGoBtn").addEventListener("click", () => {
   renderWarrantyResult(model, serial, null);
 });
 
+document.getElementById("sqftGoBtn").addEventListener("click", sqftLookup);
+document.getElementById("sqftAddrInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); sqftLookup(); }
+});
+
 // ============================================================
 // Network status
 // ============================================================
@@ -3298,7 +3304,310 @@ function showUpdatePill() {
 
 // Keep in sync with CACHE_NAME in sw.js — shown on the home screen so a tech
 // (or the office) can tell at a glance whether a phone has the latest content.
-const APP_VERSION = "v103";
+// ===== House Size ============================================================
+//
+// Square footage off the county assessor's own records, for load calcs.
+//
+// WHAT THE NUMBER MEANS. Verified against the Vanderburgh assessor's sketch for
+// 10526 Stephanie Ln: the sketch shows "1s Br B" 1752 plus "1s Br C" 240 = 1992,
+// which is exactly the SquareFootage field. The 504 sq ft garage, the deck and
+// the stoop are NOT in it, and neither is the basement under that 1752 section.
+// So the field is ABOVE-GRADE FINISHED LIVING AREA. A conditioned basement has
+// to be added by hand - which is why the UI says so instead of just printing a
+// number a tech might size off directly.
+//
+// WHY THE TWO COUNTIES WORK DIFFERENTLY. Only Vanderburgh publishes building
+// data through an API a browser is allowed to call:
+//
+//   Vanderburgh - Evansville/Vanderburgh GIS ArcGIS REST. Sends
+//     Access-Control-Allow-Origin, and the parcel layer carries SquareFootage,
+//     YearBuilt, StoryHeight, beds/baths, acreage. Full lookup in the app.
+//
+//   Warrick - has no such service. Their Think GIS viewer and the assessor's
+//     XSoft Engage site both answer without CORS headers, so the app cannot
+//     read them. What IS callable is Indiana's statewide parcel service, which
+//     covers Warrick with addresses and parcel numbers but carries NO building
+//     square footage. So for Warrick the app resolves the address to the exact
+//     parcel, then hands off one tap into the assessor's record for that
+//     parcel. The tech reads the number there rather than being handed a
+//     number this app cannot actually see.
+//
+// Do not "fix" Warrick by scraping those two sites - the app runs from a
+// browser and the browser will refuse the read.
+const SQFT_COUNTIES = {
+  vanderburgh: {
+    label: "Vanderburgh",
+    mode: "full",
+    url: "https://maps.evansvillegis.com/arcgis_server/rest/services/ASSESSOR/PARCEL_DATA/MapServer/0/query",
+    addrField: "PROPSTREET",
+    recordUrl: (p) => "https://engage.xsoftinc.com/vanderburgh/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+    assessorPhone: "812-435-5267",
+  },
+  warrick: {
+    label: "Warrick",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18173",
+    recordUrl: (p) => "https://engage.xsoftinc.com/warrick/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+    assessorPhone: "812-897-6125",
+  },
+  // The three below have no data service at all - not even one that could
+  // resolve an address to a parcel. Beacon/qPublic actively block programmatic
+  // reads (their pages 403 anything that is not a real browser), so "link"
+  // mode does not fetch anything: it opens the county's own search in the
+  // phone's browser with the address copied, and the tech pastes it there.
+  henderson: {
+    label: "Henderson Co, KY",
+    mode: "link",
+    // Verified off hendersoncopva.com's own Quick Links, 8/12/2026
+    searchUrl: "https://beacon.schneidercorp.com/Application.aspx?AppID=884&LayerID=16702&PageTypeID=2&PageID=7417",
+    searchName: "Henderson County PVA property search (Beacon)",
+    assessorPhone: "270-827-6024",
+    note: "The PVA record card lists each floor and the basement as separate lines with their own square footage.",
+  },
+  white: {
+    label: "Carmi (White Co, IL)",
+    mode: "link",
+    searchUrl: "https://qpublic.schneidercorp.com/Application.aspx?AppID=982&LayerID=19945&PageTypeID=2&PageID=8692",
+    searchName: "White County Assessor property search (qPublic)",
+    assessorPhone: "618-382-2332",
+    note: "The assessment record lists the dwelling breakdown; look for basement lines below the living-area rows.",
+  },
+  wabash: {
+    label: "Mt Carmel (Wabash Co, IL)",
+    mode: "link",
+    // Wabash County publishes no property search at all - the treasurer's
+    // parcel page is tax amounts only and the recorder is subscription-gated.
+    searchUrl: "",
+    searchName: "",
+    assessorPhone: "618-262-4463",
+    note: "Wabash County has no online property records. The assessor's office (Mt Carmel courthouse, 401 N Market St) reads the record card over the phone.",
+  },
+};
+
+// Assessors store the abbreviated form. A tech typing "Stephanie Lane" should
+// still find "10526 STEPHANIE LN".
+const SQFT_STREET_ABBR = [
+  [/\bLANE\b/g, "LN"], [/\bROAD\b/g, "RD"], [/\bSTREET\b/g, "ST"],
+  [/\bAVENUE\b/g, "AVE"], [/\bDRIVE\b/g, "DR"], [/\bCOURT\b/g, "CT"],
+  [/\bCIRCLE\b/g, "CIR"], [/\bBOULEVARD\b/g, "BLVD"], [/\bPLACE\b/g, "PL"],
+  [/\bTERRACE\b/g, "TER"], [/\bPARKWAY\b/g, "PKWY"], [/\bTRAIL\b/g, "TRL"],
+  [/\bHIGHWAY\b/g, "HWY"], [/\bNORTH\b/g, "N"], [/\bSOUTH\b/g, "S"],
+  [/\bEAST\b/g, "E"], [/\bWEST\b/g, "W"],
+];
+function sqftNormalizeAddress(raw) {
+  let s = String(raw || "").toUpperCase().replace(/[.,#]/g, " ").replace(/\s+/g, " ").trim();
+  for (const [re, to] of SQFT_STREET_ABBR) s = s.replace(re, to);
+  return s;
+}
+// ArcGIS where clauses are SQL - a quote in the typed address would break out
+// of the string literal, so double it the way SQL expects.
+const sqftSqlEscape = (s) => String(s).replace(/'/g, "''");
+
+const SQFT_CACHE_KEY = "bfc_sqft_cache";
+function sqftCacheRead() {
+  try {
+    const v = JSON.parse(localStorage.getItem(SQFT_CACHE_KEY));
+    return v && typeof v === "object" ? v : {};
+  } catch (e) { return {}; }
+}
+function sqftCacheWrite(key, rows) {
+  const all = sqftCacheRead();
+  all[key] = { at: Date.now(), rows };
+  // keep the most recent 40 so a tech can re-open this morning's addresses
+  // with no signal in a crawlspace
+  const keys = Object.keys(all).sort((a, b) => (all[b].at || 0) - (all[a].at || 0));
+  const trimmed = {};
+  for (const k of keys.slice(0, 40)) trimmed[k] = all[k];
+  safeSet(SQFT_CACHE_KEY, trimmed);
+}
+
+function sqftStatus(msg, show) {
+  const el = document.getElementById("sqftStatus");
+  if (!el) return;
+  el.textContent = msg || "";
+  el.classList.toggle("hidden", show === false || !msg);
+}
+
+const sqftNum = (n) => (typeof n === "number" && isFinite(n) ? n.toLocaleString("en-US") : null);
+
+async function sqftLookup() {
+  const countyKey = document.getElementById("sqftCountySelect").value;
+  const cfg = SQFT_COUNTIES[countyKey];
+  const typed = document.getElementById("sqftAddrInput").value.trim();
+  const result = document.getElementById("sqftResult");
+  result.innerHTML = "";
+  if (!typed) { sqftStatus("Type a street address first — number and street, like 10526 Stephanie Ln."); return; }
+
+  // Link-mode counties have nothing the app can query - render the handoff
+  // card immediately, no network, works offline.
+  if (cfg.mode === "link") {
+    sqftStatus("");
+    result.innerHTML = sqftCardLink(typed, cfg);
+    const copyBtn = document.getElementById("sqftCopyBtn");
+    if (copyBtn) copyBtn.onclick = () => {
+      navigator.clipboard && navigator.clipboard.writeText(typed).then(
+        () => { copyBtn.textContent = "Copied - paste it in their search"; },
+        () => { copyBtn.textContent = "Could not copy - type it there"; });
+    };
+    trackEvent("house size lookup " + cfg.label);
+    return;
+  }
+
+  const addr = sqftNormalizeAddress(typed);
+  const cacheKey = countyKey + "|" + addr;
+
+  if (!navigator.onLine) {
+    const hit = sqftCacheRead()[cacheKey];
+    if (hit) {
+      sqftStatus("📵 No signal — showing the copy saved on this phone.");
+      sqftRenderRows(hit.rows, cfg, countyKey, true);
+      return;
+    }
+    sqftStatus("📵 The county records need signal. Get to coverage and try again — looked-up addresses are saved for offline.");
+    return;
+  }
+
+  sqftStatus("Checking the " + cfg.label + " County assessor…");
+  try {
+    const rows = await sqftQuery(cfg, addr);
+    if (!rows.length) {
+      sqftStatus("");
+      result.innerHTML = `<p class="sqft-empty">Nothing in the ${escapeHtml(cfg.label)} County records matches <strong>${escapeHtml(typed)}</strong>.<br>
+        Try just the number and street name — leave off the city and the suffix. If it still misses, the assessor's office is ${escapeHtml(cfg.assessorPhone)}.</p>`;
+      return;
+    }
+    sqftCacheWrite(cacheKey, rows);
+    sqftStatus("");
+    sqftRenderRows(rows, cfg, countyKey, false);
+    trackEvent("house size lookup " + cfg.label);
+  } catch (e) {
+    sqftStatus("The county's records did not answer (" + (e && e.message ? e.message : "network error") + "). Try again, or call the assessor at " + cfg.assessorPhone + ".");
+  }
+}
+
+async function sqftQuery(cfg, addr) {
+  const params = new URLSearchParams({ f: "json", returnGeometry: "false", resultRecordCount: "12" });
+  if (cfg.mode === "full") {
+    params.set("where", `UPPER(${cfg.addrField}) LIKE '%${sqftSqlEscape(addr)}%'`);
+    params.set("outFields", "PARCELID,PROPSTREET,PROPCITY,PROPZIP,SquareFootage,YearBuilt,StoryHeight,Bedrooms,Bathrooms,Halfbaths,fin_rooms,acreage,PROPERTYCLASS,grade,condition,OWNER1");
+    params.set("orderByFields", "PROPSTREET");
+  } else {
+    params.set("where", `county_fips='${cfg.countyFips}' AND UPPER(${cfg.addrField}) LIKE '%${sqftSqlEscape(addr)}%'`);
+    params.set("outFields", "parcel_id,prop_add,prop_city,prop_zip,dlgf_prop_class_code");
+    params.set("orderByFields", "prop_add");
+  }
+  const res = await fetch(cfg.url + "?" + params.toString(), { credentials: "omit" });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message || "query rejected");
+  // de-dupe: the statewide layer repeats a parcel once per geometry part
+  const seen = new Set();
+  const out = [];
+  for (const f of data.features || []) {
+    const a = f.attributes || {};
+    const id = a.PARCELID || a.parcel_id || JSON.stringify(a);
+    if (seen.has(id)) continue;
+    seen.add(id);
+    out.push(a);
+  }
+  return out;
+}
+
+// 5xx is residential in the Indiana DLGF class scheme. The distinction that
+// matters here is residential vs not - a tech pulling a "square footage" off a
+// warehouse row and sizing a house from it is the failure this guards against.
+function sqftClassNote(code) {
+  const c = String(code || "").trim();
+  if (!c) return "";
+  if (/^5/.test(c)) return "residential";
+  if (/^1/.test(c)) return "agricultural — NOT a dwelling class, check before sizing";
+  return "NOT a residential class — this is commercial/industrial, confirm before sizing a house off it";
+}
+
+function sqftRenderRows(rows, cfg, countyKey, fromCache) {
+  const el = document.getElementById("sqftResult");
+  el.innerHTML = rows.map((a) => (cfg.mode === "full" ? sqftCardFull(a, cfg) : sqftCardLocate(a, cfg))).join("");
+  if (fromCache) {
+    const note = document.createElement("p");
+    note.className = "sqft-cached";
+    note.textContent = "Saved copy — re-run it in coverage if the house was recently remodelled.";
+    el.appendChild(note);
+  }
+}
+
+function sqftLine(label, value) {
+  if (value === null || value === undefined || value === "" || value === "0") return "";
+  return `<div class="sqft-row"><span class="sqft-k">${escapeHtml(label)}</span><span class="sqft-v">${escapeHtml(String(value))}</span></div>`;
+}
+
+function sqftCardFull(a, cfg) {
+  const living = sqftNum(a.SquareFootage);
+  const cls = sqftClassNote(a.PROPERTYCLASS);
+  const notResidential = cls && !/^residential/.test(cls);
+  const baths = [
+    typeof a.Bathrooms === "number" && a.Bathrooms > 0 ? a.Bathrooms + " full" : null,
+    typeof a.Halfbaths === "number" && a.Halfbaths > 0 ? a.Halfbaths + " half" : null,
+  ].filter(Boolean).join(", ");
+  const acres = typeof a.acreage === "number" && a.acreage > 0 ? a.acreage.toFixed(2) + " acres" : null;
+  const story = typeof a.StoryHeight === "number" && a.StoryHeight > 0 ? String(a.StoryHeight) : null;
+
+  return `<div class="sqft-card">
+    <div class="sqft-addr">${escapeHtml([a.PROPSTREET, a.PROPCITY].filter(Boolean).join(", "))}</div>
+    <div class="sqft-parcel">Parcel ${escapeHtml(a.PARCELID || "")}</div>
+    ${notResidential ? `<div class="sqft-warn">⚠ Class ${escapeHtml(String(a.PROPERTYCLASS))} — ${escapeHtml(cls)}.</div>` : ""}
+    <div class="sqft-hero">
+      <span class="sqft-hero-n">${living ? escapeHtml(living) : "not recorded"}</span>
+      <span class="sqft-hero-u">${living ? "sq ft" : ""}</span>
+    </div>
+    <div class="sqft-hero-cap">Above-grade finished living area, per the assessor</div>
+    <div class="sqft-grid">
+      ${sqftLine("Stories", story)}
+      ${sqftLine("Year built", a.YearBuilt > 0 ? a.YearBuilt : null)}
+      ${sqftLine("Bedrooms", a.Bedrooms > 0 ? a.Bedrooms : null)}
+      ${sqftLine("Bathrooms", baths)}
+      ${sqftLine("Finished rooms", a.fin_rooms && a.fin_rooms !== "0" ? a.fin_rooms : null)}
+      ${sqftLine("Lot", acres)}
+      ${sqftLine("Class", a.PROPERTYCLASS ? a.PROPERTYCLASS + " (" + cls + ")" : null)}
+      ${sqftLine("Grade / condition", [a.grade, a.condition].filter(Boolean).join(" / "))}
+    </div>
+    <div class="sqft-excl"><strong>Not in that number:</strong> basement (finished or not), garage, porch, deck, unfinished attic. If the basement is conditioned, measure it and add it.</div>
+    <a class="sqft-open" href="${escapeHtml(cfg.recordUrl(a.PARCELID || ""))}" target="_blank" rel="noopener">Open the assessor record &amp; sketch →</a>
+    <div class="sqft-sketch-tip">The sketch is where the basement shows up. On it, <strong>B</strong> = basement, <strong>C</strong> = crawl, and each block is labelled with its own square footage.</div>
+  </div>`;
+}
+
+function sqftCardLink(typedAddr, cfg) {
+  const hasSearch = !!cfg.searchUrl;
+  return `<div class="sqft-card">
+    <div class="sqft-addr">${escapeHtml(typedAddr)}</div>
+    <div class="sqft-parcel">${escapeHtml(cfg.label)}</div>
+    <div class="sqft-locate">${hasSearch
+      ? escapeHtml(cfg.label) + " does not allow this app to read its records directly, but their own search works fine on a phone. Copy the address, open the search, and paste it in."
+      : escapeHtml(cfg.note)}</div>
+    ${hasSearch ? `<button id="sqftCopyBtn" class="sqft-open sqft-copy" type="button">Copy the address</button>
+    <a class="sqft-open" href="${escapeHtml(cfg.searchUrl)}" target="_blank" rel="noopener">Open ${escapeHtml(cfg.searchName)} →</a>
+    <div class="sqft-sketch-tip">${escapeHtml(cfg.note)}</div>` : ""}
+    <div class="sqft-excl"><strong>If the house has a basement:</strong> check whether the record's living-area total includes it — most list the basement as its own line and leave it OUT of the total. Conditioned basement space gets added to your load calc either way.</div>
+    <div class="sqft-sketch-tip">Assessor's office: ${escapeHtml(cfg.assessorPhone)}</div>
+  </div>`;
+}
+
+function sqftCardLocate(a, cfg) {
+  const cls = sqftClassNote(a.dlgf_prop_class_code);
+  const notResidential = cls && !/^residential/.test(cls);
+  return `<div class="sqft-card">
+    <div class="sqft-addr">${escapeHtml([a.prop_add, a.prop_city].filter(Boolean).join(", "))}</div>
+    <div class="sqft-parcel">Parcel ${escapeHtml(a.parcel_id || "")}</div>
+    ${notResidential ? `<div class="sqft-warn">⚠ Class ${escapeHtml(String(a.dlgf_prop_class_code))} — ${escapeHtml(cls)}.</div>` : ""}
+    <div class="sqft-locate">Warrick County does not publish building sizes in a form this app can read, so the square footage is not shown here. This is the right parcel — open it and read the size off the assessor's own page.</div>
+    <a class="sqft-open" href="${escapeHtml(cfg.recordUrl(a.parcel_id || ""))}" target="_blank" rel="noopener">Open the Warrick assessor record →</a>
+    <div class="sqft-sketch-tip">On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.</div>
+  </div>`;
+}
+
+const APP_VERSION = "v104";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
