@@ -3345,6 +3345,21 @@ function showUpdatePill() {
 //
 // Do not "fix" Warrick by scraping those two sites - the app runs from a
 // browser and the browser will refuse the read.
+//
+// BUT: every county on the XSoft Engage platform posts the full Property
+// Record Card as a PUBLIC PDF on Azure blob storage at a predictable URL
+// (engageblob.blob.core.windows.net/<county>/pdf/<year>/<parcel>.pdf - found
+// via Bryce's sqft Telegram bot, verified 8/12/2026 for Vanderburgh, Warrick,
+// Posey and Daviess). Page 2 of that card carries the "Cost Ladder": EVERY
+// floor's square footage as its own row - including Bsmt (basement) and Crawl,
+// the numbers nothing else publishes. The blob sends no CORS header, so the
+// app cannot READ the PDF - but a plain link opens it in one tap, no login.
+// Cards are per assessment year; early in a new year the current card may not
+// be posted yet, so cards also offer last year's as a fallback link.
+function engagePrcUrl(slug, parcel, yearsBack) {
+  const y = new Date().getFullYear() - (yearsBack || 0);
+  return "https://engageblob.blob.core.windows.net/" + slug + "/pdf/" + y + "/" + encodeURIComponent(parcel) + ".pdf";
+}
 const SQFT_COUNTIES = {
   vanderburgh: {
     label: "Vanderburgh",
@@ -3352,6 +3367,7 @@ const SQFT_COUNTIES = {
     url: "https://maps.evansvillegis.com/arcgis_server/rest/services/ASSESSOR/PARCEL_DATA/MapServer/0/query",
     addrField: "PROPSTREET",
     recordUrl: (p) => "https://engage.xsoftinc.com/vanderburgh/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+    prcSlug: "vanderburgh",
     assessorPhone: "812-435-5267",
   },
   warrick: {
@@ -3361,6 +3377,7 @@ const SQFT_COUNTIES = {
     addrField: "prop_add",
     countyFips: "18173",
     recordUrl: (p) => "https://engage.xsoftinc.com/warrick/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+    prcSlug: "warrick",
     assessorPhone: "812-897-6125",
   },
   // More Indiana counties, all locate-mode off the same statewide parcel
@@ -3398,6 +3415,7 @@ const SQFT_COUNTIES = {
     addrField: "prop_add",
     countyFips: "18129",
     recordUrl: (p) => "https://engage.xsoftinc.com/posey/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+    prcSlug: "posey",
   },
   gibson: {
     label: "Gibson Co, IN",
@@ -3415,6 +3433,7 @@ const SQFT_COUNTIES = {
     addrField: "prop_add",
     countyFips: "18027",
     recordUrl: (p) => "https://engage.xsoftinc.com/daviess/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+    prcSlug: "daviess",
   },
   washington: {
     label: "Washington Co (Salem), IN",
@@ -3424,6 +3443,20 @@ const SQFT_COUNTIES = {
     countyFips: "18175",
     searchUrl: "https://washingtonin.wthgis.com/",
     searchName: "Washington County GIS (Think GIS)",
+  },
+  // Knox is on XSoft Engage (so its record-card PDFs are public), but like
+  // Dubois it submitted its ~30k parcels to the statewide layer with no
+  // property addresses (checked 8/12/2026), so the app can't resolve an
+  // address to a parcel. Their own Engage search takes addresses directly
+  // and each result links its record card. Phone verified on the county's
+  // Engage contact page 8/12/2026.
+  knox: {
+    label: "Knox Co (Vincennes), IN",
+    mode: "link",
+    searchUrl: "https://engage.xsoftinc.com/knox",
+    searchName: "Knox County assessor search (XSoft Engage)",
+    assessorPhone: "812-885-2513",
+    note: "Search the address there, open the parcel, then open its property record card (PDF). The Cost Ladder on page 2 lists every floor separately - Bsmt = basement, Crawl = crawl space - with base and finished sq ft for each.",
   },
   // Dubois is link-mode, not locate: the county submitted 34,837 parcels to
   // the statewide layer with NO property addresses on any of them (checked
@@ -3687,8 +3720,8 @@ function sqftCardFull(a, cfg) {
       ${sqftLine("Grade / condition", [a.grade, a.condition].filter(Boolean).join(" / "))}
     </div>
     <div class="sqft-excl"><strong>Not in that number:</strong> basement (finished or not), garage, porch, deck, unfinished attic. If the basement is conditioned, measure it and add it.</div>
-    <a class="sqft-open" href="${escapeHtml(cfg.recordUrl(a.PARCELID || ""))}" target="_blank" rel="noopener">Open the assessor record &amp; sketch →</a>
-    <div class="sqft-sketch-tip">The sketch is where the basement shows up. On it, <strong>B</strong> = basement, <strong>C</strong> = crawl, and each block is labelled with its own square footage.</div>
+    <a class="sqft-open" href="${escapeHtml(engagePrcUrl(cfg.prcSlug, a.PARCELID || ""))}" target="_blank" rel="noopener">Open the property record card (PDF) →</a>
+    <div class="sqft-sketch-tip">The card's <strong>Cost Ladder</strong> (page 2) lists every floor separately — <strong>Bsmt</strong> = basement, <strong>Crawl</strong> = crawl space — with its own square footage, and the sketch is on the same card. Card missing? <a href="${escapeHtml(engagePrcUrl(cfg.prcSlug, a.PARCELID || "", 1))}" target="_blank" rel="noopener">try last year's</a>, or <a href="${escapeHtml(cfg.recordUrl(a.PARCELID || ""))}" target="_blank" rel="noopener">open the assessor's map record</a>.</div>
   </div>`;
 }
 
@@ -3712,27 +3745,41 @@ function sqftCardLocate(a, cfg) {
   const cls = sqftClassNote(a.dlgf_prop_class_code);
   const notResidential = cls && !/^residential/.test(cls);
   const parcel = a.parcel_id || "";
-  // Two destination shapes. XSoft Engage counties take a parcel-deep link that
-  // opens the record directly; Think GIS / Beacon counties only have a search
-  // page, so the tech carries the parcel number over on the clipboard.
+  // Three destination shapes, best first:
+  //   - XSoft Engage counties: the record-card PDF itself, direct from the
+  //     county's public blob storage - floor-by-floor sq ft incl. basement.
+  //   - Other Engage-linked counties: a parcel-deep map link.
+  //   - Think GIS / Beacon counties: search page + parcel on the clipboard.
   const deep = typeof cfg.recordUrl === "function";
-  const dest = deep
-    ? `<a class="sqft-open" href="${escapeHtml(cfg.recordUrl(parcel))}" target="_blank" rel="noopener">Open the ${escapeHtml(cfg.label)} assessor record →</a>
-       <div class="sqft-sketch-tip">On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.</div>`
-    : `<button class="sqft-open sqft-copy sqft-copybtn" type="button" data-copy="${escapeHtml(parcel)}">Copy the parcel number</button>
+  let dest;
+  if (cfg.prcSlug) {
+    dest = `<a class="sqft-open" href="${escapeHtml(engagePrcUrl(cfg.prcSlug, parcel))}" target="_blank" rel="noopener">Open the property record card (PDF) →</a>
+       <div class="sqft-sketch-tip">The card's <strong>Cost Ladder</strong> (page 2) lists every floor separately — <strong>Bsmt</strong> = basement, <strong>Crawl</strong> = crawl space — with base and finished sq ft for each, plus year built and the sketch. Card missing? <a href="${escapeHtml(engagePrcUrl(cfg.prcSlug, parcel, 1))}" target="_blank" rel="noopener">try last year's</a>, or <a href="${escapeHtml(cfg.recordUrl(parcel))}" target="_blank" rel="noopener">open the assessor's map record</a>.</div>`;
+  } else if (deep) {
+    dest = `<a class="sqft-open" href="${escapeHtml(cfg.recordUrl(parcel))}" target="_blank" rel="noopener">Open the ${escapeHtml(cfg.label)} assessor record →</a>
+       <div class="sqft-sketch-tip">On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.</div>`;
+  } else {
+    dest = `<button class="sqft-open sqft-copy sqft-copybtn" type="button" data-copy="${escapeHtml(parcel)}">Copy the parcel number</button>
        <a class="sqft-open" href="${escapeHtml(cfg.searchUrl)}" target="_blank" rel="noopener">Open ${escapeHtml(cfg.searchName)} →</a>
        <div class="sqft-sketch-tip">Paste the parcel number (or the address) into their search box, then open the property record card for the building sizes and sketch.</div>`;
+  }
+  const explain = cfg.prcSlug
+    ? `This is the right parcel. The county posts its full record card as a public PDF — the square footage, floor by floor, is one tap away. No login.`
+    : `${escapeHtml(cfg.label)} does not publish building sizes in a form this app can read, so the square footage is not shown here. This is the right parcel — open it and read the size off the assessor's own record.`;
+  const bsmt = cfg.prcSlug
+    ? `<div class="sqft-excl"><strong>Basement:</strong> on the card, the Cost Ladder's <strong>Bsmt</strong>/<strong>Crawl</strong> rows carry their own sq ft — the base number is the footprint, the finish number is how much of it is finished living area. Conditioned basement space gets added to your load calc.</div>`
+    : `<div class="sqft-excl"><strong>If the house has a basement:</strong> the living-area total on the record usually leaves it out — the basement is its own line or its own sketch block. Conditioned basement space gets added to your load calc.</div>`;
   return `<div class="sqft-card">
     <div class="sqft-addr">${escapeHtml([a.prop_add, a.prop_city].filter(Boolean).join(", "))}</div>
     <div class="sqft-parcel">Parcel ${escapeHtml(parcel)}</div>
     ${notResidential ? `<div class="sqft-warn">⚠ Class ${escapeHtml(String(a.dlgf_prop_class_code))} — ${escapeHtml(cls)}.</div>` : ""}
-    <div class="sqft-locate">${escapeHtml(cfg.label)} does not publish building sizes in a form this app can read, so the square footage is not shown here. This is the right parcel — open it and read the size off the assessor's own record.</div>
+    <div class="sqft-locate">${explain}</div>
     ${dest}
-    <div class="sqft-excl"><strong>If the house has a basement:</strong> the living-area total on the record usually leaves it out — the basement is its own line or its own sketch block. Conditioned basement space gets added to your load calc.</div>
+    ${bsmt}
   </div>`;
 }
 
-const APP_VERSION = "v108";
+const APP_VERSION = "v109";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
