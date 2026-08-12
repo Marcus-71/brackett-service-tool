@@ -3223,6 +3223,17 @@ document.getElementById("sqftGoBtn").addEventListener("click", sqftLookup);
 document.getElementById("sqftAddrInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") { e.preventDefault(); sqftLookup(); }
 });
+// Copy buttons inside result cards are re-rendered per lookup - delegate once.
+document.getElementById("sqftResult").addEventListener("click", (e) => {
+  const btn = e.target.closest(".sqft-copybtn");
+  if (!btn) return;
+  const text = btn.dataset.copy || "";
+  if (navigator.clipboard && text) {
+    navigator.clipboard.writeText(text).then(
+      () => { btn.textContent = "Copied - paste it in their search"; },
+      () => { btn.textContent = "Could not copy - type it there"; });
+  }
+});
 
 // ============================================================
 // Network status
@@ -3352,6 +3363,80 @@ const SQFT_COUNTIES = {
     recordUrl: (p) => "https://engage.xsoftinc.com/warrick/map/getparcellist?search-envelop=" + encodeURIComponent(p),
     assessorPhone: "812-897-6125",
   },
+  // More Indiana counties, all locate-mode off the same statewide parcel
+  // service - only the DESTINATION differs, and it is whatever that county
+  // actually runs:
+  //   - XSoft Engage counties (Posey, Daviess) take a parcel-deep link,
+  //     exactly like Warrick.
+  //   - Think GIS counties (Spencer, Perry, Dubois) and Beacon counties
+  //     (Gibson) have no parcel-deep URL, so the card copies the parcel
+  //     number and opens their search for the tech to paste into.
+  // Every destination URL below was read off the county's own website, not
+  // guessed from a slug - Beacon's ?site= slugs land on a generic chooser.
+  spencer: {
+    label: "Spencer Co, IN",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18147",
+    searchUrl: "https://spencerin.wthgis.com/",
+    searchName: "Spencer County GIS (Think GIS)",
+  },
+  perry: {
+    label: "Tell City (Perry Co), IN",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18123",
+    searchUrl: "https://perryin.wthgis.com/",
+    searchName: "Perry County GIS (Think GIS)",
+  },
+  posey: {
+    label: "Posey Co, IN",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18129",
+    recordUrl: (p) => "https://engage.xsoftinc.com/posey/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+  },
+  gibson: {
+    label: "Gibson Co, IN",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18051",
+    searchUrl: "https://beacon.schneidercorp.com/Application.aspx?AppID=114&LayerID=1283&PageTypeID=1&PageID=928",
+    searchName: "Gibson County GIS (Beacon)",
+  },
+  daviess: {
+    label: "Daviess Co (Washington), IN",
+    mode: "locate",
+    url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
+    addrField: "prop_add",
+    countyFips: "18027",
+    recordUrl: (p) => "https://engage.xsoftinc.com/daviess/map/getparcellist?search-envelop=" + encodeURIComponent(p),
+  },
+  // Dubois is link-mode, not locate: the county submitted 34,837 parcels to
+  // the statewide layer with NO property addresses on any of them (checked
+  // 8/12/2026), so an address can't be resolved to a parcel from here. Their
+  // own Think GIS search takes addresses directly.
+  dubois: {
+    label: "Dubois Co (Jasper), IN",
+    mode: "link",
+    searchUrl: "https://duboisin.wthgis.com/",
+    searchName: "Dubois County GIS (Think GIS)",
+    assessorPhone: "812-481-7010",
+    note: "Search the address there, then open the parcel's property record card for building sizes and the sketch.",
+  },
+  webster: {
+    label: "Webster Co, KY",
+    mode: "link",
+    // Verified off webstercountypva.com's own Quick Links, 8/12/2026
+    searchUrl: "https://beacon.schneidercorp.com/Application.aspx?AppID=915&LayerID=17737&PageTypeID=2&PageID=7917",
+    searchName: "Webster County PVA property search (Beacon)",
+    assessorPhone: "270-639-7016",
+    note: "The PVA record card lists each floor and the basement as separate lines with their own square footage.",
+  },
   // The three below have no data service at all - not even one that could
   // resolve an address to a parcel. Beacon/qPublic actively block programmatic
   // reads (their pages 403 anything that is not a real browser), so "link"
@@ -3400,6 +3485,21 @@ function sqftNormalizeAddress(raw) {
   let s = String(raw || "").toUpperCase().replace(/[.,#]/g, " ").replace(/\s+/g, " ").trim();
   for (const [re, to] of SQFT_STREET_ABBR) s = s.replace(re, to);
   return s;
+}
+// Counties submit addresses to the statewide layer in whatever style their own
+// system uses - Vanderburgh abbreviates (LILY RD), Perry spells out (Lily
+// Road). One normalized form misses half of them, so a lookup tries each
+// distinct variant until one hits: abbreviated, spelled out, then the raw
+// typed text.
+const SQFT_STREET_EXPAND = SQFT_STREET_ABBR
+  .filter(([re]) => !/NORTH|SOUTH|EAST|WEST/.test(re.source))
+  .map(([re, to]) => [new RegExp("\\b" + to + "\\b", "g"), re.source.replace(/\\b/g, "")]);
+function sqftAddressVariants(raw) {
+  const upper = String(raw || "").toUpperCase().replace(/[.,#]/g, " ").replace(/\s+/g, " ").trim();
+  const abbreviated = sqftNormalizeAddress(raw);
+  let expanded = upper;
+  for (const [re, to] of SQFT_STREET_EXPAND) expanded = expanded.replace(re, to);
+  return [...new Set([abbreviated, expanded, upper])];
 }
 // ArcGIS where clauses are SQL - a quote in the typed address would break out
 // of the string literal, so double it the way SQL expects.
@@ -3469,13 +3569,18 @@ async function sqftLookup() {
     return;
   }
 
-  sqftStatus("Checking the " + cfg.label + " County assessor…");
+  sqftStatus("Checking the " + cfg.label + " records…");
   try {
-    const rows = await sqftQuery(cfg, addr);
+    let rows = [];
+    for (const variant of sqftAddressVariants(typed)) {
+      rows = await sqftQuery(cfg, variant);
+      if (rows.length) break;
+    }
     if (!rows.length) {
       sqftStatus("");
-      result.innerHTML = `<p class="sqft-empty">Nothing in the ${escapeHtml(cfg.label)} County records matches <strong>${escapeHtml(typed)}</strong>.<br>
-        Try just the number and street name — leave off the city and the suffix. If it still misses, the assessor's office is ${escapeHtml(cfg.assessorPhone)}.</p>`;
+      const phone = cfg.assessorPhone ? " If it still misses, the assessor's office is " + escapeHtml(cfg.assessorPhone) + "." : "";
+      result.innerHTML = `<p class="sqft-empty">Nothing in the ${escapeHtml(cfg.label)} records matches <strong>${escapeHtml(typed)}</strong>.<br>
+        Try just the number and street name — leave off the city and the suffix.${phone}</p>`;
       return;
     }
     sqftCacheWrite(cacheKey, rows);
@@ -3597,17 +3702,28 @@ function sqftCardLink(typedAddr, cfg) {
 function sqftCardLocate(a, cfg) {
   const cls = sqftClassNote(a.dlgf_prop_class_code);
   const notResidential = cls && !/^residential/.test(cls);
+  const parcel = a.parcel_id || "";
+  // Two destination shapes. XSoft Engage counties take a parcel-deep link that
+  // opens the record directly; Think GIS / Beacon counties only have a search
+  // page, so the tech carries the parcel number over on the clipboard.
+  const deep = typeof cfg.recordUrl === "function";
+  const dest = deep
+    ? `<a class="sqft-open" href="${escapeHtml(cfg.recordUrl(parcel))}" target="_blank" rel="noopener">Open the ${escapeHtml(cfg.label)} assessor record →</a>
+       <div class="sqft-sketch-tip">On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.</div>`
+    : `<button class="sqft-open sqft-copy sqft-copybtn" type="button" data-copy="${escapeHtml(parcel)}">Copy the parcel number</button>
+       <a class="sqft-open" href="${escapeHtml(cfg.searchUrl)}" target="_blank" rel="noopener">Open ${escapeHtml(cfg.searchName)} →</a>
+       <div class="sqft-sketch-tip">Paste the parcel number (or the address) into their search box, then open the property record card for the building sizes and sketch.</div>`;
   return `<div class="sqft-card">
     <div class="sqft-addr">${escapeHtml([a.prop_add, a.prop_city].filter(Boolean).join(", "))}</div>
-    <div class="sqft-parcel">Parcel ${escapeHtml(a.parcel_id || "")}</div>
+    <div class="sqft-parcel">Parcel ${escapeHtml(parcel)}</div>
     ${notResidential ? `<div class="sqft-warn">⚠ Class ${escapeHtml(String(a.dlgf_prop_class_code))} — ${escapeHtml(cls)}.</div>` : ""}
-    <div class="sqft-locate">Warrick County does not publish building sizes in a form this app can read, so the square footage is not shown here. This is the right parcel — open it and read the size off the assessor's own page.</div>
-    <a class="sqft-open" href="${escapeHtml(cfg.recordUrl(a.parcel_id || ""))}" target="_blank" rel="noopener">Open the Warrick assessor record →</a>
-    <div class="sqft-sketch-tip">On that page, <strong>Improvement Info</strong> lists each building and its size; <strong>Sketch</strong> shows the basement and foundation type.</div>
+    <div class="sqft-locate">${escapeHtml(cfg.label)} does not publish building sizes in a form this app can read, so the square footage is not shown here. This is the right parcel — open it and read the size off the assessor's own record.</div>
+    ${dest}
+    <div class="sqft-excl"><strong>If the house has a basement:</strong> the living-area total on the record usually leaves it out — the basement is its own line or its own sketch block. Conditioned basement space gets added to your load calc.</div>
   </div>`;
 }
 
-const APP_VERSION = "v104";
+const APP_VERSION = "v105";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
