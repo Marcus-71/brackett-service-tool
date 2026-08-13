@@ -3398,6 +3398,8 @@ const SQFT_COUNTIES = {
   vanderburgh: {
     label: "Vanderburgh",
     relay: "lookup",
+    // cityStrip: not a Town select - just names peeled off the typed address
+    cityStrip: ["Evansville", "Darmstadt"],
     mode: "full",
     url: "https://maps.evansvillegis.com/arcgis_server/rest/services/ASSESSOR/PARCEL_DATA/MapServer/0/query",
     addrField: "PROPSTREET",
@@ -3408,6 +3410,7 @@ const SQFT_COUNTIES = {
   warrick: {
     label: "Warrick",
     relay: "lookup",
+    cityStrip: ["Newburgh", "Boonville", "Chandler", "Lynnville", "Elberfeld", "Tennyson"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3453,6 +3456,7 @@ const SQFT_COUNTIES = {
   posey: {
     label: "Posey Co, IN",
     relay: "lookup",
+    cityStrip: ["Mt Vernon", "Mount Vernon", "Poseyville", "Cynthiana", "New Harmony", "Wadesville", "Griffin"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3482,6 +3486,7 @@ const SQFT_COUNTIES = {
   daviess: {
     label: "Daviess Co (Washington), IN",
     relay: "lookup",
+    cityStrip: ["Washington", "Odon", "Montgomery", "Elnora", "Plainville", "Cannelburg", "Alfordsville"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3513,6 +3518,7 @@ const SQFT_COUNTIES = {
     // Knox in full even though the statewide layer has no Knox addresses.
     relay: "lookup",
     prcSlug: "knox",
+    cityStrip: ["Vincennes", "Bicknell", "Monroe City", "Oaktown", "Bruceville", "Sandborn", "Edwardsport", "Wheatland", "Decker", "Freelandville"],
     mode: "link",
     searchUrl: "https://engage.xsoftinc.com/knox",
     searchName: "Knox County assessor search (XSoft Engage)",
@@ -3609,6 +3615,30 @@ function sqftNormalizeAddress(raw) {
   for (const [re, to] of SQFT_STREET_ABBR) s = s.replace(re, to);
   return s;
 }
+
+// Techs type whole addresses - "210 maryland street jasper, IN" - but the
+// records sources want street only, with the town passed separately. Peel
+// zip, state and a trailing town name off the typed text; when the town names
+// one from the county's list, the Town select gets set to it automatically.
+const SQFT_STATE_TAIL = /[\s,]+(IN|KY|IL|INDIANA|KENTUCKY|ILLINOIS)\.?\s*$/i;
+function sqftCleanTyped(typed, cfg) {
+  let s = String(typed || "").trim();
+  let town = "";
+  s = s.replace(/[\s,]+\d{5}(-\d{4})?\s*$/, "");
+  s = s.replace(SQFT_STATE_TAIL, "");
+  const names = (cfg && (cfg.towns || cfg.cityStrip)) || [];
+  const upper = s.toUpperCase();
+  for (const t of names) {
+    const tu = String(t).toUpperCase();
+    if (upper.endsWith(tu) && upper.length > tu.length) {
+      const cut = s.slice(0, s.length - t.length).replace(/[\s,]+$/, "");
+      // only treat it as a town if something address-like remains
+      if (/\d/.test(cut)) { s = cut; town = t; break; }
+    }
+  }
+  if (s.indexOf(",") >= 0) s = s.split(",")[0].trim();
+  return { street: s, town: town };
+}
 // Counties submit addresses to the statewide layer in whatever style their own
 // system uses - Vanderburgh abbreviates (LILY RD), Perry spells out (Lily
 // Road). One normalized form misses half of them, so a lookup tries each
@@ -3663,9 +3693,14 @@ async function sqftLookup() {
   result.innerHTML = "";
   if (!typed) { sqftStatus("Type a street address first - number and street, like 10526 Stephanie Ln."); return; }
 
+  // Peel town/state/zip off the typed text; a recognized town also flips the
+  // Town select so "210 maryland street jasper, IN" just works.
+  const cleaned = sqftCleanTyped(typed, cfg);
+  const street = cleaned.street || typed;
   const townSel = document.getElementById("sqftTownSelect");
+  if (cleaned.town && cfg.towns && cfg.towns.indexOf(cleaned.town) >= 0) townSel.value = cleaned.town;
   const town = cfg.towns && cfg.towns.length ? (townSel.value || cfg.towns[0]) : "";
-  const addr = sqftNormalizeAddress(typed);
+  const addr = sqftNormalizeAddress(street);
   const cacheKey = "v2|" + countyKey + "|" + (town ? town + "|" : "") + addr;
 
   if (!navigator.onLine) {
@@ -3683,15 +3718,15 @@ async function sqftLookup() {
   try {
     let r = null;
     if (cfg.relay === "lookup") {
-      r = await sqftRelayCall({ fn: "lookup", county: countyKey, q: addr, street: typed, city: town });
+      r = await sqftRelayCall({ fn: "lookup", county: countyKey, q: addr, street: street, city: town });
       // Assessors store abbreviated street types, but not all of them - if
       // the abbreviated form missed, retry with exactly what the tech typed.
-      if (r && !r.ok && /no match/i.test(r.error || "") && addr !== typed.toUpperCase()) {
-        const retry = await sqftRelayCall({ fn: "lookup", county: countyKey, q: typed, street: typed, city: town });
+      if (r && !r.ok && /no match/i.test(r.error || "") && addr !== street.toUpperCase()) {
+        const retry = await sqftRelayCall({ fn: "lookup", county: countyKey, q: street, street: street, city: town });
         if (retry && retry.ok) r = retry;
       }
     } else if (cfg.relay === "fallback") {
-      r = await sqftRelayCall({ fn: "fallback", street: typed, city: town, state: cfg.state });
+      r = await sqftRelayCall({ fn: "fallback", street: street, city: town, state: cfg.state });
     } else {
       // no relay path for this county - old handoff card
       sqftStatus("");
@@ -3710,6 +3745,7 @@ async function sqftLookup() {
       result.innerHTML = sqftCardMiss(typed, cfg, countyKey, r && r.error);
       return;
     }
+    r.wantTown = town;
     sqftCacheWrite(cacheKey, r);
     sqftStatus("");
     result.innerHTML = sqftCardAnswer(r, cfg, countyKey);
@@ -3725,18 +3761,22 @@ async function sqftRelayCall(params) {
   const clean = {};
   for (const k of Object.keys(params)) if (params[k] !== "" && params[k] != null) clean[k] = params[k];
   const url = SQFT_RELAY + "?" + new URLSearchParams(clean).toString();
-  // Apps Script's edge intermittently 404s a fresh deployment - one retry
-  // after a beat clears it (observed live 8/13/2026: same URL, 404 then 200).
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const res = await fetch(url, { credentials: "omit" });
-    if (res.ok) return await res.json();
-    if (attempt === 0 && (res.status === 404 || res.status >= 500)) {
-      await new Promise((r) => setTimeout(r, 900));
-      continue;
+  // Apps Script's edge intermittently 404s (and sometimes drops) requests -
+  // measured 3 failures in 12 hits the hour after deploy. Three attempts
+  // with backoff turns that into a non-event.
+  let lastErr = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(url, { credentials: "omit" });
+      if (res.ok) return await res.json();
+      lastErr = new Error("relay HTTP " + res.status);
+      if (res.status !== 404 && res.status < 500) break;
+    } catch (e) {
+      lastErr = e; // network hiccup - worth the same retries
     }
-    throw new Error("relay HTTP " + res.status);
+    if (attempt < 2) await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
   }
-  throw new Error("relay did not answer");
+  throw lastErr || new Error("relay did not answer");
 }
 
 // Vanderburgh's own county GIS allows direct browser reads (the only source
@@ -3758,12 +3798,14 @@ async function sqftFullDirect(cfg, typed) {
 async function sqftPickParcel(countyKey, parcel) {
   const cfg = SQFT_COUNTIES[countyKey];
   const typed = document.getElementById("sqftAddrInput").value.trim();
+  const street = sqftCleanTyped(typed, cfg).street || typed;
   const townSel = document.getElementById("sqftTownSelect");
   const town = cfg.towns && cfg.towns.length ? (townSel.value || cfg.towns[0]) : "";
   const result = document.getElementById("sqftResult");
   sqftStatus("Pulling that parcel...");
   try {
-    const r = await sqftRelayCall({ fn: "parcel", county: countyKey, parcel: parcel, q: typed, street: typed, city: town });
+    const r = await sqftRelayCall({ fn: "parcel", county: countyKey, parcel: parcel, q: street, street: street, city: town });
+    if (r && r.ok) r.wantTown = town;
     sqftStatus("");
     result.innerHTML = (r && r.ok) ? sqftCardAnswer(r, cfg, countyKey) : sqftCardMiss(typed, cfg, countyKey, r && r.error);
     if (r && r.ok) trackEvent("house size lookup " + cfg.label);
@@ -3787,6 +3829,14 @@ function sqftCardAnswer(r, cfg, countyKey) {
   const caption = isAssessor
     ? "Finished living area, per the county assessor"
     : "Living area, from public property records";
+  // Records sources fuzzy-match: asking for a Jasper address can silently
+  // return the same street number in Ferdinand. If the answer's address
+  // does not name the town the tech asked for, say so in red.
+  const townMismatch = !isAssessor && r.wantTown && r.address &&
+    r.address.toUpperCase().indexOf(String(r.wantTown).toUpperCase()) < 0;
+  const mismatchWarn = townMismatch
+    ? `<div class="sqft-warn">This matched <strong>${escapeHtml(r.address)}</strong> - NOT ${escapeHtml(r.wantTown)}. Same street name in a nearby town is common. If the house really is in ${escapeHtml(r.wantTown)}, this is a DIFFERENT house - check the town picker or the spelling.</div>`
+    : "";
   const buildings = (r.buildings || []).map((b) =>
     sqftLine(b.type || "Building", b.sqft ? (sqftNum(b.sqft) + " sq ft" + (b.year ? " (" + b.year + ")" : "")) : null)).join("");
   const floors = (r.floors || []).length ? `
@@ -3807,6 +3857,7 @@ function sqftCardAnswer(r, cfg, countyKey) {
   return `<div class="sqft-card">
     <div class="sqft-addr">${escapeHtml([r.address, r.city].filter(Boolean).join(", ") || "")}</div>
     ${r.parcel ? `<div class="sqft-parcel">Parcel ${escapeHtml(r.parcel)}${r.owner ? " - " + escapeHtml(r.owner) : ""}</div>` : ""}
+    ${mismatchWarn}
     <div class="sqft-hero">
       <span class="sqft-hero-n">${living ? escapeHtml(living) : "not recorded"}</span>
       <span class="sqft-hero-u">${living ? "sq ft" : ""}</span>
@@ -3986,7 +4037,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v111";
+const APP_VERSION = "v112";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
