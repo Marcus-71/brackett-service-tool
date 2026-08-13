@@ -3223,8 +3223,23 @@ document.getElementById("sqftGoBtn").addEventListener("click", sqftLookup);
 document.getElementById("sqftAddrInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter") { e.preventDefault(); sqftLookup(); }
 });
-// Copy buttons inside result cards are re-rendered per lookup - delegate once.
+// Some counties need a town for the records lookup (the tech only types the
+// street). The select only appears for those counties, pre-set to the town
+// most calls come from.
+function sqftSyncTownSelect() {
+  const cfg = SQFT_COUNTIES[document.getElementById("sqftCountySelect").value] || {};
+  const label = document.getElementById("sqftTownLabel");
+  const sel = document.getElementById("sqftTownSelect");
+  if (!cfg.towns || !cfg.towns.length) { label.classList.add("hidden"); sel.innerHTML = ""; return; }
+  sel.innerHTML = cfg.towns.map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+  label.classList.remove("hidden");
+}
+document.getElementById("sqftCountySelect").addEventListener("change", sqftSyncTownSelect);
+document.addEventListener("DOMContentLoaded", sqftSyncTownSelect);
+// Copy and pick buttons inside result cards are re-rendered per lookup - delegate once.
 document.getElementById("sqftResult").addEventListener("click", (e) => {
+  const pick = e.target.closest(".sqft-pickbtn");
+  if (pick) { sqftPickParcel(pick.dataset.county, pick.dataset.parcel); return; }
   const btn = e.target.closest(".sqft-copybtn");
   if (!btn) return;
   const text = btn.dataset.copy || "";
@@ -3319,6 +3334,12 @@ function showUpdatePill() {
 //
 // Square footage off the county assessor's own records, for load calcs.
 //
+// v111: answers are now self-served in the app through the relay (see the
+// SQFT_RELAY comment further down). The county notes below predate the relay
+// but the facts in them still hold - they document WHY each county needs the
+// path it got, and the link/locate config they describe is still used for the
+// secondary links on answer cards and for miss/error fallbacks.
+//
 // WHAT THE NUMBER MEANS. Verified against the Vanderburgh assessor's sketch for
 // 10526 Stephanie Ln: the sketch shows "1s Br B" 1752 plus "1s Br C" 240 = 1992,
 // which is exactly the SquareFootage field. The 504 sq ft garage, the deck and
@@ -3360,9 +3381,23 @@ function engagePrcUrl(slug, parcel, yearsBack) {
   const y = new Date().getFullYear() - (yearsBack || 0);
   return "https://engageblob.blob.core.windows.net/" + slug + "/pdf/" + y + "/" + encodeURIComponent(parcel) + ".pdf";
 }
+// v111: the app no longer hands out links as the primary answer. A small relay
+// (Google Apps Script, Andy's account, project "Brackett House Size Relay")
+// fetches what the browser is not allowed to read - Engage's JSON, Beacon's
+// report page, and the public-records fallback - and returns one JSON answer.
+// The relay is the only way to a no-extra-taps answer: every assessor source
+// except the two ArcGIS layers refuses cross-origin browser reads.
+//   relay: "lookup"   - county records the relay can read directly (Engage
+//                       counties by address search; Gibson via the statewide
+//                       parcel layer + Beacon, falling back to records)
+//   relay: "fallback" - no readable county source; public property records
+//                       (RentCast) by street + town + state
+//   towns             - shown as a select when the records source needs a town
+const SQFT_RELAY = "https://script.google.com/macros/s/AKfycbwdh3jkS2jYfn5oC2sEyCMaNaNFiq1etmSyZwIxv-h8045PnzebdT3KJQfX3bWStjsPrg/exec";
 const SQFT_COUNTIES = {
   vanderburgh: {
     label: "Vanderburgh",
+    relay: "lookup",
     mode: "full",
     url: "https://maps.evansvillegis.com/arcgis_server/rest/services/ASSESSOR/PARCEL_DATA/MapServer/0/query",
     addrField: "PROPSTREET",
@@ -3372,6 +3407,7 @@ const SQFT_COUNTIES = {
   },
   warrick: {
     label: "Warrick",
+    relay: "lookup",
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3392,6 +3428,9 @@ const SQFT_COUNTIES = {
   // guessed from a slug - Beacon's ?site= slugs land on a generic chooser.
   spencer: {
     label: "Spencer Co, IN",
+    relay: "fallback",
+    state: "IN",
+    towns: ["Rockport", "Santa Claus", "Dale", "Chrisney", "Grandview", "Richland", "Gentryville", "Hatfield"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3401,6 +3440,9 @@ const SQFT_COUNTIES = {
   },
   perry: {
     label: "Tell City (Perry Co), IN",
+    relay: "fallback",
+    state: "IN",
+    towns: ["Tell City", "Cannelton", "Troy", "Leopold", "Rome", "Derby", "Bristow"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3410,6 +3452,7 @@ const SQFT_COUNTIES = {
   },
   posey: {
     label: "Posey Co, IN",
+    relay: "lookup",
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3419,6 +3462,9 @@ const SQFT_COUNTIES = {
   },
   gibson: {
     label: "Gibson Co, IN",
+    relay: "lookup",
+    // towns feed the records fallback when Beacon refuses the relay's server
+    towns: ["Princeton", "Fort Branch", "Haubstadt", "Oakland City", "Owensville", "Patoka", "Francisco", "Somerville", "Mackey", "Hazleton"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3435,6 +3481,7 @@ const SQFT_COUNTIES = {
   },
   daviess: {
     label: "Daviess Co (Washington), IN",
+    relay: "lookup",
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3444,6 +3491,9 @@ const SQFT_COUNTIES = {
   },
   washington: {
     label: "Washington Co (Salem), IN",
+    relay: "fallback",
+    state: "IN",
+    towns: ["Salem", "New Pekin", "Campbellsburg", "Fredericksburg", "Hardinsburg", "Little York", "Saltillo"],
     mode: "locate",
     url: "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0/query",
     addrField: "prop_add",
@@ -3459,6 +3509,10 @@ const SQFT_COUNTIES = {
   // Engage contact page 8/12/2026.
   knox: {
     label: "Knox Co (Vincennes), IN",
+    // Engage's own search takes street addresses, so the relay can answer
+    // Knox in full even though the statewide layer has no Knox addresses.
+    relay: "lookup",
+    prcSlug: "knox",
     mode: "link",
     searchUrl: "https://engage.xsoftinc.com/knox",
     searchName: "Knox County assessor search (XSoft Engage)",
@@ -3471,6 +3525,9 @@ const SQFT_COUNTIES = {
   // own Think GIS search takes addresses directly.
   dubois: {
     label: "Dubois Co (Jasper), IN",
+    relay: "fallback",
+    state: "IN",
+    towns: ["Jasper", "Huntingburg", "Ferdinand", "Birdseye", "Holland", "Ireland", "Dubois", "St Anthony", "Schnellville", "Celestine"],
     mode: "link",
     searchUrl: "https://duboisin.wthgis.com/",
     searchName: "Dubois County GIS (Think GIS)",
@@ -3479,6 +3536,9 @@ const SQFT_COUNTIES = {
   },
   webster: {
     label: "Webster Co, KY",
+    relay: "fallback",
+    state: "KY",
+    towns: ["Providence", "Dixon", "Sebree", "Clay", "Slaughters", "Wheatcroft", "Poole", "Blackford"],
     mode: "link",
     // Verified off webstercountypva.com's own Quick Links, 8/12/2026
     searchUrl: "https://beacon.schneidercorp.com/Application.aspx?AppID=915&LayerID=17737&PageTypeID=2&PageID=7917",
@@ -3493,6 +3553,9 @@ const SQFT_COUNTIES = {
   // phone's browser with the address copied, and the tech pastes it there.
   henderson: {
     label: "Henderson Co, KY",
+    relay: "fallback",
+    state: "KY",
+    towns: ["Henderson", "Corydon", "Robards", "Spottsville", "Reed", "Smith Mills", "Baskett"],
     mode: "link",
     // Verified off hendersoncopva.com's own Quick Links, 8/12/2026
     searchUrl: "https://beacon.schneidercorp.com/Application.aspx?AppID=884&LayerID=16702&PageTypeID=2&PageID=7417",
@@ -3502,14 +3565,25 @@ const SQFT_COUNTIES = {
   },
   white: {
     label: "Carmi (White Co, IL)",
+    relay: "fallback",
+    state: "IL",
+    towns: ["Carmi", "Grayville", "Crossville", "Norris City", "Enfield", "Springerton", "Maunie", "Mill Shoals"],
     mode: "link",
-    searchUrl: "https://qpublic.schneidercorp.com/Application.aspx?AppID=982&LayerID=19945&PageTypeID=2&PageID=8692",
-    searchName: "White County Assessor property search (qPublic)",
+    // The old link here pointed at White County GEORGIA (wrong AppID) - White
+    // County IL is not on qPublic at all. Their real GIS is an ArcGIS
+    // Experience app (linked off whitecounty-il.gov); its parcel layer has
+    // owners and addresses but its improvements table is empty (checked
+    // 8/13/2026), so records fallback carries the sqft answer.
+    searchUrl: "https://experience.arcgis.com/experience/f893acf6d54a4db9b4411827c18b39dd",
+    searchName: "White County GIS (ArcGIS)",
     assessorPhone: "618-382-2332",
-    note: "The assessment record lists the dwelling breakdown; look for basement lines below the living-area rows.",
+    note: "The county GIS shows the parcel and owner; building sizes are not published there.",
   },
   wabash: {
     label: "Mt Carmel (Wabash Co, IL)",
+    relay: "fallback",
+    state: "IL",
+    towns: ["Mt Carmel", "Allendale", "Keensburg", "Bellmont"],
     mode: "link",
     // Wabash County publishes no property search at all - the treasurer's
     // parcel page is tax amounts only and the recorder is subscription-gated.
@@ -3587,58 +3661,184 @@ async function sqftLookup() {
   const typed = document.getElementById("sqftAddrInput").value.trim();
   const result = document.getElementById("sqftResult");
   result.innerHTML = "";
-  if (!typed) { sqftStatus("Type a street address first — number and street, like 10526 Stephanie Ln."); return; }
+  if (!typed) { sqftStatus("Type a street address first - number and street, like 10526 Stephanie Ln."); return; }
 
-  // Link-mode counties have nothing the app can query - render the handoff
-  // card immediately, no network, works offline.
-  if (cfg.mode === "link") {
-    sqftStatus("");
-    result.innerHTML = sqftCardLink(typed, cfg);
-    const copyBtn = document.getElementById("sqftCopyBtn");
-    if (copyBtn) copyBtn.onclick = () => {
-      navigator.clipboard && navigator.clipboard.writeText(typed).then(
-        () => { copyBtn.textContent = "Copied - paste it in their search"; },
-        () => { copyBtn.textContent = "Could not copy - type it there"; });
-    };
-    trackEvent("house size lookup " + cfg.label);
-    return;
-  }
-
+  const townSel = document.getElementById("sqftTownSelect");
+  const town = cfg.towns && cfg.towns.length ? (townSel.value || cfg.towns[0]) : "";
   const addr = sqftNormalizeAddress(typed);
-  const cacheKey = countyKey + "|" + addr;
+  const cacheKey = "v2|" + countyKey + "|" + (town ? town + "|" : "") + addr;
 
   if (!navigator.onLine) {
     const hit = sqftCacheRead()[cacheKey];
-    if (hit) {
-      sqftStatus("📵 No signal — showing the copy saved on this phone.");
-      sqftRenderRows(hit.rows, cfg, countyKey, true);
+    if (hit && hit.rows && hit.rows.ok) {
+      sqftStatus("No signal - showing the copy saved on this phone.");
+      result.innerHTML = sqftCardAnswer(hit.rows, cfg, countyKey);
       return;
     }
-    sqftStatus("📵 The county records need signal. Get to coverage and try again — looked-up addresses are saved for offline.");
+    sqftStatus("The records lookup needs signal. Get to coverage and try again - answers are saved on the phone for re-opening.");
     return;
   }
 
-  sqftStatus("Checking the " + cfg.label + " records…");
+  sqftStatus("Checking the " + cfg.label + " records...");
   try {
-    let rows = [];
-    for (const variant of sqftAddressVariants(typed)) {
-      rows = await sqftQuery(cfg, variant);
-      if (rows.length) break;
-    }
-    if (!rows.length) {
+    let r = null;
+    if (cfg.relay === "lookup") {
+      r = await sqftRelayCall({ fn: "lookup", county: countyKey, q: addr, street: typed, city: town });
+      // Assessors store abbreviated street types, but not all of them - if
+      // the abbreviated form missed, retry with exactly what the tech typed.
+      if (r && !r.ok && /no match/i.test(r.error || "") && addr !== typed.toUpperCase()) {
+        const retry = await sqftRelayCall({ fn: "lookup", county: countyKey, q: typed, street: typed, city: town });
+        if (retry && retry.ok) r = retry;
+      }
+    } else if (cfg.relay === "fallback") {
+      r = await sqftRelayCall({ fn: "fallback", street: typed, city: town, state: cfg.state });
+    } else {
+      // no relay path for this county - old handoff card
       sqftStatus("");
-      const phone = cfg.assessorPhone ? " If it still misses, the assessor's office is " + escapeHtml(cfg.assessorPhone) + "." : "";
-      result.innerHTML = `<p class="sqft-empty">Nothing in the ${escapeHtml(cfg.label)} records matches <strong>${escapeHtml(typed)}</strong>.<br>
-        Try just the number and street name — leave off the city and the suffix.${phone}</p>`;
+      result.innerHTML = sqftCardLink(typed, cfg);
+      trackEvent("house size lookup " + cfg.label);
       return;
     }
-    sqftCacheWrite(cacheKey, rows);
+    if (r && r.ok && r.pick) {
+      sqftStatus("");
+      result.innerHTML = sqftCardPick(r.pick, cfg, countyKey);
+      return;
+    }
+    if (!r || !r.ok) {
+      if (cfg.mode === "full" && await sqftFullDirect(cfg, typed)) return;
+      sqftStatus("");
+      result.innerHTML = sqftCardMiss(typed, cfg, countyKey, r && r.error);
+      return;
+    }
+    sqftCacheWrite(cacheKey, r);
     sqftStatus("");
-    sqftRenderRows(rows, cfg, countyKey, false);
+    result.innerHTML = sqftCardAnswer(r, cfg, countyKey);
     trackEvent("house size lookup " + cfg.label);
   } catch (e) {
-    sqftStatus("The county's records did not answer (" + (e && e.message ? e.message : "network error") + "). Try again, or call the assessor at " + cfg.assessorPhone + ".");
+    // relay unreachable - Vanderburgh still has its direct county-GIS net
+    if (cfg.mode === "full" && await sqftFullDirect(cfg, typed).catch(() => false)) return;
+    sqftStatus("The records lookup did not answer (" + (e && e.message ? e.message : "network error") + "). Try again" + (cfg.assessorPhone ? ", or call the assessor at " + cfg.assessorPhone + "." : "."));
   }
+}
+
+async function sqftRelayCall(params) {
+  const clean = {};
+  for (const k of Object.keys(params)) if (params[k] !== "" && params[k] != null) clean[k] = params[k];
+  const url = SQFT_RELAY + "?" + new URLSearchParams(clean).toString();
+  // Apps Script's edge intermittently 404s a fresh deployment - one retry
+  // after a beat clears it (observed live 8/13/2026: same URL, 404 then 200).
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch(url, { credentials: "omit" });
+    if (res.ok) return await res.json();
+    if (attempt === 0 && (res.status === 404 || res.status >= 500)) {
+      await new Promise((r) => setTimeout(r, 900));
+      continue;
+    }
+    throw new Error("relay HTTP " + res.status);
+  }
+  throw new Error("relay did not answer");
+}
+
+// Vanderburgh's own county GIS allows direct browser reads (the only source
+// that does, besides the statewide layer) - kept as a net for relay outages.
+// Renders the pre-relay full card. Returns true if it rendered.
+async function sqftFullDirect(cfg, typed) {
+  let rows = [];
+  for (const variant of sqftAddressVariants(typed)) {
+    rows = await sqftQuery(cfg, variant);
+    if (rows.length) break;
+  }
+  if (!rows.length) return false;
+  sqftStatus("");
+  sqftRenderRows(rows, cfg, "vanderburgh", false);
+  trackEvent("house size lookup " + cfg.label);
+  return true;
+}
+
+async function sqftPickParcel(countyKey, parcel) {
+  const cfg = SQFT_COUNTIES[countyKey];
+  const typed = document.getElementById("sqftAddrInput").value.trim();
+  const townSel = document.getElementById("sqftTownSelect");
+  const town = cfg.towns && cfg.towns.length ? (townSel.value || cfg.towns[0]) : "";
+  const result = document.getElementById("sqftResult");
+  sqftStatus("Pulling that parcel...");
+  try {
+    const r = await sqftRelayCall({ fn: "parcel", county: countyKey, parcel: parcel, q: typed, street: typed, city: town });
+    sqftStatus("");
+    result.innerHTML = (r && r.ok) ? sqftCardAnswer(r, cfg, countyKey) : sqftCardMiss(typed, cfg, countyKey, r && r.error);
+    if (r && r.ok) trackEvent("house size lookup " + cfg.label);
+  } catch (e) {
+    sqftStatus("The records lookup did not answer. Try again.");
+  }
+}
+
+function sqftCardPick(picks, cfg, countyKey) {
+  const rows = picks.map((m) => {
+    const cls = sqftClassNote(m.cls);
+    const warn = cls && !/^residential/.test(cls) ? " - not residential" : "";
+    return `<button class="sqft-open sqft-pickbtn" type="button" data-county="${escapeHtml(countyKey)}" data-parcel="${escapeHtml(m.parcel)}">${escapeHtml([m.address, m.city].filter(Boolean).join(", "))}${escapeHtml(warn)}</button>`;
+  }).join("");
+  return `<div class="sqft-card"><div class="sqft-locate">More than one parcel matches - tap the right one:</div>${rows}</div>`;
+}
+
+function sqftCardAnswer(r, cfg, countyKey) {
+  const living = sqftNum(r.sqft);
+  const isAssessor = r.source === "assessor";
+  const caption = isAssessor
+    ? "Finished living area, per the county assessor"
+    : "Living area, from public property records";
+  const buildings = (r.buildings || []).map((b) =>
+    sqftLine(b.type || "Building", b.sqft ? (sqftNum(b.sqft) + " sq ft" + (b.year ? " (" + b.year + ")" : "")) : null)).join("");
+  const floors = (r.floors || []).length ? `
+    <table class="sqft-floors"><tr><th>Floor</th><th>Base</th><th>Finished</th></tr>
+    ${r.floors.map((f) => `<tr><td>${escapeHtml(f.label)}</td><td>${escapeHtml(sqftNum(f.base) || "")}</td><td>${escapeHtml(sqftNum(f.finished) || "")}</td></tr>`).join("")}
+    </table>
+    <div class="sqft-sketch-tip"><strong>B</strong> = basement: base is the footprint, finished is finished living area.</div>` : "";
+  const excl = isAssessor
+    ? `<div class="sqft-excl"><strong>Not in that number:</strong> unfinished basement, crawl space, garage, porches and unfinished attic. Conditioned basement space gets added to your load calc.</div>`
+    : `<div class="sqft-excl"><strong>Check the basement:</strong> public-records totals sometimes skip a finished basement. If it is conditioned, count it in your load calc.</div>`;
+  const links = [];
+  if (r.links && r.links.prc) links.push(`<a class="sqft-open" href="${escapeHtml(r.links.prc)}" target="_blank" rel="noopener">Open the property record card (PDF) -&gt;</a>`);
+  if (r.links && r.links.beacon) links.push(`<a class="sqft-open" href="${escapeHtml(r.links.beacon)}" target="_blank" rel="noopener">Open the Beacon report -&gt;</a>`);
+  const prcTip = r.links && r.links.prc
+    ? `<div class="sqft-sketch-tip">The card's <strong>Cost Ladder</strong> (page 2) lists every floor separately - <strong>Bsmt</strong> = basement, <strong>Crawl</strong> = crawl space - with base and finished sq ft for each. Card missing? <a href="${escapeHtml(r.links.prcLastYear || r.links.prc)}" target="_blank" rel="noopener">try last year's</a>.</div>`
+    : "";
+  const val = r.valuation && /^[0-9]+$/.test(String(r.valuation)) ? "$" + Number(r.valuation).toLocaleString("en-US") : null;
+  return `<div class="sqft-card">
+    <div class="sqft-addr">${escapeHtml([r.address, r.city].filter(Boolean).join(", ") || "")}</div>
+    ${r.parcel ? `<div class="sqft-parcel">Parcel ${escapeHtml(r.parcel)}${r.owner ? " - " + escapeHtml(r.owner) : ""}</div>` : ""}
+    <div class="sqft-hero">
+      <span class="sqft-hero-n">${living ? escapeHtml(living) : "not recorded"}</span>
+      <span class="sqft-hero-u">${living ? "sq ft" : ""}</span>
+    </div>
+    <div class="sqft-hero-cap">${escapeHtml(caption)}</div>
+    <div class="sqft-grid">
+      ${sqftLine("Year built", r.yearBuilt || null)}
+      ${sqftLine("Bedrooms", r.beds || null)}
+      ${sqftLine("Bathrooms", r.baths || null)}
+      ${sqftLine("Assessed value", val)}
+      ${buildings}
+    </div>
+    ${floors}
+    ${excl}
+    ${links.join("")}
+    ${prcTip}
+    <div class="sqft-sketch-tip">Source: ${escapeHtml(r.sourceName || "county records")}${cfg.assessorPhone ? " - assessor " + escapeHtml(cfg.assessorPhone) : ""}</div>
+  </div>`;
+}
+
+function sqftCardMiss(typed, cfg, countyKey, err) {
+  const engageUrl = cfg.relay === "lookup" && countyKey !== "gibson" ? "https://engage.xsoftinc.com/" + countyKey : "";
+  const searchUrl = cfg.searchUrl || engageUrl;
+  const searchName = cfg.searchName || (engageUrl ? cfg.label + " Co assessor search (Engage)" : "");
+  return `<div class="sqft-card">
+    <div class="sqft-addr">${escapeHtml(typed)}</div>
+    <div class="sqft-parcel">${escapeHtml(cfg.label)}</div>
+    <div class="sqft-locate">No answer from the records (${escapeHtml(err || "no match")}). Try just the number and street name - leave off the city and the suffix.</div>
+    ${searchUrl ? `<button class="sqft-open sqft-copy sqft-copybtn" type="button" data-copy="${escapeHtml(typed)}">Copy the address</button>
+    <a class="sqft-open" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener">Open ${escapeHtml(searchName)} -&gt;</a>` : ""}
+    ${cfg.assessorPhone ? `<div class="sqft-sketch-tip">Assessor's office: ${escapeHtml(cfg.assessorPhone)}</div>` : ""}
+  </div>`;
 }
 
 async function sqftQuery(cfg, addr) {
@@ -3786,7 +3986,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v110";
+const APP_VERSION = "v111";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
