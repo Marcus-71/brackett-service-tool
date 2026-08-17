@@ -52,6 +52,11 @@
       <span class="tile-label">Manuals</span>
       <span class="tile-sub">Stored PDFs, works offline</span>
     </button>
+    <button class="tile tile-tstat" data-screen="tstat">
+      <span class="tile-icon">🎛️</span>
+      <span class="tile-label">Thermostats</span>
+      <span class="tile-sub">Wiring, setup, codes, manuals — every brand</span>
+    </button>
     <button class="tile tile-warranty" data-screen="warranty">
       <span class="tile-icon">🛡️</span>
       <span class="tile-label">Warranty Check</span>
@@ -116,6 +121,20 @@
   <div id="bulletinBanner" class="bulletin-banner hidden"></div>
   <main id="manualResults"></main>
   <div id="manualEmptyState" class="empty-state hidden">No manuals saved yet. Tap + Add to upload a PDF from this phone.</div>
+</section>
+
+<!-- THERMOSTATS -->
+<section id="tstatScreen" class="screen hidden">
+  <div class="disclaimer">Terminal tables, installer settings and codes pulled from each maker's own install guides. Read the wiring label on the equipment too — jumpers and terminal names shift between board revisions.</div>
+  <div class="controls">
+    <input id="tstatSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model, brand, terminal, or code (TH6220, N260, E43…)" autocomplete="off">
+    <div class="filter-row">
+      <select id="tstatBrandChips" class="filter-select" aria-label="Filter by brand"></select>
+      <select id="tstatTypeChips" class="filter-select" aria-label="Filter by type"></select>
+    </div>
+  </div>
+  <main id="tstatResults"></main>
+  <div id="tstatEmptyState" class="empty-state hidden">No matching thermostat. Try the model number off the back of the stat, or just the brand.</div>
 </section>
 
 <!-- TOOLBOX -->
@@ -371,6 +390,7 @@
 <script src="followups.js"></script>
 <script src="charging-charts.js"></script>
 <script src="toolbox.js"></script>
+<script src="thermostats.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
 <script src="app.js"></script>
 </body>

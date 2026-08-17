@@ -1149,3 +1149,47 @@ main {
 .sqft-floors td:nth-child(2), .sqft-floors td:nth-child(3),
 .sqft-floors th:nth-child(2), .sqft-floors th:nth-child(3) { text-align: right; }
 .sqft-floors tr:last-child td { border-bottom: 0; }
+
+/* ---- Thermostats tab ---- */
+.tile-tstat { border-left: 5px solid var(--brand-yellow); }
+.tstat-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
+.tstat-badge {
+  font-size: 0.72rem; font-weight: 600; padding: 0.12rem 0.5rem; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-elevated, transparent);
+}
+.tstat-badge.need-c { border-color: #c4622d; color: #ffb27a; }
+.tstat-badge.opt-c { border-color: #7a7256; color: #d8d2b0; }
+.tstat-badge.no-c { border-color: #146c3e; color: #6fe3a5; }
+@media (prefers-color-scheme: light) {
+  .tstat-badge.need-c { color: #9a4310; background: #fff0e6; }
+  .tstat-badge.opt-c { color: #5b5440; background: #f3f0e4; }
+  .tstat-badge.no-c { color: #146c3e; background: #d9f7e4; }
+}
+.tstat-models { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.86rem; line-height: 1.5; word-break: break-word; }
+.tstat-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 0.4rem; }
+.tstat-table td { padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.tstat-table tr:last-child td { border-bottom: 0; }
+.tstat-table td.tstat-term {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700; width: 34%; padding-right: 0.7rem;
+  white-space: normal; overflow-wrap: break-word;
+}
+.tstat-table td.tstat-term.short { white-space: nowrap; width: 1%; }
+.tstat-note { color: var(--text-dim); font-size: 0.86rem; margin-top: 0.15rem; }
+.tstat-table tr.hit td, .tstat-ts.hit { background: rgba(253, 210, 110, 0.16); }
+.tstat-ts { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border); }
+.tstat-ts:last-child { border-bottom: 0; }
+.tstat-ts ul { margin: 0.25rem 0 0; padding-left: 1.2rem; }
+.tstat-manuals { display: flex; flex-direction: column; gap: 0.4rem; }
+.tstat-manual-btn {
+  display: block; width: 100%; text-align: left; padding: 0.55rem 0.7rem; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg-elevated, transparent); color: var(--text);
+  font: inherit; text-decoration: none; cursor: pointer;
+}
+.tstat-manual-btn:active { transform: scale(0.99); }
+.tstat-manual-btn.ext { border-style: dashed; }
+.tstat-doctype {
+  display: inline-block; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+  padding: 0.05rem 0.4rem; border-radius: 5px; background: var(--border); color: var(--text-dim); margin-right: 0.45rem;
+}
+.tstat-source { color: var(--text-dim); font-size: 0.82rem; }

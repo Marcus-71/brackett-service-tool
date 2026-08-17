@@ -239,6 +239,7 @@ const SCREEN_TITLES = {
   diagnostics: "Diagnostic Help",
   manuals: "Manuals",
   toolbox: "Toolbox",
+  tstat: "Thermostats",
   scanner: "Tag Scanner",
   charge: "Charging Calc",
   warranty: "Warranty Check",
@@ -266,10 +267,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -286,6 +287,7 @@ function showScreen(name, fromBack) {
   if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
+  if (name === "tstat") renderTstats();
   if (name === "charge") renderChargeCalc();
 
   if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
@@ -1098,6 +1100,194 @@ function openToolboxEditForm(existing) {
 }
 
 document.getElementById("toolboxSearchInput").addEventListener("input", (e) => { toolboxState.search = e.target.value; renderToolbox(); });
+
+// ============================================================
+// THERMOSTATS - one card per thermostat family: terminals, wiring
+// notes, installer setup, on-screen codes, troubleshooting, and the
+// official manuals (opened in the in-app reader when they are in the
+// library). Data lives in thermostats.js (THERMOSTATS), organized
+// from manufacturer install guides only.
+// ============================================================
+
+const TSTAT_TYPE_LABELS = {
+  "smart-wifi": "Smart / Wi-Fi",
+  "communicating": "Communicating",
+  "programmable": "Programmable",
+  "non-programmable": "Non-programmable",
+  "wireless-redlink": "Wireless (RedLINK)",
+  "zone-control": "Zone control",
+  "accessory": "Accessory / adapter",
+};
+const TSTAT_TYPE_ORDER = ["smart-wifi", "communicating", "programmable", "non-programmable", "wireless-redlink", "zone-control", "accessory"];
+let tstatState = { search: "", brand: "All", type: "All" };
+
+function tstatEntries() { return (typeof THERMOSTATS !== "undefined") ? THERMOSTATS : []; }
+
+// Techs type partial model numbers ("TH6220", "1F85", "T755") - whole-token
+// matching would miss TH6220U2000, so any query word containing a digit also
+// matches as a plain substring of the model/code text.
+function tstatIncludes(fields, q) {
+  if (!q) return true;
+  const hay = fields.filter(Boolean).join(" ").toLowerCase();
+  return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a))));
+}
+
+function tstatSearchFields(t) {
+  return [
+    t.brand, t.family, (t.models || []).join(" "), t.aka, TSTAT_TYPE_LABELS[t.type] || t.type, t.stages,
+    ...(t.terminals || []).map(x => x.t + " " + x.fn),
+    ...(t.diagnostics || []).map(x => x.code + " " + x.meaning),
+    ...(t.troubleshooting || []).map(x => x.symptom),
+    ...(t.wiringNotes || []),
+    ...(t.manuals || []).map(x => x.title),
+  ];
+}
+
+function renderTstats() {
+  const all = tstatEntries();
+  const brands = ["All", ...uniqueSorted(all.map(t => t.brand))];
+  renderChips("tstatBrandChips", brands, tstatState.brand, (v) => { tstatState.brand = v; renderTstats(); }, "All Brands");
+  const typesPresent = new Set(all.map(t => t.type));
+  const typeSel = document.getElementById("tstatTypeChips");
+  typeSel.innerHTML = "";
+  for (const v of ["All", ...TSTAT_TYPE_ORDER.filter(x => typesPresent.has(x))]) {
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = v === "All" ? "All Types" : TSTAT_TYPE_LABELS[v];
+    if (v === tstatState.type) opt.selected = true;
+    typeSel.appendChild(opt);
+  }
+  typeSel.onchange = () => { tstatState.type = typeSel.value; renderTstats(); };
+
+  const filtered = all.filter(t =>
+    (tstatState.brand === "All" || t.brand === tstatState.brand) &&
+    (tstatState.type === "All" || t.type === tstatState.type) &&
+    tstatIncludes(tstatSearchFields(t), tstatState.search)
+  ).sort((a, b) => a.brand.localeCompare(b.brand) || (a.sort || 0) - (b.sort || 0) || a.family.localeCompare(b.family));
+
+  const results = document.getElementById("tstatResults");
+  const empty = document.getElementById("tstatEmptyState");
+  results.innerHTML = "";
+  empty.classList.toggle("hidden", filtered.length !== 0);
+  for (const t of filtered) results.appendChild(buildTstatCard(t));
+}
+
+function tstatPowerBadge(t) {
+  const c = t.power && t.power.cWire;
+  if (c === "required") return `<span class="tstat-badge need-c">C wire required</span>`;
+  if (c === "optional") return `<span class="tstat-badge opt-c">C wire optional</span>`;
+  if (c === "not-used") return `<span class="tstat-badge no-c">No C wire</span>`;
+  return "";
+}
+
+function buildTstatCard(t) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.onclick = () => openTstatDetail(t.id);
+  const models = (t.models || []);
+  const shown = models.slice(0, 4).join(", ") + (models.length > 4 ? ` +${models.length - 4} more` : "");
+  const nCodes = (t.diagnostics || []).length;
+  const nDocs = (t.manuals || []).length;
+  card.innerHTML = `
+    <div class="card-top">
+      <div>
+        <div class="card-code">${escapeHtml(t.family)}</div>
+        <div class="card-title">${escapeHtml(t.brand)}${t.aka ? " · " + escapeHtml(t.aka) : ""}</div>
+      </div>
+      <span class="tag ${t.confidence === "common" ? "common" : "verify"}">${TSTAT_TYPE_LABELS[t.type] ? escapeHtml(TSTAT_TYPE_LABELS[t.type]) : "verify"}</span>
+    </div>
+    <div class="card-meta">
+      ${shown ? `<span>${escapeHtml(shown)}</span>` : ""}
+    </div>
+    <div class="tstat-badges">
+      ${tstatPowerBadge(t)}
+      ${(t.terminals || []).length ? `<span class="tstat-badge">${(t.terminals || []).length} terminals</span>` : ""}
+      ${nCodes ? `<span class="tstat-badge">${nCodes} codes</span>` : ""}
+      ${nDocs ? `<span class="tstat-badge">${nDocs} manual${nDocs === 1 ? "" : "s"}</span>` : ""}
+    </div>
+  `;
+  return card;
+}
+
+// Which seed manual (if any) a thermostat's manual reference points at, so
+// the button opens the in-app reader instead of leaving the app.
+function tstatFindSeed(ref) {
+  if (!ref || typeof MANUAL_SEEDS === "undefined") return null;
+  const key = (ref.seedFile || ref.url || "").split("/").pop().toLowerCase();
+  if (!key) return null;
+  return MANUAL_SEEDS.find(s => s.file.split("/").pop().toLowerCase() === key || (s.filename || "").toLowerCase() === key) || null;
+}
+
+function tstatHit(text, q) {
+  if (!q) return false;
+  const hay = String(text || "").toLowerCase();
+  return q.toLowerCase().split(/\s+/).filter(Boolean).some(w => w.length >= 2 && hay.includes(w));
+}
+
+function openTstatDetail(id) {
+  const t = tstatEntries().find(x => x.id === id);
+  if (!t) return;
+  const q = tstatState.search;
+  const modal = document.getElementById("modal");
+  const p = t.power || {};
+  const cWireText = { required: "C (common) wire REQUIRED", optional: "C wire optional", "not-used": "No C wire used" }[p.cWire] || "";
+  const powerBits = [cWireText, p.batteries ? "Batteries: " + p.batteries : "", p.notes].filter(Boolean);
+
+  const termRows = (t.terminals || []).map(x => `
+    <tr class="${tstatHit(x.t + " " + x.fn, q) ? "hit" : ""}"><td class="tstat-term${String(x.t).length <= 10 ? " short" : ""}">${escapeHtml(x.t)}</td><td>${escapeHtml(x.fn)}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
+  const wiringNotes = (t.wiringNotes || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
+  const s = t.setup || {};
+  const settingRows = (s.keySettings || []).map(x => `
+    <tr><td class="tstat-term${String(x.setting).length <= 10 ? " short" : ""}">${escapeHtml(x.setting)}</td><td>${escapeHtml(x.options || "")}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
+  const diagRows = (t.diagnostics || []).map(x => `
+    <tr class="${tstatHit(x.code + " " + x.meaning, q) ? "hit" : ""}"><td class="tstat-term${String(x.code).length <= 10 ? " short" : ""}">${escapeHtml(x.code)}</td><td><b>${escapeHtml(x.meaning)}</b>${x.action ? `<div class="tstat-note">${escapeHtml(x.action)}</div>` : ""}</td></tr>`).join("");
+  const tsBlocks = (t.troubleshooting || []).map(x => `
+    <div class="tstat-ts ${tstatHit(x.symptom, q) ? "hit" : ""}"><b>${escapeHtml(x.symptom)}</b>
+      ${(x.causes || []).length ? `<div class="tstat-note">Check: ${escapeHtml((x.causes || []).join(" · "))}</div>` : ""}
+      ${(x.fixes || []).length ? `<ul>${(x.fixes || []).map(f => `<li>${escapeHtml(f)}</li>`).join("")}</ul>` : ""}
+    </div>`).join("");
+  const manualBtns = (t.manuals || []).map((m, i) => {
+    const seed = tstatFindSeed(m);
+    const label = escapeHtml(m.title || (seed && seed.title) || "Manual");
+    const kind = m.docType ? `<span class="tstat-doctype">${escapeHtml(m.docType)}</span>` : "";
+    if (seed) return `<button class="tstat-manual-btn" data-seed="${escapeHtml(seed.file)}">${kind}${label}</button>`;
+    if (m.url) return `<a class="tstat-manual-btn ext" href="${escapeHtml(m.url)}" target="_blank" rel="noopener">${kind}${label} <span class="tstat-note">opens in browser - needs signal</span></a>`;
+    return "";
+  }).join("");
+  const models = (t.models || []).join(", ");
+
+  modal.innerHTML = `
+    <h2>${escapeHtml(t.family)}</h2>
+    <div class="sub">${escapeHtml(t.brand)}${t.aka ? " · " + escapeHtml(t.aka) : ""} · ${escapeHtml(TSTAT_TYPE_LABELS[t.type] || t.type || "")}${t.stages ? " · " + escapeHtml(t.stages) : ""}</div>
+    ${models ? `<div class="detail-section"><h3>Models</h3><p class="tstat-models">${escapeHtml(models)}</p></div>` : ""}
+    ${powerBits.length ? `<div class="detail-section"><h3>Power</h3><p>${powerBits.map(escapeHtml).join("<br>")}</p></div>` : ""}
+    ${termRows ? `<div class="detail-section"><h3>Terminals</h3><table class="tstat-table">${termRows}</table></div>` : ""}
+    ${wiringNotes ? `<div class="detail-section"><h3>Wiring notes</h3><ul>${wiringNotes}</ul></div>` : ""}
+    ${(s.access || settingRows || s.factoryReset || s.installerTest) ? `<div class="detail-section"><h3>Installer setup</h3>
+      ${s.access ? `<p><b>Get in:</b> ${escapeHtml(s.access)}</p>` : ""}
+      ${settingRows ? `<table class="tstat-table">${settingRows}</table>` : ""}
+      ${s.installerTest ? `<p><b>System test:</b> ${escapeHtml(s.installerTest)}</p>` : ""}
+      ${s.factoryReset ? `<p><b>Factory reset:</b> ${escapeHtml(s.factoryReset)}</p>` : ""}
+    </div>` : ""}
+    ${diagRows ? `<div class="detail-section"><h3>Codes &amp; alerts</h3><table class="tstat-table">${diagRows}</table></div>` : ""}
+    ${tsBlocks ? `<div class="detail-section"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
+    ${(t.tips || []).length ? `<div class="detail-section"><h3>Field notes</h3><ul>${(t.tips || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+    ${manualBtns ? `<div class="detail-section"><h3>Manuals</h3><div class="tstat-manuals">${manualBtns}</div></div>` : ""}
+    ${t.sourceNotes ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(t.sourceNotes)}</p></div>` : ""}
+    <div class="modal-actions">
+      <button id="closeModalBtn">Close</button>
+    </div>
+  `;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
+    btn.onclick = () => { trackEvent("opened thermostat manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
+  });
+  const firstHit = modal.querySelector(".hit");
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+  if (firstHit) setTimeout(() => firstHit.scrollIntoView({ block: "center" }), 50);
+  trackEvent("viewed thermostat: " + t.brand + " " + t.family);
+}
+
+document.getElementById("tstatSearchInput").addEventListener("input", (e) => { tstatState.search = e.target.value; renderTstats(); });
 
 // ============================================================
 // MANUALS (PDFs stored in IndexedDB, works fully offline)
@@ -4037,7 +4227,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v112";
+const APP_VERSION = "v113";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -4111,6 +4301,7 @@ logSearches("codesSearchInput", "searched codes");
 logSearches("diagSearchInput", "searched diagnostics");
 logSearches("manualSearchInput", "searched manuals");
 logSearches("toolboxSearchInput", "searched toolbox");
+logSearches("tstatSearchInput", "searched thermostats");
 
 function showTechPicker() {
   const ov = document.createElement("div");
@@ -4151,7 +4342,7 @@ async function renderVersionFooter() {
   if (!el) return;
   let manualCount = "";
   try { manualCount = " · " + (await manualCatalog()).length + " manuals"; } catch (e) {}
-  el.textContent = APP_VERSION + " · " + getAllCodes().length + " codes · " + getAllSymptoms().length + " scenarios" + manualCount;
+  el.textContent = APP_VERSION + " · " + getAllCodes().length + " codes · " + getAllSymptoms().length + " scenarios · " + tstatEntries().length + " thermostats" + manualCount;
 }
 
 updateNetStatus();
