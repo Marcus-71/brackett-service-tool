@@ -1193,3 +1193,6 @@ main {
   padding: 0.05rem 0.4rem; border-radius: 5px; background: var(--border); color: var(--text-dim); margin-right: 0.45rem;
 }
 .tstat-source { color: var(--text-dim); font-size: 0.82rem; }
+.tstat-thumb { width: 58px; height: 58px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid var(--border); flex: 0 0 auto; margin-right: 0.6rem; }
+.tstat-card-text { flex: 1 1 auto; min-width: 0; }
+.tstat-hero { float: right; width: 108px; height: 108px; object-fit: contain; border-radius: 10px; background: #fff; border: 1px solid var(--border); margin: 0 0 0.5rem 0.7rem; }

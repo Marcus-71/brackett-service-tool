@@ -461,7 +461,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00462.pdf"
    }
   ],
-  "sourceNotes": "33-00428-05 T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 User Guide; 33-00423EFS-05 T10 Pro Smart Thermostat Installation Instructions; 33-00462-07 T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data (full ISU reference incl. EIM); 33-00462-06 T10 & T10+ Pro Smart Thermostat Product Data 33-00462-06 (full online version - ISU table, installer options, wiring, troubleshooting); T10 & T10+ Pro - Installer Options (menu access via date code, ..."
+  "sourceNotes": "33-00428-05 T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 User Guide; 33-00423EFS-05 T10 Pro Smart Thermostat Installation Instructions; 33-00462-07 T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data (full ISU reference incl. EIM); 33-00462-06 T10 & T10+ Pro Smart Thermostat Product Data 33-00462-06 (full online version - ISU table, installer options, wiring, troubleshooting); T10 & T10+ Pro - Installer Options (menu access via date code, ...",
+  "img": "tstat-img/tst-honeywell-t10-pro.jpg"
  },
  {
   "id": "tst-honeywell-t5-t5plus",
@@ -833,7 +834,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00474.pdf"
    }
   ],
-  "sourceNotes": "33-00231EFS Lyric T5 Wi-Fi Programmable Thermostat User Guide (full alert-code chart, reset options, electrical ratings, troubleshooting); 33-00498EF T5 Smart Thermostat RCHT8610WF Quick Install Guide (English/French); 33-00474 T5+ Smart Thermostat Product Data (RCHT8610WF, RCHT8612WF, RTH8800WF) - terminal checklist, C-wire rules, FAQ; How do I perform a system test in order to test the stages of equipment? (Lyric T5 Wi-Fi - ADVANCED MENU > System Test..."
+  "sourceNotes": "33-00231EFS Lyric T5 Wi-Fi Programmable Thermostat User Guide (full alert-code chart, reset options, electrical ratings, troubleshooting); 33-00498EF T5 Smart Thermostat RCHT8610WF Quick Install Guide (English/French); 33-00474 T5+ Smart Thermostat Product Data (RCHT8610WF, RCHT8612WF, RTH8800WF) - terminal checklist, C-wire rules, FAQ; How do I perform a system test in order to test the stages of equipment? (Lyric T5 Wi-Fi - ADVANCED MENU > System Test...",
+  "img": "tstat-img/tst-honeywell-t5-t5plus.jpg"
  },
  {
   "id": "tst-honeywell-t6-pro-wifi",
@@ -1185,7 +1187,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00410EFS.pdf"
    }
   ],
-  "sourceNotes": "33-00410EFS-03 T6 Pro Smart Programmable Thermostat User Guide (TH6320WF2003, TH6220WF2006); 33-00391EFS-11 T6 Pro Smart / T6 Pro Wi-Fi Getting Started Quick Guide; 33-00324-04 T6 Pro Smart Wiring Diagrams (Addendum); 33-00392-09 T6 Pro Wi-Fi Professional Install Guide (ISU table, alerts, troubleshooting)"
+  "sourceNotes": "33-00410EFS-03 T6 Pro Smart Programmable Thermostat User Guide (TH6320WF2003, TH6220WF2006); 33-00391EFS-11 T6 Pro Smart / T6 Pro Wi-Fi Getting Started Quick Guide; 33-00324-04 T6 Pro Smart Wiring Diagrams (Addendum); 33-00392-09 T6 Pro Wi-Fi Professional Install Guide (ISU table, alerts, troubleshooting)",
+  "img": "tstat-img/tst-honeywell-t6-pro-wifi.jpg"
  },
  {
   "id": "tst-honeywell-t6-pro-zwave",
@@ -1509,7 +1512,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00588EFS.pdf"
    }
   ],
-  "sourceNotes": "33-00587EFS-10 T6 Pro Z-Wave Programmable Thermostat Quick Start / Install Guide; 33-00588EFS T6 Pro Z-Wave Programmable Thermostat User Guide"
+  "sourceNotes": "33-00587EFS-10 T6 Pro Z-Wave Programmable Thermostat Quick Start / Install Guide; 33-00588EFS T6 Pro Z-Wave Programmable Thermostat User Guide",
+  "img": "tstat-img/tst-honeywell-t6-pro-zwave.jpg"
  },
  {
   "id": "tst-honeywell-t9-smart",
@@ -1842,7 +1846,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00478.pdf"
    }
   ],
-  "sourceNotes": "33-00478-04 T9 Smart Thermostat with Smart Room Sensor User Guide; 33-00421ES-05 T9 Smart Thermostat Installation Guide (RCHT9510WFW2001/2017, RCHT9610WFSW2003/2019); 33-00526ES-01 T9 Smart Thermostat Installation Guide (RCHT9610WFSW2005); 33-00444EF T9 Smart Thermostat Installation Guide (RCHT9610WFW2004); 33-00478-04 T9 Smart Thermostat with Smart Room Sensor User Guide (menu map, Advanced Setup, CSU/ISU configuration table); How Do I Reset My Honeywe..."
+  "sourceNotes": "33-00478-04 T9 Smart Thermostat with Smart Room Sensor User Guide; 33-00421ES-05 T9 Smart Thermostat Installation Guide (RCHT9510WFW2001/2017, RCHT9610WFSW2003/2019); 33-00526ES-01 T9 Smart Thermostat Installation Guide (RCHT9610WFSW2005); 33-00444EF T9 Smart Thermostat Installation Guide (RCHT9610WFW2004); 33-00478-04 T9 Smart Thermostat with Smart Room Sensor User Guide (menu map, Advanced Setup, CSU/ISU configuration table); How Do I Reset My Honeywe...",
+  "img": "tstat-img/tst-honeywell-t9-smart.jpg"
  },
  {
   "id": "tst-honeywell-rth6580wf",
@@ -2097,7 +2102,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00130ES.pdf"
    }
   ],
-  "sourceNotes": "33-00130ES-09 RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide"
+  "sourceNotes": "33-00130ES-09 RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide",
+  "img": "tstat-img/tst-honeywell-rth6580wf.jpg"
  },
  {
   "id": "tst-honeywell-rth9585wf",
@@ -2331,7 +2337,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00269EF.pdf"
    }
   ],
-  "sourceNotes": "33-00269EF-05 RTH9585WF Color Touchscreen Smart Series Programmable Thermostat User Guide; 69-2810 RTH9580 Wi-Fi Color Touchscreen Programmable Thermostat Quick Start Guide"
+  "sourceNotes": "33-00269EF-05 RTH9585WF Color Touchscreen Smart Series Programmable Thermostat User Guide; 69-2810 RTH9580 Wi-Fi Color Touchscreen Programmable Thermostat Quick Start Guide",
+  "img": "tstat-img/tst-honeywell-rth9585wf.jpg"
  },
  {
   "id": "tst-honeywell-t4-pro",
@@ -2573,7 +2580,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00613EFS.pdf"
    }
   ],
-  "sourceNotes": "33-00187EFS-17 T4 Pro Programmable Thermostat Installation Instructions; 33-00188EFS-11 T4 Pro Programmable Thermostat User Guide; 33-00613EFS-05 T4 Pro Programmable Thermostat Product Information / Submittal"
+  "sourceNotes": "33-00187EFS-17 T4 Pro Programmable Thermostat Installation Instructions; 33-00188EFS-11 T4 Pro Programmable Thermostat User Guide; 33-00613EFS-05 T4 Pro Programmable Thermostat Product Information / Submittal",
+  "img": "tstat-img/tst-honeywell-t4-pro.jpg"
  },
  {
   "id": "tst-honeywell-t6-pro",
@@ -2931,7 +2939,8 @@ const THERMOSTATS = [
     "url": "https://docs.honeywellhome.com/t6-pro-ii/en-us/Content/Installation-Instructions/1.%20Installation.htm"
    }
   ],
-  "sourceNotes": "T6 Pro Installation Manual - 5. Installer Setup (ISU) (menu access plus the full ISU parameter table); T6 Pro Installation Manual - 8. System Test (access procedure and per-stage test codes); T6 Pro Installation Manual - 9. Troubleshooting and Support; T6 Pro Installation Manual - 3. Thermostat Mounting; T6 Pro Installation Manual - 7. Alerts and Reminders (full alert code table); T6 Pro Installation Manual - 2. Wiring (R Slider Tab, terminal designatio..."
+  "sourceNotes": "T6 Pro Installation Manual - 5. Installer Setup (ISU) (menu access plus the full ISU parameter table); T6 Pro Installation Manual - 8. System Test (access procedure and per-stage test codes); T6 Pro Installation Manual - 9. Troubleshooting and Support; T6 Pro Installation Manual - 3. Thermostat Mounting; T6 Pro Installation Manual - 7. Alerts and Reminders (full alert code table); T6 Pro Installation Manual - 2. Wiring (R Slider Tab, terminal designatio...",
+  "img": "tstat-img/tst-honeywell-t6-pro.jpg"
  },
  {
   "id": "tst-honeywell-visionpro-8000",
@@ -3169,7 +3178,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/68-0000s/68-0280.pdf"
    }
   ],
-  "sourceNotes": "69-1896-01 VisionPRO TH8000 Series Installation Guide (TH8110U/TH8320U/TH8321U); 68-0280 VisionPRO 8000 Product Data (68-0280)"
+  "sourceNotes": "69-1896-01 VisionPRO TH8000 Series Installation Guide (TH8110U/TH8320U/TH8321U); 68-0280 VisionPRO 8000 Product Data (68-0280)",
+  "img": "tstat-img/tst-honeywell-visionpro-8000.jpg"
  },
  {
   "id": "tst-honeywell-focuspro-5000",
@@ -3362,7 +3372,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-1922EFS.pdf"
    }
   ],
-  "sourceNotes": "69-1922EFS-03 FocusPRO TH5000 Series Installation Guide"
+  "sourceNotes": "69-1922EFS-03 FocusPRO TH5000 Series Installation Guide",
+  "img": "tstat-img/tst-honeywell-focuspro-5000.jpg"
  },
  {
   "id": "tst-honeywell-focuspro-6000",
@@ -3565,7 +3576,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1921EFS.pdf"
    }
   ],
-  "sourceNotes": "69-2695EFS-09 FocusPRO 6000 Series Installation Instructions; 69-1921EFS FocusPRO 6000 Series User Guide"
+  "sourceNotes": "69-2695EFS-09 FocusPRO 6000 Series Installation Instructions; 69-1921EFS FocusPRO 6000 Series User Guide",
+  "img": "tstat-img/tst-honeywell-focuspro-6000.jpg"
  },
  {
   "id": "tst-honeywell-focuspro-wireless",
@@ -3746,7 +3758,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2093EFS.pdf"
    }
   ],
-  "sourceNotes": "69-2092EFS-11 FocusPRO Wireless Thermostats Installation Guide; 69-2093EFS Operating Manual FocusPro TH6320R Wireless Thermostat"
+  "sourceNotes": "69-2092EFS-11 FocusPRO Wireless Thermostats Installation Guide; 69-2093EFS Operating Manual FocusPro TH6320R Wireless Thermostat",
+  "img": "tstat-img/tst-honeywell-focuspro-wireless.jpg"
  },
  {
   "id": "tst-honeywell-lyric-round",
@@ -3984,7 +3997,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00390EFS.pdf"
    }
   ],
-  "sourceNotes": "33-00445EFS-05 Round Smart Thermostat Professional Install Guide (TH8732WFH5004; wiring/ISU also applies to RCH9300WF, RCH9310WF); 33-00390EFS-05 Round Smart Thermostat User Guide / System Types & Troubleshooting"
+  "sourceNotes": "33-00445EFS-05 Round Smart Thermostat Professional Install Guide (TH8732WFH5004; wiring/ISU also applies to RCH9300WF, RCH9310WF); 33-00390EFS-05 Round Smart Thermostat User Guide / System Types & Troubleshooting",
+  "img": "tstat-img/tst-honeywell-lyric-round.jpg"
  },
  {
   "id": "tst-honeywell-prestige-iaq",
@@ -4135,7 +4149,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2490.pdf"
    }
   ],
-  "sourceNotes": "69-2739 Prestige IAQ with Equipment Interface Module Installation Guide; 69-2490 Prestige 2.0 / Prestige IAQ 2.0 with EIM"
+  "sourceNotes": "69-2739 Prestige IAQ with Equipment Interface Module Installation Guide; 69-2490 Prestige 2.0 / Prestige IAQ 2.0 with EIM",
+  "img": "tstat-img/tst-honeywell-prestige-iaq.jpg"
  },
  {
   "id": "tst-honeywell-pro-1000-2000dv",
@@ -4284,7 +4299,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2607EFS.pdf"
    }
   ],
-  "sourceNotes": "69-2800EFS-05 PRO TH2000DV/TH1000DV Series Installation Guide; 69-2607EFS-06 PRO 1000 Series Operating Manual"
+  "sourceNotes": "69-2800EFS-05 PRO TH2000DV/TH1000DV Series Installation Guide; 69-2607EFS-06 PRO 1000 Series Operating Manual",
+  "img": "tstat-img/tst-honeywell-pro-1000-2000dv.jpg"
  },
  {
   "id": "tst-honeywell-pro-3000",
@@ -4465,7 +4481,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-1929EFS.pdf"
    }
   ],
-  "sourceNotes": "69-1929EFS PRO 3000 Series Installation Instructions (TH3110D1008/TH3210D1004)"
+  "sourceNotes": "69-1929EFS PRO 3000 Series Installation Instructions (TH3110D1008/TH3210D1004)",
+  "img": "tstat-img/tst-honeywell-pro-3000.jpg"
  },
  {
   "id": "tst-honeywell-pro-4000",
@@ -4651,7 +4668,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1928EFS.pdf"
    }
   ],
-  "sourceNotes": "69-1928EFS PRO 4000 Series Installation Instructions (TH4110D/TH4210D)"
+  "sourceNotes": "69-1928EFS PRO 4000 Series Installation Instructions (TH4110D/TH4210D)",
+  "img": "tstat-img/tst-honeywell-pro-4000.jpg"
  },
  {
   "id": "tst-honeywell-rth2300",
@@ -4794,7 +4812,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2327ES.pdf"
    }
   ],
-  "sourceNotes": "33-00100EF RTH2300/RTH221 Series Owner's Manual; 69-2327ES RTH2300 5+2 Programmable Thermostat Quick Installation Guide"
+  "sourceNotes": "33-00100EF RTH2300/RTH221 Series Owner's Manual; 69-2327ES RTH2300 5+2 Programmable Thermostat Quick Installation Guide",
+  "img": "tstat-img/tst-honeywell-rth2300.jpg"
  },
  {
   "id": "tst-honeywell-rth2410-2510",
@@ -4939,7 +4958,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2421ES.pdf"
    }
   ],
-  "sourceNotes": "33-00110ES RTH2510/RTH2410 Series Owner's Manual; 69-2421ES RTH2510/RTH2410 Quick Installation Guide"
+  "sourceNotes": "33-00110ES RTH2510/RTH2410 Series Owner's Manual; 69-2421ES RTH2510/RTH2410 Quick Installation Guide",
+  "img": "tstat-img/tst-honeywell-rth2410-2510.jpg"
  },
  {
   "id": "tst-honeywell-rth6360",
@@ -5160,7 +5180,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00201ES.pdf"
    }
   ],
-  "sourceNotes": "33-00201ES RTH6360 Series Quick Installation Guide"
+  "sourceNotes": "33-00201ES RTH6360 Series Quick Installation Guide",
+  "img": "tstat-img/tst-honeywell-rth6360.jpg"
  },
  {
   "id": "tst-honeywell-rth7600",
@@ -5398,7 +5419,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00089ES.pdf"
    }
   ],
-  "sourceNotes": "69-2206EF-03 RTH7600 Quick Installation Guide; 69-2207ES RTH7600 Operating Manual; 33-00089ES RTH7600 RET97C Series"
+  "sourceNotes": "69-2206EF-03 RTH7600 Quick Installation Guide; 69-2207ES RTH7600 Operating Manual; 33-00089ES RTH7600 RET97C Series",
+  "img": "tstat-img/tst-honeywell-rth7600.jpg"
  },
  {
   "id": "tst-honeywell-rth8500",
@@ -5608,7 +5630,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00179EF.pdf"
    }
   ],
-  "sourceNotes": "69-1902EF-1 RTH8500 Installation Guide; 69-2219EF RTH8500 Quick Installation Guide; 33-00406 RTH8500 Series Quick Installation Guide (PM Menu); 33-00179EF RTH8500 Owner's Manual"
+  "sourceNotes": "69-1902EF-1 RTH8500 Installation Guide; 69-2219EF RTH8500 Quick Installation Guide; 33-00406 RTH8500 Series Quick Installation Guide (PM Menu); 33-00179EF RTH8500 Owner's Manual",
+  "img": "tstat-img/tst-honeywell-rth8500.jpg"
  },
  {
   "id": "tst-honeywell-t87-round",
@@ -5699,7 +5722,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-1958EFS.pdf"
    }
   ],
-  "sourceNotes": "69-1958EFS-04 T87N/T87K The Round Owner's Manual"
+  "sourceNotes": "69-1958EFS-04 T87N/T87K The Round Owner's Manual",
+  "img": "tstat-img/tst-honeywell-t87-round.jpg"
  },
  {
   "id": "tst-honeywell-visionpro-8000-redlink",
@@ -5912,7 +5936,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/68-0000s/68-0312.pdf"
    }
   ],
-  "sourceNotes": "69-2760-11 VisionPRO Series with RedLINK 2.0 Installation Guide; 69-2761EFS-09 VisionPRO Series with RedLINK User Guide; 33-00308EFS VisionPRO Series with RedLINK Product Information (TH8320R1003/TH8321R1001); 68-0312 VisionPRO 8000 with RedLINK Product Data (68-0312)"
+  "sourceNotes": "69-2760-11 VisionPRO Series with RedLINK 2.0 Installation Guide; 69-2761EFS-09 VisionPRO Series with RedLINK User Guide; 33-00308EFS VisionPRO Series with RedLINK Product Information (TH8320R1003/TH8321R1001); 68-0312 VisionPRO 8000 with RedLINK Product Data (68-0312)",
+  "img": "tstat-img/tst-honeywell-visionpro-8000-redlink.jpg"
  },
  {
   "id": "tst-honeywell-visionpro-wifi",
@@ -6099,7 +6124,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2734EFS.pdf"
    }
   ],
-  "sourceNotes": "33-00065EFS VisionPRO 8000 Smart Installation Guide (TH8321WF1001); 33-00066EFS-05 VisionPRO 8000 Smart User Guide (TH8321WF1001); 69-2734EFS User Guide VisionPRO Wi-Fi Model TH8320WF"
+  "sourceNotes": "33-00065EFS VisionPRO 8000 Smart Installation Guide (TH8321WF1001); 33-00066EFS-05 VisionPRO 8000 Smart User Guide (TH8321WF1001); 69-2734EFS User Guide VisionPRO Wi-Fi Model TH8320WF",
+  "img": "tstat-img/tst-honeywell-visionpro-wifi.jpg"
  },
  {
   "id": "tst-honeywell-cwire-adapter",
@@ -6185,7 +6211,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00618.pdf"
    }
   ],
-  "sourceNotes": "69-2065EFS-09 THP9045A1023 Wiring Module (Wire Saver) Installation Instructions; 33-00042 Wire Saver THP9045A Installation Guide (paired with Wi-Fi 7-day thermostats); 33-00618-03 C-Wire Adapter Installation Guide (newer/different accessory, referenced for comparison)"
+  "sourceNotes": "69-2065EFS-09 THP9045A1023 Wiring Module (Wire Saver) Installation Instructions; 33-00042 Wire Saver THP9045A Installation Guide (paired with Wi-Fi 7-day thermostats); 33-00618-03 C-Wire Adapter Installation Guide (newer/different accessory, referenced for comparison)",
+  "img": "tstat-img/tst-honeywell-cwire-adapter.jpg"
  },
  {
   "id": "tst-honeywell-redlink-accessories",
@@ -6251,7 +6278,8 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2758EFS.pdf"
    }
   ],
-  "sourceNotes": "69-2760-11 VisionPRO Series with RedLINK 2.0 Installation Guide (accessory specs/part numbers, section 2); 69-2758EFS Equipment Interface Module (THM5421R1021) Installation Guide (accessory pairing steps)"
+  "sourceNotes": "69-2760-11 VisionPRO Series with RedLINK 2.0 Installation Guide (accessory specs/part numbers, section 2); 69-2758EFS Equipment Interface Module (THM5421R1021) Installation Guide (accessory pairing steps)",
+  "img": "tstat-img/tst-honeywell-redlink-accessories.jpg"
  },
  {
   "id": "tst-honeywell-redlink-eim",
@@ -6448,7 +6476,8 @@ const THERMOSTATS = [
     "url": "https://digitalassets.resideo.com/damroot/Original/10005/69-2091EFS.pdf"
    }
   ],
-  "sourceNotes": "69-2758EFS Equipment Interface Module (THM5421R1021) Installation Guide; 69-2091EFS RedLINK Wireless System With Equipment Interface Module (installation + error codes)"
+  "sourceNotes": "69-2758EFS Equipment Interface Module (THM5421R1021) Installation Guide; 69-2091EFS RedLINK Wireless System With Equipment Interface Module (installation + error codes)",
+  "img": "tstat-img/tst-honeywell-redlink-eim.jpg"
  },
  {
   "id": "tst-honeywell-uwp",
@@ -6564,7 +6593,8 @@ const THERMOSTATS = [
     "seedFile": "honeywell-home-t6pro-install.pdf"
    }
   ],
-  "sourceNotes": "See NOTES.md - no document list captured for this family."
+  "sourceNotes": "See NOTES.md - no document list captured for this family.",
+  "img": "tstat-img/tst-honeywell-uwp.jpg"
  },
  {
   "id": "tst-ecobee-enhanced",
@@ -6773,7 +6803,8 @@ const THERMOSTATS = [
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/38mOpxuQED3OOIUvYbLshZ/cc711d0d2844dfa61cc8e58e49a9bc4c/Enhanced_setup-user_manual_2023_v1.pdf"
    }
   ],
-  "sourceNotes": "ecobee Smart Thermostat Enhanced - Setup and User Guide; Smart Thermostat Enhanced - Conventional wiring diagram; Smart Thermostat Enhanced - Heat pump wiring diagram; Smart Thermostat Enhanced - Boiler/Radiant (3-wire Heat only) wiring diagram; Smart Thermostat Enhanced - Quick Start Guide; How to Test Your HVAC System with the ecobee Thermostat"
+  "sourceNotes": "ecobee Smart Thermostat Enhanced - Setup and User Guide; Smart Thermostat Enhanced - Conventional wiring diagram; Smart Thermostat Enhanced - Heat pump wiring diagram; Smart Thermostat Enhanced - Boiler/Radiant (3-wire Heat only) wiring diagram; Smart Thermostat Enhanced - Quick Start Guide; How to Test Your HVAC System with the ecobee Thermostat",
+  "img": "tstat-img/tst-ecobee-enhanced.jpg"
  },
  {
   "id": "tst-ecobee-premium",
@@ -7085,7 +7116,8 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/article_attachments/ST_Premium_QSG_Digital_US_20220404.pdf"
    }
   ],
-  "sourceNotes": "ecobee Smart Thermostat Premium - Installation, Setup and User Guide; Smart Thermostat Premium - Conventional wiring diagram; Smart Thermostat Premium - Heat pump with auxiliary heat wiring diagram; Smart Thermostat Premium - Power Extender Kit wiring diagram; Smart Thermostat Premium - Quick Start Guide; How to Test Your HVAC System with the ecobee Thermostat"
+  "sourceNotes": "ecobee Smart Thermostat Premium - Installation, Setup and User Guide; Smart Thermostat Premium - Conventional wiring diagram; Smart Thermostat Premium - Heat pump with auxiliary heat wiring diagram; Smart Thermostat Premium - Power Extender Kit wiring diagram; Smart Thermostat Premium - Quick Start Guide; How to Test Your HVAC System with the ecobee Thermostat",
+  "img": "tstat-img/tst-ecobee-premium.jpg"
  },
  {
   "id": "tst-ecobee-3-lite",
@@ -7238,7 +7270,8 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/article_attachments/ecobee3lite_wiringdiagram_boilerradiant.pdf"
    }
   ],
-  "sourceNotes": "How to install your ecobee3 lite; ecobee3 lite - Boiler/Radiant wiring diagram"
+  "sourceNotes": "How to install your ecobee3 lite; ecobee3 lite - Boiler/Radiant wiring diagram",
+  "img": "tstat-img/tst-ecobee-3-lite.jpg"
  },
  {
   "id": "tst-ecobee-3",
@@ -7405,7 +7438,8 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/article_attachments/pdfs/ecobee3_UserGuide.pdf"
    }
   ],
-  "sourceNotes": "ecobee3 Installation Guide; ecobee3 User Guide; ecobee3 - Conventional wiring diagram; ecobee3 - Heat pump wiring diagram; ecobee3 - Boiler/Radiant wiring diagram; ecobee3 - HVAC accessory wiring diagram"
+  "sourceNotes": "ecobee3 Installation Guide; ecobee3 User Guide; ecobee3 - Conventional wiring diagram; ecobee3 - Heat pump wiring diagram; ecobee3 - Boiler/Radiant wiring diagram; ecobee3 - HVAC accessory wiring diagram",
+  "img": "tstat-img/tst-ecobee-3.jpg"
  },
  {
   "id": "tst-ecobee-4",
@@ -7579,7 +7613,8 @@ const THERMOSTATS = [
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/7wzUl0dU6G8zfHv18E4zPJ/1d4ef614f64f9602ee9cd82d1c141285/pek_wiring.pdf"
    }
   ],
-  "sourceNotes": "How to install your ecobee4; ecobee4 - Conventional wiring diagram; ecobee4 - Heat pump with auxiliary heat wiring diagram; ecobee4 - Power Extender Kit wiring diagram"
+  "sourceNotes": "How to install your ecobee4; ecobee4 - Conventional wiring diagram; ecobee4 - Heat pump with auxiliary heat wiring diagram; ecobee4 - Power Extender Kit wiring diagram",
+  "img": "tstat-img/tst-ecobee-4.jpg"
  },
  {
   "id": "tst-ecobee-smart-voice",
@@ -7745,7 +7780,8 @@ const THERMOSTATS = [
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/6qB4MoLEnXeSgxalZriX7q/db388d510de3b6fe304a381b13e90712/smart_thermostat_voice_installation_guide.pdf"
    }
   ],
-  "sourceNotes": "How to install your ecobee (SmartThermostat with voice control)"
+  "sourceNotes": "How to install your ecobee (SmartThermostat with voice control)",
+  "img": "tstat-img/tst-ecobee-smart-voice.jpg"
  },
  {
   "id": "tst-ecobee-pek",
@@ -7816,7 +7852,8 @@ const THERMOSTATS = [
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/7wzUl0dU6G8zfHv18E4zPJ/1d4ef614f64f9602ee9cd82d1c141285/pek_wiring.pdf"
    }
   ],
-  "sourceNotes": "Smart Thermostat Premium - Power Extender Kit wiring diagram; ecobee4 - Power Extender Kit wiring diagram"
+  "sourceNotes": "Smart Thermostat Premium - Power Extender Kit wiring diagram; ecobee4 - Power Extender Kit wiring diagram",
+  "img": "tstat-img/tst-ecobee-pek.jpg"
  },
  {
   "id": "tst-ecobee-smartsensor",
@@ -7889,7 +7926,8 @@ const THERMOSTATS = [
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/5RopKoaNDxcC75ZouOW2AL/a1b12755b3b5859250ed0adc1e85fd03/Install-your-SmartSensor.pdf"
    }
   ],
-  "sourceNotes": "Install your SmartSensor"
+  "sourceNotes": "Install your SmartSensor",
+  "img": "tstat-img/tst-ecobee-smartsensor.jpg"
  },
  {
   "id": "tst-sensi-classic",
@@ -8055,7 +8093,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/bfc1e5ef-5156-4617-b9ae-b16b0105589b/R-5029%20-%20Sensi%20Smart%20Thermostat%20Manual%20Operation.pdf"
    }
   ],
-  "sourceNotes": "R-5020-4 Sensi Smart Thermostat Installation Guide (Models 1F87U-42WF, ST55); R-5029 Sensi Smart Thermostat Manual Operation Guide"
+  "sourceNotes": "R-5020-4 Sensi Smart Thermostat Installation Guide (Models 1F87U-42WF, ST55); R-5029 Sensi Smart Thermostat Manual Operation Guide",
+  "img": "tstat-img/tst-sensi-classic.jpg"
  },
  {
   "id": "tst-sensi-lite",
@@ -8389,7 +8428,8 @@ const THERMOSTATS = [
     "url": "https://sensi.copeland.com/en-us/support/sensi-manuals"
    }
   ],
-  "sourceNotes": "0037-7877006 Sensi Lite smart thermostat - Pro Install Guide; R-5664 Sensi Lite smart thermostat Installation Guide; R-5647-2 Sensi Lite 1F76U-22WFB Pro Spec Sheet; Sensi Lite smart thermostat (professional product page - Specs at a glance, Terminals row); Browse Sensi Thermostat Manuals; R-5664-3 Sensi Lite Smart Thermostat Installation Guide"
+  "sourceNotes": "0037-7877006 Sensi Lite smart thermostat - Pro Install Guide; R-5664 Sensi Lite smart thermostat Installation Guide; R-5647-2 Sensi Lite 1F76U-22WFB Pro Spec Sheet; Sensi Lite smart thermostat (professional product page - Specs at a glance, Terminals row); Browse Sensi Thermostat Manuals; R-5664-3 Sensi Lite Smart Thermostat Installation Guide",
+  "img": "tstat-img/tst-sensi-lite.jpg"
  },
  {
   "id": "tst-sensi-touch-2",
@@ -8629,7 +8669,8 @@ const THERMOSTATS = [
     "url": "https://sensi.copeland.com/documents/sensi-touch-2-smart-thermostat-manual-operation-guide-en-8631996.pdf"
    }
   ],
-  "sourceNotes": "Sensi Touch 2 Smart Thermostat Installation Guide; Sensi Touch 2 Smart Thermostat Manual Operation Guide"
+  "sourceNotes": "Sensi Touch 2 Smart Thermostat Installation Guide; Sensi Touch 2 Smart Thermostat Manual Operation Guide",
+  "img": "tstat-img/tst-sensi-touch-2.jpg"
  },
  {
   "id": "tst-sensi-touch",
@@ -8793,7 +8834,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/6f791f23-508f-4b75-898c-b16b01075780/R-5030%20-%20Sensi%20Touch%20Thermostat%20Manual%20Operation%20Guide.pdf"
    }
   ],
-  "sourceNotes": "R-5021 Sensi Touch Thermostat Installation Guide; R-5030 Sensi Touch Thermostat Manual Operation Guide"
+  "sourceNotes": "R-5021 Sensi Touch Thermostat Installation Guide; R-5030 Sensi Touch Thermostat Manual Operation Guide",
+  "img": "tstat-img/tst-sensi-touch.jpg"
  },
  {
   "id": "tst-wr-1f85u",
@@ -9061,7 +9103,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/17072d87-5f61-4480-a27b-b16b00f89c41/0037-7554001%20-%201F85U-42PR%20Instructions%20(E).pdf"
    }
   ],
-  "sourceNotes": "37-7554001 (replaces 37-7554D) 1F85U-42PR Universal Thermostat (Programmable) Installation and Operating Instructions - bilingual EN/FR"
+  "sourceNotes": "37-7554001 (replaces 37-7554D) 1F85U-42PR Universal Thermostat (Programmable) Installation and Operating Instructions - bilingual EN/FR",
+  "img": "tstat-img/tst-wr-1f85u.jpg"
  },
  {
   "id": "tst-wr-1f95-0671",
@@ -9358,7 +9401,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/551c3617-07f9-428d-b8c5-b16b0103b39e/0037-6979-Instructions-1F95-0671.pdf"
    }
   ],
-  "sourceNotes": "37-6979001 (replaces 37-6979B) 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions"
+  "sourceNotes": "37-6979001 (replaces 37-6979B) 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions",
+  "img": "tstat-img/tst-wr-1f95-0671.jpg"
  },
  {
   "id": "tst-wr-1f95ez-0671",
@@ -9623,7 +9667,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/4f1f68c9-5f2d-478f-a5f9-b16b00f936f2/0037-6994-Instructions-1F95EZ-0671.pdf"
    }
   ],
-  "sourceNotes": "37-6994001 (replaces 37-6994A) 1F95EZ-0671 Blue Easy Reader Thermostat Homeowner's Guide; 37-6986002 (replaces 37-6986001) 1F95EZ-0671 Blue Easy Reader Thermostat Installation Instructions"
+  "sourceNotes": "37-6994001 (replaces 37-6994A) 1F95EZ-0671 Blue Easy Reader Thermostat Homeowner's Guide; 37-6986002 (replaces 37-6986001) 1F95EZ-0671 Blue Easy Reader Thermostat Installation Instructions",
+  "img": "tstat-img/tst-wr-1f95ez-0671.jpg"
  },
  {
   "id": "tst-wr-1f97-1277",
@@ -9991,7 +10036,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/f8a2b5b8-48bd-4d81-96d8-b16d001e7de6/0037-5886-Instructions-90%20Series%20PREMIUM%201F90%201F97-3XX.pdf"
    }
   ],
-  "sourceNotes": "37-7388002 (replaces 37-7388001) 1F97-1277 Blue Universal Touchscreen Thermostat Installation and Operating Instructions; 0037-7388001 1F97-1277 Installation and Operating Instructions (Comfort-Set 90 Series Touchscreen); 0037-5886 Comfort-Set 90 Series PREMIUM 1F90/1F97-3XX Operating Instructions (legacy generation)"
+  "sourceNotes": "37-7388002 (replaces 37-7388001) 1F97-1277 Blue Universal Touchscreen Thermostat Installation and Operating Instructions; 0037-7388001 1F97-1277 Installation and Operating Instructions (Comfort-Set 90 Series Touchscreen); 0037-5886 Comfort-Set 90 Series PREMIUM 1F90/1F97-3XX Operating Instructions (legacy generation)",
+  "img": "tstat-img/tst-wr-1f97-1277.jpg"
  },
  {
   "id": "tst-wr-blue-4in-1f83",
@@ -10250,7 +10296,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/17072d87-5f61-4480-a27b-b16b00f89c41/0037-7554001%20-%201F85U-42PR%20Instructions%20(E).pdf"
    }
   ],
-  "sourceNotes": "0037-7479002 1F83C-11NP Installation and Operating Instructions (Single Stage, Non-Programmable); 0037-7758003 (rev of 002) 1F83C-11PR Installation and Operating Instructions (Single Stage, Programmable); 37-7511005 1F83H-21PR Installation and Operating Instructions (Heat Pump, Programmable); 0037-7136 1F83-0422 Instructions (Blue Universal Thermostat, Automatic Heat/Cool Changeover); 37-7554001 1F85U-42PR Installation and Operating Instructions (Univer..."
+  "sourceNotes": "0037-7479002 1F83C-11NP Installation and Operating Instructions (Single Stage, Non-Programmable); 0037-7758003 (rev of 002) 1F83C-11PR Installation and Operating Instructions (Single Stage, Programmable); 37-7511005 1F83H-21PR Installation and Operating Instructions (Heat Pump, Programmable); 0037-7136 1F83-0422 Instructions (Blue Universal Thermostat, Automatic Heat/Cool Changeover); 37-7554001 1F85U-42PR Installation and Operating Instructions (Univer...",
+  "img": "tstat-img/tst-wr-blue-4in-1f83.jpg"
  },
  {
   "id": "tst-wr-1f95-1277",
@@ -10557,7 +10604,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/4f1f68c9-5f2d-478f-a5f9-b16b00f936f2/0037-6994-Instructions-1F95EZ-0671.pdf"
    }
   ],
-  "sourceNotes": "0037-6753 1F95-1277 Installation and Operating Instructions (Blue Series Touchscreen); 0037-6979 1F95-0671 Blue Universal Thermostat Instructions; 0037-6994 1F95EZ-0671 Blue Easy Reader Thermostat Homeowner's Guide"
+  "sourceNotes": "0037-6753 1F95-1277 Installation and Operating Instructions (Blue Series Touchscreen); 0037-6979 1F95-0671 Blue Universal Thermostat Instructions; 0037-6994 1F95EZ-0671 Blue Easy Reader Thermostat Homeowner's Guide",
+  "img": "tstat-img/tst-wr-1f95-1277.jpg"
  },
  {
   "id": "tst-wr-1e78",
@@ -10659,7 +10707,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/7a99b251-de7d-4f62-9e9c-b16b0103a09a/0037-6620-Instruction%20Sheet-1E78.pdf"
    }
   ],
-  "sourceNotes": "37-6599001 1E78-144 Installation Instructions (Non-Programmable Thermostat); 0037-6620 1E78 Instruction Sheet"
+  "sourceNotes": "37-6599001 1E78-144 Installation Instructions (Non-Programmable Thermostat); 0037-6620 1E78 Instruction Sheet",
+  "img": "tstat-img/tst-wr-1e78.jpg"
  },
  {
   "id": "tst-wr-1f83-1f85-0422",
@@ -10980,7 +11029,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/1cf44254-c5f3-4fdc-94d7-b16d001d795d/0037-7136-Instructions-1F83-0422.pdf"
    }
   ],
-  "sourceNotes": "37-7136A 1F83-0422 / 1F85-0422 Blue Universal Thermostat with Automatic Heat/Cool Changeover Option - Installation and Operating Instructions"
+  "sourceNotes": "37-7136A 1F83-0422 / 1F85-0422 Blue Universal Thermostat with Automatic Heat/Cool Changeover Option - Installation and Operating Instructions",
+  "img": "tstat-img/tst-wr-1f83-1f85-0422.jpg"
  },
  {
   "id": "tst-wr-1f86",
@@ -11125,7 +11175,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/37a7409b-8dfe-40c3-8116-b16b0103a0b7/PROD-COMRES-WR-Classic_80_Series_Thermostats-Instructions_0037-6585.pdf"
    }
   ],
-  "sourceNotes": "37-6585001 1F86-344 Installation and Operation Instructions (Non-Programmable)"
+  "sourceNotes": "37-6585001 1F86-344 Installation and Operation Instructions (Non-Programmable)",
+  "img": "tstat-img/tst-wr-1f86.jpg"
  },
  {
   "id": "tst-wr-1f89-0211",
@@ -11315,7 +11366,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/e4d3609e-84e8-4c0d-b466-b16b00f80e97/0037-6233-Operation-1F89-211.pdf"
    }
   ],
-  "sourceNotes": "37-6997001 1F89-0211 Blue 2 inch Heat Pump Installation and Operating Instructions; 0037-6233 1F89-211 Operation Instructions (non-programmable heat pump)"
+  "sourceNotes": "37-6997001 1F89-0211 Blue 2 inch Heat Pump Installation and Operating Instructions; 0037-6233 1F89-211 Operation Instructions (non-programmable heat pump)",
+  "img": "tstat-img/tst-wr-1f89-0211.jpg"
  },
  {
   "id": "tst-wr-1f89-211",
@@ -11569,7 +11621,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/e4d3609e-84e8-4c0d-b466-b16b00f80e97/0037-6233-Operation-1F89-211.pdf"
    }
   ],
-  "sourceNotes": "37-6233001 (replaces 37-6233H) 1F89-211 Non-programmable Electronic Digital Heat Pump Thermostat Installation and Operation Instructions"
+  "sourceNotes": "37-6233001 (replaces 37-6233H) 1F89-211 Non-programmable Electronic Digital Heat Pump Thermostat Installation and Operation Instructions",
+  "img": "tstat-img/tst-wr-1f89-211.jpg"
  },
  {
   "id": "tst-wr-70-series-1f78",
@@ -11741,7 +11794,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/ec40e87f-5c47-4e72-a0d8-b16b0103970b/PROD-COMRES-WR-70_Series_Thermostats-Instructions_0037-6542.pdf"
    }
   ],
-  "sourceNotes": "37-6614C 1F78-151 Installation Instructions (5/2 Day Programmable); 0037-6542 70 Series Thermostats Instructions (0037-6542, includes 1E78 wiring)"
+  "sourceNotes": "37-6614C 1F78-151 Installation Instructions (5/2 Day Programmable); 0037-6542 70 Series Thermostats Instructions (0037-6542, includes 1E78 wiring)",
+  "img": "tstat-img/tst-wr-70-series-1f78.jpg"
  },
  {
   "id": "tst-wr-80-series-1f80",
@@ -11965,7 +12019,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/b1e84722-7191-4e64-88b3-b16b00f92561/R-4461-4%20-%2080%20Series%20thermostats_Spec%20Sheet.pdf"
    }
   ],
-  "sourceNotes": "37-6120A 1F80-71 Installation and Operation Instructions; 0037-7009 1F80-0261 Instructions (Blue 2 inch Single Stage, 5/1/1 Programmable); 0037-6621 1F80-361 Classic 80 Series Instructions (Programmable Electronic Digital Thermostat); R-4461-4 80 Series Thermostats Spec Sheet"
+  "sourceNotes": "37-6120A 1F80-71 Installation and Operation Instructions; 0037-7009 1F80-0261 Instructions (Blue 2 inch Single Stage, 5/1/1 Programmable); 0037-6621 1F80-361 Classic 80 Series Instructions (Programmable Electronic Digital Thermostat); R-4461-4 80 Series Thermostats Spec Sheet",
+  "img": "tstat-img/tst-wr-80-series-1f80.jpg"
  },
  {
   "id": "tst-wr-1f80-1f86-0471-selecto",
@@ -12118,7 +12173,8 @@ const THERMOSTATS = [
     "url": "https://media.copeland.com/fab8e3dd-548b-4be0-a423-b16d001d617e/0037-6952-Instructions-%201F80ST-0471%20and%201F86ST-0471-SP.pdf"
    }
   ],
-  "sourceNotes": "0037-6952 1F80ST-0471 and 1F86ST-0471 Blue Selecto Thermostat Instructions (Spanish language; the document text states it covers models 1F80-0471 / 1F86-0471)"
+  "sourceNotes": "0037-6952 1F80ST-0471 and 1F86ST-0471 Blue Selecto Thermostat Instructions (Spanish language; the document text states it covers models 1F80-0471 / 1F86-0471)",
+  "img": "tstat-img/tst-wr-1f80-1f86-0471-selecto.jpg"
  },
  {
   "id": "tst-braeburn-1000-builder",
@@ -12229,7 +12285,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2018/06/1020NC-Spec.pdf"
    }
   ],
-  "sourceNotes": "1020NCW-100-03 1020NC/1220NC Builder Series Detailed Installer Guide; 1020NC Specifications"
+  "sourceNotes": "1020NCW-100-03 1020NC/1220NC Builder Series Detailed Installer Guide; 1020NC Specifications",
+  "img": "tstat-img/tst-braeburn-1000-builder.jpg"
  },
  {
   "id": "tst-braeburn-1000-premier",
@@ -12359,7 +12416,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2018/06/1020-Spec.pdf"
    }
   ],
-  "sourceNotes": "1020W-100-03 1020/1220 Non-Programmable Thermostat Detailed Installer Guide; 1020 Specifications"
+  "sourceNotes": "1020W-100-03 1020/1220 Non-Programmable Thermostat Detailed Installer Guide; 1020 Specifications",
+  "img": "tstat-img/tst-braeburn-1000-premier.jpg"
  },
  {
   "id": "tst-braeburn-2000-builder",
@@ -12443,7 +12501,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2018/12/2020NC-Spec.pdf"
    }
   ],
-  "sourceNotes": "2020NCW-100-05 2020NC/2220NC Builder Series Manual; 2020NC Specifications"
+  "sourceNotes": "2020NCW-100-05 2020NC/2220NC Builder Series Manual; 2020NC Specifications",
+  "img": "tstat-img/tst-braeburn-2000-builder.jpg"
  },
  {
   "id": "tst-braeburn-2000-premier",
@@ -12606,7 +12665,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2018/06/2220-Spec_0.pdf"
    }
   ],
-  "sourceNotes": "2020W-100-06 2020/2220 Programmable Thermostat Detailed User Guide; 2220 Specifications"
+  "sourceNotes": "2020W-100-06 2020/2220 Programmable Thermostat Detailed User Guide; 2220 Specifications",
+  "img": "tstat-img/tst-braeburn-2000-premier.jpg"
  },
  {
   "id": "tst-braeburn-5000-premier",
@@ -12823,7 +12883,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2023/04/5220-spec_0.pdf"
    }
   ],
-  "sourceNotes": "5020W-100-05 5020/5220 Premier Series Detailed Installer Guide; 5020/5220 User Manual; 5020 Specifications; 5220 Specifications"
+  "sourceNotes": "5020W-100-05 5020/5220 Premier Series Detailed Installer Guide; 5020/5220 User Manual; 5020 Specifications; 5220 Specifications",
+  "img": "tstat-img/tst-braeburn-5000-premier.jpg"
  },
  {
   "id": "tst-braeburn-5300-touchscreen",
@@ -13034,7 +13095,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2015/09/5320-Spec_0.pdf"
    }
   ],
-  "sourceNotes": "5310W-100-04 5310/5320 Touchscreen Detailed Installer Guide; 5310/5320 User Manual; 5320 Specifications"
+  "sourceNotes": "5310W-100-04 5310/5320 Touchscreen Detailed Installer Guide; 5310/5320 User Manual; 5320 Specifications",
+  "img": "tstat-img/tst-braeburn-5300-touchscreen.jpg"
  },
  {
   "id": "tst-braeburn-6000-deluxe",
@@ -13217,7 +13279,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2015/10/6100-Spec.pdf"
    }
   ],
-  "sourceNotes": "6100-100-01 6000 Series (6100/6300) Detailed Installer Guide; 6100 User Manual; 6100 Specifications"
+  "sourceNotes": "6100-100-01 6000 Series (6100/6300) Detailed Installer Guide; 6100 User Manual; 6100 Specifications",
+  "img": "tstat-img/tst-braeburn-6000-deluxe.jpg"
  },
  {
   "id": "tst-braeburn-7500-bluelink",
@@ -13450,7 +13513,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2023/04/7500-spec.pdf"
    }
   ],
-  "sourceNotes": "7500-100-05 7500 BlueLink Wireless Thermostat Kit Installer Guide; 7500 User Manual; 7500 Setup Guide; 7500 Specifications"
+  "sourceNotes": "7500-100-05 7500 BlueLink Wireless Thermostat Kit Installer Guide; 7500 User Manual; 7500 Setup Guide; 7500 Specifications",
+  "img": "tstat-img/tst-braeburn-7500-bluelink.jpg"
  },
  {
   "id": "tst-braeburn-8500-bluelink",
@@ -13660,7 +13724,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2025/01/8500-Specifications.pdf"
    }
   ],
-  "sourceNotes": "8500 BlueLink Wireless Thermostat Kit Installer Guide; 8500 User Manual; 8500 Setup Guide; 8500 Specifications"
+  "sourceNotes": "8500 BlueLink Wireless Thermostat Kit Installer Guide; 8500 User Manual; 8500 Setup Guide; 8500 Specifications",
+  "img": "tstat-img/tst-braeburn-8500-bluelink.jpg"
  },
  {
   "id": "tst-braeburn-3000-3200",
@@ -13907,7 +13972,8 @@ const THERMOSTATS = [
     "url": "https://braeburnonline.com/wp-content/uploads/2011/09/3000-3200_manual.pdf"
    }
   ],
-  "sourceNotes": "3000-100-010 3000/3200 Premier Series Non-Programmable Thermostat Manual"
+  "sourceNotes": "3000-100-010 3000/3200 Premier Series Non-Programmable Thermostat Manual",
+  "img": "tstat-img/tst-braeburn-3000-3200.jpg"
  },
  {
   "id": "tst-lux-kono-wifi",
@@ -14076,7 +14142,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/KONO_WIFI_ENG_SettingsGuide.pdf"
    }
   ],
-  "sourceNotes": "54066 KONO Smart Thermostat (WiFi) Installation Manual; KONO WiFi Installation Settings Guide"
+  "sourceNotes": "54066 KONO Smart Thermostat (WiFi) Installation Manual; KONO WiFi Installation Settings Guide",
+  "img": "tstat-img/tst-lux-kono-wifi.jpg"
  },
  {
   "id": "tst-lux-kono-zwave",
@@ -14192,7 +14259,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/KONO_ZWAVE_ENG_Operating_Guide.pdf"
    }
   ],
-  "sourceNotes": "54074 KONOzw (Z-Wave) Smart Hub Thermostat Installation Manual; KONOzw Operating/Operations Guide"
+  "sourceNotes": "54074 KONOzw (Z-Wave) Smart Hub Thermostat Installation Manual; KONOzw Operating/Operations Guide",
+  "img": "tstat-img/tst-lux-kono-zwave.jpg"
  },
  {
   "id": "tst-lux-kono-zigbee",
@@ -14363,7 +14431,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/KONO_ZIGBEE_ENG_SettingsGuide.pdf"
    }
   ],
-  "sourceNotes": "KONOz (Zigbee) Smart Hub Thermostat Installation Manual; KONOz (Zigbee) Installation Settings Guide"
+  "sourceNotes": "KONOz (Zigbee) Smart Hub Thermostat Installation Manual; KONOz (Zigbee) Installation Settings Guide",
+  "img": "tstat-img/tst-lux-kono-zigbee.jpg"
  },
  {
   "id": "tst-lux-tx1500u",
@@ -14568,7 +14637,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/terminal-cross-reference-chart-withcommon-1500u.pdf"
    }
   ],
-  "sourceNotes": "52160 TX1500U Installation and Operating Instructions (EN); 52173 TX1500Uc Installation and Operating Instructions (EN); Heat Pump Terminal Cross Reference Chart"
+  "sourceNotes": "52160 TX1500U Installation and Operating Instructions (EN); 52173 TX1500Uc Installation and Operating Instructions (EN); Heat Pump Terminal Cross Reference Chart",
+  "img": "tstat-img/tst-lux-tx1500u.jpg"
  },
  {
   "id": "tst-lux-tx500u",
@@ -14837,7 +14907,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/tx500u_faq_en.pdf"
    }
   ],
-  "sourceNotes": "TX500U Installation and Operating Instructions (EN); 52172 TX500Uc Installation and Operating Instructions (EN); TX500U Troubleshoot / FAQ Guide (covers a/b/c revisions); Heat Pump Terminal Cross Reference Chart"
+  "sourceNotes": "TX500U Installation and Operating Instructions (EN); 52172 TX500Uc Installation and Operating Instructions (EN); TX500U Troubleshoot / FAQ Guide (covers a/b/c revisions); Heat Pump Terminal Cross Reference Chart",
+  "img": "tstat-img/tst-lux-tx500u.jpg"
  },
  {
   "id": "tst-lux-tx9600",
@@ -15145,7 +15216,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/LUX_TX9600TS.pdf"
    }
   ],
-  "sourceNotes": "52138 TX9600TSa Installation and Operating Instructions (EN); TX9600TS Spec Sheet; TX9600TS Troubleshoot / FAQ Guide; Heat Pump Terminal Cross Reference Chart (3rd-party brand terminal mapping)"
+  "sourceNotes": "52138 TX9600TSa Installation and Operating Instructions (EN); TX9600TS Spec Sheet; TX9600TS Troubleshoot / FAQ Guide; Heat Pump Terminal Cross Reference Chart (3rd-party brand terminal mapping)",
+  "img": "tstat-img/tst-lux-tx9600.jpg"
  },
  {
   "id": "tst-lux-geo",
@@ -15292,7 +15364,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/GEO_ENG_Manual.pdf"
    }
   ],
-  "sourceNotes": "53599-17 LUX/GEO Quick-Start / Installation Manual (EN)"
+  "sourceNotes": "53599-17 LUX/GEO Quick-Start / Installation Manual (EN)",
+  "img": "tstat-img/tst-lux-geo.jpg"
  },
  {
   "id": "tst-lux-tx1500-dial",
@@ -15469,7 +15542,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/terminal-cross-reference-chart-withcommon-1500u.pdf"
    }
   ],
-  "sourceNotes": "52017 TX1500b Series Installation and Operating Instructions (EN); 52007 TX1500E Installation and Operating Instructions (EN); Heat Pump Terminal Cross Reference Chart"
+  "sourceNotes": "52017 TX1500b Series Installation and Operating Instructions (EN); 52007 TX1500E Installation and Operating Instructions (EN); Heat Pump Terminal Cross Reference Chart",
+  "img": "tstat-img/tst-lux-tx1500-dial.jpg"
  },
  {
   "id": "tst-lux-tx500-dial",
@@ -15598,7 +15672,8 @@ const THERMOSTATS = [
     "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/TX500E_ENG_Manual.pdf"
    }
   ],
-  "sourceNotes": "52016 TX500b Series Installation and Operating Instructions (EN); 52073 TX500E Installation and Operating Instructions (EN)"
+  "sourceNotes": "52016 TX500b Series Installation and Operating Instructions (EN); 52073 TX500E Installation and Operating Instructions (EN)",
+  "img": "tstat-img/tst-lux-tx500-dial.jpg"
  },
  {
   "id": "tst-pro1-t701i",
@@ -15723,7 +15798,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-701i-OM-Operation-Manual-ALitho-2224.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2251 T701i Product Installation Guide; T701i Operation Manual"
+  "sourceNotes": "Rev. 2251 T701i Product Installation Guide; T701i Operation Manual",
+  "img": "tstat-img/tst-pro1-t701i.jpg"
  },
  {
   "id": "tst-pro1-t721i",
@@ -15888,7 +15964,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-721i-OM-Operation-Manual-ALitho-2224.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2224 T721i Product Installation Guide; T721i Operation Manual"
+  "sourceNotes": "Rev. 2224 T721i Product Installation Guide; T721i Operation Manual",
+  "img": "tstat-img/tst-pro1-t721i.jpg"
  },
  {
   "id": "tst-pro1-t751i",
@@ -16058,7 +16135,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-751i-IM-Installation-Manual-Alitho-2403.pdf"
    }
   ],
-  "sourceNotes": "PM-751i-IM T751i Installation Guide"
+  "sourceNotes": "PM-751i-IM T751i Installation Guide",
+  "img": "tstat-img/tst-pro1-t751i.jpg"
  },
  {
   "id": "tst-pro1-t855ish",
@@ -16217,7 +16295,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/800Manuals/PM-855iSH-M-OM-Operation-Manual-Alitho-2028.pdf"
    }
   ],
-  "sourceNotes": "PM-855iSH-IM T855iSH Installation Manual; PM-855iSH-M-OM T855iSH Operation Manual"
+  "sourceNotes": "PM-855iSH-IM T855iSH Installation Manual; PM-855iSH-M-OM T855iSH Operation Manual",
+  "img": "tstat-img/tst-pro1-t855ish.jpg"
  },
  {
   "id": "tst-pro1-t601-2",
@@ -16336,7 +16415,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/600Manuals/PM-601-2-IM-M-Installation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1814 T601-2 Installation Manual; Rev. 1814 T601-2 Operation Manual"
+  "sourceNotes": "Rev. 1814 T601-2 Installation Manual; Rev. 1814 T601-2 Operation Manual",
+  "img": "tstat-img/tst-pro1-t601-2.jpg"
  },
  {
   "id": "tst-pro1-t605-2",
@@ -16469,7 +16549,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/600Manuals/PM-605-2-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1823 T605-2 Installation Manual; T605-2 Operation Manual"
+  "sourceNotes": "Rev. 1823 T605-2 Installation Manual; T605-2 Operation Manual",
+  "img": "tstat-img/tst-pro1-t605-2.jpg"
  },
  {
   "id": "tst-pro1-t621-2",
@@ -16593,7 +16674,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/600Manuals/PM-621-2-IM-M-Installation-Manual-ALitho-1814.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1814 T621-2 Installation Manual; Rev. 1814 T621-2 Operation Manual"
+  "sourceNotes": "Rev. 1814 T621-2 Installation Manual; Rev. 1814 T621-2 Operation Manual",
+  "img": "tstat-img/tst-pro1-t621-2.jpg"
  },
  {
   "id": "tst-pro1-t625-2",
@@ -16727,7 +16809,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/600Manuals/PM-625-2-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1823 T625-2 Installation Manual; T625-2 Operation Manual"
+  "sourceNotes": "Rev. 1823 T625-2 Installation Manual; T625-2 Operation Manual",
+  "img": "tstat-img/tst-pro1-t625-2.jpg"
  },
  {
   "id": "tst-pro1-t701",
@@ -16847,7 +16930,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-701-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1809 T701 Installation Manual; T701 Operation Manual"
+  "sourceNotes": "Rev. 1809 T701 Installation Manual; T701 Operation Manual",
+  "img": "tstat-img/tst-pro1-t701.jpg"
  },
  {
   "id": "tst-pro1-t705",
@@ -16991,7 +17075,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-705-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1751 T705 Installation Manual; T705 Operation Manual"
+  "sourceNotes": "Rev. 1751 T705 Installation Manual; T705 Operation Manual",
+  "img": "tstat-img/tst-pro1-t705.jpg"
  },
  {
   "id": "tst-pro1-t715",
@@ -17155,7 +17240,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-715-OM-Operations-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1751 T715 Installation Manual; T715 Operation Manual"
+  "sourceNotes": "Rev. 1751 T715 Installation Manual; T715 Operation Manual",
+  "img": "tstat-img/tst-pro1-t715.jpg"
  },
  {
   "id": "tst-pro1-t721",
@@ -17293,7 +17379,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-721-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1751 T721 Installation Manual; T721 Operation Manual"
+  "sourceNotes": "Rev. 1751 T721 Installation Manual; T721 Operation Manual",
+  "img": "tstat-img/tst-pro1-t721.jpg"
  },
  {
   "id": "tst-pro1-t725",
@@ -17452,7 +17539,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-725-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1751 T725 Installation Manual; T725 Operation Manual"
+  "sourceNotes": "Rev. 1751 T725 Installation Manual; T725 Operation Manual",
+  "img": "tstat-img/tst-pro1-t725.jpg"
  },
  {
   "id": "tst-pro1-t731",
@@ -17572,7 +17660,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-731-OM-Operation-Manual-Alitho-2224.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2224 T731 Installation Manual; T731 Operation Manual"
+  "sourceNotes": "Rev. 2224 T731 Installation Manual; T731 Operation Manual",
+  "img": "tstat-img/tst-pro1-t731.jpg"
  },
  {
   "id": "tst-pro1-t731w-t731wo",
@@ -17765,7 +17854,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-731WO-OM-Operation-Manual-ALitho-2010.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2132 T731W(O) Installation Manual; T731W(O) Operation Manual"
+  "sourceNotes": "Rev. 2132 T731W(O) Installation Manual; T731W(O) Operation Manual",
+  "img": "tstat-img/tst-pro1-t731w-t731wo.jpg"
  },
  {
   "id": "tst-pro1-t751",
@@ -17936,7 +18026,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-751-OM-M-Operation-Manual-Alitho-2040.pdf"
    }
   ],
-  "sourceNotes": "PM-751-IM-M T751 Installation Manual; PM-751-OM-M T751 Operation Manual"
+  "sourceNotes": "PM-751-IM-M T751 Installation Manual; PM-751-OM-M T751 Operation Manual",
+  "img": "tstat-img/tst-pro1-t751.jpg"
  },
  {
   "id": "tst-pro1-t755-t755s",
@@ -18113,7 +18204,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-755-OM-M-Operation-Manual-Alitho-2028.pdf"
    }
   ],
-  "sourceNotes": "PM-755-IM-M T755(S) Installation Manual; PM-755-OM-M T755(S) Operation Manual"
+  "sourceNotes": "PM-755-IM-M T755(S) Installation Manual; PM-755-OM-M T755(S) Operation Manual",
+  "img": "tstat-img/tst-pro1-t755-t755s.jpg"
  },
  {
   "id": "tst-pro1-t755who",
@@ -18341,7 +18433,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PROsync/PM-755WHO-OM-Operation-Manual-Alitho-2321.pdf"
    }
   ],
-  "sourceNotes": "PM-755WHO-IM T755WHO Installation Manual; PM-755WHO-OM T755WHO Operation Manual"
+  "sourceNotes": "PM-755WHO-IM T755WHO Installation Manual; PM-755WHO-OM T755WHO Operation Manual",
+  "img": "tstat-img/tst-pro1-t755who.jpg"
  },
  {
   "id": "tst-pro1-t771",
@@ -18466,7 +18559,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-771-OM-Operation-Manual-Alitho-1823.pdf"
    }
   ],
-  "sourceNotes": "PM-771-IM T771 Installation Manual; PM-771-OM T771 Operation Manual"
+  "sourceNotes": "PM-771-IM T771 Installation Manual; PM-771-OM T771 Operation Manual",
+  "img": "tstat-img/tst-pro1-t771.jpg"
  },
  {
   "id": "tst-pro1-t805",
@@ -18631,7 +18725,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/800Manuals/PM-805-M-OM-Operation-Manual-Alitho-1910.pdf"
    }
   ],
-  "sourceNotes": "PM-805-IM-M T805 Installation Manual; PM-805-M-OM T805 Operation Manual"
+  "sourceNotes": "PM-805-IM-M T805 Installation Manual; PM-805-M-OM T805 Operation Manual",
+  "img": "tstat-img/tst-pro1-t805.jpg"
  },
  {
   "id": "tst-pro1-t855",
@@ -18801,7 +18896,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/800Manuals/PM-855-M-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-855-IM-M T855 Installation Manual; PM-855-M-OM T855 Operation Manual"
+  "sourceNotes": "PM-855-IM-M T855 Installation Manual; PM-855-M-OM T855 Operation Manual",
+  "img": "tstat-img/tst-pro1-t855.jpg"
  },
  {
   "id": "tst-pro1-t855sh",
@@ -18987,7 +19083,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/800Manuals/PM-855SH-M-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-855SH-IM T855SH Installation Manual; PM-855SH-M-OM T855SH Operation Manual"
+  "sourceNotes": "PM-855SH-IM T855SH Installation Manual; PM-855SH-M-OM T855SH Operation Manual",
+  "img": "tstat-img/tst-pro1-t855sh.jpg"
  },
  {
   "id": "tst-pro1-t955wh",
@@ -19192,7 +19289,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/900Manuals/PM-955WH-OM-Operation-Manual-Alitho-1845.pdf"
    }
   ],
-  "sourceNotes": "PM-955WH-IM T955WH Installation Manual; PM-955WH-OM T955WH Operation Manual"
+  "sourceNotes": "PM-955WH-IM T955WH Installation Manual; PM-955WH-OM T955WH Operation Manual",
+  "img": "tstat-img/tst-pro1-t955wh.jpg"
  },
  {
   "id": "tst-pro1-z955w",
@@ -19369,7 +19467,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PRO-70555-Operating-Manual-Z955W-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PRO-70500 Rev. 1518 Z955W Installation Manual; PRO-70555 Rev. 1518 Z955W Zoning Operation Manual"
+  "sourceNotes": "PRO-70500 Rev. 1518 Z955W Installation Manual; PRO-70555 Rev. 1518 Z955W Zoning Operation Manual",
+  "img": "tstat-img/tst-pro1-z955w.jpg"
  },
  {
   "id": "tst-pro1-t501m",
@@ -19464,7 +19563,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/500Manuals/PM-T501-IM-Installation-Manual-Alitho-1810.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1810 T501M Installation Manual"
+  "sourceNotes": "Rev. 1810 T501M Installation Manual",
+  "img": "tstat-img/tst-pro1-t501m.jpg"
  },
  {
   "id": "tst-pro1-t501ml2-t501ml4",
@@ -19525,7 +19625,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/500Manuals/PM-501ML2-501ML4-Installation-Manual-1810.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1810 T501ML2 / T501ML4 Installation Manual"
+  "sourceNotes": "Rev. 1810 T501ML2 / T501ML4 Installation Manual",
+  "img": "tstat-img/tst-pro1-t501ml2-t501ml4.jpg"
  },
  {
   "id": "tst-pro1-t631-2",
@@ -19639,7 +19740,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/600Manuals/PM-631-2-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-631-2-IM T631-2 Installation Manual; PM-631-2-OM T631-2 Operation Manual"
+  "sourceNotes": "PM-631-2-IM T631-2 Installation Manual; PM-631-2-OM T631-2 Operation Manual",
+  "img": "tstat-img/tst-pro1-t631-2.jpg"
  },
  {
   "id": "tst-pro1-t631w-2",
@@ -19771,7 +19873,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/600Manuals/PM-631W-2-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-631W-2-IM T631W-2 Installation Manual; PM-631W-2-OM T631W-2 Operation Manual"
+  "sourceNotes": "PM-631W-2-IM T631W-2 Installation Manual; PM-631W-2-OM T631W-2 Operation Manual",
+  "img": "tstat-img/tst-pro1-t631w-2.jpg"
  },
  {
   "id": "tst-pro1-t755h",
@@ -19910,7 +20013,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/700Manuals/PM-755H-OM-Operation-Manual-Alitho-1845.pdf"
    }
   ],
-  "sourceNotes": "PM-755H-IM Rev. 1845 T755H Installation Manual; PM-755H-OM Rev. 1845 T755H Operation Manual"
+  "sourceNotes": "PM-755H-IM Rev. 1845 T755H Installation Manual; PM-755H-OM Rev. 1845 T755H Operation Manual",
+  "img": "tstat-img/tst-pro1-t755h.jpg"
  },
  {
   "id": "tst-pro1-t801",
@@ -20033,7 +20137,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/800Manuals/PM-801-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-801-IM T801 Installation Manual; PM-801-OM T801 Operation Manual"
+  "sourceNotes": "PM-801-IM T801 Installation Manual; PM-801-OM T801 Operation Manual",
+  "img": "tstat-img/tst-pro1-t801.jpg"
  },
  {
   "id": "tst-pro1-t855s",
@@ -20166,7 +20271,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/800Manuals/PM-855S-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-855S-IM T855S Installation Manual; PM-855S-OM T855S Operation Manual"
+  "sourceNotes": "PM-855S-IM T855S Installation Manual; PM-855S-OM T855S Operation Manual",
+  "img": "tstat-img/tst-pro1-t855s.jpg"
  },
  {
   "id": "tst-pro1-t905",
@@ -20294,7 +20400,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/900Manuals/PM-905-OM-Operation-Manual-Alitho-1845.pdf"
    }
   ],
-  "sourceNotes": "PM-905-IM T905 Installation Manual; PM-905-OM Rev. 1845 T905 Operation Manual"
+  "sourceNotes": "PM-905-IM T905 Installation Manual; PM-905-OM Rev. 1845 T905 Operation Manual",
+  "img": "tstat-img/tst-pro1-t905.jpg"
  },
  {
   "id": "tst-pro1-t955",
@@ -20433,7 +20540,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/900Manuals/PM-955-OM-Operation-Manual-Alitho-1845.pdf"
    }
   ],
-  "sourceNotes": "PM-955-IM Rev. 1845 T955 Installation Manual; PM-955-OM Rev. 1845 T955 Operation Manual"
+  "sourceNotes": "PM-955-IM Rev. 1845 T955 Installation Manual; PM-955-OM Rev. 1845 T955 Operation Manual",
+  "img": "tstat-img/tst-pro1-t955.jpg"
  },
  {
   "id": "tst-pro1-t955s",
@@ -20566,7 +20674,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/900Manuals/PM-955S-OM-Operation-Manual-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PM-955S-IM T955S Installation Manual; PM-955S-OM T955S Operation Manual"
+  "sourceNotes": "PM-955S-IM T955S Installation Manual; PM-955S-OM T955S Operation Manual",
+  "img": "tstat-img/tst-pro1-t955s.jpg"
  },
  {
   "id": "tst-pro1-pa-cwa01-c-wire-adapter",
@@ -20633,7 +20742,8 @@ const THERMOSTATS = [
     "url": "https://www.pro1iaq.com/images/PDFS/C-wire-Adapter-Manual-2503.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2503 PA-CWA01 C-Wire Adapter Installation Manual"
+  "sourceNotes": "Rev. 2503 PA-CWA01 C-Wire Adapter Installation Manual",
+  "img": "tstat-img/tst-pro1-pa-cwa01-c-wire-adapter.jpg"
  },
  {
   "id": "tst-pro1-r250s-wired-outdoor-slab-sensor",
@@ -20685,7 +20795,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PM-250S-IM-Installation-Manual-ALitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1807 R250S Installation Manual"
+  "sourceNotes": "Rev. 1807 R250S Installation Manual",
+  "img": "tstat-img/tst-pro1-r250s-wired-outdoor-slab-sensor.jpg"
  },
  {
   "id": "tst-pro1-r250w-wireless-outdoor-sensor",
@@ -20774,7 +20885,8 @@ const THERMOSTATS = [
     "url": "https://www.pro1iaq.com/images/PDFS/R250W-Spec-Sheet-2344.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2407 R250W Installation Manual; R250W Spec Sheet"
+  "sourceNotes": "Rev. 2407 R250W Installation Manual; R250W Spec Sheet",
+  "img": "tstat-img/tst-pro1-r250w-wireless-outdoor-sensor.jpg"
  },
  {
   "id": "tst-pro1-r251s-wired-indoor-remote-sensor",
@@ -20826,7 +20938,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PM-251S-IM-Installation-Manual-ALitho.pdf"
    }
   ],
-  "sourceNotes": "Rev. 1809 R251S Installation Manual"
+  "sourceNotes": "Rev. 1809 R251S Installation Manual",
+  "img": "tstat-img/tst-pro1-r251s-wired-indoor-remote-sensor.jpg"
  },
  {
   "id": "tst-pro1-r751wo-wireless-remote-sensor",
@@ -20939,7 +21052,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PROsync/PM-R751WO-IM-Installation-Manual-2321.pdf"
    }
   ],
-  "sourceNotes": "Rev. 2321 R751WO Remote Sensing Installation Manual"
+  "sourceNotes": "Rev. 2321 R751WO Remote Sensing Installation Manual",
+  "img": "tstat-img/tst-pro1-r751wo-wireless-remote-sensor.jpg"
  },
  {
   "id": "tst-pro1-rz250w",
@@ -21007,7 +21121,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PM-RZ250W-IM-Installation_Manual-ALitho.pdf"
    }
   ],
-  "sourceNotes": "PM-RZ250W-IM Rev. 1807 RZ250W Installation Manual"
+  "sourceNotes": "PM-RZ250W-IM Rev. 1807 RZ250W Installation Manual",
+  "img": "tstat-img/tst-pro1-rz250w.jpg"
  },
  {
   "id": "tst-pro1-rz251w",
@@ -21101,7 +21216,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PM-RZ251W-OM-Operation-Manual.pdf"
    }
   ],
-  "sourceNotes": "PM-RZ251W-IM Rev. 1820 RZ251W Installation Guide; PM-RZ251W-OM RZ251W Operation Manual"
+  "sourceNotes": "PM-RZ251W-IM Rev. 1820 RZ251W Installation Guide; PM-RZ251W-OM RZ251W Operation Manual",
+  "img": "tstat-img/tst-pro1-rz251w.jpg"
  },
  {
   "id": "tst-pro1-w150w",
@@ -21177,7 +21293,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PRO-70497-Installation-Manual-W150W-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PRO-70497 Rev. 1344 W150W Installation Manual"
+  "sourceNotes": "PRO-70497 Rev. 1344 W150W Installation Manual",
+  "img": "tstat-img/tst-pro1-w150w.jpg"
  },
  {
   "id": "tst-pro1-ww160w",
@@ -21263,7 +21380,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PRO-70498-Installation-Manual-WW160W-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PRO-70498 Rev. 1908 WW160W Installation Manual"
+  "sourceNotes": "PRO-70498 Rev. 1908 WW160W Installation Manual",
+  "img": "tstat-img/tst-pro1-ww160w.jpg"
  },
  {
   "id": "tst-pro1-z260",
@@ -21346,7 +21464,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PRO-70499-Installation-Manual-Z260W-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PRO-70499 Rev. 1407 Z260W Installation Manual"
+  "sourceNotes": "PRO-70499 Rev. 1407 Z260W Installation Manual",
+  "img": "tstat-img/tst-pro1-z260.jpg"
  },
  {
   "id": "tst-pro1-zda250w",
@@ -21425,7 +21544,8 @@ const THERMOSTATS = [
     "url": "https://pro1iaq.com/images/PDFS/PRO-70501-Installation-Manual-ZDA250W-Alitho.pdf"
    }
   ],
-  "sourceNotes": "PRO-70501 Rev. 1407 ZDA250W Installation Manual"
+  "sourceNotes": "PRO-70501 Rev. 1407 ZDA250W Installation Manual",
+  "img": "tstat-img/tst-pro1-zda250w.jpg"
  },
  {
   "id": "tst-nest-learning-4th-gen",
@@ -22029,7 +22149,8 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/support-kms-prod/ZDmmqzQ3N7yeWRvYkE6ubV3gYfRzfUfgxqaH"
    }
   ],
-  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Identify a thermostat wire; Nest thermostat compatibility"
+  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Identify a thermostat wire; Nest thermostat compatibility",
+  "img": "tstat-img/tst-nest-learning-4th-gen.jpg"
  },
  {
   "id": "tst-nest-learning-3rd-2nd-gen",
@@ -22504,7 +22625,8 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/support-kms-prod/eotsNXyNM9LcSgMdWoHNCzyfjmd2xjYulFbF"
    }
   ],
-  "sourceNotes": "Nest Learning Thermostat Installation Guide (3rd gen); Nest Learning Thermostat Welcome Guide (3rd gen); Nest Learning Thermostat Installation Guide (2nd gen); Nest Learning Thermostat Welcome Guide (2nd gen); Nest thermostat compatibility; Nest thermostat star terminal"
+  "sourceNotes": "Nest Learning Thermostat Installation Guide (3rd gen); Nest Learning Thermostat Welcome Guide (3rd gen); Nest Learning Thermostat Installation Guide (2nd gen); Nest Learning Thermostat Welcome Guide (2nd gen); Nest thermostat compatibility; Nest thermostat star terminal",
+  "img": "tstat-img/tst-nest-learning-3rd-2nd-gen.jpg"
  },
  {
   "id": "tst-nest-thermostat-2020",
@@ -22811,7 +22933,8 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/support-kms-prod/NUKp79Lbz8QzWVGLb3OAK0xe7S3DcP8glbQL"
    }
   ],
-  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Nest thermostat compatibility; Nest Thermostat Welcome Guide (2020)"
+  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Nest thermostat compatibility; Nest Thermostat Welcome Guide (2020)",
+  "img": "tstat-img/tst-nest-thermostat-2020.jpg"
  },
  {
   "id": "tst-nest-thermostat-e",
@@ -23114,7 +23237,8 @@ const THERMOSTATS = [
     "url": "https://support.google.com/googlenest/answer/9240096?hl=en"
    }
   ],
-  "sourceNotes": "Nest Thermostat E Installation Guide; Nest thermostat compatibility; Nest thermostat star terminal; Learn about the common or C wire; Nest Thermostat E Heat Link wiring (UK/EU accessory - not part of US T4000ES kit); Troubleshoot Nest thermostat help codes"
+  "sourceNotes": "Nest Thermostat E Installation Guide; Nest thermostat compatibility; Nest thermostat star terminal; Learn about the common or C wire; Nest Thermostat E Heat Link wiring (UK/EU accessory - not part of US T4000ES kit); Troubleshoot Nest thermostat help codes",
+  "img": "tstat-img/tst-nest-thermostat-e.jpg"
  },
  {
   "id": "tst-nest-power-connector",
@@ -23228,7 +23352,8 @@ const THERMOSTATS = [
     "url": "https://support.google.com/googlenest/answer/10523126?hl=en"
    }
   ],
-  "sourceNotes": "Nest Power Connector Installation Guide; Nest Power Connector; Nest Power Connector (Google Store product/spec page); Learn about the common or C wire"
+  "sourceNotes": "Nest Power Connector Installation Guide; Nest Power Connector; Nest Power Connector (Google Store product/spec page); Learn about the common or C wire",
+  "img": "tstat-img/tst-nest-power-connector.jpg"
  },
  {
   "id": "tst-nest-temperature-sensor",
@@ -23305,7 +23430,8 @@ const THERMOSTATS = [
     "url": "https://support.google.com/googlehome/answer/9248154?hl=en"
    }
   ],
-  "sourceNotes": "Set up and install your Nest Temperature Sensor; Learn about the Nest Temperature Sensor"
+  "sourceNotes": "Set up and install your Nest Temperature Sensor; Learn about the Nest Temperature Sensor",
+  "img": "tstat-img/tst-nest-temperature-sensor.jpg"
  },
  {
   "id": "tst-amazon-smart-thermostat",
@@ -23658,7 +23784,8 @@ const THERMOSTATS = [
     "url": "https://d1ergij2b6wmg5.cloudfront.net/S3+Cloudfront/Smart+Home/Amazon+Smart+Thermostat/most+common+hvac+system+types.jpg"
    }
   ],
-  "sourceNotes": "Amazon Smart Thermostat Support (hub); Set Up Your Amazon Smart Thermostat; Connect the Wiring for Your Amazon Smart Thermostat; Connect a C-wire Adapter to Your Amazon Smart Thermostat; Most Common HVAC System Types (wiring diagram image); Amazon Smart Thermostat Wire Terminals (diagram image)"
+  "sourceNotes": "Amazon Smart Thermostat Support (hub); Set Up Your Amazon Smart Thermostat; Connect the Wiring for Your Amazon Smart Thermostat; Connect a C-wire Adapter to Your Amazon Smart Thermostat; Most Common HVAC System Types (wiring diagram image); Amazon Smart Thermostat Wire Terminals (diagram image)",
+  "img": "tstat-img/tst-amazon-smart-thermostat.jpg"
  },
  {
   "id": "tst-daikin-one-lite",
@@ -23798,7 +23925,8 @@ const THERMOSTATS = [
     "url": "https://www.goodmanmfg.com/docs/librariesprovider6/default-document-library/goodman-gtst-thermostat-local-thermostat-settings-for-unitary.pdf?view=true&view=true"
    }
   ],
-  "sourceNotes": "TRC-11 Daikin One Lite Connected Thermostat Installation & Commissioning (Technical Training Module TRC-11); Daikin One Lite Local Thermostat Menu Outline"
+  "sourceNotes": "TRC-11 Daikin One Lite Connected Thermostat Installation & Commissioning (Technical Training Module TRC-11); Daikin One Lite Local Thermostat Menu Outline",
+  "img": "tstat-img/tst-daikin-one-lite.jpg"
  },
  {
   "id": "tst-daikin-one-touch",
@@ -23975,7 +24103,8 @@ const THERMOSTATS = [
     "url": "https://daikincomfort.com/docs/default-source/daikin-one-touch/daikin-onetouch-unitary-commissioning-menu-outline.pdf"
    }
   ],
-  "sourceNotes": "TRC-10 Daikin One Touch Installation Guide (Technical Training Module TRC-10); v1.0 Daikin One Touch / One+ Wiring Diagrams; Daikin One Touch Unitary Commissioning Menu Outline; Daikin One Touch Unitary Error Codes; HG-ONETOUCH_09-25 Daikin One Touch Homeowner Guide; HG-ONETOUCH_09-25 Daikin One Touch Smart Thermostat Homeowner Guide"
+  "sourceNotes": "TRC-10 Daikin One Touch Installation Guide (Technical Training Module TRC-10); v1.0 Daikin One Touch / One+ Wiring Diagrams; Daikin One Touch Unitary Commissioning Menu Outline; Daikin One Touch Unitary Error Codes; HG-ONETOUCH_09-25 Daikin One Touch Homeowner Guide; HG-ONETOUCH_09-25 Daikin One Touch Smart Thermostat Homeowner Guide",
+  "img": "tstat-img/tst-daikin-one-touch.jpg"
  },
  {
   "id": "tst-daikin-one-plus",
@@ -24252,7 +24381,8 @@ const THERMOSTATS = [
     "url": "https://daikincomfort.com/docs/default-source/daikin-one-/ss-oneplus-st.pdf"
    }
   ],
-  "sourceNotes": "TRC-3 Daikin One+ Smart Thermostat Installation & Commissioning (Technical Training Module TRC-3); PM-ONE-ST Daikin One+ Smart Thermostat Reference Guide for Unitary Equipment; SS-ONE+ST Daikin One+ Specification Sheet; Daikin One+ and Touch Thermostat Commissioning Menu Outline for Unitary Equipment (v3.9 software); Daikin One+ Unitary Error Codes (ClimateTalk fault code table, printed webpage); Daikin One+ Phase Two ClimateTalk Fault Code table (full ..."
+  "sourceNotes": "TRC-3 Daikin One+ Smart Thermostat Installation & Commissioning (Technical Training Module TRC-3); PM-ONE-ST Daikin One+ Smart Thermostat Reference Guide for Unitary Equipment; SS-ONE+ST Daikin One+ Specification Sheet; Daikin One+ and Touch Thermostat Commissioning Menu Outline for Unitary Equipment (v3.9 software); Daikin One+ Unitary Error Codes (ClimateTalk fault code table, printed webpage); Daikin One+ Phase Two ClimateTalk Fault Code table (full ...",
+  "img": "tstat-img/tst-daikin-one-plus.jpg"
  },
  {
   "id": "tst-daikin-dt4272-dt4273",
@@ -24507,7 +24637,8 @@ const THERMOSTATS = [
     "url": "https://daikincomfort.com/docs/default-source/daikin-digital-touchscreen-thermostat/dt4273c_manual.pdf"
    }
   ],
-  "sourceNotes": "D4272 (DT4272) Owner's Manual and Installation Instructions - Residential; D4273 (DT4273) Owner's Manual and Installation Instructions - Residential; DT4272C Owner's Manual & Installation Guide - Commercial; DT4273C Owner's Manual & Installation Guide - Commercial"
+  "sourceNotes": "D4272 (DT4272) Owner's Manual and Installation Instructions - Residential; D4273 (DT4273) Owner's Manual and Installation Instructions - Residential; DT4272C Owner's Manual & Installation Guide - Commercial; DT4273C Owner's Manual & Installation Guide - Commercial",
+  "img": "tstat-img/tst-daikin-dt4272-dt4273.jpg"
  },
  {
   "id": "tst-daikin-one-rht-sensor",
@@ -24569,7 +24700,8 @@ const THERMOSTATS = [
     "seedFile": "daikin-one-wireless-rht-sensor-pmn.pdf"
    }
   ],
-  "sourceNotes": "D-NP-PC-3022 New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin)"
+  "sourceNotes": "D-NP-PC-3022 New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin)",
+  "img": "tstat-img/tst-daikin-one-rht-sensor.jpg"
  },
  {
   "id": "tst-goodman-gtst",
@@ -24713,7 +24845,8 @@ const THERMOSTATS = [
     "url": "https://www.goodmanmfg.com/docs/librariesprovider6/default-document-library/hg-gdmngtst.pdf?view=true&view=true"
    }
   ],
-  "sourceNotes": "TRC-13 Goodman GTST Connected Thermostat Installation & Commissioning (Technical Training Module TRC-13); Goodman GTST Connected Thermostat Wiring Diagram and Instructions; Goodman GTST Connected Thermostat Auxiliary Heating Wiring Diagram & Instructions; Goodman GTST Connected Thermostat Commissioning without Wi-Fi; Goodman GTST Connected Thermostat Cloud Commissioning & Quality Install; Goodman GTST Connected Thermostat Homeowner App Settings for Unitary"
+  "sourceNotes": "TRC-13 Goodman GTST Connected Thermostat Installation & Commissioning (Technical Training Module TRC-13); Goodman GTST Connected Thermostat Wiring Diagram and Instructions; Goodman GTST Connected Thermostat Auxiliary Heating Wiring Diagram & Instructions; Goodman GTST Connected Thermostat Commissioning without Wi-Fi; Goodman GTST Connected Thermostat Cloud Commissioning & Quality Install; Goodman GTST Connected Thermostat Homeowner App Settings for Unitary",
+  "img": "tstat-img/tst-goodman-gtst.jpg"
  },
  {
   "id": "tst-goodman-prostat-plus",
@@ -24807,7 +24940,8 @@ const THERMOSTATS = [
     "url": "https://www.goodmanmfg.com/docs/librariesprovider6/default-document-library/ss-psp4272rt_-psp4273rt.pdf?view=true&view=true"
    }
   ],
-  "sourceNotes": "SS-PSP4272RT_PSP4273RT PROSTAT+ PSP4272RT & PSP4273RT Product Specification Sheet (terminal designations, electrical ratings)"
+  "sourceNotes": "SS-PSP4272RT_PSP4273RT PROSTAT+ PSP4272RT & PSP4273RT Product Specification Sheet (terminal designations, electrical ratings)",
+  "img": "tstat-img/tst-goodman-prostat-plus.jpg"
  },
  {
   "id": "tst-goodman-comfortnet-ctk04",
@@ -24950,7 +25084,8 @@ const THERMOSTATS = [
     "url": "https://apps.goodmanmfg.com/brochures/files/56a79d9024343SS-GCTK04.pdf"
    }
   ],
-  "sourceNotes": "SS-GCKTO4 CTK04 ComfortNet Product Specification Sheet; IC-CNR-1506-PP-01 ComfortNet CTK04 Installation & Commissioning Training (IC-CNR-1506-PP-01); HID-350 / 69-2687EFS-03 ComfortNet CTK04 Communicating Thermostat Operating Manual"
+  "sourceNotes": "SS-GCKTO4 CTK04 ComfortNet Product Specification Sheet; IC-CNR-1506-PP-01 ComfortNet CTK04 Installation & Commissioning Training (IC-CNR-1506-PP-01); HID-350 / 69-2687EFS-03 ComfortNet CTK04 Communicating Thermostat Operating Manual",
+  "img": "tstat-img/tst-goodman-comfortnet-ctk04.jpg"
  },
  {
   "id": "tst-lennox-e40-m40",
@@ -25185,7 +25320,8 @@ const THERMOSTATS = [
     "url": "https://www.lennox.com/dA/12ec33fef0/ehb_e40_2604.pdf"
    }
   ],
-  "sourceNotes": "508808-01a Lennox E40 Smart Thermostat Installation and Setup Guide; Lennox E40 Smart Thermostat Residential Product Specifications (EHB); 508806-01 Lennox M40 Smart Thermostat Installation and Setup Guide"
+  "sourceNotes": "508808-01a Lennox E40 Smart Thermostat Installation and Setup Guide; Lennox E40 Smart Thermostat Residential Product Specifications (EHB); 508806-01 Lennox M40 Smart Thermostat Installation and Setup Guide",
+  "img": "tstat-img/tst-lennox-e40-m40.jpg"
  },
  {
   "id": "tst-lennox-m30",
@@ -25323,7 +25459,8 @@ const THERMOSTATS = [
     "seedFile": "507739-02-000"
    }
   ],
-  "sourceNotes": "See NOTES.md - no document list captured for this family."
+  "sourceNotes": "See NOTES.md - no document list captured for this family.",
+  "img": "tstat-img/tst-lennox-m30.jpg"
  },
  {
   "id": "tst-lennox-s30-e30",
@@ -25530,7 +25667,8 @@ const THERMOSTATS = [
     "seedFile": "ACC-15-03-04-000"
    }
   ],
-  "sourceNotes": "507536-08 iComfort S30 Installation Manual and Setup Guide; 507686-06 iComfort E30 Installation Manual and Setup Guide; 507686-06 Lennox E30 Smart Thermostat Installation and Setup Guide; 507536-08 Lennox S30 Smart Thermostat Installation and Setup Guide"
+  "sourceNotes": "507536-08 iComfort S30 Installation Manual and Setup Guide; 507686-06 iComfort E30 Installation Manual and Setup Guide; 507686-06 Lennox E30 Smart Thermostat Installation and Setup Guide; 507536-08 Lennox S30 Smart Thermostat Installation and Setup Guide",
+  "img": "tstat-img/tst-lennox-s30-e30.jpg"
  },
  {
   "id": "tst-lennox-s40",
@@ -25720,7 +25858,8 @@ const THERMOSTATS = [
     "seedFile": "lennox-s40-thermostat-spec.pdf"
    }
   ],
-  "sourceNotes": "Lennox S40 Smart Thermostat Installer Quick Start Guide (English/Spanish); 507826-03 Lennox Smart Zoning System - 17A30 Zone Sensor Installation and Setup Guide"
+  "sourceNotes": "Lennox S40 Smart Thermostat Installer Quick Start Guide (English/Spanish); 507826-03 Lennox Smart Zoning System - 17A30 Zone Sensor Installation and Setup Guide",
+  "img": "tstat-img/tst-lennox-s40.jpg"
  },
  {
   "id": "tst-lennox-comfortsense-3000",
@@ -25851,7 +25990,8 @@ const THERMOSTATS = [
     "url": "https://www.lennox.com/dA/db62722b4b/Lennox_ComfortSense_3000_Programmable_Manual.pdf"
    }
   ],
-  "sourceNotes": "506079-01 Lennox ComfortSense 3000 Series L3011C Non-Programmable Thermostat Operation Manual; 506074-01 Lennox ComfortSense 3000 Series L3532H 5/2-Day Programmable Thermostat Operation Manual"
+  "sourceNotes": "506079-01 Lennox ComfortSense 3000 Series L3011C Non-Programmable Thermostat Operation Manual; 506074-01 Lennox ComfortSense 3000 Series L3532H 5/2-Day Programmable Thermostat Operation Manual",
+  "img": "tstat-img/tst-lennox-comfortsense-3000.jpg"
  },
  {
   "id": "tst-lennox-comfortsense-5000",
@@ -26132,7 +26272,8 @@ const THERMOSTATS = [
     "seedFile": "CORP0705L2-04-000"
    }
   ],
-  "sourceNotes": "506068-01 ComfortSense 5000 Series Model No. L5732U (X4147) 3 Heat / 2 Cool Programmable Touch Screen Thermostat Installation Instructions; 506069-01 ComfortSense 5000 Series Model No. L5711U (X4146) 1 Heat / 1 Cool Programmable Touch Screen Thermostat Installation Instructions; 506067-01 ComfortSense 5000 Series Models L5711U and L5732U Programmable Touch Screen Thermostat Owner's Guide; 210501-02 CS5000 7 Day Programmable Touchscreen Thermostat Produc..."
+  "sourceNotes": "506068-01 ComfortSense 5000 Series Model No. L5732U (X4147) 3 Heat / 2 Cool Programmable Touch Screen Thermostat Installation Instructions; 506069-01 ComfortSense 5000 Series Model No. L5711U (X4146) 1 Heat / 1 Cool Programmable Touch Screen Thermostat Installation Instructions; 506067-01 ComfortSense 5000 Series Models L5711U and L5732U Programmable Touch Screen Thermostat Owner's Guide; 210501-02 CS5000 7 Day Programmable Touchscreen Thermostat Produc...",
+  "img": "tstat-img/tst-lennox-comfortsense-5000.jpg"
  },
  {
   "id": "tst-lennox-comfortsense-5500",
@@ -26358,7 +26499,8 @@ const THERMOSTATS = [
     "url": "https://s7d9.scene7.com/is/content/lennoxinternational/210745-01-000"
    }
   ],
-  "sourceNotes": "507501-02 ComfortSense 5500 Installation and Setup Guide; 210745-01 CS5500 7-Day Programmable Touchscreen Thermostat Product Specifications (EHB); ComfortSense 5500 (13H13) User Guide"
+  "sourceNotes": "507501-02 ComfortSense 5500 Installation and Setup Guide; 210745-01 CS5500 7-Day Programmable Touchscreen Thermostat Product Specifications (EHB); ComfortSense 5500 (13H13) User Guide",
+  "img": "tstat-img/tst-lennox-comfortsense-5500.jpg"
  },
  {
   "id": "tst-lennox-comfortsense-7500",
@@ -26522,7 +26664,8 @@ const THERMOSTATS = [
     "url": "https://www.lennox.com/lib/legacy-res/pdfs/manuals/cs7500_userguide.pdf"
    }
   ],
-  "sourceNotes": "ComfortSense 7500 (13H14) Installation and Setup Guide"
+  "sourceNotes": "ComfortSense 7500 (13H14) Installation and Setup Guide",
+  "img": "tstat-img/tst-lennox-comfortsense-7500.jpg"
  },
  {
   "id": "tst-lennox-icomfort-touch",
@@ -26661,7 +26804,8 @@ const THERMOSTATS = [
     "url": "https://s7d9.scene7.com/is/content/lennoxinternational/506052-01-000"
    }
   ],
-  "sourceNotes": "506052-01 iComfort Touch Screen Programmable Communicating Thermostat - Installer's System Setup Guide"
+  "sourceNotes": "506052-01 iComfort Touch Screen Programmable Communicating Thermostat - Installer's System Setup Guide",
+  "img": "tstat-img/tst-lennox-icomfort-touch.jpg"
  },
  {
   "id": "tst-lennox-icomfort-wifi-10f81",
@@ -26785,7 +26929,8 @@ const THERMOSTATS = [
     "url": "https://s7d9.scene7.com/is/content/lennoxinternational/507341-01-000"
    }
   ],
-  "sourceNotes": "507341-01 iComfort Wi-Fi 7-Day Programmable Communicating Thermostat Installation Manual"
+  "sourceNotes": "507341-01 iComfort Wi-Fi 7-Day Programmable Communicating Thermostat Installation Manual",
+  "img": "tstat-img/tst-lennox-icomfort-wifi-10f81.jpg"
  },
  {
   "id": "tst-lennox-merit-51m32-51m33",
@@ -26895,7 +27040,8 @@ const THERMOSTATS = [
     "url": "https://www.lennox.com/dA/9577bd051d/Lennox_Merit_Non-Programmable_Thermostats_Manual.pdf"
    }
   ],
-  "sourceNotes": "504,865M / 504,931M Lennox Merit Series Non-Programmable Thermostats (51M32, 51M33) Operation Manual"
+  "sourceNotes": "504,865M / 504,931M Lennox Merit Series Non-Programmable Thermostats (51M32, 51M33) Operation Manual",
+  "img": "tstat-img/tst-lennox-merit-51m32-51m33.jpg"
  },
  {
   "id": "tst-lennox-merit-51m34-51m35",
@@ -27079,7 +27225,8 @@ const THERMOSTATS = [
     "url": "https://s7d9.scene7.com/is/content/lennoxinternational/210500-02-000"
    }
   ],
-  "sourceNotes": "506077-02 Lennox CS3000 5/2-Day Programmable Thermostats Installation Instructions (L3511C / L3522C / L3532H); 505,048M / 505,049M (bound together) Lennox Merit Series Programmable Thermostats Operation Manual (contains the 51M34 section 505,048M and the 51M35 section 505,049M, plus 51M37 / 51M39 / 51M42); 210500-02 CS3000 5-2-Day Programmable Thermostat Product Specifications (L3511C / L3522C / L3532U)"
+  "sourceNotes": "506077-02 Lennox CS3000 5/2-Day Programmable Thermostats Installation Instructions (L3511C / L3522C / L3532H); 505,048M / 505,049M (bound together) Lennox Merit Series Programmable Thermostats Operation Manual (contains the 51M34 section 505,048M and the 51M35 section 505,049M, plus 51M37 / 51M39 / 51M42); 210500-02 CS3000 5-2-Day Programmable Thermostat Product Specifications (L3511C / L3522C / L3532U)",
+  "img": "tstat-img/tst-lennox-merit-51m34-51m35.jpg"
  },
  {
   "id": "tst-carrier-smart-thermostat-ewf",
@@ -27174,7 +27321,8 @@ const THERMOSTATS = [
     "url": "https://www.shareddocs.com/hvac/docs/1010/Public/0F/01-8110-1777-01.pdf"
    }
   ],
-  "sourceNotes": "01-TSTAT-113-01 Carrier Smart Thermostat Tech Specs; 01-8110-1777-01 Bryant Smart Thermostat Tech Specs"
+  "sourceNotes": "01-TSTAT-113-01 Carrier Smart Thermostat Tech Specs; 01-8110-1777-01 Bryant Smart Thermostat Tech Specs",
+  "img": "tstat-img/tst-carrier-smart-thermostat-ewf.jpg"
  },
  {
   "id": "tst-carrier-smart-thermostat-intelisense",
@@ -27305,7 +27453,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-tstatcciewf-01sa.pdf"
    }
   ],
-  "sourceNotes": "TSTATCCIEWF-01SA TSTATCCIEWF-01 Thermostat Set-up with Service Technician App Including Advanced Settings"
+  "sourceNotes": "TSTATCCIEWF-01SA TSTATCCIEWF-01 Thermostat Set-up with Service Technician App Including Advanced Settings",
+  "img": "tstat-img/tst-carrier-smart-thermostat-intelisense.jpg"
  },
  {
   "id": "tst-carrier-ecobee-for-carrier",
@@ -27425,7 +27574,8 @@ const THERMOSTATS = [
     "url": "https://www.shareddocs.com/hvac/docs/1010/Public/0F/01-8110-1785-01.pdf"
    }
   ],
-  "sourceNotes": "01-TSTAT-115-01 ecobee for Carrier Smart Thermostat Lite Specification Sheet; E6ICR-QSG ecobee for Carrier Smart Thermostat Premium with InteliSense technology - Quick Start Guide; 01-TSTAT-116-01 ecobee for Carrier Smart Thermostats with InteliSense Technology (Technical Documentation); E6IBR-QSG ecobee for Bryant Smart Thermostat Premium with InteliSense technology - Quick Start Guide; 01-8110-1785-01 ecobee for Bryant Smart Thermostat Lite Specificat..."
+  "sourceNotes": "01-TSTAT-115-01 ecobee for Carrier Smart Thermostat Lite Specification Sheet; E6ICR-QSG ecobee for Carrier Smart Thermostat Premium with InteliSense technology - Quick Start Guide; 01-TSTAT-116-01 ecobee for Carrier Smart Thermostats with InteliSense Technology (Technical Documentation); E6IBR-QSG ecobee for Bryant Smart Thermostat Premium with InteliSense technology - Quick Start Guide; 01-8110-1785-01 ecobee for Bryant Smart Thermostat Lite Specificat...",
+  "img": "tstat-img/tst-carrier-ecobee-for-carrier.jpg"
  },
  {
   "id": "tst-carrier-infinity-vc",
@@ -27500,7 +27650,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-systxccitc-06qs.pdf"
    }
   ],
-  "sourceNotes": "SYSTXCCITC-VC-03SI SYSTXCCITC01-C, SYSTXCCWIC01-C Infinity System Control Installation Instructions; SYSTXCCITC-VC-02SI SYSTXCCITC01-C, SYSTXCCWIC01-C Infinity System Control Installation Instructions (previous VC revision); SYSTXCCITC-06QS SYSTXCCITC01-C, SYSTXCCWIC01-C Infinity System Control Quick Start"
+  "sourceNotes": "SYSTXCCITC-VC-03SI SYSTXCCITC01-C, SYSTXCCWIC01-C Infinity System Control Installation Instructions; SYSTXCCITC-VC-02SI SYSTXCCITC01-C, SYSTXCCWIC01-C Infinity System Control Installation Instructions (previous VC revision); SYSTXCCITC-06QS SYSTXCCITC01-C, SYSTXCCWIC01-C Infinity System Control Quick Start",
+  "img": "tstat-img/tst-carrier-infinity-vc.jpg"
  },
  {
   "id": "tst-carrier-infinity-system-control",
@@ -27792,7 +27943,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-omsystxccitc-vc-03.pdf"
    }
   ],
-  "sourceNotes": "SYSTXCCITC-12SI SYSTXCCITC01-B, SYSTXCCITC01-C, SYSTXCCWIC01-B, SYSTXCCICF01-B, SYSTXCCWIF01-B Infinity System Control Installation Instructions; SYSTXCCITC-11SI Infinity System Control Installation Instructions (previous revision, SYSTXCCITC01-C / WIC01-B); SYSTXCCITC-08SI SYSTXCCITC01-B, SYSTXCCWIC01-B, SYSTXCCICF01-B, SYSTXCCWIF01-B Infinity System Control Installation Instructions; SYSTXCCITC-08PD Infinity System Control Product Data (SYSTXCCITC01-C..."
+  "sourceNotes": "SYSTXCCITC-12SI SYSTXCCITC01-B, SYSTXCCITC01-C, SYSTXCCWIC01-B, SYSTXCCICF01-B, SYSTXCCWIF01-B Infinity System Control Installation Instructions; SYSTXCCITC-11SI Infinity System Control Installation Instructions (previous revision, SYSTXCCITC01-C / WIC01-B); SYSTXCCITC-08SI SYSTXCCITC01-B, SYSTXCCWIC01-B, SYSTXCCICF01-B, SYSTXCCWIF01-B Infinity System Control Installation Instructions; SYSTXCCITC-08PD Infinity System Control Product Data (SYSTXCCITC01-C...",
+  "img": "tstat-img/tst-carrier-infinity-system-control.jpg"
  },
  {
   "id": "tst-carrier-comfort-series-nonprog",
@@ -28075,7 +28227,8 @@ const THERMOSTATS = [
     "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0A/OM-TCNHPA-02.pdf"
    }
   ],
-  "sourceNotes": "TSTAT-30SI TSTATCCN(AC,HP,2S)01-C Non-Programmable Thermostat Installation and Operating Instructions; OMTSTAT-38 Comfort Series -C Thermostat Homeowner's Guide; OMTSTAT-9 Deluxe Non-Programmable Thermostat Owner's Manual; OM-TCPHPA-02 TC-PHP01-A, TC-PAC01-A Comfort Series Programmable Thermostat Owner's Manual; OM-TCNHPA-02 TC-NHP01-A, TC-NAC01-A Comfort Series Non-Programmable Thermostat Owner's Manual"
+  "sourceNotes": "TSTAT-30SI TSTATCCN(AC,HP,2S)01-C Non-Programmable Thermostat Installation and Operating Instructions; OMTSTAT-38 Comfort Series -C Thermostat Homeowner's Guide; OMTSTAT-9 Deluxe Non-Programmable Thermostat Owner's Manual; OM-TCPHPA-02 TC-PHP01-A, TC-PAC01-A Comfort Series Programmable Thermostat Owner's Manual; OM-TCNHPA-02 TC-NHP01-A, TC-NAC01-A Comfort Series Non-Programmable Thermostat Owner's Manual",
+  "img": "tstat-img/tst-carrier-comfort-series-nonprog.jpg"
  },
  {
   "id": "tst-carrier-performance-edge-achp",
@@ -28411,7 +28564,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-tp-pac-05pd.pdf"
    }
   ],
-  "sourceNotes": "TP-PACA-02SI TP-PAC01-A, TP-PHP01-A, TP-NAC01-A, TP-NHP01-A Performance Series AC/HP Thermostat Installation Instructions; TP-PAC-05PD TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data; OM-TPPACA-02 TP-PHP01-A, TP-PAC01-A & TP-PRH01-B Performance Series Programmable Thermostat Owner's Manual; OM-TPNACA-02 TP-NHP01-A, TP-NAC01-A & TP-NRH01-B Edge Non-Programmable Thermostat Owner's Manual"
+  "sourceNotes": "TP-PACA-02SI TP-PAC01-A, TP-PHP01-A, TP-NAC01-A, TP-NHP01-A Performance Series AC/HP Thermostat Installation Instructions; TP-PAC-05PD TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data; OM-TPPACA-02 TP-PHP01-A, TP-PAC01-A & TP-PRH01-B Performance Series Programmable Thermostat Owner's Manual; OM-TPNACA-02 TP-NHP01-A, TP-NAC01-A & TP-NRH01-B Edge Non-Programmable Thermostat Owner's Manual",
+  "img": "tstat-img/tst-carrier-performance-edge-achp.jpg"
  },
  {
   "id": "tst-carrier-performance-edge-thermidistat",
@@ -28725,7 +28879,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-tp-pac-05pd.pdf"
    }
   ],
-  "sourceNotes": "TP-PRHB-02SI TP-PRH01-B, TP-NRH01-B Performance Series Edge Thermidistat Control Installation Instructions; TP-PRHB-01SI TP-PRH01-B, TP-NRH01-B Performance Series Edge Thermidistat Control Installation Instructions (first edition); TP-PAC-05PD TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data"
+  "sourceNotes": "TP-PRHB-02SI TP-PRH01-B, TP-NRH01-B Performance Series Edge Thermidistat Control Installation Instructions; TP-PRHB-01SI TP-PRH01-B, TP-NRH01-B Performance Series Edge Thermidistat Control Installation Instructions (first edition); TP-PAC-05PD TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data",
+  "img": "tstat-img/tst-carrier-performance-edge-thermidistat.jpg"
  },
  {
   "id": "tst-carrier-cor-5",
@@ -28810,7 +28965,8 @@ const THERMOSTATS = [
     "url": "https://www.shareddocs.com/hvac/docs/1009/Public/06/OG-TSTPHA-WHA-03.pdf"
    }
   ],
-  "sourceNotes": "OG-TSTPHA-WHA-03 TSTPHA01, TSTWHA01 Cor 5 and Cor 5C Thermostats Owner's Guide; QSCOR5X Cor 5 Thermostat Quick Start Guide"
+  "sourceNotes": "OG-TSTPHA-WHA-03 TSTPHA01, TSTWHA01 Cor 5 and Cor 5C Thermostats Owner's Guide; QSCOR5X Cor 5 Thermostat Quick Start Guide",
+  "img": "tstat-img/tst-carrier-cor-5.jpg"
  },
  {
   "id": "tst-carrier-housewise",
@@ -28858,7 +29014,8 @@ const THERMOSTATS = [
     "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0B/OM-T6WEM-02.pdf"
    }
   ],
-  "sourceNotes": "OM-T6WEM-02 T6-WEM01 Preferred Series AC/HP Wi-Fi Thermostat Bryant Housewise Thermostat Owner's Manual"
+  "sourceNotes": "OM-T6WEM-02 T6-WEM01 Preferred Series AC/HP Wi-Fi Thermostat Bryant Housewise Thermostat Owner's Manual",
+  "img": "tstat-img/tst-carrier-housewise.jpg"
  },
  {
   "id": "tst-carrier-tstatccpac01",
@@ -28915,7 +29072,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-omtstat-7.pdf"
    }
   ],
-  "sourceNotes": "OMTSTAT-7 TSTATCC Programmable Thermostat Homeowner's Guide"
+  "sourceNotes": "OMTSTAT-7 TSTATCC Programmable Thermostat Homeowner's Guide",
+  "img": "tstat-img/tst-carrier-tstatccpac01.jpg"
  },
  {
   "id": "tst-carrier-thermidistat-legacy",
@@ -29077,7 +29235,8 @@ const THERMOSTATS = [
     "seedFile": "carrier-omtstat-11.pdf"
    }
   ],
-  "sourceNotes": "TSTAT-3W TSTATCCPRH Thermidistat Control Low Voltage Wiring Diagrams; OMTSTAT-10 Programmable Thermidistat Control Homeowner's Guide; OMTSTAT-11 Thermidistat Control (Non-Programmable Mode) Homeowner's Guide"
+  "sourceNotes": "TSTAT-3W TSTATCCPRH Thermidistat Control Low Voltage Wiring Diagrams; OMTSTAT-10 Programmable Thermidistat Control Homeowner's Guide; OMTSTAT-11 Thermidistat Control (Non-Programmable Mode) Homeowner's Guide",
+  "img": "tstat-img/tst-carrier-thermidistat-legacy.jpg"
  },
  {
   "id": "tst-trane-xl1050",
@@ -29278,7 +29437,8 @@ const THERMOSTATS = [
     "url": "https://www.trane.com/pdf/32-5093-04B-EN.pdf"
    }
   ],
-  "sourceNotes": "18-HD80D1-6F-EN TZON1050 ComfortLink II XL1050 Installation Guide; 32-5093-04B-EN ComfortLink II XL1050 User Guide"
+  "sourceNotes": "18-HD80D1-6F-EN TZON1050 ComfortLink II XL1050 Installation Guide; 32-5093-04B-EN ComfortLink II XL1050 User Guide",
+  "img": "tstat-img/tst-trane-xl1050.jpg"
  },
  {
   "id": "tst-trane-xl824",
@@ -29453,7 +29613,8 @@ const THERMOSTATS = [
     "url": "https://www.trane.com/pdf/032-5090-06C-EN.pdf"
    }
   ],
-  "sourceNotes": "18-HD72D1-11F-EN TCONT824 ComfortLink II XL824 Installation Guide; 032-5090-06C-EN Trane XL824 Smart Control User Guide"
+  "sourceNotes": "18-HD72D1-11F-EN TCONT824 ComfortLink II XL824 Installation Guide; 032-5090-06C-EN Trane XL824 Smart Control User Guide",
+  "img": "tstat-img/tst-trane-xl824.jpg"
  },
  {
   "id": "tst-trane-xl850",
@@ -29632,7 +29793,8 @@ const THERMOSTATS = [
     "url": "https://www.trane.com/pdf/032-5091-06C-EN.pdf"
    }
   ],
-  "sourceNotes": "18-HD73D1-9E-EN TCONT850 ComfortLink II XL850 Installation Guide; 032-5091-06C-EN Trane XL850 Smart Control User Guide"
+  "sourceNotes": "18-HD73D1-9E-EN TCONT850 ComfortLink II XL850 Installation Guide; 032-5091-06C-EN Trane XL850 Smart Control User Guide",
+  "img": "tstat-img/tst-trane-xl850.jpg"
  },
  {
   "id": "tst-trane-xl624",
@@ -29815,7 +29977,8 @@ const THERMOSTATS = [
     "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD45D1-7_04012016"
    }
   ],
-  "sourceNotes": "18-HD45D1-7 TCONT624 Installation and User Guide"
+  "sourceNotes": "18-HD45D1-7 TCONT624 Installation and User Guide",
+  "img": "tstat-img/tst-trane-xl624.jpg"
  },
  {
   "id": "tst-trane-xr724",
@@ -29969,7 +30132,8 @@ const THERMOSTATS = [
     "url": "https://www.trane.com/pdf/18-HD82D1-1E-EN_09162021.pdf"
    }
   ],
-  "sourceNotes": "18-HD82D1-1E-EN XR724 User Guide and Installer's Guide"
+  "sourceNotes": "18-HD82D1-1E-EN XR724 User Guide and Installer's Guide",
+  "img": "tstat-img/tst-trane-xr724.jpg"
  },
  {
   "id": "tst-trane-tcont302-303",
@@ -30180,7 +30344,8 @@ const THERMOSTATS = [
     "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD48D1-1C-EN_12172020.pdf"
    }
   ],
-  "sourceNotes": "18-HD48D1-1C-EN / 37-7760005 TCONT302 and TCONT303 Installation and User Guide"
+  "sourceNotes": "18-HD48D1-1C-EN / 37-7760005 TCONT302 and TCONT303 Installation and User Guide",
+  "img": "tstat-img/tst-trane-tcont302-303.jpg"
  },
  {
   "id": "tst-trane-tcont600-602",
@@ -30372,7 +30537,8 @@ const THERMOSTATS = [
     "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD25D21-2_03012006"
    }
   ],
-  "sourceNotes": "18-HD25D20-3 / 69-1834-2 TCONT600AF11MA Programmable Comfort Control Installation Instructions; 18-HD25D21-2 / 69-1835-1 TCONT602AF22MA Programmable Comfort Control Installation Instructions"
+  "sourceNotes": "18-HD25D20-3 / 69-1834-2 TCONT600AF11MA Programmable Comfort Control Installation Instructions; 18-HD25D21-2 / 69-1835-1 TCONT602AF22MA Programmable Comfort Control Installation Instructions",
+  "img": "tstat-img/tst-trane-tcont600-602.jpg"
  },
  {
   "id": "tst-trane-tcont802-803",
@@ -30517,7 +30683,8 @@ const THERMOSTATS = [
     "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD25D19-3_01012006"
    }
   ],
-  "sourceNotes": "18-HD25D19-3 / 69-1790-3 TCONT802AS32DA and TCONT803AS32DA Installation Instructions"
+  "sourceNotes": "18-HD25D19-3 / 69-1790-3 TCONT802AS32DA and TCONT803AS32DA Installation Instructions",
+  "img": "tstat-img/tst-trane-tcont802-803.jpg"
  },
  {
   "id": "tst-rheem-500-communicating",
@@ -30923,7 +31090,8 @@ const THERMOSTATS = [
     "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST501CMMS%20Installation%20and%20Operating%20Instructions.pdf"
    }
   ],
-  "sourceNotes": "37-6943A 500 Series Thermostat Featuring Serial Communication (RHC-TST501CMMS) Dealer Installation and Start-Up Instructions"
+  "sourceNotes": "37-6943A 500 Series Thermostat Featuring Serial Communication (RHC-TST501CMMS) Dealer Installation and Start-Up Instructions",
+  "img": "tstat-img/tst-rheem-500-communicating.jpg"
  },
  {
   "id": "tst-rheem-econet",
@@ -31082,7 +31250,8 @@ const THERMOSTATS = [
     "url": "https://files.rheem.com/blobazrheem/wp-content/uploads/sites/2/RHM5801_EcoNet_SpecSheet_R13-LoRes.pdf"
    }
   ],
-  "sourceNotes": "RHM5429.1 EcoNet Smart Thermostat User Guide (model RETST800SYS); RHM5429.1 EcoNet Quick Start Guide; RHM4959c / Form No. 92-106930-06 EcoNet Zoning Panel (REPNL700ZON) Installation Instructions; RHM5801 EcoNet Smart Thermostat Specification Sheet"
+  "sourceNotes": "RHM5429.1 EcoNet Smart Thermostat User Guide (model RETST800SYS); RHM5429.1 EcoNet Quick Start Guide; RHM4959c / Form No. 92-106930-06 EcoNet Zoning Panel (REPNL700ZON) Installation Instructions; RHM5801 EcoNet Smart Thermostat Specification Sheet",
+  "img": "tstat-img/tst-rheem-econet.jpg"
  },
  {
   "id": "tst-rheem-200-300-24v",
@@ -31256,7 +31425,8 @@ const THERMOSTATS = [
     "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST213UNMS%20Installation%20and%20Operating%20Instructions.pdf"
    }
   ],
-  "sourceNotes": "37-7055A series RHC-TST213UNMS Installation and Operating Instructions; 37-7055A series RHC-TST305UNMS Installation and Operating Instructions"
+  "sourceNotes": "37-7055A series RHC-TST213UNMS Installation and Operating Instructions; 37-7055A series RHC-TST305UNMS Installation and Operating Instructions",
+  "img": "tstat-img/tst-rheem-200-300-24v.jpg"
  },
  {
   "id": "tst-rheem-400-modulating",
@@ -31528,7 +31698,8 @@ const THERMOSTATS = [
     "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST412MDMS%20Installation%20and%20Operating%20Instructions.pdf"
    }
   ],
-  "sourceNotes": "37-6768A Installation and Operating Instructions for Modulating Touchscreen Thermostat (RHC-TST401MDMS); 37-6981A Installation and Operating Instructions for Hum/Dehum Modulating Touchscreen Thermostat (RHC-TST412MDMS)"
+  "sourceNotes": "37-6768A Installation and Operating Instructions for Modulating Touchscreen Thermostat (RHC-TST401MDMS); 37-6981A Installation and Operating Instructions for Hum/Dehum Modulating Touchscreen Thermostat (RHC-TST412MDMS)",
+  "img": "tstat-img/tst-rheem-400-modulating.jpg"
  },
  {
   "id": "tst-rheem-400-universal",
@@ -31783,7 +31954,8 @@ const THERMOSTATS = [
     "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST422DFMS%20Installation%20and%20Operating%20Instructions.pdf"
    }
   ],
-  "sourceNotes": "37-7054A Universal Thermostat with Humidity/Dehumidity Control and Automatic Heat/Cool Changeover Option - Installation and Operating Instructions (RHC-TST422DFMS)"
+  "sourceNotes": "37-7054A Universal Thermostat with Humidity/Dehumidity Control and Automatic Heat/Cool Changeover Option - Installation and Operating Instructions (RHC-TST422DFMS)",
+  "img": "tstat-img/tst-rheem-400-universal.jpg"
  },
  {
   "id": "tst-york-echelon-ttscc01",
@@ -32014,7 +32186,8 @@ const THERMOSTATS = [
     "url": "https://www.upgnet.com/dsmarketingprod/gatekeeper/Documents/Archive_CDs/York_2013/PDF_FILES/662812-utg-c-0212.pdf"
    }
   ],
-  "sourceNotes": "542933-UIM-D-0513 Installation Manual - Model S1-TTSCC01 Touch Screen Communicating Control; 036-23098-001-B-0312 System Wiring Diagrams - Model S1-TTSCC01 Touch Screen Communicating Control; 542937-UUM-B-0212 User Manual - Model S1-TTSCC01 Touch Screen Communicating Control; 542939-URG-A-1010 Quick Reference Guide - Model S1-TTSCC01 Touch Screen Communicating Control; 662812-UTG-C-0212 Technical Guide - Model S1-TTSCC01 Touch Screen Communicating Control"
+  "sourceNotes": "542933-UIM-D-0513 Installation Manual - Model S1-TTSCC01 Touch Screen Communicating Control; 036-23098-001-B-0312 System Wiring Diagrams - Model S1-TTSCC01 Touch Screen Communicating Control; 542937-UUM-B-0212 User Manual - Model S1-TTSCC01 Touch Screen Communicating Control; 542939-URG-A-1010 Quick Reference Guide - Model S1-TTSCC01 Touch Screen Communicating Control; 662812-UTG-C-0212 Technical Guide - Model S1-TTSCC01 Touch Screen Communicating Control",
+  "img": "tstat-img/tst-york-echelon-ttscc01.jpg"
  },
  {
   "id": "tst-york-hx3-thxu430w",
@@ -32072,7 +32245,8 @@ const THERMOSTATS = [
     "url": "https://docs.johnsoncontrols.com/ductedsystems/api/khub/documents/I_IMGNgHoDTVlY~He3I8Iw/content"
    }
   ],
-  "sourceNotes": "5407935-UUM-E-1020 User's Information Manual: Hx 3 Touch Screen Thermostat - S1-THXU430W"
+  "sourceNotes": "5407935-UUM-E-1020 User's Information Manual: Hx 3 Touch Screen Thermostat - S1-THXU430W",
+  "img": "tstat-img/tst-york-hx3-thxu430w.jpg"
  },
  {
   "id": "tst-bosch-bcc100-bcc110",
@@ -32314,7 +32488,8 @@ const THERMOSTATS = [
     "seedFile": "bosch-bcc100-110-advanced-settings.pdf"
    }
   ],
-  "sourceNotes": "76H993390F 5/20 Bosch Connected Control BCC100 Wi-Fi Thermostat Installation Guide and User Manual; BTC 469902301 B Bosch Connected Control BCC100/BCC110 Advanced Settings Guide"
+  "sourceNotes": "76H993390F 5/20 Bosch Connected Control BCC100 Wi-Fi Thermostat Installation Guide and User Manual; BTC 469902301 B Bosch Connected Control BCC100/BCC110 Advanced Settings Guide",
+  "img": "tstat-img/tst-bosch-bcc100-bcc110.jpg"
  },
  {
   "id": "tst-bosch-bcc50",
@@ -32558,7 +32733,8 @@ const THERMOSTATS = [
     "url": "https://www.bosch-homecomfort.com/us/media/country_pool/service/technical_guides/bosch_connected_control_bcc50__submittal_sheet_11.2019.pdf"
    }
   ],
-  "sourceNotes": "Bosch Connected Control BCC50 Wi-Fi Thermostat Installation Guide and User Manual; Bosch Connected Control BCC50 Engineering Submittal Sheet"
+  "sourceNotes": "Bosch Connected Control BCC50 Wi-Fi Thermostat Installation Guide and User Manual; Bosch Connected Control BCC50 Engineering Submittal Sheet",
+  "img": "tstat-img/tst-bosch-bcc50.jpg"
  },
  {
   "id": "tst-mitsubishi-mhk2",
@@ -32750,6 +32926,7 @@ const THERMOSTATS = [
     "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10007/MHK2%20FAQ_v2024-02-21.pdf"
    }
   ],
-  "sourceNotes": "MHK2 Wireless Remote Controller Kit Installation Manual; 33-00447EFS B MHK2 Operation Manual; MHK2 FAQ"
+  "sourceNotes": "MHK2 Wireless Remote Controller Kit Installation Manual; 33-00447EFS B MHK2 Operation Manual; MHK2 FAQ",
+  "img": "tstat-img/tst-mitsubishi-mhk2.jpg"
  }
 ];

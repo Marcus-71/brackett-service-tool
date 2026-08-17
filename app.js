@@ -1189,7 +1189,8 @@ function buildTstatCard(t) {
   const nDocs = (t.manuals || []).length;
   card.innerHTML = `
     <div class="card-top">
-      <div>
+      ${t.img ? `<img class="tstat-thumb" src="${escapeHtml(t.img)}" alt="" loading="lazy" onerror="this.remove()">` : ""}
+      <div class="tstat-card-text">
         <div class="card-code">${escapeHtml(t.family)}</div>
         <div class="card-title">${escapeHtml(t.brand)}${t.aka ? " · " + escapeHtml(t.aka) : ""}</div>
       </div>
@@ -1256,6 +1257,7 @@ function openTstatDetail(id) {
   const models = (t.models || []).join(", ");
 
   modal.innerHTML = `
+    ${t.img ? `<img class="tstat-hero" src="${escapeHtml(t.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(t.family)}</h2>
     <div class="sub">${escapeHtml(t.brand)}${t.aka ? " · " + escapeHtml(t.aka) : ""} · ${escapeHtml(TSTAT_TYPE_LABELS[t.type] || t.type || "")}${t.stages ? " · " + escapeHtml(t.stages) : ""}</div>
     ${models ? `<div class="detail-section"><h3>Models</h3><p class="tstat-models">${escapeHtml(models)}</p></div>` : ""}
