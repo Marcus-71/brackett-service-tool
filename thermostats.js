@@ -6276,9 +6276,15 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "honeywell-home-eim-69-2758efs.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2758EFS.pdf"
+   },
+   {
+    "title": "RedLINK Wireless System With Equipment Interface Module (error code table: E23-E53)",
+    "docType": "install",
+    "seedFile": "honeywell-home-eim-redlink-wireless-system-69-2091efs.pdf",
+    "url": "https://digitalassets.resideo.com/damroot/Original/10005/69-2091EFS.pdf"
    }
   ],
-  "sourceNotes": "69-2760-11 VisionPRO Series with RedLINK 2.0 Installation Guide (accessory specs/part numbers, section 2); 69-2758EFS Equipment Interface Module (THM5421R1021) Installation Guide (accessory pairing steps)",
+  "sourceNotes": "69-2760-11 VisionPRO Series with RedLINK 2.0 Installation Guide (accessory specs/part numbers, section 2); 69-2758EFS Equipment Interface Module (THM5421R1021) Installation Guide (accessory pairing steps); 69-2091EFS RedLINK Wireless System With Equipment Interface Module (source of the E34/E53 error codes - 69-2758EFS has no error-code table)",
   "img": "tstat-img/tst-honeywell-redlink-accessories.jpg"
  },
  {
@@ -6677,7 +6683,7 @@ const THERMOSTATS = [
     {
      "setting": "Compressor Min Outdoor Temperature",
      "options": "temperature or Disabled",
-     "notes": "Default 35F/1.7C"
+     "notes": "Set to Disabled by default (ecobee-enhanced-setup-user-2023.pdf)"
     },
     {
      "setting": "Compressor Min Cycle Off Time / Compressor Min On Time",
@@ -6691,7 +6697,7 @@ const THERMOSTATS = [
     },
     {
      "setting": "Heat Differential Temperature / Cool Differential Temperature",
-     "options": "delta-F, default 0.6-1F",
+     "options": "delta-F, default 0.5F/0.3C for both Heat Differential Temperature and Cool Differential Temp",
      "notes": ""
     },
     {
@@ -6909,13 +6915,13 @@ const THERMOSTATS = [
     },
     {
      "setting": "Aux Savings Optimization",
-     "options": "Savings | Balanced | Comfort",
+     "options": "Minimum (2.0F/1.1C) | Basic (2.3F/1.3C) | Balanced (2.6F/1.4C) | Super (2.9F/1.6C, recommended default) | Maximum (3.2F/1.8C)",
      "notes": "Only shown in Automatic staging with heat pump + aux heat"
     },
     {
      "setting": "Compressor Min Outdoor Temperature",
      "options": "temperature or Disabled",
-     "notes": "Default 35F/1.7C - heat pump compressor will not run below this outdoor temp"
+     "notes": "Set to Disabled by default - when set, the heat pump compressor will not run below this outdoor temp"
     },
     {
      "setting": "Compressor Min Cycle Off Time / Compressor Min On Time",
@@ -6934,7 +6940,7 @@ const THERMOSTATS = [
     },
     {
      "setting": "Heat Differential Temperature / Cool Differential Temperature",
-     "options": "delta-F, default 0.6-1F / 0.3-0.5C",
+     "options": "delta-F, default 0.5F/0.3C for both Heat Differential Temperature and Cool Differential Temp",
      "notes": "Minimum indoor temp swing before a heat/cool call starts"
     },
     {
@@ -7338,12 +7344,12 @@ const THERMOSTATS = [
    },
    {
     "t": "ACC+",
-    "fn": "1-wire HVAC accessory (humidifier/dehumidifier/ventilation device), externally powered",
+    "fn": "HVAC accessory (humidifier/dehumidifier/ventilation device) - ACC+ alone (1 wire from the accessory) means the accessory is internally powered",
     "notes": ""
    },
    {
     "t": "ACC-",
-    "fn": "2-wire HVAC accessory, internally powered",
+    "fn": "HVAC accessory return - ACC+ and ACC- together (2 wires from the accessory) means the accessory is externally powered",
     "notes": "Paired with ACC+"
    }
   ],
@@ -7382,8 +7388,8 @@ const THERMOSTATS = [
      "notes": ""
     }
    ],
-   "installerTest": "Not documented in the ecobee3 install/user guides read; see gaps.",
-   "factoryReset": "Main Menu > Settings > Reset: Reset Schedule and Preferences | Reset Registration | Reset All. Source: support.ecobee.com 'Resetting your ecobee thermostat' (general ecobee reset flow; ecobee3-specific menu depth not separately confirmed)."
+   "installerTest": "Test Equipment, under Installation Settings: 'This menu lets you test the wiring and connections of the devices connected to the thermostat by turning them on or off. The equipment will turn off when you exit the menu. Warning: Compressor protection and minimum run-time features are not enforced while in this mode.' (ecobee3-user-guide.pdf). The exact sub-menu path is not printed in the guide.",
+   "factoryReset": "Main Menu > Settings > Reset, then pick one: Reset Registration (deletes registration/username and password, keeps equipment settings and preferences) | Reset Preferences (resets preferences, reminders, alerts and programming to default) | Reset All (back to factory defaults and removes registration). Touch Yes to confirm. (ecobee3-user-guide.pdf)"
   },
   "diagnostics": [],
   "troubleshooting": [
@@ -7867,8 +7873,8 @@ const THERMOSTATS = [
   "confidence": "verify",
   "power": {
    "cWire": "not-used",
-   "batteries": "1x CR-2032 coin cell",
-   "notes": "Wireless (915MHz) sensor, no wiring - pairs to a compatible thermostat over its proprietary radio, range about 45 feet."
+   "batteries": "1x CR-2477 coin cell",
+   "notes": "Wireless sensor, no wiring - pairs to a compatible thermostat over its proprietary radio, range about 45 feet."
   },
   "terminals": [],
   "wiringNotes": [
@@ -7896,7 +7902,7 @@ const THERMOSTATS = [
    {
     "code": "Sensor shows hollow icon with no signal waves and 'N/A' under it",
     "meaning": "Sensor lost connection - low battery, more than 45 ft from the thermostat, or 915MHz interference (baby monitors, cordless phones, other broadcasting devices)",
-    "action": "Unpair and re-pair: remove sensor's battery cover/battery, power-cycle the thermostat off the wall for ~2 minutes, remount, reinsert battery near the thermostat, follow the re-pair prompt. If unsuccessful, replace the CR-2032 battery."
+    "action": "Unpair and re-pair: remove sensor's battery cover/battery, power-cycle the thermostat off the wall for ~2 minutes, remount, reinsert battery near the thermostat, follow the re-pair prompt. If unsuccessful, replace the CR-2477 battery."
    },
    {
     "code": "Persistent/unwanted pairing prompt on thermostat",
@@ -7912,7 +7918,7 @@ const THERMOSTATS = [
      "Thermostat not on Home Screen / full-screen alert blocking prompt"
     ],
     "fixes": [
-     "Replace the CR-2032 battery to rule it out",
+     "Replace the CR-2477 battery to rule it out",
      "Remove battery from sensor, power-cycle the thermostat (off the wall ~2 min), remount, reinsert battery close to the thermostat and wait for the pairing prompt"
     ]
    }
@@ -8030,7 +8036,7 @@ const THERMOSTATS = [
     },
     {
      "setting": "Humidification (Add Accessory / Set Point)",
-     "options": "Off/On; Off/40%-95% (5% increments)",
+     "options": "Off/On; Off/5%-50% (5% increments)",
      "notes": ""
     },
     {
@@ -8047,15 +8053,10 @@ const THERMOSTATS = [
      "setting": "Fahrenheit or Celsius",
      "options": "F | C",
      "notes": ""
-    },
-    {
-     "setting": "About Thermostat / Reset",
-     "options": "Model Number/Reset",
-     "notes": "Entry point for factory reset"
     }
    ],
    "installerTest": "",
-   "factoryReset": "About Thermostat menu contains a Reset option (Configuration Menu Items Reference lists 'About Thermostat - Model Number/Reset'). The Touch models' manuals explicitly describe this button as clearing all settings back to default except HVAC Equipment settings; the Classic manual lists the same menu item but does not repeat that exact description."
+   "factoryReset": "Not documented in the Classic manuals on disk - neither sensi-classic-install.pdf nor sensi-classic-manual-operation.pdf contains an About Thermostat / Reset menu item (the Configuration Menu Items Reference ends at Wireless Radio). The About Thermostat > Factory Reset button described in the Sensi Touch/Touch 2 manuals must not be assumed to exist here."
   },
   "diagnostics": [],
   "troubleshooting": [
@@ -8206,11 +8207,6 @@ const THERMOSTATS = [
      "setting": "Reversing Valve or Multistage Position",
      "options": "O | B | 2H | 2C | 6 | --",
      "notes": "O/B for heat pump changeover; 2H/2C for 2nd-stage heat or cool; 6 for 3-wire zone hydronic"
-    },
-    {
-     "setting": "About Thermostat / Reset",
-     "options": "Model Number/Reset",
-     "notes": ""
     }
    ],
    "installerTest": "SYSTEM TESTING (Sensi Lite Pro Install Guide, 'System testing'). COOLING: tap the 3 dots on the thermostat until you select cool mode; tap down and adjust the setting to 1 degree below current room temperature - the blower should come on immediately on high speed followed by cold air circulation, and the word ON appears below the icons on the display (allow up to a 5-minute delay); then tap up and adjust to 1 degree above room temperature - the cooling system should stop. HEATING: tap the 3 dots until Heat mode is selected; adjust the setting to 1 degree above current room temperature - the heating system should begin to operate; for heat pumps with auxiliary, adjust to 3 degrees above room temperature - the auxiliary heat should begin to operate and the thermostat indicates it on screen; then adjust to 1 degree below room temperature - heating should stop and ON disappears. AUXILIARY (heat pumps with auxiliary only): tap the 3 dots until AUX mode is selected - this bypasses the heat pump and runs auxiliary-only heat; adjust to 1 degree above room temperature - auxiliary heat should start and ON appears; adjust to 1 degree below room temperature - auxiliary heat stops and ON disappears.",
@@ -8688,7 +8684,7 @@ const THERMOSTATS = [
   "power": {
    "cWire": "required",
    "batteries": "",
-   "notes": "No battery compartment documented for Touch (unlike Classic/Lite) - powered continuously from 24VAC via the C terminal."
+   "notes": "C wire required: 'Sensi Touch requires a \"C\" wire to power the thermostat. Sensi does have a battery powered light in the sub-base for installation, but that light will only last for about an hour, and is not an indicator that there is power to the thermostat.' (sensi-touch-install.pdf). Note the Touch operation manual's terminal-table footnote still refers to 'the battery compartment' when describing the RC/RH jumper - a carry-over in Emerson's own document, not evidence of a user battery."
   },
   "terminals": [
    {
@@ -9280,6 +9276,11 @@ const THERMOSTATS = [
      "setting": "Item 10 - Display light (dL)",
      "options": "dL On (default) or dL OFF",
      "notes": "Continuous backlight only works when C is powered; otherwise momentary on keypress regardless of setting"
+    },
+    {
+     "setting": "Item 11 - Temperature Display Adjustment",
+     "options": "4 LO to 4 HI (0 default)",
+     "notes": "Adjusts the displayed room temperature up to 4 degrees higher or lower; referenced by this entry's troubleshooting rows"
     }
    ],
    "installerTest": "Check Thermostat Operation section: Fan - turn on power, press FAN to ON (blower starts), press FAN to AUTO (blower stops immediately); skip if there is no G connection. Heating - press SYSTEM to Heat (light a standing pilot first if present), press Up to 1 deg above room temp, heat should run and display shows 'System On' (a flashing setpoint means the 5-minute compressor lockout is active); raise to 3 deg above room temp on MS2/HP1/HP2 and aux heat should run with 'System On +2'; press Down below room temp to stop. Emergency - press SYSTEM to EM, raise setpoint, the heat source on W/E runs and the display shows 'System On' with flashing 'EM'. Cooling - press SYSTEM to Cool and lower the setpoint (do NOT run cooling if outdoor temp is below 50 deg F; do not run the compressor unless crankcase heaters have been on 6 hours and the system has been off at least 5 minutes).",
@@ -9821,31 +9822,6 @@ const THERMOSTATS = [
      "setting": "31 / 32 / 33 / 34 - Dual Fuel",
      "options": "31 dF: OFF (default) or On (appears if HP1/HP2 selected). 32 dF setpoint with outdoor sensor: 35 default, -5 to 50 deg F. 33 dF setpoint with no outdoor sensor: 05 default, 0 to 09. 34 Cd compressor off delay: 60 default, 0-99 seconds",
      "notes": "Higher temperature or dual fuel number = smaller stage separation (more comfort); lower = larger separation (more economy)"
-    },
-    {
-     "setting": "System Type (Screen Ref 1)",
-     "options": "MS2 (default) / HP1 / HP2 / SS1",
-     "notes": ""
-    },
-    {
-     "setting": "Fan control (Screen Ref 2)",
-     "options": "GAS (default) or ELE",
-     "notes": ""
-    },
-    {
-     "setting": "O/B reversing valve (Screen Ref 3)",
-     "options": "O (default) or B",
-     "notes": "HP1/HP2 only"
-    },
-    {
-     "setting": "Heat/Cool/Aux cycle rate (Screen Ref 8-10)",
-     "options": "FA (default) or SL",
-     "notes": ""
-    },
-    {
-     "setting": "Compressor Lockout (Screen Ref 12)",
-     "options": "OFF (default) or ON",
-     "notes": ""
     }
    ],
    "installerTest": "Check Thermostat Operation section. Fan - turn on power, press FAN to ON (blower starts), press FAN to AUTO (blower stops immediately). Heating - press SYSTEM to HEAT (light a standing pilot on the aux system first if present), press Up to 1 deg above room temperature; the display should show 'System On' (a flashing setpoint on HP1 means the 5-minute compressor lockout is running - Configuration menu item 11 per the manual text); raise to 3 deg above room temperature on HP1 and aux heat should run with 'System On +2'; press Down below room temperature to stop. Emergency (heat pumps only) - press SYSTEM to EM, 'EM Heat Mode' flashes, raise the setpoint and the heat source on W/E should run showing 'System On +2' with flashing 'EM Heat Mode' and 'Heat'; lower the setpoint to stop. Cooling - press SYSTEM to Cool and lower the setpoint; the blower should come on immediately on high speed followed by cold air and the display should show 'System On'; raise the setpoint to stop. Do NOT operate cooling if the outdoor temperature is below 50 deg F, and do not run the compressor unless the oil heaters have been operational for 6 hours and the system has been off at least 5 minutes.",
@@ -10163,22 +10139,22 @@ const THERMOSTATS = [
      "notes": ""
     },
     {
-     "setting": "Temperature Display Adjustment (Installer #83)",
+     "setting": "Temperature Display Adjustment (Installer #81)",
      "options": "-5 to +5 deg F, default OFF",
      "notes": ""
     },
     {
-     "setting": "Continuous Display Light (Installer #86)",
+     "setting": "Continuous Display Light (Installer #83)",
      "options": "ON (always on, needs C wire) or OFF (momentary, default)",
      "notes": ""
     },
     {
-     "setting": "Change Air Filter reminder",
+     "setting": "Change Air Filter reminder (Installer #86)",
      "options": "OFF (default) or 1-12 months",
      "notes": ""
     },
     {
-     "setting": "Keypad Lock",
+     "setting": "Keypad Lock (Installer #99)",
      "options": "ON (disable buttons) or OFF (default)",
      "notes": ""
     }
@@ -10460,9 +10436,14 @@ const THERMOSTATS = [
      "notes": ""
     },
     {
-     "setting": "Filter change reminder (Screen Ref 39-41)",
-     "options": "OFF (default) or 25-1975 hours",
-     "notes": ""
+     "setting": "38 / 39 - Change UV Lamp",
+     "options": "38: OFF (default) or On. 39: duration in DAYS, 350 default, 25-1975",
+     "notes": "Item 38 turns the Change UV Lamp reminder on; item 39 sets its duration in days"
+    },
+    {
+     "setting": "40 / 41 - Change Filter",
+     "options": "40: OFF (default) or On. 41: duration in HOURS, 200 default, 25-1975",
+     "notes": "Item 40 turns the Change Filter reminder on; item 41 sets its duration in run hours"
     }
    ],
    "installerTest": "No separately named installer test mode documented; verify by adjusting setpoint in each SYSTEM mode and watching for the corresponding stage indicator/relay click, per the Check Thermostat Operation guidance referenced in the manual.",
@@ -12226,9 +12207,14 @@ const THERMOSTATS = [
     "notes": ""
    },
    {
-    "t": "O/B",
-    "fn": "Reversing valve cool/heat active",
-    "notes": "heat pump only"
+    "t": "O",
+    "fn": "Output - Reversing Valve (Cool Active)",
+    "notes": "heat pump only; separate terminal from B"
+   },
+   {
+    "t": "B",
+    "fn": "Output - Reversing Valve (Heat Active)",
+    "notes": "heat pump only; separate terminal from O"
    },
    {
     "t": "W1/E",
@@ -12439,14 +12425,24 @@ const THERMOSTATS = [
   },
   "terminals": [
    {
-    "t": "Rc/Rh",
-    "fn": "Cooling/heating transformer inputs",
+    "t": "Rc",
+    "fn": "Input - 24 Volt AC Cooling Transformer",
+    "notes": "Dual Transformer Systems Only"
+   },
+   {
+    "t": "Rh",
+    "fn": "Input - Power Connection (24 Volt AC Heating Transformer or Millivolt Power Source)",
     "notes": ""
    },
    {
-    "t": "O/B",
-    "fn": "Reversing valve",
-    "notes": "heat pump"
+    "t": "O",
+    "fn": "Output - Reversing Valve (Cool Active)",
+    "notes": "heat pump only; separate terminal from B"
+   },
+   {
+    "t": "B",
+    "fn": "Output - Reversing Valve (Heat Active)",
+    "notes": "heat pump only; separate terminal from O"
    },
    {
     "t": "Y1",
@@ -12479,8 +12475,24 @@ const THERMOSTATS = [
    "Wiring pattern otherwise matches the 2020/2220 Economy family."
   ],
   "setup": {
-   "access": "Rear slide switches (same pattern as other 1000/2000 series builder/economy non-programmables); this is a non-programmable unit (Builder Series naming implies NC = non-programmable).",
-   "keySettings": [],
+   "access": "Installer switches are located on the back of the thermostat and must be properly set for this thermostat to operate properly (braeburn-2020nc-2220nc-manual.pdf, step 4 'Set Installer Switches').",
+   "keySettings": [
+    {
+     "setting": "CONV / HP installer switch",
+     "options": "CONV (factory default) or HP",
+     "notes": "CONV for conventional systems, HP for heat pump systems"
+    },
+    {
+     "setting": "F / C installer switch",
+     "options": "F (factory default) or C",
+     "notes": "Fahrenheit or Celsius temperature scale"
+    },
+    {
+     "setting": "HE / HG installer switch",
+     "options": "HG (factory default) or HE",
+     "notes": "HG for gas heat, HE for electric heat"
+    }
+   ],
    "installerTest": "Same HEAT/COOL/FAN test sequence as sibling families.",
    "factoryReset": "Front RESET button."
   },
@@ -14120,6 +14132,16 @@ const THERMOSTATS = [
      "setting": "-12 Clock Format",
      "options": "12hr / 24hr",
      "notes": ""
+    },
+    {
+     "setting": "-13 Backlight",
+     "options": "10 Seconds | Always On",
+     "notes": "Backlight auto-off after 10 seconds, or always on. When the backlight is off the display is not visible - press the knob to turn it on."
+    },
+    {
+     "setting": "-17 Filter Life",
+     "options": "Off | 30 | 60 | 90 | 120 | 180 | 365 days",
+     "notes": "Sets the air filter lifespan; remaining life is shown in the fan settings submenu"
     }
    ],
    "installerTest": "-98 Compressor Bypass: set to ON to temporarily disable the minimum on/off time protection so heating/cooling can be forced on/off immediately for testing.",
@@ -16312,7 +16334,7 @@ const THERMOSTATS = [
   "power": {
    "cWire": "optional",
    "batteries": "2 AA Alkaline",
-   "notes": "Hardwire (C terminal) or battery power. Battery install recommended even when hardwired - gives 5 min compressor delay on hardwire power outage. If low battery not replaced within 21 days, icon flashes; after 22 days setpoints offset to 85F cool/55F heat temporarily (revert after 4 hrs); after 43 days relays open and unit becomes inoperable until batteries replaced."
+   "notes": "Hardwire (C terminal) or battery power. Battery install recommended even when hardwired - gives 5 min compressor delay on hardwire power outage. Low battery: the icon flashes on the screen for 21 days; if the batteries are not changed 22 days after low voltage is detected the screen shows only the flashing battery icon until a button is pressed; if not changed 43 days after detection the set points also offset to 85F/29C cooling and 55F/13C heating (set point changes can be made temporarily but revert after 4 hours). Relays open and the thermostat becomes inoperable only once the internal voltage threshold is reached, not on a fixed day count."
   },
   "terminals": [
    {
@@ -16432,7 +16454,7 @@ const THERMOSTATS = [
   "power": {
    "cWire": "optional",
    "batteries": "2 AA Alkaline",
-   "notes": "Same battery-backup / low-battery offset behavior as T601-2 (21/22/43-day escalation, setpoints offset to 85F/55F, then relays open)."
+   "notes": "Same battery-backup / low-battery behavior as T601-2: icon flashes 21 days; at 22 days the screen shows only the flashing icon until a button is pressed; at 43 days the set points also offset to 85F cool / 55F heat (temporary changes revert after 4 hrs); relays open only when the internal voltage threshold is reached."
   },
   "terminals": [
    {
@@ -16670,7 +16692,7 @@ const THERMOSTATS = [
    {
     "title": "T621-2 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t601-2-install.pdf",
+    "seedFile": "pro1-t621-2-install.pdf",
     "url": "https://pro1iaq.com/images/600Manuals/PM-621-2-IM-M-Installation-Manual-ALitho-1814.pdf"
    }
   ],
@@ -16799,7 +16821,7 @@ const THERMOSTATS = [
    {
     "title": "T625-2 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t605-2-install.pdf",
+    "seedFile": "pro1-t625-2-install.pdf",
     "url": "https://pro1iaq.com/images/600Manuals/PM-625-IM-M-Installation-Manual-Alitho.pdf"
    },
    {
@@ -17230,7 +17252,7 @@ const THERMOSTATS = [
    {
     "title": "T715 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t705-install.pdf",
+    "seedFile": "pro1-t715-install.pdf",
     "url": "https://pro1iaq.com/images/700Manuals/PM-715-IM-Installation-Manual-Alitho.pdf"
    },
    {
@@ -17369,7 +17391,7 @@ const THERMOSTATS = [
    {
     "title": "T721 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t705-install.pdf",
+    "seedFile": "pro1-t721-install.pdf",
     "url": "https://pro1iaq.com/images/700Manuals/PM-721-IM-Installation-Manual-Alitho.pdf"
    },
    {
@@ -17529,7 +17551,7 @@ const THERMOSTATS = [
    {
     "title": "T725 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t705-install.pdf",
+    "seedFile": "pro1-t725-install.pdf",
     "url": "https://pro1iaq.com/images/700Manuals/PM-725-IM-M-Installation-Manual-Alitho.pdf"
    },
    {
@@ -17650,7 +17672,7 @@ const THERMOSTATS = [
    {
     "title": "T731 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t721i-install.pdf",
+    "seedFile": "pro1-t731-install.pdf",
     "url": "https://pro1iaq.com/images/700Manuals/PM-731-IM-Installation-Manual-ALitho-2224.pdf"
    },
    {
@@ -17676,9 +17698,9 @@ const THERMOSTATS = [
   "sort": 20,
   "confidence": "verify",
   "power": {
-   "cWire": "",
+   "cWire": "optional",
    "batteries": "2 AA Alkaline (thermostat)",
-   "notes": "Thermostat battery is optional if hardwired (R and C to 24V power). The paired Base Module (mounted inside the PTAC/air handler) MUST be hardwired (C and R to 24V power) - it is not battery powered."
+   "notes": "Wall thermostat: C wire optional - battery install is optional if the thermostat is hardwired (R and C to 24V power). The paired Base Module (mounted inside the PTAC/air handler) MUST be hardwired (C and R to 24V power) - it is not battery powered. cWire below is the value for the wall unit."
   },
   "terminals": [
    {
@@ -18219,9 +18241,9 @@ const THERMOSTATS = [
   "sort": 20,
   "confidence": "verify",
   "power": {
-   "cWire": "",
+   "cWire": "optional",
    "batteries": "2x AA alkaline in the wall thermostat",
-   "notes": "Equipment Module (base station wired to the air handler) must be hardwired 24VAC to R and C. The wall thermostat itself can run on batteries and talks to the Equipment Module over radio; if remote sensors are used the wall unit still just needs batteries, but the Equipment Module is always hardwired."
+   "notes": "Wall thermostat: C wire optional - it can run on 2 AA batteries and talks to the Equipment Module over radio. The Equipment Module (base station wired to the air handler) must always be hardwired 24VAC to R and C. cWire below is the value for the wall unit."
   },
   "terminals": [
    {
@@ -19098,9 +19120,9 @@ const THERMOSTATS = [
   "sort": 20,
   "confidence": "verify",
   "power": {
-   "cWire": "",
+   "cWire": "optional",
    "batteries": "2x AA alkaline in the wall thermostat",
-   "notes": "Base Module (equivalent to T755WHO's Equipment Module) must always be hardwired 24VAC to R/C. The wall thermostat can run on batteries UNLESS remote sensors are added, in which case it must be hardwired too."
+   "notes": "Wall thermostat: C wire optional - it can run on 2 AA batteries UNLESS remote sensors are added, in which case it must be hardwired too. The Base Module (equivalent to T755WHO's Equipment Module) must always be hardwired 24VAC to R/C. cWire below is the value for the wall unit."
   },
   "terminals": [
    {
@@ -19621,7 +19643,7 @@ const THERMOSTATS = [
    {
     "title": "T501ML2 / T501ML4 Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t501m-install.pdf",
+    "seedFile": "pro1-t501ml2-4-install.pdf",
     "url": "https://pro1iaq.com/images/500Manuals/PM-501ML2-501ML4-Installation-Manual-1810.pdf"
    }
   ],
@@ -20934,7 +20956,7 @@ const THERMOSTATS = [
    {
     "title": "R251S Installation Manual",
     "docType": "install",
-    "seedFile": "pro1-t701-install.pdf",
+    "seedFile": "pro1-r251s-install.pdf",
     "url": "https://pro1iaq.com/images/PDFS/PM-251S-IM-Installation-Manual-ALitho.pdf"
    }
   ],
@@ -21027,19 +21049,24 @@ const THERMOSTATS = [
     "action": "Manual refers installer to www.pro1iaq.com/prosync for troubleshooting steps (not detailed in this PDF)"
    },
    {
-    "code": "Equipment module LED: white/green/yellow/red, single blink (slow)",
-    "meaning": "Equipment module network reset - no remotes paired or connected; will not energize heating/cooling",
-    "action": "Pair at least one remote sensor to the equipment module"
+    "code": "Equipment module LED: White, single blink (slow)",
+    "meaning": "Equipment module network reset - no remotes paired or connected; equipment module will not energize the heating and cooling system",
+    "action": "Pair at least one remote sensor / thermostat to the equipment module"
    },
    {
-    "code": "Equipment module LED: double blink",
-    "meaning": "All remote thermostats connected to the equipment module, network healthy",
+    "code": "Equipment module LED: Green, single blink",
+    "meaning": "All remote thermostats are connected to the equipment module, network is healthy",
     "action": "Normal - no action needed"
    },
    {
-    "code": "Equipment module LED: triple blink",
-    "meaning": "One or more remote thermostats disconnected from the equipment module",
-    "action": "Check remote battery/range/pairing"
+    "code": "Equipment module LED: Yellow, double blink",
+    "meaning": "One or more remote thermostats are disconnected from the equipment module",
+    "action": "Check the disconnected remote's batteries, range and pairing"
+   },
+   {
+    "code": "Equipment module LED: Red, triple blink",
+    "meaning": "All remote thermostats are disconnected; equipment module will not energize the heating and cooling system",
+    "action": "Check equipment module power and re-pair the remotes; see www.pro1iaq.com/prosync"
    }
   ],
   "troubleshooting": [],
@@ -21551,13 +21578,7 @@ const THERMOSTATS = [
   "id": "tst-nest-learning-4th-gen",
   "brand": "Google Nest",
   "family": "Nest Learning Thermostat (4th gen, 2024)",
-  "aka": "GA02434 / GA02435 / GA02501 / GA02502",
-  "models": [
-   "GA02434-US",
-   "GA02435-US",
-   "GA02501-US",
-   "GA02502-US"
-  ],
+  "models": [],
   "type": "smart-wifi",
   "stages": "Heating 1, 2 and 3 stages (W1, W2, W3); Cooling 1 and 2 stages (Y1, Y2); heat pump with auxiliary and emergency heat (O/B, AUX, E); Fan (G, G2, G3) - per support.google.com/googlehome/answer/9230098. The store.google.com 4th gen spec page states a wider set...",
   "sort": 10,
@@ -22149,7 +22170,7 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/support-kms-prod/ZDmmqzQ3N7yeWRvYkE6ubV3gYfRzfUfgxqaH"
    }
   ],
-  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Identify a thermostat wire; Nest thermostat compatibility",
+  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Identify a thermostat wire; Nest thermostat compatibility NOTE: GA-series order codes (GA02434-US, GA02435-US, GA02501-US, GA02502-US) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
   "img": "tstat-img/tst-nest-learning-4th-gen.jpg"
  },
  {
@@ -22632,14 +22653,7 @@ const THERMOSTATS = [
   "id": "tst-nest-thermostat-2020",
   "brand": "Google Nest",
   "family": "Nest Thermostat (2020, mirror display)",
-  "aka": "G4CVZ",
-  "models": [
-   "GA01334-US",
-   "GA01331-US",
-   "GA02081-US",
-   "GA02082-US",
-   "GA02083-US"
-  ],
+  "models": [],
   "type": "smart-wifi",
   "stages": "'Heating and Cooling: 1 stage of heating (W1) and cooling (Y1) and a second stage of either heating (W2) or cooling (Y2). Heat pump: with auxiliary or emergency heat (O/B, AUX). Fan: (G). Power: (C, Rh or Rc)' - verbatim from support.google.com/googlehome/a...",
   "sort": 10,
@@ -22933,7 +22947,7 @@ const THERMOSTATS = [
     "url": "https://storage.googleapis.com/support-kms-prod/NUKp79Lbz8QzWVGLb3OAK0xe7S3DcP8glbQL"
    }
   ],
-  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Nest thermostat compatibility; Nest Thermostat Welcome Guide (2020)",
+  "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Nest thermostat compatibility; Nest Thermostat Welcome Guide (2020) NOTE: GA-series order codes (GA01334-US, GA01331-US, GA02081-US, GA02082-US, GA02083-US) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
   "img": "tstat-img/tst-nest-thermostat-2020.jpg"
  },
  {
@@ -23244,10 +23258,7 @@ const THERMOSTATS = [
   "id": "tst-nest-power-connector",
   "brand": "Google Nest",
   "family": "Nest Power Connector",
-  "aka": "GA02493-US",
-  "models": [
-   "GA02493-US"
-  ],
+  "models": [],
   "type": "accessory",
   "sort": 40,
   "confidence": "common",
@@ -23352,17 +23363,14 @@ const THERMOSTATS = [
     "url": "https://support.google.com/googlenest/answer/10523126?hl=en"
    }
   ],
-  "sourceNotes": "Nest Power Connector Installation Guide; Nest Power Connector; Nest Power Connector (Google Store product/spec page); Learn about the common or C wire",
+  "sourceNotes": "Nest Power Connector Installation Guide; Nest Power Connector; Nest Power Connector (Google Store product/spec page); Learn about the common or C wire NOTE: GA-series order codes (GA02493-US) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
   "img": "tstat-img/tst-nest-power-connector.jpg"
  },
  {
   "id": "tst-nest-temperature-sensor",
   "brand": "Google Nest",
   "family": "Nest Temperature Sensor",
-  "models": [
-   "GA01426-US (1st gen)",
-   "GA02563-US (2nd gen)"
-  ],
+  "models": [],
   "type": "accessory",
   "sort": 40,
   "confidence": "verify",
@@ -23430,7 +23438,7 @@ const THERMOSTATS = [
     "url": "https://support.google.com/googlehome/answer/9248154?hl=en"
    }
   ],
-  "sourceNotes": "Set up and install your Nest Temperature Sensor; Learn about the Nest Temperature Sensor",
+  "sourceNotes": "Set up and install your Nest Temperature Sensor; Learn about the Nest Temperature Sensor NOTE: GA-series order codes (GA01426-US (1st gen), GA02563-US (2nd gen)) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
   "img": "tstat-img/tst-nest-temperature-sensor.jpg"
  },
  {
@@ -24698,9 +24706,14 @@ const THERMOSTATS = [
     "title": "New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin)",
     "docType": "other",
     "seedFile": "daikin-one-wireless-rht-sensor-pmn.pdf"
+   },
+   {
+    "title": "Daikin One Touch / One+ Unitary Commissioning Menu Outline (v3.9) - Remote Sensors calibration ranges",
+    "docType": "other",
+    "seedFile": "daikin-one-touch-unitary-commissioning-menu-outline.pdf"
    }
   ],
-  "sourceNotes": "D-NP-PC-3022 New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin)",
+  "sourceNotes": "D-NP-PC-3022 New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin); Daikin One Touch/One+ v3.9 Unitary Commissioning Menu Outline (source of the temperature -7F..7F and humidity -15%..15% calibration ranges - these are not in the D-NP-PC-3022 bulletin)",
   "img": "tstat-img/tst-daikin-one-rht-sensor.jpg"
  },
  {
