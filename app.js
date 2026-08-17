@@ -2376,6 +2376,7 @@ function ccInferEff(model) {
   if ((x = m.match(/^(?:GSX|GSZ|ASX|ASZ|DSX|DSZ|SSX|SSZ|ANX|ANZ|VSX|VSZ|GSC|GSH|GLXS|GLZS)(\d{2})/))) n = +x[1];
   else if ((x = m.match(/^D[XZ](\d{2})(?:S|TC)/))) n = +x[1];
   else if ((x = m.match(/^(?:RA|WA|RP|WP|RD)(\d{2})/))) n = +x[1];
+  else if ((x = m.match(/^(1[34])AJ[MN]/))) n = +x[1];
   else if ((x = m.match(/^[45]T[TW][RXBZV](\d)/))) n = x[1] === "0" ? 20 : 10 + +x[1];
   else if ((x = m.match(/^X[CP](\d{2})/))) n = +x[1];
   else if ((x = m.match(/^(\d{2})(?:ACX|HPX)/))) n = +x[1];
@@ -2403,7 +2404,7 @@ function ccInferRefrig(model) {
   if (/^(DX1[3-8]|DZ1[3-8]|DX20VC|DZ20VC|DZ17VS)/.test(m)) return "R-410A";
   if (/^4T[TW][RXBZV]/.test(m)) return "R-410A";
   if (/^(X[CP]1[3-9]|X[CP]2[0-9]|1[346]ACX|14HPX|ML1[467]X|EL1[678]X|SL2[58]X)/.test(m)) return "R-410A";
-  if (/^(RA1[3-9]|RA20|RP1[4-9]|RP20|WA1[3-5]|WP1[4-5])/.test(m)) return "R-410A";
+  if (/^(RA1[3-9]|RA20|RP1[4-9]|RP20|WA1[3-5]|WP1[4-5]|1[34]AJ[MN])/.test(m)) return "R-410A";
   if (/^(24VNA|25VNA|24A[BC]|25H[BC])/.test(m)) return "R-410A";
   if (/^Y[CH][JG]/.test(m)) return "R-410A";
   return null;
@@ -2425,11 +2426,8 @@ async function ccScanPhoto(which, file) {
   trackEvent("charge calc scanned " + which + " tag");
   try {
     show("Reading the " + which + " tag… first scan on a phone takes ~15-30 seconds.");
-    const canvas = await preprocessPhoto(file);
-    const worker = await getTessWorker(show);
-    const { data } = await worker.recognize(canvas);
+    const fields = await ocrTagFields(file, show);
     show(null);
-    const fields = extractTagFields(data.text || "");
     if (!fields.model) {
       show("Couldn't find a model number on the " + which + " tag — try a straighter, closer shot, or type it in the box.");
       return;
@@ -2809,6 +2807,11 @@ const MODEL_PATTERNS = [
   { re: /^U(9[78]M?V|802V)/, brand: "Rheem", equipment: "Gas Furnace", series: "Ruud Ultra Series modulating gas furnace (Rheem platform, Ruud-exclusive tier)", notes: [] },
   { re: /^U[AP]1[6-9]/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Ruud Ultra/Achiever Plus AC or heat pump (Rheem platform, Ruud-exclusive tier)", notes: [] },
   { re: /^RA1[3-9]|^WA1[3-5]|^RA20/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud AC condenser", notes: [] },
+  // Classic/Value-series R-410A condensers that pre-date the RA-prefix naming
+  // (13AJN / 13AJM = 13 SEER, 14AJM = 14.5 SEER; Rheem IO 92-21354-78-02
+  // "13 & 14.5 SEER Series Condensing Units"). Seen in the field 2026-08 on a
+  // 2013 14AJM30A01 whose bilingual tag also defeated the label reader.
+  { re: /^1[34]AJ[MN]/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem Classic/Value Series AC condenser (13AJN/13AJM 13 SEER, 14AJM 14.5 SEER, R-410A, prior generation)", notes: ["Factory-charged R-410A; the tag prints the outdoor-unit charge (e.g. 112 oz) - line-set adders and the matched coil decide the final charge. Install doc 92-21354-78-02."] },
   { re: /^R[PD]1[4-8]|^WP1[4-5]|^WSP?14|^RP(19|20)/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Rheem/Ruud heat pump", notes: ["RP17 install manual is in Manuals → Rheem."] },
   { re: /^R[HF][12][TVP]|^RB2T|^RHMV|^WH1[TP]/, brand: "Rheem", equipment: "Air Handler", series: "Rheem/Ruud air handler", notes: [] },
   { re: /^RCF[YZ]?/, brand: "Rheem", equipment: "Other", series: "Rheem/Ruud evaporator coil", notes: ["Metering device decides the charging method: piston/fixed orifice = charge by SUPERHEAT (chart method in the Charging Calc), TXV = charge by SUBCOOLING. Check which this coil actually has."] },
@@ -2999,8 +3002,16 @@ function extractTagFields(text) {
   // "SERIAL NUMBER" / "SERIAL NO." so the capture lands on the actual value —
   // otherwise the word NUMBER itself gets captured, rejected, and the real
   // serial on that line is lost.
-  const modelLabel = /(?:MODEL|MODLE|M\/N|MOD|M0DEL)(?:\s*(?:NUMBER|NUM|N[O0]\.?))?[.:# ]*\s*([A-Z0-9][A-Z0-9./-]{4,24})/;
-  const serialLabel = /(?:SERIAL|SER|S\/N|5\/N)(?:\s*(?:NUMBER|NUM|N[O0]\.?))?[.:# ]*\s*([A-Z0-9][A-Z0-9-]{5,24})/;
+  // Bilingual plates (Rheem, Carrier, anything sold in Canada) print
+  // "MODEL NO./ MODELE N° 14AJM30A01" and "SERIAL NO./ N° DE SERIE W4613...":
+  // the FILLER group below eats any run of NO. / NUMBER / N° / MODELE /
+  // DE SERIE / slashes between the English label and the value, otherwise the
+  // regex stalls on the "/" and the real model number is never captured (a
+  // real 2013 Rheem tag scanned as "could not read" for exactly this reason).
+  // OCR renders the degree sign as °, º, *, ?, o or 0.
+  const FILLER = "(?:[\\s.:#/-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
+  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL)" + FILLER + "[.:#/ ]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
+  const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/ ]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
   for (const line of lines) {
     if (!model) { const m = line.match(modelLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) model = m[1]; }
     if (!serial) { const m = line.match(serialLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) serial = m[1]; }
@@ -3074,6 +3085,41 @@ async function preprocessPhoto(file) {
   return canvas;
 }
 
+// Same pixels turned by 90/180/270 degrees. Tesseract reads horizontal text
+// only and the bundled worker has no orientation detection, so a plate shot
+// sideways (a photo taken with the phone turned, which the tech never
+// notices) came back "couldn't find a model number" every time.
+function rotateCanvas(src, deg) {
+  const out = document.createElement("canvas");
+  const swap = deg === 90 || deg === 270;
+  out.width = swap ? src.height : src.width;
+  out.height = swap ? src.width : src.height;
+  const ctx = out.getContext("2d");
+  ctx.translate(out.width / 2, out.height / 2);
+  ctx.rotate(deg * Math.PI / 180);
+  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+  return out;
+}
+
+// OCR a tag photo and pull model/serial out of it. Reads upright first, and
+// if no model number turns up tries the photo turned 90, 270 and 180 degrees
+// before giving up. Returns the first pass that yields a model, else the best
+// of the failed passes (so a serial found upright is not thrown away).
+async function ocrTagFields(file, onStatus) {
+  const base = await preprocessPhoto(file);
+  const worker = await getTessWorker(onStatus);
+  let best = null;
+  for (const deg of [0, 90, 270, 180]) {
+    if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
+    const canvas = deg ? rotateCanvas(base, deg) : base;
+    const { data } = await worker.recognize(canvas);
+    const fields = extractTagFields(data.text || "");
+    if (fields.model) { if (deg) trackEvent("tag read after rotate " + deg); return fields; }
+    if (!best || (fields.serial && !best.serial)) best = fields;
+  }
+  return best;
+}
+
 function scanStatus(msg) {
   const el = document.getElementById("scanStatus");
   if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
@@ -3088,11 +3134,8 @@ async function scanTagPhoto(file) {
   document.getElementById("scanResult").innerHTML = "";
   try {
     scanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
-    const canvas = await preprocessPhoto(file);
-    const worker = await getTessWorker(scanStatus);
-    const { data } = await worker.recognize(canvas);
+    const fields = await ocrTagFields(file, scanStatus);
     scanStatus(null);
-    const fields = extractTagFields(data.text || "");
     document.getElementById("scanModelInput").value = fields.model;
     document.getElementById("scanSerialInput").value = fields.serial;
     if (!fields.model) {
@@ -3255,11 +3298,8 @@ async function warrantyScanPhoto(file) {
   document.getElementById("warrantyResult").innerHTML = "";
   try {
     warrantyStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
-    const canvas = await preprocessPhoto(file);
-    const worker = await getTessWorker(warrantyStatus);
-    const { data } = await worker.recognize(canvas);
+    const fields = await ocrTagFields(file, warrantyStatus);
     warrantyStatus(null);
-    const fields = extractTagFields(data.text || "");
     if (fields.serial) document.getElementById("warrantySerialInput").value = fields.serial;
     if (fields.model) document.getElementById("warrantyModelInput").value = fields.model;
     if (!fields.serial && !fields.model) {
