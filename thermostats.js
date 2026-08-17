@@ -7893,9 +7893,9 @@ const THERMOSTATS = [
  },
  {
   "id": "tst-sensi-classic",
-  "brand": "Sensi",
+  "brand": "White-Rodgers",
   "family": "Sensi Classic Wi-Fi",
-  "aka": "1F87U-42WF / ST55",
+  "aka": "Emerson Sensi - 1F87U-42WF / ST55",
   "models": [
    "1F87U-42WF",
    "ST55"
@@ -8059,9 +8059,9 @@ const THERMOSTATS = [
  },
  {
   "id": "tst-sensi-lite",
-  "brand": "Sensi",
+  "brand": "White-Rodgers",
   "family": "Sensi Lite",
-  "aka": "1F76U-22WFB / ST25",
+  "aka": "Emerson Sensi - 1F76U-22WFB / ST25",
   "models": [
    "1F76U-22WFB",
    "ST25"
@@ -8393,9 +8393,9 @@ const THERMOSTATS = [
  },
  {
   "id": "tst-sensi-touch-2",
-  "brand": "Sensi",
+  "brand": "White-Rodgers",
   "family": "Sensi Touch 2",
-  "aka": "1F96U-42WF / ST76",
+  "aka": "Emerson Sensi - 1F96U-42WF / ST76",
   "models": [
    "1F96U-42WF",
    "ST76"
@@ -8633,9 +8633,9 @@ const THERMOSTATS = [
  },
  {
   "id": "tst-sensi-touch",
-  "brand": "Sensi",
+  "brand": "White-Rodgers",
   "family": "Sensi Touch Wi-Fi",
-  "aka": "1F95U-42WF / ST75",
+  "aka": "Emerson Sensi - 1F95U-42WF / ST75",
   "models": [
    "1F95U-42WF",
    "ST75"
