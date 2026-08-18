@@ -3114,6 +3114,7 @@ async function ocrTagFields(file, onStatus) {
     const canvas = deg ? rotateCanvas(base, deg) : base;
     const { data } = await worker.recognize(canvas);
     const fields = extractTagFields(data.text || "");
+    fields.text = data.text || "";
     if (fields.model) { if (deg) trackEvent("tag read after rotate " + deg); return fields; }
     if (!best || (fields.serial && !best.serial)) best = fields;
   }
@@ -3306,7 +3307,7 @@ async function warrantyScanPhoto(file) {
       warrantyStatus("Couldn't find a serial or model on the photo — try a straighter, closer shot, or type them below.");
       return;
     }
-    renderWarrantyResult(fields.model, fields.serial, detectBadgeInText((data.text || "").toUpperCase()));
+    renderWarrantyResult(fields.model, fields.serial, detectBadgeInText((fields.text || "").toUpperCase()));
   } catch (err) {
     warrantyStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can type the serial below.");
   }
@@ -4269,7 +4270,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v116";
+const APP_VERSION = "v117";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
