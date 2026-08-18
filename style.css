@@ -1197,3 +1197,11 @@ main {
 .tstat-thumb { width: 58px; height: 58px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid var(--border); flex: 0 0 auto; margin-right: 0.6rem; }
 .tstat-card-text { flex: 1 1 auto; min-width: 0; }
 .tstat-hero { float: right; width: 108px; height: 108px; object-fit: contain; border-radius: 10px; background: #fff; border: 1px solid var(--border); margin: 0 0 0.5rem 0.7rem; }
+
+/* Toolbox: current vs legacy tool badges */
+.tstat-badge.tbx-current { border-color: #146c3e; color: #6fe3a5; }
+.tstat-badge.tbx-legacy { border-color: #8a5a1e; color: #f0c27a; }
+@media (prefers-color-scheme: light) {
+  .tstat-badge.tbx-current { color: #1e6b3a; background: #e6f4ea; }
+  .tstat-badge.tbx-legacy { color: #7a4a10; background: #fff3e0; }
+}

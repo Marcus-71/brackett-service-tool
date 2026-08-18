@@ -158,11 +158,12 @@
 
 <!-- TOOLBOX -->
 <section id="toolboxScreen" class="screen hidden">
-  <div class="disclaimer">Board programming tools and when to use them. Confirm exact app/menu steps still match — vendor apps update their UI over time.</div>
+  <div class="disclaimer">Board programming tools and the manufacturers' phone / Bluetooth service apps — current ones and the legacy ones still on installed equipment — with when to use each. Confirm exact app/menu steps still match — vendor apps update their UI over time.</div>
   <div class="controls">
-    <input id="toolboxSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search tool, brand, or board…" autocomplete="off">
+    <input id="toolboxSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search tool, app, brand, or board…" autocomplete="off">
     <div class="filter-row">
       <select id="toolboxBrandChips" class="filter-select" aria-label="Filter by brand"></select>
+      <select id="toolboxEraChips" class="filter-select" aria-label="Filter by current or legacy"></select>
     </div>
   </div>
   <main id="toolboxResults"></main>

@@ -966,7 +966,8 @@ document.getElementById("diagSearchInput").addEventListener("input", (e) => { di
 
 const TOOLBOX_STORAGE_KEY = "bfc_user_toolbox_v1";
 const TOOLBOX_DELETED_KEY = "bfc_deleted_toolbox_ids_v1";
-let toolboxState = { search: "", brand: "All" };
+let toolboxState = { search: "", brand: "All", era: "All" };
+const TOOLBOX_ERA_LABEL = { current: "Current", legacy: "Legacy" };
 
 function loadUserToolbox() { try { return JSON.parse(localStorage.getItem(TOOLBOX_STORAGE_KEY)) || []; } catch { return []; } }
 function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); }
@@ -985,11 +986,14 @@ function renderToolbox() {
   const all = getAllToolboxEntries();
   const brands = ["All", ...uniqueSorted(all.map(t => t.brand))];
   renderChips("toolboxBrandChips", brands, toolboxState.brand, (v) => { toolboxState.brand = v; renderToolbox(); }, "All Brands");
+  const eras = ["All", ...uniqueSorted(all.map(t => TOOLBOX_ERA_LABEL[t.era] || "").filter(Boolean))];
+  renderChips("toolboxEraChips", eras, toolboxState.era, (v) => { toolboxState.era = v; renderToolbox(); }, "Current + Legacy");
 
   const filtered = all.filter(t =>
     (toolboxState.brand === "All" || t.brand === toolboxState.brand) &&
-    textIncludes([t.brand, t.family, t.toolName, t.title, t.whenToUse, ...(t.requirements||[]), ...(t.steps||[])], toolboxState.search)
-  ).sort((a, b) => a.brand.localeCompare(b.brand) || a.toolName.localeCompare(b.toolName));
+    (toolboxState.era === "All" || (TOOLBOX_ERA_LABEL[t.era] || "") === toolboxState.era) &&
+    textIncludes([t.brand, t.family, t.toolName, t.title, t.whenToUse, t.era, ...(t.platforms||[]), ...(t.requirements||[]), ...(t.steps||[]), ...(t.notes||[])], toolboxState.search)
+  ).sort((a, b) => a.brand.localeCompare(b.brand) || ((a.era === "legacy") - (b.era === "legacy")) || a.toolName.localeCompare(b.toolName));
 
   const results = document.getElementById("toolboxResults");
   const empty = document.getElementById("toolboxEmptyState");
@@ -1014,6 +1018,10 @@ function buildToolboxCard(t) {
     <div class="card-meta">
       <span>${escapeHtml(t.brand)}${t.family ? " · " + escapeHtml(t.family) : ""}</span>
     </div>
+    ${(t.era || (t.platforms || []).length) ? `<div class="tstat-badges">
+      ${t.era ? `<span class="tstat-badge ${t.era === "legacy" ? "tbx-legacy" : "tbx-current"}">${escapeHtml(TOOLBOX_ERA_LABEL[t.era] || t.era)}</span>` : ""}
+      ${(t.platforms || []).map(p => `<span class="tstat-badge">${escapeHtml(p)}</span>`).join("")}
+    </div>` : ""}
   `;
   return card;
 }
@@ -1024,13 +1032,27 @@ function openToolboxDetail(id) {
   const modal = document.getElementById("modal");
   const requirements = (t.requirements || []).map(r => `<li>${escapeHtml(r)}</li>`).join("");
   const steps = (t.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
+  const notes = (t.notes || []).map(n => `<li>${escapeHtml(n)}</li>`).join("");
+  const eraLine = t.era ? `<span class="tstat-badge ${t.era === "legacy" ? "tbx-legacy" : "tbx-current"}">${escapeHtml(TOOLBOX_ERA_LABEL[t.era] || t.era)}</span>` : "";
+  const platLine = (t.platforms || []).map(p => `<span class="tstat-badge">${escapeHtml(p)}</span>`).join("");
+  const manualBtns = (t.manuals || []).map(m => {
+    const seed = typeof tstatFindSeed === "function" ? tstatFindSeed(m) : null;
+    const label = escapeHtml(m.title || (seed && seed.title) || "Manual");
+    if (seed) return `<button class="tstat-manual-btn" data-seed="${escapeHtml(seed.file)}">${label}</button>`;
+    return "";
+  }).join("");
+  const linkBtns = (t.links || []).filter(l => l && l.url).map(l => `<a class="tstat-manual-btn ext" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label || l.url)} <span class="tstat-note">opens in browser - needs signal</span></a>`).join("");
   modal.innerHTML = `
     <h2>${escapeHtml(t.toolName)} — ${escapeHtml(t.title)}</h2>
     <div class="sub">${escapeHtml(t.brand)}${t.family ? " · " + escapeHtml(t.family) : ""}</div>
+    ${(eraLine || platLine) ? `<div class="tstat-badges">${eraLine}${platLine}</div>` : ""}
     <div class="detail-section"><h3>When to use it</h3><p>${escapeHtml(t.whenToUse || "—")}</p></div>
     ${requirements ? `<div class="detail-section"><h3>What you need</h3><ul>${requirements}</ul></div>` : ""}
     ${steps ? `<div class="detail-section"><h3>Steps</h3><ol>${steps}</ol></div>` : ""}
     ${t.caution ? `<div class="caution-box">⚠ ${escapeHtml(t.caution)}</div>` : ""}
+    ${notes ? `<div class="detail-section"><h3>Good to know</h3><ul>${notes}</ul></div>` : ""}
+    ${(manualBtns || linkBtns) ? `<div class="detail-section"><h3>Guides &amp; links</h3><div class="tstat-manuals">${manualBtns}${linkBtns}</div></div>` : ""}
+    ${t.source ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(t.source)}</p></div>` : ""}
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
       <button class="primary" id="editToolboxBtn">Edit / correct</button>
@@ -1038,6 +1060,9 @@ function openToolboxDetail(id) {
   `;
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editToolboxBtn").onclick = () => openToolboxEditForm(t);
+  modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
+    btn.onclick = () => { trackEvent("opened toolbox guide: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
+  });
   document.getElementById("modalBackdrop").classList.remove("hidden");
 }
 
@@ -4497,7 +4522,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v119";
+const APP_VERSION = "v120";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
