@@ -57,6 +57,11 @@
       <span class="tile-label">Thermostats</span>
       <span class="tile-sub">Wiring, setup, codes, manuals — every brand</span>
     </button>
+    <button class="tile tile-gen" data-screen="gen">
+      <span class="tile-icon">🔌</span>
+      <span class="tile-label">Generators</span>
+      <span class="tile-sub">Generac air-cooled: alarm codes, specs, manuals</span>
+    </button>
     <button class="tile tile-warranty" data-screen="warranty">
       <span class="tile-icon">🛡️</span>
       <span class="tile-label">Warranty Check</span>
@@ -135,6 +140,20 @@
   </div>
   <main id="tstatResults"></main>
   <div id="tstatEmptyState" class="empty-state hidden">No matching thermostat. Try the model number off the back of the stat, or just the brand.</div>
+</section>
+
+<!-- GENERATORS -->
+<section id="genScreen" class="screen hidden">
+  <div class="disclaimer">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
+  <div class="controls">
+    <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model, kW, or code (7043, 22kW, 1100, overcrank…)" autocomplete="off">
+    <div class="filter-row">
+      <select id="genSeriesChips" class="filter-select" aria-label="Filter by series"></select>
+      <select id="genCtrlChips" class="filter-select" aria-label="Filter by controller"></select>
+    </div>
+  </div>
+  <main id="genResults"></main>
+  <div id="genEmptyState" class="empty-state hidden">No matching generator. Try the 4-digit model (7043), the full number off the data label (G0070430 / 007043-0), the kW, or a code.</div>
 </section>
 
 <!-- TOOLBOX -->
@@ -391,6 +410,7 @@
 <script src="charging-charts.js"></script>
 <script src="toolbox.js"></script>
 <script src="thermostats.js"></script>
+<script src="generators.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
 <script src="app.js"></script>
 </body>

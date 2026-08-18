@@ -1152,6 +1152,7 @@ main {
 
 /* ---- Thermostats tab ---- */
 .tile-tstat { border-left: 5px solid var(--brand-yellow); }
+.tile-gen { border-left: 5px solid #e8590c; }
 .tstat-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
 .tstat-badge {
   font-size: 0.72rem; font-weight: 600; padding: 0.12rem 0.5rem; border-radius: 999px;

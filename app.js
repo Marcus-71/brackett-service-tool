@@ -240,6 +240,7 @@ const SCREEN_TITLES = {
   manuals: "Manuals",
   toolbox: "Toolbox",
   tstat: "Thermostats",
+  gen: "Generators",
   scanner: "Tag Scanner",
   charge: "Charging Calc",
   warranty: "Warranty Check",
@@ -267,10 +268,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
+  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
+  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -288,6 +289,7 @@ function showScreen(name, fromBack) {
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
   if (name === "tstat") renderTstats();
+  if (name === "gen") renderGens();
   if (name === "charge") renderChargeCalc();
 
   if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
@@ -1290,6 +1292,157 @@ function openTstatDetail(id) {
 }
 
 document.getElementById("tstatSearchInput").addEventListener("input", (e) => { tstatState.search = e.target.value; renderTstats(); });
+
+// ============================================================
+// GENERATORS - Generac air-cooled home standby: one card per family
+// (units sharing a controller + engine + manual set). Alarm/warning
+// codes, specs, maintenance, troubleshooting and the official manuals
+// (opened in the in-app reader when they are in the library). Data
+// lives in generators.js (GENERATORS), organized from Generac's own
+// owner's/install manuals and support articles only.
+// ============================================================
+
+let genState = { search: "", series: "All", ctrl: "All" };
+
+function genEntries() { return (typeof GENERATORS !== "undefined") ? GENERATORS : []; }
+
+// A tech types "7043", "G0070430", "007043-0", "22kw" or a code like "1100".
+// Normalise the model forms so all of them hit the same family.
+function genNormModel(s) {
+  const u = String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  let m;
+  if ((m = u.match(/^G?0{1,2}(\d{4})(\d)?$/))) return m[1];         // G0070430 / 0070430 / 007043-0 -> 7043
+  if ((m = u.match(/^(\d{4})$/))) return m[1];
+  return "";
+}
+function genSearchFields(g) {
+  return [
+    g.series, g.family, g.controller, g.engine, (g.kw || []).map(k => k + "kw " + k + " kw").join(" "),
+    ...(g.models || []).map(m => [m.g, m.digits, m.desc, "0" + m.digits, "00" + m.digits].join(" ")),
+    ...(g.alarms || []).map(a => a.code + " " + a.name + " " + a.meaning),
+    ...(g.warnings || []).map(a => a.code + " " + a.name + " " + a.meaning),
+    ...(g.troubleshooting || []).map(x => x.symptom),
+    ...(g.manuals || []).map(x => x.title),
+    g.fuel, g.years,
+  ];
+}
+function genIncludes(fields, q) {
+  if (!q) return true;
+  const hay = fields.filter(Boolean).join(" ").toLowerCase();
+  const norm = genNormModel(q);
+  if (norm && hay.includes(norm.toLowerCase())) return true;
+  return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a))));
+}
+
+function renderGens() {
+  const all = genEntries();
+  renderChips("genSeriesChips", ["All", ...uniqueSorted(all.map(g => g.series))], genState.series, (v) => { genState.series = v; renderGens(); }, "All Series");
+  renderChips("genCtrlChips", ["All", ...uniqueSorted(all.map(g => g.controller))], genState.ctrl, (v) => { genState.ctrl = v; renderGens(); }, "All Controllers");
+  const filtered = all.filter(g =>
+    (genState.series === "All" || g.series === genState.series) &&
+    (genState.ctrl === "All" || g.controller === genState.ctrl) &&
+    genIncludes(genSearchFields(g), genState.search)
+  ).sort((a, b) => (a.sort || 0) - (b.sort || 0) || a.series.localeCompare(b.series) || a.family.localeCompare(b.family));
+  const results = document.getElementById("genResults");
+  const empty = document.getElementById("genEmptyState");
+  results.innerHTML = "";
+  empty.classList.toggle("hidden", filtered.length !== 0);
+  for (const g of filtered) results.appendChild(buildGenCard(g));
+}
+
+function buildGenCard(g) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.onclick = () => openGenDetail(g.id);
+  const digits = uniqueSorted((g.models || []).map(m => m.digits).filter(Boolean));
+  const shown = digits.slice(0, 6).join(", ") + (digits.length > 6 ? ` +${digits.length - 6} more` : "");
+  const nCodes = (g.alarms || []).length + (g.warnings || []).length;
+  const nDocs = (g.manuals || []).length;
+  card.innerHTML = `
+    <div class="card-top">
+      ${g.img ? `<img class="tstat-thumb" src="${escapeHtml(g.img)}" alt="" loading="lazy" onerror="this.remove()">` : ""}
+      <div class="tstat-card-text">
+        <div class="card-code">${escapeHtml(g.family)}</div>
+        <div class="card-title">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}</div>
+      </div>
+      <span class="tag ${(g.sort || 30) <= 10 ? "common" : "verify"}">${(g.kw || []).length ? escapeHtml((g.kw.length > 1 ? g.kw[0] + "-" + g.kw[g.kw.length - 1] : g.kw[0]) + " kW") : "verify"}</span>
+    </div>
+    <div class="card-meta">${shown ? `<span>Models ${escapeHtml(shown)}</span>` : ""}</div>
+    <div class="tstat-badges">
+      ${nCodes ? `<span class="tstat-badge">${nCodes} codes</span>` : ""}
+      ${(g.troubleshooting || []).length ? `<span class="tstat-badge">${(g.troubleshooting || []).length} symptoms</span>` : ""}
+      ${nDocs ? `<span class="tstat-badge">${nDocs} manual${nDocs === 1 ? "" : "s"}</span>` : ""}
+      ${g.years ? `<span class="tstat-badge">${escapeHtml(g.years)}</span>` : ""}
+    </div>`;
+  return card;
+}
+
+function openGenDetail(id, focusModel) {
+  const g = genEntries().find(x => x.id === id);
+  if (!g) return;
+  const q = genState.search;
+  const modal = document.getElementById("modal");
+  const hit = (txt) => tstatHit(txt, q);
+  const codeRows = (rows) => (rows || []).map(a => `
+    <tr class="${hit(a.code + " " + a.name + " " + a.meaning) ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(a.code)}</td><td><b>${escapeHtml(a.name || "")}</b>${a.display ? `<div class="tstat-note">Screen: ${escapeHtml(a.display)}</div>` : ""}${a.meaning ? `<div>${escapeHtml(a.meaning)}</div>` : ""}${(a.causes || []).length ? `<div class="tstat-note">Causes: ${escapeHtml(a.causes.join(" · "))}</div>` : ""}${(a.steps || []).length ? `<ul>${a.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>` : ""}${a.clear ? `<div class="tstat-note">Clear: ${escapeHtml(a.clear)}</div>` : ""}</td></tr>`).join("");
+  const sp = g.specs || {};
+  const specLabels = { oil: "Oil", oilCapacity: "Oil capacity", sparkPlug: "Spark plug", plugGap: "Plug gap", valveClearance: "Valve clearance", battery: "Battery", airFilter: "Air filter", fuelPressure: "Fuel pressure", exercise: "Exercise" };
+  const specRows = Object.keys(specLabels).filter(k => sp[k]).map(k => `<tr><td class="tstat-term short">${escapeHtml(specLabels[k])}</td><td>${escapeHtml(sp[k])}</td></tr>`).join("");
+  const maintRows = (g.maintenance || []).map(x => `<tr><td class="tstat-term${String(x.interval).length <= 10 ? " short" : ""}">${escapeHtml(x.interval)}</td><td>${escapeHtml(x.task)}</td></tr>`).join("");
+  const tsBlocks = (g.troubleshooting || []).map(x => `
+    <div class="tstat-ts ${hit(x.symptom) ? "hit" : ""}"><b>${escapeHtml(x.symptom)}</b>
+      ${(x.causes || []).length ? `<div class="tstat-note">Check: ${escapeHtml(x.causes.join(" · "))}</div>` : ""}
+      ${(x.fixes || []).length ? `<ul>${x.fixes.map(f => `<li>${escapeHtml(f)}</li>`).join("")}</ul>` : ""}
+    </div>`).join("");
+  const manualBtns = (g.manuals || []).map(m => {
+    const seed = tstatFindSeed(m);
+    const label = escapeHtml(m.title || (seed && seed.title) || "Manual");
+    const kind = m.docType ? `<span class="tstat-doctype">${escapeHtml(m.docType)}</span>` : "";
+    if (seed) return `<button class="tstat-manual-btn" data-seed="${escapeHtml(seed.file)}">${kind}${label}</button>`;
+    if (m.url) return `<a class="tstat-manual-btn ext" href="${escapeHtml(m.url)}" target="_blank" rel="noopener">${kind}${label} <span class="tstat-note">opens in browser - needs signal</span></a>`;
+    return "";
+  }).join("");
+  const focus = focusModel ? genNormModel(focusModel) : "";
+  const modelRows = (g.models || []).map(m => `<tr class="${focus && m.digits === focus ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.digits || "")}</td><td>${escapeHtml(m.g || "")}${m.desc ? `<div class="tstat-note">${escapeHtml(m.desc)}</div>` : ""}</td></tr>`).join("");
+
+  modal.innerHTML = `
+    ${g.img ? `<img class="tstat-hero" src="${escapeHtml(g.img)}" alt="" onerror="this.remove()">` : ""}
+    <h2>${escapeHtml(g.family)}</h2>
+    <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}${g.fuel ? " · " + escapeHtml(g.fuel) : ""}${g.years ? " · " + escapeHtml(g.years) : ""}</div>
+    ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
+    ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
+    ${maintRows ? `<div class="detail-section"><h3>Maintenance</h3><table class="tstat-table">${maintRows}</table></div>` : ""}
+    ${(g.alarms || []).length ? `<div class="detail-section"><h3>Alarm codes (red - unit shuts down)</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
+    ${(g.warnings || []).length ? `<div class="detail-section"><h3>Warnings (yellow - keeps running)</h3><table class="tstat-table">${codeRows(g.warnings)}</table></div>` : ""}
+    ${tsBlocks ? `<div class="detail-section"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
+    ${(g.installNotes || []).length ? `<div class="detail-section"><h3>Install notes</h3><ul>${g.installNotes.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+    ${(g.tips || []).length ? `<div class="detail-section"><h3>Field notes</h3><ul>${g.tips.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+    ${manualBtns ? `<div class="detail-section"><h3>Manuals</h3><div class="tstat-manuals">${manualBtns}</div></div>` : ""}
+    ${g.sourceNotes ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(g.sourceNotes)}</p></div>` : ""}
+    <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
+    btn.onclick = () => { trackEvent("opened generator manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
+  });
+  const firstHit = modal.querySelector(".hit");
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+  if (firstHit) setTimeout(() => firstHit.scrollIntoView({ block: "center" }), 50);
+  trackEvent("viewed generator: " + g.series + " " + g.family);
+}
+
+// Tag scanner hook: a Generac model on the plate opens its family here.
+function genFamilyForModel(model) {
+  const d = genNormModel(model);
+  if (!d) return null;
+  // Exact G-number first (G0070430 and G0070431 can sit in different families), then the 4-digit form.
+  const u = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m5 = u.match(/^G?0{1,2}(\d{5})$/);
+  const full = m5 ? "G00" + m5[1] : "";
+  return (full && genEntries().find(g => (g.models || []).some(m => m.g === full)))
+    || genEntries().find(g => (g.models || []).some(m => m.digits === d)) || null;
+}
+
+document.getElementById("genSearchInput").addEventListener("input", (e) => { genState.search = e.target.value; renderGens(); });
 
 // ============================================================
 // MANUALS (PDFs stored in IndexedDB, works fully offline)
@@ -2870,6 +3023,13 @@ const MODEL_PATTERNS = [
   // and PUMY single-phase multi-zone outdoor (P-series on mylinkdrive).
   { re: /^MVZ[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Air Handler", series: "Mitsubishi MVZ multi-position air handler (ducted indoor for MXZ multi-zone)", notes: ["Pairs with MXZ outdoor units - the MXZ LED1/LED2 codes in Error Codes cover the outdoor side."] },
   { re: /^PUMY[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi PUMY multi-zone outdoor unit (P-series/CITY MULTI S)", notes: ["Check codes surface on the indoor controllers - see Mitsubishi codes in Error Codes."] },
+
+  // --- Generac air-cooled home standby generators (data-label model forms G0070430 / 007043-0 / 0070430) ---
+  { re: /^G0\d{6}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["G-number form (G0070430) - the same unit prints as 007043-0 on the data tag","Open in Generators for the family: specs, alarm codes, manuals"] },
+  { re: /^00\d{4}-\d$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form (007043-0 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
+  { re: /^00\d{5}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form with the dash dropped (0070430 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
+  { re: /^(52|54|55|57|58|59|60|61|62|64|65|67|69|70|71|72|73)\d{2}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["4-digit form (7043 = G0070430 / 007043-0)","Open in Generators for the family: specs, alarm codes, manuals"] },
+  // --- end Generac ---
   // --- Bosch Home Comfort ---
   // Nomenclature (from Bosch's own product-specification diagrams):
   //   Brand(B) Application(O=Outdoor/I=Indoor/P=Packaged) UnitType(V=Vertical/W=Wall/
@@ -3039,6 +3199,7 @@ const BRAND_NAME_HINTS = [
   ["LENNOX", "Lennox"], ["TRANE", "Trane"], ["YORK", "York"], ["COLEMAN", "York"],
   ["LUXAIRE", "York"], ["RHEEM", "Rheem"], ["RUUD", "Rheem"], ["MITSUBISHI", "Mitsubishi"],
   ["FRIGIDAIRE", "Nortek"], ["MAYTAG", "Nortek"], ["GIBSON", "Nortek"], ["TAPPAN", "Nortek"], ["KELVINATOR", "Nortek"], ["WESTINGHOUSE", "Nortek"], ["NORDYNE", "Nortek"], ["NORTEK", "Nortek"], ["INTERTHERM", "Nortek"], ["MILLER", "Nortek"], ["BROAN", "Nortek"], ["NUTONE", "Nortek"], ["PHILCO", "Nortek"], ["GRANDAIRE", "Nortek"],
+  ["GENERAC", "Generac"], ["HONEYWELL GENERATOR", "Generac"], ["GUARDIAN", "Generac"], ["CENTURION", "Generac"], ["POWERPACT", "Generac"], ["CORE POWER", "Generac"], ["COREPOWER", "Generac"], ["ECOGEN", "Generac"], ["SYNERGY", "Generac"], ["POWERMATE", "Generac"], ["EATON", "Generac"], ["SIEMENS", "Generac"],
 ];
 function detectBrandInText(up) {
   for (const [word, brand] of BRAND_NAME_HINTS) if (up.includes(word)) return brand;
@@ -3254,6 +3415,7 @@ function renderScanResult(info) {
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
           ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
+          ${(info.brand === "Generac" && typeof genFamilyForModel === "function" && genFamilyForModel(info.model)) ? `<button class="primary-act" id="scanGoGen">🔌 Open in Generators</button>` : ""}
           ${scanWebLinks(info)}
         </div>
       </div>
@@ -3274,6 +3436,13 @@ function renderScanResult(info) {
     manualsState.brand = manualsBrand; manualsState.model = null; manualsState.search = "";
     document.getElementById("manualSearchInput").value = "";
     showScreen("manuals");
+  };
+  const goGen = document.getElementById("scanGoGen");
+  if (goGen) goGen.onclick = () => {
+    const fam = genFamilyForModel(info.model);
+    genState.search = ""; document.getElementById("genSearchInput").value = "";
+    showScreen("gen");
+    if (fam) openGenDetail(fam.id, info.model);
   };
 }
 
@@ -4328,7 +4497,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v118";
+const APP_VERSION = "v119";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
