@@ -715,7 +715,7 @@ function openSymptomDetail(id) {
 // three causes it lists. These walk that last step: ask for the one reading
 // that separates them, then say plainly what it means and what to do — so a
 // newer tech gets to an actual answer instead of a checklist to interpret.
-const fuState = { symptom: null, questions: null, index: 0, history: [], verdict: null, seen: [] };
+const fuState = { symptom: null, questions: null, index: 0, history: [], verdict: null, seen: [], tried: [], fixed: false, exhausted: false };
 
 function getFollowups(id) {
   if (typeof SYMPTOM_FOLLOWUPS === "undefined") return null;
@@ -731,6 +731,58 @@ function startFollowups(s) {
   fuState.history = [];
   fuState.verdict = null;
   fuState.seen = [0];
+  fuState.tried = [];
+  fuState.fixed = false;
+  fuState.exhausted = false;
+  renderFollowups();
+}
+
+// "Try this -> did it fix it?" loop. The first verdict is the most likely
+// thing; if it did not fix the problem the tech should not be left staring at
+// one paragraph. "What's next" walks, in order: the next narrowing question
+// the chain still has, then the branches of this chain the tech's answers
+// skipped (the other things it could be, one at a time), then the checklist.
+function fuMarkTried(v) { if (v && !fuState.tried.includes(v)) fuState.tried.push(v); }
+function nextUntriedBranch() {
+  const qs = fuState.questions || [];
+  const answered = fuState.history.map(h => h.verdict).filter(Boolean);
+  for (let i = 0; i < qs.length; i++) {
+    const q = qs[i];
+    for (const o of (q.options || q.bands || [])) {
+      const v = o.verdict;
+      if (!v || typeof v !== "string") continue;
+      if (/^(?:no reading|that is not|not your problem|this is fine|normal)/i.test(v)) continue;
+      if (fuState.tried.includes(v) || answered.includes(v)) continue;
+      return { ask: q.ask, label: o.label || "", verdict: v, index: i };
+    }
+  }
+  return null;
+}
+function fuNotFixed() {
+  fuMarkTried(fuState.verdict);
+  trackEvent("fix did not work, asked for next: " + (fuState.symptom.title || "").slice(0, 60));
+  const more = nextOrphanQuestion();
+  if (more !== null) {                       // another narrowing question first
+    fuState.seen.push(more);
+    fuState.index = more;
+    fuState.verdict = null;
+    renderFollowups();
+    return;
+  }
+  const alt = nextUntriedBranch();           // then the other branches of this chain
+  if (alt) {
+    fuState.history.push({ ask: "Next thing to try", answer: alt.label ? "If it is instead: " + alt.label : "Another possibility", verdict: "" });
+    fuState.verdict = alt.verdict;
+    renderFollowups();
+    return;
+  }
+  fuState.exhausted = true;                  // nothing left in the chain - point at the checklist
+  fuState.verdict = "";
+  renderFollowups();
+}
+function fuFixed() {
+  fuState.fixed = true;
+  trackEvent("fix confirmed: " + (fuState.symptom.title || "").slice(0, 60));
   renderFollowups();
 }
 
@@ -798,9 +850,20 @@ function renderFollowups() {
     // Chains where every question is properly linked have nothing orphaned and
     // are completely unaffected.
     const more = nextOrphanQuestion();
+    const nth = fuState.tried.length;
     body = `
-      <div class="fu-verdict"><strong>What it points to</strong><p>${escapeHtml(fuState.verdict)}</p></div>
-      ${more !== null ? `<button class="fu-more" id="fuMoreBtn">There's more to check on this one →</button>` : ""}
+      <div class="fu-verdict"><strong>${nth ? "Next thing to try" : "What it points to"}</strong><p>${escapeHtml(fuState.verdict)}</p></div>
+      ${fuState.fixed ? `<div class="fu-done">✅ Fixed — nice. Close it out and note what you found.</div>` : `
+      <div class="fu-outcome">
+        <button class="fu-opt fu-yes" id="fuFixedBtn">✅ That fixed it</button>
+        <button class="fu-opt fu-no" id="fuNotFixedBtn">❌ Didn't fix it — what's next?</button>
+      </div>`}
+      ${more !== null && !fuState.fixed ? `<button class="fu-more" id="fuMoreBtn">There's more to check on this one →</button>` : ""}
+      <button class="fu-restart" id="fuRestartBtn">Start these questions over</button>
+    `;
+  } else if (fuState.exhausted) {
+    body = `
+      <div class="fu-verdict fu-exhausted"><strong>That's every branch of this one</strong><p>You've ruled out ${fuState.tried.length} thing${fuState.tried.length === 1 ? "" : "s"} here. Work the checklist below in order — it covers the same causes the long way — and if it still doesn't land, search Diagnostic Help for the symptom again; a neighbouring scenario may fit better. Send it in from Request Info if the app missed it.</p></div>
       <button class="fu-restart" id="fuRestartBtn">Start these questions over</button>
     `;
   } else {
@@ -818,16 +881,19 @@ function renderFollowups() {
 
   const restart = document.getElementById("fuRestartBtn");
   if (restart) restart.onclick = () => startFollowups(fuState.symptom);
+  const yes = document.getElementById("fuFixedBtn"); if (yes) yes.onclick = fuFixed;
+  const no = document.getElementById("fuNotFixedBtn"); if (no) no.onclick = fuNotFixed;
   const moreBtn = document.getElementById("fuMoreBtn");
   if (moreBtn) moreBtn.onclick = () => {
     const idx = nextOrphanQuestion();
     if (idx === null) return;
+    fuMarkTried(fuState.verdict);
     fuState.seen.push(idx);
     fuState.index = idx;
     fuState.verdict = null;
     renderFollowups();
   };
-  if (fuState.verdict) return;
+  if (fuState.verdict || fuState.exhausted) return;
 
   const q = fuState.questions[fuState.index];
   if (q.type === "number") {
@@ -4522,7 +4588,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v120";
+const APP_VERSION = "v121";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -1205,3 +1205,14 @@ main {
   .tstat-badge.tbx-current { color: #1e6b3a; background: #e6f4ea; }
   .tstat-badge.tbx-legacy { color: #7a4a10; background: #fff3e0; }
 }
+
+/* Follow-up "did that fix it?" loop */
+.fu-outcome { display: flex; gap: 0.5rem; margin-top: 0.7rem; flex-wrap: wrap; }
+.fu-outcome .fu-opt { flex: 1 1 45%; margin: 0; text-align: center; }
+.fu-outcome .fu-yes { border-color: #146c3e; }
+.fu-outcome .fu-no { border-color: #8a5a1e; }
+.fu-done { margin-top: 0.7rem; padding: 0.7rem 0.9rem; border-radius: 10px; border: 1px solid #146c3e; color: #6fe3a5; font-weight: 600; }
+.fu-verdict.fu-exhausted { border-color: #8a5a1e; }
+@media (prefers-color-scheme: light) {
+  .fu-done { color: #1e6b3a; background: #e6f4ea; }
+}
