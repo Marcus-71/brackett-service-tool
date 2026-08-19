@@ -75,7 +75,7 @@
     <button class="tile tile-toolbox" data-screen="toolbox">
       <span class="tile-icon">🧰</span>
       <span class="tile-label">Toolbox</span>
-      <span class="tile-sub">Board tools — CoolCloud, Data Loader</span>
+      <span class="tile-sub">Service apps &amp; board tools — every brand, current + legacy</span>
     </button>
     <button class="tile tile-request" data-screen="request">
       <span class="tile-icon">💬</span>
@@ -235,6 +235,12 @@
       </div>
 
       <div class="cc-section-label">Gauge readings</div>
+      <div class="cc-scan-row">
+        <button id="ccGaugeBtn" type="button">📸 Scan gauge / thermometer display</button>
+        <input id="ccGaugeInput" type="file" accept="image/*" capture="environment" class="hidden">
+      </div>
+      <div id="ccGaugeStatus" class="hidden"></div>
+      <div id="ccGaugeResult"></div>
       <div class="charge-grid">
         <div class="form-field"><label>Suction (low side) psig</label><input id="cc-suct" type="number" inputmode="decimal" placeholder="e.g. 120"></div>
         <div class="form-field"><label>Head (high side) psig</label><input id="cc-head" type="number" inputmode="decimal" placeholder="e.g. 410"></div>

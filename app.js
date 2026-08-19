@@ -2807,6 +2807,138 @@ document.getElementById("ccOutModel").addEventListener("change", ccApplyScan);
 document.getElementById("ccInModel").addEventListener("change", ccApplyScan);
 
 // ============================================================
+// Gauge / thermometer display scan - photograph the digital manifold
+// screen (techs run Fieldpiece SM480V / SMAN series) and pull the numbers
+// off it: LOW / HIGH psig, SH / SC, T1 (suction line) / T2 (liquid line)
+// probe temps and the refrigerant name. Nothing is written into the calc
+// until the tech confirms each value and the field it goes to. Analog
+// needle gauges cannot be read this way - the card says so.
+// ============================================================
+const CC_GAUGE_FIELDS = [
+  ["cc-suct", "Suction psig"], ["cc-head", "Head psig"], ["cc-sh", "Superheat F"], ["cc-sc", "Subcooling F"],
+  ["cc-slt", "Suction line temp F"], ["cc-llt", "Liquid line temp F"], ["cc-od", "Outdoor temp F"], ["cc-id", "Indoor return F"], ["cc-wb", "Indoor wet bulb F"], ["", "Ignore"],
+];
+function ccGaugeParse(raw) {
+  // Normalise the OCR soup: degree glyphs, PSIG/PSI, O->0 inside numbers, commas as decimals.
+  let t = String(raw || "").replace(/[\u00B0\u00BA\u02DA]/g, " deg ").replace(/\r/g, "\n");
+  t = t.replace(/(\d)[,](\d)/g, "$1.$2");
+  // digit look-alikes inside number-ish tokens (OCR reads 1l8 for 118, 34Z for 342, 1O5 for 105)
+  t = t.replace(/(?<![A-Za-z-])\b(?=[0-9OoIlZSB.]{2,}\b)(?=[^\s]*\d)[0-9OoIlZSB.]+\b(?![A-Za-z])/g, tok => tok.replace(/[oO]/g, "0").replace(/[Il]/g, "1").replace(/Z/g, "2").replace(/S/g, "5").replace(/B/g, "8"));
+  t = t.replace(/\bR[-\s]?4[1l][0O]A\b/gi, "R-410A").replace(/\bR[-\s]?4[5S]4B\b/gi, "R-454B").replace(/\bR[-\s]?3[2Z]\b/gi, "R-32").replace(/\bR[-\s]?[2Z][2Z]\b/gi, "R-22");
+  const up = t.toUpperCase();
+  const found = [];                                    // {value, label, field, why}
+  const used = new Set();
+  const num = "(-?\\d{1,3}(?:\\.\\d{1,2})?)";
+  const take = (re, label, field, why) => {
+    let m; const r = new RegExp(re, "g");
+    while ((m = r.exec(up))) {
+      const v = parseFloat(m[1]);
+      if (!isFinite(v)) continue;
+      const key = field + ":" + v;
+      if (used.has(key)) continue; used.add(key);
+      found.push({ value: v, label, field, why });
+      return true;
+    }
+    return false;
+  };
+  // refrigerant shown on the display
+  const rm = up.match(/\bR[-\s]?(410A|454B|32|22|407C|134A|404A|407A|448A|449A)\b/);
+  const refrig = rm ? "R-" + rm[1] : "";
+  // labelled pressures (Fieldpiece prints LOW / HIGH next to the PSIG numbers)
+  take("(?<![A-Z])LOW(?![A-Z])[^\\d-]{0,12}" + num, "LOW psig", "cc-suct", "LOW label");
+  take("(?<![A-Z])HIGH(?![A-Z])[^\\d-]{0,12}" + num, "HIGH psig", "cc-head", "HIGH label");
+  // superheat / subcool
+  take("(?<![A-Z])(?:SUPERHEAT|SUPER HEAT|SH)(?![A-Z])[^\\d-]{0,8}" + num, "Superheat", "cc-sh", "SH label");
+  take("(?<![A-Z])(?:SUBCOOL(?:ING)?|SUB COOL|SC)(?![A-Z])[^\\d-]{0,8}" + num, "Subcooling", "cc-sc", "SC label");
+  // probe temps: T1 = low-side pipe clamp, T2 = high-side (Fieldpiece convention); also SUCT/LIQ words
+  take("(?<![A-Z0-9])T1(?![A-Z])[^\\d-]{0,8}" + num, "T1 (suction line)", "cc-slt", "T1 probe");
+  take("(?<![A-Z0-9])T2(?![A-Z])[^\\d-]{0,8}" + num, "T2 (liquid line)", "cc-llt", "T2 probe");
+  take("\\b(?:SUCT(?:ION)?|LINE TEMP LOW|LOW LINE)\\b[^\\d-]{0,10}" + num + "\\s*(?:DEG|F\\b)", "Suction line temp", "cc-slt", "SUCT label");
+  take("\\b(?:LIQ(?:UID)?|LINE TEMP HIGH|HIGH LINE)\\b[^\\d-]{0,10}" + num + "\\s*(?:DEG|F\\b)", "Liquid line temp", "cc-llt", "LIQ label");
+  take("\\b(?:OUTDOOR|AMBIENT|OAT|ODT)\\b[^\\d-]{0,10}" + num, "Outdoor temp", "cc-od", "OUTDOOR label");
+  take("\\b(?:RETURN|INDOOR|RAT|DB)\\b[^\\d-]{0,10}" + num, "Indoor return", "cc-id", "RETURN label");
+  take("\\b(?:WB|WET BULB)\\b[^\\d-]{0,10}" + num, "Indoor wet bulb", "cc-wb", "WB label");
+  // unlabelled psig values: smaller one = suction, larger = head, only if not already labelled
+  const psi = []; let m; const pr = new RegExp(num + "\\s*PSI(?:G)?\\b", "g");
+  while ((m = pr.exec(up))) { const v = parseFloat(m[1]); if (isFinite(v) && v >= 0 && v <= 800) psi.push(v); }
+  const haveSuct = found.some(f => f.field === "cc-suct"), haveHead = found.some(f => f.field === "cc-head");
+  if (psi.length && !(haveSuct && haveHead)) {
+    const uniq = [...new Set(psi)].sort((a, b) => a - b);
+    if (uniq.length >= 2) { if (!haveSuct) found.push({ value: uniq[0], label: "psig (lower)", field: "cc-suct", why: "lower of two PSIG values" }); if (!haveHead) found.push({ value: uniq[uniq.length - 1], label: "psig (higher)", field: "cc-head", why: "higher of two PSIG values" }); }
+    else if (uniq.length === 1) { const v = uniq[0]; const guess = v > 200 ? "cc-head" : "cc-suct"; if (!found.some(f => f.field === guess)) found.push({ value: v, label: "psig", field: guess, why: v > 200 ? "over 200 psig - looks like head" : "under 200 psig - looks like suction" }); }
+  }
+  // leftover temperatures (deg F) the tech can assign by hand
+  const tr = new RegExp(num + "\\s*(?:DEG\\s*F?|F\\b)", "g"); const temps = [];
+  while ((m = tr.exec(up))) { const v = parseFloat(m[1]); if (isFinite(v) && v > -40 && v < 300 && !found.some(f => f.value === v)) temps.push(v); }
+  for (const v of [...new Set(temps)].slice(0, 4)) found.push({ value: v, label: "temp F (unlabelled)", field: "", why: "no label read next to it - pick the field or ignore" });
+  // plausibility: a value outside the range its box can mean is demoted to "unlabelled" for the tech to place by hand
+  const range = { "cc-suct": [5, 400], "cc-head": [100, 800], "cc-sh": [0, 80], "cc-sc": [0, 80], "cc-slt": [-20, 200], "cc-llt": [-20, 250], "cc-od": [-40, 140], "cc-id": [30, 120], "cc-wb": [30, 100] };
+  // OCR often drops the decimal point on the display ("524F" for 52.4 F): a 3-4 digit temperature is re-read with one decimal
+  for (const f of found) if (/^cc-(slt|llt|od|id|wb|sh|sc)$/.test(f.field) && Number.isInteger(f.value) && f.value >= 200 && f.value <= 1999) { f.value = f.value / 10; f.why += " (decimal restored)"; }
+  for (const f of found) { const r = range[f.field]; if (r && (f.value < r[0] || f.value > r[1])) { f.why += " - out of range for that box"; f.label += " (?)"; f.field = ""; } }
+  return { refrig, found: found.filter((f, i, arr) => f.field || arr.findIndex(g => g.value === f.value) === i), raw: t };
+}
+async function ccScanGauge(file) {
+  const st = document.getElementById("ccGaugeStatus");
+  const show = (msg) => { if (msg) { st.textContent = msg; st.classList.remove("hidden"); } else st.classList.add("hidden"); };
+  trackEvent("charge calc scanned gauge display");
+  try {
+    show("Reading the display... first scan on a phone takes ~15-30 seconds.");
+    const base = await preprocessPhoto(file);
+    const worker = await getTessWorker(show);
+    let best = null;
+    for (const deg of [0, 180, 90, 270]) {
+      const { data } = await worker.recognize(deg ? rotateCanvas(base, deg) : base);
+      const parsed = ccGaugeParse(data.text || "");
+      const score = parsed.found.filter(f => f.field).length + (parsed.refrig ? 1 : 0);
+      if (!best || score > best.score) best = { parsed, score, deg };
+      if (score >= 3) break;
+    }
+    show(null);
+    ccRenderGauge(best.parsed);
+  } catch (err) {
+    show("Scan failed: " + (err && err.message ? err.message : err) + " - type the readings in the boxes.");
+  }
+}
+function ccRenderGauge(parsed) {
+  const box = document.getElementById("ccGaugeResult");
+  const rows = parsed.found;
+  if (!rows.length && !parsed.refrig) {
+    box.innerHTML = `<div class="card cc-card cc-gauge"><b>Could not read any numbers off that photo.</b><div class="cc-note">Works on digital displays (Fieldpiece SM480V / SMAN, Testo, clamp thermometers) - fill the screen, no glare, hold it square. Analog needle gauges can't be read - type those in.</div><div class="cc-gauge-raw">Seen: ${escapeHtml(parsed.raw.replace(/\s+/g, " ").slice(0, 160))}</div></div>`;
+    return;
+  }
+  const opt = (sel) => CC_GAUGE_FIELDS.map(([v, l]) => `<option value="${v}" ${v === sel ? "selected" : ""}>${escapeHtml(l)}</option>`).join("");
+  box.innerHTML = `
+    <div class="card cc-card cc-gauge">
+      <b>Read off the display - check each one, then Apply</b>
+      ${parsed.refrig ? `<label class="cc-gauge-row"><input type="checkbox" class="cc-gauge-ref" checked> Refrigerant <b>${escapeHtml(parsed.refrig)}</b> <span class="cc-note">(shown on the gauge)</span></label>` : ""}
+      ${rows.map((r, i) => `<div class="cc-gauge-row"><span class="cc-gauge-val">${escapeHtml(String(r.value))}</span><span class="cc-gauge-lbl">${escapeHtml(r.label)}</span><select class="cc-gauge-sel" data-i="${i}">${opt(r.field)}</select></div>`).join("")}
+      <div class="cc-note">Only the boxes you pick get filled; anything you already typed is left alone unless you tick overwrite. Labels come from the words next to each number - if the display was at an angle, double-check LOW vs HIGH.</div>
+      <label class="cc-gauge-row"><input type="checkbox" id="ccGaugeOverwrite"> overwrite values already typed</label>
+      <div class="cc-scan-row"><button type="button" id="ccGaugeApply">✅ Apply to the calc</button><button type="button" id="ccGaugeDismiss">Dismiss</button></div>
+    </div>`;
+  document.getElementById("ccGaugeDismiss").onclick = () => { box.innerHTML = ""; };
+  document.getElementById("ccGaugeApply").onclick = () => {
+    const overwrite = document.getElementById("ccGaugeOverwrite").checked;
+    const applied = [];
+    const refBox = box.querySelector(".cc-gauge-ref");
+    if (refBox && refBox.checked && parsed.refrig) { const sel = document.getElementById("cc-refrig"); if ([...sel.options].some(o => o.value === parsed.refrig || o.textContent === parsed.refrig)) { sel.value = parsed.refrig; applied.push("refrigerant " + parsed.refrig); } }
+    const taken = new Set();
+    box.querySelectorAll(".cc-gauge-sel").forEach(sel => {
+      const fid = sel.value; if (!fid || taken.has(fid)) return;
+      const r = rows[+sel.dataset.i]; const el = document.getElementById(fid); if (!el) return;
+      if (el.value !== "" && !overwrite) return;
+      el.value = r.value; taken.add(fid); applied.push(CC_GAUGE_FIELDS.find(f => f[0] === fid)[1] + " " + r.value);
+    });
+    renderChargeCalc();
+    trackEvent("gauge scan applied: " + applied.length + " values");
+    box.innerHTML = applied.length ? `<div class="cc-scan-applied">✅ Set from the gauge photo - ${escapeHtml(applied.join("; "))}. Check them against the display before you trust the result.</div>` : `<div class="cc-note">Nothing applied - every picked box already had a value (tick overwrite to replace).</div>`;
+  };
+}
+document.getElementById("ccGaugeBtn").addEventListener("click", () => document.getElementById("ccGaugeInput").click());
+document.getElementById("ccGaugeInput").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) ccScanGauge(f); e.target.value = ""; });
+
+// ============================================================
 // Field calculators — weigh-in, gas meter clocking, cylinder check.
 // Pure arithmetic on numbers the tech reads off plates and dials;
 // the only built-in constants are the published line-set adders
@@ -4588,7 +4720,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v121";
+const APP_VERSION = "v122";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
