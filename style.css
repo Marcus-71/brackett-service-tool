@@ -262,15 +262,34 @@ main {
 
 /* Sits above the bottom of the screen so it clears a phone's home indicator,
    and stays out of the way of the content a tech is reading. */
-.update-pill {
+/* Floating notices (update ready, new bulletins) live in one bottom-centered
+   stack so they never crowd: the container owns the positioning and puts a
+   real gap between them, and with only one showing it just sits at the bottom
+   — no hardcoded per-pill offsets to drift out of alignment. */
+#pillStack {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   z-index: 60;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  pointer-events: none;   /* the container never eats taps; its pills do */
+}
+#pillStack > * { pointer-events: auto; }
+/* Bulletin pill rides above the update pill so both stay readable/tappable. */
+.bulletin-pill { order: 1; }
+#updatePill { order: 2; }
+
+.update-pill {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
+  max-width: 100%;
   padding: 0.7rem 1.1rem;
   border-radius: 999px;
   border: none;
@@ -282,8 +301,6 @@ main {
   cursor: pointer;
   animation: update-pill-in 0.25s ease-out;
 }
-/* Lifted above the update pill so both are readable and tappable at once. */
-.bulletin-pill { bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)); }
 
 .bulletin-banner {
   margin: 0 var(--pad, 1rem) 0.75rem;
@@ -317,8 +334,8 @@ main {
   padding-left: 0.5rem;
 }
 @keyframes update-pill-in {
-  from { opacity: 0; transform: translate(-50%, 0.5rem); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .update-pill { animation: none; }

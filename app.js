@@ -2077,8 +2077,8 @@ function showBulletinPill() {
   if (document.getElementById("bulletinPill")) return;
   const pill = document.createElement("button");
   pill.id = "bulletinPill";
-  // Same pill styling, but lifted clear of the update pill so a tech who has
-  // both waiting can still read and tap each one.
+  // Same pill styling; the shared stack keeps it clear of the update pill so a
+  // tech who has both waiting can still read and tap each one.
   pill.className = "update-pill bulletin-pill";
   pill.type = "button";
   const lead = bulletinCountPrefix() ? bulletinCountPrefix() + "new " : "New ";
@@ -2090,7 +2090,7 @@ function showBulletinPill() {
     const b = document.getElementById("bulletinBanner");
     if (b) b.scrollIntoView({ block: "nearest" });
   };
-  document.body.appendChild(pill);
+  pillStack().appendChild(pill);
 }
 
 function openManualEditForm(prefill) {
@@ -4529,6 +4529,19 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+// One shared bottom-centered stack holds every floating notice, so the update
+// pill and the bulletin pill can never overlap or crowd — CSS spaces and
+// orders them; when only one is present it just sits at the bottom.
+function pillStack() {
+  let stack = document.getElementById("pillStack");
+  if (!stack) {
+    stack = document.createElement("div");
+    stack.id = "pillStack";
+    document.body.appendChild(stack);
+  }
+  return stack;
+}
+
 function showUpdatePill() {
   if (document.getElementById("updatePill")) return;
   const pill = document.createElement("button");
@@ -4537,7 +4550,7 @@ function showUpdatePill() {
   pill.type = "button";
   pill.innerHTML = `<span>Update ready</span><span class="update-pill-cta">Tap to reload</span>`;
   pill.onclick = () => { trackEvent("took an update"); location.reload(); };
-  document.body.appendChild(pill);
+  pillStack().appendChild(pill);
 }
 
 // ============================================================
@@ -5253,7 +5266,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v128";
+const APP_VERSION = "v129";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
