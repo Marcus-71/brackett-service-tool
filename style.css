@@ -708,6 +708,26 @@ main {
 .ask-narrow-tag:active { transform: scale(0.96); }
 
 .ask-card-text { min-width: 0; }
+
+/* In-manual full-text hits */
+.ask-manual-hits { margin-top: 0.25rem; }
+.ask-manual-head {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  padding: 0.6rem 0.2rem 0.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.4rem;
+}
+.ask-manual-card .ask-snippet {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+  margin-top: 0.35rem;
+}
+.ask-manual-note { font-style: italic; }
 .ask-badge {
   flex: none; align-self: flex-start;
   font-size: 0.7rem; font-weight: 800; letter-spacing: 0.02em;

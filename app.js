@@ -557,6 +557,8 @@ document.getElementById("codesSearchInput").addEventListener("input", (e) => { c
 
 let askState = { search: "", kind: "All", brand: "All", equip: "All", _lastQ: null };
 let askIndexCache = null;
+let askManualToken = 0;      // guards the async in-manual search against stale renders
+let askManualTimer = null;
 
 // Each kind knows its human label and how to open one of its items. Codes and
 // fixes are ANSWERS; the rest are references — so when scores tie, answers
@@ -663,8 +665,12 @@ function renderAsk() {
   results.innerHTML = "";
 
   // A changed question is a fresh search — drop any brand/type narrowing so the
-  // follow-up chips reflect the NEW results, not the last query's.
-  if (q !== askState._lastQ) { askState.brand = "All"; askState.equip = "All"; askState._lastQ = q; }
+  // follow-up chips reflect the NEW results, not the last query's, and clear the
+  // last query's in-manual hits so they don't linger under new results.
+  if (q !== askState._lastQ) {
+    askState.brand = "All"; askState.equip = "All"; askState._lastQ = q;
+    const mh = document.getElementById("askManualHits"); if (mh) mh.innerHTML = "";
+  }
 
   if (!askIndexCache) askIndexCache = askBuildIndex();
 
@@ -688,6 +694,7 @@ function renderAsk() {
   if (!q) {
     empty.classList.add("hidden");
     document.getElementById("askNarrow").innerHTML = "";
+    document.getElementById("askManualHits").innerHTML = "";
     const total = askIndexCache.length;
     const chips = ASK_EXAMPLES.map(x => `<button class="ask-chip" data-q="${escapeHtml(x)}">${escapeHtml(x)}</button>`).join("");
     examples.innerHTML = `
@@ -785,6 +792,63 @@ function renderAsk() {
     more.textContent = "+" + (shown.length - MAX) + " more — pick a brand or type above, or add a model to narrow it down.";
     results.appendChild(more);
   }
+
+  // Also search INSIDE the manuals the tech has downloaded (async, debounced).
+  askScheduleManualSearch(q);
+}
+
+// Debounced so we don't scan IndexedDB on every keystroke; a token guards
+// against a slow scan landing after the query already moved on.
+function askScheduleManualSearch(q) {
+  clearTimeout(askManualTimer);
+  const token = ++askManualToken;
+  if (q.trim().length < 3) { document.getElementById("askManualHits").innerHTML = ""; return; }
+  askManualTimer = setTimeout(() => askRunManualSearch(q, token), 300);
+}
+
+async function askRunManualSearch(q, token) {
+  const box = document.getElementById("askManualHits");
+  if (!box) return;
+  let hits = [];
+  try { hits = await searchManualText(q, 12); } catch (e) {}
+  if (token !== askManualToken) return;   // superseded by a newer query
+  box.innerHTML = "";
+  if (hits.length) {
+    const head = document.createElement("div");
+    head.className = "ask-manual-head";
+    head.textContent = "Found inside your downloaded manuals";
+    box.appendChild(head);
+    for (const h of hits) box.appendChild(askManualCard(h));
+    return;
+  }
+  // Nothing inside the manuals — if none are indexed yet, tell the tech how to
+  // make them searchable (this note disappears once any manual is indexed).
+  let indexed = 0;
+  try { indexed = await manualTextCount(); } catch (e) {}
+  if (token !== askManualToken) return;
+  if (indexed === 0) {
+    const note = document.createElement("div");
+    note.className = "ask-note ask-manual-note";
+    note.textContent = "Tip: open a manual once on signal and Ask can search inside its pages too.";
+    box.appendChild(note);
+  }
+}
+
+function askManualCard(h) {
+  const card = document.createElement("div");
+  card.className = "card ask-card ask-manual-card";
+  card.onclick = () => openManualAtPage(h.id, h.page);
+  const meta = [h.brand, h.model].filter(Boolean).map(escapeHtml).join(" · ");
+  card.innerHTML = `
+    <div class="card-top">
+      <div class="ask-card-text">
+        <div class="card-title">${escapeHtml(h.title)}</div>
+        <div class="card-meta"><span>${meta}${meta ? " · " : ""}page ${h.page}</span></div>
+        <div class="ask-snippet">${escapeHtml(h.snippet)}</div>
+      </div>
+      <span class="ask-badge ask-badge-manual">Manual</span>
+    </div>`;
+  return card;
 }
 
 function askCard(it) {
@@ -867,7 +931,14 @@ function startAskVoice() {
     askListening = false;
     btn.classList.remove("listening");
     input.setAttribute("placeholder", original);
-    if (input.value.trim()) trackEvent("asked by voice");
+    // Run the search on the FINAL transcript when dictation ends — some browsers
+    // deliver the last result and the end event in an order that left the
+    // results not yet refreshed, so the screen "just sat there".
+    if (input.value.trim()) {
+      askState.search = input.value.trim();
+      renderAsk();
+      trackEvent("asked by voice");
+    }
   };
 
   try { askRecognition.start(); }
@@ -1875,6 +1946,8 @@ document.getElementById("genSearchInput").addEventListener("input", (e) => { gen
 
 const MANUALS_DB_NAME = "bfc-manuals-db";
 const MANUALS_STORE = "manuals";
+const MANUAL_TEXT_STORE = "manual_text";   // extracted full text, keyed by manual id
+const TEXT_INDEX_VERSION = 1;              // bump to force re-extraction after a parser change
 let manualsDbPromise = null;
 let currentPdfObjectUrl = null;
 const UNFILED_BRAND = "Unfiled";
@@ -1884,17 +1957,55 @@ let manualsState = { search: "", brand: null, model: null };
 function openManualsDb() {
   if (manualsDbPromise) return manualsDbPromise;
   manualsDbPromise = new Promise((resolve, reject) => {
-    const req = indexedDB.open(MANUALS_DB_NAME, 1);
+    const req = indexedDB.open(MANUALS_DB_NAME, 2);
     req.onupgradeneeded = () => {
       const db = req.result;
       if (!db.objectStoreNames.contains(MANUALS_STORE)) {
         db.createObjectStore(MANUALS_STORE, { keyPath: "id" });
+      }
+      // v2: full-text index of downloaded manuals, so Ask can search INSIDE them.
+      if (!db.objectStoreNames.contains(MANUAL_TEXT_STORE)) {
+        db.createObjectStore(MANUAL_TEXT_STORE, { keyPath: "id" });
       }
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
   return manualsDbPromise;
+}
+async function manualTextGetAll() {
+  const db = await openManualsDb();
+  return new Promise((resolve, reject) => {
+    const req = db.transaction(MANUAL_TEXT_STORE, "readonly").objectStore(MANUAL_TEXT_STORE).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function manualTextGet(id) {
+  const db = await openManualsDb();
+  return new Promise((resolve, reject) => {
+    const req = db.transaction(MANUAL_TEXT_STORE, "readonly").objectStore(MANUAL_TEXT_STORE).get(id);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function manualTextPut(record) {
+  const db = await openManualsDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(MANUAL_TEXT_STORE, "readwrite");
+    tx.objectStore(MANUAL_TEXT_STORE).put(record);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function manualTextDelete(id) {
+  const db = await openManualsDb();
+  return new Promise((resolve) => {
+    const tx = db.transaction(MANUAL_TEXT_STORE, "readwrite");
+    tx.objectStore(MANUAL_TEXT_STORE).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => resolve();   // best-effort cleanup
+  });
 }
 async function manualsGetAll() {
   const db = await openManualsDb();
@@ -1916,12 +2027,131 @@ async function manualsPut(record) {
 }
 async function manualsDelete(id) {
   const db = await openManualsDb();
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     const tx = db.transaction(MANUALS_STORE, "readwrite");
     tx.objectStore(MANUALS_STORE).delete(id);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
+  // Its blob is gone, so its full-text index can't be opened anymore — drop it.
+  await manualTextDelete(id);
+}
+
+// ============================================================
+// Full-text search INSIDE downloaded manuals
+// ============================================================
+// pdf.js pulls the text off each page of a manual the tech has downloaded and
+// we stash it in IndexedDB, so Ask can search the words on the pages — not just
+// the manual's title. Only downloaded manuals get indexed (they're on the phone
+// already), which keeps it offline-first: search what you carry. Extraction is
+// heavy, so it runs in the background, one manual at a time.
+
+let manualIndexBusy = false;
+
+async function extractManualText(m) {
+  await ensurePdfJs();
+  const data = await m.blob.arrayBuffer();
+  const doc = await pdfjsLib.getDocument({ data }).promise;
+  const pages = [];
+  try {
+    for (let n = 1; n <= doc.numPages; n++) {
+      const page = await doc.getPage(n);
+      const tc = await page.getTextContent();
+      pages.push(tc.items.map(it => it.str).join(" ").replace(/\s+/g, " ").trim());
+      page.cleanup && page.cleanup();
+    }
+  } finally {
+    doc.destroy();
+  }
+  return { id: m.id, title: m.title || m.filename || "", brand: m.brand || "", model: m.model || "", pages, indexedAt: Date.now(), tv: TEXT_INDEX_VERSION };
+}
+
+// Index one manual only if we don't already have a current text record for it.
+async function indexManualTextIfNeeded(m) {
+  if (!m || !m.blob) return false;
+  const existing = await manualTextGet(m.id);
+  if (existing && existing.tv === TEXT_INDEX_VERSION) return false;
+  try {
+    const rec = await extractManualText(m);
+    await manualTextPut(rec);
+    return true;
+  } catch (e) { return false; }
+}
+
+// Background sweep: index every downloaded-but-unindexed manual, one at a time,
+// yielding between each so the UI stays responsive. Covers manuals a tech
+// downloaded before this feature existed.
+async function indexAllDownloaded() {
+  if (manualIndexBusy) return;
+  manualIndexBusy = true;
+  try {
+    const downloaded = (await manualsGetAll()).filter(m => m && m.blob);
+    const haveIds = new Set((await manualTextGetAll()).filter(r => r.tv === TEXT_INDEX_VERSION).map(r => r.id));
+    for (const m of downloaded) {
+      if (haveIds.has(m.id)) continue;
+      await indexManualTextIfNeeded(m);
+      await new Promise(r => setTimeout(r, 60));   // breathe between big PDFs
+    }
+  } catch (e) { /* best effort */ }
+  manualIndexBusy = false;
+}
+
+async function manualTextCount() {
+  try { return (await manualTextGetAll()).filter(r => r.tv === TEXT_INDEX_VERSION).length; }
+  catch (e) { return 0; }
+}
+
+// Search the stored page text. Returns the best-matching page per manual so one
+// big manual can't flood the list.
+async function searchManualText(q, limit) {
+  const units = buildSearchUnits(q);
+  const need = units.length;
+  const threshold = Math.max(1, Math.ceil(need * 0.6));
+  let recs;
+  try { recs = await manualTextGetAll(); } catch (e) { return []; }
+  const bestByManual = new Map();
+  for (const rec of recs) {
+    if (rec.tv !== TEXT_INDEX_VERSION || !rec.pages) continue;
+    for (let i = 0; i < rec.pages.length; i++) {
+      const hay = rec.pages[i].toLowerCase();
+      if (!hay) continue;
+      const sc = askUnitHits(units, hay);
+      if (sc < threshold) continue;
+      const prev = bestByManual.get(rec.id);
+      if (!prev || sc > prev.sc) {
+        bestByManual.set(rec.id, { id: rec.id, title: rec.title, brand: rec.brand, model: rec.model, page: i + 1, sc, snippet: askSnippet(rec.pages[i], units) });
+      }
+    }
+  }
+  const out = [...bestByManual.values()].sort((a, b) => b.sc - a.sc || a.title.localeCompare(b.title));
+  return out.slice(0, limit || 12);
+}
+
+// A short readable excerpt centered on the first matched term.
+function askSnippet(text, units) {
+  const low = text.toLowerCase();
+  let idx = -1;
+  for (const u of units) for (const a of u.alts) {
+    const p = low.indexOf(a);
+    if (p >= 0 && (idx < 0 || p < idx)) idx = p;
+  }
+  if (idx < 0) idx = 0;
+  const start = Math.max(0, idx - 55);
+  let s = text.slice(start, start + 170).trim();
+  if (start > 0) s = "…" + s;
+  if (start + 170 < text.length) s = s + "…";
+  return s;
+}
+
+// Open a downloaded manual jumped to the page a search hit landed on.
+async function openManualAtPage(id, page) {
+  const rec = (await manualsGetAll()).find(x => x.id === id);
+  if (!rec || !rec.blob) { openManualDetail(id); return; }   // download gone — fall back
+  // keep listing metadata fresh from the seed index
+  const meta = (await manualCatalog()).find(x => x.id === id);
+  if (meta) { rec.title = meta.title; rec.brand = meta.brand; rec.model = meta.model; rec.notes = meta.notes; }
+  closeModal();
+  openPdfReader(rec, { page });
 }
 
 function formatBytes(bytes) {
@@ -2347,6 +2577,9 @@ async function downloadSeedManual(m, onStatus) {
   };
   await manualsPut(record);
   trackEvent("downloaded manual: " + m.title);
+  // Index its text in the background so Ask can search inside it — don't block
+  // the tech opening the manual they just downloaded.
+  setTimeout(() => { indexManualTextIfNeeded(record); }, 0);
   return record;
 }
 
@@ -2380,7 +2613,8 @@ const pdfView = {
   zoom: 1, observer: null, current: 1, historyArmed: false,
 };
 
-async function openPdfReader(m) {
+async function openPdfReader(m, opts) {
+  const targetPage = opts && opts.page ? opts.page : 0;
   const viewer = document.getElementById("pdfViewer");
   const scroll = document.getElementById("pdfScroll");
   document.getElementById("pdfViewerTitle").textContent = m.title || m.filename || "Manual";
@@ -2431,6 +2665,17 @@ async function openPdfReader(m) {
       }
     }, { root: scroll, rootMargin: "700px 0px" });
     pdfView.holders.forEach(h => pdfView.observer.observe(h));
+    // Jump to a search-hit page: set current first so kickstart paints there,
+    // then scroll once layout exists (placeholder heights are close enough; the
+    // page corrects its own height on render).
+    if (targetPage > 1 && targetPage <= doc.numPages) {
+      pdfView.current = targetPage;
+      document.getElementById("pdfPageBtn").textContent = targetPage + " / " + doc.numPages;
+      requestAnimationFrame(() => {
+        const holder = pdfView.holders[targetPage - 1];
+        if (holder) scroll.scrollTop = holder.offsetTop;
+      });
+    }
     pdfKickstart();
     trackEvent("read manual: " + (m.title || m.filename));
   } catch (err) {
@@ -5390,7 +5635,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v132";
+const APP_VERSION = "v133";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -5519,3 +5764,11 @@ else showTechPicker();
 // Only nudge a tech who has already picked their name — the picker overlay sits
 // above everything, so a pill fired underneath it would just be missed.
 if (getTechName()) showBulletinPill();
+
+// Full-text index any already-downloaded manuals once the app is idle, so Ask
+// can search inside manuals a tech downloaded before this feature shipped.
+(function scheduleManualIndexing() {
+  const run = () => indexAllDownloaded();
+  if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 8000 });
+  else setTimeout(run, 4000);
+})();
