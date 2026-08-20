@@ -43,7 +43,8 @@ const SEARCH_STOPWORDS = new Set([
   "too","very","just","also","if","i","im","my","me","we","our","you","your","he","she","they","them",
   "their","his","her","do","does","did","doing","has","have","had","having","will","would","can","could",
   "should","shall","must","may","might","up","down","out","about","into","over","again","once","here",
-  "there","when","where","why","how","all","any","both","each","more","most","other","only","own","same",
+  "there","when","where","why","how","what","which","who","whom","whose","whats",
+  "all","any","both","each","more","most","other","only","own","same",
   "get","got","showing","show","shows","seems","seem",
   // Near-zero discriminating power in an HVAC-only corpus — almost every
   // scenario in here IS about "ac"/"the unit"/"the system", so the word
@@ -5389,7 +5390,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v131";
+const APP_VERSION = "v132";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
