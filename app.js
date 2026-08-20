@@ -750,6 +750,76 @@ function askCard(it) {
 
 document.getElementById("askInput").addEventListener("input", (e) => { askState.search = e.target.value; renderAsk(); });
 
+// Voice input — an OPTION on top of typing. Speech-to-text runs through the
+// browser's Web Speech API, which on most phones transcribes server-side, so
+// the mic needs signal; the search it feeds is fully offline. The button only
+// appears where the browser actually supports recognition.
+const AskSpeech = window.SpeechRecognition || window.webkitSpeechRecognition;
+let askRecognition = null;
+let askListening = false;
+let askVoiceHintTimer = null;
+
+(function initAskVoice() {
+  const btn = document.getElementById("askMicBtn");
+  if (!btn || !AskSpeech) return;   // unsupported → leave the mic hidden, typing still works
+  btn.classList.remove("hidden");
+  btn.addEventListener("click", () => {
+    if (askListening) { try { askRecognition && askRecognition.stop(); } catch (e) {} return; }
+    startAskVoice();
+  });
+})();
+
+function showAskVoiceHint(msg) {
+  const el = document.getElementById("askVoiceHint");
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.remove("hidden");
+  clearTimeout(askVoiceHintTimer);
+  askVoiceHintTimer = setTimeout(() => el.classList.add("hidden"), 4500);
+}
+
+function startAskVoice() {
+  const btn = document.getElementById("askMicBtn");
+  const input = document.getElementById("askInput");
+  try { askRecognition = new AskSpeech(); } catch (e) { return; }
+  const original = input.getAttribute("placeholder");
+  askRecognition.lang = "en-US";
+  askRecognition.interimResults = true;   // fill the box live as they speak
+  askRecognition.continuous = false;
+  askRecognition.maxAlternatives = 1;
+  askListening = true;
+  btn.classList.add("listening");
+  input.setAttribute("placeholder", "Listening… say the code, unit, or problem");
+  const hint = document.getElementById("askVoiceHint");
+  if (hint) hint.classList.add("hidden");
+
+  askRecognition.onresult = (ev) => {
+    let text = "";
+    for (let i = ev.resultIndex; i < ev.results.length; i++) text += ev.results[i][0].transcript;
+    text = text.trim();
+    if (!text) return;
+    input.value = text;
+    askState.search = text;
+    renderAsk();
+  };
+  askRecognition.onerror = (ev) => {
+    const e = ev && ev.error;
+    if (e === "not-allowed" || e === "service-not-allowed") showAskVoiceHint("Microphone is blocked — allow mic access in the browser to ask by voice.");
+    else if (e === "network") showAskVoiceHint("Voice needs signal to hear you — type it instead when you're offline.");
+    else if (e === "no-speech") showAskVoiceHint("Didn't catch that — tap the mic and try again.");
+    else if (e === "audio-capture") showAskVoiceHint("No microphone found on this device.");
+  };
+  askRecognition.onend = () => {
+    askListening = false;
+    btn.classList.remove("listening");
+    input.setAttribute("placeholder", original);
+    if (input.value.trim()) trackEvent("asked by voice");
+  };
+
+  try { askRecognition.start(); }
+  catch (e) { askRecognition.onend(); }
+}
+
 // ============================================================
 // DIAGNOSTIC HELP (symptoms)
 // ============================================================
@@ -5266,7 +5336,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v129";
+const APP_VERSION = "v130";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

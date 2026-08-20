@@ -96,9 +96,13 @@
 
 <!-- ASK ANYTHING -->
 <section id="askScreen" class="screen hidden">
-  <div class="disclaimer">Ask the way you'd say it out loud — "goodman furnace 3 flashes", "no heat carrier infinity", "daikin charge mode", "ecobee no C wire". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once. It only ever shows what's actually stored in here — it never makes up a code, spec, or step. Works with zero signal.</div>
+  <div class="disclaimer">Ask the way you'd say it out loud — "goodman furnace 3 flashes", "no heat carrier infinity", "daikin charge mode", "ecobee no C wire". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once. It only ever shows what's actually stored in here — it never makes up a code, spec, or step. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you).</div>
   <div class="controls">
-    <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Ask anything — code, symptom, unit, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="ask-input-row">
+      <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Ask anything — code, symptom, unit, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button id="askMicBtn" class="ask-mic-btn hidden" type="button" aria-label="Ask by voice" title="Ask by voice">🎤</button>
+    </div>
+    <div id="askVoiceHint" class="ask-note hidden"></div>
     <div class="filter-row">
       <select id="askKindChips" class="filter-select" aria-label="Filter by kind"></select>
     </div>
