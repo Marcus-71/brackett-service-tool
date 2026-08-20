@@ -576,10 +576,15 @@ const ASK_KIND = {
   manual:  { label: "Manual",     rank: 5, open: (id) => openManualDetail(id) },
 };
 
+// A broad spread on purpose — not just fault codes. These teach a tech the
+// whole range they can ask across the manuals: specs, sequence of operation,
+// charging targets, airflow, gas, reversing-valve wiring, maintenance, venting.
 const ASK_EXAMPLES = [
-  "goodman 3 flashes", "no cool heat pump", "daikin charge mode",
-  "carrier infinity communication fault", "ecobee no c wire",
-  "generac 1100 overcrank", "lennox e427", "furnace short cycling",
+  "no cool heat pump", "goodman 3 flashes", "sequence of operation",
+  "target subcooling", "what size capacitor", "MCA and breaker size",
+  "manifold pressure", "blower dip switch settings",
+  "does O or B energize in cooling", "force defrost",
+  "oil capacity", "vent pipe size",
 ];
 
 // Built once per screen visit (showScreen nulls the cache), reused on every
@@ -5754,7 +5759,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v134";
+const APP_VERSION = "v135";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
