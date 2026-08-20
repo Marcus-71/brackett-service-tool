@@ -559,6 +559,10 @@ let askState = { search: "", kind: "All", brand: "All", equip: "All", _lastQ: nu
 let askIndexCache = null;
 let askManualToken = 0;      // guards the async in-manual search against stale renders
 let askManualTimer = null;
+// Server-side AI relay (holds the API key; app never sees it). Empty = feature
+// dormant (no button). Fill in the deployed Apps Script /exec URL to turn it on.
+const ASK_AI_RELAY = "";
+let askAiToken = 0;
 
 // Each kind knows its human label and how to open one of its items. Codes and
 // fixes are ANSWERS; the rest are references — so when scores tie, answers
@@ -670,6 +674,7 @@ function renderAsk() {
   if (q !== askState._lastQ) {
     askState.brand = "All"; askState.equip = "All"; askState._lastQ = q;
     const mh = document.getElementById("askManualHits"); if (mh) mh.innerHTML = "";
+    const ai = document.getElementById("askAi"); if (ai) { ai.innerHTML = ""; ai.dataset.answeredFor = ""; }
   }
 
   if (!askIndexCache) askIndexCache = askBuildIndex();
@@ -793,6 +798,9 @@ function renderAsk() {
     results.appendChild(more);
   }
 
+  // Offer a plain-English AI answer (only when the relay is configured).
+  renderAskAiControl(q);
+
   // Also search INSIDE the manuals the tech has downloaded (async, debounced).
   askScheduleManualSearch(q);
 }
@@ -851,6 +859,105 @@ function askManualCard(h) {
   return card;
 }
 
+// ---- AI answer layer ----
+// The keyword search can only point at pages; it can't understand a question
+// or bridge the tech's wording to the manual's. This asks a server-side relay
+// (which holds the API key) for a plain-English answer, GROUNDED in the manual
+// passages + code/fix entries we retrieve on-device. Online only; offline the
+// tech still has the full keyword search + manuals.
+
+// Fuller page text around the match, for feeding the model as context.
+function askTrimAround(text, units, len) {
+  const low = text.toLowerCase();
+  let idx = -1;
+  for (const u of units) for (const a of u.alts) {
+    const p = low.indexOf(a);
+    if (p >= 0 && (idx < 0 || p < idx)) idx = p;
+  }
+  if (idx < 0) idx = 0;
+  const start = Math.max(0, idx - Math.floor(len / 3));
+  return text.slice(start, start + len).trim();
+}
+async function askManualPassages(q, limit) {
+  const units = buildSearchUnits(q);
+  const threshold = Math.max(1, Math.ceil(units.length * 0.5));   // relaxed — context for the model
+  let recs = [];
+  try { recs = await manualTextGetAll(); } catch (e) { return []; }
+  const scored = [];
+  for (const rec of recs) {
+    if (rec.tv !== TEXT_INDEX_VERSION || !rec.pages) continue;
+    for (let i = 0; i < rec.pages.length; i++) {
+      const sc = askUnitHits(units, rec.pages[i].toLowerCase());
+      if (sc >= threshold) scored.push({ id: rec.id, title: rec.title, page: i + 1, sc, raw: rec.pages[i] });
+    }
+  }
+  scored.sort((a, b) => b.sc - a.sc);
+  return scored.slice(0, limit || 4).map(s => ({ id: s.id, title: s.title, page: s.page, text: askTrimAround(s.raw, units, 1200) }));
+}
+// Top structured entries, with their meaning/steps, for grounding.
+function askAiEntries(q, limit) {
+  const units = buildSearchUnits(q);
+  const idx = askIndexCache || (askIndexCache = askBuildIndex());
+  const scored = [];
+  for (const it of idx) { const { sc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc }); }
+  scored.sort((a, b) => b.sc - a.sc);
+  return scored.slice(0, limit || 5).map(({ it }) => ({ kind: ASK_KIND[it.kind].label, title: it.title, text: askEntryText(it) }));
+}
+function askEntryText(it) {
+  if (it.kind === "code") { const c = getAllCodes().find(x => x.id === it.id); return c ? [c.meaning, (c.causes || []).join("; "), (c.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
+  if (it.kind === "symptom") { const s = getAllSymptoms().find(x => x.id === it.id); return s ? [s.summary, (s.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
+  return it.sub || "";
+}
+
+async function askAiAnswer(question) {
+  const box = document.getElementById("askAi");
+  if (!box || !ASK_AI_RELAY) return;
+  const token = ++askAiToken;
+  box.dataset.answeredFor = question;
+  box.innerHTML = `<div class="ask-ai-card"><div class="ask-ai-status"><span class="ask-ai-spin"></span>Reading your manuals…</div></div>`;
+  let passages = [], entries = [];
+  try { passages = await askManualPassages(question, 4); } catch (e) {}
+  try { entries = askAiEntries(question, 5); } catch (e) {}
+  if (token !== askAiToken) return;
+  let data = null;
+  try {
+    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question, passages, entries }) });
+    data = await resp.json();
+  } catch (e) { data = { error: "network" }; }
+  if (token !== askAiToken) return;
+  if (!data || data.error) {
+    const msg = (data && data.error === "network")
+      ? "Couldn't reach the answer service — check signal and try again."
+      : "AI couldn't answer" + (data && data.error ? " (" + escapeHtml(String(data.error)) + ")" : "") + ".";
+    box.innerHTML = `<div class="ask-ai-card ask-ai-err">${msg}</div>`;
+    return;
+  }
+  const cites = passages.map(p => `<button class="ask-ai-cite" data-id="${escapeHtml(p.id)}" data-page="${p.page}">${escapeHtml(p.title)} · p.${p.page}</button>`).join("");
+  box.innerHTML = `
+    <div class="ask-ai-card">
+      <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
+      <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\n/g, "<br>")}</div>
+      ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
+    </div>`;
+  box.querySelectorAll(".ask-ai-cite").forEach(b => { b.onclick = () => openManualAtPage(b.dataset.id, Number(b.dataset.page)); });
+  trackEvent("asked AI");
+}
+
+// The "Get a direct answer" control above the results (only when the relay is
+// configured). Enter in the box, or tapping it, fires askAiAnswer.
+function renderAskAiControl(q) {
+  const box = document.getElementById("askAi");
+  if (!box) return;
+  if (!ASK_AI_RELAY || q.trim().length < 4) { box.innerHTML = ""; box.dataset.answeredFor = ""; return; }
+  if (box.dataset.answeredFor === q) return;   // keep the answer/spinner already shown for this q
+  if (!navigator.onLine) {
+    box.innerHTML = `<div class="ask-ai-offline">🤖 AI answers need a signal — showing what's saved on this phone.</div>`;
+    return;
+  }
+  box.innerHTML = `<button class="ask-ai-btn" type="button">🤖 Get a direct answer</button>`;
+  box.querySelector(".ask-ai-btn").onclick = () => askAiAnswer(q);
+}
+
 function askCard(it) {
   const card = document.createElement("div");
   card.className = "card ask-card";
@@ -867,6 +974,18 @@ function askCard(it) {
 }
 
 document.getElementById("askInput").addEventListener("input", (e) => { askState.search = e.target.value; renderAsk(); });
+// Enter / the phone keyboard's Search-Go key = submit the question: drop the
+// keyboard so results are visible (was "just sitting there" behind it), make
+// sure they're rendered, and fire the AI answer when the relay is set up.
+document.getElementById("askInput").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  const q = e.target.value.trim();
+  askState.search = q;
+  renderAsk();
+  e.target.blur();
+  if (ASK_AI_RELAY && navigator.onLine && q.length >= 4) askAiAnswer(q);
+});
 
 // Voice input — an OPTION on top of typing. Speech-to-text runs through the
 // browser's Web Speech API, which on most phones transcribes server-side, so
@@ -5635,7 +5754,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v133";
+const APP_VERSION = "v134";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
