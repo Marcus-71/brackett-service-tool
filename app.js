@@ -4475,28 +4475,57 @@ document.getElementById("dismissInstall").addEventListener("click", () => {
 // ============================================================
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-  });
-
   // A new version installs and takes over in the background, but the page a
   // tech is looking at is still running the old code — so without this they'd
   // keep seeing the old version until the next time they open the app. Offer a
   // reload instead of forcing one: an automatic refresh mid-job would wipe out
   // whatever they were part-way through on screen.
-  // Distinguish "a worker just took control for the first time" from "a newer
-  // worker replaced the one we had". Only the second is an update worth
-  // reloading for. A page loaded before its worker claimed it starts with no
-  // controller, so the first handover there is the initial claim, not an
-  // update — track that rather than snapshotting once, or every later update
-  // on that install gets swallowed.
-  let haveBaselineController = !!navigator.serviceWorker.controller;
   let updateOffered = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (!haveBaselineController) { haveBaselineController = true; return; }
+  function offerUpdate() {
     if (updateOffered) return;
     updateOffered = true;
     showUpdatePill();
+  }
+
+  // Watch a freshly-downloading worker and surface the pill the moment it
+  // reaches "installed" (its cache is complete and it's ready to serve). This
+  // is the earliest, most reliable signal: it fires as soon as the download
+  // finishes, so a tech who opens the app once on signal sees the nudge on
+  // THAT open instead of only after a second launch. We only pill when a
+  // controller already exists — a first-ever install (no controller yet) is
+  // the initial setup, not an update worth reloading for.
+  function watchWorker(worker) {
+    if (!worker) return;
+    worker.addEventListener("statechange", () => {
+      if (worker.state === "installed" && navigator.serviceWorker.controller) offerUpdate();
+    });
+  }
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").then((reg) => {
+      // A version that finished installing between sessions is already waiting.
+      if (reg.waiting && navigator.serviceWorker.controller) offerUpdate();
+      watchWorker(reg.installing);
+      reg.addEventListener("updatefound", () => watchWorker(reg.installing));
+
+      // Check for a new deploy promptly — on open, and again whenever the app
+      // returns to the foreground or regains signal. A PWA a tech leaves open
+      // for days would otherwise only ever check at a cold start.
+      const check = () => { reg.update().catch(() => {}); };
+      check();
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
+      window.addEventListener("online", check);
+    }).catch(() => {});
+  });
+
+  // Secondary trigger: the new worker took control of this page (skipWaiting +
+  // clients.claim). A page loaded before its worker claimed it starts with no
+  // controller, so the first handover is the initial claim, not an update —
+  // track that so the initial setup isn't mistaken for a new version.
+  let haveBaselineController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!haveBaselineController) { haveBaselineController = true; return; }
+    offerUpdate();
   });
 }
 
@@ -5224,7 +5253,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v127";
+const APP_VERSION = "v128";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
