@@ -686,6 +686,27 @@ main {
 
 .ask-note { font-size: 0.85rem; color: var(--text-dim); padding: 0.4rem 0.2rem 0.6rem; }
 
+/* Narrowing question shown after a broad search. */
+.ask-narrow { padding: 0; }
+.ask-narrow-q { margin: 0.1rem 0 0.7rem; }
+.ask-chip-n { opacity: 0.6; font-weight: 600; margin-left: 0.15rem; }
+.ask-narrow-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.15rem 0 0.6rem; }
+.ask-narrow-tag {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.ask-narrow-tag .x { opacity: 0.85; font-size: 0.85em; }
+.ask-narrow-tag:active { transform: scale(0.96); }
+
 .ask-card-text { min-width: 0; }
 .ask-badge {
   flex: none; align-self: flex-start;

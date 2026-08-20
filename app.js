@@ -554,7 +554,7 @@ document.getElementById("codesSearchInput").addEventListener("input", (e) => { c
 // engine (alias groups, boundary matching) the other screens use, so "comp",
 // "cap", "no cool", "flash code" etc. all resolve. Fully offline.
 
-let askState = { search: "", kind: "All" };
+let askState = { search: "", kind: "All", brand: "All", equip: "All", _lastQ: null };
 let askIndexCache = null;
 
 // Each kind knows its human label and how to open one of its items. Codes and
@@ -581,7 +581,7 @@ function askBuildIndex() {
   const items = [];
   for (const c of getAllCodes()) {
     items.push({
-      kind: "code", id: c.id,
+      kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
       title: c.code + " — " + c.title,
       sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
       titleHay: [c.brand, c.code, ...codeSearchAliases(c.code), c.title].filter(Boolean).join(" ").toLowerCase(),
@@ -590,7 +590,7 @@ function askBuildIndex() {
   }
   for (const s of getAllSymptoms()) {
     items.push({
-      kind: "symptom", id: s.id,
+      kind: "symptom", id: s.id, brand: "", equip: s.equipment || "",
       title: s.title,
       sub: [s.equipment, s.summary].filter(Boolean).join(" · "),
       hay: [s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
@@ -598,7 +598,7 @@ function askBuildIndex() {
   }
   for (const t of tstatEntries()) {
     items.push({
-      kind: "tstat", id: t.id,
+      kind: "tstat", id: t.id, brand: t.brand || "", equip: "Thermostat",
       title: [t.brand, t.family].filter(Boolean).join(" "),
       sub: (t.models || []).slice(0, 4).join(", "),
       hay: tstatSearchFields(t).filter(Boolean).join(" ").toLowerCase(),
@@ -606,7 +606,7 @@ function askBuildIndex() {
   }
   for (const g of genEntries()) {
     items.push({
-      kind: "gen", id: g.id,
+      kind: "gen", id: g.id, brand: "Generac", equip: "Generator",
       title: [g.series, g.family].filter(Boolean).join(" · "),
       sub: [g.controller, g.engine].filter(Boolean).join(" · "),
       hay: genSearchFields(g).filter(Boolean).join(" ").toLowerCase(),
@@ -614,7 +614,7 @@ function askBuildIndex() {
   }
   for (const t of getAllToolboxEntries()) {
     items.push({
-      kind: "tool", id: t.id,
+      kind: "tool", id: t.id, brand: t.brand || "", equip: "",
       title: t.toolName + (t.title ? " — " + t.title : ""),
       sub: [t.brand, t.family].filter(Boolean).join(" · "),
       hay: [t.brand, t.family, t.toolName, t.title, t.whenToUse, t.era, ...(t.platforms || []), ...(t.requirements || []), ...(t.steps || []), ...(t.notes || [])].filter(Boolean).join(" ").toLowerCase(),
@@ -625,7 +625,7 @@ function askBuildIndex() {
   if (typeof MANUAL_SEEDS !== "undefined") {
     for (const seed of MANUAL_SEEDS) {
       items.push({
-        kind: "manual", id: seedIdOf(seed),
+        kind: "manual", id: seedIdOf(seed), brand: seed.brand || "", equip: "",
         title: seed.title || (seed.file || "").split("/").pop(),
         sub: [seed.brand, seed.model].filter(Boolean).join(" · "),
         hay: [seed.brand, seed.model, seed.title, seed.notes].filter(Boolean).join(" ").toLowerCase(),
@@ -661,6 +661,10 @@ function renderAsk() {
   const empty = document.getElementById("askEmptyState");
   results.innerHTML = "";
 
+  // A changed question is a fresh search — drop any brand/type narrowing so the
+  // follow-up chips reflect the NEW results, not the last query's.
+  if (q !== askState._lastQ) { askState.brand = "All"; askState.equip = "All"; askState._lastQ = q; }
+
   if (!askIndexCache) askIndexCache = askBuildIndex();
 
   // Kind filter: only offer kinds that exist, each with a live count.
@@ -682,6 +686,7 @@ function renderAsk() {
   // No query yet — show what's in here + tappable example questions.
   if (!q) {
     empty.classList.add("hidden");
+    document.getElementById("askNarrow").innerHTML = "";
     const total = askIndexCache.length;
     const chips = ASK_EXAMPLES.map(x => `<button class="ask-chip" data-q="${escapeHtml(x)}">${escapeHtml(x)}</button>`).join("");
     examples.innerHTML = `
@@ -715,20 +720,68 @@ function renderAsk() {
   if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
   hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
 
-  empty.classList.toggle("hidden", hits.length !== 0);
+  // ----- Narrowing question -----
+  // After a broad first search, ask ONE follow-up (brand, then equipment type)
+  // so a 60-hit list collapses to the relevant unit in a tap. Chips are built
+  // from the actual matches and only appear when they'd genuinely split the set.
+  // Picking a brand keeps brand-less generic fixes too, so a cross-brand answer
+  // never vanishes just because the tech named a brand.
+  const shown = hits.filter(({ it }) =>
+    (askState.brand === "All" || it.brand === askState.brand || !it.brand) &&
+    (askState.equip === "All" || it.equip === askState.equip || !it.equip));
+
+  const narrow = document.getElementById("askNarrow");
+  narrow.innerHTML = "";
+
+  const activeTags = [];
+  if (askState.brand !== "All") activeTags.push(["brand", askState.brand]);
+  if (askState.equip !== "All") activeTags.push(["equip", askState.equip]);
+  if (activeTags.length) {
+    const row = document.createElement("div");
+    row.className = "ask-narrow-tags";
+    row.innerHTML = activeTags.map(([k, v]) => `<button class="ask-narrow-tag" data-k="${k}">${escapeHtml(v)} <span class="x">✕</span></button>`).join("");
+    row.querySelectorAll(".ask-narrow-tag").forEach(b => { b.onclick = () => { askState[b.dataset.k] = "All"; renderAsk(); }; });
+    narrow.appendChild(row);
+  }
+
+  if (shown.length > 6) {
+    const facet = (key) => {
+      const m = new Map();
+      for (const { it } of shown) { const v = it[key]; if (v) m.set(v, (m.get(v) || 0) + 1); }
+      return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    };
+    const askQuestion = (label, key, f) => {
+      const box = document.createElement("div");
+      box.className = "ask-narrow-q";
+      box.innerHTML = `<div class="ask-chip-label">${label}</div><div class="ask-chip-row">` +
+        f.slice(0, 8).map(([v, n]) => `<button class="ask-chip" data-v="${escapeHtml(v)}">${escapeHtml(v)} <span class="ask-chip-n">${n}</span></button>`).join("") +
+        `</div>`;
+      box.querySelectorAll(".ask-chip").forEach(b => { b.onclick = () => { askState[key] = b.dataset.v; renderAsk(); }; });
+      narrow.appendChild(box);
+    };
+    const brands = askState.brand === "All" ? facet("brand") : [];
+    if (brands.length >= 2) {
+      askQuestion("Which brand?", "brand", brands);
+    } else if (askState.equip === "All") {
+      const equips = facet("equip");
+      if (equips.length >= 2) askQuestion("Which type?", "equip", equips);
+    }
+  }
+
+  empty.classList.toggle("hidden", shown.length !== 0);
 
   const MAX = 60;
-  if (partial && hits.length) {
+  if (partial && shown.length) {
     const note = document.createElement("div");
     note.className = "ask-note";
     note.textContent = "No exact match — closest entries in the library:";
     results.appendChild(note);
   }
-  for (const { it } of hits.slice(0, MAX)) results.appendChild(askCard(it));
-  if (hits.length > MAX) {
+  for (const { it } of shown.slice(0, MAX)) results.appendChild(askCard(it));
+  if (shown.length > MAX) {
     const more = document.createElement("div");
     more.className = "ask-note";
-    more.textContent = "+" + (hits.length - MAX) + " more — add a brand or model to narrow it down.";
+    more.textContent = "+" + (shown.length - MAX) + " more — pick a brand or type above, or add a model to narrow it down.";
     results.appendChild(more);
   }
 }
@@ -5336,7 +5389,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v130";
+const APP_VERSION = "v131";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
