@@ -236,6 +236,7 @@ document.getElementById("modalBackdrop").addEventListener("click", (e) => {
 
 const SCREEN_TITLES = {
   home: "Brackett Service Tool",
+  ask: "Ask Anything",
   codes: "Error Codes",
   diagnostics: "Diagnostic Help",
   manuals: "Manuals",
@@ -269,10 +270,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -285,6 +286,7 @@ function showScreen(name, fromBack) {
     addBtn.onclick = ADD_HANDLERS[name];
   }
 
+  if (name === "ask") { askIndexCache = null; renderAsk(); }
   if (name === "codes") renderCodes();
   if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
@@ -540,6 +542,213 @@ function openCodeEditForm(existing) {
 }
 
 document.getElementById("codesSearchInput").addEventListener("input", (e) => { codesState.search = e.target.value; renderCodes(); });
+
+// ============================================================
+// ASK ANYTHING — one plain-English box over the whole library
+// ============================================================
+// Retrieval only. It searches every code, symptom, thermostat, generator,
+// board tool and manual already vetted into the app, then routes to that
+// item's OWN detail view. It never generates prose and never invents a code,
+// spec or step — an answer here is exactly as trustworthy as the screen it
+// came from, which is the whole point. Reuses the same HVAC-aware search
+// engine (alias groups, boundary matching) the other screens use, so "comp",
+// "cap", "no cool", "flash code" etc. all resolve. Fully offline.
+
+let askState = { search: "", kind: "All" };
+let askIndexCache = null;
+
+// Each kind knows its human label and how to open one of its items. Codes and
+// fixes are ANSWERS; the rest are references — so when scores tie, answers
+// surface first (rank order below).
+const ASK_KIND = {
+  code:    { label: "Code",       rank: 0, open: (id) => openCodeDetail(id) },
+  symptom: { label: "Fix",        rank: 1, open: (id) => openSymptomDetail(id) },
+  tstat:   { label: "Thermostat", rank: 2, open: (id) => openTstatDetail(id) },
+  gen:     { label: "Generator",  rank: 3, open: (id) => openGenDetail(id) },
+  tool:    { label: "Tool",       rank: 4, open: (id) => openToolboxDetail(id) },
+  manual:  { label: "Manual",     rank: 5, open: (id) => openManualDetail(id) },
+};
+
+const ASK_EXAMPLES = [
+  "goodman 3 flashes", "no cool heat pump", "daikin charge mode",
+  "carrier infinity communication fault", "ecobee no c wire",
+  "generac 1100 overcrank", "lennox e427", "furnace short cycling",
+];
+
+// Built once per screen visit (showScreen nulls the cache), reused on every
+// keystroke — so live typing never rebuilds ~10k haystacks.
+function askBuildIndex() {
+  const items = [];
+  for (const c of getAllCodes()) {
+    items.push({
+      kind: "code", id: c.id,
+      title: c.code + " — " + c.title,
+      sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
+      titleHay: [c.brand, c.code, ...codeSearchAliases(c.code), c.title].filter(Boolean).join(" ").toLowerCase(),
+      hay: [c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes || []), ...(c.steps || [])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  for (const s of getAllSymptoms()) {
+    items.push({
+      kind: "symptom", id: s.id,
+      title: s.title,
+      sub: [s.equipment, s.summary].filter(Boolean).join(" · "),
+      hay: [s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  for (const t of tstatEntries()) {
+    items.push({
+      kind: "tstat", id: t.id,
+      title: [t.brand, t.family].filter(Boolean).join(" "),
+      sub: (t.models || []).slice(0, 4).join(", "),
+      hay: tstatSearchFields(t).filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  for (const g of genEntries()) {
+    items.push({
+      kind: "gen", id: g.id,
+      title: [g.series, g.family].filter(Boolean).join(" · "),
+      sub: [g.controller, g.engine].filter(Boolean).join(" · "),
+      hay: genSearchFields(g).filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  for (const t of getAllToolboxEntries()) {
+    items.push({
+      kind: "tool", id: t.id,
+      title: t.toolName + (t.title ? " — " + t.title : ""),
+      sub: [t.brand, t.family].filter(Boolean).join(" · "),
+      hay: [t.brand, t.family, t.toolName, t.title, t.whenToUse, t.era, ...(t.platforms || []), ...(t.requirements || []), ...(t.steps || []), ...(t.notes || [])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  // Manuals: the seed index IS the shared library. openManualDetail() takes the
+  // same seed id and handles download-or-open, so a cloud manual works too.
+  if (typeof MANUAL_SEEDS !== "undefined") {
+    for (const seed of MANUAL_SEEDS) {
+      items.push({
+        kind: "manual", id: seedIdOf(seed),
+        title: seed.title || (seed.file || "").split("/").pop(),
+        sub: [seed.brand, seed.model].filter(Boolean).join(" · "),
+        hay: [seed.brand, seed.model, seed.title, seed.notes].filter(Boolean).join(" ").toLowerCase(),
+      });
+    }
+  }
+  return items;
+}
+
+// How many query concepts a haystack contains — same semantics the codes/
+// tstat/gen screens use (word-boundary match, plus a numeric-substring fallback
+// so "1100" finds a code embedded in a longer string).
+function askUnitHits(units, hay) {
+  let score = 0;
+  for (const u of units) {
+    if (u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a)))) score++;
+  }
+  return score;
+}
+// Full score, plus a secondary count of concepts that land in the item's
+// HEADLINE (code + name) — so for "3 flashes" the row titled "3 flashes" beats
+// a "9 flashes" row that only matched the number somewhere in its steps.
+function askScoreItem(units, it) {
+  const sc = askUnitHits(units, it.hay);
+  const tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
+  return { sc, tsc };
+}
+
+function renderAsk() {
+  const q = askState.search.trim();
+  const examples = document.getElementById("askExamples");
+  const results = document.getElementById("askResults");
+  const empty = document.getElementById("askEmptyState");
+  results.innerHTML = "";
+
+  if (!askIndexCache) askIndexCache = askBuildIndex();
+
+  // Kind filter: only offer kinds that exist, each with a live count.
+  const counts = {};
+  for (const it of askIndexCache) counts[it.kind] = (counts[it.kind] || 0) + 1;
+  const kindOpts = ["All", ...Object.keys(ASK_KIND).filter(k => counts[k])];
+  if (!kindOpts.includes(askState.kind)) askState.kind = "All";
+  const kindSel = document.getElementById("askKindChips");
+  kindSel.innerHTML = "";
+  for (const k of kindOpts) {
+    const opt = document.createElement("option");
+    opt.value = k;
+    opt.textContent = k === "All" ? "Everything" : ASK_KIND[k].label + " (" + counts[k] + ")";
+    if (k === askState.kind) opt.selected = true;
+    kindSel.appendChild(opt);
+  }
+  kindSel.onchange = () => { askState.kind = kindSel.value; renderAsk(); };
+
+  // No query yet — show what's in here + tappable example questions.
+  if (!q) {
+    empty.classList.add("hidden");
+    const total = askIndexCache.length;
+    const chips = ASK_EXAMPLES.map(x => `<button class="ask-chip" data-q="${escapeHtml(x)}">${escapeHtml(x)}</button>`).join("");
+    examples.innerHTML = `
+      <div class="ask-lead">Searches <strong>${total.toLocaleString()}</strong> vetted entries — ${counts.code || 0} codes · ${counts.symptom || 0} fixes · ${counts.tstat || 0} thermostats · ${counts.gen || 0} generators · ${counts.tool || 0} tools · ${counts.manual || 0} manuals. It only shows what's really in here.</div>
+      <div class="ask-chip-label">Try:</div>
+      <div class="ask-chip-row">${chips}</div>`;
+    examples.classList.remove("hidden");
+    examples.querySelectorAll(".ask-chip").forEach(b => {
+      b.onclick = () => {
+        const el = document.getElementById("askInput");
+        el.value = b.dataset.q; askState.search = b.dataset.q; renderAsk(); el.focus();
+      };
+    });
+    return;
+  }
+  examples.classList.add("hidden");
+
+  const units = buildSearchUnits(q);
+  const need = units.length;
+  const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
+
+  const scored = [];
+  for (const it of pool) {
+    const { sc, tsc } = askScoreItem(units, it);
+    if (sc > 0) scored.push({ it, sc, tsc });
+  }
+  // Prefer items that contain EVERY concept; if none do, fall back to the
+  // closest partial matches so a well-typed sentence never dead-ends.
+  let hits = scored.filter(x => x.sc === need);
+  let partial = false;
+  if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
+  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
+
+  empty.classList.toggle("hidden", hits.length !== 0);
+
+  const MAX = 60;
+  if (partial && hits.length) {
+    const note = document.createElement("div");
+    note.className = "ask-note";
+    note.textContent = "No exact match — closest entries in the library:";
+    results.appendChild(note);
+  }
+  for (const { it } of hits.slice(0, MAX)) results.appendChild(askCard(it));
+  if (hits.length > MAX) {
+    const more = document.createElement("div");
+    more.className = "ask-note";
+    more.textContent = "+" + (hits.length - MAX) + " more — add a brand or model to narrow it down.";
+    results.appendChild(more);
+  }
+}
+
+function askCard(it) {
+  const card = document.createElement("div");
+  card.className = "card ask-card";
+  card.onclick = () => ASK_KIND[it.kind].open(it.id);
+  card.innerHTML = `
+    <div class="card-top">
+      <div class="ask-card-text">
+        <div class="card-title">${escapeHtml(it.title)}</div>
+        ${it.sub ? `<div class="card-meta"><span>${escapeHtml(it.sub)}</span></div>` : ""}
+      </div>
+      <span class="ask-badge ask-badge-${it.kind}">${ASK_KIND[it.kind].label}</span>
+    </div>`;
+  return card;
+}
+
+document.getElementById("askInput").addEventListener("input", (e) => { askState.search = e.target.value; renderAsk(); });
 
 // ============================================================
 // DIAGNOSTIC HELP (symptoms)
@@ -5015,7 +5224,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v126";
+const APP_VERSION = "v127";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -5085,6 +5294,7 @@ function logSearches(inputId, label) {
     }, 2000);
   });
 }
+logSearches("askInput", "asked");
 logSearches("codesSearchInput", "searched codes");
 logSearches("diagSearchInput", "searched diagnostics");
 logSearches("manualSearchInput", "searched manuals");

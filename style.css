@@ -609,10 +609,51 @@ main {
 .tile-label { font-size: 1.2rem; font-weight: 800; }
 .tile-sub { font-size: 0.85rem; color: var(--text-dim); }
 
+.tile-ask { border-left: 5px solid var(--brand-yellow); background: linear-gradient(180deg, rgba(253,210,110,0.10), transparent 60%), var(--card); }
 .tile-codes { border-left: 5px solid var(--brand-orange); }
 .tile-diag { border-left: 5px solid var(--brand-yellow); }
 .tile-manuals { border-left: 5px solid var(--brand-sage); }
 .tile-toolbox { border-left: 5px solid var(--brand-olive); }
+
+/* ---------------- Ask Anything ---------------- */
+
+.ask-examples { padding: 0.25rem 0 0.5rem; }
+.ask-lead { font-size: 0.92rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 0.9rem; }
+.ask-lead strong { color: var(--text); }
+.ask-chip-label { font-size: 0.85rem; font-weight: 700; color: var(--text-dim); margin-bottom: 0.45rem; }
+.ask-chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ask-chip {
+  font: inherit; font-size: 0.9rem; cursor: pointer;
+  padding: 0.4rem 0.7rem; border-radius: 999px;
+  background: var(--bg-elevated); color: var(--text);
+  border: 1px solid var(--border);
+}
+.ask-chip:active { transform: scale(0.97); border-color: var(--accent); }
+
+.ask-note { font-size: 0.85rem; color: var(--text-dim); padding: 0.4rem 0.2rem 0.6rem; }
+
+.ask-card-text { min-width: 0; }
+.ask-badge {
+  flex: none; align-self: flex-start;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.02em;
+  padding: 0.14rem 0.5rem; border-radius: 6px;
+  border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-elevated);
+  text-transform: uppercase;
+}
+.ask-badge-code    { border-color: var(--brand-orange); color: #ffb27a; }
+.ask-badge-symptom { border-color: var(--brand-yellow); color: #f0c27a; }
+.ask-badge-tstat   { border-color: #146c3e; color: #6fe3a5; }
+.ask-badge-gen     { border-color: #2d6ec4; color: #7ab6ff; }
+.ask-badge-tool    { border-color: var(--brand-olive); color: #d8d2b0; }
+.ask-badge-manual  { border-color: var(--brand-sage); color: #d6d1a4; }
+@media (prefers-color-scheme: light) {
+  .ask-badge-code    { color: #9a4310; background: #fff0e6; }
+  .ask-badge-symptom { color: #8a5a00; background: #fff1d6; }
+  .ask-badge-tstat   { color: #146c3e; background: #d9f7e4; }
+  .ask-badge-gen     { color: #1c4f92; background: #e3eefc; }
+  .ask-badge-tool    { color: #5b5440; background: #f3f0e4; }
+  .ask-badge-manual  { color: #6a662f; background: #f4f2e0; }
+}
 
 /* ---------------- Tag Scanner ---------------- */
 

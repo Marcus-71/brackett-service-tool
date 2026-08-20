@@ -27,6 +27,11 @@
 <section id="homeScreen" class="screen">
   <img class="home-logo" src="icons/brackett-logo.png" alt="Brackett Heating · Air · Plumbing">
   <div class="home-tiles">
+    <button class="tile tile-ask" data-screen="ask">
+      <span class="tile-icon">🔎</span>
+      <span class="tile-label">Ask Anything</span>
+      <span class="tile-sub">Type it like you'd say it — searches every code, fix &amp; manual at once</span>
+    </button>
     <button class="tile tile-scanner" data-screen="scanner">
       <span class="tile-icon">📷</span>
       <span class="tile-label">Tag Scanner</span>
@@ -87,6 +92,20 @@
     <span id="homeNetNote"></span>
     <span id="appVersion" class="app-version"></span>
   </div>
+</section>
+
+<!-- ASK ANYTHING -->
+<section id="askScreen" class="screen hidden">
+  <div class="disclaimer">Ask the way you'd say it out loud — "goodman furnace 3 flashes", "no heat carrier infinity", "daikin charge mode", "ecobee no C wire". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once. It only ever shows what's actually stored in here — it never makes up a code, spec, or step. Works with zero signal.</div>
+  <div class="controls">
+    <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Ask anything — code, symptom, unit, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="filter-row">
+      <select id="askKindChips" class="filter-select" aria-label="Filter by kind"></select>
+    </div>
+  </div>
+  <div id="askExamples" class="ask-examples"></div>
+  <main id="askResults"></main>
+  <div id="askEmptyState" class="empty-state hidden">Nothing in the library matches that yet. Try fewer or different words — or send it in from Request Info so the office can add it.</div>
 </section>
 
 <!-- ERROR CODES -->
