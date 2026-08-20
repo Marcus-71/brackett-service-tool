@@ -561,7 +561,12 @@ let askManualToken = 0;      // guards the async in-manual search against stale 
 let askManualTimer = null;
 // Server-side AI relay (holds the API key; app never sees it). Empty = feature
 // dormant (no button). Fill in the deployed Apps Script /exec URL to turn it on.
-const ASK_AI_RELAY = "";
+const ASK_AI_RELAY = "https://script.google.com/macros/s/AKfycbzk5Pv9A4IIs8MSqnmv2xRFDVbS82PMWvStg_gSSUPTSXe0rOTzhUpNA7186htaGAtRjA/exec";
+// Shared password the relay checks (its APP_TOKEN script property must match).
+// Not a strong secret — it rides in this public file — but combined with the
+// obscure URL + the relay's daily cap it stops anyone who finds the URL from
+// burning the account's credits.
+const ASK_AI_APP_TOKEN = "bkt-ask-9f3Kx7Qm2Zp";
 let askAiToken = 0;
 
 // Each kind knows its human label and how to open one of its items. Codes and
@@ -926,7 +931,7 @@ async function askAiAnswer(question) {
   if (token !== askAiToken) return;
   let data = null;
   try {
-    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question, passages, entries }) });
+    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question, passages, entries, token: ASK_AI_APP_TOKEN }) });
     data = await resp.json();
   } catch (e) { data = { error: "network" }; }
   if (token !== askAiToken) return;
@@ -5759,7 +5764,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v135";
+const APP_VERSION = "v136";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
