@@ -747,6 +747,33 @@ main {
 @keyframes ask-ai-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ask-ai-spin { animation: none; } }
 
+/* "Did this help?" feedback on an AI answer */
+.ask-fb {
+  margin-top: 0.7rem; padding-top: 0.55rem; border-top: 1px solid var(--border);
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem;
+}
+.ask-fb.ask-fb-open { flex-direction: column; align-items: stretch; }
+.ask-fb-q { font-size: 0.82rem; color: var(--text-dim); margin-right: 0.15rem; }
+.ask-fb-btn {
+  font: inherit; font-size: 1.05rem; line-height: 1; cursor: pointer;
+  min-width: 44px; min-height: 34px; padding: 0.15rem 0.5rem;
+  border-radius: 999px; background: var(--card); border: 1px solid var(--border);
+}
+.ask-fb-btn:active { transform: scale(0.94); }
+.ask-fb-reasons { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.15rem 0 0.1rem; }
+.ask-fb-reason {
+  font: inherit; font-size: 0.8rem; cursor: pointer;
+  padding: 0.3rem 0.6rem; border-radius: 999px;
+  background: var(--card); color: var(--text); border: 1px solid var(--border);
+}
+.ask-fb-reason:active { transform: scale(0.96); }
+.ask-fb-note {
+  font: inherit; font-size: 0.88rem; margin-top: 0.35rem;
+  padding: 0.45rem 0.6rem; border-radius: 8px;
+  background: var(--card); color: var(--text); border: 1px solid var(--border);
+}
+.ask-fb-done { font-size: 0.85rem; color: var(--text-dim); font-weight: 600; }
+
 /* In-manual full-text hits */
 .ask-manual-hits { margin-top: 0.25rem; }
 .ask-manual-head {

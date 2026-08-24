@@ -922,6 +922,7 @@ function askEntryText(it) {
 async function askAiAnswer(question) {
   const box = document.getElementById("askAi");
   if (!box || !ASK_AI_RELAY) return;
+  askNoteReask(question);   // did the previous answer go unused before this one?
   const token = ++askAiToken;
   box.dataset.answeredFor = question;
   box.innerHTML = `<div class="ask-ai-card"><div class="ask-ai-status"><span class="ask-ai-spin"></span>Reading your manuals…</div></div>`;
@@ -948,9 +949,67 @@ async function askAiAnswer(question) {
       <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
       <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\n/g, "<br>")}</div>
       ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
-    </div>`;
-  box.querySelectorAll(".ask-ai-cite").forEach(b => { b.onclick = () => openManualAtPage(b.dataset.id, Number(b.dataset.page)); });
-  trackEvent("asked AI");
+      <div class="ask-fb" data-q="${escapeHtml(question)}">
+        <span class="ask-fb-q">Did this help?</span>
+        <button class="ask-fb-btn" data-fb="up" type="button" aria-label="Yes, this helped">👍</button>
+        <button class="ask-fb-btn" data-fb="down" type="button" aria-label="No, it missed">👎</button>
+      </div>`;
+  // Opening a source = a quiet "yes, this pointed me somewhere useful."
+  box.querySelectorAll(".ask-ai-cite").forEach(b => {
+    b.onclick = () => { askMarkEngaged(question); trackEvent("AI opened source: " + question); openManualAtPage(b.dataset.id, Number(b.dataset.page)); };
+  });
+  wireAskFeedback(box, question);
+  // Log EVERY answer with whether the AI actually had a manual to lean on, so
+  // even the guys who close it without tapping still tell us what they needed.
+  const grounded = passages.length ? ("grounded:" + passages.length + "p") : "no-manual-match";
+  trackEvent("AI answered [" + grounded + "]: " + question);
+  askLastAnswer = { question: question, ts: Date.now(), engaged: false };
+}
+
+// Re-ask / engagement tracking. If a tech gets an answer, doesn't tap anything,
+// and fires a reworded question soon after, that silence is itself a signal the
+// first answer missed — logged as a quiet thumbs-down.
+let askLastAnswer = null;
+function askMarkEngaged(question) { if (askLastAnswer && askLastAnswer.question === question) askLastAnswer.engaged = true; }
+function askNoteReask(nextQuestion) {
+  const prev = askLastAnswer;
+  if (!prev || prev.engaged || prev.question === nextQuestion) return;
+  if (Date.now() - prev.ts > 5 * 60 * 1000) return;   // only a fresh follow-up counts
+  trackEvent("AI reasked: " + prev.question + " -> " + nextQuestion);
+  prev.engaged = true;   // don't double-count if they reword again
+}
+
+// Thumbs + reason chips on an answer card. One tap on 👍, or one tap on a 👎
+// reason, is all it takes — anything typed in the note rides along.
+function wireAskFeedback(box, question) {
+  const fb = box.querySelector(".ask-fb");
+  if (!fb) return;
+  fb.querySelector('[data-fb="up"]').onclick = () => {
+    askMarkEngaged(question);
+    trackEvent("AI up: " + question);
+    fb.innerHTML = `<span class="ask-fb-done">✓ Thanks — glad it helped.</span>`;
+  };
+  fb.querySelector('[data-fb="down"]').onclick = () => {
+    askMarkEngaged(question);
+    fb.classList.add("ask-fb-open");
+    fb.innerHTML = `
+      <span class="ask-fb-q">What was off?</span>
+      <div class="ask-fb-reasons">
+        <button class="ask-fb-reason" data-r="wrong info" type="button">Wrong info</button>
+        <button class="ask-fb-reason" data-r="not in manual" type="button">Not in manual</button>
+        <button class="ask-fb-reason" data-r="too vague" type="button">Too vague</button>
+        <button class="ask-fb-reason" data-r="wrong equipment" type="button">Wrong equipment</button>
+      </div>
+      <input class="ask-fb-note" type="text" placeholder="What were you looking for? (optional)" maxlength="200">`;
+    const noteEl = fb.querySelector(".ask-fb-note");
+    fb.querySelectorAll(".ask-fb-reason").forEach(rb => {
+      rb.onclick = () => {
+        const note = (noteEl.value || "").trim();
+        trackEvent("AI down [" + rb.dataset.r + "]: " + question + (note ? " -- " + note : ""));
+        fb.innerHTML = `<span class="ask-fb-done">✓ Thanks — we'll tighten this up.</span>`;
+      };
+    });
+  };
 }
 
 // The "Get a direct answer" control above the results (only when the relay is
@@ -5764,7 +5823,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v136";
+const APP_VERSION = "v137";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
