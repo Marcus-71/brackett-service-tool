@@ -16980,6 +16980,8 @@ const GENERATORS = [
   ],
   "manuals": [
    { "title": "Protector QS 22-60 kW Liquid-Cooled - Spec Sheet (Evolution)", "docType": "spec", "seedFile": "generac-protector-qs-22-60kw-liquidcooled-spec.pdf" },
+   { "title": "Protector Spark-Ignited Owner's Manual (0K8185) - RG022-RG060 2.4L", "docType": "owner", "seedFile": "generac-protector-qs-owners-manual-0k8185.pdf" },
+   { "title": "Protector G2.4L Wiring Diagram (with electronic start)", "docType": "wiring", "seedFile": "generac-protector-qs-2p4l-wiring-diagram.pdf" },
    { "title": "Protector RG048/060/080 4.5L Liquid-Cooled - Spec Sheet", "docType": "spec", "seedFile": "generac-protector-rg048-080-4p5l-liquidcooled-spec.pdf" },
    { "title": "Protector 48/60/80 kW 4.5L - Owner's Manual", "docType": "owner", "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf" },
    { "title": "LC Product (Evolution or Nexus Control) - Diagnostic Manual (0J1195) - per-code flowcharts", "docType": "diagnostic", "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf" },
@@ -17029,6 +17031,7 @@ const GENERATORS = [
   ],
   "manuals": [
    { "title": "Protector RG025-060 Legacy 3600 rpm - Spec Sheet (Bulletin 0L0037SBY-N)", "docType": "spec", "seedFile": "generac-protector-rg-legacy-3600rpm-spec.pdf" },
+   { "title": "Protector Spark-Ignited Owner's Manual (0K8185)", "docType": "owner", "seedFile": "generac-protector-qs-owners-manual-0k8185.pdf" },
    { "title": "LC Product (Evolution or Nexus Control) - Diagnostic Manual (0J1195)", "docType": "diagnostic", "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf" },
    { "title": "D1.5 & D2.2L Engine Service Manual (10000022779)", "docType": "service", "seedFile": "generac-d1p5-d2p2l-engine-service-manual.pdf" },
    { "title": "Liquid-Cooled 2.4L (R-200B) - Diagnostic Repair Manual", "docType": "diagnostic", "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf" },
