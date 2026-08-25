@@ -4061,6 +4061,7 @@ const MODEL_PATTERNS = [
   // --- Carrier / Bryant / Payne ---
   { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["Full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'."] },
   { re: /^59TP6/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96 two-stage furnace (59TP6)", notes: ["Install/service manual is in Manuals → Carrier."] },
+  { re: /^59TN[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 96 two-stage variable-speed gas furnace (59TN6)", notes: ["Infinity communicating control - the Carrier Infinity major.minor status-code table in Error Codes (same family as the 59MN7C) applies.", "Install/service manual (59TN6B) is in Manuals → Carrier."] },
   { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["Uses the standard Carrier flash-code board — see Bryant/Payne flash codes in Error Codes."] },
   { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Standard flash-code list in Error Codes applies to most non-communicating models."] },
   // Payne-branded — same Carrier Corp platform, one standard tier (no
@@ -4069,6 +4070,7 @@ const MODEL_PATTERNS = [
   // field will come back blank for these, and that's correct, not a bug.
   { re: /^PG(9[0-9]|8[0-9])[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Payne-branded gas furnace (Carrier platform)", notes: ["Payne = Carrier — the standard Carrier/Bryant/Payne flash-code list in Error Codes applies.", "No official source documents a Payne serial date format — the tag's own date/warranty info is more reliable than a guess."] },
   { re: /^2[4567][A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity/Performance/Comfort AC or heat pump (24/25/26/27-series)", notes: ["24VNA9/25VNA8: full 39-code fault table is in Error Codes."] },
+  { re: /^G[AH][0-9][ST]AN/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier/Bryant Builder (new-construction) R-454B AC (GA) / heat pump (GH) - GA4SAN5 / GA5SAN5 / GA8TAN5, GH5SAN5 / GH8TAN5", notes: ["R-454B (A2L) Builder tier - the SAME model number is sold under both Carrier and Bryant badges. NO diagnostic control board: single-stage (GA4/GA5/GH5) are contactor-only; two-stage GA8TAN5 / GH8TAN5 troubleshoot on compressor winding / unloader tests, no LED fault table.", "Read GH8TAN5 as G (Builder tier) H (heat pump; A = air conditioner) 8 (efficiency; 4/5 = single-stage, 8 = two-stage) T (compressor: S single-stage, T two-stage) A N 5 (R-454B), then capacity digits.", "Install manuals for GA4SAN5 / GA8TAN5 / GH8TAN5 are in Manuals → Carrier. Charge R-454B by the metering device: piston = superheat, TXV = subcooling."] },
   { re: /^P[AH](8T|5S|4S|13|14|15|16)[A-Z]/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Payne-branded AC or heat pump (Carrier platform)", notes: ["Payne = Carrier — standard fault-code list in Error Codes applies where the board matches."] },
   // Bryant-branded furnaces use a bare 3-digit-plus-letter model number (no
   // brand prefix at all), confirmed against Bryant's own product literature —
@@ -4080,16 +4082,20 @@ const MODEL_PATTERNS = [
   // service manual, which documents Bryant units on the same numbering.
   { re: /^(1[0-9]{2}|2[0-9]{2})[TSV]AN/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant-branded AC or heat pump (Carrier platform)", notes: ["Bryant = Carrier — standard fault-code list in Error Codes applies where the board matches."] },
   // Mini-split platform shared across Carrier/Bryant/Payne badges.
-  { re: /^(3[78]M|40M|45M|538K|615[AP]HA|DHM|D5MAHA)/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier/Bryant/Payne-branded ductless mini-split", notes: ["Same underlying mini-split platform is sold under all three badges."] },
+  { re: /^45MUAA/, brand: "Carrier", equipment: "Air Handler", series: "Carrier Comfort Crossover ducted air handler (45MUAAQ) for 37M/38M mini-split systems - R-454B", notes: ["This is the DUCTED indoor air handler that pairs with a 37MURAQ / 38MURAQ mini-split outdoor unit, not a wall head. Same Samsung/Toshiba-Carrier ductless code scheme (EC / EH / EL / PC) as the mini-split system in Error Codes.", "Placed ahead of the generic 45M mini-split rule so it is labeled as the air handler it actually is."] },
+  { re: /^(3[78]M|40M|45M|538K|615[AP]HA|619[AMP]H|DHM|D5MAHA)/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier/Bryant/Payne-branded ductless mini-split", notes: ["Same underlying mini-split platform is sold under all three badges."] },
   { re: /^(F[EJTM]5|FE4A|FE5A|FV4C|FX4D|FB4C|PF5M)[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne air handler", notes: [] },
+  { re: /^(FT4|FF[0-9M]|FZ[0-9]|F54)[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne current residential fan coil - FT4B, FF-series, FZ-series, F54 (R-454B-ready lineup)", notes: ["Current-generation Carrier fan coils. R-454B-ready models carry the A2L RDS / Dissipation control board (LED codes) - a blower running with no thermostat call can be a leak-mitigation response, not a fault.", "This rule DELIBERATELY excludes the FM* prefixes: Carrier's FMA/FMC/FMU overlap ICP/Heil's F_M4X fan coils (matched by the ICP rule). Confirm the badge before decoding an FM* fan coil.", "No numbered fault code on the blower itself - diagnose blower relay, motor, transformer and the RDS board."] },
   // Prior-generation fan coils, confirmed against Carrier's own product data
   // (FA4A-9PD covers FA4A/FB4A/FC4B; FY4A/FA4C product data on Carrier docs).
   { re: /^(FA4[AC]|FB4[AB]|FC4[BC]|FY4[AC]|FX4[ABC])[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne fan coil (FA4/FB4/FC4/FY4/FX4 — prior generation)", notes: [] },
   { re: /^CNPV[PTU][0-9]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant/Payne cased N coil (CNPVP/CNPVT)", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs.", "Metering device decides the charging method: piston/fixed orifice = charge by SUPERHEAT (chart method in the Charging Calc), TXV = charge by SUBCOOLING. Check which this coil actually has."] },
+  { re: /^C(AAMP|VAMA|VAVA)/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant/Payne R-454B cased coil - CAAMP (cased A-coil), CVAMA / CVAVA (cased V-coil) with A2L Refrigerant Detection System", notes: ["R-454B (A2L). This coil carries the A2L mitigation hardware: an internal refrigerant leak sensor plus a Dissipation/RDS control board that flashes LED codes and, on a leak, runs the indoor blower and holds the compressor off. A blower running with no call can be the RDS doing its job, not a fault.", "Coil-only tag: system charge and electrical are on the matching outdoor unit's plate. Metering device sets the method: piston = superheat, TXV = subcooling.", "Install manuals (IM-CAAMP / IM-CVAMA / IM-CVAVA) are in Manuals → Carrier."] },
   // Residential/light-commercial packaged units, confirmed against Carrier's
   // own product data (48ES-05PD; shareddocs SUP covering 48/50 ES-EZ-VL-VT).
   // 48TC/48HC rooftops carry the IGC board whose codes are in Error Codes.
-  { re: /^(48|50)(ES|EZ|VL|VT|VG|SD|GC|TC|HC|LC)[A-Z0-9-]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant packaged unit (48 = gas-electric, 50 = electric/heat pump)", notes: ["On 48TC/48HC/Bryant 580J rooftops, the IGC board flash codes (1-9, steady, off) are in Error Codes."] },
+  { re: /^(48|50)(ES|EZ|VL|VT|VG|SD|GC|TC|HC|LC|NG|FE|GE)[A-Z0-9-]/, brand: "Carrier", equipment: "Other", series: "Carrier/Bryant packaged unit (48 = gas-electric, 50 = electric/heat pump; NG = R-454B residential 2-stage gas-electric, FE/GE = R-454B WeatherMaker light-commercial rooftop)", notes: ["On 48TC/48HC/Bryant 580J rooftops, the IGC board flash codes (1-9, steady, off) are in Error Codes.", "48/50FE and 48/50GE light-commercial rooftops use the SystemVu control (R-454B) with its own troubleshooting doc, NOT the IGC flash codes."] },
+  { re: /^5(51|59|81|82)L/, brand: "Carrier", equipment: "Other", series: "Bryant Legacy/Preferred light-commercial packaged rooftop, R-454B - 559L / 551L electric-cool or heat pump, 582L / 581L gas-electric (~5.5-15 ton)", notes: ["R-454B light-commercial rooftop - separate numbering from the 48/50 residential line. Board present; work it from the unit's own service literature (product data PDS582-559L).", "Not a residential split - expect 3-phase power and a light-commercial parts path."] },
   // Confirmed against Carrier's own residential AC/HP service manual (24-25-2SM)
   // and a matching Bryant install manual — the serial format below is real,
   // scoped to split AC/HP units 2006+, and now implemented in decodeSerialAge.
@@ -5892,7 +5898,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v140";
+const APP_VERSION = "v141";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
