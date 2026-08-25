@@ -4014,6 +4014,7 @@ const MODEL_PATTERNS = [
   { re: /^D[CHZ][679]VS/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin FIT inverter outdoor unit (DC/DH/DZ 6-9VS)", notes: ["Full FIT E-code table is in Error Codes.", "Communicating system — check Data 1/2 bus (0.6-0.9VDC bias) on comm issues.", "R-410A and R-32 FIT system service manuals are in Manuals → Daikin."] },
   { re: /^D[CHXZ](17|20)V[SC]/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin FIT/premium inverter outdoor (DZ17VSA / DX20VC / DZ20VC class)", notes: ["E-code table in Error Codes applies (DX20VC/DZ20VC service manual is in Manuals → Daikin — codes E31/E45 are specific to that platform)."] },
   { re: /^D[CH][345]S[QE]/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin R-32 single-stage AC/heat pump (DC3S/DC4S/DC5S/DH4S/DH5S)", notes: ["Copeland CoreSense/ComfortAlert diagnostics — alert codes 01-09 in Error Codes apply.", "R-32 single-stage service manual RS6200301 is in Manuals → Daikin."] },
+  { re: /^D[CHZ]7TC/, brand: "Daikin", equipment: "Condenser/Heat Pump", series: "Daikin R-32 two-stage AC / heat pump (DC7TC air conditioner, DH7TC / DZ7TC heat pump - 17.2 SEER2, 2-5 ton)", notes: ["R-32 (A2L). Two-stage scroll staged by the Daikin One+ / two-stage thermostat. Copeland CoreSense / ComfortAlert alert codes 01-09 in Error Codes apply - same diagnostics platform as the DC/DH single-stage R-32 units; there is no Daikin E-code display on this tier (that is the VS inverter units only).", "Read DH7TCA4810 as D (Daikin) H (heat pump; C = air conditioner - both R-32) 7 (SEER2 tier, ~17) T (two-stage) C (variation) A (major rev) 48 (4 ton) 10 (electrical / minor rev). Capacity code: 18=1.5t, 24=2t, 30=2.5t, 36=3t, 48=4t, 60=5t.", "R-32 two-stage service manual (shared Daikin/Goodman R-32 platform) is in Manuals → Daikin."] },
   { re: /^DR96SN/, brand: "Daikin", equipment: "Gas Furnace", series: "Daikin DR96SN single-stage multi-speed 96-97% furnace (R-32-era lineup)", notes: [] },
   // Prior-generation Daikin unitary, confirmed against Daikin's own spec
   // sheets (SS-DX13SA on daikincomfort.com) and product pages (DP14GM/DP14HM).
@@ -4022,6 +4023,7 @@ const MODEL_PATTERNS = [
   { re: /^DV[0-9]{2}[FP]EC/, brand: "Daikin", equipment: "Air Handler", series: "Daikin DV**FEC/PEC EEV air handler (R-32 FIT indoor)", notes: ["Air-handler code table (EE/Eb/Ed/E5/EF, d/b series, 70-77) in Error Codes applies.", "R-32 FIT system service manual is in Manuals → Daikin."] },
   { re: /^D[FM]VE/, brand: "Daikin", equipment: "Air Handler", series: "DFVE/DMVE EEV-series communicating air handler (Daikin FIT indoor)", notes: ["Air-handler diagnostic codes (EC/EE/EF, d, b series) are in Error Codes."] },
   { re: /^DOZP/, brand: "Daikin", equipment: "Other", series: "Daikin One zone panel (DOZP)", notes: ["Zone error codes 25-95 and DOZP troubleshooting flows are in Diagnostic Help (search 'DOZP')."] },
+  { re: /^(FTXV|RXT)[0-9]{2}[A-Z]/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin Aurora R-32 single-zone wall-mount heat pump - FTXV** indoor / RXT** outdoor (e.g. FTXV12AVJU9 with RXT12AVJU9), low-ambient cold-climate, 20-21 SEER2", notes: ["R-32 (A2L). Swing-inverter cold-climate ductless: up to 100% heating capacity at 5F, operates to -13F. Wi-Fi capable, IR remote.", "Read FTXV12AVJU9 as FTXV (Aurora R-32 wall indoor; RXT = the matching outdoor) 12 (12,000 BTU/h = 1 ton) A (rev) VJU9 (series / 230V). Sizes 09/12/15/18/24.", "Indoor two-character error codes (U/A/C/E/F/H/J/L/P) apply, same scheme as the other Daikin single-zone ductless in Error Codes; service manual is in Manuals → Daikin."] },
   { re: /^(FTXS|FDXS|CTXS|CTXG|CDXS|FVXS|RXS|FTX|FTK|RK|RX)[0-9BX]/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin single-zone ductless indoor/outdoor (wall mount, floor console, slim duct; incl. 19 Series FTK/RK)", notes: ["Full two-character error code table (U/A/C/E/F/H/J/L/P) is in Error Codes.", "19 Series service manual with per-code procedures is in Manuals → Daikin.", "CTXG/CTXS/CDXS/FVXS head-specific checks (PCB jumpers, Hall IC, fan connector voltages) are in Diagnostic Help."] },
   { re: /^(RMXS|[234]MXS|MXS)[0-9]?/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin multi-zone mini-split outdoor unit", notes: ["Multi-zone code table is in Error Codes; branch provider issues are in Diagnostic Help."] },
   // --- Goodman / Amana ---
@@ -5890,7 +5892,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v139";
+const APP_VERSION = "v140";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
