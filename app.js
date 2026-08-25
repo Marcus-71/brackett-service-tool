@@ -4142,6 +4142,17 @@ const MODEL_PATTERNS = [
   // 550.38-TG2Y (in Manuals → York). Legacy R-22, no diagnostic board.
   { re: /^H[0-9]DB[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York/Luxaire/Coleman HDB-series split-system AC condensing unit (Stellar era, e.g. H1DB018S06 = 1.5 ton)", notes: ["Legacy R-22 unit - NO fault-code board. The outdoor box is a contactor, run capacitor and internal compressor protection (high-pressure relief valve + temp sensor) only. Diagnose mechanically; work it with the AC scenarios in Diagnostic Help.", "Charge target (per the tech guide): 15 deg superheat / 15 deg subcooling at the condenser. Over 20 deg subcooling drives condensing temp too high; keep condensing temp under 140 deg F.", "Capacity from the model: 012=1t, 018=1.5t, 024=2t, 030=2.5t, 036=3t, 042=3.5t, 048=4t, 060=5t. The H1DB / H2DB digit is a design series, not tonnage.", "Common field accessories: Start-Assist / Hard-Start kit for low-voltage starting, and a 5-minute off-cycle timer to stop short-cycling.", "Technical Guide 550.38-TG2Y is in Manuals → York. York/JCI publish no public serial-date decode - use the JCI serial lookup for age."] },
   { re: /^H[0-9]RA[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York/Luxaire/Coleman HRA-series split-system heat pump (Stellar era, the heat-pump twin of the HDB air conditioner, e.g. H1RA018S06)", notes: ["Legacy R-22 unit - NO fault-code board. Outdoor box is contactor, capacitor, reversing valve and a defrost control only. Diagnose mechanically; use the heat-pump scenarios in Diagnostic Help.", "Charge target: 15 deg superheat / 15 deg subcooling (verify against the rating plate, and charge in cooling). Capacity code: 018=1.5t, 024=2t, 030=2.5t, 036=3t, 042=3.5t, 048=4t, 060=5t.", "The HDB Technical Guide (550.38-TG2Y, in Manuals → York) covers the shared platform. York/JCI publish no public serial-date decode."] },
+  // --- Added from Tag Scanner telemetry misses (v139, 2026-08-24) ---
+  // York/JCI/Guardian RAC (AC) and RHC (heat pump) value-series split systems.
+  // David scanned RAC13L30B23S; RAC13J...S21 is sold under both York and Guardian.
+  { re: /^RAC[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York/Guardian (Johnson Controls) RAC-series single-stage AC condenser (e.g. RAC13 = 13 SEER R-410A; sold under the York and Guardian value badges)", notes: ["Single-stage R-410A value unit - NO diagnostic board. Contactor, run capacitor and pressure switches only; diagnose mechanically with the AC scenarios in Diagnostic Help.", "Charge by subcooling to the rating-plate target (TXV). Capacity digits = tons: 18=1.5t, 24=2t, 30=2.5t, 36=3t, 42=3.5t, 48=4t, 60=5t (RAC13L30 = 2.5 ton).", "RHC is the heat-pump twin. York/JCI publish no public serial-date decode."] },
+  { re: /^RHC[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York/Guardian (Johnson Controls) RHC-series single-stage heat pump (the heat-pump twin of the RAC air conditioner, R-410A)", notes: ["Single-stage R-410A value unit - NO diagnostic board beyond a defrost control. Use the heat-pump scenarios in Diagnostic Help.", "Charge by subcooling to the rating plate (charge in cooling). Capacity digits = tons: 18=1.5t … 60=5t."] },
+  // Goodman/Amana/Janitrol CK-series legacy R-22 split AC condenser (CK/CKL/CKJ,
+  // 10 SEER, 1.5-5 ton). Scanned as CK30-1B; still common in older homes.
+  { re: /^CK[JL]?[0-9]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman/Amana/Janitrol CK-series legacy R-22 split AC condenser (CK / CKL / CKJ, 10 SEER, 1.5-5 ton; e.g. CK30-1B = 2.5 ton)", notes: ["Legacy R-22 unit - NO diagnostic board. Contactor, run capacitor and internal compressor protection only; diagnose mechanically.", "Capacity code: CK18=1.5t, CK24=2t, CK30=2.5t, CK36=3t, CK42=3.5t, CK48=4t, CK60=5t. The trailing -1 / -1A / -1B / -1D is the revision.", "CKJ = Janitrol badge, CKL = low-profile cabinet; same platform. Goodman service manual RS6100004 covers the CK line."] },
+  // Carrier Infinity 48XZ residential DUAL-FUEL (hybrid heat) PACKAGED unit -
+  // heat pump + gas furnace in one cabinet. Jon scanned 48XZ-060130311 (5 ton).
+  { re: /^48XZ/, brand: "Carrier", equipment: "Other", series: "Carrier Infinity 48XZ dual-fuel (hybrid heat) packaged unit - heat pump + gas-furnace section in one cabinet (Carrier's Infinity packaged line)", notes: ["Communicating Infinity unit - faults report through the Infinity System Control as major.minor status codes, NOT a flash LED. Check the control's fault history first; see Error Codes -> 'Carrier Infinity'.", "It is an all-in-one PACKAGE unit and DUAL FUEL: both the gas-furnace diagnostics AND the heat-pump/AC diagnostics in Diagnostic Help apply. Capacity 060 = 5 ton."] },
   // Air handlers confirmed against JCI's own literature: AHE single-piece
   // 3-position (UIM 697883), AHR technical guide, AVC communicating
   // (york.com), JHET fixed-speed (luxaire.com).
@@ -5879,7 +5890,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v138";
+const APP_VERSION = "v139";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
