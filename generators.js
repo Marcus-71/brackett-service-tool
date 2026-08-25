@@ -16975,13 +16975,17 @@ const GENERATORS = [
    "Numeric alarm codes (1100-2910) are the Evolution scheme; the legacy 3600 rpm platform (a separate family in this tab) uses an older flashing-LED scheme."
   ],
   "tips": [
-   "The full per-code wiring-level troubleshooting is in the 2.4L Diagnostic Repair Manual (Manuals below). The paid Evolution/Nexus liquid-cooled diagnostic manual covers the newer numeric-code platform.",
+   "The full per-code diagnostic flowcharts are in the official LC Product (Evolution or Nexus Control) Diagnostic Manual 0J1195, and engine teardown/torque is in the D1.5/D2.2L Engine Service Manual - both in Manuals below.",
    "Most common field faults: 2720 Low Coolant, 2750/2751 battery, 1100 Overcrank, 1400 High Temperature."
   ],
   "manuals": [
    { "title": "Protector QS 22-60 kW Liquid-Cooled - Spec Sheet (Evolution)", "docType": "spec", "seedFile": "generac-protector-qs-22-60kw-liquidcooled-spec.pdf" },
    { "title": "Protector RG048/060/080 4.5L Liquid-Cooled - Spec Sheet", "docType": "spec", "seedFile": "generac-protector-rg048-080-4p5l-liquidcooled-spec.pdf" },
    { "title": "Protector 48/60/80 kW 4.5L - Owner's Manual", "docType": "owner", "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf" },
+   { "title": "LC Product (Evolution or Nexus Control) - Diagnostic Manual (0J1195) - per-code flowcharts", "docType": "diagnostic", "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf" },
+   { "title": "D1.5 & D2.2L Engine Service Manual (10000022779)", "docType": "service", "seedFile": "generac-d1p5-d2p2l-engine-service-manual.pdf" },
+   { "title": "Protector Series Installation Guidelines - 48 kW", "docType": "install", "seedFile": "generac-protector-installation-guidelines-48kw.pdf" },
+   { "title": "Protector Series Training Reference Book (0E2221) - large ~70 MB", "docType": "other", "seedFile": "generac-protector-series-training-reference-0e2221.pdf" },
    { "title": "Liquid-Cooled 2.4L (R-200B) - Diagnostic Repair Manual (per-code troubleshooting, wiring, torque specs)", "docType": "diagnostic", "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf" },
    { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
   ],
@@ -17025,6 +17029,8 @@ const GENERATORS = [
   ],
   "manuals": [
    { "title": "Protector RG025-060 Legacy 3600 rpm - Spec Sheet (Bulletin 0L0037SBY-N)", "docType": "spec", "seedFile": "generac-protector-rg-legacy-3600rpm-spec.pdf" },
+   { "title": "LC Product (Evolution or Nexus Control) - Diagnostic Manual (0J1195)", "docType": "diagnostic", "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf" },
+   { "title": "D1.5 & D2.2L Engine Service Manual (10000022779)", "docType": "service", "seedFile": "generac-d1p5-d2p2l-engine-service-manual.pdf" },
    { "title": "Liquid-Cooled 2.4L (R-200B) - Diagnostic Repair Manual", "docType": "diagnostic", "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf" },
    { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
   ],
@@ -17101,6 +17107,7 @@ const GENERATORS = [
   "manuals": [
    { "title": "Protector QT 2.4L 60 kW - Owner's Manual (Nexus alarms, fuel, wiring)", "docType": "owner", "seedFile": "generac-protector-qt-2p4l-60kw-nexus-owners.pdf" },
    { "title": "Protector QT 70-150 kW Commercial - Spec Sheet (Nexus, model decode, dimensions)", "docType": "spec", "seedFile": "generac-protector-qt-70-150kw-commercial-spec.pdf" },
+   { "title": "LC Product (Evolution or Nexus Control) - Diagnostic Manual (0J1195) - covers the industrial Nexus", "docType": "diagnostic", "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf" },
    { "title": "H-100 Digital Control Panel - Technical Manual (used on larger QT)", "docType": "diagnostic", "seedFile": "generac-h100-digital-control-panel-technical-manual.pdf" },
    { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
   ],
