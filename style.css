@@ -925,6 +925,16 @@ main {
   font-size: 0.9rem;
   text-align: center;
 }
+.scan-ocr-note {
+  margin: 0.4rem 0 0.2rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--warn, #b8860b);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--warn, #b8860b) 12%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
 
 .home-logo {
   display: block;

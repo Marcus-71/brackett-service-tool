@@ -4137,6 +4137,11 @@ const MODEL_PATTERNS = [
   { re: /^TM9V|^TM9E|^TM8|^TG9S|^TG8S/, brand: "York", equipment: "Gas Furnace", series: "York/Luxaire/Coleman TM/TG gas furnace", notes: ["TM9V install manual is in Manuals → York."] },
   { re: /^YC[JGESD]|^YFK|^YCG/, brand: "York", equipment: "Condenser/Heat Pump", series: "York AC condenser", notes: [] },
   { re: /^Y[HZ][JGEF]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York heat pump", notes: [] },
+  // York/Luxaire/Coleman "Stellar"-era HDB condensing units (H*DB012-060, 1-5 ton)
+  // and their H*RA heat-pump twin. Confirmed against York Technical Guide
+  // 550.38-TG2Y (in Manuals → York). Legacy R-22, no diagnostic board.
+  { re: /^H[0-9]DB[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York/Luxaire/Coleman HDB-series split-system AC condensing unit (Stellar era, e.g. H1DB018S06 = 1.5 ton)", notes: ["Legacy R-22 unit - NO fault-code board. The outdoor box is a contactor, run capacitor and internal compressor protection (high-pressure relief valve + temp sensor) only. Diagnose mechanically; work it with the AC scenarios in Diagnostic Help.", "Charge target (per the tech guide): 15 deg superheat / 15 deg subcooling at the condenser. Over 20 deg subcooling drives condensing temp too high; keep condensing temp under 140 deg F.", "Capacity from the model: 012=1t, 018=1.5t, 024=2t, 030=2.5t, 036=3t, 042=3.5t, 048=4t, 060=5t. The H1DB / H2DB digit is a design series, not tonnage.", "Common field accessories: Start-Assist / Hard-Start kit for low-voltage starting, and a 5-minute off-cycle timer to stop short-cycling.", "Technical Guide 550.38-TG2Y is in Manuals → York. York/JCI publish no public serial-date decode - use the JCI serial lookup for age."] },
+  { re: /^H[0-9]RA[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York/Luxaire/Coleman HRA-series split-system heat pump (Stellar era, the heat-pump twin of the HDB air conditioner, e.g. H1RA018S06)", notes: ["Legacy R-22 unit - NO fault-code board. Outdoor box is contactor, capacitor, reversing valve and a defrost control only. Diagnose mechanically; use the heat-pump scenarios in Diagnostic Help.", "Charge target: 15 deg superheat / 15 deg subcooling (verify against the rating plate, and charge in cooling). Capacity code: 018=1.5t, 024=2t, 030=2.5t, 036=3t, 042=3.5t, 048=4t, 060=5t.", "The HDB Technical Guide (550.38-TG2Y, in Manuals → York) covers the shared platform. York/JCI publish no public serial-date decode."] },
   // Air handlers confirmed against JCI's own literature: AHE single-piece
   // 3-position (UIM 697883), AHR technical guide, AVC communicating
   // (york.com), JHET fixed-speed (luxaire.com).
@@ -4420,6 +4425,35 @@ function decodeSerialAge(brand, serial, equipment) {
   return null;
 }
 
+// Letters an OCR commonly reports for a stamped DIGIT on a faded or embossed
+// data plate. Used ONLY to recover a missed model (see identifyModel) — we turn
+// these letters back into digits and re-test against the known library.
+const OCR_LETTER_TO_DIGIT = { O: "0", D: "0", Q: "0", I: "1", L: "1", Z: "2", S: "5", G: "6", B: "8" };
+
+// Plausible re-reads of a garbled model: every combination of turning the
+// digit-lookalike letters back into digits, fewest changes first (most likely
+// re-read first). Bounded so a long string can't explode.
+function ocrModelCandidates(model) {
+  const chars = model.split("");
+  const pos = [];
+  for (let i = 0; i < chars.length && pos.length < 10; i++) {
+    if (OCR_LETTER_TO_DIGIT[chars[i]]) pos.push(i);
+  }
+  if (!pos.length) return [];
+  const cands = [];
+  const total = 1 << pos.length;
+  for (let mask = 1; mask < total; mask++) {   // skip 0 == the original (already tried)
+    const c = chars.slice();
+    let edits = 0;
+    for (let b = 0; b < pos.length; b++) {
+      if (mask & (1 << b)) { c[pos[b]] = OCR_LETTER_TO_DIGIT[c[pos[b]]]; edits++; }
+    }
+    cands.push({ s: c.join(""), edits });
+  }
+  cands.sort((a, b) => a.edits - b.edits);
+  return cands.slice(0, 600).map(c => c.s);
+}
+
 function identifyModel(rawModel, rawSerial, brandHint) {
   const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
   if (!model) return null;
@@ -4433,6 +4467,26 @@ function identifyModel(rawModel, rawSerial, brandHint) {
         age: decodeSerialAge(p.brand, serial, p.equipment),
         notes: p.notes,
       };
+    }
+  }
+  // Exact match missed. Faded/embossed plates make OCR swap stamped DIGITS for
+  // lookalike LETTERS (0->O, 1->I, 5->S, 8->B, 6->G ...). Try plausible re-reads
+  // against the SAME library; a re-read that lands on a known family is returned
+  // as a SUGGESTION for the tech to confirm on the tag. A wrong re-read matches
+  // nothing, so this can never invent a unit.
+  for (const cand of ocrModelCandidates(model)) {
+    for (const p of MODEL_PATTERNS) {
+      if (p.re.test(cand)) {
+        trackEvent("OCR re-read: " + model + " -> " + cand + " = " + p.brand + " " + p.series);
+        return {
+          model: cand, serial,
+          brand: p.brand, equipment: p.equipment, series: p.series,
+          capacity: decodeCapacity(cand, p.equipment),
+          age: decodeSerialAge(p.brand, serial, p.equipment),
+          notes: p.notes,
+          ocrGuess: true, rawModel: model,
+        };
+      }
     }
   }
   // Not in the offline library — keep whatever the tag itself told us so the
@@ -4670,12 +4724,14 @@ function renderScanResult(info) {
   const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
   const unknown = !info.brand ? `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>` : "";
+  const ocrBanner = info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
   box.innerHTML = `
     <div class="scan-id-card">
       <div class="card">
         <div class="card-top"><div><div class="card-code">${escapeHtml(info.model)}</div>${info.serial ? `<div class="card-sub">S/N ${escapeHtml(info.serial)}</div>` : ""}</div></div>
         ${unknown}
+        ${ocrBanner}
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
         <div class="scan-actions">
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
@@ -5823,7 +5879,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v137";
+const APP_VERSION = "v138";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
