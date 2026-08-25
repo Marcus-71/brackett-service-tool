@@ -2006,6 +2006,7 @@ function genSearchFields(g) {
     ...(g.alarms || []).map(a => a.code + " " + a.name + " " + a.meaning),
     ...(g.warnings || []).map(a => a.code + " " + a.name + " " + a.meaning),
     ...(g.troubleshooting || []).map(x => x.symptom),
+    ...(() => { const st = genStartupFor(g); return st ? (st.groups || []).flatMap(gr => [gr.group, ...(gr.steps || [])]) : []; })(),
     ...(g.manuals || []).map(x => x.title),
     g.fuel, g.years,
   ];
@@ -2061,6 +2062,22 @@ function buildGenCard(g) {
   return card;
 }
 
+// Startup/commissioning is shared by controller platform, not per-family - see GEN_STARTUP in generators.js.
+function genStartupFor(g) {
+  const c = g.controller || "", f = g.family || "";
+  let key = null;
+  if (/Power Zone 200/.test(c)) key = "pz200";
+  else if (/VSCF/.test(c) || /VSCF/.test(f)) key = "evo1";
+  else if (/Evolution 2\.0/.test(c)) key = "evo2";
+  else if (/Evolution 1\.0/.test(c)) key = "evo1";
+  else if (/Nexus/.test(c) && !/Pre-Nexus/.test(c)) key = "nexus";
+  else if (/PowerPact/.test(c) || /PowerPact/.test(f)) key = "powerpact";
+  else if (/CorePower/.test(c) || /CorePower/.test(f)) key = "corepower";
+  else if (/2008 series/.test(f)) key = "series2008";
+  else if (/Pre-Nexus/.test(c) || /LED bezel/.test(f) || /legacy/i.test(f)) key = "legacy_led";
+  return (typeof GEN_STARTUP !== "undefined" && key) ? GEN_STARTUP[key] : null;
+}
+
 function openGenDetail(id, focusModel) {
   const g = genEntries().find(x => x.id === id);
   if (!g) return;
@@ -2095,6 +2112,7 @@ function openGenDetail(id, focusModel) {
     <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}${g.fuel ? " · " + escapeHtml(g.fuel) : ""}${g.years ? " · " + escapeHtml(g.years) : ""}</div>
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
     ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
+    ${(() => { const st = genStartupFor(g); return st ? `<div class="detail-section"><h3>Startup / commissioning</h3>${st.warn ? `<p class="tstat-note"><b>${escapeHtml(st.warn)}</b></p>` : ""}${(st.groups || []).map(gr => `<div class="tstat-ts"><b>${escapeHtml(gr.group)}</b><ol>${(gr.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ol></div>`).join("")}</div>` : ""; })()}
     ${maintRows ? `<div class="detail-section"><h3>Maintenance</h3><table class="tstat-table">${maintRows}</table></div>` : ""}
     ${(g.alarms || []).length ? `<div class="detail-section"><h3>Alarm codes (red - unit shuts down)</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
     ${(g.warnings || []).length ? `<div class="detail-section"><h3>Warnings (yellow - keeps running)</h3><table class="tstat-table">${codeRows(g.warnings)}</table></div>` : ""}
@@ -5913,7 +5931,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v145";
+const APP_VERSION = "v146";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

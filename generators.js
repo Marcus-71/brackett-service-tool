@@ -16902,3 +16902,184 @@ const GENERATORS = [
   "sourceNotes": "Owner's Manual 0G8334 Sec 3.6 p.23-24 (Rev F 03/19/10), Install Manuals 0G8280 / 0G8679, wiring 0G7945 / 0G7946. G0058130 and G0058260 moved here from the Nexus families: their only owner manual is 0G8334 'MANUAL 08 HSB AIR-COOLED' with 2008-series install/wiring docs, no Nexus (0H8358) document. Explicit in the doc titles: 'EV CONTROL PANEL 2008 HSB' (0G7538), 'INSTALL HSB GENERATOR - 2008' (0G8280), 'MANUAL 08 HSB AIR-COOLED' (0G8334, Revision F, 03/19/10 print date)."
  }
 ];
+
+const GEN_STARTUP = {
+  pz200: {
+    warn: "This unit will NOT run in AUTO until it is configured in the Generac Field Pro app over Bluetooth. A solid red OFF LED means it is powered but not yet set up \u2014 don't leave the site until it is in AUTO and tested.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Confirm engine oil is at the FULL mark and the correct fuel is connected \u2014 NG 3.5\u20137.0 in w.c. or LP vapor 10\u201312 in w.c. at the inlet.",
+        "Connect the 12V battery and install the connectivity accessory (Wi-Fi/cellular) per its own manual before configuring.",
+        "Open the enclosure lid; a solid red OFF LED on the controller and external LED panel confirms the unit is powered." ] },
+      { group: "Configure in Field Pro (required to run in AUTO)", steps: [
+        "Download the Generac Field Pro app (Apple App Store or Google Play).",
+        "Log in and follow the on-screen steps to connect to the generator over Bluetooth.",
+        "Follow the guided setup process to configure the generator.",
+        "Set the unit to AUTO on the keypad once guided setup completes." ] },
+      { group: "Register & activate", steps: [
+        "Register the unit in Field Pro during setup, or at register.generac.com (dealers can use G360).",
+        "Activation is automatic once registered if the unit is on Wi-Fi/cellular, otherwise complete it through Field Pro." ] },
+      { group: "Verify automatic operation", steps: [
+        "Verify the generator is OFF, then install the transfer-switch front cover.",
+        "Turn ON the utility supply to the transfer switch (it sits on the utility side).",
+        "Set the generator MLCB (disconnect) to ON (CLOSED), then press AUTO.",
+        "Turn OFF utility to the switch \u2014 the engine cranks and starts after a ~5-second delay and picks up the load.",
+        "Restore utility \u2014 the switch retransfers to utility after ~15 seconds and the engine shuts down about a minute later." ] },
+      { group: "Set the exercise timer", steps: [
+        "Set the exercise timer in Field Pro (weekly/bi-weekly/monthly, 5\u201320 min).",
+        "Cold Smart Start (factory-on) warms the engine 30 s before load below 50\u00b0F (10\u201318 kW) or 20\u00b0F (22\u201328 kW).",
+        "On the 20 kW 208V 3-phase unit, confirm phase rotation and voltage at the disconnect before pressing AUTO." ] }
+    ]
+  },
+  evo2: {
+    warn: "Evolution 2.0 is configured entirely at the LCD panel \u2014 no phone app \u2014 but it will only run in AUTO after an activation code (from activategen.com or 1-888-9ACTIVATE) is entered at the controller. Pressing ESC instead of ENTER during setup locks it in MANUAL-only until the battery, 7.5A fuse, and T1 connector are cycled.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Verify the generator is OFF, set the generator MLCB to OFF, and turn off all breakers/loads the generator will supply.",
+        "Check engine oil and fill to the FULL mark (ships with 5W-30 synthetic, no break-in needed).",
+        "Confirm gaseous fuel lines are purged and leak-tested per code and all fuel shutoff valves are open.",
+        "On first start only, an OVERCRANK fault from trapped air in the fuel line is normal \u2014 clear with OFF then ENTER and retry up to two more times." ] },
+      { group: "Configure the controller (LCD wizard, no app)", steps: [
+        "Power-up launches the Installation Wizard on the LCD \u2014 select language with the arrow keys and press ENTER.",
+        "Select fuel type (NG or LP) and press ENTER; this must match the physical fuel selector knob.",
+        "Choose Cold Smart Start YES/NO, then set Hour, Minute, Month, Date, and Year (hold an arrow to fast-scroll).",
+        "At the \"Activate me (ENT) or ESC\" prompt, press ENTER to activate \u2014 ESC runs the unit in MANUAL only (NOT ACTIVATED)." ] },
+      { group: "Activate", steps: [
+        "Get the activation code at activategen.com (or generac.com > Service & Support > Activate Your Home Standby) or call 1-888-9ACTIVATE (1-888-922-8482) \u2014 you need the unit serial number.",
+        "At the controller, key in each digit with the arrows and ENTER (ESC corrects a digit); re-enter if \"Wrong Passcode\" appears.",
+        "No Mobile Link account or app is needed for AUTO \u2014 Mobile Link is a separate optional remote-monitoring add-on." ] },
+      { group: "Verify automatic operation", steps: [
+        "With the generator OFF, install the transfer-switch cover and turn ON utility to the switch (it transfers to utility).",
+        "Set the generator MLCB to ON (CLOSED) and press AUTO to arm the system.",
+        "Turn OFF utility and confirm the engine starts after the 5-second delay and the switch connects load after a 5- or 30-second delay.",
+        "Restore utility and confirm loads transfer back after ~15 seconds and the engine shuts down after cool-down." ] },
+      { group: "Set the exercise timer", steps: [
+        "In the wizard (or later via the EDIT menu) set the exercise Day/Time; the unit runs 5\u201312 min on that schedule without transferring load unless utility is actually lost.",
+        "Set frequency WEEKLY, BIWEEKLY, or MONTHLY (MONTHLY also picks a day 1\u201328); exercise only runs in AUTO.",
+        "Re-enter date/time any time the battery or control fuse is disconnected (the timer does not auto-adjust for DST)." ] }
+    ]
+  },
+  evo1: {
+    warn: "Configured at the LCD panel \u2014 no phone app. Requires a one-time activation code (activategen.com / 1-888-9ACTIVATE) entered at the controller before it will run in AUTO; skipping it (or pressing ESC) leaves the unit NOT ACTIVATED (manual only) until the battery/fuse are cycled and the wizard re-run.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Verify the generator is OFF, set the generator main breaker to OFF/OPEN, and turn off all breakers the generator will power.",
+        "Check engine oil and fill to the FULL mark (ships with 30-weight organic oil).",
+        "Confirm gaseous fuel lines are purged and leak-tested per code and all shutoff valves are open.",
+        "On first start only, an OVERCRANK fault from trapped air is normal \u2014 clear with OFF then ENTER and retry up to two more times." ] },
+      { group: "Configure the controller (LCD wizard, no app)", steps: [
+        "The Installation Wizard launches on power-up; do all setup at the LCD with the arrow keys and ENTER.",
+        "Select fuel type (NG or LP), choose Cold Smart Start (30 s warm-up below 50\u00b0F when enabled, vs 6 s), and select display language.",
+        "Set current Hour, Minute, Month, Date, Year (hold an arrow 2 s to fast-scroll).",
+        "At \"Activate me (ENT) or ESC\", press ENTER and key in the activation code from activategen.com / 1-888-9ACTIVATE using the unit serial number \u2014 this is one-time and never prompts again." ] },
+      { group: "Verify automatic operation", steps: [
+        "With the generator OFF, reinstall the transfer-switch cover and turn ON utility to the switch; set the generator main breaker to ON/CLOSED.",
+        "Press AUTO to arm the system.",
+        "Turn OFF utility and confirm the engine starts after the factory 10-second delay with load transfer to standby ~5 seconds later.",
+        "Restore utility and confirm loads transfer back after ~15 seconds and the engine shuts down about a minute after re-transfer." ] },
+      { group: "Set the exercise timer", steps: [
+        "Set the exercise Day and Time at the controller; the unit self-exercises weekly for ~5 or 12 min (no load transfer unless utility is actually lost).",
+        "Choose WEEKLY, BIWEEKLY, or MONTHLY (MONTHLY also picks a day 1\u201328); exercise runs only in AUTO.",
+        "Re-enter date/time (and thus the schedule) any time the 12V battery or fuse is disconnected. Change it later via the EDIT menu." ] }
+    ]
+  },
+  nexus: {
+    warn: "Configured at the NEXUS controller \u2014 no phone app. On first battery connect the Installation Assistant asks for an activation code (activategen.com / 1-888-9ACTIVATE); ESC leaves it NOT ACTIVATED (manual only). Never move the transfer-switch handle manually with loads connected.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Get the activation code from activategen.com or 1-888-9ACTIVATE (922-8482) before you begin.",
+        "Verify the transfer switch is in the utility position and do NOT connect the battery until all transfer-switch wiring is complete.",
+        "Make sure utility power is OFF and all priority breakers in the transfer switch are OFF before connecting the battery." ] },
+      { group: "Configure the controller", steps: [
+        "On first battery connection the NEXUS display enters Installation Assistant mode and starts the activation sequence.",
+        "Scroll to the language with the arrows and press ENTER; press ENTER to begin activation (ESC = manual-only / NOT ACTIVATED).",
+        "Key in each digit of the activation code with the arrows and ENTER (ESC corrects a digit).",
+        "Once accepted, follow the prompts to set the current date and time (hour in 24-hour format, then the rest)." ] },
+      { group: "Verify automatic operation", steps: [
+        "Set the generator MLCB OFF and the mode switch OFF, use the transfer handle to the utility position, and turn the distribution-panel 2-pole breaker ON.",
+        "Put the mode switch in MANUAL to warm up the engine, then close the generator main breaker with no load and confirm ~240V line-to-line / ~120V line-to-neutral.",
+        "Shut down, then bring the priority-load breakers ON one at a time until the generator carries full priority load, and recheck gas pressure.",
+        "Set the main breaker ON and mode switch to AUTO, shut OFF utility to simulate an outage, and confirm automatic start and transfer.",
+        "Restore utility, confirm automatic re-transfer and cool-down shutdown, then repeat the outage/restore cycle once more to confirm consistency." ] },
+      { group: "Set the exercise timer", steps: [
+        "From the main menu arrow to 'Edit' and press ENTER, then arrow to the exercise time setting and press ENTER.",
+        "Set the exercise hour (24-hour), minute, and day of week with the arrows and ENTER; the unit then self-exercises weekly.",
+        "Low-speed exercise, if equipped, is factory-enabled and needs no adjustment. Show the owner how to change the schedule." ] }
+    ]
+  },
+  powerpact: {
+    warn: "Simple controller \u2014 no LCD menu or app. The weekly exercise time is whatever day/time you hold the SET EXERCISE button, and it clears if the battery or fused T1 power is disconnected.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Confirm the generator is OFF and open the generator MLCB before prep; turn off all breakers/loads the generator will power.",
+        "Check crankcase oil to the FULL mark with the grade for the ambient temperature.",
+        "Confirm gaseous fuel lines are purged/leak-tested per code and all shutoff valves are open.",
+        "A first-start OVERCRANK from trapped air is normal \u2014 press OFF twice and retry up to two more times.",
+        "Press MANUAL to start, warm up ~5 min, close the MLCB, and confirm output ~236\u2013240V / 62\u201363Hz (118\u2013120V line-to-neutral); load-test toward full rated load 20\u201330 min checking voltage, frequency, fuel pressure and for leaks, then shut down after a 2\u20135 min unloaded cool-down." ] },
+      { group: "Configure / set exercise", steps: [
+        "Put the generator in AUTO (the exerciser only works from AUTO).",
+        "At the day and time you want weekly exercise, hold the SET EXERCISE button for three seconds \u2014 the unit starts, runs a verification cycle, and locks in that day/time.",
+        "To change it later, hold SET EXERCISE again at the new time. The setting is lost if the battery or fused T1 power is disconnected." ] },
+      { group: "Verify automatic operation", steps: [
+        "With the generator OFF and the transfer-switch cover on, restore utility so the switch sits on utility; close the generator MLCB and press AUTO.",
+        "Turn OFF utility and confirm the engine starts after the 5-second delay and load transfers after ~6 seconds (30 seconds in cold weather).",
+        "Restore utility and confirm re-transfer after ~15 seconds and engine shutdown about a minute later." ] }
+    ]
+  },
+  legacy_led: {
+    warn: "LED-bezel controller \u2014 no clock, display, or app. The weekly exercise slot is simply the day/time you hold the Set Exercise Time button; voltage/frequency targets differ by kW size.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Set the main breaker OFF and the AUTO/OFF/MANUAL switch to OFF before connecting the battery (AUTO or MANUAL can crank the engine the instant the battery is connected).",
+        "Turn off both transfer-switch load breakers (T1/T2) and all loads on those circuits.",
+        "Check oil to the FULL mark and confirm gas lines are purged, leak-tested, and open per code.",
+        "On 13/16 kW units a first-start over-crank fault from trapped air is normal.",
+        "Press MANUAL to start, warm up ~5 min, close the main breaker, and confirm output at E1/E2 (7 kW ~242\u2013252V/61\u201363Hz; 10/13/16 kW ~247\u2013249V/57.5\u201359.5Hz); load-test toward 3/4 load, then shut down and switch to OFF." ] },
+      { group: "Configure / set exercise", steps: [
+        "Confirm the AUTO/OFF/MANUAL switch is set to AUTO.",
+        "Hold the Set Exercise Time button several seconds until all red LEDs flash, then release.",
+        "When the LEDs stop flashing (~10 s) the unit runs a ~12-minute exercise cycle and locks in that day/time as the weekly slot.",
+        "There is no clock \u2014 the schedule is simply when you pressed the button, so press it at a time convenient for the homeowner." ] },
+      { group: "Verify automatic operation", steps: [
+        "With the generator breaker off and the switch at OFF, set the transfer switch to UTILITY and restore utility power.",
+        "Close the generator main breaker and set AUTO/OFF/MANUAL to AUTO.",
+        "Turn OFF utility and confirm the engine cranks after a 10-second delay and load transfers after an additional 15-second delay.",
+        "Restore utility and confirm re-transfer after ~15 seconds and engine shutdown about a minute later." ] }
+    ]
+  },
+  series2008: {
+    warn: "8 kW models use a pushbutton EXERCISER switch (no display); 10\u201320 kW models use the keypad Installation Assistant. Never move the transfer-switch handle manually with loads connected.",
+    groups: [
+      { group: "Before you start", steps: [
+        "With all power off, set the generator main breaker and mode switch to OFF and open all priority-circuit breakers.",
+        "Connect the battery per the Owner's Manual; the control runs an interconnect self-test for utility voltage on the DC circuits at power-up.",
+        "Use the transfer handle to move the switch to STANDBY (never with loads connected), press MANUAL to warm up the engine, then close the generator main breaker with no load.",
+        "Verify output (~240V line-to-line / ~120V line-to-neutral; on 8 kW confirm ~60Hz), then shut the breaker and mode switch OFF and restore utility with the transfer handle." ] },
+      { group: "Configure / set exercise", steps: [
+        "8 kW: in AUTO, hold the EXERCISER switch at least 10 seconds and release; the unit starts and runs a ~12-minute cycle to confirm the weekly setting (resets if battery/fuse is pulled).",
+        "10\u201320 kW: on first battery connect the Installation Assistant walks through date/time then exercise day/time; change it later via Escape > Edit > Enter.",
+        "Set the exercise hour (24-hour), minute, and day of week; low-speed exercise, if equipped, is factory-enabled." ] },
+      { group: "Verify automatic operation", steps: [
+        "With utility restored and the generator off, switch the utility feed breaker ON, then close the generator breaker and set the mode switch to AUTO.",
+        "Shut OFF the main utility breaker and confirm the generator starts automatically.",
+        "Restore utility and confirm loads transfer back automatically (check the utility/generator feed-breaker positions).",
+        "Shut utility off again and, once the generator takes over, close each priority breaker one at a time to full priority load, then recheck gas pressure." ] }
+    ]
+  },
+  corepower: {
+    warn: "Generac publishes limited documentation for the CorePower SKU (only the transfer-switch owner's manual). Follow the unit's own control-panel labeling \u2014 the general LED-controller sequence below is a guide; verify at the unit.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Set the main breaker OFF and the mode switch to OFF before connecting the battery.",
+        "Check oil to the FULL mark and confirm gas lines are purged, leak-tested, and open per code.",
+        "Press MANUAL to start, warm up a few minutes, close the main breaker with no load, and confirm ~240V/120V output; then shut down." ] },
+      { group: "Configure / set exercise", steps: [
+        "Put the unit in AUTO.",
+        "If the control has a Set Exercise button, hold it at the desired weekly day/time until it confirms; the setting clears if the battery or fuse is disconnected." ] },
+      { group: "Verify automatic operation", steps: [
+        "With the transfer-switch cover on and utility restored, close the generator main breaker and set the mode switch to AUTO.",
+        "Turn OFF utility and confirm the engine starts and the load transfers.",
+        "Restore utility and confirm re-transfer and cool-down shutdown." ] }
+    ]
+  }
+};
