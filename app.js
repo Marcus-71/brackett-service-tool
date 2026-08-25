@@ -2065,6 +2065,7 @@ function buildGenCard(g) {
 // Startup/commissioning is shared by controller platform, not per-family - see GEN_STARTUP in generators.js.
 function genStartupFor(g) {
   const c = g.controller || "", f = g.family || "";
+  if (g.startupKey && typeof GEN_STARTUP !== "undefined" && GEN_STARTUP[g.startupKey]) return GEN_STARTUP[g.startupKey];
   let key = null;
   if (/Power Zone 200/.test(c)) key = "pz200";
   else if (/VSCF/.test(c) || /VSCF/.test(f)) key = "evo1";
@@ -2134,6 +2135,10 @@ function openGenDetail(id, focusModel) {
 
 // Tag scanner hook: a Generac model on the plate opens its family here.
 function genFamilyForModel(model) {
+  // Liquid-cooled Protector models are alphanumeric (RG/QT/SG + kW) - match them by the model's `lc` prefix before the numeric-only air-cooled logic.
+  const uLC = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const lcFam = genEntries().find(g => (g.models || []).some(m => m.lc && uLC.startsWith(m.lc)));
+  if (lcFam) return lcFam;
   const d = genNormModel(model);
   if (!d) return null;
   // Exact G-number first (G0070430 and G0070431 can sit in different families), then the 4-digit form.
@@ -4243,6 +4248,9 @@ const MODEL_PATTERNS = [
   { re: /^00\d{4}-\d$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form (007043-0 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^00\d{5}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form with the dash dropped (0070430 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^(52|54|55|57|58|59|60|61|62|64|65|67|69|70|71|72|73)\d{2}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["4-digit form (7043 = G0070430 / 007043-0)","Open in Generators for the family: specs, alarm codes, manuals"] },
+  { re: /^RG0\d{2}/, brand: "Generac", equipment: "Generator", series: "Generac Protector liquid-cooled home standby (RG, 22-80 kW, Evolution)", notes: ["LIQUID-COOLED - it has a radiator, coolant and a water pump; do NOT service it like an air-cooled unit.","RG022 = 22 kW ... RG060 = 60 kW, RG080 = 80 kW. The digits after the kW code are a platform code, not a fuel/voltage value.","Open in Generators for specs, the Evolution alarm/warning codes, startup, and the diagnostic manual."] },
+  { re: /^QT\d{3}/, brand: "Generac", equipment: "Generator", series: "Generac Protector QT industrial liquid-cooled (Nexus, 22-150 kW)", notes: ["Industrial liquid-cooled genset on the Nexus 2-line-LCD panel. QT022 = 22 kW ... QT150 = 150 kW.","Open in Generators for the Nexus named-alarm list, startup, and manuals.","This industrial Nexus is NOT the residential air-cooled Nexus - the fault codes differ."] },
+  { re: /^SG\d{3}/, brand: "Generac", equipment: "Generator", series: "Generac SG industrial spark-ignited gaseous (H-100, 35-150 kW)", notes: ["Industrial spark-ignited gaseous genset on the H-100 dual-LCD control panel. SG035 = 35 kW ... SG150 = 150 kW.","Open in Generators for the H-100 alarm channels, startup, and manuals.","Not a Lennox SG rooftop: Generac SG is followed by DIGITS (SG035); Lennox Strategos is SG followed by a letter (SGH)."] },
   // --- end Generac ---
   // --- coverage:york (v123) ---
   { re: /^Y[XZ]V[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York YXV / YZV Affinity, Coleman AC21, Luxaire AL21 - variable-capacity inverter split system, up to 20 SEER, R-410A", notes: ["Two separate fault systems on one unit. The OUTDOOR CONTROL board scrolls plain-English TEXT banners on the outdoor display (no numbers); the INVERTER DRIVE board flashes NUMERIC blink counts on LED602/603/604. Both tables are in Error Codes.","On the outdoor control, a solid RED LED1 means a fault is present; yellow is the normal status heartbeat.","Read faults from the outdoor display: Menu > MODES > FAULT MODE > CURRENT SYSTEM FAULTS. STORED SYSTEM FAULTS keeps the 10 most recent.","Charge Verification mode on the outdoor display gives live superheat, subcool, compressor RPM, EEV step and input watts without hooking up gauges.","Nomenclature YXV36B21SA: Y=York, X=premium AC (Z=premium heat pump), V=20 SEER modulating, 36=capacity MBH code, B=R-410A, 2=208/230-1-60, 1=generation, S=standard (H=hard start kit), A=style letter.","Needs an Hx wi-fi communicating thermostat plus a matched AVV air handler or CM coil for full communicating operation."] },
@@ -5931,7 +5939,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v146";
+const APP_VERSION = "v147";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

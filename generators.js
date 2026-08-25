@@ -1,6 +1,7 @@
 /*
- * Generators tab data - Generac air-cooled home standby, one entry per family
- * (27 families). Built from Generac's own owner's / install manuals, spec
+ * Generators tab data - Generac home standby generators - air-cooled (27
+ * families) plus liquid-cooled Protector RG residential and QT/SG industrial.
+ * Built from Generac's own owner's / install manuals, spec
  * sheets and support.generac.com articles only. Confirm on the unit's data
  * label and controller - code tables shift between controller generations.
  * Shape: see openGenDetail() in app.js.
@@ -16900,6 +16901,274 @@ const GENERATORS = [
    }
   ],
   "sourceNotes": "Owner's Manual 0G8334 Sec 3.6 p.23-24 (Rev F 03/19/10), Install Manuals 0G8280 / 0G8679, wiring 0G7945 / 0G7946. G0058130 and G0058260 moved here from the Nexus families: their only owner manual is 0G8334 'MANUAL 08 HSB AIR-COOLED' with 2008-series install/wiring docs, no Nexus (0H8358) document. Explicit in the doc titles: 'EV CONTROL PANEL 2008 HSB' (0G7538), 'INSTALL HSB GENERATOR - 2008' (0G8280), 'MANUAL 08 HSB AIR-COOLED' (0G8334, Revision F, 03/19/10 print date)."
+ },
+ {
+  "id": "gen-generac-protector-rg-evolution",
+  "series": "Generac (Protector - liquid-cooled)",
+  "family": "Generac Protector RG liquid-cooled home standby (Evolution, 22-80 kW)",
+  "controller": "Evolution (liquid-cooled Protector / Protector QS)",
+  "startupKey": "protector_lc",
+  "kw": ["22","27","32","38","45","48","60","80"],
+  "engine": "2.4L Generac inline-4 (NA on 22/27; turbo+aftercooled on 32/38/45/60, 1800 rpm) or 4.5L Generac inline-4 big-block (NA 48; turbo+aftercooled 60/80, 1800 rpm)",
+  "fuel": "Dual-fuel NG/LP. Fuel pressure at the inlet: 2.4L units 5-14 in w.c. (NG & LP); 4.5L big-block LP 7-14 in w.c., NG 3.5-14 in w.c.",
+  "years": "current",
+  "sort": 5,
+  "models": [
+   { "g": "", "lc": "RG022", "digits": "RG022", "desc": "22 kW, 2.4L, Evolution (Protector QS)" },
+   { "g": "", "lc": "RG027", "digits": "RG027", "desc": "27 kW, 2.4L, Evolution (Protector QS)" },
+   { "g": "", "lc": "RG032", "digits": "RG032", "desc": "32 kW, 2.4L turbo, Evolution (Protector QS)" },
+   { "g": "", "lc": "RG038", "digits": "RG038", "desc": "38 kW, 2.4L turbo, Evolution (Protector QS)" },
+   { "g": "", "lc": "RG045", "digits": "RG045", "desc": "45 kW, 2.4L turbo, Evolution (Protector QS)" },
+   { "g": "", "lc": "RG048", "digits": "RG048", "desc": "48 kW, 4.5L big-block, Evolution" },
+   { "g": "", "lc": "RG060", "digits": "RG060", "desc": "60 kW, 2.4L or 4.5L, Evolution" },
+   { "g": "", "lc": "RG080", "digits": "RG080", "desc": "80 kW, 4.5L big-block turbo, Evolution" }
+  ],
+  "specs": {
+   "oil": "2.4L units: approx 4 qt (3.8 L), full-flow spin-on cartridge. 4.5L big-block: approx 12 qt (11 L). Both hydraulic lifters - NO valve-clearance adjustment exists on these engines.",
+   "oilCapacity": "2.4L ~4 qt (3.8 L); 4.5L big-block ~12 qt (11 L)",
+   "sparkPlug": "Spark plug torque 18 ft-lb (per the 2.4L Diagnostic Repair Manual). Verify the gap against the plug box / engine decal.",
+   "plugGap": "Per engine decal / plug box (not printed as text in the service manual).",
+   "valveClearance": "Hydraulic lifters - no valve-clearance adjustment on the 2.4L or 4.5L engine.",
+   "battery": "2.4L units: Group 26, 525 CCA. 4.5L big-block: Group 27F, 725 CCA. 12V flooded lead-acid.",
+   "airFilter": "See the unit's parts list / owner's manual for the air and oil filter part numbers.",
+   "fuelPressure": "2.4L: 5-14 in w.c. (NG & LP). 4.5L big-block: LP 7-14 in w.c., NG 3.5-14 in w.c. Measured at the generator fuel inlet.",
+   "exercise": "7-day / weekly exerciser, set at the Evolution controller."
+  },
+  "maintenance": [
+   { "interval": "Weekly", "task": "Confirm the unit is in AUTO and the exercise ran; check for alarms/warnings on the Evolution display." },
+   { "interval": "First 25-30 hr, then annually", "task": "Change oil and filter (2.4L ~4 qt, 4.5L ~12 qt); use the oil grade in the owner's manual." },
+   { "interval": "Annually / 2 yr", "task": "Check coolant (50/50 ethylene glycol), spark plugs, air filter, battery, and hoses per the maintenance schedule." }
+  ],
+  "alarms": [
+   { "code": "1100", "name": "Overcrank", "meaning": "Engine cranked but did not start (1101 = fuel pressure dropped during crank). Check fuel supply/pressure, gas valves, spark, and the actuator. First-start overcrank from trapped air is normal - retry." },
+   { "code": "1200", "name": "Overspeed", "meaning": "Engine speed >72 Hz (60 Hz unit) for 3 s, or instantaneous 75 Hz+. Check the Bosch throttle actuator, governor, and fuel." },
+   { "code": "1300", "name": "Low Oil Pressure", "meaning": "Oil pressure below threshold. Check oil level, then the pressure sensor/switch and wiring." },
+   { "code": "1400", "name": "High Temperature", "meaning": "Engine coolant over ~246 F. Check coolant level, water pump, fan, radiator/airflow, and the temp switch." },
+   { "code": "1500", "name": "RPM Sensor Loss", "meaning": "Lost the magnetic pickup / RPM signal during crank or run (also 1516-1521). Check the pickup gap and wiring, and fuel pressure during crank." },
+   { "code": "1600", "name": "Underspeed", "meaning": "Speed below ~83% of rated. Engine overloaded or a throttle/fuel problem." },
+   { "code": "1800", "name": "Overvoltage", "meaning": "Output above ~110-130% of rated. Check the voltage regulator/field and sensing wiring." },
+   { "code": "1900", "name": "Undervoltage", "meaning": "Output below ~80% of rated, zero-cross loss, or field-current fault (1900-1916)." },
+   { "code": "2099", "name": "Wiring Error", "meaning": "High- and low-voltage wiring swapped at install - detected on power-up. Correct the field wiring." },
+   { "code": "2101", "name": "Overload", "meaning": "High DPE field current / overload." },
+   { "code": "2400", "name": "Fuse Problem", "meaning": "The 7.5 A ATO control fuse is missing or blown. Replace and find the cause." },
+   { "code": "2500", "name": "Bosch Actuator", "meaning": "Throttle actuator stuck or not responding (2500-2502). Check the actuator, its harness, and the throttle body." },
+   { "code": "2600", "name": "Ignition Fault", "meaning": "Ignition coils, cam sensor, or crank circuit (2600-2602). Check coil packs and sensors." },
+   { "code": "2650", "name": "Missing Cam", "meaning": "No cam pulses after 4 s of cranking. Check the cam sensor and wiring." },
+   { "code": "2660", "name": "Missing Crank Pulses", "meaning": "No crank pulses - magnetic pickup fault." },
+   { "code": "2720", "name": "Low Coolant", "meaning": "Coolant level low for 5 s+. Check level cold, look for leaks, and check the level sensor." },
+   { "code": "2751", "name": "Very Low Battery", "meaning": "Battery under 9.0 V for 60 s. Load-test/replace the battery; check the charger (T1) and connections." },
+   { "code": "2800", "name": "E-Stop / Aux Shutdown", "meaning": "The external emergency-stop or auxiliary shutdown is not in the ON/run position." },
+   { "code": "1001", "name": "Controller Fault", "meaning": "LCD-to-mainboard communication lost (also 180). Check the ribbon/harness between the display and mainboard." }
+  ],
+  "warnings": [
+   { "code": "2690", "name": "Low Fuel Pressure", "meaning": "Gaseous fuel pressure low. Check the meter/regulator, upstream demand, and pipe sizing." },
+   { "code": "2730", "name": "Exercise Not Set", "meaning": "No exercise schedule programmed - set it at the controller." },
+   { "code": "2750", "name": "Low Battery", "meaning": "Battery under ~12.1 V. Check the battery, connections, and charger." },
+   { "code": "2760", "name": "Battery Problem", "meaning": "Charging/battery fault detected." },
+   { "code": "2770", "name": "Charger Overvoltage", "meaning": "Charger output over ~16.1 V - check the charger." },
+   { "code": "2780", "name": "Charger Missing AC", "meaning": "No T1 utility power to the battery charger - the battery will slowly discharge." },
+   { "code": "2910", "name": "Gaseous Emissions", "meaning": "Rich/lean condition beyond limits for 10 s+ (O2 feedback). Check fuel pressure/quality and the O2 sensor." }
+  ],
+  "installNotes": [
+   "Liquid-cooled: this unit has a radiator, coolant, and a water pump - do NOT service it like an air-cooled unit. Check coolant (50/50 ethylene glycol) cold.",
+   "The trailing digits after the kW code in the model string (e.g. the 24 in RG02224) are a platform/generation code, NOT a second kW or fuel value - don't decode them; look up the full RG string for the exact SKU.",
+   "Numeric alarm codes (1100-2910) are the Evolution scheme; the legacy 3600 rpm platform (a separate family in this tab) uses an older flashing-LED scheme."
+  ],
+  "tips": [
+   "The full per-code wiring-level troubleshooting is in the 2.4L Diagnostic Repair Manual (Manuals below). The paid Evolution/Nexus liquid-cooled diagnostic manual covers the newer numeric-code platform.",
+   "Most common field faults: 2720 Low Coolant, 2750/2751 battery, 1100 Overcrank, 1400 High Temperature."
+  ],
+  "manuals": [
+   { "title": "Protector QS 22-60 kW Liquid-Cooled - Spec Sheet (Evolution)", "docType": "spec", "seedFile": "generac-protector-qs-22-60kw-liquidcooled-spec.pdf" },
+   { "title": "Protector RG048/060/080 4.5L Liquid-Cooled - Spec Sheet", "docType": "spec", "seedFile": "generac-protector-rg048-080-4p5l-liquidcooled-spec.pdf" },
+   { "title": "Protector 48/60/80 kW 4.5L - Owner's Manual", "docType": "owner", "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf" },
+   { "title": "Liquid-Cooled 2.4L (R-200B) - Diagnostic Repair Manual (per-code troubleshooting, wiring, torque specs)", "docType": "diagnostic", "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf" },
+   { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
+  ],
+  "sourceNotes": "Generac Protector QS 22-60 kW spec sheet, RG048-080 4.5L spec sheet, 48-80 kW 4.5L owner's manual, and the Liquid-Cooled 2.4L (R-200B) Diagnostic Repair Manual. Numeric Evolution liquid-cooled alarm/warning codes cross-checked against a public transcription of the Evolution/Nexus Liquid-Cooled diagnostic manual and the free 2.4L service manual; verify against the unit's own literature."
+ },
+ {
+  "id": "gen-generac-protector-rg-legacy-3600",
+  "series": "Generac (Protector - liquid-cooled)",
+  "family": "Generac Protector RG legacy 3600 rpm liquid-cooled (25-60 kW)",
+  "controller": "Evolution / R-200B (legacy 3600 rpm liquid-cooled)",
+  "startupKey": "protector_lc",
+  "kw": ["25","30","36","45","60"],
+  "engine": "1.5L Generac (25/30 kW) or 2.4L Generac (36/45/60 kW), 3600 rpm",
+  "fuel": "Dual-fuel NG/LP. Fuel pressure 5-14 in w.c. at the inlet.",
+  "years": "legacy (Bulletin 0L0037SBY-N)",
+  "sort": 6,
+  "models": [
+   { "g": "", "lc": "RG025", "digits": "RG025", "desc": "25 kW, 1.5L, 3600 rpm" },
+   { "g": "", "lc": "RG030", "digits": "RG030", "desc": "30 kW, 1.5L, 3600 rpm" },
+   { "g": "", "lc": "RG036", "digits": "RG036", "desc": "36 kW, 2.4L, 3600 rpm" },
+   { "g": "", "lc": "RG045", "digits": "RG045", "desc": "45 kW, 2.4L, 3600 rpm (legacy)" },
+   { "g": "", "lc": "RG060", "digits": "RG060", "desc": "60 kW, 2.4L, 3600 rpm (legacy)" }
+  ],
+  "specs": {
+   "oil": "25-45 kW: approx 4 qt (3.8 L). 60 kW: approx 5.25 qt (4.96 L). Full-flow spin-on filter.",
+   "oilCapacity": "25-45 kW ~4 qt; 60 kW ~5.25 qt",
+   "battery": "Group 26, 525 CCA. 12 V 15 A charger on 25/30 kW, 30 A on 36-60 kW.",
+   "fuelPressure": "5-14 in w.c. (NG & LP) at the generator inlet.",
+   "exercise": "Weekly exerciser at the controller."
+  },
+  "maintenance": [
+   { "interval": "Weekly", "task": "Confirm AUTO and that the exercise ran; check the display for alarms." },
+   { "interval": "Annually / per hours", "task": "Oil and filter change; check coolant (2 gal on 25/30 kW, 2.5 gal on 36-60 kW), battery, and belts." }
+  ],
+  "installNotes": [
+   "This is the older 3600 rpm liquid-cooled platform (R-200B board). It generally uses an older flashing-LED / limited-code diagnostic scheme rather than the full numeric 1100-2910 code list on the current Evolution units - read the board and the unit's own manual before applying a code table.",
+   "Liquid-cooled: radiator/coolant/water pump - check coolant cold; do not service like an air-cooled unit."
+  ],
+  "tips": [
+   "Use the 2.4L Diagnostic Repair Manual (Manuals below) for component tests and wiring on the 2.4L 36-60 kW units."
+  ],
+  "manuals": [
+   { "title": "Protector RG025-060 Legacy 3600 rpm - Spec Sheet (Bulletin 0L0037SBY-N)", "docType": "spec", "seedFile": "generac-protector-rg-legacy-3600rpm-spec.pdf" },
+   { "title": "Liquid-Cooled 2.4L (R-200B) - Diagnostic Repair Manual", "docType": "diagnostic", "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf" },
+   { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
+  ],
+  "sourceNotes": "Generac RG025-060 legacy 3600 rpm spec sheet (Bulletin 0L0037SBY-N) and the Liquid-Cooled 2.4L (R-200B) Diagnostic Repair Manual."
+ },
+ {
+  "id": "gen-generac-protector-qt-nexus",
+  "series": "Generac (Protector - liquid-cooled industrial)",
+  "family": "Generac Protector QT industrial liquid-cooled (Nexus, 22-150 kW)",
+  "controller": "Nexus (industrial liquid-cooled) - 2-line LCD; distinct firmware from the residential air-cooled Nexus",
+  "startupKey": "protector_qt",
+  "kw": ["22","27","30","36","45","48","60","70","80","100","130","150"],
+  "engine": "Generac gaseous: 2.4L (<=60 kW), 6.8L (70-150 kW), 9.0L on the largest. NG/LP.",
+  "fuel": "Natural gas or LP vapor. Fuel pressure at inlet: 5-14 in w.c. (2.4L / <=60 kW), 11-14 in w.c. (6.8L 70-150 kW).",
+  "years": "-",
+  "sort": 7,
+  "models": [
+   { "g": "", "lc": "QT022", "digits": "QT022", "desc": "22 kW, 2.4L, Nexus (e.g. QT02224ANAX)" },
+   { "g": "", "lc": "QT027", "digits": "QT027", "desc": "27 kW, 2.4L, Nexus" },
+   { "g": "", "lc": "QT030", "digits": "QT030", "desc": "30 kW, Nexus (e.g. QT03015)" },
+   { "g": "", "lc": "QT036", "digits": "QT036", "desc": "36 kW, 2.4L, Nexus" },
+   { "g": "", "lc": "QT045", "digits": "QT045", "desc": "45 kW, 2.4L, Nexus (e.g. QT04524)" },
+   { "g": "", "lc": "QT048", "digits": "QT048", "desc": "48 kW, Nexus" },
+   { "g": "", "lc": "QT060", "digits": "QT060", "desc": "60 kW, 2.4L, Nexus" },
+   { "g": "", "lc": "QT070", "digits": "QT070", "desc": "70 kW, 6.8L, Nexus (e.g. QT07068ANAX)" },
+   { "g": "", "lc": "QT100", "digits": "QT100", "desc": "100 kW, 6.8L, Nexus (QT10068)" },
+   { "g": "", "lc": "QT130", "digits": "QT130", "desc": "130 kW, 6.8L, Nexus (QT13068)" },
+   { "g": "", "lc": "QT150", "digits": "QT150", "desc": "150 kW, 6.8L, Nexus (QT15068)" }
+  ],
+  "specs": {
+   "oil": "QT 2.4L 60 kW ~5.25 qt; QT 6.8L 70-150 kW ~5-6 qt. Check the unit's spec sheet.",
+   "oilCapacity": "60 kW ~5.25 qt; 70-150 kW ~5-6 qt",
+   "battery": "60 kW Group 26 525 CCA; 70/80/150 kW Group 24F 525 CCA; 100/130 kW Group 27F 700 CCA. 12 V.",
+   "fuelPressure": "5-14 in w.c. (<=60 kW), 11-14 in w.c. (70-150 kW) at the inlet.",
+   "exercise": "Weekly, ~12-20 min, QuietTest (low-speed) or Normal, set at the Nexus controller."
+  },
+  "maintenance": [
+   { "interval": "Weekly", "task": "Confirm AUTO and exercise; check the Nexus display for alarms/warnings and check coolant cold." },
+   { "interval": "Annually / per hours", "task": "Oil and filter, coolant, air filter, spark plugs, battery per the schedule." }
+  ],
+  "alarms": [
+   { "code": "Low Oil Pressure", "name": "Shutdown", "meaning": "Oil pressure below threshold. Check level, then the sensor/switch." },
+   { "code": "High Coolant Temperature", "name": "Shutdown", "meaning": "Coolant ~257 F / 125 C. Check coolant level, pump, fan, radiator/airflow." },
+   { "code": "Overcrank", "name": "Shutdown", "meaning": "Did not start within the crank cycle (~16 s then five 7 s/7 s cycles, ~90 s). Check fuel, spark, actuator." },
+   { "code": "Overspeed", "name": "Shutdown", "meaning": "+20% for 3 s or +25% instantaneous. Governor/throttle/fuel." },
+   { "code": "RPM Sensor Failure", "name": "Shutdown", "meaning": "Lost the speed signal. Check the magnetic pickup and wiring." },
+   { "code": "Under-frequency", "name": "Shutdown", "meaning": "Below rated frequency for >30 s - overload or fuel/governor." },
+   { "code": "Low Coolant Level", "name": "Shutdown", "meaning": "Coolant level low. Check cold, look for leaks, check the sensor." },
+   { "code": "Missing Cam Pulse", "name": "Shutdown", "meaning": "No cam sensor pulses. Check the cam sensor/wiring." },
+   { "code": "Missing Crank Pulse", "name": "Shutdown", "meaning": "No crank sensor pulses / magnetic pickup fault." },
+   { "code": "Governor Sensor Fault", "name": "Shutdown", "meaning": "Governor/actuator sensor fault." },
+   { "code": "Wiring Error", "name": "Shutdown", "meaning": "Miswire detected on power-up. Correct the field wiring." },
+   { "code": "Undervoltage", "name": "Shutdown", "meaning": "Output below ~60% for 5 s. Regulator/field/sensing." },
+   { "code": "Overvoltage", "name": "Shutdown", "meaning": "Above ~110% for 3 s or ~130% for 0.2 s." },
+   { "code": "Low Battery", "name": "Shutdown", "meaning": "Battery under ~11.9 V for 1 min." },
+   { "code": "Internal Failure", "name": "Shutdown", "meaning": "Controller internal fault that will not clear - cycle power; replace the control if it persists." }
+  ],
+  "warnings": [
+   { "code": "Low Battery", "name": "Warning", "meaning": "Battery under ~12.2 V. Check battery/charger/connections." },
+   { "code": "Low Fuel Pressure", "name": "Warning", "meaning": "Gaseous fuel pressure under ~5 in w.c. Check the meter/regulator and pipe sizing." },
+   { "code": "Canbus Alarm", "name": "Warning", "meaning": "CAN communication fault to an external module." },
+   { "code": "Ignition Alarm", "name": "Warning", "meaning": "Ignition system warning." },
+   { "code": "Maintenance Warning", "name": "Warning", "meaning": "Service interval reached - perform scheduled maintenance." }
+  ],
+  "installNotes": [
+   "The alarms on this INDUSTRIAL Nexus are NAMED, not the numeric 1100-2900 codes of the residential air-cooled Nexus/Evolution - do not read residential numeric codes onto this unit.",
+   "Model decode: QT + kW (3-digit) + engine code (24=2.4L, 68=6.8L) + voltage letter (A=120/240 1ph, G=120/208 3ph-Y, J=120/240 3ph-Delta, K=277/480 3ph, L=346/600) + fuel (N=NG) + enclosure (A=aluminum).",
+   "3-phase: Y (wye) for the G/K/L voltage codes, Delta for the J code."
+  ],
+  "tips": [
+   "Identify the controller first (Nexus 2-line LCD vs H-100 dual LCD) - it decides which fault table and manual to use.",
+   "The QT 60 kW owner's manual (Manuals below) carries the Nexus alarm list, fuel system, and wiring diagrams."
+  ],
+  "manuals": [
+   { "title": "Protector QT 2.4L 60 kW - Owner's Manual (Nexus alarms, fuel, wiring)", "docType": "owner", "seedFile": "generac-protector-qt-2p4l-60kw-nexus-owners.pdf" },
+   { "title": "Protector QT 70-150 kW Commercial - Spec Sheet (Nexus, model decode, dimensions)", "docType": "spec", "seedFile": "generac-protector-qt-70-150kw-commercial-spec.pdf" },
+   { "title": "H-100 Digital Control Panel - Technical Manual (used on larger QT)", "docType": "diagnostic", "seedFile": "generac-h100-digital-control-panel-technical-manual.pdf" },
+   { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
+  ],
+  "sourceNotes": "Generac QT 2.4L 60 kW owner's manual (Nexus alarm list) and QT 70-150 kW commercial spec sheet. Industrial-Nexus named alarms; distinct from the residential air-cooled numeric-code controller."
+ },
+ {
+  "id": "gen-generac-protector-sg-h100",
+  "series": "Generac (Protector - liquid-cooled industrial)",
+  "family": "Generac SG industrial spark-ignited gaseous (H-100 Digital Control Panel, 35-150 kW)",
+  "controller": "H-100 Digital Control Panel (dual 4x20 LCD, 7-button keypad)",
+  "startupKey": "protector_hpanel",
+  "kw": ["35","45","50","60","70","80","100","130","150"],
+  "engine": "Generac spark-ignited gaseous: 4.5L (35-70 kW, turbo on 45+), 9.0L V8 (80-150 kW). NG/LP.",
+  "fuel": "Natural gas 11-14 in w.c. (optional 7-11), or LP. 3-phase.",
+  "years": "-",
+  "sort": 8,
+  "models": [
+   { "g": "", "lc": "SG035", "digits": "SG035", "desc": "35 kW, 4.5L NA" },
+   { "g": "", "lc": "SG045", "digits": "SG045", "desc": "45 kW, 4.5L turbo" },
+   { "g": "", "lc": "SG050", "digits": "SG050", "desc": "50 kW, 4.5L" },
+   { "g": "", "lc": "SG060", "digits": "SG060", "desc": "60 kW, 4.5L turbo" },
+   { "g": "", "lc": "SG070", "digits": "SG070", "desc": "70 kW, 4.5L turbo" },
+   { "g": "", "lc": "SG080", "digits": "SG080", "desc": "80 kW, 9.0L NA" },
+   { "g": "", "lc": "SG100", "digits": "SG100", "desc": "100 kW, 9.0L V8" },
+   { "g": "", "lc": "SG130", "digits": "SG130", "desc": "130 kW, 9.0L V8" },
+   { "g": "", "lc": "SG150", "digits": "SG150", "desc": "150 kW, 9.0L V8" }
+  ],
+  "specs": {
+   "oil": "SG100 (9.0L) ~10 qt (9.5 L). Check the unit's spec sheet for the exact size.",
+   "oilCapacity": "SG100 ~10 qt (9.5 L)",
+   "battery": "12 VDC - see the unit's battery index in the spec sheet.",
+   "fuelPressure": "NG 11-14 in w.c. (optional 7-11) at the inlet.",
+   "exercise": "Weekly/Biweekly/Monthly, configurable duration, at the H-100."
+  },
+  "maintenance": [
+   { "interval": "Weekly", "task": "Confirm the unit is in AUTO; check the H-100 for active alarms/warnings and check coolant cold." },
+   { "interval": "Per hours / calendar", "task": "Oil and filter, coolant, spark plugs, air filter, and battery per the H-100 service reminders." }
+  ],
+  "alarms": [
+   { "code": "Strt Inhib:Oil", "name": "Shutdown", "meaning": "Start inhibited - oil pressure high on a stopped engine (sensor/wiring or a genuinely pressurized crankcase)." },
+   { "code": "Overcrank", "name": "Shutdown", "meaning": "Engine did not start within the crank cycle. Check fuel, ignition, and the actuator." },
+   { "code": "Mult Def Digtl/Analg", "name": "Shutdown", "meaning": "Multiple-definition config conflict - a channel is defined both digital and analog. Fix the panel config." },
+   { "code": "WatchDog Fail", "name": "Shutdown", "meaning": "Controller watchdog timeout - internal fault. Cycle power; replace the control if it persists." },
+   { "code": "HW Overspeed", "name": "Shutdown", "meaning": "Hardware overspeed trip. Governor/throttle/fuel." },
+   { "code": "i2t Gen Tmp HI", "name": "Shutdown", "meaning": "Generator (alternator) thermal I2t - sustained overload heating the windings." },
+   { "code": "300% Rated Cur", "name": "Shutdown", "meaning": "Current reached 300% of rated - short or severe overload." },
+   { "code": "Eng Stall RPM", "name": "Shutdown", "meaning": "Engine stalled / RPM dropped out while running." },
+   { "code": "HTS Comms / SW Fault / Not Sync / Batt Low", "name": "Alarm", "meaning": "Transfer-switch (HTS) faults - comms lost, switch fault, not synchronized, or transfer-switch battery low. A phantom 'enabled' switch that isn't installed throws the comms warning." }
+  ],
+  "warnings": [
+   { "code": "[Channel] HI/LO WARN", "name": "Warning", "meaning": "A monitored channel crossed its warning threshold (non-shutdown). Channels: Oil Temp, Coolant Temp, Oil Pressure, Coolant Level, Fuel Level, Fuel Pressure, Throttle Position, O2/Emissions, Battery Charge Current, Battery Voltage, Average Current/Voltage, Total Power, Frequency, Engine RPM." },
+   { "code": "[Channel] FAULT (Sn)", "name": "Warning", "meaning": "Sensor failure on a monitored channel (open/short). Check the sensor and its wiring." }
+  ],
+  "installNotes": [
+   "The H-100 channels are configurable at install: each monitored value can be set as a warning, a non-shutdown alarm, or a shutdown - so the exact fault list is partly site-specific. Display prefix: Wr = warning, Al = non-shutdown alarm, SD = shutdown; suffix Hi/Lo = threshold direction, Sn = sensor failure.",
+   "Enable only the HTS transfer switches that physically exist (up to 4). A non-existent switch left 'enabled' throws a comms warning."
+  ],
+  "tips": [
+   "The H-100 Control Panel Technical Manual (Manuals below) has the full alarm/channel list, I/O, and exercise setup.",
+   "Read the Alarm Log (timestamped) before physically inspecting - it shows what actually tripped first."
+  ],
+  "manuals": [
+   { "title": "H-100 Digital Control Panel - Technical Manual (fault codes, I/O, exercise setup)", "docType": "diagnostic", "seedFile": "generac-h100-digital-control-panel-technical-manual.pdf" },
+   { "title": "SG100 100 kW Industrial Gaseous - Spec Sheet (H-100)", "docType": "spec", "seedFile": "generac-sg100-industrial-gaseous-spec.pdf" },
+   { "title": "SG035 35 kW Industrial Gaseous - Spec Sheet", "docType": "spec", "seedFile": "generac-sg035-industrial-gaseous-spec.pdf" },
+   { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
+  ],
+  "sourceNotes": "Generac H-100 Control Panel Technical Manual (0F3750) and SG035/SG100 industrial gaseous spec sheets. H-100 named/configurable channel alarms."
  }
 ];
 
@@ -17080,6 +17349,66 @@ const GEN_STARTUP = {
         "With the transfer-switch cover on and utility restored, close the generator main breaker and set the mode switch to AUTO.",
         "Turn OFF utility and confirm the engine starts and the load transfers.",
         "Restore utility and confirm re-transfer and cool-down shutdown." ] }
+    ]
+  },
+  protector_lc: {
+    warn: "Liquid-cooled Protector uses the Evolution controller and needs a one-time activation code (activategen.com / 1-888-9ACTIVATE) entered at the LCD before it will run in AUTO; Wi-Fi/cellular (GGCAC) units auto-activate once connected. It is LIQUID-COOLED - check coolant (50/50) cold as part of startup.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Verify the generator is OFF and the main breaker (MLCB) is OFF.",
+        "Check engine oil to the FULL mark (2.4L ~4 qt, 4.5L ~12 qt) and check coolant (50/50 ethylene glycol) at the recovery bottle COLD.",
+        "Confirm gaseous fuel lines are purged and leak-tested per code and all shutoff valves are open (fuel pressure 5-14 in w.c. at the inlet).",
+        "A first-start OVERCRANK from trapped air in the fuel line is normal - clear with OFF then retry." ] },
+      { group: "Configure the Evolution controller", steps: [
+        "Open the control-panel lid; the Install Wizard launches on power-up. Navigate with the arrows and ENTER.",
+        "Select fuel type (NG or LP), set voltage/phase, then set the current date and time.",
+        "Enter the activation code (from activategen.com or 1-888-9ACTIVATE, using the unit serial number); Wi-Fi/cellular units auto-activate once connected." ] },
+      { group: "Verify automatic operation", steps: [
+        "With the generator OFF, install the transfer-switch cover and turn ON utility to the switch; set the generator MLCB to ON.",
+        "Press AUTO to arm the system.",
+        "Turn OFF utility and confirm the engine starts after the programmable start delay (10-30 s, 10 s standard) and the load transfers.",
+        "Restore utility and confirm the load transfers back and the engine shuts down after cool-down." ] },
+      { group: "Set the exercise timer", steps: [
+        "Set the weekly exercise day/time at the Evolution controller (or in the app on connected units).",
+        "Exercise runs only in AUTO; re-enter date/time if the battery or control fuse is disconnected." ] }
+    ]
+  },
+  protector_qt: {
+    warn: "Industrial Nexus controller - NOT the residential air-cooled Nexus, so its residential numeric codes do not apply. Needs a one-time activation code (activategen.com / 1-888-9ACTIVATE) or it runs MANUAL-only. Liquid-cooled - check coolant cold.",
+    groups: [
+      { group: "Before you start", steps: [
+        "Verify the generator is OFF and the MLCB is OFF; check oil and coolant (50/50) at the recovery bottle COLD.",
+        "Confirm gaseous fuel lines are purged and leak-tested, valves open; fuel pressure 5-14 in w.c. (<=60 kW) or 11-14 in w.c. (70-150 kW).",
+        "Record the unit serial number and get the activation code (activategen.com / 1-888-9ACTIVATE)." ] },
+      { group: "Configure the Nexus controller", steps: [
+        "On first power-up the install wizard runs: set language, enter the activation code, set date/time, select fuel type (NG/LP), and set the exercise schedule (day/time, QuietTest vs Normal, transfer-on-exercise Y/N).",
+        "The interconnect self-test checks for utility voltage mis-wired onto the DC control terminals - if it locks out, correct the wiring and cycle power (it reruns every power-up)." ] },
+      { group: "Verify automatic operation", steps: [
+        "Confirm the transfer switch/HTS is enabled and the generator MLCB is ON.",
+        "Press AUTO, then simulate a utility outage and confirm the engine starts (Nexus crank cycle ~16 s then five 7 s/7 s cycles, ~90 s before Overcrank) and the load transfers.",
+        "Restore utility and confirm re-transfer and cool-down shutdown; run one exercise cycle to confirm." ] },
+      { group: "Set the exercise timer", steps: [
+        "Set the weekly exercise (day/time, duration, QuietTest/Normal) at the Nexus controller.",
+        "Set the maintenance-interval reminders; leave installed-at hours at zero except at commissioning." ] }
+    ]
+  },
+  protector_hpanel: {
+    warn: "H-100 Digital Control Panel (dual LCD). Alarm/warning/shutdown channels are configurable at install, and a non-existent HTS transfer switch left 'enabled' throws a comms warning. Needs an activation code (activategen.com / 1-888-9ACTIVATE).",
+    groups: [
+      { group: "Before you start", steps: [
+        "Verify the generator is OFF and the breaker OFF; check oil (SG100 ~10 qt), coolant (~5.5 gal, 50/50) COLD, and battery.",
+        "Confirm gaseous fuel lines are purged and leak-tested, valves open; NG 11-14 in w.c. (optional 7-11) at the inlet.",
+        "Record the serial number and get the activation code (activategen.com / 1-888-9ACTIVATE)." ] },
+      { group: "Configure the H-100", steps: [
+        "On first power-up run the install wizard: set language, load config from USB if replacing the panel, activate, set date/time, select fuel type, and set the exercise schedule.",
+        "Enable only the HTS transfer switches that physically exist (up to 4, via GenLink or the front panel) - a phantom enabled switch throws a comms warning.",
+        "Set the alarm/warning/shutdown thresholds for the monitored channels (oil temp/pressure, coolant temp/level, fuel level/pressure, O2, battery, current/voltage, frequency, RPM) per the job." ] },
+      { group: "Verify automatic operation", steps: [
+        "Confirm the generator breaker is ON and the mode is set for testing.",
+        "Simulate a utility outage and confirm automatic start and transfer; verify 3-phase output per the winding config (Y for G/K/L voltage codes, Delta for J).",
+        "Restore utility, confirm re-transfer and cool-down, and verify alarms acknowledge and clear correctly." ] },
+      { group: "Maintenance reminders", steps: [
+        "Tie service reminders to hours, calendar date, or run count in the H-100; leave installed-at hours at zero except at initial commissioning." ] }
     ]
   }
 };
