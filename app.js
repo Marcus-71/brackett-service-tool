@@ -4720,6 +4720,72 @@ function scanStatus(msg) {
   else el.classList.add("hidden");
 }
 
+// Failed-scan photo storage — when OCR can't read a tag, keep the photo on
+// THIS phone (IndexedDB, separate tiny DB) so the tech can send it to Andy or
+// show it on-site. Nothing leaves the device automatically. Keeps the newest 20.
+const FAILED_SCANS_DB = "bfc-failed-scans-db";
+const FAILED_SCANS_STORE = "scans";
+function openFailedScansDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(FAILED_SCANS_DB, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(FAILED_SCANS_STORE)) {
+        db.createObjectStore(FAILED_SCANS_STORE, { keyPath: "id" });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function saveFailedScan(blob) {
+  try {
+    const db = await openFailedScansDb();
+    const rec = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 8), blob, tech: getTechName(), ts: new Date().toLocaleString() };
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
+      tx.objectStore(FAILED_SCANS_STORE).put(rec);
+      tx.oncomplete = resolve; tx.onerror = () => reject(tx.error);
+    });
+    // prune to newest 20
+    const all = await new Promise((resolve, reject) => {
+      const tx = db.transaction(FAILED_SCANS_STORE, "readonly");
+      const r = tx.objectStore(FAILED_SCANS_STORE).getAll();
+      r.onsuccess = () => resolve(r.result || []); r.onerror = () => reject(r.error);
+    });
+    if (all.length > 20) {
+      all.sort((a, b) => (a.id < b.id ? -1 : 1));
+      const drop = all.slice(0, all.length - 20);
+      const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
+      drop.forEach(d => tx.objectStore(FAILED_SCANS_STORE).delete(d.id));
+    }
+    return rec;
+  } catch (e) { return null; }
+}
+// Let the tech hand the photo off: native share sheet (Messages/email/etc.)
+// where supported, otherwise download the image so they can attach it manually.
+async function sendFailedScan(blob, rec) {
+  const name = "unreadable-tag-" + (rec && rec.tech ? rec.tech.replace(/\s+/g, "") + "-" : "") + Date.now() + ".jpg";
+  const file = new File([blob], name, { type: blob.type || "image/jpeg" });
+  const caption = "Tag the scanner couldn't read" + (rec && rec.tech ? " — " + rec.tech : "") + (rec && rec.ts ? " — " + rec.ts : "");
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: "Unreadable HVAC tag", text: caption });
+      trackEvent("sent unreadable tag photo");
+      return;
+    }
+  } catch (e) {
+    if (e && e.name === "AbortError") return; // tech dismissed the share sheet
+  }
+  // Fallback: download the image so it lands in Photos/Downloads to attach.
+  const url = URL.createObjectURL(file);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  trackEvent("saved unreadable tag photo to device");
+}
+
 async function scanTagPhoto(file) {
   trackEvent("scanned a tag photo");
   const preview = document.getElementById("scanPreview");
@@ -4735,6 +4801,11 @@ async function scanTagPhoto(file) {
     if (!fields.model) {
       trackEvent("scan unreadable - no model found");
       scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below.");
+      const rec = await saveFailedScan(file);
+      const box = document.getElementById("scanResult");
+      box.innerHTML = `<div class="scan-id-card"><div class="card"><p>📷 Photo saved on this phone. If you can't get a clean scan, send it to Andy and he'll add the unit.</p><div class="scan-actions"><button class="primary-act" id="scanSendFail">📤 Send this photo to Andy</button></div></div></div>`;
+      const btn = document.getElementById("scanSendFail");
+      if (btn) btn.onclick = () => sendFailedScan(file, rec);
     } else {
       renderScanResult(identifyModel(fields.model, fields.serial, fields.brandHint));
     }
@@ -5940,7 +6011,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v150";
+const APP_VERSION = "v151";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
