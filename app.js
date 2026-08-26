@@ -4733,7 +4733,8 @@ async function scanTagPhoto(file) {
     document.getElementById("scanModelInput").value = fields.model;
     document.getElementById("scanSerialInput").value = fields.serial;
     if (!fields.model) {
-      scanStatus("Couldn't confidently find a model number in the photo. Try a straighter, closer, better-lit shot — or type the model number below.");
+      trackEvent("scan unreadable - no model found");
+      scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below.");
     } else {
       renderScanResult(identifyModel(fields.model, fields.serial, fields.brandHint));
     }
@@ -5939,7 +5940,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v149";
+const APP_VERSION = "v150";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
