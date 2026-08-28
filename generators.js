@@ -16940,25 +16940,31 @@ const GENERATORS = [
    { "interval": "Annually / 2 yr", "task": "Check coolant (50/50 ethylene glycol), spark plugs, air filter, battery, and hoses per the maintenance schedule." }
   ],
   "alarms": [
+   { "code": "0180", "name": "Communication Error (display to controller)", "meaning": "The external LCD display board can't communicate with the controller's main board (shown as 0180; the main board's side of the same fault is 1001). Real-world signature: the 7.5 A control fuse blows repeatedly, the On/Manual/Off lights blink, and the gas solenoid cycles on and off. Test: if unplugging the 2-pin connector at the controller stops the fuse from blowing, the fault is in the controller/display circuit. Check the ribbon/harness and the 2-pin connector between the display and the main board first; if the fuse keeps blowing with it connected, replace the controller." },
+   { "code": "1001", "name": "Controller Fault", "meaning": "Main board is not receiving communication from the LCD display board - the main-board side of the 0180 comm fault. Check the ribbon/harness and the 2-pin connector between the display and the main board; replace the controller if it persists." },
    { "code": "1100", "name": "Overcrank", "meaning": "Engine cranked but did not start (1101 = fuel pressure dropped during crank). Check fuel supply/pressure, gas valves, spark, and the actuator. First-start overcrank from trapped air is normal - retry." },
-   { "code": "1200", "name": "Overspeed", "meaning": "Engine speed >72 Hz (60 Hz unit) for 3 s, or instantaneous 75 Hz+. Check the Bosch throttle actuator, governor, and fuel." },
+   { "code": "1200", "name": "Overspeed", "meaning": "Engine speed >72 Hz (60 Hz unit) for 3 s, or instantaneous 75 Hz+ (1200/1201/1205/1206; 1204 = external ignition module reports overspeed). Check the Bosch throttle actuator, governor, and fuel." },
    { "code": "1300", "name": "Low Oil Pressure", "meaning": "Oil pressure below threshold. Check oil level, then the pressure sensor/switch and wiring." },
-   { "code": "1400", "name": "High Temperature", "meaning": "Engine coolant over ~246 F. Check coolant level, water pump, fan, radiator/airflow, and the temp switch." },
-   { "code": "1500", "name": "RPM Sensor Loss", "meaning": "Lost the magnetic pickup / RPM signal during crank or run (also 1516-1521). Check the pickup gap and wiring, and fuel pressure during crank." },
-   { "code": "1600", "name": "Underspeed", "meaning": "Speed below ~83% of rated. Engine overloaded or a throttle/fuel problem." },
-   { "code": "1800", "name": "Overvoltage", "meaning": "Output above ~110-130% of rated. Check the voltage regulator/field and sensing wiring." },
-   { "code": "1900", "name": "Undervoltage", "meaning": "Output below ~80% of rated, zero-cross loss, or field-current fault (1900-1916)." },
+   { "code": "1400", "name": "High Temperature", "meaning": "Engine coolant over ~246 F (1401 = fuel-pressure switch triggered high-temp on NG/LP). Check coolant level, water pump, fan, radiator/airflow, and the temp switch." },
+   { "code": "1500", "name": "RPM Sensor Loss", "meaning": "Lost the magnetic pickup / RPM signal during crank or run (also 1516-1521; 1516/1517 = low fuel pressure during crank/run). Check the pickup gap and wiring, and fuel pressure during crank." },
+   { "code": "1600", "name": "Underspeed", "meaning": "Speed below ~83% of rated (1601 = low fuel pressure before the trip, 1602 = throttle stuck closed). Engine overloaded or a throttle/fuel problem." },
+   { "code": "1800", "name": "Overvoltage", "meaning": "Output above ~110-130% of rated (1800/1801/1803). Check the voltage regulator/field and sensing wiring." },
+   { "code": "1900", "name": "Undervoltage", "meaning": "Output below ~80% of rated, zero-cross loss, or field-current fault (1900-1916; 1904 = no field current - check brushes)." },
    { "code": "2099", "name": "Wiring Error", "meaning": "High- and low-voltage wiring swapped at install - detected on power-up. Correct the field wiring." },
-   { "code": "2101", "name": "Overload", "meaning": "High DPE field current / overload." },
-   { "code": "2400", "name": "Fuse Problem", "meaning": "The 7.5 A ATO control fuse is missing or blown. Replace and find the cause." },
-   { "code": "2500", "name": "Bosch Actuator", "meaning": "Throttle actuator stuck or not responding (2500-2502). Check the actuator, its harness, and the throttle body." },
-   { "code": "2600", "name": "Ignition Fault", "meaning": "Ignition coils, cam sensor, or crank circuit (2600-2602). Check coil packs and sensors." },
-   { "code": "2650", "name": "Missing Cam", "meaning": "No cam pulses after 4 s of cranking. Check the cam sensor and wiring." },
-   { "code": "2660", "name": "Missing Crank Pulses", "meaning": "No crank pulses - magnetic pickup fault." },
+   { "code": "2101", "name": "Overload", "meaning": "Unit overloaded with elevated field current. Remove load or add load-shedding (a load manager)." },
+   { "code": "2400", "name": "Fuse Problem", "meaning": "The 7.5 A ATO control fuse is missing or blown (firmware older than 1.30 flags this directly). Replace it and find the cause - a repeatedly blowing 7.5 A fuse with blinking lights is the classic 0180 comm-fault signature." },
+   { "code": "2500", "name": "Bosch Actuator", "meaning": "Throttle actuator command/feedback mismatch or stuck (2500/2501 stuck open/2502 stuck closed). Check the actuator, its harness, and the throttle body." },
+   { "code": "2600", "name": "Ignition Fault", "meaning": "Ignition coils, cam sensor, or crank circuit (2600/2601 missing cam pulse/2602 crank circuit). Check coil packs and sensors." },
+   { "code": "2611", "name": "Cylinder Overcurrent", "meaning": "Ignition coil-pack current too HIGH on a cylinder (2611-2620 = cylinders 1-10). Test and replace the affected coil pack/boot; check its wiring." },
+   { "code": "2621", "name": "Cylinder Undercurrent", "meaning": "Ignition coil-pack current too LOW on a cylinder (2621-2630 = cylinders 1-10). Test and replace the affected coil pack/boot; check the connector." },
+   { "code": "2650", "name": "Missing Cam", "meaning": "No cam pulses after 4 s of cranking (2650 internal / 2651 external ignition module). Check the cam sensor and wiring." },
+   { "code": "2660", "name": "Missing Crank Pulses", "meaning": "No crank pulses (2660 internal / 2661 external module) - magnetic pickup fault." },
+   { "code": "2671", "name": "CAN Bus Error", "meaning": "External ignition module reports a CAN bus error. Check the module, its CAN wiring, and the controller boot-up sequence." },
    { "code": "2720", "name": "Low Coolant", "meaning": "Coolant level low for 5 s+. Check level cold, look for leaks, and check the level sensor." },
    { "code": "2751", "name": "Very Low Battery", "meaning": "Battery under 9.0 V for 60 s. Load-test/replace the battery; check the charger (T1) and connections." },
-   { "code": "2800", "name": "E-Stop / Aux Shutdown", "meaning": "The external emergency-stop or auxiliary shutdown is not in the ON/run position." },
-   { "code": "1001", "name": "Controller Fault", "meaning": "LCD-to-mainboard communication lost (also 180). Check the ribbon/harness between the display and mainboard." }
+   { "code": "2790", "name": "SEEPROM Abuse", "meaning": "The controller wrote to its EEPROM too many times - possible internal controller failure. If it recurs, replace the controller." },
+   { "code": "2800", "name": "E-Stop / Aux Shutdown", "meaning": "The external emergency-stop or auxiliary shutdown is not in the ON/run position (2800/2801). Check both E-stop and any auxiliary shutdown switches." },
+   { "code": "2810", "name": "Hall Calibration", "meaning": "Hall-effect current sensor not calibrated. Update firmware and reboot the controller; recalibrate per the diagnostic manual." }
   ],
   "warnings": [
    { "code": "2690", "name": "Low Fuel Pressure", "meaning": "Gaseous fuel pressure low. Check the meter/regulator, upstream demand, and pipe sizing." },
@@ -16976,7 +16982,9 @@ const GENERATORS = [
   ],
   "tips": [
    "The full per-code diagnostic flowcharts are in the official LC Product (Evolution or Nexus Control) Diagnostic Manual 0J1195, and engine teardown/torque is in the D1.5/D2.2L Engine Service Manual - both in Manuals below.",
-   "Most common field faults: 2720 Low Coolant, 2750/2751 battery, 1100 Overcrank, 1400 High Temperature."
+   "Most common field faults: 2720 Low Coolant, 2750/2751 battery, 1100 Overcrank, 1400 High Temperature.",
+   "Code 0180 = the display can't talk to the main board. If the 7.5 A fuse keeps blowing and the On/Manual/Off lights blink, unplug the 2-pin connector at the controller: if the fuse stops blowing, the controller/display circuit is the fault - usually a controller replacement.",
+   "Diesel-only codes (2672 diesel ECU CAN, 2680/2700 fuel level, 2710 ruptured tank, 2900 diesel ECU fault) exist on diesel liquid-cooled units but do NOT appear on this spark-ignited NG/LP unit."
   ],
   "manuals": [
    { "title": "Protector QS 22-60 kW Liquid-Cooled - Spec Sheet (Evolution)", "docType": "spec", "seedFile": "generac-protector-qs-22-60kw-liquidcooled-spec.pdf" },
