@@ -20800,4 +20800,75 @@ const SYMPTOMS = [
 {"id":"s-lennox-g25mv-ram-control-sequence","equipment":"Gas Furnace","title":"Lennox G25MV - inducer runs forever, or lockout, on the RAM burner control","summary":"The G25MV uses a RAM Electronics burner control that behaves differently from every other Lennox board of the era: a single LED with flash counts, and an inducer that will run indefinitely rather than fault.","steps":["Key behaviour: on a call for heat the combustion air blower starts. If the combustion air prove switch does NOT close, the combustion air blower continues to run indefinitely until it does. A G25MV that just runs the inducer and never lights is this - check the prove switch and vent.","If the prove switch does close, the inducer pre-purges 30 seconds, then the hot surface energizes for 35 seconds, then the main gas valve opens on high fire with a 7 second trial for ignition.","Flame current must be between 1 and 5 microamps to keep the gas valve open. Below 1 microamp during the trial the control shuts down the ignitor, inducer and gas valve.","Three trials total, each starting with a fresh 30 second pre-purge. After the third failure the control locks out for 60 minutes. Manual reset by momentarily turning off power to the unit.","Indoor blower starts 45 seconds after flame is sensed. Post-purge is 5 seconds.","The LED table is flash counts: steady on = control failure, slow flash = idle, fast flash = heat call, 2 = flame lockout, 3 = pressure switch, 4 = open limit, 5 = flame sensed with valve off, 6 = failed hot surface ignitor. This is NOT the generic Lennox flash list - the numbers mean different things.","Later G25MV units may carry a White-Rodgers HSI ignition board instead of the RAM control - confirm the board before using this table."],"confidence":"common","safety":"The RAM burner control is not field repairable. If it is inoperable, replace the entire control."},
 {"id":"s-lennox-g29m-egc3ace-hard-lockout","equipment":"Gas Furnace","title":"Lennox G29M - EGC-3ACE control in hard lockout, and the reset sequence that actually works","summary":"The G29M two-stage export furnace uses an EGC-3ACE DSI board, not SureLight. Its hard lockout does not clear by cycling the thermostat alone and its LED table is its own.","steps":["Hard lockout reset sequence, in this order: 1) turn off the power to the furnace. 2) Move the thermostat control from HEAT to OFF. 3) Turn on the power to the furnace. 4) Move the thermostat control from OFF to HEAT. Skipping a step leaves it locked out.","Two states put the board into hard lockout: failed ignition (both DIAG LEDs flashing alternately) and flame failure / flame sensed without valve power.","The board has a RED diagnostic button - depress and hold it to display the last failure code - and a diagnostic code erase jumper: remove power to the control and short the pins for 10 seconds to erase the previous code.","Two-stage sequencing: the combustion air blower runs on low speed for under 2.5 minutes and switches to high speed at or beyond 2.5 minutes, with separate low-heat and high-heat pressure switches. A furnace that faults only after two and a half minutes is a high-heat pressure switch problem.","Pressure switch Watchguard on this board is 5 minutes, not 60.","The full seven-state DIAG 1 / DIAG 2 table is in Error Codes as its own family - do not use the SureLight table on this furnace."],"confidence":"common"},
 // ===== end coverage:lennox-furn-legacy =====
+ {
+  "id": "s-humidity-flex-sweat",
+  "equipment": "Air Handler",
+  "title": "Ductwork / flex duct sweating in the attic (dripping, wet insulation, ceiling stains)",
+  "summary": "Water dripping off ducts in a hot, humid attic. A surface sweats when it is at or below the DEW POINT of the air touching it — in a vented attic that air can be 120-140°F but carry a 70-78°F dew point, and 55°F supply air is far below that.",
+  "steps": [
+   "Check today's dew point in Local Weather — that is your sweat point. Any duct surface colder than it in the attic will condense.",
+   "The outer vapor jacket IS the vapor barrier. Look for tears, open seams, unsealed connections, or compressed/kinked insulation — any breach lets humid attic air reach the cold core and condense.",
+   "Seal every breach with mastic and vapor-barrier tape (not cloth duct tape). Re-seal collars, boots, and takeoffs — bare metal there runs near supply-air temp and sweats first.",
+   "Air-seal the duct joints/connections before re-insulating — leaking 55°F supply air chills the jacket and surrounding framing.",
+   "Support runs every ~4 ft so they do not sag; low spots pool condensate and crush the insulation loft (lost R-value = new cold spot).",
+   "R-8 is only the code minimum and is marginal in a 130°F attic. Where sweating keeps returning, upgrade to R-10/R-12 or bury/encapsulate the ducts, and reduce attic moisture (ventilation or encapsulation).",
+   "Look for hidden moisture sources dumping into the attic: bath/kitchen exhaust fans venting into the attic instead of outside, or roof/flashing leaks."
+  ],
+  "safety": "Wet insulation and ceiling stains can mean long-standing condensation — check for mold and for drywall/framing damage before closing it back up.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-humidity-high-indoor",
+  "equipment": "Air Handler",
+  "title": "House feels humid / sticky (high indoor humidity) even though the AC is running and cooling",
+  "summary": "Thermostat is satisfied on temperature but indoor RH stays high (60-70%). Usually a latent-removal problem: the coil is not staying cold long enough to wring out moisture. Target indoor RH is 45-55%.",
+  "steps": [
+   "Measure indoor RH. 45-55% is the target; 60%+ is the complaint zone.",
+   "Check for oversizing / short-cycling: an oversized system hits temperature fast and shuts off before the coil gets cold enough to dehumidify. Short runtimes = poor moisture removal even though the air feels cold.",
+   "Set the thermostat FAN to AUTO, not ON. Continuous fan blows air over the wet coil after the compressor stops and re-evaporates the condensate right back into the house.",
+   "Check airflow: ~400 CFM/ton is the balance point; lowering toward ~350 CFM/ton slows air across the coil, drives it colder, and pulls more moisture. Confirm blower tap / ECM setting.",
+   "Find duct leaks pulling humid attic/crawl air into the return or supply — seal them.",
+   "For a system that cannot hit 45-55% RH without overcooling, recommend a 2-stage/variable-speed system (longer low-capacity runs) or a dedicated whole-home dehumidifier."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-humidity-registers-lines",
+  "equipment": "Air Handler",
+  "title": "Supply registers/grilles or refrigerant lines sweating and dripping",
+  "summary": "Condensation forming on register faces, boot collars, or the suction line because those surfaces are at or below the dew point of the humid air around them.",
+  "steps": [
+   "Registers/boots: insulate and air-seal the boot and the gap between boot and drywall so humid room/attic air is not hitting cold metal.",
+   "Suction (big) line: replace missing or gapped line-set insulation end to end, including at the service valve and where it enters the wall.",
+   "Very cold, sweating surfaces can also mean the evaporator is running colder than normal — check charge and airflow (low airflow or low charge lowers coil/suction temperature).",
+   "Reduce the surrounding humidity where you can (see the high-indoor-humidity steps)."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-humidity-condensate",
+  "equipment": "Air Handler",
+  "title": "Condensate overflow / drain problems worse in humid weather",
+  "summary": "More latent load means the coil pulls far more water in humid weather, so a marginal drain that coped in spring overflows in July.",
+  "steps": [
+   "Clear and flush the drain line; confirm the trap is correct for a draw-through coil and is not dry or airbound.",
+   "Verify the pan slopes to the drain and the primary line is pitched downhill the whole run.",
+   "Check the secondary/emergency drain and the float safety switch — the float should shut the system off before water reaches the ceiling.",
+   "Confirm the primary drain actually flows; a partial clog shows up first on high-latent (humid) days when volume is highest."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-humidity-low-split",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Low temperature split (return-to-supply ΔT under 18°F) on a humid day",
+  "summary": "A low dry-bulb split is often NORMAL when it is humid — the system is spending capacity removing moisture (latent) instead of dropping air temperature (sensible). Do not automatically read a low split as low airflow or overcharge.",
+  "steps": [
+   "Expect ΔT around 14-17°F on humid days; the 18-22°F rule of thumb only holds near 45-55% indoor RH. The full normal range is about 14-23°F.",
+   "Confirm the charge by SUPERHEAT and SUBCOOLING, not by the split alone. Orifice/piston → target superheat (needs outdoor temp + indoor wet bulb; use the Charging Calc). TXV/EEV → target subcooling from the nameplate.",
+   "Verify airflow is in range (~350-400 CFM/ton) before touching refrigerant. Do NOT add charge just to raise the split — that overcharges the system.",
+   "Measure indoor wet bulb: a low dry-bulb split with a wet coil pulling water is the system doing its job on a humid day."
+  ],
+  "confidence": "common"
+ }
 ];

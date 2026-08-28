@@ -52,6 +52,11 @@
       <span class="tile-label">Charging Calc</span>
       <span class="tile-sub">Read head/suction/SH/SC — R-410A · R-32 · R-454B</span>
     </button>
+    <button class="tile tile-weather" data-screen="weather">
+      <span class="tile-icon">💧</span>
+      <span class="tile-label">Local Weather</span>
+      <span class="tile-sub">Live dew point &amp; sweat-point — humidity &amp; duct-sweating help</span>
+    </button>
     <button class="tile tile-manuals" data-screen="manuals">
       <span class="tile-icon">📄</span>
       <span class="tile-label">Manuals</span>
@@ -275,6 +280,7 @@
       </div>
 
     </div>
+    <div id="ccWxNote" class="cc-wx-note"></div>
     <div id="cc-targets"></div>
     <div id="cc-results"></div>
 
@@ -436,6 +442,10 @@
   <div class="pdf-viewer-scroll" id="pdfScroll"></div>
 </div>
 
+<section id="weatherScreen" class="screen hidden">
+  <div class="disclaimer">Live outdoor conditions for the Evansville service area (NWS station KEVV). Use the dew point as your <strong>sweat point</strong> — anything colder than it in unconditioned space will condense. Needs signal to update; the last reading is kept for offline.</div>
+  <main id="wxBody"></main>
+</section>
 <script src="pt-data.js"></script>
 <script src="data.js"></script>
 <script src="symptoms.js"></script>
@@ -444,6 +454,7 @@
 <script src="toolbox.js"></script>
 <script src="thermostats.js"></script>
 <script src="generators.js"></script>
+<script src="weather.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
 <script src="app.js"></script>
 </body>
