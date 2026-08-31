@@ -9108,6 +9108,5734 @@ const MAINT_SPECS = [
     ],
     "checklist": "airhandler"
   }
+,
+{
+    "brand": "Trane",
+    "model": "S9X2 / S9X1",
+    "equip": "Gas Furnace",
+    "summary": "96% AFUE condensing furnace platform, upflow/horizontal/dedicated downflow, direct/non-direct vent, high-efficiency motor. S9X2 is two-stage, S9X1 is single-stage; both share the same IFC, gas valve and orifice spec. American Standard twins AUH2 (two-stage) / AUD2 (single-stage).",
+    "match": [
+      "S9X2",
+      "S9X1",
+      "AUH2",
+      "AUD2"
+    ],
+    "source": "Trane Installer's Guide 18-CE12D1-1D-EN (Sep 2020) - https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/18-CE12D1-1D-EN_09162020.pdf",
+    "flags": [
+      {
+        "title": "Adjust 2nd stage before 1st stage",
+        "body": "Per the Installer's Guide gas valve adjustment procedure: always set the 2nd stage (HI) manifold pressure first, then the 1st stage (LO). Setting ISD (Interstage Delay) to 000 via the IFC menu/option buttons will force 2nd stage immediately after the 1st-stage blower-on delay, shortening setup time."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure - NG (2nd Stg HI / 1st Stg LO)",
+            "value": "3.5\" / 1.7\" W.C.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure - LP (2nd Stg HI / 1st Stg LO)",
+            "value": "10.0\" / 6.0\" W.C.",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply (inlet) pressure - NG",
+            "value": "min 5.0\" - max 13.8\" W.C.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure - LP",
+            "value": "min 11.0\" - max 13.8\" W.C.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Main burner orifice (all models, all inputs)",
+            "value": "NG drill #45, LP drill #56",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J (two-stage, toggle on/off)",
+            "key": "gas_valve"
+          },
+          {
+            "label": "High altitude derate",
+            "value": "Reduce input 4% per 1,000 ft above 2,000 ft; re-check clocked input after orifice/pressure change",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see Service Facts (model-specific CFM vs. ESP tables in IOM)",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific)",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame sensing current",
+            "value": "0.75 - 3.0 microamps DC (1 VDC = 1 microamp on IFC flame-sense test pads \"FP\")",
+            "key": "flame_ua"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "Hot surface ignitor; warm-up ~17 sec (resistance not published in this IOM - see rating plate/Service Facts)",
+            "key": "ignitor"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Limit switch",
+            "value": "Main thermal limit, fixed, checked by blocking return air - see rating plate for max outlet temp setpoint",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch(es)",
+            "value": "Flame roll-out switches (FRS 1 & 2); trip = error code e11 \"Open Limit (Main Thermal, Rollout Switch, or Reverse Airflow Switch)\"",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Trane",
+    "model": "S9B1",
+    "equip": "Gas Furnace",
+    "summary": "96% AFUE single-stage condensing furnace, upflow/horizontal/dedicated downflow, direct/non-direct vent, high-efficiency motor. Shares the same IFC, gas train and orifice spec as S9X1/S9X2 (documented together in the same Installer's Guide).",
+    "match": [
+      "S9B1"
+    ],
+    "source": "Trane Installer's Guide 18-CE12D1-1D-EN (Sep 2020) - https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/18-CE12D1-1D-EN_09162020.pdf",
+    "flags": [
+      {
+        "title": "Do not touch ignitor",
+        "body": "Hot surface ignitor warning printed in the IOM: \"Do NOT touch igniter. It is extremely hot.\" Allow full cool-down before servicing the burner box."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure - NG",
+            "value": "3.5\" W.C.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure - LP",
+            "value": "10.0\" W.C.",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply (inlet) pressure - NG",
+            "value": "min 5.0\" - max 13.8\" W.C.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure - LP",
+            "value": "min 11.0\" - max 13.8\" W.C.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Main burner orifice (all inputs)",
+            "value": "NG drill #45, LP drill #56",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J single-stage / redundant combination valve (per platform wiring diagrams)",
+            "key": "gas_valve"
+          },
+          {
+            "label": "High altitude derate",
+            "value": "Reduce input 4% per 1,000 ft above 2,000 ft",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see Service Facts (model-specific CFM vs. ESP tables in IOM)",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific)",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame sensing current",
+            "value": "0.75 - 3.0 microamps DC (1 VDC = 1 microamp on IFC flame-sense test pads \"FP\")",
+            "key": "flame_ua"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "Hot surface ignitor; warm-up ~17 sec (resistance not published in this IOM - see rating plate/Service Facts)",
+            "key": "ignitor"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Limit switch",
+            "value": "Main thermal limit, fixed - see rating plate for max outlet temp setpoint",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch(es)",
+            "value": "Flame roll-out switches (FRS 1 & 2); trip = error code e11 \"Open Limit (Main Thermal, Rollout Switch, or Reverse Airflow Switch)\"",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Trane",
+    "model": "S8V2 / S8X2",
+    "equip": "Gas Furnace",
+    "summary": "80% AFUE two-stage induced-draft furnace platform. S8X2 uses a high-efficiency fixed-speed motor; S8V2(-C) uses a variable-speed/communicating motor. Both share the same gas train, orifice spec and manifold pressure settings. American Standard twins ADH2 / AUH2.",
+    "match": [
+      "S8V2",
+      "S8X2",
+      "ADH2",
+      "AUH2"
+    ],
+    "source": "Trane IOM S8XB-SVX001-1D-EN (Aug 2024, covers S8B1/S8X1/S8X2) - https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation%20Operation%20and%20Maintenance/S8XB-SVX001-1D-EN_08092024.pdf | Trane IOM FNR-SVX003A-EN (Oct 2025, S8V2-C) - https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation%20Operation%20and%20Maintenance/FNR-SVX003A-EN_10312025.pdf",
+    "flags": [
+      {
+        "title": "Adjust 2nd stage before 1st stage",
+        "body": "Gas valve adjustment procedure requires setting the 2nd stage (HI) manifold pressure first, then 1st stage (LO); confirm 2nd stage is active by verifying 24VAC between C and HI on the gas valve before adjusting."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure - NG (2nd Stg HI / 1st Stg LO)",
+            "value": "3.5\" / 1.6\" W.C. (D120 models: 3.5\" / 1.8\" W.C.)",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure - LP (2nd Stg HI / 1st Stg LO)",
+            "value": "10.0\" / 6.0\" W.C. (D120 models: 10.0\" / 7.5\" W.C.)",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply (inlet) pressure - NG",
+            "value": "min 5.0\" - max 13.8\" W.C.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure - LP",
+            "value": "min 11.0\" - max 13.8\" W.C.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Main burner orifice (all models)",
+            "value": "NG drill #45, LP drill #56",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J two-stage",
+            "key": "gas_valve"
+          },
+          {
+            "label": "High altitude derate",
+            "value": "Reduce input 4% per 1,000 ft above 2,000 ft",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see Service Facts (model-specific CFM vs. ESP tables in IOM)",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific)",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame sensing current",
+            "value": "0.75 - 3.0 microamps DC (1 VDC = 1 microamp)",
+            "key": "flame_ua"
+          },
+          {
+            "label": "Ignitor type / resistance",
+            "value": "120V SiNi (silicon nitride) hot surface ignitor; 37-70 ohms cold resistance at ~75F",
+            "key": "ignitor"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Limit switch",
+            "value": "Main thermal limit - error code E04 \"Open Thermal Limit, Rollout Switch, or Reverse Airflow Switch\"",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch(es)",
+            "value": "Flame rollout switch(es) (FRS), wired in series with main thermal limit - same E04 fault code",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Trane",
+    "model": "XR95 / XV95 / XC95m",
+    "equip": "Gas Furnace",
+    "summary": "Older-generation 95% AFUE \"Fan Assisted Combustion System\" condensing furnace (pre-2012 platform, Trane model prefixes CUB1/CDB1). Still common in the field on 15+ year old installs; White-Rodgers gas valve, hot surface ignition, Category I fan-assisted venting.",
+    "match": [
+      "XR95",
+      "XV95",
+      "XC95m",
+      "CUB1",
+      "CDB1"
+    ],
+    "source": "Trane/American Standard Installation, Operation, and Maintenance Guide 41-5010-25 (2011) - https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/41-5010-25_03012011",
+    "flags": [
+      {
+        "title": "Not for use as a construction heater",
+        "body": "IOM warns: low return-air temperatures during finishing phases of construction can cause condensate formation even though this is a non-condensing model, and chlorides/fluorides from paints, adhesives, and cleaning compounds create a corrosive condition that can rapidly deteriorate the heat exchanger."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure - NG",
+            "value": "3.5\" W.C. (adjustable min 3.0\" - max 3.7\" W.C.)",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure - LP",
+            "value": "10.5\" W.C.",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply (inlet) pressure - NG",
+            "value": "min 5.0\" - max 13.8\" W.C.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure - LP",
+            "value": "min 11.0\" - max 13.8\" W.C.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Main burner orifice (all inputs, 2-7 burners)",
+            "value": "NG drill #45, LP drill #56",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers gas valve model 36G or 36J",
+            "key": "gas_valve"
+          },
+          {
+            "label": "High altitude derate",
+            "value": "Ratings based on sea level, no change needed to 2,000 ft; above 2,000 ft see orifice correction Table 21; High Altitude Kit (BAYHALT***) required above 4,000 ft (pressure switch change)",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see Service Facts (model-specific CFM vs. ESP tables in IOM)",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific CFM vs. temp rise tables in IOM)",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame sensing current",
+            "value": "not published in this IOM - see rating plate/Service Facts",
+            "key": "flame_ua"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "Hot surface ignition; warm-up ~17 sec (resistance not published in this IOM)",
+            "key": "ignitor"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Limit switch",
+            "value": "Closes gas valve on overheat; checked by blocking return air until burners shut off at rating-plate max outlet temp - not separately adjustable",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch(es)",
+            "value": "Not called out as a discrete switch in this IOM - see rating plate/Service Facts for this specific model/vintage",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Trane",
+    "model": "TUD / AUD (legacy upflow, shared platform with TDD/TUH)",
+    "equip": "Gas Furnace",
+    "summary": "Legacy 80% AFUE non-condensing, fan-assisted-combustion, induced-draft furnace. Source document covers the upflow *UD chassis (Trane TUD / American Standard AUD, first letter A or T per nameplate); downflow (TDD) and horizontal (TUH) share the same generation gas train per Trane parts commonality but should be confirmed against the unit's own Service Facts/rating plate.",
+    "match": [
+      "TUD",
+      "AUD",
+      "TDD",
+      "TUH"
+    ],
+    "source": "Trane/American Standard Installer's Guide 18-CD19D1-2 (Aug 1992, reposted 2011) - https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-CD19D1-2_08012011",
+    "flags": [
+      {
+        "title": "Flame roll-out fusible link is not resettable",
+        "body": "All models are equipped with a fusible link on the burner cover. In case of flame roll-out, the link opens (melts) and cuts the circuit, shutting off all gas flow. Unlike a manual-reset rollout switch, this link must be replaced, not reset, before the furnace can run again."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure - NG (final setting)",
+            "value": "3.0\" - 3.5\" W.C.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure - LP (final setting)",
+            "value": "10.0\" - 10.5\" W.C.",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply (inlet) pressure - NG",
+            "value": "min 5.0\" - max 10.5\" W.C.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure - LP",
+            "value": "min 11.0\" - max 13.0\" W.C.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Main burner orifice (all inputs, 2-7 burners)",
+            "value": "NAT GAS drill #44, LP drill #55",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Automatic gas valve with manual shutoff (brand/model not specified in this IOM - see rating plate)",
+            "key": "gas_valve"
+          },
+          {
+            "label": "High altitude derate",
+            "value": "Reduce input 4% per 1,000 ft above 2,000 ft; use Table 21 orifice correction; High Altitude Kit required above 4,000 ft (pressure switch change)",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see Service Facts (model-specific)",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific)",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame sensing current",
+            "value": "not published in this IOM - see rating plate/Service Facts",
+            "key": "flame_ua"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "Hot surface ignition; warm-up ~17 sec (resistance not published in this IOM)",
+            "key": "ignitor"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Limit switch",
+            "value": "Closes gas valve on overheat, checked by blocking return air until burners shut off at rating-plate max outlet temp",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch(es)",
+            "value": "Fusible link on burner cover (see flag above) - not a resettable switch on this platform",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Trane",
+    "model": "XR17 / 4TWR7 & 4TTR7 (Two-Stage Heat Pump & AC Condenser)",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Conventional 24V two-stage CLIMATUFF scroll platform (70-100% capacity modulation), non-communicating. TXV-Non-Bleed metering, Comfort \"R\" mode for better dehumidification, internal compressor high/low pressure protection with no published cutout/cutin PSIG. Low ambient cooling rated to 55°F as shipped.",
+    "match": [
+      "XR17",
+      "4TWR7",
+      "4TTR7",
+      "American Standard 4A7H7 (HP)",
+      "4A7A7 (AC)"
+    ],
+    "source": "Trane Product Data 22-1886-6C-EN, 'Split System Heat Pump XR17 4TWR7, 2-5 Tons' (June 2019); Trane Product Data 22-1942-1B-EN, 'Split System Cooling XR17 4TTR7048B' (May 2019)",
+    "flags": [
+      {
+        "title": "Defrost logic and reversing-valve energized state not published",
+        "body": "Unlike the XR14/XR16 literature, the XR17 4TWR7 Product Data sheet (22-1886-6C-EN) does not use the words 'defrost' or 'demand defrost' anywhere, and neither document states whether the reversing (switchover) valve is energized in heating or cooling. Confirm defrost behavior and SOV energized-state from the wiring diagram inside the control box or the unit's Service Facts before servicing."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV - Non-Bleed (per Model Nomenclature, Refrigerant Control code 3)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "CLIMATUFF 2-stage scroll, 1-2 stages, 70-100% capacity modulation",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost / Reversing Valve (Heat Pump)",
+        "rows": [
+          {
+            "label": "Defrost type/interval",
+            "value": "Not stated in Product Data 22-1886-6C-EN — see rating plate / Service Facts / Installer's Guide",
+            "key": "defrostType"
+          },
+          {
+            "label": "Reversing valve energized mode",
+            "value": "Not stated — see rating plate / wiring diagram in control box",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/low pressure switch",
+            "value": "\"Internal compressor high/low pressure & temperature protection\" — no cutout/cutin PSIG published; see rating plate",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Low ambient cooling lockout",
+            "value": "55°F as shipped; below 55°F requires Application Guide APP-APG013-EN (see also BAYLOAM103 Low Ambient Kit)",
+            "key": "lowAmbientLockout"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Accessory — BAYCCHT301 (smaller tons) / BAYCCHT302 (larger tons) kit; not standard as shipped",
+            "key": "crankcaseHeater"
+          }
+        ]
+      },
+      {
+        "title": "ComfortLink / Charging",
+        "rows": [
+          {
+            "label": "Communicating status",
+            "value": "Conventional 24V staging — not ComfortLink II communicating",
+            "key": "controlPlatform"
+          },
+          {
+            "label": "Charge verification",
+            "value": "Subcooling method against nameplate design subcooling + R-410A charging chart (standard Trane split-system method); exact target not printed in Product Data excerpt — see rating plate",
+            "key": "chargeMethod"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Trane/American Standard defrost boards use a TEST_COMMON pin plus separate FRC_DFT and TST pins. Short TEST_COMMON to FRC_DFT for 2 seconds and release to command a forced defrost (remove the short once defrost initiates). Shorting TEST_COMMON to TST instead speeds up all board timings rather than forcing an immediate defrost. Trane boards terminate defrost by their own coil/ambient sensor logic (not a fixed 30/60/90-min accumulator like some other brands), typically within a few minutes once coil temp recovers. Exact pin count/labeling should be confirmed against the board silkscreen for the model in hand. Source: field/trade synthesis of Trane installer manuals (corroborated pin function, not independently re-verified against a specific current PDF this session) — cross-check against the unit's own Installer's Manual defrost-control section before relying on it."
+          },
+          {
+            "label": "ComfortLink II communicating",
+            "value": "Verified directly from a Trane variable-speed heat pump Installer's Manual: on the CDA/communicating thermostat (XL824/XL850/XL1050 or ComfortLink II control), navigate CONFIG > CONTROL MENU > FRC DFT > ENTER. System must already be running with an active heat demand from the thermostat — 'FRC DFT TEST' can only be initiated in heat mode. The test has a maximum override/runtime of 15 minutes if it doesn't self-terminate sooner. Source: Trane 4TWV0024A1000A Installer's Manual (assets.unilogcorp.com service manual family), 'Defrost Control (Heat Pump Only)' section, p.26."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Per the same Trane manual, demand defrost is only enabled when the coil temperature sensor (CBS) reports coil temperature at or below 35°F — above that, a forced-defrost command may not actually engage the cycle. When defrost runs: reversing valve shifts to cooling, outdoor fan stops, and a burst of cold air from the supply registers is normal and expected, not a malfunction."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Trane",
+    "model": "XR16 / 4TTR6 (Two-Stage AC Condenser)",
+    "equip": "Condenser",
+    "summary": "Cooling-only companion to the XR16 heat pump platform. CLIMATUFF 2-stage scroll, TXV-Non-Bleed metering, internal compressor high/low pressure protection, low ambient cooling to 55°F as shipped with staged accessory kits for lower ambients.",
+    "match": [
+      "XR16",
+      "4TTR6",
+      "American Standard 4A6A6"
+    ],
+    "source": "Trane Product Data 22-1916-1J-EN, 'Split System Cooling 4TTR6'",
+    "flags": [
+      {
+        "title": "No published HP/LP cutout PSIG — internal to compressor",
+        "body": "Like every other XR-series cooling sheet reviewed, 22-1916-1J-EN states only that high/low pressure controls are 'inherent to the compressor' — there is no field-serviceable pressure switch with a printed cutout/cutin PSIG. Do not assume a number; check the rating plate or Service Facts if a specific setpoint is needed for diagnostics."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV - Non-Bleed (per Model Nomenclature, Refrigerant Control code 3)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "CLIMATUFF 2-stage scroll, 1-2 stages",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/low pressure switch",
+            "value": "Internal to compressor — no cutout/cutin PSIG published; see rating plate",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Low ambient cooling lockout",
+            "value": "55°F as shipped; see Application Guide APP-APG013-EN for operation below 55°F",
+            "key": "lowAmbientLockout"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Accessory kit (BAYCCHT302 / BAYCCHT301 depending on tonnage) — not standard as shipped",
+            "key": "crankcaseHeater"
+          }
+        ]
+      },
+      {
+        "title": "ComfortLink / Charging",
+        "rows": [
+          {
+            "label": "Communicating status",
+            "value": "Conventional 24V staging — not ComfortLink II communicating",
+            "key": "controlPlatform"
+          },
+          {
+            "label": "Charge verification",
+            "value": "Subcooling method against nameplate design subcooling + R-410A charging chart",
+            "key": "chargeMethod"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Trane",
+    "model": "XR15 / 4TWR5 (Single-Stage Heat Pump)",
+    "equip": "Heat Pump",
+    "summary": "Single-stage CLIMATUFF scroll heat pump, non-communicating. Metering device is model-dependent (TXV/EEV on some tonnages, fixed orifice on others) — the Product Data explicitly instructs verifying charge method (subcooling vs. superheat) per unit nameplate. Built-in demand defrost control is standard (accessory 'Evaporator Defrost Control' column reads N/A because it's not needed).",
+    "match": [
+      "XR15",
+      "4TWR5",
+      "American Standard 4A7H5",
+      "XB14 (builder-tier furnace/air-handler pairing name — NOT a separate outdoor condensing model; XB14 systems use the same 4TWR5/4TTR5 outdoor units)"
+    ],
+    "source": "Trane Product Data 22-1832-14J-EN, 'Split System Heat Pump 4TWR5-H' (August 2020)",
+    "flags": [
+      {
+        "title": "Metering device is not fixed across the model line — always check the nameplate",
+        "body": "22-1832-14J-EN tells the tech to 'verify proper system charge via subcooling (TXV/EEV) or superheat (fixed orifice) per the unit nameplate' — meaning some 4TWR5 tonnages ship with fixed-orifice metering and require the superheat charging method instead of subcooling. Do not default to a TXV/subcooling assumption on this model line."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Model-dependent: TXV/EEV or fixed orifice — confirm on nameplate before choosing subcooling vs. superheat charge method",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "CLIMATUFF single-stage scroll",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost / Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type/interval",
+            "value": "Built-in demand defrost control standard (accessory 'Evaporator Defrost Control' listed N/A — not required); exact delta-T/interval logic not printed in this Product Data — see Service Facts",
+            "key": "defrostType"
+          },
+          {
+            "label": "Reversing valve energized mode",
+            "value": "Not stated — see rating plate / wiring diagram",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/low pressure switch",
+            "value": "Not detailed in this excerpt — see rating plate / Service Facts",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Low ambient cooling lockout",
+            "value": "Not stated in this compact Product Data format — see rating plate / Application Guide APP-APG013-EN",
+            "key": "lowAmbientLockout"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Accessory kit BAYCCHT302 — not standard as shipped",
+            "key": "crankcaseHeater"
+          }
+        ]
+      },
+      {
+        "title": "ComfortLink / Charging",
+        "rows": [
+          {
+            "label": "Communicating status",
+            "value": "Conventional 24V staging — not ComfortLink II communicating",
+            "key": "controlPlatform"
+          },
+          {
+            "label": "Charge verification",
+            "value": "Subcooling (TXV/EEV models) or superheat (fixed-orifice models) per nameplate — do not assume one method for the whole line",
+            "key": "chargeMethod"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Trane/American Standard defrost boards use a TEST_COMMON pin plus separate FRC_DFT and TST pins. Short TEST_COMMON to FRC_DFT for 2 seconds and release to command a forced defrost (remove the short once defrost initiates). Shorting TEST_COMMON to TST instead speeds up all board timings rather than forcing an immediate defrost. Trane boards terminate defrost by their own coil/ambient sensor logic (not a fixed 30/60/90-min accumulator like some other brands), typically within a few minutes once coil temp recovers. Exact pin count/labeling should be confirmed against the board silkscreen for the model in hand. Source: field/trade synthesis of Trane installer manuals (corroborated pin function, not independently re-verified against a specific current PDF this session) — cross-check against the unit's own Installer's Manual defrost-control section before relying on it."
+          },
+          {
+            "label": "ComfortLink II communicating",
+            "value": "Verified directly from a Trane variable-speed heat pump Installer's Manual: on the CDA/communicating thermostat (XL824/XL850/XL1050 or ComfortLink II control), navigate CONFIG > CONTROL MENU > FRC DFT > ENTER. System must already be running with an active heat demand from the thermostat — 'FRC DFT TEST' can only be initiated in heat mode. The test has a maximum override/runtime of 15 minutes if it doesn't self-terminate sooner. Source: Trane 4TWV0024A1000A Installer's Manual (assets.unilogcorp.com service manual family), 'Defrost Control (Heat Pump Only)' section, p.26."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Per the same Trane manual, demand defrost is only enabled when the coil temperature sensor (CBS) reports coil temperature at or below 35°F — above that, a forced-defrost command may not actually engage the cycle. When defrost runs: reversing valve shifts to cooling, outdoor fan stops, and a burst of cold air from the supply registers is normal and expected, not a malfunction."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Trane",
+    "model": "XR13 / XR14 — 4TWR3 / 4TWR4 & 4TTR3 / 4TTR4 (Older Single-Stage HP & AC)",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Older single-stage CLIMATUFF scroll tier, R-410A, non-communicating. XR14 heat pump (4TWR4) carries 'Demand Defrost with Diagnostics' as a stated feature and model/tonnage-dependent factory Compressor Sump Heat. XR14/XR13 AC condensers (4TTR4/4TTR3) use an SPST 'Evaporator Defrost Control' accessory purely for low-ambient cooling protection (not heat-pump defrost).",
+    "match": [
+      "XR14",
+      "XR13",
+      "4TWR4",
+      "4TWR3",
+      "4TTR4",
+      "4TTR3",
+      "American Standard 4A6H4/4A6H3 (HP)",
+      "4A6A4/4A6A3 (AC)"
+    ],
+    "source": "Trane Product Data 22-1765-10, 'Split System Heat Pump XR14 4TWR4, 1½-5 Tons' (©2015 Trane); Trane Product Data 22-1904-1M-EN, 'Split System Cooling 4TTR4-L Models' (April 2020); Trane Product Data 22-1842-8R-EN, 'Split System Cooling XR13 4TTR3'",
+    "flags": [
+      {
+        "title": "Compressor Sump Heat (crankcase heater) is model/tonnage-dependent — never assume it's standard",
+        "body": "The XR14 heat pump electrical table shows 'Compressor Sump Heat' as YES on some tonnage columns and NO on others (not a blanket standard feature) — confirm per the specific model number's electrical data row or the nameplate before assuming crankcase heat is present. XR13 heat pump (4TWR3) specifics were not independently pulled this session — treat as same-generation platform to XR14 but verify defrost/reversing-valve/PSIG details from its own nameplate or Service Facts."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV - Non-Bleed (per Model Nomenclature, Refrigerant Control code 3)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "CLIMATUFF single-stage scroll",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost / Reversing Valve (Heat Pump — XR14 4TWR4 confirmed)",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Demand Defrost with Diagnostics (stated feature, 4TWR4); exact delta-T logic/interval not printed in Product Data — see Service Facts",
+            "key": "defrostType"
+          },
+          {
+            "label": "Reversing valve energized mode",
+            "value": "Not stated — see rating plate / wiring diagram",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/low pressure switch",
+            "value": "High pressure switch present; \"internal compressor high/low pressure & temperature protection\" — no cutout/cutin PSIG published; see rating plate",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Low ambient cooling (HP, as shipped)",
+            "value": "55°F as shipped; 20°F with AY28X084 accessory (evaporator defrost control) added",
+            "key": "lowAmbientCoolingHP"
+          },
+          {
+            "label": "Low ambient cooling (AC, 4TTR4/4TTR3)",
+            "value": "55°F as shipped → 40°F with evaporator defrost control accessory → 30°F with evaporator defrost control + TXV → 20°F with BAYLOAM107A low ambient kit",
+            "key": "lowAmbientCoolingAC"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Model/tonnage-dependent — YES on some 4TWR4 electrical-table columns, NO on others; accessory kit (BAYCCHT301/302) on units where not factory-installed",
+            "key": "crankcaseHeater"
+          }
+        ]
+      },
+      {
+        "title": "ComfortLink / Charging",
+        "rows": [
+          {
+            "label": "Communicating status",
+            "value": "Conventional 24V staging — not ComfortLink II communicating",
+            "key": "controlPlatform"
+          },
+          {
+            "label": "Charge verification",
+            "value": "Subcooling method against nameplate design subcooling + R-410A charging chart",
+            "key": "chargeMethod"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Trane/American Standard defrost boards use a TEST_COMMON pin plus separate FRC_DFT and TST pins. Short TEST_COMMON to FRC_DFT for 2 seconds and release to command a forced defrost (remove the short once defrost initiates). Shorting TEST_COMMON to TST instead speeds up all board timings rather than forcing an immediate defrost. Trane boards terminate defrost by their own coil/ambient sensor logic (not a fixed 30/60/90-min accumulator like some other brands), typically within a few minutes once coil temp recovers. Exact pin count/labeling should be confirmed against the board silkscreen for the model in hand. Source: field/trade synthesis of Trane installer manuals (corroborated pin function, not independently re-verified against a specific current PDF this session) — cross-check against the unit's own Installer's Manual defrost-control section before relying on it."
+          },
+          {
+            "label": "ComfortLink II communicating",
+            "value": "Verified directly from a Trane variable-speed heat pump Installer's Manual: on the CDA/communicating thermostat (XL824/XL850/XL1050 or ComfortLink II control), navigate CONFIG > CONTROL MENU > FRC DFT > ENTER. System must already be running with an active heat demand from the thermostat — 'FRC DFT TEST' can only be initiated in heat mode. The test has a maximum override/runtime of 15 minutes if it doesn't self-terminate sooner. Source: Trane 4TWV0024A1000A Installer's Manual (assets.unilogcorp.com service manual family), 'Defrost Control (Heat Pump Only)' section, p.26."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Per the same Trane manual, demand defrost is only enabled when the coil temperature sensor (CBS) reports coil temperature at or below 35°F — above that, a forced-defrost command may not actually engage the cycle. When defrost runs: reversing valve shifts to cooling, outdoor fan stops, and a burst of cold air from the supply registers is normal and expected, not a malfunction."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Trane",
+    "model": "XL18i / XL16i — 4TWX8 & 4TTX8 (Two-Stage HP & AC, older premium tier)",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Two-stage CLIMATUFF scroll platform (predecessor to XR17), non-communicating 24V, WEATHERGUARD II top shields. AC condenser (4TTX8) uses TXV-Non-Bleed metering with internal compressor pressure protection. Heat pump (4TWX8, confirmed on the 060/5-ton via Service Facts) uses a demand-defrost board with outdoor-ambient + coil sensors and delta-T logic — the same board family later reused on XR16 (47°F termination as shipped, 70°F if Jumper J2 is cut below 30°F ambient).",
+    "match": [
+      "XL18i",
+      "XL16i",
+      "4TWX8",
+      "4TTX8",
+      "American Standard 4A7X8 (HP)",
+      "4A7X8 (AC, cooling variant)"
+    ],
+    "source": "Trane Product Data 22-1885-2E-EN, 'Product Data 4TTX8024A/036A/048B/060A' (October 2020); Trane Service Facts 4TWX8060A-SF-1E-EN, 'Split System Heat Pump 4TWX8060A1000C'",
+    "flags": [
+      {
+        "title": "Heat pump defrost/board details confirmed only on the 5-ton (060) model",
+        "body": "The Demand Defrost details (delta-T logic, 47°F/70°F termination, Jumper J2) come from the Service Facts for the specific 4TWX8060A1000C (5-ton) unit. Other 4TWX8 tonnages are assumed to share the same board family but were not independently confirmed this session — verify against the Service Facts shipped with the specific unit. XL16i-specific literature was not pulled; treat as a related earlier-generation two-stage sibling and confirm specifics from its own nameplate/Service Facts."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "AC (4TTX8): TXV - Non-Bleed. HP (4TWX8, per Service Facts): outdoor EEV control board present (fault codes reference EEV/superheat/pressure-transducer faults) — confirm exact metering configuration on nameplate",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "CLIMATUFF 2-stage scroll, 1-2 stages",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost / Reversing Valve (Heat Pump)",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Demand defrost: outdoor ambient sensor + outdoor coil sensor, delta-T logic determines need for defrost; coil sensor also terminates the cycle",
+            "key": "defrostType"
+          },
+          {
+            "label": "Defrost termination — as shipped",
+            "value": ">22°F ambient: 47°F | 10-22°F: ODT + 25°F (per table)",
+            "key": "defrostTermAsShipped"
+          },
+          {
+            "label": "Defrost termination — Jumper J2 cut",
+            "value": "70°F termination when ambient is at or below 30°F",
+            "key": "defrostTermJumperCut"
+          },
+          {
+            "label": "Forced defrost test",
+            "value": "Short TEST_COMMON to FRC_DFT pin for 2 seconds to initiate a forced defrost",
+            "key": "forcedDefrost"
+          },
+          {
+            "label": "Reversing valve energized mode",
+            "value": "Not stated in the Service Facts excerpt reviewed — see wiring diagram in control box",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/low pressure switch",
+            "value": "No cutout/cutin PSIG published; unit uses a suction-line pressure transducer (EEV control board) for diagnostics, not a simple switch with a fixed setpoint — see Service Facts pressure curves for expected PSIG by operating condition",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Low ambient cooling lockout",
+            "value": "55°F as shipped (AC, per 22-1885-2E-EN); see Application Guide APP-APG013-EN for lower",
+            "key": "lowAmbientLockout"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "AC: accessory kit (BAYECMT023 / BAYCAKT001 depending on tonnage) — not standard. HP (060 model): 'Compressor Heat' row present in Service Facts electrical table but value not legible in the copy reviewed — see rating plate",
+            "key": "crankcaseHeater"
+          }
+        ]
+      },
+      {
+        "title": "ComfortLink / Charging",
+        "rows": [
+          {
+            "label": "Communicating status",
+            "value": "Conventional 24V staging — not ComfortLink II communicating",
+            "key": "controlPlatform"
+          },
+          {
+            "label": "Charge — cooling, 55-120°F OD ambient",
+            "value": "Subcooling method (high stage only), target 10-15°F subcooling; use R-410A Refrigerant Charging Chart (liquid line temp vs. PSIG) in Service Facts",
+            "key": "chargeCooling"
+          },
+          {
+            "label": "Charge — below 55°F OD ambient",
+            "value": "Weigh in nameplate charge plus line-length adders in heating mode; do NOT use the cooling subcooling method below 55°F",
+            "key": "chargeBelow55"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Trane/American Standard defrost boards use a TEST_COMMON pin plus separate FRC_DFT and TST pins. Short TEST_COMMON to FRC_DFT for 2 seconds and release to command a forced defrost (remove the short once defrost initiates). Shorting TEST_COMMON to TST instead speeds up all board timings rather than forcing an immediate defrost. Trane boards terminate defrost by their own coil/ambient sensor logic (not a fixed 30/60/90-min accumulator like some other brands), typically within a few minutes once coil temp recovers. Exact pin count/labeling should be confirmed against the board silkscreen for the model in hand. Source: field/trade synthesis of Trane installer manuals (corroborated pin function, not independently re-verified against a specific current PDF this session) — cross-check against the unit's own Installer's Manual defrost-control section before relying on it."
+          },
+          {
+            "label": "ComfortLink II communicating",
+            "value": "Verified directly from a Trane variable-speed heat pump Installer's Manual: on the CDA/communicating thermostat (XL824/XL850/XL1050 or ComfortLink II control), navigate CONFIG > CONTROL MENU > FRC DFT > ENTER. System must already be running with an active heat demand from the thermostat — 'FRC DFT TEST' can only be initiated in heat mode. The test has a maximum override/runtime of 15 minutes if it doesn't self-terminate sooner. Source: Trane 4TWV0024A1000A Installer's Manual (assets.unilogcorp.com service manual family), 'Defrost Control (Heat Pump Only)' section, p.26."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Per the same Trane manual, demand defrost is only enabled when the coil temperature sensor (CBS) reports coil temperature at or below 35°F — above that, a forced-defrost command may not actually engage the cycle. When defrost runs: reversing valve shifts to cooling, outdoor fan stops, and a burst of cold air from the supply registers is normal and expected, not a malfunction."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Trane",
+    "model": "XV20i / 4TTV0 (Variable-Speed ComfortLink II AC Condenser)",
+    "equip": "Condenser",
+    "summary": "Cooling-only companion to the already-covered XV20i/4TWV0 variable-speed heat pump. Same Integrated Variable Speed Control (IVSC) board + Communicating Display Assembly (CDA) platform, EEV metering, ComfortLink II communicating control. Charging is via the 'Charging Mode-Cooling' subcooling test ONLY, with the indoor blower mandatorily set to 400 CFM/ton.",
+    "match": [
+      "XV20i",
+      "4TTV0",
+      "TTV0",
+      "American Standard 4A7V0",
+      "A7V0"
+    ],
+    "source": "Trane Installer's Guide 18-BC89D1-1H-EN, 'Variable Speed ComfortLink II Heat Pumps and Air Conditioners' (models incl. 4TTV0024/036B/048/060/061A1000B), June 2018 — same document already used for the companion XV20i/4TWV0 heat pump entry",
+    "flags": [
+      {
+        "title": "High/low pressure cutout PSIG and other HP-only rows do not apply / are not published for this AC",
+        "body": "This Installer's Guide states only 'internal compressor high/low pressure & temperature protection' for the platform — no numeric cutout/cutin PSIG values are given for the 4TTV0 AC any more than for its 4TWV0 heat pump sibling. See rating plate or the unit's Service Facts (shipped inside the outdoor unit control box) for actual setpoints. Defrost rows are not applicable — this is a cooling-only condenser."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (PVE oil — variable-speed compressor)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Electronic Expansion Valve (EEV) — EEV Test available in CDA Control Menu",
+            "key": "metering"
+          },
+          {
+            "label": "Oil hygroscopic warning",
+            "value": "If system open to atmosphere >4 hrs, compressor oil must be replaced",
+            "key": "oilNote"
+          }
+        ]
+      },
+      {
+        "title": "Operating Range & Pressure Protection",
+        "rows": [
+          {
+            "label": "Cooling operating range",
+            "value": "55°F to 120°F outdoor ambient",
+            "key": "coolingRange"
+          },
+          {
+            "label": "Low ambient cooling lockout",
+            "value": "55°F (per Table 1 Operating Range)",
+            "key": "lowAmbientLockout"
+          },
+          {
+            "label": "High/low pressure switch",
+            "value": "Internal compressor high/low pressure & temperature protection — no cutout/cutin PSIG published; see rating plate / Service Facts",
+            "key": "pressureSwitch"
+          }
+        ]
+      },
+      {
+        "title": "Crankcase Heater / Startup",
+        "rows": [
+          {
+            "label": "Crankcase heater wait",
+            "value": "Wait 3 HOURS before starting unit if outdoor ambient is below 85°F",
+            "key": "crankcaseWait"
+          },
+          {
+            "label": "400VDC hazard",
+            "value": "Wait 2 minutes after disconnecting power; verify <42VDC at +VDC/-VDC test points before servicing IVSC board",
+            "key": "highVoltageHazard"
+          }
+        ]
+      },
+      {
+        "title": "ComfortLink II / Communicating Status",
+        "rows": [
+          {
+            "label": "Control platform",
+            "value": "Integrated Variable Speed Control (IVSC) board + Communicating Display Assembly (CDA), pairs with 850/950/1050 comfort controls",
+            "key": "controlPlatform"
+          },
+          {
+            "label": "Status LED (green)",
+            "value": "Slow=Standby/Idle, Medium=Call for Capacity, Fast=Power-up delay, Solid=Test Mode, 1 flash/4 sec=Hard Lockout",
+            "key": "statusLed"
+          },
+          {
+            "label": "COMM LED (amber)",
+            "value": "Slow=device count, Fast (5x/sec)=loss of communication",
+            "key": "commLed"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Approved subcooling method",
+            "value": "'Charging Mode-Cooling' test in comfort control Technician Menu ONLY — outdoor 55-120°F, indoor 70-80°F, indoor blower at 400 CFM/ton (mandatory)",
+            "key": "chargingMethod"
+          },
+          {
+            "label": "Design subcooling value",
+            "value": "See rating plate or Service Facts (not a fixed figure in this guide) — used with the R-410A charging chart, 8-14°F subcooling columns, 55-125°F liquid temp rows",
+            "key": "designSubcooling"
+          },
+          {
+            "label": "Line length/lift limits",
+            "value": "150 ft max length / 50 ft max lift on 5/8\"-7/8\" lines; larger 1-1/8\" vapor line models limited to 80 ft length / 10-25 ft lift depending on model",
+            "key": "lineLimits"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Trane",
+    "model": "TAM7 / 4TEC3",
+    "equip": "Air Handler",
+    "summary": "Convertible variable-speed communicating air handler (2-5 ton) with an Airflow Control (AFC) board driving an ECM blower, electronic expansion valve (EEV) metering, and dip-switch commissioning for tonnage/airflow. Cabinet accepts an optional hot-water (hydronic) coil accessory in place of electric heat.",
+    "match": [
+      "TAM7",
+      "4TEC3",
+      "TAM7A0A24H21SD",
+      "TAM7A0A24H21EA",
+      "TAM7A0B30H21SD",
+      "TAM7A0B30H21EA",
+      "TAM7A0C36H31SD",
+      "TAM7A0C36H31EA",
+      "TAM7A0C42H31SD",
+      "TAM7A0C42H31EA",
+      "TAM7A0C48H41SD",
+      "TAM7A0C48H41EA",
+      "TAM7B0C60H51SC",
+      "TAM7B0C60H51EA"
+    ],
+    "source": "Trane Installer's Guide, Convertible Air Handlers 2-5 Ton TAM7, pub. 18-GJ06D2-2F-EN (trane.com/content/dam/.../Small Splits/Air Handlers/18-GJ06D2-2F-EN.pdf); hydronic coil accessory per Trane Installer's Guide, Hydronic Coil Accessory (Fits Hyperion/ForeFront air handlers), pub. 18-GJ21D1-2A-EN (elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-GJ21D1-2A-EN_08052020.pdf)",
+    "flags": [
+      {
+        "title": "Trane: dip switches must be set with power OFF",
+        "body": "S1/S2 airflow-control (AFC) dip switches (tonnage/OD-multiplier, AC vs HP, stages, compressors, CFM/ton, blower-off delay, Torque vs Constant-CFM mode) only take effect after power is cycled off and re-applied. Changing switches with power on will not update the AFC."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Variable-speed ECM, direct drive, controlled by the Airflow Control (AFC) board",
+            "key": "blowerType"
+          },
+          {
+            "label": "Airflow commissioning",
+            "value": "Dip switch S1: OD tonnage multiplier (S1-1/S1-2), AC/HP (S1-3), OD stages (S1-4), # compressors (S1-5). Dip switch S2: cooling & heating CFM/ton (S2-1/S2-2), blower-off delay (S2-3/S2-4), Torque vs Constant-CFM airflow mode (S2-5)",
+            "key": "airflowSetup"
+          },
+          {
+            "label": "Torque mode static threshold",
+            "value": "Torque mode starts reducing airflow above approx. 0.3\" w.c. (2-ton), 0.35\" w.c. (2.5-3.5 ton), 0.4\" w.c. (4-5 ton) static; cooling only, all heating modes default to Constant CFM",
+            "key": "torqueThreshold"
+          },
+          {
+            "label": "Max external static",
+            "value": "See airflow performance tables for the specific model / rating plate (varies by tonnage and speed-tap/torque setting)",
+            "key": "maxESP"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Refrigerant",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Electronic Expansion Valve (EEV) on the Electronic Expansion Valve Control (EVC) board, field-selectable R-410A/R-22 via J7 jumper (factory default R-410A)",
+            "key": "metering"
+          },
+          {
+            "label": "Match to outdoor unit",
+            "value": "EEV is electronically controlled (not a fixed TXV) - confirm compatibility/charge per the matched outdoor unit's System Charge Adjustments (subcooling) table",
+            "key": "meteringMatch"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Integral filter channel at bottom of blower/filter compartment (no remote filter required); size set by cabinet letter (A=16x20, B=20x20, C=22x20, 1\" throwaway), per 7th digit of model number",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat / Hydronic Heat",
+        "rows": [
+          {
+            "label": "Electric heat kits",
+            "value": "Field-installed BAYHTR-series kW heater kits (wiring diagrams ship with the heater); see heater kit literature or rating plate for exact kW/staging by model",
+            "key": "heatKit"
+          },
+          {
+            "label": "Hydronic (hot water) coil option",
+            "value": "Optional BAYWAxx/BAYWVxx hydronic coil accessory (pub. 18-GJ21D1-2A-EN) slides into the heater compartment in place of electric heat; 7/8\" OD x 3/4\" ID copper field water piping, max entering water temp 180F, two vertical or two horizontal pipe runs (entering-water pipe always farthest from blower); usable upflow, downflow, or horizontal",
+            "key": "hydronicCoil"
+          }
+        ]
+      },
+      {
+        "title": "Drain / Condensate",
+        "rows": [
+          {
+            "label": "Drain pan/trap",
+            "value": "Factory condensate connections; Trane states a P-trap is NOT required for drainage because the cabinet runs at positive pressure, but a trap is still recommended to prevent conditioned-air loss/efficiency loss. No factory float switch documented - see rating plate/accessory kit for float-switch option",
+            "key": "drainPan"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Trane",
+    "model": "TEM4 / 4TEM4 (incl. TEM8 platform)",
+    "equip": "Air Handler",
+    "summary": "Convertible multi-speed air handler (1.5-5 ton) sharing the same painted-steel cabinet, drain-pan, and heater-kit platform as TEM6/TEM8. Smaller tonnages use a multi-speed PSC/direct-drive blower; larger tonnages (and the higher-tier TEM8 communicating variant) use a constant-torque (basic ECM) motor. Factory bleed TXV metering; remote/external filter required.",
+    "match": [
+      "TEM4",
+      "4TEM4",
+      "TEM8",
+      "TEM4A0B18S21SA",
+      "TEM4A0B30S31SA",
+      "TEM4A0C48S41SA",
+      "TEM4A0C60S51SA"
+    ],
+    "source": "Trane Installer's Guide, Convertible Air Handlers 1-1/2-5 Ton TEM4, pub. 18-GF73D1-1C-EN (trane.com/content/dam/.../Small Splits/Air Handlers/18-GF73D1-1C-EN.pdf)",
+    "flags": [
+      {
+        "title": "Trane: disconnect power before changing blower speed taps",
+        "body": "Unit ships with factory-set cooling and heating speed taps (High/Med/Low). Always disconnect all power before moving a motor speed tap, then verify airflow and evaporator coil temperature drop after any change."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Multi-speed, direct-drive blower - PSC on most models, constant-torque motor (basic ECM) on larger tonnages / TEM8 platform; confirm on rating plate",
+            "key": "blowerType"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Factory-set High/Med/Low speed taps for cooling and heating (field-selectable at the motor plug); airflow performance tables give CFM at 0.1-0.7\" w.c. external static for 230V and 208V taps",
+            "key": "airflowSetup"
+          },
+          {
+            "label": "Max external static (tested)",
+            "value": "Airflow tables published through 0.7\" w.c. external static (e.g., TEM4A0B30S31SA: High tap 1066 CFM @ 0.7\" w.c., 230V); downflow airflow must not exceed 1200 CFM due to condensate blow-off",
+            "key": "maxESP"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Refrigerant",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory-installed, internally-checked bleed TXV (R-410A) for AC or heat pump duty; pressures equalize after shutdown. Some outdoor units may require a start-assist kit - verify against the matched condensing unit",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "No integral filter rack - a remote/external filter must be field-installed ahead of the coil; optional Slim Fit Filter Box Kit accessories BAYSF1185AAA / BAYSF1235AAA",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heater kW range",
+            "value": "4, 5, 8, 10, 15, 19, 20, 21 kW single-phase (BAYHTR15xx series); 10 & 15 kW three-phase (BAYHTR35xx, lug terminal); single-point power entry kit for 15/19/20/21 kW heaters",
+            "key": "heatKit"
+          },
+          {
+            "label": "Downflow heat requirement",
+            "value": "Downflow condensate management kit BAYTEMDFKT1A required for 5-ton downflow applications; downflow sub-base kits TAYBASE185/TAYBASE235 available",
+            "key": "downflowKit"
+          }
+        ]
+      },
+      {
+        "title": "Drain / Condensate",
+        "rows": [
+          {
+            "label": "Drain pan",
+            "value": "Factory-installed sturdy polycarbonate drain pan, shipped configured for upflow/horizontal-left; primary + auxiliary condensate connections are 3/4\" NPT. Primary drain must be trapped outside the unit and pitched 1/4\"/ft minimum. No factory float switch documented",
+            "key": "drainPan"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Trane",
+    "model": "GAM5",
+    "equip": "Air Handler",
+    "summary": "Modular multipoise convertible air handler with a Vortica direct-drive blower on a high-efficiency ECM motor (5 speed taps), factory R-410A TXV metering, and a molded 1\" integral filter rail (filter not furnished). Two-piece modular cabinet with integrated horizontal drain pans and a safety door switch.",
+    "match": [
+      "GAM5",
+      "GAM5B0A18M11SB",
+      "GAM5B0A24M21SB",
+      "GAM5B0B30M21SB",
+      "GAM5B0B36M31SB",
+      "GAM5B0C42M31SB",
+      "GAM5B0C48M41SB",
+      "GAM5B0C60M51SB"
+    ],
+    "source": "Trane Product Data, Modular Multi-position Air Handlers GAM5B Models, pub. 22-1845-14 (trane.com/content/dam/.../Small Splits/Air Handlers/GAM5.pdf)",
+    "flags": [
+      {
+        "title": "Trane: airflow speed-tap change required for 2-stage",
+        "body": "On 2-stage AC/HP matches, the factory speed tap must be reset per the 2-Stage Airflow Adjustment tables (High tap for stage 2, Low tap for stage 1) - the unit does not auto-adjust airflow between stages."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Vortica centrifugal blower, direct drive, High-Efficiency ECM motor, 5 speed taps, soft-start operation with built-in fan-delay modes",
+            "key": "blowerType"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Field-selectable speed taps (low-voltage pigtail connections); 2-stage AC/HP applications require resetting the tap per the published High/Low CFM & ESP tables for the matched outdoor unit (e.g., GAM5B0C48M41 with 4TTR7048A: High tap 1475 CFM @ 0.449\" w.c., Low tap 1390 CFM @ 0.399\" w.c.)",
+            "key": "airflowSetup"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Refrigerant",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory R-410A thermal expansion valve (TXV); R-22 conversion TXV kit sold as accessory",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Not furnished - molded 1\" throwaway filter rail integral to cabinet; recommended size 1x throwaway per model (16x20 up to 22x20 depending on cabinet width) - see General Data table for the specific model",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Electric heat kits",
+            "value": "Slide-in electric heaters sold as accessory with polarized plug connections; see the GAM5 air handler/heater allowable-combinations matrix or rating plate for exact kW-to-model pairing",
+            "key": "heatKit"
+          }
+        ]
+      },
+      {
+        "title": "Drain / Condensate",
+        "rows": [
+          {
+            "label": "Drain pan",
+            "value": "Integrated horizontal drain pans (both orientations), 3/4\" NPT drain connection; safety door switch cuts power when a cabinet door is opened. No factory condensate float switch documented - see rating plate/accessory options",
+            "key": "drainPan"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Trane",
+    "model": "TEM3 / TWE",
+    "equip": "Air Handler",
+    "summary": "Standard-efficiency convertible air handler (1.5-5 ton) with a multi-speed direct-drive PSC blower (constant-torque motor optional per rating plate) and factory bleed TXV metering. Same cabinet/heater-kit template as TEM4/TEM6/TEM8; requires a remote/external filter.",
+    "match": [
+      "TEM3",
+      "TWE",
+      "ATEM3",
+      "TEM3A0B18S21SA",
+      "TEM3A0B30S21SA",
+      "TEM3A0B30S31SA",
+      "TEM3A0C36S31SA",
+      "TEM3A0C48S41SA",
+      "TEM3A0C60S51SA"
+    ],
+    "source": "Trane Installer's Guide, Convertible Air Handlers 1-1/2 to 5 Ton TEM3 Models, pub. 18-GJ65D1-1D-EN (trane.com/content/dam/.../Small Splits/Air Handlers/18-GJ65D1-1D-EN.pdf)",
+    "flags": [
+      {
+        "title": "Trane: model-number nomenclature caveat",
+        "body": "This Trane installer's guide documents the TEM3 (and American Standard ATEM3) family only; a distinct 'TWE-E' PSC single-phase air handler line (1.5-5 ton) is referenced in Trane product handbooks but was not independently confirmed in an elibrary.tranetechnologies.com or trane.com/content/dam document during this research. Confirm the exact TWE model's specs against its own rating plate before servicing."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Multi-speed, direct-drive blower; PSC standard, constant-torque motor version also referenced in sequence-of-operation - confirm on rating plate",
+            "key": "blowerType"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Factory-set High/Med/Low speed taps (field-adjustable at the motor plug, power off); airflow tables published 0.1-0.7\" w.c. external static for 230V/208V taps",
+            "key": "airflowSetup"
+          },
+          {
+            "label": "Max external static (tested)",
+            "value": "Airflow tables published through 0.7\" w.c. (e.g., TEM3A0B30S31SA/TEM3A0B36S31SA: High tap 1066/997 CFM @ 0.7\" w.c., 230V); downflow airflow must not exceed 1200 CFM due to condensate blow-off; TEM3A0B36S31SA recommended tap is Medium at 0.4\" w.c.",
+            "key": "maxESP"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Refrigerant",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory-installed, internally-checked bleed TXV (R-410A) for AC or heat pump duty; pressures equalize after shutdown - some outdoor units may need a start-assist kit",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "No integral filter rack - remote/external filter must be field-installed; optional Slim Fit Filter Box Kit BAYSF1185AAA / BAYSF1235AAA",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heater kW range",
+            "value": "4, 5, 8, 10, 15, 19, 20 kW single-phase (BAYHTR15xx series); 10 & 15 kW three-phase lug-terminal heaters (BAYHTR35xx); single-point power entry kit for 15/19/20 kW heaters",
+            "key": "heatKit"
+          }
+        ]
+      },
+      {
+        "title": "Drain / Condensate",
+        "rows": [
+          {
+            "label": "Drain pan",
+            "value": "Factory-installed polycarbonate drain pan shipped for upflow/horizontal-left; primary + auxiliary condensate 3/4\" NPT, primary trapped outside the unit, 1/4\"/ft minimum pitch. No factory float switch documented",
+            "key": "drainPan"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "York",
+    "model": "TM9V / TM9E / TM9M",
+    "equip": "Gas Furnace",
+    "summary": "95-96% AFUE ECM condensing platform: TM9V (2-stage variable-speed ECM), TM9E (single-stage standard ECM), TM9M (modulating). Same cabinet/heat-exchanger family, sold under the same model numbers across York and Fraser-Johnston nameplates (confirmed on york.com for TM8E/this platform); no distinct Coleman/Luxaire prefix could be verified in yorknow.com literature within this pass.",
+    "match": [
+      "TM9V",
+      "TM9V*C",
+      "TM9E",
+      "TM9E*MP",
+      "TM9M",
+      "TM9M*MP"
+    ],
+    "source": "yorknow.com TM9V_Install.pdf (5402851-UIM-A-0917); yorknow.com tm9etech.pdf; yorknow.com tm9e_installguide.pdf / tm9v_installguide.pdf",
+    "flags": [
+      {
+        "title": "Two-stage: set high fire before low fire",
+        "body": "TM9V install manual: high-fire manifold pressure MUST be set/verified before adjusting low-fire pressure — low fire is a percentage of the high-fire tap."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board / control",
+            "value": "York integrated furnace control (IFC), LED self-diagnostics",
+            "key": "board"
+          },
+          {
+            "label": "Flame-sense µA (normal/warning/lockout)",
+            "value": "see rating plate — not published in TM9V/TM9E install literature reviewed",
+            "key": "flame_ua"
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure — NG (TM9V high/low fire)",
+            "value": "3.5 in. w.c. high fire / 1.7 in. w.c. low fire (0-7,999 ft, 800-900 Btu/cu ft gas) — Table 5/6",
+            "key": "manifold_ng_tm9v"
+          },
+          {
+            "label": "Manifold pressure — LP (TM9V high/low fire)",
+            "value": "9.8 in. w.c. high fire / 4.1 in. w.c. low fire (sea level)",
+            "key": "manifold_lp_tm9v"
+          },
+          {
+            "label": "Manifold pressure — NG (TM9E single-stage, nominal)",
+            "value": "3.5 in. w.c. (0-7,999 ft) — Table 4",
+            "key": "manifold_ng_tm9e"
+          },
+          {
+            "label": "Manifold pressure — LP (TM9E)",
+            "value": "9.8 in. w.c. (sea level-7,999 ft)",
+            "key": "manifold_lp_tm9e"
+          },
+          {
+            "label": "Modulating (TM9M) range + lock procedure",
+            "value": "see rating plate / unit-specific commissioning sheet — modulating range and low-fire lockout procedure not found in literature reviewed",
+            "key": "manifold_mod_tm9m"
+          },
+          {
+            "label": "Supply pressure — NG/LP",
+            "value": "Max downstream to gas valve 0.5 psig (14 in. w.c.); full min/max supply table not located — see rating plate",
+            "key": "supply_pressure"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate — manual states \"do not attempt to drill out any orifices\"",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "see rating plate — model/manufacturer not published in literature reviewed",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate (\"within the allowable range as specified on the furnace rating plate\")",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "30-65°F depending on model/tap (TM9V Table 7: 35-65°F; TM9E Table 5 varies by model)",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor type/ohms",
+            "value": "Hot surface ignition (type per literature); resistance in ohms not published — see rating plate",
+            "key": "ignitor"
+          },
+          {
+            "label": "Limit switch (TM9E, per parts list)",
+            "value": "250°F manual-reset limit switch",
+            "key": "limit_switch"
+          },
+          {
+            "label": "Rollout/limit fault code",
+            "value": "5 RED FLASHES = limit circuit open (TM9V diagnostics)",
+            "key": "rollout_limit_code"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "see rating plate — not tabulated in literature reviewed for this platform",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "York",
+    "model": "TG9S",
+    "equip": "Gas Furnace",
+    "summary": "95.5% AFUE single-stage PSC multi-position condensing furnace. Same platform sold as Coleman-network GG9S (confirmed by combined manual title \"TG9S-GG9S\").",
+    "match": [
+      "TG9S",
+      "TG9S*MP",
+      "GG9S"
+    ],
+    "source": "yorknow.com TG9S_Install.pdf (JCI doc 1083287-UIM-H-0817)",
+    "flags": [
+      {
+        "title": "Verify altitude table before setting manifold pressure",
+        "body": "Nominal NG manifold pressure varies 2.4-3.5 in. w.c. by altitude/gas heating value — confirm the correct column for the install altitude before final adjustment, not just sea-level spec."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board / control",
+            "value": "York integrated furnace control (IFC), LED self-diagnostics",
+            "key": "board"
+          },
+          {
+            "label": "Flame-sense µA — normal",
+            "value": "~3.7 µA DC typical",
+            "key": "flame_ua_normal"
+          },
+          {
+            "label": "Flame-sense µA — warning",
+            "value": "Continuous amber flash below 1.5 µA — clean/inspect flame sensor",
+            "key": "flame_ua_warning"
+          },
+          {
+            "label": "Flame-sense µA — lockout",
+            "value": "see rating plate — exact lockout threshold not confirmed from yorknow.com excerpt reviewed",
+            "key": "flame_ua_lockout"
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure — NG",
+            "value": "2.4-3.5 in. w.c. (varies by altitude/gas Btu content, see rating plate for exact column)",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure — LP",
+            "value": "9.8 in. w.c. (sea level)",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply pressure — NG/LP",
+            "value": "Max downstream to gas valve 0.5 psig (14 in. w.c.); full min/max table — see rating plate",
+            "key": "supply_pressure"
+          },
+          {
+            "label": "Orifice",
+            "value": "Sized for 1030 Btu/ft³ natural gas heating value; specific drill number — see rating plate",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "see rating plate — model/manufacturer not published in literature reviewed",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "30-60°F (smallest models) up to 45-75°F (130 MBH models) — model-specific table",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor type/ohms",
+            "value": "Hot surface ignition; resistance in ohms not published — see rating plate",
+            "key": "ignitor"
+          },
+          {
+            "label": "Rollout switch fault code",
+            "value": "5 RED FLASHES = rollout/limit circuit fault",
+            "key": "rollout_code"
+          },
+          {
+            "label": "Main limit switch fault code",
+            "value": "4 RED FLASHES = main limit switch fault",
+            "key": "limit_code"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Manifold pressure table adjusts above 5,000 ft (Table 5) — see rating plate for exact percentage",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "York",
+    "model": "TG8S",
+    "equip": "Gas Furnace",
+    "summary": "80% AFUE single-stage PSC multi-position furnace, non-condensing. Confirmed twin standard/low-NOx variant TGLS.",
+    "match": [
+      "TG8S",
+      "TG8S*MP",
+      "TGLS",
+      "TGLS*MP"
+    ],
+    "source": "yorknow.com TG8S_Install.pdf (JCI doc 998491-UIM-C-0616)",
+    "flags": [
+      {
+        "title": "Confirm LP supply pressure floor before firing",
+        "body": "Manual publishes a hard LP minimum supply of 8.0 in. w.c. (vs. 4.5 in. w.c. for NG) — a marginal LP regulator that would pass on natural gas can starve this furnace and cause nuisance ignition lockouts."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board / control",
+            "value": "York integrated furnace control (IFC), LED self-diagnostics",
+            "key": "board"
+          },
+          {
+            "label": "Flame-sense µA thresholds",
+            "value": "see rating plate — not published in TG8S install manual reviewed",
+            "key": "flame_ua"
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure — NG",
+            "value": "3.5 in. w.c.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure — LP",
+            "value": "10.0 in. w.c.",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply pressure — NG (min/max)",
+            "value": "4.5 in. w.c. minimum / 10.5 in. w.c. maximum",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply pressure — LP (min/max)",
+            "value": "8.0 in. w.c. minimum / 13.0 in. w.c. maximum",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate — drill size not published in excerpt reviewed",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "see rating plate — model/manufacturer not published in literature reviewed",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "25-55°F (smallest models) up to 40-70°F (largest models) — model-specific, Table 6",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor type/ohms",
+            "value": "Hot surface ignition; resistance in ohms not published — see rating plate",
+            "key": "ignitor"
+          },
+          {
+            "label": "Rollout/limit switch",
+            "value": "see rating plate — temperature ratings not published in excerpt reviewed",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Manifold pressure adjustment referenced above 5,000 ft (Table 5) — see rating plate for exact value",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "York",
+    "model": "TM8E",
+    "equip": "Gas Furnace",
+    "summary": "80% AFUE single-stage ECM multi-position furnace (standard and Ultra-Low NOx TMLE variant). Same model number sold under the Fraser-Johnston nameplate per york.com product pages.",
+    "match": [
+      "TM8E",
+      "TM8E*MP",
+      "TMLE",
+      "TMLE*MP"
+    ],
+    "source": "yorknow.com technical guide (JCI doc 5597956-YTG-C-1219)",
+    "flags": [
+      {
+        "title": "Low-NOx TMLE variant may need altitude kit sooner",
+        "body": "Tech guide flags separate altitude kits (S1-1PS3301 / S1-1PS3302) required above 5,000 ft — confirm the correct kit p/n for standard TM8E vs. low-NOx TMLE before ordering."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board / control",
+            "value": "York integrated furnace control (IFC), LED self-diagnostics (per shared platform)",
+            "key": "board"
+          },
+          {
+            "label": "Flame-sense µA thresholds",
+            "value": "see rating plate — not published in TM8E technical guide reviewed",
+            "key": "flame_ua"
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure — NG/LP",
+            "value": "see rating plate — not published in technical guide reviewed (install manual not located on yorknow.com in this pass)",
+            "key": "manifold"
+          },
+          {
+            "label": "Supply pressure — NG/LP",
+            "value": "see rating plate",
+            "key": "supply_pressure"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "see rating plate",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "0.8 in. H₂O (from blower performance tables)",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "20-50°F (40 MBH model) up to 40-70°F (largest models) — model-specific table",
+            "key": "temp_rise"
+          },
+          {
+            "label": "Max outlet air temperature",
+            "value": "190°F (all models)",
+            "key": "max_outlet_temp"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor type/ohms",
+            "value": "see rating plate — not published in technical guide reviewed",
+            "key": "ignitor"
+          },
+          {
+            "label": "Rollout/limit switch",
+            "value": "see rating plate — not published in technical guide reviewed",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Altitude kit required above 5,000 ft (S1-1PS3301 std / S1-1PS3302 low-NOx); exact derate % — see rating plate",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "York",
+    "model": "GY9S / GF9S / GM9S (legacy Stellar/Latitude platform, incl. Affinity PS9)",
+    "equip": "Gas Furnace",
+    "summary": "Legacy 90%+ single-stage condensing \"Stellar/Latitude\" tubular heat-exchanger platform (superseded by TG9S). GY9S=York, GF9S=Fraser-Johnston, GM9S=Coleman-network nameplate per upgnet.com archive folder structure; PS9 is the Affinity-branded version of the same generation. LED flash codes for this platform are already covered elsewhere — this entry is MAINT figures only.",
+    "match": [
+      "GY9S",
+      "GF9S",
+      "GM9S",
+      "PS9"
+    ],
+    "source": "upgnet.com Source1 archive — York Affinity PS9 Technical Guide (doc 036-21578-002-b-0205)",
+    "flags": [
+      {
+        "title": "Confirm capacity derate before altitude conversion",
+        "body": "PS9 tech guide: reduce input capacity 4% for each 1,000 ft above 2,000 ft elevation — recompute BTU input before selecting a high-altitude orifice/pressure-switch kit on a replacement in the mountains."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board / control",
+            "value": "Legacy York integrated control — codes covered separately; MAINT figures only here",
+            "key": "board"
+          },
+          {
+            "label": "Flame-sense µA thresholds",
+            "value": "see rating plate — not published in the PS9 technical guide reviewed",
+            "key": "flame_ua"
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure — NG/LP",
+            "value": "see rating plate — not published in PS9 technical guide reviewed (dimensional/performance guide only, no combustion table)",
+            "key": "manifold"
+          },
+          {
+            "label": "Supply pressure — NG/LP",
+            "value": "see rating plate",
+            "key": "supply_pressure"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "see rating plate",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "0.5 in. w.g. (per PS9 technical guide)",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "35-65°F (40 MBH model example) — model-specific table",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor type/ohms",
+            "value": "see rating plate — not published in PS9 technical guide reviewed",
+            "key": "ignitor"
+          },
+          {
+            "label": "Rollout/limit switch",
+            "value": "see rating plate — not published in PS9 technical guide reviewed",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Reduce capacity 4% per 1,000 ft above 2,000 ft elevation",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "York",
+    "model": "YZH018-060 (Affinity 2-Stage Heat Pump)",
+    "equip": "Heat Pump",
+    "summary": "18 SEER two-stage scroll-compressor heat pump (Affinity series); factory-matched to TXV-equipped indoor coils with on-demand microprocessor defrost control.",
+    "match": [
+      "York YZH024/036/048/060 (and 'C' communicating-ready suffix)",
+      "Coleman/Luxaire 18 SEER 2-stage Affinity-platform twin — brand-specific model code not confirmed in reviewed literature, verify rating plate"
+    ],
+    "source": "York Technical Guide 561927-YTG-A-0410, 'Affinity Split-System Heat Pumps 18 SEER - R-410A', Models YZH024 thru 060(C) — JCI/York service literature distributed via upgnet.com Source1 / yorknow.com documentation library",
+    "flags": [
+      {
+        "title": "No Factory Crankcase Heater on This Platform",
+        "body": "All YZH024-060 models ship WITHOUT a crankcase heater per the Physical & Electrical Data table — don't assume one is present. Follow standard oil-return/soak precautions on cold-soaked startups and long off-cycles."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "TXV — system-matched (e.g. 1TVM4G1/4H1/4K1 by size); required, not field-selected",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "2-stage scroll (Multi-stage Compressor: Yes)",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost Type/Interval",
+            "value": "On-demand microprocessor defrost (adaptive balance-point control); not a fixed timer — exact algorithm not detailed in this guide",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing Valve Energized Mode",
+            "value": "Not stated in this guide. Standard York/JCI convention is energized-in-cooling / de-energized-in-heating — confirm against the unit wiring diagram before relying on it",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "Not published in Technical Guide — see rating plate or IFC/board label",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "Not published in Technical Guide — see rating plate or IFC/board label",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Lockout",
+            "value": "No standard rating stated. Accessory kits extend cooling operation to +20°F (Standard Low Ambient Kit S1-2LA06700424) or -20°F (Advanced Low Ambient Kit S1-2LA04701024)",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "No (all sizes)",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / System Charge for Various Matched Systems table (base factory charge + evaporator adder + lineset adder) — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "York/Coleman/Luxaire (Johnson Controls) Demand Defrost Control boards have a 'TEST' pin pair (P3 on some revisions). With a heating call active, jumper the TEST pins for 6+ seconds — defrost engages and continues for as long as the jumper stays in place. While TEST is jumpered, the control ignores actual coil (liquid-line) temperature and outdoor ambient — the coil does NOT need to be cold for the forced test to run. After removing the jumper, defrost terminates normally on its own logic: liquid-line temp reaches 80°F, or after 8 minutes of defrost run time, whichever comes first. Source: Johnson Controls Unitary Products 'Demand Defrost Control' Operation Instructions, part 031-09178-000 / doc 501062-UAI (cdn.master.ca and us-ac.com hosted copies), plus corroborating HVAC-Talk field posts."
+          },
+          {
+            "label": "ComfortNet/Affinity communicating",
+            "value": "NOT independently verified this session. The S1-TTSCC01/S1-TTSCC02 Affinity/ComfortNet touchscreen control has a service/diagnostics area, and York field literature references being able to force a defrost cycle through it, but no source located gave the exact on-screen menu path or button sequence. Do not guess the menu steps — pull the specific control's Installation/Operation guide or use the physical TEST-pin method above (works regardless of comm status) if the outdoor unit's board is accessible."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "On normal (non-forced) operation, coil temp must be below the board's frost/cut-in threshold before a defrost demand will latch; the TEST-pin forced method above deliberately bypasses that check. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux heat may lock in — warn of a normal burst of cold supply air during the test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "York",
+    "model": "YHM024-060 (LX Series Modulating Heat Pump)",
+    "equip": "Heat Pump",
+    "summary": "14-17.75 SEER inverter-driven modulating heat pump (50-100% capacity, operated from a conventional 2-stage thermostat, non-communicating); hybrid demand/time-temperature defrost control.",
+    "match": [
+      "York YHM",
+      "Coleman CH16",
+      "Luxaire TH16"
+    ],
+    "source": "Johnson Controls Unitary Products Installation Manual 5156631-UIM-G-0417, 'YHM, CH16, TH16 Series' 16 SEER Heat Pump, 2-5 Tons 1-Phase — yorknow.com/pub/media/documentationMatched/YHM48B21S_InstallGuide.pdf",
+    "flags": [
+      {
+        "title": "LPS Is Intentionally Ignored Below 15°F Ambient",
+        "body": "The control electronically ignores the Low Pressure Switch input during defrost, for 120 seconds after defrost ends, and whenever outdoor ambient is below 15°F. A low-suction condition without an LPS fault in cold weather is expected behavior on this platform, not a stuck or bypassed switch."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "TXV (bulb-mounted, R-410A TXV per install manual)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Inverter-driven, modulates 50-100% of nominal capacity in 10% steps from a conventional 2-stage thermostat signal",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost Type/Interval",
+            "value": "Hybrid Time/Temperature + Demand Defrost — control auto-selects mode based on prior cycle outcome. Defrost Enable coil temp: 35°F. Forces a defrost check at 31 min accumulated compressor run time (6-hr ceiling); defrost cycle runs up to 12 min or terminates early on coil temp",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing Valve Energized Mode",
+            "value": "Confirmed energized-in-cooling / de-energized-in-heating — control 'Energizes the reversing valve' to enter defrost (which runs the unit in cooling mode) and 'De-energizes the reversing valve' at defrost termination",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "No fixed psig published — HPS is an electronic soft-lockout; 4 soft lockouts (8 total HPS openings) escalates to a hard lockout requiring manual reset, see Owner's Guide",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "No fixed psig published — ignored during/just after defrost and below 15°F ambient (see flag); otherwise soft-lockout logic",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Lockout",
+            "value": "Standard/built-in — approved for cooling operation down to 35°F (2°C) without an accessory kit",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "Yes — confirmed (dedicated CCH troubleshooting section in manual)",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / System Charge table — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "York/Coleman/Luxaire (Johnson Controls) Demand Defrost Control boards have a 'TEST' pin pair (P3 on some revisions). With a heating call active, jumper the TEST pins for 6+ seconds — defrost engages and continues for as long as the jumper stays in place. While TEST is jumpered, the control ignores actual coil (liquid-line) temperature and outdoor ambient — the coil does NOT need to be cold for the forced test to run. After removing the jumper, defrost terminates normally on its own logic: liquid-line temp reaches 80°F, or after 8 minutes of defrost run time, whichever comes first. Source: Johnson Controls Unitary Products 'Demand Defrost Control' Operation Instructions, part 031-09178-000 / doc 501062-UAI (cdn.master.ca and us-ac.com hosted copies), plus corroborating HVAC-Talk field posts."
+          },
+          {
+            "label": "ComfortNet/Affinity communicating",
+            "value": "NOT independently verified this session. The S1-TTSCC01/S1-TTSCC02 Affinity/ComfortNet touchscreen control has a service/diagnostics area, and York field literature references being able to force a defrost cycle through it, but no source located gave the exact on-screen menu path or button sequence. Do not guess the menu steps — pull the specific control's Installation/Operation guide or use the physical TEST-pin method above (works regardless of comm status) if the outdoor unit's board is accessible."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "On normal (non-forced) operation, coil temp must be below the board's frost/cut-in threshold before a defrost demand will latch; the TEST-pin forced method above deliberately bypasses that check. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux heat may lock in — warn of a normal burst of cold supply air during the test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "York",
+    "model": "YHE018-060 / YHG018-060 (LX Series Single-Stage Heat Pump)",
+    "equip": "Heat Pump",
+    "summary": "Single-stage scroll-compressor heat pumps on the shared LX Series platform: YHE is the 14 SEER tier, YHG the 16 SEER tier. On-demand microprocessor defrost with a field-set jumper interval.",
+    "match": [
+      "York YHE",
+      "York YHG",
+      "Coleman/Luxaire TH4 (YHE 14 SEER twin)",
+      "Coleman YHG / Luxaire TH6 (YHG 16 SEER twin)"
+    ],
+    "source": "York Technical Guide 5455359-YTG-A-1217 (YHE, 14 SEER R-410A 1-Phase, yorknow.com/pub/media/documentation/YHE_NEW_TECH.pdf) and York Technical Guide 5599017-YTG-F-0520 (YHG, 16 SEER R-410A 1-Phase, yorknow.com/pub/media/documentation/YHG_tech.pdf)",
+    "flags": [
+      {
+        "title": "Crankcase Heater Presence Differs by Tier/Size",
+        "body": "YHE (14 SEER) ships WITHOUT a crankcase heater on most sizes but WITH one on its two largest tonnage models, per the Physical & Electrical Data table. YHG (16 SEER) ships WITH a crankcase heater on every size. Don't assume either way — check the specific model's data table or rating plate."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "YHE: piston or TXV allowed depending on matched indoor coil (TXV + hard-start kit required on some matches). YHG: TXV required on all matches (S1-1TVM*** kit)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Single-stage scroll",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost Type/Interval",
+            "value": "On-demand (microprocessor) defrost; field-set via a Defrost Jumper Pin position that varies by matched indoor coil (see System Charge for Various Matched Systems table for the pin setting per model — the pin-position-to-minutes mapping is printed on the defrost control board itself, not in this guide)",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing Valve Energized Mode",
+            "value": "Not stated in this guide. Standard York/JCI convention is energized-in-cooling / de-energized-in-heating — confirm against the unit wiring diagram before relying on it",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "Not published in Technical Guide — see rating plate or IFC/board label",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "Not published in Technical Guide — see rating plate or IFC/board label",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Lockout",
+            "value": "No standard rating below normal cooling operation stated. Accessory kits extend cooling to +20°F (Standard Kit S1-2LA06700424) or -20°F (Advanced Kit S1-2LA04701024); ambient ≤55°F for servicing calls for the Cold Weather Charging Tent (S1-CHGTENT01)",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "Model-dependent — see flag above; confirm on rating plate",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / System Charge table — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "York/Coleman/Luxaire (Johnson Controls) Demand Defrost Control boards have a 'TEST' pin pair (P3 on some revisions). With a heating call active, jumper the TEST pins for 6+ seconds — defrost engages and continues for as long as the jumper stays in place. While TEST is jumpered, the control ignores actual coil (liquid-line) temperature and outdoor ambient — the coil does NOT need to be cold for the forced test to run. After removing the jumper, defrost terminates normally on its own logic: liquid-line temp reaches 80°F, or after 8 minutes of defrost run time, whichever comes first. Source: Johnson Controls Unitary Products 'Demand Defrost Control' Operation Instructions, part 031-09178-000 / doc 501062-UAI (cdn.master.ca and us-ac.com hosted copies), plus corroborating HVAC-Talk field posts."
+          },
+          {
+            "label": "ComfortNet/Affinity communicating",
+            "value": "NOT independently verified this session. The S1-TTSCC01/S1-TTSCC02 Affinity/ComfortNet touchscreen control has a service/diagnostics area, and York field literature references being able to force a defrost cycle through it, but no source located gave the exact on-screen menu path or button sequence. Do not guess the menu steps — pull the specific control's Installation/Operation guide or use the physical TEST-pin method above (works regardless of comm status) if the outdoor unit's board is accessible."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "On normal (non-forced) operation, coil temp must be below the board's frost/cut-in threshold before a defrost demand will latch; the TEST-pin forced method above deliberately bypasses that check. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux heat may lock in — warn of a normal burst of cold supply air during the test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "York",
+    "model": "HMH7 (Horizontal Discharge Modulating Heat Pump)",
+    "equip": "Heat Pump",
+    "summary": "17 SEER2 side/horizontal-discharge inverter-driven modulating heat pump (35-100% capacity), optionally communicating; ducted residential outdoor unit, not a mini-split/ductless system. HMCG2 is this platform's straight-cool AC companion.",
+    "match": [
+      "York HMH7",
+      "Coleman HMH7",
+      "Luxaire HMH7 (same model code used across all three brands)"
+    ],
+    "source": "YORK Technical Guide 6353669-YTG-C-0923, 'HMH7 Series - 17 SEER2 Horizontal Discharge Modulating Heat Pump', R-410A/R-454B, 2-5 nominal tons, dated 2023-09-12 — yorknow.com/pub/media/documentation/hmh7tech.pdf",
+    "flags": [
+      {
+        "title": "Dual-Refrigerant Platform — Confirm Nameplate Before Connecting Gauges",
+        "body": "HMH7 is built in both R-410A (model refrigerant code B) and R-454B (code D) versions. Using the wrong gauges, recovery equipment, or refrigerant on this platform is a real risk — always read the rating plate before connecting a manifold, never assume R-410A."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (code B) or R-454B (code D) — see flag; confirm from model number/rating plate",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "TXV",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Inverter-driven, modulating; optionally Communicating (control strategy code C available) or standard non-communicating, per model number",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost Type/Interval",
+            "value": "Demand-defrost, adaptive control on the same JCI modulating-platform control architecture as YHM. Board-specific timing values are not printed in this Technical Guide — see the HMH7 User's Guide / IFC board label for sequence detail",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing Valve Energized Mode",
+            "value": "Not stated in this Technical Guide. Same JCI modulating-platform family as YHM, which confirms energized-in-cooling / de-energized-in-heating — verify against this unit's wiring diagram",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — related modulating platforms use an electronic soft-lockout (no fixed psig); see IFC board label",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see IFC board label",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Lockout",
+            "value": "Standard/built-in — guide states units 'shall be approved for cooling operation between 35°F and 122°F without modification'",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "Yes (base heater) — all sizes",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / chart — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "York/Coleman/Luxaire (Johnson Controls) Demand Defrost Control boards have a 'TEST' pin pair (P3 on some revisions). With a heating call active, jumper the TEST pins for 6+ seconds — defrost engages and continues for as long as the jumper stays in place. While TEST is jumpered, the control ignores actual coil (liquid-line) temperature and outdoor ambient — the coil does NOT need to be cold for the forced test to run. After removing the jumper, defrost terminates normally on its own logic: liquid-line temp reaches 80°F, or after 8 minutes of defrost run time, whichever comes first. Source: Johnson Controls Unitary Products 'Demand Defrost Control' Operation Instructions, part 031-09178-000 / doc 501062-UAI (cdn.master.ca and us-ac.com hosted copies), plus corroborating HVAC-Talk field posts."
+          },
+          {
+            "label": "ComfortNet/Affinity communicating",
+            "value": "NOT independently verified this session. The S1-TTSCC01/S1-TTSCC02 Affinity/ComfortNet touchscreen control has a service/diagnostics area, and York field literature references being able to force a defrost cycle through it, but no source located gave the exact on-screen menu path or button sequence. Do not guess the menu steps — pull the specific control's Installation/Operation guide or use the physical TEST-pin method above (works regardless of comm status) if the outdoor unit's board is accessible."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "On normal (non-forced) operation, coil temp must be below the board's frost/cut-in threshold before a defrost demand will latch; the TEST-pin forced method above deliberately bypasses that check. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux heat may lock in — warn of a normal burst of cold supply air during the test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "York",
+    "model": "YXV024-060 (Affinity Variable-Capacity Air Conditioner)",
+    "equip": "Condenser",
+    "summary": "Up to 21 SEER fully communicating variable-capacity air conditioner (inverter compressor); requires a compatible communicating thermostat and includes Charge Assurance refrigerant-charge monitoring.",
+    "match": [
+      "York YXV",
+      "Coleman AC21",
+      "Luxaire AL21"
+    ],
+    "source": "York Technical Guide 5331838-YTG-B-0517, 'Affinity Series 20 SEER - Modulating Split-System Air Conditioner', R-410A 1-Phase — yorknow.com/pub/media/documentation/YXVtech.pdf",
+    "flags": [
+      {
+        "title": "Communicating Thermostat Is Required for Variable Operation",
+        "body": "YXV needs a compatible Residential Touch Screen Communicating control (only 3 thermostat wires) to deliver true variable-capacity operation. On a conventional thermostat it falls back to fixed-stage operation — check the control type before troubleshooting a 'won't modulate' complaint."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "TXV (dealer-installed or factory on matched indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed/modulating, communicating",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see rating plate/board label",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see rating plate/board label",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Cooling Limit",
+            "value": "Standard/built-in — Low Ambient Protection allows cooling operation down to 35°F (2°C), reducing capacity as needed; no accessory kit required",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "Yes (stator heat) — all sizes",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / Tabular Data Sheet — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "York",
+    "model": "YXT024-060 (Affinity 2-Stage Air Conditioner)",
+    "equip": "Condenser",
+    "summary": "Up to 19 SEER / 18 SEER2 two-stage air conditioner. Communications-capable: operates as a conventionally-wired system or, with only 4 thermostat wires, as a communicating system.",
+    "match": [
+      "York YXT",
+      "Coleman AC19",
+      "Luxaire AL19"
+    ],
+    "source": "York Technical Guide 5493751-YTG-H-1022, 'Affinity Series Model: YXT - 18 SEER2 Split-System Air Conditioner - Single-Phase', dated 2022-10-01 — yorknow.com/pub/media/documentation/yxtseer2tech.pdf",
+    "flags": [
+      {
+        "title": "No Built-In Low-Ambient Cooling — Kit Required",
+        "body": "Unlike the fully-communicating YXV, YXT relies on the same accessory low-ambient kits as the conventional LX-series units (+20°F Standard Kit / -20°F Advanced Kit). Don't assume this model has YXV's built-in 35°F cold-weather cooling capability."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "TXV on all matched indoor coils (dealer-installed or factory, S1-1TVM*** kit)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "2-stage scroll",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see rating plate/board label",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see rating plate/board label",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Cooling Limit",
+            "value": "No standard numeric rating printed in this guide. Accessory kits extend cooling operation to +20°F (Standard Kit) or -20°F (Advanced Kit); ambient ≤55°F for servicing calls for the Cold Weather Charging Tent",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "No (per Physical & Electrical Data table)",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / chart — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "York",
+    "model": "YCG/YCE/YCJ/YFE018-060 (LX Series Single-Stage Air Conditioner)",
+    "equip": "Condenser",
+    "summary": "Single-stage scroll-compressor air conditioners on the shared LX Series outdoor-unit platform. YCG/YCE/YFE/YCJ are efficiency-tier variants (roughly 13-17 SEER depending on the matched indoor coil) of the same physical unit.",
+    "match": [
+      "York YCG",
+      "York YCE",
+      "York YCJ",
+      "York YFE",
+      "Luxaire TC-series (confirmed cross-reference: TC7B tier ≈ YCG, TC4B tier ≈ YCE)",
+      "Coleman equivalent on the same LX platform — exact tier code not directly confirmed in reviewed literature, verify rating plate"
+    ],
+    "source": "York Technical Guide 5495509-YTG-F-1021, 'LX Series Split-System Air Conditioners' up to 17 SEER, R-410A 1-Phase — yorknow.com/pub/media/documentation/ycgtech.pdf (see also yorknow.com/pub/media/documentation/ycetech.pdf for the YCE-specific tier)",
+    "flags": [
+      {
+        "title": "Refrigerant Varies by Vintage — Always Check the Nameplate",
+        "body": "This LX outdoor-unit platform has produced both R-410A units (YCG/YCE/YCJ/YFE, covered here) and newer R-454B SEER2 successors on the same chassis family (e.g. YC4-tier). Never assume R-410A on a unit in this family — confirm refrigerant type from the rating plate before connecting gauges or recovery equipment."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A on YCG/YCE/YCJ/YFE (confirm on nameplate — see flag)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering Device",
+            "value": "TXV required on all matched indoor coils (S1-1TVM*** kit)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Single-stage scroll",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Protections & Low Ambient",
+        "rows": [
+          {
+            "label": "High Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see rating plate/board label",
+            "key": "hps"
+          },
+          {
+            "label": "Low Pressure Switch Cutout/Cutin",
+            "value": "Not published in this Technical Guide — see rating plate/board label",
+            "key": "lps"
+          },
+          {
+            "label": "Low Ambient Cooling Limit",
+            "value": "No standard numeric rating printed in this guide. Accessory kits extend cooling operation to +20°F (Standard Kit) or -20°F (Advanced Kit); ambient ≤55°F for servicing calls for the Cold Weather Charging Tent",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase Heater",
+            "value": "No (per Physical & Electrical Data table)",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "System Charge",
+            "value": "See nameplate / chart — do not invent a charge value",
+            "key": "charge"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "match": [
+      "York MVC",
+      "York MV",
+      "MVC08B",
+      "MVC12B",
+      "MVC12C",
+      "MVC14D",
+      "MVC16C",
+      "MVC20D",
+      "Coleman MVC (same model prefix)",
+      "Luxaire MVC (same model prefix)"
+    ],
+    "brand": "York",
+    "model": "MVC / MV",
+    "equip": "Air Handler",
+    "summary": "Modular, variable-speed ECM communicating air handler (constant-CFM). Direct-drive ECM blower is communicating-ready for smart-thermostat pairing; ships as a flex coil with no factory metering device, so a bolt-on TXV kit (or factory TXV on some models) must be added in the field to match the outdoor unit.",
+    "source": "York Technical Manual 5151065-YTG-H-0118 (MVC Series, dated 01/18, supersedes 05/17) — yorknow.com; York Install Guide 5169038-UIM-D-0617 (Variable Speed ECM Modular Multi-Position Air Handlers) — yorknow.com",
+    "flags": [
+      {
+        "title": "York flag: no factory metering device",
+        "body": "MVC ships as a 'Flex-coil' with NO factory-installed metering device. A field bolt-on TXV kit (or factory TXV on select models) must be installed to match the outdoor condenser/heat pump — do not assume a piston is present."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Direct-drive, variable-speed ECM, communicating-capable",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow verification",
+            "value": "Onboard LED (LED2) flashes once per 100 CFM for field CFM check",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate / install guide airflow tables (not confirmed for this line)",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Filter & Heat Kit",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Field-supplied 1\" disposable/permanent, sizes incl. 16x20x1, 20x20x1, 22x20x1; optional bottom rack filter kit accessory",
+            "key": "filter"
+          },
+          {
+            "label": "Electric heat kit",
+            "value": "6HK series, 208/230V-1-60 and 208/230V-3-60, staged on W1 / W1+W2 combinations — see kit-specific table for exact kW/staging",
+            "key": "heat_kit"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "None factory-installed (flex coil); field bolt-on TXV kit required, match to outdoor unit — some models have factory TXV",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Thermoset drain pan, low-retention, positive slope to drain connection",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "match": [
+      "York AE",
+      "AE24BX21",
+      "AE30BX21",
+      "AE36BX21",
+      "AE42CX21",
+      "Coleman JHE",
+      "Luxaire JHE (multi-speed ECM twin)"
+    ],
+    "brand": "York",
+    "model": "AE (multi-speed ECM)",
+    "equip": "Air Handler",
+    "summary": "Single-piece, multi-position, multi-speed ECM (constant-torque) air handler. Five discrete motor speed taps are selected by energizing 24VAC leads at the motor terminal block; highest energized tap wins if more than one is powered simultaneously. No onboard metering device — piston or TXV is field-installed to match the outdoor unit.",
+    "source": "York Installation Manual 5169032-UIM-C-0416 (AE Series) — yorknow.com; also listed as York Install Guide 5373254-UIM-B-0617 (Standard ECM Single Piece Multi-Position Air Handlers) — yorknow.com. Coleman/Luxaire JHE twin per official Luxaire residential air handler lineup page (luxaire.com).",
+    "flags": [
+      {
+        "title": "York flag: multiple 24VAC taps energized = highest speed wins",
+        "body": "If more than one motor speed tap receives 24VAC simultaneously (miswired stat/board), the AE blower runs at the HIGHEST energized speed tap, not an average — check for stray voltage on unused tap wires during callbacks for wrong-airflow complaints."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Direct-drive, 5-speed ECM (constant-torque, non-communicating)",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "5 speed taps at motor terminal block, selected via 24VAC control wiring (speed #1 low to #5 HI)",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static pressure",
+            "value": "0.70 in. w.c. (per AE airflow data tables)",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Filter & Heat Kit",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Standard 1\" permanent or disposable; permanent washable filter kits 1PF0601/0602/0603",
+            "key": "filter"
+          },
+          {
+            "label": "Electric heat kit",
+            "value": "Single-phase kits 2.5-25 kW; 3-phase 208-230V kits 10-25 kW; minimum blower speed required varies by kit model — see heat kit table",
+            "key": "heat_kit"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "None factory-installed — piston or TXV must be field-installed to match outdoor unit",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Primary and secondary drain lines must both be field-trapped for proper drainage; fittings per ASTM D2466",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "match": [
+      "York AP",
+      "AP24BX21",
+      "AP30BX21",
+      "AP36BX21",
+      "AP48CX21",
+      "Coleman AP (same model prefix)",
+      "Luxaire AP (same model prefix)",
+      "Coleman JDP",
+      "York AHE (related but ECM, not PSC - see flag)"
+    ],
+    "brand": "York",
+    "model": "AP (standard PSC/fixed-speed) — also sold as AL / Coleman & Luxaire AP",
+    "equip": "Air Handler",
+    "summary": "Single-piece, multi-position, standard-efficiency multi-speed PSC air handler with MaxAlloy aluminum coil. Same 'AP' model-number prefix is used across York, Coleman, and Luxaire branded literature for this platform. Blower speed is field-selected at the motor terminal block; no factory metering device — piston or TXV is added per outdoor unit spec.",
+    "source": "York Installation Guide 5373256-UIM-C-0717 (Standard PSC Single Piece, Multi-Position Air Handlers) — yorknow.com; York/Luxaire/Coleman AP product data sheets (york.com, luxaire.com, colemanac.com)",
+    "flags": [
+      {
+        "title": "York flag: AHE is ECM, not PSC — do not treat as the same platform",
+        "body": "The AHE series (York doc 697887-YTG-H-0514) is often assumed to be the PSC line but is actually a fixed-speed ECM/brushless-DC blower ('Flex-coil', field bolt-on TXV, no factory metering device) — confirm blower type off the rating plate before ordering a PSC-specific replacement motor for an AHE-tagged unit."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Direct-drive, multi-speed PSC motor",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Speed tap selection at motor terminal block (connect motor lead to desired speed tap per unit wiring label)",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static pressure",
+            "value": "Tested to 0.50 in. w.c. per UL 1995/CSA 22.2 No.236; 0.2-0.5 in. w.c. recommended for optimal performance",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Filter & Heat Kit",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Built-in filter rack, 1.0\" disposable or cleanable filter",
+            "key": "filter"
+          },
+          {
+            "label": "Electric heat kit",
+            "value": "Field-installed single-phase kits available — see kit-specific kW/staging table (not itemized in this pass)",
+            "key": "heat_kit"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "None factory-installed — field piston or TXV required, sized to match outdoor unit (see outdoor unit documentation)",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "3/4\" PVC or threaded steel drain connections per ASTM D2466 Sch. 40 fittings (drains are non-pressurized)",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GMVC96 / GCVC96",
+    "equip": "Gas Furnace",
+    "summary": "2-stage, 96% AFUE, ComfortNet-compatible condensing furnace on the 34.5\" chassis. This chassis/platform is shared with the Daikin-brand DM96VC/DC96VC twin, so the Daikin service manual is the authoritative source for adjustment and troubleshooting figures.",
+    "match": [
+      "GMVC96",
+      "GCVC96",
+      "AMVC96",
+      "ACVC96",
+      "DM96VC",
+      "DC96VC"
+    ],
+    "source": "Daikin Service Instructions RSD6612010R5, \"34.5\\\" Chassis DC96VC/DM96VC Two-Stage Gas Furnace\" (daikincomfort.com/docs/default-source/dm96vc/sm-rsd6612010r5.pdf) — GMVC96/GCVC96 share this platform/chassis and figures",
+    "flags": [
+      {
+        "title": "Front cover pressure switch blocks ignition on condensate backup",
+        "body": "In addition to the high-fire/low-fire draft pressure switches, this platform adds a \"front cover pressure switch\" wired in series with the main (low-fire) gas valve solenoid. If condensate backs up in the secondary heat exchanger (plugged/misrouted drain), this switch opens and blocks the gas valve — a non-firing furnace with good draft-switch readings should point you here."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG — low stage",
+            "value": "1.6–2.2\" w.c. (nominal 1.9\" w.c.)",
+            "key": "manifold_ng_low"
+          },
+          {
+            "label": "Manifold pressure, NG — high stage",
+            "value": "3.2–3.8\" w.c. (nominal 3.5\" w.c.)",
+            "key": "manifold_ng_high"
+          },
+          {
+            "label": "Manifold pressure, LP — low stage",
+            "value": "5.7–6.3\" w.c. (nominal 6.0\" w.c.)",
+            "key": "manifold_lp_low"
+          },
+          {
+            "label": "Manifold pressure, LP — high stage",
+            "value": "9.7–10.3\" w.c. (nominal 10.0\" w.c.)",
+            "key": "manifold_lp_high"
+          },
+          {
+            "label": "Supply (inlet) pressure, NG",
+            "value": "4.5\"–10.0\" w.c.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure, LP",
+            "value": "11.0\"–13.0\" w.c.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice, NG (factory)",
+            "value": "#45 drill",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J54, two-stage",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame-sense signal (Integrated Ignition control)",
+            "value": "1–4 µA",
+            "key": "flame_sense"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "120V silicon nitride HSI (~2156–2678°F operating temp)",
+            "key": "ignitor_type"
+          },
+          {
+            "label": "Ignitor resistance, room temp",
+            "value": "37–68 Ω",
+            "key": "ignitor_ohms"
+          },
+          {
+            "label": "Ignitor current draw",
+            "value": "0.37–0.68 A @ 120V (steady state, preheat)",
+            "key": "ignitor_amps"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit",
+            "value": "Auto-reset bi-metal disc, non-adjustable",
+            "key": "primary_limit"
+          },
+          {
+            "label": "Auxiliary limit",
+            "value": "Blower housing (both sides); required for horizontal/counterflow",
+            "key": "aux_limit"
+          },
+          {
+            "label": "Flame rollout switch",
+            "value": "Manual-reset, temperature-activated, mounted to manifold assembly",
+            "key": "rollout"
+          },
+          {
+            "label": "High-altitude derate",
+            "value": "Orifice/pressure-switch kit required above 7,000 ft (USA); Canada certified to 4,500 ft max",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GMVM97 / GCVM97",
+    "equip": "Gas Furnace",
+    "summary": "Modulating (35%–100% continuously variable), 97% AFUE condensing furnace on the 34.5\" chassis. The service manual labels the modulation-range endpoints \"Low Stage\" and \"High Stage\" — these are the low-fire and high-fire manifold pressure targets, not a 2-stage valve.",
+    "match": [
+      "GMVM97",
+      "GCVM97",
+      "AMVM97",
+      "ACVM97"
+    ],
+    "source": "Goodman Service Instructions RS6612015R1, \"34.5\\\" Chassis ACVM97*BA/AMVM97*BA & GCVM97*BA/GMVM97*BA Modulating Gas Furnaces\" (mobile.goodmanmfg.com/mobileapp/stellent/pdf/infoPdf/Lit/RS6612015R1.pdf)",
+    "flags": [
+      {
+        "title": "LP manifold-pressure tolerance is wider than NG",
+        "body": "The manual states final manifold pressure must not vary more than ±0.3\" w.c. from spec on natural gas, but allows +0.5\" w.c. on propane. Don't hold an LP unit to the tighter NG tolerance when fine-tuning the regulator."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG — low fire (~35%)",
+            "value": "1.6–2.2\" w.c. (nominal 1.9\" w.c.)",
+            "key": "manifold_ng_low"
+          },
+          {
+            "label": "Manifold pressure, NG — high fire (100%)",
+            "value": "3.2–3.8\" w.c. (nominal 3.5\" w.c.)",
+            "key": "manifold_ng_high"
+          },
+          {
+            "label": "Manifold pressure, LP — low fire",
+            "value": "5.7–6.3\" w.c. (nominal 6.0\" w.c.)",
+            "key": "manifold_lp_low"
+          },
+          {
+            "label": "Manifold pressure, LP — high fire",
+            "value": "9.7–10.3\" w.c. (nominal 10.0\" w.c.)",
+            "key": "manifold_lp_high"
+          },
+          {
+            "label": "Supply (inlet) pressure, NG",
+            "value": "4.5\"–10.0\" w.c.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure, LP",
+            "value": "11.0\"–13.0\" w.c.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice, NG (factory)",
+            "value": "#45 drill (LP conversion orifice: 1.25 mm)",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J54 (modulating control); Honeywell single/two-stage valves also fielded per manual",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame-sense signal (Integrated Ignition control)",
+            "value": "1–4 µA",
+            "key": "flame_sense"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "120V silicon nitride HSI (~2156–2678°F operating temp)",
+            "key": "ignitor_type"
+          },
+          {
+            "label": "Ignitor resistance, room temp",
+            "value": "37–68 Ω",
+            "key": "ignitor_ohms"
+          },
+          {
+            "label": "Ignitor current draw",
+            "value": "0.37–0.68 A @ 120V (steady state, preheat)",
+            "key": "ignitor_amps"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit",
+            "value": "Auto-reset bi-metal disc, non-adjustable",
+            "key": "primary_limit"
+          },
+          {
+            "label": "Auxiliary limit",
+            "value": "Blower housing (both sides); required for horizontal/counterflow",
+            "key": "aux_limit"
+          },
+          {
+            "label": "Flame rollout switch",
+            "value": "Manual-reset, temperature-activated, mounted to manifold assembly",
+            "key": "rollout"
+          },
+          {
+            "label": "High-altitude derate",
+            "value": "0–7,000 ft ships as-is; above 7,000 ft requires altitude kit (orifice and/or pressure switch); Canada certified to 4,500 ft max",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GMSS92 / GMSS96 / GCSS96",
+    "equip": "Gas Furnace",
+    "summary": "Single-stage, multi-speed ECM condensing furnaces (92% and 96% AFUE) on the shared single-stage 34.5\" chassis. This platform is shared with the Daikin-brand DM92SN/DM96SN/DC96SN twins; the AFUE difference between 92% and 96% is not called out separately for the figures below.",
+    "match": [
+      "GMSS92",
+      "GMSS96",
+      "GCSS96",
+      "AMSS92",
+      "AMSS96",
+      "ACSS96",
+      "DM92SN",
+      "DM96SN",
+      "DC96SN"
+    ],
+    "source": "Daikin Service Instructions RSD6612021, July 2021, \"DM92SN, DM96SN & DC96SN Models\" (daikincomfort.com/docs/default-source/dm96sn/291234817.pdf) — GMSS92/GMSS96/GCSS96 share this platform/chassis and figures",
+    "flags": [
+      {
+        "title": "Two gas-valve suppliers fielded — check before ordering the pressure-tap adapter",
+        "body": "Single-stage units ship with either a White-Rodgers 36J22 or a Honeywell VR8215 gas valve depending on production run. The White-Rodgers 36[G/J] pressure-check adapter kit (#0151K00000S) is needed to read pressure at the White-Rodgers valve's inlet tap; the Honeywell valve uses a plain 1/8\" NPT hose barb instead. Confirm which valve is installed before grabbing gauges."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG (single-stage)",
+            "value": "3.5\" w.c. nominal, ±0.3\" w.c. tolerance",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure, LP (single-stage)",
+            "value": "10.0\" w.c. nominal, ±0.3\" w.c. tolerance",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply (inlet) pressure, NG",
+            "value": "4.5\"–10.0\" w.c.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure, LP",
+            "value": "11.0\"–13.0\" w.c.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice, NG (factory)",
+            "value": "#43 drill",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J22 or Honeywell VR8215, single-stage (production-dependent)",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame-sense signal (Integrated Ignition control)",
+            "value": "1–4 µA",
+            "key": "flame_sense"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "115V silicon carbide igniter, p/n 0130F00008, 17-second warm-up",
+            "key": "ignitor_type"
+          },
+          {
+            "label": "Ignitor resistance, room temp",
+            "value": "37–68 Ω",
+            "key": "ignitor_ohms"
+          },
+          {
+            "label": "Ignitor current draw",
+            "value": "see rating plate (not separately published for the silicon-carbide igniter; nitride-equipped units on this platform run 0.37–0.68 A @ 120V)",
+            "key": "ignitor_amps"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit",
+            "value": "Auto-reset bi-metal disc, non-adjustable",
+            "key": "primary_limit"
+          },
+          {
+            "label": "Auxiliary limit",
+            "value": "Blower housing (both sides); required for horizontal/counterflow",
+            "key": "aux_limit"
+          },
+          {
+            "label": "Flame rollout switch",
+            "value": "Manual-reset, temperature-activated, mounted to burner bracket",
+            "key": "rollout"
+          },
+          {
+            "label": "High-altitude derate",
+            "value": "Kit required above 7,000 ft",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GMEC96 / GCEC96",
+    "equip": "Gas Furnace",
+    "summary": "2-stage, 96% AFUE condensing furnace with multi-speed ECM motor — the older ECM-generation 2-stage platform (distinct chassis/control from the ComfortNet GMVC96 line).",
+    "match": [
+      "GMEC96",
+      "GCEC96",
+      "AMEC96",
+      "ACEC96"
+    ],
+    "source": "Goodman Service and Troubleshooting RS6612013R10, \"Goodman GMEC96/GCEC96 & Amana AMEC96/ACEC96 Two Stage Furnace with multi-speed ECM Motor\" (mobile.goodmanmfg.com/mobileapp/stellent/pdf/infoPdf/Lit/RS6612013R10.pdf)",
+    "flags": [
+      {
+        "title": "Smallest input size uses a different orifice",
+        "body": "*MEC96/*CEC96 furnaces have factory-installed #45 natural-gas orifices across the line, except the 030 (30,000 BTU input) size, which uses #50. Confirm the input size on the rating plate before resizing for altitude or an LP conversion."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG — low stage",
+            "value": "1.6–2.2\" w.c. (nominal 1.9\" w.c.)",
+            "key": "manifold_ng_low"
+          },
+          {
+            "label": "Manifold pressure, NG — high stage",
+            "value": "3.2–3.8\" w.c. (nominal 3.5\" w.c.)",
+            "key": "manifold_ng_high"
+          },
+          {
+            "label": "Manifold pressure, LP — low stage",
+            "value": "5.7–6.3\" w.c. (nominal 6.0\" w.c.)",
+            "key": "manifold_lp_low"
+          },
+          {
+            "label": "Manifold pressure, LP — high stage",
+            "value": "9.7–10.3\" w.c. (nominal 10.0\" w.c.)",
+            "key": "manifold_lp_high"
+          },
+          {
+            "label": "Supply (inlet) pressure, NG",
+            "value": "4.5\"–10.0\" w.c.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure, LP",
+            "value": "11.0\"–13.0\" w.c.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice, NG (factory)",
+            "value": "#45 drill (except 030 input size: #50)",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J54 or Honeywell VR9205, two-stage",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame-sense signal (Integrated Ignition control)",
+            "value": "1–4 µA",
+            "key": "flame_sense"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "120V silicon nitride HSI (~2156–2678°F operating temp)",
+            "key": "ignitor_type"
+          },
+          {
+            "label": "Ignitor resistance, room temp",
+            "value": "37–68 Ω",
+            "key": "ignitor_ohms"
+          },
+          {
+            "label": "Ignitor current draw",
+            "value": "0.37–0.68 A @ 120V (steady state, preheat)",
+            "key": "ignitor_amps"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit",
+            "value": "Auto-reset bi-metal disc, non-adjustable",
+            "key": "primary_limit"
+          },
+          {
+            "label": "Auxiliary limit",
+            "value": "Blower housing (both sides); required for horizontal/counterflow",
+            "key": "aux_limit"
+          },
+          {
+            "label": "Flame rollout switch",
+            "value": "Manual-reset, temperature-activated, mounted to manifold assembly",
+            "key": "rollout"
+          },
+          {
+            "label": "High-altitude derate",
+            "value": "Orifice kit required above 7,000 ft",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GR9S / GR9T (R-32 generation, 92%/96%)",
+    "equip": "Gas Furnace",
+    "summary": "Current-generation single-stage (S) and 2-stage (T) condensing furnaces built for pairing with R-32 cooling systems (control board includes an A2L refrigerant-leak monitoring function). Figures below are from the 92%/96% two-stage nine-speed-ECM condensing chassis (DR96TN/DD96TN); the 80% AFUE non-condensing GR9S80/GR9T80 models use a separate manual not covered here.",
+    "match": [
+      "GR9S92",
+      "GR9S96",
+      "GR9T96",
+      "GD9S92",
+      "GD9S96",
+      "GD9T96",
+      "AR9S92",
+      "AR9S96",
+      "AR9T96",
+      "AD9S96",
+      "AD9T96",
+      "DR96TN",
+      "DD96TN"
+    ],
+    "source": "Goodman Service Instructions RSD6612304, May 2024, \"DR96TN/DD96TN Two Stage Furnace with Nine Speed ECM Motor\" (mobile.goodmanmfg.com/mobileapp/stellent/pdf/infoPdf/Lit/RSD6612304.pdf) — Goodman/Amana brand model legend in this manual lists AR9T/GR9T for this platform",
+    "flags": [
+      {
+        "title": "R-32 (A2L) monitoring is ON by default — must be disabled if the cooling system isn't R-32",
+        "body": "The furnace control board ships with the R-32 leak-monitoring function enabled by default. If the paired outdoor/indoor cooling unit does not use R-32 refrigerant (e.g. a legacy R-410A system) or the R-32 sensor wire isn't connected, the function must be turned off in the \"A2L Function Enabled\" menu (display code A2E, select \"no\") or the furnace will not run properly."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG — low stage",
+            "value": "1.6–2.2\" w.c. (nominal 1.9\" w.c.)",
+            "key": "manifold_ng_low"
+          },
+          {
+            "label": "Manifold pressure, NG — high stage",
+            "value": "3.2–3.8\" w.c. (nominal 3.5\" w.c.)",
+            "key": "manifold_ng_high"
+          },
+          {
+            "label": "Manifold pressure, LP — low stage",
+            "value": "5.7–6.3\" w.c. (nominal 6.0\" w.c.)",
+            "key": "manifold_lp_low"
+          },
+          {
+            "label": "Manifold pressure, LP — high stage",
+            "value": "9.7–10.3\" w.c. (nominal 10.0\" w.c.)",
+            "key": "manifold_lp_high"
+          },
+          {
+            "label": "Supply (inlet) pressure, NG",
+            "value": "4.5\"–10.0\" w.c.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply (inlet) pressure, LP",
+            "value": "11.0\"–13.0\" w.c.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice, NG (factory)",
+            "value": "#45 drill (except DM96TN0303AN chassis: #50)",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers 36J54, two-stage",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate (approx. 0.5\" w.c. typical range per manual)",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Flame signal / ignition",
+        "rows": [
+          {
+            "label": "Flame-sense signal (Integrated Ignition control)",
+            "value": "3–8 µA — higher minimum than the older Goodman platforms (1–4 µA); don't apply the old spec here",
+            "key": "flame_sense"
+          },
+          {
+            "label": "Ignitor type",
+            "value": "120V silicon nitride HSI (~2156–2678°F operating temp)",
+            "key": "ignitor_type"
+          },
+          {
+            "label": "Ignitor resistance, room temp",
+            "value": "37–68 Ω",
+            "key": "ignitor_ohms"
+          },
+          {
+            "label": "Ignitor current draw",
+            "value": "0.37–0.68 A @ 120V (steady state, preheat)",
+            "key": "ignitor_amps"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit",
+            "value": "Auto-reset bi-metal disc, non-adjustable",
+            "key": "primary_limit"
+          },
+          {
+            "label": "Auxiliary limit",
+            "value": "Blower housing (both sides); required for horizontal/counterflow",
+            "key": "aux_limit"
+          },
+          {
+            "label": "Flame rollout switch",
+            "value": "Manual-reset, temperature-activated, mounted to burner bracket",
+            "key": "rollout"
+          },
+          {
+            "label": "High-altitude derate",
+            "value": "0–7,000 ft ships as-is; above 7,000 ft requires pressure-switch and/or orifice kit",
+            "key": "altitude"
+          },
+          {
+            "label": "R-32 sensor wire",
+            "value": "Inspect for tightness/damage during annual maintenance (control board input, indoor coil to furnace)",
+            "key": "r32_sensor"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSZC18",
+    "equip": "Heat Pump",
+    "summary": "18 SEER two-stage split-system heat pump, R-410A, ComfortNet 4-wire communicating-capable with Copeland two-stage scroll compressor and Copeland Comfort Alert diagnostics.",
+    "match": [
+      "ASZC18"
+    ],
+    "source": "Daikin/Goodman \"Service and Troubleshooting: ASXC, DSXC, GSXC Condensing Units & ASZC, DSZC, GSZC Split System Heat Pumps w/ R-410A\" (RS6200007r23) - daikincomfort.com/docs/default-source/chpf/rs6200007r23.pdf",
+    "flags": [
+      {
+        "title": "Two-stage compressor diagnostics",
+        "body": "Units with a Copeland Comfort Alert module (UC control, 2-stage models) flash a status LED for locked rotor, open circuit, high/low pressure trip, or miswire before condemning the compressor - read the module's LED code first."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory non-adjustable TXV standard on communicating (4-wire) coil pairings; flowrator/piston used on some non-communicating coil combinations - confirm indoor coil model",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Demand defrost: outdoor coil temp (OCT) sensor + accumulated compressor run time; interval selectable 30/60/90/120 min via UC board dip switch; terminates at ~75°F coil temp or 10 min max, whichever first",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling / de-energized in heating (standard Goodman/Amana convention; explicitly confirmed in the companion single-stage RS6200006r101 manual - this two-stage document does not restate it verbatim)",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Opens 610 PSIG ±10, closes (auto-reset) 420 PSIG ±25",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Opens 21 PSIG, auto-resets (closes) ~50 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "PTC type on applicable models, ~40W/265V; energize a minimum of 4 hours before compressor start",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Not published in this document - see unit rating plate / installation manual",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Communicating control",
+            "value": "ComfortNet 4-wire ready",
+            "key": "controls"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit's Expanded Performance Chart - superheat (piston-equipped) or subcooling (TXV-equipped), per nameplate; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Goodman/Amana/Janitrol PCBDM-series defrost boards (also used re-badged by other brands) commonly require two things at once: 24V present at the board's DFT (defrost thermostat/coil sensor) input — jump R to DFT if the coil isn't actually cold enough to close the sensor — AND a momentary jumper across the board's TEST/'speed-up' pins until you hear the relay click, then remove the TEST jumper. Once triggered, the unit stays in forced defrost (reversing valve to cooling, outdoor fan off, W2 aux heat and O reversing valve energized) until either 24V is removed from DFT or a built-in max defrost time (commonly ~10 minutes) elapses. Exact pin labels/layout vary by PCBDM revision — confirm against the board's own printed legend/wiring diagram before jumping anything; I could not pull a clean OEM PDF this session to confirm the precise pin silkscreen text, so treat pin names as trade-common convention, not a guaranteed exact label. Source: multi-source trade corroboration (HVAC Training Solutions defrost-board guide; JustAnswer and Fixya Goodman-specific Q&A threads) — recommend verifying against the physical board's legend."
+          },
+          {
+            "label": "ComfortNet/ComfortBridge communicating",
+            "value": "NOT verifiable this session. Goodman heat pumps are largely designed to run on a simple non-communicating thermostat (single Y/W inputs) even when ComfortBridge-equipped equipment is installed; where a CTK04 ComfortNet communicating control is used, no source located gave a documented force-defrost menu sequence. Do not invent a button sequence — use the non-communicating TEST-pin method on the outdoor board directly, which applies regardless of thermostat type, or consult Goodman's specific literature for the installed CTK04/ComfortNet control."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Normal operation requires the coil/defrost sensor to be closed (cold, roughly at/below freezing) AND accumulated compressor run time to exceed the board's 30/60/90-minute dial setting before defrost will initiate on its own; the forced method above is meant to bypass the run-time requirement but the coil sensor circuit (DFT) still needs 24V present (real cold coil, or a temporary jumper) for the relay to latch on some revisions. Expect reversing valve shift to cooling and outdoor fan shutdown when defrost runs — a cold air burst indoors is normal and temporary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSXC18",
+    "equip": "Condenser",
+    "summary": "18 SEER two-stage split-system air conditioner, R-410A, ComfortBridge-compatible with Copeland two-stage scroll compressor and Copeland Comfort Alert diagnostics.",
+    "match": [
+      "ASXC18"
+    ],
+    "source": "Daikin/Goodman \"Service and Troubleshooting: ASXC, DSXC, GSXC Condensing Units & ASZC, DSZC, GSZC Split System Heat Pumps w/ R-410A\" (RS6200007r23) - daikincomfort.com/docs/default-source/chpf/rs6200007r23.pdf",
+    "flags": [
+      {
+        "title": "ComfortBridge fault check first",
+        "body": "ComfortBridge continuously monitors performance on communicating pairs - check the ComfortBridge/Comfort Alert fault code before condemning the compressor or control board on a two-stage complaint."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory non-adjustable TXV standard on communicating (4-wire) coil pairings; flowrator/piston on some non-communicating coil combinations - confirm indoor coil model",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Opens 610 PSIG ±10, closes (auto-reset) 420 PSIG ±25",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Opens 21 PSIG, auto-resets (closes) ~50 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "PTC type on applicable models, ~40W/265V; energize a minimum of 4 hours before compressor start",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Not published in this document - see unit rating plate / installation manual",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Communicating control",
+            "value": "ComfortBridge / ComfortNet 4-wire capable",
+            "key": "controls"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit's Expanded Performance Chart - superheat (piston) or subcooling (TXV), per nameplate; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSZV20 / GVZC20",
+    "equip": "Heat Pump",
+    "summary": "Smart Speed inverter variable-speed heat pump, R-410A, up to 21 SEER/10 HSPF, sharing the Amana AVZC18/AVZC20 inverter platform and CoolCloud/ComfortNet controls per Goodman Service Bulletin SR-068.",
+    "match": [
+      "AVZC20",
+      "AVZC18"
+    ],
+    "source": "Goodman \"Service and Troubleshooting: AVZC18 Inverter Heat Pump Condenser Units w/ R-410A\" (RS6215001r7) - partnerlinkmarketing.goodmanmfg.com/Lit/RS6215001r7.pdf; platform shared with GVZC20/GVXC20 confirmed by Goodman Service Bulletin SR-068 Rev.1 (Oct 2020, \"Crank Case Heater Kit for Inverter Split Systems\") - mobile.goodmanmfg.com",
+    "flags": [
+      {
+        "title": "Idle high-pitched hum is normal",
+        "body": "A high-pitched sound from the outdoor unit at standby is the inverter maintaining compressor oil temperature via winding current, not a defect (SR-068). An external crankcase heater retrofit kit (INVCCHK01, requires BTSDL01 Bluetooth loader) is available if the homeowner finds it objectionable."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Electronic Expansion Valve (EEV) at indoor coil when matched with a communicating (AVPEC-type) air handler; inverter-tuned TXV-V kit required for non-matched/non-communicating air handlers",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "PCB + outdoor coil temp thermistor + dedicated defrost sensor (Tb); interval selectable 30/60/90/120 min; terminates when defrost sensor reads >43°F for 30 continuous seconds or max interval reached",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling / de-energized in heating (standard Goodman/Amana convention; explicitly stated for this shared platform in the companion R-32 manual RS6200301, not restated verbatim here)",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Monitoring",
+        "rows": [
+          {
+            "label": "Pressure sensing",
+            "value": "HI/LOW pressure SENSOR (transducer), not a fixed on/off switch - senses suction pressure in cooling, discharge pressure in heating",
+            "key": "pressure_sensor"
+          },
+          {
+            "label": "High-pressure control test point",
+            "value": "Verified to cut out at approximately 605 PSIG during the charge-mode functional test procedure",
+            "key": "hp_test"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "None standard - oil kept warm via compressor winding current in standby (SR-068); optional external CCH retrofit kit available",
+            "key": "crankcase"
+          },
+          {
+            "label": "Outdoor temp lockouts",
+            "value": "Compressor lockout and backup-heat lockout temperatures are installer-configured at the thermostat - no fixed factory default published in this document",
+            "key": "low_ambient"
+          },
+          {
+            "label": "System test note",
+            "value": "The outdoor unit's SYSTEM TEST self-check may not complete in ambient under 20°F due to low suction pressure - re-run once ambient exceeds 20°F; this is normal, not a fault",
+            "key": "test_note"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Speed modulation",
+            "value": "Compressor speed auto-adjusts with outdoor ambient - runs ~50% capacity below 70°F, ramps linearly to 100% above 95°F",
+            "key": "controls"
+          },
+          {
+            "label": "Communicating control",
+            "value": "ComfortNet 4-wire ready; CoolCloud app + Bluetooth Shared Data Loader (BTSDL01) used for board data/firmware service",
+            "key": "comfortnet"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit nameplate/Expanded Performance Chart, subcooling method on EEV-equipped systems; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Goodman/Amana/Janitrol PCBDM-series defrost boards (also used re-badged by other brands) commonly require two things at once: 24V present at the board's DFT (defrost thermostat/coil sensor) input — jump R to DFT if the coil isn't actually cold enough to close the sensor — AND a momentary jumper across the board's TEST/'speed-up' pins until you hear the relay click, then remove the TEST jumper. Once triggered, the unit stays in forced defrost (reversing valve to cooling, outdoor fan off, W2 aux heat and O reversing valve energized) until either 24V is removed from DFT or a built-in max defrost time (commonly ~10 minutes) elapses. Exact pin labels/layout vary by PCBDM revision — confirm against the board's own printed legend/wiring diagram before jumping anything; I could not pull a clean OEM PDF this session to confirm the precise pin silkscreen text, so treat pin names as trade-common convention, not a guaranteed exact label. Source: multi-source trade corroboration (HVAC Training Solutions defrost-board guide; JustAnswer and Fixya Goodman-specific Q&A threads) — recommend verifying against the physical board's legend."
+          },
+          {
+            "label": "ComfortNet/ComfortBridge communicating",
+            "value": "NOT verifiable this session. Goodman heat pumps are largely designed to run on a simple non-communicating thermostat (single Y/W inputs) even when ComfortBridge-equipped equipment is installed; where a CTK04 ComfortNet communicating control is used, no source located gave a documented force-defrost menu sequence. Do not invent a button sequence — use the non-communicating TEST-pin method on the outdoor board directly, which applies regardless of thermostat type, or consult Goodman's specific literature for the installed CTK04/ComfortNet control."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Normal operation requires the coil/defrost sensor to be closed (cold, roughly at/below freezing) AND accumulated compressor run time to exceed the board's 30/60/90-minute dial setting before defrost will initiate on its own; the forced method above is meant to bypass the run-time requirement but the coil sensor circuit (DFT) still needs 24V present (real cold coil, or a temporary jumper) for the relay to latch on some revisions. Expect reversing valve shift to cooling and outdoor fan shutdown when defrost runs — a cold air burst indoors is normal and temporary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSXV20 / GVXC20",
+    "equip": "Condenser",
+    "summary": "Smart Speed inverter variable-speed air conditioner, R-410A, up to 24.5 SEER/15 EER, sharing the Amana AVXC18/AVXC20 inverter platform per Goodman Service Bulletin SR-068.",
+    "match": [
+      "AVXC20",
+      "AVXC18"
+    ],
+    "source": "Goodman \"Service and Troubleshooting: AVZC18 Inverter Heat Pump Condenser Units w/ R-410A\" (RS6215001r7) - partnerlinkmarketing.goodmanmfg.com/Lit/RS6215001r7.pdf (shared inverter platform/controls document); platform shared with GVXC20/GVZC20 confirmed by Goodman Service Bulletin SR-068 Rev.1 (Oct 2020) - mobile.goodmanmfg.com",
+    "flags": [
+      {
+        "title": "Below-20°F system test",
+        "body": "The outdoor unit's SYSTEM TEST self-check can fail to complete in ambient under 20°F due to low suction pressure - re-run the test once ambient exceeds 20°F rather than condemning the unit."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Electronic Expansion Valve (EEV) when matched with a communicating air handler; inverter-tuned TXV-V kit for non-matched/non-communicating air handlers",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Monitoring",
+        "rows": [
+          {
+            "label": "Pressure sensing",
+            "value": "HI/LOW pressure SENSOR (transducer), not a fixed on/off switch",
+            "key": "pressure_sensor"
+          },
+          {
+            "label": "High-pressure control test point",
+            "value": "Verified to cut out at approximately 605 PSIG during the charge-mode functional test procedure",
+            "key": "hp_test"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "None standard - oil kept warm via compressor winding current in standby (SR-068); optional external CCH retrofit kit available",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient cooling lockout",
+            "value": "Not published in this document - see unit rating plate / installation manual",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Speed modulation",
+            "value": "Compressor speed auto-adjusts with outdoor ambient - ~50% capacity below 70°F, ramping to 100% above 95°F",
+            "key": "controls"
+          },
+          {
+            "label": "Communicating control",
+            "value": "ComfortNet 4-wire ready",
+            "key": "comfortnet"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit nameplate/Expanded Performance Chart, subcooling method on EEV-equipped systems; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSZB4 / GSZS4",
+    "equip": "Heat Pump",
+    "summary": "14.3+ SEER2 R-32 single-stage split-system heat pump platform (Goodman GSZB4/GSZS4, Amana ALZS4/ALZS5 twins) with a factory Refrigerant Detection System for A2L leak mitigation.",
+    "match": [
+      "ALZS4",
+      "ALZS5"
+    ],
+    "source": "Goodman/Daikin \"Service and Troubleshooting: ALXS/GLXS Condensing Units, ALZS4/GLZS4/GLXS5 Heat Pumps w/ R-32 Refrigerant\" (RS6200301) - daikincomfort.com/docs/default-source/amst-(r-32)/sm-rs6200301.pdf. A model-specific manual revision naming GSZB4/GSZS4 directly was not located; this entry reflects Goodman's current-generation R-32 single-stage platform manual that the manufacturer groups these tiers under - verify exact coverage against the unit's rating plate.",
+    "flags": [
+      {
+        "title": "R-32 leak alarm - do not open or de-power",
+        "body": "If the Refrigerant Detection System (RDS) signals an R-32 leak alarm (LED flash pattern), do NOT open the unit or turn it off - the control automatically stops the thermostat call, runs the blower for air circulation, and shuts off electric heat. Read the A2L PCB fault-code label before servicing."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-32 (mildly flammable, A2L classification)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV or fixed orifice/flowrator depending on coil pairing - charge by subcooling (TXV) or superheat (piston/orifice) per nameplate",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Solid-state defrost control + outdoor coil defrost thermostat/sensor; timer interval selectable 30/60/90 min",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling / de-energized in heating - explicitly stated in this manual for R-32 heat pump models",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Opens 610 PSIG ±10, closes (auto-reset) 420 PSIG ±25",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Opens 21 PSIG, auto-resets (closes) ~50 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "PTC type on applicable models; energize a minimum of 4 hours before compressor start",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Not published in this document - see unit rating plate / installation manual",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Communicating control",
+            "value": "Standard 24V staging with optional Copeland Comfort Alert compressor-protection module - not a full ComfortNet communicating platform",
+            "key": "controls"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit's Expanded Performance Chart; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Goodman/Amana/Janitrol PCBDM-series defrost boards (also used re-badged by other brands) commonly require two things at once: 24V present at the board's DFT (defrost thermostat/coil sensor) input — jump R to DFT if the coil isn't actually cold enough to close the sensor — AND a momentary jumper across the board's TEST/'speed-up' pins until you hear the relay click, then remove the TEST jumper. Once triggered, the unit stays in forced defrost (reversing valve to cooling, outdoor fan off, W2 aux heat and O reversing valve energized) until either 24V is removed from DFT or a built-in max defrost time (commonly ~10 minutes) elapses. Exact pin labels/layout vary by PCBDM revision — confirm against the board's own printed legend/wiring diagram before jumping anything; I could not pull a clean OEM PDF this session to confirm the precise pin silkscreen text, so treat pin names as trade-common convention, not a guaranteed exact label. Source: multi-source trade corroboration (HVAC Training Solutions defrost-board guide; JustAnswer and Fixya Goodman-specific Q&A threads) — recommend verifying against the physical board's legend."
+          },
+          {
+            "label": "ComfortNet/ComfortBridge communicating",
+            "value": "NOT verifiable this session. Goodman heat pumps are largely designed to run on a simple non-communicating thermostat (single Y/W inputs) even when ComfortBridge-equipped equipment is installed; where a CTK04 ComfortNet communicating control is used, no source located gave a documented force-defrost menu sequence. Do not invent a button sequence — use the non-communicating TEST-pin method on the outdoor board directly, which applies regardless of thermostat type, or consult Goodman's specific literature for the installed CTK04/ComfortNet control."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Normal operation requires the coil/defrost sensor to be closed (cold, roughly at/below freezing) AND accumulated compressor run time to exceed the board's 30/60/90-minute dial setting before defrost will initiate on its own; the forced method above is meant to bypass the run-time requirement but the coil sensor circuit (DFT) still needs 24V present (real cold coil, or a temporary jumper) for the relay to latch on some revisions. Expect reversing valve shift to cooling and outdoor fan shutdown when defrost runs — a cold air burst indoors is normal and temporary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSZH5",
+    "equip": "Heat Pump",
+    "summary": "Up to 15.2 SEER2 / 7.8 HSPF2 R-32 split-system heat pump (Goodman GSZH5, Amana twin ALZS5), the higher-tier version of the same R-32 single-stage platform as GSZB4/GSZS4.",
+    "match": [
+      "ALZS5"
+    ],
+    "source": "Goodman/Daikin \"Service and Troubleshooting: ALXS/GLXS Condensing Units, ALZS4/GLZS4/GLXS5 Heat Pumps w/ R-32 Refrigerant\" (RS6200301) - daikincomfort.com/docs/default-source/amst-(r-32)/sm-rs6200301.pdf. A model-specific manual revision naming GSZH5 directly was not located; this entry reflects the same R-32 platform manual as GSZB4/GSZS4 - verify exact coverage against the unit's rating plate.",
+    "flags": [
+      {
+        "title": "A2L brazing/leak-test rules",
+        "body": "Never use compressed air, oxygen, or a non-approved refrigerant to leak-test or pressurize an R-32 (A2L) system - use dry nitrogen only, and electrically isolate the unit before breaking into the sealed system, per this manual's A2L procedures."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-32 (mildly flammable, A2L classification)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV or fixed orifice/flowrator depending on coil pairing - charge by subcooling (TXV) or superheat (piston/orifice) per nameplate",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Solid-state defrost control + outdoor coil defrost thermostat/sensor; timer interval selectable 30/60/90 min",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling / de-energized in heating - explicitly stated in this manual for R-32 heat pump models",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Opens 610 PSIG ±10, closes (auto-reset) 420 PSIG ±25",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Opens 21 PSIG, auto-resets (closes) ~50 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "PTC type on applicable models; energize a minimum of 4 hours before compressor start",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Not published in this document - see unit rating plate / installation manual",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Communicating control",
+            "value": "Standard 24V staging with optional Copeland Comfort Alert compressor-protection module - not a full ComfortNet communicating platform",
+            "key": "controls"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit's Expanded Performance Chart; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Goodman/Amana/Janitrol PCBDM-series defrost boards (also used re-badged by other brands) commonly require two things at once: 24V present at the board's DFT (defrost thermostat/coil sensor) input — jump R to DFT if the coil isn't actually cold enough to close the sensor — AND a momentary jumper across the board's TEST/'speed-up' pins until you hear the relay click, then remove the TEST jumper. Once triggered, the unit stays in forced defrost (reversing valve to cooling, outdoor fan off, W2 aux heat and O reversing valve energized) until either 24V is removed from DFT or a built-in max defrost time (commonly ~10 minutes) elapses. Exact pin labels/layout vary by PCBDM revision — confirm against the board's own printed legend/wiring diagram before jumping anything; I could not pull a clean OEM PDF this session to confirm the precise pin silkscreen text, so treat pin names as trade-common convention, not a guaranteed exact label. Source: multi-source trade corroboration (HVAC Training Solutions defrost-board guide; JustAnswer and Fixya Goodman-specific Q&A threads) — recommend verifying against the physical board's legend."
+          },
+          {
+            "label": "ComfortNet/ComfortBridge communicating",
+            "value": "NOT verifiable this session. Goodman heat pumps are largely designed to run on a simple non-communicating thermostat (single Y/W inputs) even when ComfortBridge-equipped equipment is installed; where a CTK04 ComfortNet communicating control is used, no source located gave a documented force-defrost menu sequence. Do not invent a button sequence — use the non-communicating TEST-pin method on the outdoor board directly, which applies regardless of thermostat type, or consult Goodman's specific literature for the installed CTK04/ComfortNet control."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Normal operation requires the coil/defrost sensor to be closed (cold, roughly at/below freezing) AND accumulated compressor run time to exceed the board's 30/60/90-minute dial setting before defrost will initiate on its own; the forced method above is meant to bypass the run-time requirement but the coil sensor circuit (DFT) still needs 24V present (real cold coil, or a temporary jumper) for the relay to latch on some revisions. Expect reversing valve shift to cooling and outdoor fan shutdown when defrost runs — a cold air burst indoors is normal and temporary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GLXS4 / GSXB4 / GSXS4 / GSXH5",
+    "equip": "Condenser",
+    "summary": "13.4-17 SEER2 R-32 single-stage split-system air conditioner platform (Goodman GLXS4/GSXB4/GSXS4/GSXH5, Amana ALXS3/ALXS4/ALXS5 twins) with a factory Refrigerant Detection System for A2L leak mitigation.",
+    "match": [
+      "ALXS3",
+      "ALXS4",
+      "ALXS5"
+    ],
+    "source": "Goodman/Daikin \"Service and Troubleshooting: ALXS3, ALXS4, ALXS5, GLXS3, GLXS4, GLXS5 Condensing Units w/ R-32 Refrigerant\" (RS6200301) - daikincomfort.com/docs/default-source/amst-(r-32)/sm-rs6200301.pdf. GSXB4/GSXS4/GSXH5 model-specific manual revisions were not located; this entry reflects the same current-generation R-32 platform manual that explicitly names GLXS4 - verify exact tier coverage against the unit's rating plate.",
+    "flags": [
+      {
+        "title": "R-32 leak alarm - do not open or de-power",
+        "body": "If the Refrigerant Detection System (RDS) signals an R-32 leak alarm, do not open the unit or de-energize it - let the automatic sequence (thermostat off, blower on, heat off) run, then read the A2L PCB fault-code label before servicing."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-32 (mildly flammable, A2L classification)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV or fixed orifice/flowrator depending on coil pairing - charge by subcooling (TXV) or superheat (piston/orifice) per nameplate",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Opens 610 PSIG ±10, closes (auto-reset) 420 PSIG ±25",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Opens 21 PSIG, auto-resets (closes) ~50 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "PTC type on applicable models; energize a minimum of 4 hours before compressor start",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient cooling lockout",
+            "value": "Not published in this document - see unit rating plate / installation manual",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Communicating control",
+            "value": "Standard 24V staging with optional Copeland Comfort Alert compressor-protection module - not a full ComfortNet communicating platform",
+            "key": "controls"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit's Expanded Performance Chart; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "GSX14 / GSXN4",
+    "equip": "Condenser",
+    "summary": "14-14.3 SEER(2) single-stage split-system air conditioner, R-410A (Goodman GSX14/GSXN4, Amana twin ASX14).",
+    "match": [
+      "ASX14"
+    ],
+    "source": "Goodman/Daikin \"Service and Troubleshooting: ANX, SSX, ASX, GSX, DSX, VSX Condensing Units & ANZ, SSZ, ASZ, GSZ, DSZ, VSZ Split System Heat Pumps w/ R-410A\" (RS6200006r101) - daikincomfort.com/docs/default-source/aspt/sm-rs6200006r101.pdf",
+    "flags": [
+      {
+        "title": "Optional low-ambient cooling kit",
+        "body": "Some models are factory- or field-equipped with a Low Ambient Thermostat (LAT) switch/kit to permit cooling operation below the normal outdoor temperature range - confirm its presence before assuming a fixed cooling lockout; no single factory lockout value is published for the base unit."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Piston/fixed-orifice standard; TXV where the matched indoor coil specifies one - charge by superheat (piston) or subcooling (TXV) per nameplate",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Opens 610 PSIG ±10, closes (auto-reset) 420 PSIG ±25",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Opens 21 PSIG, auto-resets (closes) ~50 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "\"Optional item\" on applicable models, PTC type; energize a minimum of 4 hours before compressor start",
+            "key": "crankcase"
+          },
+          {
+            "label": "Low-ambient (LAT) kit",
+            "value": "Optional switch/kit permits cooling below normal ambient range on some models - no fixed lockout temp published, see rating plate",
+            "key": "low_ambient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Charging",
+        "rows": [
+          {
+            "label": "Communicating control",
+            "value": "Standard non-communicating 24V staging",
+            "key": "controls"
+          },
+          {
+            "label": "Charging method",
+            "value": "Per unit's Expanded Performance Chart; never invent a charge value",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Goodman",
+    "model": "AWST / AWUF",
+    "equip": "Air Handler",
+    "summary": "Wall-mount (closet/utility) air handler, 1.5-3 tons. Legacy AWUF/AWUT split blower type by model suffix (PSC on AWUF18/24/30/36, multi-speed ECM on AWUF19/25/31/32/37 and AWUT); the current AWST platform standardizes on a multi-speed ECM motor with Flowrater or TXV metering selectable by suffix.",
+    "match": [
+      "Amana AWST",
+      "Amana AWUF",
+      "Amana AWUT"
+    ],
+    "source": "Goodman SS-GAWUF (AWUF/AWUT Series product specifications, goodmanmfg.com, 11/19); Goodman SS-GAWST (AWST Series product specifications, goodmanmfg.com, 10/23)",
+    "flags": [
+      {
+        "title": "Goodman: confirm blower type and metering from the model number, not the family name",
+        "body": "\"AWUF\" is not automatically PSC — Goodman split the AWUF/AWUT nomenclature by model number: AWUF18/24/30/36 are multi-speed PSC, AWUF19/25/31/32/37 and all AWUT are multi-speed ECM. AWST's nomenclature (position 3) lists MS-ECM only. Expansion device is coded separately: F = Flowrater (fixed-orifice/piston), T = Thermal Expansion Valve. Always read the full model string off the rating plate before assuming motor or metering type."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower motor",
+            "value": "Direct-drive, multi-speed — PSC on legacy AWUF18/24/30/36; multi-speed ECM on AWUF19/25/31/32/37, all AWUT, and all current AWST",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Speed selected by motor lead/tap wired at the low-voltage board per airflow data table; no field CFM dial",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static pressure",
+            "value": "Not published as a single figure — see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Cabinet air leakage",
+            "value": "<2.0% at 1.0\" w.c. and <1.4% at 0.5\" w.c. per ASHRAE 193",
+            "key": "leakage"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heat kit range",
+            "value": "3, 5, 8, 10 kW sequence-controlled, rust-resistant nickel-chromium heating elements",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Chassis note",
+            "value": "Large chassis (2.5- and 3-ton) is front-return only; small chassis (1.5- and 2-ton) allows front or bottom return",
+            "key": "chassis"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "AWUF/AWST \"F\" suffix = Check Flowrater (fixed-orifice/piston); AWUT/AWST \"T\" suffix = fully adjustable TXV — match to outdoor unit type per Goodman combination charts",
+            "key": "metering"
+          },
+          {
+            "label": "Coil",
+            "value": "Aluminum tubing coil on all models",
+            "key": "coil"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Thermoplastic drain pan with bottom primary and secondary drain connections; no factory float switch — field-installed per local code, see rating plate",
+            "key": "drain"
+          },
+          {
+            "label": "Filter",
+            "value": "Built-in filter rack, filter included from factory",
+            "key": "filter"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Goodman",
+    "model": "AEPF",
+    "equip": "Air Handler",
+    "summary": "Multi-position variable-speed (constant-CFM DC/ECM) air handler, 1.5-5 tons, metered with a Check Flowrater. Companion AEPT (expansion-valve, R-22-only) model is covered separately; this entry is the AEPF/piston variant.",
+    "match": [
+      "Amana AEPF"
+    ],
+    "source": "Goodman SS-GAEPF (AEPF/AEPT Series product specifications, goodmanmfg.com, 2/06)",
+    "flags": [
+      {
+        "title": "Goodman: airflow is set by dip switches, four modes x four levels",
+        "body": "The variable-speed control board has dip switches that pre-program CFM independently for Cooling, Heat Pump Heating, Backup (electric) Heating, and Backup+Heat Pump Heating — four selectable levels per mode. Confirm dip-switch settings match the installed heat kit and outdoor unit capacity; a mis-set dip switch is a common cause of low delivered airflow complaints on this platform."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower motor",
+            "value": "Variable-speed DC (ECM) motor; up to 14 field-selectable airflow settings",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Dip switches on the control board — 4 levels each for Cooling, Heat Pump Heating, Backup Heat, and Backup+HP Heat",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static pressure",
+            "value": "Not published as a single figure — see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Cabinet air leakage",
+            "value": "Factory-sealed to <=2% leakage at 1.0\" w.c. external duct static",
+            "key": "leakage"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heat kit range",
+            "value": "3-21 kW field-installed electric heat kits",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Staging",
+            "value": "Low-voltage control circuit is arranged to permit staging of the heater elements",
+            "key": "staging"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device (AEPF)",
+            "value": "Check Flowrater (fixed-orifice/piston) for cooling and heat-pump applications",
+            "key": "metering"
+          },
+          {
+            "label": "Multi-position drain pans",
+            "value": "Built-in coil has separate horizontal, vertical, and downflow drain pans with secondary drain connections",
+            "key": "drain"
+          },
+          {
+            "label": "Float switch",
+            "value": "Not standard — no factory float switch called out; see rating plate/install manual for field kit",
+            "key": "float_switch"
+          },
+          {
+            "label": "Filter",
+            "value": "Built-in filter rack for 1\" filter (filter not included); permanent washable filter offered as accessory",
+            "key": "filter"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Goodman",
+    "model": "AVPEC",
+    "equip": "Air Handler",
+    "summary": "Multi-position, variable-speed ECM air handler with an internal Electronic Expansion Valve (EEV), 2-5 tons. Communicating (ComfortBridge) and inverter-compatible — the matched indoor unit for Goodman/Amana variable-capacity communicating outdoor systems such as the AVXC20 condenser line.",
+    "match": [
+      "Amana AVPEC"
+    ],
+    "source": "Goodman SS-GAVPEC (AVPEC product specifications, goodmanmfg.com, 8/21)",
+    "flags": [
+      {
+        "title": "Goodman: EEV units store their own fault history",
+        "body": "AVPEC's ComfortBridge control keeps a fault recall log of the six most recent faults, and commissioning/diagnostics run over onboard Bluetooth via the CoolCloud app rather than DIP-switch airflow setup. Pull the fault-recall log first on a communicating-system callback instead of guessing from symptoms, and confirm the outdoor unit is a matched inverter/communicating model (e.g. AVXC-series) before troubleshooting as a standalone air handler."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower motor",
+            "value": "Variable-speed ECM, communicating (ComfortBridge); onboard CFM indicator",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Set/commissioned via ComfortBridge communicating control (CoolCloud app over onboard Bluetooth), not field dip switches; provides adjustable low CFM for fan-only operation",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static pressure",
+            "value": "Not published as a single figure — see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Cabinet air leakage",
+            "value": "<2.0% at 1.0\" w.c. and <1.4% at 0.5\" w.c. per ASHRAE 193",
+            "key": "leakage"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heat kit range",
+            "value": "3-25 kW electric heater kits (HKS)",
+            "key": "heat_kw"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory-installed Electronic Expansion Valve (EEV) — suitable for operation with inverter-driven/communicating outdoor products; match to AVXC-series or other ComfortBridge-communicating condensers/heat pumps",
+            "key": "metering"
+          },
+          {
+            "label": "Coil",
+            "value": "All-aluminum evaporator coil, multi-position (horizontal or vertical)",
+            "key": "coil"
+          },
+          {
+            "label": "Drain pan",
+            "value": "DecaBDE-free thermoplastic drain pan with secondary drain connection; no factory float switch called out — see rating plate/install manual for field kit",
+            "key": "drain"
+          },
+          {
+            "label": "Filter",
+            "value": "Tool-less built-in filter rack, 1\" filter",
+            "key": "filter"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Rheem",
+    "model": "R95T / R95TA",
+    "equip": "Gas Furnace",
+    "summary": "95% AFUE SINGLE-stage condensing furnace, Constant Torque ECM blower, PlusOne Ignition (DSI) and PlusOne blocked-drain sensor. Same model-number platform is marketed by Ruud as \"Achiever Plus\" (identical R95TA model numbers, not a separate Ruud number) — do not confuse with the genuinely two-stage R96T.",
+    "match": [
+      "R95TA0401317MSA",
+      "R95TA0601317MSA",
+      "R95TA0701317MSA",
+      "R95TA0851521MSA",
+      "R95TA1001521MSA",
+      "R95TA1151524MSA",
+      "Ruud Achiever Plus R95T (identical R95TA model numbers, twin-branded)"
+    ],
+    "source": "Ruud Achiever Plus / Rheem Classic Plus R95T Series spec sheet, Form No. G22-538, pts.myrheem.com (Gas_Furnace/R95TA/R95TA_G22-538_Rev0-B.pdf)",
+    "flags": [
+      {
+        "title": "Canadian-only altitude derate method",
+        "body": "For Canadian installations only, an optional derate (manifold gas pressure reduction) method may be used to adjust the furnace for altitude. This optional method may NOT be used for U.S. installations — U.S. installs require the orifice change per the installation instructions."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "see rating plate — not published in this spec sheet; full install-instructions PDF (>30MB) not retrievable this session",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure (LP)",
+            "value": "see rating plate",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply pressure (NG/LP)",
+            "value": "see rating plate",
+            "key": "supply_pressure"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "24V gas valve with integral pressure regulator and supply/manifold test ports (shown in equipment diagram); exact make/model not confirmed",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Min external static",
+            "value": "0.18–0.28 in. W.C. (varies by size, 040–115)",
+            "key": "min_static"
+          },
+          {
+            "label": "Max external static",
+            "value": "0.9 in. W.C. (all sizes)",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "25–55°F (040) up to 45–75°F (115) — size-specific, confirm exact range on rating plate",
+            "key": "temp_rise"
+          },
+          {
+            "label": "AFUE",
+            "value": "95.00%",
+            "key": "afue"
+          }
+        ]
+      },
+      {
+        "title": "Ignition/diagnostics",
+        "rows": [
+          {
+            "label": "Ignitor type",
+            "value": "PlusOne Ignition System — Direct Spark Ignition (DSI), remote flame sensor; not a hot-surface ignitor, so no ohm spec applies",
+            "key": "ignitor"
+          },
+          {
+            "label": "Flame sense",
+            "value": "Board carries flame-sense current diagnostics — read the 7-segment fault code; no fixed µA spec published",
+            "key": "flame_sense"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Manual-reset rollout switch(es) plus limit control; PlusOne patented Blocked Drain Sensor on condensate side",
+            "key": "rollout"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "10% high-altitude output derate published (Canadian installs); see installation instructions for required orifice change on U.S. installs above 2,000 ft",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Rheem",
+    "model": "R92T / R92P",
+    "equip": "Gas Furnace",
+    "summary": "92% AFUE SINGLE-stage condensing furnace (not two-stage, despite some third-party listings). R92P uses a PSC blower motor; R92T is the Constant Torque ECM variant of the same platform — identical cabinet, AFUE, and airflow/temp-rise tables. Both are Rheem Classic(Plus) branded; Ruud markets the same platform under matching R92P/R92T model numbers.",
+    "match": [
+      "R92PA0401317MSA",
+      "R92PA0601317MSA",
+      "R92PA0701317MSA",
+      "R92PA0851521MSA",
+      "R92PA1001521MSA",
+      "R92PA1151524MSA",
+      "R92TA (Constant Torque ECM variant, same platform/model-number series)",
+      "Ruud R92P/R92T (shared model numbers, twin-branded)"
+    ],
+    "source": "Rheem Classic Series R92P spec sheet, Form No. G11-536 Rev.1, pts.myrheem.com (Gas_Furnace/R92P/R92P_G11-536_Rev1.pdf)",
+    "flags": [
+      {
+        "title": "California low-NOx compliance",
+        "body": "Standard model complies with California low-NOx requirements per the spec sheet — confirm the CARB-compliant SKU is used when replacing equipment in a regulated region."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "see rating plate — not published in this spec sheet; full install-instructions PDF exceeded retrieval size limit this session",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure (LP)",
+            "value": "see rating plate",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply pressure (NG/LP)",
+            "value": "see rating plate",
+            "key": "supply_pressure"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "24V gas valve with integral pressure regulator and supply/manifold test ports (shown in equipment diagram); exact make/model not confirmed",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Min external static",
+            "value": "0.18–0.28 in. W.C. (varies by size, 040–115)",
+            "key": "min_static"
+          },
+          {
+            "label": "Max external static",
+            "value": "0.8 in. W.C. (all sizes)",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "25–55°F (040) up to 45–75°F (115) — size-specific, confirm exact range on rating plate",
+            "key": "temp_rise"
+          },
+          {
+            "label": "AFUE",
+            "value": "92.00%",
+            "key": "afue"
+          }
+        ]
+      },
+      {
+        "title": "Ignition/diagnostics",
+        "rows": [
+          {
+            "label": "Ignitor type",
+            "value": "PlusOne Ignition System — Direct Spark Ignition (DSI), remote flame sensor; not a hot-surface ignitor, so no ohm spec applies",
+            "key": "ignitor"
+          },
+          {
+            "label": "Flame sense",
+            "value": "Board carries flame-sense current diagnostics — read the 7-segment fault code; no fixed µA spec published",
+            "key": "flame_sense"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Manual-reset rollout switch(es) plus limit control; PlusOne patented Blocked Drain Sensor on condensate side",
+            "key": "rollout"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "10% high-altitude output derate published (Canadian installs); see installation instructions for required orifice change on U.S. installs above 2,000 ft",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Rheem",
+    "model": "R801S / R801P",
+    "equip": "Gas Furnace",
+    "summary": "80% AFUE single-stage NON-condensing furnace on the older UT Electronic Controls (UTEC) platform — the pre-Bluetooth generation, distinct from the current R801/R802 Bluetooth-diagnostic lineup already covered. Upflow/Horizontal and Downflow variants (also badged 80DSS/80DSP) share the same installation instructions and gas/electrical specs; R801S and R801P are identical except cabinet width options.",
+    "match": [
+      "R801SA*MSA (upflow/horizontal & downflow)",
+      "R801PA*MSA",
+      "80DSS*/80DSP* (same platform, alternate badge)",
+      "Ruud equivalent shares same R801S/R801P model numbers"
+    ],
+    "source": "Rheem Installation Instructions for Downflow Single Stage Gas Furnaces (-)801S/(-)801P/(-)(-)80DSS/(-)(-)80DSP, Form 92-24161-143-03 (Supersedes 92-24161-143-02), pts.rheem.com (Gas_Furnace/IO/92-24161-143-03_801S_801P.pdf) — confirms myrheem.com/myruud.com as the parts reference",
+    "flags": [
+      {
+        "title": "Only ONE rollout switch on this platform",
+        "body": "(-)801S/(-)801P require only ONE flame roll-out manual-reset switch, on the LEFT side of the burner cover plate — unlike larger Rheem platforms that use two. Confirm switch count/location before ordering a replacement part."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "3.5 in. W.C. (±0.3 in.)",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure (LP)",
+            "value": "10.0 in. W.C.",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply pressure (NG)",
+            "value": "5.0–10.5 in. W.C. (5.0 min for input adjustment, 6–7 in. recommended)",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply pressure (LP)",
+            "value": "11.0–13.0 in. W.C. (min 11.0)",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "Factory-default #42 (NG, sized for 1050 Btu/cu.ft. sea-level gas); altitude/heating-value reselection per Table 9 (NG) and Table 10 (LP, #54 0–7,000 ft / #55 7,000–10,000 ft)",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "24V slow-opening gas valve (Honeywell, per diagram) with integral pressure regulator and supply/manifold test ports; takes 2–3 sec to fully open",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static",
+            "value": "see rating plate — total system static drop should not exceed 0.8 in. W.C. per install instructions; not populated on the sample nameplate in this doc",
+            "key": "max_static"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "Example on sample rating plate (R801PA075417ZSA, 75,000 Btuh): 25–55°F — size-specific, confirm on the actual unit's rating plate",
+            "key": "temp_rise"
+          },
+          {
+            "label": "AFUE",
+            "value": "80% (non-condensing, Category I)",
+            "key": "afue"
+          }
+        ]
+      },
+      {
+        "title": "Ignition/diagnostics",
+        "rows": [
+          {
+            "label": "Ignitor type",
+            "value": "Direct Spark Ignition (DSI) via UT Electronic Controls integrated board; not a hot-surface ignitor, so no ohm spec applies",
+            "key": "ignitor"
+          },
+          {
+            "label": "Flame sense",
+            "value": "Flame proven by rectification 8 sec after gas valve opens; board reports fault code 12 (low flame sense) / 13 (flame lost) — no fixed µA spec published",
+            "key": "flame_sense"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "MRLC (Manual Reset Limit Control, aka rollout) — fault code 33; single switch, left side of burner cover plate. Over-temperature limit and pressure switch also monitored (fault codes 22, 55/57)",
+            "key": "rollout"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Ready for 0–4,999 ft as shipped; 5,000–10,000 ft requires manifold pressure/orifice change per Table 9 (NG) and Table 10 (LP) — pressure switch kit 903853 required above 5,000 ft",
+            "key": "altitude_derate"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RP16 Series",
+    "equip": "Heat Pump",
+    "summary": "Classic Series two-stage split heat pump, R-410A, up to 16 SEER/13 EER, single-row 7mm condenser coil, scroll compressor. Ruud sells this identical platform under the same model number.",
+    "match": [
+      "Ruud RP16 Series (identical model number, Ruud-branded literature)",
+      "2, 3, 4, 5 ton"
+    ],
+    "source": "files.myrheem.com Product Documents B5265097-4CA1-4CC8-AD6F-AB42CF320654.pdf (Rheem Classic Series Two-Stage Heat Pump spec sheet, Form P11-813 Rev.3); pts.rheem.com .../HP/RP16/92-105074-12-01_RP16_IO.pdf (RP16 Installation Instructions, Doc 92-105074-12 Rev.01)",
+    "flags": [
+      {
+        "title": "Confirm refrigerant before connecting gauges",
+        "body": "RP16 is an R-410A-only legacy platform. Confirm refrigerant type on the unit nameplate before attaching manifold gauges — do not assume compatibility with R-454B (A2L) service tools/recovery equipment used on newer Endeavor Line units."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV (field/factory installed, model-dependent)",
+            "key": "metering"
+          },
+          {
+            "label": "Filter drier",
+            "value": "Shipped loose for field installation",
+            "key": "filter_drier"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Demand Defrost Control (coil temp + compressor run time)",
+            "key": "defrost_type"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in heating mode (per shared platform wiring diagram notes)",
+            "key": "rv_energized"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches (standard)",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Auto-reset: opens (cutout) ~610 PSIG, closes (cutin) ~420 PSIG",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Auto-reset: opens (cutout) ~15 PSIG, closes (cutin) ~40 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Cooling low-ambient (standard)",
+            "value": "Rated to 55°F outdoor ambient without accessories",
+            "key": "low_ambient_std"
+          },
+          {
+            "label": "Low Ambient Kit (optional)",
+            "value": "Extends cooling operation to 0°F; cycles outdoor fan off at ~250 PSIG head pressure; Rheem recommends use below 70°F ambient",
+            "key": "low_ambient_kit"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Optional accessory on some capacities; energize 12 hrs before startup after extended shutdown",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging & Diagnostics",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "See unit nameplate / charging chart on service panel — do not invent a superheat/subcooling target",
+            "key": "charging"
+          },
+          {
+            "label": "EcoNet/VSODU",
+            "value": "RP16 (plain, non-AZ) is not EcoNet-enabled; two-stage staged scroll only",
+            "key": "econet_note"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Rheem/Ruud defrost control boards include a 2-pin TEST header. With a heating call active, short the TEST pins with an insulated screwdriver or jumper for 5–7 seconds — reversing valve shifts to cooling, outdoor fan turns off, and W (aux heat) energizes, confirming defrost engaged. Some board revisions require a short, momentary release (~1 sec), then a second short to actually trigger the test — if the first short doesn't take, remove and reapply. If 24V is present at the board but the TEST short still won't force defrost, the board is likely faulty. Source: Rheem heat pump service/troubleshooting literature (Rheem 15PJL series 92-20522-80-05 doc referenced in pts.myrheem.com) plus corroborating HVAC-Talk and JustAnswer field threads — the specific OEM PDF could not be parsed directly this session, so confirm pin layout against the installed board's printed legend."
+          },
+          {
+            "label": "EcoNet communicating",
+            "value": "NOT verifiable this session. EcoNet-enabled outdoor units add an outdoor-unit test screen in the EcoNet Control Center app (as of software v60) that can lock compressor speed for testing, but no source located documented a dedicated 'force defrost' command through the EcoNet app or wall control. Use the physical TEST-pin method on the outdoor board instead, or confirm current app capability directly with Rheem/EcoNet support before relying on an app-based method."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, the outdoor coil should be at/below the board's frost cut-in for a natural (non-forced) defrost to latch; the TEST-pin method is designed to bypass that. When forced defrost runs: reversing valve shifts to cooling, outdoor fan stops, aux heat may energize — warn of the normal cold-air burst from supply registers during the test, and don't leave the unit in forced defrost longer than necessary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RP13 Series (shared platform with RP14/RP15)",
+    "equip": "Heat Pump",
+    "summary": "Classic Series single-stage split heat pump, R-410A, 13 SEER. Rheem publishes RP13, RP14 and RP15 under one shared installation/service manual — same controls, pressure switches and defrost logic across the tier.",
+    "match": [
+      "WeatherKing WP14 (confirmed shared-platform doc; WP13/WP15 not independently verified)",
+      "1.5 to 5 ton"
+    ],
+    "source": "pts.rheem.com .../HP/IO/92-105074-04-10_RP13_RP14_RP15.pdf (R-410A Heat Pump Outdoor Units Installation Instructions (-)P14/(-)P15, Doc 92-105074-04 Rev.10, filename covers RP13_RP14_RP15); my.rheem.com/pts/HP/RP13/RP13_IO.asp (document index confirming RP13 uses this manual)",
+    "flags": [
+      {
+        "title": "Demand defrost sensor failure behavior differs by sensor",
+        "body": "If the outdoor coil sensor fails, the demand defrost control will NOT initiate defrost at all (silent no-heat-in-cold-weather complaint). If the ambient sensor fails instead, the control defaults to a fixed defrost every 34 minutes of compressor runtime with coil temp below 35°F. Check sensor resistance before condemning the defrost board."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV or EEV at indoor unit (per matched indoor coil)",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Demand Defrost Control — initiates when outdoor coil temp is below 35°F AND compressor has run 34+ minutes at that coil temp AND the ambient/coil differential trips",
+            "key": "defrost_type"
+          },
+          {
+            "label": "Defrost termination",
+            "value": "Terminates on time (14 minutes max) or on termination temperature, whichever occurs first",
+            "key": "defrost_term"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in heating mode (wiring diagram note: \"component energized in heating mode\")",
+            "key": "rv_energized"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches (standard on (-)P14; confirm on P13/P15 nameplate)",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Auto-reset: opens (cutout) ~610 PSIG, closes (cutin) ~420 PSIG",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Auto-reset: opens (cutout) ~15 PSIG, closes (cutin) ~40 PSIG",
+            "key": "lp_switch"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Low Ambient Control (LAC), P/N RXAD-A08",
+            "value": "Senses compressor head pressure; cycles outdoor fan off at ~250 PSIG to hold head pressure at low ambient; rated to 0°F; Rheem recommends use below 70°F ambient",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Some capacities factory-installed; add for units with a low ambient kit; energize 12 hrs before startup after extended shutdown",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Anti-short-cycle",
+            "value": "Time-guard keeps compressor off min. 5 minutes after a power interruption or thermostat cycle",
+            "key": "anti_short_cycle"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Weigh-in to nameplate charge for 15 ft. line set; use charging chart on service panel for longer runs — see rating plate",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Rheem/Ruud defrost control boards include a 2-pin TEST header. With a heating call active, short the TEST pins with an insulated screwdriver or jumper for 5–7 seconds — reversing valve shifts to cooling, outdoor fan turns off, and W (aux heat) energizes, confirming defrost engaged. Some board revisions require a short, momentary release (~1 sec), then a second short to actually trigger the test — if the first short doesn't take, remove and reapply. If 24V is present at the board but the TEST short still won't force defrost, the board is likely faulty. Source: Rheem heat pump service/troubleshooting literature (Rheem 15PJL series 92-20522-80-05 doc referenced in pts.myrheem.com) plus corroborating HVAC-Talk and JustAnswer field threads — the specific OEM PDF could not be parsed directly this session, so confirm pin layout against the installed board's printed legend."
+          },
+          {
+            "label": "EcoNet communicating",
+            "value": "NOT verifiable this session. EcoNet-enabled outdoor units add an outdoor-unit test screen in the EcoNet Control Center app (as of software v60) that can lock compressor speed for testing, but no source located documented a dedicated 'force defrost' command through the EcoNet app or wall control. Use the physical TEST-pin method on the outdoor board instead, or confirm current app capability directly with Rheem/EcoNet support before relying on an app-based method."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, the outdoor coil should be at/below the board's frost cut-in for a natural (non-forced) defrost to latch; the TEST-pin method is designed to bypass that. When forced defrost runs: reversing valve shifts to cooling, outdoor fan stops, aux heat may energize — warn of the normal cold-air burst from supply registers during the test, and don't leave the unit in forced defrost longer than necessary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RA13 Series (shared platform with RA14/RA16)",
+    "equip": "Condenser",
+    "summary": "Classic Series split air conditioner, R-410A, 13-16 SEER family. Rheem publishes RA13, RA14 and RA16 under one shared installation/service manual — identical controls, pressure switches and low-ambient accessory across the tier. Ruud markets the identical unit under the same RA13 model number.",
+    "match": [
+      "Ruud RA13 Series (identical model number, Ruud-branded literature confirmed)",
+      "WeatherKing WA13 (confirmed shared-platform doc index page)",
+      "1.5 to 5 ton"
+    ],
+    "source": "files.myrheem.com Product Documents 7DF54289-1B36-40E5-B20D-59C343AC1B0C.pdf (Ruud Achiever Series Air Conditioners RA13 spec sheet); pts.rheem.com .../AC/IO/92-104921-09-08_RA13_RA14_RA16.pdf (Air Cooled Condensing Units Installation Instructions (-)A13/(-)A14/(-)A16, Doc 92-104921-09 Rev.08)",
+    "flags": [
+      {
+        "title": "Cooling below 55°F requires the low-ambient accessory",
+        "body": "As shipped, this platform is only rated for cooling operation to 55°F outdoor ambient. Running the condenser below that without the factory Low Ambient Control kit (and crankcase heater) risks head-pressure collapse, compressor flooding, and nuisance low-pressure trips — don't assume every unit in the field has the kit installed."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV or EEV on the indoor unit (per matched indoor coil)",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches (available factory or field-installed; confirm on SKU/nameplate)",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Auto-reset: opens (cutout) ~610 PSIG, closes (cutin) ~420 PSIG",
+            "key": "hp_switch"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Auto-reset: opens (cutout) ~15 PSIG, closes (cutin) ~40 PSIG",
+            "key": "lp_switch"
+          },
+          {
+            "label": "Diagnostic service window",
+            "value": "Two-fastener opening gives access to install/read high and low pressure switches without full panel removal",
+            "key": "diag_window"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient & Crankcase Heater",
+        "rows": [
+          {
+            "label": "Cooling low-ambient (standard)",
+            "value": "Rated to 55°F outdoor ambient without accessories",
+            "key": "low_ambient_std"
+          },
+          {
+            "label": "Low Ambient Control (LAC), P/N RXAD-A08",
+            "value": "Senses compressor head pressure; cycles outdoor fan off at ~250 PSIG; extends cooling to 0°F; Rheem recommends use below 70°F ambient",
+            "key": "low_ambient_kit"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Recommended whenever a Low Ambient Kit is installed; not required on most scroll-compressor RA13 units otherwise",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Factory charge covers 15 ft. line set; use line-length charge adjustment table for longer runs — see rating plate/charging chart",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RP18AZ / RP16AZ / RP15AZ / RP14AZ (Endeavor Line, current catalog)",
+    "equip": "Heat Pump",
+    "summary": "Current Rheem Endeavor Line heat pump tiers (Prestige/Classic Plus/Classic series) as listed live on rheem.com in Aug 2026. The RH20AZ/RH17AZ/RH15AZ model numbers requested were NOT found in any published Rheem literature — no \"RH\"-prefixed heat pump line exists. These RP-prefixed AZ models are the closest real, currently-published Endeavor Line equivalents (RP18AZ = top tier, RP16AZ = mid two-stage/inverter, RP15AZ/RP14AZ = entry tiers).",
+    "match": [
+      "Ruud UP16AZ (confirmed live on ruud.com for the AZ mid-tier)",
+      "WeatherKing WP15AZ/WP14AZ platform naming pattern (not independently verified per-SKU)",
+      "2 to 5 ton (RP14AZ/RP15AZ: 1.5 to 5 ton)"
+    ],
+    "source": "rheem.com/products/residential/heating-and-cooling/heat-pumps/ (live Rheem product catalog, accessed 2026-08-31) and individual model pages (e.g. rheem.com/product/... RP18AZ, RP16AZ, RP15AZ, RP14AZ)",
+    "flags": [
+      {
+        "title": "Refrigerant type not consistently published per SKU — verify nameplate",
+        "body": "Rheem's Endeavor Line sells parallel AY- and AZ-suffix SKUs per tier. The catalog explicitly labels the AY-suffix siblings (e.g. RD18AY, RA15AY, RA14AY) as \"R-454B Refrigerant,\" but the AZ-suffix cards reviewed do not state a refrigerant type. Do NOT assume R-410A or R-454B on an AZ-suffix unit — confirm on the nameplate/A2L placard before selecting recovery equipment, gauges, or leak-detection method."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Efficiency & Platform (as published)",
+        "rows": [
+          {
+            "label": "RP18AZ (Prestige)",
+            "value": "Up to 20 SEER2 / 12.5 EER2 / 8.5 HSPF2, EcoNet Enabled, 2-5 ton",
+            "key": "rp18az"
+          },
+          {
+            "label": "RP16AZ (Classic Plus)",
+            "value": "Up to 17 SEER2 / 10.4 EER2 / 8.1 HSPF2, EcoNet Enabled, 1.5-5 ton",
+            "key": "rp16az"
+          },
+          {
+            "label": "RP15AZ (Classic Plus)",
+            "value": "Up to 16 SEER2 / 11.7 EER2 / 8.1 HSPF2, not EcoNet-enabled, 1.5-5 ton",
+            "key": "rp15az"
+          },
+          {
+            "label": "RP14AZ (Classic)",
+            "value": "Up to 14.3 SEER2 / 10.4 EER2 / 7.6 HSPF2, not EcoNet-enabled, 1.5-5 ton",
+            "key": "rp14az"
+          }
+        ]
+      },
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "See rating plate / A2L placard — not stated per-SKU in reviewed catalog copy",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "See rating plate / service manual — not stated in reviewed catalog copy",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Defrost, Reversing Valve & Pressure Switches",
+        "rows": [
+          {
+            "label": "Defrost type/interval",
+            "value": "See rating plate / service manual — not published in the marketing literature reviewed; not verified for this generation",
+            "key": "defrost_type"
+          },
+          {
+            "label": "Reversing valve energized mode",
+            "value": "See service manual — not confirmed for this generation (legacy Rheem platforms energize in heating mode; not verified to carry over)",
+            "key": "rv_energized"
+          },
+          {
+            "label": "High/low pressure switch cutout/cutin",
+            "value": "See rating plate — not published in reviewed literature",
+            "key": "pressure_switches"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient, Crankcase Heater & EcoNet",
+        "rows": [
+          {
+            "label": "Low ambient lockout",
+            "value": "See rating plate — not published in reviewed literature",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "See rating plate — not published in reviewed literature",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "EcoNet/VSODU",
+            "value": "RP18AZ and RP16AZ are EcoNet Enabled per catalog; RP15AZ and RP14AZ are not",
+            "key": "econet_note"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Rheem/Ruud defrost control boards include a 2-pin TEST header. With a heating call active, short the TEST pins with an insulated screwdriver or jumper for 5–7 seconds — reversing valve shifts to cooling, outdoor fan turns off, and W (aux heat) energizes, confirming defrost engaged. Some board revisions require a short, momentary release (~1 sec), then a second short to actually trigger the test — if the first short doesn't take, remove and reapply. If 24V is present at the board but the TEST short still won't force defrost, the board is likely faulty. Source: Rheem heat pump service/troubleshooting literature (Rheem 15PJL series 92-20522-80-05 doc referenced in pts.myrheem.com) plus corroborating HVAC-Talk and JustAnswer field threads — the specific OEM PDF could not be parsed directly this session, so confirm pin layout against the installed board's printed legend."
+          },
+          {
+            "label": "EcoNet communicating",
+            "value": "NOT verifiable this session. EcoNet-enabled outdoor units add an outdoor-unit test screen in the EcoNet Control Center app (as of software v60) that can lock compressor speed for testing, but no source located documented a dedicated 'force defrost' command through the EcoNet app or wall control. Use the physical TEST-pin method on the outdoor board instead, or confirm current app capability directly with Rheem/EcoNet support before relying on an app-based method."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, the outdoor coil should be at/below the board's frost cut-in for a natural (non-forced) defrost to latch; the TEST-pin method is designed to bypass that. When forced defrost runs: reversing valve shifts to cooling, outdoor fan stops, aux heat may energize — warn of the normal cold-air burst from supply registers during the test, and don't leave the unit in forced defrost longer than necessary."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RA18AZ / RA16AZ / RA15AZ / RA14AZ / RA13NZ (Endeavor Line, current catalog)",
+    "equip": "Condenser",
+    "summary": "Current Rheem Endeavor Line air conditioner tiers (Prestige/Classic Plus/Classic series) as listed live on rheem.com in Aug 2026. RA15AZ and RA14AZ are exact matches to the requested Endeavor R-454B line; no RA17AZ exists — RA16AZ (17 SEER2) is the closest real, currently-published equivalent, with RA18AZ as the top inverter tier.",
+    "match": [
+      "1.5 to 5 ton (RA15AZ/RA16AZ/RA18AZ: 2 to 5 ton)"
+    ],
+    "source": "rheem.com/products/residential/heating-and-cooling/air-conditioners/ (live Rheem product catalog, accessed 2026-08-31) and individual model page rheem.com/product/rheem-ra14az-endeavor-line-classic-series-air-conditioner-ra14az30aj1nalhp/",
+    "flags": [
+      {
+        "title": "Refrigerant type not consistently published per SKU — verify nameplate",
+        "body": "As with the Endeavor heat pumps, the AY-suffix AC siblings (RA16AY, RA15AY, RA14AY) are explicitly labeled \"R-454B Refrigerant\" in Rheem's catalog, but the AZ-suffix cards (RA14AZ, RA15AZ, RA16AZ, RA18AZ) reviewed do not state a refrigerant type, and RA13NZ/RA13NY are only marked \"meets energy standards for Northern regions.\" Confirm refrigerant on the nameplate/A2L placard before servicing — do not assume R-410A or R-454B from the model number alone."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Efficiency & Platform (as published)",
+        "rows": [
+          {
+            "label": "RA18AZ (Prestige)",
+            "value": "Up to 20 SEER2 / 13 EER2, EcoNet Enabled, inverter-driven variable-speed compressor, 2-5 ton",
+            "key": "ra18az"
+          },
+          {
+            "label": "RA16AZ (Classic Plus)",
+            "value": "Up to 17 SEER2 / 10.5 EER2, EcoNet Enabled, inverter-driven variable-speed twin-rotary compressor, 7mm coil, 2-5 ton",
+            "key": "ra16az"
+          },
+          {
+            "label": "RA15AZ (Classic Plus)",
+            "value": "Up to 15.2 SEER2 / 9.8 EER2, EcoNet Enabled, inverter-driven variable-speed twin-rotary compressor, 7mm coil, 2-5 ton",
+            "key": "ra15az"
+          },
+          {
+            "label": "RA14AZ (Classic)",
+            "value": "Up to 16 SEER2 / 13 EER2, not EcoNet-enabled, single-stage compressor, 7mm coil, 1.5-5 ton",
+            "key": "ra14az"
+          },
+          {
+            "label": "RA13NZ (Classic, Northern-region)",
+            "value": "Up to 15.2 SEER2 / 12 EER2, single-stage, 1.5-5 ton",
+            "key": "ra13nz"
+          }
+        ]
+      },
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "See rating plate / A2L placard — not stated per-SKU in reviewed catalog copy",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "See rating plate / service manual — not stated in reviewed catalog copy",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches & Low Ambient",
+        "rows": [
+          {
+            "label": "High/low pressure switch cutout/cutin",
+            "value": "See rating plate — not published in reviewed literature",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low ambient cooling operation",
+            "value": "See rating plate / service manual — not published in reviewed literature for this generation",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "See rating plate — not published in reviewed literature",
+            "key": "crankcase_heater"
+          }
+        ]
+      },
+      {
+        "title": "EcoNet",
+        "rows": [
+          {
+            "label": "EcoNet/VSODU",
+            "value": "RA18AZ, RA16AZ and RA15AZ are EcoNet Enabled per catalog; RA14AZ and RA13NZ are not",
+            "key": "econet_note"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RBHP",
+    "equip": "Air Handler",
+    "summary": "RBHP-Series high-efficiency air handler, R-410A only. X-13 (ECM) constant-torque motor with 5 field-selectable speed taps, factory shipped connected on Tap 5 (high). Standard/optional electric heat kits built into the blower housing. 35\" tall, 4-way convertible (upflow/downflow/horizontal L or R). Ruud badges the identical platform under the same RBHP model code. Companion hydronic/electric variant RBHK was not independently located in Rheem/Ruud literature this pass - do not assume RBHP figures apply to it; confirm via rating plate.",
+    "match": [
+      "RBHP"
+    ],
+    "source": "Rheem RBHP-Series Air Handler Spec Sheet, FORM NO. H11-544 REV. 3, files.myrheem.com (Rheem Manufacturing Co.)",
+    "flags": [
+      {
+        "title": "R-410A platform only",
+        "body": "RBHP is built for R-410A systems (RCHL-series coils) and is NOT rated for R-454B/A2L outdoor units. Confirm refrigerant type on the rating plate before matching to an outdoor condenser - do not pair with an R-454B (Y-series) system."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "X-13 (ECM) constant-torque motor, 5 speeds",
+            "key": "blower_type"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Field-selectable motor speed tap (2-5) wired at the control board per cabinet size/tonnage and heat kW - see Airflow Performance Data table for correct tap. Shipped from factory on Tap 5 (high).",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static",
+            "value": "Optimum operating range 0.2\"-0.5\" W.C.; performance data published from 0.1\" to 1.0\" W.C.",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Permanent washable filter, framed in unit filter rack. Sizes: 17\"cab 16-1/4x21\", 21\"cab 19-3/4x21\", 24\"/25\"cab 23-1/4x21\" (part nos. 54-23217-02/03/04).",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heat kit staging",
+            "value": "Model-code heat kW: 06=4.9kW, 07=7.0kW, 11=10.0kW (single circuit, up to 3 elements). Circuit breaker standard on kits above 11kW for UL/cUL service-disconnect.",
+            "key": "heat_kit"
+          },
+          {
+            "label": "Max heat rise",
+            "value": "85°F (17\" cab) down to 65°F (24\"/25\" cab) - see cabinet-size table for exact CFM/rise limits.",
+            "key": "max_heat_rise"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Refrigerant",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Internal check TXV on the RCHL factory-matched indoor coil (R-410A only).",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Drain",
+        "rows": [
+          {
+            "label": "Drain pan",
+            "value": "Molded polymer corrosion-resistant condensate pan on all coils with PVC condensate elbow standard. External auxiliary horizontal drain pan (RXBM-AA06) fits all sizes as accessory. No factory float switch documented in this literature - verify against local code.",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Rheem",
+    "model": "RH1PY",
+    "equip": "Air Handler",
+    "summary": "Endeavor-line PSC single-stage air handler for R-454B (A2L) systems only, form H22-589 Rev.2 (Ruud-badged; identical RH1PY model code used by Rheem). 4-way convertible, aluminum coil, TXV metering, field-installed RXBH- electric heat kits. Companion two-stage constant-torque RH2TY exists in the same Endeavor line, but no RH2P (PSC) model was found published - Rheem's Endeavor two-stage air handler is RH2TY, not RH2P; treat RH2P as not a real/current model number.",
+    "match": [
+      "RH1PY"
+    ],
+    "source": "Rheem/Ruud Endeavor Line Air Handlers RH1PY Spec Sheet, FORM NO. H22-589 REV. 2, files.myrheem.com (Rheem Manufacturing Co.)",
+    "flags": [
+      {
+        "title": "R-454B / A2L refrigerant",
+        "body": "RH1PY is R-454B (mildly flammable A2L) only - confirm the PlusOne refrigerant detection sensor (factory or field-installed) is present and functional before servicing, and never mix components with an R-410A system. Match indoor/outdoor units by refrigerant type stamped on the rating plate, not by cabinet appearance."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "PSC motor, 2-speed (Low/High)",
+            "key": "blower_type"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "2-speed tap selection via low-voltage wiring at the control board (no dip switches). Airflow range is fixed per cabinet/tonnage - see Airflow Performance Data tables (e.g. 1817S: 517-711 CFM; 4821S/4824S: 1395-1824 CFM).",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static",
+            "value": "Optimum operating range 0.3\"-0.7\" W.C.; performance data published from 0.1\" to 1.0\" W.C. Coil-only units: minimum 0.1\" W.C.",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Filter",
+            "value": "Filter size/part number not published in this spec sheet - see rating plate or installation instructions.",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Heat kit staging",
+            "value": "Field-installed RXBH- kits, single or multiple-circuit, ranging 2.25/3.0kW up to 18.0/24.0kW depending on cabinet size (jumper kits RXBJ-A21/A31 convert multi-circuit kits to a single supply circuit). Kits include UL/cUL service-disconnect circuit breakers.",
+            "key": "heat_kit"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Refrigerant",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Thermal Expansion Valve (TXV), standard. R-454B only - must be matched to an R-454B (\"Y\") outdoor unit, not R-410A.",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Drain",
+        "rows": [
+          {
+            "label": "Drain pan",
+            "value": "Vertical drain pan with primary drain plus auxiliary upflow/downflow and horizontal drain connections; double-coil cabinet variants available. No float switch documented in this spec sheet.",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  }
 ];
 
 /* ------------------------------------------------------------------ *
