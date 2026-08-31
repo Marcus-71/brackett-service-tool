@@ -1463,3 +1463,58 @@ main {
 .wx-ref-list .k{display:block;font-weight:600;font-size:.8rem;color:var(--muted,#888);}
 .wx-ref-src{font-size:.76rem;color:var(--muted,#888);margin-top:.4rem;}
 .cc-wx-note{font-size:.86rem;margin:.4rem 0;color:var(--muted,#aaa);line-height:1.35;}
+
+.tile-maint { border-left: 5px solid var(--brand-sage); }
+
+/* ---- Maintenance Figures ---- */
+.maint-card { padding: 0; overflow: hidden; }
+.maint-head {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: .75rem; padding: .85rem 1rem; background: none; border: 0; text-align: left;
+  font: inherit; color: inherit; cursor: pointer;
+}
+.maint-title { font-weight: 700; }
+.maint-sub { font-size: .85rem; color: var(--text-dim); margin-top: .15rem; }
+.maint-caret { color: var(--text-dim); font-size: 1.1rem; }
+
+.maint-tabs { display: flex; gap: .5rem; padding: 0 1rem .6rem; }
+.maint-tab {
+  flex: 1; padding: .5rem; border-radius: 8px; border: 1px solid var(--border);
+  background: none; font: inherit; color: var(--text-dim); cursor: pointer; font-size: .9rem;
+}
+.maint-tab.on {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: var(--accent); color: var(--text); font-weight: 600;
+}
+
+.maint-body { padding: 0 1rem 1rem; }
+.maint-group { margin-top: 1rem; }
+.maint-group-title {
+  font-size: .8rem; font-weight: 700; letter-spacing: .02em;
+  padding-bottom: .3rem; margin-bottom: .4rem;
+  border-bottom: 2px solid var(--accent);
+}
+.maint-table { width: 100%; border-collapse: collapse; }
+.maint-table td {
+  padding: .45rem .4rem; vertical-align: top;
+  border-bottom: 1px solid var(--border); font-size: .92rem;
+}
+.maint-label { width: 42%; color: var(--text-dim); }
+.maint-value { font-weight: 500; }
+.maint-key .maint-value { font-weight: 700; }
+
+.maint-flag {
+  border-left: 3px solid var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-radius: 0 8px 8px 0;
+  padding: .7rem .85rem; margin-top: .85rem; font-size: .92rem;
+}
+.maint-flag-title { font-weight: 700; color: var(--danger); margin-bottom: .3rem; }
+
+.maint-cl-title { font-weight: 700; margin-top: .5rem; }
+.maint-note { font-size: .88rem; color: var(--text-dim); margin: .3rem 0 .2rem; }
+.maint-cl { margin: .3rem 0 0; padding-left: 1.2rem; }
+.maint-cl li { margin-bottom: .4rem; font-size: .92rem; }
+
+.maint-source { margin-top: 1.2rem; font-size: .8rem; color: var(--text-dim); }
+.maint-empty { padding: 1rem; color: var(--text-dim); }

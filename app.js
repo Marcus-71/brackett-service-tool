@@ -247,6 +247,7 @@ const SCREEN_TITLES = {
   scanner: "Tag Scanner",
   charge: "Charging Calc",
   weather: "Local Weather",
+  maint: "Maintenance Figures",
   warranty: "Warranty Check",
   sqft: "House Size",
   request: "Request Info",
@@ -272,10 +273,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -297,6 +298,7 @@ function showScreen(name, fromBack) {
   if (name === "gen") renderGens();
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
+  if (name === "maint") renderMaint();
 
   if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
 
@@ -6013,7 +6015,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v156";
+const APP_VERSION = "v157";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -42,6 +42,11 @@
       <span class="tile-label">Error Codes</span>
       <span class="tile-sub">Look up a flash/fault code</span>
     </button>
+    <button class="tile tile-maint" data-screen="maint">
+      <span class="tile-icon">📋</span>
+      <span class="tile-label">Maintenance Figures</span>
+      <span class="tile-sub">Specs &amp; clean-and-check list</span>
+    </button>
     <button class="tile tile-diag" data-screen="diagnostics">
       <span class="tile-icon">🩺</span>
       <span class="tile-label">Diagnostic Help</span>
@@ -132,6 +137,18 @@
   </div>
   <main id="codesResults"></main>
   <div id="codesEmptyState" class="empty-state hidden">No matching codes. Try a different search, or add this one.</div>
+</section>
+
+<section id="maintScreen" class="screen hidden">
+  <div class="disclaimer">Pulled from manufacturer service literature. The rating plate on the unit wins over anything on this screen.</div>
+  <div class="controls">
+    <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model — G61, DM96VC, 59TP6, 58SC0…" autocomplete="off">
+    <div class="filter-row">
+      <select id="maintEquipChips" class="filter-select" aria-label="Filter by equipment"></select>
+    </div>
+  </div>
+  <main id="maintResults"></main>
+  <div id="maintEmptyState" class="empty-state hidden">No maintenance figures for that model yet. Check Manuals for the PDF.</div>
 </section>
 
 <!-- DIAGNOSTIC HELP -->
@@ -456,6 +473,7 @@
 <script src="generators.js"></script>
 <script src="weather.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
+<script src="maint.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
