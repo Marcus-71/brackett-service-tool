@@ -4696,6 +4696,4417 @@ const MAINT_SPECS = [
       }
     ],
     "checklist": "airhandler"
+  },
+{
+    "brand": "Lennox",
+    "model": "SL280V / SL280NV",
+    "equip": "Gas Furnace",
+    "summary": "Two-stage, variable-speed, communicating (iComfort/S40-capable) 80% gas furnace, SureLight integrated control. Covers SL280UHV, SL280DFV (dual fuel), SL280UHNV (Canada low-NOx).",
+    "match": [
+      "SL280V",
+      "SL280NV",
+      "SL280UHV",
+      "SL280DFV",
+      "SL280UHNV",
+      "SL280UH",
+      "two-stage",
+      "variable speed",
+      "communicating",
+      "icomfort",
+      "80%",
+      "furnace"
+    ],
+    "source": "Lennox SL280UHV Installation Instructions, Corp. 508245-01 (02/2022); Lennox SL280UHNV Service Literature, Corp. 1601-L8 (2021), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "No fixed flame-sense µA pass/fail threshold published",
+        "body": "This is a communicating (SureLight/iComfort) integrated control, not an older fixed-threshold board. The control's Flame Signal Mode (menu 'F') displays LIVE flame current on the 7-segment LED in microamps, but Corp. 1601-L8 does not publish a numeric normal/low/dropout table - diagnosis is by comparing the live reading before/after cleaning the sensor rather than to a fixed spec. Do not assume a generic µA cutoff for this board family."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "SureLight integrated control (communicating)",
+            "value": "Live µA readout only via Flame Signal Mode (menu 'F') on 7-seg LED - no fixed normal/low/dropout numbers published",
+            "key": true
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure NG (low/high fire), 0-4500 ft",
+            "value": "1.7 in. w.g. low fire / 3.5 in. w.g. high fire",
+            "key": true
+          },
+          {
+            "label": "Manifold pressure NG, 4500-7500 ft (derate)",
+            "value": "~1.5-1.6 in. w.g. low fire / 2.8-3.4 in. w.g. high fire (size-dependent, see Table 19)",
+            "key": false
+          },
+          {
+            "label": "Manifold pressure LP/propane (low/high fire)",
+            "value": "4.5 in. w.g. low fire / 10.0 in. w.g. high fire (LP changeover kit required)",
+            "key": true
+          },
+          {
+            "label": "Supply line pressure NG",
+            "value": "4.5 in. w.g. min / 13.0 in. w.g. max"
+          },
+          {
+            "label": "Supply line pressure LP",
+            "value": "10.0-11.0 in. w.g. min / 13.0 in. w.g. max"
+          },
+          {
+            "label": "Orifice, NG (070/090/110)",
+            "value": ".063 / .055 (size-specific, high-altitude kit swaps this - see Table 21)"
+          },
+          {
+            "label": "Orifice, LP/propane",
+            "value": ".034 / .032"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Two-stage redundant valve, factory-set, non-adjustable regulator; 1/8 NPT test ports at valve for manifold/supply pressure"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "0.8 in. w.g. heating / 1.0 in. w.g. cooling - do not exceed heating ESP, causes erratic limit operation",
+            "key": true
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-size specific; not consolidated in Corp. 508245-01)"
+          },
+          {
+            "label": "Blower",
+            "value": "Variable-speed ECM, DIP-switch selectable heat/cool speeds (+24% to -18% of factory default)"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "SureLight silicon nitride hot-surface ignitor, 39-70 Ω across terminals 1-5 (5-pin plug), 120VAC ±10% regulated, 20-sec warm-up",
+            "key": true
+          },
+          {
+            "label": "Primary/secondary limits",
+            "value": "Auto-reset, factory-set, no published trip temperature ('not published' in Corp. 508245-01/1601-L8)"
+          },
+          {
+            "label": "Flame rollout switches (2)",
+            "value": "Manual-reset, factory-set, no published trip temperature"
+          },
+          {
+            "label": "Pressure switches",
+            "value": "Factory-set, non-adjustable; high-altitude kits 69W56/73W33/73W34/73W35 swap switch per altitude band (see Table 20)"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "No change 0-4500 ft; NG manifold pressure/orifice derate 4500-7500 ft; high-altitude NG orifice kit required 7500-10,000 ft"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Lennox",
+    "model": "SL297NV",
+    "equip": "Gas Furnace",
+    "summary": "Two-stage, variable-speed, communicating (iComfort/S40-capable) 97% condensing gas furnace, SureLight integrated control. Natural gas only - no LP/propane conversion kit published.",
+    "match": [
+      "SL297NV",
+      "SL297UHNV",
+      "97%",
+      "two-stage",
+      "variable speed",
+      "communicating",
+      "icomfort",
+      "condensing",
+      "furnace"
+    ],
+    "source": "Lennox SL297UHNV Installation Instructions, Corp. 507760-02 (02/2018); Lennox SL297UHNV Service Literature, Corp. 1802-L1 (rev. 02/2021), lennox.com / tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Natural gas only - do not attempt an LP conversion",
+        "body": "Corp. 507760-02 contains no LP/propane orifice or conversion-kit table for the SL297UHNV (unlike the SL280V family, which has one). The gas piping/CSA references to 'Natural Gas and Propane' in this literature are generic code citations, not a model-specific LP option. Confirm fuel type against the model/rating plate before ordering parts - do not substitute an SL280 LP kit."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "SureLight integrated control (communicating)",
+            "value": "Live µA readout only via Flame Signal Mode push-button/menu - no fixed normal/low/dropout numbers published in Corp. 1802-L1",
+            "key": true
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure NG (low/high fire), all models",
+            "value": "1.7 in. w.g. low fire / 3.5 in. w.g. high fire",
+            "key": true
+          },
+          {
+            "label": "Supply line pressure NG",
+            "value": "4.5 in. w.g. min / 13.0 in. w.g. max"
+          },
+          {
+            "label": "LP/propane",
+            "value": "Not offered - see flag"
+          },
+          {
+            "label": "Combustion CO2% (NG, low/high fire)",
+            "value": "040: 6.3-7.8% | 060: 6.5-8.2% | 080: 7.2-8.4%"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Redundant two-stage valve; 1/8 NPT manifold/supply test ports"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "0.8 in. w.g. heating / 1.0 in. w.g. cooling"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "45-75°F (-040 low-input) / 40-70°F (-040 high-input, -060, -080) per Corp. 1802-L1 spec tables - confirm against rating plate",
+            "key": true
+          },
+          {
+            "label": "Blower",
+            "value": "Variable-speed ECM; continuous-fan selectable 28/38/70/100% of 2nd-stage cool speed, min 250 cfm"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "SureLight silicon nitride hot-surface ignitor, 39-70 Ω across terminals 1-5, 120VAC ±10%, 20-sec warm-up",
+            "key": true
+          },
+          {
+            "label": "Primary limit / rollout switches",
+            "value": "Auto-reset limit, manual-reset flame rollout; factory-set, no published trip temperature"
+          },
+          {
+            "label": "Pressure switch / inducer calibration",
+            "value": "Control self-calibrates combustion-air-inducer prove switch each heat cycle; calibration-failure codes E229/watchguard calibration failure logged if it can't complete"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "NOT approved for installations above 4500 ft (Corp. 507760-02) - no high-altitude kit published for this model"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Lennox",
+    "model": "EL296V / EL296E",
+    "equip": "Gas Furnace",
+    "summary": "Two-stage 96% condensing gas furnace, SureLight integrated control. EL296UHV is variable-speed/communicating (iComfort); EL296UHE is constant-torque, non-communicating. Flame-sense µA thresholds below are keyed to the EL296UHE control (103699) - the UHV communicating control shows live µA only, no fixed thresholds published.",
+    "match": [
+      "EL296V",
+      "EL296E",
+      "EL296UHV",
+      "EL296UHE",
+      "EL296DFV",
+      "96%",
+      "two-stage",
+      "condensing",
+      "elite series",
+      "furnace"
+    ],
+    "source": "Lennox EL296UHV(X) Service Literature, Corp. 1125-L5 (2021); Lennox EL296UHE Service Literature, Corp. 1246-L10 (2014), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Flame-sense µA table is EL296UHE (board 103699) only - EL296UHV communicating control has no fixed threshold",
+        "body": "Corp. 1246-L10 (EL296UHE) publishes a fixed flame-signal table keyed to integrated control 103699: Normal 2.6 µA or greater, Low 2.5 µA or less, Drop Out ~0.6 µA. The EL296UHV/EL296DFV (iComfort communicating SureLight control) only displays a LIVE µA reading in Flame Signal Mode ('F' menu) per Corp. 1125-L5 - no numeric pass/fail table is published for that board. Confirm which control is installed before applying the EL296UHE numbers."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board 103699 (EL296UHE, non-communicating)",
+            "value": "Normal 2.6 µA or greater / Low 2.5 µA or less / Drop Out ~0.6 µA",
+            "key": true
+          },
+          {
+            "label": "EL296UHV/DFV communicating SureLight control",
+            "value": "Live µA readout only via Flame Signal Mode - no fixed thresholds published"
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure NG (low/high fire), 0-4500 ft",
+            "value": "1.7 in. w.g. low fire / 3.5 in. w.g. high fire",
+            "key": true
+          },
+          {
+            "label": "Manifold pressure NG, derated bands to 7500 ft",
+            "value": "As low as 1.5/3.1 in. w.g. depending on size - see Table 31, Corp. 1125-L5"
+          },
+          {
+            "label": "Manifold pressure LP/propane (low/high fire)",
+            "value": "4.5 in. w.g. low fire / 10.0 in. w.g. high fire (changeover kit required)",
+            "key": true
+          },
+          {
+            "label": "Supply line pressure NG",
+            "value": "4.5 in. w.g. min / 13.0 in. w.g. max"
+          },
+          {
+            "label": "Supply line pressure LP",
+            "value": "11.0 in. w.g. min / 13.0 in. w.g. max"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Two-stage redundant valve, internally regulated, 1/8 NPT test ports"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "0.8 in. w.g. heating / 1.0 in. w.g. cooling",
+            "key": true
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (ranges from 20-50°F to 55-85°F across sizes per Corp. 1125-L5/1246-L10 spec tables)"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "SureLight silicon nitride hot-surface ignitor, 39-70 Ω across terminals, 20-sec warm-up",
+            "key": true
+          },
+          {
+            "label": "Flame rollout switch (S47)",
+            "value": "N.C. SPST manual-reset, one per side of burner box, factory-set trip temp not published"
+          },
+          {
+            "label": "Primary/secondary limits",
+            "value": "Auto-reset, factory-set, no published trip temperature"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Approved 0-10,000 ft with manifold pressure/pressure-switch adjustment per Table 31/32 - no hard altitude ceiling like SL297NV"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Lennox",
+    "model": "EL280",
+    "equip": "Gas Furnace",
+    "summary": "Two-stage 80% non-condensing gas furnace (upflow/horizontal EL280UH(X)(E), dual-fuel EL280DF(E)), SureLight integrated control 103699-XX/107048-XX family. Notably low max external static (0.5 in. w.g.) vs. the 90%+ Lennox lines.",
+    "match": [
+      "EL280",
+      "EL280UH",
+      "EL280UHX",
+      "EL280UHE",
+      "EL280DF",
+      "EL280DFE",
+      "80%",
+      "two-stage",
+      "non-condensing",
+      "furnace"
+    ],
+    "source": "Lennox EL280UH(X)E Installation Instructions, Corp. 507908-02 (04/2024); Lennox EL280DF Service Literature, Corp. 1139-L11 (rev. 06/2016), tech.lennoxintl.com / lennox.com",
+    "flags": [
+      {
+        "title": "Max external static is only 0.5 in. w.g. - notably lower than SL/EL condensing lines",
+        "body": "Both EL280UH(X) and EL280DF spec tables (Corp. 507908-02, 1139-L11) list 0.5 in. w.g. as the high-static/max ESP rating for heating AND cooling - well below the 0.8/1.0 in. w.g. figures on the SL280V/EL296V condensing furnaces. On a duct system sized for a condensing replacement, verify actual static against this lower EL280 ceiling before assuming the blower can handle it."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "Board 103699-XX / 107048-XX",
+            "value": "Normal 1.9 µA or greater / Low 1.4 µA or less / Drop Out ~0.20 µA (per Corp. 1139-L11 EL280DF service literature)",
+            "key": true
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure NG (low/high fire), 0-7500 ft",
+            "value": "1.7 in. w.g. low fire / 3.5 in. w.g. high fire",
+            "key": true
+          },
+          {
+            "label": "Manifold pressure NG, 4500-7500 ft derate",
+            "value": "As low as 1.5/2.8 in. w.g. depending on size"
+          },
+          {
+            "label": "Manifold pressure LP/propane (low/high fire)",
+            "value": "4.5 in. w.g. low fire / 10.0 in. w.g. high fire (changeover kit required)",
+            "key": true
+          },
+          {
+            "label": "Supply line pressure NG / LP",
+            "value": "4.5-13.0 in. w.g. (NG) / 11.0-13.0 in. w.g. (LP)"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Two-stage redundant valve, 1/8 NPT test ports"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "0.5 in. w.g. (heating and cooling) - see flag",
+            "key": true
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (ranges 20-50°F to 40-70°F across sizes per Corp. 1139-L11 spec tables)"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "SureLight silicon nitride hot-surface ignitor, 39-70 Ω, 20-sec warm-up",
+            "key": true
+          },
+          {
+            "label": "Rollout/limit switches",
+            "value": "Factory-set, auto/manual-reset per switch type; no published trip temperature"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "NG orifice/manifold pressure adjustment 4500-7500 ft; high-altitude NG orifice kit required 7500-10,000 ft"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Lennox",
+    "model": "ML195 / ML196E",
+    "equip": "Gas Furnace",
+    "summary": "Single-stage condensing gas furnaces (ML195UH 95% AFUE, ML196UHE 96% AFUE / constant-torque blower), SureLight integrated control. Same gas train figures across both; flame-sense µA thresholds differ by control and are listed per model below.",
+    "match": [
+      "ML195",
+      "ML195UH",
+      "ML195DF",
+      "EL195UHNE",
+      "ML196E",
+      "ML196UHE",
+      "ML196DFE",
+      "95%",
+      "96%",
+      "single-stage",
+      "condensing",
+      "merit series",
+      "furnace"
+    ],
+    "source": "Lennox EL195UHNE Service Literature, Corp. 1801-L1 (rev. 02/2021); Lennox ML195DF Installation Instructions, Corp. 507269-03f; Lennox ML196UHE Service Literature, Corp. 1911-L7 (07/2020), tech.lennoxintl.com / lennox.com",
+    "flags": [
+      {
+        "title": "Flame-sense µA differs between the ML195 and ML196E control - do not cross-apply",
+        "body": "The ML195/EL195UHNE literature (Corp. 1801-L1) publishes Normal 2.6 µA or greater / Low 2.5 µA or less / Drop Out 1.1 µA. The ML196UHE literature (Corp. 1911-L7) publishes a DIFFERENT table: Normal 1.5 µA or greater / Low 0.5-1.4 µA / Drop Out 0.4 µA. These are not interchangeable - confirm the model (and therefore the control board generation) before judging a flame-sense reading as good or marginal."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "ML195UH / EL195UHNE control",
+            "value": "Normal 2.6 µA or greater / Low 2.5 µA or less / Drop Out ~1.1 µA",
+            "key": true
+          },
+          {
+            "label": "ML196UHE control",
+            "value": "Normal 1.5 µA or greater / Low 0.5-1.4 µA / Drop Out ~0.4 µA",
+            "key": true
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure NG (single-stage, all sizes)",
+            "value": "3.5 in. w.g.",
+            "key": true
+          },
+          {
+            "label": "Manifold pressure LP/propane",
+            "value": "10.0 in. w.g. (changeover kit required)",
+            "key": true
+          },
+          {
+            "label": "Supply line pressure NG",
+            "value": "4.5-10.5 in. w.g."
+          },
+          {
+            "label": "Supply line pressure LP",
+            "value": "11.0-13.0 in. w.g."
+          },
+          {
+            "label": "Gas valve",
+            "value": "Internally redundant single-stage valve, gas control switch and 24VAC terminals on valve top, 1/8 NPT test ports"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure (high static)",
+            "value": "0.5 in. w.g.",
+            "key": true
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (ranges 25-55°F to 50-80°F across sizes per spec tables)"
+          },
+          {
+            "label": "Blower",
+            "value": "ML195UH: DC brushless constant-torque; ML196UHE: constant-torque ECM"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "Nitride hot-surface ignitor, 39-70 Ω, 102-132VAC to ignitor",
+            "key": true
+          },
+          {
+            "label": "Rollout switch (S47)",
+            "value": "Auto-reset, factory-set, breaks 24V to R on trip; trip temperature not published - see rating plate"
+          },
+          {
+            "label": "Primary limit (S10)",
+            "value": "Factory-set, auto-reset, no published trip temperature"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Approved 0-10,000 ft; NG manifold pressure steps down 4501-7500 ft, high-altitude orifice kit required above 7500 ft, pressure-switch kit required 4501-10,000 ft"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Lennox",
+    "model": "ME180 / ML180",
+    "equip": "Gas Furnace",
+    "summary": "Single-stage 80% non-condensing gas furnace (ML180UH/UHE/UHV upflow-horizontal, ML180DF/DFE dual-fuel). SureLight integrated control shares the same flame-signal table as ML196UHE. 'ME180' commercial-brand/model-alias figures not independently found in Lennox literature - treat as ML180 platform and confirm off the rating plate.",
+    "match": [
+      "ME180",
+      "ML180",
+      "ML180UH",
+      "ML180UHE",
+      "ML180UHV",
+      "ML180DF",
+      "ML180DFE",
+      "80%",
+      "single-stage",
+      "non-condensing",
+      "merit series",
+      "furnace"
+    ],
+    "source": "Lennox ML180DFE Service Literature, Corp. 1121-L4 (2017); Lennox ML180UHA Service Literature, Corp. 1218-L4 (2017), tech.lennoxintl.com / lennox.com",
+    "flags": [
+      {
+        "title": "'ME180' not confirmed as a distinct Lennox literature model",
+        "body": "No ME180-specific installation or service literature was located on tech.lennoxintl.com or lennox.com during this research - only ML180 family documents. If a unit is nameplated 'ME180', treat the figures below as a starting point only and verify every value (especially manifold pressure and temp rise) against that unit's own rating plate before servicing."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Flame signal",
+        "rows": [
+          {
+            "label": "ML180DFE / ML180UH(X)(E) SureLight control",
+            "value": "Normal 1.5 µA or greater / Low 0.5-1.4 µA / Drop Out ~0.4 µA (per Corp. 1121-L4)",
+            "key": true
+          }
+        ]
+      },
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure NG (single-stage, all sizes, 0-10,000 ft)",
+            "value": "3.5 in. w.g. - does not step down with altitude (pressure-switch kit swap used instead)",
+            "key": true
+          },
+          {
+            "label": "Manifold pressure LP/propane",
+            "value": "10.0 in. w.g. (changeover kit required)",
+            "key": true
+          },
+          {
+            "label": "Supply line pressure NG",
+            "value": "4.5-13.0 in. w.g."
+          },
+          {
+            "label": "Supply line pressure LP",
+            "value": "11.0-13.0 in. w.g."
+          },
+          {
+            "label": "Gas valve",
+            "value": "Single-stage redundant valve, 1/8 NPT test ports"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure (high static)",
+            "value": "0.5 in. w.g.",
+            "key": true
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-size specific per Corp. 1121-L4/1218-L4 spec tables)"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "Nitride hot-surface ignitor, 39-70 Ω, 20-sec warm-up",
+            "key": true
+          },
+          {
+            "label": "Rollout/primary limit switches",
+            "value": "Factory-set, auto/manual-reset per switch type; trip temperature not published"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Approved 0-10,000 ft; NG manifold pressure essentially unchanged by altitude, high-altitude pressure-switch kit required above 4500-7500 ft (size-dependent) - see Table 13, Corp. 1121-L4"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Lennox",
+    "model": "XP21",
+    "equip": "Heat Pump",
+    "summary": "2-5 ton two-stage scroll heat pump (SilentComfort Technology), R-410A. Note: Lennox literature classifies XP21 as a TWO-STAGE compressor unit, not a variable-speed/inverter model - correcting a common assumption. Optional iComfort S30 communicating control; also runs as a conventional multi-stage unit.",
+    "match": [
+      "XP21"
+    ],
+    "source": "Lennox Product Specifications XP21 (ehb_xp21_2010.pdf) and Corp. 507217-02 Installation Instructions, tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Confirm compressor staging before quoting repairs",
+        "body": "Lennox literature lists the XP21 as a Two-Stage Scroll Compressor (SilentComfortTM), not a fully variable-capacity/inverter unit. Don't assume inverter-drive board diagnostics apply - use the standard two-stage IFC/defrost board fault codes (Five-Strike lockout) instead."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV (field-matched via TXV Usage/Substitution tables to indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart - charge is line-set-length and indoor-coil dependent; do not use a flat charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost control",
+            "value": "IntelliFrostTM Adaptive (demand) Defrost - outdoor temp, coil temp & compressor run-time inputs; field jumper selectable at 50°F/70°F/90°F/MAX, default 50°F",
+            "key": "defrost_type"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Factory-installed 4-way valve, pressure-differential operated; energized state not specified in reviewed literature - verify against unit wiring diagram",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present, automatic reset, monitored by control board with 5-Strike lockout; exact cutout/cutin psig not published - see rating plate/switch part label",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "No specific °F threshold published; Compressor Low Ambient Cut-Off + Freezestat recommended when Low Ambient Kit (68M04) is installed",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Yes, factory-installed w/ thermostat (S40) - energize 24 hrs before startup",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "Optional iComfort S30 Wi-Fi communicating; also operates as a conventional 2-stage unit with standard thermostats",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Lennox Demand Defrost Control boards have a 2-pin 'TEST' header. With the unit running a heating call, jumper the TEST pins for 2–5 seconds then remove — this forces one defrost event. If the jumper stays on TEST longer than 5 seconds, the control ignores it and reverts to normal operation (won't force). To repeat the test, remove the jumper for at least 1 second before reapplying. Source: Lennox heat pump unit service literature (tech.lennoxintl.com/.../507633-01.pdf, 'Demand Defrost Control' section) and corroborating field write-ups."
+          },
+          {
+            "label": "iComfort communicating",
+            "value": "From the iComfort Touch/S30 installer Tests screen (Installer program > Tests), select the test set and press Start; the built-in defrost test is a short, self-terminating routine (~30 seconds) distinct from the other 30-minute component tests, per the iComfort Touch Setup manual's troubleshooting/tests section. Exact on-screen menu wording for current S30 firmware not independently re-verified this session — confirm live on the thermostat before using with a customer present. Source: Lennox iComfort Touch Setup Manual, 'Troubleshooting Tips' (lennox.com/dA/3c5cd2b3e6/Lennox_icomfortTouch_Manual.pdf, p.31 via ManualsLib)."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Outdoor coil sensor must be cold enough to be below the board's defrost cut-in (near/below freezing) for the forced cycle to actually engage and hold — on a warm coil the TEST short may be ignored or terminate immediately. Expect the reversing valve to shift to cooling and the outdoor fan to stop when defrost engages; a cold-air burst from supply registers during the test is normal."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "XP20 / EL22XPV / EL18XPV / SL25XPV / SL22XPV",
+    "equip": "Heat Pump",
+    "summary": "2-5 ton variable-capacity heat pumps (DC Inverter, Precise ComfortTM Technology), R-410A, spanning the Signature (SL), Elite (EL) and XP tiers. Share the same DC-inverter variable rotary/scroll compressor platform and control logic. iComfort Communicating Thermostat is REQUIRED (not furnished) - these are not compatible with conventional non-communicating thermostats.",
+    "match": [
+      "XP20",
+      "EL22XPV",
+      "EL18XPV",
+      "SL25XPV",
+      "SL22XPV"
+    ],
+    "source": "Lennox Product Specifications: XP20 (ehb_xp20_2010.pdf), EL18XPV (ehb_el18xpv_2104.pdf), SL25XPV (ehb_sl25xpv_2109.pdf), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Communicating thermostat is mandatory, not optional",
+        "body": "Unlike XP21/XP17-class units, XP20/EL22XPV/EL18XPV/SL25XPV/SL22XPV literature explicitly states an iComfort Communicating Thermostat is required and is NOT furnished with the unit. A conventional stat will not run the outdoor unit correctly - confirm the correct iComfort stat is on the job before committing to a repair/replacement quote."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV/EEV per TXV Usage table (field-matched to indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart - do not use a flat charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost control",
+            "value": "Demand defrost using outdoor ambient, coil temp & compressor run-time; selectable termination temp 50°F/70°F/90°F, 14-minute maximum defrost time (XP20 literature)",
+            "key": "defrost_type"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Factory-installed 4-way valve; energized state not specified in reviewed literature - verify against unit wiring diagram",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present with 5-Strike lockout protection; exact cutout/cutin psig not published - see rating plate",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Built-in low ambient control - cooling mode rated to operate down to 0°F outdoor air temp (no field kit required per EL18XPV/XP20 literature)",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Yes, factory-installed",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "iComfort S30 Communicating Thermostat REQUIRED - order separately, not furnished",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Lennox Demand Defrost Control boards have a 2-pin 'TEST' header. With the unit running a heating call, jumper the TEST pins for 2–5 seconds then remove — this forces one defrost event. If the jumper stays on TEST longer than 5 seconds, the control ignores it and reverts to normal operation (won't force). To repeat the test, remove the jumper for at least 1 second before reapplying. Source: Lennox heat pump unit service literature (tech.lennoxintl.com/.../507633-01.pdf, 'Demand Defrost Control' section) and corroborating field write-ups."
+          },
+          {
+            "label": "iComfort communicating",
+            "value": "From the iComfort Touch/S30 installer Tests screen (Installer program > Tests), select the test set and press Start; the built-in defrost test is a short, self-terminating routine (~30 seconds) distinct from the other 30-minute component tests, per the iComfort Touch Setup manual's troubleshooting/tests section. Exact on-screen menu wording for current S30 firmware not independently re-verified this session — confirm live on the thermostat before using with a customer present. Source: Lennox iComfort Touch Setup Manual, 'Troubleshooting Tips' (lennox.com/dA/3c5cd2b3e6/Lennox_icomfortTouch_Manual.pdf, p.31 via ManualsLib)."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Outdoor coil sensor must be cold enough to be below the board's defrost cut-in (near/below freezing) for the forced cycle to actually engage and hold — on a warm coil the TEST short may be ignored or terminate immediately. Expect the reversing valve to shift to cooling and the outdoor fan to stop when defrost engages; a cold-air burst from supply registers during the test is normal."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "XP17 / EL17XP1 / EL16XP1 / ML17XP1",
+    "equip": "Heat Pump",
+    "summary": "1.5-5 ton single-stage scroll heat pumps (SilentComfort Technology on XP17; Elite/Merit equivalents on EL17XP1, EL16XP1, ML17XP1), R-410A. Fixed-capacity PSC compressor, works with any standard or communicating thermostat.",
+    "match": [
+      "XP17",
+      "EL17XP1",
+      "EL16XP1",
+      "ML17XP1"
+    ],
+    "source": "Lennox Product Specifications XP17 (ehb_xp17_1512.pdf), tech.lennoxintl.com (single-stage EL/ML platform siblings share the same IntelliFrost defrost control logic)",
+    "flags": [
+      {
+        "title": "Single-stage - no inverter/EEV diagnostics apply",
+        "body": "These are fixed-capacity scroll compressors (PSC motor, no VFD/inverter board). Don't chase variable-speed fault codes on this platform - use the standard IntelliFrost defrost board and 5-Strike HP/LP lockout diagnostics."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV per TXV Usage table (field-matched to indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart - do not use a flat charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost control",
+            "value": "IntelliFrostTM Adaptive (demand) Defrost - outdoor temp, coil temp & compressor run-time inputs; field jumper 50°F/70°F/90°F/MAX, default 50°F",
+            "key": "defrost_type"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Factory-installed 4-way valve, pressure-differential operated; energized state not specified in reviewed literature - verify against unit wiring diagram",
+            "key": "reversing_valve"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present, automatic reset; exact cutout/cutin psig not published - see rating plate",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Cooling mode operates satisfactorily down to 45°F outdoor air without extra controls; optional field Low Ambient Kit extends to 30°F (add Freezestat + Compressor Low Ambient Cut-Off)",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Available/factory-installed depending on size - confirm on rating plate",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "Works with iComfort Communicating Control or conventional thermostats (not communicating-mandatory)",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Lennox Demand Defrost Control boards have a 2-pin 'TEST' header. With the unit running a heating call, jumper the TEST pins for 2–5 seconds then remove — this forces one defrost event. If the jumper stays on TEST longer than 5 seconds, the control ignores it and reverts to normal operation (won't force). To repeat the test, remove the jumper for at least 1 second before reapplying. Source: Lennox heat pump unit service literature (tech.lennoxintl.com/.../507633-01.pdf, 'Demand Defrost Control' section) and corroborating field write-ups."
+          },
+          {
+            "label": "iComfort communicating",
+            "value": "From the iComfort Touch/S30 installer Tests screen (Installer program > Tests), select the test set and press Start; the built-in defrost test is a short, self-terminating routine (~30 seconds) distinct from the other 30-minute component tests, per the iComfort Touch Setup manual's troubleshooting/tests section. Exact on-screen menu wording for current S30 firmware not independently re-verified this session — confirm live on the thermostat before using with a customer present. Source: Lennox iComfort Touch Setup Manual, 'Troubleshooting Tips' (lennox.com/dA/3c5cd2b3e6/Lennox_icomfortTouch_Manual.pdf, p.31 via ManualsLib)."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Outdoor coil sensor must be cold enough to be below the board's defrost cut-in (near/below freezing) for the forced cycle to actually engage and hold — on a warm coil the TEST short may be ignored or terminate immediately. Expect the reversing valve to shift to cooling and the outdoor fan to stop when defrost engages; a cold-air burst from supply registers during the test is normal."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "XC25 / XC20",
+    "equip": "Condenser",
+    "summary": "2-5 ton variable-capacity air conditioners (DC Inverter, Precise ComfortTM Technology), R-410A. Top-tier Signature/XC platform units - iComfort Communicating Thermostat is REQUIRED and not furnished.",
+    "match": [
+      "XC25",
+      "XC20"
+    ],
+    "source": "Lennox Product Specifications: XC25 (ehb_xc25_1711.pdf), XC20 (ehb_xc20_2010.pdf), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Communicating thermostat is mandatory, not optional",
+        "body": "Both XC25 and XC20 literature explicitly states an iComfort Communicating Thermostat is required (order separately - not furnished). These will not run correctly on a conventional non-communicating stat; verify equipment on the job before quoting a stat swap or condenser replacement."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV per TXV Usage table (field-matched to indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart - do not use a flat charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present with monitoring & lockout provisions; exact cutout/cutin psig not published - see rating plate",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Built-in low ambient control (no field kit stated in reviewed literature); Freezestat recommended for extra low-ambient protection",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Yes, factory-installed - prevents refrigerant migration during low ambient",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "iComfort Communicating Thermostat REQUIRED - order separately, not furnished",
+            "key": "communicating"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "XC21 / XC16",
+    "equip": "Condenser",
+    "summary": "2-5 ton two-stage air conditioners, R-410A. XC21 is iComfort-enabled (works communicating OR with ComfortSense 7500 / other conventional thermostats); XC16 (Elite tier) is the same two-stage-compressor class.",
+    "match": [
+      "XC21",
+      "XC16"
+    ],
+    "source": "Lennox Installation & Service Literature XC21 (Corp. 1007-L2), XC16 Guide Specifications (guidespecs_XC16_1408.pdf), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Two-stage, communicating-optional - confirm thermostat compatibility",
+        "body": "XC21 explicitly supports non-communicating operation (Lennox ComfortSense 7500 or other conventional stats) in addition to full iComfort communicating mode - unlike the XC25/XC20 tier. Don't assume a communicating stat swap is required for this platform."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV (metering valve device only per XC21 literature)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart - do not use a flat charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present with 5-Strike lockout on high/low pressure switches and discharge temp sensor; exact cutout/cutin psig not published - see rating plate",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "XC16: optional Low Ambient Kit extends operation down to 30°F, plus Compressor Low Ambient Cutoff; XC21 threshold not stated in reviewed literature",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "XC16: standard on 048-060 models, optional (field kit) on 024-036; XC21: crankcase thermostat (S40) present - confirm on rating plate",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "Compatible with iComfort Communicating Control or conventional/ComfortSense 7500 thermostats",
+            "key": "communicating"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "XC17 / XC13 / XC14 / EL17XC1 / EL16XC1 / ML14XC1",
+    "equip": "Condenser",
+    "summary": "1.5-5 ton single-stage scroll air conditioners spanning Signature (XC17), base (XC13/XC14) and Elite/Merit (EL17XC1, EL16XC1, ML14XC1) tiers, R-410A. Fixed-capacity scroll compressor, works with any standard or communicating thermostat.",
+    "match": [
+      "XC17",
+      "XC13",
+      "XC14",
+      "EL17XC1",
+      "EL16XC1",
+      "ML14XC1"
+    ],
+    "source": "Lennox Product Specifications: XC17 (ehb_xc17_1511.pdf), XC14 (ehb_xc14_1706.pdf), EL16XC1 (ehb_el16xc1_2010.pdf), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Single-stage, no inverter diagnostics",
+        "body": "All models in this group use a fixed-capacity (single stage) scroll compressor per Lennox literature - not variable-speed. Use standard high/low pressure switch and crankcase-heater troubleshooting; don't chase DC-inverter-board fault codes on this platform."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV per TXV Usage table (field-matched to indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart (EL16XC1 example: factory charge ranges ~4 lb 9 oz to 7 lb 1 oz by tonnage) - confirm actual unit charge on its own nameplate, do not reuse another size's figure",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present, automatic reset; exact cutout/cutin psig not published - see rating plate",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Standard cooling rated to ~45°F outdoor air without extra controls; optional Low Ambient Kit extends to 30°F w/ Freezestat + Compressor Low Ambient Cut-Off (platform convention per XC16/XP17-family literature)",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "EL16XC1: standard 018-048 models, add-on kit for larger; confirm presence/size on individual model's rating plate",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "Works with iComfort Communicating Control or conventional thermostats (not communicating-mandatory)",
+            "key": "communicating"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "EL18XCV / SL28XCV",
+    "equip": "Condenser",
+    "summary": "2-5 ton variable-capacity air conditioners (DC Inverter Rotary/Scroll Compressor, Precise ComfortTM Technology), R-410A, Elite and Signature tiers. Same DC-inverter platform as EL18XPV/SL25XPV heat pumps.",
+    "match": [
+      "EL18XCV",
+      "SL28XCV"
+    ],
+    "source": "Lennox Product Specifications EL18XCV (ehb_el18xcv_2109.pdf), tech.lennoxintl.com",
+    "flags": [
+      {
+        "title": "Verify communicating-thermostat requirement before quoting",
+        "body": "Unlike XC25/XC20, the EL18XCV bulletin does not carry an explicit 'iComfort Communicating Thermostat required' note - but variable-capacity Lennox platforms generally need a compatible iComfort communicating control to run properly. Confirm required thermostat model against the specific unit's spec sheet/nameplate before committing to a repair plan."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "Factory TXV per TXV Usage/Substitution table (field-matched to indoor coil)",
+            "key": "metering"
+          },
+          {
+            "label": "Charging method",
+            "value": "See unit rating plate / factory charging chart - do not use a flat charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Protection & Low Ambient",
+        "rows": [
+          {
+            "label": "High/Low pressure switches",
+            "value": "Both present with high/low pressure switch monitoring; exact cutout/cutin psig not published - see rating plate",
+            "key": "pressure_switches"
+          },
+          {
+            "label": "Low-ambient lockout",
+            "value": "Built-in low ambient operation control; specific °F threshold not stated in reviewed literature - Freezestat recommended for extra protection",
+            "key": "low_ambient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Yes, factory-installed - prevents refrigerant migration during low ambient",
+            "key": "crankcase_heater"
+          },
+          {
+            "label": "Communicating control",
+            "value": "Pairs with iComfort Communicating Control - confirm exact thermostat requirement on unit's own spec sheet/nameplate",
+            "key": "communicating"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Lennox",
+    "model": "CBX40UHV",
+    "equip": "Air Handler",
+    "summary": "Dave Lennox Signature Collection variable-speed ECM air handler, 2-5 ton, multi-position (upflow/horizontal, downflow with kit), iComfort Communicating capable.",
+    "match": [
+      "CBX40UHV",
+      "CBX40UHV-024",
+      "CBX40UHV-030",
+      "CBX40UHV-036",
+      "CBX40UHV-042",
+      "CBX40UHV-048",
+      "CBX40UHV-060"
+    ],
+    "source": "Lennox Product Specifications Bulletin 210521 (Nov 2017), tech.lennoxintl.com/.../ehb_cbx40uhv_1711.pdf",
+    "flags": [
+      {
+        "title": "Lennox note",
+        "body": "Blower speeds (HEAT/COOL, 4 taps each) are set by jumper pins on the control board, not dip switches; an ADJUST jumper trims speed +/-10%. First-stage cooling airflow is auto-set to 70% of the selected COOL speed. Continuous fan (DELAY jumper) runs ~28/38/70/100% of COOL speed, min 380 cfm."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower",
+        "rows": [
+          {
+            "label": "Motor type",
+            "value": "ECM variable-speed, 1/2-1 hp depending on size",
+            "key": "motor"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Jumper-selectable HEAT/COOL speed taps (1-4) + ADJUST trim jumper; no dip switches",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "0.80 in. w.g. (rated blower performance range, all sizes)",
+            "key": "max_static"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Type/size",
+            "value": "Disposable frame, MERV 16, 20x20x5 (-024/030/036) or 20x25x5 (-042/048/060)",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "2.5-25 kW field-installed ECB40 kits",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Staging",
+            "value": "2.5-6 kW kits are single-stage/single-breaker; 8 kW and larger are 2-stage, split across two circuit breakers (e.g. 12.5 kW = 30A+45A, 15 kW = 35A+60A) - staging sequenced by the control board, no separate field sequencer",
+            "key": "heat_staging"
+          }
+        ]
+      },
+      {
+        "title": "Metering / Coil",
+        "rows": [
+          {
+            "label": "Metering",
+            "value": "Factory wide-range R-410A check/expansion valve (TXV) standard; model-number digit also allows fixed orifice or outdoor-unit-side TXV - match device to outdoor unit per AHRI combination",
+            "key": "metering"
+          },
+          {
+            "label": "Coil",
+            "value": "3-row copper tube/aluminum fin twin 'A' coil",
+            "key": "coil"
+          }
+        ]
+      },
+      {
+        "title": "Drain",
+        "rows": [
+          {
+            "label": "Pan",
+            "value": "Deep corrosion-resistant plastic dual-position drain pan (upflow/downflow/horizontal), dual (2x 3/4 in fpt) pipe drains",
+            "key": "drain_pan"
+          },
+          {
+            "label": "Trap / float switch",
+            "value": "Not published as factory-standard in this bulletin - field-fabricated trap and any safety float switch per local code/install instructions; see rating plate/IOM for jurisdiction requirements",
+            "key": "drain_trap"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Lennox",
+    "model": "CBX32MV",
+    "equip": "Air Handler",
+    "summary": "Dave Lennox Signature Collection variable-speed ECM air handler, 1.5-5+ ton, multi-position, iComfort Communicating capable (Signature tier below CBX40UHV).",
+    "match": [
+      "CBX32MV",
+      "CBX32MV-018/024",
+      "CBX32MV-024/030",
+      "CBX32MV-036",
+      "CBX32MV-048",
+      "CBX32MV-060",
+      "CBX32MV-068"
+    ],
+    "source": "Lennox Product Specifications Bulletin 210352 (Feb 2018), tech.lennoxintl.com/.../ehb_cbx32mv_1802b.pdf",
+    "flags": [
+      {
+        "title": "Lennox note",
+        "body": "Same jumper-pin airflow architecture as CBX40UHV (HEAT/COOL taps 1-4 + ADJUST trim), but filters are 1 in. disposable (not the 5 in. MERV 16 media filter used on CBX40UHV) - do not cross-stock filters between the two lines."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower",
+        "rows": [
+          {
+            "label": "Motor type",
+            "value": "ECM variable-speed, 1/2 hp (-018/024 thru -036) or 1 hp (-048/060/068)",
+            "key": "motor"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Jumper-selectable HEAT/COOL speed taps (1-4) + ADJUST trim jumper; no dip switches",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "0.80 in. w.g. (rated blower performance range)",
+            "key": "max_static"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Type/size",
+            "value": "Disposable frame, 1 in., size by tonnage: 15x20x1 (-018/024) up to 20x25x1 (-068)",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "2.5-25 kW field-installed kits (see Electric Heat Data tables)",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Staging",
+            "value": "Same pattern as CBX40UHV: lower-kW kits single-stage, 8 kW+ kits 2-stage across two breakers, sequenced by control board",
+            "key": "heat_staging"
+          }
+        ]
+      },
+      {
+        "title": "Metering / Coil",
+        "rows": [
+          {
+            "label": "Metering",
+            "value": "Factory wide-range R-410A check/expansion valve (TXV) standard; model number also codes fixed orifice or outdoor-unit-side TXV options - match to outdoor unit per AHRI combination",
+            "key": "metering"
+          },
+          {
+            "label": "Coil",
+            "value": "3-row copper tube/aluminum fin coil, 12 fins/in.",
+            "key": "coil"
+          }
+        ]
+      },
+      {
+        "title": "Drain",
+        "rows": [
+          {
+            "label": "Pan",
+            "value": "Deep corrosion-resistant plastic dual-position drain pan (upflow/downflow/horizontal), dual (2x 3/4 in fpt) pipe drains",
+            "key": "drain_pan"
+          },
+          {
+            "label": "Trap / float switch",
+            "value": "Not published as factory-standard in this bulletin - field-fabricated trap and any safety float switch per local code/install instructions; see rating plate/IOM for jurisdiction requirements",
+            "key": "drain_trap"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Lennox",
+    "model": "CBX27UH",
+    "equip": "Air Handler",
+    "summary": "Elite Series constant-torque, multi-tap blower air handler, 1.5-5 ton, upflow/horizontal, 5-speed 'high efficiency' motor (not variable-speed ECM).",
+    "match": [
+      "CBX27UH",
+      "CBX27UH-018",
+      "CBX27UH-024",
+      "CBX27UH-030",
+      "CBX27UH-036",
+      "CBX27UH-042",
+      "CBX27UH-048",
+      "CBX27UH-060"
+    ],
+    "source": "Lennox Product Specifications Bulletin 210581 (Oct 2017), tech.lennoxintl.com/.../ehb_cbx27uh_1710.pdf",
+    "flags": [
+      {
+        "title": "Lennox note",
+        "body": "Airflow is set by choosing one of 5 fixed motor taps (Tap 1-5) wired at the board per the blower-performance table for the target CFM/ESP - there is no ECM jumper/dip-switch profile on this line. Published blower tables only go to 0.80 in. w.g. ESP; taps 1-2 drop out (N/A) above ~0.60-0.70 in. w.g. on smaller sizes."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower",
+        "rows": [
+          {
+            "label": "Motor type",
+            "value": "High-efficiency multi-tap PSC-type motor, 5 speed taps, 1/2 hp (-018 thru -036) or 1 hp (-042/048/060)",
+            "key": "motor"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Field-selected motor tap (1-5) per blower-performance CFM table; no jumpers/dip switches",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "0.80 in. w.g. (table range; usable airflow narrows at high static on lower taps)",
+            "key": "max_static"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Type/size",
+            "value": "Disposable frame, 1 in., 20x20x1 (-018 thru -036) or 20x24x1 (-042/048/060)",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "2.5-20 kW (sizes -018/024/030/036) or 5-25 kW (-042/048/060) field-installed kits",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Staging",
+            "value": "Not captured in the pages reviewed - confirm stage count/sequencer per specific kW kit in the Electric Heat Data tables of this bulletin before quoting",
+            "key": "heat_staging"
+          }
+        ]
+      },
+      {
+        "title": "Metering / Coil",
+        "rows": [
+          {
+            "label": "Metering",
+            "value": "Model-number digit codes fixed orifice, indoor-side TXV, or outdoor-unit-side TXV - match metering device to outdoor unit per AHRI combination",
+            "key": "metering"
+          },
+          {
+            "label": "Coil",
+            "value": "3-row copper tube/aluminum fin coil, 12 fins/in.",
+            "key": "coil"
+          }
+        ]
+      },
+      {
+        "title": "Drain",
+        "rows": [
+          {
+            "label": "Pan",
+            "value": "Deep corrosion-resistant plastic dual-position drain pan (upflow/downflow/horizontal), dual (2x 3/4 in fpt) pipe drains",
+            "key": "drain_pan"
+          },
+          {
+            "label": "Trap / float switch",
+            "value": "Not published as factory-standard in this bulletin - field-fabricated trap and any safety float switch per local code/install instructions; see rating plate/IOM for jurisdiction requirements",
+            "key": "drain_trap"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Lennox",
+    "model": "CBX25UH",
+    "equip": "Air Handler",
+    "summary": "Merit Series entry-level multi-tap PSC air handler, 1.5-5 ton, upflow/horizontal (downflow with kit) - base offering below CBX27UH.",
+    "match": [
+      "CBX25UH",
+      "CBX25UH-018",
+      "CBX25UH-024",
+      "CBX25UH-030",
+      "CBX25UH-036",
+      "CBX25UH-042",
+      "CBX25UH-048",
+      "CBX25UH-060"
+    ],
+    "source": "Lennox Product Specifications Bulletin 210770 (Dec 2018, -10 revision), tech.lennoxintl.com/.../ehb_cbx25uh-10_1812.pdf",
+    "flags": [
+      {
+        "title": "Lennox note",
+        "body": "3-speed PSC motor (High/Medium/Low) wired at the board per the blower table - no ECM jumpers/dip switches. Published blower-performance tables only extend to 0.50 in. w.g. ESP (lower static rating than CBX27UH/32MV/40UHV) - do not oversize ductwork static budget for this model."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower",
+        "rows": [
+          {
+            "label": "Motor type",
+            "value": "PSC, 3 fixed speed taps (High/Med/Low), 1/3 hp (-018 thru -036, -042) or 1/2 hp (-048/060)",
+            "key": "motor"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Field-selected tap (High/Med/Low) wired per blower-performance CFM table; no jumpers/dip switches",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "0.50 in. w.g. (top of published blower-performance table, all sizes)",
+            "key": "max_static"
+          }
+        ]
+      },
+      {
+        "title": "Filter",
+        "rows": [
+          {
+            "label": "Type/size",
+            "value": "Disposable (non-pleated) frame, 1 in.; size by tonnage from 12x20x1 (-018) up to 18x24x1 (-042/048/060)",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "2.5-20 kW field-installed kits",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Staging",
+            "value": "Not captured in the pages reviewed - confirm stage count/sequencer per specific kW kit in the Electric Heat Data tables of this bulletin before quoting",
+            "key": "heat_staging"
+          }
+        ]
+      },
+      {
+        "title": "Metering / Coil",
+        "rows": [
+          {
+            "label": "Metering",
+            "value": "Factory wide-range R-410A check/expansion valve (TXV) standard for cooling; unlike CBX27UH/32MV/40UHV, model number carries no separate field-selectable metering-device digit - match orifice/piston needs to outdoor unit per AHRI combination",
+            "key": "metering"
+          },
+          {
+            "label": "Coil",
+            "value": "3-row copper tube/aluminum fin coil, 14 fins/in.",
+            "key": "coil"
+          }
+        ]
+      },
+      {
+        "title": "Drain",
+        "rows": [
+          {
+            "label": "Pan",
+            "value": "Factory-installed anti-microbial dual-position polymer drain pan (upflow/downflow/horizontal), dual pipe drains",
+            "key": "drain_pan"
+          },
+          {
+            "label": "Trap / float switch",
+            "value": "Not published as factory-standard in this bulletin - field-fabricated trap and any safety float switch per local code/install instructions; see rating plate/IOM for jurisdiction requirements",
+            "key": "drain_trap"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Carrier",
+    "model": "59MN7",
+    "equip": "Gas Furnace",
+    "summary": "Infinity Modulating 4-Way Multipoise condensing gas furnace, up to 98.3% AFUE. Modulating gas valve set at two points (Max Heat / Min Heat); communicating Infinity control with Status Code LED. Bryant twin: 987M (Evolution Modulating).",
+    "match": [
+      "59MN7",
+      "59MN7A",
+      "59MN7B",
+      "Bryant 987M",
+      "987M"
+    ],
+    "source": "Carrier 59MN7B Installation, Start-Up, Operating and Service and Maintenance Instructions, Form 59MN7B-02SI — https://www.shareddocs.com/hvac/docs/1009/Public/0D/59MN7B-02SI.pdf",
+    "flags": [
+      {
+        "title": "Two different manifold pressure tables — do not mix them up",
+        "body": "Manual states verbatim: 'Use Table 18 for all models EXCEPT 59MN7B060C21--20. Use Table 19 for all models 59MN7B060C21--20 ONLY.' Grabbing the wrong table on that one 060 unit throws both Max Heat and Min Heat manifold pressure off. Confirm full model/suffix off the rating plate before pulling a table."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "Table (18 or 19 per model suffix — see flag), by input rate + altitude. Table basis: 20,000 BTUh Max-Heat/8,000 BTUh Min-Heat per burner (std.) or 20,200/8,000 per burner (060C21-20). Sea-level example: 3.4 in. w.c. max heat / 0.55 in. w.c. min heat, No. 44 orifice.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Supply pressure NG",
+            "value": "Min 4.5 in. w.c. / Max 13.6 in. w.c. at furnace inlet, checked with burners firing at max heat.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply pressure LP",
+            "value": "Max 13.8 in. w.c. published; minimum not clearly resolved from this manual — see rating plate / gas pressure table.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "Factory No. 44 (example, 0-2000 ft, 1050 Btu/cu ft, 0.62 SG) — verify per Table 19/20 for actual altitude and gas heat value; never assume, always check.",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Modulating 2-stage-setpoint gas valve; brand/model not stated in SI text — confirm on rating plate/parts list.",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static",
+            "value": "Blower performance (Table 7, Air Delivery CFM) published in 0.1 in. w.c. increments up to 1.0 in. w.c. ESP by unit size/cooling switch setting — no single max ESP figure stated.",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise",
+            "value": "Varies by unit size — printed on furnace rating plate; verify with duct thermometers per 'Set Temperature Rise' section.",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/flame",
+        "rows": [
+          {
+            "label": "Status LED",
+            "value": "Amber Status Code LED on blower door: solid ON = normal, rapid flash = lockout, or 2-digit flash code (digit 1 = number of flashes group 1, pause, digit 2 = flashes group 2). Stores last 7 codes in memory, survives power loss.",
+            "key": "led"
+          },
+          {
+            "label": "Flame current",
+            "value": "Normal 4.0-6.0 microamps DC (nominal); lockout/flame-sense fault if signal drops below 0.5 microamps DC.",
+            "key": "flame_current"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Manual-reset limit switch in burner assembly opens on flame rollout/overheat. Manual explicitly warns: correct the root cause (inadequate combustion air, gas pressure, orifice, or venting) before resetting — 'DO NOT jumper this switch.'",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Table 16 multiplier, ~2%/1000 ft above 2000 ft: 1.00 (0-2000 ft) down to 0.87 (6001-7000 ft), 0.85 (7001-8000 ft), 0.83 (8001-9000 ft), 0.81 (9001-10,000 ft). NG manifold pressure tables (18/19) already build in altitude + heating-value compensation — do not apply an additional derate on top of the table value.",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Carrier",
+    "model": "59TN6",
+    "equip": "Gas Furnace",
+    "summary": "Infinity Two-Stage, Variable-Speed 4-Way Multipoise condensing gas furnace, up to 96%+ AFUE. Communicating Infinity control, Status Code LED. Bryant twin: 986T (Evolution Two-Stage).",
+    "match": [
+      "59TN6",
+      "59TN6A",
+      "59TN6B",
+      "Bryant 986T",
+      "986T"
+    ],
+    "source": "Carrier 59TN6B Installation, Start-up, Operating, Service and Maintenance Instructions, Form 59TN6B-01SI — https://www.shareddocs.com/hvac/docs/1009/Public/05/59TN6B-01SI.pdf",
+    "flags": [
+      {
+        "title": "Flame-sense/limit lockout requires root-cause fix, not a reset",
+        "body": "Manual: 'These furnaces are equipped with a manual reset limit switch...opens and shuts off power to the gas valve if an overheat condition (flame rollout) occurs.' Same as other 59-series: correct inadequate combustion air, gas pressure, orifice sizing, or venting before resetting — do not jumper."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "Table 20, by input rate + altitude (two-stage: separate high-fire/low-fire settings). BTUh-per-burner table basis not confirmed in this pass — verify against unit's Table 19/20 heading.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Supply pressure NG",
+            "value": "Min 4.5 in. w.c. / Max ~13.6 in. w.c. at furnace inlet (same inlet-pressure-check procedure as 59MN7/59SC2 platform).",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply pressure LP",
+            "value": "Max 13.8 in. w.c. published; minimum not clearly resolved from this manual — see rating plate.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "Factory-sized by model; verify per Table 20 for altitude/gas heat value — never assume, always check and verify.",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Two-stage gas valve; brand/model not stated in SI text — confirm on rating plate/parts list.",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static",
+            "value": "Blower performance tables published in 0.1 in. w.c. increments to 1.0 in. w.c. ESP by unit size — no single max ESP figure stated.",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise",
+            "value": "Varies by unit size — printed on furnace rating plate; verify with duct thermometers.",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/flame",
+        "rows": [
+          {
+            "label": "Status LED",
+            "value": "Amber Status Code LED, blower door: solid ON = normal, rapid flash = lockout, or 2-digit flash code; stores last 7 codes.",
+            "key": "led"
+          },
+          {
+            "label": "Flame current",
+            "value": "Normal 4.0-6.0 microamps DC (nominal); lockout if signal drops below 0.5 microamps DC.",
+            "key": "flame_current"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Manual-reset limit switch + rollout switch(es) in burner assembly — see flag.",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Table 18 multiplier, ~2%/1000 ft above 2000 ft (same schedule as 59MN7: 1.00 at 0-2000 ft to 0.81 at 9001-10,000 ft). Manifold pressure table already compensates for altitude — do not double-derate.",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Carrier",
+    "model": "59SC2 / 59SC5 / 59SP5 / 59SP2",
+    "equip": "Gas Furnace",
+    "summary": "Comfort/Performance single-stage 4-way multipoise condensing gas furnace platform, up to ~96.5% AFUE depending on size/series (59SP2 runs lower, to ~91.1% AFUE on some sizes). NOTE: 59SC5 is single-stage per its own product data ('59SC5B...Single-Stage'), not 2-stage — corrected from initial assumption. Bryant twins: 915S and 925S (Legacy single-stage family), per Carrier/Bryant cross-reference service bulletin.",
+    "match": [
+      "59SC2",
+      "59SC2D",
+      "59SC2E",
+      "59SC5",
+      "59SC5A",
+      "59SC5B",
+      "59SP5",
+      "59SP5A",
+      "59SP2",
+      "Bryant 915S",
+      "Bryant 925S",
+      "915S",
+      "925S"
+    ],
+    "source": "Carrier 59SC2D Installation, Start-up, Operating and Service and Maintenance Instructions, Form 59SC2D-03SI — https://www.shareddocs.com/hvac/docs/1009/Public/09/59SC2D-03SI.pdf",
+    "flags": [
+      {
+        "title": "Check inlet pressure under firing load, not just static",
+        "body": "Manual: confirm inlet gas pressure is between 4.5 in. w.c. and 13.6 in. w.c. WHILE the furnace is calling for max heat (burners firing) — 'if pressure is too low, you will not be able to adjust the manifold pressure to obtain the proper input rate.' A supply that reads fine at idle can sag below 4.5 in. w.c. once the burners and any other gas load pull simultaneously."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "Table 19, by input rate + altitude. Sea-level example given in manual: 0-2000 ft, 1050 Btu/cu ft, 0.62 SG => No. 44 orifice, 3.4 in. w.c. (847 Pa).",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Supply pressure NG",
+            "value": "Min 4.5 in. w.c. / Max 13.6 in. w.c. (1125-3388 Pa), checked at max-heat call — see flag.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply pressure LP",
+            "value": "Max 13.8 in. w.c. published; minimum not clearly resolved from this manual — see rating plate.",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "Factory No. 44 at sea level (example); verify per Table 19 for actual altitude/gas heat value — never assume, always check.",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "Single-stage gas valve; brand/model not stated in SI text — confirm on rating plate/parts list.",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static",
+            "value": "Blower performance (Table 21, Air Delivery CFM) published in 0.1 in. w.c. increments to 1.0 in. w.c. ESP by unit size — no single max ESP figure stated.",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise",
+            "value": "Must fall within range on furnace rating plate; verify per instructions using duct thermometers in supply/return.",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/flame",
+        "rows": [
+          {
+            "label": "Status LED",
+            "value": "Amber Status Code LED, blower door: solid ON = normal, rapid flash = lockout, or 2-digit flash code; stores last 7 codes in memory.",
+            "key": "led"
+          },
+          {
+            "label": "Flame current",
+            "value": "Normal 4.0-6.0 microamps DC (nominal); lockout if signal drops below 0.5 microamps DC.",
+            "key": "flame_current"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Manual-reset limit switch in burner assembly opens on flame rollout/overheat; correct root cause before reset, do not jumper.",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Table 17 multiplier, ~2%/1000 ft above 2000 ft (same schedule as 59MN7/59TN6). Manifold pressure table (19) already compensates for altitude + gas heating value — do not double-derate.",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Carrier",
+    "model": "58CTA / 58CTX / 58CTW / 58CTY",
+    "equip": "Gas Furnace",
+    "summary": "Performance 80 Two-Stage, induced-combustion, hot-surface-ignition, non-condensing 4-way multipoise gas furnace, 80% AFUE, 45,000-155,000 Btuh (Series 140). 58CTA/58CTX use a PSC blower; 58CTW/58CTY use an ECM variable-speed blower with ComfortHeat technology on the same gas train/combustion platform. 58CTX/58CTY are Low-NOx (40 ng/J) versions for AQMD areas.",
+    "match": [
+      "58CTA",
+      "58CTX",
+      "58CTW",
+      "58CTY",
+      "Bryant 820TB (variable-speed twin — Preferred 80 two-stage, size-matched; PSC-blower 58CTA/CTX twin unconfirmed)"
+    ],
+    "source": "Carrier 58CTW/58CTY Product Data, Form 58CTW-06PD — https://www.shareddocs.com/hvac/docs/1009/Public/0C/58CTW-06PD.pdf (58CTA/58CTX-specific installation/service manual, Form 58CT-12SI, could not be located at a direct shareddocs.com URL in this pass — same combustion platform, verify furnace-specific figures against rating plate)",
+    "flags": [
+      {
+        "title": "Main limit switch is mounted behind the gas valve",
+        "body": "Furnace-components diagram in the product data places the MAIN LIMIT SWITCH behind the gas valve, separate from the manual-reset limit switches on the burner box and the flame rollout switch. When troubleshooting a limit-related lockout, there are multiple limit/rollout switches on this platform — identify which one tripped from the wiring diagram/LED code before condemning a part."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG/LP)",
+            "value": "Not obtained from Product Data (PD sheets on this platform don't carry the adjustment table) — see Table in Series 140 installation instructions (Form 58CT-12SI), by input rate + altitude; use value on furnace rating plate.",
+            "key": "manifold"
+          },
+          {
+            "label": "Supply pressure NG",
+            "value": "Min 4.5 in. w.c. / Max 13.6 in. w.c. at furnace gas valve inlet.",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Orifice",
+            "value": "Factory-installed, sized by model/altitude/heat value — see Installation Instructions for usage table (part numbers e.g. LH32DB0xx series listed in PD, no single drill size published).",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "White-Rodgers, redundant, slow-opening two-stage gas valve (reduces ignition noise, regulates gas flow, electric shutoff).",
+            "key": "gas_valve"
+          },
+          {
+            "label": "Ignition",
+            "value": "Hot Surface Igniter, Size 43 (Power Heat igniter).",
+            "key": "ignition"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static",
+            "value": "Blower performance tables published in 0.1 in. w.c. increments to 1.0 in. w.c. ESP by unit size — no single max ESP figure stated; guide-spec boilerplate references 0.50 in. w.c. as a nominal design point.",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise",
+            "value": "Certified Temperature Rise Range published per unit size in PD table (High/Low columns by model) — pull the exact deg F range for the specific model/size off that table or the rating plate; values did not extract cleanly in this pass.",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/flame",
+        "rows": [
+          {
+            "label": "Status LED",
+            "value": "Enhanced diagnostics via LED and reflective sight glass; stores fault codes through power outages (per PD features list).",
+            "key": "led"
+          },
+          {
+            "label": "Flame current",
+            "value": "Not published in the documents reviewed this pass — see rating plate/service label.",
+            "key": "flame_current"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Manual-reset limit switch(es) on burner box, separate MAIN LIMIT SWITCH behind gas valve, plus flame rollout switch — see flag.",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Not extracted from the documents reviewed this pass — see Series 140 installation instructions altitude derate table / rating plate.",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Carrier",
+    "model": "58UVB / 58MVC",
+    "equip": "Gas Furnace",
+    "summary": "Variable-speed, variable-capacity (high/medium/low heat) condensing gas furnace. NOTE: corrected from the originally assumed 80% tier — 58UVB is documented as 'Performance 96, 95% AFUE Upflow-Only Variable-Speed'; 58MVC is the Infinity ICS 4-way-multipoise variable-speed sibling (up to ~96.6% AFUE on some sizes). Both are condensing units, not 80% non-condensing. Bryant twin not confirmed in this research pass — do not assume a specific Bryant model number without checking a parts cross-reference.",
+    "match": [
+      "58UVB",
+      "58MVC",
+      "58MVB"
+    ],
+    "source": "Carrier 58MVC Installation Instructions, Form 58MVC-4SI — https://www.shareddocs.com/hvac/docs/1009/Public/03/58MVC-4SI.pdf",
+    "flags": [
+      {
+        "title": "Never redrill orifices, and hold medium-heat pressure to a narrow band",
+        "body": "Manual, verbatim: 'DO NOT redrill orifices. Improper drilling (burrs, out-of-round holes, etc.) can cause excessive burner noise and misdirection of burner flames... resulting in heat exchanger failures.' Also: 'DO NOT set medium-heat manifold pressure less than 1.3 in. w.c. or more than 1.7 in. w.c. for natural gas' — a much tighter band than the high/low setpoints."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure (NG)",
+            "value": "3-point setpoint (High/Medium/Low heat), by input rate + altitude — worked example in manual for 80,000 Btuh high-heat input at sea level: 3.8 in. w.c. high heat / 1.6 in. w.c. medium heat / 0.6 in. w.c. low heat, No. 45 orifice. Medium-heat band restricted to 1.3-1.7 in. w.c. — see flag.",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Supply pressure",
+            "value": "Not clearly extracted in this pass — see rating plate/gas piping section of manual.",
+            "key": "supply"
+          },
+          {
+            "label": "Orifice",
+            "value": "Factory No. 45 (sea-level example); verify per installation-instructions usage table for altitude/gas heat value — never redrill (see flag).",
+            "key": "orifice"
+          },
+          {
+            "label": "Gas valve",
+            "value": "3-stage (high/medium/low) gas valve; brand/model not stated in extracted text — confirm on rating plate/parts list.",
+            "key": "gas_valve"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static",
+            "value": "Design guidance in manual: avoid duct configurations causing static pressure greater than 0.5 in. w.c.; full blower ESP table not isolated in this pass — see rating plate/blower table.",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise",
+            "value": "Must fall within range on furnace rating plate; adjustable via setup switch SW1-4 (rise-range selection) and airflow speed taps.",
+            "key": "temp_rise"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/flame",
+        "rows": [
+          {
+            "label": "Status LED",
+            "value": "Control status code indicator light: rapid flash = fault/no-run condition; flashes 2-digit codes (e.g., code 12 during 90-sec vent-RPM evaluation, code 24 = fuse needs replacement, codes 11/25/41/42 = component-test results). Stores up to 7 codes.",
+            "key": "led"
+          },
+          {
+            "label": "Flame current",
+            "value": "Not published as a specific microamp figure in the sections reviewed — see rating plate/service label.",
+            "key": "flame_current"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Rollout/limit",
+            "value": "Flame rollout manual-reset switch (verify continuity before restart); de-energizes gas valve, throttling valve, and humidifier terminal when R-to-W circuit opens.",
+            "key": "rollout_limit"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "2% derate per 1000 ft above 2000 ft (US), per Table 11 multiplier — simpler flat-rate schedule than the 59-series table-per-range format.",
+            "key": "altitude"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Carrier",
+    "model": "25VNA0",
+    "equip": "Heat Pump",
+    "summary": "Infinity Series variable-speed (Greenspeed) heat pump, 1.5-5 tons. Variable-speed scroll compressor, communicating Infinity control, TXV for cooling / EXV for heating. Runs with adaptive (AUTO) or field-fixed defrost intervals.",
+    "match": [
+      "25VNA0",
+      "Infinity 20",
+      "Greenspeed",
+      "Bryant 280A",
+      "Evolution Extreme"
+    ],
+    "source": "Carrier Product Data 25VNA-05PD (shareddocs.com/hvac/docs/1009/Public/01/25VNA-05PD.pdf); Service Manual 24VNA0-25VNA0-1SM (shareddocs.com/hvac/docs/1009/Public/0B/24VNA0-25VNA0-1SM.pdf)",
+    "flags": [
+      {
+        "title": "Low-pressure protection is software, not a discrete switch",
+        "body": "This platform uses a suction pressure transducer (0-200 psig range) feeding the control board, not a mechanical low-pressure switch. When troubleshooting nuisance low-pressure trips, pull the reading from the Infinity Control diagnostics / abnormal system status screen rather than assuming a failed physical switch."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed scroll",
+            "key": "compressorType"
+          },
+          {
+            "label": "Metering - cooling",
+            "value": "TXV (Puron hard shutoff)",
+            "key": "meteringCool"
+          },
+          {
+            "label": "Metering - heating",
+            "value": "Electronic expansion valve (EXV)",
+            "key": "meteringHeat"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch (mechanical)",
+            "value": "Trips ~610 ±20 psig discharge; standard",
+            "key": "hpsCutout"
+          },
+          {
+            "label": "Low pressure cutout - cooling (3-min)",
+            "value": "≤ 55 psig (software, via suction transducer)",
+            "key": "lpCutoutCool3min"
+          },
+          {
+            "label": "Low pressure cutout - heating (3-min)",
+            "value": "< 23 psig (software)",
+            "key": "lpCutoutHeat3min"
+          },
+          {
+            "label": "Low pressure cutout - instantaneous (either mode)",
+            "value": "< 13 psig (software)",
+            "key": "lpCutoutInstant"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Time/temperature with AUTO adaptive mode, selected via Infinity Control UI (no dip switches)",
+            "key": "defrostType"
+          },
+          {
+            "label": "Defrost intervals",
+            "value": "AUTO (adaptive 30/60/90/120 min based on prior defrost duration), or field-fixed 30, 60, 90, or 120 min; factory default AUTO; first defrost after power-up defaults to 30 min",
+            "key": "defrostInterval"
+          },
+          {
+            "label": "Defrost enable condition",
+            "value": "Only below 50°F outdoor coil temp",
+            "key": "defrostEnableTemp"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling (O), de-energized in heating; outdoor fan turns on 15 sec before valve switches at defrost termination",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase / Communicating",
+        "rows": [
+          {
+            "label": "Low-ambient cooling",
+            "value": "Standard down to 0°F with Infinity Control (no field kit needed)",
+            "key": "lowAmbient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Standard; energized during off-cycle below 75°F outdoor temp",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Full Greenspeed variable-capacity operation requires Infinity System Control",
+            "key": "communicating"
+          },
+          {
+            "label": "Charging",
+            "value": "See rating plate / product data charge table by unit size - do not use a generic charge weight",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Standard demand-defrost boards (HK32EA/HK61EA-series, CEPL13xxxx — same family used on Bryant and ICP/Heil/Tempstar). Remove the small plastic cap over the 2-pin 'Forced Defrost' / 'Speed-Up' (TP1/TP2) test header and short the pins with a jumper wire. Momentarily short-and-release once first to clear any compressor anti-short-cycle delay, then re-short and HOLD 5+ seconds — board commands defrost. You should hear the reversing valve shift and see the outdoor fan stop; verify 24V C-to-W2 with a meter. Pull the jumper the instant the valve shifts or the board will hold in speed-up (60x) mode and cycle continuously — don't leave it shorted. If the valve doesn't shift within ~10 sec of the sustained short, board or valve is suspect. Bryant boards are identical; confirm exact pin silkscreen against the installed board revision, since older CEPL revisions label the header 'TEST' and only speed timing rather than instant-force. Source: Carrier/HVAC-Talk field discussion + HVAC Training Solutions defrost-board walkthrough (hvac-talk.com thread 993331; hvactrainingsolutions.net/heat-pump-defrost-control-boards-step-step)."
+          },
+          {
+            "label": "Infinity communicating",
+            "value": "On the Infinity touch thermostat, enter the installer 'Checkout' diagnostic (Menu > Setups > Advanced, press and hold Advanced ~10 sec until Install/Service menu appears), then step through the heat pump Checkout routine, which commands the outdoor unit into defrost as part of the sequence. NOT independently re-verified against a current Infinity outdoor-unit Installation Instructions manual for this session, so confirm the exact menu path on the specific control/thermostat model in front of you before relying on it — menu wording has changed across Infinity System Control generations. The physical 2-pin Forced Defrost header on the outdoor board (same as non-comm procedure above) also still works on Infinity outdoor units independent of the thermostat. Source: Carrier documentation as summarized by Hunker 'How To Enter Diagnostic Mode On A Carrier Infinity Thermostat' and JustAnswer HVAC Q&A — treat menu path as a starting point, not gospel."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Coil temperature sensor (DFT) must read cold — Carrier defrost boards generally need the coil sensor closed (roughly below freezing, board-dependent ~30±3°F) before a forced defrost will actually initiate/hold; forcing on a warm coil may not take. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux/W2 heat may energize — a burst of cold air from supply registers is normal, not a fault. Warn occupants if testing with the system live."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "25HPB6",
+    "equip": "Heat Pump",
+    "summary": "Performance 16 heat pump, 1.5-5 tons, single-stage scroll compressor with hard-shutoff TXV. Time/temperature defrost, field-selectable interval. Non-communicating (standard 24V or Thermidistat).",
+    "match": [
+      "25HPB6",
+      "Performance 16",
+      "Bryant Preferred single-stage"
+    ],
+    "source": "Carrier Product Data 25HPB6-04PD (shareddocs.com/hvac/docs/1009/Public/07/25HPB6-04PD.pdf); Installation Instructions 25HCC-HPB-03SI (shareddocs.com/hvac/docs/1009/Public/09/25HCC-HPB-03SI.pdf)",
+    "flags": [
+      {
+        "title": "This is a single-stage unit, not 2-stage",
+        "body": "Carrier's own literature (25HPB6-04PD, 25HCC-HPB-03SI) documents 25HPB6 as a single scroll-compressor, single-stage heat pump. The true 2-stage 16 SEER Performance model is 25HCB6 (already covered separately) - don't confuse the two on a service call."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Compressor",
+            "value": "Single-stage scroll",
+            "key": "compressorType"
+          },
+          {
+            "label": "Metering",
+            "value": "Hard-shutoff TXV, standard all sizes",
+            "key": "metering"
+          },
+          {
+            "label": "High/low pressure switch cutout",
+            "value": "See rating plate - exact psig not published for this platform",
+            "key": "pressureSwitchCutout"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Time/temperature electronic defrost control",
+            "key": "defrostType"
+          },
+          {
+            "label": "Defrost intervals",
+            "value": "Field-selectable 30, 60, 90, or 120 min; factory set to 90 min; defrost thermostat closes ~32°F, terminates on thermostat open or automatically after 10 min",
+            "key": "defrostInterval"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "O terminal, energized in cooling / de-energized in heating",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase",
+        "rows": [
+          {
+            "label": "Max outdoor ambient - heating mode",
+            "value": "66°F published operating ceiling (not a lockout switch setting)",
+            "key": "maxHeatAmbient"
+          },
+          {
+            "label": "Low-ambient cooling control",
+            "value": "Accessory (Motormaster / low-ambient switch) - factory standard only on smallest size group; verify nameplate",
+            "key": "lowAmbient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Standard on smaller size groups, not present on largest; confirm against nameplate",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Charging",
+            "value": "Subcooling method (hard-shutoff TXV) - see charging chart in install instructions / rating plate",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Standard demand-defrost boards (HK32EA/HK61EA-series, CEPL13xxxx — same family used on Bryant and ICP/Heil/Tempstar). Remove the small plastic cap over the 2-pin 'Forced Defrost' / 'Speed-Up' (TP1/TP2) test header and short the pins with a jumper wire. Momentarily short-and-release once first to clear any compressor anti-short-cycle delay, then re-short and HOLD 5+ seconds — board commands defrost. You should hear the reversing valve shift and see the outdoor fan stop; verify 24V C-to-W2 with a meter. Pull the jumper the instant the valve shifts or the board will hold in speed-up (60x) mode and cycle continuously — don't leave it shorted. If the valve doesn't shift within ~10 sec of the sustained short, board or valve is suspect. Bryant boards are identical; confirm exact pin silkscreen against the installed board revision, since older CEPL revisions label the header 'TEST' and only speed timing rather than instant-force. Source: Carrier/HVAC-Talk field discussion + HVAC Training Solutions defrost-board walkthrough (hvac-talk.com thread 993331; hvactrainingsolutions.net/heat-pump-defrost-control-boards-step-step)."
+          },
+          {
+            "label": "Infinity communicating",
+            "value": "On the Infinity touch thermostat, enter the installer 'Checkout' diagnostic (Menu > Setups > Advanced, press and hold Advanced ~10 sec until Install/Service menu appears), then step through the heat pump Checkout routine, which commands the outdoor unit into defrost as part of the sequence. NOT independently re-verified against a current Infinity outdoor-unit Installation Instructions manual for this session, so confirm the exact menu path on the specific control/thermostat model in front of you before relying on it — menu wording has changed across Infinity System Control generations. The physical 2-pin Forced Defrost header on the outdoor board (same as non-comm procedure above) also still works on Infinity outdoor units independent of the thermostat. Source: Carrier documentation as summarized by Hunker 'How To Enter Diagnostic Mode On A Carrier Infinity Thermostat' and JustAnswer HVAC Q&A — treat menu path as a starting point, not gospel."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Coil temperature sensor (DFT) must read cold — Carrier defrost boards generally need the coil sensor closed (roughly below freezing, board-dependent ~30±3°F) before a forced defrost will actually initiate/hold; forcing on a warm coil may not take. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux/W2 heat may energize — a burst of cold air from supply registers is normal, not a fault. Warn occupants if testing with the system live."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "25HCC5",
+    "equip": "Heat Pump",
+    "summary": "Comfort-series single-stage heat pumps, 1.5-5 tons: 25HCC5, 25HCE4 (and older 25HBC5), all sharing the same installation instructions. Piston metering on the outdoor heating circuit; TXV or piston indoor depending on coil match. Time/temperature defrost.",
+    "match": [
+      "25HCC5",
+      "25HCE4",
+      "25HBC5",
+      "25HCC6",
+      "25HBC6",
+      "Comfort 14",
+      "Comfort 15",
+      "Bryant Legacy single-stage"
+    ],
+    "source": "Carrier Installation Instructions 25HBC-CC-CE-01SI, covering 25HBC5/25HCC5/25HCE4 (shareddocs.com/hvac/docs/1009/Public/0A/25HBC-CC-CE-01SI.pdf); Product Data 25HCE4-08PD (shareddocs.com/hvac/docs/1009/Public/03/25HCE4-08PD.pdf)",
+    "flags": [
+      {
+        "title": "\"25HCC6\" and \"25HBC6\" were not found in Carrier's published lineup",
+        "body": "No product data or install instructions exist under those exact model numbers. The current Comfort single-stage heat pump family is 25HCC5 paired with 25HCE4 (Comfort 14); the nearest older single-stage Comfort unit is 25HBC5 (Comfort 15). Use this entry for any of those - confirm the exact digit/letter suffix against the unit's rating plate."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering - outdoor (heating)",
+            "value": "Piston, in the liquid service valve body",
+            "key": "meteringHeat"
+          },
+          {
+            "label": "Metering - indoor (cooling)",
+            "value": "TXV or piston depending on indoor coil match - check which is installed before charging",
+            "key": "meteringCool"
+          },
+          {
+            "label": "High/low pressure switch cutout",
+            "value": "See rating plate - exact psig not published for this platform",
+            "key": "pressureSwitchCutout"
+          }
+        ]
+      },
+      {
+        "title": "Defrost & Reversing Valve",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Time/temperature electronic defrost control",
+            "key": "defrostType"
+          },
+          {
+            "label": "Defrost intervals",
+            "value": "Field-selectable 30, 60, or 90 min (quick-connect jumper); factory set to 60 or 90 min depending on size; defrost thermostat closes ~30°F liquid line, reopens ~65°F; max 10-min defrost cycle",
+            "key": "defrostInterval"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "O terminal, energized in cooling / de-energized in heating",
+            "key": "reversingValve"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase",
+        "rows": [
+          {
+            "label": "Max outdoor ambient - heating mode",
+            "value": "66°F published operating ceiling",
+            "key": "maxHeatAmbient"
+          },
+          {
+            "label": "Low-ambient cooling control",
+            "value": "Accessory - factory standard only on smallest size group",
+            "key": "lowAmbient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Standard on smaller/mid size groups, not on largest; confirm against nameplate",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Charging",
+            "value": "Superheat method for piston metering, subcooling method for TXV - see charging chart in install instructions / rating plate",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "Standard demand-defrost boards (HK32EA/HK61EA-series, CEPL13xxxx — same family used on Bryant and ICP/Heil/Tempstar). Remove the small plastic cap over the 2-pin 'Forced Defrost' / 'Speed-Up' (TP1/TP2) test header and short the pins with a jumper wire. Momentarily short-and-release once first to clear any compressor anti-short-cycle delay, then re-short and HOLD 5+ seconds — board commands defrost. You should hear the reversing valve shift and see the outdoor fan stop; verify 24V C-to-W2 with a meter. Pull the jumper the instant the valve shifts or the board will hold in speed-up (60x) mode and cycle continuously — don't leave it shorted. If the valve doesn't shift within ~10 sec of the sustained short, board or valve is suspect. Bryant boards are identical; confirm exact pin silkscreen against the installed board revision, since older CEPL revisions label the header 'TEST' and only speed timing rather than instant-force. Source: Carrier/HVAC-Talk field discussion + HVAC Training Solutions defrost-board walkthrough (hvac-talk.com thread 993331; hvactrainingsolutions.net/heat-pump-defrost-control-boards-step-step)."
+          },
+          {
+            "label": "Infinity communicating",
+            "value": "On the Infinity touch thermostat, enter the installer 'Checkout' diagnostic (Menu > Setups > Advanced, press and hold Advanced ~10 sec until Install/Service menu appears), then step through the heat pump Checkout routine, which commands the outdoor unit into defrost as part of the sequence. NOT independently re-verified against a current Infinity outdoor-unit Installation Instructions manual for this session, so confirm the exact menu path on the specific control/thermostat model in front of you before relying on it — menu wording has changed across Infinity System Control generations. The physical 2-pin Forced Defrost header on the outdoor board (same as non-comm procedure above) also still works on Infinity outdoor units independent of the thermostat. Source: Carrier documentation as summarized by Hunker 'How To Enter Diagnostic Mode On A Carrier Infinity Thermostat' and JustAnswer HVAC Q&A — treat menu path as a starting point, not gospel."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "Coil temperature sensor (DFT) must read cold — Carrier defrost boards generally need the coil sensor closed (roughly below freezing, board-dependent ~30±3°F) before a forced defrost will actually initiate/hold; forcing on a warm coil may not take. When defrost engages: reversing valve shifts to cooling, outdoor fan stops, aux/W2 heat may energize — a burst of cold air from supply registers is normal, not a fault. Warn occupants if testing with the system live."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "24VNA6",
+    "equip": "Condenser",
+    "summary": "Infinity Series variable-speed (Greenspeed) air conditioner, 2-5 tons, paired with 25VNA4/25VNA0-family heat pumps or matched fan coils. Variable-speed rotary/scroll compressor, TXV, communicating Infinity control. Covers 24VNA6 and 24VNA9 (19VS) platforms.",
+    "match": [
+      "24VNA6",
+      "24VNA9",
+      "Infinity 19VS",
+      "Infinity 26",
+      "Greenspeed AC",
+      "Bryant 186CNV",
+      "Bryant 187B",
+      "Evolution Extreme AC"
+    ],
+    "source": "Carrier Product Data 24VNA6-02PD (shareddocs.com/hvac/docs/1009/Public/0F/24VNA6-02PD.pdf); Service Manual 24VNA6-25VNA4-1SM (shareddocs.com/hvac/docs/1009/Public/01/24VNA6-25VNA4-1SM.pdf)",
+    "flags": [
+      {
+        "title": "Pressure cutout figures are for the 24VNA6/25VNA4 platform specifically",
+        "body": "The 670/470 psig mechanical HPS trip/reset and 15 psig software low-pressure shutdown below come from the 24VNA6-25VNA4 service manual. The 24VNA9 (19VS) uses a related but separate control platform (own service manual: 25VNA8-24VNA9-4SM) - confirm exact figures there before using as a diagnostic threshold on a 24VNA9."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed rotary (smaller sizes) or variable-speed scroll (larger sizes)",
+            "key": "compressorType"
+          },
+          {
+            "label": "Metering",
+            "value": "TXV (Puron hard shutoff)",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches (24VNA6/25VNA4 platform)",
+        "rows": [
+          {
+            "label": "High pressure switch (mechanical)",
+            "value": "Trips 670 psig discharge, resets/closes at 470 psig",
+            "key": "hpsCutout"
+          },
+          {
+            "label": "High pressure shutdown (software)",
+            "value": "Immediate shutdown at 620 psig",
+            "key": "hpShutdownSoftware"
+          },
+          {
+            "label": "Low pressure shutdown (software)",
+            "value": "Immediate shutdown at 15 psig",
+            "key": "lpShutdownSoftware"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase / Communicating",
+        "rows": [
+          {
+            "label": "Low-ambient cooling",
+            "value": "Standard down to 0°F with Infinity Control",
+            "key": "lowAmbient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Standard",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Full Greenspeed variable-capacity cooling requires Infinity System Control",
+            "key": "communicating"
+          },
+          {
+            "label": "Charging",
+            "value": "Subcooling method (TXV) - see rating plate / product data charge table by unit size",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "24ANB1",
+    "equip": "Condenser",
+    "summary": "Two-stage scroll air conditioner, 2-5 tons, compatible with the Infinity System Control for 2-stage communicating operation (also runs on a standard non-communicating stat). Covers the 24ANB1/24ANB7/25HNB6/25HNB9 family sharing one application guideline.",
+    "match": [
+      "24ANB1",
+      "24ANB7",
+      "2-stage AC",
+      "Infinity 21 AC"
+    ],
+    "source": "Carrier Application Guideline and Service Manual 24-25-9SM, covering 24ANB1/24ANB7/25HNB6/25HNB9 (shareddocs.com/hvac/docs/1009/Public/03/24-25-9SM.pdf)",
+    "flags": [
+      {
+        "title": "This is Infinity-tier, not base Performance",
+        "body": "In Carrier's own model-number legend (24-25-9SM), the 'N' position in 24ANB1 stands for Infinity, not Performance. This is the 2-stage, Infinity-System-Control-compatible AC line - verify the actual tier badge against the unit's nameplate/brochure rather than assuming Performance branding."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Compressor",
+            "value": "Two-stage scroll",
+            "key": "compressorType"
+          },
+          {
+            "label": "Metering",
+            "value": "Hard-shutoff TXV, standard",
+            "key": "metering"
+          },
+          {
+            "label": "High pressure switch cutout",
+            "value": "See rating plate - standard feature, exact psig not published in this excerpt",
+            "key": "pressureSwitchCutout"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase / Communicating",
+        "rows": [
+          {
+            "label": "Low-ambient cooling",
+            "value": "MotorMaster low-ambient controller / low-ambient pressure switch REQUIRED for cooling operation below 55°F outdoor",
+            "key": "lowAmbient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Accessory; standard on smaller size groups only (marked ‡ in spec table) - confirm nameplate",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Supports Infinity System Control (2-stage communicating) and standard non-communicating thermostats",
+            "key": "communicating"
+          },
+          {
+            "label": "Charging",
+            "value": "See charging chart in application guideline / rating plate",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "24ACC6",
+    "equip": "Condenser",
+    "summary": "Single-stage scroll air conditioners, 1.5-5 tons, sharing the same TXV/R-410A platform across tier badges: 24ACC6 (Performance 16), 24ABC6 (Comfort 16), and 24AAA6 (Comfort baseline single-stage), all covered by a common installation instructions doc.",
+    "match": [
+      "24ACC6",
+      "24ABC6",
+      "24AAA6",
+      "Performance 16 AC",
+      "Comfort 16 AC"
+    ],
+    "source": "Carrier Product Data 24ACC6-9PD (shareddocs.com/hvac/docs/1009/Public/07/24ACC6-9PD.pdf) and 24ABC6-8PD (shareddocs.com/hvac/docs/1009/Public/01/24ABC6-8PD.pdf); Installation Instructions 24AAA-ACC-11SI, covering 24AAA/24ACC family (shareddocs.com/hvac/docs/1009/Public/02/24AAA-ACC-11SI.pdf)",
+    "flags": [
+      {
+        "title": "Different tier badges, same platform",
+        "body": "24ACC6 is badged 'Performance 16' and 24ABC6 is badged 'Comfort 16' in Carrier's own product data, but both list an identical scroll compressor / hard-shutoff TXV / R-410A physical data table - which is why they're grouped here. Don't assume a parts or refrigerant-circuit difference based on the tier name alone; confirm against the specific size/nameplate."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Compressor",
+            "value": "Single-stage scroll",
+            "key": "compressorType"
+          },
+          {
+            "label": "Metering",
+            "value": "TXV (Puron hard shutoff)",
+            "key": "metering"
+          }
+        ]
+      },
+      {
+        "title": "Pressure Switches",
+        "rows": [
+          {
+            "label": "High pressure switch",
+            "value": "Standard; exact psig not published - see rating plate",
+            "key": "hpsCutout"
+          },
+          {
+            "label": "Low pressure switch",
+            "value": "Standard; exact psig not published - see rating plate",
+            "key": "lpsCutout"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase",
+        "rows": [
+          {
+            "label": "Low-ambient cooling",
+            "value": "Accessory kit required (not standard)",
+            "key": "lowAmbient"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Accessory; standard on smaller size groups only, absent on largest - confirm nameplate",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Charging",
+            "value": "Subcooling method (TXV) - see charging chart in product data / rating plate",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "24AHA4",
+    "equip": "Condenser",
+    "summary": "Performance 14 Compact single-stage air conditioner, 1.5-5 tons, horizontal low-profile cabinet. Scroll compressor, TXV, R-410A.",
+    "match": [
+      "24AHA4",
+      "Performance 14 Compact"
+    ],
+    "source": "Carrier Product Data 24AHA4-05PD (shareddocs.com/hvac/docs/1009/Public/0C/24AHA4-05PD.pdf)",
+    "flags": [
+      {
+        "title": "Horizontal compact cabinet - not a drop-in for standard units",
+        "body": "24AHA4 uses a low-profile horizontal cabinet, not the typical square condenser case. Confirm clearances and airflow/mounting requirements in its own installation instructions before treating it as a like-for-like swap with a standard-cabinet Performance 14 unit."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A (Puron)",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Compressor",
+            "value": "Single-stage scroll",
+            "key": "compressorType"
+          },
+          {
+            "label": "Metering",
+            "value": "TXV, sized per indoor coil match (subcooling charging method)",
+            "key": "metering"
+          },
+          {
+            "label": "High pressure switch cutout",
+            "value": "See rating plate - standard feature, exact psig not published in this excerpt",
+            "key": "pressureSwitchCutout"
+          }
+        ]
+      },
+      {
+        "title": "Low Ambient / Crankcase",
+        "rows": [
+          {
+            "label": "Crankcase heater",
+            "value": "Accessory kit (KAACH series), size-dependent - not standard",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Evaporator freeze thermostat",
+            "value": "Accessory",
+            "key": "freezeStat"
+          },
+          {
+            "label": "Charging",
+            "value": "Subcooling method (TXV) - see charging chart in product data / rating plate",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Carrier",
+    "model": "FV4C",
+    "equip": "Air Handler",
+    "summary": "Performance-tier variable-speed ECM fan coil (002-006, 1.5-5 ton). Non-communicating — configured entirely with 'Easy Select' jumpers/taps on the onboard PCB rather than a wall control link. Factory TXV, upflow/horizontal-left/downflow (kit).",
+    "match": [
+      "Bryant FV4C (Preferred Series Fan Coil)",
+      "Payne FV4C",
+      "Carrier Performance™ Fan Coil FV4C"
+    ],
+    "source": "Carrier IM-FV4C-04, FV4C 002,003,005,006 Installation Instructions, https://www.shareddocs.com/hvac/docs/1009/Public/02/IM-FV4C-04.pdf",
+    "flags": [
+      {
+        "title": "Not the same platform as FE4A/FE5A",
+        "body": "FV4C is the standard Performance-tier variable-speed fan coil, set up entirely with 'Easy Select' PCB jumpers/taps (AUX HEAT KW/CFM, AC/HP SIZE, SYSTEM TYPE, AC/HP CFM ADJUST, ON/OFF DELAY). It has no SystemVu/communicating link. Don't confuse with the Infinity FE4A/FE5A communicating fan coil (covered separately) — different control board, different setup procedure."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower/motor",
+            "value": "Variable-speed ECM, factory-programmed airflow tables selected via PCB jumpers/taps (no simple speed switch)",
+            "key": "blower_type"
+          },
+          {
+            "label": "AC/HP SIZE tap",
+            "value": "Set to match installed condenser/heat pump tonnage (018/024/030/036); factory-set to largest size fan coil supports",
+            "key": "size_tap"
+          },
+          {
+            "label": "SYSTEM TYPE tap",
+            "value": "AC / HP-COMFORT (~315 CFM/ton heating, ~350 CFM/ton cooling) / HP-EFF (~350 CFM/ton both modes); factory set to AC",
+            "key": "system_type"
+          },
+          {
+            "label": "AC/HP CFM ADJUST tap",
+            "value": "NOM (factory) / HI (+15% airflow) / LO (-10% airflow), all modes except non-heat-pump heating",
+            "key": "cfm_adjust"
+          },
+          {
+            "label": "Max external static",
+            "value": "Not published in install instructions — see Product Data / rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Filter",
+            "value": "Factory filter kit (internal) required unless field filter installed in return duct — see Table 1 filter kit chart for size by unit",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "Factory-authorized field-installed kits, 5-30 kW; exact kits approved listed on unit rating plate",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Staging",
+            "value": "Supports Intelligent Heat Staging with compatible kits (remove jumper J2 to enable); AUX HEAT KW/CFM tap must be set to narrowest range matching installed heater kW",
+            "key": "heat_staging"
+          },
+          {
+            "label": "Clearance",
+            "value": "20-, 24-, 30-kW heaters: maintain 1 in. (25 mm) clearance to combustibles at discharge plenum/ductwork for 36 in. from unit; downflow needs accessory base for clearance",
+            "key": "heat_clearance"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory hard-shutoff Puron (R-410A) TXV — all indoor coils must use hard-shutoff TXV, never an R-22 TXV or piston",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Primary and secondary condensate pan/trap; prime both traps after connecting, do not use shallow running traps",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Carrier",
+    "model": "FMA4X",
+    "equip": "Air Handler",
+    "summary": "Multipoise apartment/multi-family fan coil, upflow only, 1.5-3 ton. FMA4X = TXV + 5-tap multi-tap ECM motor; sibling FMA4P = piston + 3-speed PSC motor. Same cabinet/platform, different metering and blower — verify suffix before parts substitution.",
+    "match": [
+      "Bryant FMA4X (apartment/multi-family fan coil)",
+      "Payne / WeatherMaker FMA4X",
+      "Carrier FMA4P (piston/PSC sibling of same platform)"
+    ],
+    "source": "Carrier SSG-FMA4-04, FMA4X/FMA4P Product Data, https://www.shareddocs.com/hvac/docs/1009/Public/04/SSG-FMA4-04.pdf",
+    "flags": [
+      {
+        "title": "FMA4X piston/ECM taps are unit-specific",
+        "body": "On the FMA4P (piston) variant, the factory piston is unique to the fan coil and CANNOT be replaced with the piston shipped with the outdoor unit — check AHRI match-up to see if the fan coil's piston works with the chosen condenser or if an accessory TXV kit is required. On FMA4X, the 5-tap ECM motor speed must be selected to land airflow within 300-450 CFM/ton per the performance tables."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "FMA4X blower/motor",
+            "value": "ECM, 5 motor speed taps (Tap 1-5)",
+            "key": "blower_x"
+          },
+          {
+            "label": "FMA4P blower/motor",
+            "value": "PSC, 3 motor speeds (Low/Med/High)",
+            "key": "blower_p"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "Performance tables published through 0.8 in. wc for both FMA4X and FMA4P — see Tables 7 & 8",
+            "key": "max_esp"
+          },
+          {
+            "label": "Filter",
+            "value": "16x20x1 in. (406x508x25 mm) on 18/24-size units, 20x20x1 in. (508x508x25 mm) on 30/36-size units, field-installed",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "Accessory field-installed EHK kits, 5, 7.5, or 10 kW (EHK model code: 05/08/10)",
+            "key": "heat_kw"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "FMA4X: factory TXV, R-410A. FMA4P: factory piston (.057/.065/.070 orifice by size), R-410A",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Primary/auxiliary connections, both 3/4 in. FPT",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Carrier",
+    "model": "FX4C / FH4C",
+    "equip": "Air Handler",
+    "summary": "Comfort/Legacy-line fixed-speed PSC fan coils, 018-060. FX4C is the standard slope-coil cabinet (upflow/horizontal); FH4C is the compact companion cabinet (sizes 001-004) built factory horizontal-left. Both use 3-tap PSC motor speed selection at the motor and factory Puron TXV.",
+    "match": [
+      "Bryant FX4C (Legacy Line Fan Coil)",
+      "Payne FX4C",
+      "Bryant / Payne FH4C",
+      "FY4A (TXV coil shipped/installed alongside FX4C in split coil configurations, same IM)",
+      "FA4C / FC4D (same installation manual family as FH4C)"
+    ],
+    "source": "Carrier IM-FX4C-03, FX4C/FY4A Installation Instructions, https://www.shareddocs.com/hvac/docs/1009/Public/0E/IM-FX4C-03.pdf ; Carrier FA4C/FC4D/FH4C Installation Instructions, https://www.carrierparts.com/?mdocs-file=130282",
+    "flags": [
+      {
+        "title": "FH4C 003/004 horizontal restriction",
+        "body": "FH4C is factory built for horizontal-left installation, but FH4C003 and FH4C004 units equipped with an accessory cooling coil are NOT approved for horizontal applications — verify size/coil combination before mounting. All other FX4C/FH4C sizes support upflow and horizontal-left."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower/motor",
+            "value": "Fixed-speed PSC, typically 3 motor speed taps",
+            "key": "blower_type"
+          },
+          {
+            "label": "Speed selection",
+            "value": "Done at the motor, not the board: disconnect fan lead from terminal 2 and move to desired tap — Low (1), Medium (2), High (3). Low static duct systems should use lower tap; high-static systems should use higher tap",
+            "key": "speed_select"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "Performance tables published through 0.60 in. wc across sizes 018-060 (see Table 1)",
+            "key": "max_esp"
+          },
+          {
+            "label": "Filter",
+            "value": "Factory filter kit required if filter is located inside unit; otherwise field-supplied filter required in return duct",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "Field-installed accessory electric heater packages, 5-30 kW; exact approved kits on rating plate",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Clearance",
+            "value": "20-30 kW heaters require 1 in. (25 mm) clearance to combustibles at discharge plenum for specified distance from unit",
+            "key": "heat_clearance"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory hard-shutoff Puron (R-410A) TXV — do not use R-22 TXV or a piston metering device",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Primary and secondary drain pan connections with traps; prime all traps after hookup, do not use shallow running traps to avoid overflow",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Carrier",
+    "model": "FB4C",
+    "equip": "Air Handler",
+    "summary": "Comfort/Legacy-line multipoise fan coil, 018-061, multi-tap ECM motor across all sizes. FB4CNF (018-048) ships with a factory piston; FB4CNP (018-061) ships with a factory TXV — check the model suffix before ordering metering parts or matching to the outdoor unit.",
+    "match": [
+      "Bryant FB4C (Legacy Line Fan Coil)",
+      "Payne FB4C",
+      "WeatherMaker FB4C"
+    ],
+    "source": "Carrier FB4CNF-P-13PD, FB4C Base Series Fan Coil Product Data, https://www.shareddocs.com/hvac/docs/1009/Public/04/FB4CNF-P-13PD.pdf",
+    "flags": [
+      {
+        "title": "NF (piston) vs NP (TXV) suffix matters",
+        "body": "FB4CNF (018-048) has a factory-installed Teflon-ring piston; FB4CNP (018-061) has a factory TXV. Confirm the suffix on the rating plate before selecting a replacement metering kit or checking AHRI match-up with the outdoor unit — the two are not interchangeable without the correct accessory kit (TXV kits KFAFR0301FRM / KSATX-series listed in accessories table)."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower & Airflow Setup",
+        "rows": [
+          {
+            "label": "Blower/motor",
+            "value": "Multi-tap ECM, all sizes, 5 speed taps (Tap 1-5)",
+            "key": "blower_type"
+          },
+          {
+            "label": "Speed selection note",
+            "value": "Speed Tap 4 (white wire) is reserved for electric heat only — must remain on tap 4, do not reassign for cooling/heat-pump speed",
+            "key": "speed_select"
+          },
+          {
+            "label": "Max external static (published)",
+            "value": "Performance tables published through 0.60 in. wc across sizes 018-061",
+            "key": "max_esp"
+          },
+          {
+            "label": "Filter",
+            "value": "Field-supplied filter required (no factory filter included) — filter rack/cabinet accessory kits available (KFAFK0112SML, KFAFR0101FRM, etc.)",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Electric Heat",
+        "rows": [
+          {
+            "label": "Kit range",
+            "value": "Factory-installed heater packages on select models (5-15 kW); accessory field-installed heaters 3-30 kW",
+            "key": "heat_kw"
+          },
+          {
+            "label": "Clearance",
+            "value": "20-, 24-, 30-kW heaters require 1 in. (25 mm) clearance to combustibles at discharge plenum",
+            "key": "heat_clearance"
+          }
+        ]
+      },
+      {
+        "title": "Metering & Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "FB4CNF (018-048): factory Teflon-ring piston, Puron (R-410A). FB4CNP (018-061): factory TXV, Puron (R-410A)",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan",
+            "value": "Primary/secondary drain connections; prime traps before use per condensate-blowing cautions at high CFM/ton on 048-061 sizes",
+            "key": "drain"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DM97MC / DC97MC",
+    "equip": "Gas Furnace",
+    "summary": "97% AFUE modulating gas furnace, 34.5\" chassis. Gas valve modulates continuously (nominally 35-100% of high fire) via pneumatic linkage to the variable-speed inducer.",
+    "match": [
+      "DM97MC",
+      "DC97MC"
+    ],
+    "source": "Daikin DM97MC/DC97MC Installation Instructions (IM/IOD-2007 series), daikincomfort.com/docs/default-source/dc97mc/im-iod-2007q.pdf; Daikin DM97MC/DC97MC Service Instructions, daikincity.com/document/Service%20Manual/129985",
+    "flags": [
+      {
+        "title": "Do not chase microamps on modulating flame sensor",
+        "body": "Daikin service literature states reading flame signal with a microamp meter will not provide reliable/consistent results on this platform and is not a recommended diagnostic practice. IFC posts warning code E6 when signal approaches the low threshold; clean the sensor with steel wool if signal is marginal instead of chasing a microamp number."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG, low stage (~50% firing)",
+            "value": "3.5\" w.c. (#45 orifice)",
+            "key": "manifold_ng_low"
+          },
+          {
+            "label": "Manifold pressure, NG, high stage / full modulation",
+            "value": "see rating plate",
+            "key": "manifold_ng_high"
+          },
+          {
+            "label": "Manifold pressure, LP",
+            "value": "see rating plate",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply/inlet gas pressure, NG",
+            "value": "4.5\" w.c. min - 10.0\" w.c. max",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply/inlet gas pressure, LP",
+            "value": "11.0\" w.c. min - 13.0\" w.c. max",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "Fixed, non-adjustable orifice (#45 shown for low stage on published model); do not peen or redrill; verify size on rating plate/LP kit for specific model",
+            "key": "orifice"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Modulating furnaces approved for install up to 10,000 ft with no kit or changes required (NG); Canada certified only to 4500 ft; LP altitude kit LPM-09-1.25MM referenced for LP applications",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "Varies by model, e.g. 20-50°F to 35-65°F depending on chassis/tonnage - see rating plate for exact model",
+            "key": "temp_rise"
+          },
+          {
+            "label": "Return/entering air temperature requirement",
+            "value": "see rating plate",
+            "key": "return_air_temp"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/ignition",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "Hot surface ignitor (Daikin 0131F00008S), 37-68 ohms cold resistance, ~17 second warm-up",
+            "key": "ignitor"
+          },
+          {
+            "label": "Ground check",
+            "value": "Measure resistance between neutral (white) connection and a burner (bare metal) - should read 10 ohms or less",
+            "key": "ground_check"
+          },
+          {
+            "label": "Status code display",
+            "value": "IFC flash/alpha codes on furnace display, e.g. A=normal, H=% gas heat demand, P=% high heat, C=low indoor airflow, E1=low flame signal, E2=igniter fault/improper ground, E7=inducer overcurrent, E8=rollout open, b0-b9=blower faults",
+            "key": "status_codes"
+          },
+          {
+            "label": "Induced draft blower motor",
+            "value": "ECM winding resistance 14-17 ohms room temp (+/-5% between windings), IFC drive voltage 15-110 VAC between windings",
+            "key": "idb_motor"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit control",
+            "value": "Non-adjustable, automatic-reset, bi-metal, normally closed - no published numeric setpoint (rating plate/part only)",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch",
+            "value": "Manual-reset, temperature-activated, mounted to manifold assembly; normally closed - check continuity with ohmmeter",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DM92SN / DC92SN / DM96SN / DC96SN",
+    "equip": "Gas Furnace",
+    "summary": "R-32-era single-stage, multi-speed ECM gas furnace platform - 92% AFUE (DM92SN/DC92SN) and 96% AFUE (DM96SN/DC96SN) share the same install/service instructions and gas-train specs.",
+    "match": [
+      "DM92SN",
+      "DC92SN",
+      "DM96SN",
+      "DC96SN"
+    ],
+    "source": "Daikin Installation Instructions for DM92SN, DM96SN & DC96SN Single-Stage Gas Furnace (IOD-2029), daikincomfort.com/docs/default-source/dm96sn/iod-2029.pdf; Daikin Service Instructions RSD6612021, DM92SN, DM96SN & DC96SN Models, daikincomfort.com/docs/default-source/dm96sn/291234817.pdf",
+    "flags": [
+      {
+        "title": "Drain trap is dual-partitioned - prime both sides",
+        "body": "Daikin installation instructions specify the drain trap must be primed prior to startup by filling BOTH sides of the trap with water, not just one - a single-side fill leaves one leg dry and can pull flue gas/nuisance-trip the pressure switch."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG",
+            "value": "3.5\" w.c. nominal (3.2-3.8\" w.c. range, tolerance +/-0.3\" from setpoint)",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure, LP",
+            "value": "10.0\" w.c. nominal (9.7-10.3\" w.c. range, tolerance +0.5\" from setpoint)",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply/inlet gas pressure, NG",
+            "value": "4.5\" w.c. min - 10.0\" w.c. max",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply/inlet gas pressure, LP",
+            "value": "11.0\" w.c. min - 13.0\" w.c. max",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate (fixed orifice, size not published generically in install/service instructions)",
+            "key": "orifice"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "Install per Listed High Altitude Conversion Kit required above 7000 ft (2134 m); do not reduce manifold pressure below rating-plate spec at altitude - low air density + low manifold pressure starves burner orifice of air",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific table in Specification Sheet)",
+            "key": "temp_rise"
+          },
+          {
+            "label": "Return/entering air temperature requirement",
+            "value": "see rating plate",
+            "key": "return_air_temp"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/ignition",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "120V silicon nitride HSI, 37-68 ohms cold resistance, steady-state preheat current 0.37-0.68A at 120V, normal operating temp ~2156-2678°F",
+            "key": "ignitor"
+          },
+          {
+            "label": "Ground check",
+            "value": "115VAC supply must be properly grounded with correct polarity; measure neutral-to-bare-metal resistance - 10 ohms or less (standard Daikin ground check)",
+            "key": "ground_check"
+          },
+          {
+            "label": "Status code display",
+            "value": "IFC status menu shows mode codes (idle, continuous fan, cooling low/high stage, gas heat) - see rating plate/IFC menu for full code list",
+            "key": "status_codes"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Auxiliary/primary limit control",
+            "value": "see rating plate (S-301 checking procedure published; numeric setpoint not published generically)",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch",
+            "value": "Manual-reset flame rollout control, opens on flame rollout condition - check continuity with ohmmeter",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace90"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DM80HE / DC80 (DM80HS / DD80HS / DM80SS platform)",
+    "equip": "Gas Furnace",
+    "summary": "80% AFUE two-stage, convertible multi-speed gas furnace platform. DM80HE shares its Installation Instructions with the DD80HS and DM80SS models (upflow/horizontal and downflow/horizontal variants of the same chassis).",
+    "match": [
+      "DM80HE",
+      "DC80",
+      "DD80HS",
+      "DM80SS",
+      "DM80HS"
+    ],
+    "source": "Daikin Installation Instructions for DM80(H,S)S/DD80(H,S)S/DM80HE Gas Furnace, daikincomfort.com (ManualsLib-hosted copy: manualslib.com/manual/3578174/Daikin-Dm80s.html); DM80HS0403A product literature (Durable Silicon Nitride igniter, self-diagnostic control board)",
+    "flags": [
+      {
+        "title": "Manifold pressure is on the rating plate, not a single fixed number",
+        "body": "This is a single-orifice, two-stage design - staging is done by the gas valve regulator, not a second orifice. Daikin's install instructions state gas manifold pressure MUST be as specified on the unit rating plate and that only minor adjustment should be made at the gas valve pressure regulator - do not set to a generic number without checking the plate for that specific model/BTU input."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG low/high stage",
+            "value": "Typical two-stage table on this platform: low ~1.9\" w.c. (1.6-2.2\" range), high ~3.5\" w.c. (3.2-3.8\" range) - confirm exact stage values on rating plate",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure, LP low/high stage",
+            "value": "Typical two-stage table on this platform: low ~6.0\" w.c. (5.7-6.3\" range), high ~10.0\" w.c. (9.7-10.3\" range) - confirm exact stage values on rating plate",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply/inlet gas pressure, NG",
+            "value": "4.5\" w.c. min - 10.0\" w.c. max",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply/inlet gas pressure, LP",
+            "value": "11.0\" w.c. min - 13.0\" w.c. max",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "NG: #45; LP: #55 (requires LPT-03 kit single-stage / LPM-06 kit two-stage)",
+            "key": "orifice"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "No modification required 0-5,500 ft; above 5,500 ft a pressure switch change and orifice change kit are required (distributor-supplied kit)",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate (model-specific chart in Quick Start/Specification Sheet)",
+            "key": "temp_rise"
+          },
+          {
+            "label": "Return/entering air temperature requirement",
+            "value": "see rating plate",
+            "key": "return_air_temp"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/ignition",
+        "rows": [
+          {
+            "label": "Ignitor",
+            "value": "Silicon Nitride HSI; generic Daikin HSI spec is 37-68 ohms cold resistance - confirm on this specific control if in doubt",
+            "key": "ignitor"
+          },
+          {
+            "label": "Ground check",
+            "value": "Standard Daikin ground/polarity check: resistance between neutral (white) connection and a burner (bare metal) should be 10 ohms or less",
+            "key": "ground_check"
+          },
+          {
+            "label": "Status code display",
+            "value": "Self-diagnostic control board with constant-memory fault code, shown via LED flash code - see control board legend/rating plate for full code list",
+            "key": "status_codes"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit control",
+            "value": "see rating plate (non-adjustable auto-reset control; numeric setpoint not published generically)",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch",
+            "value": "Manual-reset flame rollout control - check continuity with ohmmeter",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DM80SN / DC80SN",
+    "equip": "Gas Furnace",
+    "summary": "80% AFUE single-stage gas furnace, its own service platform distinct from the DM80HE two-stage chassis. Ships with either a Carbide Mini or Silicon Nitride hot surface igniter depending on production run.",
+    "match": [
+      "DM80SN",
+      "DC80SN"
+    ],
+    "source": "Daikin DM80SN/DC80SN Service Instructions, daikincomfort.com (ManualsLib-hosted copy: manualslib.com/manual/2583493/Daikin-Dm80sn.html)",
+    "flags": [
+      {
+        "title": "Two different igniter types in the field - don't assume ohms range",
+        "body": "This platform used either a Carbide Mini igniter (30-300 ohms cold, ~2550-2876°F operating temp, ~0.7A +/-0.3A steady-state draw) or a 120V Silicon Nitride igniter (part 0130F00008, 37-68 ohms cold, ~2156-2678°F operating temp). Confirm which is installed before condemning an igniter on a resistance reading - a Silicon Nitride unit reading 150 ohms is bad, but that same 150 ohms is normal on a Carbide Mini."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Gas",
+        "rows": [
+          {
+            "label": "Manifold pressure, NG",
+            "value": "3.5\" w.c. (tolerance +/-0.3\" w.c. from setpoint)",
+            "key": "manifold_ng"
+          },
+          {
+            "label": "Manifold pressure, LP",
+            "value": "10.0\" w.c. (tolerance +/-0.3\" w.c. from setpoint)",
+            "key": "manifold_lp"
+          },
+          {
+            "label": "Supply/inlet gas pressure, NG",
+            "value": "4.5\" w.c. min - 10.0\" w.c. max",
+            "key": "supply_ng"
+          },
+          {
+            "label": "Supply/inlet gas pressure, LP",
+            "value": "11.0\" w.c. min - 13.0\" w.c. max",
+            "key": "supply_lp"
+          },
+          {
+            "label": "Orifice",
+            "value": "see rating plate (fixed orifice; per manual, resize only for altitude-related firing-rate reduction - never peen or redrill)",
+            "key": "orifice"
+          },
+          {
+            "label": "Altitude derate",
+            "value": "see rating plate / distributor altitude kit (not published generically in this manual section)",
+            "key": "altitude"
+          }
+        ]
+      },
+      {
+        "title": "Air",
+        "rows": [
+          {
+            "label": "Max external static pressure",
+            "value": "see rating plate",
+            "key": "max_esp"
+          },
+          {
+            "label": "Temperature rise range",
+            "value": "see rating plate",
+            "key": "temp_rise"
+          },
+          {
+            "label": "Return/entering air temperature requirement",
+            "value": "see rating plate",
+            "key": "return_air_temp"
+          }
+        ]
+      },
+      {
+        "title": "Diagnostics/ignition",
+        "rows": [
+          {
+            "label": "Ignitor - Carbide Mini",
+            "value": "30-300 ohms cold resistance, ~2550-2876°F operating temp, steady-state current ~0.7A +/-0.3A at 120V",
+            "key": "ignitor_carbide"
+          },
+          {
+            "label": "Ignitor - Silicon Nitride",
+            "value": "Part 0130F00008, 37-68 ohms cold resistance, ~2156-2678°F operating temp",
+            "key": "ignitor_sn"
+          },
+          {
+            "label": "Ground check",
+            "value": "Standard Daikin ground/polarity check: resistance between neutral (white) connection and a burner (bare metal) should be 10 ohms or less",
+            "key": "ground_check"
+          },
+          {
+            "label": "Status/config display",
+            "value": "IFC main/option menu shows active alarm + last 6 faults by code number; also hosts blower-speed and heat/cool on/off delay config (e.g. gas heat on-delay default 30 sec, off-delay default 90 sec)",
+            "key": "status_codes"
+          }
+        ]
+      },
+      {
+        "title": "Safeties",
+        "rows": [
+          {
+            "label": "Primary limit control",
+            "value": "see rating plate (S-300 checking procedure published; numeric setpoint not published generically)",
+            "key": "limit"
+          },
+          {
+            "label": "Rollout switch",
+            "value": "Manual-reset flame rollout control (S-302) - check continuity with ohmmeter",
+            "key": "rollout"
+          }
+        ]
+      }
+    ],
+    "checklist": "furnace80"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DZ18TC / DX18TC",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Shared-platform 2-stage (Low/High capacity) split-system heat pump (DZ18TC) and air conditioner (DX18TC), R-410A, factory-equipped with an outdoor air temperature (OAT) sensor and optional ComfortNet communicating control.",
+    "match": [
+      "DZ18TC",
+      "DZ18VCA",
+      "DX18TC",
+      "Daikin 2-stage heat pump",
+      "Daikin 2-stage condenser"
+    ],
+    "source": "SS-DZ18TC spec sheet, backend.daikincomfort.com/docs/default-source/product-documents/residential/specifications/ss-dz18tc.pdf; ComfortNet DX16TC & DX18TC Service Instructions",
+    "flags": [
+      {
+        "title": "Model number check",
+        "body": "User's original spec sheet listed 'DZ18VCA' for a 2-stage heat pump, but Daikin's published 2-stage platform is DZ18TC (paired AC: DX18TC) — DZ18VC/DZ18VCA is actually an inverter (variable-speed swing compressor) model, not 2-stage. Confirm the exact nameplate model/serial before servicing; this entry covers the DZ18TC/DX18TC 2-stage platform."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV (thermostatic expansion valve)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "2-stage (Low/High capacity) scroll compressor",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Heat Pump Operation (DZ18TC)",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Demand-defrost control board (time/temperature adaptive)",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling; de-energized in heating (standard Daikin residential convention)",
+            "key": "reversingValve"
+          },
+          {
+            "label": "Low-ambient heating lockout",
+            "value": "See service manual / installation instructions for line-set-length-dependent lockout tables",
+            "key": "lowAmbient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Protection",
+        "rows": [
+          {
+            "label": "High/low pressure switch setpoints",
+            "value": "See service manual — cutout/cutin PSIG varies by tonnage; not safe to generalize across the 1.5–5 ton range",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "See rating plate / service manual for this tonnage (not confirmed factory-standard across all sizes)",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "ComfortNet-ready — factory OAT sensor installed; supports ComfortNet communicating thermostat, non-communicating (24V) operation also supported",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Standard superheat/subcooling charging per unit nameplate charging chart (non-inverter 2-stage compressor — standard gauge charging applies, unlike the inverter platforms)",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "PARTIALLY verifiable only. Daikin's DZ6VSA (Daikin Fit family) service reference lists a defrost-board configuration parameter literally named 'Force Defrost Cycle' with two states (0:ON / 1:OFF), indicating it's a field-configurable setting rather than a simple momentary-jumper test — but the exact DIP switch bank/pin location and how the ON state behaves (one-shot vs. persistent) could not be confirmed from the accessible manual excerpt this session. Do NOT guess the switch position or pin numbers — pull the full Daikin DZ6VSA (or applicable model) Installation & Service Reference and locate the 'Force Defrost Cycle' setting in the defrost-board configuration table before using it in the field. Source: Daikin DZ6VSA 1EA Series Installation & Service Reference (ManualsLib-hosted copy)."
+          },
+          {
+            "label": "Daikin One+ communicating",
+            "value": "NOT verifiable this session. The Daikin One+ thermostat has a 'System Test' function used for inverter calibration (5–15 minutes, must not be interrupted, master zone-1 thermostat only, all other zone stats set OFF) and a general service/diagnostics menu, but no source located confirmed a dedicated, documented 'force defrost' command distinct from that calibration test. Do not treat System Test as a defrost-force procedure without confirming with current Daikin service documentation for the specific communicating outdoor unit."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, expect any genuine forced-defrost test to require (or bypass) a cold coil condition, and to shift the reversing valve to cooling and stop the outdoor fan — a burst of cold supply air is normal during the test. Because the exact Daikin force-defrost mechanics aren't fully confirmed here, verify against the specific unit's Installation & Service Reference before performing a live test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DZ17VSA / DX17VSS",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Daikin FIT variable-speed, inverter-drive, side-discharge split system: DZ17VSA heat pump and DX17VSS air conditioner, R-410A, EEV metering, Intelligent Defrost, Daikin One+ compatible.",
+    "match": [
+      "DZ17VSA",
+      "DX17VSA",
+      "DX17VSS",
+      "Daikin FIT 17 series",
+      "Daikin FIT heat pump",
+      "Daikin FIT air conditioner"
+    ],
+    "source": "SS-DZ17VSA spec sheet and SS-DX17VSS spec sheet, backend.daikincomfort.com/docs/default-source/product-documents/residential/specifications/ (ss-dz17vsa.pdf, ss-dx17vss.pdf); DX17VSS/DZ17VSA outdoor unit installation instructions",
+    "flags": [
+      {
+        "title": "Model number check",
+        "body": "User's original list gave 'DX17VSA' for the AC condenser; Daikin's published FIT AC partner to DZ17VSA is DX17VSS (no DX17VSA exists in current Daikin literature). Confirm nameplate model before ordering parts."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "EEV (electronic expansion valve)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed (inverter) swing compressor, side-discharge cabinet",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Heat Pump Operation (DZ17VSA)",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Intelligent Defrost Mode (inverter demand-based, communicating control)",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling; de-energized in heating (standard Daikin residential convention)",
+            "key": "reversingValve"
+          },
+          {
+            "label": "Low-ambient heating lockout",
+            "value": "Line-set-length dependent — installation instructions specify a 15°F heating lockout when the line set is 30 ft or longer; see manual for full lockout table by line length",
+            "key": "lowAmbient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Protection",
+        "rows": [
+          {
+            "label": "High/low pressure switch setpoints",
+            "value": "See service manual — inverter-modulated; cutout/cutin not fixed across the operating range",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "See rating plate / service manual for this tonnage",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Daikin One+ smart thermostat compatible; communicating (BACnet-style Daikin serial) control with algorithmic staging logic",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Inverter charge mode via control board / Daikin One app — do NOT charge to static gauge superheat/subcooling targets; charge to nameplate per installation instructions' final charge procedure",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "PARTIALLY verifiable only. Daikin's DZ6VSA (Daikin Fit family) service reference lists a defrost-board configuration parameter literally named 'Force Defrost Cycle' with two states (0:ON / 1:OFF), indicating it's a field-configurable setting rather than a simple momentary-jumper test — but the exact DIP switch bank/pin location and how the ON state behaves (one-shot vs. persistent) could not be confirmed from the accessible manual excerpt this session. Do NOT guess the switch position or pin numbers — pull the full Daikin DZ6VSA (or applicable model) Installation & Service Reference and locate the 'Force Defrost Cycle' setting in the defrost-board configuration table before using it in the field. Source: Daikin DZ6VSA 1EA Series Installation & Service Reference (ManualsLib-hosted copy)."
+          },
+          {
+            "label": "Daikin One+ communicating",
+            "value": "NOT verifiable this session. The Daikin One+ thermostat has a 'System Test' function used for inverter calibration (5–15 minutes, must not be interrupted, master zone-1 thermostat only, all other zone stats set OFF) and a general service/diagnostics menu, but no source located confirmed a dedicated, documented 'force defrost' command distinct from that calibration test. Do not treat System Test as a defrost-force procedure without confirming with current Daikin service documentation for the specific communicating outdoor unit."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, expect any genuine forced-defrost test to require (or bypass) a cold coil condition, and to shift the reversing valve to cooling and stop the outdoor fan — a burst of cold supply air is normal during the test. Because the exact Daikin force-defrost mechanics aren't fully confirmed here, verify against the specific unit's Installation & Service Reference before performing a live test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DZ6VS / DX6VS",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Daikin FIT entry-level R-32 (A2L) side-discharge inverter platform: DZ6VS heat pump and DX6VS air conditioner. Factory crankcase heater required per R-32 long-line-set guidance.",
+    "match": [
+      "DZ6VS",
+      "DZ6VSA",
+      "DX6VS",
+      "Daikin FIT R-32",
+      "Daikin R32 side discharge"
+    ],
+    "source": "SS-DZ6VS and SS-DX6VS spec sheets, backend.daikincomfort.com/docs/default-source/product-documents/residential/specifications/ (ss-dz6vs.pdf, ss-dx6vs.pdf); DZ6VS Service Instructions (SiUS612209EA), daikincomfort.com/docs/default-source/daikin-fit-heat-pump---dz6vs/; R-32 Long Line Set Application Technical Publication TP-110",
+    "flags": [
+      {
+        "title": "R-32 (A2L) refrigerant — verify nameplate before service",
+        "body": "This platform uses R-32, a mildly flammable (A2L) refrigerant. Use only EPA 608-certified, A2L-rated recovery/charging equipment and an A2L-approved (non-spark) leak detector; no open flame or halogen-torch leak testing. Confirm refrigerant type on the unit's own rating plate — do not assume from model family alone."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-32 (A2L, mildly flammable) — verify on rating plate",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "EEV (electronic expansion valve)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed inverter, side-discharge cabinet",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Heat Pump Operation (DZ6VS)",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Inverter demand-based defrost control",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling; de-energized in heating (standard Daikin residential convention)",
+            "key": "reversingValve"
+          },
+          {
+            "label": "Low-ambient heating range",
+            "value": "Published heating operating range approximately -10°F to 70°F ambient; see spec sheet for exact lockout by capacity",
+            "key": "lowAmbient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Protection",
+        "rows": [
+          {
+            "label": "High/low pressure switch setpoints",
+            "value": "See service manual — inverter-modulated, not fixed",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Factory-installed on all heat pump models in this line per Daikin R-32 long-line-set guidance; a 40W crankcase heater is required on any compressor if not already factory-fitted",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Daikin One+ compatible communicating control",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Inverter charge mode — do NOT charge to static gauge superheat/subcooling targets; charge to nameplate per installation instructions' final charge procedure. A2L systems: pressure-test with dry nitrogen/helium only, never refrigerant, for leak checks",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "PARTIALLY verifiable only. Daikin's DZ6VSA (Daikin Fit family) service reference lists a defrost-board configuration parameter literally named 'Force Defrost Cycle' with two states (0:ON / 1:OFF), indicating it's a field-configurable setting rather than a simple momentary-jumper test — but the exact DIP switch bank/pin location and how the ON state behaves (one-shot vs. persistent) could not be confirmed from the accessible manual excerpt this session. Do NOT guess the switch position or pin numbers — pull the full Daikin DZ6VSA (or applicable model) Installation & Service Reference and locate the 'Force Defrost Cycle' setting in the defrost-board configuration table before using it in the field. Source: Daikin DZ6VSA 1EA Series Installation & Service Reference (ManualsLib-hosted copy)."
+          },
+          {
+            "label": "Daikin One+ communicating",
+            "value": "NOT verifiable this session. The Daikin One+ thermostat has a 'System Test' function used for inverter calibration (5–15 minutes, must not be interrupted, master zone-1 thermostat only, all other zone stats set OFF) and a general service/diagnostics menu, but no source located confirmed a dedicated, documented 'force defrost' command distinct from that calibration test. Do not treat System Test as a defrost-force procedure without confirming with current Daikin service documentation for the specific communicating outdoor unit."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, expect any genuine forced-defrost test to require (or bypass) a cold coil condition, and to shift the reversing valve to cooling and stop the outdoor fan — a burst of cold supply air is normal during the test. Because the exact Daikin force-defrost mechanics aren't fully confirmed here, verify against the specific unit's Installation & Service Reference before performing a live test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DH9VS / DC9VS",
+    "equip": "Condenser/Heat Pump",
+    "summary": "Daikin FIT Aurora R-32 (A2L) higher-performance inverter platform: DH9VS side-discharge cold-climate heat pump (ENERGY STAR Cold Climate Heat Pump certified) and DC9VS air conditioner.",
+    "match": [
+      "DH9VS",
+      "DZ9VSA",
+      "DC9VS",
+      "DX9VSA",
+      "Daikin FIT Aurora",
+      "Daikin cold climate heat pump R-32"
+    ],
+    "source": "SS-DH9VS-R32 spec sheet, daikincomfort.com/docs/default-source/fit-aurora-heat-pump-dh9vs/ss-dh9vs-r32.pdf; SS-DC9VS-R32 spec sheet; DH9VS/DH7VS/DC9VS Outdoor Unit Installation & Service Reference Manual",
+    "flags": [
+      {
+        "title": "Model number check + R-32 (A2L) refrigerant",
+        "body": "User's original list named 'DZ9VSA'/'DX9VSA' for the R-32 inverter platform; no such models appear in current Daikin literature. The closest published R-32 inverter platform above the entry-level DZ6VS/DX6VS line is DH9VS (heat pump, Aurora cold-climate) paired with DC9VS (AC). R-32 is a mildly flammable (A2L) refrigerant — use only EPA 608-certified, A2L-rated equipment and A2L-approved leak detection; confirm refrigerant on the rating plate."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-32 (A2L, mildly flammable) — verify on rating plate",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "EEV (electronic expansion valve)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed inverter (swing compressor), side-discharge cabinet",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Heat Pump Operation (DH9VS)",
+        "rows": [
+          {
+            "label": "Defrost type",
+            "value": "Inverter demand-based defrost control",
+            "key": "defrost"
+          },
+          {
+            "label": "Reversing valve",
+            "value": "Energized in cooling; de-energized in heating (standard Daikin residential convention)",
+            "key": "reversingValve"
+          },
+          {
+            "label": "Low-ambient / cold-climate rating",
+            "value": "ENERGY STAR Cold Climate Heat Pump certified — engineered for high heating-capacity retention at low outdoor ambient; see spec sheet capacity-maintenance table for exact temperature points (not generalized here)",
+            "key": "lowAmbient"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Protection",
+        "rows": [
+          {
+            "label": "High/low pressure switch setpoints",
+            "value": "See service manual — inverter-modulated, not fixed",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "Factory-installed (standard on this R-32 heat pump line per Daikin long-line-set guidance)",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Daikin One+ compatible communicating control",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Inverter charge mode — do NOT charge to static gauge superheat/subcooling targets; charge to nameplate per installation instructions' final charge procedure. A2L systems: pressure-test with dry nitrogen/helium only, never refrigerant",
+            "key": "charging"
+          }
+        ]
+      },
+      {
+        "title": "Force defrost",
+        "rows": [
+          {
+            "label": "Non-communicating board",
+            "value": "PARTIALLY verifiable only. Daikin's DZ6VSA (Daikin Fit family) service reference lists a defrost-board configuration parameter literally named 'Force Defrost Cycle' with two states (0:ON / 1:OFF), indicating it's a field-configurable setting rather than a simple momentary-jumper test — but the exact DIP switch bank/pin location and how the ON state behaves (one-shot vs. persistent) could not be confirmed from the accessible manual excerpt this session. Do NOT guess the switch position or pin numbers — pull the full Daikin DZ6VSA (or applicable model) Installation & Service Reference and locate the 'Force Defrost Cycle' setting in the defrost-board configuration table before using it in the field. Source: Daikin DZ6VSA 1EA Series Installation & Service Reference (ManualsLib-hosted copy)."
+          },
+          {
+            "label": "Daikin One+ communicating",
+            "value": "NOT verifiable this session. The Daikin One+ thermostat has a 'System Test' function used for inverter calibration (5–15 minutes, must not be interrupted, master zone-1 thermostat only, all other zone stats set OFF) and a general service/diagnostics menu, but no source located confirmed a dedicated, documented 'force defrost' command distinct from that calibration test. Do not treat System Test as a defrost-force procedure without confirming with current Daikin service documentation for the specific communicating outdoor unit."
+          },
+          {
+            "label": "Prerequisite / safety",
+            "value": "As with other brands, expect any genuine forced-defrost test to require (or bypass) a cold coil condition, and to shift the reversing valve to cooling and stop the outdoor fan — a burst of cold supply air is normal during the test. Because the exact Daikin force-defrost mechanics aren't fully confirmed here, verify against the specific unit's Installation & Service Reference before performing a live test."
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DX20VC",
+    "equip": "Condenser",
+    "summary": "High-efficiency inverter-technology split-system air conditioner (up to 24.5 SEER), R-410A, shares its inverter platform with the already-covered DZ20VC heat pump. Standalone AC-only equivalent — no matching DZ20VC 'AC-only' distinction needed since DZ20VC covers the heat pump side.",
+    "match": [
+      "DX20VC",
+      "Daikin inverter condenser",
+      "Daikin 20 SEER AC"
+    ],
+    "source": "SS-DX20VC spec sheet, backend.daikincomfort.com/docs/default-source/product-documents/residential/specifications/ss-dx20vc.pdf",
+    "flags": [
+      {
+        "title": "AC-side companion to already-covered DZ20VC",
+        "body": "DZ20VC (heat pump) is already documented elsewhere in this tool; DX20VC is its cooling-only counterpart and shares the same inverter compressor/EEV/communicating platform — heat-pump-specific fields (defrost, reversing valve) do not apply to this AC-only unit."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "EEV (electronic expansion valve)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Variable-speed inverter (Swing/Scroll depending on tonnage)",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Protection",
+        "rows": [
+          {
+            "label": "High/low pressure switch setpoints",
+            "value": "See service manual — inverter-modulated, not fixed across the 2–5 ton range",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "See rating plate / service manual for this tonnage",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "ComfortNet/Daikin One+ compatible variable-speed communicating control",
+            "key": "communicating"
+          },
+          {
+            "label": "Cooling ambient operating range",
+            "value": "See spec sheet for minimum/maximum outdoor ambient cooling operation by tonnage",
+            "key": "ambientRange"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Inverter charge mode — do NOT charge to static gauge superheat/subcooling targets; charge to nameplate per installation instructions' final charge procedure",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DX16SA",
+    "equip": "Condenser",
+    "summary": "High-efficiency single-stage split-system air conditioner, up to 16 SEER, R-410A, fixed-speed scroll compressor with single-speed condenser fan — the AC-only counterpart to the already-covered DZ16SA/DZ14SA standard heat pumps.",
+    "match": [
+      "DX16SA",
+      "Daikin single stage condenser",
+      "Daikin 16 SEER AC"
+    ],
+    "source": "SS-DX16SA spec sheet, backend.daikincomfort.com/docs/default-source/product-documents/residential/specifications/ss-dx16sa.pdf",
+    "flags": [
+      {
+        "title": "AC-side companion to already-covered DZ16SA/DZ14SA",
+        "body": "DZ16SA and DZ14SA (standard single/2-stage heat pumps) are already documented elsewhere in this tool. DX16SA is the fixed-speed AC-only condenser sharing this standard (non-inverter) platform — heat-pump-specific fields (defrost, reversing valve, low-ambient heating lockout) do not apply."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Refrigerant & Metering",
+        "rows": [
+          {
+            "label": "Refrigerant",
+            "value": "R-410A",
+            "key": "refrigerant"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV (thermostatic expansion valve)",
+            "key": "metering"
+          },
+          {
+            "label": "Compressor",
+            "value": "Single-stage, single-speed scroll compressor",
+            "key": "compressor"
+          }
+        ]
+      },
+      {
+        "title": "Controls & Protection",
+        "rows": [
+          {
+            "label": "High/low pressure switch setpoints",
+            "value": "See service manual — cutout/cutin PSIG varies by tonnage (1.5–5 ton range)",
+            "key": "pressureSwitch"
+          },
+          {
+            "label": "Crankcase heater",
+            "value": "See rating plate / service manual for this tonnage (not standard on all sizes of this fixed-speed platform)",
+            "key": "crankcaseHeater"
+          },
+          {
+            "label": "Communicating status",
+            "value": "Non-communicating, standard 24V single-stage control (no ComfortNet/Daikin One+ communicating capability on this platform)",
+            "key": "communicating"
+          }
+        ]
+      },
+      {
+        "title": "Charging",
+        "rows": [
+          {
+            "label": "Charging method",
+            "value": "Standard superheat (fixed orifice-style TXV) charging per unit nameplate charging chart — conventional gauge charging applies (non-inverter, fixed-speed compressor)",
+            "key": "charging"
+          }
+        ]
+      }
+    ],
+    "checklist": "heatpump"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DAR / DAT Series",
+    "equip": "Air Handler",
+    "summary": "Commercial multi-position air handler, 7.5-10 ton, belt-drive centrifugal blower (DAR = single-speed motor; DAT = two-speed motor, 3-phase only), factory-installed internal TXV. No factory electric heat -- AHKD accessory heater kits only.",
+    "match": [
+      "DAR09*",
+      "DAR12*",
+      "DAT09*",
+      "DAT12*",
+      "AR090*",
+      "AR120*"
+    ],
+    "source": "Daikin Service Instructions RSD6200006R47 (DAR09, DAR12, DAT09, DAT12, DX11/13/14/15/16), daikincomfort.com",
+    "flags": [
+      {
+        "title": "No factory electric heat",
+        "body": "AR, DAR, and DAT series air handlers do not have factory-installed electric heat. AHKD accessory heater kits (15/20/30 kW nominal, 208-230V-3-60 or 460V-3-60) are the ONLY heater kits approved for these series -- confirm the electrical characteristics of the air handler, heater kit, and building power supply are compatible before install."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower drive",
+            "value": "Belt-driven, draw-through centrifugal blower; heavy-gauge galvanized cabinet with fiberglass sound-blanket lining",
+            "key": "blower"
+          },
+          {
+            "label": "Speed",
+            "value": "DAR = single-speed motor; DAT = two-speed motor (for use with two condenser stages, e.g. DX13/DZ13)",
+            "key": "speed"
+          },
+          {
+            "label": "Airflow setup / CFM per tap",
+            "value": "Not published in the service literature reviewed -- confirm against the unit rating plate or IOM airflow table before adjusting",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static",
+            "value": "See unit rating plate / IOM airflow table (not captured in service manual reviewed)",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Heat / Metering / Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Factory-installed, internally mounted TXV (nomenclature position 'T')",
+            "key": "metering"
+          },
+          {
+            "label": "Electric heat",
+            "value": "None factory-installed. AHKD accessory kits: 15 kW / 20 kW / 30 kW nominal, 208-230V-3-60 or 460V-3-60",
+            "key": "heat_kit"
+          },
+          {
+            "label": "Voltage config",
+            "value": "DAR: 208/230V 3-phase. DAT: 208/230V or 460V 3-phase. Indoor applications field-convertible 208/230-3-60 to 460-3-60",
+            "key": "voltage"
+          },
+          {
+            "label": "Drain pan / filter",
+            "value": "Not detailed in the service manual sections reviewed -- see rating plate / IOM for exact drain connection and filter size",
+            "key": "drain_filter"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Daikin",
+    "model": "ASPT / AMST Series",
+    "equip": "Air Handler",
+    "summary": "Residential multi-position, multi-speed ECM-based air handler with internal factory TXV, 1.5-5 ton (ASPT); companion AMST is the current 9-speed ECM update on the same cased-cabinet platform. NOTE: no Daikin model literally named 'DASH' exists in the literature reviewed -- this entry is mapped to the closest current multi-speed/high-efficiency ECM cased air handler family and should be verified against the unit's actual nameplate model.",
+    "match": [
+      "ASPT*",
+      "AMST*"
+    ],
+    "source": "Daikin Spec Sheet SS-DASPT (ASPT Series, Multi-Position Multi-Speed ECM-Based Air Handler w/ Internal TXV, 1.5-5 Tons), daikincomfort.com",
+    "flags": [
+      {
+        "title": "Confirm heater kit vs. minimum CFM",
+        "body": "The blower speed tap selected must meet or exceed the minimum CFM required for the installed heater kit (see the Heat Kit Data / Minimum CFM Required table) -- an undersized tap on a heat-kit-equipped unit can trip the high-limit or damage the heater."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower motor",
+            "value": "Direct-drive, multi-speed ECM, field speed-tap selectable",
+            "key": "blower"
+          },
+          {
+            "label": "Cabinet",
+            "value": "SmartFrame cabinet, 21\" depth for attic access, DecaBDE-free thermoplastic drain pan w/ secondary drain connections",
+            "key": "cabinet"
+          },
+          {
+            "label": "Airflow example (ASPT25B14 @ 0.3\" ESP)",
+            "value": "1,295 CFM (tap 1); full per-model, per-tap, per-static table published in SS-DASPT for all 13 cabinet sizes",
+            "key": "airflow"
+          },
+          {
+            "label": "Max external static",
+            "value": "Table-driven per model/tap (0.1-1.0 in. w.c. range published in spec sheet); confirm exact max for installed model on rating plate",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Heat / Metering / Drain",
+        "rows": [
+          {
+            "label": "Metering device",
+            "value": "Internal, factory-installed TXV for cooling and heat pump applications",
+            "key": "metering"
+          },
+          {
+            "label": "Electric heat",
+            "value": "3 kW - 25 kW HKS heater kits, staged: 03=3.0kW, 05=4.5kW, 06=6.0kW, 08=8.0kW, 10=9.6kW, 15=14.4kW, 19=19.2kW (150F limit), 20=19.2kW (170F limit), 25=25.0kW",
+            "key": "heat_kit"
+          },
+          {
+            "label": "Coil drain connect",
+            "value": "3/4\" FPT on most cabinet sizes",
+            "key": "drain"
+          },
+          {
+            "label": "Filter",
+            "value": "Tool-less filter access; exact filter size not published in the spec-sheet pages captured -- confirm on rating plate/cabinet label",
+            "key": "filter"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Daikin",
+    "model": "MBVC Series",
+    "equip": "Air Handler",
+    "summary": "Multi-position, variable-speed ECM-based modular blower -- a blower-only chassis matched to a separately-ordered cased coil -- ComfortNet-communicating capable, with advanced airflow/tonnage auto-configuration in communicating mode.",
+    "match": [
+      "MBVC*"
+    ],
+    "source": "Daikin Spec Sheet SS-DMBVC (MBVC Series, Multi-Position Variable-Speed ECM-Based Modular Blower -- Communicating), daikincomfort.com",
+    "flags": [
+      {
+        "title": "Blower-only chassis -- metering lives in the coil",
+        "body": "MBVC is a modular blower section only; there is no factory metering device on the blower itself. TXV or piston selection is set by the matched cased coil ordered separately -- verify the coil's metering device matches the outdoor unit, not the MBVC nameplate."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower motor",
+            "value": "Variable-speed ECM, direct drive",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow delivered (nomenclature)",
+            "value": "08 = 800 CFM, 12 = 1200 CFM, 16 = 1600 CFM, 20 = 2000 CFM",
+            "key": "airflow"
+          },
+          {
+            "label": "Airflow behavior",
+            "value": "Constant CFM held across a wide static-pressure range independent of duct system; adjustable low CFM for fan-only operation; CFM indicator and fault recall (last 6 faults) on control",
+            "key": "airflow_behavior"
+          },
+          {
+            "label": "Max external static",
+            "value": "Not present in the spec-sheet pages captured -- see rating plate / full airflow table",
+            "key": "max_esp"
+          }
+        ]
+      },
+      {
+        "title": "Heat / Cabinet / Drain",
+        "rows": [
+          {
+            "label": "Electric heat",
+            "value": "3 kW - 21 kW heater kits (HKR/HKA/HKP families): 4.75 kW, 7.00 kW, 9.50 kW, 14.25-15.00 kW, 19.00-19.60 kW steps",
+            "key": "heat_kit"
+          },
+          {
+            "label": "Cabinet",
+            "value": "21\" deep, foil-faced insulation, galvanized leather-grain finish; blower section itself is usable as the electric heater enclosure",
+            "key": "cabinet"
+          },
+          {
+            "label": "Metering device",
+            "value": "None on the blower chassis -- set by the matched cased coil (TXV or piston per coil model)",
+            "key": "metering"
+          },
+          {
+            "label": "Drain pan / filter",
+            "value": "Not present in the spec-sheet pages captured -- see rating plate / IOM",
+            "key": "drain_filter"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
+  },
+  {
+    "brand": "Daikin",
+    "model": "DHG Series",
+    "equip": "Air Handler",
+    "summary": "Packaged rooftop gas/electric unit, 3-12.5 ton (separate 3-6 ton and 7.5-12.5 ton platforms). NOTE: this is a self-contained packaged unit, not a matched indoor air handler section -- covered here for its integrated supply-air/blower section per request. 3-6 ton platform: direct-drive multi-speed blower (10 speed taps), two-stage gas heat, factory TXV.",
+    "match": [
+      "DHG*"
+    ],
+    "source": "Daikin Installation Instructions IM-IOD-1075 (DHG Series 3-6 Ton Packaged Gas/Electric Unit, Direct Drive), daikincomfort.com",
+    "flags": [
+      {
+        "title": "Never operate without the condensate trap",
+        "body": "Manual states explicitly: install the condensate drain trap (3/4\" drain line and fittings minimum, 4\" minimum trap depth recommended) before operating -- 'do not operate without trap.' Running the unit untrapped lets flue draft pull air backward through the drain pan."
+      }
+    ],
+    "groups": [
+      {
+        "title": "Blower / Airflow",
+        "rows": [
+          {
+            "label": "Blower type",
+            "value": "Direct-drive, multi-speed motor -- 10 speed taps on standard/high-static gas 3-6 ton models; CFM set via low-voltage leads on terminal block TB1",
+            "key": "blower"
+          },
+          {
+            "label": "Airflow setup",
+            "value": "Speed-tap selection at TB1 per the Appendix A blower-performance tables; standard-static and high-static gas versions have different allowable tap ranges",
+            "key": "airflow_setup"
+          },
+          {
+            "label": "Max external static",
+            "value": "Model/tap-dependent -- see Appendix A blower performance tables in IM-IOD-1075",
+            "key": "max_esp"
+          },
+          {
+            "label": "Filter",
+            "value": "Filter section behind access panels -- note airflow-direction arrows on filter frames when replacing; exact size not published in pages captured, see rating plate",
+            "key": "filter"
+          }
+        ]
+      },
+      {
+        "title": "Heat / Metering / Drain",
+        "rows": [
+          {
+            "label": "Gas heat staging",
+            "value": "Two-stage heating (low/high stage regulator); example unit natural-gas manifold pressure: low stage 1.7 in. w.c. minimum, high stage 2.7-3.3 in. w.c. -- verify exact figures against the specific model's rating plate",
+            "key": "gas_stage"
+          },
+          {
+            "label": "Metering device",
+            "value": "TXV -- field superheat adjustment: clockwise (in) increases superheat, counterclockwise (out) decreases superheat",
+            "key": "metering"
+          },
+          {
+            "label": "Condensate drain",
+            "value": "3/4\" drain line and fittings minimum; install trap per detail drawing (4\" minimum trap recommended); do not operate without trap",
+            "key": "drain"
+          },
+          {
+            "label": "Combustion air",
+            "value": "Power venter supplies combustion air -- keep air passageways and unit clearances free of obstruction",
+            "key": "combustion_air"
+          }
+        ]
+      }
+    ],
+    "checklist": "airhandler"
   }
 ];
 
