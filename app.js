@@ -4864,6 +4864,9 @@ function renderScanResult(info) {
   }
   if (info.age) facts.push(["Age", info.age]);
   const codeCount = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment).length : 0;
+  // Share across with Maintenance Figures: show the link only when this exact
+  // model actually resolves to a maintenance entry (uses the same forgiving match).
+  const hasMaint = typeof MAINT_SPECS !== "undefined" && typeof maintMatches === "function" && !!info.model && MAINT_SPECS.some(e => maintMatches(e, info.model));
   const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
   const unknown = !info.brand ? `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>` : "";
@@ -4878,6 +4881,7 @@ function renderScanResult(info) {
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
         <div class="scan-actions">
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
+          ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
           ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
           ${(info.brand === "Generac" && typeof genFamilyForModel === "function" && genFamilyForModel(info.model)) ? `<button class="primary-act" id="scanGoGen">🔌 Open in Generators</button>` : ""}
@@ -4890,6 +4894,12 @@ function renderScanResult(info) {
     codesState.brand = info.brand; codesState.equipment = info.equipment; codesState.search = "";
     document.getElementById("codesSearchInput").value = "";
     showScreen("codes");
+  };
+  const goMaint = document.getElementById("scanGoMaint");
+  if (goMaint) goMaint.onclick = () => {
+    if (typeof maintState !== "undefined") { maintState.query = info.model; maintState.equip = ""; maintState.open = null; }
+    const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = info.model;
+    showScreen("maint");
   };
   document.getElementById("scanGoDiag").onclick = () => {
     diagState.equipment = info.equipment || "All"; diagState.search = "";
@@ -6022,7 +6032,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v161";
+const APP_VERSION = "v162";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
