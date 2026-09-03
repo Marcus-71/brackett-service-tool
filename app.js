@@ -4091,7 +4091,7 @@ const MODEL_PATTERNS = [
   { re: /^MBV[CK][0-9]/, brand: "Goodman", equipment: "Air Handler", series: "Goodman/Daikin modular blower (MBVC/MBVK — electric heat or FIT indoor)", notes: ["With an electric heat kit installed, work it as an electric furnace — the air handler power-path and heat-strip scenarios in Diagnostic Help apply.", "On a Daikin FIT system the communicating code table in Error Codes applies."] },
   // --- Carrier / Bryant / Payne ---
   { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["Full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'."] },
-  { re: /^59TP6/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96 two-stage furnace (59TP6)", notes: ["Install/service manual is in Manuals → Carrier."] },
+  { re: /^59TP[67]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96/97 two-stage furnace (59TP6 / 59TP7)", notes: ["59TP7 = Performance 97 (to 97% AFUE); 59TP6 = Performance 96. Same service platform — manifold Table 26 by input rate + altitude, same temp-rise and altitude-derate. 59TP7A standardizes the 59TP6C on-board 3-digit LCD + NFC diagnostics.","Install/service manual is in Manuals → Carrier."] },
   { re: /^59TN[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 96 two-stage variable-speed gas furnace (59TN6)", notes: ["Infinity communicating control - the Carrier Infinity major.minor status-code table in Error Codes (same family as the 59MN7C) applies.", "Install/service manual (59TN6B) is in Manuals → Carrier."] },
   { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["Uses the standard Carrier flash-code board — see Bryant/Payne flash codes in Error Codes."] },
   { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Standard flash-code list in Error Codes applies to most non-communicating models."] },
@@ -4371,6 +4371,13 @@ const MODEL_PATTERNS = [
   { re: /^BMS500-AA[US]\d{3}-[01]AH[WCD]X[BC]/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch Climate 5000 ductless indoor head (W = wall, C = 4-way cassette, D = ducted)", notes: ["Trailing letter tells the generation: B = G2, C = G3. G2 also appears with a trailing A on some outdoor strings.", "REFRIGERANT IS NEVER STATED in any G2 or G3 Climate 5000 service manual - do not infer it from the model. Read the label on the outdoor unit.", "9k to 18k units have NO display - the RUN and TIMER lamp blink counts are the whole readout.", "Codes: use the short E/F/P family; G3 ducted and cassette units may also print the long EH/EL/EC/PC codes."] },
   { re: /^BMS500-AAS\d{3}-[01]CSX[RHL][ABC]/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch Climate 5000 single-zone outdoor unit (R = Regular, H = Max Performance, L = light commercial 48k/60k)", notes: ["Trailing letter: C = G3, A or B = G2.", "REFRIGERANT IS NEVER STATED in the G2 or G3 manuals - read the label on the unit.", "On the light commercial L models (48k and 60k) the IPM board carries LED2 and LED3 - that table is in Error Codes.", "The 0-prefix capacity block (e.g. BMS500-AAS012-0CSXR*) is the 115V unit."] },
   { re: /^BMS500-AAM\d{3}-1CSX[RH][ABC]/, brand: "Bosch", equipment: "Mini-Split", series: "Bosch Climate 5000 multizone outdoor unit (18k / 27k / 36k / 48k, 2 to 5 zone)", notes: ["Trailing letter: C = G3, A or B = G2. THIS MATTERS - the G2 and G3 multizone code sets are completely different and are separate families in Error Codes.", "G2 multizone codes are E/F/P strings whose meanings differ from the single-zone codes of the same name; G3 multizone uses EC/PC strings.", "REFRIGERANT IS NEVER STATED in these manuals - read the label on the unit.", "Point check is entered with SW1 on both generations."] },
+  // ---- v161: current/common models added to Maintenance Figures that the decoder lacked ----
+  { re: /^PG9M/, brand: "Carrier", equipment: "Gas Furnace", series: "Payne PG9M multipoise condensing 90%+ furnace (PG9MAA / PG9MAB)", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^PG8[MJ]/, brand: "Carrier", equipment: "Gas Furnace", series: "Payne PG8M / PG8J multipoise 80% AFUE furnace", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^RHP1[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York / Guardian (JCI) RHP-series R-454B single-stage heat pump", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^EBE[0-9]/, brand: "York", equipment: "Electric Furnace", series: "Coleman EBE mobile-home electric furnace", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^MMD[SM][0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox MMD (Powered by Samsung) multi-position air handler, R-32", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^(RGE|PGE|PRPGE|PRPGN)1[3-6]/, brand: "Lennox", equipment: "Packaged Unit", series: "Allied Air (Armstrong/AirEase/Ducane/Concord) RGE/PGE gas-electric packaged unit", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -4557,7 +4564,7 @@ function identifyModel(rawModel, rawSerial, brandHint) {
   // tech still gets a brand, an age estimate, and targeted internet lookups.
   // Also report the miss: an unrecognized model is the clearest signal of what
   // the library is missing, and it costs the tech nothing to send.
-  trackEvent("MODEL NOT IN LIBRARY: " + model + (brandHint ? " (" + brandHint + ")" : ""));
+  trackEvent("MODEL NOT IN LIBRARY: " + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : ""));
   return {
     model, serial, brand: null,
     brandGuess: brandHint || null,
@@ -4803,7 +4810,7 @@ async function scanTagPhoto(file) {
     document.getElementById("scanModelInput").value = fields.model;
     document.getElementById("scanSerialInput").value = fields.serial;
     if (!fields.model) {
-      trackEvent("scan unreadable - no model found");
+      trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
       scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below.");
       const rec = await saveFailedScan(file);
       const box = document.getElementById("scanResult");
@@ -6015,7 +6022,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v160";
+const APP_VERSION = "v161";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
