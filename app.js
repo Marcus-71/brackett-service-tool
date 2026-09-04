@@ -4381,6 +4381,8 @@ const MODEL_PATTERNS = [
   { re: /^EBE[0-9]/, brand: "York", equipment: "Electric Furnace", series: "Coleman EBE mobile-home electric furnace", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^MMD[SM][0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox MMD (Powered by Samsung) multi-position air handler, R-32", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^(RGE|PGE|PRPGE|PRPGN)1[3-6]/, brand: "Lennox", equipment: "Packaged Unit", series: "Allied Air (Armstrong/AirEase/Ducane/Concord) RGE/PGE gas-electric packaged unit", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
+  // ---- v165: National Comfort Products NCPC thru-the-wall condensing unit (scanned in the field, was MODEL NOT IN LIBRARY) ----
+  { re: /^NCPC-?[0-9]{3}/, brand: "National Comfort Products", equipment: "Condenser/Heat Pump", series: "National Comfort Products (NCP) NCPC thru-the-wall split-system condensing unit - NCPC-018 / 024 / 030 in the 1010, 3010 and 4010 cabinet series, R-22 (e.g. NCPC-024-1010)", notes: ["There are NO fault codes, NO LEDs and NO control board on this unit - the app is not missing a table, the unit genuinely has none. Standard wiring is a contactor and a dual run capacitor; R-Y from the thermostat energizes the contactor. Diagnose it electrically - capacitor under load, contactor coil and contacts, amp draw, superheat/subcooling - not by looking for a code. Use the AC scenarios in Diagnostics for this unit - it is filed under Condenser/Heat Pump because that is what it is, just mounted through the wall.", "R-22 - the whole NCPC line is the R-22 generation and is discontinued. Confirm the refrigerant and charge from the data plate before gauges go on.", "SPLIT system - this is the outdoor condensing section only. The matching indoor coil / air handler is separate equipment with its own plate.", "Capacity from the model (manufacturer ratings): 018 = 18,000, 024 = 23,900, 030 = 28,500 BTU/hr - so 024 is nominal 2 ton. 208/230V single phase.", "A /D suffix (e.g. NCPC-024-1010/D) is the Madison Series variant - same manual, Figure 3 wiring schematic. It adds a high pressure switch, low pressure switch, delay-on-make / delay-on-break timers, fan speed control and a crankcase heater, but it is still relay logic with NO codes and NO board. If the unit has pressure switches, it is a Madison.", "The 20-page NCP installation manual (standard and Madison wiring schematics, superheat charging chart, parts list, dimensional drawings) and the 2-page spec sheet are in Manuals → National Comfort Products."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -6035,7 +6037,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v164";
+const APP_VERSION = "v165";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
