@@ -148,6 +148,9 @@
   <div class="disclaimer">Pulled from manufacturer service literature. The rating plate on the unit wins over anything on this screen.</div>
   <div class="controls">
     <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model — G61, DM96VC, 59TP6, 58SC0…" autocomplete="off">
+    <label class="scan-btn" for="maintPhotoInput" style="margin-top:.7rem">📷 Scan the data plate</label>
+    <input type="file" id="maintPhotoInput" accept="image/*" capture="environment" class="hidden">
+    <div id="maintScanStatus" class="scan-status hidden"></div>
     <div class="filter-row">
       <select id="maintEquipChips" class="filter-select" aria-label="Filter by equipment"></select>
     </div>

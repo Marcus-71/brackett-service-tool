@@ -4964,6 +4964,44 @@ document.getElementById("tagPhotoInput").addEventListener("change", (e) => {
   if (file) scanTagPhoto(file);
   e.target.value = "";
 });
+
+// Maintenance Figures shares the Tag Scanner's photo-OCR: snap the data plate
+// on the Maintenance screen and the read model drops straight into its search.
+function maintScanStatus(msg) {
+  const el = document.getElementById("maintScanStatus");
+  if (!el) return;
+  if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
+  else el.classList.add("hidden");
+}
+function maintApplyScannedModel(model) {
+  const input = document.getElementById("maintSearchInput");
+  if (input) input.value = model;
+  if (typeof maintState !== "undefined") { maintState.query = model; maintState.open = null; }
+  if (typeof renderMaint === "function") renderMaint();
+  const matched = typeof MAINT_SPECS !== "undefined" && typeof maintMatches === "function" &&
+    MAINT_SPECS.some(x => maintMatches(x, model));
+  maintScanStatus(matched ? null : ("Read " + model + " — no maintenance figures for that model yet. Check Manuals, or use Request Info."));
+  return matched;
+}
+const maintPhotoInput = document.getElementById("maintPhotoInput");
+if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  try {
+    maintScanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
+    const fields = await ocrTagFields(file, maintScanStatus);
+    if (fields && fields.model) {
+      trackEvent("maint scan -> " + fields.model);
+      maintApplyScannedModel(fields.model);
+    } else {
+      maintScanStatus("Couldn't read a model off that photo — try again (straighter, closer, better lit) or type it above.");
+      trackEvent("maint scan unreadable - no model found");
+    }
+  } catch (err) {
+    maintScanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — type the model above instead.");
+  }
+});
 document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   const model = document.getElementById("scanModelInput").value.trim();
   const serial = document.getElementById("scanSerialInput").value.trim();
@@ -6064,7 +6102,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v168";
+const APP_VERSION = "v169";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
