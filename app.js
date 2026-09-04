@@ -4532,6 +4532,17 @@ function ocrModelCandidates(model) {
   return cands.slice(0, 600).map(c => c.s);
 }
 
+// v168: a serial number that got read out of the wrong line of the plate.
+// Deliberately narrow — a Goodman-style date-coded serial (2410E22019) or a
+// long all-digit run. Checked against every MODEL_PATTERNS regex: no library
+// pattern accepts a string that starts with four digits, so neither shape can
+// collide with a real model. Do NOT widen. Detection only — no decode (v64
+// rule: serial dates are only decoded for formats confirmed against official
+// manufacturer documentation, and Goodman is not one of them).
+function looksLikeSerial(s) {
+  return /^\d{4}[A-Z]{1,2}\d{3,}$/.test(s) || /^\d{8,}$/.test(s);
+}
+
 function identifyModel(rawModel, rawSerial, brandHint) {
   const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
   if (!model) return null;
@@ -4571,11 +4582,17 @@ function identifyModel(rawModel, rawSerial, brandHint) {
   // tech still gets a brand, an age estimate, and targeted internet lookups.
   // Also report the miss: an unrecognized model is the clearest signal of what
   // the library is missing, and it costs the tech nothing to send.
-  trackEvent("MODEL NOT IN LIBRARY: " + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : ""));
+  // v168: if the "model" is shaped like a serial number, the tech read the
+  // wrong line of the plate. Log it under its own heading so it does not land
+  // on the office's coverage-gap list (those rows are mined to decide what
+  // equipment to add; this is user error, not a gap).
+  const serialLike = looksLikeSerial(model);
+  trackEvent((serialLike ? "SERIAL IN MODEL FIELD: " : "MODEL NOT IN LIBRARY: ") + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : ""));
   return {
     model, serial, brand: null,
     brandGuess: brandHint || null,
     age: brandHint ? decodeSerialAge(brandHint, serial) : null,
+    serialLike,
   };
 }
 
@@ -4876,7 +4893,15 @@ function renderScanResult(info) {
   const hasMaint = typeof MAINT_SPECS !== "undefined" && typeof maintMatches === "function" && !!info.model && MAINT_SPECS.some(e => maintMatches(e, info.model));
   const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
-  const unknown = !info.brand ? `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>` : "";
+  // v168: a serial-shaped "model" gets a pointer back to the plate instead of
+  // the dead-end "not in library" text (which would also send the office
+  // chasing a model that does not exist). Same plain <p> as the not-found
+  // message — no new styling.
+  const unknown = !info.brand
+    ? (info.serialLike
+      ? `<p><strong>That looks like a serial number, not a model.</strong> The model number is usually on the line above it on the data plate — check the tag and enter the model number below.</p>`
+      : `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>`)
+    : "";
   const ocrBanner = info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
   box.innerHTML = `
@@ -6039,7 +6064,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v167";
+const APP_VERSION = "v168";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
