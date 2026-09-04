@@ -1088,6 +1088,20 @@ main {
   cursor: pointer;
 }
 
+/* "Access removed" stop for a departed tech — same shell as the picker */
+.tech-picker-overlay.access-removed { z-index: 210; }
+.access-removed .tech-picker p { margin-bottom: 1.4rem; overflow-wrap: anywhere; }
+.tech-picker-link {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.tech-picker-link:active { opacity: 0.7; }
+
 /* Scan-to-chart in the Charging Calc */
 .cc-scan-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
 .cc-scan-row > button {

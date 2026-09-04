@@ -6035,7 +6035,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v163";
+const APP_VERSION = "v164";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -6048,11 +6048,23 @@ const APP_VERSION = "v163";
 
 const TRACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfZ9Dv1jlj3h4uzomWlHsgS-OcaDMhb0sbaE2YbXLCP2swsQQ/formResponse";
 const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", version: "entry.872662639" };
-const TECH_NAMES = ["James", "Gus", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Andy"];
+const TECH_NAMES = ["James", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Andy"];
 const TECH_KEY = "bfc-tech-name";
 const TRACK_QUEUE_KEY = "bfc-track-queue";
 
-function getTechName() { return localStorage.getItem(TECH_KEY) || ""; }
+// Technicians who have left. Their phones still have the app installed and
+// cached, so this is what stops it — a name match on next launch. Anyone who
+// clears site data gets past it; it is a courtesy stop, not security.
+const BLOCKED_TECHS = ["Gus"];
+
+function getTechName() {
+  try { return localStorage.getItem(TECH_KEY) || ""; } catch (e) { return ""; }
+}
+
+function isBlockedTech(name) {
+  const n = String(name || "").trim().toLowerCase();
+  return !!n && BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === n);
+}
 
 // The Call Log is the service manager's own tool — the tile only shows on
 // Andy's phone. Every other tech keeps the home screen they already know.
@@ -6120,6 +6132,28 @@ logSearches("manualSearchInput", "searched manuals");
 logSearches("toolboxSearchInput", "searched toolbox");
 logSearches("tstatSearchInput", "searched thermostats");
 
+// Full-screen stop for a departed tech. Same shell as the picker so it reads
+// as part of the app, not an error. The one way out is the "not my phone"
+// link, which forgets the stored name and lets the picker ask again.
+function showAccessRemoved() {
+  if (document.querySelector(".tech-picker-overlay.access-removed")) return;
+  const ov = document.createElement("div");
+  ov.className = "tech-picker-overlay access-removed";
+  ov.innerHTML =
+    `<div class="tech-picker">
+      <img src="icons/icon-192.png" alt="" class="tech-picker-logo">
+      <h2>Access removed</h2>
+      <p>This app is for current Brackett Heating &amp; Air employees. If you think this is a mistake, please contact the office.</p>
+      <button type="button" class="tech-picker-link" id="notMyPhoneBtn">This isn't my phone</button>
+    </div>`;
+  document.body.appendChild(ov);
+  document.body.style.overflow = "hidden";
+  ov.querySelector("#notMyPhoneBtn").onclick = () => {
+    try { localStorage.removeItem(TECH_KEY); } catch (e) { /* reload still brings the picker back */ }
+    location.reload();
+  };
+}
+
 function showTechPicker() {
   const ov = document.createElement("div");
   ov.className = "tech-picker-overlay";
@@ -6145,6 +6179,7 @@ function showTechPicker() {
     // persist just means the picker asks again next launch.
     try { localStorage.setItem(TECH_KEY, name); } catch (e) { /* not worth blocking on */ }
     ov.remove();
+    if (isBlockedTech(name)) { showAccessRemoved(); return; }
     syncCallLogTile();
     trackEvent("app opened");
   };
@@ -6163,22 +6198,35 @@ async function renderVersionFooter() {
   el.textContent = APP_VERSION + " · " + getAllCodes().length + " codes · " + getAllSymptoms().length + " scenarios · " + tstatEntries().length + " thermostats" + manualCount;
 }
 
+function startApp() {
+  syncCallLogTile();
+  renderVersionFooter();
+
+  if (getTechName()) trackEvent("app opened");
+  else showTechPicker();
+
+  // Only nudge a tech who has already picked their name — the picker overlay sits
+  // above everything, so a pill fired underneath it would just be missed.
+  if (getTechName()) showBulletinPill();
+
+  // Full-text index any already-downloaded manuals once the app is idle, so Ask
+  // can search inside manuals a tech downloaded before this feature shipped.
+  (function scheduleManualIndexing() {
+    const run = () => indexAllDownloaded();
+    if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 8000 });
+    else setTimeout(run, 4000);
+  })();
+}
+
 updateNetStatus();
 showScreen("home");
-syncCallLogTile();
-renderVersionFooter();
 
-if (getTechName()) trackEvent("app opened");
-else showTechPicker();
-
-// Only nudge a tech who has already picked their name — the picker overlay sits
-// above everything, so a pill fired underneath it would just be missed.
-if (getTechName()) showBulletinPill();
-
-// Full-text index any already-downloaded manuals once the app is idle, so Ask
-// can search inside manuals a tech downloaded before this feature shipped.
-(function scheduleManualIndexing() {
-  const run = () => indexAllDownloaded();
-  if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 8000 });
-  else setTimeout(run, 4000);
-})();
+// A departed tech's phone stops here: no tile sync, no bulletin, no indexing.
+// The tracked open is the point — it tells the office the app is still being
+// launched on that phone.
+if (isBlockedTech(getTechName())) {
+  showAccessRemoved();
+  if (typeof trackEvent === "function") trackEvent("BLOCKED: " + getTechName() + " opened the app");
+} else {
+  startApp();
+}
