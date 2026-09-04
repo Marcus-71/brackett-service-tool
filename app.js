@@ -251,6 +251,7 @@ const SCREEN_TITLES = {
   warranty: "Warranty Check",
   sqft: "House Size",
   request: "Request Info",
+  calllog: "Call Log",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -260,6 +261,7 @@ const ADD_HANDLERS = {
     model: manualsState.model && manualsState.model !== GENERAL_MODEL ? manualsState.model : "",
   }),
   toolbox: () => openToolboxEditForm(null),
+  calllog: () => openCallEntryForm(null),
 };
 
 let currentScreen = "home";
@@ -273,10 +275,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -299,6 +301,7 @@ function showScreen(name, fromBack) {
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
   if (name === "maint") renderMaint();
+  if (name === "calllog" && typeof renderCallLog === "function") renderCallLog();
 
   if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
 
@@ -6032,7 +6035,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v162";
+const APP_VERSION = "v163";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -6050,6 +6053,14 @@ const TECH_KEY = "bfc-tech-name";
 const TRACK_QUEUE_KEY = "bfc-track-queue";
 
 function getTechName() { return localStorage.getItem(TECH_KEY) || ""; }
+
+// The Call Log is the service manager's own tool — the tile only shows on
+// Andy's phone. Every other tech keeps the home screen they already know.
+// Runs at startup and again the moment the picker sets a name.
+function syncCallLogTile() {
+  const t = (getTechName() || "").trim().toLowerCase();
+  document.getElementById("tileCallLog")?.classList.toggle("hidden", t !== "andy");
+}
 
 function readTrackQueue() {
   try { return JSON.parse(localStorage.getItem(TRACK_QUEUE_KEY) || "[]"); } catch (e) { return []; }
@@ -6134,6 +6145,7 @@ function showTechPicker() {
     // persist just means the picker asks again next launch.
     try { localStorage.setItem(TECH_KEY, name); } catch (e) { /* not worth blocking on */ }
     ov.remove();
+    syncCallLogTile();
     trackEvent("app opened");
   };
   ov.querySelectorAll(".tech-name-btn").forEach((b) => { b.onclick = () => pick(b.dataset.name); });
@@ -6153,6 +6165,7 @@ async function renderVersionFooter() {
 
 updateNetStatus();
 showScreen("home");
+syncCallLogTile();
 renderVersionFooter();
 
 if (getTechName()) trackEvent("app opened");

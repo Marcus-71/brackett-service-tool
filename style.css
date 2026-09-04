@@ -1518,3 +1518,139 @@ main {
 
 .maint-source { margin-top: 1.2rem; font-size: .8rem; color: var(--text-dim); overflow-wrap: anywhere; word-break: break-word; }
 .maint-empty { padding: 1rem; color: var(--text-dim); }
+
+/* ---------------- Call Log (service manager) ---------------- */
+/* Built for one thumb in a truck: every tap target is 44px+, chips wrap,
+   nothing is allowed to push wider than a 360px phone. */
+
+.tile-calllog { border-left: 5px solid var(--brand-navy); }
+
+.cl-seg { display: flex; gap: 0.5rem; }
+.cl-seg-btn {
+  flex: 1; min-width: 0; min-height: 44px; padding: 0.5rem 0.4rem;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text-dim);
+  font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+}
+.cl-seg-btn.on {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: var(--accent); color: var(--text); font-weight: 700;
+}
+.cl-seg-badge {
+  display: inline-block; min-width: 1.4em; padding: 0.05em 0.4em;
+  border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 0.75rem; font-weight: 800; line-height: 1.4; text-align: center;
+}
+
+.cl-warn { margin-top: 0; font-size: 0.85rem; }
+.cl-log-btn { width: 100%; min-height: 52px; font-size: 1.1rem; }
+.cl-dim { color: var(--text-dim); font-weight: 400; }
+
+/* Log rows */
+.cl-row {
+  position: relative; padding-right: 2.8rem; min-height: 44px;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+.cl-row-top {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.55rem;
+  min-width: 0;
+}
+.cl-row-tech { font-weight: 800; color: var(--accent); }
+.cl-row-min { font-weight: 700; font-size: 0.9rem; }
+.cl-row-unit { font-size: 0.9rem; color: var(--text); overflow-wrap: anywhere; }
+.cl-row-when { margin-left: auto; font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
+.cl-row-sym { margin-top: 0.3rem; font-size: 0.92rem; line-height: 1.35; overflow-wrap: anywhere; }
+.tag.cl-tag-missing { background: #4a2b06; color: #ffc266; vertical-align: 0.1em; }
+@media (prefers-color-scheme: light) {
+  .tag.cl-tag-missing { background: #fff1d6; color: #8a5a00; }
+}
+.cl-row-del {
+  position: absolute; top: 0.25rem; right: 0.25rem; width: 44px; height: 44px;
+  border: none; background: transparent; color: var(--text-dim);
+  font-size: 1rem; cursor: pointer; border-radius: 10px;
+}
+.cl-row-del:active { background: var(--border); }
+
+/* Queue rows */
+.cl-queue-intro { font-size: 0.85rem; color: var(--text-dim); line-height: 1.4; }
+.cl-q-row { cursor: pointer; }
+.cl-q-unit { font-weight: 800; font-size: 1.02rem; overflow-wrap: anywhere; }
+.cl-q-sym { margin-top: 0.2rem; font-size: 0.95rem; overflow-wrap: anywhere; }
+.cl-q-ans {
+  margin-top: 0.4rem; padding: 0.5rem 0.7rem; border-radius: 8px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-size: 0.9rem; line-height: 1.4; color: var(--text); white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.cl-added-btn {
+  display: block; width: 100%; min-height: 44px; margin-top: 0.7rem;
+  border-radius: 10px; border: 1px solid var(--ok); background: transparent;
+  color: var(--ok); font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+}
+.cl-added-btn:active { background: color-mix(in srgb, var(--ok) 15%, transparent); }
+
+/* Summary */
+.cl-sum-title {
+  font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--text-dim); margin-top: 0.5rem;
+}
+.cl-sum-title:first-child { margin-top: 0; }
+.cl-sum-card { cursor: default; }
+.cl-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.cl-stat {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 0.7rem 0.4rem; text-align: center; min-width: 0;
+}
+.cl-stat-n { font-size: 1.45rem; font-weight: 800; color: var(--accent-2); line-height: 1.1; overflow-wrap: anywhere; }
+.cl-stat-k { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.03em; }
+
+.cl-bar-row {
+  display: grid; grid-template-columns: 5.2rem minmax(0, 1fr) auto; gap: 0.5rem; align-items: center;
+  padding: 0.3rem 0; font-size: 0.9rem;
+}
+.cl-bar-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cl-bar { display: block; height: 10px; border-radius: 5px; background: var(--border); overflow: hidden; }
+.cl-bar-fill { display: block; height: 100%; background: var(--accent); border-radius: 5px; }
+.cl-bar-n { font-size: 0.82rem; color: var(--text-dim); white-space: nowrap; }
+
+.cl-notin { display: flex; align-items: center; gap: 0.8rem; }
+.cl-notin-pct { font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.cl-notin-sub { font-size: 0.88rem; color: var(--text-dim); line-height: 1.35; }
+
+.cl-rep-row { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+.cl-rep-row:last-child { border-bottom: none; }
+.cl-rep-label { overflow-wrap: anywhere; }
+.cl-rep-n { font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+.cl-weeks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4rem; }
+.cl-week {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 0.5rem 0.2rem; text-align: center; min-width: 0;
+}
+.cl-week-n { font-size: 1.15rem; font-weight: 800; line-height: 1.1; }
+.cl-week-min { font-size: 0.78rem; color: var(--text-dim); }
+.cl-week-k { font-size: 0.7rem; color: var(--text-dim); margin-top: 0.15rem; white-space: nowrap; }
+
+.cl-sum-actions { display: flex; gap: 0.5rem; margin-top: 0.3rem; }
+.cl-sum-actions button {
+  flex: 1; min-width: 0; min-height: 48px; padding: 0.6rem 0.4rem;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text);
+  font: inherit; font-weight: 700; font-size: 0.92rem; cursor: pointer;
+}
+.cl-sum-actions button:active { transform: scale(0.98); }
+
+/* Entry form */
+.cl-timer-row { text-align: center; margin-bottom: 0.6rem; }
+.cl-timer {
+  font-size: 2.8rem; font-weight: 800; line-height: 1; color: var(--accent-2);
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+}
+.cl-timer-hint { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.3rem; line-height: 1.35; }
+.cl-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.cl-chips + .form-field, #cl-min-chips { margin-bottom: 0.9rem; }
+.cl-chip {
+  min-height: 44px; padding: 0.5rem 0.95rem;
+  font-size: 0.95rem; color: var(--text);
+}
+.cl-chip:active { transform: scale(0.97); }

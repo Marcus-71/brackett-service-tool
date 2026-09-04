@@ -97,6 +97,11 @@
       <span class="tile-label">Request Info</span>
       <span class="tile-sub">Missing a code, manual, or unit? Tell the office</span>
     </button>
+    <button id="tileCallLog" class="tile tile-calllog hidden" data-screen="calllog">
+      <span class="tile-icon">📞</span>
+      <span class="tile-label">Call Log</span>
+      <span class="tile-sub">Log a tech's call — builds the queue of what's missing</span>
+    </button>
   </div>
   <div class="home-footer">
     <span id="homeNetNote"></span>
@@ -463,6 +468,21 @@
   <div class="disclaimer">Live outdoor conditions for the Evansville service area (NWS station KEVV). Use the dew point as your <strong>sweat point</strong> — anything colder than it in unconditioned space will condense. Needs signal to update; the last reading is kept for offline.</div>
   <main id="wxBody"></main>
 </section>
+
+<!-- CALL LOG (service manager only) -->
+<section id="calllogScreen" class="screen hidden">
+  <div class="disclaimer">Every call a tech makes in is knowledge the app is missing. Log it in 20 seconds — who, how long, what they had, what you told them. <strong>Queue</strong> is what still needs adding to the app. <strong>Summary</strong> is where the day went. Stays on this phone; works with zero signal.</div>
+  <div class="controls">
+    <div class="cl-seg" id="calllogSeg">
+      <button type="button" class="cl-seg-btn on" data-view="log">Log</button>
+      <button type="button" class="cl-seg-btn" data-view="queue">Queue <span id="calllogQueueCount" class="cl-seg-badge hidden"></span></button>
+      <button type="button" class="cl-seg-btn" data-view="summary">Summary</button>
+    </div>
+  </div>
+  <main id="calllogLogView"></main>
+  <main id="calllogQueueView" class="hidden"></main>
+  <main id="calllogSummaryView" class="hidden"></main>
+</section>
 <script src="pt-data.js"></script>
 <script src="data.js"></script>
 <script src="symptoms.js"></script>
@@ -474,6 +494,7 @@
 <script src="weather.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
 <script src="maint.js"></script>
+<script src="calllog.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
