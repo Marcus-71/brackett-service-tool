@@ -4983,6 +4983,22 @@ function maintApplyScannedModel(model) {
   maintScanStatus(matched ? null : ("Read " + model + " — no maintenance figures for that model yet. Check Manuals, or use Request Info."));
   return matched;
 }
+// When the maint scan can't read a model: log WHAT we did get (serial/brand,
+// not just "nothing") so the office can see who's struggling, and hand the tech
+// over to the Tag Scanner, which has the save-photo / send-to-Andy fallback and
+// the brand ID that this screen doesn't.
+function maintScanNoModel(fields) {
+  trackEvent("maint scan - no model read" +
+    (fields && fields.serial ? " | serial: " + fields.serial : "") +
+    (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
+  const el = document.getElementById("maintScanStatus");
+  if (!el) return;
+  el.classList.remove("hidden");
+  el.innerHTML = "Couldn't read a model off that photo. Try again — straighter, closer, better lit — or type it above. " +
+    '<button type="button" id="maintToScanner" style="background:none;border:none;color:var(--brand-navy,#003A70);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">Open the Tag Scanner ›</button>';
+  const b = document.getElementById("maintToScanner");
+  if (b) b.onclick = () => { if (typeof showScreen === "function") showScreen("scanner"); };
+}
 const maintPhotoInput = document.getElementById("maintPhotoInput");
 if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
   const file = e.target.files && e.target.files[0];
@@ -4995,8 +5011,7 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
       trackEvent("maint scan -> " + fields.model);
       maintApplyScannedModel(fields.model);
     } else {
-      maintScanStatus("Couldn't read a model off that photo — try again (straighter, closer, better lit) or type it above.");
-      trackEvent("maint scan unreadable - no model found");
+      maintScanNoModel(fields);
     }
   } catch (err) {
     maintScanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — type the model above instead.");
@@ -6102,7 +6117,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v170";
+const APP_VERSION = "v171";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
