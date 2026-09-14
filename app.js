@@ -4983,12 +4983,22 @@ function maintApplyScannedModel(model) {
   maintScanStatus(matched ? null : ("Read " + model + " — no maintenance figures for that model yet. Check Manuals, or use Request Info."));
   return matched;
 }
-// When the maint scan can't read a model: log WHAT we did get (serial/brand,
-// not just "nothing") so the office can see who's struggling, and hand the tech
-// over to the Tag Scanner, which has the save-photo / send-to-Andy fallback and
-// the brand ID that this screen doesn't.
+// A real HVAC model number always carries at least one digit (tonnage, BTU,
+// series). OCR that comes back all-letters ("PLANCHE", "IFIER") is a misread of
+// some other text on the plate, not a model — treat it as "no model read" so
+// the tech gets the retry prompt instead of an empty "no figures" result.
+function maintModelPlausible(m) {
+  const s = (m || "").replace(/\s+/g, "");
+  return s.length >= 3 && /\d/.test(s);
+}
+// When the maint scan can't read a model: log WHAT we did get (the garbled read,
+// serial/brand — not just "nothing") so the office can see who's struggling, and
+// hand the tech over to the Tag Scanner, which has the save-photo / send-to-Andy
+// fallback and the brand ID that this screen doesn't.
 function maintScanNoModel(fields) {
+  const raw = fields && fields.model ? String(fields.model).trim() : "";
   trackEvent("maint scan - no model read" +
+    (raw ? " | garbled read: " + raw : "") +
     (fields && fields.serial ? " | serial: " + fields.serial : "") +
     (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
   const el = document.getElementById("maintScanStatus");
@@ -5007,7 +5017,7 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
   try {
     maintScanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
     const fields = await ocrTagFields(file, maintScanStatus);
-    if (fields && fields.model) {
+    if (fields && fields.model && maintModelPlausible(fields.model)) {
       trackEvent("maint scan -> " + fields.model);
       maintApplyScannedModel(fields.model);
     } else {
@@ -6117,7 +6127,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v171";
+const APP_VERSION = "v172";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
