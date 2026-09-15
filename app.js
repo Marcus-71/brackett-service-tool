@@ -4640,9 +4640,14 @@ function extractTagFields(text) {
   const FILLER = "(?:[\\s.:#/-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
   const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL)" + FILLER + "[.:#/ ]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
   const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/ ]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
+  // A two-column header row ("MODEL NO.   SERIAL NO.") makes the MODEL label
+  // capture the NEXT label word — a Trane plate scanned as model "SERIAL". Reject
+  // the plate's own label words, and require a real model to carry a digit (every
+  // HVAC model number does; a label word like SERIAL/TYPE/MODEL never does).
+  const TAG_NONVALUE = /^(?:SERIAL|SERIES|MODEL|MODELE|NUMBER|NUM|TYPE|MFG|MFR|MFD|SER|S\/?N|M\/?N|NO)\.?$/;
   for (const line of lines) {
-    if (!model) { const m = line.match(modelLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) model = m[1]; }
-    if (!serial) { const m = line.match(serialLabel); if (m && !/NUMBER|NO\.?$/.test(m[1])) serial = m[1]; }
+    if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) model = m[1]; }
+    if (!serial) { const m = line.match(serialLabel); if (m && !TAG_NONVALUE.test(m[1])) serial = m[1]; }
   }
   // No labels found — look for any token matching a known model pattern.
   if (!model) {
@@ -6127,7 +6132,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v172";
+const APP_VERSION = "v173";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
