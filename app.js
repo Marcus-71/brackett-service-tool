@@ -4996,6 +4996,31 @@ function maintModelPlausible(m) {
   const s = (m || "").replace(/\s+/g, "");
   return s.length >= 3 && /\d/.test(s);
 }
+// A scanned string that's all digits — or 9+ chars that are almost all digits
+// with at most one stray letter — is a SERIAL, not a model. Every HVAC model
+// number carries letters (brand prefix, series) and rarely runs past 8
+// mostly-numeric chars; serials are long date-coded runs (252140595,
+// 2410E22019). Techs on the Maintenance screen keep photographing the serial
+// line and get an empty "no figures" — detect it and tell them to grab the model.
+function looksLikeSerial(raw) {
+  const s = (raw || "").replace(/[\s.\-\/]/g, "").toUpperCase();
+  if (s.length < 8) return false;
+  const digits = (s.match(/[0-9]/g) || []).length;
+  const letters = (s.match(/[A-Z]/g) || []).length;
+  if (letters === 0) return true;               // all-digit run of 8+ = serial
+  return s.length >= 9 && letters <= 1 && digits / s.length >= 0.8;
+}
+// Never call a string a serial if we actually recognize it as a model: a known
+// MODEL_PATTERN or a covered MAINT_SPECS entry overrides the serial heuristic,
+// so a digit-heavy real model number is still treated as a model.
+function isKnownModelString(m) {
+  const cleaned = (m || "").replace(/[.\/ ]/g, "").toUpperCase();
+  if (!cleaned) return false;
+  if (typeof MODEL_PATTERNS !== "undefined" && MODEL_PATTERNS.some(p => p.re.test(cleaned))) return true;
+  if (typeof MAINT_SPECS !== "undefined" && typeof maintMatches === "function" &&
+      MAINT_SPECS.some(x => maintMatches(x, m))) return true;
+  return false;
+}
 // When the maint scan can't read a model: log WHAT we did get (the garbled read,
 // serial/brand — not just "nothing") so the office can see who's struggling, and
 // hand the tech over to the Tag Scanner, which has the save-photo / send-to-Andy
@@ -5014,6 +5039,20 @@ function maintScanNoModel(fields) {
   const b = document.getElementById("maintToScanner");
   if (b) b.onclick = () => { if (typeof showScreen === "function") showScreen("scanner"); };
 }
+// The tech photographed the serial, not the model. Maintenance figures are keyed
+// to the model, so point them at it explicitly instead of the generic retry.
+function maintScanSerialOnly(fields) {
+  const sn = (fields && (fields.serial || fields.model)) ? String(fields.serial || fields.model).trim() : "";
+  trackEvent("maint scan - serial not model" +
+    (sn ? " | read: " + sn : "") +
+    (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
+  const el = document.getElementById("maintScanStatus");
+  if (!el) return;
+  el.classList.remove("hidden");
+  el.innerHTML = "That looks like the <strong>serial number</strong>" +
+    (sn ? " (" + escapeHtml(sn) + ")" : "") +
+    ", not the model. Maintenance figures are keyed to the <strong>model number</strong> — usually on the same plate, labeled MODEL or M/N. Scan or type the model above.";
+}
 const maintPhotoInput = document.getElementById("maintPhotoInput");
 if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
   const file = e.target.files && e.target.files[0];
@@ -5022,9 +5061,13 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
   try {
     maintScanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
     const fields = await ocrTagFields(file, maintScanStatus);
-    if (fields && fields.model && maintModelPlausible(fields.model)) {
-      trackEvent("maint scan -> " + fields.model);
-      maintApplyScannedModel(fields.model);
+    const scanned = (fields && fields.model) || "";
+    const serialLike = scanned && looksLikeSerial(scanned) && !isKnownModelString(scanned);
+    if (scanned && maintModelPlausible(scanned) && !serialLike) {
+      trackEvent("maint scan -> " + scanned);
+      maintApplyScannedModel(scanned);
+    } else if (serialLike || (fields && fields.serial)) {
+      maintScanSerialOnly(fields);
     } else {
       maintScanNoModel(fields);
     }
@@ -6132,7 +6175,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v174";
+const APP_VERSION = "v175";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
