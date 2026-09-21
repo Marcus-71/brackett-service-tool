@@ -575,6 +575,15 @@ const ASK_AI_RELAY = "https://script.google.com/macros/s/AKfycbzk5Pv9A4IIs8MSqnm
 // burning the account's credits.
 const ASK_AI_APP_TOKEN = "bkt-ask-9f3Kx7Qm2Zp";
 let askAiToken = 0;
+// Failed-scan photo relay (tools/scan-photo-relay.gs): when OCR can't read a
+// tag, the photo is queued on the phone and POSTed here into Andy's "Brackett
+// Failed Scans" Drive folder. Empty = dormant: photos stay on the phone with
+// the manual "Send this photo" button only, exactly as before. Fill in the
+// deployed Apps Script /exec URL to turn it on.
+const SCAN_PHOTO_RELAY = "https://script.google.com/macros/s/AKfycbwsRf8U7QzFrsolGtZZVpU4RDrMgln7gQ4ywRMp94_2iwZPR67elE6Fhaaq04Unm33X/exec";
+// Must equal the relay's APP_TOKEN script property. Same weak-shared-secret
+// model as ASK_AI_APP_TOKEN (obscure URL + daily cap do the real work).
+const SCAN_PHOTO_APP_TOKEN = ASK_AI_APP_TOKEN;
 
 // Each kind knows its human label and how to open one of its items. Codes and
 // fixes are ANSWERS; the rest are references — so when scores tie, answers
@@ -4543,7 +4552,9 @@ function looksLikeSerial(s) {
   return /^\d{4}[A-Z]{1,2}\d{3,}$/.test(s) || /^\d{8,}$/.test(s);
 }
 
-function identifyModel(rawModel, rawSerial, brandHint) {
+// photoId (optional): the failed-scan photo record this read came from, so the
+// "not in library" event can be paired with its picture in the Drive folder.
+function identifyModel(rawModel, rawSerial, brandHint, photoId) {
   const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
   if (!model) return null;
   const serial = (rawSerial || "").toUpperCase().trim();
@@ -4587,7 +4598,7 @@ function identifyModel(rawModel, rawSerial, brandHint) {
   // on the office's coverage-gap list (those rows are mined to decide what
   // equipment to add; this is user error, not a gap).
   const serialLike = looksLikeSerial(model);
-  trackEvent((serialLike ? "SERIAL IN MODEL FIELD: " : "MODEL NOT IN LIBRARY: ") + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : ""));
+  trackEvent((serialLike ? "SERIAL IN MODEL FIELD: " : "MODEL NOT IN LIBRARY: ") + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : "") + (photoId ? " | photo: " + photoId : ""));
   return {
     model, serial, brand: null,
     brandGuess: brandHint || null,
@@ -4760,11 +4771,17 @@ function scanStatus(msg) {
   else el.classList.add("hidden");
 }
 
-// Failed-scan photo storage — when OCR can't read a tag, keep the photo on
-// THIS phone (IndexedDB, separate tiny DB) so the tech can send it to Andy or
-// show it on-site. Nothing leaves the device automatically. Keeps the newest 20.
+// Failed-scan photo storage — when OCR can't read a tag (or reads a model the
+// library doesn't know), keep the photo on THIS phone (IndexedDB, separate tiny
+// DB) so the tech can send it to Andy or show it on-site. Keeps the newest 20.
+// v179: when SCAN_PHOTO_RELAY is set, every saved photo is also queued for
+// upload to Andy's Drive folder (flushScanPhotos) — Andy: "when it doesn't scan
+// right, pull in the picture." Record: { id, blob, tech, ts, kind, read,
+// version, uploaded }. v151-era records have no kind/uploaded and are treated
+// as kind "unreadable", not yet uploaded, so they get sent too.
 const FAILED_SCANS_DB = "bfc-failed-scans-db";
 const FAILED_SCANS_STORE = "scans";
+const FAILED_SCANS_KEEP = 20;
 function openFailedScansDb() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(FAILED_SCANS_DB, 1);
@@ -4778,30 +4795,153 @@ function openFailedScansDb() {
     req.onerror = () => reject(req.error);
   });
 }
-async function saveFailedScan(blob) {
+function failedScansGetAll(db) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FAILED_SCANS_STORE, "readonly");
+    const r = tx.objectStore(FAILED_SCANS_STORE).getAll();
+    r.onsuccess = () => resolve(r.result || []); r.onerror = () => reject(r.error);
+  });
+}
+function failedScansPut(db, rec) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
+    tx.objectStore(FAILED_SCANS_STORE).put(rec);
+    tx.oncomplete = resolve; tx.onerror = () => reject(tx.error);
+  });
+}
+// Ids sort chronologically (Date.now() prefix), so a plain string sort = oldest first.
+function newScanPhotoId() {
+  return Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+}
+// Shrink a phone photo (often 3-4 MB, 4000 px) to something worth uploading:
+// long edge <= 1600 px, JPEG 0.82 — tag text stays legible, size drops ~10x.
+// Any failure (HEIC the browser can't decode, canvas tainted, etc.) returns the
+// original blob so the photo is never lost.
+async function downscaleScanPhoto(blob, maxEdge = 1600, quality = 0.82) {
   try {
-    const db = await openFailedScansDb();
-    const rec = { id: Date.now() + "-" + Math.random().toString(36).slice(2, 8), blob, tech: getTechName(), ts: new Date().toLocaleString() };
-    await new Promise((resolve, reject) => {
-      const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
-      tx.objectStore(FAILED_SCANS_STORE).put(rec);
-      tx.oncomplete = resolve; tx.onerror = () => reject(tx.error);
-    });
-    // prune to newest 20
-    const all = await new Promise((resolve, reject) => {
-      const tx = db.transaction(FAILED_SCANS_STORE, "readonly");
-      const r = tx.objectStore(FAILED_SCANS_STORE).getAll();
-      r.onsuccess = () => resolve(r.result || []); r.onerror = () => reject(r.error);
-    });
-    if (all.length > 20) {
-      all.sort((a, b) => (a.id < b.id ? -1 : 1));
-      const drop = all.slice(0, all.length - 20);
-      const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
-      drop.forEach(d => tx.objectStore(FAILED_SCANS_STORE).delete(d.id));
+    let bitmap = null, w, h;
+    if (typeof createImageBitmap === "function") {
+      bitmap = await createImageBitmap(blob);
+      w = bitmap.width; h = bitmap.height;
+    } else {
+      bitmap = await new Promise((resolve, reject) => {
+        const img = new Image();
+        const url = URL.createObjectURL(blob);
+        img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("decode")); };
+        img.src = url;
+      });
+      w = bitmap.naturalWidth; h = bitmap.naturalHeight;
     }
+    if (!w || !h) return blob;
+    const scale = Math.min(1, maxEdge / Math.max(w, h));
+    const cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = cw; canvas.height = ch;
+    canvas.getContext("2d").drawImage(bitmap, 0, 0, cw, ch);
+    if (bitmap.close) bitmap.close();
+    const out = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+    return (out && out.size) ? out : blob;
+  } catch (e) { return blob; }
+}
+// meta: { id?, kind, read } — kind is a short tag for the Drive filename
+// ("unreadable", "not-in-library", "maint-unreadable", ...), read is whatever
+// OCR did make out, so the photo can be matched to its telemetry line.
+async function saveFailedScan(blob, meta) {
+  try {
+    const m = meta || {};
+    const db = await openFailedScansDb();
+    const small = await downscaleScanPhoto(blob);
+    const rec = {
+      id: m.id || newScanPhotoId(),
+      blob: small,
+      tech: getTechName(),
+      ts: new Date().toLocaleString(),
+      kind: m.kind || "unreadable",
+      read: String(m.read || "").slice(0, 200),
+      version: APP_VERSION,
+      uploaded: false,
+    };
+    await failedScansPut(db, rec);
+    // Prune to the newest 20. Drop already-uploaded photos first (Andy has
+    // them), so a stretch with no signal never throws away un-sent ones
+    // ahead of sent ones.
+    const all = await failedScansGetAll(db);
+    if (all.length > FAILED_SCANS_KEEP) {
+      all.sort((a, b) => (a.id < b.id ? -1 : 1));
+      const excess = all.length - FAILED_SCANS_KEEP;
+      const sent = all.filter(r => r.uploaded === true && r.id !== rec.id);
+      const unsent = all.filter(r => r.uploaded !== true && r.id !== rec.id);
+      const drop = sent.concat(unsent).slice(0, excess);
+      await new Promise((resolve) => {
+        const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
+        drop.forEach(d => tx.objectStore(FAILED_SCANS_STORE).delete(d.id));
+        tx.oncomplete = resolve; tx.onerror = resolve; tx.onabort = resolve;
+      });
+    }
+    flushScanPhotos();
     return rec;
   } catch (e) { return null; }
 }
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => resolve(String(fr.result || "").replace(/^data:[^,]*,/, ""));
+    fr.onerror = () => reject(fr.error);
+    fr.readAsDataURL(blob);
+  });
+}
+// Upload queue. Oldest first, one at a time; a network failure stops the pass
+// and leaves the rest queued for the next trigger (save, app start, 'online').
+// A refusal from the relay (bad token, too big...) is retried a few times and
+// then the record is parked so it can't jam the queue forever. Completely
+// silent: the tech never sees any of this.
+const SCAN_PHOTO_MAX_REJECTS = 3;
+let scanPhotosFlushing = false;
+async function flushScanPhotos() {
+  if (!SCAN_PHOTO_RELAY || scanPhotosFlushing || !navigator.onLine) return;
+  scanPhotosFlushing = true;
+  try {
+    const db = await openFailedScansDb();
+    const pending = (await failedScansGetAll(db))
+      .filter(r => r && r.blob && r.uploaded !== true && !r.gaveUp)
+      .sort((a, b) => (a.id < b.id ? -1 : 1));
+    for (const rec of pending) {
+      if (!navigator.onLine) break;
+      const kind = rec.kind || "unreadable";
+      let data = null;
+      try {
+        const payload = {
+          token: SCAN_PHOTO_APP_TOKEN,
+          id: rec.id,
+          tech: rec.tech || getTechName() || "",
+          ts: rec.ts || "",
+          kind,
+          read: rec.read || "",
+          version: rec.version || APP_VERSION,
+          mime: rec.blob.type || "image/jpeg",
+          b64: await blobToBase64(rec.blob),
+        };
+        // String body = text/plain, so no CORS preflight (same as askAiAnswer).
+        const resp = await fetch(SCAN_PHOTO_RELAY, { method: "POST", body: JSON.stringify(payload) });
+        data = await resp.json();
+      } catch (e) { break; }   // offline / relay unreachable — try again later
+      if (data && data.ok) {
+        rec.uploaded = true; rec.uploadedAt = new Date().toLocaleString();
+        await failedScansPut(db, rec);
+        trackEvent("scan photo uploaded: " + kind + " " + rec.id);
+      } else if (data && data.error === "cap") {
+        break;                  // relay's daily cap — everything waits for tomorrow
+      } else {
+        rec.rejects = (rec.rejects || 0) + 1;
+        if (rec.rejects >= SCAN_PHOTO_MAX_REJECTS) rec.gaveUp = true;
+        await failedScansPut(db, rec);
+      }
+    }
+  } catch (e) { /* storage or relay trouble — never surfaces to the tech */ }
+  scanPhotosFlushing = false;
+}
+window.addEventListener("online", () => { flushScanPhotos(); });
 // Let the tech hand the photo off: native share sheet (Messages/email/etc.)
 // where supported, otherwise download the image so they can attach it manually.
 async function sendFailedScan(blob, rec) {
@@ -4839,15 +4979,31 @@ async function scanTagPhoto(file) {
     document.getElementById("scanModelInput").value = fields.model;
     document.getElementById("scanSerialInput").value = fields.serial;
     if (!fields.model) {
-      trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
+      const photoId = newScanPhotoId();
+      trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
       scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below.");
-      const rec = await saveFailedScan(file);
+      const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       const box = document.getElementById("scanResult");
-      box.innerHTML = `<div class="scan-id-card"><div class="card"><p>📷 Photo saved on this phone. If you can't get a clean scan, send it to Andy and he'll add the unit.</p><div class="scan-actions"><button class="primary-act" id="scanSendFail">📤 Send this photo to Andy</button></div></div></div>`;
+      // With the relay on, the photo goes to Andy by itself; the share button
+      // stays as a backup. Relay off = the v151 wording, unchanged.
+      const autoNote = SCAN_PHOTO_RELAY
+        ? (navigator.onLine
+          ? "📷 Photo sent to Andy automatically so he can add the unit. If you can't get a clean scan, enter the model number below."
+          : "📷 Photo saved — it will send to Andy automatically when you're back in signal. If you can't get a clean scan, enter the model number below.")
+        : "📷 Photo saved on this phone. If you can't get a clean scan, send it to Andy and he'll add the unit.";
+      box.innerHTML = `<div class="scan-id-card"><div class="card"><p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
       const btn = document.getElementById("scanSendFail");
       if (btn) btn.onclick = () => sendFailedScan(file, rec);
     } else {
-      renderScanResult(identifyModel(fields.model, fields.serial, fields.brandHint));
+      // A read that the library doesn't recognize is just as useful to Andy
+      // as an unreadable one — keep the picture and pair it with the
+      // "MODEL NOT IN LIBRARY" line through photoId.
+      const photoId = newScanPhotoId();
+      const info = identifyModel(fields.model, fields.serial, fields.brandHint, photoId);
+      renderScanResult(info);
+      if (info && !info.brand) {
+        saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: fields.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
+      }
     }
   } catch (err) {
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
@@ -5025,12 +5181,15 @@ function isKnownModelString(m) {
 // serial/brand — not just "nothing") so the office can see who's struggling, and
 // hand the tech over to the Tag Scanner, which has the save-photo / send-to-Andy
 // fallback and the brand ID that this screen doesn't.
-function maintScanNoModel(fields) {
+function maintScanNoModel(fields, file) {
   const raw = fields && fields.model ? String(fields.model).trim() : "";
+  const photoId = file ? newScanPhotoId() : "";
   trackEvent("maint scan - no model read" +
     (raw ? " | garbled read: " + raw : "") +
     (fields && fields.serial ? " | serial: " + fields.serial : "") +
-    (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
+    (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : "") +
+    (photoId ? " | photo: " + photoId : ""));
+  if (file) saveFailedScan(file, { id: photoId, kind: "maint-unreadable", read: raw || (fields && fields.serial ? "serial " + fields.serial : "") }).catch(() => {});
   const el = document.getElementById("maintScanStatus");
   if (!el) return;
   el.classList.remove("hidden");
@@ -5041,11 +5200,14 @@ function maintScanNoModel(fields) {
 }
 // The tech photographed the serial, not the model. Maintenance figures are keyed
 // to the model, so point them at it explicitly instead of the generic retry.
-function maintScanSerialOnly(fields) {
+function maintScanSerialOnly(fields, file) {
   const sn = (fields && (fields.serial || fields.model)) ? String(fields.serial || fields.model).trim() : "";
+  const photoId = file ? newScanPhotoId() : "";
   trackEvent("maint scan - serial not model" +
     (sn ? " | read: " + sn : "") +
-    (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : ""));
+    (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : "") +
+    (photoId ? " | photo: " + photoId : ""));
+  if (file) saveFailedScan(file, { id: photoId, kind: "maint-serial-only", read: sn }).catch(() => {});
   const el = document.getElementById("maintScanStatus");
   if (!el) return;
   el.classList.remove("hidden");
@@ -5064,12 +5226,16 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
     const scanned = (fields && fields.model) || "";
     const serialLike = scanned && looksLikeSerial(scanned) && !isKnownModelString(scanned);
     if (scanned && maintModelPlausible(scanned) && !serialLike) {
-      trackEvent("maint scan -> " + scanned);
-      maintApplyScannedModel(scanned);
+      const matched = maintApplyScannedModel(scanned);
+      // Read fine but no figures for it: that photo is a coverage gap for
+      // Andy, same as an unreadable one. Only appends to the existing line.
+      const photoId = matched ? "" : newScanPhotoId();
+      trackEvent("maint scan -> " + scanned + (matched ? "" : " | no figures | photo: " + photoId));
+      if (!matched) saveFailedScan(file, { id: photoId, kind: "maint-no-figures", read: scanned + (fields && fields.serial ? " / " + fields.serial : "") }).catch(() => {});
     } else if (serialLike || (fields && fields.serial)) {
-      maintScanSerialOnly(fields);
+      maintScanSerialOnly(fields, file);
     } else {
-      maintScanNoModel(fields);
+      maintScanNoModel(fields, file);
     }
   } catch (err) {
     maintScanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — type the model above instead.");
@@ -6175,7 +6341,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v178";
+const APP_VERSION = "v179";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -6344,6 +6510,9 @@ function startApp() {
 
   if (getTechName()) trackEvent("app opened");
   else showTechPicker();
+
+  // Any failed-scan photos still waiting on the phone go to Andy now.
+  try { flushScanPhotos(); } catch (e) {}
 
   // Only nudge a tech who has already picked their name — the picker overlay sits
   // above everything, so a pill fired underneath it would just be missed.
