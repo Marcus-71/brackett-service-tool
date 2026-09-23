@@ -48,12 +48,36 @@
  *     {"ok":true,"service":"brackett-scan-photos"}.
  *
  * Re-deploying after a code change: Deploy -> Manage deployments -> pencil ->
- * Version: New version -> Deploy. The /exec URL stays the same.
+ * Version: New version -> Deploy. The /exec URL stays the same. (That is all
+ * the sweep feature below needs — paste the new code, save, then do exactly
+ * that. It uses no new OAuth scope, so there is no re-consent step.)
  *
  * WIRE FORMAT (POST body, JSON, sent as text/plain so the browser skips the
  * CORS preflight — same trick as the Ask AI relay):
- *   { token, id, tech, ts, kind, read, version, mime, b64 }
- * Reply: { ok:true, name, fileId, dup? }  or  { ok:false, error }
+ *   Upload (the default — any body without an `action` field):
+ *     { token, id, tech, ts, kind, read, version, mime, b64 }
+ *     Reply: { ok:true, name, fileId, dup? }  or  { ok:false, error }
+ *   Sweep (see CLEANUP below):
+ *     { token, action:"sweep" }
+ *     Reply: { ok:true, action:"sweep", trashed:[{id,name}], failed:[{id,name,error}] }
+ *            or  { ok:false, error }
+ *
+ * CLEANUP (sweep)
+ * ---------------
+ * This account owns every photo it uploads, and in Drive only the OWNER can
+ * trash a file. The daily triage job runs on the work account, which has
+ * writer access to the folder: it can rename files but not trash them. So the
+ * convention is:
+ *   1. The triage job renames each finished photo so its name STARTS WITH the
+ *      literal prefix "RESOLVED_" (e.g. "RESOLVED_2026-09-23_101502_...jpg").
+ *   2. It then POSTs { token, action:"sweep" } to this relay.
+ *   3. sweepResolved_() lists the folder for RESOLVED_ files, re-checks the
+ *      prefix in JS (Drive's `name contains` is a token match, not a prefix
+ *      match), and marks each one trashed: true — at most 200 per call.
+ * Files go to Drive Trash, never a hard delete (Drive.Files.remove is never
+ * called), so anything swept by mistake can be restored from Trash for 30 days.
+ * Nothing outside the relay's own folder is ever listed or touched.
+ * sweepResolved() (no underscore) runs the same sweep from the editor.
  */
 
 var FOLDER_NAME = "Brackett Failed Scans";
@@ -77,6 +101,13 @@ function doPost(e) {
     var wantToken = props.getProperty("APP_TOKEN");
     if (wantToken && String(body.token || "") !== wantToken) {
       return json_({ ok: false, error: "bad token" });
+    }
+
+    // Cleanup request from the triage job (see CLEANUP in the header). No id /
+    // image / daily cap — it only trashes files already renamed RESOLVED_*.
+    if (body.action === "sweep") {
+      var swept = sweepResolved_(getFolder_(props));
+      return json_({ ok: true, action: "sweep", trashed: swept.trashed, failed: swept.failed });
     }
 
     var id = sanitize_(body.id, 40);
@@ -149,6 +180,62 @@ function setup() {
   if (!props.getProperty("APP_TOKEN")) {
     Logger.log("WARNING: script property APP_TOKEN is not set - the relay will accept any caller.");
   }
+}
+
+// ------------------------------------------------------------------- cleanup
+
+var RESOLVED_PREFIX = "RESOLVED_";
+var SWEEP_CAP       = 200;               // files trashed per sweep call
+
+/** Run from the editor: trashes RESOLVED_* files in the relay folder and logs the result. */
+function sweepResolved() {
+  var folderId = getFolder_(PropertiesService.getScriptProperties());
+  var res = sweepResolved_(folderId);
+  Logger.log("Sweep of folder " + folderId + ": trashed " + res.trashed.length +
+    ", failed " + res.failed.length);
+  Logger.log(JSON.stringify(res));
+}
+
+/**
+ * Moves every file in the folder whose name starts with RESOLVED_ to Drive
+ * Trash (recoverable for 30 days). Returns { trashed:[{id,name}],
+ * failed:[{id,name,error}] }. Only ever sets trashed:true — never a hard
+ * delete — and never looks outside the given folder. Stops at SWEEP_CAP.
+ */
+function sweepResolved_(folderId) {
+  // Collect first, trash second: trashing while paging shrinks the
+  // `trashed = false` result set under the page token, so later pages would
+  // skip files.
+  var targets = [];
+  var pageToken = null;
+  do {
+    var params = {
+      q: "'" + folderId + "' in parents and name contains '" + RESOLVED_PREFIX + "' and trashed = false",
+      fields: "nextPageToken,files(id,name)",
+      pageSize: 100
+    };
+    if (pageToken) params.pageToken = pageToken;
+    var res = Drive.Files.list(params);
+    var list = (res && res.files) || [];
+    for (var i = 0; i < list.length && targets.length < SWEEP_CAP; i++) {
+      var name = String(list[i].name || "");
+      // `name contains` matches tokens anywhere in the name; only a true prefix counts.
+      if (name.indexOf(RESOLVED_PREFIX) === 0) targets.push({ id: list[i].id, name: name });
+    }
+    pageToken = res && res.nextPageToken;
+  } while (pageToken && targets.length < SWEEP_CAP);
+
+  var trashed = [];
+  var failed = [];
+  for (var j = 0; j < targets.length; j++) {
+    try {
+      Drive.Files.update({ trashed: true }, targets[j].id);
+      trashed.push(targets[j]);
+    } catch (err) {
+      failed.push({ id: targets[j].id, name: targets[j].name, error: String(err && err.message || err) });
+    }
+  }
+  return { trashed: trashed, failed: failed };
 }
 
 // -------------------------------------------------------------------- helpers
