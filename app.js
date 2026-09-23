@@ -256,7 +256,8 @@ const SCREEN_TITLES = {
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
   diagnostics: () => openSymptomEditForm(null),
-  manuals: () => openManualEditForm({
+  manuals: () => openManualLibraryPicker({
+    q: manualsState.search || (manualsState.model && manualsState.model !== GENERAL_MODEL ? manualsState.model : ""),
     brand: manualsState.brand && manualsState.brand !== UNFILED_BRAND ? manualsState.brand : "",
     model: manualsState.model && manualsState.model !== GENERAL_MODEL ? manualsState.model : "",
   }),
@@ -2448,11 +2449,20 @@ async function renderManuals() {
   document.getElementById("manualBreadcrumb").classList.toggle("hidden", !!manualsState.search);
 
   // Search overrides folder browsing with a flat result list across everything.
+  // Model numbers match by prefix either way (a full scanned model finds its
+  // family manual, a few typed characters find every family starting with them).
   if (manualsState.search) {
-    const filtered = all.filter(m => textIncludes([m.brand, m.model, m.title, m.notes], manualsState.search))
-      .sort((a, b) => manualBrandOf(a).localeCompare(manualBrandOf(b)) || (a.title||"").localeCompare(b.title||""));
-    empty.classList.toggle("hidden", filtered.length !== 0);
-    for (const m of filtered) results.appendChild(buildManualCard(m));
+    const r = manualSearch(all, manualsState.search);
+    empty.classList.add("hidden");
+    if (r.list.length && r.closestTo) {
+      const n = document.createElement("div");
+      n.className = "maint-flag";
+      n.innerHTML = `<div class="maint-flag-title">No manual listed for ${escapeHtml(manualsState.search.trim())} exactly</div>These are the library manuals for models starting ${escapeHtml(r.closestTo)}. Check the series on the rating plate matches.`;
+      results.appendChild(n);
+    }
+    for (const m of r.list) results.appendChild(buildManualCard(m));
+    if (!r.list.length) results.appendChild(buildManualNotFound(manualsState.search));
+    manualScheduleMissLog(manualsState.search, r.list.length);
     return;
   }
 
@@ -2762,6 +2772,184 @@ document.getElementById("manualSearchInput").addEventListener("input", (e) => { 
 
 function seedIdOf(seed) { return "manual-seed-" + seed.file.split("/").pop().replace(/\.pdf$/i, ""); }
 
+// ------------------------------------------------------------
+// Model-number manual search. Techs type (or scan) whole or partial
+// model numbers — "EL296UH110XV60C", "DM96", "58TP0B" — which the
+// word search never matched, so they hit a dead end and got sent to
+// the phone's file picker. Every manual now answers to the model
+// tokens in its model/title (plus an optional seed `match` list),
+// matched by prefix in both directions.
+// ------------------------------------------------------------
+function manualNorm(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+const MANUAL_TOK_CACHE = new Map();
+function manualModelTokens(m) {
+  const key = (m.id || "") + "|" + (m.model || "") + "|" + (m.title || "");
+  let toks = MANUAL_TOK_CACHE.get(key);
+  if (toks) return toks;
+  const set = new Set();
+  for (const w of [m.model, m.title].filter(Boolean).join(" ").split(/[\s\/,;:()&+|]+/)) {
+    const t = manualNorm(w.replace(/\*.*$/, ""));          // "DV*PEC" is a wildcard family, not a prefix
+    if (t.length >= 4 && /[0-9]/.test(t) && /[A-Z]/.test(t) && !/^R\d{2,3}[A-Z]?$/.test(t)) set.add(t);
+  }
+  for (const w of m.match || []) { const t = manualNorm(w); if (t.length >= 3) set.add(t); }
+  toks = [...set];
+  MANUAL_TOK_CACHE.set(key, toks);
+  return toks;
+}
+// Score how well one manual answers a normalized model query (0 = no hit).
+function manualTokenScore(m, qn) {
+  let best = 0;
+  for (const t of manualModelTokens(m)) {
+    if (qn.length >= 3 && t.startsWith(qn)) best = Math.max(best, 10 + qn.length);       // typed the start of the model
+    else if (t.length >= 4 && qn.startsWith(t)) best = Math.max(best, 10 + t.length);    // scanned the whole model
+    else {
+      // Family names that differ from the tag only in a trailing letter or two
+      // ("EL296UHV" for a scanned EL296UH110XV60C) rank as the family manual.
+      let c = 0;
+      while (c < t.length && c < qn.length && t[c] === qn[c]) c++;
+      if (c >= 6 && c >= t.length - 2) best = Math.max(best, 10 + c);
+    }
+  }
+  return best;
+}
+// Returns { list, closestTo }. closestTo is set only when nothing matched the
+// whole query and the list is the nearest shorter model prefix that does.
+function manualSearch(all, q) {
+  const qn = manualNorm(q);
+  const scored = new Map();
+  const add = (m, s) => { if (s > (scored.get(m) || 0)) scored.set(m, s); };
+  for (const m of all) {
+    if (textIncludes([m.brand, m.model, m.title, m.notes], q)) add(m, 1);
+    if (qn.length >= 3) { const s = manualTokenScore(m, qn); if (s) add(m, s); }
+  }
+  // The Maintenance Figures library knows which family a full model belongs
+  // to (and its other names) — use those tokens too.
+  if (/[0-9]/.test(qn) && qn.length >= 4 && typeof maintLookup === "function" && typeof MAINT_SPECS !== "undefined") {
+    let ents = [];
+    try { ents = maintLookup(q, MAINT_SPECS).exact || []; } catch (e) {}
+    const fam = [...new Set(ents.flatMap(e => (e.match || []).map(manualNorm)).filter(t => t.length >= 4 && /[0-9]/.test(t)))];
+    if (fam.length) for (const m of all) {
+      const toks = manualModelTokens(m);
+      if (toks.some(t => fam.some(f => t.startsWith(f) || f.startsWith(t) && t.length >= 4))) add(m, 5);
+    }
+  }
+  let closestTo = "";
+  if (!scored.size && /[0-9]/.test(qn) && qn.length > 4) {
+    for (let L = qn.length - 1; L >= 4 && !scored.size; L--) {
+      const p = qn.slice(0, L);
+      for (const m of all) if (manualModelTokens(m).some(t => t.startsWith(p))) add(m, 2);
+      if (scored.size) closestTo = p + "…";
+    }
+  }
+  const list = [...scored.entries()]
+    .sort((a, b) => b[1] - a[1] || manualBrandOf(a[0]).localeCompare(manualBrandOf(b[0])) || (a[0].title || "").localeCompare(b[0].title || ""))
+    .map(x => x[0]);
+  return { list, closestTo };
+}
+// The seed index as catalog rows, synchronously (no IndexedDB) — for places
+// that just need to know whether the library has a manual for a model.
+function manualSeedRows() {
+  if (typeof MANUAL_SEEDS === "undefined") return [];
+  return MANUAL_SEEDS.map(s => ({ id: seedIdOf(s), brand: s.brand, model: s.model, title: s.title, notes: s.notes, match: s.match }));
+}
+function manualBrandForModel(q) {
+  const qn = manualNorm(q);
+  if (!qn || typeof MODEL_PATTERNS === "undefined") return "";
+  const p = MODEL_PATTERNS.find(x => x.re.test(qn));
+  return p ? p.brand : "";
+}
+// Open the Manuals screen already searching for a model.
+function openManualsForModel(q) {
+  manualsState.search = String(q || "").trim();
+  manualsState.brand = null; manualsState.model = null;
+  const inp = document.getElementById("manualSearchInput");
+  if (inp) inp.value = manualsState.search;
+  showScreen("manuals");
+}
+
+function buildManualNotFound(q) {
+  const box = document.createElement("div");
+  box.className = "manual-notfound";
+  const brand = manualBrandForModel(q);
+  const all = (typeof MANUAL_SEEDS !== "undefined") ? MANUAL_SEEDS : [];
+  const brandKey = brand ? brand.split(/[\s\/]/)[0].toLowerCase() : "";
+  const folder = brandKey ? [...new Set(all.map(s => s.brand))].find(b => (b || "").toLowerCase().startsWith(brandKey)) : "";
+  box.innerHTML = `
+    <div class="manual-notfound-title">No manual for ${escapeHtml(q.trim())} in the library yet</div>
+    <div class="manual-notfound-body">Try just the first 4-6 characters of the model. This search has been logged so the office can add the manual.</div>
+    <div class="manual-notfound-actions">
+      ${folder ? `<button type="button" class="primary" data-act="brand">Browse all ${escapeHtml(folder)} manuals</button>` : ""}
+      <button type="button" data-act="request">Ask the office for it</button>
+    </div>`;
+  const b = box.querySelector('[data-act="brand"]');
+  if (b) b.onclick = () => {
+    manualsState.search = ""; manualsState.brand = folder; manualsState.model = null;
+    document.getElementById("manualSearchInput").value = "";
+    closeModal();
+    if (currentScreen === "manuals") renderManuals(); else showScreen("manuals");
+  };
+  box.querySelector('[data-act="request"]').onclick = () => {
+    closeModal();
+    document.getElementById("rq-type").value = "Missing manual";
+    document.getElementById("rq-model").value = q.trim();
+    showScreen("request");
+  };
+  return box;
+}
+
+// Log searches that find nothing (once each, after the tech stops typing) so
+// the daily triage can go get the missing manual.
+let manualMissTimer = null;
+const manualMissLogged = new Set();
+function manualScheduleMissLog(q, count) {
+  clearTimeout(manualMissTimer);
+  const key = manualNorm(q);
+  if (count || key.length < 3 || manualMissLogged.has(key)) return;
+  manualMissTimer = setTimeout(() => {
+    manualMissLogged.add(key);
+    trackEvent("manual not found: " + q.trim().slice(0, 40));
+  }, 2000);
+}
+
+// The + on Manuals: pick from the shared library (GitHub-hosted, downloads
+// on tap). Adding a PDF that's already on the phone is the fallback only.
+function openManualLibraryPicker(prefill) {
+  const p = prefill || {};
+  const modal = document.getElementById("modal");
+  modal.innerHTML = `
+    <h2>Get a manual</h2>
+    <div class="sub">Search the Brackett library by brand or model — even part of the model number. Tap one to download it to this phone; it works offline after that.</div>
+    <input id="libPickInput" class="search-input" type="search" inputmode="search" autocapitalize="characters" autocomplete="off" placeholder="e.g. EL296, 58TP0B, DM96SN0603" value="${escapeHtml(p.q || "")}">
+    <div id="libPickResults" class="lib-pick-results"></div>
+    <div class="modal-actions">
+      <button id="closeModalBtn">Close</button>
+    </div>
+    <button type="button" id="libPickOwn" class="lib-pick-own">Have your own PDF saved on this phone? Add it instead</button>`;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  document.getElementById("libPickOwn").onclick = () => openManualEditForm({ brand: p.brand, model: p.model });
+  const input = document.getElementById("libPickInput");
+  const out = document.getElementById("libPickResults");
+  const draw = async () => {
+    const q = input.value;
+    out.innerHTML = "";
+    if (manualNorm(q).length < 2 && q.trim().length < 3) {
+      out.innerHTML = `<div class="lib-pick-hint">${(typeof MANUAL_SEEDS !== "undefined" ? MANUAL_SEEDS.length : 0).toLocaleString()} manuals in the library.</div>`;
+      return;
+    }
+    const r = manualSearch(await manualCatalog(), q);
+    if (input.value !== q) return;                     // a newer keystroke already redrew
+    if (r.closestTo) out.insertAdjacentHTML("beforeend", `<div class="lib-pick-hint">Nothing listed for that exact model — closest: models starting ${escapeHtml(r.closestTo)}</div>`);
+    for (const m of r.list.slice(0, 40)) out.appendChild(buildManualCard(m));
+    if (r.list.length > 40) out.insertAdjacentHTML("beforeend", `<div class="lib-pick-hint">${r.list.length - 40} more — type more of the model to narrow it.</div>`);
+    if (!r.list.length) out.appendChild(buildManualNotFound(q));
+    manualScheduleMissLog(q, r.list.length);
+  };
+  input.addEventListener("input", draw);
+  draw();
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+  setTimeout(() => input.focus(), 50);
+}
+
 // Seeds may point at a manufacturer CDN instead of a file in this repo (the
 // Lennox library is hosted on Adobe Scene7 and serves CORS *), which keeps
 // hundreds of MB of PDFs out of the repo while still working on-demand.
@@ -2782,10 +2970,10 @@ async function manualCatalog() {
       if (rec) {
         rec.seedFile = seed.file; rec.downloaded = true;
         // keep listing metadata fresh from the index even for stored copies
-        rec.brand = seed.brand; rec.model = seed.model; rec.title = seed.title; rec.notes = seed.notes;
+        rec.brand = seed.brand; rec.model = seed.model; rec.title = seed.title; rec.notes = seed.notes; rec.match = seed.match;
         out.push(rec); localById.delete(id);
       } else {
-        out.push({ id, brand: seed.brand, model: seed.model, title: seed.title, notes: seed.notes, filename: seed.filename || seed.file.split("/").pop(), seedFile: seed.file, downloaded: false });
+        out.push({ id, brand: seed.brand, model: seed.model, title: seed.title, notes: seed.notes, match: seed.match, filename: seed.filename || seed.file.split("/").pop(), seedFile: seed.file, downloaded: false });
       }
     }
   }
@@ -5160,6 +5348,9 @@ function renderScanResult(info) {
     : "";
   const ocrBanner = info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
+  // How many library manuals answer to this exact model (or its family).
+  const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
+  const nModelManuals = modelManuals.closestTo ? 0 : modelManuals.list.length;
   box.innerHTML = `
     <div class="scan-id-card">
       <div class="card">
@@ -5171,6 +5362,7 @@ function renderScanResult(info) {
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
           ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
+          ${nModelManuals ? `<button class="primary-act" id="scanGoModelManuals">📄 Manuals for this model (${nModelManuals})</button>` : ""}
           ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
           ${(info.brand === "Generac" && typeof genFamilyForModel === "function" && genFamilyForModel(info.model)) ? `<button class="primary-act" id="scanGoGen">🔌 Open in Generators</button>` : ""}
           ${scanWebLinks(info)}
@@ -5194,6 +5386,8 @@ function renderScanResult(info) {
     document.getElementById("diagSearchInput").value = "";
     showScreen("diagnostics");
   };
+  const goModelManuals = document.getElementById("scanGoModelManuals");
+  if (goModelManuals) goModelManuals.onclick = () => openManualsForModel(info.model);
   const goManuals = document.getElementById("scanGoManuals");
   if (goManuals) goManuals.onclick = () => {
     manualsState.brand = manualsBrand; manualsState.model = null; manualsState.search = "";
@@ -6455,7 +6649,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v188";
+const APP_VERSION = "v189";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -6481,9 +6675,14 @@ function getTechName() {
   try { return localStorage.getItem(TECH_KEY) || ""; } catch (e) { return ""; }
 }
 
+// Only the names on TECH_NAMES get in (Andy, v189). A name typed in through the
+// old "Not listed?" box is blocked too; the link on the stop screen lets a real
+// employee forget that name and pick theirs from the list.
 function isBlockedTech(name) {
   const n = String(name || "").trim().toLowerCase();
-  return !!n && BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === n);
+  if (!n) return false;
+  if (BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === n)) return true;
+  return !TECH_NAMES.some((t) => t.trim().toLowerCase() === n);
 }
 
 // The Call Log is the service manager's own tool — the tile only shows on
@@ -6564,7 +6763,7 @@ function showAccessRemoved() {
       <img src="icons/icon-192.png" alt="" class="tech-picker-logo">
       <h2>Access removed</h2>
       <p>This app is for current Brackett Heating &amp; Air employees. If you think this is a mistake, please contact the office.</p>
-      <button type="button" class="tech-picker-link" id="notMyPhoneBtn">This isn't my phone</button>
+      <button type="button" class="tech-picker-link" id="notMyPhoneBtn">This isn't my phone / pick my name from the list</button>
     </div>`;
   document.body.appendChild(ov);
   document.body.style.overflow = "hidden";
@@ -6585,10 +6784,7 @@ function showTechPicker() {
       <h2>Whose phone is this?</h2>
       <p>One-time setup — tap your name so the office knows who's using the app. You'll never see this again.</p>
       <div class="tech-picker-names">${nameBtns}</div>
-      <div class="tech-picker-other">
-        <input id="techOtherInput" type="text" autocomplete="name" placeholder="Not listed? Type your name">
-        <button id="techOtherBtn">That's me</button>
-      </div>
+      <p class="tech-picker-note">Not on the list? This app is for Brackett employees only. Ask the office to add you.</p>
     </div>`;
   document.body.appendChild(ov);
   const pick = (name) => {
@@ -6604,10 +6800,6 @@ function showTechPicker() {
     trackEvent("app opened");
   };
   ov.querySelectorAll(".tech-name-btn").forEach((b) => { b.onclick = () => pick(b.dataset.name); });
-  ov.querySelector("#techOtherBtn").onclick = () => {
-    const v = ov.querySelector("#techOtherInput").value.trim();
-    if (v) pick(v);
-  };
 }
 
 async function renderVersionFooter() {

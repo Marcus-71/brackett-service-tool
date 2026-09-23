@@ -772,12 +772,25 @@ function renderMaint() {
     });
   });
 
+  results.querySelectorAll("[data-maint-manuals]").forEach(btn => {
+    btn.addEventListener("click", () => openManualsForModel(btn.dataset.maintManuals));
+  });
+
   results.querySelectorAll("[data-maint-tab]").forEach(btn => {
     btn.addEventListener("click", () => {
       maintState.tab = btn.dataset.maintTab;
       renderMaint();
     });
   });
+}
+
+// What to search Manuals for from an entry: the tech's own query when it was a
+// model number, else the entry's first model-number match token.
+function maintManualQuery(entry) {
+  const q = (maintState.query || "").trim();
+  if (/[0-9]/.test(q) && q.replace(/[^A-Za-z0-9]/g, "").length >= 4) return q;
+  const tok = (entry.match || []).find(t => /[0-9]/.test(t) && t.replace(/[^A-Za-z0-9]/g, "").length >= 4);
+  return tok || entry.model;
 }
 
 function maintBody(entry) {
@@ -823,5 +836,6 @@ function maintBody(entry) {
           </table>
         </div>`).join("")}
       <div class="maint-source">${entry.source} · Always confirm against the rating plate on the unit in front of you.</div>
+      ${typeof openManualsForModel === "function" ? `<button type="button" class="maint-manuals-btn" data-maint-manuals="${maintEsc(maintManualQuery(entry))}">📄 Manuals for this unit</button>` : ""}
     </div>`;
 }
