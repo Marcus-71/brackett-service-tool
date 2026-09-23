@@ -567,6 +567,56 @@ function maintMatchScore(entry, q) {
   return best;
 }
 
+// v185: the 4-char fuzzy rule crosses EQUIPMENT TYPES. "EL19KPV" (a Lennox heat
+// pump) shares "el19" with the ML195 furnace entry, "EL180UH" (a furnace) with
+// the XP25 heat pump, so a tech who scanned a heat pump could open gas-furnace
+// figures. An entry is an EXACT match when the query (or an OCR re-read) starts
+// with one of its whole model tokens; anything else is only a look-alike. For
+// look-alikes we ask the Tag Scanner's MODEL_PATTERNS what kind of equipment the
+// model is, and hide entries of a different kind.
+const MAINT_EQUIP_COMPAT = {
+  "Gas Furnace": ["Gas Furnace"],
+  "Condenser/Heat Pump": ["Condenser", "Heat Pump", "Condenser/Heat Pump"],
+  "Air Handler": ["Air Handler", "Electric Furnace"],
+  "Electric Furnace": ["Electric Furnace", "Air Handler"],
+  "Mini-Split": ["Mini-Split"]
+};
+function maintEsc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+}
+function maintIsExact(entry, q) {
+  const needles = [maintNormalize(q)].concat(maintQueryCandidates(q)).filter(Boolean);
+  const parts = (s) => (s || "").split(" (")[0].split("/");
+  const models = (entry.match || []).concat(parts(entry.model)).map(maintNormalize).filter(t => t.length >= 4);
+  const brands = parts(entry.brand).map(maintNormalize).filter(Boolean);
+  const tokens = models.concat(brands.flatMap(b => models.map(m => b + m)));
+  return needles.some(n => tokens.some(t => n.startsWith(t)));
+}
+function maintQueryEquip(q) {
+  if (typeof MODEL_PATTERNS === "undefined") return null;
+  const raw = (q || "").toUpperCase().replace(/\s+/g, "");
+  if (!raw) return null;
+  let cands = [raw];
+  try { if (typeof ocrModelCandidates === "function") cands = cands.concat(ocrModelCandidates(raw)); } catch (e) { /* keep raw */ }
+  for (const c of cands) {
+    const p = MODEL_PATTERNS.find(x => x.re.test(c));
+    if (p) return p.equipment || null;
+  }
+  return null;
+}
+// One place that decides what a model-number query shows. exact: entries that
+// carry the model. approx: same-kind look-alikes (only when nothing is exact).
+// hidden: how many look-alikes were dropped for being a different kind.
+function maintLookup(q, list) {
+  const pool = list || MAINT_SPECS.filter(e => maintMatches(e, q));
+  const exact = pool.filter(e => maintIsExact(e, q));
+  if (exact.length) return { exact, approx: [], equip: null, hidden: 0 };
+  const equip = maintQueryEquip(q);
+  const ok = equip && MAINT_EQUIP_COMPAT[equip];
+  const approx = ok ? pool.filter(e => ok.includes(e.equip)) : pool;
+  return { exact: [], approx, equip, hidden: pool.length - approx.length };
+}
+
 function renderMaint() {
   const results = document.getElementById("maintResults");
   const empty = document.getElementById("maintEmptyState");
@@ -605,7 +655,23 @@ function renderMaint() {
   // weaker fuzzy hits are noise — drop them. Word/brand queries ("furnace",
   // "heat pump", "Nordyne", "GMVC") skip ranking and list everything as before.
   const qn = maintNormalize(maintState.query);
-  if (/[0-9]/.test(qn)) {
+  let notice = "";
+  if (/[0-9]/.test(qn) && list.length) {
+    // v185: exact model matches only; otherwise same-kind look-alikes, clearly
+    // labelled, and never a different kind of equipment (see maintLookup).
+    const lk = maintLookup(maintState.query, list);
+    const q = maintEsc(maintState.query.trim());
+    if (lk.exact.length) {
+      list = lk.exact;
+    } else {
+      list = lk.approx;
+      const kind = lk.equip ? maintEsc(lk.equip.toLowerCase()) + " " : "";
+      notice = list.length
+        ? `<div class="maint-flag"><div class="maint-flag-title">Not an exact match for ${q}</div>No figures for this model yet. These are the closest ${kind}entries by model prefix, and they may be a different series with different numbers. Check the series on the rating plate before you use any figure.</div>`
+        : `<div class="maint-flag"><div class="maint-flag-title">No figures for ${q} yet</div>The only look-alike entries are a different kind of equipment, so they're hidden. Check Manuals, or use Request Info.</div>`;
+    }
+  }
+  if (/[0-9]/.test(qn) && list.length) {
     const scored = list.map((e, i) => ({ e, i, s: maintMatchScore(e, maintState.query) }));
     const top = scored.reduce((m, x) => Math.max(m, x.s), 0);
     if (top >= 5) {
@@ -616,13 +682,13 @@ function renderMaint() {
   }
 
   if (!list.length) {
-    results.innerHTML = "";
-    empty.classList.remove("hidden");
+    results.innerHTML = notice;
+    empty.classList.toggle("hidden", !!notice);
     return;
   }
   empty.classList.add("hidden");
 
-  results.innerHTML = list.map((entry, i) => {
+  results.innerHTML = notice + list.map((entry, i) => {
     const id = entry.brand + "|" + entry.model;
     const isOpen = maintState.open === id;
     return `

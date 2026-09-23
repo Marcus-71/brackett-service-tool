@@ -5141,7 +5141,10 @@ function renderScanResult(info) {
   const codeCount = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment).length : 0;
   // Share across with Maintenance Figures: show the link only when this exact
   // model actually resolves to a maintenance entry (uses the same forgiving match).
-  const hasMaint = typeof MAINT_SPECS !== "undefined" && typeof maintMatches === "function" && !!info.model && MAINT_SPECS.some(e => maintMatches(e, info.model));
+  // v185: exact entries, or same-kind look-alikes (the list labels those); never
+  // a different kind of equipment (see maintLookup in maint.js).
+  const hasMaint = typeof MAINT_SPECS !== "undefined" && typeof maintLookup === "function" && !!info.model &&
+    (lk => lk.exact.length > 0 || lk.approx.length > 0)(maintLookup(info.model));
   const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
   // v168: a serial-shaped "model" gets a pointer back to the plate instead of
@@ -5229,9 +5232,14 @@ function maintApplyScannedModel(model) {
   if (input) input.value = model;
   if (typeof maintState !== "undefined") { maintState.query = model; maintState.open = null; }
   if (typeof renderMaint === "function") renderMaint();
-  const matched = typeof MAINT_SPECS !== "undefined" && typeof maintMatches === "function" &&
-    MAINT_SPECS.some(x => maintMatches(x, model));
-  maintScanStatus(matched ? null : ("Read " + model + " — no maintenance figures for that model yet. Check Manuals, or use Request Info."));
+  // v185: only an EXACT model match counts as "has figures". Look-alikes of the
+  // same kind still show (labelled in the list), but the scan is logged and its
+  // photo saved as a coverage gap so the daily triage researches the real model.
+  const lk = typeof maintLookup === "function" ? maintLookup(model) : { exact: [], approx: [] };
+  const matched = lk.exact.length > 0;
+  maintScanStatus(matched ? null : lk.approx.length
+    ? ("Read " + model + " — no exact figures for that model yet. Showing the closest look-alikes; check the series on the plate.")
+    : ("Read " + model + " — no maintenance figures for that model yet. Check Manuals, or use Request Info."));
   return matched;
 }
 // A real HVAC model number always carries at least one digit (tonnage, BTU,
@@ -6445,7 +6453,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v184";
+const APP_VERSION = "v185";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
