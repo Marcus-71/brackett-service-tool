@@ -4842,9 +4842,12 @@ function detectBrandInText(up) {
 function extractTagFields(text) {
   // OCR reads a printed 1 as "!" often enough to cut a model in half
   // ("59SCSBOBOE! 71116"); no plate prints a "!", so treat it as the 1 it is.
-  const up = text.toUpperCase().replace(/!/g, "1");
+  // v185: same idea for "@" - a stamped or embossed 0 comes back "@" inside a
+  // model ("59SC5B@8OE14"), which cut the model at that point. Only when it sits
+  // between letters/digits, so "RLA 14.1 @ 230V" is left alone.
+  const up = text.toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10");
   const lines = up.split(/\n+/).map(l => l.trim()).filter(Boolean);
-  let model = "", serial = "", serialSource = "";
+  let model = "", serial = "", serialSource = "", stackedModel = "", modelSource = "";
   // "(?:NUMBER|NO...)?" explicitly eats the filler word in "MODEL NUMBER" /
   // "SERIAL NUMBER" / "SERIAL NO." so the capture lands on the actual value —
   // otherwise the word NUMBER itself gets captured, rejected, and the real
@@ -4865,8 +4868,39 @@ function extractTagFields(text) {
   // HVAC model number does; a label word like SERIAL/TYPE/MODEL never does).
   const TAG_NONVALUE = /^(?:SERIAL|SERIES|MODEL|MODELE|NUMBER|NUM|TYPE|MFG|MFR|MFD|SER|S\/?N|M\/?N|NO)\.?$/;
   for (const line of lines) {
-    if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) model = m[1]; }
-    if (!serial) { const m = line.match(serialLabel); if (m && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+    if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { model = m[1]; modelSource = "label"; } }
+    // v185: every serial carries a digit. A misread label word ("NUMEER",
+    // "ARCOAIRE" after SER...) is not a serial - keep looking on later lines.
+    if (!serial) { const m = line.match(serialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+  }
+  // v185: label on its own line with the value on the line BELOW - a stacked
+  // "SERIAL NO." / "0716J65571" sticker, or a two-column header row
+  // "MODEL NO.   SERIAL NO." with both values underneath (Trane, York). The
+  // same-line labels above find nothing on those plates.
+  if (!model || !serial) {
+    const LABEL_WORDS = /MODELE|MODEL|M0DEL|MOD|M\/N|SERIAL|S[EÈÉ]RIE|SER|S\/N|5\/N|NUMBER|NUM|N[O0°º]|DE|#|[.:\/|°º*-]/g;
+    const valueTok = (t) => t.replace(/^[^A-Z0-9]+|[^A-Z0-9]+$/g, "");
+    for (let i = 0; i + 1 < lines.length; i++) {
+      const line = lines[i];
+      const mAt = line.search(/(?:^|[^A-Z])(?:MODEL|M0DEL|M\/N|MOD\.)/), sAt = line.search(/(?:^|[^A-Z])(?:SERIAL|S\/N|SER\.)/);
+      if (mAt < 0 && sAt < 0) continue;
+      // label-only line: nothing with a digit left once the label words go
+      if (/[A-Z0-9]*[0-9][A-Z0-9]*/.test(line.replace(LABEL_WORDS, " ").replace(/\b[A-Z]{1,2}\b/g, " "))) continue;
+      // the value(s) must START the next line (after OCR specks), so "MFG DATE
+      // 02/2016" under a label is not taken for its value
+      const raw = lines[i + 1].split(/\s+/).map(valueTok);
+      while (raw.length && raw[0].length <= 2) raw.shift();
+      const toks = raw.slice(0, 2).filter(t => /^[A-Z0-9-]{5,24}$/.test(t) && /[0-9]/.test(t) && !TAG_NONVALUE.test(t));
+      if (!toks.length || toks[0] !== raw[0]) continue;
+      let mv = "", sv = "";
+      if (mAt >= 0 && sAt >= 0) { if (mAt < sAt) { mv = toks[0]; sv = toks[1] || ""; } else { sv = toks[0]; mv = toks[1] || ""; } }
+      else if (mAt >= 0) mv = toks[0];
+      else sv = toks[0];
+      // used only if no library-shaped token turns up (below): a misread header
+      // can put the serial under MODEL
+      if (!model && !stackedModel && mv && (/[A-Z]/.test(mv) || mv.length >= 8)) stackedModel = mv;
+      if (!serial && sv && sv.length >= 6) { serial = sv; serialSource = "label"; }
+    }
   }
   // OCR routinely drops or mangles the slash in "M/N:" / "S/N:". A sideways
   // Carrier label read as "MN: 59SCSBOBOE1…" and "SIN: 0621ASO2TS", and both
@@ -4879,8 +4913,8 @@ function extractTagFields(text) {
   const weakSerialLabel = /(?:^|[^A-Z0-9])[S5]\s?[\/|\\1IL]?\s?N\s*[:;]\s*([A-Z0-9][A-Z0-9-]{5,24})/;
   if (!model || !serial) {
     for (const line of lines) {
-      if (!model) { const m = line.match(weakModelLabel); if (m && /[0-9]/.test(m[1]) && /[A-Z]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) model = m[1]; }
-      if (!serial) { const m = line.match(weakSerialLabel); if (m && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+      if (!model) { const m = line.match(weakModelLabel); if (m && /[0-9]/.test(m[1]) && /[A-Z]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { model = m[1]; modelSource = "label"; } }
+      if (!serial) { const m = line.match(weakSerialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
     }
   }
   // No labels found — look for any token matching a known model pattern.
@@ -4890,9 +4924,11 @@ function extractTagFields(text) {
       const cleaned = t.replace(/[./]/g, "");
       // Every real model carries a digit. Without this a plain plate WORD could
       // hit a pattern prefix: "NAMEPLATE" OCR'd as "PLATE" matched Mitsubishi ^PLA.
-      if (/[0-9]/.test(cleaned) && MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; break; }
+      if (/[0-9]/.test(cleaned) && MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; modelSource = "pattern"; break; }
     }
   }
+  if (!model && stackedModel) { model = stackedModel; modelSource = "label"; }
+  else if (model && stackedModel && model === stackedModel.replace(/[./]/g, "")) modelSource = "label";   // the token sits right under a MODEL label
   // Serial fallback: many brands (Goodman/Daikin/Amana) use an all-digit
   // serial — grab the longest 8-16 digit run that isn't part of the model.
   if (!serial) {
@@ -4915,7 +4951,9 @@ function extractTagFields(text) {
   // serialSource: "label" = read off an S/N / SERIAL label; "digits" = just the
   // longest bare digit run on the photo, which can be any number (part no.,
   // barcode caption) — never treat that alone as proof the tech shot the serial.
-  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, brandHint: detectBrandInText(up) };
+  // modelSource (v185): "pattern" = no label, just a token that fits a
+  // MODEL_PATTERNS prefix - weaker evidence, which ocrTagFields weighs.
+  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, modelSource, brandHint: detectBrandInText(up) };
 }
 
 let tessWorkerPromise = null;
@@ -4996,59 +5034,496 @@ function enhanceForOcr(src, scale) {
   return out;
 }
 
-// OCR a tag photo and pull model/serial out of it. Reads upright first, and
-// if no model number turns up tries the photo turned 90, 270 and 180 degrees
-// before giving up. Returns the first pass that yields a model, else the best
-// of the failed passes (so a serial found upright is not thrown away).
-//
-// v183: if all four normal passes miss, retry in Tesseract's SPARSE-TEXT mode
-// (PSM 11). The normal mode (SINGLE_BLOCK, this worker's default) treats the
-// whole photo as one text block, so pipes, wiring and barcodes around a small
-// label drown it out. Sparse mode hunts for text anywhere: a sideways Carrier
-// label that read as garbage in normal mode came back "MN: 59SC5B080E…".
-// Then one enhanced 2x pass at whichever turn read most confidently. Only runs
-// on scans that were already failing, so good scans cost nothing extra.
+// ---- v185 tag OCR ----------------------------------------------------------
+// Measured on a 240-image synthetic rating-plate benchmark plus the real
+// failed-scan photos (scratch/ocr/bench - not shipped). Model read right: 35% ->
+// 58% of plates; wrong model reported: 29% -> 12%; model reported off a photo
+// with no data plate: 8% -> 0%. What changed, and why:
+//  * A pass no longer "wins" just because SOME string landed in the model slot.
+//    A photo read at the wrong turn produces garbage, and garbage that fit a
+//    loose MODEL_PATTERNS entry was returned as the model. Candidates are now
+//    graded by how specific their library family is (ocrPatternBits /
+//    ocrMatchTier) and by Tesseract's word confidence.
+//  * The model line is re-read zoomed from the ORIGINAL full-resolution photo
+//    (a 1600 px copy of a 4000 px photo leaves small print a few pixels tall)
+//    and the reads vote; a zoomed read also recovers a model cut short.
+//  * O and I after a library prefix become 0 and 1, and a prefix that reaches
+//    a specific family after one or two lookalike swaps is fixed (the scan
+//    result then shows the "check the tag" note) - see ocrCleanModel.
+// Good photos still stop after the first pass (plus one small re-read when the
+// first read is not already clean and confident).
+
+// Full-resolution bitmap kept alongside the 1600 px working copy, so the model
+// line can be re-read from the camera's own pixels.
+async function loadPhotoForOcr(file) {
+  const bmp = await createImageBitmap(file);
+  const maxDim = 1600;
+  const scale = Math.min(1, maxDim / Math.max(bmp.width, bmp.height));
+  const base = document.createElement("canvas");
+  base.width = Math.round(bmp.width * scale);
+  base.height = Math.round(bmp.height * scale);
+  base.getContext("2d").drawImage(bmp, 0, 0, base.width, base.height);
+  return { bmp, base, scale };
+}
+
+function ocrLibraryPattern(s) {
+  for (const p of MODEL_PATTERNS) if (p.re.test(s)) return p;
+  return null;
+}
+
+// How much a MODEL_PATTERNS entry pins down, in bits: how unlikely a random
+// run of letters/digits is to match it (a literal = log2(36), [0-9] = 1.8,
+// [A-Z] = 0.5, optional parts 0, alternatives = the weakest one).
+// ^59(SC|SP)[0-9] = 22 bits, ^4TT[RXBZV][0-9] = 20, but ^Z[FHJR][0-9] = 10 and
+// ^[89][0-9]{2}[A-Z]{1,2}[0-9]? = 8 - loose ones like those matched OCR
+// garbage from a photo read at the wrong turn ("ZH0905" off a capacitor,
+// "999LS1STSE" off an upside-down plate).
+function ocrPatternBits(p) {
+  if (p._ocrBits !== undefined) return p._ocrBits;
+  const src = p.re.source, LIT = Math.log2(36);
+  let i = 0;
+  const classBits = (body) => {
+    const neg = body[0] === "^", b = neg ? body.slice(1) : body, set = new Set();
+    for (let k = 0; k < b.length; k++) {
+      if (b[k] === "\\") { if (b[k + 1] === "d") for (let c = 48; c < 58; c++) set.add(String.fromCharCode(c)); k++; }
+      else if (b[k + 1] === "-" && k + 2 < b.length) { for (let c = b.charCodeAt(k); c <= b.charCodeAt(k + 2); c++) set.add(String.fromCharCode(c)); k += 2; }
+      else set.add(b[k]);
+    }
+    const n = [...set].filter(c => /[A-Z0-9]/.test(c)).length;
+    return Math.log2(36 / Math.max(1, Math.min(36, neg ? 36 - n : n)));
+  };
+  const seq = () => {
+    const alts = [];
+    let cur = 0;
+    while (i < src.length && src[i] !== ")") {
+      const c = src[i];
+      if (c === "|") { alts.push(cur); cur = 0; i++; continue; }
+      if (c === "^" || c === "$") { i++; continue; }
+      let bits;
+      if (c === "(") {
+        if (src[i + 1] === "?" && (src[i + 2] === "!" || src[i + 2] === "=")) {   // lookahead: adds nothing
+          for (let depth = 0; i < src.length; i++) { if (src[i] === "\\") { i++; continue; } if (src[i] === "(") depth++; else if (src[i] === ")" && --depth === 0) { i++; break; } }
+          continue;
+        }
+        i += src[i + 1] === "?" && src[i + 2] === ":" ? 3 : 1;
+        bits = seq(); i++;
+      } else if (c === "[") {
+        let j = i + 1;
+        while (j < src.length && src[j] !== "]") j += src[j] === "\\" ? 2 : 1;
+        bits = classBits(src.slice(i + 1, j)); i = j + 1;
+      } else if (c === "\\") { bits = src[i + 1] === "d" ? Math.log2(3.6) : /[A-Za-z]/.test(src[i + 1]) ? 0 : 1; i += 2; }
+      else { bits = /[A-Z0-9]/.test(c) ? LIT : c === "." ? 0 : 1; i++; }
+      const q = src[i];
+      if (q === "?" || q === "*") { bits = 0; i++; }
+      else if (q === "+") i++;
+      else if (q === "{") { const j = src.indexOf("}", i); bits *= parseInt(src.slice(i + 1, j), 10) || 0; i = j + 1; }
+      if (src[i] === "?") i++;
+      cur += bits;
+    }
+    alts.push(cur);
+    return Math.min(...alts);
+  };
+  p._ocrBits = seq();
+  return p._ocrBits;
+}
+// How far a library hit can be trusted on its own. 2: a specific family
+// (15+ bits) - ends the scan. 1: a looser family (11-15 bits: ^Y[HZ][JGEF],
+// ^YC[JGESD]...) - needs a confident read or an agreeing zoomed re-read.
+// 0: a loose pattern - treated like any unknown model.
+function ocrMatchTier(p) {
+  const bits = ocrPatternBits(p);
+  return bits >= 15 ? 2 : bits >= 11 ? 1 : 0;
+}
+
+// Glyphs Tesseract swaps on plate fonts, both ways (a stamped 8 read as B, a
+// condensed S read as 8 - Carrier's "59SC5B" came back "598C5B" - and a 9 read
+// as S - Lennox "EL297" came back "EL2ST").
+const OCR_CONFUSABLE = { "0": "OD", O: "0D", D: "0O", Q: "0O", "1": "IL7", I: "1L", L: "1I", T: "7", "7": "1T", "2": "Z", Z: "2", "5": "S", S: "589", "8": "BS", B: "8", "6": "G", G: "6", "9": "S" };
+
+// Library look-up that forgives OCR lookalikes in the family prefix: up to two
+// swaps among the first 7 characters, accepted only on a tier-2 family match
+// (ocrMatchTier), so garbage can't be rewritten into a loose pattern.
+function ocrFuzzyLibrary(s) {
+  const n = Math.min(7, s.length), pos = [];
+  for (let i = 0; i < n; i++) if (OCR_CONFUSABLE[s[i]]) pos.push(i);
+  const tries = [];
+  for (const i of pos) for (const ch of OCR_CONFUSABLE[s[i]]) tries.push([[i, ch]]);
+  for (let a = 0; a < pos.length; a++) for (let b = a + 1; b < pos.length; b++)
+    for (const c1 of OCR_CONFUSABLE[s[pos[a]]]) for (const c2 of OCR_CONFUSABLE[s[pos[b]]]) tries.push([[pos[a], c1], [pos[b], c2]]);
+  for (const edits of tries) {
+    const c = s.split("");
+    for (const [i, ch] of edits) c[i] = ch;
+    const cand = c.join(""), p = ocrLibraryPattern(cand);
+    // each swap spends ~5 bits of the family's evidence; keep 12 in hand
+    if (!p || ocrMatchTier(p) < 2 || ocrPatternBits(p) - 5 * edits.length < 12) continue;
+    const len = cand.match(p.re)[0].length;
+    if (len >= 4 && (edits.length === 1 || len >= 5)) return { cand, p, len };
+  }
+  return null;
+}
+
+// Clean an OCR'd model against the library:
+//  * O and I after the family prefix become 0 and 1. Makers leave O and I out
+//    of model numbers after the prefix because they read as 0 and 1
+//    (ML196UHO70P60A, R97VA040172IMSA). The prefix itself is never touched:
+//    MS7-CO, AOU... carry a real O there.
+//  * a prefix that only reaches the library after a lookalike swap is swapped
+//    (fixedFrom = the raw read, so the scan result can say "check the tag").
+//  * tier: how far the family match can be trusted (ocrMatchTier).
+// Used on OCR output only; identifyModel() on typed models is unchanged.
+function ocrCleanModel(raw) {
+  const s = (raw || "").toUpperCase().replace(/\s+/g, "");
+  if (!s) return { model: "", lib: null, exact: false, tier: 0 };
+  const tail = (str, n) => str.slice(0, n) + str.slice(n).replace(/O/g, "0").replace(/I/g, "1");
+  let p = ocrLibraryPattern(s);
+  if (p) return { model: tail(s, s.match(p.re)[0].length), lib: p, exact: true, tier: ocrMatchTier(p) };
+  if (s.length >= 6 && /[0-9]/.test(s)) {
+    for (const cand of ocrModelCandidates(s)) {
+      p = ocrLibraryPattern(cand);
+      // the same digit-for-letter re-read identifyModel() makes (O->0, S->5...)
+      if (!p) continue;
+      const n = cand.match(p.re)[0].length;
+      let edits = 0;
+      for (let k = 0; k < n; k++) if (cand[k] !== s[k]) edits++;
+      const bits = ocrPatternBits(p) - 5 * edits;
+      const t = bits >= 12 ? ocrMatchTier(p) : bits >= 8 ? Math.min(1, ocrMatchTier(p)) : 0;
+      if (t >= 1) return { model: tail(cand.slice(0, n) + s.slice(n), n), lib: p, exact: false, tier: t, fixedFrom: s };
+    }
+    const f = ocrFuzzyLibrary(s);
+    if (f) return { model: tail(f.cand, f.len), lib: f.p, exact: false, tier: 2, fixedFrom: s };
+  }
+  return { model: s, lib: null, exact: false, tier: 0 };
+}
+
+// A non-library read has to at least look like a model number. A serial-shaped
+// read is kept on purpose: it drives the "that's the serial, scan the model"
+// hint (looksLikeSerial / maintLooksLikeSerial).
+function ocrPlausibleModel(s) {
+  if (looksLikeSerial(s) || maintLooksLikeSerial(s)) return true;
+  if (s.length < 5 || s.length > 22) return false;
+  if (!/[0-9]/.test(s) || !/[A-Z]/.test(s)) return false;
+  if (/([A-Z])\1\1/.test(s)) return false;          // "SEZ2FEEEEREIC"
+  return true;
+}
+
+// The Tesseract words that make up the model string: their lowest confidence
+// and their bounding box (in the recognized canvas's pixels).
+function ocrModelWords(data, raw) {
+  const key = (raw || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!key) return null;
+  let conf = 101, box = null, n = 0;
+  for (const w of data.words || []) {
+    const t = (w.text || "").toUpperCase().replace(/!/g, "1").replace(/@/g, "0").replace(/[^A-Z0-9]/g, "");
+    if (t.length < 3 || !(key.includes(t) || t.includes(key))) continue;
+    n++;
+    conf = Math.min(conf, w.confidence || 0);
+    const b = w.bbox;
+    box = box ? { x0: Math.min(box.x0, b.x0), y0: Math.min(box.y0, b.y0), x1: Math.max(box.x1, b.x1), y1: Math.max(box.y1, b.y1) } : { ...b };
+  }
+  return n ? { conf, box } : null;
+}
+
+function ocrEditDistance(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+
+// Grayscale + 1%/99% contrast stretch (by hand: no ctx.filter on older iPhones).
+function ocrGrayStretch(canvas) {
+  const ctx = canvas.getContext("2d");
+  const img = ctx.getImageData(0, 0, canvas.width, canvas.height), d = img.data;
+  const hist = new Uint32Array(256), n = d.length / 4;
+  for (let i = 0; i < d.length; i += 4) { const y = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) | 0; d[i] = y; hist[y]++; }
+  let lo = 0, hi = 255, acc = 0;
+  for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc > n * 0.01) { lo = i; break; } }
+  acc = 0;
+  for (let i = 255; i >= 0; i--) { acc += hist[i]; if (acc > n * 0.01) { hi = i; break; } }
+  const k = 255 / Math.max(16, hi - lo);
+  for (let i = 0; i < d.length; i += 4) d[i] = d[i + 1] = d[i + 2] = Math.max(0, Math.min(255, (d[i] - lo) * k));
+  ctx.putImageData(img, 0, 0);
+  return canvas;
+}
+
+// Re-read the model line from the full-resolution photo. box is in the pixels
+// of the pass canvas (the 1600 px copy scaled by passScale, then turned deg
+// degrees clockwise by rotateCanvas) as Tesseract reported it: in its own
+// straightened frame when rotateAuto turned the page by rad radians.
+async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, straighten) {
+  const { bmp, scale } = photo;
+  const k = scale * passScale;
+  const w = photo.base.width * passScale, h = photo.base.height * passScale;   // pass canvas size BEFORE rotation
+  const pw = deg === 90 || deg === 270 ? h : w, ph = deg === 90 || deg === 270 ? w : h;   // pass canvas size
+  const hTxt = box.y1 - box.y0;
+  // Generous to the right: OCR often splits a long model ("59SCSBOBOE! 71116"),
+  // and only the first piece is in box.
+  const x0 = box.x0 - hTxt * 1.5, y0 = box.y0 - hTxt * 0.6, x1 = box.x1 + Math.max(hTxt * 8, (box.x1 - box.x0) * 0.6), y1 = box.y1 + hTxt * 0.6;
+  // straightened frame -> pass canvas: turn back by -rad about the centre
+  const cs = Math.cos(-rad || 0), sn = Math.sin(-rad || 0);
+  const unskew = ([u, v]) => [pw / 2 + (u - pw / 2) * cs - (v - ph / 2) * sn, ph / 2 + (u - pw / 2) * sn + (v - ph / 2) * cs];
+  // pass canvas -> unrotated 1600 px copy (undo rotateCanvas)
+  const unrot = ([u, v]) => deg === 90 ? [v, h - u] : deg === 180 ? [w - u, h - v] : deg === 270 ? [w - v, u] : [u, v];
+  const pts = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].map(unskew).map(unrot).map(([x, y]) => [x / k, y / k]);
+  const sx = Math.max(0, Math.min(...pts.map(p => p[0]))), sy = Math.max(0, Math.min(...pts.map(p => p[1])));
+  const ex = Math.min(bmp.width, Math.max(...pts.map(p => p[0]))), ey = Math.min(bmp.height, Math.max(...pts.map(p => p[1])));
+  if (ex - sx < 8 || ey - sy < 8) return null;
+  const glyph = hTxt / k;                          // text height in original pixels
+  const f = Math.max(0.5, Math.min(4, (glyphPx || 44) / Math.max(1, glyph)));
+  const crop = document.createElement("canvas");
+  crop.width = Math.max(1, Math.round((ex - sx) * f)); crop.height = Math.max(1, Math.round((ey - sy) * f));
+  if (crop.width * crop.height > 6e6) return null;
+  const cx = crop.getContext("2d");
+  cx.imageSmoothingQuality = "high";
+  cx.drawImage(bmp, sx, sy, ex - sx, ey - sy, 0, 0, crop.width, crop.height);
+  const line = ocrGrayStretch(deg ? rotateCanvas(crop, deg) : crop);
+  // PSM 6 (a block), not 7 (one line): the crop always catches slivers of the
+  // lines above and below, and single-line mode then reads garbage (TG8S040B12MP11
+  // came back "ToasM0BIMPH1" at PSM 7, exact at PSM 6). Passed per call
+  // (tesseract.js applies it to this recognize only), so the shared worker's
+  // settings are never disturbed. rotateAuto straightens a line shot at an angle.
+  const { data } = await worker.recognize(line, straighten ? { tessedit_pageseg_mode: "6", rotateAuto: true } : { tessedit_pageseg_mode: "6" });
+  return data;
+}
+
+// Pick the model out of a zoomed line read: a labelled value first, else the
+// token closest to what the full-photo pass read.
+function ocrModelFromLine(data, prev) {
+  const text = (data && data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10");
+  const f = extractTagFields(text);
+  const toks = text.split(/[^A-Z0-9./-]+/).map(t => t.replace(/^[./-]+|[./-]+$/g, "")).filter(t => t.length >= 4 && /[0-9]/.test(t));
+  // distance to what the full-photo pass read; a read that starts the same way
+  // and runs on is the full model the first pass cut short ("EL297" ->
+  // "EL297UHO70XE36B-02"), so only its first prev.length characters count
+  const dist = (t) => Math.min(ocrEditDistance(t, prev), t.length > prev.length ? ocrEditDistance(t.slice(0, prev.length), prev) : 99);
+  const near = Math.max(1, Math.min(3, prev.length / 3));
+  let pick = f.model ? f.model.toUpperCase() : "";
+  if (!pick || dist(pick) > near) {
+    let bestD = 99;
+    for (const t of toks) { const dd = dist(t); if (dd < bestD || (dd === bestD && t.length > pick.length)) { bestD = dd; pick = t; } }
+    if (bestD > near) pick = "";
+  }
+  if (!pick) return null;
+  const w = ocrModelWords(data, pick);
+  return { raw: pick, conf: w ? w.conf : (data.confidence || 0) };
+}
+
+// OCR a tag photo and pull model/serial out of it. Pass order follows v183 -
+// upright, then turned 90/270/180, then Tesseract's SPARSE-TEXT mode (PSM 11:
+// pipes, wiring and barcodes around a small label drown the normal
+// SINGLE_BLOCK mode) at each turn, then an enhanced 2x pass at whichever turn
+// read most confidently - with these v185 changes:
+//  * the SINGLE_BLOCK passes level the page first (Tesseract's rotateAuto);
+//  * what stops the scan is a candidate the app can trust (ocrMatchTier plus
+//    Tesseract's word confidence), not just any string in the model slot;
+//  * the model line is re-read zoomed from the full-resolution photo and the
+//    reads vote;
+//  * when a whole pass finds nothing, its longest model-shaped words are
+//    zoomed into (small print comes back garbled at 1600 px);
+//  * one Sauvola-binarized pass at the best turn before the enhanced pass.
+// Returns the chosen pass's fields, else the best of the failed passes (so a
+// serial found upright is not thrown away) with the model left empty.
 async function ocrTagFields(file, onStatus) {
-  const base = await preprocessPhoto(file);
+  const photo = await loadPhotoForOcr(file);
+  const base = photo.base;
   const worker = await getTessWorker(onStatus);
-  let best = null;
+  let best = null, bestCand = null, lastConf = 0;
+  const probes = [];
   // Prefer a failed pass that read the serial off its LABEL over one that only
   // found a bare digit run.
   const rank = (f) => (f.serial ? (f.serialSource === "label" ? 2 : 1) : 0);
   const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; };
-  const read = async (canvas) => {
-    const { data } = await worker.recognize(canvas);
+  // Longer reads of the same family win: "EL297" off a sideways Lennox sticker
+  // is the start of EL297UH070XE36B, not the model.
+  const score = (c) => (c.tier === 2 ? (c.exact ? 200 : 150) : c.tier === 1 ? 100 : c.lib ? 50 : 0) + c.conf + 2 * Math.min(16, c.model.length);
+  // A library family read in under 7 characters is almost always a model cut
+  // short, so it cannot end the scan by itself (tier 1 at most).
+  const mkCand = (from, clean, conf, extra) => ({ ...from, model: clean.model, lib: clean.lib, exact: clean.exact, tier: clean.lib ? (clean.model.length < 7 ? Math.min(1, clean.tier) : clean.tier) : -1, fixedFrom: clean.fixedFrom, conf, ...extra });
+  // One full-photo pass. opts: extra per-call Tesseract settings (tesseract.js
+  // applies them to this recognize only, so the shared worker is undisturbed).
+  // rad: any extra turn already applied to canvas (0 here; rotateAuto's own
+  // turn comes back in data.rotateRadians).
+  const read = async (canvas, opts, deg, passScale, event, rad) => {
+    const { data } = await worker.recognize(canvas, opts);
+    const turn = (rad || 0) + (data.rotateRadians || 0);
+    // Model-shaped words, for a zoomed look if no pass finds a model.
+    for (const w of data.words || []) {
+      const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9-]/g, "");
+      if (t.length >= 7 && t.length <= 22 && t.length >= (w.text || "").length - 2 && /[A-Z]/.test(t) && w.bbox.y1 - w.bbox.y0 >= 6)
+        probes.push({ t, conf: w.confidence || 0, box: w.bbox, rad: turn, deg, passScale, event });
+    }
     const fields = extractTagFields(data.text || "");
     fields.text = data.text || "";
     fields.confidence = data.confidence || 0;
+    keep(fields);
+    lastConf = fields.confidence;
+    if (!fields.model) {
+      // No labelled model and no exact library token: a word that reaches a
+      // specific family only after a lookalike fix ("N4AG42BKA") is still
+      // worth a zoomed second look - as a tier-1 candidate, so it needs a
+      // confident or agreeing re-read to count.
+      let pick = null;
+      for (const w of data.words || []) {
+        const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9-]/g, "");
+        if (t.length < 7 || !/[0-9]/.test(t) || (w.confidence || 0) < 30) continue;
+        const cl = ocrCleanModel(t);
+        if (cl.lib && cl.tier === 2 && (!pick || t.length > pick.t.length)) pick = { t, cl, w };
+      }
+      if (!pick) return null;
+      const c = mkCand({ fields, box: pick.w.bbox, rad: turn, deg, passScale, event }, { ...pick.cl, tier: 1 }, pick.w.confidence || 0);
+      if (!bestCand || score(c) > score(bestCand)) bestCand = c;
+      return c;
+    }
+    const clean = ocrCleanModel(fields.model);
+    if (!clean.lib && !ocrPlausibleModel(clean.model)) return null;
+    const w = ocrModelWords(data, fields.model);
+    // No MODEL label and only a loose or short family match - "ZH09/0S" off
+    // an upside-down "24V COIL", "Q31SN" off an upside-down "LISTED": not a
+    // candidate unless read very confidently.
+    if (fields.modelSource === "pattern" && (clean.tier <= 0 || (clean.tier === 1 && clean.model.length < 7)) && (w ? w.conf : 0) < 90) return null;
+    const c = mkCand({ fields, box: w && w.box, rad: turn, deg, passScale, event }, clean, w ? w.conf : fields.confidence);
+    if (!bestCand || score(c) > score(bestCand)) bestCand = c;
+    return c;
+  };
+  // Zoomed re-read(s) of a candidate's model line from the full-resolution
+  // photo. Agreement confirms the read; a zoomed read that EXTENDS it recovers a
+  // model the full-photo pass cut short (GMES920404 -> GMES920404CN); any other
+  // disagreement gets a third read at a different zoom and the reads vote.
+  const confirm = async (c) => {
+    if (!c.box) return { c, agree: false };
+    const zoomRead = async (size, auto) => {
+      let data = null;
+      try { data = await ocrZoomLine(worker, photo, c.box, c.rad, c.deg, c.passScale, size, auto); } catch (e) { data = null; }
+      const z = data && ocrModelFromLine(data, c.model);
+      if (!z) return null;
+      const zc = ocrCleanModel(z.raw);
+      if (!zc.lib && !ocrPlausibleModel(zc.model)) return null;
+      return mkCand(c, zc, z.conf, { zoomed: true });
+    };
+    const z1 = await zoomRead(44, true);
+    if (!z1) return { c, agree: false };
+    if (z1.model === c.model) return { c: { ...c, conf: Math.max(c.conf, z1.conf) }, agree: true };
+    if (z1.tier >= 1 && z1.model.length > c.model.length && z1.model.startsWith(c.model)) return { c: z1, agree: false };
+    const z2 = await zoomRead(30, false);
+    const reads = [c, z1, z2].filter(Boolean);
+    for (let i = 0; i < reads.length; i++) for (let j = i + 1; j < reads.length; j++)
+      // two zoomed reads agreeing on a non-library string must not replace a
+      // library read ("TMOVO060C12MP11" twice vs TM9V060C12MP1)
+      if (reads[i].model === reads[j].model && reads[i].tier >= c.tier) return { c: { ...reads[i], conf: Math.max(reads[i].conf, reads[j].conf) }, agree: true };
+    // three same-length reads, no two identical: character-by-character majority
+    if (reads.length === 3 && reads.every(r => r.model.length === c.model.length)) {
+      let v = "";
+      for (let k = 0; k < c.model.length; k++) { const ch = reads.map(r => r.model[k]); v += ch[1] === ch[2] ? ch[1] : ch[0]; }
+      const vc = ocrCleanModel(v);
+      if (vc.lib && vc.tier >= c.tier) return { c: mkCand(c, { ...vc, fixedFrom: vc.fixedFrom || c.fixedFrom }, c.conf, { zoomed: v !== c.model }), agree: false };
+    }
+    // still split: the full-photo read stands unless a zoomed read is clearly better
+    const bestZ = reads.slice(1).sort((a, b) => score(b) - score(a))[0];
+    return { c: score(bestZ) > score(c) + 20 ? bestZ : c, agree: false };
+  };
+  const finish = (c) => {
+    const fields = c.fields;
+    fields.model = c.model;
+    if (c.fixedFrom) {
+      fields.ocrFixedFrom = c.fixedFrom;
+      if (c.lib) trackEvent("OCR re-read: " + c.fixedFrom + " -> " + c.model + " = " + c.lib.brand + " " + c.lib.series);
+    }
+    // Serial from the same pass when it has one; else a LABELLED serial seen on
+    // another pass (the model and serial are not always legible on one turn).
+    if (!fields.serial && best && best.serialSource === "label" && best.serial) { fields.serial = best.serial; fields.serialSource = "label"; }
+    if (c.event) trackEvent(c.event);
+    if (c.zoomed) trackEvent("tag model fixed by zoom re-read");
     return fields;
   };
-  for (const deg of [0, 90, 270, 180]) {
-    if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
-    const fields = await read(deg ? rotateCanvas(base, deg) : base);
-    if (fields.model) { if (deg) trackEvent("tag read after rotate " + deg); return fields; }
-    keep(fields);
-  }
+  // Decide after each pass. A specific library family ends the scan; a looser
+  // one needs a confident read or an agreeing zoomed re-read; anything else
+  // must be read very confidently or confirmed by the zoom.
+  const settle = async (c) => {
+    if (!c) return null;
+    // a clean, confident read of a specific family needs no second look
+    if (c.tier === 2 && c.exact && c.conf >= 85) return c;
+    if (c.tier === 2) return (await confirm(c)).c;
+    if (c.conf >= 90) return c;
+    const r = await confirm(c);
+    // Two reads agreeing is not enough on its own: an upside-down "24V COIL"
+    // reads "ZH09/0S" both times. It has to be a decently confident read too.
+    if (r.c.tier === 2 || (r.c.tier === 1 && (r.agree || r.c.conf >= 60)) || (r.agree && r.c.conf >= 70) || r.c.conf >= 85) return r.c;
+    if (score(r.c) > score(bestCand)) bestCand = r.c;
+    return null;
+  };
+  // Zoom into the longest model-shaped words seen so far; only a read that
+  // lands on a trusted library family counts (a garbled word is not a model).
+  const probeWords = async (max) => {
+    // letters AND digits first (a model), then length: "N4AG42BKA" before "REFRIGERANT"
+    const mixed = (t) => (/[0-9].*[0-9]/.test(t) && /[A-Z].*[A-Z]/.test(t) ? 1 : 0);
+    const list = probes.splice(0).sort((a, b) => mixed(b.t) - mixed(a.t) || b.t.length - a.t.length || b.conf - a.conf).slice(0, max);
+    for (const p of list) {
+      let data = null;
+      try { data = await ocrZoomLine(worker, photo, p.box, p.rad, p.deg, p.passScale, 44, true); } catch (e) { data = null; }
+      if (!data) continue;
+      const text = (data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10");
+      const f = extractTagFields(text);
+      const toks = [f.model, ...text.split(/[^A-Z0-9-]+/)].filter(t => t && t.length >= 5 && /[0-9]/.test(t));
+      for (const t of toks) {
+        const zc = ocrCleanModel(t);
+        const w = ocrModelWords(data, t), conf = w ? w.conf : (data.confidence || 0);
+        if (!(zc.tier === 2 || (zc.lib && zc.tier === 1 && conf >= 70))) continue;
+        const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
+        fields.text = (fields.text || "") + " \n" + (data.text || "");
+        if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
+        return mkCand({ fields, box: null, deg: p.deg, event: "tag read by zoom on a word" + (p.deg ? " rotate " + p.deg : "") }, zc, conf);
+      }
+    }
+    return null;
+  };
   try {
-    await worker.setParameters({ tessedit_pageseg_mode: "11" });
+    // SINGLE_BLOCK passes at each turn, upright first, with rotateAuto:
+    // Tesseract measures the text-line angle and levels the page before
+    // reading. Benchmark (40 photos, one tab): 38% -> 56% of plates read with
+    // the v185 changes; levelling costs ~0.2 s on a photo read first time but
+    // saves passes on tilted ones. (Levelling only when a plain pass failed
+    // measured slower AND worse: 44%.)
     let bestDeg = 0, bestConf = -1;
     for (const deg of [0, 90, 270, 180]) {
-      if (onStatus) onStatus("Taking a closer look at the label...");
-      const fields = await read(deg ? rotateCanvas(base, deg) : base);
-      if (fields.model) { trackEvent("tag read by sparse pass" + (deg ? " rotate " + deg : "")); return fields; }
-      keep(fields);
-      if (fields.confidence > bestConf) { bestConf = fields.confidence; bestDeg = deg; }
+      if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
+      const done = await settle(await read(deg ? rotateCanvas(base, deg) : base, { rotateAuto: true }, deg, 1, deg ? "tag read after rotate " + deg : "", 0));
+      if (done) return finish(done);
+      if (lastConf > bestConf) { bestConf = lastConf; bestDeg = deg; }
     }
+    if (onStatus) onStatus("Taking a closer look at the label...");
+    let z = await probeWords(3);
+    if (z) return finish(z);
+    // Sparse passes stay un-straightened: on real cluttered photos the angle
+    // estimate went wrong and lost reads the plain sparse pass made.
+    for (const deg of [0, 90, 270, 180]) {
+      const done = await settle(await read(deg ? rotateCanvas(base, deg) : base, { tessedit_pageseg_mode: "11" }, deg, 1, "tag read by sparse pass" + (deg ? " rotate " + deg : ""), 0));
+      if (done) return finish(done);
+    }
+    z = await probeWords(3);
+    if (z) return finish(z);
     if (onStatus) onStatus("Zooming in on the label...");
+    // Tesseract's own Sauvola (local) threshold at the turn that read best:
+    // shadows and glare across a plate defeat the default global threshold.
+    const done1 = await settle(await read(bestDeg ? rotateCanvas(base, bestDeg) : base, { rotateAuto: true, thresholding_method: "2" }, bestDeg, 1, "tag read by local-threshold pass" + (bestDeg ? " rotate " + bestDeg : ""), 0));
+    if (done1) return finish(done1);
     const big = enhanceForOcr(base, 2);
-    const fields = await read(bestDeg ? rotateCanvas(big, bestDeg) : big);
-    if (fields.model) { trackEvent("tag read by enhanced pass" + (bestDeg ? " rotate " + bestDeg : "")); return fields; }
-    keep(fields);
+    const done2 = await settle(await read(bestDeg ? rotateCanvas(big, bestDeg) : big, { tessedit_pageseg_mode: "11" }, bestDeg, 2, "tag read by enhanced pass" + (bestDeg ? " rotate " + bestDeg : ""), 0));
+    if (done2) return finish(done2);
+    z = await probeWords(3);
+    if (z) return finish(z);
+    // Nothing settled: the best candidate still wins if it is a trusted library
+    // model or was read with reasonable confidence; weak garbage is not reported.
+    // (a short read - under 7 characters - needs a very confident read)
+    const bc = bestCand;
+    if (bc && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || bc.conf >= 80)) return finish(bc);
   } finally {
     // The worker is shared by every later scan: put it back in its default
     // layout mode (SINGLE_BLOCK = "6", per the bundled worker), not PSM 3.
     try { await worker.setParameters({ tessedit_pageseg_mode: "6" }); } catch (e) {}
+    try { if (photo.bmp.close) photo.bmp.close(); } catch (e) {}
   }
+  if (best) best.model = "";
   return best;
 }
 
@@ -5287,6 +5762,10 @@ async function scanTagPhoto(file) {
       // "MODEL NOT IN LIBRARY" line through photoId.
       const photoId = newScanPhotoId();
       const info = identifyModel(fields.model, fields.serial, fields.brandHint, photoId);
+      // v185: the OCR already swapped lookalike characters to reach the library
+      // (ocrCleanModel) - show the same "check the tag" note identifyModel's own
+      // re-read gets.
+      if (info && info.brand && !info.ocrGuess && fields.ocrFixedFrom) { info.ocrGuess = true; info.rawModel = fields.ocrFixedFrom; }
       renderScanResult(info);
       if (info && !info.brand) {
         saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: fields.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
