@@ -4638,9 +4638,11 @@ function detectBrandInText(up) {
 
 // Pull likely model/serial strings out of raw OCR text.
 function extractTagFields(text) {
-  const up = text.toUpperCase();
+  // OCR reads a printed 1 as "!" often enough to cut a model in half
+  // ("59SCSBOBOE! 71116"); no plate prints a "!", so treat it as the 1 it is.
+  const up = text.toUpperCase().replace(/!/g, "1");
   const lines = up.split(/\n+/).map(l => l.trim()).filter(Boolean);
-  let model = "", serial = "";
+  let model = "", serial = "", serialSource = "";
   // "(?:NUMBER|NO...)?" explicitly eats the filler word in "MODEL NUMBER" /
   // "SERIAL NUMBER" / "SERIAL NO." so the capture lands on the actual value —
   // otherwise the word NUMBER itself gets captured, rejected, and the real
@@ -4662,14 +4664,31 @@ function extractTagFields(text) {
   const TAG_NONVALUE = /^(?:SERIAL|SERIES|MODEL|MODELE|NUMBER|NUM|TYPE|MFG|MFR|MFD|SER|S\/?N|M\/?N|NO)\.?$/;
   for (const line of lines) {
     if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) model = m[1]; }
-    if (!serial) { const m = line.match(serialLabel); if (m && !TAG_NONVALUE.test(m[1])) serial = m[1]; }
+    if (!serial) { const m = line.match(serialLabel); if (m && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+  }
+  // OCR routinely drops or mangles the slash in "M/N:" / "S/N:". A sideways
+  // Carrier label read as "MN: 59SCSBOBOE1…" and "SIN: 0621ASO2TS", and both
+  // values were thrown away because only the slashed form counted. Weaker second
+  // tier, used only when the strict labels found nothing: the slash-less and
+  // misread forms (MN, MIN, M1N, M|N / SN, SIN, S1N, 5IN), and only when a colon
+  // follows, the way plates print them. "MIN:" is also minimum-volts on some
+  // plates, so a weak-label model must look like one: 6+ chars, letters AND digits.
+  const weakModelLabel = /(?:^|[^A-Z0-9])M\s?[\/|\\1IL]?\s?N\s*[:;]\s*([A-Z0-9][A-Z0-9.\/-]{5,24})/;
+  const weakSerialLabel = /(?:^|[^A-Z0-9])[S5]\s?[\/|\\1IL]?\s?N\s*[:;]\s*([A-Z0-9][A-Z0-9-]{5,24})/;
+  if (!model || !serial) {
+    for (const line of lines) {
+      if (!model) { const m = line.match(weakModelLabel); if (m && /[0-9]/.test(m[1]) && /[A-Z]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) model = m[1]; }
+      if (!serial) { const m = line.match(weakSerialLabel); if (m && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+    }
   }
   // No labels found — look for any token matching a known model pattern.
   if (!model) {
     const tokens = up.match(/[A-Z0-9./-]{5,24}/g) || [];
     for (const t of tokens) {
       const cleaned = t.replace(/[./]/g, "");
-      if (MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; break; }
+      // Every real model carries a digit. Without this a plain plate WORD could
+      // hit a pattern prefix: "NAMEPLATE" OCR'd as "PLATE" matched Mitsubishi ^PLA.
+      if (/[0-9]/.test(cleaned) && MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; break; }
     }
   }
   // Serial fallback: many brands (Goodman/Daikin/Amana) use an all-digit
@@ -4689,9 +4708,12 @@ function extractTagFields(text) {
       .filter(t => /^[0-9]{8,16}$/.test(t))
       .filter(t => !model.includes(t))
       .sort((a, b) => b.length - a.length);
-    if (best.length) serial = best[0];
+    if (best.length) { serial = best[0]; serialSource = "digits"; }
   }
-  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), brandHint: detectBrandInText(up) };
+  // serialSource: "label" = read off an S/N / SERIAL label; "digits" = just the
+  // longest bare digit run on the photo, which can be any number (part no.,
+  // barcode caption) — never treat that alone as proof the tech shot the serial.
+  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, brandHint: detectBrandInText(up) };
 }
 
 let tessWorkerPromise = null;
@@ -4749,22 +4771,81 @@ function rotateCanvas(src, deg) {
   return out;
 }
 
+// Last-resort pass for small or dim labels: grayscale + contrast stretch, then
+// drawn at 2x. Tesseract reads small print far better with bigger glyphs. The
+// contrast is done per-pixel by hand because canvas ctx.filter is missing on
+// older iPhones. A dim Lennox barcode sticker went from nothing to "EL297".
+function enhanceForOcr(src, scale) {
+  const g = document.createElement("canvas");
+  g.width = src.width; g.height = src.height;
+  const gx = g.getContext("2d");
+  gx.drawImage(src, 0, 0);
+  const img = gx.getImageData(0, 0, g.width, g.height), d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const y = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    d[i] = d[i + 1] = d[i + 2] = Math.max(0, Math.min(255, (y - 128) * 1.8 + 128));
+  }
+  gx.putImageData(img, 0, 0);
+  const out = document.createElement("canvas");
+  out.width = Math.round(src.width * scale); out.height = Math.round(src.height * scale);
+  const ox = out.getContext("2d");
+  ox.imageSmoothingQuality = "high";
+  ox.drawImage(g, 0, 0, out.width, out.height);
+  return out;
+}
+
 // OCR a tag photo and pull model/serial out of it. Reads upright first, and
 // if no model number turns up tries the photo turned 90, 270 and 180 degrees
 // before giving up. Returns the first pass that yields a model, else the best
 // of the failed passes (so a serial found upright is not thrown away).
+//
+// v183: if all four normal passes miss, retry in Tesseract's SPARSE-TEXT mode
+// (PSM 11). The normal mode (SINGLE_BLOCK, this worker's default) treats the
+// whole photo as one text block, so pipes, wiring and barcodes around a small
+// label drown it out. Sparse mode hunts for text anywhere: a sideways Carrier
+// label that read as garbage in normal mode came back "MN: 59SC5B080E…".
+// Then one enhanced 2x pass at whichever turn read most confidently. Only runs
+// on scans that were already failing, so good scans cost nothing extra.
 async function ocrTagFields(file, onStatus) {
   const base = await preprocessPhoto(file);
   const worker = await getTessWorker(onStatus);
   let best = null;
-  for (const deg of [0, 90, 270, 180]) {
-    if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
-    const canvas = deg ? rotateCanvas(base, deg) : base;
+  // Prefer a failed pass that read the serial off its LABEL over one that only
+  // found a bare digit run.
+  const rank = (f) => (f.serial ? (f.serialSource === "label" ? 2 : 1) : 0);
+  const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; };
+  const read = async (canvas) => {
     const { data } = await worker.recognize(canvas);
     const fields = extractTagFields(data.text || "");
     fields.text = data.text || "";
+    fields.confidence = data.confidence || 0;
+    return fields;
+  };
+  for (const deg of [0, 90, 270, 180]) {
+    if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
+    const fields = await read(deg ? rotateCanvas(base, deg) : base);
     if (fields.model) { if (deg) trackEvent("tag read after rotate " + deg); return fields; }
-    if (!best || (fields.serial && !best.serial)) best = fields;
+    keep(fields);
+  }
+  try {
+    await worker.setParameters({ tessedit_pageseg_mode: "11" });
+    let bestDeg = 0, bestConf = -1;
+    for (const deg of [0, 90, 270, 180]) {
+      if (onStatus) onStatus("Taking a closer look at the label...");
+      const fields = await read(deg ? rotateCanvas(base, deg) : base);
+      if (fields.model) { trackEvent("tag read by sparse pass" + (deg ? " rotate " + deg : "")); return fields; }
+      keep(fields);
+      if (fields.confidence > bestConf) { bestConf = fields.confidence; bestDeg = deg; }
+    }
+    if (onStatus) onStatus("Zooming in on the label...");
+    const big = enhanceForOcr(base, 2);
+    const fields = await read(bestDeg ? rotateCanvas(big, bestDeg) : big);
+    if (fields.model) { trackEvent("tag read by enhanced pass" + (bestDeg ? " rotate " + bestDeg : "")); return fields; }
+    keep(fields);
+  } finally {
+    // The worker is shared by every later scan: put it back in its default
+    // layout mode (SINGLE_BLOCK = "6", per the bundled worker), not PSM 3.
+    try { await worker.setParameters({ tessedit_pageseg_mode: "6" }); } catch (e) {}
   }
   return best;
 }
@@ -5162,7 +5243,11 @@ function maintModelPlausible(m) {
 // mostly-numeric chars; serials are long date-coded runs (252140595,
 // 2410E22019). Techs on the Maintenance screen keep photographing the serial
 // line and get an empty "no figures" — detect it and tell them to grab the model.
-function looksLikeSerial(raw) {
+// Named maintLooksLikeSerial on purpose: v175 shipped this as a second
+// "looksLikeSerial", and since the later function declaration wins it silently
+// replaced v168's deliberately narrow Tag Scanner version (see its "Do NOT
+// widen" note). This broader check is for the Maintenance screen only.
+function maintLooksLikeSerial(raw) {
   const s = (raw || "").replace(/[\s.\-\/]/g, "").toUpperCase();
   if (s.length < 8) return false;
   const digits = (s.match(/[0-9]/g) || []).length;
@@ -5197,7 +5282,11 @@ function maintScanNoModel(fields, file) {
   const el = document.getElementById("maintScanStatus");
   if (!el) return;
   el.classList.remove("hidden");
-  el.innerHTML = "Couldn't read a model off that photo. Try again — straighter, closer, better lit — or type it above. " +
+  // A serial read off its own S/N label is worth showing; a bare digit run is not.
+  const sn = fields && fields.serialSource === "label" && fields.serial ? String(fields.serial).trim() : "";
+  el.innerHTML = (sn
+      ? "Read the serial (" + escapeHtml(sn) + ") but not the model number. Get the <strong>MODEL</strong> line in the shot — closer and straight-on — or type it above. "
+      : "Couldn't read a model off that photo. Try again — straighter, closer, better lit — or type it above. ") +
     '<button type="button" id="maintToScanner" style="background:none;border:none;color:var(--brand-navy,#003A70);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">Open the Tag Scanner ›</button>';
   const b = document.getElementById("maintToScanner");
   if (b) b.onclick = () => { if (typeof showScreen === "function") showScreen("scanner"); };
@@ -5205,7 +5294,8 @@ function maintScanNoModel(fields, file) {
 // The tech photographed the serial, not the model. Maintenance figures are keyed
 // to the model, so point them at it explicitly instead of the generic retry.
 function maintScanSerialOnly(fields, file) {
-  const sn = (fields && (fields.serial || fields.model)) ? String(fields.serial || fields.model).trim() : "";
+  // Called only when the model slot held the serial, so show THAT string.
+  const sn = (fields && (fields.model || fields.serial)) ? String(fields.model || fields.serial).trim() : "";
   const photoId = file ? newScanPhotoId() : "";
   trackEvent("maint scan - serial not model" +
     (sn ? " | read: " + sn : "") +
@@ -5228,7 +5318,7 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
     maintScanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
     const fields = await ocrTagFields(file, maintScanStatus);
     const scanned = (fields && fields.model) || "";
-    const serialLike = scanned && looksLikeSerial(scanned) && !isKnownModelString(scanned);
+    const serialLike = scanned && maintLooksLikeSerial(scanned) && !isKnownModelString(scanned);
     if (scanned && maintModelPlausible(scanned) && !serialLike) {
       const matched = maintApplyScannedModel(scanned);
       // Read fine but no figures for it: that photo is a coverage gap for
@@ -5236,7 +5326,12 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
       const photoId = matched ? "" : newScanPhotoId();
       trackEvent("maint scan -> " + scanned + (matched ? "" : " | no figures | photo: " + photoId));
       if (!matched) saveFailedScan(file, { id: photoId, kind: "maint-no-figures", read: scanned + (fields && fields.serial ? " / " + fields.serial : "") }).catch(() => {});
-    } else if (serialLike || (fields && fields.serial)) {
+    } else if (serialLike) {
+      // Only when the MODEL slot itself held a serial-shaped string. A serial
+      // found elsewhere on the photo is not proof the tech shot the wrong line:
+      // Andy's Carrier label had M/N right there, OCR just missed it, and the old
+      // "fields.serial" test told him he'd scanned the serial (off a stray digit
+      // run, 13080890858, that wasn't even the real serial).
       maintScanSerialOnly(fields, file);
     } else {
       maintScanNoModel(fields, file);
@@ -6345,7 +6440,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v182";
+const APP_VERSION = "v183";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
