@@ -2789,7 +2789,8 @@ function manualModelTokens(m) {
   const set = new Set();
   for (const w of [m.model, m.title].filter(Boolean).join(" ").split(/[\s\/,;:()&+|]+/)) {
     const t = manualNorm(w.replace(/\*.*$/, ""));          // "DV*PEC" is a wildcard family, not a prefix
-    if (t.length >= 4 && /[0-9]/.test(t) && /[A-Z]/.test(t) && !/^R\d{2,3}[A-Z]?$/.test(t)) set.add(t);
+    // refrigerant names aren't models — but Rheem's R95T / R801S are
+    if (t.length >= 4 && /[0-9]/.test(t) && /[A-Z]/.test(t) && !/^R(22|32|134A|290|404A|407C|410A|454B|466A)$/.test(t)) set.add(t);
   }
   for (const w of m.match || []) { const t = manualNorm(w); if (t.length >= 3) set.add(t); }
   toks = [...set];
@@ -7135,7 +7136,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v191";
+const APP_VERSION = "v192";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
