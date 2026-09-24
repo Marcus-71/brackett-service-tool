@@ -1,5 +1,5 @@
 /*
- * Thermostats tab data - one entry per thermostat family (177 families, v113).
+ * Thermostats tab data - one entry per thermostat family (293 families, v203).
  * Built from each manufacturer's own installation / user guides only (no forums,
  * no ManualsLib, no dealer-restricted docs). Same starter/verify caveat as the
  * rest of the app: confirm against the wiring label on the equipment - jumpers
@@ -429,33 +429,13 @@ const THERMOSTATS = [
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00423EFS.pdf"
    },
    {
-    "title": "T10 & T10+ Pro - Installer Options (menu access via date code, Installer Test contents, Reset submenu)",
-    "docType": "install",
-    "url": "https://docs.honeywellhome.com/t10-t10plus-pro-product-data/Installer%20Options.htm"
-   },
-   {
-    "title": "T10 & T10+ Pro - Installer Setup (ISU) (how to enter ISU on a new install and on a revisit, plus the full ISU parameter table)",
-    "docType": "install",
-    "url": "https://docs.honeywellhome.com/t10-t10plus-pro-product-data/Installer%20Setup%20(ISU).htm"
-   },
-   {
-    "title": "T10 & T10+ Pro - Wiring Diagrams (wiring without an EIM, fan coil, U slider tab accessory wiring)",
-    "docType": "wiring",
-    "url": "https://docs.honeywellhome.com/t10-t10plus-pro-product-data/Wiring.htm"
-   },
-   {
-    "title": "T10 & T10+ Pro - Troubleshooting and Support",
-    "docType": "troubleshooting",
-    "url": "https://docs.honeywellhome.com/t10-t10plus-pro-product-data/Troubleshooting%20and%20Support.htm"
-   },
-   {
     "title": "T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 User Guide",
     "docType": "user",
     "seedFile": "honeywell-home-t10-userguide.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00428.pdf"
    },
    {
-    "title": "T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data (full ISU reference incl. EIM)",
+    "title": "T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data (full ISU reference incl. EIM) - Installer Options, Installer Setup (ISU), Wiring Diagrams, Troubleshooting and Support",
     "docType": "spec",
     "seedFile": "honeywell-home-t10-productdata.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00462.pdf"
@@ -803,11 +783,6 @@ const THERMOSTATS = [
     "title": "How do I perform a system test in order to test the stages of equipment? (Lyric T5 Wi-Fi - ADVANCED MENU > System Test)",
     "docType": "troubleshooting",
     "url": "https://www.honeywellhome.com/blogs/support/how-do-i-preform-a-system-test-in-order-to-test-the-stages-of-equipment"
-   },
-   {
-    "title": "How Do I Reset My Honeywell Home Device? (factory / Wi-Fi / schedule / HomeKit reset paths per model family)",
-    "docType": "troubleshooting",
-    "url": "https://www.honeywellhome.com/blogs/support/how-do-i-reset-my-honeywell-home-device"
    },
    {
     "title": "T5 Smart Thermostat RCHT8610WF Quick Install Guide (English/French)",
@@ -1159,7 +1134,9 @@ const THERMOSTATS = [
   ],
   "tips": [
    "Wi-Fi models need a C wire - there is no battery-only Wi-Fi operation.",
-   "Same UWP wall plate and slider tabs as the rest of the T-series."
+   "Same UWP wall plate and slider tabs as the rest of the T-series.",
+   "Searching TH6220? Three different thermostats start with it - match the FULL model on the back of the thermostat: TH6220U2000 = T6 Pro Programmable (33-00181EFS); TH6220WF2006 = T6 Pro Wi-Fi / T6 Pro Smart (33-00392EFS, 33-00410EFS); TH6220D = FocusPRO 6000 (69-2695EFS).",
+   "TH6320 is shared too: TH6320U2008 = T6 Pro (33-00181EFS); TH6320U = FocusPRO 6000 (69-2695EFS); TH6320WF2003 = T6 Pro Wi-Fi/Smart; TH6320WF1005 = FocusPRO Wi-Fi (69-2738EFS); TH6320R = FocusPRO Wireless RedLINK (69-2092EFS); TH6320ZW2003/2007 = T6 Pro Z-Wave."
   ],
   "manuals": [
    {
@@ -1185,6 +1162,18 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-t6prosmart-install.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00410EFS.pdf"
+   },
+   {
+    "title": "T6 Pro Smart Programmable Thermostat Professional Install Guide TH6220WF2006/TH6320WF2003 (33-00392EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t6prosmart-proinstall-33-00392efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00392EFS.pdf"
+   },
+   {
+    "title": "T6 Pro Series Smart Thermostat Submittal Sheet (33-00411)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t6prosmart-submittal-33-00411.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00411.pdf"
    }
   ],
   "sourceNotes": "33-00410EFS-03 T6 Pro Smart Programmable Thermostat User Guide (TH6320WF2003, TH6220WF2006); 33-00391EFS-11 T6 Pro Smart / T6 Pro Wi-Fi Getting Started Quick Guide; 33-00324-04 T6 Pro Smart Wiring Diagrams (Addendum); 33-00392-09 T6 Pro Wi-Fi Professional Install Guide (ISU table, alerts, troubleshooting)",
@@ -1497,7 +1486,9 @@ const THERMOSTATS = [
     ]
    }
   ],
-  "tips": [],
+  "tips": [
+   "TH6320ZW2007 has SmartStart and enters INCLUDE mode as soon as it is powered and configured for system type; TH6320ZW2003 (or a network without SmartStart) is included/excluded from MENU > Z-WAVE SETUP."
+  ],
   "manuals": [
    {
     "title": "T6 Pro Z-Wave Programmable Thermostat Quick Start / Install Guide",
@@ -1510,6 +1501,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-t6prozwave-userguide.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00588EFS.pdf"
+   },
+   {
+    "title": "T6 Pro Z-Wave TH6320ZW2003/TH6320ZW2007 Getting Started (33-00594EFS)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-t6prozwave-gettingstarted-33-00594efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00594EFS.pdf"
    }
   ],
   "sourceNotes": "33-00587EFS-10 T6 Pro Z-Wave Programmable Thermostat Quick Start / Install Guide; 33-00588EFS T6 Pro Z-Wave Programmable Thermostat User Guide",
@@ -1856,7 +1853,8 @@ const THERMOSTATS = [
   "aka": "RTH6580WF / RTH6500WF",
   "models": [
    "RTH6580WF1001",
-   "RTH6580WF1006"
+   "RTH6580WF1006",
+   "RTH6500WF"
   ],
   "type": "smart-wifi",
   "stages": "Function 1 System Type covers 1H/1C up to 2H/2C conventional and heat pump with/without backup heat",
@@ -2100,6 +2098,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-rth6580wf-userguide.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00130ES.pdf"
+   },
+   {
+    "title": "RTH6500WF Series Wi-Fi Programmable Thermostat Quick Start Guide (69-2720)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-rth6500wf-quickstart-69-2720.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2720.pdf"
    }
   ],
   "sourceNotes": "33-00130ES-09 RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide",
@@ -2112,7 +2116,10 @@ const THERMOSTATS = [
   "aka": "RTH9585WF / RTH9580WF",
   "models": [
    "RTH9585WF",
-   "RTH9580WF"
+   "RTH9580WF",
+   "RTH9585WF1004",
+   "RTH9585WF1012",
+   "RTH9580"
   ],
   "type": "smart-wifi",
   "stages": "Configurable via System Setup: 1-2 heat stages, 1-2 cool/compressor stages, conventional or heat pump",
@@ -2335,6 +2342,36 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-rth9585-userguide.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00269EF.pdf"
+   },
+   {
+    "title": "RTH9585WF Smart Series Color Touchscreen User Guide (33-00524ES)",
+    "docType": "user",
+    "seedFile": "honeywell-home-rth9585wf-userguide-33-00524es.pdf",
+    "url": "https://digitalassets.resideo.com/damroot/Original/10011/33-00524ES.pdf"
+   },
+   {
+    "title": "RTH9585WF Quick Start Guide (33-00268)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-rth9585wf-quickstart-33-00268.pdf",
+    "url": "https://digitalassets.resideo.com/damroot/Original/10014/33-00268.pdf"
+   },
+   {
+    "title": "RTH9580 Wi-Fi User Guide (33-00167)",
+    "docType": "user",
+    "seedFile": "honeywell-home-rth9580wf-userguide-33-00167.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00167.pdf"
+   },
+   {
+    "title": "RTH9580 Wi-Fi Quick Start Guide (33-00168)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-rth9580wf-quickstart-33-00168.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00168.pdf"
+   },
+   {
+    "title": "RTH9585WF Product Information (33-00538EFS)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-rth9585wf-productinfo-33-00538efs.pdf",
+    "url": "https://digitalassets.resideo.com/damroot/Original/10014/33-00538EFS.pdf"
    }
   ],
   "sourceNotes": "33-00269EF-05 RTH9585WF Color Touchscreen Smart Series Programmable Thermostat User Guide; 69-2810 RTH9580 Wi-Fi Color Touchscreen Programmable Thermostat Quick Start Guide",
@@ -2578,6 +2615,24 @@ const THERMOSTATS = [
     "docType": "spec",
     "seedFile": "honeywell-home-t4pro-productinfo.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00613EFS.pdf"
+   },
+   {
+    "title": "T4 Pro Programmable Thermostat Product Data (33-00614EFS)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t4pro-productdata-33-00614efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00614EFS.pdf"
+   },
+   {
+    "title": "T4 Pro Series Thermostats Submittal Sheet (33-00285)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t4pro-submittal-33-00285.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00285.pdf"
+   },
+   {
+    "title": "Addendum - T4 and T1 PRO Wiring Diagrams (33-00325)",
+    "docType": "wiring",
+    "seedFile": "honeywell-home-t4-t1pro-wiring-addendum-33-00325.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00325.pdf"
    }
   ],
   "sourceNotes": "33-00187EFS-17 T4 Pro Programmable Thermostat Installation Instructions; 33-00188EFS-11 T4 Pro Programmable Thermostat User Guide; 33-00613EFS-05 T4 Pro Programmable Thermostat Product Information / Submittal",
@@ -2909,34 +2964,34 @@ const THERMOSTATS = [
    "Leave the U Slider Tab in place - U is unused on T6 Pro.",
    "W is not used on heat pump applications - use O/B, AUX-W2 and E.",
    "The L/A-A heat pump fault input needs the C wire.",
-   "S terminals (wired sensor) exist on TH6220U/TH6320U only, not TH6210U."
+   "S terminals (wired sensor) exist on TH6220U/TH6320U only, not TH6210U.",
+   "Searching TH6220? Three different thermostats start with it - match the FULL model on the back of the thermostat: TH6220U2000 = T6 Pro Programmable (33-00181EFS); TH6220WF2006 = T6 Pro Wi-Fi / T6 Pro Smart (33-00392EFS, 33-00410EFS); TH6220D = FocusPRO 6000 (69-2695EFS).",
+   "TH6320 is shared too: TH6320U2008 = T6 Pro (33-00181EFS); TH6320U = FocusPRO 6000 (69-2695EFS); TH6320WF2003 = T6 Pro Wi-Fi/Smart; TH6320WF1005 = FocusPRO Wi-Fi (69-2738EFS); TH6320R = FocusPRO Wireless RedLINK (69-2092EFS); TH6320ZW2003/2007 = T6 Pro Z-Wave."
   ],
   "manuals": [
    {
-    "title": "T6 Pro Programmable Thermostat Installation Instructions",
+    "title": "T6 Pro Programmable Thermostat Installation Instructions - Installer Setup (ISU), System Test, Thermostat Mounting, UWP and Cover Plate Installation",
     "docType": "install",
     "seedFile": "honeywell-home-t6pro-install.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00181EFS.pdf"
    },
    {
-    "title": "T6 Pro Installation Manual - 5. Installer Setup (ISU) (menu access plus the full ISU parameter table)",
-    "docType": "install",
-    "url": "https://docs.honeywellhome.com/t6-pro-ii/en-us/Content/Installation-Instructions/5.%20Installer%20Setup%20(ISU).htm"
+    "title": "T6 Pro Programmable Thermostat User Manual TH6320U2008/TH6220U2000/TH6210U2001 (33-00182EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-t6pro-usermanual-33-00182efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00182EFS.pdf"
    },
    {
-    "title": "T6 Pro Installation Manual - 8. System Test (access procedure and per-stage test codes)",
-    "docType": "install",
-    "url": "https://docs.honeywellhome.com/t6-pro-ii/en-us/Content/Installation-Instructions/8.%20System%20Test.htm"
+    "title": "Addendum - T6 PRO Wiring Diagrams (33-00323)",
+    "docType": "wiring",
+    "seedFile": "honeywell-home-t6pro-wiring-addendum-33-00323.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00323.pdf"
    },
    {
-    "title": "T6 Pro Installation Manual - 3. Thermostat Mounting",
-    "docType": "install",
-    "url": "https://docs.honeywellhome.com/t6-pro-ii/en-us/Content/Installation-Instructions/3.%20Thermostat%20Mounting.htm"
-   },
-   {
-    "title": "T6 Pro Installation Manual - 1. Installation (UWP and cover plate mounting)",
-    "docType": "install",
-    "url": "https://docs.honeywellhome.com/t6-pro-ii/en-us/Content/Installation-Instructions/1.%20Installation.htm"
+    "title": "T6 Pro Series Thermostats Submittal Sheet (33-00263)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t6pro-submittal-33-00263.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00263.pdf"
    }
   ],
   "sourceNotes": "T6 Pro Installation Manual - 5. Installer Setup (ISU) (menu access plus the full ISU parameter table); T6 Pro Installation Manual - 8. System Test (access procedure and per-stage test codes); T6 Pro Installation Manual - 9. Troubleshooting and Support; T6 Pro Installation Manual - 3. Thermostat Mounting; T6 Pro Installation Manual - 7. Alerts and Reminders (full alert code table); T6 Pro Installation Manual - 2. Wiring (R Slider Tab, terminal designatio...",
@@ -3163,7 +3218,9 @@ const THERMOSTATS = [
     ]
    }
   ],
-  "tips": [],
+  "tips": [
+   "'TH8000' is the VisionPRO TH8000 Series (TH8110U, TH8320U, TH8321U). RedLINK versions (TH8110R/TH8320R/TH8321R) and Wi-Fi (TH8320WF/TH8321WF) have their own cards."
+  ],
   "manuals": [
    {
     "title": "VisionPRO TH8000 Series Installation Guide (TH8110U/TH8320U/TH8321U)",
@@ -3176,6 +3233,24 @@ const THERMOSTATS = [
     "docType": "spec",
     "seedFile": "honeywell-home-visionpro8000-productdata-68-0280.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/68-0000s/68-0280.pdf"
+   },
+   {
+    "title": "VisionPRO TH8000 Series Touch-screen Programmable Thermostat Installation Guide (69-2693)",
+    "docType": "install",
+    "seedFile": "honeywell-home-visionpro-th8000-installguide-69-2693.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2693.pdf"
+   },
+   {
+    "title": "VisionPRO TH8000 Series Touchscreen Programmable Thermostat Operating Manual (69-1894EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-visionpro-th8000-operating-69-1894efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1894EFS.pdf"
+   },
+   {
+    "title": "VisionPRO 8000 Installer Setup and System Test card (69-1871)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-visionpro8000-setup-test-69-1871.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1871.pdf"
    }
   ],
   "sourceNotes": "69-1896-01 VisionPRO TH8000 Series Installation Guide (TH8110U/TH8320U/TH8321U); 68-0280 VisionPRO 8000 Product Data (68-0280)",
@@ -3370,6 +3445,24 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "honeywell-home-focuspro5000-install-69-1922efs.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-1922EFS.pdf"
+   },
+   {
+    "title": "FocusPRO 5000 Series Installation Instructions (69-2698EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-focuspro5000-install-69-2698efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2698EFS.pdf"
+   },
+   {
+    "title": "FocusPRO 5000 Series Digital Thermostat User Guide (69-1923EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-focuspro5000-userguide-69-1923efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1923EFS.pdf"
+   },
+   {
+    "title": "FocusPRO 5000 and 6000 Series Installer Setup and System Test card (69-2026)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-focuspro-5000-6000-setup-test-69-2026.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2026.pdf"
    }
   ],
   "sourceNotes": "69-1922EFS-03 FocusPRO TH5000 Series Installation Guide",
@@ -3561,7 +3654,10 @@ const THERMOSTATS = [
     ]
    }
   ],
-  "tips": [],
+  "tips": [
+   "Searching TH6220? Three different thermostats start with it - match the FULL model on the back of the thermostat: TH6220U2000 = T6 Pro Programmable (33-00181EFS); TH6220WF2006 = T6 Pro Wi-Fi / T6 Pro Smart (33-00392EFS, 33-00410EFS); TH6220D = FocusPRO 6000 (69-2695EFS).",
+   "TH6320 is shared too: TH6320U2008 = T6 Pro (33-00181EFS); TH6320U = FocusPRO 6000 (69-2695EFS); TH6320WF2003 = T6 Pro Wi-Fi/Smart; TH6320WF1005 = FocusPRO Wi-Fi (69-2738EFS); TH6320R = FocusPRO Wireless RedLINK (69-2092EFS); TH6320ZW2003/2007 = T6 Pro Z-Wave."
+  ],
   "manuals": [
    {
     "title": "FocusPRO 6000 Series Installation Instructions",
@@ -3574,6 +3670,18 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-focuspro6000-user-69-1921efs.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1921EFS.pdf"
+   },
+   {
+    "title": "FocusPRO TH6000 Series Programmable Thermostat Installation Guide (69-1920EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-focuspro6000-installguide-69-1920efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1920EFS.pdf"
+   },
+   {
+    "title": "FocusPRO 5000 and 6000 Series Installer Setup and System Test card (69-2026)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-focuspro-5000-6000-setup-test-69-2026.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2026.pdf"
    }
   ],
   "sourceNotes": "69-2695EFS-09 FocusPRO 6000 Series Installation Instructions; 69-1921EFS FocusPRO 6000 Series User Guide",
@@ -3585,7 +3693,8 @@ const THERMOSTATS = [
   "family": "FocusPRO Wireless (RedLINK)",
   "aka": "TH6320R",
   "models": [
-   "TH6320R1004"
+   "TH6320R1004",
+   "TH5320R"
   ],
   "type": "wireless-redlink",
   "stages": "Wireless control for up to 3H/2C heat pump or up to 2H/2C conventional systems (via Equipment Interface Module or TrueZONE panel)",
@@ -3756,6 +3865,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-focusprowireless-operating-69-2093efs.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2093EFS.pdf"
+   },
+   {
+    "title": "FocusPRO TH5320R Wireless Thermostat Operating Manual (69-2094EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-focuspro-th5320r-operating-69-2094efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2094EFS.pdf"
    }
   ],
   "sourceNotes": "69-2092EFS-11 FocusPRO Wireless Thermostats Installation Guide; 69-2093EFS Operating Manual FocusPro TH6320R Wireless Thermostat",
@@ -4006,7 +4121,10 @@ const THERMOSTATS = [
   "family": "Prestige IAQ",
   "aka": "THX9421R5021",
   "models": [
-   "THX9421R5021"
+   "THX9421R5021",
+   "THX9321R5030",
+   "THX9321",
+   "THX9421"
   ],
   "type": "wireless-redlink",
   "stages": "Up to 3H/2C conventional or heat pump via Equipment Interface Module (model dependent)",
@@ -4134,7 +4252,9 @@ const THERMOSTATS = [
    }
   ],
   "troubleshooting": [],
-  "tips": [],
+  "tips": [
+   "Prestige 2.0 (THX9321) and Prestige IAQ 2.0 (THX9421) share the same install guide (69-2490), operating manual (69-2703EFS) and product data (68-0311)."
+  ],
   "manuals": [
    {
     "title": "Prestige IAQ with Equipment Interface Module Installation Guide",
@@ -4147,6 +4267,18 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "honeywell-home-prestige2-iaq2-eim-69-2490.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2490.pdf"
+   },
+   {
+    "title": "Prestige THX9321/9421 Touch-screen Thermostat Operating Manual (69-2703EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-prestige-thx9321-9421-operating-69-2703efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2703EFS.pdf"
+   },
+   {
+    "title": "Product Data - THX9321 Prestige 2.0 and THX9421 Prestige IAQ with EIM (68-0311)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-prestige2-productdata-68-0311.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/68-0000s/68-0311.pdf"
    }
   ],
   "sourceNotes": "69-2739 Prestige IAQ with Equipment Interface Module Installation Guide; 69-2490 Prestige 2.0 / Prestige IAQ 2.0 with EIM",
@@ -4160,7 +4292,10 @@ const THERMOSTATS = [
   "models": [
    "TH1100DV1000",
    "TH1110DV1009",
-   "TH2110DV1008"
+   "TH2110DV1008",
+   "TH2210DV1006",
+   "TH1210DV",
+   "TH2210DV"
   ],
   "type": "non-programmable",
   "stages": "TH1100DV heat only; TH1110DV/TH2110DV 1H/1C conventional or heat pump (TH2110DV also available as TH2210DV 2H/1C heat pump)",
@@ -4284,7 +4419,9 @@ const THERMOSTATS = [
    }
   ],
   "troubleshooting": [],
-  "tips": [],
+  "tips": [
+   "DV = vertical. The horizontal PRO 1000/2000 (TH1110D, TH2110D, TH1210D, TH2210D) has its own card with manual 69-1968EFS."
+  ],
   "manuals": [
    {
     "title": "PRO TH2000DV/TH1000DV Series Installation Guide",
@@ -4297,6 +4434,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "honeywell-home-pro1000-operating-69-2607efs.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2607EFS.pdf"
+   },
+   {
+    "title": "PRO 2000 Series Programmable Thermostats Operating Manual TH2110DV1008/TH2210DV1006 (69-1969EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-pro2000dv-operating-69-1969efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1969EFS.pdf"
    }
   ],
   "sourceNotes": "69-2800EFS-05 PRO TH2000DV/TH1000DV Series Installation Guide; 69-2607EFS-06 PRO 1000 Series Operating Manual",
@@ -4677,7 +4820,9 @@ const THERMOSTATS = [
   "family": "RTH2300",
   "aka": "basic programmable, no heat pump aux",
   "models": [
-   "RTH2300B1020"
+   "RTH2300B1020",
+   "RTH221B1047",
+   "RTH221"
   ],
   "type": "programmable",
   "stages": "Single-stage heat/cool conventional, or heat pump without auxiliary/backup heat; not for multistage systems",
@@ -4810,6 +4955,12 @@ const THERMOSTATS = [
     "docType": "quick-start",
     "seedFile": "honeywell-home-rth2300-quickinstall-69-2327es.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2327ES.pdf"
+   },
+   {
+    "title": "RTH2300/RTH221 Series Programmable Thermostat Owner's Manual (33-00102EF)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth2300-rth221-ownersmanual-33-00102ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00102EF.pdf"
    }
   ],
   "sourceNotes": "33-00100EF RTH2300/RTH221 Series Owner's Manual; 69-2327ES RTH2300 5+2 Programmable Thermostat Quick Installation Guide",
@@ -4821,7 +4972,10 @@ const THERMOSTATS = [
   "family": "RTH2410 / RTH2510",
   "aka": "heat pump with aux heat",
   "models": [
-   "RTH2410"
+   "RTH2410",
+   "RTH2510",
+   "RTHL2410",
+   "RTHL2510"
   ],
   "type": "programmable",
   "stages": "Single-stage heat/cool conventional, or heat pump with or without auxiliary/backup heat; not for multistage conventional systems",
@@ -4956,6 +5110,12 @@ const THERMOSTATS = [
     "docType": "quick-start",
     "seedFile": "honeywell-home-rth2410-quickinstall-69-2421es.pdf",
     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2421ES.pdf"
+   },
+   {
+    "title": "RTHL2510/RTHL2410 Series Programmable Thermostat Quick Installation Guide (69-2714EF)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-rthl2410-rthl2510-quickinstall-69-2714ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2714EF.pdf"
    }
   ],
   "sourceNotes": "33-00110ES RTH2510/RTH2410 Series Owner's Manual; 69-2421ES RTH2510/RTH2410 Quick Installation Guide",
@@ -5640,7 +5800,8 @@ const THERMOSTATS = [
   "aka": "mechanical round thermostat",
   "models": [
    "T87N1000",
-   "T87K1007"
+   "T87K1007",
+   "CT87N"
   ],
   "type": "non-programmable",
   "stages": "T87N: heat and cool (single stage); T87K: heat only",
@@ -5720,6 +5881,12 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "honeywell-home-t87nk-ownersmanual-69-1958efs.pdf",
     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-1958EFS.pdf"
+   },
+   {
+    "title": "CT87N Easy-To-See The Round Owner's Manual (69-1919EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-ct87n-round-ownersmanual-69-1919efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1919EFS.pdf"
    }
   ],
   "sourceNotes": "69-1958EFS-04 T87N/T87K The Round Owner's Manual",
@@ -6603,6 +6770,3930 @@ const THERMOSTATS = [
   "img": "tstat-img/tst-honeywell-uwp.jpg"
  },
  {
+  "id": "tst-honeywell-chronotherm-iii",
+  "brand": "Honeywell Home",
+  "family": "Chronotherm III Fuel Saver (legacy)",
+  "aka": "Chronotherm III 7-day programmable on a subbase (1990s). Resideo's catalog lists this owner's manual under T8611G",
+  "models": [
+   "Chronotherm III"
+  ],
+  "type": "programmable",
+  "stages": "Heating/cooling; some models automatic changeover; heat pump models have AUX HT and CHECK lights",
+  "sort": 70,
+  "confidence": "rare",
+  "power": {
+   "cWire": "",
+   "batteries": "3 AAA alkaline backup batteries",
+   "notes": "Wiring is on the subbase and not covered in the owner's manual. Backup batteries hold the program and display during most outages; display reads 32F until mounted on a powered subbase."
+  },
+  "terminals": [],
+  "wiringNotes": [
+   "Owner's manuals only - no terminal or wiring information published in these documents. System and fan switches are on the subbase; available positions vary by model."
+  ],
+  "setup": {
+   "access": "Owner-level programming only (7 independent days, copy function). Remove: loosen the two captive screws at the bottom corners, pull out from the bottom, lift off the base.",
+   "keySettings": [
+    {
+     "setting": "Auto changeover models",
+     "options": "Heating setting must be at least 3 degrees below the cooling setting"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "REPL BAT flashing",
+    "meaning": "Backup batteries low",
+    "action": "System switch OFF, replace 3 AAA within 20-30 seconds to keep the program"
+   },
+   {
+    "code": "Display flashes 1:00 PM",
+    "meaning": "Program lost in a power outage (backup batteries dead or missing)",
+    "action": "Replace batteries and reprogram"
+   },
+   {
+    "code": "AUX HT light",
+    "meaning": "Backup (auxiliary) heat is on (heat pump models)"
+   },
+   {
+    "code": "CHECK light",
+    "meaning": "Heat pump models - meaning depends on the heat pump equipment literature"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display blinks while setting temperature",
+    "causes": [
+     "Setting limit reached"
+    ],
+    "fixes": [
+     "Stay within range; on auto-changeover models keep heat 3 degrees below cool"
+    ]
+   }
+  ],
+  "tips": [
+   "Owner's manual only - no wiring. The manual prints only 'Chronotherm III'; Resideo's catalog page for T8611G2002 lists it."
+  ],
+  "manuals": [
+   {
+    "title": "Chronotherm III 7 Day Programmable Thermostat Owner's Manual - legacy (69-0341)",
+    "docType": "user",
+    "seedFile": "honeywell-home-chronotherm3-7day-owners-69-0341.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-0341.PDF"
+   }
+  ],
+  "sourceNotes": "69-0341 Chronotherm III 7 Day Programmable Thermostat Owner's Manual (legacy, no date printed). 69-0378 and 69-0398 were rejected: their text layer never names the product. 69-0313/69-0338/69-0397 are image-only scans.",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-ct87-round",
+  "brand": "Honeywell Home",
+  "family": "CT87 Round (retail mercury: CT87A / CT87B / CT87J)",
+  "aka": "The Round CT87A wallplate heat-only, CT87B heat/cool subbase, CT87J heat pump subbase",
+  "models": [
+   "CT87A",
+   "CT87B",
+   "CT87J"
+  ],
+  "type": "non-programmable",
+  "stages": "Single stage only. CT87A: heat only (or 2-wire cooling only). CT87B: heat only, cool only, or heat/cool. CT87J: single-stage heat pump (no aux), cool only, or electric furnace with or without cooling. None are for multistage, heat pumps with aux, or line-voltage baseboard",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "None (mechanical, mercury switch)",
+   "notes": "Low voltage 15-30 VAC only. Set the heat anticipator before powering; never below .3 A."
+  },
+  "terminals": [
+   {
+    "t": "R / RH",
+    "fn": "Power (R on CT87A and CT87J, RH on CT87B)",
+    "notes": "Old R, RH, 4 or V wires land here"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling transformer power (CT87B)",
+    "notes": "Jumper RH to Rc for 1 transformer"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (W, W1, H wires)",
+    "notes": "CT87J heat pump: jumper W to Y"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor (Y, Y1, M wires)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan (G, F wires) - CT87B, CT87J",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "3-wire hot water zone valve (CT87A); heat reversing valve (CT87J)",
+    "notes": "Never attach wires to both B and O"
+   },
+   {
+    "t": "O",
+    "fn": "Cool reversing valve (CT87J)",
+    "notes": ""
+   },
+   {
+    "t": "P",
+    "fn": "CT87J subbase terminal (see Fig. 13 of 69-0274)",
+    "notes": "If the old stat had wires on Y or W and P, contact a contractor"
+   }
+  ],
+  "wiringNotes": [
+   "CT87A: 2-wire heat only (R, W) or 3-wire hot water zone valve (R, W, B).",
+   "CT87B: 4-wire heat/cool with RH-Rc jumper, or 5-wire with separate heating and cooling transformers.",
+   "Discard the red plastic insert that holds the mercury switch during shipping.",
+   "Level the wallplate/subbase with the leveling posts - accuracy depends on it."
+  ],
+  "setup": {
+   "access": "Pull off the thermostat cover; heat anticipator scale is on the thermostat.",
+   "keySettings": [
+    {
+     "setting": "Heat anticipator",
+     "options": "Match the old thermostat setting, or: steam 1.2, hot water 0.8, high-efficiency warm air 0.8, standard warm air 0.4, electric 0.3",
+     "notes": "Set to 1.2 before mounting. Furnace overshoots: move down .1 A; shuts off early: move up .1 A. Never below .3 A"
+    }
+   ],
+   "installerTest": "Heat: System Heat, turn the dial above room temperature - heat starts; below - stops. Cool: System Cool (wait 5 minutes after heat test on CT87J), dial below room - cooling starts.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Furnace runs past setpoint / shuts off before setpoint",
+    "causes": [
+     "Heat anticipator set wrong"
+    ],
+    "fixes": [
+     "Move anticipator down .1 A (overshoot) or up .1 A (short cycles); never below .3"
+    ]
+   }
+  ],
+  "tips": [
+   "CT87N is a different product (electronic Easy-To-See with DIP switches) - see The Round (T87N / T87K) card."
+  ],
+  "manuals": [
+   {
+    "title": "CT87A,B,J Round Thermostat Installation Instructions - legacy (69-0274)",
+    "docType": "install",
+    "seedFile": "honeywell-home-ct87abj-round-install-69-0274.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-0274.pdf"
+   }
+  ],
+  "sourceNotes": "69-0274-6 CT87A,B,J Round Thermostat Installation Instructions (Rev. 08-02, legacy)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-focuspro-wifi",
+  "brand": "Honeywell Home",
+  "family": "FocusPRO Wi-Fi (FocusPRO Smart)",
+  "aka": "TH6320WF1005 Wi-Fi Series, Total Connect Comfort",
+  "models": [
+   "TH6320WF1005"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 3 heat / 2 cool heat pump, or 2 heat / 2 cool conventional",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Every wiring diagram lands C (24VAC common from the cooling transformer on 2-transformer systems) and the blank-display check is 'make sure C wire is connected'. User guide: works with common 24 volt systems, not millivolt or 120/240V."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "Heating power - secondary of heating transformer",
+    "notes": "Jumpered to Rc; remove jumper for 2-transformer systems"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling power - secondary of cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (from cooling transformer if 2 transformers)",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat relay",
+    "notes": "Conventional"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat relay",
+    "notes": "Conventional"
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover valve for heat pumps",
+    "notes": "Function 2"
+   },
+   {
+    "t": "Aux/E",
+    "fn": "Auxiliary / emergency heat relay",
+    "notes": "Heat pump"
+   },
+   {
+    "t": "L",
+    "fn": "L terminal (shown on heat pump diagrams)",
+    "notes": "Function not described in the installation guide"
+   },
+   {
+    "t": "K",
+    "fn": "Optional wire saver module",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Remove the R-Rc jumper for 2-transformer systems; C must come from the cooling transformer.",
+   "Wire: 18- to 22-gauge thermostat wire; shielded cable not required.",
+   "System types in diagrams: 1H/1C, heat only, heat only with fan, cool only, 2H/2C, 1H/1C HP, 2H/1C HP (Aux/E), 2H/2C HP (Y2), 3H/2C HP (Y2 + Aux/E)."
+  ],
+  "setup": {
+   "access": "Press Fan and the up arrow together about 3 seconds; buttons become Done, Back, blank, Next. Next moves to the function number (left), arrows change the option (right), Done saves and exits.",
+   "keySettings": [
+    {
+     "setting": "1 System Type",
+     "options": "0 Heat/cool, 1 HP no backup, 2 Heat only, 3 Heat only with fan, 4 Cool only, 5 HP with backup, 6 2H/2C, 7 2H/1C, 8 1H/2C, 9 HP 2H/2C, 10 HP 3H/2C"
+    },
+    {
+     "setting": "2 Heat Pump Changeover Valve",
+     "options": "0 O (cooling), 1 B (heating)"
+    },
+    {
+     "setting": "3 Heating Fan Control",
+     "options": "0 Gas or oil (system controls fan), 1 Electric (thermostat controls fan)"
+    },
+    {
+     "setting": "5 / 6 / 7 Heating cycle rate (stage 1 / 2 / aux)",
+     "options": "5 gas/oil <90%, 9 electric, 3 hot water or >90%, 1 steam/gravity; other 2,4,6,7,8,10,11,12"
+    },
+    {
+     "setting": "9 / 10 Compressor cycle rate stage 1 / 2",
+     "options": "3 recommended; 1-6 CPH"
+    },
+    {
+     "setting": "12 Manual/Auto Changeover",
+     "options": "0 Manual, 1 Automatic (fixed 3F separation)"
+    },
+    {
+     "setting": "13 Adaptive Intelligent Recovery",
+     "options": "1 On, 0 Off"
+    },
+    {
+     "setting": "14 Temperature Format",
+     "options": "0 F, 1 C"
+    },
+    {
+     "setting": "15 Compressor protection",
+     "options": "5 minutes (0-4 min options)"
+    },
+    {
+     "setting": "16 Schedule Options",
+     "options": "1 7-day programmable, 0 non-programmable"
+    },
+    {
+     "setting": "26 Auxiliary Control",
+     "options": "0 Comfort, 1 Economy"
+    },
+    {
+     "setting": "27 / 28 Heat / Cool range stops",
+     "options": "Max heat 90F (40-89F); Min cool 50F (51-99F)"
+    },
+    {
+     "setting": "32 Temperature display offset",
+     "options": "0 (-3 to +3F)"
+    },
+    {
+     "setting": "38 / 39 Wi-Fi On/Off / Wi-Fi Connection",
+     "options": "38: 1 On, 0 Off; 39: set 0 to disconnect"
+    },
+    {
+     "setting": "85 / 90 Restore schedule / original settings",
+     "options": "85: 1 restore energy-saving schedule; 90: 1 disconnect Wi-Fi and restore original settings"
+    }
+   ],
+   "installerTest": "Press and hold up and down arrows until the display changes; arrows turn the system on/off, NEXT advances, DONE ends. Test 10 heat (0 off, 1-3 stages), 20 emergency heat, 30 cooling (1, 2 stages), 40 fan. Compressor protection is bypassed during testing.",
+   "factoryReset": "Function 90 = 1 disconnects Wi-Fi and restores original settings."
+  },
+  "diagnostics": [
+   {
+    "code": "E01",
+    "meaning": "Router lost power during Wi-Fi setup",
+    "action": "Ensure the router has power"
+   },
+   {
+    "code": "E02",
+    "meaning": "Invalid Wi-Fi password",
+    "action": "Re-enter the home Wi-Fi password"
+   },
+   {
+    "code": "E42",
+    "meaning": "Router is not issuing an IP address",
+    "action": "Wait 30 minutes; pull thermostat 10 s and reconnect; check router DHCP"
+   },
+   {
+    "code": "E43",
+    "meaning": "No internet connection - cannot reach Total Connect Comfort",
+    "action": "Check internet cable, reboot router"
+   },
+   {
+    "code": "E99",
+    "meaning": "General error",
+    "action": "Remove thermostat from wallplate 10 seconds, then reconnect"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No C wire / no 24VAC",
+     "Breaker, power switch, furnace door"
+    ],
+    "fixes": [
+     "Verify C wire",
+     "Restore power"
+    ]
+   },
+   {
+    "symptom": "Fan does not turn on with heat",
+    "causes": [
+     "Function 3 wrong"
+    ],
+    "fixes": [
+     "Set Function 3 to 1 for electric"
+    ]
+   },
+   {
+    "symptom": "Heat pump cool air in heat / warm in cool",
+    "causes": [
+     "Function 2 wrong"
+    ],
+    "fixes": [
+     "Set Function 2 to 0 (O) or 1 (B)"
+    ]
+   },
+   {
+    "symptom": "Heating runs in cool mode, or heat and cool run together",
+    "causes": [
+     "Function 1 wrong",
+     "Bare wires touching",
+     "Wiring error"
+    ],
+    "fixes": [
+     "Correct Function 1",
+     "Separate bare wires at the wallplate",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "No-Wi-Fi indicator",
+    "causes": [
+     "Router or ISP down, weak signal"
+    ],
+    "fixes": [
+     "Check another device, move router, pull thermostat 10 s and reconnect"
+    ]
+   }
+  ],
+  "tips": [
+   "TH6320WF1005 is the FocusPRO Wi-Fi, not the T6 Pro Wi-Fi TH6320WF2003 - check the full model on the back of the thermostat.",
+   "If Auto Changeover Only is selected, the System setting stays locked in Auto."
+  ],
+  "manuals": [
+   {
+    "title": "FocusPRO Wi-Fi TH6000 Series Programmable Thermostat Installation Guide (69-2738EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-focusprowifi-install-69-2738efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2738EFS.pdf"
+   },
+   {
+    "title": "FocusPRO TH6320WF1005 Wi-Fi Series User Guide (69-2736EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-focusprowifi-userguide-69-2736efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2736EFS.pdf"
+   },
+   {
+    "title": "FocusPRO TH6320WF1005 Smart Series Product Information (33-00306EFS)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-focusprowifi-productinfo-33-00306efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00306EFS.pdf"
+   }
+  ],
+  "sourceNotes": "69-2738EFS-05 FocusPRO Wi-Fi TH6000 Series Installation Guide (Rev. 02-22); 69-2736EFS-14 FocusPRO TH6320WF1005 Wi-Fi Series User Guide; 33-00306EFS-09 Product Information (Rev. 03-22)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-pro-1000-2000",
+  "brand": "Honeywell Home",
+  "family": "PRO 1000 / PRO 2000 (horizontal)",
+  "aka": "TH1100D / TH1110D / TH1210D non-programmable, TH2110D / TH2210D programmable (locking-screw wallplate); PRO 2000 TH2110DH / TH2210DH",
+  "models": [
+   "TH1100D",
+   "TH1110D",
+   "TH1210D",
+   "TH2110D",
+   "TH2210D",
+   "TH2110DH",
+   "TH2210DH"
+  ],
+  "type": "programmable",
+  "stages": "TH1100D: heat only (incl. 750 mV). TH1110D / TH2110D: 1H/1C or heat pump without aux. TH1210D / TH2210D: heat pump with aux (2H/1C)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AAA",
+   "notes": "With 24 VAC common on C, batteries are backup only; without C, batteries power the thermostat. Set the System switch to Off before pulling batteries or equipment can stay energized. Max load 1 A @ 24 VAC per output."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC power",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "Optional 24 VAC common",
+    "notes": "Not required for heat-only, cool-only or no-fan systems"
+   },
+   {
+    "t": "W",
+    "fn": "Heat",
+    "notes": "Heat pump without aux: jumper W to Y"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Heat pump reversing valve",
+    "notes": "Set the O/B jumper on the back of the faceplate"
+   },
+   {
+    "t": "Aux",
+    "fn": "Auxiliary heat (TH1210D / TH2210D)",
+    "notes": "Terminal letter shown only on the wiring diagram"
+   }
+  ],
+  "wiringNotes": [
+   "O/B jumper (back of faceplate): O (factory) energizes the valve in Cool; B energizes it in Heat. Wrong setting reverses heat and cool.",
+   "Fan jumper HG (factory, gas/oil - furnace controls fan) or HE (heat pump/electric - thermostat starts fan immediately). Not on TH1100, TH1210D, TH2210D; on TH1210D/TH2210D the fan always starts with the call.",
+   "Loosen the captive locking screw at the bottom to separate thermostat and wallplate. Leveling is cosmetic only."
+  ],
+  "setup": {
+   "access": "Press up and down together for 3 seconds; up/down changes the option, up+down 1 second advances; after the last function up+down saves and exits (auto-save after 60 s; RUN also saves on programmable models).",
+   "keySettings": [
+    {
+     "setting": "1 Temperature display",
+     "options": "0 F, 1 C"
+    },
+    {
+     "setting": "2 Time display",
+     "options": "0 12-hour, 1 24-hour"
+    },
+    {
+     "setting": "3 Heating cycles per hour",
+     "options": "2 steam/gravity, 3 hot water/90%+, 4-5 gas or oil (5 default), 6 electric"
+    },
+    {
+     "setting": "4 Cooling cycles per hour",
+     "options": "2-6 (3 default)"
+    },
+    {
+     "setting": "5 Compressor protection",
+     "options": "0 Off, 1 On (5 min)"
+    },
+    {
+     "setting": "6 Adaptive Intelligent Recovery",
+     "options": "0 Off, 1 On"
+    },
+    {
+     "setting": "7 Application",
+     "options": "0 Indoor (40-90F), 1 Garage (35-90F)"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Cool On / Heat On flashing",
+    "meaning": "Compressor protection",
+    "action": "Wait 5 minutes"
+   },
+   {
+    "code": "Lo Batt",
+    "meaning": "AAA batteries low (about 60 days left)",
+    "action": "Replace batteries"
+   },
+   {
+    "code": "Aux On",
+    "meaning": "Auxiliary heat on (heat pump models)"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No power / dead AAA batteries"
+    ],
+    "fixes": [
+     "Check breaker, switch, furnace door; install fresh AAA alkaline batteries"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats in Cool / cools in Heat",
+    "causes": [
+     "O/B jumper wrong"
+    ],
+    "fixes": [
+     "Move the O/B jumper"
+    ]
+   },
+   {
+    "symptom": "Cold air at start of heat call on gas/oil",
+    "causes": [
+     "Fan jumper on HE"
+    ],
+    "fixes": [
+     "Set fan jumper to HG"
+    ]
+   }
+  ],
+  "tips": [
+   "TH1110D here is the older PRO 1000 (locking-screw wallplate) - a T1 Pro is TH1110D2009 on a UWP. Check the full model on the back of the thermostat.",
+   "TH1110D is on two cards - match the full model: TH1110D2009 / TH1010D2000 = T1 Pro (UWP wallplate, 33-00189EFS); other TH1110D / TH1100D / TH1210D = PRO 1000 horizontal (locking-screw wallplate, 69-1968EFS)."
+  ],
+  "manuals": [
+   {
+    "title": "PRO 1000 / 2000 Series Programmable and Non-programmable Thermostats Installation Manual - legacy (69-1968EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-pro1000-2000-install-69-1968efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1968EFS.pdf"
+   },
+   {
+    "title": "PRO 2000 Series Programmable Thermostat Operating Manual TH2110DH / TH2210DH (69-2608EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-pro2000-operating-69-2608efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2608EFS.pdf"
+   }
+  ],
+  "sourceNotes": "69-1968EFS-08 PRO 1000 / 2000 Series Installation Manual (legacy product document); 69-2608EFS-05 PRO 2000 Series Operating Manual (Rev. 06-20)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-rth111",
+  "brand": "Honeywell Home",
+  "family": "RTH111 Non-Programmable",
+  "aka": "RTH111B retail digital non-programmable (two generations)",
+  "models": [
+   "RTH111B1042",
+   "RTH111"
+  ],
+  "type": "non-programmable",
+  "stages": "Single stage only: 1H/1C conventional, heat only, cool only, 750 mV millivolt, or heat pump without auxiliary/backup heat. Not for multistage or heat pumps with backup heat",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "2 AAA alkaline (required)",
+   "notes": "Battery powered. Manuals say do not use C (or C1 / X) wires - tape them off. Set the System switch to Off before pulling batteries or equipment can stay energized."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power",
+    "notes": "Metal jumper to Rc; remove it only if both R and Rc wires exist (RTH111B1042)"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC cooling transformer (RTH111B1042)",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heat",
+    "notes": "Rated 20-30 VAC 1.0 A or 750 mV powerpile 100 mA DC"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor",
+    "notes": "Heat pump without backup heat: jumper Y to W"
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Changeover, cooling (heat pump)",
+    "notes": "Connect O or B, not both"
+   },
+   {
+    "t": "B",
+    "fn": "Changeover, heating (heat pump)",
+    "notes": "Do not connect B if not a heat pump"
+   },
+   {
+    "t": "W/Aux",
+    "fn": "Not used",
+    "notes": "Shown as 'W/Aux Not Used' on RTH111B1042"
+   }
+  ],
+  "wiringNotes": [
+   "Do not use C, C1 or X wires - wrap bare ends with electrical tape.",
+   "Heat pump without auxiliary/backup heat: connect O or B (not both) and place a jumper between Y and W.",
+   "RTH111B1042 fan switch on the back: GAS OR OIL (factory) for systems that run the fan on a heat call; ELECTRIC OR HEAT PUMP lets the thermostat energize G in heat.",
+   "Older RTH111 (69-2384ES): jumper JP1 HG (gas/oil, factory) or HE (electric) for heat fan control; jumper JP2 O (factory) or B for the reversing valve - wrong JP2 setting reverses heat and cool.",
+   "Older RTH111 (69-2384ES) cannot be used if the old thermostat had any two of R, RC, RH, 4 and V wires.",
+   "Works on single stage 24 volt or 750 mV systems only."
+  ],
+  "setup": {
+   "access": "RTH111B1042: press and hold both up and down buttons about 5 seconds; up/down changes the setting, up+down together 1 second advances; after the last function up+down saves and exits (auto-saves after 60 s idle). Older RTH111: hold up+down 3 seconds (Run button also saves and exits).",
+   "keySettings": [
+    {
+     "setting": "Function 5 Heating system type (RTH111B1042)",
+     "options": "5 Gas or oil furnace under 90% efficient, 6 Electric furnace, 3 Heat pump / hot water / furnace over 90%, 2 Gas/oil steam or gravity"
+    },
+    {
+     "setting": "Function 14 Temperature display (RTH111B1042)",
+     "options": "0 Fahrenheit, 1 Celsius"
+    },
+    {
+     "setting": "Function 15 Compressor protection (RTH111B1042)",
+     "options": "1 On, 0 Off",
+     "notes": "About 5 minute minimum off time"
+    },
+    {
+     "setting": "Function 1 / 2 / 3 (older RTH111, 69-2384ES)",
+     "options": "1 Temp format 0 F / 1 C; 2 Heating CPH 2-6 (default 5: 2 steam/gravity, 3 hot water/90%+, 4-5 gas or oil, 6 electric); 3 Compressor protection 0 Off / 1 On"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Cool On / Heat On flashing",
+    "meaning": "Compressor protection 5 minute delay",
+    "action": "Wait 5 minutes"
+   },
+   {
+    "code": "Lo Batt",
+    "meaning": "AAA batteries low (appears about 60 days before depletion)",
+    "action": "Replace both AAA alkaline batteries"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Dead or missing AAA batteries"
+    ],
+    "fixes": [
+     "Install fresh AAA alkaline batteries"
+    ]
+   },
+   {
+    "symptom": "Heating or cooling system does not respond",
+    "causes": [
+     "System switch position / setpoint on wrong side of room temperature"
+    ],
+    "fixes": [
+     "Heat: setpoint above room temp; Cool: setpoint below room temp",
+     "Wait 5 minutes"
+    ]
+   },
+   {
+    "symptom": "Cannot change setpoint",
+    "causes": [
+     "System switch not in Heat or Cool",
+     "Outside allowed range"
+    ],
+    "fixes": [
+     "Heat 40-90F, Cool 50-99F"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats in Cool and cools in Heat (older RTH111)",
+    "causes": [
+     "JP2 O/B jumper in the wrong position"
+    ],
+    "fixes": [
+     "Move JP2 to match the O or B wire"
+    ]
+   }
+  ],
+  "tips": [
+   "Two different RTH111 generations exist: the current RTH111B1042 (33-00137EF, metal R-Rc jumper, fan switch) and an older vertical RTH111 with a locking screw and JP1/JP2 jumpers (69-2384ES)."
+  ],
+  "manuals": [
+   {
+    "title": "RTH111 Series Non-Programmable Thermostat Owner's Manual (33-00137EF)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth111-ownersmanual-33-00137ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00137EF.pdf"
+   },
+   {
+    "title": "RTH111 Non-Programmable Thermostat Quick Installation Guide - legacy (69-2384ES)",
+    "docType": "quick-start",
+    "seedFile": "honeywell-home-rth111-legacy-quickinstall-69-2384es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2384ES.pdf"
+   }
+  ],
+  "sourceNotes": "33-00137EF-01 RTH111 Series Owner's Manual (09-19); 69-2384ES-01 RTH111 Quick Installation Guide (09-09, legacy product document)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-rth3100c",
+  "brand": "Honeywell Home",
+  "family": "RTH3100C Heat Pump Non-Programmable",
+  "aka": "RTH3100C digital non-programmable for heat pumps",
+  "models": [
+   "RTH3100C"
+  ],
+  "type": "non-programmable",
+  "stages": "Heat pump: 1 compressor stage with auxiliary and emergency heat (Aux and E terminals)",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline",
+   "notes": "Batteries are optional if wired for AC power (C wire); they back up the display during power interruptions."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "If the old stat had both O and B wires, B goes to C"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Heat pump changeover valve (O wire)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "B terminal - function not described in the manuals",
+    "notes": "If the old stat had BOTH O and B wires, the B wire goes to C, not B"
+   },
+   {
+    "t": "Aux",
+    "fn": "Auxiliary heat",
+    "notes": ""
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat",
+    "notes": "If no wire matches E, jumper E to Aux"
+   },
+   {
+    "t": "L",
+    "fn": "L terminal - function not described in the manuals",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Alternate designations per the install guide chart: X / X2 / W / W1 / W2 / Y1 / M / F / V / VR / H map to the terminals shown - check the chart on page 12 of 69-1891ES.",
+   "Old stat had both V and VR, or W1 + W2 + Y: contact a contractor. Old stat had O and B: B to C (call Honeywell if C is already used).",
+   "No wire for E: jumper E to Aux."
+  ],
+  "setup": {
+   "access": "Press and hold up and down buttons until the display changes; down changes the setting, up advances; press and hold both to save and exit.",
+   "keySettings": [
+    {
+     "setting": "Function 6 Auxiliary heat cycle rate",
+     "options": "5 gas/oil <90%, 1 steam/gravity, 3 hot water/furnace >90%, 9 electric"
+    },
+    {
+     "setting": "Function 8 Emergency heat cycle rate",
+     "options": "9 electric, 1 steam/gravity, 3 hot water/>90%, 5 gas/oil <90%"
+    },
+    {
+     "setting": "Function 14 Temperature display",
+     "options": "0 Fahrenheit, 1 Celsius"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Cool On / Heat On flashing",
+    "meaning": "Compressor protection",
+    "action": "Wait 5 minutes"
+   },
+   {
+    "code": "Replace Batt",
+    "meaning": "Batteries low",
+    "action": "Install fresh AA alkaline batteries"
+   },
+   {
+    "code": "Em / Aux",
+    "meaning": "Emergency heat on / auxiliary heat on"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker, power switch, furnace door",
+     "Dead batteries"
+    ],
+    "fixes": [
+     "Restore power",
+     "Install fresh AA batteries"
+    ]
+   },
+   {
+    "symptom": "System does not respond",
+    "causes": [
+     "System switch / setpoint"
+    ],
+    "fixes": [
+     "Heat above room temp or Cool below room temp",
+     "Wait 5 minutes"
+    ]
+   },
+   {
+    "symptom": "Temperature settings do not change",
+    "causes": [
+     "Outside range"
+    ],
+    "fixes": [
+     "Heat 40-90F, Cool 50-99F"
+    ]
+   }
+  ],
+  "tips": [
+   "Em Heat on the System switch locks out the compressor and runs aux/emergency heat."
+  ],
+  "manuals": [
+   {
+    "title": "RTH3100C Non-Programmable Digital Thermostat Installation Guide - legacy (69-1891ES)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth3100c-install-69-1891es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1891ES.pdf"
+   },
+   {
+    "title": "RTH3100C Non-Programmable Digital Thermostat Operating Manual - legacy (69-1892ES)",
+    "docType": "user",
+    "seedFile": "honeywell-home-rth3100c-operating-69-1892es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1892ES.pdf"
+   }
+  ],
+  "sourceNotes": "69-1891ES-1 RTH3100C Installation Guide (Rev. 04-06, legacy); 69-1892ES-1 RTH3100C Operating Manual (Rev. 04-06, legacy)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-rth5160",
+  "brand": "Honeywell Home",
+  "family": "RTH5160 Non-Programmable",
+  "aka": "RTH5160D retail non-programmable on UWP wall plate",
+  "models": [
+   "RTH5160D1003"
+  ],
+  "type": "non-programmable",
+  "stages": "Setup 220/221 allow up to 2 heat / 2 cool conventional or 1 compressor + 1 aux/E heat pump; note the wiring checklist lists R, Rh, Rc, Y, G, C, A or L/A, O/B, W2 or AUX, E, W, K (no Y2)",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline (always required)",
+   "notes": "C does not power the display or operation - batteries are always required. A single C/C1 wire may be landed on C; if the old thermostat had two C/C1 wires, tape them off separately."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC (R or RH)",
+    "notes": "R-switch up for one R wire; down for separate R/RH and Rc"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC cooling transformer",
+    "notes": "If the old stat had R and RH: R wire to Rc, RH wire to R, switch down"
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (optional)",
+    "notes": "Does not power the thermostat"
+   },
+   {
+    "t": "W",
+    "fn": "Heat",
+    "notes": ""
+   },
+   {
+    "t": "W2 / AUX",
+    "fn": "Second stage heat or heat pump auxiliary heat",
+    "notes": ""
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor / cool stage 1",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Heat pump reversing valve",
+    "notes": "System Setup 218"
+   },
+   {
+    "t": "K, L/A, S, U",
+    "fn": "Not supported",
+    "notes": "If K was used, a C-wire adapter is at the equipment - rewire so Y and G are used instead of K"
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump alternate wiring: keep the R slider tab up (1 wire). If the old stat had separate O and B wires, land B on C (stop if C is already used). Stop and call a contractor if the old stat had V and VR, or Y1 + W1 + W2.",
+   "Does not support the heat pump fault (L/A) alert.",
+   "Line-voltage (120/240V) systems are not compatible.",
+   "The wiring checklist in 33-00200ES has no Y2 entry even though Setup 220 offers 2 cool stages - verify before wiring a 2-stage condenser."
+  ],
+  "setup": {
+   "access": "System Setup starts after first install; to re-enter from the Home screen press and hold Menu about 5 seconds. Edit (-) changes, Next (+) saves and advances, Done saves and exits.",
+   "keySettings": [
+    {
+     "setting": "125 Temperature Indication Scale",
+     "options": "0 Fahrenheit, 1 Celsius"
+    },
+    {
+     "setting": "200 Heating System Type",
+     "options": "1 Conventional Forced Air, 2 Heat Pump, 3 Radiant Heat (Boiler), 5 None (Cool Only)"
+    },
+    {
+     "setting": "205 Heating Equipment Type",
+     "options": "Conventional: 1 Std Gas, 2 High-Eff Gas, 3 Oil, 4 Electric, 5 Hot Water Fan Coil. Heat Pump: 7 Air to Air. Radiant: 9 Hot Water, 12 Steam"
+    },
+    {
+     "setting": "218 Reversing Valve O/B",
+     "options": "0 O (O/B in Cool), 1 B (O/B in Heat)"
+    },
+    {
+     "setting": "220 Cool / Compressor Stages",
+     "options": "0, 1, 2 (max 2 cool or 1 compressor)"
+    },
+    {
+     "setting": "221 Heat / Backup Heat Stages",
+     "options": "Heat 1, 2; Backup 0, 1"
+    },
+    {
+     "setting": "300 System Changeover",
+     "options": "0 Manual, 1 Automatic"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "170",
+    "meaning": "Internal memory error",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "173",
+    "meaning": "Thermostat temperature sensor error",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "405",
+    "meaning": "Low battery alert",
+    "action": "Replace within two months"
+   },
+   {
+    "code": "407",
+    "meaning": "Critical low battery",
+    "action": "Replace as soon as possible"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Dead AA batteries (C does not power it)"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries"
+    ]
+   },
+   {
+    "symptom": "Cannot select Cool",
+    "causes": [
+     "Setup 220 set to 0"
+    ],
+    "fixes": [
+     "Set 220 to 1 or 2"
+    ]
+   },
+   {
+    "symptom": "Fan does not turn on with heat",
+    "causes": [
+     "Setup 205 does not match equipment"
+    ],
+    "fixes": [
+     "Set 205 to the actual heating equipment type"
+    ]
+   },
+   {
+    "symptom": "Heating runs in cool mode / heat pump blows cool air in heat or warm air in cool",
+    "causes": [
+     "Setup 200 or 218 wrong"
+    ],
+    "fixes": [
+     "Correct system type (200) and O/B (218)"
+    ]
+   },
+   {
+    "symptom": "Heat On / Cool On flashing",
+    "causes": [
+     "Compressor protection"
+    ],
+    "fixes": [
+     "Wait 5 minutes"
+    ]
+   }
+  ],
+  "tips": [
+   "Batteries always run the RTH5160 - a good C wire will not keep a dead-battery unit lit."
+  ],
+  "manuals": [
+   {
+    "title": "RTH5160 Series Non-Programmable Thermostat Quick Installation Guide (33-00200ES)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth5160-quickinstall-33-00200es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00200ES.pdf"
+   }
+  ],
+  "sourceNotes": "33-00200ES-9 RTH5160 Series Non-Programmable Thermostat Quick Installation Guide (05-26)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-rth6350-6450",
+  "brand": "Honeywell Home",
+  "family": "RTH6350 / RTH6450 Programmable",
+  "aka": "RTH6350D / RTH6450D, RET93E / RET95E (removable battery holder)",
+  "models": [
+   "RTH6350",
+   "RTH6450",
+   "RET93E",
+   "RET95E"
+  ],
+  "type": "programmable",
+  "stages": "Conventional up to 2 heat / 2 cool (Function 1 types 6-8); single-stage heat pump with or without backup/aux heat. Not for multistage heat pumps",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "2 AA alkaline in removable battery holder (required)",
+   "notes": "Battery powered - manuals say do not use C, X or B wires on conventional systems. Works on 24 volt or 750 mV systems; not 120/240V."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power",
+    "notes": "Metal jumper to Rc; remove only if both R and Rc wires exist"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heat stage 1",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor / cool stage 1",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Cool stage 2",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Heat pump changeover valve",
+    "notes": "Function 2"
+   },
+   {
+    "t": "Aux",
+    "fn": "Heat pump auxiliary heat",
+    "notes": "If E and Aux do not each have a wire, jumper them together"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "L terminal (shown on heat pump wiring)",
+    "notes": "Function not described in the manuals"
+   }
+  ],
+  "wiringNotes": [
+   "Conventional: do not use C, X or B - tape them off.",
+   "Heat pump: leave the R-Rc metal jumper in place. Separate O and B wires: tape off B and do not connect it. Stop and call a contractor if the old stat had V and VR, or Y1 + W1 + W2.",
+   "Model number is printed on the removable battery holder."
+  ],
+  "setup": {
+   "access": "Press and hold the up arrow and FAN buttons about 5 seconds; arrows change the setting, NEXT advances, DONE saves and exits.",
+   "keySettings": [
+    {
+     "setting": "Function 1 System type",
+     "options": "0 Heat/cool, 1 Heat pump no backup, 2 Heat only, 3 Heat only with fan, 4 Cool only, 5 Heat pump with backup/aux, 6 2H/2C, 7 2H/1C, 8 1H/2C"
+    },
+    {
+     "setting": "Function 2 Heat pump changeover valve",
+     "options": "0 O (cooling), 1 B (heating)"
+    },
+    {
+     "setting": "Function 3 Heating fan control",
+     "options": "0 Gas or oil (system controls fan), 1 Electric (thermostat controls fan)"
+    },
+    {
+     "setting": "Function 5 / 6 / 8 Cycle rates (heat / stage 2 heat / emergency heat)",
+     "options": "5 gas/oil <90%, 9 electric, 3 hot water or >90%, 1 steam/gravity (Em heat default 9)"
+    },
+    {
+     "setting": "Function 12 Manual/Auto changeover (RTH6450 only)",
+     "options": "0 Manual, 1 Automatic (min 3F separation)"
+    },
+    {
+     "setting": "Function 13 Smart Response Technology",
+     "options": "1 On, 0 Off"
+    },
+    {
+     "setting": "Function 14 Temperature display",
+     "options": "0 F, 1 C"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Heat On / Cool On flashing",
+    "meaning": "Compressor protection",
+    "action": "Wait 5 minutes"
+   },
+   {
+    "code": "Replace Battery",
+    "meaning": "Batteries low (about two months left)",
+    "action": "Replace AA batteries in the battery holder"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Dead AA batteries"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries"
+    ]
+   },
+   {
+    "symptom": "Cannot change system to Cool / heat runs in cool mode",
+    "causes": [
+     "Function 1 system type wrong"
+    ],
+    "fixes": [
+     "Set Function 1 to match equipment"
+    ]
+   },
+   {
+    "symptom": "Fan does not turn on with heat",
+    "causes": [
+     "Function 3 wrong"
+    ],
+    "fixes": [
+     "Set Function 3 to 1 for electric heat"
+    ]
+   },
+   {
+    "symptom": "Heating and cooling run at the same time (or heat will not turn off)",
+    "causes": [
+     "Function 1 wrong",
+     "Bare wires touching at the wallplate"
+    ],
+    "fixes": [
+     "Correct Function 1",
+     "Pull the thermostat and separate bare wires"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Function 2 wrong"
+    ],
+    "fixes": [
+     "Set Function 2 to 0 (O) or 1 (B)"
+    ]
+   }
+  ],
+  "tips": [
+   "Auto changeover (Function 12) exists on RTH6450/RET95E only, not RTH6350/RET93E."
+  ],
+  "manuals": [
+   {
+    "title": "RTH6350/RTH6450 Series Programmable Thermostat Quick Installation Guide - legacy (69-2416ES)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth6350-rth6450-quickinstall-69-2416es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2416ES.pdf"
+   },
+   {
+    "title": "RTH6350/RTH6450 RET93E/RET95E Series Programmable Thermostat Owner's Manual (33-00116ES)",
+    "docType": "user",
+    "seedFile": "honeywell-home-rth6350-rth6450-ownersmanual-33-00116es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00116ES.pdf"
+   }
+  ],
+  "sourceNotes": "69-2416ES-05 RTH6350/RTH6450 Series Quick Installation Guide (Rev. 10-10, legacy product document); 33-00116ES-01 RTH6350/RTH6450 RET93E/RET95E Series Owner's Manual",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-rth7400-7500",
+  "brand": "Honeywell Home",
+  "family": "RTH7400 / RTH7500 Programmable",
+  "aka": "RTH7460D / RTH7560E (UWP generation) and older RTH7400 / RTH7500 / RET97D",
+  "models": [
+   "RTH7460D1000",
+   "RTH7460D1018",
+   "RTH7560E1001",
+   "RTH7560E1019",
+   "RTH7400",
+   "RTH7500",
+   "RET97D"
+  ],
+  "type": "programmable",
+  "stages": "Up to 2 heat / 2 cool conventional; heat pump with up to 2 compressor stages (UWP generation) and 1 aux/E stage",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline",
+   "notes": "UWP generation (RTH7460D/RTH7560E): batteries always required - C does not power the display or operation. Older RTH7400/RTH7500/RET97D: batteries optional backup if wired for AC power (R + C); works on 24V or 750 mV systems."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC (R or RH)",
+    "notes": "UWP: R-switch up for one R wire, down for R + Rc. Older: metal jumper to Rc, remove only if both R and Rc wires"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC cooling",
+    "notes": "Old stat had R and RH: R wire to Rc, RH wire to R"
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "Only one C/C1 wire may be landed; two C/C1 wires: tape both off. Separate O and B wires: B goes to C"
+   },
+   {
+    "t": "W",
+    "fn": "Heat stage 1",
+    "notes": "Do NOT use W for heat pump applications (UWP generation)"
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2 / Aux",
+    "notes": ""
+   },
+   {
+    "t": "AUX / E",
+    "fn": "Heat pump auxiliary / emergency heat",
+    "notes": "Older generation: if E and Aux do not each have a wire, jumper them together"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor stage 1",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor / cool stage 2",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Heat pump changeover valve",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "Heat pump fault input (older RTH7400/RTH7500 only)",
+    "notes": "Requires C wire. The UWP generation does not support L/A, S or U"
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump alternate wiring: keep R slider tab up / leave R-Rc jumper in place. Stop and call a contractor if the old stat had V and VR, or Y1 + W1 + W2.",
+   "UWP generation: the thermostat needs no jumpers - remove any from the old stat.",
+   "Not for 120/240V line-voltage systems."
+  ],
+  "setup": {
+   "access": "UWP generation: press and hold Menu and + about 5 seconds, Select to enter System Setup (ISU); +/- change, Select saves and advances, Home exits early. Older generation: press and release the left button, then hold the center button about 5 seconds; arrows change, NEXT advances, DONE saves.",
+   "keySettings": [
+    {
+     "setting": "ISU 120 Scheduling (UWP)",
+     "options": "0 Non-programmable, 1 1-week, 2 5-2 (RTH7560), 3 5-1-1 (RTH7460), 4 7-day (RTH7560)"
+    },
+    {
+     "setting": "ISU 200 / 205 System and Equipment Type (UWP)",
+     "options": "200: 1 Conventional, 2 Heat Pump, 3 Radiant (Boiler), 5 Cool Only. 205: 1 Std Gas, 2 High-Eff Gas, 3 Oil, 4 Electric, 5 Fan Coil, 7 Air-to-Air HP, 9 Hot Water, 12 Steam"
+    },
+    {
+     "setting": "ISU 218 Reversing Valve O/B (UWP)",
+     "options": "0 O, 1 B"
+    },
+    {
+     "setting": "ISU 220 / 221 Stages (UWP)",
+     "options": "Cool/compressor 0, 1, 2; Heat 1, 2; Backup 0, 1"
+    },
+    {
+     "setting": "ISU 300 System Changeover (UWP)",
+     "options": "0 Manual, 1 Automatic"
+    },
+    {
+     "setting": "ISU 425 Smart Response (UWP)",
+     "options": "0 No, 1 Yes"
+    },
+    {
+     "setting": "ISU 430 / 431 Min Cool / Max Heat (RTH7500 only)",
+     "options": "50-99F / 40-90F"
+    },
+    {
+     "setting": "ISU 711 Air Filter 1 Reminder (UWP)",
+     "options": "0 Off, 1-8 run-time days (10-150), 9-19 calendar days/months"
+    },
+    {
+     "setting": "0170 System Type (older)",
+     "options": "1 Heat/cool, 2 HP no backup, 3 Heat only, 4 Heat only with fan, 5 Hot water heat only, 6 Cool only, 7 HP with backup, 8 2H/2C, 9 2H/1C, 10 1H/2C"
+    },
+    {
+     "setting": "0180 / 0190 (older)",
+     "options": "0180 Heating fan: 0 gas/oil, 1 electric. 0190 Changeover: 0 O, 1 B"
+    },
+    {
+     "setting": "0240 / 0270 Cycle rates (older)",
+     "options": "Heat: 5 gas/oil, 9 electric, 3 HP/hot water/90%+, 1 steam/gravity. Em heat: 9"
+    },
+    {
+     "setting": "0300 / 0320 / 0500 / 0530 / 0600 / 0610 (older)",
+     "options": "Auto changeover 0/1; F/C; filter reminder 0-6; Smart Response 1/0; max heat 40-90F; min cool 50-99F"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "170",
+    "meaning": "Internal memory error (UWP generation)",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "173",
+    "meaning": "Thermostat temperature sensor error",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "181",
+    "meaning": "Replace air filter (1)",
+    "action": "Dismiss after replacing to reset the timer"
+   },
+   {
+    "code": "405",
+    "meaning": "Low battery",
+    "action": "Replace within two months"
+   },
+   {
+    "code": "407",
+    "meaning": "Critical low battery",
+    "action": "Replace as soon as possible"
+   },
+   {
+    "code": "Wait",
+    "meaning": "Compressor protection (older generation)",
+    "action": "Wait a few minutes"
+   },
+   {
+    "code": "LO BATT",
+    "meaning": "Batteries low (older generation, about 30 days left)",
+    "action": "Replace AA batteries"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Dead AA batteries",
+     "No AC power (older generation)"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries",
+     "Check breaker, power switch, furnace door"
+    ]
+   },
+   {
+    "symptom": "Cannot change system setting to Cool",
+    "causes": [
+     "ISU 220 set to 0"
+    ],
+    "fixes": [
+     "Set 220 to 1 or 2"
+    ]
+   },
+   {
+    "symptom": "Fan does not turn on with heat",
+    "causes": [
+     "ISU 205 does not match equipment"
+    ],
+    "fixes": [
+     "Correct ISU 205"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool, or heat runs in cool mode",
+    "causes": [
+     "ISU 200 or 218 wrong"
+    ],
+    "fixes": [
+     "Correct system type and O/B setting"
+    ]
+   },
+   {
+    "symptom": "Heat On / Cool On flashing",
+    "causes": [
+     "Compressor protection"
+    ],
+    "fixes": [
+     "Wait 5 minutes"
+    ]
+   }
+  ],
+  "tips": [
+   "Two generations share the RTH7400/RTH7500 name: the UWP push-in wall plate (RTH7460D/RTH7560E, 3-digit ISU numbers, 33-00202EF) and the older screw-terminal wallplate (RET97D, 4-digit function numbers, 33-00090EF). Check the back of the thermostat."
+  ],
+  "manuals": [
+   {
+    "title": "RTH7400, RTH7500 Series Programmable Thermostat Quick Installation Guide (33-00202EF)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth7400-rth7500-quickinstall-33-00202ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00202EF.pdf"
+   },
+   {
+    "title": "RTH7400/RTH7500 RET97D Series Programmable Thermostat Owner's Manual - legacy (33-00090EF)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth7400-rth7500-ret97d-ownersmanual-33-00090ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00090EF.pdf"
+   }
+  ],
+  "sourceNotes": "33-00202EF-17 RTH7400, RTH7500 Series Quick Installation Guide (Rev. 11-20; models RTH7560E1001, RTH7560E1019, RTH7460D1000, RTH7460D1018); 33-00090EF-01 RTH7400/RTH7500 RET97D Series Owner's Manual (legacy product document)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-rth8580wf",
+  "brand": "Honeywell Home",
+  "family": "RTH8580WF Wi-Fi Touchscreen",
+  "aka": "RTH8500 Wi-Fi Series 7-day touchscreen (Total Connect Comfort)",
+  "models": [
+   "RTH8580WF"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool conventional, heat pump with or without aux/backup heat (function 0170 types 1-10)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "Coin cell (clock backup only)",
+   "notes": "C wire is the primary power source - without it the thermostat will not power up. The coin cell only keeps time/date during outages. Not for millivolt or 120/240V systems."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC (heating)",
+    "notes": "Metal jumper to Rc; remove only if both R and Rc wires exist. Old R + RH: R wire to Rc, RH wire to R, remove jumper"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC (cooling)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common - required",
+    "notes": "Separate O and B wires: B goes to C (heat pump alternate wiring)"
+   },
+   {
+    "t": "W",
+    "fn": "Heat stage 1",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor / cool stage 1",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Cool stage 2",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Heat pump changeover valve",
+    "notes": "Function 0190"
+   },
+   {
+    "t": "E/AUX",
+    "fn": "Heat pump auxiliary / emergency heat",
+    "notes": "Separate AUX and E wires both go into E/AUX; AUX jumpered to E: land AUX on E/AUX, no jumper"
+   },
+   {
+    "t": "L",
+    "fn": "Heat pump system monitor input",
+    "notes": "Red light in the upper right corner when the monitor finds a problem"
+   },
+   {
+    "t": "K",
+    "fn": "Do not use - for future use",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump alternate wiring: leave the R-Rc metal jumper in place. Separate O and B wires: O to O/B, B to C and set function 0190 to 0. Check for help if the old stat had V and VR, or separate Y1, W1 and W2.",
+   "Red light is normal in Emergency Heat mode; if not in Em Heat, it indicates a system monitor problem - call for service."
+  ],
+  "setup": {
+   "access": "Press SYSTEM, then press and hold the center blank button about 5 seconds. Use the arrows beside the 4-digit function number to change function and beside the right-hand number to change the option; DONE saves and exits.",
+   "keySettings": [
+    {
+     "setting": "0160 Schedule Options",
+     "options": "4 7-day programmable, 0 non-programmable"
+    },
+    {
+     "setting": "0170 System Type",
+     "options": "1 Heat/cool, 2 Heat pump no backup, 4 Heat only with fan, 5 Heat only (no fan), 6 Cool only, 7 Heat pump with backup/aux, 8 2H/2C, 9 2H/1C, 10 1H/2C",
+     "notes": "Must be changed for multistage, heat pump or hydronic"
+    },
+    {
+     "setting": "0180 Heating Fan Control",
+     "options": "0 Gas or oil (system controls fan), 1 Electric (thermostat controls fan)"
+    },
+    {
+     "setting": "0190 Heat Pump Changeover Valve",
+     "options": "0 O (cooling), 1 B (heating)"
+    },
+    {
+     "setting": "0240 / 0250 Heating Cycle Rate stage 1 / stage 2",
+     "options": "5 Gas or oil <90%, 9 Electric, 3 Hot water or >90% furnace, 1 Steam or gravity"
+    },
+    {
+     "setting": "0280 Backlight",
+     "options": "0 Off (on 8 s after keypress), 1 Always on low"
+    },
+    {
+     "setting": "0300 Manual/Auto Changeover",
+     "options": "0 Manual, 1 Automatic (min 3F heat/cool separation)"
+    },
+    {
+     "setting": "0320 Temperature Format",
+     "options": "0 F, 1 C"
+    },
+    {
+     "setting": "0500 Filter Change Reminder",
+     "options": "0 Off, 1-8 = 10/30/60/90/120/180/270/365 run-time days"
+    },
+    {
+     "setting": "0530 Smart Response Technology",
+     "options": "1 On, 0 Off"
+    },
+    {
+     "setting": "0710 Restore Original Settings",
+     "options": "0 No, 1 Disconnect Wi-Fi and restore original settings"
+    },
+    {
+     "setting": "0890 / 0900 Wi-Fi On/Off / Wi-Fi Connection",
+     "options": "0890: 1 On, 0 Off (removes Wi-Fi SETUP message). 0900: set 0 to disconnect from the network"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": "Function 0710 = 1 disconnects Wi-Fi and restores original settings (erases customizations)."
+  },
+  "diagnostics": [
+   {
+    "code": "Wait",
+    "meaning": "Compressor protection timer",
+    "action": "Wait 5 minutes"
+   },
+   {
+    "code": "Recovery",
+    "meaning": "Smart Response is starting the system before a scheduled period"
+   },
+   {
+    "code": "Wi-Fi SETUP",
+    "meaning": "Not yet connected to Wi-Fi",
+    "action": "Connect to NewThermostat_xxxxxx network and browse to 192.168.1.1"
+   },
+   {
+    "code": "CONNECTION FAILURE",
+    "meaning": "Could not join the Wi-Fi network (e.g. wrong password)",
+    "action": "Re-enter the home Wi-Fi password"
+   },
+   {
+    "code": "REGISTER AT TOTAL CONNECT",
+    "meaning": "On Wi-Fi but not registered",
+    "action": "Register at mytotalconnectcomfort.com with the MAC ID and MAC CRC"
+   },
+   {
+    "code": "UPDATING",
+    "meaning": "Automatic software update in progress (screen blank)"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No C wire / no 24VAC",
+     "Breaker, power switch or furnace door"
+    ],
+    "fixes": [
+     "Verify C is connected at the thermostat and equipment",
+     "Check breaker, power switch, furnace door"
+    ]
+   },
+   {
+    "symptom": "Cannot change system setting to Cool",
+    "causes": [
+     "Function 0170 system type wrong"
+    ],
+    "fixes": [
+     "Set 0170 to match the equipment"
+    ]
+   },
+   {
+    "symptom": "Fan does not turn on with a call for heat",
+    "causes": [
+     "Function 0180 set to gas/oil on an electric system"
+    ],
+    "fixes": [
+     "Set 0180 to 1 Electric heat"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool air in heat or warm in cool",
+    "causes": [
+     "Function 0190 wrong"
+    ],
+    "fixes": [
+     "Set 0190 to 0 (O) or 1 (B)"
+    ]
+   },
+   {
+    "symptom": "Red light is on",
+    "causes": [
+     "Emergency Heat mode (normal)",
+     "System monitor fault on L"
+    ],
+    "fixes": [
+     "If not in Em Heat, call for service"
+    ]
+   }
+  ],
+  "tips": [
+   "Not the same as the RTH8500D / RTH8560D non-Wi-Fi touchscreen card - the Wi-Fi model needs a C wire and uses 4-digit function numbers.",
+   "MAC ID and MAC CRC are shown in the message center, on the ID card and on the back of the thermostat."
+  ],
+  "manuals": [
+   {
+    "title": "RTH8500 Wi-Fi Series (RTH8580WF) Wi-Fi Touchscreen Programmable Thermostat User Guide (33-00133EF)",
+    "docType": "install",
+    "seedFile": "honeywell-home-rth8580wf-userguide-33-00133ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00133EF.pdf"
+   }
+  ],
+  "sourceNotes": "33-00133EF-01 RTH8500 Wi-Fi Series Wi-Fi Touchscreen Programmable Thermostat User Guide (06-15, legacy product document; includes RTH8580WF Thermostat ID card 69-2723EFS)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t1-pro",
+  "brand": "Honeywell Home",
+  "family": "T1 Pro",
+  "aka": "TH1110D / TH1010D non-programmable (UWP)",
+  "models": [
+   "TH1110D2009",
+   "TH1010D2000"
+  ],
+  "type": "non-programmable",
+  "stages": "TH1110D2009: 1H/1C conventional or 1H/1C heat pump without aux heat. TH1010D2000: 1H or 1C conventional (heat only or cool only)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (primary or backup power)",
+   "notes": "Runs on AA batteries alone or on 24VAC with R and C (C recommended). W also accepts a 750 mV powerpile heating circuit. Continuous backlight (ISU 1400) needs the C wire."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power from heating transformer",
+    "notes": "Jumped to Rc by the R Slider Tab"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC power from cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "Optional if batteries are installed; on 2-transformer systems use the common from the cooling transformer"
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay (stage 1)",
+    "notes": "Rated 20-30 Vac 0.02-1.0 A or 750 mV DC powerpile"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor contactor (stage 1)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover valve (TH1110D only)",
+    "notes": "Set ISU 218 to O or B"
+   },
+   {
+    "t": "Y2, AUX-W2, E, K, L/A-A",
+    "fn": "Not used for T1 thermostat",
+    "notes": "Present on the UWP but not functional on T1 Pro"
+   }
+  ],
+  "wiringNotes": [
+   "R Slider Tab: up (1 wire) if a single R wire is landed on R, Rc or RH; down (2 wires) if separate R and Rc wires exist.",
+   "Leave the U terminal slider tabs in place on T1 Pro.",
+   "Heat-only Series 20 valve: R to valve R, Y to valve W, W to valve B; set ISU 200 to Radiant Heat (3) and cool stages to 0.",
+   "Heat pump wiring (TH1110D only): R, Rc (slider), Y compressor, O/B changeover, G fan, C optional. No aux/emergency heat on T1 Pro.",
+   "Wire: 18- to 22-gauge thermostat wire; shielded cable not required."
+  ],
+  "setup": {
+   "access": "Press and hold Menu (center) about 3 seconds to enter installer setup; Edit changes a value, Next advances, Done saves and returns.",
+   "keySettings": [
+    {
+     "setting": "ISU 125 Temperature Indication Scale",
+     "options": "0 Fahrenheit, 1 Celsius"
+    },
+    {
+     "setting": "ISU 200 Heating System Type",
+     "options": "1 Conventional Forced Air, 2 Heat Pump (TH1110D only), 3 Radiant Heat, 5 None (Cool Only)"
+    },
+    {
+     "setting": "ISU 205 Heating Equipment Type",
+     "options": "Conventional: 1 Std Gas, 2 High-Eff Gas, 3 Oil, 4 Electric, 5 Hot Water Fan Coil. Heat Pump: 7 Air to Air, 8 Geothermal. Radiant: 9 Hot Water, 12 Steam",
+     "notes": "Not shown if ISU 200 = Cool Only"
+    },
+    {
+     "setting": "ISU 218 Reversing Valve O/B",
+     "options": "0 O (O/B in Cool), 1 B (O/B in Heat)",
+     "notes": "Heat pump only"
+    },
+    {
+     "setting": "ISU 220 Cool / Compressor Stages",
+     "options": "0, 1",
+     "notes": "Not shown on TH1010D"
+    },
+    {
+     "setting": "ISU 221 Heat Stages",
+     "options": "0, 1",
+     "notes": "Not shown on TH1010D"
+    },
+    {
+     "setting": "ISU 230 Fan Control in Heat",
+     "options": "1 Equipment Controls Fan, 2 Thermostat Controls Fan",
+     "notes": "Only if ISU 205 = Electric Forced Air or Fan Coil"
+    },
+    {
+     "setting": "ISU 430 / 431 Minimum Cool / Maximum Heat Setpoint",
+     "options": "50-99F (default 50F) / 32-90F (default 90F)"
+    },
+    {
+     "setting": "ISU 1400 Backlighting",
+     "options": "0 On Demand, 1 Continuous",
+     "notes": "Continuous needs C wire; hidden on battery-only power"
+    },
+    {
+     "setting": "ISU 1420 Temperature Display Offset",
+     "options": "-3F to 3F (0)"
+    }
+   ],
+   "installerTest": "not published in the T1 Pro installation instructions",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Cool On / Heat On flashing",
+    "meaning": "Built-in compressor protection delay is active",
+    "action": "Wait about 5 minutes for the safe restart time"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Tripped breaker",
+     "System power switch off",
+     "Furnace door open",
+     "Dead or missing AA batteries"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn system power switch on",
+     "Close furnace door securely",
+     "Install fresh AA alkaline batteries"
+    ]
+   },
+   {
+    "symptom": "Heating or cooling system does not respond",
+    "causes": [
+     "Wrong mode or setpoint on wrong side of room temperature",
+     "Power switch/breaker/furnace door"
+    ],
+    "fixes": [
+     "Set Heat with setpoint above room temp or Cool with setpoint below room temp",
+     "Check breaker, power switch and furnace door",
+     "Wait 5 minutes for the system to respond"
+    ]
+   },
+   {
+    "symptom": "Temperature settings do not change",
+    "causes": [
+     "Range stops (ISU 430/431) limiting the setpoint"
+    ],
+    "fixes": [
+     "Heat range 32-90F, cool range 50-99F; check the installer's range-stop settings"
+    ]
+   }
+  ],
+  "tips": [
+   "Do not confuse the T1 Pro TH1110D2009 with the older PRO 1000 TH1110D (different wall plate and manual) - check the full model on the back.",
+   "O/B and heat pump setup exist only on TH1110D2009; TH1010D2000 is heat-only or cool-only.",
+   "TH1110D is on two cards - match the full model: TH1110D2009 / TH1010D2000 = T1 Pro (UWP wallplate, 33-00189EFS); other TH1110D / TH1100D / TH1210D = PRO 1000 horizontal (locking-screw wallplate, 69-1968EFS)."
+  ],
+  "manuals": [
+   {
+    "title": "T1 Pro Non-Programmable Thermostat Installation Instructions (33-00189EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t1pro-install-33-00189efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00189EFS.pdf"
+   },
+   {
+    "title": "T1 Pro Non-Programmable Thermostat User Guide (33-00190EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-t1pro-userguide-33-00190efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00190EFS.pdf"
+   },
+   {
+    "title": "T1 Pro Series Thermostats Submittal Sheet (33-00287)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t1pro-submittal-33-00287.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00287.pdf"
+   },
+   {
+    "title": "Addendum - T4 and T1 PRO Wiring Diagrams (33-00325)",
+    "docType": "wiring",
+    "seedFile": "honeywell-home-t4-t1pro-wiring-addendum-33-00325.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00325.pdf"
+   }
+  ],
+  "sourceNotes": "33-00189EFS-09 T1 Pro Non-Programmable Thermostat Installation Instructions (Rev. 09-20); 33-00190EFS-09 T1 Pro User Guide (Rev. 08-20); 33-00287-03 T1 Pro Series Submittal Sheet (Rev. 03-20); 33-00325-02 T4 and T1 PRO Wiring Diagrams addendum (Rev. 07-21)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t3-pro",
+  "brand": "Honeywell Home",
+  "family": "T3 Pro",
+  "aka": "TH3110U / TH3210U non-programmable (UWP)",
+  "models": [
+   "TH3110U2008",
+   "TH3210U2004"
+  ],
+  "type": "non-programmable",
+  "stages": "TH3110U2008: 1H/1C conventional or 1H/1C heat pump without aux heat. TH3210U2004: 1H/1C conventional or up to 2H/1C heat pump with electric aux heat (plus emergency heat)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (primary or backup power)",
+   "notes": "Runs on AA batteries or 24VAC R + C (C recommended). W also accepts a 750 mV powerpile heating circuit. Continuous backlight (ISU 1400) needs the C wire."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power from heating transformer",
+    "notes": "Jumped to Rc by the R Slider Tab"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC power from cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "Optional with batteries; on 2-transformer systems use the common from the cooling transformer"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (stage 1)",
+    "notes": "Do not use W on heat pump applications"
+   },
+   {
+    "t": "AUX-W2",
+    "fn": "Auxiliary heat (TH3210U only)",
+    "notes": ""
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat (TH3210U only)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor contactor (stage 1)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover valve",
+    "notes": "ISU 218 selects O or B"
+   },
+   {
+    "t": "S, Y2, U, K, L/A-A",
+    "fn": "Not used for T3 thermostat",
+    "notes": "Present on the UWP only"
+   }
+  ],
+  "wiringNotes": [
+   "R Slider Tab up (1 wire) for a single R/Rc/RH wire; down (2 wires) when separate R and Rc wires exist. Leave the U slider tabs in place.",
+   "Heat pump: R, Y, O/B, G, C (+ AUX and E on TH3210U). Do not land a wire on W for heat pump applications.",
+   "Heat-only Series 20 valve: R to valve R, Y to valve W, W to valve B; set Radiant Heat and 0 cool stages in ISU.",
+   "Wire: 18- to 22-gauge thermostat wire; shielded cable not required."
+  ],
+  "setup": {
+   "access": "Enters installer setup automatically on first power-up. To re-enter from the Home screen press and hold Menu about 5 seconds; Edit (-) changes values, Next (+) saves and advances, Done saves and exits.",
+   "keySettings": [
+    {
+     "setting": "ISU 125 Temperature Indication Scale",
+     "options": "0 Fahrenheit, 1 Celsius"
+    },
+    {
+     "setting": "ISU 200 Heating System Type",
+     "options": "1 Conventional Forced Air, 2 Heat Pump, 3 Radiant Heat, 5 None (Cool Only)",
+     "notes": "Default varies by model"
+    },
+    {
+     "setting": "ISU 205 Heating Equipment Type",
+     "options": "Conventional: 1 Std Gas, 2 High-Eff Gas, 3 Oil, 4 Electric, 5 Hot Water Fan Coil. Radiant: 9 Hot Water, 12 Steam",
+     "notes": "Not shown for heat pump or cool only"
+    },
+    {
+     "setting": "ISU 218 Reversing Valve O/B",
+     "options": "0 O (O/B in Cool), 1 B (O/B in Heat)",
+     "notes": "Heat pump only"
+    },
+    {
+     "setting": "ISU 220 Cool / Compressor Stages",
+     "options": "0, 1"
+    },
+    {
+     "setting": "ISU 221 Heat / Backup Heat Stages",
+     "options": "Heat 1; Backup 0, 1"
+    },
+    {
+     "setting": "ISU 230 Fan Control in Heat",
+     "options": "1 Equipment Controls Fan, 2 Thermostat Controls Fan",
+     "notes": "Only for Electric Forced Air or Fan Coil"
+    },
+    {
+     "setting": "ISU 300 System Changeover",
+     "options": "0 Manual, 1 Automatic"
+    },
+    {
+     "setting": "ISU 303 Auto Changeover Differential",
+     "options": "0-5F",
+     "notes": "Differential, not deadband (deadband fixed at 0F)"
+    },
+    {
+     "setting": "ISU 340 Backup Heat Droop (TH3210U only)",
+     "options": "0 Comfort, 2-15F"
+    },
+    {
+     "setting": "ISU 350 Upstage Timer to Backup Heat (TH3210U only)",
+     "options": "Off, 30/45/60/75/90 min, 2/3/4/5 hours"
+    },
+    {
+     "setting": "ISU 365 / 370 / 375 Cycle rates",
+     "options": "Compressor 1-6 CPH; Heat 1-12 CPH; Aux heat 1-12 CPH (TH3210U)",
+     "notes": "Recommended heat CPH: std gas 5, high-eff gas 3, oil 5, electric 9, fan coil 3, hot water radiant 3, steam 1"
+    },
+    {
+     "setting": "ISU 387 Compressor Protection",
+     "options": "0 Off, 1-5 minutes",
+     "notes": "Shows Wait during the minimum-off time"
+    },
+    {
+     "setting": "ISU 430 / 431 Minimum Cool / Maximum Heat Setpoint",
+     "options": "50-99F (50F) / 32-90F (90F)"
+    },
+    {
+     "setting": "ISU 1400 / 1401 Backlighting / Brightness",
+     "options": "0 On Demand, 1 Continuous (needs C); brightness 1-5"
+    },
+    {
+     "setting": "ISU 1420 Temperature Display Offset",
+     "options": "-3F to 3F (0)"
+    }
+   ],
+   "installerTest": "not published in the T3 Pro installation instructions",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "170",
+    "meaning": "Internal memory error",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "173",
+    "meaning": "Thermostat temperature sensor error",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "405",
+    "meaning": "Low battery alert",
+    "action": "Replace AA batteries within two months"
+   },
+   {
+    "code": "407",
+    "meaning": "Critical low battery",
+    "action": "Replace AA batteries as soon as possible"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Dead/missing AA batteries and no C wire",
+     "Breaker, power switch or furnace door"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries",
+     "Check breaker, system power switch and furnace door"
+    ]
+   },
+   {
+    "symptom": "Heating or cooling does not respond",
+    "causes": [
+     "Wrong mode or setpoint",
+     "Power interrupted"
+    ],
+    "fixes": [
+     "Menu > Mode to Heat (setpoint above room) or Cool (setpoint below room)",
+     "Check breaker, power switch, furnace door",
+     "Wait 5 minutes"
+    ]
+   },
+   {
+    "symptom": "Heat On / Cool On flashing",
+    "causes": [
+     "Compressor protection delay"
+    ],
+    "fixes": [
+     "Wait 5 minutes for safe restart"
+    ]
+   },
+   {
+    "symptom": "Aux heat runs in cooling, or cool runs on a call for heat",
+    "causes": [
+     "Wire landed on W on a heat pump system"
+    ],
+    "fixes": [
+     "Remove the W wire; heat pumps use O/B, Y, AUX and E only"
+    ]
+   }
+  ],
+  "tips": [
+   "Only TH3210U2004 has AUX-W2 and E - a TH3110U2008 cannot run heat pump backup heat.",
+   "T3 Pro has auto changeover (ISU 300) - T1 Pro does not."
+  ],
+  "manuals": [
+   {
+    "title": "T3 Pro Thermostat Installation Instructions (33-00520EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t3pro-install-33-00520efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00520EFS.pdf"
+   },
+   {
+    "title": "T3 Pro Thermostat User Guide (33-00521EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-t3pro-userguide-33-00521efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00521EFS.pdf"
+   },
+   {
+    "title": "T3 Pro Series Thermostats Submittal Sheet (33-00522EF)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t3pro-submittal-33-00522ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00522EF.pdf"
+   }
+  ],
+  "sourceNotes": "33-00520EFS-05 T3 Pro Thermostat Installation Instructions (Rev. 10-22); 33-00521EFS-03 T3 Pro User Guide (Rev. 03-20); 33-00522EF-01 T3 Pro Series Submittal Sheet",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t6-pro-hydronic",
+  "brand": "Honeywell Home",
+  "family": "T6 Pro Hydronic",
+  "aka": "TH6100AF programmable, floor/air sensing (UWP)",
+  "models": [
+   "TH6100AF2004"
+  ],
+  "type": "programmable",
+  "stages": "Heat only, 1 stage (boiler, hot water valve, relay panel, radiant floor or steam). Controls air (A mode), floor (F mode) or air with floor limits (AF mode)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (primary or backup power)",
+   "notes": "R + C recommended. A separate transformer can power the display on Rc/C with the R slider tab down, while the heat circuit stays on R/W. Continuous backlight needs C."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power from heating transformer",
+    "notes": "Jumped to Rc by the R Slider Tab (up = 1 wire)"
+   },
+   {
+    "t": "Rc",
+    "fn": "24VAC from a transformer other than the heating transformer, used to power the display (optional)",
+    "notes": "R slider tab down (2 wires) when used"
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "If a separate display transformer is used, use that transformer's common"
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay (stage 1)",
+    "notes": "To boiler W, zone valve, or W on a zone of a hot water relay panel"
+   },
+   {
+    "t": "S, S",
+    "fn": "Input for auxiliary wired floor or indoor sensor",
+    "notes": "AC112-01 10K floor sensor ships in the box"
+   },
+   {
+    "t": "O/B, Y, Y2, AUX-W2, E, G, K, U, L/A-A",
+    "fn": "Unused on this model",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Boiler, hot water valve circuit or relay panel wires go to R and W. Same transformer providing C: leave R slider tab up (1 wire). Separate transformer for the display: slider down, heat circuit on R/W, display transformer on Rc/C.",
+   "Leave the U slider tabs in place.",
+   "Floor sensor AC112-01 (10K ohm): install midway between pipes (e.g. 6 in. from pipe on 12 in. spacing), vertically centered, preferably inside min. 0.5 in. PEX conduit; center of small rooms, at least 7 ft from the wall in large rooms.",
+   "Recommended maximum floor temperature 90F for most coverings, 85F for wood. Freeze protection for garages/basements 41-45F suggested.",
+   "Wire: 18- to 22-gauge thermostat wire; shielded cable not required."
+  ],
+  "setup": {
+   "access": "Press and hold CENTER and the arrow button (as pictured in the manual) about 3 seconds for the advanced menu, Select to enter ISU; Select cycles options, arrows change values, Home saves and exits.",
+   "keySettings": [
+    {
+     "setting": "ISU 120 Scheduling Options",
+     "options": "0 Non-programmable, 2 5-2, 3 5-1-1, 4 7-Day"
+    },
+    {
+     "setting": "ISU 129 Wired Floor Temperature Sensor",
+     "options": "0 None, 1 Wired floor sensor",
+     "notes": "Must be wired to S and set to 1 for AF or F mode"
+    },
+    {
+     "setting": "ISU 205 Heating Equipment Type",
+     "options": "9 Hot Water Radiant Heat, 10 Hot Water Radiant Floor Heat, 12 Steam"
+    },
+    {
+     "setting": "ISU 299 Temperature Control Mode",
+     "options": "1 Air and Floor (AF), 2 Air Only (A), 3 Floor Only (F)",
+     "notes": "Only if ISU 205 = 10; default AF with floor sensor, A without"
+    },
+    {
+     "setting": "ISU 370 Heating Cycle Rate",
+     "options": "1-12 CPH",
+     "notes": "Defaults: hot water radiant 3, radiant floor A/AF 1, radiant floor F 3, steam 1"
+    },
+    {
+     "setting": "ISU 388 Minimum On Time (boiler short-cycle protection)",
+     "options": "0 Off, 2, 5, 15 min"
+    },
+    {
+     "setting": "ISU 425 Adaptive Intelligent Recovery",
+     "options": "0 No, 1 Yes"
+    },
+    {
+     "setting": "ISU 431 / 432 Maximum / Minimum Heat Setpoint",
+     "options": "A/AF: 40-90F (90F max, 50F min default). F: 40-99F (85F max, 50F min default)"
+    },
+    {
+     "setting": "ISU 435 Keypad Lockout",
+     "options": "0 Disabled, 1 Enabled"
+    },
+    {
+     "setting": "ISU 500 / 515 / 520 Wired Indoor Air Sensor",
+     "options": "500: 0 No, 1 Yes; 515: 0 10k, 1 20k; 520: 1 Thermostat only, 2 Wired only, 3 Average",
+     "notes": "Only when no floor sensor is configured"
+    },
+    {
+     "setting": "ISU 575 / 576 Minimum / Maximum Floor Temperature Limit",
+     "options": "Min 40-89F (72F); Max 50-99F (85F)",
+     "notes": "AF mode only; limits must be at least 10 degrees apart"
+    },
+    {
+     "setting": "ISU 577 Floor Economy Mode",
+     "options": "0 Off, 1 On",
+     "notes": "Disables minimum floor limit during Away and Sleep"
+    },
+    {
+     "setting": "ISU 578 Freeze Protection Temperature",
+     "options": "A mode 40-50F (40F)",
+     "notes": "Heats even with system Off"
+    },
+    {
+     "setting": "ISU 1400 / 1401 Backlighting / Brightness",
+     "options": "0 On Demand, 1 Continuous (needs C); 1-5"
+    },
+    {
+     "setting": "ISU 1410 / 1415 / 1420",
+     "options": "Clock 12/24; Daylight Saving 0 Off, 1 On; Display offset -3 to 3F"
+    }
+   ],
+   "installerTest": "Advanced menu (hold CENTER + arrow 3 s) > TEST > Select; choose Heat or Ver (firmware); arrow buttons turn heat on and off; Home exits.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "170",
+    "meaning": "Internal memory error",
+    "action": "Contact dealer"
+   },
+   {
+    "code": "171",
+    "meaning": "Set the date and time",
+    "action": "Set date/time (needed for the program schedule)"
+   },
+   {
+    "code": "173",
+    "meaning": "Thermostat temperature sensor error",
+    "action": "Replace the thermostat"
+   },
+   {
+    "code": "177",
+    "meaning": "Wired indoor temperature sensor not connected or shorted",
+    "action": "Check sensor wiring on S terminals"
+   },
+   {
+    "code": "252",
+    "meaning": "AC power lost",
+    "action": "Check the AC circuit breaker"
+   },
+   {
+    "code": "405",
+    "meaning": "Battery low",
+    "action": "Replace batteries"
+   },
+   {
+    "code": "407",
+    "meaning": "Battery critical - thermostat cannot control the system",
+    "action": "Replace batteries immediately"
+   },
+   {
+    "code": "514",
+    "meaning": "Floor temperature sensor not connected or shorted",
+    "action": "AF mode ignores floor limits; F mode stops heating except freeze protection. Check sensor wiring"
+   },
+   {
+    "code": "535",
+    "meaning": "High floor temperature (above maximum floor limit)"
+   },
+   {
+    "code": "536",
+    "meaning": "Freeze protection (below freeze protection limit)"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker or heating power switch off",
+     "Dead AA batteries and no C"
+    ],
+    "fixes": [
+     "Reset breaker / turn on heating power switch",
+     "Install fresh AA alkaline batteries"
+    ]
+   },
+   {
+    "symptom": "Heating system does not respond",
+    "causes": [
+     "Mode not Heat or setpoint below room temperature"
+    ],
+    "fixes": [
+     "Set Heat with setpoint above room temperature",
+     "Check breaker and power switch",
+     "Wait 5 minutes"
+    ]
+   },
+   {
+    "symptom": "Temperature settings do not change",
+    "causes": [
+     "Setpoint outside allowed range"
+    ],
+    "fixes": [
+     "Heat range 40-90F (A/AF mode)"
+    ]
+   }
+  ],
+  "tips": [
+   "Floor-only (F) mode shows FLR above the floor temperature - the displayed number is the slab, not the room.",
+   "Temperature Control Mode (ISU 299) only appears when ISU 205 is set to 10 Hot Water Radiant Floor Heat."
+  ],
+  "manuals": [
+   {
+    "title": "T6 Pro Hydronic Programmable Thermostat Installation Instructions (33-00340EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t6prohydronic-install-33-00340efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00340EFS.pdf"
+   },
+   {
+    "title": "T6 Pro Hydronic Programmable Thermostat User Guide (33-00343EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-t6prohydronic-userguide-33-00343efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00343EFS.pdf"
+   },
+   {
+    "title": "T6 Pro Hydronic Programmable Thermostat Submittal Sheet (33-00361)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-t6prohydronic-submittal-33-00361.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00361.pdf"
+   }
+  ],
+  "sourceNotes": "33-00340EFS-13 T6 Pro Hydronic Programmable Thermostat Installation Instructions (Rev. 08-22); 33-00343EFS-07 User Guide (Rev. 09-21); 33-00361-03 Submittal Sheet (Rev. 03-21)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t834",
+  "brand": "Honeywell Home",
+  "family": "T834 / T8034 Mechanical Heat-Cool",
+  "aka": "T834N / T834L vertical, T8034N horizontal (builder mechanical thermostat)",
+  "models": [
+   "T834N",
+   "T834L",
+   "T8034N"
+  ],
+  "type": "non-programmable",
+  "stages": "24 Vac single-stage heat and cool, heat only, heat only with fan, cool only, single-stage heat pump (W jumpered to Y). T834L: cool only (Off/Cool)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "None",
+   "notes": "Mechanical; no C terminal. Heat anticipator on T834N/T8034N (not T834L)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "Heating power - secondary of heating transformer",
+    "notes": "Metal jumper R-Rc for single transformer; remove for 2 transformers"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling power - secondary of cooling transformer",
+    "notes": "Not present on T834L"
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay",
+    "notes": "Not on T834L. Heat pump: jumper W to Y"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Heat pump changeover valve energized in cooling",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "Heat pump changeover valve energized in heating",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump: connect W to Y with a short wire (not supplied).",
+   "Wire: 18-gauge thermostat wire; shielded not required.",
+   "Fan switch (not T834L): F (factory) for gas/oil; E for heat pump or electric heat when G is connected."
+  ],
+  "setup": {
+   "access": "Remove the cover; heat anticipator arrow and F/E fan switch are on the base.",
+   "keySettings": [
+    {
+     "setting": "Heat anticipator (not T834L)",
+     "options": "Steam 1.2, hot water 0.8, high-efficiency warm air 0.8, standard warm air 0.4, electric 0.3"
+    },
+    {
+     "setting": "Fan operation switch (not T834L)",
+     "options": "F gas/oil (factory), E electric or heat pump"
+    }
+   ],
+   "installerTest": "not published",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Setpoint range is 50-90F. System switch: Heat/Off/Cool (T834N) or Off/Cool (T834L); Fan: Auto/On."
+  ],
+  "manuals": [
+   {
+    "title": "T834 Series Thermostat Owner's Manual (69-1944EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t834-series-ownersmanual-69-1944efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1944EFS.pdf"
+   }
+  ],
+  "sourceNotes": "69-1944EFS-05 T834 Series Thermostat Owner's Manual (covers T8034N horizontal, T834N/T834L vertical). 69-2083EFS-03 (older edition of the same manual, 03-20) not used.",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t8400-t8401-t8411",
+  "brand": "Honeywell Home",
+  "family": "T8400C / T8401C / T8411R Electronic Non-Programmable",
+  "aka": "TRADELINE digital non-programmable (T8400C power-stealing, T8401C C-wire, T8411R heat pump)",
+  "models": [
+   "T8400C",
+   "T8401C",
+   "T8411R"
+  ],
+  "type": "non-programmable",
+  "stages": "T8400C / T8401C: single-stage heat/cool, manual changeover. T8411R: heat pump 2 heat (compressor + aux) / 1 cool with Em Ht",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "None - setpoints held in non-volatile memory",
+   "notes": "T8400C is powered through the heating/cooling system controls (4-wire systems, no C). T8401C and T8411R are powered directly from the system transformer (C terminal connected; 5-wire for T8401C). 18-30 Vac."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24V power",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "Transformer common",
+    "notes": "Connect on T8401C and T8411R installs"
+   },
+   {
+    "t": "W",
+    "fn": "Heating primary control (T8400C/T8401C)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling contactor / compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1",
+    "fn": "Compressor contactor, heat (T8411R)",
+    "notes": "Jumper to Y when supplied; remove for a separate heating compressor contactor"
+   },
+   {
+    "t": "W2",
+    "fn": "Auxiliary heat relay (T8411R)",
+    "notes": ""
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat relay (T8411R)",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "Energized continuously in Em Ht (T8411R)",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Changeover valve, cool (T8411R)",
+    "notes": "Not all models have both O and B"
+   },
+   {
+    "t": "B",
+    "fn": "Changeover valve, heat (T8411R)",
+    "notes": "Not all models have both O and B"
+   }
+  ],
+  "wiringNotes": [
+   "Use 18-gauge maximum wire and keep wiring in the shaded area left of the terminals so the thermostat seats.",
+   "Level only for appearance - the electronic thermostat works when not level."
+  ],
+  "setup": {
+   "access": "Set the setpoint to 52F (or 11C), then press up and down together for more than 1 second - all segments light and the software revision shows. Up steps through: factory info, F/C (down changes), heat cycle rate (down scrolls), cooling algorithm C1/C3 (select models), CC; up again saves and exits.",
+   "keySettings": [
+    {
+     "setting": "Heat cycle rate (T8400C/T8401C)",
+     "options": "1 steam/radiant floor/gravity, 3 hydronic or condensing furnace, 6 gas/oil forced air, 9 electric, 4/5/12 special"
+    },
+    {
+     "setting": "Stage 2 heat cycle rate (T8411R)",
+     "options": "3, 4, 5, 6, 9, 12 (stage 1 heat and cool fixed at 3 CPH)"
+    },
+    {
+     "setting": "Cooling algorithm (select models)",
+     "options": "C1 standard, C3 aggressive (can overshoot)"
+    },
+    {
+     "setting": "Temperature indication",
+     "options": "F or C"
+    }
+   ],
+   "installerTest": "In installer setup steps 2-3 the down key turns the heat or cool output on/off according to the SYSTEM switch (bypasses the 5-minute off timer). T8411R heat: 1st press compressor heat, 2nd aux on, 3rd aux off, 4th heat off.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Aux Ht indicator",
+    "meaning": "Auxiliary backup heat running (T8411R)"
+   },
+   {
+    "code": "Em Ht indicator",
+    "meaning": "SYSTEM switch in Em Ht - W2 and E cycle, L on, compressor off (T8411R)"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "Cooling starts about five minutes after a call (compressor off-timer); use the installer-setup output test to bypass it during checkout.",
+   "Setpoint range 40-99F."
+  ],
+  "manuals": [
+   {
+    "title": "T8400C and T8401C Electronic Thermostats Installation Instructions - legacy (69-1480)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t8400c-t8401c-install-69-1480.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1480.pdf"
+   },
+   {
+    "title": "T8411R Electronic Heat Pump Thermostat Installation Instructions - legacy (69-1481)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t8411r-install-69-1481.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1481.pdf"
+   }
+  ],
+  "sourceNotes": "69-1480-1 T8400C and T8401C Installation Instructions (Rev. 2-02); 69-1481-1 T8411R Installation Instructions (Rev. 2-02). Owner's guide 69-1490 not used: it prints no model number.",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t8775-digital-round",
+  "brand": "Honeywell Home",
+  "family": "The Digital Round (T8775)",
+  "aka": "T8775A heat only / T8775C heat-cool digital round non-programmable",
+  "models": [
+   "T8775A",
+   "T8775C"
+  ],
+  "type": "non-programmable",
+  "stages": "Single stage 24V: T8775A heat only; T8775C heat-only with fan, heat/cool (1 or 2 transformers), or single-stage heat pump",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "None - batteries are not required (setting held in permanent memory)",
+   "notes": "Wallplate has no C terminal (W, R, Rc, B, O, Y, G). Box includes a 4074 FAB resistor (use not described in the instructions)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24V power (heating transformer)",
+    "notes": "Factory jumper to Rc; remove for 2-transformer heat/cool"
+   },
+   {
+    "t": "Rc",
+    "fn": "24V power (cooling transformer)",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heating relay or valve coil",
+    "notes": "Heat pump: jumper W to Y (wire not supplied)"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor contactor (T8775C)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay (T8775C)",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Cool changeover valve (heat pump, T8775C)",
+    "notes": "Use either O or B"
+   },
+   {
+    "t": "B",
+    "fn": "Heat changeover valve (heat pump, T8775C)",
+    "notes": "Use either O or B"
+   }
+  ],
+  "wiringNotes": [
+   "Use 18-gauge wire.",
+   "Single-stage heat pump (T8775C): jumper W to Y and use either O or B for the changeover valve.",
+   "Fuel switch (T8775C only) on the back: F (factory) for gas or oil; E for electric heat or heat pump (fan starts immediately with heat when G is connected)."
+  ],
+  "setup": {
+   "access": "DIP switches 1-3 on the back of the thermostat; fuel switch (T8775C). SYSTEM and FAN slide switches on top (T8775C).",
+   "keySettings": [
+    {
+     "setting": "DIP 1 / 2 Heat cycle rate",
+     "options": "1 CPH steam/gravity (On/On); 3 CPH 90%+ warm air, hot water, heat pump (Off/On); 6 CPH gas or oil warm air - factory (Off/Off); 9 CPH electric warm air (On/Off)",
+     "notes": "In-floor radiant: check with manufacturer"
+    },
+    {
+     "setting": "DIP 3 Temperature display",
+     "options": "Off Fahrenheit (factory), On Celsius"
+    },
+    {
+     "setting": "Fuel switch (T8775C)",
+     "options": "F gas/oil (factory), E electric or heat pump"
+    }
+   ],
+   "installerTest": "Checkout: Heat - SYSTEM Heat, FAN Auto, raise setpoint; flame appears and heat turns on. Cool (T8775C) - SYSTEM Cool, lower setpoint; after about five minutes a solid snowflake appears and cooling runs. Fan - SYSTEM Off, FAN On.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Flashing snowflake",
+    "meaning": "Five-minute compressor protection delay (call for cool within 5 min of shutdown or after a power interruption)",
+    "action": "Wait five minutes"
+   },
+   {
+    "code": "Flame",
+    "meaning": "Heat is on"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Heating or cooling does not come on",
+    "causes": [
+     "SYSTEM switch not in Heat/Cool",
+     "Setpoint on wrong side of room temp",
+     "Compressor delay",
+     "Fuse / breaker"
+    ],
+    "fixes": [
+     "Set SYSTEM switch",
+     "Heat: setpoint above room and flame shown; Cool: below room and solid snowflake",
+     "Wait 5 minutes",
+     "Check fuse/breaker and airflow at register"
+    ]
+   }
+  ],
+  "tips": [
+   "Setpoint range is 40-90F heat and 45-99F cool (T8775C).",
+   "Turning the dial one click shows the setpoint (arrow at SET); after 5 seconds it returns to room temperature (arrow at ROOM)."
+  ],
+  "manuals": [
+   {
+    "title": "T8775A,C The Digital Round Non-Programmable Thermostat Installation Instructions (69-1677EF)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t8775-digitalround-install-69-1677ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1677EF.pdf"
+   },
+   {
+    "title": "T8775A,C The Digital Round Owner's Guide (69-1679EF)",
+    "docType": "user",
+    "seedFile": "honeywell-home-t8775-digitalround-ownersguide-69-1679ef.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-1679EF.pdf"
+   }
+  ],
+  "sourceNotes": "69-1677EF-03 T8775A,C The Digital Round Installation Instructions (Rev. 03-20); 69-1679EF-03 T8775A,C Owner's Guide (Rev. 03-20)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-t87f-round",
+  "brand": "Honeywell Home",
+  "family": "T87F Round (Easy-to-See, mercury)",
+  "aka": "T87F mechanical round with 137421 wallplate or Q539 subbase",
+  "models": [
+   "T87F3467",
+   "T87F5199",
+   "T87F"
+  ],
+  "type": "non-programmable",
+  "stages": "Single stage heating, cooling only, or heating/cooling with a Q539 subbase (System and Fan switches); two-wire and three-wire (Series 10 SPDT) 24-27 Vac heating",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "None (mechanical, mercury switch)",
+   "notes": "Heat anticipator must be set to the current draw of the heating primary control BEFORE mounting - too low can burn it out. Contains mercury: recycle the old control, do not trash it."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24V from transformer / primary control",
+    "notes": "Wallplate terminals are lettered; captive screws on the thermostat complete the connection"
+   },
+   {
+    "t": "W",
+    "fn": "Heat",
+    "notes": "Heat anticipator in series - set to measured R-W current"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling contactor",
+    "notes": "Cooling-only uses R and Y"
+   },
+   {
+    "t": "B",
+    "fn": "Series 10 (three-wire SPDT) connection",
+    "notes": "Shown only on the Series 10 replacement diagram"
+   }
+  ],
+  "wiringNotes": [
+   "Heating/cooling needs a Q539 subbase for System (COOL/OFF/HEAT) and Fan (ON/AUTO) switches - follow the subbase instructions when used.",
+   "Typical diagrams: oil (R8184 primary), gas (transformer + gas valve), cooling only (R, Y), heating-cooling with remote changeover switch, Series 10 replacement.",
+   "Level the wallplate/subbase with a spirit level - an out-of-level mercury thermostat deviates from setpoint.",
+   "Do not short across relay coil terminals - it can burn out the heat anticipator.",
+   "Outlet box mounting: order 129044A adapter ring."
+  ],
+  "setup": {
+   "access": "Pull off the cover ring; remove the polystyrene packing that protects the mercury switches.",
+   "keySettings": [
+    {
+     "setting": "Heat anticipator",
+     "options": ".12 to 1.0 A scale",
+     "notes": "Match the primary control current rating or the old thermostat setting. If unknown: thermostat off, power on, AC ammeter across R (or RH) and W for one minute, set to the reading. Larger number = longer burn, fewer cycles"
+    }
+   ],
+   "installerTest": "Heat: set about 10F above room (Q539: HEAT/AUTO) - heat and fan start; set 10F below - they stop. Cool: set 10F below room (COOL/AUTO) - cooling and fan start. Fan: OFF + ON runs fan continuously.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Temperature control deviates from setpoint",
+    "causes": [
+     "Thermostat not level",
+     "Out of calibration"
+    ],
+    "fixes": [
+     "Re-level the wallplate/subbase",
+     "Recalibrate with the 104994A calibration wrench"
+    ]
+   }
+  ],
+  "tips": [
+   "Do not operate cooling if outdoor air (or the heat-exchange water) is below 50F."
+  ],
+  "manuals": [
+   {
+    "title": "T87F Easy-to-See Thermostats Installation Instructions - legacy (69-0200)",
+    "docType": "install",
+    "seedFile": "honeywell-home-t87f-easytosee-install-69-0200.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-0200.pdf"
+   }
+  ],
+  "sourceNotes": "69-0200-6 T87F Easy-to-See Thermostats Installation Instructions (Rev. 8-02). Q539 subbase instructions not found on Resideo as a PDF.",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-tb7220-tb8220",
+  "brand": "Honeywell Home",
+  "family": "TB7220U CommercialPRO / TB8220U Commercial VisionPRO",
+  "aka": "Light-commercial programmable thermostats with economizer/TOD output (A terminal)",
+  "models": [
+   "TB7220U",
+   "TB8220U"
+  ],
+  "type": "programmable",
+  "stages": "Conventional up to 2 heat / 2 cool; heat pump up to 3 heat / 2 cool with auxiliary heat (W1)",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Battery only, 24 Vac only, or 24 Vac with battery backup",
+   "notes": "When using batteries the 24V common connection is optional. Continuous backlight needs AC power."
+  },
+  "terminals": [
+   {
+    "t": "Rc",
+    "fn": "Power for cooling - secondary of cooling transformer",
+    "notes": "Metal jumper Rc-R for 1 transformer; remove for 2"
+   },
+   {
+    "t": "R",
+    "fn": "Power for heating - secondary of heating transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "Common from cooling transformer",
+    "notes": "Optional with batteries"
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay (conventional)",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Second stage heat relay (conventional)",
+    "notes": ""
+   },
+   {
+    "t": "W1",
+    "fn": "Auxiliary heat relay output (heat pump 2H/1C, 3H/2C)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor output",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Second stage cooling",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover valve for heat pumps",
+    "notes": "O factory, B selectable in installer setup"
+   },
+   {
+    "t": "A",
+    "fn": "Economizer / Time-Of-Day output",
+    "notes": "Powered via R (TB8220U) or RC (TB7220U); powered = occupied. To W7212 'N' or W7459 'TR'"
+   },
+   {
+    "t": "S1, S2",
+    "fn": "Optional outdoor or indoor remote sensor",
+    "notes": "Separate cable from the thermostat cable; multiple TR21 or C7189U sensors supported"
+   },
+   {
+    "t": "L",
+    "fn": "Powers red LED in upper right corner (TB8220U)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Two wallplate label sets: conventional (W, W2) or heat pump (O/B, W1) - pick the set for the system type.",
+   "With dual transformers the heating transformer must power the economizer (TB8220U)."
+  ],
+  "setup": {
+   "access": "TB8220U: press SYSTEM, then press and hold the two blank keys either side of the center blank key about 5 seconds; arrows cycle Setup Numbers. TB7220U: press and release System, then press System and Done together about 5 seconds.",
+   "keySettings": [
+    {
+     "setting": "0170 System Selection (TB8220U)",
+     "options": "1 1H/1C Conv, 2 1H/1C HP, 3 1H w/o fan, 4 1H with fan, 6 1C, 7 2H/1C HP (aux), 8 2H/2C Conv (default), 9 2H/1C Conv, 10 1H/2C Conv, 11 2H/2C HP, 12 3H/2C HP (aux)",
+     "notes": "Emergency Heat button needs setting 7 or 12"
+    },
+    {
+     "setting": "0175 TOD/Economizer output (A)",
+     "options": "0 Unused, 1 TOD (A energized in Occupied), 2 Economizer (A energized on a call for cool)"
+    },
+    {
+     "setting": "0180 Heat Fan Operation",
+     "options": "0 Fossil, 1 Electric"
+    },
+    {
+     "setting": "Pre-occupancy Purge Duration",
+     "options": "0-3 hours (also sends economizer to minimum)"
+    },
+    {
+     "setting": "0190 Reversing Valve O/B",
+     "options": "O (factory) or B"
+    },
+    {
+     "setting": "0280 Continuous Backlight",
+     "options": "0 No, 1 Yes"
+    },
+    {
+     "setting": "0340 / 0350 / 0360 Heat pump lockouts",
+     "options": "Outdoor sensor; compressor lockout 0 or 15-60F; aux lockout 0 or 40-60F"
+    },
+    {
+     "setting": "0690 Temperature Control Cool",
+     "options": "1 Less, 2 Standard, 3 More aggressive"
+    }
+   ],
+   "installerTest": "Tests follow the setup numbers: Test 1 Cool (stages 1-2), 2 Fan, 3 Heat (stages 1-3), 4 Auxiliary heat, 8 TOD/Economizer. Minimum compressor off time is bypassed.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "On system-powered (C wire) installs the minimum-off timer also runs at startup and after power interruptions."
+  ],
+  "manuals": [
+   {
+    "title": "TB8220U Commercial VisionPRO Programmable Thermostat Installation Instructions (62-3070)",
+    "docType": "install",
+    "seedFile": "honeywell-home-tb8220u-install-62-3070.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/62-0000s/62-3070.pdf"
+   },
+   {
+    "title": "TB8220U Commercial Programmable Thermostat Owner's Guide (63-2643)",
+    "docType": "user",
+    "seedFile": "honeywell-home-tb8220u-ownersguide-63-2643.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/63-0000s/63-2643.pdf"
+   },
+   {
+    "title": "TB7220U CommercialPRO Programmable Thermostat Installation Instructions (62-0221)",
+    "docType": "install",
+    "seedFile": "honeywell-home-tb7220u-install-62-0221.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/62-0000s/62-0221.pdf"
+   },
+   {
+    "title": "TB7220U Commercial Programmable Thermostat Owner's Guide (63-2626)",
+    "docType": "user",
+    "seedFile": "honeywell-home-tb7220u-ownersguide-63-2626.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/63-0000s/63-2626.pdf"
+   }
+  ],
+  "sourceNotes": "62-3070-07 TB8220U Installation Instructions (Rev. 03-11); 63-2643 TB8220U Owner's Guide (legacy); 62-0221-07 TB7220U Installation Instructions (Rev. 10-20); 63-2626-02 TB7220U Owner's Guide (Rev. 02-19)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-th7000",
+  "brand": "Honeywell Home",
+  "family": "TH7000 Series Touchscreen Programmable",
+  "aka": "TH7110U / TH7220U pro touch-screen (sibling of RTH7600)",
+  "models": [
+   "TH7110U",
+   "TH7220U",
+   "TH7220U1035"
+  ],
+  "type": "programmable",
+  "stages": "TH7110U: 1H/1C. TH7220U: up to 2H/1C heat pump or 2H/2C conventional",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Supplied batteries for primary or backup power (plus a lithium battery - pull the tab)",
+   "notes": "For 24VAC primary power connect transformer common to C. C is required if L is used, and for the always-on backlight (0280 = 1). Works on 750 mV heating."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "Heating power - secondary of heating transformer",
+    "notes": "Factory jumper to Rc; remove only for 2-transformer systems"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling power - secondary of cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (optional; from cooling transformer if 2 transformers)",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat relay",
+    "notes": "Series 20: W to valve terminal B"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat relay (TH7220)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage compressor contactor",
+    "notes": "Series 20: Y to valve terminal W"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor contactor (TH7220)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover valve for heat pumps",
+    "notes": "Function 0190"
+   },
+   {
+    "t": "Aux",
+    "fn": "Auxiliary heat relay (TH7220)",
+    "notes": "Field jumper Aux to E if no emergency heat relay"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat relay (TH7220)",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "System monitor (TH7220)",
+    "notes": "Requires C"
+   },
+   {
+    "t": "S1, S2",
+    "fn": "Optional outdoor or remote indoor sensor",
+    "notes": "C7089U1006 outdoor, C7189U1005 remote indoor"
+   }
+  ],
+  "wiringNotes": [
+   "Heat-only Series 20: R to valve R, W to valve B, Y to valve W; set 0170 to 5.",
+   "Remote indoor sensor on S1/S2 replaces the internal sensor (0340 = 3)."
+  ],
+  "setup": {
+   "access": "Press SYSTEM & FAN, then press and hold SYSTEM and DONE until the display changes. Arrows change the setting, NEXT advances, DONE saves and exits.",
+   "keySettings": [
+    {
+     "setting": "0160 Schedule format",
+     "options": "4 7-day, 0 Non-programmable"
+    },
+    {
+     "setting": "0170 System type",
+     "options": "1 1H/1C conv, 2 1H/1C HP, 3 Heat only 2-wire, 4 Heat only with fan, 5 Series 20 hot water, 6 Cool only, 7 2H/1C HP with aux, 8 2H/2C, 9 2H/1C, 10 1H/2C"
+    },
+    {
+     "setting": "0180 Fan control (heating)",
+     "options": "0 Gas/oil, 1 Electric"
+    },
+    {
+     "setting": "0190 Changeover valve",
+     "options": "0 cooling (O), 1 heating (B)"
+    },
+    {
+     "setting": "0200 / 0210 Aux heat type / external fossil fuel kit",
+     "options": "0 Electric, 1 Fossil fuel; 1 external kit controls backup, 0 thermostat controls (outdoor sensor required)"
+    },
+    {
+     "setting": "0220-0270 Cycle rates",
+     "options": "Compressor 3 (1-6); heat 5/1/3/9; Em heat 9"
+    },
+    {
+     "setting": "0280 Backlight",
+     "options": "0 8 s after keypress, 1 always on low (needs 24VAC)"
+    },
+    {
+     "setting": "0300 / 0310 Changeover / deadband",
+     "options": "0 Manual, 1 Auto; deadband 3F (2-9F)"
+    },
+    {
+     "setting": "0340 Remote sensor",
+     "options": "0 None, 1 Outdoor (display), 2 Outdoor control (heat pumps), 3 Indoor"
+    },
+    {
+     "setting": "0350 / 0360 Compressor / aux lockout",
+     "options": "0 None, or 5-60F (compressor) / 5-65F (aux)",
+     "notes": "Needs outdoor sensor"
+    },
+    {
+     "setting": "0500 / 0510 / 0520 Filter / humidifier pad / UV reminders",
+     "options": "Filter 0-6; pad 90/180/365 days; UV 365 days"
+    },
+    {
+     "setting": "0530 Adaptive Intelligent Recovery",
+     "options": "1 On, 0 Off"
+    },
+    {
+     "setting": "0580 Compressor protection",
+     "options": "5 min (0-4)"
+    },
+    {
+     "setting": "0600 / 0610 Range stops",
+     "options": "Max heat 90F, Min cool 50F"
+    },
+    {
+     "setting": "0650 / 0660 Extended fan timer",
+     "options": "0 Off, 90 s"
+    },
+    {
+     "setting": "0670 Keypad lock",
+     "options": "0 Unlocked, 1 Partial, 2 Full"
+    },
+    {
+     "setting": "0700 Display offset",
+     "options": "-3 to +3F"
+    },
+    {
+     "setting": "0710 RESET",
+     "options": "1 Reset installer options and schedule (date/time kept)"
+    }
+   ],
+   "installerTest": "In installer setup press Go Back repeatedly until Test 1 appears. 1 cooling (1 compressor+fan, 2 stage 2), 2 fan, 3 heating (1, 2 stage 2), 4 emergency heat (1, 2 aux). NEXT = next test, DONE exits. Compressor protection bypassed.",
+   "factoryReset": "Function 0710 = 1 resets installer options and program schedule (date and time kept)."
+  },
+  "diagnostics": [
+   {
+    "code": "Wait (flashing)",
+    "meaning": "Compressor protection off-time (0580)"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "Heat pump lockouts (0350/0360) only work with the C7089U1006 outdoor sensor on S1/S2."
+  ],
+  "manuals": [
+   {
+    "title": "TH7000 Series Touch-screen Programmable Thermostat Installation Guide (69-2668ES)",
+    "docType": "install",
+    "seedFile": "honeywell-home-th7000-install-69-2668es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2668ES.pdf"
+   },
+   {
+    "title": "TH7000 Series Touchscreen Programmable Thermostat Operating Manual TH7220U1035 (69-2667ES)",
+    "docType": "user",
+    "seedFile": "honeywell-home-th7000-operating-69-2667es.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2667ES.pdf"
+   }
+  ],
+  "sourceNotes": "69-2668ES-05 TH7000 Series Installation Guide (Rev. 04-19); 69-2667ES-03 TH7000 Series Operating Manual (Rev. 03-21)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-th8320zw",
+  "brand": "Honeywell Home",
+  "family": "TH8320ZW Z-Wave Touchscreen",
+  "aka": "TH8320ZW Z-Wave touch-screen thermostat (security-panel / home automation installs)",
+  "models": [
+   "TH8320ZW"
+  ],
+  "type": "communicating",
+  "stages": "Up to 3 heat / 2 cool heat pump (with aux), 2 heat / 2 cool conventional; also Series 20 hot water, heat only, cool only, 750 mV",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "Coin cell (factory installed, pull the plastic tab)",
+   "notes": "Connecting the transformer common to C is mandatory. Continuous backlight also needs 24VAC."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "Heating power - secondary of heating transformer",
+    "notes": "Factory jumper to Rc; remove only for 2-transformer systems"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling power - secondary of cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (from cooling transformer if 2 transformers)",
+    "notes": "Mandatory"
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat relay",
+    "notes": "Series 20: W to valve terminal B"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat relay",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage compressor contactor",
+    "notes": "Series 20: Y to valve terminal W"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover valve for heat pumps",
+    "notes": "Function 0190"
+   },
+   {
+    "t": "Aux",
+    "fn": "Auxiliary heat relay",
+    "notes": "Field jumper Aux to E if there is no emergency heat relay"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat relay",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "Heat pump reset / equipment monitor",
+    "notes": "Powered continuously in Em Heat; system monitor in Heat, Cool or Off. Requires C"
+   },
+   {
+    "t": "K",
+    "fn": "Optional THP9045 wiring module terminal",
+    "notes": "Runs fan + compressor on one wire in 4-wire 1H/1C retrofits"
+   }
+  ],
+  "wiringNotes": [
+   "Heat-only Series 20: R to valve R, W to valve B, Y to valve W, C to 24VAC common; set 0170 to 5.",
+   "Remove the plastic tab from the coin-cell battery tray during installation."
+  ],
+  "setup": {
+   "access": "Press SYSTEM, then press and hold the two buttons shown in the installation guide (Installer setup figure) until the display changes; arrows next to the function number select it, arrows next to the setting change it, DONE saves and exits.",
+   "keySettings": [
+    {
+     "setting": "0160 Schedule format",
+     "options": "0 Non-programmable, 4 Programmable"
+    },
+    {
+     "setting": "0170 System type",
+     "options": "1 1H/1C conv, 2 1H/1C HP, 3 Heat only 2-wire, 4 Heat only with fan, 5 Series 20 hot water, 6 Cool only, 7 2H/1C HP with aux, 8 2H/2C conv, 9 2H/1C conv, 10 1H/2C conv, 11 2H/2C HP, 12 3H/2C HP with aux"
+    },
+    {
+     "setting": "0180 Fan control (heating)",
+     "options": "0 Gas/oil (equipment controls fan), 1 Electric (thermostat controls fan)"
+    },
+    {
+     "setting": "0190 Changeover valve",
+     "options": "0 O in cooling, 1 B in heating"
+    },
+    {
+     "setting": "0220 / 0230 Compressor cycle rates",
+     "options": "3 recommended; 1-6 CPH"
+    },
+    {
+     "setting": "0240-0270 Heat / 2nd / 3rd / Em heat cycle rates",
+     "options": "5 gas/oil <90%, 1 steam/gravity, 3 hot water/90%+, 9 electric"
+    },
+    {
+     "setting": "0280 Continuous backlight",
+     "options": "0 45 s after keypress, 1 always on low (needs 24VAC)"
+    },
+    {
+     "setting": "0300 / 0310 Auto changeover / deadband",
+     "options": "0 Manual, 1 Auto; deadband 3F (2-9F)"
+    },
+    {
+     "setting": "0500 / 0502 Filter reminder",
+     "options": "0 Off, 1-8 run-time days, 9-14 calendar days; count heat+cool or cool only"
+    },
+    {
+     "setting": "0520 UV lamp reminder",
+     "options": "0 Disabled, 1 365 days, 2 730 days"
+    },
+    {
+     "setting": "0530 Adaptive Intelligent Recovery",
+     "options": "1 On, 0 Off"
+    },
+    {
+     "setting": "0580 Compressor protection",
+     "options": "5 min (0-4)"
+    },
+    {
+     "setting": "0600 / 0610 Range stops",
+     "options": "Max heat 90F (40-89), min cool 50F (51-99)"
+    },
+    {
+     "setting": "0615 / 0616 Energy saving setpoints",
+     "options": "Heat 65F, Cool 78F"
+    },
+    {
+     "setting": "0650 / 0660 Extended fan timer heat / cool",
+     "options": "0 Off, 30, 60, 90, 120 s"
+    },
+    {
+     "setting": "0670 Keypad lock",
+     "options": "0 Unlocked, 1 Partial, 2 Full"
+    },
+    {
+     "setting": "0700 Temperature display offset",
+     "options": "-3 to +3F"
+    },
+    {
+     "setting": "0710 Reset",
+     "options": "1 Reset installer options, Z-Wave radio module and schedule to factory (date/time kept)"
+    },
+    {
+     "setting": "rf10 Z-Wave Network Connection",
+     "options": "1 Add (controller in INCLUDE mode), 0 Remove"
+    },
+    {
+     "setting": "rf20 Z-Wave Node Connection",
+     "options": "0 Idle, 1 Send node info"
+    }
+   ],
+   "installerTest": "In installer setup press the down arrow repeatedly until TEST appears. Test 1 cooling (1 compressor+fan, 2 stage 2), 2 fan, 3 heating (1, 2 stage 2), 4 emergency heat (1 Em heat + fan, 2 aux). DONE ends. Compressor protection is bypassed during testing.",
+   "factoryReset": "Function 0710 = 1 resets installer options, the Z-Wave radio module and the schedule (date and time kept)."
+  },
+  "diagnostics": [
+   {
+    "code": "Wait",
+    "meaning": "Compressor protection minimum off time (0580)",
+    "action": "Wait for the off timer"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "Z-Wave inclusion: put the Z-Wave controller in INCLUDE mode first, then set rf10 to 1. Set rf10 to 0 to exclude before moving it to another controller.",
+   "The thermostat supports one association group with up to five nodes."
+  ],
+  "manuals": [
+   {
+    "title": "TH8320ZW Touch-screen Thermostat Installation Guide - legacy (69-2486)",
+    "docType": "install",
+    "seedFile": "honeywell-home-th8320zw-install-69-2486.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2486.pdf"
+   },
+   {
+    "title": "TH8320ZW Touchscreen Thermostat Operating Manual - legacy (69-2485EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-th8320zw-operating-69-2485efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2485EFS.pdf"
+   }
+  ],
+  "sourceNotes": "69-2486-09 TH8320ZW Touch-screen Thermostat Installation Guide (Rev. 06-13, legacy product document); 69-2485EFS-05 TH8320ZW Operating Manual (legacy)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-visionpro-iaq",
+  "brand": "Honeywell Home",
+  "family": "VisionPRO IAQ (TH9421C with EIM)",
+  "aka": "VisionPRO IAQ Total Home Comfort System, TH9000 Series, EnviraCOM (TH9421C / YTH9421C + THM5421C1008 EIM)",
+  "models": [
+   "TH9421C",
+   "THM5421C1008"
+  ],
+  "type": "communicating",
+  "stages": "Up to 3 heat / 2 cool conventional or heat pump with 2 compressor stages and up to 2 aux stages; controls humidification, dehumidification and ventilation",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Thermostat runs on 3 wires (1 data, 2 24Vac, 3 common) to the Equipment Interface Module (EIM). All equipment wiring lands on the EIM."
+  },
+  "terminals": [
+   {
+    "t": "1, 2, 3",
+    "fn": "EIM to thermostat: 1 data, 2 24Vac power from EIM, 3 common",
+    "notes": "Communication LED on the EIM"
+   },
+   {
+    "t": "C",
+    "fn": "24 Vac transformer common (EIM)",
+    "notes": "2-transformer: cooling transformer common"
+   },
+   {
+    "t": "R / RC / RH",
+    "fn": "24 Vac transformer / cooling / heating transformer (EIM)",
+    "notes": "Factory jumpers R-Rc-Rh; remove Rc-Rh jumper for 2-transformer systems"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "Stage 1 heat (conventional) or changeover valve (heat pump)",
+    "notes": ""
+   },
+   {
+    "t": "W2/AUX",
+    "fn": "Stage 2 heat or heat pump aux heat (fossil or electric)",
+    "notes": ""
+   },
+   {
+    "t": "W3/AUX2",
+    "fn": "Stage 3 heat or heat pump aux 2",
+    "notes": ""
+   },
+   {
+    "t": "Y / Y2",
+    "fn": "Cool / compressor stage 1 and 2",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "HUM1/HUM2",
+    "fn": "Humidification connection (normally open)",
+    "notes": ""
+   },
+   {
+    "t": "DHM1/DHM2",
+    "fn": "Dehumidification connection (NO or NC per installer setup)",
+    "notes": ""
+   },
+   {
+    "t": "VNT1/VNT2",
+    "fn": "Ventilation connection (normally open)",
+    "notes": ""
+   },
+   {
+    "t": "OUT1/OUT2",
+    "fn": "Outdoor temperature sensor (C7089U1006)",
+    "notes": ""
+   },
+   {
+    "t": "IN1/IN2",
+    "fn": "Remote indoor temperature sensor (C7189)",
+    "notes": "Averaging requires square numbers of sensors (4, 9, 16)"
+   }
+  ],
+  "wiringNotes": [
+   "Use 18-gauge thermostat wire.",
+   "Heat pump: configure O (factory, cool) or B (heat) changeover in Installer Setup.",
+   "For W8835 zone panel wiring see the panel's product data."
+  ],
+  "setup": {
+   "access": "Press and release SYSTEM, then press and hold the two blank keys either side of the center blank key about 5 seconds. Arrows change the setting, Next advances, Done exits. Many settings can be set to E (Auto Discover) when connected to the EIM.",
+   "keySettings": [
+    {
+     "setting": "110 Zone Number",
+     "options": "0 not zoned, 1 master zone controller, 2-9 satellite (EnviraZONE only)"
+    },
+    {
+     "setting": "172 System Selection",
+     "options": "1 Conventional, 2 Heat Pump, 3 Heat Only No Fan, E Auto Discover"
+    },
+    {
+     "setting": "173 Heat Pump Type",
+     "options": "0 Air to Air, 1 Geothermal"
+    },
+    {
+     "setting": "174 Cool / Compressor Stages",
+     "options": "0, 1, 2, E"
+    },
+    {
+     "setting": "176 Heat / HP Aux Stages",
+     "options": "0-3 conventional, 0-2 aux; E"
+    },
+    {
+     "setting": "200 Back-up Heat Source",
+     "options": "0 Electric, 1 Fossil fuel, E"
+    },
+    {
+     "setting": "360 Heat Pump Aux Heat Lockout",
+     "options": "0 none, 5-65F",
+     "notes": "Needs outdoor sensor"
+    },
+    {
+     "setting": "365 / 366 Discharge sensor / zoning high limit",
+     "options": "Remote sensor; 110-170F (160F default) master zone only"
+    },
+    {
+     "setting": "382 Dehumidification system modes",
+     "options": "0, 2, 3 (see product data)"
+    }
+   ],
+   "installerTest": "Installer System Test appears at the end of the Installer Setup numbers (heat, cool, fan, Em heat on heat pumps); minimum compressor off time is bypassed. Error log (last 10) follows the tests; reset clears inactive errors.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "027",
+    "meaning": "Faulty thermostat (must be replaced)"
+   },
+   {
+    "code": "035",
+    "meaning": "Duplicate thermostat zone detected"
+   },
+   {
+    "code": "036 / 037 / 038",
+    "meaning": "Duplicate UV / filter / humidifier pad timer"
+   },
+   {
+    "code": "039",
+    "meaning": "Duplicate indoor humidity sensor"
+   },
+   {
+    "code": "040",
+    "meaning": "Compressor should be running but it is not"
+   },
+   {
+    "code": "050",
+    "meaning": "Duplicate outdoor temperature sensor"
+   },
+   {
+    "code": "052",
+    "meaning": "Faulty post-coil air discharge sensor"
+   },
+   {
+    "code": "053",
+    "meaning": "Faulty outdoor temperature sensor"
+   },
+   {
+    "code": "054",
+    "meaning": "Faulty indoor humidity sensor"
+   },
+   {
+    "code": "089",
+    "meaning": "Heating/cooling equipment is missing"
+   },
+   {
+    "code": "090",
+    "meaning": "Data interface is continuously busy"
+   },
+   {
+    "code": "091",
+    "meaning": "Thermostat is not receiving data from other equipment"
+   },
+   {
+    "code": "118",
+    "meaning": "Faulty discharge air temperature sensor"
+   },
+   {
+    "code": "119",
+    "meaning": "Faulty temperature sensor"
+   },
+   {
+    "code": "121",
+    "meaning": "Duplicate post-coil air discharge sensor"
+   },
+   {
+    "code": "122",
+    "meaning": "Network Zone Panel not found (EnviraCOM code list 69-2063EFS)"
+   },
+   {
+    "code": "EIM LED blinks continuously / always off",
+    "meaning": "Wiring problem",
+    "action": "Check wiring to terminals 1, 2, 3"
+   },
+   {
+    "code": "EIM LED always on",
+    "meaning": "EIM may need replacement"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "Active errors flash 'Err' and up to 5 codes in the time field, most critical first.",
+   "Remote sensor check: about 11,100 ohms at 72F (resistance table in 68-0287)."
+  ],
+  "manuals": [
+   {
+    "title": "VisionPRO IAQ Total Home Comfort System Product Data (68-0287)",
+    "docType": "install",
+    "seedFile": "honeywell-home-visionproiaq-productdata-68-0287.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/68-0000s/68-0287.pdf"
+   },
+   {
+    "title": "TH9000 Series Equipment Interface Module Installation Guide - legacy (69-2406EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-th9000-eim-install-69-2406efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2406EFS.pdf"
+   },
+   {
+    "title": "TH9000 Series Total Home Comfort System Operating Manual - legacy (69-2404EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-th9000-operating-69-2404efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2404EFS.pdf"
+   },
+   {
+    "title": "EnviraCOM Error Codes - legacy (69-2063EFS)",
+    "docType": "troubleshooting",
+    "seedFile": "honeywell-home-enviracom-errorcodes-69-2063efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2063EFS.pdf"
+   }
+  ],
+  "sourceNotes": "68-0287-04 VisionPRO IAQ Product Data (Rev. 03-11); 69-2406EFS-01 TH9000 Series EIM Installation Guide; 69-2404EFS-03 TH9000 Series Operating Manual (Rev. 12-13); 69-2063EFS EnviraCOM Error Codes (03-07)",
+  "img": ""
+ },
+ {
+  "id": "tst-honeywell-wifi-9000",
+  "brand": "Honeywell Home",
+  "family": "Wi-Fi 9000 / Smart Thermostat 9000 Color Touchscreen",
+  "aka": "TH9320WF (pro version of the RTH9580-style color touchscreen), Total Connect Comfort",
+  "models": [
+   "TH9320WF5003",
+   "TH9320WF"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool conventional; heat pump up to 3 heat / 2 cool (2 compressor stages + Aux/E)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Requires a 24Vac common to power the thermostat. The K terminal is available for the THP9045A C-wire adaptor."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "Heating power - secondary of heating transformer",
+    "notes": "Jumper loop (plug) joins R and Rc; unplug only if both R and Rc wires exist"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling power - secondary of cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (from cooling transformer if 2 transformers)",
+    "notes": "Required"
+   },
+   {
+    "t": "K",
+    "fn": "Optional C-wire adaptor (THP9045A)",
+    "notes": ""
+   },
+   {
+    "t": "W-O/B",
+    "fn": "1st stage heat relay, or changeover valve for heat pumps",
+    "notes": "Shared terminal"
+   },
+   {
+    "t": "W2-Aux/E",
+    "fn": "2nd stage heat relay, or heat pump auxiliary/emergency heat relay",
+    "notes": "Shared terminal"
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor contactor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "Heat pump system monitor",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Push-in terminals accept one wire each: hold down the terminal with a pen tip and slide the straightened wire in.",
+   "Heat pump: O/B lands on W-O/B and Aux/E on W2-Aux/E - the same terminals conventional systems use for W and W2.",
+   "Wire: 18- to 22-gauge thermostat wire; shielded cable not required."
+  ],
+  "setup": {
+   "access": "Initial setup runs on first power-up or after a factory reset (language, Home/Business, location name, controls, system type). Later: MENU > System Setup; advanced options at MENU > Preferences > Advanced Preferences.",
+   "keySettings": [
+    {
+     "setting": "Your system type",
+     "options": "Forced Air (default), Heat Pump, Hot Water or Steam"
+    },
+    {
+     "setting": "Forced air heating type / efficiency",
+     "options": "Gas/Oil or Electric; Standard or High Efficiency"
+    },
+    {
+     "setting": "Number of cooling / heating stages",
+     "options": "1 or 2 (Y / Y+Y2, W / W+W2)"
+    },
+    {
+     "setting": "Your fan control",
+     "options": "Thermostat (default) or heating system controls fan"
+    },
+    {
+     "setting": "Type of changeover valve",
+     "options": "Cooling (O, default) or heating (B)"
+    },
+    {
+     "setting": "Heat pump compressor stages / backup heat",
+     "options": "1 or 2 stages; backup heat Yes (default) / No"
+    },
+    {
+     "setting": "Advanced: Scheduling, F/C, changeover, periods",
+     "options": "Non-programmable/Programmable; Manual/Automatic changeover; 2 or 4 periods"
+    },
+    {
+     "setting": "Advanced (Business mode): pre-occupancy purge, override type/duration",
+     "options": "Purge Off/1/2/3 h; Standard or Initiate Occupancy; 1-10 h or No Limit"
+    },
+    {
+     "setting": "Advanced: temperature limits, keypad lockout, offsets",
+     "options": "Min cool / max heat; Unlocked/Partially/Locked; indoor temp and humidity offsets"
+    }
+   ],
+   "installerTest": "not published in the installation guide",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Wait",
+    "meaning": "Compressor protection timer",
+    "action": "Wait 5 minutes"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No C wire / no 24VAC",
+     "Breaker, power switch, furnace door"
+    ],
+    "fixes": [
+     "Verify C wire",
+     "Restore power"
+    ]
+   },
+   {
+    "symptom": "Cannot change system to Cool, or heat runs in cool mode",
+    "causes": [
+     "'Your thermostat controls' or 'Your system type' wrong"
+    ],
+    "fixes": [
+     "Correct in MENU > System Setup"
+    ]
+   },
+   {
+    "symptom": "Fan does not turn on with heat",
+    "causes": [
+     "'Your fan control' wrong"
+    ],
+    "fixes": [
+     "Set thermostat controls fan for electric heat"
+    ]
+   },
+   {
+    "symptom": "Heat pump cool air in heat / warm in cool",
+    "causes": [
+     "Changeover valve type wrong"
+    ],
+    "fixes": [
+     "Set O (cooling) or B (heating)"
+    ]
+   }
+  ],
+  "tips": [
+   "Register at mytotalconnectcomfort.com with the MAC and CRC shown after Wi-Fi setup."
+  ],
+  "manuals": [
+   {
+    "title": "Smart Thermostat 9000 Color Touchscreen TH9320WF Installation Guide (69-2815EFS)",
+    "docType": "install",
+    "seedFile": "honeywell-home-wifi9000-th9320wf-install-69-2815efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2815EFS.pdf"
+   },
+   {
+    "title": "TH9320WF5003 Smart Thermostat 9000 Color Touchscreen User Guide (69-2814EFS)",
+    "docType": "user",
+    "seedFile": "honeywell-home-wifi9000-th9320wf-userguide-69-2814efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/69-0000s/69-2814EFS.pdf"
+   },
+   {
+    "title": "Wi-Fi Color Touchscreen Thermostat 9000 Product Information (33-00311EFS)",
+    "docType": "spec",
+    "seedFile": "honeywell-home-wifi9000-productinfo-33-00311efs.pdf",
+    "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00311EFS.pdf"
+   }
+  ],
+  "sourceNotes": "69-2815EFS-09 Smart Thermostat 9000 Color Touchscreen TH9320WF Installation Guide (07-26); 69-2814EFS-07 TH9320WF5003 User Guide (Rev. 04-22); 33-00311EFS-03 Product Information (Rev. 03-19)",
+  "img": ""
+ },
+ {
   "id": "tst-ecobee-enhanced",
   "brand": "ecobee",
   "family": "Smart Thermostat Enhanced",
@@ -6807,6 +10898,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "ecobee-enhanced-setup-user-2023.pdf",
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/38mOpxuQED3OOIUvYbLshZ/cc711d0d2844dfa61cc8e58e49a9bc4c/Enhanced_setup-user_manual_2023_v1.pdf"
+   },
+   {
+    "title": "Smart Thermostat Enhanced - Power Extender Kit wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-enhanced-wiring-pek.pdf",
+    "url": "https://assets.ctfassets.net/a3qyhfznts9y/20Td6O2mzVx18bzkga3hNy/df3727132c2a9fd81d9ea7c0016d1adb/Smart_Thermostat-Enhanced_PEK_Conventional.pdf"
    }
   ],
   "sourceNotes": "ecobee Smart Thermostat Enhanced - Setup and User Guide; Smart Thermostat Enhanced - Conventional wiring diagram; Smart Thermostat Enhanced - Heat pump wiring diagram; Smart Thermostat Enhanced - Boiler/Radiant (3-wire Heat only) wiring diagram; Smart Thermostat Enhanced - Quick Start Guide; How to Test Your HVAC System with the ecobee Thermostat",
@@ -7120,6 +11217,12 @@ const THERMOSTATS = [
     "docType": "quick-start",
     "seedFile": "ecobee-premium-qsg.pdf",
     "url": "https://storage.googleapis.com/article_attachments/ST_Premium_QSG_Digital_US_20220404.pdf"
+   },
+   {
+    "title": "Smart Thermostat Premium - Dual transformer (boiler or radiant with air handler) wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-premium-wiring-dual-transformer.pdf",
+    "url": "https://assets.ctfassets.net/a3qyhfznts9y/5fw5h7DNZ256cJIkipY9AF/d15923c8cbd6eb745da826ebcd0dad2d/Smart_Thermostat_Premium_Boiler_or_Radiant_System.pdf"
    }
   ],
   "sourceNotes": "ecobee Smart Thermostat Premium - Installation, Setup and User Guide; Smart Thermostat Premium - Conventional wiring diagram; Smart Thermostat Premium - Heat pump with auxiliary heat wiring diagram; Smart Thermostat Premium - Power Extender Kit wiring diagram; Smart Thermostat Premium - Quick Start Guide; How to Test Your HVAC System with the ecobee Thermostat",
@@ -7261,7 +11364,9 @@ const THERMOSTATS = [
     ]
    }
   ],
-  "tips": [],
+  "tips": [
+   "Do not jumper Rc and Rh - ecobee does it internally; a single R wire goes in Rc (ecobee3 lite wiring diagrams)."
+  ],
   "manuals": [
    {
     "title": "How to install your ecobee3 lite",
@@ -7274,6 +11379,24 @@ const THERMOSTATS = [
     "docType": "wiring",
     "seedFile": "ecobee-ecobee3lite-wiring-boilerradiant.pdf",
     "url": "https://storage.googleapis.com/article_attachments/ecobee3lite_wiringdiagram_boilerradiant.pdf"
+   },
+   {
+    "title": "ecobee3 lite - Conventional heating/cooling wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-ecobee3lite-wiring-conventional.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/ecobee3lite_wiringdiagram_conventionalheating.pdf"
+   },
+   {
+    "title": "ecobee3 lite - Heat pump with auxiliary heat wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-ecobee3lite-wiring-heatpump.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/ecobee3lite_wiringdiagram_heatpump.pdf"
+   },
+   {
+    "title": "ecobee3 lite - Power Extender Kit wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-ecobee3lite-wiring-pek.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/ecobee3lite_wiringdiagram_PEK.pdf"
    }
   ],
   "sourceNotes": "How to install your ecobee3 lite; ecobee3 lite - Boiler/Radiant wiring diagram",
@@ -7442,6 +11565,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "ecobee-ecobee3-user-guide.pdf",
     "url": "https://storage.googleapis.com/article_attachments/pdfs/ecobee3_UserGuide.pdf"
+   },
+   {
+    "title": "ecobee3 Quick Start Guide",
+    "docType": "quick-start",
+    "seedFile": "ecobee-ecobee3-quickstart.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/ecobee3_QuickStartGuide_EN.pdf"
    }
   ],
   "sourceNotes": "ecobee3 Installation Guide; ecobee3 User Guide; ecobee3 - Conventional wiring diagram; ecobee3 - Heat pump wiring diagram; ecobee3 - Boiler/Radiant wiring diagram; ecobee3 - HVAC accessory wiring diagram",
@@ -7784,6 +11913,36 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "ecobee-smarttherm-voice-install.pdf",
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/6qB4MoLEnXeSgxalZriX7q/db388d510de3b6fe304a381b13e90712/smart_thermostat_voice_installation_guide.pdf"
+   },
+   {
+    "title": "SmartThermostat with voice control - Conventional wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-smarttherm-voice-wiring-conventional.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/SmartThermostat_with_voice_control_conventional_wiring.pdf"
+   },
+   {
+    "title": "SmartThermostat with voice control - Heat pump wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-smarttherm-voice-wiring-heatpump.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/SmartThermostat_with_voice_control_heat_pump_wiring.pdf"
+   },
+   {
+    "title": "SmartThermostat with voice control - Boiler/radiant wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-smarttherm-voice-wiring-boiler.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/SmartThermostat_with_voice_control_boiler_radiant_wiring.pdf"
+   },
+   {
+    "title": "SmartThermostat with voice control - Power Extender Kit wiring diagram",
+    "docType": "wiring",
+    "seedFile": "ecobee-smarttherm-voice-wiring-pek.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/SmartThermostat_with_voice_control_pek_wiring.pdf"
+   },
+   {
+    "title": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era)",
+    "docType": "user",
+    "seedFile": "ecobee-generic-install-setup-user-guide.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/pdfs/ecobee%20installation-setup-user%20guide.pdf"
    }
   ],
   "sourceNotes": "How to install your ecobee (SmartThermostat with voice control)",
@@ -7930,10 +12089,249 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "ecobee-install-smartsensor.pdf",
     "url": "https://assets.ctfassets.net/a3qyhfznts9y/5RopKoaNDxcC75ZouOW2AL/a1b12755b3b5859250ed0adc1e85fd03/Install-your-SmartSensor.pdf"
+   },
+   {
+    "title": "Room Sensor installation guide",
+    "docType": "install",
+    "seedFile": "ecobee-roomsensor-install.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/RoomSensor2Pack_InstallationGuide.pdf"
    }
   ],
   "sourceNotes": "Install your SmartSensor",
   "img": "tstat-img/tst-ecobee-smartsensor.jpg"
+ },
+ {
+  "id": "tst-ecobee-essential",
+  "brand": "ecobee",
+  "family": "Smart Thermostat Essential",
+  "aka": "ecobee entry-level smart thermostat (wiring guide dated Oct 2024); model number not printed in the manufacturer wiring guide",
+  "models": [],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 1 cool or 1 heat / 2 cool conventional; heat pump (air, water, geothermal) with 1 stage aux; PTAC single or variable fan speed",
+  "sort": 15,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "24 VAC required. No C wire: Power Extender Kit on G/PEK (not for dual transformer, fan coil or communicating units)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC (single transformer)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common"
+   },
+   {
+    "t": "G/PEK",
+    "fn": "Fan, or Power Extender Kit"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage A/C or heat pump compressor"
+   },
+   {
+    "t": "W1",
+    "fn": "1st stage heat or heat pump aux"
+   },
+   {
+    "t": "OB*",
+    "fn": "Heat pump reversing valve, OR 2nd stage conventional cool, OR 2nd stage conventional heat",
+    "notes": "Only one of these uses - hence 2H/1C or 1H/2C"
+   }
+  ],
+  "wiringNotes": [
+   "Only six terminals: the OB* terminal is shared - reversing valve, Y2 or W2, never two at once.",
+   "With PEK on a heat pump, O/B is wired directly to the thermostat.",
+   "Heat pumps use the internet weather feed - no outdoor sensor or dual-fuel kit needed.",
+   "Designed for 24 VAC only - not line voltage or millivolt; 2 A max per terminal.",
+   "Junction-box installs need the ecobee Essential Trim Kit (ecobee install page)."
+  ],
+  "setup": {
+   "access": "Menu > Settings > Installation Settings > Thresholds (Installer Code 3262 if enabled).",
+   "keySettings": [
+    {
+     "setting": "Auto Heat/Cool",
+     "options": "Enabled (default)"
+    },
+    {
+     "setting": "Heat/Cool Min Delta",
+     "options": "5 F default"
+    },
+    {
+     "setting": "Compressor Min Cycle Off Time",
+     "options": "300 s default"
+    },
+    {
+     "setting": "Compressor Min Outdoor Temperature",
+     "options": "AC 35 F; heat pump user defined"
+    },
+    {
+     "setting": "AC Overcool Max",
+     "options": "Disabled default"
+    },
+    {
+     "setting": "Heat / Compressor Min On Time",
+     "options": "5 min"
+    },
+    {
+     "setting": "Temperature / Humidity Correction",
+     "options": "+0 default"
+    },
+    {
+     "setting": "Aux Heat Max Outdoor Temperature",
+     "options": "50 F default"
+    },
+    {
+     "setting": "Aux Min On Time",
+     "options": "5 min"
+    },
+    {
+     "setting": "Configure Staging",
+     "options": "Automatic or Manual (differentials, dissipation times, stage deltas and max runtimes)"
+    }
+   ],
+   "installerTest": "Not in the wiring guide.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Reminders & Alerts defaults (Menu > Reminders and Alerts > Preferences): HVAC maintenance 6 months, filter 3 months, low temp alert 50 F, high temp alert 92 F; heating/cooling failure alerts enabled."
+  ],
+  "manuals": [
+   {
+    "title": "Smart Thermostat Essential Wiring Guide (includes installation settings and reminders/alerts tables)",
+    "docType": "wiring",
+    "seedFile": "ecobee-essential-wiring-guide.pdf",
+    "url": "https://assets.ctfassets.net/a3qyhfznts9y/6AZVoxbq96qnpLxtLJ5oTo/304526352808c0354bdba164fe22c710/Attis_Retail_Wiring_Guide_ISED_Cert-2024Oct11__3_.pdf"
+   }
+  ],
+  "sourceNotes": "ecobee Smart Thermostat Essential retail wiring guide, dated 2024-10-11 (file Attis_Retail_Wiring_Guide_ISED_Cert-2024Oct11).",
+  "img": ""
+ },
+ {
+  "id": "tst-ecobee-smart-si",
+  "brand": "ecobee",
+  "family": "ecobee Smart Si",
+  "aka": "2012-era Smart Si (color screen, buttons, pro-installed)",
+  "models": [],
+  "type": "smart-wifi",
+  "stages": "Conventional up to 2 heat / 2 cool; heat pump up to 2 compressor + aux (3H/2C); geothermal, dual fuel, boilers",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "24 VAC, 3 VA minimum."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "Heat transformer",
+    "notes": "Factory jumper RC-RH; remove for 2-transformer"
+   },
+   {
+    "t": "RC",
+    "fn": "Cool transformer"
+   },
+   {
+    "t": "C",
+    "fn": "Common",
+    "notes": "Boiler + air handler: C to heating transformer common"
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor"
+   },
+   {
+    "t": "W (O/B)",
+    "fn": "1st stage heat or reversing valve"
+   },
+   {
+    "t": "W2 (AUX)",
+    "fn": "2nd stage heat or 1st stage aux"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "N/C",
+    "fn": "Unused"
+   }
+  ],
+  "wiringNotes": [
+   "Max wire run: 18 AWG 128 ft, 20 AWG 80 ft, 22 AWG 50 ft.",
+   "Terminal rating 30 VAC, 3 A.",
+   "Not for line voltage or millivolt."
+  ],
+  "setup": {
+   "access": "MENU > Settings > Installation Settings (Equipment, Thresholds, Test Equipment). Installer code (pre-programmed 3262) can be enabled.",
+   "keySettings": [
+    {
+     "setting": "Heat pump - OB energize on cool",
+     "options": "Yes (O) / No (B)"
+    },
+    {
+     "setting": "Min Cycle Off Time",
+     "options": "240-900 s"
+    },
+    {
+     "setting": "Min Outdoor Temp (compressor lockout)",
+     "options": "0-65 F or disabled (needs internet)"
+    },
+    {
+     "setting": "Allow HP with Aux Heat",
+     "options": "Yes: aux after 30 min; No: heat pump up to 2 h then aux only"
+    },
+    {
+     "setting": "Aux Max Outdoor Temp",
+     "options": "0-80 F (default 70)"
+    },
+    {
+     "setting": "Heat/Cool Min Delta",
+     "options": "2-10 F (default 5)"
+    },
+    {
+     "setting": "Heat/Cool differential",
+     "options": "0-3 F"
+    },
+    {
+     "setting": "Dissipation time",
+     "options": "0-900 s (default 30)"
+    },
+    {
+     "setting": "Min on time",
+     "options": "1-20 min (default 5)"
+    },
+    {
+     "setting": "Temp correction",
+     "options": "+/-10 F"
+    }
+   ],
+   "installerTest": "Settings > Installation Settings > Test Equipment - turns each device on/off; compressor protection and minimum runtimes are NOT enforced; everything turns off when you exit.",
+   "factoryReset": "Reset HVAC Equipment Settings (equipment only) or Reset All Settings (includes user settings and registration). Reboot with the reset button through the hole at the bottom left."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Smart Si Thermostat Installation Manual",
+    "docType": "install",
+    "seedFile": "ecobee-smart-si-install.pdf",
+    "url": "https://storage.googleapis.com/article_attachments/pdfs/Smart%20Si%20Installation%20Manual%20-%20English.pdf"
+   }
+  ],
+  "sourceNotes": "ecobee Smart Si Installation Manual (c)2012, PDF 04/2013; FCC ID WR9EBSTAT. Smart Si User Manual rejected (EULA text marks the manual as ecobee confidential information).",
+  "img": ""
  },
  {
   "id": "tst-sensi-classic",
@@ -8092,6 +12490,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "sensi-classic-manual-operation.pdf",
     "url": "https://media.copeland.com/bfc1e5ef-5156-4617-b9ae-b16b0105589b/R-5029%20-%20Sensi%20Smart%20Thermostat%20Manual%20Operation.pdf"
+   },
+   {
+    "title": "Sensi Smart Thermostat Humidity Control Guide (R-5622-1)",
+    "docType": "wiring",
+    "seedFile": "sensi-smart-humidity-qsg-r5622.pdf",
+    "url": "https://media.copeland.com/c9c42ccb-d9be-4a7b-867e-b16b010c2d7f/R-5622%20-%20Sensi%20smart%20-%20Humidification-Dehumidification%20-%20Quick%20Start%20Guide.pdf"
    }
   ],
   "sourceNotes": "R-5020-4 Sensi Smart Thermostat Installation Guide (Models 1F87U-42WF, ST55); R-5029 Sensi Smart Thermostat Manual Operation Guide",
@@ -8663,6 +13067,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "sensi-touch2-manual-operation.pdf",
     "url": "https://sensi.copeland.com/documents/sensi-touch-2-smart-thermostat-manual-operation-guide-en-8631996.pdf"
+   },
+   {
+    "title": "Sensi Touch 2 Humidification & Dehumidification Setup Guide (R-5615-2)",
+    "docType": "wiring",
+    "seedFile": "sensi-touch2-humidity-r5615.pdf",
+    "url": "https://media.copeland.com/ab1c4d05-7a41-4c94-b15e-b16b010c9261/R-5615%20-%20Sensi%20Touch%202%20smart%20-%20Humidification%20and%20Dehumidification.pdf"
    }
   ],
   "sourceNotes": "Sensi Touch 2 Smart Thermostat Installation Guide; Sensi Touch 2 Smart Thermostat Manual Operation Guide",
@@ -8828,6 +13238,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "sensi-touch-manual-operation.pdf",
     "url": "https://media.copeland.com/6f791f23-508f-4b75-898c-b16b01075780/R-5030%20-%20Sensi%20Touch%20Thermostat%20Manual%20Operation%20Guide.pdf"
+   },
+   {
+    "title": "Sensi Touch Smart Thermostat Humidity Control Guide (R-5621-1)",
+    "docType": "wiring",
+    "seedFile": "sensi-touch-humidity-qsg-r5621.pdf",
+    "url": "https://media.copeland.com/6cf49eeb-2ba8-4823-b80b-b16b010c2fe3/R-5621%20-%20Sensi%20Touch%20smart%20-%20Humidification-Dehumidification%20-%20Quick%20Start%20Guide.pdf"
    }
   ],
   "sourceNotes": "R-5021 Sensi Touch Thermostat Installation Guide; R-5030 Sensi Touch Thermostat Manual Operation Guide",
@@ -10583,6 +14999,18 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "white-rodgers-1f95ez-0671-instructions.pdf",
     "url": "https://media.copeland.com/4f1f68c9-5f2d-478f-a5f9-b16b00f936f2/0037-6994-Instructions-1F95EZ-0671.pdf"
+   },
+   {
+    "title": "1F95-1280 Blue Commercial Touchscreen Universal Thermostat (damper/economizer) Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f95-1280-commercial-install.pdf",
+    "url": "https://media.copeland.com/99370362-6906-4ee0-8f23-b16b00f8397a/37-7322B-instruction%20Sheet-Easy%20Install%20Thermostats.pdf"
+   },
+   {
+    "title": "1F95-0680 Blue Commercial Thermostat (damper control) Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f95-0680-commercial-install.pdf",
+    "url": "https://media.copeland.com/4f85b442-103c-4e03-aeb3-b16b0103acd4/4209180.pdf"
    }
   ],
   "sourceNotes": "0037-6753 1F95-1277 Installation and Operating Instructions (Blue Series Touchscreen); 0037-6979 1F95-0671 Blue Universal Thermostat Instructions; 0037-6994 1F95EZ-0671 Blue Easy Reader Thermostat Homeowner's Guide",
@@ -11020,7 +15448,8 @@ const THERMOSTATS = [
   "aka": "1F86-344 / 1F86-244",
   "models": [
    "1F86-344",
-   "1F86-244"
+   "1F86-244",
+   "1F86-0244"
   ],
   "type": "non-programmable",
   "stages": "1H/1C conventional or single-stage heat pump with no auxiliary heat (B and O terminals)",
@@ -11154,6 +15583,12 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "white-rodgers-1f86-344-instructions.pdf",
     "url": "https://media.copeland.com/37a7409b-8dfe-40c3-8116-b16b0103a0b7/PROD-COMRES-WR-Classic_80_Series_Thermostats-Instructions_0037-6585.pdf"
+   },
+   {
+    "title": "1F86-0244 Blue 2 inch Single Stage Thermostat Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f86-0244-install.pdf",
+    "url": "https://media.copeland.com/26edee98-b34d-40b3-9ba3-b16b00f82b21/0037-7010-Instructions-1F86-0244.pdf"
    }
   ],
   "sourceNotes": "37-6585001 1F86-344 Installation and Operation Instructions (Non-Programmable)",
@@ -11773,6 +16208,18 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "white-rodgers-70series-0037-6542.pdf",
     "url": "https://media.copeland.com/ec40e87f-5c47-4e72-a0d8-b16b0103970b/PROD-COMRES-WR-70_Series_Thermostats-Instructions_0037-6542.pdf"
+   },
+   {
+    "title": "1F78 5/2 Day Programmable Thermostat Installation Instructions (37-6614C)",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f78-52day-install-0037-6614.pdf",
+    "url": "https://media.copeland.com/523d07ce-f5fb-427b-8841-b16b0103ac43/PROD-COMRES-WR-70_Series_Thermostats-Instructions_0037-6614.pdf"
+   },
+   {
+    "title": "1F78 Non-Programmable Thermostat Installation Instructions (37-6615C)",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f78-nonprog-install-0037-6615.pdf",
+    "url": "https://media.copeland.com/cf314a7d-fb58-49f8-94b4-b16b0103a478/PROD-COMRES-WR-70_Series_Thermostats-Instructions_0037-6615.pdf"
    }
   ],
   "sourceNotes": "37-6614C 1F78-151 Installation Instructions (5/2 Day Programmable); 0037-6542 70 Series Thermostats Instructions (0037-6542, includes 1E78 wiring)",
@@ -11788,7 +16235,9 @@ const THERMOSTATS = [
    "1F80-224",
    "1F80-240",
    "1F80-261/1F80-0261",
-   "1F80-361"
+   "1F80-361",
+   "1F80-0224",
+   "1F87-361"
   ],
   "type": "programmable",
   "stages": "1H/1C conventional or single-stage heat pump (reversing valve O or B); 5/1/1 or 5/2 day programmable",
@@ -11998,6 +16447,18 @@ const THERMOSTATS = [
     "docType": "spec",
     "seedFile": "white-rodgers-80series-spec-sheet.pdf",
     "url": "https://media.copeland.com/b1e84722-7191-4e64-88b3-b16b00f92561/R-4461-4%20-%2080%20Series%20thermostats_Spec%20Sheet.pdf"
+   },
+   {
+    "title": "1F80-0224 Blue 2 inch Programmable Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f80-0224-install.pdf",
+    "url": "https://media.copeland.com/d6a73147-33f2-4b9a-b692-b16b00f824e2/0037-7014-Instructions-1F80-0224.pdf"
+   },
+   {
+    "title": "1F87-361 Programmable Electronic Digital Thermostat Installation and Operation Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f87-361-install.pdf",
+    "url": "https://media.copeland.com/7d4aa7bf-3eab-41f3-ba9e-b16d00162ef4/PROD-COMRES-WR-Classic_80_Series_Thermostats-Instructions_0037-6763.pdf"
    }
   ],
   "sourceNotes": "37-6120A 1F80-71 Installation and Operation Instructions; 0037-7009 1F80-0261 Instructions (Blue 2 inch Single Stage, 5/1/1 Programmable); 0037-6621 1F80-361 Classic 80 Series Instructions (Programmable Electronic Digital Thermostat); R-4461-4 80 Series Thermostats Spec Sheet",
@@ -12156,6 +16617,1009 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "0037-6952 1F80ST-0471 and 1F86ST-0471 Blue Selecto Thermostat Instructions (Spanish language; the document text states it covers models 1F80-0471 / 1F86-0471)",
   "img": "tstat-img/tst-wr-1f80-1f86-0471-selecto.jpg"
+ },
+ {
+  "id": "tst-wr-1f56n-444",
+  "brand": "White-Rodgers",
+  "family": "1F56N-444 / 1E56N-444 Mechanical Snap-Action",
+  "aka": "Horizontal 1F56N-444, vertical 1E56N-444 (mercury-free mechanical)",
+  "models": [
+   "1F56N-444",
+   "1E56N-444"
+  ],
+  "type": "non-programmable",
+  "stages": "1 heat / 1 cool; single-stage heat pump with no aux (W-Y jumper); 2-wire heat only or cool only on wallplate; millivolt heat",
+  "sort": 60,
+  "confidence": "common",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "None",
+   "notes": "Mechanical - no power needed. Works on 24 VAC and millivolt (anticipator on Millivolt Link)."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 VAC heating (R)",
+    "notes": "Jumper RC-RH factory installed - leave for 4-wire, remove for 5-wire"
+   },
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W",
+    "fn": "Heat"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "A",
+    "fn": "Fan-in-heat option",
+    "notes": "Move the yellow factory jumper from Y to A for electric heat / heat pump so the thermostat runs the fan on heat"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cooling"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heating"
+   }
+  ],
+  "wiringNotes": [
+   "Cross reference: RH = 4/M/R5; RC = R/V; G = F; W = H/4; Y = C/Y6.",
+   "Two-wire heat only: wallplate, R and W. Two-wire cool only: R and Y.",
+   "Single-stage heat pump (no aux): jumper W to Y, reversing valve on O (cool) or B (heat). Does NOT do multi-stage heat or cool.",
+   "Not for heat pumps with aux/emergency heat or line voltage (120/240 V) baseboard."
+  ],
+  "setup": {
+   "access": "No menu. Set heat anticipator (0.15-1.2 A) to the old thermostat setting or the primary control rating; counterclockwise = longer cycles, clockwise = shorter, max 1/2 mark per adjustment; Millivolt Link for millivolt.",
+   "keySettings": [
+    {
+     "setting": "Heat anticipator",
+     "options": "0.15 to 1.2 A adjustable; cooling anticipator fixed"
+    },
+    {
+     "setting": "Temperature range",
+     "options": "50-90 F"
+    }
+   ],
+   "installerTest": "Use the SYSTEM and FAN switches: FAN ON runs the blower even with SYSTEM OFF.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Heat cycles too short / too long",
+    "causes": [
+     "Heat anticipator set wrong"
+    ],
+    "fixes": [
+     "Match anticipator to the primary control current; move counterclockwise for longer cycles"
+    ]
+   }
+  ],
+  "tips": [
+   "Mercury-free - but it often replaces a mercury thermostat: recycle the old one via thermostat-recycle.org."
+  ],
+  "manuals": [
+   {
+    "title": "1F56N-444 / 1E56N-444 Snap-Action Thermostat Installation Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f56n-444-install.pdf",
+    "url": "https://media.copeland.com/55340e61-6125-4624-bdb0-b16b00f8919d/0037-6881-Instructions-1F56N-444.pdf"
+   }
+  ],
+  "sourceNotes": "White-Rodgers PART NO. 37-6881001 (replaces 37-6881B), date code 0921; Copeland copy 04/2025.",
+  "img": ""
+ },
+ {
+  "id": "tst-wr-1f75",
+  "brand": "White-Rodgers",
+  "family": "1F75 Series (1F75C-11NP / 11PR, 1F75H-21NP / 21PR)",
+  "aka": "C = single stage, H = heat pump; NP non-programmable, PR programmable",
+  "models": [
+   "1F75C-11NP",
+   "1F75C-11PR",
+   "1F75H-21NP",
+   "1F75H-21PR"
+  ],
+  "type": "programmable",
+  "stages": "1F75C: 1 heat / 1 cool (single-stage heat pump with Y-W jumper). 1F75H: single-stage compressor heat pump with 1 stage aux/emergency (2H/1C), electric or dual fuel",
+  "sort": 25,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (required when no C wire; backup when C present)",
+   "notes": "Battery powered or hardwired with C."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC",
+    "fn": "24 VAC heating / cooling power (1F75C)",
+    "notes": "Cut the RC/RH jumper when both wires are present"
+   },
+   {
+    "t": "R",
+    "fn": "24 VAC power (1F75H)"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (1F75C)",
+    "notes": "Heat pump: jumper Y to W"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling (1F75C) / 1st stage compressor heat and cool (1F75H)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover energized in cool (O) or heat (B)",
+    "notes": "1F75H: O/B switch, factory O"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / aux (1F75H)"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency (aux-only) heat (1F75H)",
+    "notes": "Cut the W2/E jumper on the back if W2 and E are separate heat sources"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional with batteries"
+   }
+  ],
+  "wiringNotes": [
+   "1F75H: for dual fuel turn on Dual Fuel Logic (menu 60).",
+   "Optional wall cover-up plate F61-2663 (6 3/4 x 4 1/2 in)."
+  ],
+  "setup": {
+   "access": "Set SYSTEM switch to OFF, press and hold the temperature up and down buttons 3 s (item 30 shows). Press both together to step to the next item; up or down changes the value.",
+   "keySettings": [
+    {
+     "setting": "30 Heat cycle rate",
+     "options": "SLO / MEd / FAS (default MEd)"
+    },
+    {
+     "setting": "32 Aux cycle rate (1F75H)",
+     "options": "SLO / MEd / FAS"
+    },
+    {
+     "setting": "35 Cool cycle rate",
+     "options": "SLO / MEd / FAS"
+    },
+    {
+     "setting": "50 Compressor lockout",
+     "options": "OFF (default) or On - 5 min delay"
+    },
+    {
+     "setting": "60 Dual Fuel Logic (1F75H)",
+     "options": "OFF electric aux / On gas aux"
+    },
+    {
+     "setting": "65 / 66 Max heat / min cool limits",
+     "options": "47-99 / 45-97"
+    },
+    {
+     "setting": "74 Schedule type (PR models)",
+     "options": "7-day, 5-1-1 (default), 0 non-programmable"
+    },
+    {
+     "setting": "76 Early start",
+     "options": "OFF/On"
+    },
+    {
+     "setting": "79 F/C",
+     "options": ""
+    },
+    {
+     "setting": "81 Display adjust",
+     "options": "-5 to +5"
+    },
+    {
+     "setting": "83 Continuous backlight",
+     "options": "On needs C wire"
+    },
+    {
+     "setting": "86 Change filter reminder",
+     "options": "OFF or 1-12 months"
+    }
+   ],
+   "installerTest": "Test Equipment in the manual: FAN ON/AUTO; HEAT 1 F above room = heat pump on, 3 F above = aux (Heat On Auxiliary); AUX switch position runs aux only; COOL 1 F below room (up to 5 min if compressor lockout on).",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door not seated (door switch)"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the blower door to engage the interlock"
+    ]
+   },
+   {
+    "symptom": "No heat",
+    "causes": [
+     "System switch not in HEAT",
+     "Loose wire",
+     "Pilot out or furnace lockout (older systems)",
+     "Equipment or thermostat fault"
+    ],
+    "fixes": [
+     "Set HEAT and raise setpoint above room temp",
+     "Check terminals",
+     "Re-light pilot / check furnace lockout",
+     "Within about 5 min the thermostat should click; if not, reset it (see factory reset)"
+    ]
+   },
+   {
+    "symptom": "No cool",
+    "causes": [
+     "System switch not in COOL",
+     "Loose wire",
+     "Compressor lockout delay"
+    ],
+    "fixes": [
+     "Set COOL and lower setpoint below room temp",
+     "Check terminals",
+     "Allow up to 5 min if compressor lockout is on"
+    ]
+   },
+   {
+    "symptom": "Heat, cool or fan runs constantly",
+    "causes": [
+     "Short in wiring, thermostat or equipment"
+    ],
+    "fixes": [
+     "Check each connection for shorted/touching wires; reset the thermostat"
+    ]
+   },
+   {
+    "symptom": "'Call for Service' icon",
+    "causes": [
+     "Heat/cool could not get within 10 F of setpoint in 2 h",
+     "'--' room temp = thermostat failed",
+     "Flashing Call for Service = compressor self-diagnostic fault at outdoor unit"
+    ],
+    "fixes": [
+     "Follow No Heat / No Cool steps",
+     "Replace thermostat",
+     "Check the outdoor unit"
+    ]
+   },
+   {
+    "symptom": "Buttons do nothing",
+    "causes": [
+     "Keypad lockout on"
+    ],
+    "fixes": [
+     "Turn off keypad lockout"
+    ]
+   }
+  ],
+  "tips": [
+   "Do not run cooling below 50 F outdoor; compressor oil heaters should be on 6 h first (per 1F75H manual)."
+  ],
+  "manuals": [
+   {
+    "title": "1F75C-11NP Non-Programmable Single Stage Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f75c-11np-install.pdf",
+    "url": "https://media.copeland.com/e587731a-e955-423e-9e37-b16b010bea04/0037-784001%20-%201F75C-11NP%20Installation%20Instructions%20%28E%29.pdf"
+   },
+   {
+    "title": "1F75C-11PR Programmable Single Stage Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f75c-11pr-install.pdf",
+    "url": "https://media.copeland.com/c2e7a0d9-50dc-444e-b576-b16b010be1d8/0037-7841001%20-%201F75C-11PR%20Installation%20Instructions%20%28E%29.pdf"
+   },
+   {
+    "title": "1F75H-21NP Non-Programmable Heat Pump Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f75h-21np-install.pdf",
+    "url": "https://media.copeland.com/1cb2b873-0bb4-4f19-a4bb-b16b010beedb/0037-7842001%20-%201F75H-21NP%20Installation%20Instructions%20%28E%29.pdf"
+   },
+   {
+    "title": "1F75H-21PR Programmable Heat Pump Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f75h-21pr-install.pdf",
+    "url": "https://media.copeland.com/3d2a9fd1-d9d3-4314-85d2-b16b010bfc01/0037-7843001%20-%201F75H-21PR%20Instruction%20Sheet%20%28E%29.pdf"
+   }
+  ],
+  "sourceNotes": "White-Rodgers PART NO. 37-7840003 (1F75C-11NP), 37-7841003 (1F75C-11PR), 37-7842002 (1F75H-21NP), 37-7843002 (1F75H-21PR, code 2102); Copeland copies 04/2025.",
+  "img": ""
+ },
+ {
+  "id": "tst-wr-1f82-heat-pump",
+  "brand": "White-Rodgers",
+  "family": "1F82 Heat Pump Programmable (1F82-0261 Blue 2 inch / 1F82-261)",
+  "aka": "Blue 2 inch heat pump 5/1/1 programmable; 1F82-261 older generation",
+  "models": [
+   "1F82-0261",
+   "1F82-261"
+  ],
+  "type": "programmable",
+  "stages": "Single-stage compressor heat pump with 1 stage aux/emergency heat (2H/1C)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "C not required if AA batteries are replaced yearly; batteries also back up AC power. Low batteries (under ~2 months) offset the setpoint 10 degrees as a warning."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional with batteries"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor contactor"
+   },
+   {
+    "t": "W2",
+    "fn": "Aux / emergency heat (stage 2)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover relay",
+    "notes": "O/B switch on base, factory O (energized in cool)"
+   },
+   {
+    "t": "L",
+    "fn": "System monitor / fault input",
+    "notes": "Shows 'Service'"
+   }
+  ],
+  "wiringNotes": [
+   "FAN (Ele/Gas) switch on the base: ON for electric heat/heat pump (thermostat runs blower on heat); OFF when the aux/emergency heat controls its own blower.",
+   "EMR (Energy Management Recovery) starts early - heat pump ~15 min per degree; uses aux only if the heat pump cannot recover in time."
+  ],
+  "setup": {
+   "access": "1F82-0261: SYSTEM to OFF and press up and down together; RUN/HOLD = next item, TIME = back, PRGM = exit (auto-exit 15 min).",
+   "keySettings": [
+    {
+     "setting": "1 Cool Savings (CS)",
+     "options": "OFF/On, value 1-6"
+    },
+    {
+     "setting": "2 EMR",
+     "options": "On (default)/OFF"
+    },
+    {
+     "setting": "3 Cycle rate heat pump (CR HE-PU)",
+     "options": "FA (default) / SL"
+    },
+    {
+     "setting": "4 Cycle rate aux",
+     "options": "FA / SL"
+    },
+    {
+     "setting": "5 Compressor lockout (CL)",
+     "options": "OFF (default) / On"
+    },
+    {
+     "setting": "6 Display light",
+     "options": "On/OFF"
+    },
+    {
+     "setting": "7 Temp display adjust",
+     "options": "4 LO to 4 HI"
+    },
+    {
+     "setting": "8 F/C",
+     "options": ""
+    },
+    {
+     "setting": "9 Fast second stage (FH)",
+     "options": "On/OFF"
+    },
+    {
+     "setting": "10 Change Filter",
+     "options": "OFF/On, 25-1975 h"
+    }
+   ],
+   "installerTest": "Not published as a menu - verify with system switch and setpoint.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door not seated (door switch)"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the blower door to engage the interlock"
+    ]
+   },
+   {
+    "symptom": "No heat",
+    "causes": [
+     "System switch not in HEAT",
+     "Loose wire",
+     "Pilot out or furnace lockout (older systems)",
+     "Equipment or thermostat fault"
+    ],
+    "fixes": [
+     "Set HEAT and raise setpoint above room temp",
+     "Check terminals",
+     "Re-light pilot / check furnace lockout",
+     "Within about 5 min the thermostat should click; if not, reset it (see factory reset)"
+    ]
+   },
+   {
+    "symptom": "No cool",
+    "causes": [
+     "System switch not in COOL",
+     "Loose wire",
+     "Compressor lockout delay"
+    ],
+    "fixes": [
+     "Set COOL and lower setpoint below room temp",
+     "Check terminals",
+     "Allow up to 5 min if compressor lockout is on"
+    ]
+   },
+   {
+    "symptom": "Heat, cool or fan runs constantly",
+    "causes": [
+     "Short in wiring, thermostat or equipment"
+    ],
+    "fixes": [
+     "Check each connection for shorted/touching wires; reset the thermostat"
+    ]
+   }
+  ],
+  "tips": [
+   "'Service' on the display is a heating/cooling system fault from L, not a thermostat fault."
+  ],
+  "manuals": [
+   {
+    "title": "1F82-0261 Blue 2 inch Heat Pump Thermostat Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f82-0261-install.pdf",
+    "url": "https://media.copeland.com/a7caefc6-c117-46cb-8de8-b16b00f82b17/0037-7022-Instructions-1F82-0261.pdf"
+   },
+   {
+    "title": "1F82-261 Programmable Electronic Digital Heat Pump Thermostat Installation and Operation Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f82-261-install.pdf",
+    "url": "https://media.copeland.com/f61c31c3-03b3-4d54-bbb0-b16b0104ed3b/0037-6175-Instructions-Programmable%20Electronic%20Digital.pdf"
+   }
+  ],
+  "sourceNotes": "White-Rodgers PART NO. 37-7022001 (1F82-0261, code 1023) and 37-6175001 (1F82-261).",
+  "img": ""
+ },
+ {
+  "id": "tst-wr-blue-easy-set",
+  "brand": "White-Rodgers",
+  "family": "Blue Easy Set (1F86EZ-0251 / 1F89EZ-0251)",
+  "aka": "Home / Sleep / Away preset non-programmable",
+  "models": [
+   "1F86EZ-0251",
+   "1F89EZ-0251"
+  ],
+  "type": "non-programmable",
+  "stages": "1F86EZ-0251: 1H/1C single stage or single-stage heat pump with no aux (1/1). 1F89EZ-0251: heat pump with aux/emergency (W2, EMER)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "Battery or hardwired; 1F86EZ battery mode works from millivolt to 30 VAC."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional with batteries"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (1F86EZ)",
+    "notes": "Optional W-Y jumper for single stage heat pump"
+   },
+   {
+    "t": "W2",
+    "fn": "Aux / emergency heat (1F89EZ)"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor"
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover relay",
+    "notes": "O/B switch, factory O"
+   },
+   {
+    "t": "L",
+    "fn": "System monitor (1F89EZ)"
+   }
+  ],
+  "wiringNotes": [
+   "Two-transformer wiring: if safety circuits are in only one system, remove the transformer of the system with no safety circuits; polarity must be observed."
+  ],
+  "setup": {
+   "access": "SYSTEM to OFF, press and hold up + down 3 s. AWAY = next, HOME = back. Exit by moving SYSTEM to COOL or HEAT.",
+   "keySettings": [
+    {
+     "setting": "01 System type (1F86EZ)",
+     "options": "SS single stage or HP heat pump (single compressor)"
+    },
+    {
+     "setting": "Sleep timer",
+     "options": "OFF/On, 1-12 h"
+    },
+    {
+     "setting": "Cool Savings",
+     "options": "OFF/On, 1-6"
+    },
+    {
+     "setting": "Cycle rate heat / cool",
+     "options": "FA / ME / SL"
+    },
+    {
+     "setting": "Compressor lockout",
+     "options": "OFF/On (5 min)"
+    },
+    {
+     "setting": "Display light",
+     "options": "On/OFF (continuous needs C)"
+    },
+    {
+     "setting": "Room temp display",
+     "options": "4 LO to 4 HI"
+    },
+    {
+     "setting": "Change filter",
+     "options": "OFF/On, 25-1975 h"
+    }
+   ],
+   "installerTest": "Check with switches: FAN ON/AUTO, COOL below room temp (flashing setpoint = compressor lockout), EMER runs W2 only (1F89EZ).",
+   "factoryReset": "Reset: with SYSTEM in HEAT or COOL (or EMER), press and hold up and down together about 10 s until the display blanks."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door not seated (door switch)"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the blower door to engage the interlock"
+    ]
+   },
+   {
+    "symptom": "No heat",
+    "causes": [
+     "System switch not in HEAT",
+     "Loose wire",
+     "Pilot out or furnace lockout (older systems)",
+     "Equipment or thermostat fault"
+    ],
+    "fixes": [
+     "Set HEAT and raise setpoint above room temp",
+     "Check terminals",
+     "Re-light pilot / check furnace lockout",
+     "Within about 5 min the thermostat should click; if not, reset it (see factory reset)"
+    ]
+   },
+   {
+    "symptom": "No cool",
+    "causes": [
+     "System switch not in COOL",
+     "Loose wire",
+     "Compressor lockout delay"
+    ],
+    "fixes": [
+     "Set COOL and lower setpoint below room temp",
+     "Check terminals",
+     "Allow up to 5 min if compressor lockout is on"
+    ]
+   },
+   {
+    "symptom": "Heat, cool or fan runs constantly",
+    "causes": [
+     "Short in wiring, thermostat or equipment"
+    ],
+    "fixes": [
+     "Check each connection for shorted/touching wires; reset the thermostat"
+    ]
+   }
+  ],
+  "tips": [
+   "Presets: hold HOME, SLEEP or AWAY 3 s to save the current setpoint to that button."
+  ],
+  "manuals": [
+   {
+    "title": "1F86EZ-0251 Blue Easy Set 1H/1C Non-Programmable Installation and Operation Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f86ez-0251-install.pdf",
+    "url": "https://media.copeland.com/e47ab88a-f08d-425f-a17b-b16b00f83343/0037-7201-Instructions-1F86EZ-0251.pdf"
+   },
+   {
+    "title": "1F89EZ-0251 Blue Easy Set Heat Pump Installation Instructions and User Guide",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f89ez-0251-install.pdf",
+    "url": "https://media.copeland.com/c6736722-62ba-4355-82cf-b16b00f83362/0037-7208-Instruction%20Sheet-Easy%20Install%20Thermostats.pdf"
+   }
+  ],
+  "sourceNotes": "White-Rodgers PART NO. 37-7201001 (1F86EZ-0251, code 1635) and 37-7208001 (1F89EZ-0251, code 1106, (c)2024 Copeland).",
+  "img": ""
+ },
+ {
+  "id": "tst-wr-70-series-heat-pump",
+  "brand": "White-Rodgers",
+  "family": "70 Series Heat Pump (1F72 programmable / 1F79 non-programmable)",
+  "aka": "1F72 5/2 day programmable HP, 1F79 non-programmable HP",
+  "models": [
+   "1F72",
+   "1F79"
+  ],
+  "type": "programmable",
+  "stages": "Heat pump with or without aux/emergency heat (Y, W2, E); not for conventional gas/electric systems",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "2 AAA (memory only)",
+   "notes": "Does not run on batteries - AAA only keep configuration if AC is lost."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor contactor"
+   },
+   {
+    "t": "W2",
+    "fn": "Aux heat (stage 2)"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat relay",
+    "notes": "Jumper W2-E to use one aux heat for both"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B",
+    "fn": "Changeover relay",
+    "notes": "O/B switch, factory O"
+   },
+   {
+    "t": "L",
+    "fn": "System monitor input"
+   }
+  ],
+  "wiringNotes": [
+   "Jumper W906: cut if the aux/emergency heat energizes its own blower; leave if the thermostat must run the fan.",
+   "Clip W904 for Celsius; clip W905 for slow cycle (1.5/1.2 F instead of 1.2/0.75 F)."
+  ],
+  "setup": {
+   "access": "1F79: SYSTEM OFF, press down + up 2 s, then down + up momentarily to step; move SYSTEM from OFF to exit. 1F72: press PRGM and RUN, HOLD = next, TIME = back, RUN = exit.",
+   "keySettings": [
+    {
+     "setting": "FA fast second stage",
+     "options": "On/OFF"
+    },
+    {
+     "setting": "CL compressor lockout",
+     "options": "OFF/On"
+    },
+    {
+     "setting": "Display adjust",
+     "options": "3 LO to 3 HI"
+    },
+    {
+     "setting": "dL backlight",
+     "options": "On/OFF (not on earlier models)"
+    }
+   ],
+   "installerTest": "Not published as a menu.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door not seated (door switch)"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the blower door to engage the interlock"
+    ]
+   },
+   {
+    "symptom": "No heat",
+    "causes": [
+     "System switch not in HEAT",
+     "Loose wire",
+     "Pilot out or furnace lockout (older systems)",
+     "Equipment or thermostat fault"
+    ],
+    "fixes": [
+     "Set HEAT and raise setpoint above room temp",
+     "Check terminals",
+     "Re-light pilot / check furnace lockout",
+     "Within about 5 min the thermostat should click; if not, reset it (see factory reset)"
+    ]
+   },
+   {
+    "symptom": "No cool",
+    "causes": [
+     "System switch not in COOL",
+     "Loose wire",
+     "Compressor lockout delay"
+    ],
+    "fixes": [
+     "Set COOL and lower setpoint below room temp",
+     "Check terminals",
+     "Allow up to 5 min if compressor lockout is on"
+    ]
+   },
+   {
+    "symptom": "Heat, cool or fan runs constantly",
+    "causes": [
+     "Short in wiring, thermostat or equipment"
+    ],
+    "fixes": [
+     "Check each connection for shorted/touching wires; reset the thermostat"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "1F72 5/2 Day Programmable Heat Pump Thermostat Installation and Operation Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f72-install.pdf",
+    "url": "https://media.copeland.com/7ecf7008-13be-44d4-85f6-b16b0104f413/PROD-COMRES-WR-70_Series_Thermostats-Instructions_0037-6498.pdf"
+   },
+   {
+    "title": "1F79 Non-Programmable Heat Pump Thermostat Installation and Operation Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f79-install.pdf",
+    "url": "https://media.copeland.com/c6ab534a-c9a9-4072-b45b-b16b0104f22f/PROD-COMRES-WR-70_Series_Thermostats-Instructions_0037-6499.pdf"
+   }
+  ],
+  "sourceNotes": "White-Rodgers PART NO. 37-6498001 (1F72) and 37-6499001 (1F79), code 1632; model numbers printed as 1F72 / 1F79 family names.",
+  "img": ""
+ },
+ {
+  "id": "tst-wr-1f95-1291",
+  "brand": "White-Rodgers",
+  "family": "1F95-1291 Blue Humidity Touchscreen Universal",
+  "aka": "Blue touchscreen with humidify/dehumidify control",
+  "models": [
+   "1F95-1291"
+  ],
+  "type": "programmable",
+  "stages": "SS1 1H/1C, MS2 2H/2C, HP1 single-stage HP + up to 2 aux (3H/1C), HP2 2-stage HP + up to 2 aux (4H/2C); humidify (HM) and dehumidify (DHM)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "Battery mV-30 VAC or hardwired 20-30 VAC; power stealing switch on the back (set Off to run on batteries if power stealing causes problems)."
+  },
+  "terminals": [
+   {
+    "t": "RC / RH",
+    "fn": "24 VAC cooling / heating"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common"
+   },
+   {
+    "t": "Y / Y2",
+    "fn": "1st / 2nd stage cool or compressor"
+   },
+   {
+    "t": "W/E",
+    "fn": "1st stage heat / emergency"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / aux"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (O or B set in menu)"
+   },
+   {
+    "t": "6",
+    "fn": "3-wire zone valve connection (SS1/MS2)"
+   },
+   {
+    "t": "L",
+    "fn": "Heat pump fault input"
+   },
+   {
+    "t": "HM",
+    "fn": "Humidifier output",
+    "notes": "Energizes on a heat call when RH is below setpoint; auto humidification option (menu 42)"
+   },
+   {
+    "t": "DHM",
+    "fn": "Dehumidify output - de-energizes to drop fan speed",
+    "notes": "Only for equipment with a dehum input or a fan-speed relay"
+   },
+   {
+    "t": "S + / -",
+    "fn": "Remote/outdoor sensor"
+   }
+  ],
+  "wiringNotes": [
+   "Dehumidify via DHM lowers blower speed; manual recommends an anti-freeze-up control (White-Rodgers CAFC) on the suction line."
+  ],
+  "setup": {
+   "access": "Press Menu, then press and hold Installer Config 5 s; reference number shows top right. Up = next item, down = previous, right/left change the option.",
+   "keySettings": [
+    {
+     "setting": "1 System type",
+     "options": "SS1, MS2, HP1, HP2"
+    },
+    {
+     "setting": "3 O/B",
+     "options": "O or B (HP only)"
+    },
+    {
+     "setting": "4 Programs per week",
+     "options": "7 day, 5 days (5+1+1), 0 days non-programmable"
+    },
+    {
+     "setting": "24/25 Heat / cool limits",
+     "options": "HL 62-98, LL 46-82"
+    },
+    {
+     "setting": "26/27 Keypad lockout",
+     "options": "OFF, L total, P partial; 3-digit code"
+    },
+    {
+     "setting": "30-32 Remote sensor",
+     "options": "On/OFF, indoor/outdoor, local sensor on/off"
+    },
+    {
+     "setting": "33-37 Dual fuel / aux cut-out",
+     "options": "dF on/off, setpoint -5 to 50 F, compressor off delay, aux cut out -5 to 79 F"
+    },
+    {
+     "setting": "Humidity setpoints",
+     "options": "Humidify 5-50%, dehumidify 40-95%"
+    }
+   ],
+   "installerTest": "Not published as an output test menu.",
+   "factoryReset": "Press the up, down and SYSTEM keys together - display blanks, then all segments show; programming, clock and configuration return to defaults. On heat pumps re-set menu items 1 and 3 afterward."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door not seated (door switch)"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the blower door to engage the interlock"
+    ]
+   },
+   {
+    "symptom": "No heat",
+    "causes": [
+     "System switch not in HEAT",
+     "Loose wire",
+     "Pilot out or furnace lockout (older systems)",
+     "Equipment or thermostat fault"
+    ],
+    "fixes": [
+     "Set HEAT and raise setpoint above room temp",
+     "Check terminals",
+     "Re-light pilot / check furnace lockout",
+     "Within about 5 min the thermostat should click; if not, reset it (see factory reset)"
+    ]
+   },
+   {
+    "symptom": "No cool",
+    "causes": [
+     "System switch not in COOL",
+     "Loose wire",
+     "Compressor lockout delay"
+    ],
+    "fixes": [
+     "Set COOL and lower setpoint below room temp",
+     "Check terminals",
+     "Allow up to 5 min if compressor lockout is on"
+    ]
+   },
+   {
+    "symptom": "Heat, cool or fan runs constantly",
+    "causes": [
+     "Short in wiring, thermostat or equipment"
+    ],
+    "fixes": [
+     "Check each connection for shorted/touching wires; reset the thermostat"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "1F95-1291 Blue Humidity Touchscreen Universal Thermostat Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f95-1291-install.pdf",
+    "url": "https://media.copeland.com/76e3484c-7394-452d-9e4b-b16b00f839ce/37-7313F-Instruction%20Sheet-Easy%20Install%20Thermostats.pdf"
+   }
+  ],
+  "sourceNotes": "White-Rodgers PART NO. 37-7313001 (replaces 37-7313G), code 1632; Copeland copy 04/2025.",
+  "img": ""
  },
  {
   "id": "tst-braeburn-1000-builder",
@@ -13988,6 +19452,1045 @@ const THERMOSTATS = [
   "img": "tstat-img/tst-braeburn-3000-3200.jpg"
  },
  {
+  "id": "tst-braeburn-1030-1230",
+  "brand": "Braeburn",
+  "family": "1030 / 1230 Economy Series Non-Programmable",
+  "aka": "Economy Series non-programmable (2022 manuals)",
+  "models": [
+   "1030",
+   "1230"
+  ],
+  "type": "non-programmable",
+  "stages": "1030: 1 heat / 1 cool conventional or heat pump. 1230: up to 2 heat / 1 cool conventional or heat pump (aux)",
+  "sort": 25,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (included)",
+   "notes": "24 VAC or batteries; batteries back up 24 VAC. In dual-transformer jobs C must come from the cooling transformer."
+  },
+  "terminals": [
+   {
+    "t": "Rh",
+    "fn": "24 VAC heating transformer"
+   },
+   {
+    "t": "Rc",
+    "fn": "24 VAC cooling transformer",
+    "notes": "Remove factory jumper for dual transformer (conventional); leave it on heat pumps"
+   },
+   {
+    "t": "W1",
+    "fn": "Conventional heat (1030/1230)"
+   },
+   {
+    "t": "W1/E",
+    "fn": "Emergency heat relay (1230, heat pump)",
+    "notes": "No separate E relay: land on W2 and jumper W2 to E"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage / aux heat (1230)"
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O",
+    "fn": "Cool-active reversing valve"
+   },
+   {
+    "t": "B",
+    "fn": "Heat-active reversing valve",
+    "notes": "Wire O or B, never both"
+   },
+   {
+    "t": "L",
+    "fn": "System malfunction indicator (1230)",
+    "notes": "Needs C connected"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional"
+   }
+  ],
+  "wiringNotes": [
+   "Installer switches on the back: CONV/HP (ships CONV) and HG (gas heat) / HE (electric heat).",
+   "Also for 250-750 mV heat only and 2-wire hydronic zones."
+  ],
+  "setup": {
+   "access": "Hold MENU 5 s until the first installer setting shows; up/down change, MENU next; exits after the last setting. (0000 IL = enter installer lock code.)",
+   "keySettings": [
+    {
+     "setting": "CSCP compressor short cycle protection",
+     "options": "0-5 min (default 5)"
+    },
+    {
+     "setting": "1st / 2nd stage differential",
+     "options": "DIF1 0.5, 1.0, 2.0 F (default 0.5); DIF2 1-6 F (default 2.0)"
+    },
+    {
+     "setting": "Heat / cool setpoint limits",
+     "options": "45-90 F"
+    },
+    {
+     "setting": "Installer lock",
+     "options": "4-digit code (0000 not valid)"
+    },
+    {
+     "setting": "11 Installer Clear (CLR)",
+     "options": "Y = factory reset on exit"
+    }
+   ],
+   "installerTest": "Manual test from the installer manual: SYSTEM to HEAT and raise setpoint 3 F above room (system starts in a few seconds; gas furnace fan may lag), OFF and let it shut down, COOL and lower 3 F below room (CSCP delay may apply), then FAN ON / AUTO. Do not run COOL below 50 F outdoor; never jumper gas valve or board terminals to test.",
+   "factoryReset": "Installer setting 11 CLR = Y (factory reset takes effect on exiting the installer menu)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Cooling will not start right away",
+    "causes": [
+     "Compressor Short Cycle Protection (CSCP) delay"
+    ],
+    "fixes": [
+     "Wait out the delay or set CSCP to 0 in installer settings for testing"
+    ]
+   },
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "1030/1230 Economy Series Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-1030-1230-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2022/12/1030-1230-Installer.pdf"
+   },
+   {
+    "title": "1030/1230 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-1030-1230-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2022/12/1030-1230-User.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 1030-100-01 installer manual and 1030-110-01 user manual, (c)2022.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-2030-2230",
+  "brand": "Braeburn",
+  "family": "2030 / 2230 Economy Series Programmable",
+  "aka": "Economy Series programmable (2022 manuals)",
+  "models": [
+   "2030",
+   "2230"
+  ],
+  "type": "programmable",
+  "stages": "2030: 1H/1C conventional or heat pump. 2230: up to 2H/1C conventional or heat pump",
+  "sort": 25,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (included)",
+   "notes": "24 VAC or batteries; batteries back up 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "Rh",
+    "fn": "24 VAC heating"
+   },
+   {
+    "t": "Rc",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W1 / W1/E",
+    "fn": "Heat / emergency heat (2230)"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage / aux (2230)"
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O / B",
+    "fn": "Reversing valve cool-active / heat-active"
+   },
+   {
+    "t": "L",
+    "fn": "Malfunction indicator (2230)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional"
+   }
+  ],
+  "wiringNotes": [
+   "Installer switches CONV/HP and HG/HE on the back (same as 1030/1230)."
+  ],
+  "setup": {
+   "access": "Hold MENU 5 s; up/down change; NEXT (HOLD) / BACK (PROG) move; MENU exits.",
+   "keySettings": [
+    {
+     "setting": "1 Programming mode",
+     "options": "7-day, 5-2, or NO (non-programmable)"
+    },
+    {
+     "setting": "6 Adaptive Recovery (ARM)",
+     "options": "OF / ON - starts up to 3 h early"
+    },
+    {
+     "setting": "CSCP compressor short cycle protection",
+     "options": "0-5 min (default 5)"
+    },
+    {
+     "setting": "1st / 2nd stage differential",
+     "options": "DIF1 0.5, 1.0, 2.0 F (default 0.5); DIF2 1-6 F (default 2.0)"
+    },
+    {
+     "setting": "Heat / cool setpoint limits",
+     "options": "45-90 F"
+    },
+    {
+     "setting": "Installer lock",
+     "options": "4-digit code (0000 not valid)"
+    },
+    {
+     "setting": "13 Installer Clear (CLR)",
+     "options": "Y = factory reset on exit"
+    }
+   ],
+   "installerTest": "Manual test from the installer manual: SYSTEM to HEAT and raise setpoint 3 F above room (system starts in a few seconds; gas furnace fan may lag), OFF and let it shut down, COOL and lower 3 F below room (CSCP delay may apply), then FAN ON / AUTO. Do not run COOL below 50 F outdoor; never jumper gas valve or board terminals to test.",
+   "factoryReset": "Installer setting 13 CLR = Y."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Cooling will not start right away",
+    "causes": [
+     "Compressor Short Cycle Protection (CSCP) delay"
+    ],
+    "fixes": [
+     "Wait out the delay or set CSCP to 0 in installer settings for testing"
+    ]
+   },
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "2030/2230 Economy Series Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-2030-2230-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2022/12/2030-2230-Installer.pdf"
+   },
+   {
+    "title": "2030/2230 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-2030-2230-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2023/11/2030-2230-User-Manual-02.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 2030-100-01 (c)2022 installer manual; 2030-110-02 (c)2023 user manual.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-1232-2232",
+  "brand": "Braeburn",
+  "family": "1232 / 2232 Economy Series Universal (2025)",
+  "aka": "1232 non-programmable, 2232 programmable",
+  "models": [
+   "1232",
+   "2232"
+  ],
+  "type": "programmable",
+  "stages": "Up to 2H/2C conventional or 3H/2C heat pump (2 compressors + aux); millivolt and 2- or 3-wire hydronic",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (included)",
+   "notes": "24 VAC or batteries; some features (CPOP, power monitor) need C."
+  },
+  "terminals": [
+   {
+    "t": "Rh",
+    "fn": "24 VAC heating"
+   },
+   {
+    "t": "Rc",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W1/E",
+    "fn": "1st stage heat / emergency heat"
+   },
+   {
+    "t": "W2/AUX",
+    "fn": "2nd stage / aux heat"
+   },
+   {
+    "t": "Y1 / Y2",
+    "fn": "1st / 2nd stage compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B/V3",
+    "fn": "Reversing valve (O or B per setting) or 3-wire zone valve (V3)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Remote/outdoor sensor"
+   },
+   {
+    "t": "L",
+    "fn": "Malfunction indicator"
+   }
+  ],
+  "wiringNotes": [
+   "No installer switches - system type is chosen in the installer menu (ships CONV 11)."
+  ],
+  "setup": {
+   "access": "Hold MENU 5 s; up/down change; NEXT / BACK move (2232: NEXT=HOLD, BACK=PROG); RETURN (FAN) exits. 'UNLOCK 0000' = installer lock active.",
+   "keySettings": [
+    {
+     "setting": "System Type",
+     "options": "CONV 11, CONV 22, HP 11, HP 21, HP 32, HD 1 (hydronic heat only), HD 11 (hydronic with cooling)"
+    },
+    {
+     "setting": "Conventional heat fan control (FAN 1)",
+     "options": "GAS (default) or ELEC"
+    },
+    {
+     "setting": "Emergency heat fan (EMER FAN)",
+     "options": "ELEC default"
+    },
+    {
+     "setting": "Finish with high stage (AUX FNSH)",
+     "options": "NO default"
+    },
+    {
+     "setting": "Reversing valve (R VALVE)",
+     "options": "O (default) or B"
+    },
+    {
+     "setting": "Fossil fuel backup (AUX HEAT)",
+     "options": "ELEC (compressor + aux) or GAS (compressor locked out 1 min after aux call)"
+    },
+    {
+     "setting": "Compressor power outage protection (CPOP)",
+     "options": "OFF default; needs C"
+    },
+    {
+     "setting": "AC power interrupt warning (POWR MON)",
+     "options": "OFF default; needs C and batteries"
+    },
+    {
+     "setting": "Auto changeover / deadband",
+     "options": "OFF/ON; 2-5 F"
+    },
+    {
+     "setting": "CSCP compressor short cycle protection",
+     "options": "0-5 min (default 5)"
+    },
+    {
+     "setting": "1st / 2nd stage differential",
+     "options": "DIF1 0.5, 1.0, 2.0 F (default 0.5); DIF2 1-6 F (default 2.0)"
+    },
+    {
+     "setting": "Heat / cool setpoint limits",
+     "options": "45-90 F"
+    },
+    {
+     "setting": "Installer lock",
+     "options": "4-digit code (0000 not valid)"
+    },
+    {
+     "setting": "Installer Clear",
+     "options": "CLEAR NONE / ALL (ALL = factory reset on exit)"
+    }
+   ],
+   "installerTest": "Manual test from the installer manual: SYSTEM to HEAT and raise setpoint 3 F above room (system starts in a few seconds; gas furnace fan may lag), OFF and let it shut down, COOL and lower 3 F below room (CSCP delay may apply), then FAN ON / AUTO. Do not run COOL below 50 F outdoor; never jumper gas valve or board terminals to test. Adjust settings to test humidifier/accessories if used.",
+   "factoryReset": "Installer Clear = ALL."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Cooling will not start right away",
+    "causes": [
+     "Compressor Short Cycle Protection (CSCP) delay"
+    ],
+    "fixes": [
+     "Wait out the delay or set CSCP to 0 in installer settings for testing"
+    ]
+   },
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "1232 Economy Series Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-1232-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/12/Braeburn-1232-Installer-Manual.pdf"
+   },
+   {
+    "title": "1232 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-1232-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/12/Braeburn-1232-User-Manual.pdf"
+   },
+   {
+    "title": "2232 Economy Series Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-2232-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/12/Braeburn-2232-Installer-Manual.pdf"
+   },
+   {
+    "title": "2232 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-2232-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/12/Braeburn-2232-User-Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 1232-100-01 / 1232-110-01 and 2232-100-01 / 2232-110-01, (c)2025.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-4030-4235",
+  "brand": "Braeburn",
+  "family": "4030 / 4235 Premier Series",
+  "aka": "4030 heat pump/conventional with dry contact; 4235 universal with humidity control",
+  "models": [
+   "4030",
+   "4235"
+  ],
+  "type": "programmable",
+  "stages": "4030: up to 2H/1C heat pump or 1H/1C conventional + dry contact. 4235: up to 3H/2C heat pump or 2H/2C conventional + humidify/dehumidify (H/D)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "24 VAC or batteries."
+  },
+  "terminals": [
+   {
+    "t": "Rh",
+    "fn": "24 VAC heating"
+   },
+   {
+    "t": "Rc",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W1/E",
+    "fn": "1st stage heat / emergency heat"
+   },
+   {
+    "t": "W2/AUX",
+    "fn": "2nd stage / aux heat"
+   },
+   {
+    "t": "Y1 / Y2",
+    "fn": "1st / 2nd stage compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B/V3",
+    "fn": "Reversing valve (O or B per setting) or 3-wire zone valve (V3)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Remote/outdoor sensor"
+   },
+   {
+    "t": "L",
+    "fn": "Malfunction indicator"
+   },
+   {
+    "t": "H/D",
+    "fn": "Humidifier / dehumidifier output (4235)",
+    "notes": "Humidify 10-50% RH, dehumidify range per spec"
+   },
+   {
+    "t": "DRY1 / DRY2",
+    "fn": "Dry contact relay"
+   }
+  ],
+  "wiringNotes": [
+   "18-22 gauge unshielded wire, 200 ft max.",
+   "Ships as CONV 11 - set system type in installer menu."
+  ],
+  "setup": {
+   "access": "Hold MENU 5 s; up/down change; NEXT (HOLD) / BACK (PROG); RETURN (FAN) exits.",
+   "keySettings": [
+    {
+     "setting": "System Type",
+     "options": "CONV 11, CONV 22, HP 11, HP 21, HP 32, HD 1 (hydronic heat only), HD 11 (hydronic with cooling)"
+    },
+    {
+     "setting": "Conventional heat fan control (FAN 1)",
+     "options": "GAS (default) or ELEC"
+    },
+    {
+     "setting": "Emergency heat fan (EMER FAN)",
+     "options": "ELEC default"
+    },
+    {
+     "setting": "Finish with high stage (AUX FNSH)",
+     "options": "NO default"
+    },
+    {
+     "setting": "Reversing valve (R VALVE)",
+     "options": "O (default) or B"
+    },
+    {
+     "setting": "Fossil fuel backup (AUX HEAT)",
+     "options": "ELEC (compressor + aux) or GAS (compressor locked out 1 min after aux call)"
+    },
+    {
+     "setting": "Compressor power outage protection (CPOP)",
+     "options": "OFF default; needs C"
+    },
+    {
+     "setting": "AC power interrupt warning (POWR MON)",
+     "options": "OFF default; needs C and batteries"
+    },
+    {
+     "setting": "Auto changeover / deadband",
+     "options": "OFF/ON; 2-5 F"
+    },
+    {
+     "setting": "CSCP compressor short cycle protection",
+     "options": "0-5 min (default 5)"
+    },
+    {
+     "setting": "1st / 2nd stage differential",
+     "options": "DIF1 0.5, 1.0, 2.0 F (default 0.5); DIF2 1-6 F (default 2.0)"
+    },
+    {
+     "setting": "Heat / cool setpoint limits",
+     "options": "45-90 F"
+    },
+    {
+     "setting": "Installer lock",
+     "options": "4-digit code (0000 not valid)"
+    },
+    {
+     "setting": "Installer Clear",
+     "options": "NONE / ALL"
+    }
+   ],
+   "installerTest": "Manual test from the installer manual: SYSTEM to HEAT and raise setpoint 3 F above room (system starts in a few seconds; gas furnace fan may lag), OFF and let it shut down, COOL and lower 3 F below room (CSCP delay may apply), then FAN ON / AUTO. Do not run COOL below 50 F outdoor; never jumper gas valve or board terminals to test.",
+   "factoryReset": "Installer Clear = ALL."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Cooling will not start right away",
+    "causes": [
+     "Compressor Short Cycle Protection (CSCP) delay"
+    ],
+    "fixes": [
+     "Wait out the delay or set CSCP to 0 in installer settings for testing"
+    ]
+   },
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "4030/4235 Premier Series Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-4030-4235-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2022/12/Braeburn-4030-4235-Installer-Guide.pdf"
+   },
+   {
+    "title": "4030/4235 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-4030-4235-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2024/04/4030-4235-User.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 4030-100-05 (c)2025 installer manual; 4030-110-05 (c)2024 user manual.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-4020",
+  "brand": "Braeburn",
+  "family": "4020 Premier Hydronic (heat only, freeze protection)",
+  "aka": "Hydronic / radiant floor thermostat",
+  "models": [
+   "4020"
+  ],
+  "type": "programmable",
+  "stages": "Heat only: single stage hot water or steam, in-floor, 250-750 mV, 2- or 3-wire zone valves",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "24 VAC or batteries."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC"
+   },
+   {
+    "t": "W",
+    "fn": "Heat"
+   },
+   {
+    "t": "V3",
+    "fn": "3rd wire of a 3-wire zone valve"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Sensor input (remote/floor)"
+   }
+  ],
+  "wiringNotes": [],
+  "setup": {
+   "access": "Hold MENU 5 s; up/down change; NEXT (HOLD) / BACK (PROG); RETURN (TEMP) exits.",
+   "keySettings": [
+    {
+     "setting": "Installer Clear",
+     "options": "NONE / ALL"
+    }
+   ],
+   "installerTest": "Raise setpoint above room temperature in HEAT and confirm the zone valve/boiler responds.",
+   "factoryReset": "Installer Clear = ALL."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "4020 Hydronic Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-4020-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/07/4020-Installer-03.pdf"
+   },
+   {
+    "title": "4020 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-4020-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/07/4020-User-03.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 4020-100-03 and 4020-110-03, (c)2024.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-7205-7320",
+  "brand": "Braeburn",
+  "family": "BlueLink Wi-Fi 7205 / 7320",
+  "aka": "7205 universal smart Wi-Fi; 7320 touchscreen Wi-Fi with wireless humidity control and remote sensors",
+  "models": [
+   "7205",
+   "7320"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2H/2C conventional or 3H/2C heat pump",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "24 VAC or batteries; Wi-Fi may need C (7205) and requires C (7320)."
+  },
+  "terminals": [
+   {
+    "t": "Rh / Rc",
+    "fn": "24 VAC heating / cooling"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "May be required for Wi-Fi (7205), required for Wi-Fi (7320)"
+   },
+   {
+    "t": "W1/E/W3",
+    "fn": "1st stage / emergency / 3rd stage heat"
+   },
+   {
+    "t": "W2 (AUX)",
+    "fn": "2nd stage / aux"
+   },
+   {
+    "t": "Y1 / Y2",
+    "fn": "Compressor stages"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve"
+   },
+   {
+    "t": "K",
+    "fn": "Optional Share-a-Wire module connection (Model 7340 on 7205)"
+   },
+   {
+    "t": "L",
+    "fn": "Malfunction indicator (7320)"
+   },
+   {
+    "t": "A",
+    "fn": "Economizer, fresh air or output control (7320)"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Wired remote/outdoor sensor (7320)"
+   }
+  ],
+  "wiringNotes": [
+   "Share-a-Wire module on K lets a 4-wire run carry an extra function (see guide)."
+  ],
+  "setup": {
+   "access": "7205: hold RETURN + DOWN 3 s. 7320: touch and hold SYSTEM + CONFIG 3 s. Up/down change, NEXT/BACK move.",
+   "keySettings": [
+    {
+     "setting": "System Type",
+     "options": "7320: 11CONV, 22CONV, 11HP, 22HP, 32HP"
+    },
+    {
+     "setting": "Installer Clear",
+     "options": "CLR0 none, CLR1 wireless sensors (7320), CLR2 all settings"
+    }
+   ],
+   "installerTest": "Manual test from the installer manual: SYSTEM to HEAT and raise setpoint 3 F above room (system starts in a few seconds; gas furnace fan may lag), OFF and let it shut down, COOL and lower 3 F below room (CSCP delay may apply), then FAN ON / AUTO. Do not run COOL below 50 F outdoor; never jumper gas valve or board terminals to test.",
+   "factoryReset": "Installer Clear CLR2 (all settings)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Cooling will not start right away",
+    "causes": [
+     "Compressor Short Cycle Protection (CSCP) delay"
+    ],
+    "fixes": [
+     "Wait out the delay or set CSCP to 0 in installer settings for testing"
+    ]
+   },
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "7205 Installer Guide",
+    "docType": "install",
+    "seedFile": "braeburn-7205-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2018/01/7205-Installer-Guide.pdf"
+   },
+   {
+    "title": "7205 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-7205-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2022/08/7205-User-Manual_0.pdf"
+   },
+   {
+    "title": "7320 Installer Guide",
+    "docType": "install",
+    "seedFile": "braeburn-7320-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2015/11/7320-Installer-Guide_0.pdf"
+   },
+   {
+    "title": "7320 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-7320-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2015/11/7320-User-Manual_0.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 7205-100-03 (c)2017, 7205-110-03 (c)2022, 7320-100-02 / 7320-110-03 (c)2015.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-8205",
+  "brand": "Braeburn",
+  "family": "BlueLink 8205 Universal Smart Wi-Fi",
+  "aka": "2024 BlueLink Wi-Fi",
+  "models": [
+   "8205"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2H/2C conventional or 3H/2C heat pump",
+  "sort": 35,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA (required)",
+   "notes": "Runs on AA batteries; 24 VAC optional (batteries then back up). Heat pumps, cool-only or heat-only may need C."
+  },
+  "terminals": [
+   {
+    "t": "Rh / Rc",
+    "fn": "24 VAC heating / cooling"
+   },
+   {
+    "t": "W1/E/W3",
+    "fn": "1st stage / emergency / 3rd stage heat"
+   },
+   {
+    "t": "W2/AUX",
+    "fn": "2nd stage / aux"
+   },
+   {
+    "t": "Y1 / Y2",
+    "fn": "Compressor stages"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional / may be required"
+   }
+  ],
+  "wiringNotes": [],
+  "setup": {
+   "access": "Hold MENU 5 s; up/down change; NEXT (HOLD) / BACK (PROG); RETURN (FAN) exits.",
+   "keySettings": [
+    {
+     "setting": "System Type",
+     "options": "CONV 11, CONV 22, HP 11, HP 21, HP 32, HD 1 (hydronic heat only), HD 11 (hydronic with cooling)"
+    },
+    {
+     "setting": "Conventional heat fan control (FAN 1)",
+     "options": "GAS (default) or ELEC"
+    },
+    {
+     "setting": "Emergency heat fan (EMER FAN)",
+     "options": "ELEC default"
+    },
+    {
+     "setting": "Finish with high stage (AUX FNSH)",
+     "options": "NO default"
+    },
+    {
+     "setting": "Reversing valve (R VALVE)",
+     "options": "O (default) or B"
+    },
+    {
+     "setting": "Installer Clear",
+     "options": "NONE / ALL"
+    }
+   ],
+   "installerTest": "Manual test from the installer manual: SYSTEM to HEAT and raise setpoint 3 F above room (system starts in a few seconds; gas furnace fan may lag), OFF and let it shut down, COOL and lower 3 F below room (CSCP delay may apply), then FAN ON / AUTO. Do not run COOL below 50 F outdoor; never jumper gas valve or board terminals to test.",
+   "factoryReset": "Installer Clear = ALL."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Cooling will not start right away",
+    "causes": [
+     "Compressor Short Cycle Protection (CSCP) delay"
+    ],
+    "fixes": [
+     "Wait out the delay or set CSCP to 0 in installer settings for testing"
+    ]
+   },
+   {
+    "symptom": "Blank display / erratic",
+    "causes": [
+     "Dead AA batteries with no C wire"
+    ],
+    "fixes": [
+     "Install fresh AA alkaline batteries or land a C wire"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "8205 Installer Manual",
+    "docType": "install",
+    "seedFile": "braeburn-8205-installer.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/01/8205-Installer-Manual.pdf"
+   },
+   {
+    "title": "8205 User Manual",
+    "docType": "user",
+    "seedFile": "braeburn-8205-user.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2025/01/8205-User-Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 8205-100-02 and 8205-110-01, (c)2024.",
+  "img": ""
+ },
+ {
+  "id": "tst-braeburn-500-505",
+  "brand": "Braeburn",
+  "family": "500 / 505 Builder Mechanical",
+  "aka": "Mercury-free mechanical with Megaswitch",
+  "models": [
+   "500",
+   "505"
+  ],
+  "type": "non-programmable",
+  "stages": "500: 1 heat / 1 cool (single-stage heat pump OK). 505: heat only. Both: 250-750 mV heat only",
+  "sort": 60,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "None",
+   "notes": "Mechanical; system needs 24 VAC (or millivolt heat)."
+  },
+  "terminals": [
+   {
+    "t": "Rh",
+    "fn": "Heating transformer (M, 4, R)"
+   },
+   {
+    "t": "Rc",
+    "fn": "Cooling transformer (V)"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (H, 4)"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan (F)"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cooling"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heating"
+   }
+  ],
+  "wiringNotes": [
+   "Not for above 30 VAC."
+  ],
+  "setup": {
+   "access": "No menu. Heat anticipator 0.15-1.2 A.",
+   "keySettings": [
+    {
+     "setting": "Heat anticipation",
+     "options": "0.15-1.2 A"
+    },
+    {
+     "setting": "Range",
+     "options": "50-90 F"
+    }
+   ],
+   "installerTest": "Use SYSTEM and FAN levers.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "500/505 Builder Series Mechanical Thermostat User Manual",
+    "docType": "install",
+    "seedFile": "braeburn-500-505-manual.pdf",
+    "url": "https://braeburnonline.com/wp-content/uploads/2013/08/500-505-Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Braeburn 500/505 manual (c)2013.",
+  "img": ""
+ },
+ {
   "id": "tst-lux-kono-wifi",
   "brand": "Lux",
   "family": "Kono Wi-Fi",
@@ -15696,6 +22199,558 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "52016 TX500b Series Installation and Operating Instructions (EN); 52073 TX500E Installation and Operating Instructions (EN)",
   "img": "tstat-img/tst-lux-tx500-dial.jpg"
+ },
+ {
+  "id": "tst-lux-tx9100u",
+  "brand": "Lux",
+  "family": "TX9100U / TX9100E Smart Temp",
+  "aka": "TX9100U, Ua, Ub, Uc universal 7-day; TX9100E earlier 1-cool version",
+  "models": [
+   "TX9100U",
+   "TX9100Ua",
+   "TX9100Ub",
+   "TX9100Uc",
+   "TX9100E"
+  ],
+  "type": "programmable",
+  "stages": "TX9100U: 1-2 heat / 1-2 cool conventional or heat pump. TX9100Uc: heat pump 1 compressor only (no Y2). TX9100E: 1-2 heat / 1 cool. All: 3-wire zone valves, millivolt",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "Dual powered (batteries and/or 24 V C)."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 V heat transformer (R, V)",
+    "notes": "Factory RH-RC jumper; remove for two transformers"
+   },
+   {
+    "t": "RC",
+    "fn": "24 V cool transformer"
+   },
+   {
+    "t": "W1",
+    "fn": "Heat stage 1 (W, 4)"
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2 / heat pump aux + emergency (one terminal)",
+    "notes": "Tape off a separate E wire"
+   },
+   {
+    "t": "Y1",
+    "fn": "Cool / compressor stage 1 (Y, 6)"
+   },
+   {
+    "t": "Y2",
+    "fn": "Cool stage 2 (conventional)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan (F)"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cool"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heat",
+    "notes": "Use O or B, never both; if both are present old B is probably common - put it on C"
+   },
+   {
+    "t": "C",
+    "fn": "System common (optional)",
+    "notes": "Battery backup; C not needed for heat/cool to work"
+   },
+   {
+    "t": "A",
+    "fn": "Used with 3-wire zone valve per wiring diagram #2 (TX9100U)"
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump with aux/emergency: install the Y1-W1 jumper and land aux/emergency on W2 (diagram #8).",
+   "Single-stage heat pump, no aux: Y1-W1 jumper (diagram #7).",
+   "Mechanical clock thermostats may have two 'C' clock-power wires - tape them off, do not land on C."
+  ],
+  "setup": {
+   "access": "TX9100U: 9 DIP switches on the circuit board; changes take effect after moving HEAT/OFF/COOL or pressing HW RST.",
+   "keySettings": [
+    {
+     "setting": "SW1 System",
+     "options": "FURN (default) or HP"
+    },
+    {
+     "setting": "SW2 Type",
+     "options": "PROG (default) or MAN (non-programmable)"
+    },
+    {
+     "setting": "SW3 Periods",
+     "options": "4 (default) or 2 per day"
+    },
+    {
+     "setting": "SW4 Scale",
+     "options": "F / C"
+    },
+    {
+     "setting": "SW5 Time",
+     "options": "12 / 24 h"
+    },
+    {
+     "setting": "SW6 Delay",
+     "options": "5 min (default) or 2 min"
+    },
+    {
+     "setting": "SW7 Early recovery",
+     "options": "Disable (default) / Enable"
+    },
+    {
+     "setting": "SW8 Battery monitor",
+     "options": "ON unless running on C only"
+    },
+    {
+     "setting": "SW9 Fan",
+     "options": "GAS (default) or ELEC/HP (thermostat runs blower in heat)"
+    }
+   ],
+   "installerTest": "Set HEAT/COOL and move setpoint past room temperature; allow the 5 (or 2) minute delay.",
+   "factoryReset": "SW RST (left, below battery holder) held 5 s: erases programs and swing/offset/calibration. HW RST (right) 2 s: rereads switches / unlocks keypad; locked keypad default code 0000."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No fan in heat",
+    "causes": [
+     "Fan option on GAS",
+     "Different a/b/c revisions set fan differently"
+    ],
+    "fixes": [
+     "Set to ELEC/HP for heat pumps and electric heat - see the troubleshoot guide for your revision"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "TX9100U Smart Temp Installation and Operating Instructions (52103)",
+    "docType": "install",
+    "seedFile": "lux-tx9100u-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/tx9100u_manual_en.pdf"
+   },
+   {
+    "title": "TX9100Uc Installation and Operating Instructions (52174)",
+    "docType": "install",
+    "seedFile": "lux-tx9100uc-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/TX9100Uc_ENG_Manual.pdf"
+   },
+   {
+    "title": "TX9100U Troubleshoot Guide (a/b/c revisions)",
+    "docType": "troubleshooting",
+    "seedFile": "lux-tx9100u-faq.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/tx9100u_faq_en.pdf"
+   },
+   {
+    "title": "TX9100E Installation and Operating Instructions (52032)",
+    "docType": "install",
+    "seedFile": "lux-tx9100e-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/TX9100E_ENG_Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Lux 52103 (c)2011, 52174 (c)2014, 52032 (c)2008, TX9100U troubleshoot guide.",
+  "img": ""
+ },
+ {
+  "id": "tst-lux-tx700u",
+  "brand": "Lux",
+  "family": "TX700U",
+  "aka": "Battery-powered programmable, heat pump with aux/emergency capable",
+  "models": [
+   "TX700U"
+  ],
+  "type": "programmable",
+  "stages": "Gas, oil, millivolt, electric heat/cool and heat pumps with aux/emergency; not for 2-compressor (Y2) heat pumps",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Batteries required",
+   "notes": "Requires batteries to operate."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 V heat transformer (R, V)",
+    "notes": "Factory RH-RC jumper; remove for two transformers"
+   },
+   {
+    "t": "RC",
+    "fn": "24 V cool transformer"
+   },
+   {
+    "t": "W1",
+    "fn": "Heat stage 1 (W, 4)"
+   },
+   {
+    "t": "W2",
+    "fn": "Aux / emergency heat (heat pump)"
+   },
+   {
+    "t": "Y1",
+    "fn": "Cool / compressor stage 1 (Y, 6)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan (F)"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cool"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heat",
+    "notes": "Use O or B, never both; if both are present old B is probably common - put it on C"
+   },
+   {
+    "t": "C",
+    "fn": "System common (optional)",
+    "notes": "Battery backup; C not needed for heat/cool to work"
+   }
+  ],
+  "wiringNotes": [
+   "GAS/ELEC shorting-cap jumper on the board sets fan in HEAT/EMERG HEAT (ELEC for heat pumps and electric heat)."
+  ],
+  "setup": {
+   "access": "System switch OFF, hold EMER about 5 s until the screen changes; items advance in order.",
+   "keySettings": [
+    {
+     "setting": "Item 07 DLAY",
+     "options": "5 min (default) or 2 min"
+    },
+    {
+     "setting": "Swing",
+     "options": "1-9"
+    }
+   ],
+   "installerTest": "Test in HEAT/COOL with setpoint changes; allow compressor delay.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "TX700U Installation and Operating Instructions (53596)",
+    "docType": "install",
+    "seedFile": "lux-tx700u-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/tx700u_manual_en.pdf"
+   }
+  ],
+  "sourceNotes": "Lux 53596.",
+  "img": ""
+ },
+ {
+  "id": "tst-lux-tx100e-p711-p721",
+  "brand": "Lux",
+  "family": "TX100E / P711 / P721 (single-stage and 2H/1C)",
+  "aka": "TX100E non-programmable 1H/1C; P711 programmable 1H/1C; P721 programmable 2H/1C (no heat pump)",
+  "models": [
+   "TX100E",
+   "P711",
+   "P721"
+  ],
+  "type": "programmable",
+  "stages": "TX100E / P711: 1H/1C gas/oil/electric or single-stage heat pump (no aux), 2-wire zone valve, millivolt. P721: 1-2 heat / 1 cool, not heat pump",
+  "sort": 35,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "Batteries; C optional."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC",
+    "fn": "24 V heat / cool",
+    "notes": "Factory RH-RC jumper; remove for two transformers"
+   },
+   {
+    "t": "W / W1",
+    "fn": "Heat stage 1"
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2 (P721)"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "B/O",
+    "fn": "Shared reversing valve terminal (TX100E / P711)",
+    "notes": "B/O jumper on the board selects O or B; heat pump needs second jumper (supplied) per diagram #5"
+   },
+   {
+    "t": "C",
+    "fn": "Common (optional)"
+   }
+  ],
+  "wiringNotes": [
+   "GAS/ELEC jumper JP1 sets fan control in HEAT with fan on AUTO.",
+   "Heat pump: if both O and B exist, put the old B wire on C."
+  ],
+  "setup": {
+   "access": "Board jumpers (GAS/ELEC, B/O).",
+   "keySettings": [
+    {
+     "setting": "GAS / ELEC",
+     "options": "GAS default"
+    }
+   ],
+   "installerTest": "Manual heat/cool test.",
+   "factoryReset": "Software Reset erases programs and user settings (keypad lockout must be off first) - see manual."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No fan in heat",
+    "causes": [
+     "GAS/ELEC jumper on GAS"
+    ],
+    "fixes": [
+     "Move jumper to ELECTRIC for electric heat / heat pump"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "TX100E Installation and Operating Instructions (52203)",
+    "docType": "install",
+    "seedFile": "lux-tx100e-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/tx100e_manual_en.pdf"
+   },
+   {
+    "title": "TX100E Troubleshoot Guide",
+    "docType": "troubleshooting",
+    "seedFile": "lux-tx100e-faq.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/tx100e_faq_en.pdf"
+   },
+   {
+    "title": "P711 Installation and Operating Instructions (52204)",
+    "docType": "install",
+    "seedFile": "lux-p711-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/P711_ENG_WebManual.pdf"
+   },
+   {
+    "title": "P721 Installation and Operating Instructions (52206)",
+    "docType": "install",
+    "seedFile": "lux-p721-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/P721_ENG_Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Lux 52203 (c)2014, 52204 (c)2014, 52206 (c)2015.",
+  "img": ""
+ },
+ {
+  "id": "tst-lux-p722u",
+  "brand": "Lux",
+  "family": "P722U LuxPRO Universal Programmable",
+  "aka": "LuxPRO universal 7-day (DIP switch setup like TX9100U)",
+  "models": [
+   "P722U"
+  ],
+  "type": "programmable",
+  "stages": "1-2 heat / 1-2 cool conventional or heat pump; 3-wire zone valves; millivolt",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "Dual powered."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 V heat transformer (R, V)",
+    "notes": "Factory RH-RC jumper; remove for two transformers"
+   },
+   {
+    "t": "RC",
+    "fn": "24 V cool transformer"
+   },
+   {
+    "t": "W1",
+    "fn": "Heat stage 1 (W, 4)"
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2 / heat pump aux + emergency (one terminal)",
+    "notes": "Tape off a separate E wire"
+   },
+   {
+    "t": "Y1",
+    "fn": "Cool / compressor stage 1 (Y, 6)"
+   },
+   {
+    "t": "Y2",
+    "fn": "Cool stage 2 (conventional)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan (F)"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cool"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heat",
+    "notes": "Use O or B, never both; if both are present old B is probably common - put it on C"
+   },
+   {
+    "t": "C",
+    "fn": "System common (optional)",
+    "notes": "Battery backup; C not needed for heat/cool to work"
+   },
+   {
+    "t": "A",
+    "fn": "Used with 3-wire zone valve per wiring diagram #2 (TX9100U)"
+   }
+  ],
+  "wiringNotes": [],
+  "setup": {
+   "access": "9 DIP switches on the circuit board; changes take effect after moving HEAT/OFF/COOL or pressing HW RST.",
+   "keySettings": [
+    {
+     "setting": "SW1 System",
+     "options": "FURN (default) or HP"
+    },
+    {
+     "setting": "SW2 Type",
+     "options": "PROG (default) or MAN (non-programmable)"
+    },
+    {
+     "setting": "SW3 Periods",
+     "options": "4 (default) or 2 per day"
+    },
+    {
+     "setting": "SW4 Scale",
+     "options": "F / C"
+    },
+    {
+     "setting": "SW5 Time",
+     "options": "12 / 24 h"
+    },
+    {
+     "setting": "SW6 Delay",
+     "options": "5 min (default) or 2 min"
+    },
+    {
+     "setting": "SW7 Early recovery",
+     "options": "Disable (default) / Enable"
+    },
+    {
+     "setting": "SW8 Battery monitor",
+     "options": "ON unless running on C only"
+    },
+    {
+     "setting": "SW9 Fan",
+     "options": "GAS (default) or ELEC/HP (thermostat runs blower in heat)"
+    }
+   ],
+   "installerTest": "Manual heat/cool test.",
+   "factoryReset": "HW RST / SW RST buttons on the board (see manual)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "P722U Installation and Operating Instructions (52133)",
+    "docType": "install",
+    "seedFile": "lux-p722u-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/P722U_ENG_Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Lux 52133 (c)2013.",
+  "img": ""
+ },
+ {
+  "id": "tst-lux-tx9000ts",
+  "brand": "Lux",
+  "family": "TX9000TS Smart Temp Touchscreen",
+  "aka": "Older Lux touchscreen",
+  "models": [
+   "TX9000TS"
+  ],
+  "type": "programmable",
+  "stages": "Single stage gas/oil/electric heat and A/C, single-stage heat pump, millivolt; not for 3-wire zone valves, 120 V or multistage",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Batteries",
+   "notes": "Optional common wire can be used (manual diagram notes)."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC",
+    "fn": "24 V"
+   },
+   {
+    "t": "W",
+    "fn": "Heat"
+   },
+   {
+    "t": "Y",
+    "fn": "Cool / compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O / B",
+    "fn": "Reversing valve"
+   }
+  ],
+  "wiringNotes": [
+   "GAS/ELECTRIC jumper on the back of the body: move to ELEC for electric heat / heat pump."
+  ],
+  "setup": {
+   "access": "Option switches inside: #1 12/24 h, #2 smart recovery, #3 F/C, #4 5 min / 2 min minimum run time.",
+   "keySettings": [
+    {
+     "setting": "Switch #4",
+     "options": "5 min / 2 min minimum run time"
+    }
+   ],
+   "installerTest": "Manual heat/cool test.",
+   "factoryReset": "Hardware Reset unlocks the touchscreen and rereads switches (programs kept); Software Reset (touchscreen unlocked) resets all programmable values."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "TX9000TS Series Smart Temp Installation and Operating Instructions (52019)",
+    "docType": "install",
+    "seedFile": "lux-tx9000ts-manual.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/0658/1341/3974/files/TX9000TS_ENG_Manual.pdf"
+   }
+  ],
+  "sourceNotes": "Lux 52019.",
+  "img": ""
  },
  {
   "id": "tst-pro1-t701i",
@@ -22168,6 +29223,18 @@ const THERMOSTATS = [
     "docType": "quick-start",
     "seedFile": "google-nest-4thgen-welcome.pdf",
     "url": "https://storage.googleapis.com/support-kms-prod/ZDmmqzQ3N7yeWRvYkE6ubV3gYfRzfUfgxqaH"
+   },
+   {
+    "title": "Nest Learning Thermostat (4th gen) Pro Installation and Configuration Guide (v2.4, May 2026)",
+    "docType": "install",
+    "seedFile": "google-nest-4thgen-pro-install-guide.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_learning_thermostat_4th_gen_pro_install_guide_q2_26.pdf"
+   },
+   {
+    "title": "Nest Thermostats - Configuring heat pumps (4th gen & Nest Thermostat)",
+    "docType": "other",
+    "seedFile": "google-nest-4thgen-2020-heatpump-config.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_thermostat_heat_pump_configuration_guide_q2_26.pdf"
    }
   ],
   "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Identify a thermostat wire; Nest thermostat compatibility NOTE: GA-series order codes (GA02434-US, GA02435-US, GA02501-US, GA02502-US) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
@@ -22644,6 +29711,24 @@ const THERMOSTATS = [
     "docType": "quick-start",
     "seedFile": "google-nest-2ndgen-welcome.pdf",
     "url": "https://storage.googleapis.com/support-kms-prod/eotsNXyNM9LcSgMdWoHNCzyfjmd2xjYulFbF"
+   },
+   {
+    "title": "Google Nest Learning Thermostat (3rd gen) Pro Installation and Configuration Guide",
+    "docType": "install",
+    "seedFile": "google-nest-3rdgen-pro-install-guide.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_learning_thermostat_3rd_gen_pro_install_guide_q4_24.pdf"
+   },
+   {
+    "title": "Nest Learning Thermostat & Nest Thermostat E - Heat pump configuration guide (2023)",
+    "docType": "other",
+    "seedFile": "google-nest-3rdgen-e-heatpump-config.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nlt_gen3_nte_heat_pump_configuration_guide_2023.pdf"
+   },
+   {
+    "title": "Nest Learning Thermostat (3rd gen) Spec Sheet",
+    "docType": "spec",
+    "seedFile": "google-nest-3rdgen-spec-sheet.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nlt_gen3_spec_sheet.pdf"
    }
   ],
   "sourceNotes": "Nest Learning Thermostat Installation Guide (3rd gen); Nest Learning Thermostat Welcome Guide (3rd gen); Nest Learning Thermostat Installation Guide (2nd gen); Nest Learning Thermostat Welcome Guide (2nd gen); Nest thermostat compatibility; Nest thermostat star terminal",
@@ -22653,7 +29738,12 @@ const THERMOSTATS = [
   "id": "tst-nest-thermostat-2020",
   "brand": "Google Nest",
   "family": "Nest Thermostat (2020, mirror display)",
-  "models": [],
+  "models": [
+   "GA02180-US",
+   "GA02081-US",
+   "GA02082-US",
+   "GA02083-US"
+  ],
   "type": "smart-wifi",
   "stages": "'Heating and Cooling: 1 stage of heating (W1) and cooling (Y1) and a second stage of either heating (W2) or cooling (Y2). Heat pump: with auxiliary or emergency heat (O/B, AUX). Fan: (G). Power: (C, Rh or Rc)' - verbatim from support.google.com/googlehome/a...",
   "sort": 10,
@@ -22945,6 +30035,24 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "google-nest-nestthermostat2020-welcome.pdf",
     "url": "https://storage.googleapis.com/support-kms-prod/NUKp79Lbz8QzWVGLb3OAK0xe7S3DcP8glbQL"
+   },
+   {
+    "title": "Nest Thermostat Pro Installation and Configuration Guide (Jan 2026)",
+    "docType": "install",
+    "seedFile": "google-nest-nestthermostat2020-pro-install-guide.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_thermostat_pro_install_guide_q1_26.pdf"
+   },
+   {
+    "title": "Google Nest Thermostat Submittal Sheet",
+    "docType": "spec",
+    "seedFile": "google-nest-nestthermostat2020-submittal.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_thermostat_submittal_sheet_q3_25.pdf"
+   },
+   {
+    "title": "Nest Thermostats - Configuring heat pumps",
+    "docType": "other",
+    "seedFile": "google-nest-4thgen-2020-heatpump-config.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_thermostat_heat_pump_configuration_guide_q2_26.pdf"
    }
   ],
   "sourceNotes": "Nest thermostat technical specifications; Nest thermostat star terminal; Test your system with a Nest thermostat; Fix an undetected, unconfigured, or unspecified thermostat wire; Nest thermostat compatibility; Nest Thermostat Welcome Guide (2020) NOTE: GA-series order codes (GA01334-US, GA01331-US, GA02081-US, GA02082-US, GA02083-US) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
@@ -23249,6 +30357,30 @@ const THERMOSTATS = [
     "title": "Troubleshoot Nest thermostat help codes",
     "docType": "troubleshooting",
     "url": "https://support.google.com/googlenest/answer/9240096?hl=en"
+   },
+   {
+    "title": "Nest Thermostat E Pro Installation & Configuration Guide (v1.0, Dec 2017)",
+    "docType": "install",
+    "seedFile": "google-nest-thermostate-pro-install-guide.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nte_pro_install_guide_2017.pdf"
+   },
+   {
+    "title": "Nest Thermostat E condensed installation instructions",
+    "docType": "install",
+    "seedFile": "google-nest-thermostate-condensed-install.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_thermostat_e_condensed_installation_instructions.pdf"
+   },
+   {
+    "title": "Google Nest Thermostat E Tech Specs (Aug 2019)",
+    "docType": "spec",
+    "seedFile": "google-nest-thermostate-spec-sheet.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_thermostat_e_tech_specs_infosheet.pdf"
+   },
+   {
+    "title": "Nest Learning Thermostat & Nest Thermostat E - Heat pump configuration guide (2023)",
+    "docType": "other",
+    "seedFile": "google-nest-3rdgen-e-heatpump-config.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nlt_gen3_nte_heat_pump_configuration_guide_2023.pdf"
    }
   ],
   "sourceNotes": "Nest Thermostat E Installation Guide; Nest thermostat compatibility; Nest thermostat star terminal; Learn about the common or C wire; Nest Thermostat E Heat Link wiring (UK/EU accessory - not part of US T4000ES kit); Troubleshoot Nest thermostat help codes",
@@ -23361,6 +30493,18 @@ const THERMOSTATS = [
     "title": "Nest Power Connector",
     "docType": "other",
     "url": "https://support.google.com/googlenest/answer/10523126?hl=en"
+   },
+   {
+    "title": "Nest Power Connector Pro Installation Guide (v1.1)",
+    "docType": "install",
+    "seedFile": "google-nest-powerconnector-pro-install-guide.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_power_connector_pro_installation_guide_2022.pdf"
+   },
+   {
+    "title": "Nest Power Connector info sheet (2022)",
+    "docType": "spec",
+    "seedFile": "google-nest-powerconnector-infosheet.pdf",
+    "url": "https://services.google.com/fh/files/helpcenter/nest_power_connector_infosheet_2022.pdf"
    }
   ],
   "sourceNotes": "Nest Power Connector Installation Guide; Nest Power Connector; Nest Power Connector (Google Store product/spec page); Learn about the common or C wire NOTE: GA-series order codes (GA02493-US) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
@@ -23440,6 +30584,55 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "Set up and install your Nest Temperature Sensor; Learn about the Nest Temperature Sensor NOTE: GA-series order codes (GA01426-US (1st gen), GA02563-US (2nd gen)) removed - not printed in any Google document on disk and not confirmable on store.google.com or support.google.com.",
   "img": "tstat-img/tst-nest-temperature-sensor.jpg"
+ },
+ {
+  "id": "tst-nest-learning-1st-gen",
+  "brand": "Google Nest",
+  "family": "Nest Learning Thermostat (1st gen, 2011)",
+  "aka": "Original Nest - 1-stage cooling only",
+  "models": [],
+  "type": "smart-wifi",
+  "stages": "Conventional heat 1 or 2 stage, cooling 1 stage; one-stage heat pump with aux; zone systems with or without dampers",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Internal rechargeable (recharges itself; red light flashes when low)",
+   "notes": "C wire not needed in 99% of installs per the guide. Not for millivolt or 110/220 V systems."
+  },
+  "terminals": [
+   {
+    "t": "Rh / Rc",
+    "fn": "24 VAC",
+    "notes": "No jumper needed between Rh and Rc; a single R wire can go in either"
+   }
+  ],
+  "wiringNotes": [
+   "Compatibility per guide: 24 V HVAC, 1- or 2-stage conventional heat, 1-stage cooling, gas/oil/electric/solar/geothermal, 1-stage heat pump with aux, zoned systems.",
+   "Strip wires 1/3 to 1/2 in; push and hold the connector button while inserting.",
+   "Electrical box installs use the Optional Mounting Kit."
+  ],
+  "setup": {
+   "access": "Press the ring to start setup; wiring is detected at the base.",
+   "keySettings": [],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Low battery: small red light flashes; the Nest recharges itself (can take several hours) before setup continues."
+  ],
+  "manuals": [
+   {
+    "title": "Nest Learning Thermostat Installation Guide (1st generation, 2012 print)",
+    "docType": "install",
+    "seedFile": "google-nest-learning-install-tw0.pdf",
+    "url": "https://storage.googleapis.com/support-kms-prod/TW0Ii0exvSSg03Ran3KxYmylyvpeP5AoyCtI"
+   }
+  ],
+  "sourceNotes": "Google/Nest support documents page (support.google.com/googlehome/answer/9373007) 'Installation Guide' link, PDF dated 02/2012 (855-4MY-NEST era). Generation inferred from compatibility (1-stage cooling) and date - verify against the unit.",
+  "img": ""
  },
  {
   "id": "tst-amazon-smart-thermostat",
@@ -24396,26 +31589,25 @@ const THERMOSTATS = [
   "id": "tst-daikin-dt4272-dt4273",
   "brand": "Daikin",
   "family": "DT4272 / DT4273 TouchScreen",
-  "aka": "D4272 / D4273 residential, DT4272C / DT4273C commercial",
+  "aka": "DT4272 / DT4273 residential, DT4273C commercial (the button-style D4272 / D4273 are on the Premium Series card)",
   "models": [
-   "D4272",
-   "D4273",
-   "DT4272C",
+   "DT4272",
+   "DT4273",
    "DT4273C"
   ],
-  "type": "programmable",
-  "stages": "up to 4 Heat / 2 Cool, gas/electric or heat pump, conventional 24V (not communicating)",
+  "type": "smart-wifi",
+  "stages": "Up to 4 heat / 2 cool conventional; heat pump up to 2 compressor + 0-2 aux stages; dual fuel; conventional 24V (not communicating)",
   "sort": 20,
   "confidence": "verify",
   "power": {
    "cWire": "required",
    "batteries": "",
-   "notes": "Manual states explicitly: 'This thermostat requires both R (24 VAC Return) and C (24 VAC Common) be connected to the backplate terminals.' No battery backup documented."
+   "notes": "Manual: 'This thermostat requires both R (24 VAC Return) and C (24 VAC Common) be connected to the backplate terminals.' Wi-Fi (Skyport) on board."
   },
   "terminals": [
    {
     "t": "R",
-    "fn": "24 VAC return (power)",
+    "fn": "24 VAC return",
     "notes": "Required"
    },
    {
@@ -24424,14 +31616,9 @@ const THERMOSTATS = [
     "notes": "Required"
    },
    {
-    "t": "W2",
-    "fn": "2nd stage heat circuit",
+    "t": "G",
+    "fn": "Fan relay",
     "notes": ""
-   },
-   {
-    "t": "W3",
-    "fn": "3rd stage heat circuit",
-    "notes": "Residential D4272 chart shows W3 as 3rd stage heat; on the heat-pump wiring diagrams W3 is 4th stage heat"
    },
    {
     "t": "Y1",
@@ -24444,132 +31631,125 @@ const THERMOSTATS = [
     "notes": ""
    },
    {
-    "t": "G",
-    "fn": "Fan relay",
+    "t": "W1/O/B",
+    "fn": "1st stage heat circuit, or reversing valve on a heat pump",
+    "notes": "O or B set by the reversing-valve dip switch when the GAS/EL-HP switch is on HP"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
     "notes": ""
    },
    {
-    "t": "W1/O/B",
-    "fn": "1st stage heat circuit (conventional) or reversing valve (heat pump)",
-    "notes": "Function set by J2 jumper (O or B) when J1 is set to Heat Pump"
+    "t": "W3 (W3/AUX)",
+    "fn": "3rd stage heat circuit",
+    "notes": "Backplate label W3/AUX. Installation Settings > AUX Output Settings: usage and polarity (N.O./N.C.); on DT4273 / DT4273C the output can be used for Heating, Humidification or Dehumidification"
    },
    {
-    "t": "REMOTE/OUTDOOR",
-    "fn": "Wired remote or outdoor sensor connections",
-    "notes": "Selected via Wired Sensor Type setup step"
-   },
-   {
-    "t": "DRY CONTACT (Ck1/CKGND)",
-    "fn": "Dry contact input (condensate overflow, equipment fault, twist-timer, etc.)",
-    "notes": "Polarity (normally open/closed) and use are configured in Installer Setup steps 47-48"
-   },
-   {
-    "t": "AUX (DT4272C/DT4273C commercial only)",
-    "fn": "Aux output",
-    "notes": "Commercial backplate labels this AUX where the residential backplate instead breaks out Y2/W3/dry contact differently - see wiringNotes"
+    "t": "SENSOR",
+    "fn": "Remote / outdoor / supply / return sensor connections",
+    "notes": "TSTATGTAC-OS sensor: 10K ohm NTC at 77 F / 25 C"
    }
   ],
   "wiringNotes": [
-   "Jumpers on the back of the thermostat: J1 = Gas/Elec vs Heat Pump (system type); J2 = RV=O vs RV=B (heat pump reversing valve, only used when J1=Heat Pump - if O, W1/O/B energizes in cooling; if B, it energizes in heating); J3 = Gas vs Elec (when J1=Gas/Elec, controls whether G/fan energizes during heat call - Gas leaves it off, Elec turns it on; when J1=Heat Pump, selects aux heat type - Gas disallows aux heat during HP operation, Elec allows up to 2 stages of strip heat).",
-   "Old-thermostat wire cross-reference chart printed in the manual: G or F -> G; Y1 or Y -> Y1; W1 or W -> W1/O/B; Rh, R, M, Vr, A -> R; C -> C; O/B -> W1/O/B (if heat pump); W2 -> W2; Y2 -> Y2; W3 -> W3.",
-   "Sample wiring diagrams given for: 3-wire heat-only (R,C,W1/O/B); 4-wire cool-only (R,C,Y1,G); 5-wire 1-stage cool + 1-stage gas or electric heat (R,C,W1/O/B,Y1,G); 8-wire 2-stage cool + 3-stage gas heat (R,C,W1/O/B,W2,W3,Y1,Y2,G); heat-pump diagrams using W1/O/B as the reversing valve plus Y1/Y2 compressor stages and W2/W3 for supplemental strip heat stages.",
-   "Commercial DT4272C/DT4273C backplate additionally breaks out an AUX output and an OUTDOOR SENSOR terminal block distinctly from the residential backplate's REMOTE/OUTDOOR combined block; core R/C/G/W1-W3/Y1-Y2 wiring is otherwise identical between residential and commercial variants.",
-   "DT4273/DT4273C add humidification/dehumidification control over the same terminal set (via the AUX or dry-contact wiring) versus DT4272/DT4272C.",
-   "DT4272C adds 365-day calendar/holiday scheduling as its main commercial differentiator, not a wiring difference."
+   "Dip switches on the back of the thermostat: GAS/EL or HP (leave on GAS/EL for anything but a heat pump); O or B reversing valve (O = W1/O/B energizes in cooling, B = in heating); GAS or ELEC - with GAS/EL it sets whether G runs in heat (ELEC) or not (GAS); with HP it sets aux type (GAS = no aux during heat pump operation, use for dual fuel; ELEC = up to two stages of strip heat).",
+   "Old-thermostat wire chart: G or F -> G; Y1 or Y -> Y1; W1 or W -> W1/O/B; Rh, R, M, Vr, A -> R; C -> C; O/B -> W1/O/B (heat pump); W2 -> W2; Y2 -> Y2; W3 -> W3; OUT- / OUT+ -> SENSOR.",
+   "Wire counts: heat only needs 3 wires (R, C, W) - an Add-A-Wire accessory will not work there, pull a new wire for C; single-stage heat + AC needs 5 (R, C, W, Y, G); heat pump without aux 5 (R, C, W1/O/B, Y, G); heat pump with aux 6 (adds W2). One wire short: 'Making 4 Wires Work' jumper method (fan then runs only with a heat/cool call), pull new wire, or a Daikin Add-A-Wire.",
+   "Backplate does not fully cover a vertical junction box - use the TSTATGTAC-WP wallplate or a horizontally mounted single-gang box.",
+   "Free Cooling: with Mechanical Cooling = NO, Y1 drives the free-cooling damper(s) and Y2 is disabled; with YES, the compressor is on Y2 and comes on with a 2nd-stage cooling demand (damper closes).",
+   "Dual Fuel appears only with the GAS/EL-HP switch on HP and the GAS-ELEC switch on GAS; changeover is by outdoor sensor (balance point 0-60 F) or, with Changeover With Outdoor OFF, by a 3rd-stage heat demand. Once on fossil fuel, that heat call (and new calls within 10 minutes) finish on fossil fuel."
   ],
   "setup": {
-   "access": "Press SETUP, then press MODE to enter Advanced/Installer Setup; use WARMER/COOLER to change the value of the current step; press MODE to advance to the next numbered setup step; press SETUP again to exit.",
+   "access": "Set the thermostat mode to OFF, then press MENU > Settings > Installation Settings.",
    "keySettings": [
     {
-     "setting": "Time period schedule (Setup 1)",
-     "options": "7 Day / Non Program / 1 Day / 5+2 Day",
+     "setting": "Available Modes",
+     "options": "All Modes Including Auto / Heat and Cool / Heat Only / Cool Only",
+     "notes": "Settings menu"
+    },
+    {
+     "setting": "Heat & Cool Stages",
+     "options": "Up to 2 cool and 4 heat stages (default 1H/1C)",
      "notes": ""
     },
     {
-     "setting": "Available modes (Setup 2)",
-     "options": "Auto-Changeover / Heat and Cool (manual) / Heat Only / Cool Only",
+     "setting": "Compressor Stages / Aux Heat Stages",
+     "options": "Up to 2 compressors; 0-2 aux stages",
+     "notes": "Only with the dip switch on Heat Pump"
+    },
+    {
+     "setting": "Cycles Per Hour",
+     "options": "2, 3, 4, 5, 6, No Limit (default 6)",
+     "notes": "WARMER or COOLER overrides and resets the limit"
+    },
+    {
+     "setting": "Min Heat/Cool Difference",
+     "options": "0-6 F (default 2)",
      "notes": ""
     },
     {
-     "setting": "Setpoint limits enable + max heat / min cool setpoint (Setup 17-19)",
-     "options": "35-99F",
+     "setting": "Compressor Min OFF Time",
+     "options": "None, 3 or 5 minutes (default 5)",
      "notes": ""
     },
     {
-     "setting": "Cycles per hour (Setup 20)",
-     "options": "No Limit, 2, 3, 4, 5, 6",
-     "notes": "Overridden/reset by pressing WARMER or COOLER on the stat"
-    },
-    {
-     "setting": "Compressor minimum off time (Setup 21)",
-     "options": "0, 3, or 5 minutes",
+     "setting": "1st Stage Deadband",
+     "options": "1-6 F (default 2)",
      "notes": ""
     },
     {
-     "setting": "Number of heat stages / cool stages (Setup 23-24)",
-     "options": "per equipment",
-     "notes": "Non-heat-pump applications"
+     "setting": "2nd / 3rd / 4th Stage Deadband, Timer, Turnoff Point",
+     "options": "Deadband 0-10 F (default 2); timer 0-60 min (default 2); turnoff point Deadband or Setpoint",
+     "notes": "Stage timer and deadband must both be met"
     },
     {
-     "setting": "Number of compressor stages / aux stages (Setup 25-26)",
-     "options": "1-2 compressor stages, 0-2 aux stages",
-     "notes": "Heat pump applications only"
+     "setting": "Free Cooling",
+     "options": "Enabled / Disabled; Usable Outdoor Temp 40-80 F (default 65); Mechanical Cooling Yes / No",
+     "notes": "Needs dampers and different wiring"
     },
     {
-     "setting": "Stage deadbands 1st-4th (Setup 27-30)",
-     "options": "1-6F (1st stage), 0-10F (2nd-4th)",
-     "notes": "Minimum temp difference before each stage turns on"
+     "setting": "Heat Pump Lockout / Aux Heat Lockout",
+     "options": "HP will not run below 20-75 F (default 65); aux will not run above 0-75 F (default 65)",
+     "notes": "Aux lockout needs HP + ELEC dip settings"
     },
     {
-     "setting": "Minutes between stages (Setup 31-33)",
-     "options": "0-60 minutes",
+     "setting": "Dual Fuel",
+     "options": "On / Off; Changeover With Outdoor On / Off; Balance Point 0-60 F",
+     "notes": "HP + GAS dip settings only"
+    },
+    {
+     "setting": "AUX Output Usage / Polarity",
+     "options": "W3 (default), Hum or Dehum; Normally Open (default) or Normally Closed",
+     "notes": "DT4273 / DT4273C: must be Hum or Dehum before the Humidity menu settings take effect"
+    },
+    {
+     "setting": "Fan Off Delay",
+     "options": "0-120 s (default 0)",
+     "notes": "After cooling or electric strip heat"
+    },
+    {
+     "setting": "Control Sensor / Wired Sensor Use",
+     "options": "Thermostat only, remote only, or average; wired sensor = Outdoor, Remote (default), Supply or Return",
      "notes": ""
     },
     {
-     "setting": "Fan program on/off, runtime, start/stop (Setup 37-40)",
-     "options": "runtime 0-60 min in 5-min steps",
-     "notes": "Not available on all models"
-    },
-    {
-     "setting": "Wired sensor type (Setup 41)",
-     "options": "Remote / Supply / Outdoor",
-     "notes": "Only Remote allows control from the sensor"
-    },
-    {
-     "setting": "Control-to-temp source (Setup 42)",
-     "options": "Thermostat / Wired Remote / Wireless Remote / averages of the above",
+     "setting": "Calibrate Sensors",
+     "options": "-7 to +7 F; humidity -20% to +20% RH",
      "notes": ""
-    },
-    {
-     "setting": "Fahrenheit or Celsius (Setup 45)",
-     "options": "F or C",
-     "notes": ""
-    },
-    {
-     "setting": "Dry contact polarity and use (Setup 47-48)",
-     "options": "Normally Open / Normally Closed; use = CONDENSATE, FAULT, etc.",
-     "notes": "CONDENSATE locks out the compressor and shows 'CONDENSATE PAN OVERFLOW' when active"
-    },
-    {
-     "setting": "Local API (Setup 50)",
-     "options": "On/Off",
-     "notes": "Allows 3rd-party home automation software to interface with the thermostat"
     }
    ],
-   "installerTest": "After entering Advanced Setup, pressing MODE again (documented in the wiring/jumper section) shows the current jumper settings (J1 Gas/Electric or Heat Pump, J2 Reversing Valve O/B, J3 Fan Gas/Electric) and the current state of the Dry Contact and Fault terminals - used to verify jumper/wiring configuration without opening the thermostat.",
-   "factoryReset": "Press and hold SETUP for 10 seconds until all display icons appear; release SETUP; press and hold FAN for 5 seconds until 'DEFAULTS' appears; release FAN; press MODE to return to normal operation. Warning: this resets all Time Period and Advanced Programming to factory defaults."
+   "installerTest": "Installation Settings > Test Outputs - runs the outputs without the thermostat's time delays (e.g. a 1st stage cooling call energizes Y1 and G).",
+   "factoryReset": "Installation Settings > Factory Defaults (set the mode to OFF first). Restart Thermostat is on the same menu."
   },
   "diagnostics": [],
   "troubleshooting": [
    {
-    "symptom": "Air conditioning does not attempt to turn on",
+    "symptom": "Touchscreen buttons not responsive",
     "causes": [
-     "Compressor timer (cycles-per-hour) lockout still active",
-     "Cooling setpoint set too high or above the cooling setpoint limit"
+     "Touchscreen out of calibration"
     ],
     "fixes": [
-     "Consult Cycles Per Hour setting (Setup 20) and defeat/adjust if needed",
-     "Lower the cooling setpoint or the cooling setpoint limit (Setup 17-19)"
+     "Pull the thermostat off the backplate and push it back on while pressing the center of the screen until the Calibration screen appears, then re-calibrate"
     ]
    },
    {
@@ -24578,65 +31758,71 @@ const THERMOSTATS = [
      "Lack of proper power"
     ],
     "fixes": [
-     "Confirm power is on to the furnace and 24VAC is present between R and C"
+     "Make sure power is on to the HVAC and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Air conditioning does not attempt to turn on",
+    "causes": [
+     "Cooling setpoint set too high"
+    ],
+    "fixes": [
+     "Lower the cooling setpoint or the cooling setpoint limit"
     ]
    },
    {
     "symptom": "Heating does not attempt to turn on",
     "causes": [
-     "Heating setpoint set too low or below the setpoint limit"
+     "Heating setpoint set too low"
     ],
     "fixes": [
-     "Raise the heating setpoint or the heating setpoint limit (Setup 17-19)"
+     "Raise the heating setpoint or the heating setpoint limit"
     ]
    },
    {
-    "symptom": "On a residential heat pump, calling for cooling instead brings on the heat",
+    "symptom": "Residential heat pump heats when calling for cooling",
     "causes": [
-     "Reversing valve jumper (J2) set to B instead of O"
+     "Reversing valve dip switch set to B"
     ],
     "fixes": [
-     "Set the reversing valve jumper to O"
+     "Set it to O"
     ]
    },
    {
-    "symptom": "Calling for cooling brings on both heat and cool",
+    "symptom": "Both heat and cool come on during a cooling call",
     "causes": [
-     "Equipment jumper (J1) set to HP on a Gas/Electric system"
+     "Equipment dip switch on HP with a gas/electric unit"
     ],
     "fixes": [
-     "Set the equipment jumper (J1) to Gas/Elec"
+     "Set the equipment dip switch to GAS/EL"
     ]
    },
    {
-    "symptom": "Pressing the Program button shows 'DISABLED'",
+    "symptom": "Air handler fuse blows when the thermostat is put on the powered backplate",
     "causes": [
-     "Program Mode (Setup 1) is set to NON PROGRAM"
+     "Outdoor sensor or sensor wiring shorted"
     ],
     "fixes": [
-     "Set Program Mode to 1 Day, 5/2 Day, or 7 Day"
+     "Check / replace the outdoor sensor and its wiring"
     ]
    }
   ],
-  "tips": [],
+  "tips": [
+   "Touchscreen models need R and C; a 2-wire heat-only circuit will not work (pull new wire or use the TSTATGAC0410 two-wire kit). Outdoor/remote sensor TSTATGTAC-OS is a 10K NTC.",
+   "Button-style D4272 / D4273 / D4272C (scrolling display, SETUP / MODE keys) are on the Daikin Premium Series card. DT4272C is not printed in any Daikin manual - the file served as 'dt4272c_manual.pdf' is the D4272C Premium manual."
+  ],
   "manuals": [
    {
-    "title": "D4272 (DT4272) Owner's Manual and Installation Instructions - Residential",
+    "title": "Daikin DT4272 TouchScreen Digital Thermostat Owner's Manual & Installation Guide (residential)",
     "docType": "install",
-    "seedFile": "daikin-dt4272-manual.pdf",
-    "url": "https://daikinthermostats.com/downloads/D4272_manual.pdf"
+    "seedFile": "daikin-dt4272-touchscreen-residential-install.pdf",
+    "url": "https://daikinthermostats.com/downloads/DT4272_manual.pdf"
    },
    {
-    "title": "D4273 (DT4273) Owner's Manual and Installation Instructions - Residential",
+    "title": "Daikin DT4273 TouchScreen Digital Thermostat Owner's Manual & Installation Guide (residential)",
     "docType": "install",
-    "seedFile": "daikin-dt4273-manual.pdf",
-    "url": "https://daikinthermostats.com/downloads/D4273_manual.pdf"
-   },
-   {
-    "title": "DT4272C Owner's Manual & Installation Guide - Commercial",
-    "docType": "install",
-    "seedFile": "daikin-dt4272c-manual.pdf",
-    "url": "https://daikincomfort.com/docs/default-source/daikin-digital-touchscreen-thermostat/dt4272c_manual.pdf"
+    "seedFile": "daikin-dt4273-touchscreen-residential-install.pdf",
+    "url": "https://daikinthermostats.com/downloads/DT4273_manual.pdf"
    },
    {
     "title": "DT4273C Owner's Manual & Installation Guide - Commercial",
@@ -24645,8 +31831,8 @@ const THERMOSTATS = [
     "url": "https://daikincomfort.com/docs/default-source/daikin-digital-touchscreen-thermostat/dt4273c_manual.pdf"
    }
   ],
-  "sourceNotes": "D4272 (DT4272) Owner's Manual and Installation Instructions - Residential; D4273 (DT4273) Owner's Manual and Installation Instructions - Residential; DT4272C Owner's Manual & Installation Guide - Commercial; DT4273C Owner's Manual & Installation Guide - Commercial",
-  "img": "tstat-img/tst-daikin-dt4272-dt4273.jpg"
+  "sourceNotes": "DT4272 TouchScreen Owner's Manual & Installation Guide (residential); DT4273 TouchScreen Owner's Manual & Installation Guide (residential); DT4273C Owner's Manual & Installation Guide - Commercial. Rebuilt in v203 from the TouchScreen manuals - the earlier content and the D4272 / D4273 / D4272C manuals were the button-style Premium Series stat (now on that card).",
+  "img": ""
  },
  {
   "id": "tst-daikin-one-rht-sensor",
@@ -24715,6 +31901,742 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "D-NP-PC-3022 New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin); Daikin One Touch/One+ v3.9 Unitary Commissioning Menu Outline (source of the temperature -7F..7F and humidity -15%..15% calibration ranges - these are not in the D-NP-PC-3022 bulletin)",
   "img": "tstat-img/tst-daikin-one-rht-sensor.jpg"
+ },
+ {
+  "id": "tst-daikin-brc1h71w-madoka",
+  "brand": "Daikin",
+  "family": "Madoka Wired Remote Controller (BRC1H71W)",
+  "aka": "round-dial wired controller for Daikin VRV / SkyAir style indoor units, Bluetooth app setup",
+  "models": [
+   "BRC1H71W"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected Daikin indoor unit(s) (P1/P2 communicating)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "The controller gets its power from the indoor unit over P1/P2 - the indoor unit must be powered for it to operate. No 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "P1 / P2",
+    "fn": "Remote controller bus to indoor unit P1 / P2",
+    "notes": "Not polarity sensitive. Non-shielded 2-conductor stranded copper, AWG-18, up to 1640 ft (500 m)"
+   }
+  ],
+  "wiringNotes": [
+   "Keep controller wiring at least 3.5 ft (1 m) from power wiring to avoid noise.",
+   "First/only controller on an indoor unit becomes Main automatically; a second one must be set to Sub. Main and Sub must be the same controller type.",
+   "Setting Main/Sub: wait for U5 or U8 on the home screen; on U5 press and hold until \"2\" (Sub) appears, on U8 press and hold until \"1\" (Main) appears. A re-designation needs a power reset; if the Sub does not show the home screen within 2 minutes, power down and check wiring.",
+   "Changeover master: with several indoor units on one heat pump outdoor unit (or one branch selector port on heat recovery), only the changeover-master controller can choose cool/heat/auto; others follow."
+  ],
+  "setup": {
+   "access": "Installer menu: hold the button 5 s to show the information screen, then press the button sequence shown in the manual and hold 10 s. Field settings cannot be changed from the controller while Bluetooth is connected - disconnect or use the app.",
+   "keySettings": [
+    {
+     "setting": "Field setting 10(20)-2 Thermistor priority for space temperature control",
+     "options": "01 return air thermistor primary, remote controller secondary; 02 return air only (controller sensor not used); 03 remote controller thermistor only",
+     "notes": "Mode in parentheses = per individual indoor unit in a group"
+    },
+    {
+     "setting": "Field setting 10(20)-5 Room temperature reported to multizone controllers",
+     "options": "01 return air thermistor, 02 thermistor chosen by 10-2",
+     "notes": ""
+    },
+    {
+     "setting": "Field setting 12(22)-2 Thermo-on/off deadband",
+     "options": "01 2 F (1 C), 02 1 F (0.5 C)",
+     "notes": "Default depends on indoor unit"
+    },
+    {
+     "setting": "Field setting 1C-01 Room temperature display",
+     "options": "01 inlet temperature, 02 remote controller thermistor",
+     "notes": ""
+    },
+    {
+     "setting": "Field setting 1E-02 Setback availability",
+     "options": "01 N/A, 02 heat only, 03 cool only, 04 cool/heat",
+     "notes": ""
+    },
+    {
+     "setting": "R/C setting R1-12 Bluetooth (BLE)",
+     "options": "00 disabled, 01 enabled",
+     "notes": ""
+    },
+    {
+     "setting": "R/C setting R1-07 Home screen type",
+     "options": "00 text, 01 icon",
+     "notes": ""
+    },
+    {
+     "setting": "Installer password",
+     "options": "Enable/Disable + 4-digit code",
+     "notes": "Installer menu > Installer Password"
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "U5",
+    "meaning": "Shown at power-up when a Sub controller has not been designated (one indoor unit, two controllers)",
+    "action": "Set one controller to Sub"
+   },
+   {
+    "code": "Error icon + code + unit number",
+    "meaning": "Indoor/outdoor fault reported by the system",
+    "action": "See the indoor unit installation / service manual error code list"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Sub controller never reaches the home screen",
+    "causes": [
+     "Wiring problem on P1/P2"
+    ],
+    "fixes": [
+     "Turn off power and check the wiring"
+    ]
+   }
+  ],
+  "tips": [
+   "Group and unit address for centralized control can only be set while a centralized controller is connected - release the group address before disconnecting it."
+  ],
+  "manuals": [
+   {
+    "title": "BRC1H71W Wired Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "daikin-brc1h71w-madoka-install.pdf",
+    "url": "https://daikincomfort.com/docs/default-source/madoka-remote-controller/im-brc1h71w_en.pdf"
+   },
+   {
+    "title": "BRC1H71W Wired Remote Controller Operation Handbook",
+    "docType": "user",
+    "seedFile": "daikin-brc1h71w-madoka-operation-handbook.pdf",
+    "url": "https://daikincomfort.com/docs/default-source/madoka-remote-controller/ug-brc1h71w_en.pdf"
+   }
+  ],
+  "sourceNotes": "EM19A026 BRC1H71W Wired Remote Controller Installation Manual (2020); 3P607381-1 EM19A030 BRC1H71W Operation Handbook (2020)",
+  "img": ""
+ },
+ {
+  "id": "tst-daikin-brc1e73-navigation",
+  "brand": "Daikin",
+  "family": "Navigation Wired Remote Controller (BRC1E73)",
+  "aka": "VRV / SkyAir wired remote with backlit LCD menus",
+  "models": [
+   "BRC1E73"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected Daikin indoor unit(s) (P1/P2 communicating)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered from the indoor unit over P1/P2. No 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "P/P1 and N/P2",
+    "fn": "To indoor unit P1 / P2",
+    "notes": "Not polarity sensitive. Non-shielded 2-conductor stranded copper, AWG-18, max 1640 ft (500 m)"
+   }
+  ],
+  "wiringNotes": [
+   "Keep controller wiring at least 3.5 ft (1 m) away from power wiring.",
+   "Two controllers on one indoor unit: at the \"Checking the connection\" screen hold the Mode button 4 s on the one that should become Sub (display changes from \"Main RC\" to \"Sub RC\"). If not set, error U5 is shown.",
+   "\"Checking the connection. Please stand by.\" for up to 90 s after power-up is normal."
+  ],
+  "setup": {
+   "access": "Service settings menu: hold Cancel 4 s while the backlight is on. Items: Test Operation, Maintenance Contact, Field Settings, Energy Saving Options, Prohibit Function, Min Setpoints Differential, Error History, Indoor/Outdoor Unit Status, Forced Fan ON, Switch Main Sub Controller.",
+   "keySettings": [
+    {
+     "setting": "Field setting 10(20)-2 Thermistor priority for space temperature control",
+     "options": "01 return air thermistor primary, remote controller secondary; 02 return air only (controller sensor not used); 03 remote controller thermistor only",
+     "notes": "Mode in parentheses = per individual indoor unit in a group"
+    },
+    {
+     "setting": "Field setting 12(22)-2 Thermo-on/off deadband",
+     "options": "01 2 F (1 C), 02 1 F (0.5 C)",
+     "notes": "Default depends on indoor unit"
+    },
+    {
+     "setting": "Field setting 1C-10 to 1C-15 Remote controller thermostat offsets",
+     "options": "-5.4 F to +1.8 F steps per mode (auto / cool / heat, main and sub)",
+     "notes": "Use the auto-mode offset to avoid frequent changeover"
+    },
+    {
+     "setting": "Field setting 1E-02 Setback availability",
+     "options": "N/A, heat only, cool only, cool/heat",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Set Cool, hold Cancel 4 s > Test Operation > Menu/OK, then press On/Off within 10 s; unit cools regardless of setpoint, run at least 10 min; ends automatically after 30 min. Then Main menu > Maintenance Information to check the error history (hold On/Off 4 s to erase it). Apply outdoor power at least 6 h before test operation.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "U5",
+    "meaning": "Sub remote controller not designated (two controllers on one indoor unit)",
+    "action": "Hold Mode 4 s on one controller to make it Sub"
+   },
+   {
+    "code": "CODE xx on LCD",
+    "meaning": "System error",
+    "action": "Use the error code list in the indoor unit installation manual; Service settings > Error History > RC Error History shows unit numbers"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Controller display blank",
+    "causes": [
+     "Power outage / voltage error / open phase",
+     "Wrong indoor-outdoor wiring",
+     "Indoor PCB failure",
+     "Remote controller wiring not connected",
+     "Remote controller failure"
+    ],
+    "fixes": [
+     "Check power and indoor-outdoor wiring",
+     "Check P1/P2 wiring",
+     "Replace the failed board or controller"
+    ]
+   },
+   {
+    "symptom": "Stuck on \"Checking the connection\" (beyond 90 s)",
+    "causes": [
+     "Open fuse or tripped breaker at outdoor unit",
+     "Indoor PCB failure",
+     "Wrong indoor-outdoor wiring"
+    ],
+    "fixes": [
+     "Check outdoor power and wiring",
+     "Diagnose indoor PCB"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "BRC1E73 Wired Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "daikin-brc1e73-navigation-install.pdf",
+    "url": "https://daikincomfort.com/docs/default-source/navigation-remote-controller/im-3p243521-7l-installation-ma.pdf"
+   },
+   {
+    "title": "Navigation Remote Controller BRC1E73 Service Manual",
+    "docType": "troubleshooting",
+    "seedFile": "daikin-brc1e73-navigation-service-manual.pdf",
+    "url": "https://daikincomfort.com/docs/default-source/navigation-remote-controller/sm-sm_brc1e73.pdf"
+   }
+  ],
+  "sourceNotes": "3P243521-7L BRC1E73 Installation Manual (2021); SiUS721424EB Service Manual Navigation Remote Controller BRC1E73 (2015)",
+  "img": ""
+ },
+ {
+  "id": "tst-daikin-premium-series",
+  "brand": "Daikin",
+  "family": "Daikin Premium Series Digital Thermostats (D2111 / D4271C / D4272C / D4272 / D4273)",
+  "aka": "Daikin-branded button stat with scrolling display, optional Wi-Fi (Skyport); the TouchScreen DT4272 / DT4273 have their own card",
+  "models": [
+   "D2111",
+   "D4272",
+   "D4273",
+   "D4271C",
+   "D4272C"
+  ],
+  "type": "programmable",
+  "stages": "D4272 / D4273 (residential; D4273 adds humidity control) and D4271C / D4272C (commercial): W1/O/B, W2, W3, Y1, Y2 - heat pump 1-2 compressor + 0-2 aux; D4272C / D4273 add HUM / DEHUM / AUX. D2111 (residential): up to 2 heat / 1 cool",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: requires both R (24 VAC return) and C (24 VAC common) at the backplate."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat, or reversing valve on heat pumps",
+    "notes": "Set by DIP switches"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "W3",
+    "fn": "3rd stage heat circuit",
+    "notes": "D4272 / D4273 / D4271C / D4272C"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "D4272 / D4273 / D4271C / D4272C"
+   },
+   {
+    "t": "HUM / DEHUM",
+    "fn": "Humidifier / dehumidifier control",
+    "notes": "D4273 / D4272C"
+   },
+   {
+    "t": "AUX",
+    "fn": "Aux output",
+    "notes": "D4273 / D4272C"
+   },
+   {
+    "t": "OUTDOOR SENSOR / REMOTE SENSOR",
+    "fn": "Wired sensor connections",
+    "notes": ""
+   },
+   {
+    "t": "DRY CONTACT",
+    "fn": "Dry contact input",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything but a heat pump); O vs B reversing valve (O = W1/O/B on in cooling, B = on in heating); GAS vs ELEC - with GAS/EL it sets whether G runs in heat (ELEC) or not (GAS); with HP it sets aux type (GAS = no aux during heat pump operation, use for dual fuel; ELEC = strip heat allowed)."
+  ],
+  "setup": {
+   "access": "Installer/Advanced Setup: press SETUP, then MODE; WARMER/COOLER change the value, MODE advances, SETUP exits. Technician Setup: hold SETUP until all icons appear (the manuals say 5 s in one place and 10 s in another), then MODE. Setup step numbers differ by model - use the Advanced Setup Table in the matching manual. ",
+   "keySettings": [
+    {
+     "setting": "Program mode",
+     "options": "Non, 1 Day, 5/2 Day, 7 Day",
+     "notes": "Default 7 Day"
+    },
+    {
+     "setting": "Setpoint limits / max heat / min cool",
+     "options": "No or Use; 35-99 F (defaults 74 / 70)",
+     "notes": ""
+    },
+    {
+     "setting": "Cycles per hour",
+     "options": "No limit, 2-6 (default 6)",
+     "notes": "WARMER/COOLER overrides and resets"
+    },
+    {
+     "setting": "Compressor minimum off minutes",
+     "options": "0, 3, 5 (default 5)",
+     "notes": ""
+    },
+    {
+     "setting": "Number of heat / cool / compressor / aux stages",
+     "options": "Per model (4-stage models: heat 0-3, cool 0-2, compressor 1-2, aux 0-2; 2111 models: heat 0-2, cool 0-1, aux 0-1)",
+     "notes": "Heat/cool stage settings are for non-heat-pump display callouts"
+    },
+    {
+     "setting": "1st stage deadband",
+     "options": "1-6 F (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "2nd-4th stage deadbands / minutes between stages",
+     "options": "0-10 F / 0-60 min",
+     "notes": ""
+    },
+    {
+     "setting": "Fan off delay",
+     "options": "0-120 s",
+     "notes": ""
+    },
+    {
+     "setting": "Wired sensor type / control-to source",
+     "options": "Remote, Supply, Outdoor / Thermostat, wired remote, wireless remote(s), averages",
+     "notes": ""
+    },
+    {
+     "setting": "Dry contact polarity / use",
+     "options": "Open or Closed; Condensate, Vacation, FDD",
+     "notes": "Condensate locks out the compressor"
+    },
+    {
+     "setting": "Skyport / Local API",
+     "options": "On/Off",
+     "notes": "Needs the optional Wi-Fi module"
+    }
+   ],
+   "installerTest": "Technician Setup: MODE steps through version, DIP/jumper state and dry-contact state, then \"TURN ON EQUIPMENT?\" - WARMER cycles up through heat stages, COOLER cycles down through cooling stages (MODE exits), then \"CALIBRATE SENSORS?\". Auto-exits after 10 minutes.",
+   "factoryReset": "Hold SETUP until all icons appear, release, hold FAN 5 s until DEFAULTS appears, release and press MODE. Resets all programming."
+  },
+  "diagnostics": [
+   {
+    "code": "CONDENSATE (dry contact)",
+    "meaning": "Dry contact set to Condensate is active - compressor locked out"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Air conditioning does not attempt to turn on",
+    "causes": [
+     "Compressor timer lockout (Cycles Per Hour / minimum off time)",
+     "Cooling setpoint too high or limited"
+    ],
+    "fixes": [
+     "Adjust/defeat Cycles Per Hour in Installer Setup (WARMER or COOLER overrides it)",
+     "Lower the cooling setpoint or setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Heating does not attempt to turn on",
+    "causes": [
+     "Heating setpoint too low / limited"
+    ],
+    "fixes": [
+     "Raise heating setpoint or heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve DIP switch set for B"
+    ],
+    "fixes": [
+     "Set reversing valve to O (if equipment uses O)"
+    ]
+   },
+   {
+    "symptom": "Both heat and cool come on during a cooling call",
+    "causes": [
+     "Equipment DIP switch set to HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set equipment switch to GAS/EL"
+    ]
+   },
+   {
+    "symptom": "Program button shows \"DISABLED\"",
+    "causes": [
+     "Program mode set to NON PROGRAM"
+    ],
+    "fixes": [
+     "Set Program Mode (setup step 1) to 1, 5/2 or 7 Day"
+    ]
+   }
+  ],
+  "tips": [
+   "D4272 / D4273 (button stat, this card) are not the DT4272 / DT4273 TouchScreen - match the model printed on the thermostat."
+  ],
+  "manuals": [
+   {
+    "title": "Daikin D2111 Digital Thermostat Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-d2111-premium-install-owners.pdf",
+    "url": "https://daikinthermostats.com/downloads/D2111_manual.pdf"
+   },
+   {
+    "title": "Daikin D4272 Residential Digital Thermostat Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-dt4272-manual.pdf",
+    "url": "https://daikinthermostats.com/downloads/D4272_manual.pdf"
+   },
+   {
+    "title": "Daikin D4273 Residential Digital Thermostat with Humidity Control Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-dt4273-manual.pdf",
+    "url": "https://daikinthermostats.com/downloads/D4273_manual.pdf"
+   },
+   {
+    "title": "Daikin D4271C Commercial Digital Thermostat Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-d4271c-premium-install-owners.pdf",
+    "url": "https://daikinthermostats.com/downloads/D4271C_manual.pdf"
+   },
+   {
+    "title": "Daikin D4272C Commercial Digital Thermostat with Humidity Control Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-dt4272c-manual.pdf",
+    "url": "https://daikinthermostats.com/downloads/D4272C_manual.pdf"
+   }
+  ],
+  "sourceNotes": "D2111 Owner's Manual and Installation Instructions (2017-06); D4271C Owner's Manual and Installation Instructions (2017-06); D4272C Owner's Manual and Installation Instructions (2017-06); D4272 Owner's Manual and Installation Instructions - Residential; D4273 Owner's Manual and Installation Instructions - Residential (moved from the DT4272 / DT4273 TouchScreen card in v203)",
+  "img": "tstat-img/tst-daikin-dt4272-dt4273.jpg"
+ },
+ {
+  "id": "tst-daikin-premium-mini-d2270",
+  "brand": "Daikin",
+  "family": "Daikin Premium Mini Wi-Fi Thermostat (D2270 / D2270C)",
+  "aka": "compact Wi-Fi stat, Skyport cloud + local API; D2270C commercial",
+  "models": [
+   "D2270",
+   "D2270C"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool, gas/electric or heat pump",
+  "sort": 40,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: requires both R and C wired to the backplate."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "CK1",
+    "fn": "Dry contact",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything but a heat pump); O vs B reversing valve (O = W1/O/B on in cooling, B = on in heating); GAS vs ELEC - with GAS/EL it sets whether G runs in heat (ELEC) or not (GAS); with HP it sets aux type (GAS = no aux during heat pump operation, use for dual fuel; ELEC = strip heat allowed)."
+  ],
+  "setup": {
+   "access": "Setup screens: press MODE and simultaneously FAN for 5 s; Wi-Fi setup: hold FAN about 5 s.",
+   "keySettings": [],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Daikin D2270 Premium Mini Thermostat Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-d2270-premium-mini-install-owners.pdf",
+    "url": "https://daikinthermostats.com/downloads/D2270_manual.pdf"
+   },
+   {
+    "title": "Daikin D2270C Commercial Premium Mini Thermostat Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-d2270c-premium-mini-install-owners.pdf",
+    "url": "https://daikinthermostats.com/downloads/D2270C_manual.pdf"
+   }
+  ],
+  "sourceNotes": "D2270 Owner's Manual & Installation Instructions (2022-01); D2270C Owner's Manual & Installation Instructions (2022-01)",
+  "img": ""
+ },
+ {
+  "id": "tst-daikin-value-series",
+  "brand": "Daikin",
+  "family": "Daikin Value Series Digital Thermostats (TSTATD1100-2 / 1152-2 / 2100-2 / 2152-2)",
+  "aka": "battery or 24V slide-switch builder stats; goodmanthermostats.com lists Goodman TSTATG1100-2 / TSTATG1152-2 / TSTATG2100-2 / TSTATG2152-2 with the same feature text (no Goodman PDF posted)",
+  "models": [
+   "TSTATD1100-2",
+   "TSTATD1152-2",
+   "TSTATD2100-2",
+   "TSTATD2152-2"
+  ],
+  "type": "programmable",
+  "stages": "TSTATD1100-2 / 1152-2: 1 heat / 1 cool (gas/electric, or heat pump with no aux). TSTATD2100-2 / 2152-2: heat pump 2 heat (aux) / 1 cool. xx52 = 5+2 programmable, xx00 = non-programmable",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline",
+   "notes": "Battery or 24 VAC powered; C optional (if no C, runs on 2 AA). Replace batteries at least every 12 months; keep them in even on 24 V so the clock survives power loss."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC (1100-2 / 1152-2)",
+    "fn": "Heating / cooling transformer power",
+    "notes": "Factory jumper RC-RH; remove for dual-transformer systems"
+   },
+   {
+    "t": "R (2100-2 / 2152-2)",
+    "fn": "Power",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "Common (optional)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heating (1100-2) / auxiliary heat (2100-2)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B (1100-2) or O and B (2100-2)",
+    "fn": "Reversing valve: O energize to cool, B energize to heat",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "TSTATD1100-2 jumpers: gas heat = J1 GAS (FAN), J2 GAS; electric heat with fan = J1 ELEC (FAN), J2 GAS; heat pump = J1 ELEC (FAN), J2 HP, J3 O or B - no aux / emergency heat on this model.",
+   "TSTATD1100-2 also runs 2-wire (R, W) gas or millivolt heat.",
+   "Heat pump models: aux heat comes on at setpoint minus 1st-stage deadband (1 F, adjustable) minus 2nd-stage deadband (2 F, fixed). AUX HEAT switch: Emergency / Normal / Lockout.",
+   "18-22 gauge unshielded thermostat cable; leave the thermal insulating label on the backplate."
+  ],
+  "setup": {
+   "access": "Programmable models: slide Program switch to SET, when the clock flashes hold NEXT 5 s for Advanced Setup (deadband 1-6 F, cycles per hour 2-6 / d = no limit (zoning) / d1 = no limit and no compressor lockout, backlight, F/C, filter hours). Non-programmable models use jumpers and slide switches.",
+   "keySettings": [
+    {
+     "setting": "Deadband (xx52 models)",
+     "options": "1-6 F",
+     "notes": ""
+    },
+    {
+     "setting": "Cycles per hour (xx52 models)",
+     "options": "2-6, d (no limit - zoning), d1 (d + no compressor lockout)",
+     "notes": "WARMER/COOLER temporarily overrides"
+    },
+    {
+     "setting": "Filter icon hours (xx52 models)",
+     "options": "Blower hours before FILTER icon; 0 = off",
+     "notes": "Hold RESET FILTER to clear"
+    }
+   ],
+   "installerTest": "Mode switch to HEAT (or COOL), set 10 F past room temperature (allow up to 5 min compressor lockout); Mode OFF + Fan ON should run the fan continuously.",
+   "factoryReset": "Programmable models: Advanced Setup (hold NEXT 5 s), then with Cycles Per Hour flashing hold NEXT, and hold NEXT again - all icons show when defaults are restored."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Slide switches very hard to move",
+    "causes": [
+     "Backplate screwed too tight to an uneven wall"
+    ],
+    "fixes": [
+     "Loosen the backplate screws"
+    ]
+   },
+   {
+    "symptom": "Cooling or heating does not start",
+    "causes": [
+     "Setpoint on the wrong side of room temp",
+     "Mode switch position",
+     "Weak batteries",
+     "Heat pump models: Aux switch in Emergency"
+    ],
+    "fixes": [
+     "Correct setpoint / mode",
+     "Replace batteries",
+     "Aux switch to Normal"
+    ]
+   },
+   {
+    "symptom": "Fan does not run with the compressor",
+    "causes": [
+     "Fan switch not fully in On or Auto"
+    ],
+    "fixes": [
+     "Slide the fan switch firmly into position"
+    ]
+   }
+  ],
+  "tips": [
+   "Bi-color LED shows red for heat demand and green for cool demand when system powered."
+  ],
+  "manuals": [
+   {
+    "title": "Daikin TSTATD1100-2 Non-Programmable Digital Thermostat Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-tstatd1100-2-value-install.pdf",
+    "url": "https://daikinthermostats.com/downloads/TSTATD1100-2_manual.pdf"
+   },
+   {
+    "title": "Daikin TSTATD2100-2 Heat Pump Non-Programmable Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "daikin-tstatd2100-2-value-install.pdf",
+    "url": "https://daikinthermostats.com/downloads/TSTATD2100-2_manual.pdf"
+   },
+   {
+    "title": "Daikin TSTATD1152-2 5+2 Day Programmable Owner's Manual",
+    "docType": "user",
+    "seedFile": "daikin-tstatd1152-2-value-owners.pdf",
+    "url": "https://daikinthermostats.com/downloads/TSTATD1152-2_manual.pdf"
+   },
+   {
+    "title": "Daikin TSTATD2152-2 Heat Pump 5+2 Day Programmable Owner's Manual",
+    "docType": "user",
+    "seedFile": "daikin-tstatd2152-2-value-owners.pdf",
+    "url": "https://daikinthermostats.com/downloads/TSTATD2152-2_manual.pdf"
+   }
+  ],
+  "sourceNotes": "P/N 88-993 Rev. 1 TSTATD1100-2 (12/13); P/N 88-995 Rev. 1 TSTATD2100-2 (12/13); P/N 88-994 Rev. 1 TSTATD1152-2 (12/13); P/N 88-996 Rev. 1 TSTATD2152-2 (12/13)",
+  "img": ""
  },
  {
   "id": "tst-goodman-gtst",
@@ -24944,13 +32866,25 @@ const THERMOSTATS = [
   },
   "diagnostics": [],
   "troubleshooting": [],
-  "tips": [],
+  "tips": [
+   "Installer settings: Main Menu > Settings > Installation Settings (heat/cool stages up to 4H/2C, compressor stages up to 2, aux 0-2, compressor min off None/3/5 min, cycles per hour 2-6 or no limit, deadbands, free cooling, heat pump / aux lockout and dual fuel, fan off delay 0-120 s, sensor settings); Settings > Test Outputs runs outputs without time delays; Settings > Factory Defaults.",
+   "DIP switches on the back: GAS/EL vs HP, O vs B reversing valve, GAS vs ELEC (fan in heat / aux type on HP).",
+   "Will not work on 2 wires (heat only) - pull new wire or use the ACC0410 two-wire kit. Outdoor sensor PSPAC-OS (10K NTC at 77 F). Backplate does not fully cover a vertical junction box - use the PSPAC-WPT wallplate.",
+   "PSP4273RT: W3/AUX terminal is 3rd stage heat / 2nd stage aux / humidify / dehumidify - AUX Output Usage must be set to Hum or Dehum before the Humidity menu settings take effect.",
+   "Touchscreen not responding: pull the stat off the backplate and push it back on while pressing the center of the screen until the Calibration screen appears."
+  ],
   "manuals": [
    {
     "title": "PROSTAT+ PSP4272RT & PSP4273RT Product Specification Sheet (terminal designations, electrical ratings)",
     "docType": "spec",
     "seedFile": "goodman-prostatplus-specsheet.pdf",
     "url": "https://www.goodmanmfg.com/docs/librariesprovider6/default-document-library/ss-psp4272rt_-psp4273rt.pdf?view=true&view=true"
+   },
+   {
+    "title": "ProStat+ PSP4272RT / PSP4273RT Residential TouchScreen Programmable Thermostats User & Installer Manual",
+    "docType": "install",
+    "seedFile": "goodman-prostatplus-psp4272rt-psp4273rt-install.pdf",
+    "url": "https://prostatplushvac.com/wp-content/uploads/2021/07/PSP4272RT_73RT-UM_ENG_v1.pdf"
    }
   ],
   "sourceNotes": "SS-PSP4272RT_PSP4273RT PROSTAT+ PSP4272RT & PSP4273RT Product Specification Sheet (terminal designations, electrical ratings)",
@@ -25099,6 +33033,565 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "SS-GCKTO4 CTK04 ComfortNet Product Specification Sheet; IC-CNR-1506-PP-01 ComfortNet CTK04 Installation & Commissioning Training (IC-CNR-1506-PP-01); HID-350 / 69-2687EFS-03 ComfortNet CTK04 Communicating Thermostat Operating Manual",
   "img": "tstat-img/tst-goodman-comfortnet-ctk04.jpg"
+ },
+ {
+  "id": "tst-goodman-premium-g4272-g4273",
+  "brand": "Goodman / Amana",
+  "family": "Goodman Premium Series Digital Thermostats (G4272 / G4273 / G2111)",
+  "aka": "Goodman-branded button stat with scrolling display, optional Wi-Fi (Skyport)",
+  "models": [
+   "G4272",
+   "G4273",
+   "G2111"
+  ],
+  "type": "programmable",
+  "stages": "G4272 / G4273: up to 3 heat / 2 cool conventional; heat pump 1-2 compressor + 0-2 aux. G4273 adds HUM / DEHUM / AUX. G2111: up to 2 heat / 1 cool (heat pump 1 aux stage)",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: requires both R (24 VAC return) and C (24 VAC common) at the backplate."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat, or reversing valve on heat pumps",
+    "notes": "Set by DIP switches"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "W3",
+    "fn": "3rd stage heat circuit",
+    "notes": "G4272 / G4273"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "G4272 / G4273"
+   },
+   {
+    "t": "HUM / DEHUM",
+    "fn": "Humidifier / dehumidifier control",
+    "notes": "G4273"
+   },
+   {
+    "t": "AUX",
+    "fn": "Aux output",
+    "notes": "G4273"
+   },
+   {
+    "t": "REMOTE/OUTDOOR",
+    "fn": "Wired sensor connections",
+    "notes": ""
+   },
+   {
+    "t": "DRY CONTACT",
+    "fn": "Dry contact input",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything but a heat pump); O vs B reversing valve (O = W1/O/B on in cooling, B = on in heating); GAS vs ELEC - with GAS/EL it sets whether G runs in heat (ELEC) or not (GAS); with HP it sets aux type (GAS = no aux during heat pump operation, use for dual fuel; ELEC = strip heat allowed).",
+   "Optional Wi-Fi module; with it installed, vacation settings are edited through Skyport."
+  ],
+  "setup": {
+   "access": "Installer/Advanced Setup: press SETUP, then MODE; WARMER/COOLER change the value, MODE advances, SETUP exits. Technician Setup: hold SETUP until all icons appear (the manuals say 5 s in one place and 10 s in another), then MODE. Setup step numbers differ by model - use the Advanced Setup Table in the matching manual. ",
+   "keySettings": [
+    {
+     "setting": "Program mode",
+     "options": "Non, 1 Day, 5/2 Day, 7 Day",
+     "notes": "Default 7 Day"
+    },
+    {
+     "setting": "Setpoint limits / max heat / min cool",
+     "options": "No or Use; 35-99 F (defaults 74 / 70)",
+     "notes": ""
+    },
+    {
+     "setting": "Cycles per hour",
+     "options": "No limit, 2-6 (default 6)",
+     "notes": "WARMER/COOLER overrides and resets"
+    },
+    {
+     "setting": "Compressor minimum off minutes",
+     "options": "0, 3, 5 (default 5)",
+     "notes": ""
+    },
+    {
+     "setting": "Number of heat / cool / compressor / aux stages",
+     "options": "Per model (4-stage models: heat 0-3, cool 0-2, compressor 1-2, aux 0-2; 2111 models: heat 0-2, cool 0-1, aux 0-1)",
+     "notes": "Heat/cool stage settings are for non-heat-pump display callouts"
+    },
+    {
+     "setting": "1st stage deadband",
+     "options": "1-6 F (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "2nd-4th stage deadbands / minutes between stages",
+     "options": "0-10 F / 0-60 min",
+     "notes": ""
+    },
+    {
+     "setting": "Fan off delay",
+     "options": "0-120 s",
+     "notes": ""
+    },
+    {
+     "setting": "Wired sensor type / control-to source",
+     "options": "Remote, Supply, Outdoor / Thermostat, wired remote, wireless remote(s), averages",
+     "notes": ""
+    },
+    {
+     "setting": "Dry contact polarity / use",
+     "options": "Open or Closed; Condensate, Vacation, FDD",
+     "notes": "Condensate locks out the compressor"
+    },
+    {
+     "setting": "Skyport / Local API",
+     "options": "On/Off",
+     "notes": "Needs the optional Wi-Fi module"
+    }
+   ],
+   "installerTest": "Technician Setup: MODE steps through version, DIP/jumper state and dry-contact state, then \"TURN ON EQUIPMENT?\" - WARMER cycles up through heat stages, COOLER cycles down through cooling stages (MODE exits), then \"CALIBRATE SENSORS?\". Auto-exits after 10 minutes.",
+   "factoryReset": "Hold SETUP until all icons appear, release, hold FAN 5 s until DEFAULTS appears, release and press MODE. Resets all programming."
+  },
+  "diagnostics": [
+   {
+    "code": "CONDENSATE (dry contact)",
+    "meaning": "Dry contact set to Condensate is active - compressor locked out",
+    "action": "Clear the drain / float switch problem"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Air conditioning does not attempt to turn on",
+    "causes": [
+     "Compressor timer lockout (Cycles Per Hour / minimum off time)",
+     "Cooling setpoint too high or limited"
+    ],
+    "fixes": [
+     "Adjust/defeat Cycles Per Hour in Installer Setup (WARMER or COOLER overrides it)",
+     "Lower the cooling setpoint or setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Heating does not attempt to turn on",
+    "causes": [
+     "Heating setpoint too low / limited"
+    ],
+    "fixes": [
+     "Raise heating setpoint or heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve DIP switch set for B"
+    ],
+    "fixes": [
+     "Set reversing valve to O (if equipment uses O)"
+    ]
+   },
+   {
+    "symptom": "Both heat and cool come on during a cooling call",
+    "causes": [
+     "Equipment DIP switch set to HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set equipment switch to GAS/EL"
+    ]
+   },
+   {
+    "symptom": "Program button shows \"DISABLED\"",
+    "causes": [
+     "Program mode set to NON PROGRAM"
+    ],
+    "fixes": [
+     "Set Program Mode (setup step 1) to 1, 5/2 or 7 Day"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lockout: hold MODE and press WARMER + COOLER together (repeat to unlock)."
+  ],
+  "manuals": [
+   {
+    "title": "Goodman G4272 Digital Thermostat Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "goodman-g4272-premium-install-owners.pdf",
+    "url": "https://goodmanthermostats.com/downloads/G4272_manual.pdf"
+   },
+   {
+    "title": "Goodman G4273 Digital Thermostat with Humidity Control Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "goodman-g4273-premium-install-owners.pdf",
+    "url": "https://goodmanthermostats.com/downloads/G4273_manual.pdf"
+   },
+   {
+    "title": "Goodman G2111 Digital Thermostat Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "goodman-g2111-premium-install-owners.pdf",
+    "url": "https://goodmanthermostats.com/downloads/G2111_manual.pdf"
+   }
+  ],
+  "sourceNotes": "G4272 Owner's Manual and Installation Instructions (2017-05); G4273 Owner's Manual and Installation Instructions (2017-05); G2111 Owner's Manual and Installation Instructions (2017-05)",
+  "img": ""
+ },
+ {
+  "id": "tst-goodman-touchscreen-gt4272-gt4273",
+  "brand": "Goodman / Amana",
+  "family": "Goodman TouchScreen Series (GT4272 / GT4273)",
+  "aka": "Goodman-branded full-color touchscreen, Wi-Fi (Skyport), SD card",
+  "models": [
+   "GT4272",
+   "GT4273"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 4 heat / 2 cool: conventional up to 3 heat / 2 cool; heat pump up to 2 compressor + 2 aux. GT4273 adds humidification / dehumidification",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Requires R and C. Will not work on 2 wires (heat only) - pull new wire or use TSTATGAC0410 two-wire kit."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve (heat pump)",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat (3rd stage on 2-compressor heat pump)",
+    "notes": ""
+   },
+   {
+    "t": "W3/AUX",
+    "fn": "3rd stage heat (4th stage heat on 2-compressor heat pump) / aux",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor",
+    "notes": "With Free Cooling: Y1 runs the economizer, mechanical cooling on Y2"
+   },
+   {
+    "t": "SENSOR",
+    "fn": "Wired sensor: outdoor / remote / supply / return (10K NTC at 77 F)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything but a heat pump); O vs B reversing valve (O = W1/O/B on in cooling, B = on in heating); GAS vs ELEC - with GAS/EL it sets whether G runs in heat (ELEC) or not (GAS); with HP it sets aux type (GAS = no aux during heat pump operation, use for dual fuel; ELEC = strip heat allowed).",
+   "Outdoor/remote temperature sensor: TSTATGTAC-OS (10K ohm NTC at 77 F)."
+  ],
+  "setup": {
+   "access": "Main Menu > Settings > Installation Settings (stages, timers & deadbands, free cooling, heat pump / dual fuel, sensor settings, AUX output); Settings also holds Test Outputs, Factory Defaults, Restart Thermostat, dealer information.",
+   "keySettings": [
+    {
+     "setting": "Heat & Cool stages",
+     "options": "Up to 2 stages cooling and 4 stages heating",
+     "notes": ""
+    },
+    {
+     "setting": "Compressor stages / Aux heat stages",
+     "options": "Up to 2 / 0-2",
+     "notes": "Only when DIP switch set for heat pump"
+    },
+    {
+     "setting": "Compressor min OFF time",
+     "options": "None, 1 min, 5 min",
+     "notes": ""
+    },
+    {
+     "setting": "Cycles per hour",
+     "options": "2-6, No Limit (default 6)",
+     "notes": "WARMER/COOLER overrides"
+    },
+    {
+     "setting": "Min heat/cool difference",
+     "options": "0-6 F (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "Heat pump lockout / aux heat lockout / dual fuel balance point",
+     "options": "Enabled/disabled with outdoor temps",
+     "notes": "Needs outdoor sensor"
+    },
+    {
+     "setting": "Wired sensor use",
+     "options": "Outdoor, Remote, Supply, Return",
+     "notes": "10K NTC sensor (TSTATGTAC-OS)"
+    },
+    {
+     "setting": "Calibrate sensors",
+     "options": "Thermostat and wired sensor offsets",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Settings > Test Outputs - runs outputs without thermostat time delays.",
+   "factoryReset": "Settings > Factory Defaults."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Touchscreen buttons not responsive",
+    "causes": [
+     "Touchscreen out of calibration"
+    ],
+    "fixes": [
+     "Pull the thermostat off the backplate and push it back on while pressing the center of the screen until Calibration appears; re-calibrate"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Heating does not attempt to turn on",
+    "causes": [
+     "Heating setpoint too low / limited"
+    ],
+    "fixes": [
+     "Raise heating setpoint or heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve DIP switch set for B"
+    ],
+    "fixes": [
+     "Set reversing valve to O (if equipment uses O)"
+    ]
+   },
+   {
+    "symptom": "Both heat and cool come on during a cooling call",
+    "causes": [
+     "Equipment DIP switch set to HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set equipment switch to GAS/EL"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Goodman GT4272 Owner's Manual & Installation Guide",
+    "docType": "install",
+    "seedFile": "goodman-gt4272-touchscreen-install-owners.pdf",
+    "url": "https://goodmanthermostats.com/downloads/GT4272_manual.pdf"
+   },
+   {
+    "title": "Goodman GT4273 Owner's Manual & Installation Guide",
+    "docType": "install",
+    "seedFile": "goodman-gt4273-touchscreen-install-owners.pdf",
+    "url": "https://goodmanthermostats.com/downloads/GT4273_manual.pdf"
+   }
+  ],
+  "sourceNotes": "GT4272 Owner's Manual & Installation Guide (2015-11); GT4273 Owner's Manual & Installation Guide (2015-11)",
+  "img": ""
+ },
+ {
+  "id": "tst-goodman-premium-mini-g2270",
+  "brand": "Goodman / Amana",
+  "family": "Goodman Premium Mini Wi-Fi Thermostat (G2270)",
+  "aka": "compact Wi-Fi stat, Skyport cloud + local API",
+  "models": [
+   "G2270"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool, gas/electric or heat pump",
+  "sort": 40,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: requires both R and C wired to the backplate."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "CK1",
+    "fn": "Dry contact",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything but a heat pump); O vs B reversing valve (O = W1/O/B on in cooling, B = on in heating); GAS vs ELEC - with GAS/EL it sets whether G runs in heat (ELEC) or not (GAS); with HP it sets aux type (GAS = no aux during heat pump operation, use for dual fuel; ELEC = strip heat allowed)."
+  ],
+  "setup": {
+   "access": "Setup screens: press MODE and simultaneously FAN for 5 s; Wi-Fi setup: hold FAN about 5 s.",
+   "keySettings": [
+    {
+     "setting": "Step 11-13 Setpoint limits / max heat / min cool",
+     "options": "On/Off; 35-99 F",
+     "notes": ""
+    },
+    {
+     "setting": "Step 14 Cycles per hour",
+     "options": "No limit, 2-6",
+     "notes": ""
+    },
+    {
+     "setting": "Step 15 Compressor minimum off",
+     "options": "0, 3, 5 min",
+     "notes": ""
+    },
+    {
+     "setting": "Step 17-19 Deadbands / minutes between stages",
+     "options": "1-6 F; 0-10 F; 0-60 min",
+     "notes": ""
+    },
+    {
+     "setting": "Step 21 Fan off delay",
+     "options": "0, 30, 60, 90, 120 s",
+     "notes": ""
+    },
+    {
+     "setting": "Step 24-25 Dry contact polarity / use",
+     "options": "Open/Closed; Condensate Pan, Vacation, FDD",
+     "notes": "FDD shows \"EQUIP FAULT\""
+    },
+    {
+     "setting": "Step 26-27 Skyport / Local API",
+     "options": "On/Off",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": "Mode OFF, hold MODE + DOWN 5 s until all icons appear, release, hold FAN 2 s (Fd / ALL), choose Wi-Fi, STAT or ALL with up/down, hold FAN 2 s; MODE twice to exit."
+  },
+  "diagnostics": [
+   {
+    "code": "CONDENSATE PAN",
+    "meaning": "Dry contact (Condensate Pan) active - compressor locked out"
+   },
+   {
+    "code": "EQUIP FAULT",
+    "meaning": "Dry contact set to FDD is active"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lockout: hold MODE, press WARMER + COOLER together for 2 s."
+  ],
+  "manuals": [
+   {
+    "title": "Goodman G2270 Premium Mini Thermostat Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "goodman-g2270-premium-mini-install-owners.pdf",
+    "url": "https://goodmanthermostats.com/downloads/G2270_manual.pdf"
+   }
+  ],
+  "sourceNotes": "P/N 88-1277 G2270 Owner's Manual & Installation Instructions (07/18)",
+  "img": ""
  },
  {
   "id": "tst-lennox-e40-m40",
@@ -27065,7 +35558,11 @@ const THERMOSTATS = [
    "51M34",
    "51M35",
    "L3511C",
-   "L3522C"
+   "L3522C",
+   "51M37",
+   "51M38",
+   "51M39",
+   "51M42"
   ],
   "type": "programmable",
   "stages": "51M34 / L3511C: non-heat-pump single-stage heat / single-stage cool. 51M35 / L3522C: non-heat-pump two-stage heat / two-stage cool. Both gas or electric furnace.",
@@ -27242,6 +35739,375 @@ const THERMOSTATS = [
   "img": "tstat-img/tst-lennox-merit-51m34-51m35.jpg"
  },
  {
+  "id": "tst-lennox-allied-comfortsync-a3",
+  "brand": "Lennox",
+  "family": "Allied Air Comfort Sync A3 (Armstrong / AirEase / Ducane / Concord)",
+  "aka": "Allied Air (a Lennox International company) communicating thermostat: Smart Hub + HD Display",
+  "models": [
+   "Comfort Sync A3"
+  ],
+  "type": "communicating",
+  "stages": "Allied Air communicating (RS-BUS) indoor and outdoor units, including variable-capacity outdoor units; non-communicating 24V equipment can be added during commissioning; Comfort Sync zoning (up to 4 zones listed in the airflow test)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Smart Hub is powered with 24VAC (1 A) on R and C at the indoor unit; it feeds 12VDC to the HD Display on 12+ / 12-. The HD Display does not use the old R/C thermostat wiring - it gets 12VDC plus comm bus A/B from the Smart Hub."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC input (Smart Hub)",
+    "notes": "18 AWG unshielded"
+   },
+   {
+    "t": "i+ / i-",
+    "fn": "RS-BUS to the communicating indoor/outdoor equipment (Smart Hub)",
+    "notes": "22 AWG shielded 2-pair recommended"
+   },
+   {
+    "t": "C",
+    "fn": "24VAC return (Smart Hub)",
+    "notes": ""
+   },
+   {
+    "t": "ACC1 / ACC2",
+    "fn": "Accessory outputs - typically 1 or 2 speed ventilators and fresh air dampers (Smart Hub)",
+    "notes": ""
+   },
+   {
+    "t": "12+ / 12-",
+    "fn": "12VDC to the HD Display",
+    "notes": ""
+   },
+   {
+    "t": "A / B",
+    "fn": "Communications bus to the HD Display",
+    "notes": "22 AWG shielded 2-pair recommended"
+   }
+  ],
+  "wiringNotes": [
+   "Smart Hub mounts near the indoor unit with the antenna roughly vertical and a clear path to the home Wi-Fi; not on the unit, duct work or large metal.",
+   "Use 2-pair 18 AWG unshielded for power terminals (R, C, 12+, 12-) and 2-pair 22 AWG shielded for comm terminals (i+, i-, A, B).",
+   "Max 300 ft between components; max 1500 ft of all connections combined. Do not exceed 30 VAC or 1 A per connection; never jumper gas valve / control terminals to test.",
+   "Discharge air sensor 88K38 recommended with variable-capacity outdoor units; non-communicating outdoor unit: wire transient voltage suppressor 89W72 across the contactor coil (or Y1-C at the indoor control).",
+   "HD Display can take up to 45 seconds to power up; if it is off the subbase it cannot talk to the system."
+  ],
+  "setup": {
+   "access": "Commissioning at first power-up (HD Display) or with the mobile setup app connected directly to the Smart Hub. Afterwards: Menu / Settings > Advanced Settings > Dealer Control Center (equipment parameters, notifications, tests, diagnostics, installation report, information).",
+   "keySettings": [
+    {
+     "setting": "Equipment Parameters",
+     "options": "All system parameters (depend on connected Allied communicating equipment)",
+     "notes": ""
+    },
+    {
+     "setting": "Non-communicating equipment",
+     "options": "Added from the equipment-found screen during commissioning",
+     "notes": ""
+    },
+    {
+     "setting": "Dehumidification",
+     "options": "Overcooling / dehumidification set point / advanced modes",
+     "notes": ""
+    },
+    {
+     "setting": "Ventilation",
+     "options": "ERV, HRV, fresh air damper on ACC1/ACC2",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Dealer Control Center > Tests: verify airflow per zone (blower, heating, cooling CFM), then run a manual or automatic test; results are saved in the Installation Report. Diagnostics tests each communicating component.",
+   "factoryReset": "Smart Hub reboot: hold the Smart Hub button 5 seconds."
+  },
+  "diagnostics": [
+   {
+    "code": "Smart Hub status LED solid green",
+    "meaning": "System normal"
+   },
+   {
+    "code": "Red",
+    "meaning": "HVAC fault - critical alert needs attention"
+   },
+   {
+    "code": "Blinking amber",
+    "meaning": "Wi-Fi not connected / out of range / Wi-Fi hardware error"
+   },
+   {
+    "code": "Blinking magenta",
+    "meaning": "HD Display not connected (comm A/B open or reversed, 12V open, or display not seated on subbase)"
+   },
+   {
+    "code": "Cyan",
+    "meaning": "Indoor unit not connected or cannot communicate"
+   },
+   {
+    "code": "Service Urgent / Service Soon / Information Only",
+    "meaning": "Alert types - Urgent shows on the home screen; Soon only under installer alerts",
+    "action": "Manual-clear alerts: Dealer Control Center > Notifications"
+   },
+   {
+    "code": "Unknown Device Detected / Missing Device / Indoor Unit Not Detected",
+    "meaning": "Bus device problems - soft-disabled devices show double dashes on their seven-segment display",
+    "action": "See Electrical Troubleshooting voltages in the guide"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "HD Display blank or 'cannot communicate'",
+    "causes": [
+     "One comm wire open at Smart Hub A/B",
+     "A and B reversed",
+     "12VDC open",
+     "Display not seated"
+    ],
+    "fixes": [
+     "Check A/B and 12+/12- at the Smart Hub",
+     "Re-seat the display on the subbase"
+    ]
+   }
+  ],
+  "tips": [
+   "Multiple errors cycle on the status LED one second each, in priority HVAC, thermostat, then Wi-Fi."
+  ],
+  "manuals": [
+   {
+    "title": "Comfort Sync A3 Ultra Smart Thermostat Installation and Setup Guide (508026-01, 10/2024)",
+    "docType": "install",
+    "seedFile": "allied-comfortsync-a3-install.pdf",
+    "url": "https://s7d9.scene7.com/is/content/AlliedAir/FLAGSHIP_THERMOSTAT_COMFORTSYNC-A3_INSTALLATIONMANUALpdf"
+   },
+   {
+    "title": "Comfort Sync A3 Ultra Smart Thermostat User Guide (508027-01, 07/2023)",
+    "docType": "user",
+    "seedFile": "allied-comfortsync-a3-userguide.pdf",
+    "url": "https://s7d9.scene7.com/is/content/AlliedAir/FLAGSHIP_THERMOSTAT_COMFORTSYNC-A3_USERMANUALpdf"
+   }
+  ],
+  "sourceNotes": "508026-01 Installation and Setup Guide (10/2024) and 508027-01 User Guide (07/2023), Allied Air Enterprises (Lennox International) - linked from alliedair.com Comfort Sync support hub. Brand kept as Lennox per the group brief; the build may prefer a separate 'Allied Air' brand.",
+  "img": ""
+ },
+ {
+  "id": "tst-lennox-comfortsense-7000",
+  "brand": "Lennox",
+  "family": "ComfortSense 7000 (L7742U)",
+  "aka": "L7742U touch screen (later redesigned case = catalog Y2081)",
+  "models": [
+   "L7742U",
+   "Y2081"
+  ],
+  "type": "programmable",
+  "stages": "Universal: up to 2 compressor stages and 2 indoor heat stages (4 heat / 2 cool on a heat pump with dual fuel or electric backup)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "24VAC thermostat - requires a common wire. Lithium battery only keeps the clock (about 30 days) on power loss. 18 AWG or larger, max 300 ft one way, 1 A max load per terminal."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC power",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage heating or cooling",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage heating or cooling",
+    "notes": ""
+   },
+   {
+    "t": "W1",
+    "fn": "1st stage heat (non-HP) / 3rd stage heat (HP)",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat (non-HP) / 4th stage heat (HP)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Cool-active reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "Heat-active reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "D",
+    "fn": "Dehumidification relay (to DS terminal)",
+    "notes": ""
+   },
+   {
+    "t": "H",
+    "fn": "Humidification relay (to humidifier)",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "System check - HVAC fault input (LSOM / service light)",
+    "notes": ""
+   },
+   {
+    "t": "T / T",
+    "fn": "Optional outdoor temperature sensor",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Do not jumper across gas valve or control terminals to test - use the thermostat test mode.",
+   "Outdoor sensor on the two T terminals, max 300 ft; no shielded/twisted pair needed.",
+   "Used with Harmony II zoning: see Lennox Application Note H-04-5.",
+   "L input shows HVAC ERROR DETECTED when L has 24VAC (or LSOM error) and Y1 has been on 5 minutes - information only, not equipment protection."
+  ],
+  "setup": {
+   "access": "OPTIONS tab > down arrow to INSTALLER SETTINGS > ENTER; confirm 'MUST BE SET BY QUALIFIED PERSON' with ENTER.",
+   "keySettings": [
+    {
+     "setting": "SYSTEM SETUP",
+     "options": "Non heat pump (gas/oil, electric, no heat) or heat pump (no backup, dual fuel, electric); compressor stages 1/2; indoor heat stages 1/2",
+     "notes": ""
+    },
+    {
+     "setting": "OUTDOOR SENSOR",
+     "options": "Yes / No (default)",
+     "notes": ""
+    },
+    {
+     "setting": "LOW / HIGH BALANCE POINT (multi-stage HP)",
+     "options": "25F default (-20F to high BP) / 50F default (low BP to 75F)",
+     "notes": ""
+    },
+    {
+     "setting": "DEADBAND",
+     "options": "3-8F (default 4F)",
+     "notes": ""
+    },
+    {
+     "setting": "HUMIDIFY",
+     "options": "Off, Dewpoint, Precision, Basic; 15-45% (45)",
+     "notes": ""
+    },
+    {
+     "setting": "DEHUMIDIFY",
+     "options": "Off, Humiditrol, Precision, Basic; 45-60% (50)",
+     "notes": "Dewpoint and Humiditrol need the outdoor sensor"
+    },
+    {
+     "setting": "STG 1 / STG 2 DIFF",
+     "options": "1.0F / 0.5F (0.5-8.0F)",
+     "notes": ""
+    },
+    {
+     "setting": "STG 2 DELAY",
+     "options": "20 min (5-120)",
+     "notes": ""
+    },
+    {
+     "setting": "STG 2 HP LOCK TEMP (dual fuel)",
+     "options": "Off (default), -45 to 75F",
+     "notes": ""
+    },
+    {
+     "setting": "RESIDUAL COOL",
+     "options": "0-120 s",
+     "notes": ""
+    },
+    {
+     "setting": "TEMPERATURE / HUMIDITY OFFSET",
+     "options": "-5 to +5F",
+     "notes": ""
+    }
+   ],
+   "installerTest": "OPTIONS > INSTALLER SETTINGS > SYSTEM TEST MODES > TEST OUTPUTS: turn Y1, Y2, W1, W2, G, H, D, O/B on/off one at a time. Turn FAN (G) ON before Y1 or the compressor runs without the blower. Minimum off timer bypassed; exits after 5 minutes idle. In dual fuel do not run HP and furnace together.",
+   "factoryReset": "INSTALLER SETTINGS > RESET SETTINGS > YES erases all programming and installer settings (last resort). ENERGY STAR DEFAULT resets only the schedule."
+  },
+  "diagnostics": [
+   {
+    "code": "TEMP SENSOR ERROR / CALL FOR SERVICE",
+    "meaning": "Local sensor out of range (-40 to 158F) - EE shown, temperature control stops",
+    "action": "Replace thermostat (clears if sensor reads back in range)"
+   },
+   {
+    "code": "MEMORY ERROR / CALL FOR SERVICE",
+    "meaning": "EEPROM error",
+    "action": "Replace thermostat"
+   },
+   {
+    "code": "NO OUTDOOR SENSOR",
+    "meaning": "Outdoor sensor out of range (-50 to 180F) with Humiditrol/dewpoint/balance point in use",
+    "action": "Replace/repair outdoor sensor; stat falls back to non-ODT operation"
+   },
+   {
+    "code": "HUM SENSOR ERROR",
+    "meaning": "Humidity sensor reading 0-10% or over 90%",
+    "action": "Service"
+   },
+   {
+    "code": "HVAC ERROR DETECTED",
+    "meaning": "L terminal fault signal with Y1 on 5 minutes",
+    "action": "Check outdoor unit (LSOM / service light)"
+   },
+   {
+    "code": "Blank display",
+    "meaning": "CPU/ROM error - relays disabled",
+    "action": "Replace thermostat"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "High temperature protection: all heat stages turn off if room temperature exceeds 96F.",
+   "Compressor short-cycle protection shows WAIT on the home screen."
+  ],
+  "manuals": [
+   {
+    "title": "Quick-Start Installation Instructions ComfortSense 7000 Series Model L7742U (506227-01)",
+    "docType": "install",
+    "seedFile": "lennox-cs7000-quickstart-install.pdf",
+    "url": "https://s7d9.scene7.com/is/content/lennoxinternational/506227-01-000"
+   },
+   {
+    "title": "ComfortSense 7000 Series Model L7742U Programming and Application Guide (506228-01)",
+    "docType": "install",
+    "seedFile": "lennox-cs7000-programming-application.pdf",
+    "url": "https://s7d9.scene7.com/is/content/lennoxinternational/506228-01-000"
+   },
+   {
+    "title": "ComfortSense 7000 Series Model L7742U Homeowner's Manual (506229-01)",
+    "docType": "user",
+    "seedFile": "lennox-cs7000-homeowner.pdf",
+    "url": "https://s7d9.scene7.com/is/content/lennoxinternational/506229-01-000"
+   },
+   {
+    "title": "Touchscreen ComfortSense 7000 Product Specifications (Bulletin 210515)",
+    "docType": "spec",
+    "seedFile": "lennox-cs7000-spec.pdf",
+    "url": "https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/ehb_tstat_cmfrtsnse7000_7day_0906.pdf"
+   }
+  ],
+  "sourceNotes": "506227-01 Quick-Start Installation (05/09); 506228-01 Programming and Application Guide (05/09); 506229-01 Homeowner's Manual (05/09); Product Specifications bulletin 210515 (June 2009) - revision note gives new catalog number Y2081.",
+  "img": ""
+ },
+ {
   "id": "tst-carrier-smart-thermostat-ewf",
   "brand": "Carrier",
   "family": "Carrier / Bryant Smart Thermostat",
@@ -27332,6 +36198,12 @@ const THERMOSTATS = [
     "docType": "spec",
     "seedFile": "carrier-bryantsmarttstat-tstatbbewf01-techspecs.pdf",
     "url": "https://www.shareddocs.com/hvac/docs/1010/Public/0F/01-8110-1777-01.pdf"
+   },
+   {
+    "title": "TSTATCCEWF-01 Carrier Smart Thermostat Installation Instructions (TSTATCCEWF-02SI, 04/26)",
+    "docType": "install",
+    "seedFile": "carrier-smart-thermostat-tstatccewf-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0A/TSTATCCEWF-02SI.pdf"
    }
   ],
   "sourceNotes": "01-TSTAT-113-01 Carrier Smart Thermostat Tech Specs; 01-8110-1777-01 Bryant Smart Thermostat Tech Specs",
@@ -27676,7 +36548,11 @@ const THERMOSTATS = [
    "SYSTXCCITC01-C",
    "SYSTXCCWIC01-B",
    "SYSTXCCICF01-B",
-   "SYSTXCCWIF01-B"
+   "SYSTXCCWIF01-B",
+   "SYSTXBBECC01-B",
+   "SYSTXBBWEC01-B",
+   "SYSTXBBECF01-B",
+   "SYSTXBBWEF01-B"
   ],
   "type": "communicating",
   "stages": "Communicating ABCD-bus system control. Stage count is set by the connected communicating equipment (furnace / fan coil / AC / HP / geothermal HP), not by the control. Non-communicating outdoor units supported via Y/Y2 (1-stage AC) or R/O/W/Y (1-stage HP) wi...",
@@ -28252,7 +37128,13 @@ const THERMOSTATS = [
    "TP-PAC01-A",
    "TP-PHP01-A",
    "TP-NAC01-A",
-   "TP-NHP01-A"
+   "TP-NHP01-A",
+   "T6-PAC",
+   "T6-PHP",
+   "T6-NAC",
+   "T6-NHP",
+   "T6-PHP01-A",
+   "T6-NHP01-A"
   ],
   "type": "programmable",
   "stages": "HP model configurable HP / AC / H / C / H2 (2-stage heat pump with fan coil) / A2 (2-stage AC with furnace or fan coil). AC model configurable AC / H / C only. Heat pump gets one thermostat-controlled stage of auxiliary heat; further aux staging must be han...",
@@ -28575,6 +37457,18 @@ const THERMOSTATS = [
     "title": "TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data",
     "docType": "spec",
     "seedFile": "carrier-tp-pac-05pd.pdf"
+   },
+   {
+    "title": "Bryant T6-PAC, T6-PHP, T6-NAC, T6-NHP Preferred Series AC/HP Thermostat Installation Instructions (IIT6-PAC-07, 07/13)",
+    "docType": "install",
+    "seedFile": "bryant-preferred-t6-pac-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/02/IIT6-PAC-07.pdf"
+   },
+   {
+    "title": "Thermostats and Accessories catalog (Replacement Components 570-292, 12/2018) - Bryant T1 / T2 / T6 model list",
+    "docType": "spec",
+    "seedFile": "carrier-bryant-thermostat-catalog-570-292.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1006/Public/08/570-292.pdf"
    }
   ],
   "sourceNotes": "TP-PACA-02SI TP-PAC01-A, TP-PHP01-A, TP-NAC01-A, TP-NHP01-A Performance Series AC/HP Thermostat Installation Instructions; TP-PAC-05PD TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data; OM-TPPACA-02 TP-PHP01-A, TP-PAC01-A & TP-PRH01-B Performance Series Programmable Thermostat Owner's Manual; OM-TPNACA-02 TP-NHP01-A, TP-NAC01-A & TP-NRH01-B Edge Non-Programmable Thermostat Owner's Manual",
@@ -28589,7 +37483,10 @@ const THERMOSTATS = [
    "TP-PRH01-B",
    "TP-NRH01-B",
    "TP-PRH01-A",
-   "TP-NRH01-A"
+   "TP-NRH01-A",
+   "T6-PRH01-B",
+   "T6-NRH01-B",
+   "T6-NRH01-A"
   ],
   "type": "programmable",
   "stages": "Option 01 range H2, A2, HP, AC, hh, h2, H, C. H2 = 2-speed heat pump with fan coil, HP = 1-speed heat pump with fan coil, A2 = 2-speed AC, AC = 1-speed AC, hh = 1-speed heat pump with furnace (Hybrid Heat), h2 = 2-speed heat pump with furnace (Hybrid Heat),...",
@@ -28890,6 +37787,18 @@ const THERMOSTATS = [
     "title": "TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data",
     "docType": "spec",
     "seedFile": "carrier-tp-pac-05pd.pdf"
+   },
+   {
+    "title": "Bryant T6-PRH01-B, T6-NRH01-B Preferred Series Thermidistat Installation Instructions (IIT6-PRHB-02, 04/17)",
+    "docType": "install",
+    "seedFile": "bryant-preferred-t6-prh-thermidistat-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/04/IIT6-PRHB-02.pdf"
+   },
+   {
+    "title": "Thermostats and Accessories catalog (Replacement Components 570-292, 12/2018) - Bryant T1 / T2 / T6 model list",
+    "docType": "spec",
+    "seedFile": "carrier-bryant-thermostat-catalog-570-292.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1006/Public/08/570-292.pdf"
    }
   ],
   "sourceNotes": "TP-PRHB-02SI TP-PRH01-B, TP-NRH01-B Performance Series Edge Thermidistat Control Installation Instructions; TP-PRHB-01SI TP-PRH01-B, TP-NRH01-B Performance Series Edge Thermidistat Control Installation Instructions (first edition); TP-PAC-05PD TP-PAC, TP-PHP, TP-PRH, TP-NAC, TP-NHP, TP-NRH Performance Series Edge Thermostat Product Data",
@@ -28963,7 +37872,9 @@ const THERMOSTATS = [
     ]
    }
   ],
-  "tips": [],
+  "tips": [
+   "Dealer options: touch and hold MENU about 5 seconds until SW01 blinks. Output test: hold FAN 10 seconds (IM-TST-03)."
+  ],
   "manuals": [
    {
     "title": "Cor 5 Thermostat Quick Start Guide",
@@ -28976,6 +37887,18 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "carrier-cor5-tstpha01-tstwha01-owners-guide.pdf",
     "url": "https://www.shareddocs.com/hvac/docs/1009/Public/06/OG-TSTPHA-WHA-03.pdf"
+   },
+   {
+    "title": "TSTPHA01 Cor 5, TSTWHA01 Cor 5C, TSTPRH01 Cor 7, TSTWRH01 Cor 7C Installation Instructions (TST-03QS, 09/18)",
+    "docType": "install",
+    "seedFile": "carrier-cor5-cor7-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/04/TST-03QS.pdf"
+   },
+   {
+    "title": "Cor 5 / 5C / 7 / 7C Advanced Installation and Configuration Instructions (IM-TST-03, 01/19) - wiring diagrams, SW01-SW99 dealer options, output test",
+    "docType": "install",
+    "seedFile": "carrier-cor5-cor7-advanced-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0A/IM-TST-03.pdf"
    }
   ],
   "sourceNotes": "OG-TSTPHA-WHA-03 TSTPHA01, TSTWHA01 Cor 5 and Cor 5C Thermostats Owner's Guide; QSCOR5X Cor 5 Thermostat Quick Start Guide",
@@ -29252,6 +38175,1865 @@ const THERMOSTATS = [
   "img": "tstat-img/tst-carrier-thermidistat-legacy.jpg"
  },
  {
+  "id": "tst-carrier-base-series-tb",
+  "brand": "Carrier",
+  "family": "Base Series TB-PAC / TB-PHP / TB-NAC / TB-NHP and Bryant T1",
+  "aka": "Carrier Base Series (builder / RNC); Bryant Legacy Line-RNC T1-PAC01-A, T1-PHP01-A",
+  "models": [
+   "TB-PAC01-A",
+   "TB-PHP01-A",
+   "TB-NAC01-A",
+   "TB-NHP01-A",
+   "TB-PAC",
+   "TB-PHP",
+   "T1-PAC01-A",
+   "T1-PHP01-A"
+  ],
+  "type": "programmable",
+  "stages": "Single-stage: AC model 1 heat / 1 cool; HP model 1-speed heat pump with 1 stage aux (or configured as AC); PTAC modes PH/PC",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline (programmable models)",
+   "notes": "Programmable TB-PAC/PHP and T1: run on 24VAC (R and C) or two AA batteries, or both (battery then only covers power loss). Jumper J2 must be AC for 24VAC or BAT for battery operation for the backlight. Non-programmable TB-NAC/NHP need no batteries."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "Not needed on programmable models when running on batteries"
+   },
+   {
+    "t": "W",
+    "fn": "Heat / aux heat",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (HP models)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Install batteries last so the thermostat latches properly on the base.",
+   "HP output table: stage 1 heat Y,G (+O/B if RVS = H); stage 2 heat adds W; Em heat = W only."
+  ],
+  "setup": {
+   "access": "Press and hold FAN about 10 seconds until only two pairs of digits show (programmable) or '01' shows (non-programmable). Up/Down change, H/C toggles between option and setting.",
+   "keySettings": [
+    {
+     "setting": "Option 01 Equipment type",
+     "options": "HP thermostat: HP, AC, PH, PC; AC thermostat: AC or PC",
+     "notes": "PH/PC = PTAC: display shows setpoint only, compressor timeguard disabled"
+    },
+    {
+     "setting": "Option 03",
+     "options": "F / C",
+     "notes": ""
+    },
+    {
+     "setting": "Option 04 Fan with W",
+     "options": "OF (default) / ON",
+     "notes": ""
+    },
+    {
+     "setting": "Option 10 Reversing valve",
+     "options": "C (default) / H",
+     "notes": ""
+    },
+    {
+     "setting": "Option 13 Room temp offset",
+     "options": "+/-5F",
+     "notes": ""
+    },
+    {
+     "setting": "Option 21 Keypad lockout",
+     "options": "OF / ON - unlock Up+Down 5 s",
+     "notes": ""
+    },
+    {
+     "setting": "Option 26 / 27",
+     "options": "Min cool 50-90F (52) / max heat 50-90F (88)",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Check operation: set HEAT 3F above room (or COOL 3F below) and press UP + FAN together to defeat timers; HP models: EMHT runs W only.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "E4 (flashing with temperature)",
+    "meaning": "Internal non-volatile memory failure - all outputs off",
+    "action": "Replace thermostat"
+   },
+   {
+    "code": "---- in temperature display",
+    "meaning": "Room temperature sensor failed - outputs off",
+    "action": "Replace thermostat"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display blank except empty battery icon",
+    "causes": [
+     "Batteries dead/absent on battery-only install"
+    ],
+    "fixes": [
+     "Replace AA batteries or connect C for 24VAC operation"
+    ]
+   }
+  ],
+  "tips": [
+   "5-minute compressor timeguard after power-up and after each compressor off; UP + FAN overrides it for one cycle.",
+   "Max 4 cycles per hour (15-minute timer per output)."
+  ],
+  "manuals": [
+   {
+    "title": "TB-PAC, TB-PHP Base Series Programmable Thermostats Installation Instructions and Owner's Manual (TB-PAC-09SI)",
+    "docType": "install",
+    "seedFile": "carrier-tb-pac-09si.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/00/TB-PAC-09SI.pdf"
+   },
+   {
+    "title": "TB-PAC01-A, TB-PHP01-A Base Series Programmable Thermostats Installation Instructions (TB-PACA-02SI)",
+    "docType": "install",
+    "seedFile": "carrier-tb-paca-02si.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0E/TB-PACA-02SI.pdf"
+   },
+   {
+    "title": "TB-NAC01-A, TB-NHP01-A Base Series Non-Programmable Thermostat Installation Instructions (TB-NACA-02SI)",
+    "docType": "install",
+    "seedFile": "carrier-base-tb-naca-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/01/TB-NACA-02SI.pdf"
+   },
+   {
+    "title": "Bryant T1-PAC01-A, T1-PHP01-A Legacy Line-RNC Programmable Thermostats Installation Instructions (IIT1-PACA-02)",
+    "docType": "install",
+    "seedFile": "bryant-legacy-rnc-t1-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/07/IIT1-PACA-02.pdf"
+   }
+  ],
+  "sourceNotes": "TB-PAC-09SI (05/12) and TB-PACA-02SI are existing library seeds; TB-NACA-02SI (04/17); IIT1-PACA-02 (04/17).",
+  "img": ""
+ },
+ {
+  "id": "tst-carrier-comfort-tc-a",
+  "brand": "Carrier",
+  "family": "Comfort Series TC-PAC / TC-PHP (-A) and Bryant Legacy T2",
+  "aka": "Carrier TC-PAC01-A, TC-NAC01-A, TC-PHP01-A, TC-NHP01-A; Bryant Legacy T2-PAC01-A, T2-NAC01-A, T2-PHP01-A, T2-NHP01-A",
+  "models": [
+   "TC-PAC01-A",
+   "TC-NAC01-A",
+   "TC-PHP01-A",
+   "TC-NHP01-A",
+   "T2-PAC01-A",
+   "T2-NAC01-A",
+   "T2-PHP01-A",
+   "T2-NHP01-A"
+  ],
+  "type": "programmable",
+  "stages": "AC models (xAC): 1 heat / 1 cool, will not run a heat pump. HP models (xHP): up to 2 cool / 3 heat (2-speed HP with aux), can be configured AC, A2, H2, H (heat only) or C (cool only)",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "If no C wire is connected, two AA batteries must be installed to power the thermostat. Continuous backlight needs 24VAC."
+  },
+  "terminals": [
+   {
+    "t": "Rc",
+    "fn": "24VAC from cooling equipment",
+    "notes": ""
+   },
+   {
+    "t": "Rh",
+    "fn": "24VAC from heating equipment",
+    "notes": "Factory jumper Rc-Rh; remove for separate transformers"
+   },
+   {
+    "t": "W",
+    "fn": "Heating",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "Cooling low stage",
+    "notes": ""
+   },
+   {
+    "t": "Y/Y2",
+    "fn": "Cooling high or single stage",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Max wire size 22 AWG with 0.8 mm insulation.",
+   "Programmable model needs all four mounting screws/anchors to avoid bending the wall plate.",
+   "Two transformers: remove the Rc-Rh jumper, indoor R to Rh, outdoor R to Rc, both commons to C."
+  ],
+  "setup": {
+   "access": "Press and hold FAN about 10 seconds until only two pairs of digits show (option number / setting). Up/Down change, the MODE key moves between number and setting.",
+   "keySettings": [
+    {
+     "setting": "Option 01 Equipment type",
+     "options": "HP thermostat: HP, H2, AC, A2, H, C. AC thermostat: AC, H, C",
+     "notes": ""
+    },
+    {
+     "setting": "Option 04 Fan (G) with W",
+     "options": "OF (default) / ON",
+     "notes": ""
+    },
+    {
+     "setting": "Option 07 Zoning",
+     "options": "OF / ON",
+     "notes": ""
+    },
+    {
+     "setting": "Option 10 Reversing valve",
+     "options": "C = energized in cool (default) / H = in heat",
+     "notes": ""
+    },
+    {
+     "setting": "Option 11 Deadband",
+     "options": "01-06 (default 02)",
+     "notes": ""
+    },
+    {
+     "setting": "Option 12 Smart Recovery (prog.)",
+     "options": "OF, 30, 60, 90 (default 90)",
+     "notes": ""
+    },
+    {
+     "setting": "Option 13 Room temp offset",
+     "options": "-5 to +5F",
+     "notes": ""
+    },
+    {
+     "setting": "Option 15 Auto changeover",
+     "options": "ON (default) / OF",
+     "notes": ""
+    },
+    {
+     "setting": "Option 16 Max cycles per hour",
+     "options": "2, 4 (default), 6",
+     "notes": ""
+    },
+    {
+     "setting": "Option 21 Keypad lockout",
+     "options": "OF (default) / ON - unlock Up+Down 5 s",
+     "notes": ""
+    },
+    {
+     "setting": "Option 24 / 25 (prog.)",
+     "options": "P / nP; 2 or 4 periods",
+     "notes": ""
+    },
+    {
+     "setting": "Option 26 / 27",
+     "options": "Min cool 52-90F (52) / Max heat 50-88F (88)",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Hold FAN about 15 seconds until 'In St' (programmable) or 'InS' (non-programmable) shows; MODE then selects off / cool / heat / Em Heat and energizes stages without delays. DONE or FAN exits; auto-exits after 15 minutes.",
+   "factoryReset": "Option 99 Reset to Factory Defaults - clears all configuration, program, clock and day."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "On power-up the display shows the configured equipment type (HP, H2, AC, A2, H or C) for 2 seconds - quick check of Option 01.",
+   "Minimum on timer 3 minutes; cycle timer 30/15/10 min for 2/4/6 CPH."
+  ],
+  "manuals": [
+   {
+    "title": "TC-PAC01-A, TC-NAC01-A, TC-PHP01-A, TC-NHP01-A Comfort Series AC/HP Thermostat Installation Instructions (TC-PACA-02SI)",
+    "docType": "install",
+    "seedFile": "carrier-comfort-tc-paca-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/07/TC-PACA-02SI.pdf"
+   },
+   {
+    "title": "Bryant T2-PAC01-A, T2-NAC01-A, T2-PHP01-A, T2-NHP01-A Legacy Series Thermostats Installation Instructions (IIT2-PACA-02)",
+    "docType": "install",
+    "seedFile": "bryant-legacy-t2-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0E/IIT2-PACA-02.pdf"
+   },
+   {
+    "title": "TC-PHP01-A, TC-PAC01-A Comfort Series Programmable Thermostat Owner's Manual",
+    "docType": "user",
+    "seedFile": "carrier-comfort-tc-p-series-om.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/02/OM-TCPHPA-02.pdf"
+   },
+   {
+    "title": "TC-NHP01-A, TC-NAC01-A Comfort Series Non-Programmable Thermostat Owner's Manual",
+    "docType": "user",
+    "seedFile": "carrier-comfort-tc-n-series-om.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0A/OM-TCNHPA-02.pdf"
+   }
+  ],
+  "sourceNotes": "TC-PACA-02SI Comfort Series Installation Instructions (04/17); IIT2-PACA-02 Bryant Legacy Series Installation Instructions (04/17). Owner's manuals are existing seeds already used on the Comfort Series Non-Programmable (-C) card.",
+  "img": ""
+ },
+ {
+  "id": "tst-carrier-cor-7",
+  "brand": "Carrier",
+  "family": "Cor 7 / Cor 7C (humidity)",
+  "aka": "TSTPRH01 (Cor 7, non-Wi-Fi) / TSTWRH01 (Cor 7C, Wi-Fi)",
+  "models": [
+   "TSTPRH01",
+   "TSTWRH01"
+  ],
+  "type": "programmable",
+  "stages": "Up to 2-stage heat pump or AC with furnace / fan coil; hybrid heat (dual fuel); 3 stages of heat on a 2-stage heat pump with aux; humidify / dehumidify control",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "24VAC only (Rh and/or Rc plus C). No batteries: settings are kept in memory and the clock runs at least 12 hours on power loss. No C wire: repurpose G as C (single-stage gas/oil/propane furnace or Carrier/Bryant fan coil only), use the Two-Wire Relay Module (Cor 7/7C), or run a new wire."
+  },
+  "terminals": [
+   {
+    "t": "Rc/V+",
+    "fn": "24VAC hot - cooling",
+    "notes": ""
+   },
+   {
+    "t": "Rh",
+    "fn": "24VAC hot - heating",
+    "notes": "Twist off the PCB breakout jumper to separate Rc and Rh for split power"
+   },
+   {
+    "t": "C/Vg",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "W/W1",
+    "fn": "Heat stage 1 / aux heat",
+    "notes": ""
+   },
+   {
+    "t": "Y1/W2",
+    "fn": "Compressor low stage (or heat stage on some configs)",
+    "notes": ""
+   },
+   {
+    "t": "Y/Y2",
+    "fn": "Compressor high or single stage",
+    "notes": ""
+   },
+   {
+    "t": "O/W2/B",
+    "fn": "Reversing valve (heat pump) or 2nd stage heat (AC/furnace)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "HUM",
+    "fn": "Humidifier solenoid / or Dehum output to furnace DEHUM (SW37)",
+    "notes": "Cor 7/7C"
+   }
+  ],
+  "wiringNotes": [
+   "Some heat pumps designate the aux heat terminal W1 instead of W2 - check the unit.",
+   "FV/FK fan coils: remove the J2 jumper for heat staging where the diagram shows it.",
+   "Repurposing G as C loses continuous fan and circulation; jumper Y (Y1) to G at the furnace board or fan coil so the blower runs in cooling.",
+   "Two-Wire Relay Module (Cor 7 series): only two wires at the wall; the module sits by the indoor unit and adds a dry contact (SW19) and remote room sensor support (SW05)."
+  ],
+  "setup": {
+   "access": "Dealer Options menu: on Cor 7/7C press START if MENU is not shown, then touch and hold MENU about 5 seconds until SW01 blinks. Standard menus: touch MENU (Schedule, Alerts, Settings, Wi-Fi).",
+   "keySettings": [
+    {
+     "setting": "SW01 Equipment Type",
+     "options": "HP2 (default), HP1, AC2, AC1, HH1, HH2, HT, CL",
+     "notes": ""
+    },
+    {
+     "setting": "SW04 Fan (G) on with W/W1",
+     "options": "OFF / ON",
+     "notes": "Most furnaces/fan coils run their own blower - use OFF"
+    },
+    {
+     "setting": "SW06 Cooling lockout below 55F",
+     "options": "Needs outdoor sensor or Wi-Fi weather",
+     "notes": ""
+    },
+    {
+     "setting": "SW07 Zoning",
+     "options": "OFF / ON",
+     "notes": ""
+    },
+    {
+     "setting": "SW08 Aux heat lockout",
+     "options": "Off, 5-55F",
+     "notes": ""
+    },
+    {
+     "setting": "SW09 Heat pump lockout balance point (hybrid heat)",
+     "options": "Needs outdoor sensor or Wi-Fi weather",
+     "notes": ""
+    },
+    {
+     "setting": "SW10 Reversing valve",
+     "options": "O (energized in cool) / B (energized in heat)",
+     "notes": ""
+    },
+    {
+     "setting": "SW11 Deadband",
+     "options": "1-6 (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "SW16 Max cycles per hour",
+     "options": "2, 4, 6",
+     "notes": ""
+    },
+    {
+     "setting": "SW17 Min time between stages (HP)",
+     "options": "10, 15, 20, 25 min",
+     "notes": ""
+    },
+    {
+     "setting": "SW24 / SW25",
+     "options": "Programmable P / nP; 2 or 4 periods",
+     "notes": ""
+    },
+    {
+     "setting": "SW32 Furnace heat staging",
+     "options": "FURN (furnace stages itself) / TSTAT",
+     "notes": ""
+    },
+    {
+     "setting": "SW34 Hybrid heat furnace latch",
+     "options": "On (default) / Off",
+     "notes": ""
+    },
+    {
+     "setting": "SW37 Hum/Dehum terminal",
+     "options": "Hum (default) / Dehum",
+     "notes": ""
+    },
+    {
+     "setting": "SW41 Variable speed blower",
+     "options": "Off / On",
+     "notes": ""
+    },
+    {
+     "setting": "SW99 Reset to factory defaults",
+     "options": "Clears all configuration, program, clock",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Press and hold the FAN button 10 seconds for Output Test mode. Heat/Cool button picks the mode: Aux Heat, Heat and Cool each run stage 1 for 3 minutes then stage 1+2 for 3 more minutes (STG 1 / STG 2 countdown). Fan button toggles G.",
+   "factoryReset": "Dealer menu SW99 resets everything to out-of-box (reconfigure equipment afterward). User preferences only: Menu > Settings > RST DEFAULT (hold 10 seconds)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Ten-minute staging timer holds higher stages; it is overridden (60-second staging) when the temperature error exceeds 5 degrees.",
+   "Hybrid heat defrost: furnace runs during defrost, then fan-only 2 minutes; with SW34 On the furnace finishes the cycle."
+  ],
+  "manuals": [
+   {
+    "title": "TSTPHA01 Cor 5, TSTWHA01 Cor 5C, TSTPRH01 Cor 7, TSTWRH01 Cor 7C Advanced Installation and Configuration Instructions (IM-TST-03)",
+    "docType": "install",
+    "seedFile": "carrier-cor5-cor7-advanced-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0A/IM-TST-03.pdf"
+   },
+   {
+    "title": "TSTPHA01 Cor 5, TSTWHA01 Cor 5C, TSTPRH01 Cor 7, TSTWRH01 Cor 7C Installation Instructions (TST-03QS)",
+    "docType": "install",
+    "seedFile": "carrier-cor5-cor7-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/04/TST-03QS.pdf"
+   },
+   {
+    "title": "TSTPRH01 Cor 7 / TSTWRH01 Cor 7C Owner's Manual (OG-TSTPRH-WRH-03)",
+    "docType": "user",
+    "seedFile": "carrier-cor7-owners-manual.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/00/OG-TSTPRH-WRH-03.pdf"
+   }
+  ],
+  "sourceNotes": "TST-03QS Installation Instructions (09/18); IM-TST-03 Advanced Installation and Configuration Instructions, edition 01/19 (replaces IM-TST-02); OG-TSTPRH-WRH-03 Owner's Manual, edition 10/18.",
+  "img": ""
+ },
+ {
+  "id": "tst-carrier-cor-wifi-tp-wem01",
+  "brand": "Carrier",
+  "family": "Cor Wi-Fi Thermostat (TP-WEM01)",
+  "aka": "Carrier Cor (original, Performance Series AC/HP Wi-Fi)",
+  "models": [
+   "TP-WEM01-A",
+   "TP-WEM01"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool; heat pump 1 or 2 stage + 1 or 2 stage aux; dual fuel; geothermal; one accessory (humidifier, dehumidifier or ventilator)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Needs 24VAC with C. No C wire: repurpose G as C (single-stage equipment only - loses continuous fan), use the Power Extender Kit TS-2PE01, or run another wire. No physical Rc-Rh jumper: guided setup asks for 1 or 2 transformers."
+  },
+  "terminals": [
+   {
+    "t": "Rc",
+    "fn": "24VAC cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "Rh",
+    "fn": "24VAC heating transformer",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "Y/Y1",
+    "fn": "Compressor stage 1",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor stage 2",
+    "notes": ""
+   },
+   {
+    "t": "W/W1 (AUX1)",
+    "fn": "Heat stage 1 / aux 1",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2 / aux 2",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "ACC+ / ACC-",
+    "fn": "Accessory relay (humidifier, dehumidifier, ventilator)",
+    "notes": "Powered from Rh/Rc (answer Yes in setup, internal relay closes) or self-powered (No)"
+   }
+  ],
+  "wiringNotes": [
+   "Discard old jumpers between Rh/Rc/R - the thermostat links Rc and Rh in software.",
+   "Label wires, one wire per push-in connector; the release lever drops when the wire is seated.",
+   "FV fan coils: remove J1 on the fan coil board; remove J2 for two-stage heating (W1, W2).",
+   "If the old stat is 110/120V or uses wire nuts it is line-voltage and not compatible."
+  ],
+  "setup": {
+   "access": "Service menus: Menu, then touch and hold the Service icon about 10 seconds until Installation Settings shows. Equipment Setup, Thresholds, View Wiring, Reconfigure Equipment and Test Equipment are under Installation Settings. Guided setup runs on first power-up.",
+   "keySettings": [
+    {
+     "setting": "Transformers",
+     "options": "One / Two (guided setup)",
+     "notes": ""
+    },
+    {
+     "setting": "Heat pump reversing valve",
+     "options": "Energized on Cool (O) / Energized on Heat (B)",
+     "notes": ""
+    },
+    {
+     "setting": "Heat pump lockout temperature",
+     "options": "Forces aux heat below setpoint (hybrid heat)",
+     "notes": ""
+    },
+    {
+     "setting": "Cooling lockout",
+     "options": "Blocks cooling below 55F (default on for heat pump)",
+     "notes": ""
+    },
+    {
+     "setting": "Aux heat during defrost",
+     "options": "Enable/disable",
+     "notes": ""
+    },
+    {
+     "setting": "Accessory type / power source",
+     "options": "Humidifier, dehumidifier (active open/closed), ventilator",
+     "notes": ""
+    },
+    {
+     "setting": "Thresholds",
+     "options": "Auto changeover, cooling/heating differentials, fan optimization",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Menu > (hold) Service > Installation Settings > Test Equipment > Next - turns each relay on/off. Compressor protection and minimum run times are NOT enforced; equipment turns off when you exit.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Thermostat does not power on",
+    "causes": [
+     "Loose wire in the push-in blocks",
+     "Equipment power left off",
+     "No 24VAC between Rc-C or Rh-C"
+    ],
+    "fixes": [
+     "Kill power, reseat and tug-test wires",
+     "Restore power at switch/breaker",
+     "Meter 24VAC Rc-C / Rh-C"
+    ]
+   }
+  ],
+  "tips": [
+   "When G is repurposed as C, setup warns G is missing - touch Override then Yes to disable auto detection."
+  ],
+  "manuals": [
+   {
+    "title": "TP-WEM01-A Carrier Cor Thermostat Installation Guide (TP-WEM-05SI)",
+    "docType": "install",
+    "seedFile": "carrier-cor-tpwem01-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/03/TP-WEM-05SI.pdf"
+   },
+   {
+    "title": "TP-WEM01 Carrier Cor Thermostat Advanced Installation and Configuration Instructions (TP-WEM01-01SUP)",
+    "docType": "install",
+    "seedFile": "carrier-cor-tpwem01-advanced-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/06/TP-WEM01-01SUP.pdf"
+   },
+   {
+    "title": "TP-WEM01-A Carrier Cor Thermostat Owner's Manual (OM-TPWEM-02)",
+    "docType": "user",
+    "seedFile": "carrier-cor-tpwem01-owners-manual.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0E/OM-TPWEM-02.pdf"
+   }
+  ],
+  "sourceNotes": "TP-WEM-05SI Installation Guide, edition 07/16 (replaces 04SI); TP-WEM01-01SUP Advanced Installation and Configuration, edition 04/16; OM-TPWEM-02 Owner's Manual, edition 12/17.",
+  "img": ""
+ },
+ {
+  "id": "tst-carrier-infinity-control-uid",
+  "brand": "Carrier",
+  "family": "Infinity Control (SYSTXCCUID01) / Bryant Evolution Control",
+  "aka": "Original Infinity / Evolution user interface (UID, 2004-2013) - Bryant SYSTXBBUID01",
+  "models": [
+   "SYSTXCCUID01-V",
+   "SYSTXCCUID01-B",
+   "SYSTXCCUID01-A",
+   "SYSTXBBUID01-D",
+   "SYSTXBBUID01"
+  ],
+  "type": "communicating",
+  "stages": "Communicating ABCD system: Infinity/Evolution variable-speed furnace or FE fan coil with 2-stage communicating AC/HP, or a 1-stage non-communicating AC/HP through the indoor unit; hybrid heat; zoning with the Damper Control Module",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Powered from the indoor unit over the ABCD bus: C = 24VAC common, D = 24VAC hot."
+  },
+  "terminals": [
+   {
+    "t": "A",
+    "fn": "Data A (green)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "Data B (yellow)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (white)",
+    "notes": ""
+   },
+   {
+    "t": "D",
+    "fn": "24VAC hot (red)",
+    "notes": ""
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Optional remote room sensor",
+    "notes": ""
+   },
+   {
+    "t": "HUM",
+    "fn": "Humidifier connection (on the indoor unit)",
+    "notes": ""
+   },
+   {
+    "t": "OAT",
+    "fn": "Outdoor air temperature sensor (on the indoor unit)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Every ABCD connector must be wired the same way (green-yellow-white-red recommended).",
+   "Ordinary thermostat wire, 22 AWG or larger; runs over 100 ft use 20 AWG or larger. Shielded cable near high voltage / CATV / Ethernet - shield to C or ground at the indoor unit only.",
+   "A non-communicating 1-stage AC is wired from the indoor unit's COM, 24V and Y/Y2 outputs (Fig. 12); the control itself still uses only ABCD.",
+   "Remote room sensor replaces the internal sensor; averaging needs the series-parallel wiring with a specific sensor count.",
+   "G input on the furnace/fan coil can be set up for fan or system shutdown (NC default) - SYSTEM MALFUNCTION shows when it trips."
+  ],
+  "setup": {
+   "access": "Press and hold the ADVANCED button at least 10 seconds for the INSTALL / SERVICE menus: Equipment Summary, Install, Setup, Checkout, Service. Menus exit after 60 minutes idle.",
+   "keySettings": [
+    {
+     "setting": "Auto Mode",
+     "options": "Enable (default); changeover time 5-120 min (default 30)",
+     "notes": ""
+    },
+    {
+     "setting": "Heat/Cool deadband",
+     "options": "0-6F",
+     "notes": ""
+    },
+    {
+     "setting": "Offsets",
+     "options": "Temp -5 to +5F, outside temp -5 to +5F, humidity",
+     "notes": ""
+    },
+    {
+     "setting": "Cycles per hour",
+     "options": "4 (default) or 6",
+     "notes": ""
+    },
+    {
+     "setting": "Programming",
+     "options": "On/Off; 2 or 4 periods; programmable fan",
+     "notes": ""
+    },
+    {
+     "setting": "Smart Recovery",
+     "options": "On (default) - starts 90 min early",
+     "notes": ""
+    },
+    {
+     "setting": "Furnace / cooling / HP airflow",
+     "options": "Comfort (default) / Efficiency",
+     "notes": ""
+    },
+    {
+     "setting": "Heat pump lockout (Hybrid Heat setup)",
+     "options": "Balance point below which the HP will not run",
+     "notes": ""
+    },
+    {
+     "setting": "Elect heat lockout",
+     "options": "None, +5 to 55F",
+     "notes": ""
+    },
+    {
+     "setting": "Reset Factory Defaults",
+     "options": "Program schedule, user settings, install settings, last 10 events",
+     "notes": ""
+    }
+   ],
+   "installerTest": "INSTALL/SERVICE > CHECKOUT: furnace/gas PAC, electric heat, heat pump heating (low/high, defrost), HP or AC cooling (low/high), humidifier, ventilator, SAM. Default 5 minutes, range 5-120 min; airflow fixed at Efficiency during checkout.",
+   "factoryReset": "INSTALL/SERVICE > SETUP > Thermostat > Reset Factory Defaults (choose program schedule, user settings, install settings, last 10 events). To re-run commissioning: ADVANCED 10 s > INSTALL."
+  },
+  "diagnostics": [
+   {
+    "code": "SYSTEM MALFUNCTION",
+    "meaning": "A critical fault in the indoor or outdoor unit",
+    "action": "INSTALL/SERVICE > SERVICE > Last 10 System Events (set TODAY'S DATE first)"
+   },
+   {
+    "code": "Fan coil 37 / 41 / 44 / 45",
+    "meaning": "Heater on when not energized / blower motor fault / motor communication fault / control failure"
+   },
+   {
+    "code": "Furnace 13 / 14 / 15 / 21 / 22 / 23 / 24 / 33 / 41 / 45",
+    "meaning": "Limit lockout / ignition lockout / blower motor lockout / gas heating lockout / abnormal flame proving / pressure switch did not open / secondary fuse open / limit fault high heat only / blower motor fault / control circuitry lockout",
+    "action": "For 13, 14 and 21 the system uses heat pump heat only, if available"
+   },
+   {
+    "code": "Outdoor 25, 45, 47, 48, 69, 73, 74, 76, 78, 81-88, 96, 97, 99",
+    "meaning": "Invalid model plug, control failure, no 230V, inverter comm/internal fault, contactor/start/thermal/pressure lockouts, VDC under/over voltage, high torque lockout (flash code on the outdoor board)"
+   },
+   {
+    "code": "NO SENSOR DATA",
+    "meaning": "Temp sensor failed or lost smart sensor communication"
+   },
+   {
+    "code": "High / Low room temp alert",
+    "meaning": "100F for 10 min (clears at 98F) / 38F for 10 min (clears at 40F)"
+   },
+   {
+    "code": "High humidity alert",
+    "meaning": "80% RH for 30 minutes (clears at 78%)"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Control does not power up",
+    "causes": [
+     "ABCD miswired",
+     "No power at indoor unit",
+     "Blown indoor board fuse"
+    ],
+    "fixes": [
+     "Recheck ABCD on all devices - colors must match",
+     "Amber LED on indoor board lit?",
+     "Check 24VAC C-D at the control and damper module",
+     "Check the indoor board fuse"
+    ]
+   },
+   {
+    "symptom": "Indoor Unit Not Found",
+    "causes": [
+     "Wiring / communication issue on ABCD"
+    ],
+    "fixes": [
+     "Recheck ABCD",
+     "Disconnect accessories, connect the UI straight to the indoor unit with a short wire, add devices back one at a time"
+    ]
+   },
+   {
+    "symptom": "Outdoor Unit Not Found (2-stage communicating)",
+    "causes": [
+     "ABCD at outdoor unit",
+     "No 24VAC C-D at outdoor unit"
+    ],
+    "fixes": [
+     "Recheck ABCD at the outdoor unit",
+     "Check 24VAC between C and D"
+    ]
+   }
+  ],
+  "tips": [
+   "A -V model UI (software 21) can be clipped onto the ABCD anywhere as a Service Tool; the wall control shows IN SERVICE MODE and takes back over 2 minutes after removal.",
+   "Static pressure is checked only at initial install or when INSTALL is re-run."
+  ],
+  "manuals": [
+   {
+    "title": "SYSTXCCUID01-V Infinity Control Installation Instructions (UID01-06SI)",
+    "docType": "install",
+    "seedFile": "carrier-uid01-06si.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0C/UID01-06SI.pdf"
+   },
+   {
+    "title": "Infinity Control Homeowner's Guide (OMUID-3CA)",
+    "docType": "user",
+    "seedFile": "carrier-omuid-3ca.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/00/OMUID-3CA.pdf"
+   },
+   {
+    "title": "SYSTXBBUID01-D Evolution Control Installation Instructions (IIUID01-08)",
+    "docType": "install",
+    "seedFile": "bryant-evolution-control-uid01-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/06/IIUID01-08.pdf"
+   },
+   {
+    "title": "SYSTXBBUID01-D Evolution Control Product Data (PDSUID01-08)",
+    "docType": "spec",
+    "seedFile": "bryant-evolution-control-uid01-productdata.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/05/PDSUID01-08.pdf"
+   }
+  ],
+  "sourceNotes": "UID01-06SI (edition 11/11, replaces UID01-5SI) - already in the manual library as carrier-uid01-06si.pdf; IIUID01-08 Bryant Evolution Control Installation Instructions (05/12); PDSUID01-08 Product Data (05/12). Model -A/-B names from existing seed titles UID01-2PD / UID01-4SI / UID01-5SI.",
+  "img": ""
+ },
+ {
+  "id": "tst-carrier-infinity-touch-a",
+  "brand": "Carrier",
+  "family": "Infinity Touch Control (-A) / Bryant Evolution Connex (-A)",
+  "aka": "SYSTXCCITW01-A (with Wireless Access Point) / ITN01-A / ITC01-A; Bryant SYSTXBBECW01-A / ECN01-A / ECC01-A",
+  "models": [
+   "SYSTXCCITW01-A",
+   "SYSTXCCITN01-A",
+   "SYSTXCCITC01-A",
+   "SYSTXBBECW01-A",
+   "SYSTXBBECN01-A",
+   "SYSTXBBECC01-A"
+  ],
+  "type": "communicating",
+  "stages": "Communicating ABCD Infinity/Evolution systems: variable-speed furnace or FE fan coil, 2-stage AC/HP, geothermal, small packaged products; zoning with the Damper Control Module (SYSTXCC4ZC01)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Powered on the ABCD bus (C = 24VAC common, D = 24VAC hot). Some multi-stage outdoor units have their own low-voltage supply and only use A and B."
+  },
+  "terminals": [
+   {
+    "t": "A",
+    "fn": "Data A (green)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "Data B (yellow)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (white)",
+    "notes": ""
+   },
+   {
+    "t": "D",
+    "fn": "24VAC hot (red)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Wire every ABCD connector consistently.",
+   "SYSTXCCSAM01 System Access Module is NOT compatible; use SYSTXCCRCT01 or SYSTXCCRWF01.",
+   "SYSTXCCITW01 ships with an Infinity Wireless Access Point (TP-LINK): its blue WAN port goes to the home router LAN port; or join the home Wi-Fi directly."
+  ],
+  "setup": {
+   "access": "Touch MENU, then touch and hold the SERVICE icon at least 10 seconds for the Service menus (Equipment Summary, Installation, Setup, Checkout, Service Information).",
+   "keySettings": [
+    {
+     "setting": "Auto mode",
+     "options": "Enable (default); simultaneous heat/cool Off (default); changeover time 5-120 min (30)",
+     "notes": ""
+    },
+    {
+     "setting": "Heat/cool deadband",
+     "options": "0-6 (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "Offsets",
+     "options": "Outdoor temp -5 to 5F, humidity -10 to 10%",
+     "notes": ""
+    },
+    {
+     "setting": "Reset factory defaults",
+     "options": "Program schedule, user settings, install settings, last 10 faults",
+     "notes": ""
+    },
+    {
+     "setting": "Scheduling",
+     "options": "On/Off",
+     "notes": ""
+    },
+    {
+     "setting": "Heat source lockouts",
+     "options": "AC/heat pump and hydronic lockout temperatures",
+     "notes": ""
+    },
+    {
+     "setting": "Disable zoning",
+     "options": "Yes/No",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Service > Checkout: runs each piece of equipment; zoning checks include Airflow Limits, Damper/Sensor Check and Duct Assessment.",
+   "factoryReset": "Service > Setup > Thermostat > Reset Factory Defaults."
+  },
+  "diagnostics": [
+   {
+    "code": "Indoor unit not found",
+    "meaning": "Communication with indoor equipment failed at start-up",
+    "action": "Must be corrected before commissioning continues - check ABCD"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "Service Information > View Diagnostics shows the top 3 likely root causes for the most recent fault (compatible equipment only).",
+   "Software 14 or later is described; HVACPartners / MyInfinityTouch had the latest releases."
+  ],
+  "manuals": [
+   {
+    "title": "SYSTXCCITW01-A, SYSTXCCITN01-A & SYSTXCCITC01-A Infinity Touch Control Installation Instructions (SYSTXCCITW-11SI)",
+    "docType": "install",
+    "seedFile": "carrier-infinity-touch-a-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/0F/SYSTXCCITW-11SI.pdf"
+   },
+   {
+    "title": "SYSTXCCITW01-A, SYSTXCCITN01-A & SYSTXCCITC01-A Infinity Touch Control Owner's Manual (OMSYSTXCCITW-08)",
+    "docType": "user",
+    "seedFile": "carrier-infinity-touch-a-owners-manual.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/05/OMSYSTXCCITW-08.pdf"
+   },
+   {
+    "title": "SYSTXBBECW01-A, SYSTXBBECN01-A & SYSTXBBECC01-A Evolution Connex Control Installation Instructions (II-SYSTXBBEC-08)",
+    "docType": "install",
+    "seedFile": "bryant-evolution-connex-a-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/03/II-SYSTXBBEC-08.pdf"
+   }
+  ],
+  "sourceNotes": "SYSTXCCITW-11SI Infinity Touch Control Installation Instructions, edition 10/16 (replaces 10SI), reflects Version 14 software; OMSYSTXCCITW-08 Owner's Manual (06/15); II-SYSTXBBEC-08 Evolution Connex Control Installation Instructions. The existing -B/-C Infinity System Control card covers the later generation.",
+  "img": ""
+ },
+ {
+  "id": "tst-icp-ion-gray-smart",
+  "brand": "ICP (Heil / Tempstar / Comfortmaker)",
+  "family": "Ion Gray Smart Thermostat (TSTATIIEWF)",
+  "aka": "ICP / Heil / Tempstar / Comfortmaker smart Wi-Fi thermostat (Ion SmartHome app)",
+  "models": [
+   "TSTATIIEWF-01"
+  ],
+  "type": "smart-wifi",
+  "stages": "Standard up to 2 heat / 2 cool; heat pump 1 or 2 stage with up to 2 aux; dual fuel; one accessory dry contact (humidifier, dehumidifier or ventilator)",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "24VAC only - needs Rh and/or Rc plus C; will not run without them. Rh and Rc are joined by a shunt jumper; remove it for two transformers."
+  },
+  "terminals": [
+   {
+    "t": "Rc",
+    "fn": "24VAC cooling",
+    "notes": ""
+   },
+   {
+    "t": "Rh",
+    "fn": "24VAC heating",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "W1/A1",
+    "fn": "Heat stage 1 / aux 1",
+    "notes": ""
+   },
+   {
+    "t": "W2/O",
+    "fn": "Heat stage 2 / reversing valve",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor stage 1",
+    "notes": ""
+   },
+   {
+    "t": "Y2/A2",
+    "fn": "Compressor stage 2 / aux 2",
+    "notes": ""
+   },
+   {
+    "t": "ACC / ACC",
+    "fn": "Dry contact for humidifier, dehumidifier or ventilation (ERV/HRV)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Thermostat holds to the wall plate with 4 magnets and pogo pins - contains strong magnets (pacemaker warning).",
+   "Takes about 7 seconds to light after power-up.",
+   "No C wire: see the C-Wire Diagrams page of the installation instructions."
+  ],
+  "setup": {
+   "access": "Contractor setup with the Fast OEM Mobile Tech app (Connect to Equipment > Smart Thermostat), or manual setup on the stat at first power-up: Mode = back, Fan = select, Up/Down = change. F/C first, then system type L1 Standard, L2 Heat Pump, L3 Dual Fuel and sub-type.",
+   "keySettings": [
+    {
+     "setting": "L1 Standard",
+     "options": "01, 02, 10, 20, 11, 21, 12, 22 (heat/cool stages); F0 thermostat runs fan, F1 furnace runs fan",
+     "notes": ""
+    },
+    {
+     "setting": "L2 Heat Pump",
+     "options": "10, 11, 12, 20, 21 (stages / aux); reversing valve 01 = cool, 02 = heat",
+     "notes": ""
+    },
+    {
+     "setting": "L3 Dual Fuel",
+     "options": "Heat pump stages + furnace stages; reversing valve 01/02",
+     "notes": ""
+    },
+    {
+     "setting": "Cycle rate (app)",
+     "options": "Heat and cool set separately; e.g. AC/HP default 3 CPH (MRT 15, MOT 5)",
+     "notes": ""
+    },
+    {
+     "setting": "Heat/cool setpoint gap",
+     "options": "3F minimum, 15F maximum",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Hold MODE 10 seconds (only after the HVAC type is configured) - display shows S0. Up/Down to H1/H2, A1/A2, C1/C2, F1; Fan to start. Each test overrides the setpoint for 20 minutes; S0 stops.",
+   "factoryReset": "Press Fan + Mode together 10 seconds for the reset menu: nr = network reset (Wi-Fi/BLE/Matter only, press Fan once); Fr = factory reset (everything incl. HVAC type, press Fan twice)."
+  },
+  "diagnostics": [
+   {
+    "code": "Sr",
+    "meaning": "Remote maintenance in progress through the dealer portal or Fast OEM app"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display does not light up",
+    "causes": [
+     "No 24VAC"
+    ],
+    "fixes": [
+     "Check Rc/Rh and C for 24VAC"
+    ]
+   }
+  ],
+  "tips": [
+   "No schedule is stored in the stat - it needs internet to re-establish the schedule after power loss.",
+   "Five-minute compressor timeguard always applies."
+  ],
+  "manuals": [
+   {
+    "title": "TSTATIIEWF-01 Ion Gray Smart Thermostat Installation Instructions (TSTATIIEWF-02SI, 04/26)",
+    "docType": "install",
+    "seedFile": "icp-ion-gray-smart-tstatiiewf-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1009/Public/04/TSTATIIEWF-02SI.pdf"
+   }
+  ],
+  "sourceNotes": "TSTATIIEWF-02SI Installation Instructions, edition 04/26 (previous edition TSTATIIEWF-01SI 7/2024). Same platform as the Carrier Smart Thermostat TSTATCCEWF-01.",
+  "img": ""
+ },
+ {
+  "id": "tst-icp-ion-system-control",
+  "brand": "ICP (Heil / Tempstar / Comfortmaker)",
+  "family": "Ion System Control (SYST0101CW)",
+  "aka": "Heil / Tempstar / Comfortmaker / Arcoaire / KeepRite / Day & Night Ion communicating wall control",
+  "models": [
+   "SYST0101CW"
+  ],
+  "type": "communicating",
+  "stages": "Ion communicating 4-wire systems: variable-speed furnace or fan coil with communicating AC/HP; conventional multi-stage outdoor units may need the Ion Communicating Relay Module SYST0101RM; zoning with the damper control module",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Powered on the 4-wire communication bus: C = 24VAC common, R = 24VAC hot. Some multi-stage outdoor units have their own supply and use only DX+/DX-."
+  },
+  "terminals": [
+   {
+    "t": "DX+",
+    "fn": "Data A (green)",
+    "notes": ""
+   },
+   {
+    "t": "DX-",
+    "fn": "Data B (yellow)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (white)",
+    "notes": ""
+   },
+   {
+    "t": "R",
+    "fn": "24VAC hot (red)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Every communicating connector must be wired consistently (color code recommended, not mandatory).",
+   "Multi-stage conventional outdoor units or heat pumps may need the Ion Communicating Relay Module (SYST0101RM) for extra outputs."
+  ],
+  "setup": {
+   "access": "Touch MENU, then touch and hold the SERVICE icon at least 10 seconds until it turns green. Service screens always use degrees F.",
+   "keySettings": [
+    {
+     "setting": "Service menus",
+     "options": "Equipment Summary, Installation (re-install / re-learn), Setup, Checkout, Service Information",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Service menus > Checkout.",
+   "factoryReset": "Setup > Reset Factory Defaults (program schedule, user settings, install settings, fault history)."
+  },
+  "diagnostics": [
+   {
+    "code": "Indoor unit not found",
+    "meaning": "Communicating furnace/fan coil not found at power-up",
+    "action": "Must be fixed before commissioning continues; otherwise the control runs in DEMO mode - fix the bus, then re-install from the Installer menu"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "Service Information > View Diagnostics shows the top 3 likely root causes for the most recent fault (compatible models).",
+   "Last 10 System Events, Run/Fault History and Model/Serial Numbers are in Service Information."
+  ],
+  "manuals": [
+   {
+    "title": "SYST0101CW Ion System Control Installation Manual (616 01 1600 00, 02/18)",
+    "docType": "install",
+    "seedFile": "icp-ion-system-control-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/0D/61601160000.pdf"
+   }
+  ],
+  "sourceNotes": "616 01 1600 00 SYST0101CW Ion System Control Installation Manual (02/18), reflects Version 1 software - already in the manual library as icp-ion-system-control-install.pdf (byte-identical to the shareddocs copy).",
+  "img": ""
+ },
+ {
+  "id": "tst-icp-observer",
+  "brand": "ICP (Heil / Tempstar / Comfortmaker)",
+  "family": "Observer Communicating Wall Control (TSTAT0101SC / TSTAT0201CW Wi-Fi)",
+  "aka": "ICP Observer - Heil / Tempstar / Comfortmaker / Arcoaire / KeepRite",
+  "models": [
+   "TSTAT0101SC",
+   "TSTAT0201CW"
+  ],
+  "type": "communicating",
+  "stages": "Observer communicating system: variable-speed furnace or fan coil with 2-stage AC/HP over a 4-wire bus; conventional 24V equipment via the NAXA00101DB daughter board (then it works as a universal thermostat)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Powered on the 4-wire bus (C = 24VAC common, R = 24VAC hot)."
+  },
+  "terminals": [
+   {
+    "t": "DX+",
+    "fn": "Data A (green)",
+    "notes": ""
+   },
+   {
+    "t": "DX-",
+    "fn": "Data B (yellow)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (white)",
+    "notes": ""
+   },
+   {
+    "t": "R",
+    "fn": "24VAC hot (red)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Terminal order may differ between components - wire by label, consistently at every device. Use the separate 4-pin connector supplied for the furnace/fan coil board.",
+   "22 AWG or larger; runs over 100 ft use 20 AWG. Shield (if used) to C or ground at the indoor unit.",
+   "Dual fuel with a non-communicating heat pump: an OAT sensor must be installed or the heat pump will not run.",
+   "Bypass humidifier wires to the furnace/fan coil HUM and 24VAC COM; fan-powered humidifiers need a 24VAC N.O. isolation relay (DPST). Do not use a separate humidistat.",
+   "Remote room sensor(s) replace or average with the internal sensor."
+  ],
+  "setup": {
+   "access": "Press and hold the FAN button at least 10 seconds for the INSTALLER CONFIGURATION menus (exit after 90 seconds idle).",
+   "keySettings": [
+    {
+     "setting": "Filter reminder",
+     "options": "Off, 800-7200 fan hours (default 3200)",
+     "notes": ""
+    },
+    {
+     "setting": "Auto Mode",
+     "options": "On (default) / Off; auto changeover timer 5-30 min (30)",
+     "notes": ""
+    },
+    {
+     "setting": "Room temperature sensing",
+     "options": "Local (default), Remote, Average",
+     "notes": ""
+    },
+    {
+     "setting": "Reversing valve",
+     "options": "Heat / Cool (default)",
+     "notes": ""
+    },
+    {
+     "setting": "Fan on with W",
+     "options": "On / Off (default)",
+     "notes": ""
+    },
+    {
+     "setting": "Cooling lockout below 55F",
+     "options": "Off (default) / On",
+     "notes": ""
+    },
+    {
+     "setting": "Auxiliary heat lockout",
+     "options": "Off, 5-55F",
+     "notes": ""
+    },
+    {
+     "setting": "Heat pump lockout",
+     "options": "Off, 5-55F",
+     "notes": ""
+    },
+    {
+     "setting": "Min cool / max heat setpoint",
+     "options": "52-90F (52) / 50-88F (88)",
+     "notes": ""
+    },
+    {
+     "setting": "Offsets",
+     "options": "Outdoor and room air -5 to +5F; humidity -10 to +10%",
+     "notes": ""
+    },
+    {
+     "setting": "Smart recovery",
+     "options": "Off, 30, 60, 90 (default 90)",
+     "notes": ""
+    },
+    {
+     "setting": "Deadband",
+     "options": "2-6 (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "Cycles per hour",
+     "options": "2, 4 (default), 6",
+     "notes": ""
+    },
+    {
+     "setting": "Time between fuel types",
+     "options": "10-25 min (15)",
+     "notes": ""
+    },
+    {
+     "setting": "Programming",
+     "options": "On / Off",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": "Installer menu > Reset to Factory Defaults - hold the button 10 seconds. This also clears the event history."
+  },
+  "diagnostics": [
+   {
+    "code": "Last 10 System Faults tags",
+    "meaning": "HP = heat pump, AC = air conditioner, FN = furnace, FC = fan coil",
+    "action": "Enter the DATE menu before reading the history"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Control shows THERMOSTAT DEMO MODE / retry",
+    "causes": [
+     "No communicating indoor unit found"
+    ],
+    "fixes": [
+     "Check the 4-wire bus and retry the search; demo mode only runs when no communicating equipment is found"
+    ]
+   }
+  ],
+  "tips": [
+   "TSTAT0201CW adds Wi-Fi remote access (MyObserverComfort)."
+  ],
+  "manuals": [
+   {
+    "title": "Communicating Wall Control Installation Manual TSTAT0101SC (Observer) (616 01 1018 00, 03/06/14)",
+    "docType": "install",
+    "seedFile": "icp-observer-wall-control-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/0B/ICP_61601101800_28517.pdf"
+   },
+   {
+    "title": "Communicating Wall Control With Wi-Fi Capability Installation Manual TSTAT0201CW (616 01 1019 01, 6/17/15)",
+    "docType": "install",
+    "seedFile": "icp-observer-wifi-tstat0201cw-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/0C/61601101901.pdf"
+   },
+   {
+    "title": "Communicating Wall Control With Wi-Fi Capability Owner's Manual TSTAT0201CW (616 02 1019 01, 6/16/15)",
+    "docType": "user",
+    "seedFile": "icp-observer-wifi-tstat0201cw-owners.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/00/61602101901.pdf"
+   },
+   {
+    "title": "TSTAT0201CW Product Specifications (616 31 1003 01, 7/8/2015)",
+    "docType": "spec",
+    "seedFile": "icp-observer-wifi-tstat0201cw-spec.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/0A/61631100301.pdf"
+   }
+  ],
+  "sourceNotes": "616 01 1018 00 TSTAT0101SC installation (existing seed, byte-identical to the shareddocs copy); 616 01 1019 01 TSTAT0201CW installation; 616 02 1019 01 owner's manual; 616 31 1003 01 product specifications.",
+  "img": ""
+ },
+ {
+  "id": "tst-icp-tstat07-series",
+  "brand": "ICP (Heil / Tempstar / Comfortmaker)",
+  "family": "ICP TSTAT07xx Digital Programmable (TSTAT0709 - TSTAT0716)",
+  "aka": "Heil / Tempstar / Comfortmaker TSTAT0710 multi-stage, TSTAT0713 '1 For All' temperature & humidity",
+  "models": [
+   "TSTAT0709",
+   "TSTAT0710",
+   "TSTAT0711",
+   "TSTAT0712",
+   "TSTAT0713"
+  ],
+  "type": "programmable",
+  "stages": "TSTAT0710: multi-stage (up to 2 heat / 2 cool or heat pump). TSTAT0713: 2 heat / 2 cool, heat pump, with humidity (dehumidify) output",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "optional",
+   "batteries": "",
+   "notes": "Can power-share on R, W and Y (4-wire R-G-W-Y); if the display dims or cooling chatters, add a 270 ohm 10 W resistor at the furnace per the manual. With C, 24VAC between R and C."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC (from Rh/R/M/Vr/A on old stat)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (optional)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor stage 1",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor stage 2",
+    "notes": ""
+   },
+   {
+    "t": "W1",
+    "fn": "Heat stage 1",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Heat stage 2",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve (heat pump) - TSTAT0710 'O' terminal",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "TSTAT0713 combined heat 1 / reversing valve terminal",
+    "notes": ""
+   },
+   {
+    "t": "HUM / DEHUM",
+    "fn": "TSTAT0713 optional dehumidification to the unit's DEHUM terminal",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Electric heat and heat pump must be turned ON in Advanced Setup (see owner's manual); if cooling brings on heat, heat pump is not set on; if heat and cool both come on, it is set for heat pump on a conventional system."
+  ],
+  "setup": {
+   "access": "Calibration (TSTAT0710): hold MODE, press FAN 5 seconds until all icons show, then press Up and Down together twice; set the flashing number to room temperature; MODE to exit. Advanced Setup is in the owner's manual.",
+   "keySettings": [],
+   "installerTest": "Set HEAT 10 degrees above room (furnace on) and COOL 10 degrees below (AC on; most equipment has a 5-minute delay); Fan On runs the blower.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display blank",
+    "causes": [
+     "No power"
+    ],
+    "fixes": [
+     "Check furnace power; 24VAC R-W (or R-C if C used)"
+    ]
+   },
+   {
+    "symptom": "AC does not try to start",
+    "causes": [
+     "Compressor timeguard / cycles per hour",
+     "Cool setpoint limit too high"
+    ],
+    "fixes": [
+     "Defeat timeguard / change limit in Setup (owner's manual)"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Digital Thermostat P/N TSTAT0710 Installation Instructions (P/N 88-416, 2003)",
+    "docType": "install",
+    "seedFile": "icp-tstat0710-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/02/61601100600_ICP_5033.pdf"
+   },
+   {
+    "title": "Installation Manual P/N TSTAT0713 (616 01 1012 00 / 88-441)",
+    "docType": "install",
+    "seedFile": "icp-tstat0713-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/00/61601101200_ICP_16090.pdf"
+   },
+   {
+    "title": "TSTAT Series Thermostats product sheet 770 31 1303 00 (TSTAT0403 - TSTAT0803 line-up)",
+    "docType": "spec",
+    "seedFile": "icp-tstat-series-lineup.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1011/Public/01/77031130300_ICP_13667.pdf"
+   }
+  ],
+  "sourceNotes": "TSTAT0710 Installation Instructions (ICP 2003, P/N 88-416); TSTAT0713 Installation Manual 616 01 1012 00 (P/N 88-441); ICP TSTAT line product sheet 770 31 1303 00. These are older non-communicating ICP thermostats - rare today.",
+  "img": ""
+ },
+ {
+  "id": "tst-totaline-p274-programmable",
+  "brand": "Totaline",
+  "family": "P274-1100 / 1200 / 1300 Residential Programmable",
+  "aka": "Totaline 7-day programmable (AC / heat pump / 2-speed) - Carrier Replacement Components catalog 570-502",
+  "models": [
+   "P274-1100",
+   "P274-1200",
+   "P274-1300"
+  ],
+  "type": "programmable",
+  "stages": "P274-1100: 1 cool / 1 heat AC only. P274-1200: 1 cool / 2 heat (HP, or AC with 2-stage heat). P274-1300: 2-speed AC or HP (2 cool / 3 heat), or 1-speed HP with 3-stage electric heat (intelligent heat staging)",
+  "sort": 50,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Powered by 24 VAC (18-30 VAC) on R and C, 5 VA. No batteries; schedules held indefinitely and the clock runs at least 72 hours on power loss."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC hot",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": "S2 and C are connected internally - do not ground a sensor shield to C"
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "W/W1",
+    "fn": "Heat stage 1 / aux",
+    "notes": ""
+   },
+   {
+    "t": "Y/Y2",
+    "fn": "Compressor (high or single stage)",
+    "notes": ""
+   },
+   {
+    "t": "Y1/W2",
+    "fn": "Compressor low stage (2-speed) or heat stage (1300)",
+    "notes": ""
+   },
+   {
+    "t": "O/W2",
+    "fn": "Reversing valve (HP) or 2nd stage heat (AC mode, 1200/1300)",
+    "notes": ""
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Remote space or outdoor sensor (TSTATXXSEN01-B outdoor, P274-0401 space)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Wire size: 22 AWG up to 36 ft, 18 AWG up to 100 ft.",
+   "Space temperature averaging: only P274-0401 sensors, singly or in groups of 4 or 9; total sensor wiring max 1000 ft.",
+   "DIP switches (set before mounting): A = zoning (ON cancels the 4 CPH limit and 5-min timeguard - zoned only); B = setback recovery (OFF smart, ON normal); C = HP/AC select (1200/1300; ON = AC, extra relay becomes 2nd stage heat); D = intelligent heat staging (1300 only, needs a variable-speed fan coil and 2:1 heaters).",
+   "On power-up the display shows the setup mode: AC, HP, A2, H2 or HS."
+  ],
+  "setup": {
+   "access": "Configuration mode: press and hold Fan about 10 seconds; the option number flashes top right - Up/Down to choose, Set Time/Temp to change it.",
+   "keySettings": [
+    {
+     "setting": "DIP switches A-D",
+     "options": "See wiring notes",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Press Hold, then Fan (G on); Heat 10 degrees above room (heat within 5 minutes); for stage 1 only set 2-3 degrees above. Press Up + Fan together to defeat timers for one cycle.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "--",
+    "meaning": "Temperature sensor out of range",
+    "action": "Check sensor; if cycling power does not clear it, replace thermostat"
+   },
+   {
+    "code": "E2",
+    "meaning": "Brownout / voltage too low",
+    "action": "Check wiring and 24 VAC between R and C; clears 15 s after voltage is restored"
+   },
+   {
+    "code": "E3",
+    "meaning": "Outdoor temperature out of range and needed for Option 8",
+    "action": "Check outdoor sensor and wiring"
+   },
+   {
+    "code": "Clean Filter",
+    "meaning": "Filter reminder"
+   }
+  ],
+  "troubleshooting": [],
+  "tips": [
+   "5-minute compressor timeguard, 15-minute cycle timer (4 CPH), 15-minute staging timer (skipped if demand is over 5 degrees), 3-minute minimum on time; heat/cool setpoints kept 3 degrees apart."
+  ],
+  "manuals": [
+   {
+    "title": "Totaline Residential Programmable Thermostats P274-1100, 1200, 1300 Installation and Operating Instructions (P274-8SI, 1-07)",
+    "docType": "install",
+    "seedFile": "totaline-p274-programmable-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1005/Public/00/P274-8SI.pdf"
+   }
+  ],
+  "sourceNotes": "P274-8SI Installation and Operating Instructions, Replacement Components Division Carrier Corporation, 1-07 (catalog 570-502).",
+  "img": ""
+ },
+ {
+  "id": "tst-totaline-p474-0130",
+  "brand": "Totaline",
+  "family": "P474-0130 Non-Programmable Battery Digital",
+  "aka": "Totaline battery-operated 1H/1C digital, millivolt compatible",
+  "models": [
+   "P474-0130"
+  ],
+  "type": "non-programmable",
+  "stages": "1 heat / 1 cool; single-stage heat pump with the heat pump jumper; millivolt compatible",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "2 AA alkaline",
+   "notes": "Battery operated - replace the AA batteries at least every 12 months or when the low-battery code shows; the heat cannot turn on if the batteries are exhausted (freeze risk)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "Power (from Rh, R, M, Vr or A)",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heating (from W1, W or H)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling (from Y1 or Y)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heat",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cool",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan (from G or F)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Jumpers: FAN W/ HEAT = ON only for first-stage electric heat (fan on immediately with heat); HEAT PUMP = ON only for heat pumps; otherwise both OFF.",
+   "Do not over-tighten the backplate to an uneven wall - it deforms and the slide switches bind."
+  ],
+  "setup": {
+   "access": "Slide switches for Heat / Off / Cool and Fan On / Auto; configuration by jumpers on the back.",
+   "keySettings": [
+    {
+     "setting": "FAN W/ HEAT jumper",
+     "options": "ON / OFF",
+     "notes": ""
+    },
+    {
+     "setting": "HEAT PUMP jumper",
+     "options": "ON / OFF",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Power on, slide to HEAT and raise the setpoint above room; slide to COOL and lower it below room.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Heat does not try to come on",
+    "causes": [
+     "Heat setpoint too low",
+     "Mode switch not on Heat",
+     "Batteries too weak"
+    ],
+    "fixes": [
+     "Raise setpoint",
+     "Set the switch to Heat",
+     "Replace AA batteries"
+    ]
+   },
+   {
+    "symptom": "Slide switches very hard to move",
+    "causes": [
+     "Backplate deformed by screws on an uneven wall"
+    ],
+    "fixes": [
+     "Loosen the mounting screws"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Totaline P/N P474-0130 Installation Instructions / Owner's Manual (P/N 88-396)",
+    "docType": "install",
+    "seedFile": "totaline-p474-0130-install.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1006/Public/08/P474-0130.pdf"
+   }
+  ],
+  "sourceNotes": "P474-0130 Installation Instructions and Owner's Manual, P/N 88-396.",
+  "img": ""
+ },
+ {
+  "id": "tst-totaline-p474-2150",
+  "brand": "Totaline",
+  "family": "P474-2150 '1 For All' Programmable",
+  "aka": "Totaline 5+1+1 occupied/unoccupied programmable, Title 24",
+  "models": [
+   "P474-2150"
+  ],
+  "type": "programmable",
+  "stages": "1 or 2 stage cooling and gas heating, heat pump (with emergency heat), electric or hydronic heat - commercial or residential",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "No batteries required; the clock keeps time at least 48 hours without power."
+  },
+  "terminals": [],
+  "wiringNotes": [
+   "Terminal wiring is in the separate installation instructions (not in this owner's manual)."
+  ],
+  "setup": {
+   "access": "Advanced Setup: set mode OFF, press and hold Mode then press Override 5 seconds (step number top right); Mode + Override 2 seconds exits (auto-exit 30 s). Quick clock setup: Mode + Override 2 seconds.",
+   "keySettings": [
+    {
+     "setting": "Step 3 Display",
+     "options": "On (full) / Off (time only)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 4 Fan",
+     "options": "Auto / On (smart fan in unoccupied)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 5 Heat pump",
+     "options": "Off (default) / On",
+     "notes": "Factory setup is for 1-2 stage gas; heat pump and electric heat must be set here"
+    },
+    {
+     "setting": "Step 6 Reversing valve",
+     "options": "O (default) / B",
+     "notes": ""
+    },
+    {
+     "setting": "Step 7 Electric heat",
+     "options": "Off / On (fan on with heat)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 8 Deadband",
+     "options": "1-6 (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 9 Min heat/cool difference",
+     "options": "0-6 (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 10 Cycles per hour",
+     "options": "d (limit defeated), d1 (also defeats 5-min lockout), 2-6 (default 6)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 11 / 12",
+     "options": "Backlight On/Off; F/C",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": "Hold Mode, press Down 2 seconds (all icons), then hold Override until Fd appears. Press Mode again to calibrate room temperature with Up/Down, Mode to return."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Emergency heat (heat pump): hold Override and press Up 2 seconds - cool setpoint shows EH; 2nd stage heat and fan run, compressor locked out.",
+   "Keypad lock: hold Mode and press Up + Down together (repeat to unlock).",
+   "2nd stage comes on after stage 1 has run 2 minutes and the error reaches setpoint + deadband + 2 degrees."
+  ],
+  "manuals": [
+   {
+    "title": "Totaline P/N P474-2150 1 For All Programmable Digital Thermostat Owner's Manual (Carrier Replacement Components, 11/98)",
+    "docType": "user",
+    "seedFile": "totaline-p474-2150-owners.pdf",
+    "url": "https://www.shareddocs.com/hvac/docs/1006/Public/02/P474-2150.pdf"
+   }
+  ],
+  "sourceNotes": "P474-2150 Owner's Manual, Replacement Components Division Carrier Corporation 11/98. No separate installation instruction was found on shareddocs; terminals left out.",
+  "img": ""
+ },
+ {
   "id": "tst-trane-xl1050",
   "brand": "Trane / American Standard",
   "family": "ComfortLink II XL1050",
@@ -29448,6 +40230,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "trane-xl1050-user-guide.pdf",
     "url": "https://www.trane.com/pdf/32-5093-04B-EN.pdf"
+   },
+   {
+    "title": "Trane Comfort Controls Product and Submittal Data (CNTR-PSD001A-EN, May 2026)",
+    "docType": "spec",
+    "seedFile": "trane-comfort-controls-productdata.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-PSD001A-EN_05292026.pdf"
    }
   ],
   "sourceNotes": "18-HD80D1-6F-EN TZON1050 ComfortLink II XL1050 Installation Guide; 32-5093-04B-EN ComfortLink II XL1050 User Guide",
@@ -29460,7 +40248,8 @@ const THERMOSTATS = [
   "aka": "TCONT824 / Gold 824",
   "models": [
    "TCONT824AS42DA",
-   "TCONT824"
+   "TCONT824",
+   "TCONT824AS52DA"
   ],
   "type": "communicating",
   "stages": "up to 2 compressor stages, up to 3 indoor heat stages",
@@ -29624,6 +40413,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "trane-xl824-user-guide.pdf",
     "url": "https://www.trane.com/pdf/032-5090-06C-EN.pdf"
+   },
+   {
+    "title": "Trane Comfort Controls Product and Submittal Data (CNTR-PSD001A-EN, May 2026)",
+    "docType": "spec",
+    "seedFile": "trane-comfort-controls-productdata.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-PSD001A-EN_05292026.pdf"
    }
   ],
   "sourceNotes": "18-HD72D1-11F-EN TCONT824 ComfortLink II XL824 Installation Guide; 032-5090-06C-EN Trane XL824 Smart Control User Guide",
@@ -29636,7 +40431,8 @@ const THERMOSTATS = [
   "aka": "TZON850 / Gold 850",
   "models": [
    "TZON850AC52ZA",
-   "TZON850"
+   "TZON850",
+   "TCONT850AC52UA"
   ],
   "type": "communicating",
   "stages": "up to 2-3 stages heat/cool depending on equipment; supports humidifier/dehumidifier/UV/ventilation accessories",
@@ -29804,6 +40600,12 @@ const THERMOSTATS = [
     "docType": "user",
     "seedFile": "trane-xl850-user-guide.pdf",
     "url": "https://www.trane.com/pdf/032-5091-06C-EN.pdf"
+   },
+   {
+    "title": "Trane Comfort Controls Product and Submittal Data (CNTR-PSD001A-EN, May 2026)",
+    "docType": "spec",
+    "seedFile": "trane-comfort-controls-productdata.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-PSD001A-EN_05292026.pdf"
    }
   ],
   "sourceNotes": "18-HD73D1-9E-EN TCONT850 ComfortLink II XL850 Installation Guide; 032-5091-06C-EN Trane XL850 Smart Control User Guide",
@@ -29988,6 +40790,12 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "trane-tcont624-install.pdf",
     "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD45D1-7_04012016"
+   },
+   {
+    "title": "Trane Comfort Controls Product and Submittal Data (CNTR-PSD001A-EN, May 2026)",
+    "docType": "spec",
+    "seedFile": "trane-comfort-controls-productdata.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-PSD001A-EN_05292026.pdf"
    }
   ],
   "sourceNotes": "18-HD45D1-7 TCONT624 Installation and User Guide",
@@ -30155,7 +40963,9 @@ const THERMOSTATS = [
   "aka": "White-Rodgers-built platform",
   "models": [
    "TCONT302",
-   "TCONT303"
+   "TCONT303",
+   "XR302",
+   "XR303"
   ],
   "type": "programmable",
   "stages": "Single Stage (SS1) or Multi-Stage (MS2) conventional; Heat Pump 1 (1 compressor) or Heat Pump 2 (2 compressor/2 speed)",
@@ -30700,6 +41510,1639 @@ const THERMOSTATS = [
   "img": "tstat-img/tst-trane-tcont802-803.jpg"
  },
  {
+  "id": "tst-trane-link-ux360",
+  "brand": "Trane / American Standard",
+  "family": "Link UX360",
+  "aka": "THUI2360 / Trane Link smart thermostat with SC360 System Controller",
+  "models": [
+   "THUI2360A200U"
+  ],
+  "type": "communicating",
+  "stages": "Trane Link (CAN bus): heat pump, heat/cool, dual fuel, heat only, cooling only; up to 5 heat / 2 cool stages",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "24 VAC (18-30 VAC) from the HVAC system on R and B of the 4-wire Link bus; 2 W typical, 5 W max."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC (red)",
+    "notes": ""
+   },
+   {
+    "t": "DH",
+    "fn": "CAN data high (white)",
+    "notes": ""
+   },
+   {
+    "t": "DL",
+    "fn": "CAN data low (green)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "24VAC common (blue)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "4-wire Link connection (R, DH, DL, B) from the UX360 to the SC360 System Controller or its distribution board; the SC360 connects to the communicating indoor and outdoor units.",
+   "Use solid 18 AWG thermostat wire; strip 1/4 in.; seal the wall hole - air leaks behind the UX360 cause improper operation.",
+   "Keep the UX360 at least 3 ft from the SC360 and other electronics; if they must be closer, mount the UX360 diagonally above the SC360, never directly above or below.",
+   "CAN checks, bus idle: 2-4 VDC from DH to GND and from DL to GND. Power off: DH-DL about 60 +/-10 ohms with SC360 + communicating indoor + variable-speed outdoor, about 90 +/-10 ohms with no communicating outdoor unit; lower means a short, higher means an open. DH to GND (device powered off and disconnected) should be 1 Mohm or more.",
+   "Up to four indoor sensors can be assigned: UX360 onboard, SC360 onboard (only if installed in conditioned space), wireless ZSENS930AW00MA (sensor software 1.70 or later), wired ZZSENSAL0400AA."
+  ],
+  "setup": {
+   "access": "Menu > Technician Access > Configuration (Climate Control, Energy, Environment, Accessories). Link equipment self-configures at start-up; UX360 power-up takes 80-200 seconds.",
+   "keySettings": [
+    {
+     "setting": "Compressor Cooling System Control",
+     "options": "More Efficient, Efficient, Balanced, Comfort, [More Comfort]",
+     "notes": "More Efficient = standard performance, no humidity control"
+    },
+    {
+     "setting": "Compressor Cooling / Heating Cycles Per Hour",
+     "options": "2-6 CPH [3]",
+     "notes": ""
+    },
+    {
+     "setting": "Minimum / Maximum CFM per ton (cooling)",
+     "options": "200-500 [250] / 200-500 [500]",
+     "notes": ""
+    },
+    {
+     "setting": "Comp Heat CFM per ton",
+     "options": "290-450 [400]",
+     "notes": ""
+    },
+    {
+     "setting": "Auxiliary Heat Lockout",
+     "options": "Enabled/[Disabled], 32-70F [45F]",
+     "notes": "10F minimum separation from compressor heat lockout"
+    },
+    {
+     "setting": "Compressor Heat Lockout",
+     "options": "Enabled/[Disabled], 5-70F [30F]",
+     "notes": ""
+    },
+    {
+     "setting": "Accessory 1 & 2 Input",
+     "options": "None, Air Cleaner, Powered/Bypass, Steam, Ext Dehum, Ventilator",
+     "notes": ""
+    },
+    {
+     "setting": "ID External Switch Input 1 & 2",
+     "options": "None, Condensate-Cooling, Smoke Detector",
+     "notes": ""
+    },
+    {
+     "setting": "Outdoor Load Shed",
+     "options": "None, Load Shed, Generator Backup",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Test Modes: Test Blower (300-1580 CFM), Test Compressor Cool / Heat (minimum-100% demand), Test Indoor Heat stage 1/2/3, Charge Mode - Cooling, Check Charge Mode - Heating, Pump Down Mode cooling/heating, Test Aux Relay.",
+   "factoryReset": "Configuration > General Options: Factory System Restore erases all user and installer settings; Partial Restore resets only the HVAC configuration (zoning, sensor and user settings kept)."
+  },
+  "diagnostics": [
+   {
+    "code": "Critical alert",
+    "meaning": "Loss of heating/cooling; service call required",
+    "action": "Shown on the home screen. Menu > System Info > Alerts for description and possible causes"
+   },
+   {
+    "code": "Major alert",
+    "meaning": "Reduced functionality; minimum operation possible",
+    "action": "Not shown on the home screen - check Alerts"
+   },
+   {
+    "code": "Minor alert",
+    "meaning": "Function may be lost but should recover, or info only",
+    "action": "Alerts screen only; Alert History keeps cleared alerts for 30 days"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display will not come on",
+    "causes": [
+     "Loss of 24VAC between R and B at the UX360"
+    ],
+    "fixes": [
+     "Check R and B wiring",
+     "Check transformer 24VAC output",
+     "Check for broken or shorted wire"
+    ]
+   },
+   {
+    "symptom": "Heat pump not running, only furnace or heat strips",
+    "causes": [
+     "Outdoor temperature below the compressor lockout",
+     "Outdoor sensor out of calibration or failed",
+     "Outdoor unit not reporting"
+    ],
+    "fixes": [
+     "Adjust compressor lockout",
+     "Check outdoor sensor and wiring, and outdoor unit communication",
+     "Check the Configuration screen"
+    ]
+   },
+   {
+    "symptom": "Screen does not respond",
+    "causes": [
+     "Internal hardware failure",
+     "Screen Lock enabled"
+    ],
+    "fixes": [
+     "Remove the UX360 from the sub-base and reset",
+     "Hold Menu 5 seconds to override the screen lock"
+    ]
+   },
+   {
+    "symptom": "Time changes every 24 hours",
+    "causes": [
+     "Wrong time zone in the Trane Home account"
+    ],
+    "fixes": [
+     "Correct the time zone in Trane Home"
+    ]
+   }
+  ],
+  "tips": [
+   "Software updates for the whole Link system come through the SC360 when it has internet - no SD card.",
+   "A '+' under the indoor temperature means compressor and indoor heat are running together - informational only."
+  ],
+  "manuals": [
+   {
+    "title": "Trane Link UX360 Smart Thermostat Installer's Guide (CNTR-SVN001A-EN)",
+    "docType": "install",
+    "seedFile": "trane-ux360-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-SVN001A-EN_12142025.pdf"
+   },
+   {
+    "title": "Trane Link UX360 Thermostat User Guide (32-5102-1C-EN)",
+    "docType": "user",
+    "seedFile": "trane-ux360-userguide.pdf",
+    "url": "https://trane-assets-grd.s3.amazonaws.com/residential/en/assets/owners-manuals/user-manual-tstat-ux360.pdf"
+   }
+  ],
+  "sourceNotes": "CNTR-SVN001-EN Installer's Guide Trane Link UX360 Smart Thermostat (14 Dec 2025, supersedes 18-HD98D1-1C-EN Aug 2023); 32-5102-1C-EN Trane Link UX360 Thermostat User Guide.",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-tcont800",
+  "brand": "Trane / American Standard",
+  "family": "TCONT800 Touch Screen (XL800)",
+  "aka": "TCONT800AS11AA 1H/1C touch screen",
+  "models": [
+   "TCONT800AS11AA"
+  ],
+  "type": "programmable",
+  "stages": "1 heat / 1 cool conventional, or single-stage heat pump with no auxiliary heat",
+  "sort": 50,
+  "confidence": "rare",
+  "power": {
+   "cWire": "optional",
+   "batteries": "3 AAA (armchair programming only)",
+   "notes": "24 VAC common wire recommended. The manual warns that battery-only power may not be adequate and can let the system shut down in freezing conditions."
+  },
+  "terminals": [
+   {
+    "t": "RC",
+    "fn": "24VAC cooling transformer",
+    "notes": ""
+   },
+   {
+    "t": "R",
+    "fn": "24VAC heating transformer",
+    "notes": ""
+   },
+   {
+    "t": "W1 / O",
+    "fn": "Heat (heat/cool) or changeover valve (heat pump)",
+    "notes": "Wallplate terminal ID set by system type"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Remote temperature sensor",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Choose the Heat/Cool or Heat Pump terminal label set on the wallplate to match the system type (factory default: 1H/1C gas furnace).",
+   "Single-transformer 1H/1C and two-transformer 1H/1C hookups are both shown; heat pump hookup is for a single-stage heat pump with no aux heat."
+  ],
+  "setup": {
+   "access": "Press and release the System key, then press and hold the two blank keys on either side of the center blank key for about 5 seconds. Press Done to exit.",
+   "keySettings": [
+    {
+     "setting": "0160 Schedule",
+     "options": "0 non-programmable, 4 7-day",
+     "notes": ""
+    },
+    {
+     "setting": "0170 System Type",
+     "options": "1 1H/1C, 2 single-stage heat pump (no aux), 3 heat only no fan, 4 heat only with fan, 5 hot water Series 20, 6 cool only",
+     "notes": ""
+    },
+    {
+     "setting": "0180 Fan Operation",
+     "options": "Equipment controls fan in heat, or control runs fan (electric/heat pump)",
+     "notes": ""
+    },
+    {
+     "setting": "0220 / 0240 Cycles per hour",
+     "options": "Compressor 1-6 (3 recommended); heat 1-12 (1 steam/gravity, 3 two-stage/hot water, 5 single-stage fossil, 9 electric)",
+     "notes": ""
+    },
+    {
+     "setting": "0600 / 0610",
+     "options": "Heat / cool setpoint limits",
+     "notes": ""
+    },
+    {
+     "setting": "0670",
+     "options": "Keypad lock options",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Enter Installer Setup and press the Down arrow: Test 1 cool, Test 2 fan, Test 3 heat. Compressor minimum off-time is bypassed during tests.",
+   "factoryReset": "ISU 0710 = 1 resets all installer options and the schedule to default (calendar and time kept)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display does not come on",
+    "causes": [
+     "Control not powered"
+    ],
+    "fixes": [
+     "Check for 24 Vac between B and Rc"
+    ]
+   },
+   {
+    "symptom": "Temperature settings do not change",
+    "causes": [
+     "Upper/lower limit reached",
+     "Keypad fully locked"
+    ],
+    "fixes": [
+     "Check ISU 0600 and 0610",
+     "Change ISU 0670"
+    ]
+   },
+   {
+    "symptom": "Heating or cooling does not come on",
+    "causes": [
+     "Minimum off-time active",
+     "System not set to Heat or Cool",
+     "Wrong system type selection",
+     "Equipment not operating"
+    ],
+    "fixes": [
+     "Wait out the delay",
+     "Set the system mode",
+     "Check ISU 0170",
+     "Check the equipment"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "TCONT800AS11AA Touch Screen Programmable Comfort Control Installation Instructions (18-HD25D18-3 / 69-1787-03)",
+    "docType": "install",
+    "seedFile": "trane-tcont800-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD25D18-3_09012008"
+   }
+  ],
+  "sourceNotes": "18-HD25D18-3 (69-1787-03) Installation Instructions TCONT800AS11AA, 9/2008.",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xb200",
+  "brand": "Trane / American Standard",
+  "family": "XB200 Non-Programmable",
+  "aka": "TCONT200 Comfort Control (1H/1C, load powered)",
+  "models": [
+   "TCONT200AN11AA"
+  ],
+  "type": "non-programmable",
+  "stages": "1 heat / 1 cool (gas, oil or electric); heat only or cool only",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "4-wire hookup (R, G, Y, W). Load powered through W and Y (20-30 VAC) - no battery, no C wire. Two 360 ohm 5 W resistors come with the control: one must go from W to B/C at the indoor unit on every install; the second goes from Y to B/C if there is no outdoor unit or the outdoor unit has a compressor anti-short-cycle timer."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC hot",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heating",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Missing 360 ohm resistor is the cause when the display will not come on or comes on and goes off.",
+   "Oil furnaces require an external relay."
+  ],
+  "setup": {
+   "access": "Installer Setup: System Mode OFF, Fan AUTO, press and hold Mode + Up arrow. User Setup: press and hold Mode + Fan. Allow 5 seconds after Step 99 SA before removing power.",
+   "keySettings": [
+    {
+     "setting": "Compressor Stages",
+     "options": "0 none, 1 single stage AC",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Heater Type",
+     "options": "1 gas/oil, 2 electric",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Heater Stages",
+     "options": "0 none, 1 single",
+     "notes": ""
+    },
+    {
+     "setting": "Cooling fan ON / OFF delay",
+     "options": "0-30 s / 0-90 s",
+     "notes": ""
+    },
+    {
+     "setting": "Compressor / heater cycles per hour",
+     "options": "2-6 CPH",
+     "notes": ""
+    },
+    {
+     "setting": "Heater minimum on time",
+     "options": "Gas 3-15 min, electric 1-15 min",
+     "notes": ""
+    },
+    {
+     "setting": "User setup",
+     "options": "F/C, auto/manual changeover, deadband 2-10F, cooling droop, energy savings offsets, filter reminder, calibrate +/-5F",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Manual Test Mode: System Mode OFF, Fan AUTO, press and hold Mode + Down arrow. G fan, Y compressor (G must be on), W heat. Times out 1 minute after the last key; press $ to exit.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display will not come on, or comes on and goes off",
+    "causes": [
+     "Blown fuse / breaker",
+     "Furnace switch off",
+     "Blower door loose",
+     "360 ohm resistor not installed"
+    ],
+    "fixes": [
+     "Reset/replace",
+     "Turn on",
+     "Seat the door",
+     "Install the 360 ohm 5 W resistor W to B/C (and Y to B/C where required)"
+    ]
+   },
+   {
+    "symptom": "Service indicator flashing",
+    "causes": [
+     "Control EEPROM write error"
+    ],
+    "fixes": [
+     "Press any key and re-enter setup choices"
+    ]
+   },
+   {
+    "symptom": "Service solid and '--' in the display",
+    "causes": [
+     "Indoor sensor open or shorted"
+    ],
+    "fixes": [
+     "Replace control"
+    ]
+   },
+   {
+    "symptom": "Cannot set heat above 80F",
+    "causes": [
+     "Heat/cool deadband set too high"
+    ],
+    "fixes": [
+     "Lower the deadband in User Setup"
+    ]
+   }
+  ],
+  "tips": [
+   "LitePort gives the servicer access to stored real-time and history data."
+  ],
+  "manuals": [
+   {
+    "title": "Installer's Guide XB200 Comfort Control TCONT200AN11AA (18-HD29D1-3)",
+    "docType": "install",
+    "seedFile": "trane-xb200-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD29D1-3_06012008"
+   }
+  ],
+  "sourceNotes": "18-HD29D1-3 Installer's Guide XB200 TCONT200AN11AA (6/2008).",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xl900",
+  "brand": "Trane / American Standard",
+  "family": "XL900 ComfortLink II Communicating",
+  "aka": "TCONT900 ComfortLink II communicating comfort control",
+  "models": [
+   "TCONT900AC43UA"
+  ],
+  "type": "communicating",
+  "stages": "Communicating: up to 4 heat / 3 cool / heat pump; stages auto-discovered from ComfortLink II equipment",
+  "sort": 40,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Powered by 24 VAC on R (hot) and B (common) of the 3-wire ComfortLink II bus (18-30 VAC). Contains a lithium clock battery only."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC hot",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "D",
+    "fn": "Communicating data",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "3-wire hookup: D, R, B from the control to the ComfortLink II indoor unit; a CLII outdoor unit connects at the indoor unit.",
+   "Communicating indoor unit with a single-stage (non-communicating) AC: Y1 and B from the indoor unit to the AC; the control defaults the outdoor side to single-stage cooling.",
+   "Maximum total communicating cable 500 ft of 18 AWG; maximum single run from a transformer 250 ft.",
+   "Keep the cable at least 1 ft from large inductive loads; 18-gauge color-coded cable, shielded not normally required.",
+   "Can mount horizontally on the wall or a 2x4 box."
+  ],
+  "setup": {
+   "access": "Press and release the System key, then press and hold the two blank keys on either side of the center key for about 5 seconds until the Installer Setup screen appears. ISU settings marked E are auto-discovered; changing one manually disables discovery for that setting.",
+   "keySettings": [
+    {
+     "setting": "ISU 0160 Schedule",
+     "options": "0 non-programmable, 4 7-day programmable",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0172 System Selection",
+     "options": "E auto-discover, 1 heat/cool, 2 heat pump, 3 heat only (no fan)",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0174 Compressor Stages",
+     "options": "E, 0 none, 1 single, 2 two-stage/two-step",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0176 Heater Stages",
+     "options": "E, 0-3",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0180 Fan Operation",
+     "options": "E, 0 equipment controls fan in heat (fossil), 1 control runs fan in heat (electric)",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0181 Indoor Unit Type",
+     "options": "E, 0 non-variable speed, 1 variable speed",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0183 / 0185 / 0186",
+     "options": "Stage 2 airflow, heat pump warm air discharge (80%), continuous fan airflow 25-100%",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0600 / 0610 setpoint limits",
+     "options": "Heat 40-90F, cool 60-99F",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0670 Keypad lock",
+     "options": "Unlocked, partially locked, fully locked",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0700 / 0701 Calibrate",
+     "options": "Temperature +/-3F, humidity +/-5%",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0706 Reset discovered device",
+     "options": "Clears Err 126 by re-running Auto Discovery",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 0710 Reset",
+     "options": "1 = reset all ISU options and schedule to default",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Enter Installer Setup and press the Down arrow for the Installer System Tests (Test 1 cool, Test 2 fan, Test 3 heat, Test 4 emergency heat, Test 5 humidifier, Test 6 dehumidification). Minimum compressor off-time is bypassed; tests time out after 5 minutes.",
+   "factoryReset": "ISU 0710 = 1 resets all Installer Setup options and the schedule to default (only calendar and time kept)."
+  },
+  "diagnostics": [
+   {
+    "code": "Err 89",
+    "meaning": "A communicating device is missing",
+    "action": "Restore communication; see Alert Code Addendum 18-HD32D2-1"
+   },
+   {
+    "code": "Err 126",
+    "meaning": "A discovered device changed",
+    "action": "Restore communication or ISU 0706 to re-run discovery"
+   },
+   {
+    "code": "Red service LED + alternating Alert Code screen",
+    "meaning": "Alert present",
+    "action": "Refer to Alert Code Addendum form 18-HD32D2-1 / 69-2009"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display will not come on",
+    "causes": [
+     "Blown fuse / tripped breaker",
+     "Indoor unit power switch off",
+     "Blower door not seated",
+     "Broken/shorted wire, or R-D or B-D reversed"
+    ],
+    "fixes": [
+     "Reset breaker / replace fuse",
+     "Turn switch on",
+     "Seat the door",
+     "Check R, B, D wiring"
+    ]
+   },
+   {
+    "symptom": "System stuck in OFF, no equipment runs",
+    "causes": [
+     "Equipment was not connected during Auto-Discovery"
+    ],
+    "fixes": [
+     "Check wiring and cycle power - discovery runs again"
+    ]
+   },
+   {
+    "symptom": "Only furnace heat in dual fuel",
+    "causes": [
+     "Outdoor sensor missing/not reporting",
+     "Outdoor temp below compressor lockout"
+    ],
+    "fixes": [
+     "Check outdoor sensor wiring",
+     "Lower the compressor lockout setting"
+    ]
+   },
+   {
+    "symptom": "Fan set to On but not running",
+    "causes": [
+     "Trane humidity control is holding the blower off"
+    ],
+    "fixes": [
+     "Verify dehumidification setpoint is below actual indoor RH"
+    ]
+   }
+  ],
+  "tips": [
+   "Discovery LED (upper right) is lit while the control is discovering equipment."
+  ],
+  "manuals": [
+   {
+    "title": "Installer's Guide TCONT900AC43UA Comfort Control (18-HD32D1-2 / 69-2079-05)",
+    "docType": "install",
+    "seedFile": "trane-xl900-tcont900-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD32D1-2_12012008"
+   }
+  ],
+  "sourceNotes": "18-HD32D1-2 (69-2079-05) Installer's Guide TCONT900AC43UA, 12/2008. The word 'Proprietary' in this PDF is only the feature name 'Trane Proprietary Humidity Control', not a distribution restriction.",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xl950",
+  "brand": "Trane / American Standard",
+  "family": "ComfortLink II XL950",
+  "aka": "TZONE950 / 950 Control",
+  "models": [
+   "TZONE950AC52ZA",
+   "TZONE950AC52ZB"
+  ],
+  "type": "communicating",
+  "stages": "ComfortLink II communicating: 1, 2 or variable-speed outdoor unit; indoor heat none/1/2/3/modulating; 24V equipment through the BAY24VRPAC52DA Relay Panel; zoning with the optional Zone Panel",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered by 24 VAC (range 18-32 VAC) from the indoor unit on the 3-wire ComfortLink II bus (R, B, D). About 7 VA - roughly 4 VA more than a typical communicating control, so check that the indoor transformer is big enough."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC hot (ComfortLink II bus)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "24VAC common (ComfortLink II bus)",
+    "notes": ""
+   },
+   {
+    "t": "D",
+    "fn": "Communicating data",
+    "notes": ""
+   },
+   {
+    "t": "(top terminal)",
+    "fn": "Reserved - do not connect",
+    "notes": "Installer's guide: do not connect wiring to the top terminal, it is reserved for future use"
+   }
+  ],
+  "wiringNotes": [
+   "3-wire hookup: R, B and D from the control to the communicating indoor unit; a communicating outdoor unit connects to the indoor unit's R/B/D.",
+   "24V (non-communicating) equipment is run through the BAY24VRPAC52DA Relay Panel; see the Relay Panel installer's guide for the Y/W/G/O side.",
+   "Communicating indoor unit (except TAM8) with a non-communicating single-stage AC: Y1 and B from the indoor unit go to the outdoor unit. Heat pump or multi-stage AC needs the Relay Panel.",
+   "TAM8 air handler with a non-communicating outdoor unit uses a CCM instead of a Relay Panel (O, B, R, Y1, Y2 to the CCM).",
+   "Maximum total cable for the whole communicating system is 500 ft of 18 AWG; maximum single run from a transformer is 250 ft.",
+   "Use 18 AWG color-coded thermostat cable, keep it at least 1 ft from large inductive loads (EACs, motors, ballasts); ground unused conductors at the indoor unit chassis only.",
+   "Optional sensors: ZZSENSAL0400AA wired remote indoor sensor, BAYSEN01ATEMPA wired outdoor sensor (can land on the control or the Relay Panel)."
+  ],
+  "setup": {
+   "access": "Home > Menu > Service > Technician Access (hold the icon 5 seconds) > Proceed. Installer Setup is in the Service Menu. In a communicating system components are discovered automatically; manual setup is not required.",
+   "keySettings": [
+    {
+     "setting": "Outdoor Unit Type",
+     "options": "None, Cooling Only, Heat Pump",
+     "notes": ""
+    },
+    {
+     "setting": "Outdoor Unit Stages",
+     "options": "1, 2, Variable",
+     "notes": ""
+    },
+    {
+     "setting": "Compressor Type",
+     "options": "Single Compressor Two Stage, Two Compressor Two Stage",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Unit Type",
+     "options": "Electric, Gas/Oil, Hydronic",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Unit Heat Stages",
+     "options": "None, 1, 2, 3, Modulating",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Unit Blower Type",
+     "options": "Variable Speed, Non-Variable Speed",
+     "notes": ""
+    },
+    {
+     "setting": "Zoning",
+     "options": "Enable, Disable",
+     "notes": ""
+    },
+    {
+     "setting": "Compressor / indoor heater cycles per hour",
+     "options": "2-6 CPH per stage",
+     "notes": ""
+    },
+    {
+     "setting": "Select Outdoor Temperature Sensor",
+     "options": "No ODT Sensor, Thermostat ODT Sensor, CLII/AccuLink Outdoor Sensor, Relay Panel ODT Sensor",
+     "notes": ""
+    },
+    {
+     "setting": "Lockouts",
+     "options": "Compressor heating lockout, aux heat lockout, defrost heater balance point W1 (40-55F) / W2, W3 (5-55F)",
+     "notes": ""
+    },
+    {
+     "setting": "Dehumidifier / Ventilation",
+     "options": "Uses Relay Panel Aux 1 / Aux 2 contacts",
+     "notes": "Needs Relay Panel BAY24VRPAC52DB or newer"
+    }
+   ],
+   "installerTest": "Service Menu > Test Mode. System Test: blower 50/100%, cool stage 1/2, compressor heat stage 1/2, indoor heat stage 1/2/3/modulating, compressor + indoor heat, aux contact (max 30 minutes, minimum on/off times defeated, all dampers driven open). Damper Test (max 30 minutes). Variable Speed Test: Charging Mode - Cooling, Check Charge Mode - Heating, Checkout Modes, Pump Down Modes (120 minutes).",
+   "factoryReset": "Service menu > Restore Factory Defaults clears all stored settings. Reboot restarts the software; a full power cycle means pulling the control off the sub-base."
+  },
+  "diagnostics": [
+   {
+    "code": "Critical alert",
+    "meaning": "Loss of heating/cooling operation - service call required",
+    "action": "Shown on the home screen; open Diagnostics for problem description and possible cause"
+   },
+   {
+    "code": "Major alert",
+    "meaning": "Reduced functionality, minimum operation still possible",
+    "action": "Yellow icon only; check Diagnostics"
+   },
+   {
+    "code": "Normal alert",
+    "meaning": "Function may be lost but should recover, or diagnostic info",
+    "action": "Only shown in the Diagnostic screen"
+   },
+   {
+    "code": "Err.126.00",
+    "meaning": "A device is enabled but not reporting on the bus (Summary Table shows it offline)",
+    "action": "Restore communication, or remove the offline device from the Summary Table"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display will not come on",
+    "causes": [
+     "Loss of 24VAC between R and B at the control"
+    ],
+    "fixes": [
+     "Check R and B wiring - R/D or B/D may be reversed",
+     "Check transformer for 24VAC output",
+     "Check for broken or shorted thermostat wire"
+    ]
+   },
+   {
+    "symptom": "Indoor temperature reads wrong",
+    "causes": [
+     "Sensor needs calibration",
+     "Screen heat trapped in the body by a ceiling fan or top-down airflow"
+    ],
+    "fixes": [
+     "Calibrate from the control menu",
+     "Move the control away from the air stream or use a remote sensor"
+    ]
+   },
+   {
+    "symptom": "Heating or cooling will not come on",
+    "causes": [
+     "Wrong mode or setpoint",
+     "Minimum off-time delay",
+     "Equipment needs service"
+    ],
+    "fixes": [
+     "Set mode and setpoint",
+     "Wait 5 minutes and recheck",
+     "Check/repair the system"
+    ]
+   },
+   {
+    "symptom": "Fan set to ON but not running",
+    "causes": [
+     "Humidity control is engaged",
+     "Blower motor not working"
+    ],
+    "fixes": [
+     "Blower cycles off with the equipment when RH is above setpoint (humidity icon on the Fan Mode button)",
+     "Check/repair the system"
+    ]
+   }
+  ],
+  "tips": [
+   "The 7-inch screen gives off heat; a ceiling fan blowing down on the control can make it read high.",
+   "Demo Mode needs only 24V on R and B; press Restore Factory Defaults before installing a control that was used in Demo Mode."
+  ],
+  "manuals": [
+   {
+    "title": "Installer's Guide - ComfortLink II - TZONE950AC52ZA (18-HD64D1-10)",
+    "docType": "install",
+    "seedFile": "trane-xl950-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD64D1-10_02012015"
+   },
+   {
+    "title": "Trane Comfort Controls Product and Submittal Data (CNTR-PSD001A-EN) - XL950 TZONE950AC52ZB specs",
+    "docType": "spec",
+    "seedFile": "trane-comfort-controls-productdata.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-PSD001A-EN_05292026.pdf"
+   }
+  ],
+  "sourceNotes": "18-HD64D1-10 Installer's Guide ComfortLink II TZONE950AC52ZA (2/15). The PDF text layer uses an encoded font; content was read after decoding. TZONE950AC52ZB (current suffix) is from CNTR-PSD001A-EN (May 2026). Not all of the doc's option ranges survived decoding, so only clearly readable values are listed.",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xr102-xr103",
+  "brand": "Trane / American Standard",
+  "family": "XR102 / XR103 Non-Programmable",
+  "aka": "TCONT102 (1H/1C) / TCONT103 (heat pump 2H/1C)",
+  "models": [
+   "TCONT102",
+   "TCONT103"
+  ],
+  "type": "non-programmable",
+  "stages": "XR102: 1 heat / 1 cool (gas, oil, electric, 24V or millivolt), no aux heat. XR103: heat pump only, 2 heat / 1 cool with emergency heat",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AAA alkaline",
+   "notes": "XR102 runs on the two AAA batteries (system will not operate with dead batteries; after 4 weeks of low-battery warning it offsets the setpoint 10 degrees). XR103 does not need the batteries to operate - they only keep the configuration if AC power is lost; its C terminal takes 24VAC common."
+  },
+  "terminals": [
+   {
+    "t": "Rh / Rc",
+    "fn": "24V heating / cooling transformer",
+    "notes": "XR102: remove jumper for 2-transformer systems"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (XR102)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O / B",
+    "fn": "Reversing valve (XR102 heat pump use; energized in cool on O, heat on B)",
+    "notes": ""
+   },
+   {
+    "t": "R",
+    "fn": "24VAC (XR103)",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (XR103, switch selects O or B, factory O)",
+    "notes": ""
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat (XR103)",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Aux heat (XR103)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common (XR103)",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "L terminal (XR103) - shown on the terminal block; function not described in the guide",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "XR102 does not support auxiliary heat. Clip W905 for hydronic (longer heat cycle); clip W904 for Celsius.",
+   "XR103 jumpers: W906 cut if the emergency/aux heat energizes the blower itself; leave it if the thermostat must run the fan. W905 = slow cycle (1.5F / 1.2F instead of 1.2F / 0.75F). W904 = Celsius.",
+   "Diagrams include TAM7/TAM9 (24V mode), GAF2-S, S9V2, variable-speed gas furnace, packaged units, GAT2/GAM2/TEM3/TEM4, GAM5A/TAM4/GAF2-36M.",
+   "Wire third-party condensate overflow switches between thermostat Y and Y1 of the airflow control board; X2 is required to energize aux heat during defrost."
+  ],
+  "setup": {
+   "access": "XR103 configuration menu: SYSTEM switch OFF, hold Up and Down for 2 seconds; exit by moving the SYSTEM switch. XR102: temperature display adjust = press Up and Down 2 seconds with SYSTEM OFF; backlight = press Up and Down 2 seconds with SYSTEM in HEAT.",
+   "keySettings": [
+    {
+     "setting": "XR103 FA",
+     "options": "Fast second stage ON/OFF",
+     "notes": "ON: 2nd stage comes on immediately when setpoint is raised 3F or more"
+    },
+    {
+     "setting": "XR103 CL",
+     "options": "Compressor lockout ON/OFF",
+     "notes": "5 minute delay after power loss and between cycles"
+    },
+    {
+     "setting": "Temperature display adjust",
+     "options": "3 LO to 3 HI",
+     "notes": ""
+    },
+    {
+     "setting": "dL backlight",
+     "options": "ON/OFF",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": "Press Up and Down together while moving the SYSTEM switch from OFF to HEAT - resets to factory defaults (use after a voltage spike blanks the display)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or breaker",
+     "Furnace switch off",
+     "Blower door loose"
+    ],
+    "fixes": [
+     "Reset/replace",
+     "Turn on",
+     "Seat the door"
+    ]
+   },
+   {
+    "symptom": "Blank display or keys not responding",
+    "causes": [
+     "Voltage spike / static",
+     "Batteries need replacing"
+    ],
+    "fixes": [
+     "Replace batteries (AAA)",
+     "Do the reset"
+    ]
+   },
+   {
+    "symptom": "Snowflake/flame icons flashing (XR103) or snowflake flashing (XR102)",
+    "causes": [
+     "5-minute compressor lockout active"
+    ],
+    "fixes": [
+     "Wait - normal protection"
+    ]
+   }
+  ],
+  "tips": [
+   "XR102 cooling cycle rate is fixed and cannot be adjusted."
+  ],
+  "manuals": [
+   {
+    "title": "Trane XR102 Non-Programmable Thermostat TCONT102 Installation and User Guide (18-HD54D1-1B-EN)",
+    "docType": "install",
+    "seedFile": "trane-xr102-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD54D1-1B-EN_12172020.pdf"
+   },
+   {
+    "title": "Trane XR103 Non-Programmable Heat Pump Thermostat TCONT103 Installation and User Guide (18-HD55D1-1C-EN)",
+    "docType": "install",
+    "seedFile": "trane-xr103-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD55D1-1C-EN_12172020.pdf"
+   }
+  ],
+  "sourceNotes": "18-HD54D1-1B-EN XR102 Installation and User Guide (Sept 2020); 18-HD55D1-1C-EN XR103 Installation and User Guide (2020).",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xr202-xr203",
+  "brand": "Trane / American Standard",
+  "family": "XR202 / XR203 Programmable",
+  "aka": "TCONT202 (1H/1C) / TCONT203 (multi-stage, heat pump, dual fuel)",
+  "models": [
+   "TCONT202AS11MA",
+   "TCONT203AS42MA",
+   "TCONT202",
+   "TCONT203"
+  ],
+  "type": "programmable",
+  "stages": "XR202: 1 heat / 1 cool (single-stage heat pump with a field jumper Y-W; no aux heat). XR203: heat pump, heat/cool, dual fuel; up to 4 heat / 2 cool",
+  "sort": 30,
+  "confidence": "common",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline",
+   "notes": "AA batteries are required when there is no C wire; with a C wire they are backup (keep the clock). Continuous backlight needs a C wire."
+  },
+  "terminals": [
+   {
+    "t": "Rc / Rh",
+    "fn": "24V cooling / heating transformer",
+    "notes": "Internally connected; clip the RC/RH jumper when there are separate wires"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (switch on XR202; menu item on XR203)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor stage 1",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "W / W/E",
+    "fn": "Heat (XR202) / heat or emergency heat (XR203)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "L",
+    "fn": "L terminal (XR203) - shown on the terminal block; function not described in the guide",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor stage 2 (XR203)",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Aux / 2nd stage heat (XR203)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "XR202: to run a single-stage heat pump, field-install a jumper between Y and W. The 202 does not support auxiliary heat.",
+   "XR203 diagrams cover TAM7/TAM9 24V mode, S9V2, TEM6/VS gas furnace, packaged units, GAM5A/B, TAM4, GAF2, GAT2/GAM2/TEM3/TEM4."
+  ],
+  "setup": {
+   "access": "Installer menu: hold MENU for 8 seconds. User menu: press and release MENU. Next = Menu button, Back = Fan button, arrows change, Hold/Run exits.",
+   "keySettings": [
+    {
+     "setting": "05 Outdoor Equipment (XR203)",
+     "options": "AC0, AC1, AC2 (default), HP1, HP2",
+     "notes": ""
+    },
+    {
+     "setting": "10 Indoor Equipment (XR203)",
+     "options": "GA1, GA2, EL1, EL2",
+     "notes": ""
+    },
+    {
+     "setting": "15 dE Dedicated Emergency (XR203)",
+     "options": "W/E only in emergency; W2 becomes 1st stage aux",
+     "notes": ""
+    },
+    {
+     "setting": "20 R O/B or 3-wire zone valve (XR203)",
+     "options": "O, B, 3",
+     "notes": ""
+    },
+    {
+     "setting": "25 Fn Circulation fan",
+     "options": "OFF, 10-100%",
+     "notes": ""
+    },
+    {
+     "setting": "30 / 32 / 35 CR cycle rates",
+     "options": "SLO, MEd (default), FAS for heat / aux / cool",
+     "notes": ""
+    },
+    {
+     "setting": "50 CL Compressor lockout",
+     "options": "On (5 min) / OFF",
+     "notes": ""
+    },
+    {
+     "setting": "65 / 66 Limits",
+     "options": "Max heat 47-99, min cool 45-97",
+     "notes": ""
+    },
+    {
+     "setting": "Schedule type",
+     "options": "7-day, 5-1-1, non-programmable",
+     "notes": ""
+    },
+    {
+     "setting": "76 E Early Start",
+     "options": "On / OFF",
+     "notes": ""
+    },
+    {
+     "setting": "83 dL Continuous backlight",
+     "options": "Needs C wire",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Test by operation (XR203 section 5): Fan On/Auto; Heat 1 degree above room (3 degrees above brings aux on a heat pump); Aux mode; Cool 1 degree below room. 'Starting Soon' means the 5-minute compressor lockout is running.",
+   "factoryReset": "XR202: press Menu and Backlight together and hold until the display blanks - resets schedule and user settings. Removing batteries 2 minutes resets without changing menu settings."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Blank display or no response to keys",
+    "causes": [
+     "Batteries low / no C wire",
+     "Control fault"
+    ],
+    "fixes": [
+     "Remove batteries 2 minutes and reinstall",
+     "Replace thermostat if it persists"
+    ]
+   },
+   {
+    "symptom": "No heat",
+    "causes": [
+     "Mode/setpoint",
+     "Loose wires",
+     "Furnace lockout"
+    ],
+    "fixes": [
+     "Set Heat and raise setpoint; within 5 minutes it should click and show Heat On",
+     "If it clicks but no heat, check the furnace"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lockout on XR202: press and hold the arrow button shown in the guide together with Menu until the lock icon appears; hold 3 seconds to turn it off."
+  ],
+  "manuals": [
+   {
+    "title": "Trane XR202 Programmable Thermostat TCONT202AS11MA Installation and User Guide (18-HD51D1-1C-EN)",
+    "docType": "install",
+    "seedFile": "trane-xr202-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/literature/installation/18-hd51d1-1c-en_12172020.pdf"
+   },
+   {
+    "title": "Trane XR203 Programmable Thermostat TCONT203AS42MA Installation and User Guide (18-HD50D1-1D-EN)",
+    "docType": "install",
+    "seedFile": "trane-xr203-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD50D1-1D-EN_12172020.pdf"
+   }
+  ],
+  "sourceNotes": "18-HD51D1-1C-EN XR202 Installation and User Guide (Sept 2020); 18-HD50D1-1D-EN XR203 Installation and User Guide (2020).",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xr401",
+  "brand": "Trane / American Standard",
+  "family": "XR401 Non-Programmable",
+  "aka": "TCONT401 Comfort Control (2H/1C / heat pump)",
+  "models": [
+   "TCONT401AN21MA"
+  ],
+  "type": "non-programmable",
+  "stages": "Up to 2 heat / 1 cool conventional, or 1-stage heat pump with 1 stage aux heat (factory set 2H/1C gas)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "20-30 VAC Class II; 24VAC common on B. Setup and diagnostics are kept in non-volatile memory (no battery)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24VAC hot",
+    "notes": ""
+   },
+   {
+    "t": "W2/X2",
+    "fn": "Heat 2nd stage / X2 on heat pump",
+    "notes": ""
+   },
+   {
+    "t": "W1",
+    "fn": "Heat 1st stage",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Switch-over valve (SOV)",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "OT / OT",
+    "fn": "BAYSEN01ATEMPA outdoor temperature sensor (optional, for display)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump with air handler: if the outdoor sensor (ODT) is not used, connect a jumper from W1 to W2.",
+   "Oil furnaces need an external relay (R1). Dual fuel needs an external TAYPLUS103A kit; select 1 heater stage (ISU step 8) when using a two-stage gas/oil furnace in dual fuel.",
+   "Outdoor sensor: north side, out of the sun and away from the condenser discharge; max 200 ft of cable, 18 AWG minimum."
+  ],
+  "setup": {
+   "access": "Installer Setup: System Mode OFF, Fan AUTO, then press and hold Mode + Up arrow until SET-UP shows. User Setup: press and hold Mode + Fan. Mode = next step, Fan = previous step, arrows change the value. Allow 5 seconds after Step 99 SA (save) before removing power.",
+   "keySettings": [
+    {
+     "setting": "System Type",
+     "options": "1 = AC, 2 = HP",
+     "notes": ""
+    },
+    {
+     "setting": "Compressor Stages",
+     "options": "0 none, 1 single stage",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Heater Type",
+     "options": "1 gas/oil, 2 electric",
+     "notes": ""
+    },
+    {
+     "setting": "Indoor Heater Stages",
+     "options": "0 none, 1 single, 2 two stage",
+     "notes": ""
+    },
+    {
+     "setting": "Outdoor Sensor",
+     "options": "0 none, 1 has sensor",
+     "notes": ""
+    },
+    {
+     "setting": "Cooling / compressor heating fan ON and OFF delays",
+     "options": "ON 0-30 s, OFF 0-90 s",
+     "notes": ""
+    },
+    {
+     "setting": "Compressor / heater cycles per hour",
+     "options": "2-6 CPH",
+     "notes": ""
+    },
+    {
+     "setting": "User setup",
+     "options": "F/C, auto/manual changeover, deadband 2-10F, cooling droop, energy savings offsets, filter reminder 1-180 days, calibrate indoor/outdoor +/-5F",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Manual Test Mode: System Mode OFF, Fan AUTO, press and hold Mode + Down arrow. Step 70 G fan, 72 Y compressor (G must be on), O switch-over valve, W1, W2. Times out 1 minute after the last key press. Press $ to exit.",
+   "factoryReset": "Installer Setup Step 99: select FA (factory default settings) and press Mode; SA saves, CA cancels."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display will not come on",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door loose"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the door so the interlock closes"
+    ]
+   },
+   {
+    "symptom": "Temperature setting will not change",
+    "causes": [
+     "Setpoint limit reached (heat 40-85F, cool 65-90F)",
+     "Keypad locked"
+    ],
+    "fixes": [
+     "Stay inside the limits",
+     "Unlock: press Up + Down together"
+    ]
+   },
+   {
+    "symptom": "Room temperature overshoots after a setpoint change of more than 2 degrees",
+    "causes": [
+     "Oversized equipment - control cannot respond fast enough"
+    ],
+    "fixes": [
+     "Set Control Response Rate to Fast (ISU)"
+    ]
+   }
+  ],
+  "tips": [
+   "Defeat the equipment time delay for the current cycle: press Mode + Down arrow together.",
+   "Keypad lock/unlock: hold Up + Down together."
+  ],
+  "manuals": [
+   {
+    "title": "Installer's Guide XR401 TCONT401AN21MA (18-HD29D2-4)",
+    "docType": "install",
+    "seedFile": "trane-xr401-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD29D2-4_04012006"
+   }
+  ],
+  "sourceNotes": "18-HD29D2-4 Installer's Guide XR401 TCONT401AN21MA (4/2006).",
+  "img": ""
+ },
+ {
+  "id": "tst-trane-xr402",
+  "brand": "Trane / American Standard",
+  "family": "XR402 Non-Programmable",
+  "aka": "TCONT402 Comfort Control (3H/2C, heat pump, dual fuel, BK)",
+  "models": [
+   "TCONT402AN32DA"
+  ],
+  "type": "non-programmable",
+  "stages": "Up to 3 heat / 2 cool / heat pump / dual fuel (factory set 2H/2C gas/cooling with BK output enabled)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "20-30 VAC Class II; 24VAC common on B. Settings stored in non-volatile memory (no battery backup needed)."
+  },
+  "terminals": [
+   {
+    "t": "Y2",
+    "fn": "Cooling 2nd stage",
+    "notes": ""
+   },
+   {
+    "t": "W3",
+    "fn": "Heating 3rd stage",
+    "notes": ""
+   },
+   {
+    "t": "R",
+    "fn": "24VAC hot",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "Heating 2nd stage",
+    "notes": ""
+   },
+   {
+    "t": "W1",
+    "fn": "Heating 1st stage",
+    "notes": ""
+   },
+   {
+    "t": "Y/Y1",
+    "fn": "Cooling 1st stage",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O",
+    "fn": "Switch-over valve",
+    "notes": ""
+   },
+   {
+    "t": "B",
+    "fn": "24VAC common",
+    "notes": ""
+   },
+   {
+    "t": "BK",
+    "fn": "Variable-speed airflow (PWM) output to VS indoor units",
+    "notes": ""
+   },
+   {
+    "t": "H1 / H2",
+    "fn": "Optional humidistat (BAYSTAT253A), opens on rise",
+    "notes": ""
+   },
+   {
+    "t": "OT1 / OT2",
+    "fn": "Outdoor temperature sensor BAYSEN01ATEMPA (included)",
+    "notes": ""
+   },
+   {
+    "t": "RS1 / RS2",
+    "fn": "Optional remote indoor sensor ZZSENSAL0400AA",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Dual fuel (HP with gas or oil furnace): cut the JP1 jumper on the control. No external dual fuel kit (TAYPLUS103A) is needed.",
+   "To use BK: cut/remove the R-to-BK jumper at the indoor unit, set indoor dip switches 5 and 6 OFF, do not connect the indoor unit's Y terminals, and run a BK wire. With BK disabled, use normal 24V Y1/Y2 to the indoor unit.",
+   "Two-step heat pump dual fuel (16 SEER condenser) diagram: jumper R to O at the LVTB and cut the BK jumper.",
+   "Oil furnace applications require an external relay (see Fig. OIL-1).",
+   "Outdoor sensor max 200 ft, 18 AWG minimum. 10K thermistor table in the guide (e.g. 75F = 10.5K, 30F = 34.5K)."
+  ],
+  "setup": {
+   "access": "Installer Setup (steps 1-49): System Mode OFF, Fan AUTO, press and hold Mode + Up arrow. User Setup (steps 50-62): press and hold Mode + Fan. Mode = forward, Fan = back, arrows change. Wait 5 seconds after Step 99 SA before removing power.",
+   "keySettings": [
+    {
+     "setting": "Step 5 System Type",
+     "options": "1 AC, 2 HP",
+     "notes": ""
+    },
+    {
+     "setting": "Step 6 Compressor Stages",
+     "options": "0 none, 1 single, 2 two stage/two step",
+     "notes": ""
+    },
+    {
+     "setting": "Step 7 Compressor Type",
+     "options": "0 two step, 1 two stage",
+     "notes": ""
+    },
+    {
+     "setting": "Step 8 Indoor Heater Type",
+     "options": "1 gas/oil, 2 electric, 3 wet heat",
+     "notes": ""
+    },
+    {
+     "setting": "Step 9 Indoor Heater Stages",
+     "options": "0-3",
+     "notes": ""
+    },
+    {
+     "setting": "Step 10 Outdoor Sensor",
+     "options": "0 none, 1 display only, 2 display and control",
+     "notes": ""
+    },
+    {
+     "setting": "Step 11 BK Output",
+     "options": "0 disabled, 1 enabled (default)",
+     "notes": ""
+    },
+    {
+     "setting": "Steps 12-13 VS blower on/off delay profiles",
+     "options": "1 no delay ... 7 (see guide)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 14 Compressor low stage airflow",
+     "options": "Two step 55-80% (65%), two stage 35-60% (50%)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 34 Control Response Rate",
+     "options": "0 normal, 1 fast",
+     "notes": ""
+    },
+    {
+     "setting": "Step 36 Remote indoor sensor",
+     "options": "0 none, 1 has sensor",
+     "notes": ""
+    },
+    {
+     "setting": "Step 37 Humidistat for dehumidification",
+     "options": "0/1",
+     "notes": ""
+    },
+    {
+     "setting": "Steps 43-44 Heat pump restricted / resume outdoor temp (dual fuel)",
+     "options": "Disabled or 10-70F / 14-74F",
+     "notes": ""
+    },
+    {
+     "setting": "Step 46 Aux heat lockout outdoor temp",
+     "options": "Disabled or 15-75F",
+     "notes": ""
+    },
+    {
+     "setting": "Steps 47-49 W1/W2/W3 defrost balance points",
+     "options": "Disabled or -10 to 55F",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Manual Test Mode: System Mode OFF, Fan AUTO, press and hold Mode + Down arrow. Step 70 G fan, 71 BK output 35-100%, 72 Y1 (G must be on), 73 Y2, 74 O, 75-77 W1/W2/W3, then LCD segment test. Times out after 4 minutes; press $ to exit.",
+   "factoryReset": "Installer Setup Step 99: FA restores factory defaults and clears service data; CL clears history and service data only; CS clears setups; SA saves; CA cancels."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display will not come on",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door loose"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Seat the door so the interlock closes"
+    ]
+   },
+   {
+    "symptom": "Service indicator flashing",
+    "causes": [
+     "Control EEPROM write error"
+    ],
+    "fixes": [
+     "Press any key and check / re-enter setup choices"
+    ]
+   },
+   {
+    "symptom": "Service indicator solid and '--' in the temperature display",
+    "causes": [
+     "Indoor temperature sensor open or shorted"
+    ],
+    "fixes": [
+     "Replace control"
+    ]
+   },
+   {
+    "symptom": "Temperature setting will not change",
+    "causes": [
+     "Setpoint limit reached (heat 40-85F, cool 65-90F)",
+     "Keypad locked"
+    ],
+    "fixes": [
+     "Stay inside the limits",
+     "Unlock: press Up + Down together"
+    ]
+   },
+   {
+    "symptom": "Room temperature overshoots after a setpoint change of more than 2 degrees",
+    "causes": [
+     "Oversized equipment - control cannot respond fast enough"
+    ],
+    "fixes": [
+     "Set Control Response Rate to Fast (ISU)"
+    ]
+   },
+   {
+    "symptom": "Outdoor temperature shows '--' with Service solid",
+    "causes": [
+     "Outdoor sensor or its wiring open/shorted"
+    ],
+    "fixes": [
+     "Disconnect the sensor and check sensor and wiring resistance against the 10K thermistor table",
+     "Replace sensor or repair wiring"
+    ]
+   },
+   {
+    "symptom": "Service (and Heat) indicator flashing at ISU steps 5 and 8",
+    "causes": [
+     "JP1 dual fuel jumper does not agree with ISU selections"
+    ],
+    "fixes": [
+     "Cut JP1 for dual fuel applications"
+    ]
+   },
+   {
+    "symptom": "ROOM and SERVICE flashing while room temp still displayed",
+    "causes": [
+     "Remote indoor sensor selected in ISU 36 but missing, open or disconnected"
+    ],
+    "fixes": [
+     "Fix ISU 36 or the sensor wiring - control falls back to its onboard sensor"
+    ]
+   }
+  ],
+  "tips": [
+   "No external dual fuel kit is needed with this control - cut JP1 instead.",
+   "Defeat the minimum off time for one cycle: press Mode + Down arrow about 2 seconds."
+  ],
+  "manuals": [
+   {
+    "title": "Installer's Guide XR402 TCONT402AN32DA (18-HD29D3-4)",
+    "docType": "install",
+    "seedFile": "trane-xr402-install.pdf",
+    "url": "https://elibrary.tranetechnologies.com/public/trane-history/Literature/Installation/18-HD29D3-4_05012008"
+   }
+  ],
+  "sourceNotes": "18-HD29D3-4 Installer's Guide XR402 TCONT402AN32DA (05/08, supersedes 18-HD29D3-3).",
+  "img": ""
+ },
+ {
   "id": "tst-rheem-500-communicating",
   "brand": "Rheem / Ruud",
   "family": "500 Series Communicating",
@@ -30707,7 +43150,8 @@ const THERMOSTATS = [
   "models": [
    "RHC-TST501CMMS",
    "RHC-TST550CMMS",
-   "RHC-TST551CMMS"
+   "RHC-TST551CMMS",
+   "UHC-TST501CMMS"
   ],
   "type": "communicating",
   "stages": "auto-configured by connected Comfort Control2 System equipment - up to 4H/2C on heat pump systems, 2H/2C on conventional gas/electric systems (thermostat itself has no fixed stage limit; staging is reported by the connected furnace/air handler/outdoor unit ...",
@@ -31273,7 +43717,11 @@ const THERMOSTATS = [
   "aka": "RHC-TST213UNMS / RHC-TST305UNMS",
   "models": [
    "RHC-TST213UNMS",
-   "RHC-TST305UNMS"
+   "RHC-TST305UNMS",
+   "RHC-TST314UNMS",
+   "UHC-TST213UNMS",
+   "UHC-TST305UNMS",
+   "UHC-TST314UNMS"
   ],
   "type": "programmable",
   "stages": "TST213UNMS: Single Stage (SS1) or Multi-Stage 2 (MS2) conventional; TST305UNMS: adds Heat Pump 1/2 support",
@@ -31436,6 +43884,18 @@ const THERMOSTATS = [
     "docType": "install",
     "seedFile": "rheem-tst213unms-install.pdf",
     "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST213UNMS%20Installation%20and%20Operating%20Instructions.pdf"
+   },
+   {
+    "title": "(-)HC-TST305UNMS Big Blue Humidity Universal Thermostat Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "rheem-tst305unms-install.pdf",
+    "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST305UNMS%20Installation%20and%20Operating%20Instructions.pdf"
+   },
+   {
+    "title": "(-)HC-TST314UNMS Universal Touchscreen Thermostat Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "rheem-tst314unms-install.pdf",
+    "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST314UNMS%20Installation%20and%20Operating%20Instructions.pdf"
    }
   ],
   "sourceNotes": "37-7055A series RHC-TST213UNMS Installation and Operating Instructions; 37-7055A series RHC-TST305UNMS Installation and Operating Instructions",
@@ -31448,7 +43908,9 @@ const THERMOSTATS = [
   "aka": "RHC-TST401MDMS / RHC-TST412MDMS",
   "models": [
    "RHC-TST401MDMS",
-   "RHC-TST412MDMS"
+   "RHC-TST412MDMS",
+   "UHC-TST401MDMS",
+   "UHC-TST412MDMS"
   ],
   "type": "programmable",
   "stages": "RHC-TST401MDMS: single/multi-stage heat (up to 3H) or heat pump with aux/emergency heat, 2 stage cool; RHC-TST412MDMS: same plus 2nd stage compressor (Y2) and humidification/dehumidification relays",
@@ -31720,7 +44182,8 @@ const THERMOSTATS = [
   "family": "400 Series Universal",
   "aka": "RHC-TST422DFMS",
   "models": [
-   "RHC-TST422DFMS"
+   "RHC-TST422DFMS",
+   "UHC-TST422DFMS"
   ],
   "type": "programmable",
   "stages": "Single Stage (SS1): 1H/1C; Multi Stage (MS2): 2H/2C; Heat Pump 1 (HP1, single-stage compressor): up to 2 stages aux/emergency heat, 3H total/1C; Heat Pump 2 (HP2, two-stage or two-compressor): up to 2 stages aux/emergency heat, 4H total/2C",
@@ -31969,6 +44432,248 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "37-7054A Universal Thermostat with Humidity/Dehumidity Control and Automatic Heat/Cool Changeover Option - Installation and Operating Instructions (RHC-TST422DFMS)",
   "img": "tstat-img/tst-rheem-400-universal.jpg"
+ },
+ {
+  "id": "tst-rheem-tst211gess",
+  "brand": "Rheem / Ruud",
+  "family": "200 Series Single Stage Programmable (RHC/UHC-TST211GESS)",
+  "aka": "Rheem / Ruud single-stage or heat pump stat with Auto changeover option",
+  "models": [
+   "RHC-TST211GESS",
+   "UHC-TST211GESS"
+  ],
+  "type": "programmable",
+  "stages": "1 heat / 1 cool conventional, or single-stage heat pump with no aux / emergency heat (not for 3H/2C systems)",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline",
+   "notes": "Battery or 24 VAC powered (C from the cooling or heat-only transformer). Batteries: replace about every 2 years. With under two months of battery left the setpoint offsets 10 F (cooler in heat, warmer in cool) as a warning."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "Power for heating",
+    "notes": ""
+   },
+   {
+    "t": "RC",
+    "fn": "Power for cooling",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "Common from the secondary side of the cooling (or heat-only) transformer",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "O/B",
+    "fn": "SS: power-closed for 3-wire zone valve; HP: changeover valve",
+    "notes": "O or B chosen in installer menu item 1"
+   }
+  ],
+  "wiringNotes": [
+   "SS/HP switch on the back: factory SS (conventional single stage); set HP for a single-stage heat pump.",
+   "GAS/ELEC switch: factory GAS (thermostat does not run the fan on a heat call); ELEC runs G with heat. In heat pump mode the fan always runs with heat.",
+   "Supports millivolt heat-only floor/wall furnaces and 2- or 3-wire hydronic zone valves."
+  ],
+  "setup": {
+   "access": "With the stat in Heat, Cool or Auto, press MENU for at least 5 s; MENU advances, up/down changes; RUN returns to normal.",
+   "keySettings": [
+    {
+     "setting": "1 Reversing valve (HP only)",
+     "options": "O (on in cool, default), B (on in heat)",
+     "notes": ""
+    },
+    {
+     "setting": "2 Programs per week",
+     "options": "P2 5/2 day (default), P3 5/1/1, P0 non-programmable",
+     "notes": ""
+    },
+    {
+     "setting": "3 Cool Savings",
+     "options": "Off (default) / On, amount 1-6 F (default 3)",
+     "notes": ""
+    },
+    {
+     "setting": "4 Energy Management Recovery (E)",
+     "options": "On (default) / Off",
+     "notes": ""
+    },
+    {
+     "setting": "5-7 Cycle rate (anticipation)",
+     "options": "Heat SS: FA 0.4 F, ME 0.6 F (default), SL 1.8 F; Cool default FA; Heat pump FA 1.2 F (default), SL 1.7 F",
+     "notes": ""
+    },
+    {
+     "setting": "8 Compressor lockout (CL)",
+     "options": "Off (default) / On = 5 min between compressor cycles",
+     "notes": ""
+    },
+    {
+     "setting": "9 System mode configuration",
+     "options": "Heat Cool Off (Auto) default; Heat Off with/without fan; Cool Off; Auto Off",
+     "notes": ""
+    },
+    {
+     "setting": "11 Temperature display adjustment",
+     "options": "4 LO to 4 HI",
+     "notes": ""
+    },
+    {
+     "setting": "13 Change filter reminder",
+     "options": "Off/On, 25-1975 h run time (200 h default)",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Diagnostic: SYSTEM to HEAT and raise setpoint above room temp - a soft click within a few seconds means the stat is switching (cooling may take up to 5 min to click).",
+   "factoryReset": "Hard reset: remove wires from R and C (do not short them) and remove batteries for 2 minutes - resets menu settings and programs. Reset programming/clock/configuration: press up, down and FAN together."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "No heat / no cool / no fan",
+    "causes": [
+     "Blown fuse or tripped breaker",
+     "Furnace power switch off",
+     "Blower door not engaging interlock",
+     "Loose connection"
+    ],
+    "fixes": [
+     "Replace fuse / reset breaker",
+     "Turn switch on",
+     "Reinstall door",
+     "Tighten connections"
+    ]
+   },
+   {
+    "symptom": "Heat, cool or fan runs constantly",
+    "causes": [
+     "Short in wiring, thermostat or equipment",
+     "Fan switch set to ON"
+    ],
+    "fixes": [
+     "Check for touching wires / bare wire under the terminal block",
+     "Reset the stat; test the equipment"
+    ]
+   },
+   {
+    "symptom": "Display blank or erratic after a surge / static",
+    "causes": [
+     "Voltage spike or static discharge"
+    ],
+    "fixes": [
+     "Do the R/C + battery reset described above"
+    ]
+   },
+   {
+    "symptom": "Cycles too fast or too slow",
+    "causes": [
+     "Location / system size vs cycle rate"
+    ],
+    "fixes": [
+     "Choose SL (slow) cycle rate in menu steps 5-7"
+    ]
+   }
+  ],
+  "tips": [
+   "Mercury notice: this stat has no mercury but may replace one that does - dispose of old mercury stats properly."
+  ],
+  "manuals": [
+   {
+    "title": "(-)HC-TST211GESS Single Stage Thermostat Installation and Operating Instructions",
+    "docType": "install",
+    "seedFile": "rheem-tst211gess-install.pdf",
+    "url": "https://s3.amazonaws.com/rheemparts/PartImages/MultiplePIP/Finished%20Goods%20Thermostats/-HC-TST211GESS%20Installation%20and%20Operating%20Instructions.pdf"
+   }
+  ],
+  "sourceNotes": "Part No. 37-7195A (-)HC-TST211GESS Installation and Operating Instructions (2010)",
+  "img": ""
+ },
+ {
+  "id": "tst-rheem-pro-series-83-85",
+  "brand": "Rheem / Ruud",
+  "family": "Professional Thermostats 83 / 85 Series (UHC/RHC-TST83C, 83H, 85U)",
+  "aka": "Ruud / Rheem Protech replacement stats, blue backlit display; RHC- = Rheem, UHC- = Ruud",
+  "models": [
+   "UHC-TST83C-11NP",
+   "UHC-TST83C-11PR",
+   "UHC-TST83H-21NP",
+   "UHC-TST83H-21PR",
+   "UHC-TST85U-22NP",
+   "UHC-TST85U-22PR",
+   "UHC-TST85U-42NP",
+   "UHC-TST85U-42PR"
+  ],
+  "type": "programmable",
+  "stages": "83C-11: 1 heat / 1 cool conventional or heat pump. 83H-21: heat pump 2 heat / 1 cool. 85U-22: up to 2H/2C conventional or 2H/1C heat pump. 85U-42: up to 2H/2C conventional or 4H/2C heat pump. NP = non-programmable, PR = 7-day or 5+1+1 programmable",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Battery power supported (mV to 30 VAC)",
+   "notes": "Brochure: battery power mV to 30 VAC, hardwire 20-30 VAC; continuous backlight requires the common wire."
+  },
+  "terminals": [],
+  "wiringNotes": [
+   "Terminal designations per the Ruud sheet (the sheet does not describe what each terminal does): Universal 85U-22/42 = RC RH C W/E W2 Y Y2 O/B/6 G L; Heat pump 83H-21 = R C W2 E Y O/B G L; Conventional/heat pump single stage 83C-11 = RC RH C W Y O/B G.",
+   "Terminal load: staging models 1.5 A per terminal / 2.5 A total; single-stage models 1.0 A per terminal / 1.5 A total.",
+   "Accessories: wallplate F61-2663 (6-3/4 x 4-1/2 in), thermostat guard F29-0198.",
+   "Rheem/Ruud did not publish an installation manual for this series online (searched Rheem/Ruud sites and parts S3 store) - only this brochure."
+  ],
+  "setup": {
+   "access": "Not published in the brochure.",
+   "keySettings": [
+    {
+     "setting": "Dual fuel control (85U / 83H)",
+     "options": "L (logic) per the sheet",
+     "notes": ""
+    },
+    {
+     "setting": "Setpoint range",
+     "options": "45-99 F",
+     "notes": ""
+    },
+    {
+     "setting": "Rated differentials @ 6 F/hr",
+     "options": "Heat conv. fast 0.5 / med 0.75 / slow 1.9 F; cool 0.9 / 1.7 F; heat pump 0.9 / 1.2 / 1.7 F; aux 0.5 / 1.2 / 1.9 F",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "All models: temperature limits and keypad lockout; select models add auto changeover, filter reminder and dual fuel."
+  ],
+  "manuals": [
+   {
+    "title": "Ruud Professional Thermostats spec sheet (PRO-5116)",
+    "docType": "spec",
+    "seedFile": "ruud-pro-series-83-85-spec-sheet.pdf",
+    "url": "http://cdn.globalimageserver.com/FetchDocument.aspx?ID=f55b07f8-3c9d-4f4e-8847-901d5fd3dde7"
+   }
+  ],
+  "sourceNotes": "PRO-5116 Ruud Professional Thermostats sheet (12-17), linked from ruud.com RHC-TST-83 / RHC-TST-85 product pages",
+  "img": ""
  },
  {
   "id": "tst-york-echelon-ttscc01",
@@ -32249,17 +44954,932 @@ const THERMOSTATS = [
   },
   "diagnostics": [],
   "troubleshooting": [],
-  "tips": [],
+  "tips": [
+   "Communicating terminals: A (+) data, R 24 VAC hot, C 24 VAC common / data ground, B (-) data - four 18 AWG wires to each unit/control (Installation Manual 5407934-UIM-D-1020).",
+   "Variable capacity outdoor units use only three wires (A, C, B) - do NOT connect R to the outdoor unit control board; they have their own transformer.",
+   "Never put more than one wire under a communication terminal screw - use a single pigtail (max 6 in.) and a wire nut, or expect nuisance communication faults.",
+   "Keep communication wiring at least 1 ft from large inductive loads (EAC, motors); use shielded wire only where that cannot be avoided.",
+   "Can also be wired conventionally: up to 2H/2C conventional or 4H/2C heat pump using W1, W2, Y1, Y2, O/B, G, HUM, R, C. Dual fuel controlled by the stat needs the S1-02542683000 ambient sensor on S1/S2.",
+   "Installer System Settings: on the Settings screen tap and hold the Service icon for 5 seconds. Restore Defaults requires a 5-second hold.",
+   "Once on the homeowner Wi-Fi, an available over-the-air software update starts about 5 minutes after connecting."
+  ],
   "manuals": [
    {
     "title": "User's Information Manual: Hx 3 Touch Screen Thermostat - S1-THXU430W",
     "docType": "user",
     "seedFile": "york-hx3-thxu430w-usermanual.pdf",
     "url": "https://docs.johnsoncontrols.com/ductedsystems/api/khub/documents/I_IMGNgHoDTVlY~He3I8Iw/content"
+   },
+   {
+    "title": "Hx 3 Touch Screen Thermostat S1-THXU430W Installation Manual",
+    "docType": "install",
+    "seedFile": "york-hx3-thxu430w-install-manual.pdf",
+    "url": "https://www.master.ca/media/akeneo_connector/asset_files/Y/o/York_Coleman_Luxaire_THXU430W_installation_1020_en_CA_0962.pdf"
    }
   ],
   "sourceNotes": "5407935-UUM-E-1020 User's Information Manual: Hx 3 Touch Screen Thermostat - S1-THXU430W",
   "img": "tstat-img/tst-york-hx3-thxu430w.jpg"
+ },
+ {
+  "id": "tst-york-source1-lx-series-legacy",
+  "brand": "York / Coleman",
+  "family": "Source 1 LX Series Digital Thermostat (S1-THSU21P1 / 32P7 / 32HP7)",
+  "aka": "York / Coleman / Luxaire OEM \"Source 1\" LX residential stat, blue backlit scrolling display",
+  "models": [
+   "S1-THSU21P1",
+   "S1-THSU32P7",
+   "S1-THSU32HP7"
+  ],
+  "type": "programmable",
+  "stages": "Backplate: W1/O/B, W2, W3 heat and Y1, Y2 compressor; heat pump with up to 2 stages of electric aux; features vary by model (32HP7 adds humidity control)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: \"This thermostat requires both R (24 VAC Return) and C (24 VAC Common) be connected to the backplate terminals.\""
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return (power)",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat, or reversing valve on heat pumps",
+    "notes": "Function set by J1 / J2 jumpers"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "W3",
+    "fn": "3rd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "HUM",
+    "fn": "Humidifier control circuit",
+    "notes": "Humidity models"
+   },
+   {
+    "t": "DEHUM",
+    "fn": "Dehumidifier control circuit",
+    "notes": "Humidity models"
+   },
+   {
+    "t": "AUX",
+    "fn": "Aux output",
+    "notes": "Programmable: time, temp, external, error, free cooling, venting"
+   },
+   {
+    "t": "OUTDOOR SENSOR",
+    "fn": "Outdoor sensor connections",
+    "notes": ""
+   },
+   {
+    "t": "REMOTE SENSOR",
+    "fn": "Remote sensor connections",
+    "notes": ""
+   },
+   {
+    "t": "DRY CONTACT",
+    "fn": "Dry contact input (drain pan overflow or vacation)",
+    "notes": ""
+   },
+   {
+    "t": "FAULT",
+    "fn": "Fault input",
+    "notes": "Setup 72 Fault Type: None, York (Yorkguard heat pump control fault alerts 2/3), Comfort Alert"
+   }
+  ],
+  "wiringNotes": [
+   "Old-stat cross reference from the manual: G/F -> G; Y1/Y/C -> Y1; W1/W/H -> W1/O/B; Rh/R/M/Vr/A -> R; O/B (heat pump) -> W1/O/B; W2 -> W2; Y2 -> Y2; W3 -> W3; H/HUM -> HUM; D/DEHUM -> DEHUM; Ck1/CKGND -> DRY CONTACT.",
+   "Jumpers on the back of the thermostat: J1 GAS/ELEC or HEATPUMP; J2 RV=O (W1/O/B on in cool) or RV=B (on in heat); J3 GAS/ELEC - with J1=GAS/ELEC selects whether G runs in heat (ELEC) or not (GAS); with J1=HEATPUMP selects aux type (GAS = no aux during HP, use for dual fuel; ELEC = up to 2 stages strip heat).",
+   "Some commercial heat pumps need J1 set to GAS/ELEC - consult the heat pump literature."
+  ],
+  "setup": {
+   "access": "Advanced/Installer Setup: press SETUP, then MODE; WARMER/COOLER change the value, MODE advances, SETUP exits. Technician Setup: hold SETUP 5 s until all icons appear.",
+   "keySettings": [
+    {
+     "setting": "Step 1 Program mode",
+     "options": "Non, 1, 5/2, 7 day",
+     "notes": "Default 7"
+    },
+    {
+     "setting": "Step 2 Available modes",
+     "options": "Heat/Cool/Auto/Off, Heat/Cool/Off, Heat/Off, Cool/Off",
+     "notes": ""
+    },
+    {
+     "setting": "Step 18-20 Setpoint limits / max heat / min cool",
+     "options": "No/Use; 35-99",
+     "notes": ""
+    },
+    {
+     "setting": "Step 21 Cycles per hour",
+     "options": "No limit, 2-6",
+     "notes": "Default 6"
+    },
+    {
+     "setting": "Step 22 Compressor minimum off",
+     "options": "0, 3, 5 min",
+     "notes": "Default 5"
+    },
+    {
+     "setting": "Step 24 Number of compressor stages",
+     "options": "1, 2",
+     "notes": ""
+    },
+    {
+     "setting": "Step 25-34 Stage deadbands, interstage minutes, turn-off points",
+     "options": "1st 1-6, others 0-10 deg; 0-60 min; Deadband or Setpoint",
+     "notes": ""
+    },
+    {
+     "setting": "Step 39 Control to temp source",
+     "options": "Tstat, Remote, Average",
+     "notes": ""
+    },
+    {
+     "setting": "Step 43-45 Cool to dehumidify / max overcool / reheat",
+     "options": "Off/On; 0-5 deg; On/Off",
+     "notes": "Humidity models"
+    },
+    {
+     "setting": "Step 46-49 Heat pump / aux heat lockout on outdoor temp",
+     "options": "On/Off; HP lockout 10-45 F; aux lockout 20-75 F",
+     "notes": "Requires outdoor sensor"
+    },
+    {
+     "setting": "Step 50-54 Dual fuel",
+     "options": "On/Off/External; safety timer; changeover on outdoor temp; balance point 5-60 F; delay 0-90 s",
+     "notes": ""
+    },
+    {
+     "setting": "Step 55 Fan off delay",
+     "options": "0, 120 s",
+     "notes": ""
+    },
+    {
+     "setting": "Step 70-71 Dry contact polarity / use",
+     "options": "Open/Closed; Pan or Vacation",
+     "notes": ""
+    },
+    {
+     "setting": "Step 72 Fault type",
+     "options": "None, York, Comfort Alert",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Technician Setup (hold SETUP 5 s): MODE shows version, then jumper settings and Dry Contact/Fault state, then \"TURN ON EQUIPMENT?\" - WARMER steps up heating stages, COOLER steps down cooling stages; then sensor calibration and HUM / DEHUM / AUX output control. Auto-exits after 10 min.",
+   "factoryReset": "Hold SETUP 5 s until all icons appear, release, then hold FAN 5 s until DEFAULTS appears; press MODE. Resets all programming."
+  },
+  "diagnostics": [
+   {
+    "code": "FAULT",
+    "meaning": "Scrolling display shows FAULT when the fault input is active (Fault Type = None)",
+    "action": "Check the equipment fault source wired to the FAULT terminal"
+   },
+   {
+    "code": "CONDENSATE / drain pan (dry contact)",
+    "meaning": "Dry contact set for drain pan and input active",
+    "action": "Clear the condensate problem"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Air conditioning does not attempt to turn on",
+    "causes": [
+     "Compressor timer lockout (cycles per hour / minimum off time)",
+     "Cooling setpoint too high or limited by setpoint limit"
+    ],
+    "fixes": [
+     "Defeat/adjust Cycles Per Hour in Installer Setup",
+     "Lower the cooling setpoint or the setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Heating does not attempt to turn on",
+    "causes": [
+     "Heating setpoint too low / limited"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or the heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve jumper/DIP set for B"
+    ],
+    "fixes": [
+     "Set reversing valve to O (if the equipment uses O)"
+    ]
+   },
+   {
+    "symptom": "Both heat and cool come on during a cooling call",
+    "causes": [
+     "Equipment jumper/DIP set for HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set equipment jumper/DIP to GAS/ELEC"
+    ]
+   },
+   {
+    "symptom": "Program button shows \"DISABLED\"",
+    "causes": [
+     "Program mode set to NON PROGRAM"
+    ],
+    "fixes": [
+     "Set Setup Step 1 Program Mode to 1, 5/2 or 7 Day"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lockout, service filter / UV lamp / humidifier reminders and \"Press Fan to clear all messages\" (step 75) are in the same setup list."
+  ],
+  "manuals": [
+   {
+    "title": "LX Series Digital Thermostat S1-THSU21P1 / S1-THSU32P7 / S1-THSU32HP7 Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "york-source1-lx-thsu21p1-32p7-install-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/LX_Residential_Owner's_and_Installation_Manual_eng.pdf"
+   }
+  ],
+  "sourceNotes": "LX Residential Owner's and Installation Manual (Source 1, 2010-04)",
+  "img": ""
+ },
+ {
+  "id": "tst-york-source1-lx-series-30x",
+  "brand": "York / Coleman",
+  "family": "Source 1 LX Series (S1-THSU301-S / 302-S / 303-S)",
+  "aka": "refreshed Source 1 LX residential stats, optional Wi-Fi module (Skyport cloud)",
+  "models": [
+   "S1-THSU301-S",
+   "S1-THSU302-S",
+   "S1-THSU303-S"
+  ],
+  "type": "programmable",
+  "stages": "S1-THSU301-S: up to 2 heat / 1 cool (heat pump: 1 aux stage). S1-THSU302-S / 303-S: up to 4 heat / 2 cool incl. heat pump with 2 aux stages; 303-S adds humidity control (HUM/DEHUM)",
+  "sort": 20,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: \"This thermostat requires both R (24 VAC Return) and C (24 VAC Common) be connected to the backplate terminals.\""
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve (heat pump)",
+    "notes": "Set by DIP switches"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat circuit",
+    "notes": ""
+   },
+   {
+    "t": "W3",
+    "fn": "3rd stage heat circuit",
+    "notes": "302-S / 303-S"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "302-S / 303-S"
+   },
+   {
+    "t": "HUM / DEHUM",
+    "fn": "Humidifier / dehumidifier control",
+    "notes": "303-S only"
+   },
+   {
+    "t": "AUX",
+    "fn": "Aux output",
+    "notes": "303-S backplate"
+   },
+   {
+    "t": "OUTDOOR SENSOR",
+    "fn": "Outdoor sensor",
+    "notes": ""
+   },
+   {
+    "t": "REMOTE SENSOR",
+    "fn": "Remote sensor",
+    "notes": "302-S / 303-S"
+   },
+   {
+    "t": "DRY CONTACT",
+    "fn": "Dry contact input",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back of the thermostat: GAS/EL vs HP; RV=O (W1/O/B on in cool) vs RV=B (on in heat); GAS vs ELEC - with GAS/EL selects fan in heat (ELEC) or not (GAS); with HP selects aux type (GAS = no aux during HP operation).",
+   "Optional Wi-Fi module (Skyport cloud); some display features are not available when the Wi-Fi module is present."
+  ],
+  "setup": {
+   "access": "Advanced Setup: press SETUP then MODE; WARMER/COOLER change, MODE advances, SETUP exits. Technician Setup: hold SETUP 10 s.",
+   "keySettings": [
+    {
+     "setting": "Step 1 Program mode",
+     "options": "Non, 1 Day, 5/2 Day, 7 Day",
+     "notes": "Default 7"
+    },
+    {
+     "setting": "Step 17-19 Setpoint limits / max heat / min cool",
+     "options": "No/Use; 35-99 (defaults 74 / 70)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 20 Cycles per hour",
+     "options": "No limit, 2-6 (default 6)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 21 Compressor minimum off",
+     "options": "0, 3, 5 min (default 5)",
+     "notes": ""
+    },
+    {
+     "setting": "Step 23-26 Heat stages / cool stages / compressor stages / aux stages (302-S)",
+     "options": "0-3 / 0-2 / 1-2 / 0-2",
+     "notes": "301-S: heat 0-2, cool 0-1, aux 0-1"
+    },
+    {
+     "setting": "Step 27-36 Deadbands, interstage timers, turn-off points",
+     "options": "1st 1-6, others 0-10 deg; 0-60 min; Deadband or Setpoint",
+     "notes": ""
+    },
+    {
+     "setting": "Step 44 Fan off delay",
+     "options": "0-120 s",
+     "notes": ""
+    },
+    {
+     "setting": "Step 47-48 Dry contact polarity / use",
+     "options": "Open/Closed; Condensate, Vacation, FDD",
+     "notes": "Condensate locks out compressor and shows \"CONDENSATE PAN OVERFLOW\""
+    },
+    {
+     "setting": "Step 49-50 Skyport / Local API",
+     "options": "On/Off",
+     "notes": ""
+    },
+    {
+     "setting": "Step 51-58 ADR (demand response) event limits and offsets",
+     "options": "per table",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Technician Setup (hold SETUP 10 s): version, DIP settings and dry-contact state, \"TURN ON EQUIPMENT?\" (WARMER cycles up heating stages, COOLER cycles down cooling stages), sensor calibration. Auto-exits after 10 min.",
+   "factoryReset": "Hold SETUP 10 s until all icons appear, release, hold FAN 5 s until DEFAULTS appears."
+  },
+  "diagnostics": [
+   {
+    "code": "CONDENSATE PAN OVERFLOW",
+    "meaning": "Dry contact (set to Condensate) is active - compressor locked out",
+    "action": "Clear the condensate problem / check float switch"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Air conditioning does not attempt to turn on",
+    "causes": [
+     "Compressor timer lockout (cycles per hour / minimum off time)",
+     "Cooling setpoint too high or limited by setpoint limit"
+    ],
+    "fixes": [
+     "Defeat/adjust Cycles Per Hour in Installer Setup",
+     "Lower the cooling setpoint or the setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Heating does not attempt to turn on",
+    "causes": [
+     "Heating setpoint too low / limited"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or the heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve jumper/DIP set for B"
+    ],
+    "fixes": [
+     "Set reversing valve to O (if the equipment uses O)"
+    ]
+   },
+   {
+    "symptom": "Both heat and cool come on during a cooling call",
+    "causes": [
+     "Equipment jumper/DIP set for HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set equipment jumper/DIP to GAS/ELEC"
+    ]
+   },
+   {
+    "symptom": "Program button shows \"DISABLED\"",
+    "causes": [
+     "Program mode set to NON PROGRAM"
+    ],
+    "fixes": [
+     "Set Setup Step 1 Program Mode to 1, 5/2 or 7 Day"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lockout: hold MODE and press WARMER + COOLER together (same to unlock)."
+  ],
+  "manuals": [
+   {
+    "title": "S1-THSU301-S Residential Digital Thermostat Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "york-source1-lx-thsu301-s-install-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/S1-THSU301-S%20Manual.pdf"
+   },
+   {
+    "title": "S1-THSU302-S Residential Digital Thermostat Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "york-source1-lx-thsu302-s-install-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/S1-THSU302-S%20Manual.pdf"
+   },
+   {
+    "title": "S1-THSU303-S Residential Digital Thermostat with Humidity Control Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "york-source1-lx-thsu303-s-install-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/S1-THSU303-S%20Manual.pdf"
+   }
+  ],
+  "sourceNotes": "S1-THSU301-S Owner's Manual & Installation Instructions (Source 1, 2019-05); S1-THSU302-S Owner's Manual & Installation Instructions (Source 1, 2019-05); S1-THSU303-S Owner's Manual & Installation Instructions (Source 1, 2019-05)",
+  "img": ""
+ },
+ {
+  "id": "tst-york-source1-the-series",
+  "brand": "York / Coleman",
+  "family": "Source 1 THE Series Digital Thermostats (S1-THEC11 / S1-THEH21)",
+  "aka": "battery or 24V \"HVAC Service Parts\" builder stats with slide switches",
+  "models": [
+   "S1-THEC11NS",
+   "S1-THEC11P5S",
+   "S1-THEH21NS",
+   "S1-THEH21P5S"
+  ],
+  "type": "programmable",
+  "stages": "S1-THEC11*: 1 heat / 1 cool (gas/electric, or heat pump without aux). S1-THEH21*: heat pump 1 or 2 heat (with aux/emergency) / 1 cool. P5S = 5+2 programmable, NS = non-programmable",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA alkaline",
+   "notes": "Battery or system powered; C wire optional. Replace AA batteries at least every 12 months; keep them installed even with 24 V so the clock keeps running."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC (THEC11)",
+    "fn": "Heating / cooling transformer power",
+    "notes": "Factory jumper between RC and RH - remove for dual-transformer systems"
+   },
+   {
+    "t": "R (THEH21)",
+    "fn": "Power",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "Common (optional)",
+    "notes": ""
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor",
+    "notes": ""
+   },
+   {
+    "t": "W",
+    "fn": "Heating (THEC11) / auxiliary heat (THEH21)",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": ""
+   },
+   {
+    "t": "O/B (THEC11) or O and B (THEH21)",
+    "fn": "Reversing valve - O energize to cool, B energize to heat",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "THEC11 jumpers: gas heat + electric cool = J1 GAS, J2 ELEC/GAS (J3 unused); electric heat with fan = J1 ELEC/HP, J2 ELEC/GAS; heat pump = J1 ELEC/HP, J2 HP, J3 O or B (no aux/emergency heat on this model).",
+   "THEC11 2-wire heat-only (R, W) works on gas or millivolt systems.",
+   "THEH21: 2nd stage (aux) comes on at setpoint minus 1st-stage deadband (1 deg, adjustable 1-6) minus 2nd-stage deadband (2 deg, fixed). Aux Heat slide switch: Emergency / Normal / Lockout.",
+   "18-22 gauge unshielded thermostat cable; leave the thermal insulating label on the backplate."
+  ],
+  "setup": {
+   "access": "Slide switches for system mode and fan; configuration jumpers J1-J3 on the circuit board (THEC11).",
+   "keySettings": [],
+   "installerTest": "Mode switch to HEAT/COOL and set 10 degrees past room temperature (wait up to 5 minutes for compressor lockout); Mode OFF + Fan ON should run the fan.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Slide switches very hard to move",
+    "causes": [
+     "Backplate screwed too tight to an uneven wall"
+    ],
+    "fixes": [
+     "Loosen the backplate screws"
+    ]
+   },
+   {
+    "symptom": "Cooling or heating does not start",
+    "causes": [
+     "Setpoint on wrong side of room temp",
+     "Mode switch not in Cool/Heat",
+     "Weak batteries",
+     "THEH21: Aux switch in Emergency"
+    ],
+    "fixes": [
+     "Correct setpoint and mode",
+     "Replace batteries",
+     "Slide Aux Heat switch to Normal"
+    ]
+   },
+   {
+    "symptom": "Fan does not run with compressor",
+    "causes": [
+     "Fan switch not fully in On or Auto"
+    ],
+    "fixes": [
+     "Slide the fan switch firmly into position"
+    ]
+   },
+   {
+    "symptom": "Aux heat does not come on (THEH21)",
+    "causes": [
+     "Aux Heat switch set to Lockout"
+    ],
+    "fixes": [
+     "Slide Aux Heat switch to Normal"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "S1-THEC11P5S Installation Instructions",
+    "docType": "install",
+    "seedFile": "york-source1-the-thec11p5s-install.pdf",
+    "url": "https://source1thermostats.com/downloads/ManualSource1InstallS1-THEC11P5SRev4.pdf"
+   },
+   {
+    "title": "S1-THEH21P5S Installation Instructions",
+    "docType": "install",
+    "seedFile": "york-source1-the-theh21p5s-install.pdf",
+    "url": "https://source1thermostats.com/downloads/ManualSource1InstallS1-THEH21P5SRev4.pdf"
+   },
+   {
+    "title": "S1-THEC11NS Non-Programmable Owner's Manual",
+    "docType": "user",
+    "seedFile": "york-source1-the-thec11ns-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/ManualSource1S1-THEC11NSRev4.pdf"
+   },
+   {
+    "title": "S1-THEH21NS Heat Pump Non-Programmable Owner's Manual",
+    "docType": "user",
+    "seedFile": "york-source1-the-theh21ns-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/ManualSource1S1-THEH21NSRev4.pdf"
+   }
+  ],
+  "sourceNotes": "P/N 88-551 Rev. 4 S1-THEC11P5S Installation Instructions (Source 1, 2006); P/N 88-553 Rev. 4 S1-THEH21P5S Installation Instructions (Source 1, 2007); S1-THEC11NS Owner's Manual Rev 4 (Source 1, 2007); S1-THEH21NS Owner's Manual Rev 4 (Source 1, 2007)",
+  "img": ""
+ },
+ {
+  "id": "tst-york-source1-cts-touchscreen",
+  "brand": "York / Coleman",
+  "family": "Source 1 CTS Series Color Touch Screen (S1-THPU432-S / 433-S)",
+  "aka": "full-color touchscreen, Wi-Fi (Skyport), SD card photos",
+  "models": [
+   "S1-THPU432-S",
+   "S1-THPU433-S"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 4 heat / 2 cool: conventional up to 3 heat / 2 cool; heat pump up to 2 compressor + 2 aux; 433-S adds humidity control",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Manual: requires both R and C connected to the backplate. 2-wire heat-only will not work (use ACC0410 two-wire kit or pull new wire)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return",
+    "notes": ""
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": ""
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay",
+    "notes": ""
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve (heat pump)",
+    "notes": ""
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat",
+    "notes": ""
+   },
+   {
+    "t": "W3/AUX",
+    "fn": "3rd stage heat / aux",
+    "notes": ""
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor",
+    "notes": ""
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor",
+    "notes": "With Free Cooling, Y1 drives the damper and mechanical cooling moves to Y2"
+   },
+   {
+    "t": "SENSOR",
+    "fn": "Remote / outdoor / supply / return sensor (10K NTC at 77 F)",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "DIP switches on the back: GAS/EL vs HP; O vs B reversing valve; GAS vs ELEC (fan in heat, or aux type on HP - use GAS for dual fuel).",
+   "Backplate does not fully cover a vertical junction box - use S1-CTSPLATE wallplate or a horizontal single-gang box.",
+   "18-22 gauge thermostat wire."
+  ],
+  "setup": {
+   "access": "Main menu > Settings > Installation Settings (stages, timers & deadbands, heat pump / dual fuel, sensor and AUX settings), Test Outputs, Factory Defaults, Restart.",
+   "keySettings": [
+    {
+     "setting": "Heat & Cool stages / Compressor stages / Aux stages",
+     "options": "Up to 2 cool, 4 heat / up to 2 compressors / 0-2 aux",
+     "notes": "Compressor & aux only when DIP set for heat pump"
+    },
+    {
+     "setting": "Compressor Min OFF time",
+     "options": "None, 1 min, 5 min",
+     "notes": "Default 5"
+    },
+    {
+     "setting": "Cycles per hour",
+     "options": "2-6 or No Limit (default 6)",
+     "notes": "Overridden by pressing WARMER or COOLER"
+    },
+    {
+     "setting": "Min Heat/Cool difference",
+     "options": "0-6 F (default 2)",
+     "notes": ""
+    },
+    {
+     "setting": "Calibrate sensors",
+     "options": "-7 to +7 F (thermostat and wired sensor)",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Settings > Test Outputs - exercises outputs without thermostat time delays (e.g. 1st stage cool = Y1 + G).",
+   "factoryReset": "Settings > Factory Defaults."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Touchscreen buttons not responsive",
+    "causes": [
+     "Touchscreen out of calibration"
+    ],
+    "fixes": [
+     "Remove from backplate, reinstall while pressing the center of the screen until Calibration appears, re-calibrate"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Lack of proper power"
+    ],
+    "fixes": [
+     "Make sure power is on to the furnace and there is 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "Heating does not attempt to turn on",
+    "causes": [
+     "Heating setpoint too low / limited"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or the heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve jumper/DIP set for B"
+    ],
+    "fixes": [
+     "Set reversing valve to O (if the equipment uses O)"
+    ]
+   },
+   {
+    "symptom": "Both heat and cool come on during a cooling call",
+    "causes": [
+     "Equipment jumper/DIP set for HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set equipment jumper/DIP to GAS/ELEC"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "S1-THPU432-S CTS Series Owner's Manual & Installation Guide",
+    "docType": "install",
+    "seedFile": "york-source1-cts-thpu432-s-install-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/S1_THPU432-S_manual_r3.pdf"
+   },
+   {
+    "title": "S1-THPU433-S CTS Series with Humidity Control Owner's Manual & Installation Guide",
+    "docType": "install",
+    "seedFile": "york-source1-cts-thpu433-s-install-owners.pdf",
+    "url": "https://source1thermostats.com/downloads/S1_THPU433-S_manual.pdf"
+   }
+  ],
+  "sourceNotes": "S1-THPU432-S Owner's Manual & Installation Guide r3 (Source 1, 2018-09); S1-THPU433-S Owner's Manual & Installation Guide (Source 1, 2020-02)",
+  "img": ""
+ },
+ {
+  "id": "tst-york-hx3-zoning",
+  "brand": "York / Coleman",
+  "family": "Hx3 Communicating Zoning (S1-ZMC401A Zone Control Module)",
+  "aka": "Hx3 Touch Screen as Main Control + S1-ZCC01A zone thermostats / S1-TCZSN02 zone sensors",
+  "models": [
+   "S1-ZMC401A",
+   "S1-ZCC01A",
+   "S1-TCZSN02"
+  ],
+  "type": "zone-control",
+  "stages": "Up to 8 zones: Primary Zone Module zones 1-4, second (Secondary) module zones 5-8; equipment staging via the communicating system",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Zone module needs zone system power plus a separate damper power transformer (damper power must be isolated from zone system power)."
+  },
+  "terminals": [
+   {
+    "t": "Zone sensor terminals (Quadrant A, 4-wire x4)",
+    "fn": "Communicating zone thermostats / sensors for zones 2-8",
+    "notes": ""
+   },
+   {
+    "t": "Quadrant B (4-wire)",
+    "fn": "To a Secondary Zone Module for zones 5-8",
+    "notes": ""
+   },
+   {
+    "t": "Damper terminals (Quadrant C, 3-wire x4): CLS / COM / OPN",
+    "fn": "Damper power closed / common / open",
+    "notes": "24 VAC power-open/power-close dampers only (no pneumatic)"
+   },
+   {
+    "t": "Quadrant D (4-wire x2)",
+    "fn": "Indoor and outdoor communicating equipment controls",
+    "notes": ""
+   },
+   {
+    "t": "Quadrant E (4-wire)",
+    "fn": "Hx3 Touch Screen Thermostat acting as Main Control",
+    "notes": "Primary Zone Module only"
+   },
+   {
+    "t": "Leaving air sensor (2-wire)",
+    "fn": "LAT sensor supplied with the kit",
+    "notes": "Primary Zone Module only"
+   }
+  ],
+  "wiringNotes": [
+   "Main Control must be an Hx3 Touch Screen (S1-THXU430W); Main Control software must be greater than 01.11 and zone thermostats greater than 02.00 - update before installing.",
+   "Compatible zone sensors: Hx3 Zone Thermostat S1-ZCC01A, Hx3 Zone Sensor S1-TCZSN02 (or Hx3 Touch Screen stats as zone thermostats).",
+   "Follow ACCA Manual J/D/Zr design practice (manual cites the ACCA manuals)."
+  ],
+  "setup": {
+   "access": "Zone module LCD menus: zone settings, sensor/system status, auto detection, configurations, test mode (Primary module); system zoning settings (changeover time, damper timing, airflow bleeding, max airflow per zone, zone names, zone safeties) from the Main Control.",
+   "keySettings": [],
+   "installerTest": "Test mode on the Primary Zone Module LCD.",
+   "factoryReset": "Restore defaults section in the zone module manual."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Zone module LCD reports incomplete profile, unassigned zone sensor, component miswire and active faults."
+  ],
+  "manuals": [
+   {
+    "title": "Hx 3 Zone Control Module S1-ZMC401A Installation Manual",
+    "docType": "install",
+    "seedFile": "york-hx3-zone-module-s1-zmc401a-install.pdf",
+    "url": "https://www.master.ca/media/akeneo_connector/asset_files/Y/o/York_Coleman_Luxaire_HX3_installation_zone_control_module_1119_en_CA_257a.pdf"
+   },
+   {
+    "title": "Communicating Zone Thermostat Kit S1-ZCC01 Accessory Installation Manual",
+    "docType": "install",
+    "seedFile": "york-hx3-zone-thermostat-s1-zcc01-install.pdf",
+    "url": "https://www.master.ca/media/akeneo_connector/asset_files/Y/o/York_Coleman_Luxaire_HX3_installation_zone_thermostat_0520_en_CA_18b2.pdf"
+   },
+   {
+    "title": "User's Information Manual: Hx 3 Zoning System",
+    "docType": "user",
+    "seedFile": "york-hx3-zoning-user-manual.pdf",
+    "url": "https://docs.johnsoncontrols.com/ductedsystems/api/khub/documents/odm8KI4mw6tVLSwDKDKYMg/content"
+   }
+  ],
+  "sourceNotes": "5594275-UIM-B-1020 Hx 3 Zone Control Module Installation Manual (Johnson Controls Ducted Systems, 10/2020); 5930954-UAI-A-0520 Communicating Zone Thermostat Kit S1-ZCC01 (Johnson Controls Ducted Systems, 05/2020); 5594278-UUM-A-1119 User's Information Manual: Hx 3 Zoning System (11/2019)",
+  "img": ""
  },
  {
   "id": "tst-bosch-bcc100-bcc110",
@@ -32941,5 +46561,5304 @@ const THERMOSTATS = [
   ],
   "sourceNotes": "MHK2 Wireless Remote Controller Kit Installation Manual; 33-00447EFS B MHK2 Operation Manual; MHK2 FAQ",
   "img": "tstat-img/tst-mitsubishi-mhk2.jpg"
+ },
+ {
+  "id": "tst-mitsubishi-mhk1",
+  "brand": "Mitsubishi",
+  "family": "MHK1 Wireless Remote Controller Kit (RedLINK, 1st gen)",
+  "aka": "MRCH1 remote + MIFH1 receiver + MRC1 cable; optional MCCH1 portable central controller, MOS1 outdoor sensor",
+  "models": [
+   "MHK1",
+   "MRCH1",
+   "MIFH1",
+   "MRC1",
+   "MCCH1",
+   "MOS1"
+  ],
+  "type": "wireless-redlink",
+  "stages": "Set by the connected Mitsubishi indoor unit (submittal lists P-Series NHA4, SEZ/SUZ, SLZ/SUZ, MXZ-B multi-zone, MSY/MSZ and MFZ indoor units)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "2 AA alkaline (remote); MCCH1 3 AA alkaline; MOS1 2 AA lithium",
+   "notes": "Remote controller is battery powered and wireless. The MIFH1 receiver is powered through the 5-conductor MRC1 cable from CN105 on the indoor unit board. \"REPLACE BATTERY\" flashes about two months before batteries are depleted."
+  },
+  "terminals": [
+   {
+    "t": "CN105",
+    "fn": "Indoor unit control board 5-pin connector - MRC1 cable from the MIFH1 wireless receiver plugs in here",
+    "notes": "Connect before mounting the indoor unit; do not cut or modify the cable (6-1/2 ft / 2 m)"
+   }
+  ],
+  "wiringNotes": [
+   "Each indoor unit needs its own dedicated MRCH1 remote controller and MIFH1 wireless receiver.",
+   "Linking: press CONNECT on the receiver (POWER LED solid green first), then on the remote go to Wireless Setup, pick a zone name and press CONNECT; exit wireless setup at the receiver when done (auto-exits after 15 minutes).",
+   "Receiver POWER LED: solid green = powered and talking to the indoor unit; slow flash (1/s) = powered, wait ~30 s; fast flash (5/s) = communication error with indoor unit - check cable.",
+   "Receiver CONNECT LED: flashing green = in wireless setup; solid green = RedLINK communication established; yellow = wait; red = RedLINK device not communicating.",
+   "If the remote senses indoor temperature (Setup 173 = 1, default), mount it in the same room as the indoor unit, 5 ft above the floor on an interior wall.",
+   "Replacing a receiver: at the remote hold FAN + up for 3 s, go to Function 194, set 0 to disconnect from the old receiver, then re-link. Hold CONNECT on the receiver 10 s to remove all wireless devices."
+  ],
+  "setup": {
+   "access": "Hold FAN and the up arrow until the display changes (\"WAIT\" for up to 40 s). Up/down changes the setting, NEXT advances, DONE saves and exits.",
+   "keySettings": [
+    {
+     "setting": "101 Auto restart after power outage",
+     "options": "1 OFF, 2 ON, 3 Not supported",
+     "notes": ""
+    },
+    {
+     "setting": "104 Power voltage",
+     "options": "1 230V, 2 208V, 3 Not supported",
+     "notes": ""
+    },
+    {
+     "setting": "107 Change filter duration",
+     "options": "1 100 h, 2 2500 h, 3 OFF",
+     "notes": ""
+    },
+    {
+     "setting": "108 Auto fan",
+     "options": "1 Quiet, 2 Standard, 3 High ceiling",
+     "notes": ""
+    },
+    {
+     "setting": "134 Central controller (AG-150 or similar) present",
+     "options": "0 Not installed, 1 Installed",
+     "notes": ""
+    },
+    {
+     "setting": "136 Residential / Commercial",
+     "options": "0 Residential, 1 Commercial",
+     "notes": ""
+    },
+    {
+     "setting": "139 Fahrenheit / Celsius",
+     "options": "0 F, 1 C",
+     "notes": ""
+    },
+    {
+     "setting": "142 System type",
+     "options": "0 Heat & Cool (heat pump), 1 Cool only",
+     "notes": ""
+    },
+    {
+     "setting": "144 System changeover",
+     "options": "1 Auto/Heat/Off/Cool, 0 Manual (Heat/Off/Cool), 2 Auto only, 3 Single setpoint (AG-150 only)",
+     "notes": ""
+    },
+    {
+     "setting": "145 Changeover deadband",
+     "options": "3 F default, 2-8 F",
+     "notes": ""
+    },
+    {
+     "setting": "170 / 172 Max heat / min cool setpoint",
+     "options": "90 F (40-89) / 50 F (51-99)",
+     "notes": "Subject to HVAC equipment"
+    },
+    {
+     "setting": "173 Sensing location",
+     "options": "1 Sense at remote controller, 0 Sense at indoor unit",
+     "notes": ""
+    },
+    {
+     "setting": "174 Indoor temperature display offset",
+     "options": "0, -3 to +3 F",
+     "notes": ""
+    },
+    {
+     "setting": "160-168 Lockouts",
+     "options": "Full lockout, On/Off, system mode, fan, setpoint, clock/schedule: 0 No / 1 Yes",
+     "notes": ""
+    },
+    {
+     "setting": "194 Wireless setup",
+     "options": "1 Connected, 0 Disconnect from wireless system",
+     "notes": "Use when replacing a receiver"
+    },
+    {
+     "setting": "198 / 199 Reset schedule / reset installer setup to factory defaults",
+     "options": "0 No, 1 Yes",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Hold up and down arrows about 3 s. Test 02 wireless test (1 = radio signal test, 5-10 scale, 5 or higher recommended); 50 cool/heat test (0 Off, 1 Cool, 2 Heat); 70/80/90/95 show software and configuration data.",
+   "factoryReset": "Installer setup function 198 (reset schedule) and 199 (reset installer setup to factory defaults)."
+  },
+  "diagnostics": [
+   {
+    "code": "E0 27",
+    "meaning": "Device temperature outside operating range",
+    "action": "If within range for 30 min and problem persists, replace remote controller"
+   },
+   {
+    "code": "E0 91",
+    "meaning": "Receiver lost communication with the indoor unit for 10 minutes",
+    "action": "Check cable connection; try replacing the cable"
+   },
+   {
+    "code": "E1 29",
+    "meaning": "Attempting to connect incompatible wireless devices"
+   },
+   {
+    "code": "E1 34",
+    "meaning": "Low signal strength",
+    "action": "Move the wireless device and try again"
+   },
+   {
+    "code": "E1 38",
+    "meaning": "Wireless link attempt failed",
+    "action": "Make sure receiver CONNECT light is flashing and you are 2+ ft from the receiver"
+   },
+   {
+    "code": "E1 54",
+    "meaning": "Indoor unit does not support the wireless receiver"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Screen displays \"No Signal\"",
+    "causes": [
+     "Remote lost radio contact with the wireless network, usually after a power outage"
+    ],
+    "fixes": [
+     "Check the breaker and the indoor unit power switch; communication restores automatically a few minutes after power returns"
+    ]
+   },
+   {
+    "symptom": "Indoor unit does not respond",
+    "causes": [
+     "No power to equipment",
+     "Recent command still processing"
+    ],
+    "fixes": [
+     "Check circuit breaker and power switch at equipment",
+     "Wait 5 minutes for the system to respond"
+    ]
+   }
+  ],
+  "tips": [
+   "For the full list of equipment error codes see the indoor/outdoor unit service manual (the MHK1 manual lists only RedLINK codes).",
+   "Newer replacement for this kit is the MHK2 (kumo touch) - see that card."
+  ],
+  "manuals": [
+   {
+    "title": "MHK1 Controller Kit Installation Manual (MIFH1, MRCH1, MCCH1, MOS1)",
+    "docType": "install",
+    "seedFile": "mitsubishi-mhk1-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10004/Mr_Slim_Series_MHK1_Central_Remote_Controller_Install_12-10.pdf"
+   },
+   {
+    "title": "MRCH1 Remote Controller Operating Manual",
+    "docType": "user",
+    "seedFile": "mitsubishi-mhk1-operation-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/Mr_Slim_Series_MHK1_Central_Remote_Controller_Operation_Manual.pdf"
+   },
+   {
+    "title": "MHK1 Remote Controller Kit Submittal Data",
+    "docType": "spec",
+    "seedFile": "mitsubishi-mhk1-submittal.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10005/M_MHK1_Controller_Kit_Submittal.pdf"
+   }
+  ],
+  "sourceNotes": "69-2426-01 MHK1 Controller Kit Installation Manual (M.S. 11-10); 69-2427EFS-01 MRCH1 Remote Controller Operating Manual (2010); Submittal Data: MHK1 Remote Controller Kit for M-Series and P-Series (2011)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-par-40maau",
+  "brand": "Mitsubishi",
+  "family": "PAR-40MAAU Deluxe Wired MA Remote Controller",
+  "aka": "MA remote, CITY MULTI / M-series / P-series",
+  "models": [
+   "PAR-40MAAU"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected indoor unit(s)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered over the 2-wire MA remote controller line from the indoor unit (display blank if 8.5-12 VDC is not present). No 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "A / B (non-polarized)",
+    "fn": "MA remote controller 2-core cable (0.3 mm2 / AWG22 sheathed, field supplied)",
+    "notes": "M-series / P-series: to indoor unit TB5. CITY MULTI: to indoor unit TB15 (MA remote controller terminal block). No polarity."
+   }
+  ],
+  "wiringNotes": [
+   "M-series / P-series: wire to indoor unit TB5; up to 16 refrigerant systems in one group; up to two remote controllers per group (one Main, one Sub).",
+   "Total MA wiring length up to 450 m (1476 ft).",
+   "Do not connect remote controllers to each other - only one wire pair per controller terminal block; up to two wires of the same size per TB5 terminal.",
+   "When mixing indoor unit types, connect the controller to (and make the refrigerant-address-00 Main unit) the unit with the most functions.",
+   "Controller has a built-in temperature sensor; use the indoor unit sensor instead if supply air does not reach the wall or the wall backs onto outdoors (Function Mode 02)."
+  ],
+  "setup": {
+   "access": "Main menu > Service (maintenance password, default 9999) for Test run, Function setting, Check, Diagnosis; Main menu > Initial setting (administrator password, default 0000). Hold F1 10 s on the password screen to reset a forgotten password to default.",
+   "keySettings": [
+    {
+     "setting": "Mode 01 Automatic recovery after power failure",
+     "options": "1 Disable, 2 Enable (about 4 min standby after power returns)",
+     "notes": "Unit No. \"Grp.\" - applies to all connected indoor units"
+    },
+    {
+     "setting": "Mode 02 Thermistor selection (room temp detection)",
+     "options": "1 Average of indoor units in operation, 2 Indoor unit thermistor (fixed), 3 Built-in sensor on the remote controller",
+     "notes": ""
+    },
+    {
+     "setting": "Mode 03 LOSSNAY connection",
+     "options": "1 Not connected, 2 Connected (no OA intake by indoor units), 3 Connected (with OA intake)",
+     "notes": ""
+    },
+    {
+     "setting": "Mode 04 Power voltage",
+     "options": "1 240 V, 2 220/230 V",
+     "notes": ""
+    },
+    {
+     "setting": "Mode 07 Filter sign",
+     "options": "1 100 hours, 2 2500 hours, 3 Not displayed",
+     "notes": "Set per unit (1-4) or All"
+    },
+    {
+     "setting": "Mode 08 Fan speed",
+     "options": "1 Silent (or standard), 2 Standard (or high ceiling 1), 3 High ceiling (or high ceiling 2)",
+     "notes": "Also used for static-pressure selection on ducted units - see indoor unit manual"
+    },
+    {
+     "setting": "Mode 11 Vane",
+     "options": "1 No vanes (vane setting No.3), 2 Vanes (setting No.1), 3 Vanes (setting No.2)",
+     "notes": ""
+    },
+    {
+     "setting": "Main/Sub (Initial setting > Basic)",
+     "options": "Main, Sub",
+     "notes": "Set one controller to Sub when two are on a group"
+    }
+   ],
+   "installerTest": "Service > Test run > Test run (also Drain pump test run on supported units); cancel with ON/OFF. Error handling per the indoor unit installation manual.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "E3 / 6832 (RC check)",
+    "meaning": "Noise on transmission line, or indoor unit / other remote controller faulty",
+    "action": "Check transmission line and other remote controllers"
+   },
+   {
+    "code": "NG (ALL0, ALL1) (RC check)",
+    "meaning": "Remote controller send/receive circuit fault",
+    "action": "Replace remote controller"
+   },
+   {
+    "code": "ERC + count (RC check)",
+    "meaning": "Data errors on transmission line",
+    "action": "Check for external noise on the line"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Remote controller display completely blank",
+    "causes": [
+     "Correct voltage (8.5-12 VDC) not reaching the controller from the indoor unit"
+    ],
+    "fixes": [
+     "Check the remote controller wiring and the indoor unit (Service > Diagnosis > Remote controller check once display is up)"
+    ]
+   },
+   {
+    "symptom": "Remote controller check shows E3 / 6832",
+    "causes": [
+     "Noise on the transmission line, or the indoor unit or another remote controller is faulty"
+    ],
+    "fixes": [
+     "Check the transmission line and the other remote controllers"
+    ]
+   },
+   {
+    "symptom": "Remote controller check shows NG (ALL0, ALL1)",
+    "causes": [
+     "Send-receive circuit fault in the remote controller"
+    ],
+    "fixes": [
+     "Replace the remote controller"
+    ]
+   },
+   {
+    "symptom": "Remote controller check shows ERC with a data error count",
+    "causes": [
+     "Data sent by the controller was disturbed on the transmission line (external noise)"
+    ],
+    "fixes": [
+     "Check the transmission line for noise interference"
+    ]
+   }
+  ],
+  "tips": [
+   "Service > Check > Error history shows up to 16 records; Diagnosis > Self check shows the error code by refrigerant address (M/P) or M-NET address (CITY MULTI).",
+   "Service > Input maintenance info. > Collect model names and S/N pulls indoor/outdoor model and serial numbers (wait about 10 minutes after power-up)."
+  ],
+  "manuals": [
+   {
+    "title": "PAR-40MAAU MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-par-40maau-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10007/IM_WT09034X01_PAR-40MAAU_ML.pdf"
+   }
+  ],
+  "sourceNotes": "WT09034X01 PAR-40MAAU Installation Manual (2018)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-par-41maau-42maaub",
+  "brand": "Mitsubishi",
+  "family": "PAR-41MAAU / PAR-42MAAUB Deluxe Wired MA Remote Controller",
+  "aka": "MA remote, CITY MULTI / M-series / P-series; PAR-42MAAUB is the current (2024) version",
+  "models": [
+   "PAR-41MAAU",
+   "PAR-42MAAUB"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected indoor unit(s)",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered over the 2-wire MA remote controller line from the indoor unit (display blank if 8.5-12 VDC is not present). No 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "A / B (non-polarized)",
+    "fn": "MA remote controller 2-core cable (0.3 mm2 / AWG22 sheathed, field supplied)",
+    "notes": "M-series / P-series: to indoor unit TB5. CITY MULTI: to indoor unit TB15 (MA remote controller terminal block). No polarity."
+   }
+  ],
+  "wiringNotes": [
+   "M-series / P-series: wire to indoor unit TB5 (no polarity); up to 16 refrigerant systems per group; up to two controllers per group (Main + Sub).",
+   "Total MA wiring length (M/P-series): 500 m (1640 ft) with one remote controller, 200 m (656 ft) with two. CITY MULTI (TB15): up to 200 m (656 ft).",
+   "Remote controllers cannot be wired together; do not connect to TB5 of an indoor unit on the same refrigerant system in a way the diagrams do not show.",
+   "Controller has a built-in temperature sensor (Mode 02 setting 3). PAR-42MAAUB manual notes the controller sensor is not used with Fresh Air Intake model units."
+  ],
+  "setup": {
+   "access": "Main menu > Service (maintenance password, default 9999): Test run, Input maintenance info., Function setting, Check (error history, preliminary error history), Diagnosis (self check, remote controller check). Main menu > Initial setting uses the administrator password (default 0000). Holding the password-screen button 10 s resets a forgotten password to default.",
+   "keySettings": [
+    {
+     "setting": "Mode 01 Automatic recovery after power failure",
+     "options": "1 Disable, 2 Enable (about 4 min standby after power returns)",
+     "notes": "Unit No. \"Grp.\" - applies to all connected indoor units"
+    },
+    {
+     "setting": "Mode 02 Thermistor selection (room temp detection)",
+     "options": "1 Average of indoor units in operation, 2 Indoor unit thermistor (fixed), 3 Built-in sensor on the remote controller",
+     "notes": ""
+    },
+    {
+     "setting": "Mode 03 LOSSNAY connection",
+     "options": "1 Not connected, 2 Connected (no OA intake by indoor units), 3 Connected (with OA intake)",
+     "notes": ""
+    },
+    {
+     "setting": "Mode 04 Power voltage",
+     "options": "1 240 V, 2 220/230 V",
+     "notes": ""
+    },
+    {
+     "setting": "Mode 07 Filter sign",
+     "options": "1 100 hours, 2 2500 hours, 3 Not displayed",
+     "notes": "Set per unit (1-4) or All"
+    },
+    {
+     "setting": "Mode 08 Fan speed",
+     "options": "1 Silent (or standard), 2 Standard (or high ceiling 1), 3 High ceiling (or high ceiling 2)",
+     "notes": "Also used for static-pressure selection on ducted units - see indoor unit manual"
+    },
+    {
+     "setting": "Mode 11 Vane",
+     "options": "1 No vanes (vane setting No.3), 2 Vanes (setting No.1), 3 Vanes (setting No.2)",
+     "notes": ""
+    },
+    {
+     "setting": "Main/Sub (Initial setting > Basic setting)",
+     "options": "Main, Sub",
+     "notes": "Designate one as Sub when two controllers share a group"
+    },
+    {
+     "setting": "Temperature unit (Display details)",
+     "options": "F (factory), C, 1 C",
+     "notes": ""
+    },
+    {
+     "setting": "RC operation setting (Service)",
+     "options": "Cooling/Heating (default), Cooling only",
+     "notes": "Cooling only removes Auto and Heat from the mode menu"
+    }
+   ],
+   "installerTest": "Service > Test run > Test run or Drain pump test run; ON/OFF cancels. Refer to the indoor unit installation manual for test-run errors.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "E3 / 6832 (RC check)",
+    "meaning": "Noise on transmission line, or indoor unit / other remote controller faulty",
+    "action": "Check transmission line and other remote controllers"
+   },
+   {
+    "code": "NG (ALL0, ALL1) (RC check)",
+    "meaning": "Remote controller send/receive circuit fault",
+    "action": "Replace remote controller"
+   },
+   {
+    "code": "ERC + count (RC check)",
+    "meaning": "Data errors on transmission line",
+    "action": "Check for external noise on the line"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Remote controller display completely blank",
+    "causes": [
+     "Correct voltage (8.5-12 VDC) not reaching the controller from the indoor unit"
+    ],
+    "fixes": [
+     "Check the remote controller wiring and the indoor unit (Service > Diagnosis > Remote controller check once display is up)"
+    ]
+   },
+   {
+    "symptom": "Remote controller check shows E3 / 6832",
+    "causes": [
+     "Noise on the transmission line, or the indoor unit or another remote controller is faulty"
+    ],
+    "fixes": [
+     "Check the transmission line and the other remote controllers"
+    ]
+   },
+   {
+    "symptom": "Remote controller check shows NG (ALL0, ALL1)",
+    "causes": [
+     "Send-receive circuit fault in the remote controller"
+    ],
+    "fixes": [
+     "Replace the remote controller"
+    ]
+   },
+   {
+    "symptom": "Remote controller check shows ERC with a data error count",
+    "causes": [
+     "Data sent by the controller was disturbed on the transmission line (external noise)"
+    ],
+    "fixes": [
+     "Check the transmission line for noise interference"
+    ]
+   }
+  ],
+  "tips": [
+   "Check > Error history keeps 16 records; Preliminary error history (M/P-series) keeps 32 records of detected error signs.",
+   "Function setting (M/P-series) Pattern 2 units: modes 1-28 take settings 1-3, modes 31-66 take settings 1-15.",
+   "Write down any changed function settings after installation - the manual asks for this."
+  ],
+  "manuals": [
+   {
+    "title": "PAR-41MAAU MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-par-41maau-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/M_PAR-41MAAU_INSTALL.pdf"
+   },
+   {
+    "title": "PAR-42MAAUB MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-par-42maaub-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10007/PAR-42MAAUB_Installation%20Manual.pdf"
+   }
+  ],
+  "sourceNotes": "WT10444X02 PAR-41MAAU Installation Manual (2022); WT10683X01 PAR-42MAAUB Installation Manual (2024)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-par-30maau",
+  "brand": "Mitsubishi",
+  "family": "PAR-30MAAU Wired MA Remote Controller (legacy)",
+  "aka": "backlit MA remote",
+  "models": [
+   "PAR-30MAAU"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected indoor unit(s)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered over the 2-wire MA remote controller cable from the indoor unit."
+  },
+  "terminals": [
+   {
+    "t": "A / B (non-polarized)",
+    "fn": "MA remote controller cable, 0.3 mm2 (AWG22) 2-core sheathed, field supplied",
+    "notes": "Install manual covers CITY MULTI (\"-A\" type and later) indoor units; see indoor unit manual for terminal location"
+   }
+  ],
+  "wiringNotes": [
+   "Strip 6 mm (1/4 in) of sheath; no solderless (crimp) terminals on the controller terminal block.",
+   "Main remote controller does the room sensing when the controller sensor is used; use the indoor unit sensor if supply air does not reach the wall or the wall backs onto outdoors.",
+   "Install manual refers test run, function setting, check, self check and remote controller check to the separate Initial Setting Manual / indoor unit manual."
+  ],
+  "setup": {
+   "access": "Service/initial-setting procedures are in the separate Initial Setting Manual supplied with the controller (not in this install manual).",
+   "keySettings": [],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "PAR-30MAAU MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-par-30maau-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10004/M_PAR-30MAAU_INSTALL_WT06014X01-en_2010-10.pdf"
+   }
+  ],
+  "sourceNotes": "WT06014X01 PAR-30MAAU Installation Manual (2010-10)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-par-21maau",
+  "brand": "Mitsubishi",
+  "family": "PAR-21MAAU Wired MA Remote Controller (legacy)",
+  "aka": "Mr. SLIM / CITY MULTI MA remote",
+  "models": [
+   "PAR-21MAAU"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected indoor unit(s)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered from the indoor unit over the remote cable (DC 12 V; power mark goes off if normal voltage is missing). Never apply AC - maximum 12 V."
+  },
+  "terminals": [
+   {
+    "t": "A / B (no polarity)",
+    "fn": "To the indoor unit MA remote controller (or A-control) terminal block",
+    "notes": "2-core cable 22-16 AWG (0.3-1.25 mm2) field supplied; strip 1/4 in (6 mm); no crimp terminals"
+   }
+  ],
+  "wiringNotes": [
+   "PAC-YT32PTA cannot be connected.",
+   "Optional spacer PAC-YT83RS recommended when the controller sensor would be affected by the wall.",
+   "Two controllers on one group: set one to Sub (Function selection > Mode selection > CONTROLLER MAIN/SUB)."
+  ],
+  "setup": {
+   "access": "Unit function selection (Mr. SLIM only): with the unit OFF hold FILTER + TEST 2 s; set refrigerant address (CLOCK buttons), unit address 00/01-04/AL (ON/OFF then CLOCK), register with the set button, pick mode No. with TEMP buttons, MENU shows current setting, register again; hold FILTER + TEST 2 s to exit. Remote controller function selection: stop the unit and hold the MENU-area buttons shown in the manual for 2 s.",
+   "keySettings": [
+    {
+     "setting": "Mode 01 Power failure automatic recovery",
+     "options": "1 Not available, 2 Available (about 4 min wait)",
+     "notes": "Unit address 00"
+    },
+    {
+     "setting": "Mode 02 Indoor temperature detecting",
+     "options": "1 Indoor unit operating average, 2 Set by indoor unit remote controller, 3 Remote controller internal sensor",
+     "notes": "Unit address 00"
+    },
+    {
+     "setting": "Mode 07 Filter sign",
+     "options": "1 100 Hr, 2 2500 Hr, 3 No filter sign",
+     "notes": "Unit address 01-04 or AL"
+    },
+    {
+     "setting": "Mode 08 Fan speed",
+     "options": "1 Quiet, 2 Standard, 3 High ceiling",
+     "notes": ""
+    },
+    {
+     "setting": "Temperature range limit (remote function selection)",
+     "options": "Cool/Dry 67-87 F, Heat 63-83 F, Auto 67-83 F",
+     "notes": "Range varies by connected unit"
+    },
+    {
+     "setting": "Operation lock",
+     "options": "no1 all buttons except ON/OFF, no2 all buttons, OFF",
+     "notes": "Activate on normal screen by holding FILTER + ON/OFF 2 s"
+    }
+   ],
+   "installerTest": "Press TEST twice within 3 s to start test run (\"TEST RUN\" and mode alternate; stops after 2 h); ON/OFF ends it.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "Self check",
+    "meaning": "Press CHECK twice within 3 s, set address with TEMP buttons - shows the error history code for that unit",
+    "action": "Error code meanings are in the indoor unit installation manual / service handbook"
+   },
+   {
+    "code": "E3 / 6833 / 6832 flashing (RC check)",
+    "meaning": "Cannot send - noise on the transmission line or indoor unit / other remote faulty",
+    "action": "Check transmission line and other remotes"
+   },
+   {
+    "code": "NG flashing (RC check)",
+    "meaning": "Remote controller send/receive circuit abnormal",
+    "action": "Replace remote controller"
+   },
+   {
+    "code": "ERC + count (RC check)",
+    "meaning": "Data errors from noise on the transmission line",
+    "action": "Check transmission line"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Air conditioner cannot be controlled from the remote",
+    "causes": [
+     "No DC 12 V at the remote (power mark off)",
+     "Transmission problem"
+    ],
+    "fixes": [
+     "Check remote wiring and the indoor unit",
+     "Hold CHECK 5 s for remote controller check; hold CHECK 5 s again to exit (returns after about 30 s)"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "PAR-21MAAU MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-par-21maau-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/PAR-21MAAU_IM_WT06052X01_GB_w1.pdf"
+   }
+  ],
+  "sourceNotes": "WT06052X01 PAR-21MAAU Installation Manual (2010)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-pac-us444cn-1",
+  "brand": "Mitsubishi",
+  "family": "PAC-US444CN-1 Thermostat Interface (3rd-party 24V thermostat)",
+  "aka": "lets a conventional 24 VAC thermostat (Nest, ecobee, Lyric, etc.) run one M/P-series indoor unit",
+  "models": [
+   "PAC-US444CN-1"
+  ],
+  "type": "accessory",
+  "stages": "Accepts 1H/1C or 2H/2C conventional thermostat signals; drives one inverter indoor unit",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Needs 24 VAC for the thermostat - field transformer (Mitsubishi sells VPL24-210, 230/115 VAC to 24 VAC). Terminals rated 20-30 VAC. Interface itself plugs into CN105."
+  },
+  "terminals": [
+   {
+    "t": "TR / TC",
+    "fn": "24 VAC in (R) / common in (C) from transformer",
+    "notes": ""
+   },
+   {
+    "t": "R / C",
+    "fn": "24 VAC out / common out to the thermostat",
+    "notes": ""
+   },
+   {
+    "t": "Y1 / Y2",
+    "fn": "Stage 1 / stage 2 cooling",
+    "notes": "Y2 optional"
+   },
+   {
+    "t": "W1 / W2",
+    "fn": "Stage 1 / stage 2 heating",
+    "notes": "W2 optional"
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": "With no heat/cool call, G puts the indoor unit in fan (ventilation) mode, high speed"
+   },
+   {
+    "t": "G1 / G2 / G3",
+    "fn": "Low / medium / high fan speed inputs",
+    "notes": "Optional; override SW1-3/4 when energized"
+   },
+   {
+    "t": "CN105 cable",
+    "fn": "Plugs into CN105 on the indoor unit control board",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Configure the thermostat as a CONVENTIONAL system, not heat pump. Minimum terminals R, C, G, W1, Y1; preferred R, C, G, W1, W2, Y1, Y2. Line-voltage thermostats do not work.",
+   "Use 18 AWG thermostat wire. One thermostat + one interface per indoor unit (multi-zone MXZ needs one per head).",
+   "Do not connect any Mitsubishi MA/ME/wireless remote or central controller (AE-200, AE-50, EW-50) during normal operation - it interferes. An MA remote may be connected temporarily to change other function settings.",
+   "Mitsubishi as secondary heat: thermostat W1 to the primary heat source, thermostat W2 to interface W1, SW2-6 OFF.",
+   "Interface forces Mode 1 auto-restart ON and ignores Mode 2 / Mode 24; room temp comes from the thermostat, indoor thermistor is used for rate-of-change.",
+   "MVZ, PVA and PVFY are approved for mounting the interface and the VPL24-210 transformer inside their control box."
+  ],
+  "setup": {
+   "access": "Two DIP switch banks (SW1, SW2) on the board - remove the four screws on the back of the case. Factory default is OFF for all switches.",
+   "keySettings": [
+    {
+     "setting": "SW1-1/SW1-2 Delayed Off",
+     "options": "OFF/OFF 5 min (default), ON/OFF 10 min, OFF/ON 30 min, ON/ON 0 min",
+     "notes": "Unit keeps running after the thermostat is satisfied"
+    },
+    {
+     "setting": "SW1-3/SW1-4 Fan speed",
+     "options": "OFF/OFF Auto (default), ON/OFF Medium, OFF/ON High, ON/ON Custom Auto",
+     "notes": ""
+    },
+    {
+     "setting": "SW2-6 Two-stage operation",
+     "options": "OFF = full capacity on stage 1; ON = capacity varied to heat/cool at a fixed rate",
+     "notes": "ON when both Y2 and W2 are wired; OFF when either is unconnected (App Note 3044 stresses ON for inverter benefit)"
+    },
+    {
+     "setting": "SW2-1/2/3 Static pressure",
+     "options": "Sets indoor Modes 8/10/11 per the table in the manual (OFF/OFF/x = not set)",
+     "notes": "Set static at the interface OR the indoor unit, not both"
+    },
+    {
+     "setting": "SW2-4 CN24 during defrost (Mode 23)",
+     "options": "OFF setting 2 (fan and CN24 ON, default), ON setting 1 (OFF)",
+     "notes": ""
+    },
+    {
+     "setting": "SW2-5 Heating thermal-off fan (Mode 25)",
+     "options": "OFF extra low (default), ON set by interface",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "To lock HIGH fan in heating stage 1, jumper W1 to G3 on the interface.",
+   "With SW2-6 ON and a Y1/W1 call the unit starts about 2 F from room temp and trims capacity every 5 minutes toward a 1 F per 5 min rate; full capacity is reached in roughly 25-35 minutes if it cannot keep up (App Note 3044).",
+   "Newer PAC-US445CN-1 (Thermostat Interface 2) reverses the meaning of SW2-6 - check which interface is installed."
+  ],
+  "manuals": [
+   {
+    "title": "PAC-US444CN-1 Thermostat Interface Installation/Instruction Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-pac-us444cn-1-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10005/PAC-US444CN-1_Thermostat_Interface_Installation_Instructions_en_05-27-15.pdf"
+   },
+   {
+    "title": "PAC-US444CN-1 Thermostat Interface FAQ",
+    "docType": "other",
+    "seedFile": "mitsubishi-pac-us444cn-1-faq.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10004/PAC-US444CN-1_FAQ_2015-05.pdf"
+   },
+   {
+    "title": "Application Note 3044 - Thermostat Interface Sequence of Operations",
+    "docType": "other",
+    "seedFile": "mitsubishi-pac-us444cn-1-appnote-3044.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10008/Application%20Note%203044%20ME%20-%20Thermostat%20Interface%20Sequence%20of%20Operations.pdf"
+   }
+  ],
+  "sourceNotes": "PAC-US444CN-1 Thermostat Interface Installation Instructions (May 2015); Thermostat Interface FAQ PAC-US444CN-1 (May 2015); Application Note 3044 Thermostat Interface Sequence of Operations (2019)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-pac-us445cn-1",
+  "brand": "Mitsubishi",
+  "family": "PAC-US445CN-1 Thermostat Interface 2 (3rd-party 24V thermostat)",
+  "aka": "successor to PAC-US444CN-1; required for PAA units",
+  "models": [
+   "PAC-US445CN-1"
+  ],
+  "type": "accessory",
+  "stages": "Accepts 1H/1C or 2H/2C conventional thermostat signals; drives one indoor unit",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "required",
+   "batteries": "",
+   "notes": "Needs 24 VAC for the thermostat from a field transformer; terminals rated 20-30 VAC. Interface plugs into CN105 on the indoor unit board."
+  },
+  "terminals": [
+   {
+    "t": "TR / TC",
+    "fn": "24 VAC in / common in",
+    "notes": ""
+   },
+   {
+    "t": "R / C",
+    "fn": "24 VAC out / common out to thermostat",
+    "notes": ""
+   },
+   {
+    "t": "Y1 / Y2",
+    "fn": "Stage 1 / stage 2 cooling",
+    "notes": "Y2 optional"
+   },
+   {
+    "t": "W1 / W2",
+    "fn": "Stage 1 / stage 2 heating",
+    "notes": "W2 optional"
+   },
+   {
+    "t": "G",
+    "fn": "Fan",
+    "notes": "Also decides thermal-off fan when entering heat/cool mode on units supporting Mode 25/27"
+   },
+   {
+    "t": "G1 / G2 / G3",
+    "fn": "Low / medium / high fan speed",
+    "notes": "Optional; override SW1-3/4"
+   },
+   {
+    "t": "CN105 cable",
+    "fn": "To CN105 on the indoor unit control board",
+    "notes": ""
+   }
+  ],
+  "wiringNotes": [
+   "Thermostat must be configured for a CONVENTIONAL system (not heat pump). 18 AWG thermostat wire.",
+   "Only Thermostat Interface 2 works with the PAA unit: mount it in the PAA control box, CN105 to the board, supplied PAA accessory cable to CNH02 on the relay board (G green, W1 white, W2 brown, Y1 yellow, Y2 blue, C light blue, R red), thermostat to terminals 13A-19A. PAC-US444CN-1 is not compatible with PAA.",
+   "PAA relay board SW01-1: ON (default) routes furnace R through the PAA box to power the thermostat; OFF lets auxiliary equipment (e.g. zoning panel) supply its own power.",
+   "Do not connect Mitsubishi MA/ME remotes during normal operation; one interface per thermostat. Indoor unit Mode settings through the interface only work on M-series units beginning with \"S\" and P-series units.",
+   "Alternate primary heat source: thermostat W1 to the other heat source, thermostat W2 to interface W1, SW2-6 ON."
+  ],
+  "setup": {
+   "access": "DIP switch banks SW1 and SW2 on the board (four screws on the back of the case); factory default OFF for all.",
+   "keySettings": [
+    {
+     "setting": "SW1-1 Delay timer",
+     "options": "OFF = stay in heat/cool 2 h after W1/Y1 drops (default, ignores G changes during that time); ON = go to off/fan immediately",
+     "notes": ""
+    },
+    {
+     "setting": "SW1-2 Cooling thermal-off fan when G off (Mode 27)",
+     "options": "OFF setting 2 = fan off (default), ON setting 3 = extra low",
+     "notes": ""
+    },
+    {
+     "setting": "SW1-3/SW1-4 Fan speed",
+     "options": "OFF/OFF Custom Auto (default), ON/OFF Medium, OFF/ON High, ON/ON Auto",
+     "notes": ""
+    },
+    {
+     "setting": "SW2-6 Stage 1 operation",
+     "options": "OFF = capacity varied to a fixed rate (default); ON = full capacity",
+     "notes": "ON when Y2 or W2 is left unconnected; OFF when both are wired (opposite of PAC-US444CN-1)"
+    },
+    {
+     "setting": "SW2-1/2/3 Static pressure",
+     "options": "Sets Modes 8/10/11 per table",
+     "notes": ""
+    },
+    {
+     "setting": "SW2-4 Mode 23",
+     "options": "OFF setting 1 (default), ON setting 2",
+     "notes": ""
+    },
+    {
+     "setting": "SW2-5 Heating thermal-off fan (Mode 25)",
+     "options": "OFF setting 2 = fan off (default), ON setting 1 = extra low",
+     "notes": "Leave SW1-2 and SW2-5 OFF with PAA units"
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "SW2-6 logic is reversed versus the older PAC-US444CN-1 - confirm the model before copying settings."
+  ],
+  "manuals": [
+   {
+    "title": "PAC-US445CN-1 Thermostat Interface 2 Installation/Instruction Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-pac-us445cn-1-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10007/PAC-US445CN-1%20Installation%20Manual.pdf"
+   },
+   {
+    "title": "Application Note 3062 - Thermostat Interface 2 Sequence of Operations",
+    "docType": "other",
+    "seedFile": "mitsubishi-pac-us445cn-1-appnote-3062.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/Application_Note_3062_ME_-_Thermostat_Interface_2_Sequence_of_Operations.pdf"
+   }
+  ],
+  "sourceNotes": "PAC-US445CN-1 Thermostat Interface 2 Installation/Instruction Manual (2022, file 2024); Application Note 3062 Thermostat Interface 2 Sequence of Operations (2023)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-pac-sdw01rc-1",
+  "brand": "Mitsubishi",
+  "family": "PAC-SDW01RC-1 Simple Ductless Wired Remote Controller (SDW01)",
+  "aka": "dial-type wired controller, 2023",
+  "models": [
+   "PAC-SDW01RC-1"
+  ],
+  "type": "accessory",
+  "stages": "Set by the connected M-series / P-series indoor unit",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered from the indoor unit through the adapter on CN105; no batteries or 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "Adapter cable",
+    "fn": "Plugs into CN105 on the indoor unit control board",
+    "notes": "Mount adapter near or inside the indoor unit"
+   },
+   {
+    "t": "A / B / C / D",
+    "fn": "Adapter to wall plate, matching letters",
+    "notes": "18 AWG, 4-conductor minimum; max 17 m (55 ft)"
+   }
+  ],
+  "wiringNotes": [
+   "Not compatible with kumo cloud - do not connect it to a Wireless Interface 2.",
+   "On multi-zone outdoor units with a branch box (e.g. MXZ) set all addresses and DIP switches before connecting the SDW01.",
+   "Power the indoor unit off before wiring."
+  ],
+  "setup": {
+   "access": "Press the dial > scroll right to Settings > Installer. Function Codes (indoor unit settings 1-28, values 1-3; stored in the indoor unit), ISU (controller settings; lost if controller is replaced), Error Codes (history), Factory Reset, Test Mode.",
+   "keySettings": [
+    {
+     "setting": "Function Code 01 Power failure auto recovery",
+     "options": "1 Off, 2 On (about 4 min delay)",
+     "notes": ""
+    },
+    {
+     "setting": "Function Code 02 Indoor temperature detection",
+     "options": "1 Average, 2 Return air, 3 Remote controller",
+     "notes": ""
+    },
+    {
+     "setting": "Function Code 08 / 10 Static pressure",
+     "options": "Per SEZ / PEAD / SVZ / PVA static tables in the manual",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 142 System type",
+     "options": "Heat pump (heat & cool), Cool only",
+     "notes": "Auto-detected"
+    },
+    {
+     "setting": "ISU 144 Auto changeover",
+     "options": "Manual, Auto (ACO)",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 180 / 181 Max heat / min cool setpoint",
+     "options": "40-90 F / 50-99 F",
+     "notes": "Limited by indoor unit"
+    },
+    {
+     "setting": "ISU 190 Indoor temperature source",
+     "options": "SDW01 thermistor (default), Indoor unit return air sensor",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 191 Indoor temp display offset",
+     "options": "-5 to +5 F",
+     "notes": ""
+    },
+    {
+     "setting": "ISU 197-200 Auto Dry",
+     "options": "Enable; RH threshold 35-75% (default 60); dry-mode offset 2-9 F; overcool 2-4 F",
+     "notes": ""
+    }
+   ],
+   "installerTest": "Settings > Installer > Test Mode > Run Cool Test / Run Heat Test; End Test to exit. Only on P-series and SEZ, SLZ, SVZ models.",
+   "factoryReset": "Settings > Installer > Factory Reset (controller only)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Function Code changes stay in the indoor unit even if the SDW01 is replaced; ISU changes revert when the controller is swapped."
+  ],
+  "manuals": [
+   {
+    "title": "PAC-SDW01RC-1 Simple Ductless Wired Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-pac-sdw01rc-1-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/M_PAC-SDW01RC-1_Install.pdf"
+   },
+   {
+    "title": "PAC-SDW01RC-1 Operation Manual",
+    "docType": "user",
+    "seedFile": "mitsubishi-pac-sdw01rc-1-operation-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/M_PAC-SDW01RC-1_Operation.pdf"
+   }
+  ],
+  "sourceNotes": "47007-0013910 Rev A SDW01 Installation Manual (2023); SDW01 Operation Manual (2023)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-par-ct01mau-sb",
+  "brand": "Mitsubishi",
+  "family": "PAR-CT01MAU-SB Touch MA Wired Remote Controller",
+  "aka": "color touchscreen MA remote with Bluetooth (MELRemo app)",
+  "models": [
+   "PAR-CT01MAU-SB"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected indoor unit(s)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered over the MA remote controller line from the indoor unit (display blank if 8.5-12 VDC is not present)."
+  },
+  "terminals": [
+   {
+    "t": "A / B (non-polarized)",
+    "fn": "MA remote controller 2-core cable (0.3 mm2 / AWG22 sheathed, field supplied)",
+    "notes": "M-series / P-series: to indoor unit TB5. CITY MULTI: to indoor unit TB15 (MA remote controller terminal block). No polarity."
+   }
+  ],
+  "wiringNotes": [
+   "Total wiring length: up to 150 m (492 ft) on M-series/P-series (TB5); up to 70 m (229 ft) on CITY MULTI (TB15).",
+   "Up to two controllers per group (Main/Sub)."
+  ],
+  "setup": {
+   "access": "Main menu > Service (maintenance password, default 9999); Initial setting needs the administrator password (default 0000).",
+   "keySettings": [
+    {
+     "setting": "Main/Sub",
+     "options": "Main, Sub",
+     "notes": ""
+    }
+   ],
+   "installerTest": "At the Main display press Setting and select Service > Test run > Test run; ON/OFF cancels.",
+   "factoryReset": ""
+  },
+  "diagnostics": [
+   {
+    "code": "E3 / 6832 (RC check)",
+    "meaning": "Noise on transmission line, or indoor unit / other remote faulty",
+    "action": "Check transmission line"
+   },
+   {
+    "code": "NG (ALL0, ALL1) (RC check)",
+    "meaning": "Remote send/receive circuit fault",
+    "action": "Replace remote"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Remote controller display completely blank",
+    "causes": [
+     "Correct voltage (8.5-12 VDC) not reaching the controller from the indoor unit"
+    ],
+    "fixes": [
+     "Check the remote controller wiring and the indoor unit (Service > Diagnosis > Remote controller check once display is up)"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "PAR-CT01MAU-SB Touch MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-par-ct01mau-sb-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10004/WT08632X01_IM_PAR-CT01MAU-SB_MEUSA.pdf"
+   }
+  ],
+  "sourceNotes": "WT08632X01 PAR-CT01MAU-SB Installation Manual (2014)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-pac-yt53crau",
+  "brand": "Mitsubishi",
+  "family": "PAC-YT53CRAU Simple MA Remote Controller",
+  "aka": "basic MA remote",
+  "models": [
+   "PAC-YT53CRAU",
+   "PAC-YT53CRAU-J"
+  ],
+  "type": "communicating",
+  "stages": "Set by the connected indoor unit(s)",
+  "sort": 50,
+  "confidence": "rare",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered over the MA remote controller line from the indoor unit."
+  },
+  "terminals": [
+   {
+    "t": "A / B (non-polarized)",
+    "fn": "MA remote cable to indoor unit TB5 (M/P-series) or TB15 (CITY MULTI)",
+    "notes": "0.3 mm2 (AWG22) 2-core; for runs longer than 10 m (32 ft) use up to 1.25 mm2 (16 AWG)"
+   }
+  ],
+  "wiringNotes": [
+   "Wiring up to 200 m (656 ft).",
+   "Two controllers per group maximum (Main + Sub)."
+  ],
+  "setup": {
+   "access": "Function DIP switches on the back of the top case (factory: SW1, 3, 4 ON; SW2 OFF).",
+   "keySettings": [
+    {
+     "setting": "SW1 Main/Sub",
+     "options": "ON Main, OFF Sub",
+     "notes": ""
+    },
+    {
+     "setting": "SW2 Temperature units",
+     "options": "ON Celsius, OFF Fahrenheit",
+     "notes": ""
+    },
+    {
+     "setting": "SW3 Cool/Heat display in AUTO",
+     "options": "ON Yes, OFF No",
+     "notes": ""
+    },
+    {
+     "setting": "SW4 Indoor temperature display",
+     "options": "ON Yes, OFF No",
+     "notes": ""
+    }
+   ],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "PAC-YT53CRAU Simple MA Remote Controller Installation Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-pac-yt53crau-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10004/M_PAC-YT53CRAU_INSTALL_WT06429X01_2012-03.pdf"
+   }
+  ],
+  "sourceNotes": "WT06429X01 PAC-YT53CRAU Installation Manual (2012-03)",
+  "img": ""
+ },
+ {
+  "id": "tst-mitsubishi-kumo-wireless-interface-2",
+  "brand": "Mitsubishi",
+  "family": "kumo cloud Wireless Interface 2 (PAC-USWHS002-WF-2)",
+  "aka": "Wi-Fi adapter for the kumo cloud app",
+  "models": [
+   "PAC-USWHS002-WF-2"
+  ],
+  "type": "accessory",
+  "stages": "n/a - app / Wi-Fi gateway for one indoor unit",
+  "sort": 20,
+  "confidence": "common",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "",
+   "notes": "Powered from the indoor unit via CN105 (DC 12.7 V, 2 W max)."
+  },
+  "terminals": [
+   {
+    "t": "White connector",
+    "fn": "Connecting cable to CN105 on the indoor unit control board",
+    "notes": ""
+   },
+   {
+    "t": "Red connector",
+    "fn": "For an MHK1 or MHK2 remote controller receiver only",
+    "notes": "Never connect the red connector to the indoor unit - communication will fail"
+   }
+  ],
+  "wiringNotes": [
+   "2.4 GHz Wi-Fi only (channels 1-11); will not join a 5 GHz network. A 2.4 GHz-only SSID works best.",
+   "Do not mount inside a metal enclosure (weak signal). Power down the whole system before connecting.",
+   "Commissioning is done in the kumo cloud app - see the kumo cloud Technician Manual.",
+   "With an MHK2, commission the WI2 in kumo cloud first, then plug the MHK2 receiver into the WI2 red plug (see MHK2 card)."
+  ],
+  "setup": {
+   "access": "",
+   "keySettings": [],
+   "installerTest": "",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [
+   "Not all indoor units are compatible with Wireless Interface 2 / MHK1 - check the compatibility charts on mylinkdrive.com."
+  ],
+  "manuals": [
+   {
+    "title": "Wireless Interface 2 PAC-USWHS002-WF-2 Installation/Instruction Manual",
+    "docType": "install",
+    "seedFile": "mitsubishi-kumo-wi2-install-manual.pdf",
+    "url": "https://s3.amazonaws.com/enter.mehvac.com/DAMRoot/Original/10006/PAC-USWHS002-WF-2_Install_Manual.pdf"
+   }
+  ],
+  "sourceNotes": "MEUS DOC# CE-1519-L001 Ver. 3 Wireless Interface 2 Installation Manual (January 2021)",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-colortouch-t7850-t7900",
+  "brand": "Venstar",
+  "family": "ColorTouch T7850 / T7900 (residential)",
+  "aka": "ColorTouch residential - T7800 (manual has no Wi-Fi section), T7850 (Wi-Fi), T7900 (Wi-Fi + humidity)",
+  "models": [
+   "T7800",
+   "T7850",
+   "T7900"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 4 heat / 2 cool conventional; heat pump up to 2 compressor stages + 2 aux stages; dual fuel; T7900 adds humidify/dehumidify via W3/AUX",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Both R and C must be connected to the backplate. For a 2-wire heat-only system the manual says pull new wire or use the ACC0410 two-wire kit."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return (power)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required - thermostat needs both R and C"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": "With Free Cooling and no compressor, Y1 drives the free-cooling damper"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "With Free Cooling plus mechanical cooling, the compressor goes on Y2"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat, or reversing valve on a heat pump",
+    "notes": "Set by GAS/EL-HP and O-B dip switches"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / aux heat (heat pump)"
+   },
+   {
+    "t": "W3/AUX",
+    "fn": "3rd stage heat (4th stage on 2-compressor heat pump); on humidity models can be re-assigned to HUM or DEHUM",
+    "notes": "AUX Output Usage setting"
+   },
+   {
+    "t": "SENSOR",
+    "fn": "10K remote / outdoor / supply / return sensor input",
+    "notes": "ACC-TSEN 10K ohm NTC at 77F"
+   }
+  ],
+  "wiringNotes": [
+   "Dip switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything other than a heat pump; some commercial heat pumps may need GAS/EL - check the unit literature).",
+   "O/B dip (heat pump only): O energizes W1/O/B in cooling, B energizes W1/O/B in heating.",
+   "GAS/ELEC dip: with GAS/EL set, GAS = thermostat does NOT energize G in heat, ELEC = thermostat energizes G in heat. With HP set, GAS = aux heat not allowed to run with the heat pump (use GAS for dual fuel), ELEC = up to two stages of aux strip heat allowed.",
+   "Wire chart: G/F -> G, Y1/Y -> Y1, W1/W -> W1/O/B, Rh/R/M/Vr/A -> R, C -> C, O/B -> W1/O/B (heat pump), W2 -> W2, Y2 -> Y2.",
+   "4-wire trick in the manual (no C): at the thermostat move the G wire to C; at the equipment jumper G to Y with the supplied 3 in. jumper and land the old G wire on C (fan then runs only with cooling).",
+   "The backplate does not fully cover a vertical junction box - use the ACC-WPLWH wallplate or a horizontal single-gang box.",
+   "T7900: AUX Output Usage set to Hum or Dehum turns W3/AUX into a humidifier or dehumidifier output; polarity NO or NC."
+  ],
+  "setup": {
+   "access": "Main Menu > Settings > Installation Settings (set the thermostat mode to OFF before changing setup).",
+   "keySettings": [
+    {
+     "setting": "Heat & Cool Stages",
+     "options": "Up to 2 cool and 4 heat stages (factory 1H/1C)"
+    },
+    {
+     "setting": "Compressor Stages / Aux Heat Stages",
+     "options": "1-2 compressors; 0-2 aux stages",
+     "notes": "Available depending on heat pump dip switch"
+    },
+    {
+     "setting": "Compressor Min OFF Time",
+     "options": "None, 1 or 5 minutes (factory 5)"
+    },
+    {
+     "setting": "Cycles Per Hour",
+     "options": "2, 3, 4, 5, 6 or No Limit (factory 6)",
+     "notes": "Override/reset by pressing WARMER or COOLER"
+    },
+    {
+     "setting": "Min Heat/Cool Difference",
+     "options": "0-6 F (factory 2)"
+    },
+    {
+     "setting": "1st / 2nd-4th Stage Deadband",
+     "options": "1st: 1-6 F (factory 2); later stages 0-10 F; stage timer 0-60 min; turnoff point Deadband or Setpoint"
+    },
+    {
+     "setting": "Free Cooling",
+     "options": "Enabled/Disabled, usable outdoor temp 40-80 F, Mechanical Cooling Yes/No",
+     "notes": "Needs dampers and different wiring"
+    },
+    {
+     "setting": "Heat Pump Lockout / Aux Heat Lockout",
+     "options": "HP lockout 20-75 F; aux lockout 0-75 F",
+     "notes": "Heat pump dip settings only"
+    },
+    {
+     "setting": "Dual Fuel",
+     "options": "On/Off, changeover with outdoor sensor On/Off, balance point 0-60 F",
+     "notes": "HP + GAS dip positions"
+    },
+    {
+     "setting": "Fan Off Delay",
+     "options": "0-120 s"
+    },
+    {
+     "setting": "Sensor Settings",
+     "options": "Control sensor, wired sensor use (remote/outdoor/supply/return), calibrate -7 to +7 F"
+    },
+    {
+     "setting": "AUX Output Usage / Polarity (T7900)",
+     "options": "W3 (heat), Hum or Dehum; Normally Open or Normally Closed",
+     "notes": "Must be Hum/Dehum before the Humidity menu settings take effect"
+    },
+    {
+     "setting": "Humidity (T7900)",
+     "options": "Humidify setpoint 0-60%, dehumidify setpoint 25-99%, run A/C to dehumidify, max overcool 0-20 F, reheat (ELEC dip only)"
+    }
+   ],
+   "installerTest": "Settings > Installation Settings > Test Outputs - runs the outputs with no thermostat time delays (e.g. a 1st stage cooling call energizes Y1 and G).",
+   "factoryReset": "Settings > Installation Settings > Factory Defaults. Restart Thermostat is on the same menu."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Touchscreen buttons not responsive",
+    "causes": [
+     "Touchscreen out of calibration"
+    ],
+    "fixes": [
+     "Pull the thermostat off the backplate, push it back on while holding a finger firmly on the center of the screen until the Calibration screen appears, then re-calibrate"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No 24 VAC between R and C"
+    ],
+    "fixes": [
+     "Confirm power to the HVAC equipment and 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Cooling setpoint too high or cooling setpoint limit set"
+    ],
+    "fixes": [
+     "Lower the cooling setpoint or the cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint too low or heating setpoint limit set"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or the heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve dip switch set to B"
+    ],
+    "fixes": [
+     "Set the reversing valve dip switch to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both come on with a cooling call",
+    "causes": [
+     "Equipment dip switch set to HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set the equipment dip switch for GAS/EL"
+    ]
+   },
+   {
+    "symptom": "Air handler control fuse blows only when the thermostat is pushed onto the backplate",
+    "causes": [
+     "Shorted outdoor sensor or sensor wiring"
+    ],
+    "fixes": [
+     "Check/replace the outdoor sensor and its wiring"
+    ]
+   }
+  ],
+  "tips": [
+   "Skyport cloud service and Local API are under the Wi-Fi menu (T7850/T7900); firmware can be updated over Wi-Fi or from an SD card.",
+   "My Thermostat (Information menu) shows the dip switch settings, equipment status and runtimes - check it before pulling the unit off the wall."
+  ],
+  "manuals": [
+   {
+    "title": "ColorTouch T7850 Owner's Manual & Installation Guide (residential)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t7850-install-om.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T7850_OM_Install_r2.pdf"
+   },
+   {
+    "title": "ColorTouch T7900 Owner's Manual & Installation Guide (residential, humidity control)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t7900-install-om.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T7900_OM_Install_FINAL.pdf"
+   },
+   {
+    "title": "ColorTouch T7800 Owner's Manual & Installation Guide (residential)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t7800-install-om.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T7800_OM_Install_r2.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar P/N 88-1087 Rev.1 04/15 (T7850), 88-1088 Rev.1 04/15 (T7900), 88-1086 Rev.1 05/15 (T7800); firmware rev 4.04 manuals.",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-colortouch-t8850-t8900",
+  "brand": "Venstar",
+  "family": "ColorTouch T8850 / T8900 (commercial)",
+  "aka": "ColorTouch commercial - T8900 adds humidity control",
+  "models": [
+   "T8850",
+   "T8900"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 4 heat / 2 cool conventional; heat pump up to 2 compressor stages + aux; dual fuel; occupied/unoccupied scheduling with override; T8900 humidity control",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Both R and C must be connected to the backplate; 2-wire systems need new wire or the ACC0410 kit."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return (power)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required - thermostat needs both R and C"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": "With Free Cooling and no compressor, Y1 drives the free-cooling damper"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "With Free Cooling plus mechanical cooling, the compressor goes on Y2"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat, or reversing valve on a heat pump",
+    "notes": "Set by GAS/EL-HP and O-B dip switches"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / aux heat (heat pump)"
+   },
+   {
+    "t": "W3/AUX",
+    "fn": "3rd stage heat (4th stage on 2-compressor heat pump); on humidity models can be re-assigned to HUM or DEHUM",
+    "notes": "AUX Output Usage setting"
+   },
+   {
+    "t": "SENSOR",
+    "fn": "10K remote / outdoor / supply / return sensor input",
+    "notes": "ACC-TSEN 10K ohm NTC at 77F"
+   }
+  ],
+  "wiringNotes": [
+   "Dip switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything other than a heat pump; some commercial heat pumps may need GAS/EL - check the unit literature).",
+   "O/B dip (heat pump only): O energizes W1/O/B in cooling, B energizes W1/O/B in heating.",
+   "GAS/ELEC dip: with GAS/EL set, GAS = thermostat does NOT energize G in heat, ELEC = thermostat energizes G in heat. With HP set, GAS = aux heat not allowed to run with the heat pump (use GAS for dual fuel), ELEC = up to two stages of aux strip heat allowed.",
+   "Same backplate and dip switches as the residential ColorTouch; the backplate does not cover a vertical junction box (ACC-WPLWH wallplate)."
+  ],
+  "setup": {
+   "access": "Main Menu > Settings > Installation Settings (mode OFF before changing setup).",
+   "keySettings": [
+    {
+     "setting": "Heat & Cool Stages",
+     "options": "Up to 2 cool and 4 heat stages (factory 1H/1C)"
+    },
+    {
+     "setting": "Compressor Stages / Aux Heat Stages",
+     "options": "1-2 compressors; 0-2 aux stages",
+     "notes": "Available depending on heat pump dip switch"
+    },
+    {
+     "setting": "Compressor Min OFF Time",
+     "options": "None, 1 or 5 minutes (factory 5)"
+    },
+    {
+     "setting": "Cycles Per Hour",
+     "options": "2, 3, 4, 5, 6 or No Limit (factory 6)",
+     "notes": "Override/reset by pressing WARMER or COOLER"
+    },
+    {
+     "setting": "Min Heat/Cool Difference",
+     "options": "0-6 F (factory 2)"
+    },
+    {
+     "setting": "1st / 2nd-4th Stage Deadband",
+     "options": "1st: 1-6 F (factory 2); later stages 0-10 F; stage timer 0-60 min; turnoff point Deadband or Setpoint"
+    },
+    {
+     "setting": "Free Cooling",
+     "options": "Enabled/Disabled, usable outdoor temp 40-80 F, Mechanical Cooling Yes/No",
+     "notes": "Needs dampers and different wiring"
+    },
+    {
+     "setting": "Heat Pump Lockout / Aux Heat Lockout",
+     "options": "HP lockout 20-75 F; aux lockout 0-75 F",
+     "notes": "Heat pump dip settings only"
+    },
+    {
+     "setting": "Dual Fuel",
+     "options": "On/Off, changeover with outdoor sensor On/Off, balance point 0-60 F",
+     "notes": "HP + GAS dip positions"
+    },
+    {
+     "setting": "Fan Off Delay",
+     "options": "0-120 s"
+    },
+    {
+     "setting": "Sensor Settings",
+     "options": "Control sensor, wired sensor use (remote/outdoor/supply/return), calibrate -7 to +7 F"
+    },
+    {
+     "setting": "Occupied Fan State",
+     "options": "On or Auto"
+    },
+    {
+     "setting": "Preoccupancy Fan Purge",
+     "options": "On/Off, purge time from 15 min"
+    }
+   ],
+   "installerTest": "Settings > Installation Settings > Test Outputs.",
+   "factoryReset": "Settings > Installation Settings > Factory Defaults."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Touchscreen buttons not responsive",
+    "causes": [
+     "Touchscreen out of calibration"
+    ],
+    "fixes": [
+     "Pull the thermostat off the backplate, push it back on while holding a finger firmly on the center of the screen until the Calibration screen appears, then re-calibrate"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No 24 VAC between R and C"
+    ],
+    "fixes": [
+     "Confirm power to the HVAC equipment and 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Cooling setpoint too high or cooling setpoint limit set"
+    ],
+    "fixes": [
+     "Lower the cooling setpoint or the cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint too low or heating setpoint limit set"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or the heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve dip switch set to B"
+    ],
+    "fixes": [
+     "Set the reversing valve dip switch to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both come on with a cooling call",
+    "causes": [
+     "Equipment dip switch set to HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set the equipment dip switch for GAS/EL"
+    ]
+   },
+   {
+    "symptom": "Air handler control fuse blows only when the thermostat is pushed onto the backplate",
+    "causes": [
+     "Shorted outdoor sensor or sensor wiring"
+    ],
+    "fixes": [
+     "Check/replace the outdoor sensor and its wiring"
+    ]
+   }
+  ],
+  "tips": [
+   "OVERRIDE button: during unoccupied periods forces Occupied 1 settings for 30 min up to 4 h; during occupied periods forces unoccupied. Press OVERRIDE > CANCEL OVERRIDE to end it."
+  ],
+  "manuals": [
+   {
+    "title": "ColorTouch T8850 Owner's Manual & Installation Guide (commercial)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t8850-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T8850_manual.pdf"
+   },
+   {
+    "title": "ColorTouch T8900 Owner's Manual & Installation Guide (commercial, humidity control)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t8900-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T8900_manual.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar P/N 88-1091 Rev.1 07/15 (T8850) and 06/15 (T8900), firmware rev 4.04.",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-colortouch-1st-gen",
+  "brand": "Venstar",
+  "family": "ColorTouch 1st gen (T5800 / T5900 / T6800 / T6900)",
+  "aka": "T5800/T5900 residential, T6800/T6900 commercial; x900 = humidity control",
+  "models": [
+   "T5800",
+   "T5900",
+   "T6800",
+   "T6900"
+  ],
+  "type": "programmable",
+  "stages": "Up to 4 heat / 2 cool; heat pump with aux; Wi-Fi only with the Skyport Wi-Fi Key ACC0454",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Both R and C must be connected to the backplate."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return (power)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required - thermostat needs both R and C"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay",
+    "notes": "With Free Cooling and no compressor, Y1 drives the free-cooling damper"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "With Free Cooling plus mechanical cooling, the compressor goes on Y2"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat, or reversing valve on a heat pump",
+    "notes": "Set by GAS/EL-HP and O-B dip switches"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / aux heat (heat pump)"
+   },
+   {
+    "t": "W3/AUX",
+    "fn": "3rd stage heat (4th stage on 2-compressor heat pump); on humidity models can be re-assigned to HUM or DEHUM",
+    "notes": "AUX Output Usage setting"
+   },
+   {
+    "t": "SENSOR",
+    "fn": "10K remote / outdoor / supply / return sensor input",
+    "notes": "ACC-TSEN 10K ohm NTC at 77F"
+   }
+  ],
+  "wiringNotes": [
+   "Dip switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything other than a heat pump; some commercial heat pumps may need GAS/EL - check the unit literature).",
+   "O/B dip (heat pump only): O energizes W1/O/B in cooling, B energizes W1/O/B in heating.",
+   "GAS/ELEC dip: with GAS/EL set, GAS = thermostat does NOT energize G in heat, ELEC = thermostat energizes G in heat. With HP set, GAS = aux heat not allowed to run with the heat pump (use GAS for dual fuel), ELEC = up to two stages of aux strip heat allowed.",
+   "Wi-Fi connection requires the Skyport Wi-Fi Key, model ACC0454."
+  ],
+  "setup": {
+   "access": "Main Menu > Settings > Installation Settings (mode OFF first).",
+   "keySettings": [
+    {
+     "setting": "Heat & Cool Stages / Compressor / Aux stages",
+     "options": "See Installation Settings - same structure as later ColorTouch"
+    },
+    {
+     "setting": "Sensor Settings",
+     "options": "Remote/outdoor/supply/return via SENSOR terminals (ACC-TSEN)"
+    }
+   ],
+   "installerTest": "Settings menu > Test Outputs.",
+   "factoryReset": "Settings menu > Factory Defaults."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Touchscreen buttons not responsive",
+    "causes": [
+     "Touchscreen out of calibration"
+    ],
+    "fixes": [
+     "Pull the thermostat off the backplate, push it back on while holding a finger firmly on the center of the screen until the Calibration screen appears, then re-calibrate"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No 24 VAC between R and C"
+    ],
+    "fixes": [
+     "Confirm power to the HVAC equipment and 24 VAC between R and C"
+    ]
+   },
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Cooling setpoint too high or cooling setpoint limit set"
+    ],
+    "fixes": [
+     "Lower the cooling setpoint or the cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint too low or heating setpoint limit set"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or the heating setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats when calling for cooling",
+    "causes": [
+     "Reversing valve dip switch set to B"
+    ],
+    "fixes": [
+     "Set the reversing valve dip switch to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both come on with a cooling call",
+    "causes": [
+     "Equipment dip switch set to HP on a gas/electric unit"
+    ],
+    "fixes": [
+     "Set the equipment dip switch for GAS/EL"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "ColorTouch T5800 Owner's Manual & Installation Instructions (residential)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t5800-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T5800_manual_rev7.pdf"
+   },
+   {
+    "title": "ColorTouch T5900 Owner's Manual & Installation Instructions (residential, humidity)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t5900-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T5900_manual_rev4.pdf"
+   },
+   {
+    "title": "ColorTouch T6800 Owner's Manual & Installation Instructions (commercial)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t6800-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T6800_manual_rev5.pdf"
+   },
+   {
+    "title": "ColorTouch T6900 Owner's Manual & Installation Instructions (commercial, humidity)",
+    "docType": "install",
+    "seedFile": "venstar-colortouch-t6900-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/colortouch/documents/T6900_manual_rev4.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar P/N 88-860 Rev.7, 88-956 Rev.4, 88-874 Rev.5, 88-957 Rev.4 (all 08/14, firmware 3.04).",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-explorer-residential",
+  "brand": "Venstar",
+  "family": "Explorer Residential T3700 / T3800 / T3900",
+  "aka": "Explorer (2nd gen Voyager) residential",
+  "models": [
+   "T3700",
+   "T3800",
+   "T3900"
+  ],
+  "type": "programmable",
+  "stages": "T3700: up to 2 heat / 1 cool. T3800: up to 4 heat / 2 cool. T3900: up to 4 heat / 2 cool with humidity control (HUM/DEHUM) and AUX output",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Both R and C must be connected. Wi-Fi via optional module (Skyport)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay",
+    "notes": "T3800/T3900"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat"
+   },
+   {
+    "t": "W3",
+    "fn": "3rd stage heat",
+    "notes": "T3800/T3900; 4th stage on 2-compressor heat pump"
+   },
+   {
+    "t": "HUM",
+    "fn": "Humidifier control",
+    "notes": "T3900"
+   },
+   {
+    "t": "DEHUM",
+    "fn": "Dehumidifier control",
+    "notes": "T3900"
+   },
+   {
+    "t": "AUX",
+    "fn": "Aux output (time, temp, external, free cooling, venting)",
+    "notes": "T3900"
+   },
+   {
+    "t": "OUTDOOR SENSOR",
+    "fn": "Outdoor sensor"
+   },
+   {
+    "t": "REMOTE SENSOR",
+    "fn": "Remote sensor",
+    "notes": "T3900"
+   },
+   {
+    "t": "DRY CONTACT",
+    "fn": "Dry contact input (Ck1/CKGND)",
+    "notes": "Condensate switch, vacation or FDD"
+   }
+  ],
+  "wiringNotes": [
+   "Dip switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything other than a heat pump; some commercial heat pumps may need GAS/EL - check the unit literature).",
+   "O/B dip (heat pump only): O energizes W1/O/B in cooling, B energizes W1/O/B in heating.",
+   "GAS/ELEC dip: with GAS/EL set, GAS = thermostat does NOT energize G in heat, ELEC = thermostat energizes G in heat. With HP set, GAS = aux heat not allowed to run with the heat pump (use GAS for dual fuel), ELEC = up to two stages of aux strip heat allowed.",
+   "Wire chart: G/F -> G, Y1/Y -> Y1, W1/W -> W1/O/B, Rh/R/M/Vr/A -> R, O/B -> W1/O/B, W2 -> W2, Y2 -> Y2, W3 -> W3, H/Hum -> HUM, D/Dehum -> DEHUM, Ck1/CKGND -> DRY CONTACT.",
+   "On 4-stage heat pump heat there is no 4th stage indicator - display still shows 3rd stage."
+  ],
+  "setup": {
+   "access": "Advanced Setup: press SETUP, then MODE to step through; WARMER/COOLER change values; SETUP exits. Put the thermostat in OFF first.",
+   "keySettings": [
+    {
+     "setting": "Step 1 Prog Mode",
+     "options": "Non, 1 Day, 5/2 Day, 7 Day (factory 7)"
+    },
+    {
+     "setting": "Step 2 Available Modes",
+     "options": "Heat/Cool/Auto/Off, Heat/Cool/Off, Heat/Off, Cool/Off"
+    },
+    {
+     "setting": "Cycles Per Hour",
+     "options": "No Limit, 2-6 (factory 6)"
+    },
+    {
+     "setting": "Compressor Minimum Off",
+     "options": "0, 3, 5 min (factory 5)"
+    },
+    {
+     "setting": "Number of Heat / Cool / Compressor / Aux stages",
+     "options": "Heat 0-3, Cool 0-2, Compressor 1-2, Aux 0-2 (T3900 table)"
+    },
+    {
+     "setting": "1st Stage Deadband",
+     "options": "1-6 F (factory 2); later stages 0-10 F, 0-60 min between stages"
+    },
+    {
+     "setting": "Heat pump / aux lockout, dual fuel",
+     "options": "HP lockout 0-75 F, aux lockout 20-75 F, dual fuel on/off, balance point 0-60 F, changeover delay 0-90 s"
+    },
+    {
+     "setting": "Fan Off Delay",
+     "options": "0-120 s"
+    },
+    {
+     "setting": "Dry Contact Use / Polarity",
+     "options": "Condensate, Vacation, FDD; Open or Closed"
+    },
+    {
+     "setting": "Skyport / Local API",
+     "options": "On/Off (Wi-Fi module)"
+    }
+   ],
+   "installerTest": "Technician Setup: press and hold SETUP 10 s until all icons appear. MODE steps through: firmware versions, dip/jumper settings and Dry Contact state, TURN ON EQUIPMENT? (WARMER = yes; WARMER cycles up heat stages, COOLER cycles down cooling stages), CALIBRATE SENSORS?, and on humidity/AUX models CONTROL HUM / DEHUM / AUX OUT. Press SETUP to exit (auto-exits after 10 min).",
+   "factoryReset": "Hold SETUP 10 s until all icons appear, release, then hold FAN 5 s until DEFAULTS shows; release and press MODE. Wipes schedule and advanced setup."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Compressor timer lockout / cycles per hour",
+     "Cooling setpoint too high or setpoint limit"
+    ],
+    "fixes": [
+     "Defeat Cycles Per Hour in setup (No Limit) or wait it out",
+     "Lower the cooling setpoint or cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No 24 VAC between R and C"
+    ],
+    "fixes": [
+     "Confirm furnace power and 24 VAC R to C"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint too low or setpoint limit"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats on a cooling call",
+    "causes": [
+     "Reversing valve dip set to B"
+    ],
+    "fixes": [
+     "Set it to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both on with a cooling call",
+    "causes": [
+     "Equipment dip on HP with a gas/electric unit"
+    ],
+    "fixes": [
+     "Set to GAS/EL"
+    ]
+   },
+   {
+    "symptom": "PROGRAM button shows DISABLED",
+    "causes": [
+     "Program Mode = Non-Programmable"
+    ],
+    "fixes": [
+     "Set setup step 1 (Prog Mode) to 1, 5/2 or 7 day"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lock: hold MODE and press WARMER + COOLER together; repeat to unlock."
+  ],
+  "manuals": [
+   {
+    "title": "Explorer T3700 Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-explorer-t3700-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/voyager/documents/T3700_manual_v2.pdf"
+   },
+   {
+    "title": "Explorer T3800 Owner's Manual and Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-explorer-t3800-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/voyager/documents/T3800_manual_v2.pdf"
+   },
+   {
+    "title": "Explorer T3900 Owner's Manual and Installation Instructions (humidity control)",
+    "docType": "install",
+    "seedFile": "venstar-explorer-t3900-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/voyager/documents/T3900_manual_v2.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar P/N 88-1017 Rev.4b 04/26/18 (T3700), 88-1016 Rev.4d 04/18/18 (T3800), 88-1015 Rev.4e 03/29/18 (T3900); firmware rev 12. Model number printed on the cover art.",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-explorer-commercial",
+  "brand": "Venstar",
+  "family": "Explorer Commercial T4700 / T4800 / T4900",
+  "aka": "Explorer commercial (occupied/unoccupied, override)",
+  "models": [
+   "T4700",
+   "T4800",
+   "T4900"
+  ],
+  "type": "programmable",
+  "stages": "T4700: up to 2 heat / 2 cool with humidity control. T4800: up to 4 heat / 2 cool. T4900: up to 4 heat / 2 cool with humidity control and AUX output",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Both R and C must be connected. Wi-Fi via optional module."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor relay"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor relay"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat"
+   },
+   {
+    "t": "W3",
+    "fn": "3rd stage heat",
+    "notes": "T4800/T4900"
+   },
+   {
+    "t": "HUM",
+    "fn": "Humidifier control",
+    "notes": "T4700/T4900"
+   },
+   {
+    "t": "DEHUM",
+    "fn": "Dehumidifier control",
+    "notes": "T4700/T4900"
+   },
+   {
+    "t": "AUX",
+    "fn": "Aux output",
+    "notes": "T4900"
+   },
+   {
+    "t": "OUTDOOR SENSOR",
+    "fn": "Outdoor sensor"
+   },
+   {
+    "t": "REMOTE SENSOR",
+    "fn": "Remote sensor"
+   },
+   {
+    "t": "DRY CONTACT",
+    "fn": "Dry contact input"
+   }
+  ],
+  "wiringNotes": [
+   "Dip switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything other than a heat pump; some commercial heat pumps may need GAS/EL - check the unit literature).",
+   "O/B dip (heat pump only): O energizes W1/O/B in cooling, B energizes W1/O/B in heating.",
+   "GAS/ELEC dip: with GAS/EL set, GAS = thermostat does NOT energize G in heat, ELEC = thermostat energizes G in heat. With HP set, GAS = aux heat not allowed to run with the heat pump (use GAS for dual fuel), ELEC = up to two stages of aux strip heat allowed."
+  ],
+  "setup": {
+   "access": "Advanced Setup: press SETUP, then MODE to step; SETUP exits. Mode OFF first.",
+   "keySettings": [
+    {
+     "setting": "Step 1 Prog Mode",
+     "options": "Non, 1 Day, 5/2 Day, 7 Day (factory 7)"
+    },
+    {
+     "setting": "Step 2 Available Modes",
+     "options": "Heat/Cool/Auto/Off, Heat/Cool/Off, Heat/Off, Cool/Off"
+    },
+    {
+     "setting": "Cycles Per Hour",
+     "options": "No Limit, 2-6 (factory 6)"
+    },
+    {
+     "setting": "Compressor Minimum Off",
+     "options": "0, 3, 5 min (factory 5)"
+    },
+    {
+     "setting": "Number of Heat / Cool / Compressor / Aux stages",
+     "options": "Heat 0-3, Cool 0-2, Compressor 1-2, Aux 0-2 (T3900 table)"
+    },
+    {
+     "setting": "1st Stage Deadband",
+     "options": "1-6 F (factory 2); later stages 0-10 F, 0-60 min between stages"
+    },
+    {
+     "setting": "Heat pump / aux lockout, dual fuel",
+     "options": "HP lockout 0-75 F, aux lockout 20-75 F, dual fuel on/off, balance point 0-60 F, changeover delay 0-90 s"
+    },
+    {
+     "setting": "Fan Off Delay",
+     "options": "0-120 s"
+    },
+    {
+     "setting": "Dry Contact Use / Polarity",
+     "options": "Condensate, Vacation, FDD; Open or Closed"
+    },
+    {
+     "setting": "Skyport / Local API",
+     "options": "On/Off (Wi-Fi module)"
+    },
+    {
+     "setting": "Minutes of Fan Purge",
+     "options": "0-3:00 in 15 min steps (0 = off)"
+    },
+    {
+     "setting": "Max Occ / Unocc Dehum Overcool",
+     "options": "0-20 F (T4900)"
+    }
+   ],
+   "installerTest": "Technician Setup: press and hold SETUP 10 s until all icons appear. MODE steps through: firmware versions, dip/jumper settings and Dry Contact state, TURN ON EQUIPMENT? (WARMER = yes; WARMER cycles up heat stages, COOLER cycles down cooling stages), CALIBRATE SENSORS?, and on humidity/AUX models CONTROL HUM / DEHUM / AUX OUT. Press SETUP to exit (auto-exits after 10 min).",
+   "factoryReset": "Hold SETUP 10 s until all icons appear, release, then hold FAN 5 s until DEFAULTS shows; release and press MODE. Wipes schedule and advanced setup."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Compressor timer lockout / cycles per hour",
+     "Cooling setpoint too high or setpoint limit"
+    ],
+    "fixes": [
+     "Defeat Cycles Per Hour in setup (No Limit) or wait it out",
+     "Lower the cooling setpoint or cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No 24 VAC between R and C"
+    ],
+    "fixes": [
+     "Confirm furnace power and 24 VAC R to C"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint too low or setpoint limit"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats on a cooling call",
+    "causes": [
+     "Reversing valve dip set to B"
+    ],
+    "fixes": [
+     "Set it to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both on with a cooling call",
+    "causes": [
+     "Equipment dip on HP with a gas/electric unit"
+    ],
+    "fixes": [
+     "Set to GAS/EL"
+    ]
+   },
+   {
+    "symptom": "PROGRAM button shows DISABLED",
+    "causes": [
+     "Program Mode = Non-Programmable"
+    ],
+    "fixes": [
+     "Set setup step 1 (Prog Mode) to 1, 5/2 or 7 day"
+    ]
+   }
+  ],
+  "tips": [
+   "Override button: during unoccupied periods forces occupied settings; during occupied periods forces unoccupied."
+  ],
+  "manuals": [
+   {
+    "title": "Explorer T4700 Owner's Manual and Installation Instructions (commercial, humidity)",
+    "docType": "install",
+    "seedFile": "venstar-explorer-t4700-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/voyager/documents/T4700_manual_v2.pdf"
+   },
+   {
+    "title": "Explorer T4800 Owner's Manual and Installation Instructions (commercial)",
+    "docType": "install",
+    "seedFile": "venstar-explorer-t4800-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/voyager/documents/T4800_manual_v2.pdf"
+   },
+   {
+    "title": "Explorer T4900 Owner's Manual and Installation Instructions (commercial, humidity)",
+    "docType": "install",
+    "seedFile": "venstar-explorer-t4900-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/voyager/documents/T4900_manual_v2.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar P/N 88-1014 Rev.3 10/17 (T4700), 88-1013 Rev.3 10/17 (T4800), 88-1012 Rev.5 10/17 (T4900); firmware rev 12.",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-explorer-mini-t2000",
+  "brand": "Venstar",
+  "family": "Explorer Mini T2000",
+  "aka": "Explorer Mini Wi-Fi, 7-day programmable",
+  "models": [
+   "T2000"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool conventional or heat pump (W1/O/B, W2)",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Both R and C must be connected for proper operation."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "1st stage compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage compressor"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat"
+   },
+   {
+    "t": "CK1",
+    "fn": "Dry contact input",
+    "notes": "Condensate pan, vacation or FDD"
+   }
+  ],
+  "wiringNotes": [
+   "Dip switches on the back of the thermostat: GAS/EL vs HP (leave GAS/EL for anything other than a heat pump; some commercial heat pumps may need GAS/EL - check the unit literature).",
+   "O/B dip (heat pump only): O energizes W1/O/B in cooling, B energizes W1/O/B in heating.",
+   "GAS/ELEC dip: with GAS/EL set, GAS = thermostat does NOT energize G in heat, ELEC = thermostat energizes G in heat. With HP set, GAS = aux heat not allowed to run with the heat pump (use GAS for dual fuel), ELEC = up to two stages of aux strip heat allowed.",
+   "Remove the display from the backplate by pulling from the center."
+  ],
+  "setup": {
+   "access": "Setup steps: hold MODE + FAN 5 s. Other button combos: MODE + Up 2 s = time schedule; Up + FAN 2 s = emergency heat; MODE + Up + Down 2 s = lock buttons; MODE + Down 2 s then MODE = calibration; FAN 5 s = wireless setup.",
+   "keySettings": [
+    {
+     "setting": "Step 14 Cycles Per Hour",
+     "options": "No Limit, 2-6 (factory 6)"
+    },
+    {
+     "setting": "Step 15 Compressor Minimum Off",
+     "options": "0, 3, 5 min (factory 5)"
+    },
+    {
+     "setting": "Step 16 Min Heat/Cool Difference",
+     "options": "0-6 F (factory 2)"
+    },
+    {
+     "setting": "Steps 17-20 Deadbands",
+     "options": "1st 1-6 F, 2nd 0-10 F, 0-60 min between stages, turnoff at Deadband or Setpoint"
+    },
+    {
+     "setting": "Step 21 Fan Off Delay",
+     "options": "0, 30, 60, 90, 120 s"
+    },
+    {
+     "setting": "Step 25 Dry Contact Use",
+     "options": "Condensate Pan, Vacation, FDD (factory Vacation)"
+    },
+    {
+     "setting": "Steps 26/27 Skyport / Local API",
+     "options": "On/Off"
+    },
+    {
+     "setting": "Step 28 Available Modes",
+     "options": "Heat, Cool, Heat or Cool, Auto"
+    }
+   ],
+   "installerTest": "Not published (no output test menu in the manual).",
+   "factoryReset": "Put in OFF, hold MODE + DOWN 5 s until all icons show, release, hold FAN 2 s - Fd and ALL appear; choose Wi-Fi, STAT or ALL with Up/Down, then hold FAN 2 s to restore."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Compressor timer lockout / cycles per hour",
+     "Cooling setpoint too high or setpoint limit"
+    ],
+    "fixes": [
+     "Defeat Cycles Per Hour in setup (No Limit) or wait it out",
+     "Lower the cooling setpoint or cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No 24 VAC between R and C"
+    ],
+    "fixes": [
+     "Confirm furnace power and 24 VAC R to C"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint too low or setpoint limit"
+    ],
+    "fixes": [
+     "Raise the heating setpoint or setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats on a cooling call",
+    "causes": [
+     "Reversing valve dip set to B"
+    ],
+    "fixes": [
+     "Set it to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both on with a cooling call",
+    "causes": [
+     "Equipment dip on HP with a gas/electric unit"
+    ],
+    "fixes": [
+     "Set to GAS/EL"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Explorer Mini T2000 Owner's Manual & Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-explorer-mini-t2000-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/explorermini/documents/T2000_manual.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar Explorer Mini T2000 manual, P/N 88-1192 rev.3, (c)2017, PDF dated 03/2020.",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-slimline-residential",
+  "brand": "Venstar",
+  "family": "Slimline Residential T1700 / T1800 / T1900",
+  "aka": "Slimline (2007 era); T1900 = humidity control",
+  "models": [
+   "T1700",
+   "T1800",
+   "T1900"
+  ],
+  "type": "programmable",
+  "stages": "T1700: 1-day programmable up to 2 heat / 1 cool. T1800/T1900: 7-day programmable up to 3 heat / 2 cool (via MISC outputs); T1900 adds humidity",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Not published",
+   "notes": "Install manual troubleshooting checks 24 VAC R-W, or R-C when C is used."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Blank-display check: 24 VAC R-W, or R-C if C is used"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor relay"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat"
+   },
+   {
+    "t": "MISC1 / MISC2 / MISC3",
+    "fn": "Configurable outputs set by jumper: W3, PROG (pilot relay by time/temp/remote), HUM, DEHUM, or Y2 (MISC1 only)",
+    "notes": "Not on T1700. Never put more than one jumper on the same MISC block"
+   },
+   {
+    "t": "RS+5 / RS1 / RS2 / RSGND",
+    "fn": "Remote and outdoor sensor connections",
+    "notes": "T1700/T2800 list outdoor sensor RS+5/RS2/RSGND only"
+   },
+   {
+    "t": "CK1 / CKGND",
+    "fn": "Dry contact input",
+    "notes": "T1900, T2700, T2900 only - Vacation or Service Pan (locks out Y1)"
+   }
+  ],
+  "wiringNotes": [
+   "Jumpers on the back set HP/GAS, O/B, and ELEC/GAS (fan) plus the MISC1-3 output functions.",
+   "CK1/CK2 dry contact: Vacation forces vacation mode; Service Pan locks out Y1 and shows Service Pan."
+  ],
+  "setup": {
+   "access": "Setup: hold MODE and press PROGRAM; MODE steps forward (hold MODE to step back).",
+   "keySettings": [
+    {
+     "setting": "Cycles Per Hour",
+     "options": "Limits starts per hour (6 = once every 10 min); overridden/reset by UP or DOWN"
+    },
+    {
+     "setting": "Deadbands",
+     "options": "1st 1-6 F, 2nd/3rd 0-10 F, 0-60 min between stages (factory 2 min)"
+    }
+   ],
+   "installerTest": "Manual test: MODE to HEAT and set 10 F above room (furnace on), MODE to COOL and set 10 F below room (A/C on), FAN to On (fan runs).",
+   "factoryReset": "OFF mode, hold MODE and then hold FAN 5 s until all icons appear, release, hold FAN 5 s until Fd appears, then press MODE."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Compressor timer lockout / cycles per hour",
+     "Cooling setpoint limit"
+    ],
+    "fixes": [
+     "Defeat cycles per hour / timeguard in setup",
+     "Lower the cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No power"
+    ],
+    "fixes": [
+     "Check furnace power; 24 VAC between R and W, or R and C if C is used"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint limit"
+    ],
+    "fixes": [
+     "Raise the heating setpoint limit in setup"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats on a cooling call",
+    "causes": [
+     "Reversing valve jumper on b"
+    ],
+    "fixes": [
+     "Move it to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both on with a cooling call",
+    "causes": [
+     "Equipment jumper on HP with a gas/electric unit"
+    ],
+    "fixes": [
+     "Set the equipment jumper to GAS"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Slimline T1700 Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-slimline-t1700-install.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T1700ManualInstallRev1.pdf"
+   },
+   {
+    "title": "Slimline T1800 Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-slimline-t1800-install.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T1800ManualInstallRev1.pdf"
+   },
+   {
+    "title": "Slimline T1900 Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-slimline-t1900-install.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T1900ManualInstallRev1.pdf"
+   },
+   {
+    "title": "Slimline T1900 Owner's Manual",
+    "docType": "user",
+    "seedFile": "venstar-slimline-t1900-owners-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T1900ManualRev1.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar Slimline install manuals dated 08/07 (T1900 P/N 88-600 Rev.1); T1900 Owner's Manual P/N 88-599 Rev.1.",
+  "img": ""
+ },
+ {
+  "id": "tst-venstar-slimline-commercial",
+  "brand": "Venstar",
+  "family": "Slimline Commercial T2700 / T2800 / T2900",
+  "aka": "Slimline commercial (Title 24); T2900 = humidity control",
+  "models": [
+   "T2700",
+   "T2800",
+   "T2900"
+  ],
+  "type": "programmable",
+  "stages": "T2700: non-programmable up to 2 heat / 2 cool. T2800/T2900: 7-day programmable up to 3 heat / 2 cool; T2900 adds humidity",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Not published",
+   "notes": "Same power check as residential Slimline (R-W, or R-C when C is used)."
+  },
+  "terminals": [
+   {
+    "t": "R",
+    "fn": "24 VAC return"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Blank-display check: 24 VAC R-W, or R-C if C is used"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor relay"
+   },
+   {
+    "t": "W1/O/B",
+    "fn": "1st stage heat or reversing valve"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat"
+   },
+   {
+    "t": "MISC1 / MISC2 / MISC3",
+    "fn": "Configurable outputs set by jumper: W3, PROG (pilot relay by time/temp/remote), HUM, DEHUM, or Y2 (MISC1 only)",
+    "notes": "Not on T1700. Never put more than one jumper on the same MISC block"
+   },
+   {
+    "t": "RS+5 / RS1 / RS2 / RSGND",
+    "fn": "Remote and outdoor sensor connections",
+    "notes": "T1700/T2800 list outdoor sensor RS+5/RS2/RSGND only"
+   },
+   {
+    "t": "CK1 / CKGND",
+    "fn": "Dry contact input",
+    "notes": "T1900, T2700, T2900 only - Vacation or Service Pan (locks out Y1)"
+   }
+  ],
+  "wiringNotes": [
+   "Jumpers on the back set HP/GAS, O/B, ELEC/GAS (fan) and MISC1-3 functions."
+  ],
+  "setup": {
+   "access": "Setup: hold MODE and press PROGRAM; MODE steps forward (hold MODE to step back).",
+   "keySettings": [
+    {
+     "setting": "Cycles Per Hour",
+     "options": "Limits starts per hour (6 = once every 10 min); overridden/reset by UP or DOWN"
+    },
+    {
+     "setting": "Deadbands",
+     "options": "1st 1-6 F, 2nd/3rd 0-10 F, 0-60 min between stages (factory 2 min)"
+    }
+   ],
+   "installerTest": "Manual test: MODE to HEAT and set 10 F above room (furnace on), MODE to COOL and set 10 F below room (A/C on), FAN to On (fan runs).",
+   "factoryReset": "OFF mode, hold MODE and then hold FAN 5 s until all icons appear, release, hold FAN 5 s until Fd appears, then press MODE."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "A/C does not try to turn on",
+    "causes": [
+     "Compressor timer lockout / cycles per hour",
+     "Cooling setpoint limit"
+    ],
+    "fixes": [
+     "Defeat cycles per hour / timeguard in setup",
+     "Lower the cooling setpoint limit"
+    ]
+   },
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No power"
+    ],
+    "fixes": [
+     "Check furnace power; 24 VAC between R and W, or R and C if C is used"
+    ]
+   },
+   {
+    "symptom": "Heat does not try to turn on",
+    "causes": [
+     "Heating setpoint limit"
+    ],
+    "fixes": [
+     "Raise the heating setpoint limit in setup"
+    ]
+   },
+   {
+    "symptom": "Heat pump heats on a cooling call",
+    "causes": [
+     "Reversing valve jumper on b"
+    ],
+    "fixes": [
+     "Move it to O"
+    ]
+   },
+   {
+    "symptom": "Heat and cool both on with a cooling call",
+    "causes": [
+     "Equipment jumper on HP with a gas/electric unit"
+    ],
+    "fixes": [
+     "Set the equipment jumper to GAS"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Slimline T2700 Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-slimline-t2700-install.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T2700ManualInstallRev1.pdf"
+   },
+   {
+    "title": "Slimline T2800 Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-slimline-t2800-install.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T2800ManualInstallRev1.pdf"
+   },
+   {
+    "title": "Slimline T2900 Installation Instructions",
+    "docType": "install",
+    "seedFile": "venstar-slimline-t2900-install.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T2900ManualInstallRev1.pdf"
+   },
+   {
+    "title": "Slimline T2900 Owner's Manual",
+    "docType": "user",
+    "seedFile": "venstar-slimline-t2900-owners-manual.pdf",
+    "url": "https://files.venstar.com/thermostats/slimline/documents/T2900ManualRev5.pdf"
+   }
+  ],
+  "sourceNotes": "Venstar Slimline commercial install manuals dated 08/07; T2900 Owner's Manual P/N 88-605 Rev.5.",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-8400-series",
+  "brand": "Aprilaire",
+  "family": "8400 Series (8444 / 8446 / 8448 / 8463 / 8465 / 8466)",
+  "aka": "Non-programmable 8444/8446/8448, programmable 8463/8465/8466",
+  "models": [
+   "8444",
+   "8446",
+   "8448",
+   "8463",
+   "8465",
+   "8466"
+  ],
+  "type": "programmable",
+  "stages": "8444/8463: 1H/1C conventional. 8446/8465: heat pump 1 compressor + aux. 8448/8466: universal - 2H/2C conventional or heat pump 2 compressor + 2 aux (SW1 switch)",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "AA (optional if on 24 VAC)",
+   "notes": "Dual powered: 24 VAC, batteries, or both. Heat pump use needs 24 VAC for the fault and Em heat indicators."
+  },
+  "terminals": [
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling transformer",
+    "notes": "Jumper RC-R on single-transformer systems"
+   },
+   {
+    "t": "R",
+    "fn": "24 VAC heating transformer"
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat / aux heat (heat pump)"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / 2nd aux (8448/8466 only)"
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage cooling / compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage cooling / compressor (8448/8466 only)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional when on batteries; required on heat pump models for fault and Em heat indicators"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (heat pump models)"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator input (heat pump)"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Optional 8052 outdoor temperature sensor"
+   }
+  ],
+  "wiringNotes": [
+   "RC-R jumper for single transformer; remove for two transformers.",
+   "8448/8466: Equipment Type switch on the back of the face selects Heat/Cool or Heat Pump (shown as setting 00).",
+   "Outdoor sensor: 8052 on S1/S2, up to 300 ft, enable with setting 05."
+  ],
+  "setup": {
+   "access": "Press MODE until system is OFF, then press and hold UP + MODE 3 s. UP/DOWN change value, MODE advances; DONE after the last setting (auto-saves after 20 s idle).",
+   "keySettings": [
+    {
+     "setting": "02 Fan control in heat / aux type",
+     "options": "0 Gas/Oil (equipment controls fan, use for dual fuel), 1 Electric (thermostat controls fan)"
+    },
+    {
+     "setting": "03 Sensor offset",
+     "options": "-4 to +4 F"
+    },
+    {
+     "setting": "04 Auto changeover",
+     "options": "0 off, 1 on"
+    },
+    {
+     "setting": "05 Outdoor sensor",
+     "options": "0 none, 1 attached"
+    },
+    {
+     "setting": "06/07/08 Min off/on times",
+     "options": "Compressor off 5 min (1-5), heat off 2 min (1-5), equipment on 2 min (1-5)"
+    },
+    {
+     "setting": "09-11 Stage differentials",
+     "options": "1-4 F (default 1)"
+    },
+    {
+     "setting": "12 Reversing valve",
+     "options": "0 O (energized in cooling), 1 B (energized in heating)"
+    },
+    {
+     "setting": "13 Stage rate",
+     "options": "1-5 or OFF (default 2)"
+    },
+    {
+     "setting": "14 Auto deadband",
+     "options": "2-5 F (default 3)"
+    },
+    {
+     "setting": "16/17 Low / High balance point",
+     "options": "LBP 0-60 F (default 20), HBP 0-80 F (default 65); needs setting 05"
+    },
+    {
+     "setting": "19 Program format",
+     "options": "5/2 or 5/1/1 (programmable models)"
+    },
+    {
+     "setting": "20-24 Reminders",
+     "options": "Air filter, water panel, humidifier type, dehumidifier, HVAC service"
+    }
+   ],
+   "installerTest": "System Test: MODE to OFF, press and hold UP + FAN 3 s. Test 50 heat/aux (W, W2), 51 cool (Y, Y2), 52 fan or compressor heat, 53 fan (HP). UP turns output on (01/02), DOWN off, MODE next. Output status flashes if 24 VAC is missing.",
+   "factoryReset": "RESET button under the battery door returns the thermostat and system settings to factory defaults."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker off",
+     "HVAC power switch off",
+     "Furnace door open",
+     "Dead batteries (battery-capable models)"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn on the system switch",
+     "Close the furnace door securely",
+     "Fresh AA alkaline batteries where used"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   },
+   {
+    "symptom": "Setpoints will not change",
+    "causes": [
+     "Outside allowed range"
+    ],
+    "fixes": [
+     "Heat 45-90 F, Cool 50-99 F"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "8400 Series Thermostats Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8400-series-install.pdf",
+    "url": "https://rp.widen.net/content/eeemonwvmh/original/aprilaire-8400-series-thermostat-installation-guide-B2204777.pdf?u=5rn8it"
+   },
+   {
+    "title": "8400 Series Thermostats Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8400-series-owners.pdf",
+    "url": "https://rp.widen.net/content/avo1wj8i9v/original/aprilaire-8400-series-thermostat-owners-manual-B2204776.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2204777F (61000652) install, B2204776E (61000651) owner's manual, both 06/2022.",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-8476-8476w-8810",
+  "brand": "Aprilaire",
+  "family": "8476 / 8476W / 8810 (Event-Based Air Cleaning)",
+  "aka": "8476 programmable, 8476W Wi-Fi, 8810 Wi-Fi automation thermostat",
+  "models": [
+   "8476",
+   "8476W",
+   "8810"
+  ],
+  "type": "smart-wifi",
+  "stages": "Universal: 2H/2C conventional or heat pump 2 compressor + 2 aux (SW1 selects)",
+  "sort": 50,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "8476: optional batteries (AC, battery or both); 8476W/8810: none - clock held 24 h",
+   "notes": "8476W and 8810 are powered from 24 VAC. On the 8476, 24 VAC must be connected for the system fault and Em heat indicators."
+  },
+  "terminals": [
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling",
+    "notes": "RC-R jumper on single transformer"
+   },
+   {
+    "t": "R",
+    "fn": "24 VAC heating"
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat / 1st aux"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / 2nd aux"
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage cool / compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage cool / compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "C",
+    "fn": "Common",
+    "notes": "Required on 8476W/8810; 8476 can run on batteries"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Optional outdoor temperature sensor"
+   }
+  ],
+  "wiringNotes": [
+   "SW1 on the back selects Heat/Cool vs Heat Pump.",
+   "RC-R jumper for one transformer; remove for two.",
+   "Wi-Fi setup (8476W/8810): see the Aprilaire Wi-Fi Quick Start Guide."
+  ],
+  "setup": {
+   "access": "MODE to OFF, press and hold UP + MODE 3 s. UP/DOWN change, MODE next; DONE after last setting.",
+   "keySettings": [
+    {
+     "setting": "01 Equipment type",
+     "options": "Shows SW1 position: Heat/Cool or Heat Pump"
+    },
+    {
+     "setting": "03 Reversing valve",
+     "options": "O on in cooling / B on in heating"
+    },
+    {
+     "setting": "04 Control setup",
+     "options": "Heat & Cool, Heat only, Cool only"
+    },
+    {
+     "setting": "05 / 06 Stages",
+     "options": "Cool/compressor 1 or 2; heat/aux 1 or 2"
+    },
+    {
+     "setting": "07 Fan control / aux type",
+     "options": "Gas/Oil (equipment fan) or Electric (thermostat fan)"
+    },
+    {
+     "setting": "12/13 Auto changeover, deadband",
+     "options": "Enable/disable; 2-9 F (default 3)"
+    },
+    {
+     "setting": "15 Outdoor sensor",
+     "options": "Not installed / installed"
+    },
+    {
+     "setting": "18-20 Min times",
+     "options": "Compressor off 5 min, heat off 2 min, min on 2 min (1-5)"
+    },
+    {
+     "setting": "22-25 Stage differentials",
+     "options": "1-9 F (default 1)"
+    },
+    {
+     "setting": "37 Stage rate",
+     "options": "1-5 or OFF (default 2)"
+    },
+    {
+     "setting": "39/40 Balance points",
+     "options": "LBP 0-60 F (20), HBP 0-80 F (65)"
+    },
+    {
+     "setting": "41 Program format",
+     "options": "7-Day or Non-Prog"
+    }
+   ],
+   "installerTest": "System Test: MODE to OFF, press and hold UP + CLEAN AIR 3 s. Tests 50 heat (compressor heat on HP), 51 aux, 52 cool, 53 fan; UP turns on stage 1/2, DOWN off, MODE next.",
+   "factoryReset": "RESET button under the front cover resets thermostat and system settings to factory defaults."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker off",
+     "HVAC power switch off",
+     "Furnace door open",
+     "Dead batteries (battery-capable models)"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn on the system switch",
+     "Close the furnace door securely",
+     "Fresh AA alkaline batteries where used"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   },
+   {
+    "symptom": "Setpoints will not change",
+    "causes": [
+     "Outside range"
+    ],
+    "fixes": [
+     "Heat 40-90 F, Cool 50-99 F"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Model 8476 Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8476-install.pdf",
+    "url": "https://rp.widen.net/content/ggttfvhzfz/original/aprilaire-8476-thermostat-installation-guide-B2205693A.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8476W Wi-Fi Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8476w-install.pdf",
+    "url": "https://rp.widen.net/content/qrv2ouemz8/original/aprilaire-8476w-thermostat-installation-guide-B2206487.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8476W Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8476w-owners.pdf",
+    "url": "https://rp.widen.net/content/bkauduy02q/original/aprilaire-8476w-thermostat-owners-manual-B2206486.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8810 Wi-Fi Automation Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8810-install.pdf",
+    "url": "https://rp.widen.net/content/w3ffgi7tph/original/aprilaire-8810-thermostat-installation-guide-B2207187.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8810 Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8810-owners.pdf",
+    "url": "https://rp.widen.net/content/bmafirt3cz/original/aprilaire-8810-wi-fi-automation-thermostat-owners-manual-B2206490.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2205693A (8476 install, 12/2011); B2206487A / B2206486A (8476W install/owner, 05/2015); B2207187A (8810 install, 02/2017); B2206490A (8810 owner, 07/2015).",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-8600-8620",
+  "brand": "Aprilaire",
+  "family": "8600 / 8620 / 8620W Touch Screen",
+  "aka": "8600 universal touchscreen; 8620 adds IAQ output; 8620W adds Wi-Fi",
+  "models": [
+   "8600",
+   "8620",
+   "8620W"
+  ],
+  "type": "smart-wifi",
+  "stages": "Universal 2H/2C conventional or heat pump 2 compressor + 2 aux; 8620/8620W control one IAQ device (humidifier, dehumidifier or ventilation) plus event-based air cleaning",
+  "sort": 45,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "8600 and 8620: batteries optional (dual power); 8620W: none - clock held 24 h",
+   "notes": "8620W is powered from 24 VAC. On heat pumps C must be connected for the fault and Em heat indicators (8620)."
+  },
+  "terminals": [
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling",
+    "notes": "RC-R jumper for one transformer"
+   },
+   {
+    "t": "R",
+    "fn": "24 VAC heating"
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat / 1st aux"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat / 2nd aux"
+   },
+   {
+    "t": "Y",
+    "fn": "1st stage cool / compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage cool / compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "C",
+    "fn": "Common",
+    "notes": "Optional on battery-powered 8600/8620; required on 8620W"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (8620/8620W)",
+    "notes": "8600 has separate O and B terminals - both off in OFF/idle"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator (heat pump, optional)"
+   },
+   {
+    "t": "S1 / S2",
+    "fn": "Outdoor temperature sensor",
+    "notes": "Included with 8620/8620W"
+   },
+   {
+    "t": "T1 / T2",
+    "fn": "Optional remote temperature sensor (8051/8053)"
+   },
+   {
+    "t": "I1 / I2",
+    "fn": "IAQ dry-contact output (8620/8620W) - humidifier, dehumidifier or ventilation",
+    "notes": "Humidifier diagram assumes solenoid valve; dehum = NO dry contact input; vent = NC damper"
+   }
+  ],
+  "wiringNotes": [
+   "SW1 on the back selects Heat/Cool or Heat Pump; thermostat reboots within 10 s after changing it.",
+   "Only one of humidifier / whole-home dehumidifier / ventilation can use I1-I2."
+  ],
+  "setup": {
+   "access": "MODE to OFF, MENU, press and hold SETUP 7 s until INSTALL SETUP appears, press it; choose HVAC or Indoor Air Quality; NEXT/BACK page, arrows change, DONE saves (60 s timeout).",
+   "keySettings": [
+    {
+     "setting": "03 Reversing valve",
+     "options": "O on in cooling / B on in heating"
+    },
+    {
+     "setting": "04 Control setup",
+     "options": "Heat & Cool, Heat only, Cool only"
+    },
+    {
+     "setting": "05 / 06 Stages",
+     "options": "Cool/compressor 1 or 2; heat/aux 1 or 2"
+    },
+    {
+     "setting": "07 Fan control / aux type",
+     "options": "Gas/Oil (equipment fan) or Electric (thermostat fan)"
+    },
+    {
+     "setting": "12/13 Auto changeover, deadband",
+     "options": "Enable/disable; 2-9 F (default 3)"
+    },
+    {
+     "setting": "15 Outdoor sensor",
+     "options": "Not installed / installed"
+    },
+    {
+     "setting": "18-20 Min times",
+     "options": "Compressor off 5 min, heat off 2 min, min on 2 min (1-5)"
+    },
+    {
+     "setting": "22-25 Stage differentials",
+     "options": "1-9 F (default 1)"
+    },
+    {
+     "setting": "37 Stage rate",
+     "options": "1-5 or OFF (default 2)"
+    },
+    {
+     "setting": "39/40 Balance points",
+     "options": "LBP 0-60 F (20), HBP 0-80 F (65)"
+    },
+    {
+     "setting": "41 Program format",
+     "options": "7-Day or Non-Prog"
+    },
+    {
+     "setting": "08/09 Extended fan heat/cool",
+     "options": "Disable or 90 s"
+    },
+    {
+     "setting": "11 Humidity offset",
+     "options": "-5 to +5 %"
+    },
+    {
+     "setting": "14 Remote sensor",
+     "options": "Not installed / control / control with backup / average"
+    },
+    {
+     "setting": "IAQ - Dehumidifier control",
+     "options": "None, Whole Home, Air Conditioner, AC w/IAQ Output; overcool limit 1-3 F"
+    },
+    {
+     "setting": "IAQ - Humidifier",
+     "options": "Installed on HVAC / standalone, Auto (needs outdoor sensor) or Manual, operation Heat only / Heat or Fan / Forces Fan / Without Fan"
+    }
+   ],
+   "installerTest": "System Test: MODE to OFF, press and hold FAN + MODE 3 s; first screen shows equipment configuration, NEXT runs heat, cool, fan, humidify, dehumidify and ventilation tests.",
+   "factoryReset": "Press RESET 5 s (disabled when the thermostat is off the wall) - returns installer settings to default."
+  },
+  "diagnostics": [
+   {
+    "code": "01",
+    "meaning": "SENSOR ERROR - open temperature sensor",
+    "action": "Outputs off, retries every 10 min"
+   },
+   {
+    "code": "02",
+    "meaning": "Shorted temperature sensor"
+   },
+   {
+    "code": "04",
+    "meaning": "EEPROM ERROR"
+   },
+   {
+    "code": "06",
+    "meaning": "REMOTE SENSOR ERROR - open remote sensor (8620W)"
+   },
+   {
+    "code": "07",
+    "meaning": "Shorted remote sensor (8620W)"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker off",
+     "HVAC power switch off",
+     "Furnace door open",
+     "Dead batteries (battery-capable models)"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn on the system switch",
+     "Close the furnace door securely",
+     "Fresh AA alkaline batteries where used"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   },
+   {
+    "symptom": "Humidifier does not run in Auto",
+    "causes": [
+     "Outdoor sensor not enabled or not reading"
+    ],
+    "fixes": [
+     "Set setting 15 Outdoor Sensor to installed and confirm outdoor temp shows on the home screen"
+    ]
+   }
+  ],
+  "tips": [
+   "Unused IAQ buttons can be removed: hold the button 7 s on the home screen, choose YES."
+  ],
+  "manuals": [
+   {
+    "title": "Model 8600 Universal Touch Screen Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8600-install.pdf",
+    "url": "https://rp.widen.net/content/btngv0q135/original/aprilaire-8600-thermostat-installation-guide-B2205243.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8600 Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8600-owners.pdf",
+    "url": "https://rp.widen.net/content/d63mskdmfc/original/aprilaire-8600-thermostat-owners-manual-B2205242.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8620 Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8620-install.pdf",
+    "url": "https://rp.widen.net/content/elia12mvvh/original/aprilaire-8620-thermostat-installation-guide-B2205748A.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8620W Wi-Fi Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8620w-install.pdf",
+    "url": "https://rp.widen.net/content/csrunjw5ab/original/aprilaire-8620w-wi-fi-thermostat-installation-guide-B2206471.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8620W Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8620w-owners.pdf",
+    "url": "https://rp.widen.net/content/irmduhvofy/original/aprilaire-8620w-thermostat-owners-manual-B2206470.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2205243A / B2205242A (8600, 10/2010); B2205748A (8620 install, 04/2012); B2206471D (8620W install, 04/2017); B2206470A (8620W owner, 05/2015).",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-8910-8920w",
+  "brand": "Aprilaire",
+  "family": "8910 / 8910W / 8920W Home Comfort Control (with Equipment Control Module)",
+  "aka": "Touchscreen + Equipment Control Module; 8910W Wi-Fi; 8920W Wi-Fi color",
+  "models": [
+   "8910",
+   "8910W",
+   "8920W"
+  ],
+  "type": "smart-wifi",
+  "stages": "3H/3C conventional or 4H/2C heat pump; full IAQ (humidifier, dehumidifier, ventilation, air cleaner) from the ECM",
+  "sort": 45,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Thermostat is powered over the 3-wire bus from the Equipment Control Module; ECM power LED should be lit."
+  },
+  "terminals": [
+   {
+    "t": "1 / 2 / 3",
+    "fn": "3-wire bus between thermostat and Equipment Control Module",
+    "notes": "Only 3 wires needed to the thermostat"
+   },
+   {
+    "t": "T1 / T2 (thermostat)",
+    "fn": "Optional remote sensor 8051/8053"
+   },
+   {
+    "t": "R / RC / RH",
+    "fn": "24 VAC at the Equipment Control Module"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common (ECM)"
+   },
+   {
+    "t": "W / W2",
+    "fn": "1st / 2nd stage heat or aux"
+   },
+   {
+    "t": "W3/B",
+    "fn": "3rd stage heat (conventional) or reversing valve B (heat pump)"
+   },
+   {
+    "t": "Y / Y2",
+    "fn": "1st / 2nd stage cool or compressor"
+   },
+   {
+    "t": "Y3/O",
+    "fn": "3rd stage cool (conventional) or reversing valve O (heat pump)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "L / CEQ",
+    "fn": "Heat pump fault indicator input and its 24 VAC common from the heat pump (optional)"
+   },
+   {
+    "t": "HUM",
+    "fn": "Humidifier output"
+   },
+   {
+    "t": "DHno / DHnc / DHcom",
+    "fn": "Dehumidifier dry contacts, normally open or normally closed"
+   },
+   {
+    "t": "VENT",
+    "fn": "Ventilation output"
+   },
+   {
+    "t": "EAC",
+    "fn": "Electronic air cleaner output"
+   },
+   {
+    "t": "ODT / RAT / LAT",
+    "fn": "Outdoor (8052 included), return air and leaving air sensors"
+   }
+  ],
+  "wiringNotes": [
+   "All equipment lands on the Equipment Control Module; the wall unit only needs terminals 1-2-3.",
+   "Do not mount the ECM on foundation walls, HVAC equipment or ductwork (condensation). Touch grounded metal before handling it.",
+   "8056 wireless outdoor sensor can replace the wired 8052 (radio on the ECM plus outdoor radio).",
+   "8920W: reversing valve is chosen by the terminal used - O is active in cooling, B in heating."
+  ],
+  "setup": {
+   "access": "8910/8910W: MODE to OFF, MENU, hold SETUP 7 s, press INSTALL SETUP. 8920W: first power-up runs the Installer Setup Wizard; later MENU > hold Contractor Info 10 s for the Installer Menu.",
+   "keySettings": [
+    {
+     "setting": "Equipment type",
+     "options": "Heat/Cool or Heat Pump (8910/8910W: SW1 switch on back of face)"
+    },
+    {
+     "setting": "Stages",
+     "options": "Heat/Cool up to 3 heat and 3 cool; heat pump up to 2 compressor + aux"
+    },
+    {
+     "setting": "Fan control in heating / aux type",
+     "options": "Gas/Oil or Electric"
+    },
+    {
+     "setting": "Remote / outdoor / return sensors",
+     "options": "Enable per sensor"
+    },
+    {
+     "setting": "Min times",
+     "options": "Compressor off 5 min, heat off 2 min, min on 2 min (1-5)"
+    },
+    {
+     "setting": "IAQ tables",
+     "options": "Humidifier, dehumidifier, air cleaning, fresh-air ventilation"
+    }
+   ],
+   "installerTest": "8910/8910W: MODE to OFF, hold FAN + MODE 3 s, NEXT through heat/cool/fan/IAQ tests. 8920W: Installer Menu > Installer Test (min on/off times not enforced).",
+   "factoryReset": "8910/8910W: hold RESET 5 s. 8920W: Installer Menu > Installer Tools > Factory Reset."
+  },
+  "diagnostics": [
+   {
+    "code": "01",
+    "meaning": "SENSOR ERROR - open temperature sensor",
+    "action": "Outputs off; retries every 10 min"
+   },
+   {
+    "code": "02",
+    "meaning": "Shorted temperature sensor"
+   },
+   {
+    "code": "03",
+    "meaning": "EEPROM ERROR"
+   },
+   {
+    "code": "05",
+    "meaning": "LOST SYSTEM CONNECTION - thermostat lost the equipment control module",
+    "action": "Check the 1-2-3 wiring and ECM power"
+   },
+   {
+    "code": "06",
+    "meaning": "REMOTE SENSOR ERROR - open (8910W)"
+   },
+   {
+    "code": "07",
+    "meaning": "Remote sensor shorted (8910W)"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "No power at the Equipment Control Module (power LED off)",
+     "Breaker / switch / furnace door"
+    ],
+    "fixes": [
+     "Check breaker, system switch and furnace door; confirm ECM power LED"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   }
+  ],
+  "tips": [
+   "8920W installer settings can be exported to / imported from a USB drive (Installer Tools > Export Setup)."
+  ],
+  "manuals": [
+   {
+    "title": "Model 8910 Home Comfort Control Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8910-install.pdf",
+    "url": "https://rp.widen.net/content/je6ugj5jci/original/aprilaire-8910-home-comfort-control-installation-guide-B2205646B.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8910 Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8910-owners.pdf",
+    "url": "https://rp.widen.net/content/w7udxpfqyv/original/aprilaire-8910-home-comfort-control-owners-manual-B2205645A.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8910W Wi-Fi Thermostat Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8910w-install.pdf",
+    "url": "https://rp.widen.net/content/lkt9pam0ym/original/aprilaire-8910w-wi-fi-thermostat-installation-guide-B2206504.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8910W Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8910w-owners.pdf",
+    "url": "https://rp.widen.net/content/4d8ndeqkwr/original/aprilaire-8910w-thermostat-owners-manual-B2206503.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8920W Wi-Fi Thermostat Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-8920w-install.pdf",
+    "url": "https://rp.widen.net/content/qfp49ynpp8/original/aprilaire-8920w-wi-fi-thermostat-installation-guide-B2205906H.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model 8920W Wi-Fi IAQ Thermostat Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-8920w-owners.pdf",
+    "url": "https://rp.widen.net/content/zi9y0emd9w/original/aprilaire-8920w-wi-fi-iaq-thermostat-owners-manual-B2206994D.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2205646B / B2205645A (8910, 2011-12); B2206504E / B2206503A (8910W, 2015-17); B2205906H / B2206994D (8920W, 06/2022).",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-s84n",
+  "brand": "Aprilaire",
+  "family": "S84N 1H1C / S84N SU",
+  "aka": "S-Series 4-inch non-Wi-Fi (2022+)",
+  "models": [
+   "S84N1H1C",
+   "S84NSU"
+  ],
+  "type": "programmable",
+  "stages": "S84N 1H1C: 1 heat / 1 cool conventional. S84N SU: single-stage universal - 1H/1C or single-stage heat pump with aux",
+  "sort": 35,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Optional (AC or battery or both)",
+   "notes": "Batteries optional when on 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 VAC heating",
+    "notes": "RC-RH jumper for one transformer"
+   },
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W",
+    "fn": "1st stage heat / aux (heat pump, SU only)"
+   },
+   {
+    "t": "Y",
+    "fn": "Cooling / compressor (SU)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "C",
+    "fn": "Common"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve (SU only)"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator (SU heat pump only)"
+   },
+   {
+    "t": "T1 / T2",
+    "fn": "Outdoor or remote sensor (SU only)"
+   }
+  ],
+  "wiringNotes": [
+   "Remove the RC-RH jumper for two-transformer (boiler + air handler) systems."
+  ],
+  "setup": {
+   "access": "Press SELECT (Main Menu) > Settings > press and hold UP + DOWN 3 s to unlock Installer > Installer (HVAC Settings, HVAC Advanced, IAQ Settings, Wireless Sensor, Test, Reset). First power-up / after reset runs the Installer Setup Wizard.",
+   "keySettings": [
+    {
+     "setting": "Stages",
+     "options": "Heat/Cool: 1-2 heat, 1-2 cool; Heat Pump: 1-2 compressor, 1-2 aux (S86 models)"
+    },
+    {
+     "setting": "Programmable",
+     "options": "Programmable or Non Programmable"
+    },
+    {
+     "setting": "Wired Temperature Sensor (T1/T2)",
+     "options": "Outdoor, Remote, Remote Average, No"
+    },
+    {
+     "setting": "Auto changeover / deadband",
+     "options": "Enable; 2-9 F (default 3); changeover time 1-5 min (4)"
+    },
+    {
+     "setting": "Min times",
+     "options": "Equipment min on 2 min, heat min off 2 min, compressor min off 5 min (1-5)"
+    },
+    {
+     "setting": "High / Low balance point",
+     "options": "HBP 0-80 F (65), LBP 0-60 F (20) - needs outdoor sensor"
+    },
+    {
+     "setting": "Stage rate / factor",
+     "options": "Enabled, 1-5 (default 2)"
+    },
+    {
+     "setting": "Temp sensor offset",
+     "options": "-4 to +4 F"
+    }
+   ],
+   "installerTest": "Installer > Test - relay test of configured outputs.",
+   "factoryReset": "Installer > Reset (all settings to factory default)."
+  },
+  "diagnostics": [
+   {
+    "code": "E01",
+    "meaning": "Sensor Error - internal temperature (and RH) sensor failure",
+    "action": "Outputs off; retries every 10 min"
+   },
+   {
+    "code": "E03",
+    "meaning": "EEPROM Error"
+   },
+   {
+    "code": "E06",
+    "meaning": "Remote Sensor Error - open remote sensor circuit"
+   },
+   {
+    "code": "E07",
+    "meaning": "Remote Sensor Error - shorted remote sensor circuit"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker off",
+     "HVAC power switch off",
+     "Furnace door open",
+     "Dead batteries (battery-capable models)"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn on the system switch",
+     "Close the furnace door securely",
+     "Fresh AA alkaline batteries where used"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Model S84N 1H1C & S84N SU Thermostats Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-s84-install.pdf",
+    "url": "https://rp.widen.net/content/wf0rk5wjzj/original/aprilaire-s84n1h1c-s84nsu-thermostat-installation-guide-B2208795.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model S84N 1H1C & S84N SU Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-s84-owners.pdf",
+    "url": "https://rp.widen.net/content/i76ietlcep/original/aprilaire-s84n1h1c-s84nsu-thermostat-owners-manual-B2208794.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2208795B (install) and B2208794B (owner's), 01/2022.",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-s86n",
+  "brand": "Aprilaire",
+  "family": "S86N MU / S86N MUPR",
+  "aka": "S-Series 6-inch multi-stage universal (MUPR adds IAQ output)",
+  "models": [
+   "S86NMU",
+   "S86NMUPR"
+  ],
+  "type": "programmable",
+  "stages": "Up to 2H/2C conventional or heat pump 2 compressor + 2 aux; MUPR adds I1/I2 IAQ output (humidifier, dehumidifier, air cleaning, ventilation)",
+  "sort": 35,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None (clock held 2 h)",
+   "notes": "Powered from 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 VAC heating",
+    "notes": "RC-RH jumper for one transformer"
+   },
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W / W2",
+    "fn": "1st / 2nd stage heat or aux"
+   },
+   {
+    "t": "Y / Y2",
+    "fn": "1st / 2nd stage cool or compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "C",
+    "fn": "Common"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator (heat pump, optional)"
+   },
+   {
+    "t": "T1 / T2",
+    "fn": "Outdoor/remote sensor"
+   },
+   {
+    "t": "I1 / I2",
+    "fn": "IAQ control output (MUPR only)"
+   }
+  ],
+  "wiringNotes": [
+   "Remove the RC-RH jumper for two-transformer systems."
+  ],
+  "setup": {
+   "access": "Press SELECT (Main Menu) > Settings > press and hold UP + DOWN 3 s to unlock Installer > Installer (HVAC Settings, HVAC Advanced, IAQ Settings, Wireless Sensor, Test, Reset). First power-up / after reset runs the Installer Setup Wizard.",
+   "keySettings": [
+    {
+     "setting": "Stages",
+     "options": "Heat/Cool: 1-2 heat, 1-2 cool; Heat Pump: 1-2 compressor, 1-2 aux (S86 models)"
+    },
+    {
+     "setting": "Programmable",
+     "options": "Programmable or Non Programmable"
+    },
+    {
+     "setting": "Wired Temperature Sensor (T1/T2)",
+     "options": "Outdoor, Remote, Remote Average, No"
+    },
+    {
+     "setting": "Auto changeover / deadband",
+     "options": "Enable; 2-9 F (default 3); changeover time 1-5 min (4)"
+    },
+    {
+     "setting": "Min times",
+     "options": "Equipment min on 2 min, heat min off 2 min, compressor min off 5 min (1-5)"
+    },
+    {
+     "setting": "High / Low balance point",
+     "options": "HBP 0-80 F (65), LBP 0-60 F (20) - needs outdoor sensor"
+    },
+    {
+     "setting": "Stage rate / factor",
+     "options": "Enabled, 1-5 (default 2)"
+    },
+    {
+     "setting": "Temp sensor offset",
+     "options": "-4 to +4 F"
+    }
+   ],
+   "installerTest": "Installer > Test: heating, cooling, fan, humidification, dehumidification, ventilation tests.",
+   "factoryReset": "Installer > Reset."
+  },
+  "diagnostics": [
+   {
+    "code": "E01",
+    "meaning": "Sensor Error - internal temperature (and RH) sensor failure",
+    "action": "Outputs off; retries every 10 min"
+   },
+   {
+    "code": "E03",
+    "meaning": "EEPROM Error"
+   },
+   {
+    "code": "E06",
+    "meaning": "Remote Sensor Error - open remote sensor circuit"
+   },
+   {
+    "code": "E07",
+    "meaning": "Remote Sensor Error - shorted remote sensor circuit"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker off",
+     "HVAC power switch off",
+     "Furnace door open",
+     "Dead batteries (battery-capable models)"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn on the system switch",
+     "Close the furnace door securely",
+     "Fresh AA alkaline batteries where used"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Model S86N MU & S86N MUPR Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-s86n-install.pdf",
+    "url": "https://rp.widen.net/content/dcacsoijge/original/aprilaire-s86nmu-s86nmupr-thermostat-installation-guide-B2208833.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model S86N MU & S86N MUPR Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-s86n-owners.pdf",
+    "url": "https://rp.widen.net/content/u7b39jrxyb/original/aprilaire-s86nmu-s86nmupr-thermostat-owners-manual-B2208832.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2208833C (install, 07/2022), B2208832B (owner's, 01/2022).",
+  "img": ""
+ },
+ {
+  "id": "tst-aprilaire-s86wmupr",
+  "brand": "Aprilaire",
+  "family": "S86W MUPR Wi-Fi with IAQ",
+  "aka": "S-Series Wi-Fi (AprilAire Healthy Air app)",
+  "models": [
+   "S86WMUPR"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2H/2C conventional or heat pump 2 compressor + 2 aux; I1/I2 IAQ output; up to 9 AprilAire wireless sensors (Z10IDT indoor, Z10ODT outdoor, ZAZW water)",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None (clock held 2 h)",
+   "notes": "Powered from 24 VAC."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 VAC heating",
+    "notes": "RC-RH jumper for one transformer"
+   },
+   {
+    "t": "RC",
+    "fn": "24 VAC cooling"
+   },
+   {
+    "t": "W / W2",
+    "fn": "1st / 2nd stage heat or aux"
+   },
+   {
+    "t": "Y / Y2",
+    "fn": "1st / 2nd stage cool or compressor"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "C",
+    "fn": "Common"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator (heat pump, optional)"
+   },
+   {
+    "t": "T1 / T2",
+    "fn": "Outdoor (8052 included) or remote sensor"
+   },
+   {
+    "t": "I1 / I2",
+    "fn": "IAQ control output"
+   }
+  ],
+  "wiringNotes": [
+   "Factory reset does not remove the thermostat from the AprilAire Healthy Air app - remove it in the app or use Unregister in Wi-Fi settings."
+  ],
+  "setup": {
+   "access": "Press SELECT (Main Menu) > Settings > press and hold UP + DOWN 3 s to unlock Installer > Installer (HVAC Settings, HVAC Advanced, IAQ Settings, Wireless Sensor, Test, Reset). First power-up / after reset runs the Installer Setup Wizard.",
+   "keySettings": [
+    {
+     "setting": "Stages",
+     "options": "Heat/Cool: 1-2 heat, 1-2 cool; Heat Pump: 1-2 compressor, 1-2 aux (S86 models)"
+    },
+    {
+     "setting": "Programmable",
+     "options": "Programmable or Non Programmable"
+    },
+    {
+     "setting": "Wired Temperature Sensor (T1/T2)",
+     "options": "Outdoor, Remote, Remote Average, No"
+    },
+    {
+     "setting": "Auto changeover / deadband",
+     "options": "Enable; 2-9 F (default 3); changeover time 1-5 min (4)"
+    },
+    {
+     "setting": "Min times",
+     "options": "Equipment min on 2 min, heat min off 2 min, compressor min off 5 min (1-5)"
+    },
+    {
+     "setting": "High / Low balance point",
+     "options": "HBP 0-80 F (65), LBP 0-60 F (20) - needs outdoor sensor"
+    },
+    {
+     "setting": "Stage rate / factor",
+     "options": "Enabled, 1-5 (default 2)"
+    },
+    {
+     "setting": "Temp sensor offset",
+     "options": "-4 to +4 F"
+    }
+   ],
+   "installerTest": "Installer > Test: heating, cooling, fan, humidification, dehumidification, ventilation.",
+   "factoryReset": "Installer > Reset."
+  },
+  "diagnostics": [
+   {
+    "code": "E01",
+    "meaning": "Sensor Error - internal temperature (and RH) sensor failure",
+    "action": "Outputs off; retries every 10 min"
+   },
+   {
+    "code": "E03",
+    "meaning": "EEPROM Error"
+   },
+   {
+    "code": "E06",
+    "meaning": "Remote Sensor Error - open remote sensor circuit"
+   },
+   {
+    "code": "E07",
+    "meaning": "Remote Sensor Error - shorted remote sensor circuit"
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Display is blank",
+    "causes": [
+     "Breaker off",
+     "HVAC power switch off",
+     "Furnace door open",
+     "Dead batteries (battery-capable models)"
+    ],
+    "fixes": [
+     "Reset breaker",
+     "Turn on the system switch",
+     "Close the furnace door securely",
+     "Fresh AA alkaline batteries where used"
+    ]
+   },
+   {
+    "symptom": "Heating does not respond (HEATING shown)",
+    "causes": [
+     "No 24 VAC at transformer secondary",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C at the equipment",
+     "Check 24 VAC W to transformer common - if present the thermostat is working, look at the heating equipment",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Cooling does not respond (COOLING shown)",
+    "causes": [
+     "No 24 VAC",
+     "Equipment fault",
+     "Loose/broken wire"
+    ],
+    "fixes": [
+     "Check 24 VAC R-C",
+     "Check 24 VAC Y to common - if present the thermostat is working",
+     "Check wiring"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on with a heat call",
+    "causes": [
+     "Fan control in heating set to Gas/Oil (equipment controls fan)"
+    ],
+    "fixes": [
+     "Set fan control to match the system (Electric = thermostat runs fan)"
+    ]
+   },
+   {
+    "symptom": "Heat pump blows cool in heat / warm in cool",
+    "causes": [
+     "Reversing valve O/B setting wrong"
+    ],
+    "fixes": [
+     "Set O (on in cooling) or B (on in heating) to match the heat pump"
+    ]
+   },
+   {
+    "symptom": "Heat and cool on at the same time / heat runs in cool mode",
+    "causes": [
+     "Equipment type (SW1 or setting) does not match the equipment",
+     "Heat and cool wires shorted"
+    ],
+    "fixes": [
+     "Set equipment type to Heat/Cool or Heat Pump correctly",
+     "Check for shorted wires"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Model S86W MUPR Wi-Fi Thermostat with IAQ Safety & Installation Instructions",
+    "docType": "install",
+    "seedFile": "aprilaire-s86wmupr-install.pdf",
+    "url": "https://rp.widen.net/content/hcqwndyzyi/original/aprilaire-s86wmupr-thermostat-installation-guide-B2208826D.pdf?u=5rn8it"
+   },
+   {
+    "title": "Model S86W MUPR Owner's Manual",
+    "docType": "user",
+    "seedFile": "aprilaire-s86wmupr-owners.pdf",
+    "url": "https://rp.widen.net/content/nlvlxa495p/original/aprilaire-s86w-mupr-wi-fi-thermostat-with-iaq-owners-manual-B2208825C.pdf?u=5rn8it"
+   }
+  ],
+  "sourceNotes": "Aprilaire B2208826D (install) and B2208825C (owner's), 06/2025.",
+  "img": ""
+ },
+ {
+  "id": "tst-robertshaw-pro-series-rs8-rs9",
+  "brand": "Robertshaw",
+  "family": "Pro-Series RS8110 / RS8210 / RS9110 / RS9210 / RS9220",
+  "aka": "Pro-Series push-in terminal thermostats: RS8xxx non-programmable, RS9xxx programmable",
+  "models": [
+   "RS8110",
+   "RS8210",
+   "RS9110",
+   "RS9210",
+   "RS9220"
+  ],
+  "type": "programmable",
+  "stages": "RS8110 / RS9110: 1H/1C (heat pump without aux via W-Y jumper). RS8210 / RS9210: 2H/1C incl. heat pump with aux/emergency. RS9220: 2H/2C multi-stage. All: heat-only, cool-only, 750 mV",
+  "sort": 30,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "optional",
+   "batteries": "2 AA",
+   "notes": "Battery or hardwired C; batteries keep settings/display during outages."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC",
+    "fn": "24 VAC heating / cooling",
+    "notes": "Single transformer: terminal sleeve in RC position; two transformers: sleeve in RH"
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay stage 1"
+   },
+   {
+    "t": "W2",
+    "fn": "Heat relay stage 2 (multi-stage models)"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor relay stage 1"
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor relay stage 2 (RS9220)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cooling"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heating"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional on battery power"
+   }
+  ],
+  "wiringNotes": [
+   "Heat pump with NO aux: jumper W to Y and use O or B (never both).",
+   "18-22 AWG thermostat wire; shielded not required.",
+   "Cross-reference sheet lists Pro1, Honeywell, Braeburn, White-Rodgers and Aprilaire equivalents."
+  ],
+  "setup": {
+   "access": "RS8110: system switch OFF, press and hold UP + DOWN 3 s. RS8210/RS9110/RS9210/RS9220: press MENU, then hold TECH SET 3 s; NEXT STEP / PREV STEP move, DONE exits.",
+   "keySettings": [
+    {
+     "setting": "Filter change reminder",
+     "options": "OFF to 2000 h in 50 h steps (default OFF)"
+    },
+    {
+     "setting": "Room temperature calibration",
+     "options": "+/-4 F"
+    },
+    {
+     "setting": "Minimum compressor on-time",
+     "options": "OFF, 3, 4, 5 min (default OFF)"
+    },
+    {
+     "setting": "Compressor short cycle delay",
+     "options": "ON (5 min) default / OFF"
+    },
+    {
+     "setting": "Cooling / heating differential",
+     "options": "0.2-2 F (defaults 0.5 cool, 0.4 heat)"
+    },
+    {
+     "setting": "Heat max / cool min setpoint limits",
+     "options": "41-90 F (defaults 90 / 41)"
+    },
+    {
+     "setting": "Fan operation",
+     "options": "GAS (default) or ELEC"
+    },
+    {
+     "setting": "Program options (programmable models)",
+     "options": "7d, 5d (5+1+1), 0d non-programmable"
+    },
+    {
+     "setting": "Factory default reset",
+     "options": "YES then NEXT"
+    }
+   ],
+   "installerTest": "Not published as a test menu - test with the system switch and setpoint (compressor delay applies).",
+   "factoryReset": "Technician Setup > Factory Default Reset > YES, NEXT."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Compressor icons flashing, no cooling yet",
+    "causes": [
+     "5-minute compressor protection delay"
+    ],
+    "fixes": [
+     "Wait, or set compressor short cycle delay OFF in Technician Setup for testing"
+    ]
+   }
+  ],
+  "tips": [
+   "Keypad lock: after Technician Setup, hold MENU 3 s to lock/unlock (programmable models)."
+  ],
+  "manuals": [
+   {
+    "title": "RS8110 Installation Manual (352-00301-001C)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs8110-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/04/352-00301-001C-RS8110-Non-Programmable-Wall-Thermostat-Install-Manual-in-English-Spanish.pdf"
+   },
+   {
+    "title": "RS8210 Installation Manual (352-00302-001C)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs8210-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/04/352-00302-001C_RS8210-Non-Programmable-Wall-Thermostat-Install-Manual-in-English-Spanish.pdf"
+   },
+   {
+    "title": "RS9110 Installation Manual (352-00303-001C)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs9110-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/04/352-00303-001C_RS9110-Programmable-Wall-Thermostat-Install-Manual-in-English-Spanish.pdf"
+   },
+   {
+    "title": "RS9210 Installation Manual (352-00304-001C)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs9210-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/04/352-00304-001C_RS9210-Programmable-Wall-Thermostat-Install-Manual-in-English-Spanish.pdf"
+   },
+   {
+    "title": "RS9220 Installation Manual (352-00305-001C)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs9220-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/04/352-00305-001C_RS9220-Programmable-Wall-Thermostat-Install-Manual-in-English-Spanish.pdf"
+   },
+   {
+    "title": "Pro-Series Wall Thermostat Cross Reference (150-2805 Rev D, 02/26) - Pro1 / Honeywell / Braeburn / White-Rodgers / Aprilaire equivalents",
+    "docType": "other",
+    "seedFile": "robertshaw-pro-series-cross-reference.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/02/Pro-Series-Wall-Thermostat-Cross-Reference-150-2805D.pdf"
+   }
+  ],
+  "sourceNotes": "Robertshaw 352-00301..00305-001C install manuals (EN/ES), posted 04/2026; cross reference 150-2805 Rev D 02/26.",
+  "img": ""
+ },
+ {
+  "id": "tst-robertshaw-rs10420t-rs10421t",
+  "brand": "Robertshaw",
+  "family": "Pro-Series RS10420T / RS10421T Touchscreen",
+  "aka": "RS10421T = Wi-Fi (Robertshaw app) with humidifier/dehumidifier ports",
+  "models": [
+   "RS10420T",
+   "RS10421T"
+  ],
+  "type": "smart-wifi",
+  "stages": "Multi-stage conventional and heat pump with aux/emergency (wiring diagrams show up to 3H/2C heat pump and 2H/2C conventional); RS10421T adds humidify/dehumidify",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "Hardwire (common wire) only."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC",
+    "fn": "24 VAC heating / cooling",
+    "notes": "Single transformer: terminal sleeve in RC position; two transformers: sleeve in RH"
+   },
+   {
+    "t": "W",
+    "fn": "Heat relay stage 1"
+   },
+   {
+    "t": "W2",
+    "fn": "Heat relay stage 2 (multi-stage models)"
+   },
+   {
+    "t": "Y",
+    "fn": "Compressor relay stage 1"
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor relay stage 2 (RS9220)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan relay"
+   },
+   {
+    "t": "O",
+    "fn": "Reversing valve energized in cooling"
+   },
+   {
+    "t": "B",
+    "fn": "Reversing valve energized in heating"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Optional on battery power"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat",
+    "notes": "No separate E relay: jumper E to W2"
+   },
+   {
+    "t": "Humidifier / dehumidifier ports",
+    "fn": "RS10421T accessory outputs"
+   }
+  ],
+  "wiringNotes": [
+   "Set fan operation to electric for heat pump systems (aux heat relay energized as 2nd stage of heat).",
+   "RS10421T pairs with the RS9055OUT wireless outdoor sensor from Technician Setup (Remote Sensor Pair)."
+  ],
+  "setup": {
+   "access": "Press MENU, then hold TECHNICIAN SETUP 3 s; NEXT STEP / PREV STEP move, DONE exits.",
+   "keySettings": [
+    {
+     "setting": "Setup WiFi (RS10421T)",
+     "options": "Router configuration"
+    },
+    {
+     "setting": "Remote Sensor Pair (RS10421T)",
+     "options": "Press FAN, then hold RS9055OUT CONNECT 3 s"
+    },
+    {
+     "setting": "Filter change reminder",
+     "options": "OFF to 2000 h in 50 h steps (default OFF)"
+    },
+    {
+     "setting": "Room temperature calibration",
+     "options": "+/-4 F"
+    },
+    {
+     "setting": "Minimum compressor on-time",
+     "options": "OFF, 3, 4, 5 min (default OFF)"
+    },
+    {
+     "setting": "Compressor short cycle delay",
+     "options": "ON (5 min) default / OFF"
+    },
+    {
+     "setting": "Cooling / heating differential",
+     "options": "0.2-2 F (defaults 0.5 cool, 0.4 heat)"
+    },
+    {
+     "setting": "Heat max / cool min setpoint limits",
+     "options": "41-90 F (defaults 90 / 41)"
+    },
+    {
+     "setting": "Factory default reset",
+     "options": "YES then NEXT"
+    }
+   ],
+   "installerTest": "Not published as a test menu.",
+   "factoryReset": "Technician Setup > factory default reset."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Compressor icons flashing, no cooling yet",
+    "causes": [
+     "5-minute compressor protection delay"
+    ],
+    "fixes": [
+     "Wait, or set compressor short cycle delay OFF in Technician Setup for testing"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "RS10420T Installation Manual (352-00308-001 Rev B)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs10420t-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/01/352-00308-001_RS10420T_Install-Manual_Rev-B.pdf"
+   },
+   {
+    "title": "RS10421T Programmable Wi-Fi Installation Manual (352-00316-001B)",
+    "docType": "install",
+    "seedFile": "robertshaw-rs10421t-install.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/04/352-00316-001B_RS10421T-Programmable-WiFi-Wall-Thermostat-Install-Manual-in-English-Spanish.pdf"
+   },
+   {
+    "title": "Pro-Series Wall Thermostat Cross Reference (150-2805 Rev D, 02/26) - Pro1 / Honeywell / Braeburn / White-Rodgers / Aprilaire equivalents",
+    "docType": "other",
+    "seedFile": "robertshaw-pro-series-cross-reference.pdf",
+    "url": "https://www.robertshaw.com/wp-content/uploads/2026/02/Pro-Series-Wall-Thermostat-Cross-Reference-150-2805D.pdf"
+   }
+  ],
+  "sourceNotes": "Robertshaw 352-00308-001 Rev B (RS10420T, 01/2026) and 352-00316-001B (RS10421T, 04/2026).",
+  "img": ""
+ },
+ {
+  "id": "tst-robertshaw-9400-series",
+  "brand": "Robertshaw",
+  "family": "9400 Series Digital Non-Programmable (9400 / 9401 / 9415 / 9420)",
+  "aka": "9400/9401 1H/1C, 9415 2H/2C conventional, 9420 heat pump 2H/2C",
+  "models": [
+   "9400",
+   "9401",
+   "9415",
+   "9420"
+  ],
+  "type": "non-programmable",
+  "stages": "9400/9401: single stage gas/electric or single-stage heat pump. 9415: 2 heat / 2 cool conventional. 9420: heat pump multi-stage with W2 aux and E emergency",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Batteries (9400 low battery indicator)",
+   "notes": "9401 requires a common wire; others per model legend (C required on 9415/9420)."
+  },
+  "terminals": [
+   {
+    "t": "Rh / Rc",
+    "fn": "24 VAC heat / cool transformer (9400/9401)"
+   },
+   {
+    "t": "R",
+    "fn": "24 VAC hot (9415/9420)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required 9401/9415/9420"
+   },
+   {
+    "t": "W / W1",
+    "fn": "Heat (9400/9401/9415)"
+   },
+   {
+    "t": "W2",
+    "fn": "2nd stage heat (9415) / aux heat (9420)"
+   },
+   {
+    "t": "Y / Y1",
+    "fn": "Cooling / 1st stage compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage cooling"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O / B",
+    "fn": "Reversing valve cool-active / heat-active (9401, 9420); accessory outputs on 9400/9415 (zoning / heat pump)"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat (9420)",
+    "notes": "No E relay: jumper E and W2"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator (9420)"
+   }
+  ],
+  "wiringNotes": [
+   "Old thermostat C wire can be a cooling control OR transformer common - check the furnace diagram; cap it if it is common and not used."
+  ],
+  "setup": {
+   "access": "No installer menu documented beyond F/C: press and hold the two buttons pictured in the manual 3 s to show F or C.",
+   "keySettings": [
+    {
+     "setting": "Temperature differential",
+     "options": "0.5-3.0 F (1st stage); 9415/9420 2nd stage 1-6 F"
+    }
+   ],
+   "installerTest": "Manual test: switch to COOL and set 3 F below room (cooling in a few seconds), same for HEAT; never jumper gas valve or board terminals; do not run COOL below 50 F.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "System will not restart right away",
+    "causes": [
+     "Built-in 5-minute compressor delay"
+    ],
+    "fixes": [
+     "Wait 5 minutes"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "9400 Digital Non-Programmable Thermostat User's Manual (110-1039)",
+    "docType": "install",
+    "seedFile": "robertshaw-9400-manual.pdf",
+    "url": "https://www.salestools.robertshaw.com/spaw2/SiteContent/9400%20Thermostat%20manual_110-1039.pdf"
+   },
+   {
+    "title": "9401 Thermostat Manual (110-1041)",
+    "docType": "install",
+    "seedFile": "robertshaw-9401-manual.pdf",
+    "url": "https://www.salestools.robertshaw.com/spaw2/SiteContent/9401%20Thermostat%20manual_110-1041.pdf"
+   },
+   {
+    "title": "9415 Digital Non-Programmable 2H/2C Manual (110-1043B)",
+    "docType": "install",
+    "seedFile": "robertshaw-9415-manual.pdf",
+    "url": "https://www.salestools.robertshaw.com/spaw2/SiteContent/9415%20Thermostat%20manual_110-1043B.pdf"
+   },
+   {
+    "title": "9420 Digital Non-Programmable Heat Pump Manual (110-1044C)",
+    "docType": "install",
+    "seedFile": "robertshaw-9420-manual.pdf",
+    "url": "https://www.salestools.robertshaw.com/spaw2/SiteContent/9420%20Thermostat%20manual_110-1044C.pdf"
+   }
+  ],
+  "sourceNotes": "Robertshaw salestools manuals 110-1039, 110-1041, 110-1043B, 110-1044C.",
+  "img": ""
+ },
+ {
+  "id": "tst-robertshaw-9610-9620",
+  "brand": "Robertshaw",
+  "family": "9610 / 9620 Digital Programmable",
+  "aka": "9610 7-day 1H/1C; 9620 heat pump programmable",
+  "models": [
+   "9610",
+   "9620"
+  ],
+  "type": "programmable",
+  "stages": "9610: 1 heat / 1 cool gas/electric. 9620: heat pump with Y1/Y2, W2 aux, E emergency",
+  "sort": 60,
+  "confidence": "rare",
+  "power": {
+   "cWire": "optional",
+   "batteries": "Batteries retain program memory",
+   "notes": "9620 legend lists C as required."
+  },
+  "terminals": [
+   {
+    "t": "RH / RC",
+    "fn": "24 VAC heat / cool transformer (9610)"
+   },
+   {
+    "t": "R",
+    "fn": "24 VAC hot (9620)"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common (required on 9620)"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (9610)"
+   },
+   {
+    "t": "Y / Y1",
+    "fn": "Cooling / 1st stage compressor"
+   },
+   {
+    "t": "Y2",
+    "fn": "2nd stage cooling (9620)"
+   },
+   {
+    "t": "W2",
+    "fn": "Aux heat (9620)"
+   },
+   {
+    "t": "E",
+    "fn": "Emergency heat (9620)",
+    "notes": "No E terminal: jumper E and W2"
+   },
+   {
+    "t": "G",
+    "fn": "Fan"
+   },
+   {
+    "t": "O / B",
+    "fn": "Reversing valve cool-active / heat-active"
+   },
+   {
+    "t": "L",
+    "fn": "System fault indicator (9620)"
+   }
+  ],
+  "wiringNotes": [
+   "Old C wire may be cooling control or transformer common - verify at the furnace."
+  ],
+  "setup": {
+   "access": "No installer menu documented.",
+   "keySettings": [],
+   "installerTest": "Switch to COOL/HEAT and move setpoint 3 F past room temperature.",
+   "factoryReset": "9610: press the reset button above the terminal block. 9620: RESET button beneath the lower left corner of the display (returns to factory pre-programmed settings)."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "System will not restart right away",
+    "causes": [
+     "Built-in 5-minute compressor delay"
+    ],
+    "fixes": [
+     "Wait 5 minutes"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "9610 Digital Programmable Thermostat User's Manual (110-655B)",
+    "docType": "install",
+    "seedFile": "robertshaw-9610-manual.pdf",
+    "url": "https://www.salestools.robertshaw.com/spaw2/SiteContent/9610%20Thermostat%20manual_110-655B.pdf"
+   },
+   {
+    "title": "9620 Thermostat Manual (110-732E)",
+    "docType": "install",
+    "seedFile": "robertshaw-9620-manual.pdf",
+    "url": "https://www.salestools.robertshaw.com/spaw2/SiteContent/9620%20Thermostat%20manual_110-732E.pdf"
+   }
+  ],
+  "sourceNotes": "Robertshaw 110-655B (9610, 11/2006) and 110-732E (9620, 07/2001).",
+  "img": ""
+ },
+ {
+  "id": "tst-hunter-44100-44550",
+  "brand": "Hunter",
+  "family": "44100 / 44550 Auto Saver 550 (battery programmable, c.2001)",
+  "aka": "Hunter Fan retail programmable thermostats",
+  "models": [
+   "44100",
+   "44550"
+  ],
+  "type": "programmable",
+  "stages": "44100: gas/oil/electric, 2-wire hot water heat and A/C (1H/1C). 44550: same plus single-stage heat pump without aux/emergency (O/B)",
+  "sort": 70,
+  "confidence": "rare",
+  "power": {
+   "cWire": "not-used",
+   "batteries": "2 AA",
+   "notes": "Battery powered. 44550 manual: do NOT connect a C wire - tape it off."
+  },
+  "terminals": [
+   {
+    "t": "RH",
+    "fn": "24 V (R, RH, VR, 4)",
+    "notes": "4-wire system: keep RH-RC jumper; 5-wire: remove it"
+   },
+   {
+    "t": "RC",
+    "fn": "24 V cool (RC, VC)"
+   },
+   {
+    "t": "W",
+    "fn": "Heat (W, H) - not for heat pumps"
+   },
+   {
+    "t": "Y / Y1",
+    "fn": "Compressor (Y, Y1, C, M)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan (G, F)"
+   },
+   {
+    "t": "O/B",
+    "fn": "Reversing valve - single-stage heat pumps only (44550)"
+   }
+  ],
+  "wiringNotes": [
+   "44100: HG/HE heating system selector on the circuit board - leave HG for gas/oil; if an electric furnace fan does not start on heat, move to HE.",
+   "Also works with 24 V or millivolt control systems per 44550 manual."
+  ],
+  "setup": {
+   "access": "Selector switches on the board (HG/HE, F/C); press reset after changing F/C.",
+   "keySettings": [
+    {
+     "setting": "HG / HE",
+     "options": "HG gas/oil (default), HE electric with fan relay"
+    }
+   ],
+   "installerTest": "Set HEAT/COOL and adjust setpoint; allow up to 20 s delay (44100).",
+   "factoryReset": "Press the reset button (small pin, hold 2 s) - clears programs back to 12:00 AM."
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Scrambled or double display",
+    "causes": [
+     "Mylar sticker on display"
+    ],
+    "fixes": [
+     "Remove the clear mylar sticker"
+    ]
+   },
+   {
+    "symptom": "No display",
+    "causes": [
+     "Batteries"
+    ],
+    "fixes": [
+     "Check/replace batteries; press reset 2 s"
+    ]
+   },
+   {
+    "symptom": "Fan does not come on in heat",
+    "causes": [
+     "HG/HE switch wrong"
+    ],
+    "fixes": [
+     "Move HG/HE selector to the other position"
+    ]
+   },
+   {
+    "symptom": "Heat/cool does not come on",
+    "causes": [
+     "Mode switch wrong",
+     "Up to 20 s delay",
+     "Breaker / blower door",
+     "4-wire system without RC-RH jumper"
+    ],
+    "fixes": [
+     "Check switch, wait, check power, install RC-RH jumper"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Hunter 44550 Auto Saver 550 Owner's Manual",
+    "docType": "user",
+    "seedFile": "hunter-44550-owners.pdf",
+    "url": "https://image.hunterfan.com/44550.pdf"
+   },
+   {
+    "title": "Hunter 44100 Owner's Manual",
+    "docType": "user",
+    "seedFile": "hunter-44100-owners.pdf",
+    "url": "https://image.hunterfan.com/44100.pdf"
+   }
+  ],
+  "sourceNotes": "Hunter Fan Company owner's manuals from image.hunterfan.com (PDFs dated 2001).",
+  "img": ""
+ },
+ {
+  "id": "tst-wyze-thermostat",
+  "brand": "Wyze",
+  "family": "Wyze Thermostat",
+  "aka": "Model WTHERM (app-installed, Wyze app)",
+  "models": [
+   "WTHERM"
+  ],
+  "type": "smart-wifi",
+  "stages": "Conventional up to 3 heat / 2 cool; heat pump up to 4 heat / 2 cool incl. dual fuel; one accessory (humidifier, dehumidifier, emergency heat or ventilator); single or dual transformer",
+  "sort": 40,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "24 VAC, 0.15 A max. C-wire adapter with cables is in the box for homes without a C wire."
+  },
+  "terminals": [],
+  "wiringNotes": [
+   "Not compatible with zoning panels or communicating/modulating equipment (QSG lists Redlink, Comfortmater [sic] and Climate Talk).",
+   "Installation is guided step by step in the Wyze app (support articles: with C wire / with C-wire adapter)."
+  ],
+  "setup": {
+   "access": "All setup in the Wyze app (+ New Device > Wyze Thermostat).",
+   "keySettings": [],
+   "installerTest": "Not published in the QSG.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Wyze Thermostat Quick Start Guide",
+    "docType": "quick-start",
+    "seedFile": "wyze-thermostat-qsg.pdf",
+    "url": "https://support.wyze.com/hc/en-us/article_attachments/21982459737883"
+   },
+   {
+    "title": "Wyze Thermostat Installation Guide (with C-Wire) - web article",
+    "docType": "install",
+    "seedFile": "",
+    "url": "https://support.wyze.com/hc/en-us/articles/360049453272-Wyze-Thermostat-Installation-Guide-with-C-Wire"
+   },
+   {
+    "title": "Wyze Thermostat Installation Guide (with C-Wire Adapter) - web article",
+    "docType": "install",
+    "seedFile": "",
+    "url": "https://support.wyze.com/hc/en-us/articles/360054217892-Wyze-Thermostat-Installation-Guide-with-C-Wire-Adapter"
+   },
+   {
+    "title": "Wyze Thermostat Tech Specs - web article",
+    "docType": "spec",
+    "seedFile": "",
+    "url": "https://support.wyze.com/hc/en-us/articles/360050568511-Wyze-Thermostat-Tech-Specs"
+   }
+  ],
+  "sourceNotes": "Wyze Thermostat QSG (support.wyze.com attachment, 1 page). Terminal list is not printed in the QSG text; Wyze install guides are web-only (no PDF). Tech specs page: conventional 3H/2C, heat pump 4H/2C.",
+  "img": ""
+ },
+ {
+  "id": "tst-mysa-smart-thermostat",
+  "brand": "Mysa",
+  "family": "Mysa Smart Thermostat (for Central HVAC)",
+  "aka": "Model MYSA ST V1-0; low-voltage Mysa (not the baseboard / in-floor / mini-split models)",
+  "models": [
+   "MYSA ST V1-0"
+  ],
+  "type": "smart-wifi",
+  "stages": "Up to 2 heat / 2 cool conventional or heat pump with aux; hydronic; 3-speed fan coil / PTAC",
+  "sort": 45,
+  "confidence": "occasional",
+  "power": {
+   "cWire": "required",
+   "batteries": "None",
+   "notes": "C wire required; without one use the Mysa C-Wire Power Adapter (sold separately). 24 VAC only - not millivolt or line voltage."
+  },
+  "terminals": [
+   {
+    "t": "R (RH / RC)",
+    "fn": "24 VAC",
+    "notes": "Switch behind the main display: CLOSED (default) for one R wire; OPEN when separate RH and RC wires"
+   },
+   {
+    "t": "C",
+    "fn": "24 VAC common",
+    "notes": "Required"
+   },
+   {
+    "t": "W1 / OB",
+    "fn": "Heat stage 1 or heat pump reversing valve",
+    "notes": "2 A max"
+   },
+   {
+    "t": "W2 / AUX",
+    "fn": "Heat stage 2 / aux heat / G2 medium fan speed (fan coil)"
+   },
+   {
+    "t": "Y1",
+    "fn": "Compressor stage 1"
+   },
+   {
+    "t": "Y2",
+    "fn": "Compressor stage 2 / G3 high fan speed (fan coil)"
+   },
+   {
+    "t": "G",
+    "fn": "Fan / G1 low fan speed"
+   }
+  ],
+  "wiringNotes": [
+   "Terminals take 16-22 AWG solid or 18-22 AWG stranded; 2 A per terminal, 7 A total solid / 5 A stranded.",
+   "Condensate pump float switch opening interrupts 24 V to the Mysa."
+  ],
+  "setup": {
+   "access": "Hold LEFT + RIGHT arrows together (about 5 s) until PREF shows, right arrow to CONF, center touch; up/down to pick the Configuration Code, center touch to apply (check mark).",
+   "keySettings": [
+    {
+     "setting": "Configuration code digit 1 (heating)",
+     "options": "0 none, 1 1-stage fuel, 2 1-stage electric, 3 1-stage heat pump, 4 1-stage hydronic/FCU, 6 2-stage fuel, 7 2-stage electric, 8 2-stage heat pump, 9 2-stage hydronic"
+    },
+    {
+     "setting": "Digit 2 (cooling)",
+     "options": "0 none, 1 single stage HP or AC, 6 two stage"
+    },
+    {
+     "setting": "Digit 3",
+     "options": "Letter code for heat fan control / emergency heat / reversing valve on cool (see guide table)",
+     "notes": "Example from guide: 31L -> 31P changes reversing valve function"
+    },
+    {
+     "setting": "Pairing mode",
+     "options": "Hold UP + DOWN together"
+    }
+   ],
+   "installerTest": "Not published beyond app setup.",
+   "factoryReset": ""
+  },
+  "diagnostics": [],
+  "troubleshooting": [
+   {
+    "symptom": "Mysa did not power up",
+    "causes": [
+     "Breaker/switch off or furnace door interlock open",
+     "Blown 3 or 5 A board fuse",
+     "Wires not fully inserted",
+     "C not connected at the board",
+     "Condensate float switch tripped"
+    ],
+    "fixes": [
+     "Restore power / seat door",
+     "Replace fuse",
+     "Reseat wires",
+     "Land C at the control board",
+     "Clear the condensate issue"
+    ]
+   },
+   {
+    "symptom": "Blowing cool air in heat (or warm in cool)",
+    "causes": [
+     "Wrong 3rd digit (reversing valve)"
+    ],
+    "fixes": [
+     "Correct the Configuration Code 3rd digit (e.g. 31L <-> 31P)"
+    ]
+   }
+  ],
+  "tips": [],
+  "manuals": [
+   {
+    "title": "Mysa Smart Thermostat (for Central HVAC) User Guide",
+    "docType": "install",
+    "seedFile": "mysa-smart-thermostat-user-guide.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/2589/0264/files/Mysa_Smart_Thermsotat_User_Guide.pdf?v=1769535043"
+   },
+   {
+    "title": "Mysa Power C-Wire Adapter guide",
+    "docType": "install",
+    "seedFile": "mysa-power-cwire-adapter.pdf",
+    "url": "https://cdn.shopify.com/s/files/1/2589/0264/files/Mysa_Power_Common_Wire_Adapter.pdf?v=1769534917"
+   }
+  ],
+  "sourceNotes": "Mysa (Empowered Homes Inc.) user guide linked from help.getmysa.com Wiring Reference Guide; FCC ID 2AC7Z-ESPS3WROOM1. 'confidential' hit in scan is the French word 'confidentialite' (privacy policy) - not a restriction.",
+  "img": ""
  }
 ];
