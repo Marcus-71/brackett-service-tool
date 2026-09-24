@@ -4600,6 +4600,18 @@ const MODEL_PATTERNS = [
   { re: /^DV(24|36|48|60)PVC[CD]14/, brand: "Daikin", equipment: "Air Handler", series: "Daikin DVPVC inverter-tuned TXV air handler (ComfortNet), R-410A", notes: ["V = inverter-tuned TXV (SS-DVPVC).", "See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^MBR(08|12|16|20)00A[AB]/, brand: "Goodman", equipment: "Air Handler", series: "Goodman / Amana MBR modular blower - 3-speed PSC, EBTDR fan-delay board", notes: ["PSC 3-speed; the speed lead goes on EBTDR COM.", "EBTDR delays: 7 s on, 65 s off (SS-GMBR 7/17).", "See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^DP16UM(30|36)08041/, brand: "Daikin", equipment: "Other", series: "Daikin DP16UM 16 SEER ultra-low NOx gas/electric packaged unit, R-410A", notes: ["Natural gas only; manifold 2.8-3.2 in. w.c.; temperature rise 30-60 or 35-65 F. Charge to superheat / subcooling at 95 F (IOD-3021B / RSD6313002).", "See the Maintenance Figures screen for service specs on this unit."] },
+  // ---- v198: Daikin ductless batch - Tag Scanner rules only where the scanner had none ----
+  { re: /^(R|FT)[XK]N(09|12|18|24)NMVJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin 15 SEER RXN / RKN NMVJU outdoor and FTXN / FTKN NMVJU wall indoor - the twins of the 19 Series, R-410A", notes: ["Same service manual as the 19 Series (SiUS041501E). RXN / RKN ...NMVJU is a different platform from RXN / RKN ...AXVJU.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^(R|FT)[XK]N(09|12|18|24)AXVJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin RXN / RKN AXVJU outdoor and FTXN / FTKN AXVJU wall indoor - N-line twins of the 17 SEER RXB / RKB AXVJU, R-410A", notes: ["Service manual SM-5WM-Y-NA-B1. Not the RXN / RKN ...NMVJU 19 Series twins.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^RXL(09|12|15|18|24)[QU]MVJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin AURORA R-410A low-ambient single-zone outdoor RXL QMVJU / UMVJU (not the R-32 FTXV / RXT Aurora)", notes: ["Heat pump only. Pairs with FTX NMVJU / UVJU wall, FVXS NVJU floor or FDMQ RVJU ducted (SiUS091601EC).", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^RKS(30|36)LVJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin LV Series RKS30 / RKS36 LVJU cooling-only single-zone outdoor, R-410A", notes: ["Pairs 1:1 with FTXS LVJU (SiUS091133).", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^FTXR(09|12|18)TVJU[WS]/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin Emura FTXR TVJUW (white) / TVJUS (silver) wall indoor, pairs with RX RMVJU9(A), R-410A", notes: ["Service manual SiUS041829EB. No forced-defrost procedure is published for FTXR.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^FDMQ(09|12|15|18|24)RVJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin FDMQ RVJU concealed ducted indoor - pairs with the RX RMVJU outdoor, or FDMQ12/18/24 with the AURORA RXL, R-410A", notes: ["Service manual SiUS071735EA. Read the outdoor plate: charge and heating range follow the outdoor unit.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^FFQ(09|12|15|18)Q2VJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin FFQ Q2VJU 2x2 ceiling cassette indoor - pairs with RX RMVJU or the earlier RX QMVJU, R-410A", notes: ["Service manual SiUS091628ED.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^(RXM|FTXM)(09|12|18|24)[WV]VJU/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin ATMOSPHERA RXM outdoor / FTXM wall indoor (WVJU9, WVJU8, VVJU), R-32 (A2L)", notes: ["R-32 (A2L). Pair by matching suffix (SiUS042113EB).", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^BPMKS04[89]A[23]U/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin Branch Provider (BP) unit BPMKS048A2U (2-port) / BPMKS049A3U (3-port) for the RMXS48LVJU multi-zone", notes: ["F1/F2 transmission to the outdoor unit (SiUS181631EA).", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^RZ[QR](18|24|30|36|42|48)(PVJU|T[AB]VJU)/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin SkyAir light-commercial single-zone outdoor - RZQ heat pump / RZR cooling only, P, TA or TB generation, R-410A", notes: ["Run the check operation (BS4) at commissioning or U3 appears.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^F[CHABT]Q(18|24|30|36|42|48)(PAVJU|PBVJU|PVJU|MVJU|TAVJU|TBVJU|AAVJU)/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin SkyAir indoor unit - FCQ cassette, FHQ ceiling-suspended, FAQ wall, FBQ ducted or FTQ air handler (paired with RZQ / RZR), R-410A", notes: ["FTQ connections are brazed; do not confuse FTQ with FTXS.", "See the Maintenance Figures screen for service specs on this unit."] },
   // --- end triage additions ---
 ];
 
@@ -7136,7 +7148,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v197";
+const APP_VERSION = "v198";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
