@@ -4612,6 +4612,9 @@ const MODEL_PATTERNS = [
   { re: /^BPMKS04[89]A[23]U/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin Branch Provider (BP) unit BPMKS048A2U (2-port) / BPMKS049A3U (3-port) for the RMXS48LVJU multi-zone", notes: ["F1/F2 transmission to the outdoor unit (SiUS181631EA).", "See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^RZ[QR](18|24|30|36|42|48)(PVJU|T[AB]VJU)/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin SkyAir light-commercial single-zone outdoor - RZQ heat pump / RZR cooling only, P, TA or TB generation, R-410A", notes: ["Run the check operation (BS4) at commissioning or U3 appears.", "See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^F[CHABT]Q(18|24|30|36|42|48)(PAVJU|PBVJU|PVJU|MVJU|TAVJU|TBVJU|AAVJU)/, brand: "Daikin", equipment: "Mini-Split", series: "Daikin SkyAir indoor unit - FCQ cassette, FHQ ceiling-suspended, FAQ wall, FBQ ducted or FTQ air handler (paired with RZQ / RZR), R-410A", notes: ["FTQ connections are brazed; do not confuse FTQ with FTXS.", "See the Maintenance Figures screen for service specs on this unit."] },
+  // ---- v201: Carrier D5MVHAQ Value-tier high wall - Tag Scanner rules only where the scanner had none ----
+  { re: /^D5MVHAQ\d{2}XA/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier D5MVHAQ Value-tier high wall indoor WITH refrigerant leak sensor (XA), R-454B - single-zone 37MVRAQ or multi-zone 37MTRAQ", notes: ["XA = with refrigerant leak sensor. Source: D5MVHA-01SM.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^D5MVHAQ\d{2}XC/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier D5MVHAQ Value-tier high wall indoor WITHOUT leak sensor (XC), R-454B - 37MVRAQ single-zone only, never multi-zone", notes: ["XC = no sensor: cannot be paired with the multi-zone 37MTRAQ. Source: D5MVHAQ-02SI.", "See the Maintenance Figures screen for service specs on this unit."] },
   // --- end triage additions ---
 ];
 
@@ -7148,7 +7151,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v200";
+const APP_VERSION = "v201";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
