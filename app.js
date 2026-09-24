@@ -431,7 +431,7 @@ function renderCodes() {
   const filtered = all.filter(c =>
     (codesState.brand === "All" || c.brand === codesState.brand) &&
     (codesState.equipment === "All" || c.equipment === codesState.equipment) &&
-    textIncludes([c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[])], codesState.search)
+    textIncludes([c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[]), ...(c.techTips || []).map(t => t.text)], codesState.search)
   ).sort((a, b) => a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
 
   const results = document.getElementById("codesResults");
@@ -469,10 +469,12 @@ function openCodeDetail(id) {
   const modal = document.getElementById("modal");
   const causes = (code.causes || []).map(c => `<li>${escapeHtml(c)}</li>`).join("");
   const steps = (code.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
+  const tips = (code.techTips || []).map(t => `<li>${escapeHtml(t.text)}${t.source ? `<div class="tech-tip-src">${escapeHtml(t.source)}</div>` : ""}</li>`).join("");
   modal.innerHTML = `
     <h2>${escapeHtml(code.code)} — ${escapeHtml(code.title)}</h2>
     <div class="sub">${escapeHtml(code.brand)}${code.family ? " · " + escapeHtml(code.family) : ""} · ${escapeHtml(code.equipment)}</div>
     <div class="detail-section"><h3>What it means</h3><p>${escapeHtml(code.meaning || "—")}</p></div>
+    ${tips ? `<div class="detail-section tech-tip"><h3>💡 Manufacturer tech tip</h3><ul>${tips}</ul></div>` : ""}
     ${causes ? `<div class="detail-section"><h3>Likely causes</h3><ul>${causes}</ul></div>` : ""}
     ${steps ? `<div class="detail-section"><h3>Diagnostic steps</h3><ol>${steps}</ol></div>` : ""}
     ${code.safety ? `<div class="safety-box">⚠ ${escapeHtml(code.safety)}</div>` : ""}
@@ -540,6 +542,7 @@ function openCodeEditForm(existing) {
       steps: document.getElementById("f-steps").value.split("\n").map(s => s.trim()).filter(Boolean),
       safety: document.getElementById("f-safety").value.trim(),
       confidence: document.getElementById("f-confidence").value,
+      ...(c.techTips ? { techTips: c.techTips } : {}),
     };
     const userCodes = loadUserCodes().filter(u => u.id !== entry.id);
     userCodes.push(entry);
@@ -619,7 +622,7 @@ function askBuildIndex() {
       title: c.code + " — " + c.title,
       sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
       titleHay: [c.brand, c.code, ...codeSearchAliases(c.code), c.title].filter(Boolean).join(" ").toLowerCase(),
-      hay: [c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes || []), ...(c.steps || [])].filter(Boolean).join(" ").toLowerCase(),
+      hay: [c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes || []), ...(c.steps || []), ...(c.techTips || []).map(t => t.text)].filter(Boolean).join(" ").toLowerCase(),
     });
   }
   for (const s of getAllSymptoms()) {
@@ -7151,7 +7154,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v203";
+const APP_VERSION = "v204";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

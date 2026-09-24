@@ -1681,3 +1681,11 @@ main {
   font-size: 0.95rem; color: var(--text);
 }
 .cl-chip:active { transform: scale(0.97); }
+
+/* manufacturer tech tips on error codes */
+.detail-section.tech-tip { background: #3a3013; color: #ffe08a; border-left: 4px solid #c99a1a; border-radius: 10px; padding: 0.6rem 0.9rem; }
+.detail-section.tech-tip h3 { color: inherit; }
+.tech-tip-src { font-size: 0.8rem; opacity: 0.8; margin-top: 0.15rem; }
+@media (prefers-color-scheme: light) {
+  .detail-section.tech-tip { background: #fff4d6; color: #5a4300; border-left-color: #e0a100; }
+}
