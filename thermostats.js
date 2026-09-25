@@ -209,6 +209,16 @@ const THERMOSTATS = [
    "installerTest": "Installer Options > Installer Test (date code required to enter Installer Options). The Installer Test lets you: turn Heat stages on or off, turn Cool stages on or off, turn the Em Heat stage on or off, turn IAQ equipment on or off, see equipment Run Time, and see the sensor temperature reading if a 10K/20K pipe sensor is used for a Fan Coil Unit. If discharge and return air sensors (RATS and DATS) are used with a T10+ and EIM, the display shows both readings and the delta during the installer test.",
    "factoryReset": "Installer Options > Reset > Factory Reset. Getting there: Menu > Thermostat Information (write down the date code) > back > Installer Options > enter the date code > Reset. The Reset submenu contains Reset Schedule, Delete all sensors, Reset HomeKit, Factory Reset and Reset WiFi. Note for T10+ installs: if the T10+ was already configured WITHOUT an EIM, a factory reset is required to get back to the initial screen that offers the 'use with an EIM' choice."
   },
+  "techTips": [
+   {
+    "text": "Only T10+ models (THX321WF3003W, THX321WFS3001W) pair with the EIM THM04R3000 and the wireless outdoor sensor C7089R3013 (not C7089R1013), and a T10+ first set up without an EIM must be factory reset to reach the screen that adds one. Light-commercial and fan-coil ISU settings need T10+ firmware 03.03.08.02 or later and EIM firmware 01.02.01.00 or later.",
+    "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+   },
+   {
+    "text": "A T9/T10 firmware update started on 27 Sept 2022 put a limited number of units back to factory defaults (welcome screen), and Resideo paused the rollout. Take the thermostat back through setup, or call Resideo's priority line 1-888-292-1944.",
+    "source": "Action Required: Important Information About Your T9/T10 Thermostat (resideo.com notice), Sep 2022"
+   }
+  ],
   "diagnostics": [
    {
     "code": "SET DATE AND TIME",
@@ -253,17 +263,43 @@ const THERMOSTATS = [
    {
     "code": "MEMORY ERROR / INTERNAL SENSOR ERROR / INTERNAL HUM TEMP FAILURE / THERMOSTAT MEMORY ERROR",
     "meaning": "Internal chip/sensor failure",
-    "action": "Replace the thermostat"
+    "action": "Replace the thermostat - except the T10 'Sensor Error' alert that followed a firmware update: Resideo says that alert is false (the unit still reads temperature and controls normally), so call Resideo Support to clear it instead",
+    "techTips": [
+     {
+      "text": "Resideo says a recent firmware update made some T10s show a false 'Sensor Error: An issue with the internal sensor was detected. The thermostat may need to be replaced' alert, while the unit still reads temperature and controls the HVAC normally. Call Resideo Support (1-800-633-3991) to clear the alert instead of replacing the thermostat.",
+      "source": "Honeywell T10 Thermostat Sensor Error (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    },
    {
     "code": "THERMOSTAT UNKNOWN TIME",
     "meaning": "Power lost, time not updated via WiFi",
-    "action": "Reset time or verify WiFi connection"
+    "action": "Reset time or verify WiFi connection",
+    "techTips": [
+     {
+      "text": "A T10/T10+ used with Apple HomeKit but never registered to the Resideo (or Resideo Connect) app may lose time. Resideo recommends registering it in the Resideo app even when it is controlled through HomeKit.",
+      "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+     }
+    ]
    },
    {
     "code": "LOW SENSOR BATTERIES / INDOOR SENSOR ERROR / INDOOR SENSOR CONNECTION ERROR",
     "meaning": "Named Room Sensor battery low, faulted, or disconnected",
-    "action": "Replace AAA batteries, or replace the sensor"
+    "action": "Replace AAA batteries, or replace the sensor",
+    "techTips": [
+     {
+      "text": "For 'Indoor Sensor Connection Error' or 'Error Adding Device', reset the sensor by holding Connect for about 15 seconds, then re-add it within 2 ft of the thermostat. If it keeps dropping, replace the batteries (or pull them for 30 seconds) and keep the sensor clear of large appliances, metal and concrete walls.",
+      "source": "T9/T10 Thermostat Error Messages: 'Indoor Sensor Connection Error' and 'Error Adding Device' (honeywellhome.com support article), updated Sep 2025"
+     },
+     {
+      "text": "If a C7189R2002 or C7189R3002 wireless indoor sensor won't connect, check the date codes: T10+ thermostats with date code 2440 and later work only with C7189R3002 sensors, and C7189R3002 sensors work only with T10+ thermostats. Resideo says older thermostats and sensors that cannot connect should be replaced.",
+      "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+     },
+     {
+      "text": "When the selected sensors stop communicating, a T10+ controls from its Fallback Room sensor(s), then from the thermostat itself unless the installer chose 'NEVER USE THERMOSTAT'; a plain T10 always falls back to the thermostat sensor. Check Menu > Preferences > Fallback Room when the controlling temperature looks wrong after a sensor alert.",
+      "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+     }
+    ]
    },
    {
     "code": "OUTDOOR SENSOR ERROR",
@@ -284,6 +320,72 @@ const THERMOSTATS = [
     "code": "REDLINK RF TOOLKIT NOT RESPONDING",
     "meaning": "Wireless sensor RF network not operating (radio died or connection severed)",
     "action": "Contact Customer Care for assistance"
+   },
+   {
+    "code": "WAITING FOR EQUIPMENT",
+    "meaning": "The thermostat is holding off heating/cooling to prevent short cycling (should last 5 minutes at most).",
+    "action": "Time it: longer than 5 minutes means intermittent power loss at the start of the call. Test with only R and C landed to find a shorted wire or high equipment draw.",
+    "techTips": [
+     {
+      "text": "'Waiting for equipment' is the anti-short-cycle hold and should last 5 minutes at most. Longer usually means the thermostat is losing power at the start of the call: test with only R and C landed on the UWP (or on the EIM for a T10+ with EIM) - if the call then starts within 5 minutes, a shorted wire or high equipment draw is dropping thermostat power.",
+      "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+     }
+    ]
+   },
+   {
+    "code": "Idle (Dry contact lockout)",
+    "meaning": "Equipment Status shows heat/cool held off by a custom Dry Contact Alert set to lock out equipment (T10+ with EIM).",
+    "action": "Find and clear the dry-contact device (drain pan, leak or fan-failure switch, etc.) wired to the EIM, and review the dry-contact alert settings in the installer setup.",
+    "techTips": [
+     {
+      "text": "A T10+ with EIM can be set to lock out heat or cooling while a custom dry-contact alert is active (for example a drain-pan or water-leak switch), even if the alert was snoozed or hidden. 'Idle (Dry contact lockout)' in Menu > Equipment Status means the dry-contact device, not the thermostat, is stopping the call.",
+      "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+     }
+    ]
+   },
+   {
+    "code": "Freeze Protection active",
+    "meaning": "Installer-set freeze protection is running heat to hold a minimum temperature even though the mode is Off or Cool.",
+    "action": "Normal if intended; otherwise review the freeze-protection setting in the installer setup.",
+    "techTips": [
+     {
+      "text": "If heat runs while the thermostat is in Cool or Off, look for 'Freeze Protection active' on the display. The installer set a freeze-protection temperature that holds a minimum temperature even in Off or Cool, and the thermostat also alerts if the room falls below it.",
+      "source": "Resideo 33-00462-08, T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data - Troubleshooting and Support"
+     }
+    ]
+   },
+   {
+    "code": "Can't Enter Enroll Mode",
+    "meaning": "Another device is in enroll mode.",
+    "action": "Complete or exit enrollment on the other RedLINK device, then reset the thermostat (off the wall 1 minute, or service switch off 30 seconds) and allow about 10 minutes.",
+    "techTips": [
+     {
+      "text": "This message means another RedLINK device in the system is still in enroll mode (check other screens and flashing sensor lights) - finish or exit that first. Then reset the thermostat by pulling it off the wall for 1 minute (or turning the service switch off for 30 seconds) and allow about 10 minutes to recover.",
+      "source": "T9/T10 Thermostat Error Message: 'Can't Enter Enroll Mode' (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "Error - WiFi Connection Failed",
+    "meaning": "The thermostat could not join the Wi-Fi network (router settings not suitable).",
+    "action": "Enable DHCP, use a non-hidden SSID, split a combined dual-band network into separate 2.4/5 GHz names, power-cycle the router and retry.",
+    "techTips": [
+     {
+      "text": "The T9/T10 needs DHCP and a visible (non-hidden) SSID. If the router merges 2.4 GHz and 5 GHz under one name, split them into two named networks, then power-cycle the router and retry.",
+      "source": "T9/T10 Thermostat Error Message: 'Error - WiFi Connection Failed' (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "Sensor light steady green / flashing red when pairing",
+    "meaning": "The Smart Room Sensor did not enter pairing (it should flash green rapidly).",
+    "action": "Hold Connect about 15 seconds until the light turns orange (sensor reset), then add the sensor again.",
+    "techTips": [
+     {
+      "text": "The sensor light should flash green rapidly while pairing. If it stays steady green or flashes red after you press Connect, hold Connect until the light turns orange (about 15 seconds) to reset the sensor, then add it again.",
+      "source": "T9/T10 Thermostat Error Message: When pairing a Smart Room Sensor, the green light is steady and/or flashes red (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -1695,6 +1797,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "Menu icon > scroll down to Advanced Setup > Reset > Factory Reset. The same Reset submenu also holds Schedule Reset and HomeKit Reset. Wi-Fi is reset separately from Menu > Wi-Fi > Change Network. Source: honeywellhome.com support article 'How Do I Reset My Honeywell Home Device?', T9 (RCHT9510WF, RCHT9610WF) row. The 33-00478-04 user guide separately documents 'Reset to default schedule' under Menu > Schedule."
   },
+  "techTips": [
+   {
+    "text": "A T9/T10 firmware update started on 27 Sept 2022 put a limited number of units back to factory defaults (welcome screen), and Resideo paused the rollout. Take the thermostat back through setup, or call Resideo's priority line 1-888-292-1944.",
+    "source": "Action Required: Important Information About Your T9/T10 Thermostat (resideo.com notice), Sep 2022"
+   }
+  ],
   "diagnostics": [
    {
     "code": "SET DATE AND TIME",
@@ -1764,7 +1872,46 @@ const THERMOSTATS = [
    {
     "code": "INDOOR SENSOR CONNECTION ERROR",
     "meaning": "Named sensor is no longer connected",
-    "action": "Replace batteries and verify sensor placement"
+    "action": "Replace batteries and verify sensor placement",
+    "techTips": [
+     {
+      "text": "Reset the Smart Room Sensor by holding Connect for about 15 seconds, then re-add it within 2 ft of the thermostat. If it keeps dropping, replace the batteries (or pull them for 30 seconds) and move the sensor so no large appliance, metal or concrete wall sits between it and the thermostat.",
+      "source": "T9/T10 Thermostat Error Messages: 'Indoor Sensor Connection Error' and 'Error Adding Device' (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "Can't Enter Enroll Mode",
+    "meaning": "Another device is in enroll mode.",
+    "action": "Complete or exit enrollment on the other RedLINK device, then reset the thermostat (off the wall 1 minute, or service switch off 30 seconds) and allow about 10 minutes.",
+    "techTips": [
+     {
+      "text": "This message means another RedLINK device in the system is still in enroll mode (check other screens and flashing sensor lights) - finish or exit that first. Then reset the thermostat by pulling it off the wall for 1 minute (or turning the service switch off for 30 seconds) and allow about 10 minutes to recover.",
+      "source": "T9/T10 Thermostat Error Message: 'Can't Enter Enroll Mode' (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "Error - WiFi Connection Failed",
+    "meaning": "The thermostat could not join the Wi-Fi network (router settings not suitable).",
+    "action": "Enable DHCP, use a non-hidden SSID, split a combined dual-band network into separate 2.4/5 GHz names, power-cycle the router and retry.",
+    "techTips": [
+     {
+      "text": "The T9/T10 needs DHCP and a visible (non-hidden) SSID. If the router merges 2.4 GHz and 5 GHz under one name, split them into two named networks, then power-cycle the router and retry.",
+      "source": "T9/T10 Thermostat Error Message: 'Error - WiFi Connection Failed' (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "Sensor light steady green / flashing red when pairing",
+    "meaning": "The Smart Room Sensor did not enter pairing (it should flash green rapidly).",
+    "action": "Hold Connect about 15 seconds until the light turns orange (sensor reset), then add the sensor again.",
+    "techTips": [
+     {
+      "text": "The sensor light should flash green rapidly while pairing. If it stays steady green or flashes red after you press Connect, hold Connect until the light turns orange (about 15 seconds) to reset the sensor, then add it again.",
+      "source": "T9/T10 Thermostat Error Message: When pairing a Smart Room Sensor, the green light is steady and/or flashes red (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -2275,7 +2422,19 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "SETTINGS > Preferences > Restore Factory Defaults."
   },
-  "diagnostics": [],
+  "diagnostics": [
+   {
+    "code": "Sensor Error / Sensor Failure",
+    "meaning": "Alert saying the thermostat must be replaced. Resideo says it can be a false alarm caused by humidity below 10% RH.",
+    "action": "Dismiss the alert and allow 24-48 hours for the humidity sensor to normalize; it should clear without replacement.",
+    "techTips": [
+     {
+      "text": "Resideo says the RTH9585WF, THX9421R and TH9320WF can show a false 'sensor error' or 'sensor failure' telling you to replace the thermostat after exposure to air below 10% RH (cold storage in a vehicle or warehouse, or a very dry room). Dismiss the alert and give the humidity sensor 24-48 hours to normalize before replacing anything.",
+      "source": "Why does my 9000 series thermostat show \"sensor error\"? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Display is blank",
@@ -4040,7 +4199,36 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "After install or remounting, the Lyric Round display lights in a circle as it starts and charges, which can take up to 3 minutes. If it stays dark, check equipment power, fuses and breakers, the wiring, a fresh AAA lithium battery and the R vs R/Rc switch; without a C wire, a system that powers the thermostat over the heating circuit may not keep the display lit.",
+    "source": "Honeywell Lyric Round Thermostat Not Working (honeywellhome.com support article), updated Sep 2025"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "Thermostat Power Lost",
+    "meaning": "Power to the Lyric thermostat has been interrupted.",
+    "action": "Check equipment power, the breaker and any service switch; if power is fine and the unit stays offline, contact Resideo support.",
+    "techTips": [
+     {
+      "text": "'Thermostat Power Lost' means power to the Lyric was interrupted: check the HVAC system is powered, the breaker is on and not tripped, and any equipment service switch is on. If power is normal but the thermostat stays offline, call Resideo (1-800-633-3991).",
+      "source": "What does the message on my Lyric that says Thermostat Power Lost mean? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "Replace Battery",
+    "meaning": "The Lyric's backup battery charge is low.",
+    "action": "Replace with one AAA lithium (non-rechargeable) battery; Resideo recommends yearly replacement.",
+    "techTips": [
+     {
+      "text": "'Replace Battery' on the Lyric means its backup battery is low. Fit one new AAA lithium (non-rechargeable) battery; Resideo says to replace it once a year.",
+      "source": "What does the message on my Lyric that says Replace Battery mean? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Screen shows circles lighting up around it after install",
@@ -4249,6 +4437,17 @@ const THERMOSTATS = [
     "code": "EIM Connected light - Red",
     "meaning": "RedLINK 2.0 device(s) are NOT communicating",
     "action": "Check EIM and RedLINK 2.0 devices"
+   },
+   {
+    "code": "Sensor Error / Sensor Failure",
+    "meaning": "Alert saying the thermostat must be replaced. Resideo says it can be a false alarm caused by humidity below 10% RH.",
+    "action": "Dismiss the alert and allow 24-48 hours for the humidity sensor to normalize; it should clear without replacement.",
+    "techTips": [
+     {
+      "text": "Resideo says the RTH9585WF, THX9421R and TH9320WF can show a false 'sensor error' or 'sensor failure' telling you to replace the thermostat after exposure to air below 10% RH (cold storage in a vehicle or warehouse, or a very dry room). Dismiss the alert and give the humidity sensor 24-48 hours to normalize before replacing anything.",
+      "source": "Why does my 9000 series thermostat show \"sensor error\"? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [],
@@ -4416,6 +4615,17 @@ const THERMOSTATS = [
     "code": "Cool On / Heat On (flashing)",
     "meaning": "Compressor protection feature engaged (Setup Function 15)",
     "action": "Wait 5 minutes before the compressor restarts"
+   },
+   {
+    "code": "LO",
+    "meaning": "Ambient temperature reads below 32 F (0 C).",
+    "action": "Allow several hours to acclimate; if the room is above 32 F and LO persists, replace the thermostat.",
+    "techTips": [
+     {
+      "text": "LO means the thermostat reads ambient below 32 F (0 C), and a newly installed unit can take several hours to reach room temperature. If the room really is above freezing and LO stays, replace the thermostat.",
+      "source": "Why is my TH1100DV/TH1110DV/TH1210DV showing an error message LO? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [],
@@ -6016,6 +6226,12 @@ const THERMOSTATS = [
    "installerTest": "Menu > Installer Options > enter password > Installer Test; follow on-screen prompts to run equipment test.",
    "factoryReset": "Menu > Installer Options > enter password (date code) > scroll to Reset to Defaults."
   },
+  "techTips": [
+   {
+    "text": "An economizer-fault alert (ISU 222, commercial setup only) was added to the TH8321WF from date code 1736 (it updates automatically on Wi-Fi with a TCC account) and to the TH8321R without EIM from date code 1740 (microSD field-update file from the web portal). In residential setup the L/A terminal is always the heat-pump fault input, and 24 V on L/A raises the heat-pump service message.",
+    "source": "Resideo Addendum 33-00326-03, TH8321R or TH8321WF with Economizer Fault"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Alert Light (red) - solid",
@@ -6217,6 +6433,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "An economizer-fault alert (ISU 222, commercial setup only) was added to the TH8321WF from date code 1736 (it updates automatically on Wi-Fi with a TCC account) and to the TH8321R without EIM from date code 1740 (microSD field-update file from the web portal). In residential setup the L/A terminal is always the heat-pump fault input, and 24 V on L/A raises the heat-pump service message.",
+    "source": "Resideo Addendum 33-00326-03, TH8321R or TH8321WF with Economizer Fault"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Alert Light (red) - solid",
@@ -6227,6 +6449,17 @@ const THERMOSTATS = [
     "code": "Wait",
     "meaning": "Compressor protection timer engaged",
     "action": "Wait 5 minutes for system to restart safely"
+   },
+   {
+    "code": "WiFi Signal Lost",
+    "meaning": "The thermostat has lost its connection to the router.",
+    "action": "Confirm the router is online and pull the thermostat for 1 minute; if needed, reset Wi-Fi (System > hold middle box 5 s > 0900 = 0 > Done) and reconnect via NewThermostat_ at 192.168.1.1.",
+    "techTips": [
+     {
+      "text": "With the router confirmed online, pull the thermostat off its base for 1 minute and refit it. If it still won't reconnect, reset its Wi-Fi (press System, hold the middle blank box 5 seconds, set function 0900 to 0, press Done), then rejoin through the 'NewThermostat_xxxx' network at 192.168.1.1.",
+      "source": "Why am I getting a WiFi Signal Lost message on my VisionPRO (TH8320WF or RTH8580WF) thermostat? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -7323,6 +7556,39 @@ const THERMOSTATS = [
    {
     "code": "Aux On",
     "meaning": "Auxiliary heat on (heat pump models)"
+   },
+   {
+    "code": "E1",
+    "meaning": "Thermostat error - Honeywell's article says to replace the thermostat (TH1100DH / TH1110DH / TH1210DH).",
+    "action": "Replace the thermostat (the article gives no field repair).",
+    "techTips": [
+     {
+      "text": "Honeywell's answer for E1 on the TH1100DH / TH1110DH / TH1210DH is to replace the thermostat; the article gives no field repair.",
+      "source": "Why is my TH1100DH/TH1110DH/TH1210DH showing an error message E1? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "HI",
+    "meaning": "Ambient temperature reads above 122 F (50 C) (TH1100DH / TH1110DH / TH1210DH).",
+    "action": "Allow a newly installed thermostat several hours to reach room temperature; if the room is below 122 F and HI stays, replace the thermostat.",
+    "techTips": [
+     {
+      "text": "HI means the thermostat reads ambient above 122 F (50 C). Give a newly installed thermostat several hours to reach room temperature; if the room is below 122 F and HI stays, replace the thermostat.",
+      "source": "Why is my TH1100DH/TH1110DH/TH1210DH showing an error message HI? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
+   },
+   {
+    "code": "LO",
+    "meaning": "Ambient temperature reads below 32 F (0 C) (TH1100DH / TH1110DH / TH1210DH).",
+    "action": "Allow a newly installed thermostat several hours to reach room temperature; if the room is above 32 F and LO stays, replace the thermostat.",
+    "techTips": [
+     {
+      "text": "LO means the thermostat reads ambient below 32 F (0 C). Give a newly installed thermostat several hours to reach room temperature; if the room is above 32 F and LO stays, replace the thermostat.",
+      "source": "Why is my TH1100DH/TH1110DH/TH1210DH showing an error message LO? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -8499,6 +8765,17 @@ const THERMOSTATS = [
    {
     "code": "UPDATING",
     "meaning": "Automatic software update in progress (screen blank)"
+   },
+   {
+    "code": "WiFi Signal Lost",
+    "meaning": "The thermostat has lost its connection to the router.",
+    "action": "Confirm the router is online and pull the thermostat for 1 minute; if needed, reset Wi-Fi (System > hold middle box 5 s > 0900 = 0 > Done) and reconnect via NewThermostat_ at 192.168.1.1.",
+    "techTips": [
+     {
+      "text": "With the router confirmed online, pull the thermostat off its base for 1 minute and refit it. If it still won't reconnect, reset its Wi-Fi (press System, hold the middle blank box 5 seconds, set function 0900 to 0, press Done), then rejoin through the 'NewThermostat_xxxx' network at 192.168.1.1.",
+      "source": "Why am I getting a WiFi Signal Lost message on my VisionPRO (TH8320WF or RTH8580WF) thermostat? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -10625,6 +10902,17 @@ const THERMOSTATS = [
     "code": "Wait",
     "meaning": "Compressor protection timer",
     "action": "Wait 5 minutes"
+   },
+   {
+    "code": "Sensor Error / Sensor Failure",
+    "meaning": "Alert saying the thermostat must be replaced. Resideo says it can be a false alarm caused by humidity below 10% RH.",
+    "action": "Dismiss the alert and allow 24-48 hours for the humidity sensor to normalize; it should clear without replacement.",
+    "techTips": [
+     {
+      "text": "Resideo says the RTH9585WF, THX9421R and TH9320WF can show a false 'sensor error' or 'sensor failure' telling you to replace the thermostat after exposure to air below 10% RH (cold storage in a vehicle or warehouse, or a very dry room). Dismiss the alert and give the humidity sensor 24-48 hours to normalize before replacing anything.",
+      "source": "Why does my 9000 series thermostat show \"sensor error\"? (honeywellhome.com support article), updated Sep 2025"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -10820,6 +11108,20 @@ const THERMOSTATS = [
    "installerTest": "TEST MODE / TEST EQUIPMENT MENU - official path, verbatim from support.ecobee.com/s/articles/How-to-Test-Your-HVAC-System-with-ecobee: 'Test mode allows you to force the ecobee to run heating, cooling or connected accessories to help troubleshoot and confirm the ecobee is configured correctly.' On the ecobee Thermostat: Main Menu > General > Settings > Installation Settings > Test Equipment, then tap Ok to view the Test Equipment menu. For Smart Thermostat Lite and Smart Thermostat Essential owners: Main Menu > Settings > Installation Settings > Test Equipment, then tap Ok. Then: 'Select the equipment you wish to test and then On. Doing so should run the equipment straightaway, but we suggest leaving selected for at least two minutes if this is not the case. If you wish to test another function, simply select it and the original test will stop.' CAUTIONS stated in the article: 'These tests will bypass any thresholds including compressor protection settings, so please use with caution.' 'This is not available on the ecobee app.' 'The options displayed on the Test Equipment screen will depend on your ecobee configuration.' 'Exiting the Test Equipment menu will stop any active tests.' Test Mode referenced in troubleshooting articles (Heat/Cool/Aux stage tests) - exact menu path not documented in sources read.",
    "factoryReset": "Main Menu > General > Settings > Reset: Reset Schedule and Preferences | Reset Registration | Reset All (same behavior as Premium). Source: support.ecobee.com 'Resetting your ecobee thermostat'."
   },
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   },
+   {
+    "text": "The Smart Thermostat Enhanced's PEK+ terminal is shared by the PEK wire, G3 (third fan speed) and ACC (one-wire accessory). The Enhanced cannot run a PEK and a humidifier, dehumidifier or ventilator at the same time, so ecobee recommends the Premium when you need both.",
+    "source": "What's the PEK+ connector? (support.ecobee.com article)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Flame (or Auto) icon with an exclamation mark",
@@ -10830,6 +11132,17 @@ const THERMOSTATS = [
     "code": "Aux Heat Runtime Alert / Aux Outdoor Temp Alert / Low-High Temp Alert / Low-High Humidity Alert",
     "meaning": "Same alert set as Premium (see Premium family entry)",
     "action": "See Premium family entry"
+   },
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -11079,6 +11392,16 @@ const THERMOSTATS = [
    "installerTest": "TEST MODE / TEST EQUIPMENT MENU - official path, verbatim from support.ecobee.com/s/articles/How-to-Test-Your-HVAC-System-with-ecobee: 'Test mode allows you to force the ecobee to run heating, cooling or connected accessories to help troubleshoot and confirm the ecobee is configured correctly.' On the ecobee Thermostat: Main Menu > General > Settings > Installation Settings > Test Equipment, then tap Ok to view the Test Equipment menu. For Smart Thermostat Lite and Smart Thermostat Essential owners: Main Menu > Settings > Installation Settings > Test Equipment, then tap Ok. Then: 'Select the equipment you wish to test and then On. Doing so should run the equipment straightaway, but we suggest leaving selected for at least two minutes if this is not the case. If you wish to test another function, simply select it and the original test will stop.' CAUTIONS stated in the article: 'These tests will bypass any thresholds including compressor protection settings, so please use with caution.' 'This is not available on the ecobee app.' 'The options displayed on the Test Equipment screen will depend on your ecobee configuration.' 'Exiting the Test Equipment menu will stop any active tests.' Referenced as 'Test Mode' in troubleshooting articles (e.g. Heat Stage 1 On, Heat Pump Heat Stage 1, Aux Stage 1, Cool Stage 1 On, Heat Pump Cool Stage 1 On - each run for 2 minutes to confirm equipment responds) - the exact on-thermostat menu path to reach Test Mode was not stated in any document read; see gaps.",
    "factoryReset": "Main Menu > General > Settings > Reset, then choose: Reset Schedule and Preferences (clears schedule/preferences, keeps equipment config and registration); Reset Registration (unregisters from current account, keeps equipment config/schedule); or Reset All (wipes everything back to factory defaults, deletes account link and HVAC equipment config - requires full re-setup, a technician may be needed to reconfigure HVAC settings). Source: support.ecobee.com 'Resetting your ecobee thermostat'."
   },
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Flame (or Auto) icon with an exclamation mark",
@@ -11104,6 +11427,17 @@ const THERMOSTATS = [
     "code": "Low/High Humidity Alert",
     "meaning": "Indoor relative humidity is outside the configured percentage",
     "action": "Check humidifier/dehumidifier accessory operation, or AC Overcool Max setting if no accessory is installed"
+   },
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -11344,11 +11678,32 @@ const THERMOSTATS = [
    "installerTest": "Test Mode referenced in troubleshooting articles; exact menu path not documented in sources read.",
    "factoryReset": "Main Menu > Settings > Reset: Reset Schedule and Preferences | Reset Registration | Reset All. Source: support.ecobee.com 'Resetting your ecobee thermostat' (this article gives a separate, shorter menu path - 'Main Menu > Settings > Reset' - for Smart Thermostat Lite and Essential owners; ecobee3 lite's own menu path was not separately confirmed)."
   },
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Aux Heat Runtime Alert / Aux Outdoor Temp Alert / Low-High Temp Alert / Low-High Humidity Alert",
     "meaning": "Same alert set as Premium",
     "action": "See Premium family entry"
+   },
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -11514,7 +11869,29 @@ const THERMOSTATS = [
    "installerTest": "Test Equipment, under Installation Settings: 'This menu lets you test the wiring and connections of the devices connected to the thermostat by turning them on or off. The equipment will turn off when you exit the menu. Warning: Compressor protection and minimum run-time features are not enforced while in this mode.' (ecobee3-user-guide.pdf). The exact sub-menu path is not printed in the guide.",
    "factoryReset": "Main Menu > Settings > Reset, then pick one: Reset Registration (deletes registration/username and password, keeps equipment settings and preferences) | Reset Preferences (resets preferences, reminders, alerts and programming to default) | Reset All (back to factory defaults and removes registration). Touch Yes to confirm. (ecobee3-user-guide.pdf)"
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Requesting heat/cool but no airflow",
@@ -11702,11 +12079,32 @@ const THERMOSTATS = [
    "installerTest": "Test Mode referenced in troubleshooting articles; exact menu path not documented in sources read.",
    "factoryReset": "Main Menu > General > Settings > Reset: Reset Schedule and Preferences | Reset Registration | Reset All. Source: support.ecobee.com 'Resetting your ecobee thermostat'."
   },
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Aux Heat Runtime Alert / Aux Outdoor Temp Alert / Low-High Temp Alert / Low-High Humidity Alert",
     "meaning": "Same alert set as Premium, worded for ecobee4 in its own manual",
     "action": "See Premium family entry"
+   },
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -11882,6 +12280,16 @@ const THERMOSTATS = [
    "installerTest": "Test Mode referenced in troubleshooting articles; exact menu path not documented in sources read.",
    "factoryReset": "Main Menu > General > Settings > Reset: Reset Schedule and Preferences | Reset Registration | Reset All. Source: support.ecobee.com 'Resetting your ecobee thermostat'."
   },
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Flame (or Auto) icon with an exclamation mark",
@@ -11892,6 +12300,17 @@ const THERMOSTATS = [
     "code": "Aux Heat Runtime Alert / Aux Outdoor Temp Alert / Low-High Temp Alert / Low-High Humidity Alert",
     "meaning": "Same alert set as Premium",
     "action": "See Premium family entry"
+   },
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -11981,6 +12400,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "The PEK works with the ecobee3, ecobee3 lite, ecobee4, SmartThermostat with voice control, Premium, Enhanced, and (sold separately) Lite and Essential - not with the EMS, EMS Si, Smart or Smart Si, and not on dual-transformer or heat-only systems. It needs at least 4 wires, because it combines G and Y to free a conductor for C.",
+    "source": "ecobee Thermostat PEK Compatibility (support.ecobee.com article)"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [
    {
@@ -12196,7 +12621,29 @@ const THERMOSTATS = [
    "installerTest": "Not in the wiring guide.",
    "factoryReset": ""
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "For a black screen, measure Rc (or R) to C at the ecobee: it should read 24-29 VAC, and on models with Rc and Rh the R wire must be in Rc (only the ecobee3 can power on from either). Clicking with no power-up usually means low Rc-C voltage from a spare wire used as C that is not landed on C at the equipment - try another conductor or the PEK. Also check the 3 or 5 amp furnace board fuse and replace it with the same rating.",
+    "source": "How to troubleshoot ecobee thermostat power issues (support.ecobee.com article); Troubleshooting ecobee Clicking Noise and Power Issue (support.ecobee.com article)"
+   },
+   {
+    "text": "The most common install cause of wrong temperature or humidity readings is an open hole behind the ecobee letting wall-cavity air reach the sensors. Pull the backplate, push excess wire into the wall and seal the hole flat with plumber's putty - putty on top of the terminal plate, or wire left bunched behind it, can make it worse. With SmartSensors, the display shows the average of the participating sensors.",
+    "source": "My ecobee temperature is inaccurate (support.ecobee.com article)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "Calibrating (after a reboot)",
+    "meaning": "The thermostat rebooted after losing 24 VAC power (frequent power loss, or 'calibrating' after a reboot).",
+    "action": "Find what is cutting 24 VAC: float switch or condensate pump in cooling, furnace high limit in heating, or an undersized transformer on boilers / zone valves (add a separate 24 V 40 VA transformer).",
+    "techTips": [
+     {
+      "text": "An ecobee has no internal power source, so a reboot or 'calibrating' screen means the 24 VAC dropped out - gaps in the System Monitor runtime data show when. In cooling look for a clogged condensate line tripping a float switch or pump; in heat look for a furnace tripping its high limit (dirty filter, blocked intake, carbon build-up). Most boilers, and zone-valve systems with more than 3 zones, need a separate 24 V 40 VA transformer for the ecobee.",
+      "source": "Why is my ecobee thermostat rebooting? (support.ecobee.com article)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [],
   "tips": [
    "Reminders & Alerts defaults (Menu > Reminders and Alerts > Preferences): HVAC maintenance 6 months, filter 3 months, low temp alert 50 F, high temp alert 92 F; heating/cooling failure alerts enabled."
@@ -12319,7 +12766,25 @@ const THERMOSTATS = [
    "installerTest": "Settings > Installation Settings > Test Equipment - turns each device on/off; compressor protection and minimum runtimes are NOT enforced; everything turns off when you exit.",
    "factoryReset": "Reset HVAC Equipment Settings (equipment only) or Reset All Settings (includes user settings and registration). Reboot with the reset button through the hole at the bottom left."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "The Smart Si installer code is pre-programmed to 3262, and its 'Min Outdoor Temp' compressor lockout only works with an internet connection. With 'Allow HP with Aux Heat' = Yes, aux joins the heat pump after 30 minutes if the setpoint isn't met; with No, the heat pump runs up to 2 hours, then shuts off and aux takes over.",
+    "source": "Smart SI: Installation and use (support.ecobee.com article)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "Heating/Cooling alert (system not responding)",
+    "meaning": "The system did not respond to a call for heat or cool.",
+    "action": "Test each stage with Installation Settings > Test Equipment, check the equipment, and confirm Enable Heating/Cooling Alerts is on.",
+    "techTips": [
+     {
+      "text": "The Smart Si raises a heating/cooling alert (on screen, in the web portal and by email) when the system does not respond to a call for heat or cool. It can be turned off under Enable Heating/Cooling Alerts, so check that setting before assuming a quiet system is healthy.",
+      "source": "Smart SI: Installation and use (support.ecobee.com article)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [],
   "tips": [],
   "manuals": [
@@ -12456,7 +12921,63 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "Not documented in the Classic manuals on disk - neither sensi-classic-install.pdf nor sensi-classic-manual-operation.pdf contains an About Thermostat / Reset menu item (the Configuration Menu Items Reference ends at Wireless Radio). The About Thermostat > Factory Reset button described in the Sensi Touch/Touch 2 manuals must not be assumed to exist here."
   },
-  "diagnostics": [],
+  "diagnostics": [
+   {
+    "code": "E5 (ES) Call for Service",
+    "meaning": "Internal protector in the thermostat's power supply has tripped (surge or miswiring); control may be off by as much as 10 F.",
+    "action": "Contact Sensi technical support. Temporary workaround: power off and move the C wire to L (or tape it off) - Wi-Fi is lost but the thermostat keeps controlling.",
+    "techTips": [
+     {
+      "text": "E5 means an internal protector in the Sensi's power supply has tripped, usually from a power surge (lightning) or miswiring at install, and control may drift up to 10 F from setpoint. Contact Sensi support (888-605-7131); as a stopgap, move the C wire to L (or tape it off) so the unit runs on batteries without Wi-Fi.",
+      "source": "E5 (ES) Call for Service Thermostat Error (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "Call for Service",
+    "meaning": "Voltage on the L diagnostic terminal, or the room moving the wrong way during an active heating/cooling call.",
+    "action": "Remove and isolate the L wire to confirm, then chase the equipment fault driving L - or troubleshoot no-heat/no-cool. E5 with Call for Service is a separate power-supply fault.",
+    "techTips": [
+     {
+      "text": "Any voltage on the L (diagnostic) terminal makes the Sensi show 'Call for Service', so remove the L wire and refit the thermostat to confirm; if the message clears, the equipment is signalling a fault worth a service call. Without L voltage, the message means the room kept falling while heating or rising while cooling.",
+      "source": "Call for Service (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "99F+ / -- room temperature / 255% humidity",
+    "meaning": "Internal temperature/humidity sensor failure.",
+    "action": "Contact Sensi support for a replacement thermostat.",
+    "techTips": [
+     {
+      "text": "A reading of 99 F or higher, only dashes for room temperature, or 255% humidity means the internal sensor has failed - contact Sensi support for a replacement. Readings off by only a few degrees are fixed with Temperature or Humidity Offset, or by resetting the thermostat to recalibrate.",
+      "source": "Call for Service - Inaccurate temperature or humidity reading (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "Loss of Heating / Loss of Cooling alert",
+    "meaning": "The home temperature moved the wrong way during an active call (heating: dropped 5 F).",
+    "action": "Check at a supply vent whether the equipment is running: troubleshoot the HVAC if not, check sizing or open doors if it is. Clean the sensor vents and check the wiring.",
+    "techTips": [
+     {
+      "text": "Loss of Heating fires when the home drops 5 F during an active heating call (Loss of Cooling is the cooling version), and the thermostat can't tell whether the equipment actually started. Feel a supply vent: conditioned air means the system runs but can't keep up (open doors or windows, sizing), while no air or room-temperature air means the equipment isn't answering the call; also check the side sensor vents are clean and every wire is tight.",
+      "source": "Smart Alert: Loss of Heating (sensi.copeland.com support article); Smart Alert: Loss of Cooling (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "No Wi-Fi icon",
+    "meaning": "The Wi-Fi radio is off: low batteries, a missing C wire on heat-only/cool-only/heat pump systems, or HVAC power interrupted.",
+    "action": "Replace the AA batteries and fix C-wire compatibility, check HVAC power (breakers, float switch, door panels), then reset and reconnect.",
+    "techTips": [
+     {
+      "text": "No Wi-Fi icon on the Sensi smart thermostat means low batteries (replace when the battery icon is half full) or a missing C wire - heat-only, cool-only and heat pump systems need C or the Sensi shuts Wi-Fi off after about 2 hours. HVAC trouble also cuts its power, so check breakers, clogged drain lines (float switch) and loose air-handler panels.",
+      "source": "Why is there no Wi-Fi icon on my thermostat? (sensi.copeland.com support article)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Cannot connect thermostat to Wi-Fi during setup",
@@ -12620,17 +13141,46 @@ const THERMOSTATS = [
    {
     "code": "'Call for Service' on the screen",
     "meaning": "1. Heating or cooling system is not able to heat/cool the space to within 5 degrees of the setpoint within 2 hours. 2. If '-' is displayed for the Room Temperature, a replacement thermostat is needed. 3. None of the buttons operate on the thermostat.",
-    "action": "1. See corrective action for 'No Heat' or 'No Cool'. 2. Replace thermostat. 3. Make sure keypad lockout is not turned on; if it is OFF, try resetting the thermostat (turn power to the system off, wait 5 seconds, turn it back on)."
+    "action": "1. See corrective action for 'No Heat' or 'No Cool'. 2. Replace thermostat. 3. Make sure keypad lockout is not turned on; if it is OFF, try resetting the thermostat (turn power to the system off, wait 5 seconds, turn it back on).",
+    "techTips": [
+     {
+      "text": "Without E5, Sensi says 'Call for Service' means heating or cooling is not responding: the thermostat shows heating while the room keeps dropping, or cooling while it keeps rising. If you can't switch into Heat or Cool, or the setpoint keeps jumping to 99 F, recheck the configuration and then contact Sensi support.",
+      "source": "Call for Service (sensi.copeland.com support article)"
+     }
+    ]
    },
    {
     "code": "'-' shown for Room Temperature",
     "meaning": "Replacement thermostat is needed",
-    "action": "Replace thermostat"
+    "action": "Replace thermostat",
+    "techTips": [
+     {
+      "text": "A reading of 99 F or higher, only dashes for room temperature, or 255% humidity means the internal sensor has failed - contact Sensi support for a replacement. Readings off by only a few degrees are fixed with Temperature or Humidity Offset, or by resetting the thermostat to recalibrate.",
+      "source": "Call for Service - Inaccurate temperature or humidity reading (sensi.copeland.com support article)"
+     }
+    ]
    },
    {
     "code": "Sensi Alert triggers (app/email alerts, not on-screen codes)",
     "meaning": "High temperature: above 99 deg F. Low temperature: below 45 deg F. High humidity: above 70%. Loss of heat/cool: temp goes up or down 5 deg F during a cycle.",
-    "action": "Investigate the equipment - these are the documented alert thresholds, not fault codes."
+    "action": "Investigate the equipment - these are the documented alert thresholds, not fault codes.",
+    "techTips": [
+     {
+      "text": "Loss of Heating fires when the home drops 5 F during an active heating call (Loss of Cooling is the cooling version), and the thermostat can't tell whether the equipment actually started. Feel a supply vent: conditioned air means the system runs but can't keep up (open doors or windows, sizing), while no air or room-temperature air means the equipment isn't answering the call; also check the side sensor vents are clean and every wire is tight.",
+      "source": "Smart Alert: Loss of Heating (sensi.copeland.com support article); Smart Alert: Loss of Cooling (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "Flashing X next to Wi-Fi icon",
+    "meaning": "Wi-Fi turned off to save batteries: no C wire on a heat-only, cool-only or heat pump system, or low batteries.",
+    "action": "Install a C wire (or check the batteries), then reset by removing the batteries until the screen blanks and reconnect to Wi-Fi.",
+    "techTips": [
+     {
+      "text": "On a Sensi Lite, a flashing 'X' next to the Wi-Fi icon means the thermostat is outside compatibility limits: heat-only, cool-only and heat pump systems need a C wire, and without one the Sensi turns Wi-Fi off after about 2 hours to save its AAA batteries. Low batteries also switch the Wi-Fi radio off.",
+      "source": "Why is there no Wi-Fi icon on my thermostat? (sensi.copeland.com support article)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -12972,7 +13522,30 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "About Thermostat menu > Factory Reset button. Clears all settings except HVAC Equipment settings and Temperature Limits."
   },
-  "diagnostics": [],
+  "diagnostics": [
+   {
+    "code": "99F+ / -- room temperature / 255% humidity",
+    "meaning": "Internal temperature/humidity sensor failure.",
+    "action": "Contact Sensi support for a replacement thermostat.",
+    "techTips": [
+     {
+      "text": "A reading of 99 F or higher, only dashes for room temperature, or 255% humidity means the internal sensor has failed - contact Sensi support for a replacement. Readings off by only a few degrees are fixed with Temperature or Humidity Offset, or by resetting the thermostat to recalibrate.",
+      "source": "Call for Service - Inaccurate temperature or humidity reading (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "Loss of Heating / Loss of Cooling alert",
+    "meaning": "The home temperature moved the wrong way during an active call (heating: dropped 5 F).",
+    "action": "Check at a supply vent whether the equipment is running: troubleshoot the HVAC if not, check sizing or open doors if it is. Clean the sensor vents and check the wiring.",
+    "techTips": [
+     {
+      "text": "Loss of Heating fires when the home drops 5 F during an active heating call (Loss of Cooling is the cooling version), and the thermostat can't tell whether the equipment actually started. Feel a supply vent: conditioned air means the system runs but can't keep up (open doors or windows, sizing), while no air or room-temperature air means the equipment isn't answering the call; also check the side sensor vents are clean and every wire is tight.",
+      "source": "Smart Alert: Loss of Heating (sensi.copeland.com support article); Smart Alert: Loss of Cooling (sensi.copeland.com support article)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Touchscreen is blank / won't turn on",
@@ -13205,7 +13778,41 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "About Thermostat menu shows model/MAC/firmware/support info and a Factory Reset button. Pressing it 'will change all settings back to default (except for the HVAC Equipment settings) and clear any HomeKit pairing so someone else can connect the Sensi Touch to Wi-Fi.'"
   },
-  "diagnostics": [],
+  "diagnostics": [
+   {
+    "code": "Call for Service",
+    "meaning": "Voltage on the L diagnostic terminal, or the room moving the wrong way during an active heating/cooling call.",
+    "action": "Remove and isolate the L wire to confirm, then chase the equipment fault driving L - or troubleshoot no-heat/no-cool. E5 with Call for Service is a separate power-supply fault.",
+    "techTips": [
+     {
+      "text": "Any voltage on the L (diagnostic) terminal makes the Sensi show 'Call for Service', so remove the L wire and refit the thermostat to confirm; if the message clears, the equipment is signalling a fault worth a service call. Without L voltage, the message means the room kept falling while heating or rising while cooling.",
+      "source": "Call for Service (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "99F+ / -- room temperature / 255% humidity",
+    "meaning": "Internal temperature/humidity sensor failure.",
+    "action": "Contact Sensi support for a replacement thermostat.",
+    "techTips": [
+     {
+      "text": "A reading of 99 F or higher, only dashes for room temperature, or 255% humidity means the internal sensor has failed - contact Sensi support for a replacement. Readings off by only a few degrees are fixed with Temperature or Humidity Offset, or by resetting the thermostat to recalibrate.",
+      "source": "Call for Service - Inaccurate temperature or humidity reading (sensi.copeland.com support article)"
+     }
+    ]
+   },
+   {
+    "code": "Loss of Heating / Loss of Cooling alert",
+    "meaning": "The home temperature moved the wrong way during an active call (heating: dropped 5 F).",
+    "action": "Check at a supply vent whether the equipment is running: troubleshoot the HVAC if not, check sizing or open doors if it is. Clean the sensor vents and check the wiring.",
+    "techTips": [
+     {
+      "text": "Loss of Heating fires when the home drops 5 F during an active heating call (Loss of Cooling is the cooling version), and the thermostat can't tell whether the equipment actually started. Feel a supply vent: conditioned air means the system runs but can't keep up (open doors or windows, sizing), while no air or room-temperature air means the equipment isn't answering the call; also check the side sensor vents are clean and every wire is tight.",
+      "source": "Smart Alert: Loss of Heating (sensi.copeland.com support article); Smart Alert: Loss of Cooling (sensi.copeland.com support article)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Cannot connect to Wi-Fi during setup",
@@ -22856,7 +23463,13 @@ const THERMOSTATS = [
    {
     "code": "WIFI IDLE (in WIFI SSID field)",
     "meaning": "Thermostat is not connected to WiFi",
-    "action": "Recommission thermostat to local WiFi via the Pro1 Connect App"
+    "action": "Recommission thermostat to local WiFi via the Pro1 Connect App",
+    "techTips": [
+     {
+      "text": "Pro1 Wi-Fi stats work only on 2.4 GHz 802.11b/g/n, so give the 2.4 and 5 GHz networks different names. If the stat is on the router but won't talk to the app, open ports 1883, 8883 and 443 (guest networks usually block 443); a stat over a year old may update itself on first connection before it appears in the app.",
+      "source": "Pro1 WIFI Facts - Wi-Fi Troubleshooting (pro1iaq.com)"
+     }
+    ]
    }
   ],
   "troubleshooting": [],
@@ -23022,7 +23635,13 @@ const THERMOSTATS = [
    {
     "code": "WIFI IDLE",
     "meaning": "Thermostat not connected to WiFi",
-    "action": "Recommission via Pro1 Connect App"
+    "action": "Recommission via Pro1 Connect App",
+    "techTips": [
+     {
+      "text": "Pro1 Wi-Fi stats work only on 2.4 GHz 802.11b/g/n, so give the 2.4 and 5 GHz networks different names. If the stat is on the router but won't talk to the app, open ports 1883, 8883 and 443 (guest networks usually block 443); a stat over a year old may update itself on first connection before it appears in the app.",
+      "source": "Pro1 WIFI Facts - Wi-Fi Troubleshooting (pro1iaq.com)"
+     }
+    ]
    }
   ],
   "troubleshooting": [],
@@ -23194,7 +23813,13 @@ const THERMOSTATS = [
    {
     "code": "WIFI IDLE (shown in WIFI SSID tech step)",
     "meaning": "Thermostat is not currently connected to WiFi",
-    "action": "Recommission via Pro1 Connect App"
+    "action": "Recommission via Pro1 Connect App",
+    "techTips": [
+     {
+      "text": "Pro1 Wi-Fi stats work only on 2.4 GHz 802.11b/g/n, so give the 2.4 and 5 GHz networks different names. If the stat is on the router but won't talk to the app, open ports 1883, 8883 and 443 (guest networks usually block 443); a stat over a year old may update itself on first connection before it appears in the app.",
+      "source": "Pro1 WIFI Facts - Wi-Fi Troubleshooting (pro1iaq.com)"
+     }
+    ]
    },
    {
     "code": "WIFI RESET",
@@ -23348,7 +23973,17 @@ const THERMOSTATS = [
    {
     "code": "WIFI indicator off",
     "meaning": "Not connected to WiFi",
-    "action": "Use the app/commissioning flow to reconnect, or check WIFI Menu SSID step for current status"
+    "action": "Use the app/commissioning flow to reconnect, or check WIFI Menu SSID step for current status",
+    "techTips": [
+     {
+      "text": "Pro1 Wi-Fi stats work only on 2.4 GHz 802.11b/g/n, so give the 2.4 and 5 GHz networks different names. If the stat is on the router but won't talk to the app, open ports 1883, 8883 and 443 (guest networks usually block 443); a stat over a year old may update itself on first connection before it appears in the app.",
+      "source": "Pro1 WIFI Facts - Wi-Fi Troubleshooting (pro1iaq.com)"
+     },
+     {
+      "text": "To clear a bad network on the T855iSH: MENU > Wi-Fi > NEXT until DELETE NETWORK, hold YES 3 s, then recommission. A legacy T855i (only 5 buttons under the door) uses MENU > Wi-Fi > hold TECH 3 s > YES.",
+      "source": "Pro1 Reset Wi-Fi (pro1iaq.com); Pro1 WIFI Facts - Wi-Fi Troubleshooting (pro1iaq.com)"
+     }
+    ]
    },
    {
     "code": "HON / dON flashing",
@@ -28774,6 +29409,20 @@ const THERMOSTATS = [
    "installerTest": "SYSTEM TEST (answer/9225726). During setup: 1) Choose 'Test Now' once it shows on the thermostat screen. 2) Choose a specific system function to test - Heating, Cooling, or Fan (options your system does not have are not shown); select Continue to go back to the Equipment menu. 3) The thermostat tells you what to look for, e.g. 'Radiators should be warming up' - go verify it. 4) Select 'Continue Testing' for systems slow to warm/cool (in-floor radiant can need 30 minutes or more). 5) Select Done if the system responds correctly, or Troubleshoot if there is a problem. If the display shows a code beginning with T (such as T03), use the Nest thermostat help codes article. AFTER SETUP, for the Nest Thermostat and Nest Learning Thermostat (4th gen): Open the Home app > tap Favorites or Devices > tap your thermostat > select Mode > pick Cool, Heat, or Fan > for heating turn the target temperature up until it turns orange, for cooling turn it down until it turns blue > wait about 5 minutes and check the air from the vents/radiators (30+ minutes for slow systems). NOTE: 'If it's too hot or cold to test your system, your thermostat may prevent you from testing a mode. This is to help prevent damage to your system.'",
    "factoryReset": "Google Home app: Home > Climate > your thermostat > Settings > Factory Reset. After the reset completes, go to the Home tab, tap Add > Device, and scan the device QR code (or tap Use setup code / Add a different way), then re-enter any wires connected to your thermostat. (answer/9244860)"
   },
+  "techTips": [
+   {
+    "text": "Google's Pro flyer maps each HVAC System Health Monitor alert to a likely cause. Cooling: 'A/C briefly lost power several times' = full condensate tank, failed pump, clogged drain or float switch; 'A/C ran longer than usual' = low charge, restricted airflow or iced coil; 'fails to cool... clicking noise' = startup capacitor or A/C fan. Heating: 'briefly stopped heating several times' = intermittent igniter or dirty safety sensor; 'fails to heat even while running' = dirty or faulty flame sensor or fan problem; 'furnace shuts down intermittently' = dirty filter, restrictive ductwork or fan; 'unexpected auxiliary heat usage' = weak heat pump compressor.",
+    "source": "Google Nest Pro flyer, Install Nest thermostats for service and repair (HVAC System Health Monitor), Q3 2026"
+   },
+   {
+    "text": "Software 2.4 (30 Apr 2026) added on-device setup, multi-stage heat pump support, and on-device advanced settings and equipment reconfiguration, so every essential setting is now on the thermostat itself; 2.3 (30 Oct 2025) added an on-device system test. Boxes with the gear icon on the back get the latest software out of the box.",
+    "source": "Learn about Nest thermostat software update history (Google Nest Help, support.google.com); Google Nest Pro flyer, Identifying 2.4 on the Nest Learning Thermostat (4th gen), Q3 2026"
+   },
+   {
+    "text": "Nest only enforces heat-pump compressor and aux-heat lockout temperatures while the thermostat is on Wi-Fi, because it needs the outdoor temperature. Offline, aux heat comes on whenever the heat pump takes longer than expected to reach the target, so check Wi-Fi before chasing 'aux heat running too much'.",
+    "source": "Google Nest Pro, Nest Learning Thermostat (4th gen) Pro installation and configuration guide, Troubleshooting, Q2 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Wire shown as 'Unspecified' (Google Home app) / 'Unconfigured' (thermostat or Nest app)",
@@ -29018,7 +29667,13 @@ const THERMOSTATS = [
    {
     "code": "N260 / N410",
     "meaning": "A C wire or the Nest Power Connector is recommended for stable power",
-    "action": "Install C wire or Nest Power Connector; if installing the Power Connector and this shows up, confirm the HVAC equipment cover is fully closed (safety switch)"
+    "action": "Install C wire or Nest Power Connector; if installing the Power Connector and this shows up, confirm the HVAC equipment cover is fully closed (safety switch)",
+    "techTips": [
+     {
+      "text": "In Settings > Equipment > Power Info, VIN should be 24-42 V (a peak value - divide by 1.414 for RMS and confirm with a meter), and Iin 150-300 mA with a C wire or Power Connector, or 20-300 mA without and never below 20 mA; the letter after Iin shows the source (P = Power Connector working, W/Y = sharing on that wire, A = active wire). The battery enters Power Saver below 3.8 V and drops Wi-Fi below 3.6 V - fix with a Power Connector (one per zone thermostat), a spare wire as C, a resistor on Y/W or a new C wire.",
+      "source": "Google Nest Pro, Nest Learning Thermostat (4th gen) Pro installation and configuration guide, Troubleshooting - Power Sharing, Q2 2026"
+     }
+    ]
    },
    {
     "code": "N261 / N411",
@@ -29195,7 +29850,7 @@ const THERMOSTATS = [
    "4th gen replaces the single star terminal with AQ+ / AQ- for 1- or 2-wire accessories.",
    "Google's own pages disagree on what the star and AQ terminals accept - both variants are listed in the terminal notes; confirm in the Google Home app.",
    "Solid-core 18-22 AWG only; stranded wire is not supported.",
-   "There is no on-thermostat installer menu - all configuration is in the Google Home app."
+   "Software 2.4 and later (30 Apr 2026) has on-device setup, advanced settings and equipment reconfiguration (Settings > Equipment > Advanced Settings); earlier software had no on-thermostat installer menu - all configuration was in the Google Home app."
   ],
   "manuals": [
    {
@@ -29362,6 +30017,20 @@ const THERMOSTATS = [
    "installerTest": "Settings > Equipment > Continue > Test. Runs Heating/Cooling/Fan checks; allow 5+ minutes for forced air, 30+ minutes for radiant systems. T-series codes (T01-T12) report faults found.",
    "factoryReset": "Settings > Reset on the thermostat, choose reset option (removes personal settings; must set up again in app). Manual reset if frozen: remove display from base, remove batteries/power source is internal so instead hold ring/press-hold per on-device prompt, then reseat display until it clicks - may lose unsaved data."
   },
+  "techTips": [
+   {
+    "text": "Google's Pro flyer maps each HVAC System Health Monitor alert to a likely cause. Cooling: 'A/C briefly lost power several times' = full condensate tank, failed pump, clogged drain or float switch; 'A/C ran longer than usual' = low charge, restricted airflow or iced coil; 'fails to cool... clicking noise' = startup capacitor or A/C fan. Heating: 'briefly stopped heating several times' = intermittent igniter or dirty safety sensor; 'fails to heat even while running' = dirty or faulty flame sensor or fan problem; 'furnace shuts down intermittently' = dirty filter, restrictive ductwork or fan; 'unexpected auxiliary heat usage' = weak heat pump compressor.",
+    "source": "Google Nest Pro flyer, Install Nest thermostats for service and repair (HVAC System Health Monitor), Q3 2026"
+   },
+   {
+    "text": "Nest only enforces heat-pump compressor and aux-heat lockout temperatures while the thermostat is on Wi-Fi, because it needs the outdoor temperature. Offline, aux heat comes on whenever the heat pump takes longer than expected to reach the target, so check Wi-Fi before chasing 'aux heat running too much'.",
+    "source": "Google Nest Pro, Nest Learning Thermostat (3rd gen) Pro installation guide, Troubleshooting, Q4 2024"
+   },
+   {
+    "text": "Software 5.9.4-5 (10 Oct 2019) added 'short cycling and power loss mitigation' for the 1st and 2nd gen Nest Learning Thermostat only. On a 1st or 2nd gen unit that short-cycles or chatters, confirm it has updated before blaming the equipment.",
+    "source": "Learn about Nest thermostat software update history (Google Nest Help, support.google.com)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "E1",
@@ -29536,7 +30205,13 @@ const THERMOSTATS = [
    {
     "code": "N260",
     "meaning": "C wire or Nest Power Connector recommended",
-    "action": "Install C wire or Power Connector; if installing Power Connector, confirm HVAC cover is closed"
+    "action": "Install C wire or Power Connector; if installing Power Connector, confirm HVAC cover is closed",
+    "techTips": [
+     {
+      "text": "In Technical Details, Voc and VIN should be 29-42 V, and Iin about 200 mA with a C wire or 20-40 mA without; the Iin letter shows the source ((a) sharing on active Y, (i) on an inactive wire, (c) C wire present, (o)/(x) not sharing - power lost or circuit incomplete), and no sharing happens in the first 90 s of a call. Below 3.6 V the battery shuts off Wi-Fi and the screen, 3.7 V is needed to install updates, and Google lists E1, E297, N260 and N261 as symptoms of weak power sharing.",
+      "source": "Google Nest Pro, Nest Learning Thermostat (3rd gen) Pro installation guide, Troubleshooting - Power Sharing, Q4 2024"
+     }
+    ]
    },
    {
     "code": "N261",
@@ -29562,6 +30237,28 @@ const THERMOSTATS = [
     "code": "M19",
     "meaning": "Battery low - replace/charge",
     "action": "Charge via micro-USB or wait for power-stealing to recharge"
+   },
+   {
+    "code": "E297",
+    "meaning": "Power-related code listed among the symptoms of insufficient power sharing (no C wire; the system cannot keep the battery charged).",
+    "action": "Check the Technical Details Iin reading, then add a C wire or Nest Power Connector (or use a spare wire as C, or a resistor on Y/W).",
+    "techTips": [
+     {
+      "text": "Google's 3rd gen Pro guide lists E297 with E1, N260 and N261 as codes that appear when the system cannot deliver steady power for power sharing. The fix is the same: a Power Connector, a spare wire as C, a resistor on Y/W, or a new C wire.",
+      "source": "Google Nest Pro, Nest Learning Thermostat (3rd gen) Pro installation guide, Troubleshooting - Power Sharing, Q4 2024"
+     }
+    ]
+   },
+   {
+    "code": "M15",
+    "meaning": "The thermostat can't connect to the Nest app or Wi-Fi (pairs with TD error codes in the app).",
+    "action": "Check the Nest service status and home internet, test with a phone hotspot, restart the router and fix router settings (IPv6/multicast, no AP isolation, separate SSIDs); reset the thermostat and re-add it.",
+    "techTips": [
+     {
+      "text": "M15 (often with a TD code such as TD008 or TD013 in the app) means the thermostat can't reach the Nest app or Wi-Fi. Google's quick test is a phone hotspot: if the thermostat joins it, the home router settings are the cause - enable IPv6 and multicast, turn off wireless/AP isolation, give the 2.4 and 5 GHz bands different names and relax firewall or parental controls.",
+      "source": "Fix Nest thermostat connection to Nest app or Wi-Fi (TD error codes) (Google Nest Help, support.google.com)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -29868,6 +30565,16 @@ const THERMOSTATS = [
    "installerTest": "SYSTEM TEST (answer/9225726). During setup: choose 'Test Now' when it appears on the thermostat screen, pick Heating, Cooling, or Fan, read the on-screen 'what to look for' prompt (e.g. 'Radiators should be warming up'), select 'Continue Testing' for slow systems, then Done (or Troubleshoot). After setup: Open the Home app > tap Favorites or Devices > tap your thermostat > select Mode > pick Cool, Heat, or Fan > for heating turn the target temperature up until it turns orange, for cooling turn it down until it turns blue > wait about 5 minutes (30+ minutes for radiant) and check the vents/radiators. If it is too hot or cold outside, the thermostat may block that mode's test to prevent equipment damage. Codes beginning with T (e.g. T03) point to the Nest thermostat help codes article. To review wires on this model: go to the Equipment menu on the thermostat - unconfigured wires are shown in orange, wires recognized by the app are blue. (answer/9244860)",
    "factoryReset": "Google Home app: Home > Climate > your thermostat > Settings > Factory Reset; then re-add the device and re-enter the wires. (answer/9244860)"
   },
+  "techTips": [
+   {
+    "text": "Google's Pro flyer maps each HVAC System Health Monitor alert to a likely cause. Cooling: 'A/C briefly lost power several times' = full condensate tank, failed pump, clogged drain or float switch; 'A/C ran longer than usual' = low charge, restricted airflow or iced coil; 'fails to cool... clicking noise' = startup capacitor or A/C fan. Heating: 'briefly stopped heating several times' = intermittent igniter or dirty safety sensor; 'fails to heat even while running' = dirty or faulty flame sensor or fan problem; 'furnace shuts down intermittently' = dirty filter, restrictive ductwork or fan; 'unexpected auxiliary heat usage' = weak heat pump compressor.",
+    "source": "Google Nest Pro flyer, Install Nest thermostats for service and repair (HVAC System Health Monitor), Q3 2026"
+   },
+   {
+    "text": "Nest only enforces heat-pump compressor and aux-heat lockout temperatures while the thermostat is on Wi-Fi, because it needs the outdoor temperature. Offline, aux heat comes on whenever the heat pump takes longer than expected to reach the target, so check Wi-Fi before chasing 'aux heat running too much'.",
+    "source": "Google Nest Pro, Nest Thermostat Pro installation and configuration guide, Troubleshooting, Q1 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Wire shown in ORANGE in the thermostat's Equipment menu",
@@ -29932,7 +30639,13 @@ const THERMOSTATS = [
    {
     "code": "N260 / N410",
     "meaning": "C wire or Nest Power Connector recommended",
-    "action": "Install C wire or Power Connector; confirm HVAC cover closed if installing Power Connector"
+    "action": "Install C wire or Power Connector; confirm HVAC cover closed if installing Power Connector",
+    "techTips": [
+     {
+      "text": "In Settings > Equipment > Power Info, VIN should be 24-42 V (peak) and Iin 150-300 mA with a C wire or Power Connector, or 20-300 mA without; 'P' after Iin confirms the Power Connector is working. Google says a C wire or Power Connector MUST be used on zoned systems, heat pumps and heat-only or cool-only systems. Without enough power, expect Delayed/Starts in messages, chattering, short cycling and N260.",
+      "source": "Google Nest Pro, Nest Thermostat Pro installation and configuration guide, Troubleshooting - Power Sharing, Q1 2026"
+     }
+    ]
    },
    {
     "code": "N261 / N411",
@@ -29957,7 +30670,57 @@ const THERMOSTATS = [
    {
     "code": "M19",
     "meaning": "Battery low",
-    "action": "Replace 2 AAA batteries or ensure wiring is charging the unit"
+    "action": "Replace the 2 AAA batteries - they are not rechargeable (Google Nest Pro guide). Wiring power does not recharge them: with a C wire or Power Connector they last 2-4 years, without one as little as 3-6 months if power sharing is not sufficient",
+    "techTips": [
+     {
+      "text": "The Nest Thermostat's included batteries are not rechargeable. Google's Pro guide says they last 2-4 years with a C wire or Power Connector, but may last only 3-6 months without one if power sharing is not sufficient.",
+      "source": "Google Nest Pro, Nest Thermostat Pro installation and configuration guide, Power requirements, Q1 2026"
+     }
+    ]
+   },
+   {
+    "code": "E297 (after a Power Connector install)",
+    "meaning": "Error after installing the Nest Power Connector: the thermostat software is older than 1.1.",
+    "action": "Update the thermostat to software 1.1 or later (Settings > Version > Update, over Wi-Fi or a hotspot), then run the Power Connector Power Test.",
+    "techTips": [
+     {
+      "text": "E297 on a Nest Thermostat after a Power Connector install, or no Power Connector entry under Settings > Equipment, means the thermostat needs software 1.1 or later. Update it under Settings > Version > Update over Wi-Fi (a phone hotspot works if the home has none), then run Settings > Equipment > Power Connector > Power Test and confirm the connector is detected.",
+      "source": "Google Nest Pro, Nest Power Connector Pro installation guide, Troubleshooting, 2022"
+     }
+    ]
+   },
+   {
+    "code": "E197",
+    "meaning": "Power error on the Nest Thermostat (no C wire / not enough power), listed alongside N260/N261.",
+    "action": "Install a C wire or the Nest Power Connector, then run the Power Test (Settings > Equipment > Power Connector).",
+    "techTips": [
+     {
+      "text": "Google lists E197, N260 and N261 as power errors a Nest Thermostat may show before a Power Connector is installed. All three clear once a Power Connector or a C wire is correctly installed.",
+      "source": "Google Nest Pro, Nest Power Connector Pro installation guide, Troubleshooting, 2022"
+     }
+    ]
+   },
+   {
+    "code": "M21",
+    "meaning": "Software update problem on the Nest Thermostat.",
+    "action": "Restart it if stuck over 15 minutes; fix 'No network', or 'Add account to check for updates' by removing and re-adding the thermostat in the Google Home app ('Already installed').",
+    "techTips": [
+     {
+      "text": "Restart a Nest Thermostat that is stuck for more than 15 minutes during a software update. 'Unable to check' is a Nest service issue and 'No network' means it is off Wi-Fi; 'Add account to check for updates' means no Google account is linked - remove and re-add it in the Google Home app, choosing 'Already installed'.",
+      "source": "Nest Thermostat unable to update software (Google Nest Help, support.google.com)"
+     }
+    ]
+   },
+   {
+    "code": "M15",
+    "meaning": "The thermostat can't connect to the Nest app or Wi-Fi (pairs with TD error codes in the app).",
+    "action": "Check the Nest service status and home internet, test with a phone hotspot, restart the router and fix router settings (IPv6/multicast, no AP isolation, separate SSIDs); reset the thermostat and re-add it.",
+    "techTips": [
+     {
+      "text": "M15 (often with a TD code such as TD008 or TD013 in the app) means the thermostat can't reach the Nest app or Wi-Fi. Google's quick test is a phone hotspot: if the thermostat joins it, the home router settings are the cause - enable IPv6 and multicast, turn off wireless/AP isolation, give the 2.4 and 5 GHz bands different names and relax firewall or parental controls.",
+      "source": "Fix Nest thermostat connection to Nest app or Wi-Fi (TD error codes) (Google Nest Help, support.google.com)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -30152,6 +30915,12 @@ const THERMOSTATS = [
    "installerTest": "Settings > Equipment > Continue > Test on the thermostat; tests Heating/Cooling/Fan; allow 5+ minutes typical, longer for radiant. T-codes report faults found.",
    "factoryReset": "Settings > Reset on thermostat, choose reset option (removes personal settings, must set up again in app)."
   },
+  "techTips": [
+   {
+    "text": "Google's Pro flyer maps each HVAC System Health Monitor alert to a likely cause. Cooling: 'A/C briefly lost power several times' = full condensate tank, failed pump, clogged drain or float switch; 'A/C ran longer than usual' = low charge, restricted airflow or iced coil; 'fails to cool... clicking noise' = startup capacitor or A/C fan. Heating: 'briefly stopped heating several times' = intermittent igniter or dirty safety sensor; 'fails to heat even while running' = dirty or faulty flame sensor or fan problem; 'furnace shuts down intermittently' = dirty filter, restrictive ductwork or fan; 'unexpected auxiliary heat usage' = weak heat pump compressor.",
+    "source": "Google Nest Pro flyer, Install Nest thermostats for service and repair (HVAC System Health Monitor), Q3 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "E1",
@@ -30262,6 +31031,17 @@ const THERMOSTATS = [
     "code": "W1-W5",
     "meaning": "Wi-Fi connection failures",
     "action": "Adjust router settings; re-run Wi-Fi setup"
+   },
+   {
+    "code": "M15",
+    "meaning": "The thermostat can't connect to the Nest app or Wi-Fi (pairs with TD error codes in the app).",
+    "action": "Check the Nest service status and home internet, test with a phone hotspot, restart the router and fix router settings (IPv6/multicast, no AP isolation, separate SSIDs); reset the thermostat and re-add it.",
+    "techTips": [
+     {
+      "text": "M15 (often with a TD code such as TD008 or TD013 in the app) means the thermostat can't reach the Nest app or Wi-Fi. Google's quick test is a phone hotspot: if the thermostat joins it, the home router settings are the cause - enable IPv6 and multicast, turn off wireless/AP isolation, give the 2.4 and 5 GHz bands different names and relax firewall or parental controls.",
+      "source": "Fix Nest thermostat connection to Nest app or Wi-Fi (TD error codes) (Google Nest Help, support.google.com)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -30437,7 +31217,13 @@ const THERMOSTATS = [
    {
     "code": "N260 (during Power Connector install)",
     "meaning": "C wire/power source not yet providing enough power - commonly because the HVAC equipment cover is open (safety switch)",
-    "action": "Confirm the HVAC equipment cover is fully closed before restoring power"
+    "action": "Confirm the HVAC equipment cover is fully closed before restoring power",
+    "techTips": [
+     {
+      "text": "If N260/N261 remains after the install, check the Power Connector location and wiring: with more than one thermostat it belongs at the zone controller, one per zone thermostat, not at the equipment. 'No power' after install (E298 on the Nest Thermostat, E73/E74 on NLT 3rd gen, E196 on the Thermostat E) usually means an open door switch, power still off, or a bad fuse or connection; neither the connector nor Nest thermostats work on millivolt systems (about 0.5 VDC across Th/Tp).",
+      "source": "Google Nest Pro, Nest Power Connector Pro installation guide, Troubleshooting, 2022"
+     }
+    ]
    },
    {
     "code": "Wiring error shown right after install",
@@ -30618,6 +31404,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "Software 5.9.4-5 (10 Oct 2019) added 'short cycling and power loss mitigation' for the 1st and 2nd gen Nest Learning Thermostat only. On a 1st or 2nd gen unit that short-cycles or chatters, confirm it has updated before blaming the equipment.",
+    "source": "Learn about Nest thermostat software update history (Google Nest Help, support.google.com)"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [],
   "tips": [
@@ -30776,6 +31568,12 @@ const THERMOSTATS = [
    "installerTest": "No dedicated installer/commissioning test mode is documented on amazon.com. The closest documented diagnostic actions are: (1) a soft 'restart' - detach the faceplate from the wall plate, wait a few seconds, reattach; (2) a 'force update' - remove the faceplate and reattach after 30 seconds if the display is stuck on 'SEt' with a blinking yellow light (device installing firmware); (3) checking the Alexa app's 'Connected wire map' against physical wiring.",
    "factoryReset": "PARTIAL reset (keeps HVAC/wiring configuration, clears connectivity/account data): on the thermostat, press and hold Up-Temperature + middle Mode buttons together for 10 seconds until 'rEs' appears, then press and hold the middle Mode button until the device resets after a 5-second countdown; a red exclamation mark appears afterward prompting re-setup via the Alexa app. FULL FACTORY reset (erases everything including HVAC configuration and device settings): press and hold Up-Temperature + Down-Temperature + Mode buttons together for 10 seconds until 'rEs' appears, then press and hold the middle Mode button until 'sET' appears after a 5-second countdown; you must also manually remove the device from the Alexa app (Devices > Thermostat > Settings > Delete/Remove) before re-adding it."
   },
+  "techTips": [
+   {
+    "text": "Remote temperature sensing works with the Echo (4th gen), Echo Dot (5th gen), Echo Dot with Clock (5th gen) and Amazon Smart Air Quality Monitor, and a sensor only appears in the Alexa app if it was active in the last 90 days, is on the same Amazon account, and the thermostat is set to Heat, Cool or Auto. Detaching and refitting the faceplate makes the thermostat pull the latest software; reset a misbehaving sensor by unplugging it for 10 minutes, and keep it out of sun, vents and dead-air spots.",
+    "source": "Troubleshoot Amazon Temperature Sensors for Smart Thermostat (amazon.com help)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "SEt (display text)",
@@ -31104,6 +31902,16 @@ const THERMOSTATS = [
    "installerTest": "SYSTEM TEST option appears as step 20 in the SETUP menu list; selecting it and running shows 'SYSTEM TEST (RUNNING)' on the display.",
    "factoryReset": "In the ALL ICONS menu (hold MODE + COOLER 5s), the reset submenu shows WIFI RESET, ACCOUNT RESET, and FACTORY RESET, each performed by press-and-hold FAN."
   },
+  "techTips": [
+   {
+    "text": "Daikin ONE thermostats (DTST-LTE-LA-A, DTST-ONE-ADA-A, DTST-TOU-A, DTST-TOU-ADA-A, DTST-CWBSA-NI-A) are not compatible with the CTX/CTXV/FTXV/FTKF/FTXF/FTXQ ductless wall-mounts listed in the TSB - if one communicates fine, leave it. If the wall-mount ignores commands and its LED flashes with no error code, replace the Daikin ONE with a BRC073A6, keeping the KRP067A41E adapter and changing the cable to BRCW901A03/A08 or DACA-BRCW901P10/P25.",
+    "source": "Daikin TSB D-GN-MS-0086, Update on TSB D-GN-MS-0084 - Incompatibility of Daikin ONE Thermostats with Certain Ductless Wall-Mount Units, Sep 2025"
+   },
+   {
+    "text": "An OTA pushed from 7/14/2025 improves mini/multi-split defrost logic when a Daikin ONE or ONE lite controls the unit. Connect the thermostat to Wi-Fi (a phone hotspot works) and confirm it has the latest software; mini-splits without a Daikin ONE don't need it.",
+    "source": "Daikin TSB D-GN-OT-0081, Daikin ONE Defrost logic improvement: Over-The-Air Update, Jul 2025"
+   }
+  ],
   "diagnostics": [
    {
     "code": "PWR LED flashing green (on S21 translation adaptor)",
@@ -31249,6 +32057,12 @@ const THERMOSTATS = [
    "installerTest": "Same System Test / Charge Verification Mode / Refrigerant Leak Test / Optional Tests / Error History as One+ (shared v3.9 commissioning menu).",
    "factoryReset": "Same as One+: available from the welcome screen's 'setup options'."
   },
+  "techTips": [
+   {
+    "text": "Daikin ONE thermostats (DTST-LTE-LA-A, DTST-ONE-ADA-A, DTST-TOU-A, DTST-TOU-ADA-A, DTST-CWBSA-NI-A) are not compatible with the CTX/CTXV/FTXV/FTKF/FTXF/FTXQ ductless wall-mounts listed in the TSB - if one communicates fine, leave it. If the wall-mount ignores commands and its LED flashes with no error code, replace the Daikin ONE with a BRC073A6, keeping the KRP067A41E adapter and changing the cable to BRCW901A03/A08 or DACA-BRCW901P10/P25.",
+    "source": "Daikin TSB D-GN-MS-0086, Update on TSB D-GN-MS-0084 - Incompatibility of Daikin ONE Thermostats with Certain Ductless Wall-Mount Units, Sep 2025"
+   }
+  ],
   "diagnostics": [
    {
     "code": "1E/1F/20/21/22",
@@ -31449,6 +32263,20 @@ const THERMOSTATS = [
    "installerTest": "System Optimization menu offers: System Test (required on inverter units before setup can complete; incomplete test shows code '11' on the equipment's 7-segment display, which clears once the test passes), Charge Verification Mode (steady-state run for gauge charging, ~1-2 hrs), Refrigerant Leak Test (status messages include: 1 Outdoor Temp out of range-use gauges, 2 System stabilizing, 3 Outdoor fan speed not in range, 4 Compressor speed not in range, 5 Indoor SH not in range, 6 In range - SubCool = X, 7 SC in range - confirming), Optional Tests (Cooling/Fan/Heat Pump Heat/Gas Heat/Electric Heat/Pump Down - each Run/Stop), and Error History (color-coded white=non-critical, yellow/critical).",
    "factoryReset": "From the initial welcome screen, 'setup options' includes a factory reset option (exact on-screen path per the v3.9 commissioning menu outline: welcome > setup options > factory reset)."
   },
+  "techTips": [
+   {
+    "text": "Daikin ONE thermostats (DTST-LTE-LA-A, DTST-ONE-ADA-A, DTST-TOU-A, DTST-TOU-ADA-A, DTST-CWBSA-NI-A) are not compatible with the CTX/CTXV/FTXV/FTKF/FTXF/FTXQ ductless wall-mounts listed in the TSB - if one communicates fine, leave it. If the wall-mount ignores commands and its LED flashes with no error code, replace the Daikin ONE with a BRC073A6, keeping the KRP067A41E adapter and changing the cable to BRCW901A03/A08 or DACA-BRCW901P10/P25.",
+    "source": "Daikin TSB D-GN-MS-0086, Update on TSB D-GN-MS-0084 - Incompatibility of Daikin ONE Thermostats with Certain Ductless Wall-Mount Units, Sep 2025"
+   },
+   {
+    "text": "An OTA pushed from 7/14/2025 improves mini/multi-split defrost logic when a Daikin ONE or ONE lite controls the unit. Connect the thermostat to Wi-Fi (a phone hotspot works) and confirm it has the latest software; mini-splits without a Daikin ONE don't need it.",
+    "source": "Daikin TSB D-GN-OT-0081, Daikin ONE Defrost logic improvement: Over-The-Air Update, Jul 2025"
+   },
+   {
+    "text": "Some Daikin communicating air handlers and furnaces have no 4-pin Phoenix connector for 1, 2, R, C, and the One+ didn't ship with one: order part F043067900S (free, reference DTB-RES-1904). On boards with a factory 9-pin connector you can instead remove the red mistake-proofing clip and move that connector two positions left so it covers 1, 2, R, C.",
+    "source": "Daikin Technical Bulletin DTB-RES-1904, Phoenix Plug for Communicating Systems Using the Daikin One+ Smart Thermostat, Jun 2019"
+   }
+  ],
   "diagnostics": [
    {
     "code": "02",
@@ -32716,6 +33544,12 @@ const THERMOSTATS = [
    "installerTest": "System Test: local SETUP step 20, hold FAN ~2s to start, runs ~15 minutes, cannot be stopped mid-test. Charge Verification: drop cooling setpoint to ~50F to force max-speed cooling, then weigh in charge per the outdoor unit's charging chart while monitoring subcool with gauges/temperature clamp.",
    "factoryReset": "Not separately documented for GTST in the sources reviewed - see gaps (a shared-platform reset flow was found under a mislabeled document, see Daikin One Lite family in this file for the WIFI RESET / ACCOUNT RESET / FACTORY RESET button sequence, which was NOT independently confirmed to be verbatim identical on GTST)."
   },
+  "techTips": [
+   {
+    "text": "Some GTST thermostats report indoor temperature wrongly, which prevents proper conditioning; the fix is firmware V3.5.8, pushed automatically to units on Wi-Fi (offline units can update over a phone hotspot). Check the version with Mode + Down Arrow held 5 s, then Mode to the 'Version Ud' screen; holding Fan 2 s there starts the update.",
+    "source": "Daikin TSB G-GN-PC-0066, GTST-CW-WH-A Firmware Update, Feb 2025"
+   }
+  ],
   "diagnostics": [
    {
     "code": "11",
@@ -34098,12 +34932,24 @@ const THERMOSTATS = [
    {
     "code": "29 / 30",
     "meaning": "Over/Low Temperature Protection (same 90F/40F thresholds as S40)",
-    "action": "See S40 family entry"
+    "action": "See S40 family entry",
+    "techTips": [
+     {
+      "text": "The LennoxPROs lookup for 29 says installer test mode bypasses the lockout and keeps cooling with the other safeties still active, stopping for mechanical safety alerts such as pressure trips - a technician should be on site. The thermostat shows '– –' when indoor temperature is above 99°F. (The lookup also says 29 locks out cooling and heating, while Lennox's alert code guide 100017 and this card say only heating - the sources conflict.)",
+      "source": "LennoxPROs Error Code Lookup, alert code 29 (lennoxpros.com, public)"
+     }
+    ]
    },
    {
     "code": "105",
     "meaning": "Wiring Issue / Communication Problem",
-    "action": "Same 2-step troubleshooting sequence as S40"
+    "action": "Same 2-step troubleshooting sequence as S40",
+    "techTips": [
+     {
+      "text": "Lennox's step 2 for a 105 that keeps coming back: measure each wire in AC mode to C on the board for induced voltage - 0.3 VAC is not an issue, up to 0.7 VAC gives moderate success, up to 1.2 VAC only occasional success, and over 1.2 VAC must be fixed. Step 3 is new wiring: 18/2 for R and C plus shielded 18-22/2 for i+/i- with the shield on indoor C only, or separate unshielded 2-conductor runs.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
    },
    {
     "code": "126",
@@ -34114,6 +34960,116 @@ const THERMOSTATS = [
     "code": "130",
     "meaning": "Configuration Jumper Missing (non-communicating applications only) - Unit Type or Heat Stage jumper missing on the Smart Hub",
     "action": "Install the missing jumper; set to heat pump, furnace control, or air handler control as applicable"
+   },
+   {
+    "code": "35 - Incorrect Operation Of Device",
+    "meaning": "A communicating device didn't respond within 15 minutes to the thermostat's command to start or end heating or cooling - it may be disabled by a fault or lockout, or by electrical noise when the compressor contactor coil energizes.",
+    "action": "Communicating outdoor unit: wire a transient voltage suppressor across the compressor contactor coil terminals. Non-communicating outdoor unit: use TVS 89W72 across the contactor coil or across Y1 and C at the indoor control (Littelfuse 5KP43CA bidirectional).",
+    "techTips": [
+     {
+      "text": "If 35 shows up when the compressor contactor pulls in, suspect contactor-coil noise: Lennox's fix is a transient voltage suppressor (Littelfuse 5KP43CA, Lennox 89W72) across the contactor coil, or across Y1 and C at the indoor control on a non-communicating outdoor unit.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "36 / 37 - Heating / Cooling When Not Requested",
+    "meaning": "The system has been heating (36) or cooling (37) for at least 15 minutes without a demand.",
+    "action": "Run diagnostic mode and check it matches actual equipment operation, check for other alerts and why the equipment is running, then recycle power. Clears on its own.",
+    "techTips": [
+     {
+      "text": "36/37 means the equipment has been heating or cooling for at least 15 minutes without a demand. Run diagnostic mode (S30: dealer control center > diagnostics; S40: Service Support Center > Diagnostics > Select All > Start) and compare it with what the equipment is actually doing.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "38 / 39 - Not Heating / Not Cooling When Requested",
+    "meaning": "The system hasn't been able to start heating (38) or cooling (39) for more than 45 minutes; it goes offline for 60 minutes, then tries to restart.",
+    "action": "Run diagnostic mode and compare it with actual operation, check for other alert codes blocking operation, check the heating or cooling equipment, then recycle power.",
+    "techTips": [
+     {
+      "text": "38/39 means the system couldn't start heating or cooling for more than 45 minutes; it goes offline for 60 minutes, then tries to restart. Look for the equipment alert behind it before anything else.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "124 - Tstat Lost Communication To Smarthub",
+    "meaning": "The thermostat lost communication with a system component for more than 3 minutes; related operation stops until a heartbeat returns.",
+    "action": "Check and ohm the wiring between components and cycle power. Disconnect other components and check communication one at a time; with a float switch, use an isolation relay to break the common to the outdoor unit and remove the float switch from the circuit to test.",
+    "techTips": [
+     {
+      "text": "124 often traces to a miswired component or a float switch in the common: a miswired component can make another component show a false code, so disconnect components and check communication one at a time, and with a float switch use an isolation relay to break the common to the outdoor unit (remove the float switch from the circuit to test).",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "65537 / 65538 - Missing Base",
+    "meaning": "The Smart Hub doesn't detect the mag-mount base: 65538 after 30 seconds (dealer info), 65537 once 65538 has been raised more than 30 times (Service Urgent); the Smart Hub shows an amber LED.",
+    "action": "Mount and wire the mag-mount before powering up the Smart Hub. Clears on its own once the base is detected for 2 seconds.",
+    "techTips": [
+     {
+      "text": "Amber LED on the Smart Hub with Missing Base: mount and wire the mag-mount first, then power the Smart Hub. It clears once the base is detected for 2 seconds.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "65539 / 65540 - Thermostat Lost Connection / Missing HD Wall Display",
+    "meaning": "The HD wall display hasn't been detected: more than 30 seconds for 65539 (Service Urgent), less than 30 seconds for 65540 (dealer info).",
+    "action": "Solid blue LED on the mag-mount = powered, flashing blue = not talking to the Smart Hub; check A/B and ±12V wiring between the Smart Hub and the HD display sub-base. Clears once the display is detected for 2 seconds.",
+    "techTips": [
+     {
+      "text": "Use the mag-mount blue LED: solid means it is powered, flashing means it isn't talking to the Smart Hub - check the A/B and ±12V wiring between the Smart Hub and the HD display sub-base.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "700 / 701 - Thermostat Temp Sensor Problem / Temp Above Limit",
+    "meaning": "700: the HD display's internal temperature sensor isn't working correctly. 701: the reading is above the display's fixed 99°F limit.",
+    "action": "700: remove the HD display from the mag-mount and reattach it, seal the wall hole behind the mag-mount, run 'reset all' in the dealer control center, and replace the HD display if it persists. 701: cool the thermostat, adjust the setpoint, run reset all, and replace the HD display or mag-mount if needed.",
+    "techTips": [
+     {
+      "text": "Seal the wall hole behind the mag-mount before condemning the HD display for 700; 701 is a reading above the display's fixed 99°F limit.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "703 - Thermostat Humid Sensor Problem",
+    "meaning": "The humidity sensor is damaged or its data may be corrupted.",
+    "action": "Try a system reset first; if it persists, replace the thermostat.",
+    "techTips": [
+     {
+      "text": "Lennox says to try a system reset before replacing the thermostat for 703.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "610 / 611 - Low / High Room Temperature Detected",
+    "meaning": "Room-temperature notification shown on the HD display and emailed to the homeowner and dealer; low range 30-50°F (default 40°F), high range 80-100°F (default 90°F).",
+    "action": "Informational - clears on its own once the condition is resolved. Email needs an active Wi-Fi connection and an account with a valid email address.",
+    "techTips": [
+     {
+      "text": "610/611 emails only go out with a working Wi-Fi connection and an account with a valid email address.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "18 / 19 - Low Ambient HP Heat Lockout / High Ambient Auxiliary Heat Lockout",
+    "meaning": "18: outdoor temperature is below the low balance point, so the heat pump isn't used for heating. 19: outdoor temperature is above the balance point, so the furnace or electric heat isn't used.",
+    "action": "Notification only (Minor); clears on its own when outdoor temperature crosses back over the balance point. Review the balance-point settings if it happens at unexpected temperatures.",
+    "techTips": [
+     {
+      "text": "18/19 are balance-point notifications, not faults: 18 = outdoor temperature below the low balance point so the heat pump isn't used for heating; 19 = above the balance point so the furnace or electric heat isn't used.",
+      "source": "LennoxPROs Error Code Lookup, alert codes 18 and 19 (lennoxpros.com, public)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -34285,7 +35241,13 @@ const THERMOSTATS = [
    {
     "code": "105",
     "meaning": "Wiring Issue / Communication Problem - low-voltage wiring between system components compromised, device can't communicate",
-    "action": "See wiringNotes for the full 2-step troubleshooting sequence (bundle unused wires, check splices/grounding, then isolate device-by-device)"
+    "action": "See wiringNotes for the full 2-step troubleshooting sequence (bundle unused wires, check splices/grounding, then isolate device-by-device)",
+    "techTips": [
+     {
+      "text": "Lennox's step 2 for a 105 that keeps coming back: measure each wire in AC mode to C on the board for induced voltage - 0.3 VAC is not an issue, up to 0.7 VAC gives moderate success, up to 1.2 VAC only occasional success, and over 1.2 VAC must be fixed. Step 3 is new wiring: 18/2 for R and C plus shielded 18-22/2 for i+/i- with the shield on indoor C only, or separate unshielded 2-conductor runs.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
    },
    {
     "code": "370",
@@ -34296,6 +35258,39 @@ const THERMOSTATS = [
     "code": "-- (double dash, zone sensor)",
     "meaning": "Zone sensor lost communication with the damper control module, or two zone sensors share the same zone number; system goes into central mode",
     "action": "Check zone sensor wiring/address, correct and re-run Re-Configure System"
+   },
+   {
+    "code": "35 - Incorrect Operation Of Device",
+    "meaning": "A communicating device didn't respond within 15 minutes to the thermostat's command to start or end heating or cooling - it may be disabled by a fault or lockout, or by electrical noise when the compressor contactor coil energizes.",
+    "action": "Communicating outdoor unit: wire a transient voltage suppressor across the compressor contactor coil terminals. Non-communicating outdoor unit: use TVS 89W72 across the contactor coil or across Y1 and C at the indoor control (Littelfuse 5KP43CA bidirectional).",
+    "techTips": [
+     {
+      "text": "If 35 shows up when the compressor contactor pulls in, suspect contactor-coil noise: Lennox's fix is a transient voltage suppressor (Littelfuse 5KP43CA, Lennox 89W72) across the contactor coil, or across Y1 and C at the indoor control on a non-communicating outdoor unit.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "36 / 37 - Heating / Cooling When Not Requested",
+    "meaning": "The system has been heating (36) or cooling (37) for at least 15 minutes without a demand.",
+    "action": "Run diagnostic mode and check it matches actual equipment operation, check for other alerts and why the equipment is running, then recycle power. Clears on its own.",
+    "techTips": [
+     {
+      "text": "36/37 means the equipment has been heating or cooling for at least 15 minutes without a demand. Run diagnostic mode (S30: dealer control center > diagnostics; S40: Service Support Center > Diagnostics > Select All > Start) and compare it with what the equipment is actually doing.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
+   },
+   {
+    "code": "38 / 39 - Not Heating / Not Cooling When Requested",
+    "meaning": "The system hasn't been able to start heating (38) or cooling (39) for more than 45 minutes; it goes offline for 60 minutes, then tries to restart.",
+    "action": "Run diagnostic mode and compare it with actual operation, check for other alert codes blocking operation, check the heating or cooling equipment, then recycle power.",
+    "techTips": [
+     {
+      "text": "38/39 means the system couldn't start heating or cooling for more than 45 minutes; it goes offline for 60 minutes, then tries to restart. Look for the equipment alert behind it before anything else.",
+      "source": "Lennox 100017, Residential Communicating Systems Alert Code Guide (V2), Mar 2023"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -36183,6 +37178,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "The 11/2025 OTA widened the AUX heat lockout range to 10-60°F and the compressor lockout to 0-50°F and lowered the minimum heat setpoint to 45°F; the thermostat must be on Wi-Fi to get it (firmware 1758.03.16.00 or later under Settings > Information). Then factory reset (Fr: hold MODE+FAN 10 s, arrow to Fr, press FAN twice) and set it up again in the Service Tech App.",
+    "source": "Carrier TIC2025-0033, Smart Thermostat Software Update, Nov 2025"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [],
   "tips": [],
@@ -36515,7 +37516,33 @@ const THERMOSTATS = [
    "installerTest": "SERVICE > CHECKOUT, same structure as the SI line.",
    "factoryReset": "SETUP > THERMOSTAT > Reset Factory Defaults (Program Schedule / User Settings / Install Settings / Last 10 Events), same as the SI line."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "-C learning and setup fixes to check before replacing parts: 2.00 fixed a 5-ton equipment learning issue and resolved IDU dissipation fault 184, 1.64 fixed installer setup with a non-communicating ODU, and 2.10 fixed HP heating checkout using the cooling checkout duration (5 minutes by default).",
+    "source": "Carrier TIC2026-0011, Software 2.10 Release (-C wall control), Apr 2026"
+   },
+   {
+    "text": "The launch -C software (1.05) was not compatible with Technicolor CGM443 routers (Comcast and Cox) or with WPA3 routers; -C 1.11 later added WPA3 compatibility. At launch the -C also had no S1/S2 remote-sensor terminals (use the zone board), no microSD slot and no SAM support.",
+    "source": "Carrier TIC2022-0004, Introduction of C Series Communicating Wall Control, Apr 2022; Carrier TIC2026-0011, Software 2.10 Release (-C wall control), Apr 2026"
+   },
+   {
+    "text": "A -C control with a USB-C port can be updated or backdated manually from a USB-C device; the folder must be named FW for software before 1.50 and TSTAT for 1.50 and later.",
+    "source": "Carrier TIC2024-0019, -C Software Load, May 2024"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "160 - Humidity Sensor Fault",
+    "meaning": "Wall-control humidity sensor fault (fault 160, device Wall Control, in Carrier's master fault list).",
+    "action": "Nuisance 160 faults were corrected in -C software 1.64 - update the control software before replacing it.",
+    "techTips": [
+     {
+      "text": "Nuisance 160 humidity-sensor faults are a known -C software issue, corrected in 1.64 - update before replacing the control.",
+      "source": "Carrier TIC2026-0011, Software 2.10 Release (-C wall control), Apr 2026; Carrier TIC2025-0010, Residential Fault Code List, Apr 2025"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [],
   "tips": [],
   "manuals": [
@@ -36693,6 +37720,20 @@ const THERMOSTATS = [
    "installerTest": "SERVICE menu > CHECKOUT. Exercises each installed piece of equipment: Electric Heat (Low/Med/High, 0-120 min each, default 5); Furnace (Low Heat / High Heat, 0-120 min, default 5, shows the live ignition sequence); Hydronic (0-120 min, default 5); Air Conditioning (Low Cool / High Cool run times, default 5 min, stage selectable on 18VS); Heat Pump Heating (Low/High run time, speed selectable on variable speed, Defrost Yes/No default No); Heat Pump Cooling (Low/High run time, speed selectable); Humidifier (On/Off); Ventilator (High/Low/Off); Zoning Airflow Limits and Damper/Sensor Check. NOTE: airflow during all Checkout modes is forced to the EFFICIENCY setting and ignores the configured airflow settings.",
    "factoryReset": "SERVICE menu (hold SERVICE icon 10 sec) > SETUP > THERMOSTAT > Reset Factory Defaults. Individually select any of: Program Schedule (back to pre-programmed times/temps), User Settings, Install Settings, Last 10 Events. Touch SAVE. To re-learn equipment after a control has fallen into DEMO mode, use the Installer menu and perform a re-install (SERVICE > INSTALLATION > FULL INSTALLATION > NEXT)."
   },
+  "techTips": [
+   {
+    "text": "Carrier's master fault list shows which codes come from the wall control itself: 170-177 Smart Sensor zone comm, 178 indoor unit and 179 outdoor communication faults, 180/181 zone 1-4 / 5-8 communication, 182 NIM, 185 B36, 186 SAM, 160 humidity sensor, 162 remote sensor, 187/188/189 low/high room temp and high humidity alerts, 194 possible frozen coil, 196/198 auxiliary input (G) shutdown/alert, 210-218 static-pressure and zone airflow stage-downs, and 224-233 watchdog faults. The list gives descriptions only, no actions.",
+    "source": "Carrier TIC2025-0010, Residential Fault Code List, Apr 2025"
+   },
+   {
+    "text": "Series B v1.3 improved the temperature compensation algorithm, which had caused errors of up to 3°F; if the temperature offset was changed from the factory default on older software, remove it after updating to 1.3. The homeowner can force a reboot by pressing and holding anywhere on the home screen for at least 10 seconds.",
+    "source": "Carrier TIC2017-0008 (distributor copy), Infinity / Evolution Series B Software Release V1.3, Nov 2017"
+   },
+   {
+    "text": "-B software 2.00 fixed recognition of a wired remote room sensor connected to Zone 1 through the 4-zone control. If a Zone 1 wired sensor isn't recognized, check the -B software version.",
+    "source": "Carrier TIC18-0008 (distributor copy), Infinity / Evolution -B Software version 2.00, Aug 2018"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Searching for indoor unit",
@@ -36717,7 +37758,13 @@ const THERMOSTATS = [
    {
     "code": "System Learning Failed / equipment missing after re-learn",
     "meaning": "Commissioning could not identify the connected equipment.",
-    "action": "Choose Relearn System, or select the equipment manually."
+    "action": "Choose Relearn System, or select the equipment manually.",
+    "techTips": [
+     {
+      "text": "Known -B learning bugs fixed in software: 3.01/3.40 fixed the control not recognizing 2-ton Infinity/Evolution Extreme 26 AC and 24 HP models with the FE4ANF002 fan coil, and 3.40 fixed discovery of the 24VNA624 + FE4ANB005 combination. Update the control first if a supported combination won't learn.",
+      "source": "Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025"
+     }
+    ]
    },
    {
     "code": "View Diagnostics (Advanced Diagnostics)",
@@ -36727,7 +37774,13 @@ const THERMOSTATS = [
    {
     "code": "Last 10 System Events",
     "meaning": "Rolling log of the last 10 system events with time, date and which piece of equipment generated each event.",
-    "action": "SERVICE > SERVICE INFORMATION > Last 10 System Events. Cleared only from SETUP > THERMOSTAT > Reset Factory Defaults > Last 10 Events."
+    "action": "SERVICE > SERVICE INFORMATION > Last 10 System Events. Cleared only from SETUP > THERMOSTAT > Reset Factory Defaults > Last 10 Events.",
+    "techTips": [
+     {
+      "text": "Since v3.60, fault codes with different expansion codes are logged as separate Last 10 entries and fault descriptions are stored permanently, and 3.94 fixed factory reset not clearing root-cause diagnostics and old faults with the same number showing as active. On older software, the code and description in the log may not match.",
+      "source": "Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025"
+     }
+    ]
    },
    {
     "code": "Run/Fault History",
@@ -36737,12 +37790,68 @@ const THERMOSTATS = [
    {
     "code": "Wi-Fi status: Connected / Not Connected",
     "meaning": "Wireless status screen shows separate status for the Wi-Fi link and for the MyInfinity server connection.",
-    "action": "Both must read Connected. On a failed join, verify SSID and security key and touch RETRY. 2.4 GHz networks only; if the home network is incompatible, add a compatible 2.4 GHz access point. Registration info (serial number, MAC address, QR code) is at MENU > down arrow > Wireless > View MyInfinity Registration Info."
+    "action": "Both must read Connected. On a failed join, verify SSID and security key and touch RETRY. 2.4 GHz networks only; if the home network is incompatible, add a compatible 2.4 GHz access point. Registration info (serial number, MAC address, QR code) is at MENU > down arrow > Wireless > View MyInfinity Registration Info.",
+    "techTips": [
+     {
+      "text": "Carrier fixed two -B Wi-Fi problems in software: v3.61 lowered the MTU for connection drops with certain ISPs, and v3.62 enabled 802.11n High Throughput rates so the control can join 802.11n-only or mixed-mode (b/g/n) routers (802.11n further fixed in 4.05). If a -B control won't stay connected, check the software version before replacing it.",
+      "source": "Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025"
+     }
+    ]
    },
    {
     "code": "Fan Coil / Furnace G-Terminal Alert (installer-named label)",
     "meaning": "Installer-configurable alert driven by the state of the R-to-G contact on the indoor unit board; the label text the installer typed is what appears.",
-    "action": "Configure contact state Normally Open or Normally Closed under SETUP > FAN COIL (or FURNACE) > G-Terminal Alert. The label shows on the main screen and in the notification email."
+    "action": "Configure contact state Normally Open or Normally Closed under SETUP > FAN COIL (or FURNACE) > G-Terminal Alert. The label shows on the main screen and in the notification email.",
+    "techTips": [
+     {
+      "text": "Before v3.60, false G-terminal alerts could fire during the learning check if the control read the furnace/fan coil status inputs before they were set; 3.60 fixed it. Update the software before chasing a G-terminal alert seen right after commissioning.",
+      "source": "Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025"
+     }
+    ]
+   },
+   {
+    "code": "127 - EQUIPMENT UPDATE FAILURE",
+    "meaning": "An equipment firmware update pushed by the -B wall control failed.",
+    "action": "Retry the equipment update (OTA or SD card); from v3.60 an active 127 clears on its own after the next successful firmware update.",
+    "techTips": [
+     {
+      "text": "From v3.60 an active 127-EQUIPMENT UPDATE FAILURE fault clears after the next successful firmware update.",
+      "source": "Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025"
+     }
+    ]
+   },
+   {
+    "code": "126 - Active Heat Cycle Active",
+    "meaning": "Two consecutive limit-33 trips on the furnace; from v4.05 the wall control runs the furnace in an altered strategy (zoning).",
+    "action": "In this mode the control fully opens the dampers for zones calling for heat and spreads the extra airflow by zone size. Find the cause of the repeated limit-33 trips at the furnace.",
+    "techTips": [
+     {
+      "text": "From v4.05, after two limit-33 trips in a row on the furnace, zoned systems run an altered strategy, show '126 - Active Heat Cycle Active', fully open the dampers for zones calling for heat and spread the extra airflow by zone size.",
+      "source": "Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025; Carrier TIC2025-0010, Residential Fault Code List, Apr 2025"
+     }
+    ]
+   },
+   {
+    "code": "160 - Humidity Sensor Fault",
+    "meaning": "Wall-control humidity sensor fault (fault 160, device Wall Control, in Carrier's master fault list).",
+    "action": "On -B controls v4.74 included high humidity fault 160 refinements, and -C 1.64 corrected nuisance 160 faults - update the software before condemning the control.",
+    "techTips": [
+     {
+      "text": "Fault 160 had software-side nuisance trips: -C 1.64 corrected them and -B 4.74 added high humidity fault 160 refinements. Update the software before condemning the control.",
+      "source": "Carrier TIC2026-0011, Software 2.10 Release (-C wall control), Apr 2026; Carrier TIC2025-0034, Software 4.79 Release (Series -B controls), Nov 2025; Carrier TIC2025-0010, Residential Fault Code List, Apr 2025"
+     }
+    ]
+   },
+   {
+    "code": "Serial Number not valid (at registration)",
+    "meaning": "Some -B system controls built in weeks 22, 30 and 32 shipped with duplicate serial numbers, so the second control with a given serial cannot be registered (the bulletin adds that Bryant controls built in week 35 may carry the wrong model number structure and branded software).",
+    "action": "The control still works in the system. If registration shows 'Serial Number not valid', remove, replace and scrap the control and claim it under warranty (the affected serial ranges are printed in the bulletin).",
+    "techTips": [
+     {
+      "text": "'Serial Number not valid' at registration on a -B control from the listed serial ranges is a duplicate-serial factory escape (the control still works): replace it, scrap it and claim it under warranty. Ranges printed: 2220W200001-2220W201062, 3020W200001-3020W201728, 3220W200001-3220W201704 and 3520W200001-3520W210000.",
+      "source": "Carrier TIC2021-0002, System Control Duplicate Serial Number Escape, Feb 2021"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -37830,6 +38939,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "The Cor app moved to a new carrier.com domain, and stats commissioned after 3/31/2020 need the new domain name to reach the servers. Commission in AP mode with app v2.6 or later, which sets it automatically (units already connected were updated over the air).",
+    "source": "Carrier TIC2020-0004 (distributor copy), Cor 7C & 5C Thermostat Mobile App Update, Mar 2020"
+   }
+  ],
   "diagnostics": [
    {
     "code": "HW PROBLEM",
@@ -37931,6 +39046,24 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "Touch Main Menu > Settings > Reset, then choose one of: Reset Registration (clears username/password only), Reset Contractor Information, Reset Preferences (preferences/reminders/alerts/programming back to default), or Reset All (full factory default, removes registration). Touch Yes to confirm. NOTE from the manual: 'Reset All removes all equipment settings created during installation. Have your installation instructions nearby to help you reconfigure your thermostat.'"
   },
+  "techTips": [
+   {
+    "text": "Field temperature/humidity accuracy and overshoot complaints were traced to air leaking through the unsealed wiring hole behind the thermostat when the blower runs. Push excess wire into the wall and seal the hole; units with serial date code week 10 of 2015 or later have gaskets, but the gaskets do not replace sealing the hole.",
+    "source": "Carrier TIC2015-0007 (distributor copy), Cor & Housewise Thermostats Temperature/Humidity Accuracy & Control, Apr 2015"
+   },
+   {
+    "text": "Humidity reads high at first power-up and takes a few hours to settle (improved in v3.6.0.947), and software v3.6.0.980 adds a ±10% RH offset. Calibrate temperature to your reference first, since 1°F of error can shift RH by several percent, then set the humidity offset.",
+    "source": "Carrier TIC2015-0011 (distributor copy), Cor / Housewise humidity accuracy, Jul 2015"
+   },
+   {
+    "text": "Editing the schedule from the mobile app could set the occupied-profile differential to the Away value of 1.5°F (default 0.5°F), so the system started late; software released the week of 4/6/2015 fixed it. Check the setting at Menu > Service (hold 10 s) > Installation Settings > Operating Thresholds.",
+    "source": "Carrier TIC2015-0008 (distributor copy), Cor & Housewise Thermostats Software Update, Apr 2015"
+   },
+   {
+    "text": "From 8/31/2015 the thermostat downloads the latest software (about 20 MB) within 10-15 minutes of first joining Wi-Fi, then restarts on its own. Finish guided setup within 10 minutes of connecting or the restart sends setup back to step 1; with no home Wi-Fi, a phone hotspot can be used.",
+    "source": "Carrier TIC2015-0015 (distributor copy), Cor / Housewise Software Update Info, Sep 2015"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [
    {
@@ -38663,6 +39796,16 @@ const THERMOSTATS = [
    "installerTest": "Press and hold the FAN button 10 seconds for Output Test mode. Heat/Cool button picks the mode: Aux Heat, Heat and Cool each run stage 1 for 3 minutes then stage 1+2 for 3 more minutes (STG 1 / STG 2 countdown). Fan button toggles G.",
    "factoryReset": "Dealer menu SW99 resets everything to out-of-box (reconfigure equipment afterward). User preferences only: Menu > Settings > RST DEFAULT (hold 10 seconds)."
   },
+  "techTips": [
+   {
+    "text": "The Wi-Fi fix for the Cor 7C (TSTWRH01) needs two OTA updates in a row: 4.0, which enables Wi-Fi driver updates, then 4.1 with the new driver, and the thermostat restarts twice. Nothing happens if Auto Update is turned OFF.",
+    "source": "Carrier TIC2019-0010 (distributor copy), Cor7C Thermostat Wi-Fi Driver Update, Jun 2019"
+   },
+   {
+    "text": "The Cor app moved to a new carrier.com domain, and stats commissioned after 3/31/2020 need the new domain name to reach the servers. Commission in AP mode with app v2.6 or later, which sets it automatically (units already connected were updated over the air).",
+    "source": "Carrier TIC2020-0004 (distributor copy), Cor 7C & 5C Thermostat Mobile App Update, Mar 2020"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [],
   "tips": [
@@ -38810,6 +39953,24 @@ const THERMOSTATS = [
    "installerTest": "Menu > (hold) Service > Installation Settings > Test Equipment > Next - turns each relay on/off. Compressor protection and minimum run times are NOT enforced; equipment turns off when you exit.",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "Field temperature/humidity accuracy and overshoot complaints were traced to air leaking through the unsealed wiring hole behind the thermostat when the blower runs. Push excess wire into the wall and seal the hole; units with serial date code week 10 of 2015 or later have gaskets, but the gaskets do not replace sealing the hole.",
+    "source": "Carrier TIC2015-0007 (distributor copy), Cor & Housewise Thermostats Temperature/Humidity Accuracy & Control, Apr 2015"
+   },
+   {
+    "text": "Humidity reads high at first power-up and takes a few hours to settle (improved in v3.6.0.947), and software v3.6.0.980 adds a ±10% RH offset. Calibrate temperature to your reference first, since 1°F of error can shift RH by several percent, then set the humidity offset.",
+    "source": "Carrier TIC2015-0011 (distributor copy), Cor / Housewise humidity accuracy, Jul 2015"
+   },
+   {
+    "text": "Editing the schedule from the mobile app could set the occupied-profile differential to the Away value of 1.5°F (default 0.5°F), so the system started late; software released the week of 4/6/2015 fixed it. Check the setting at Menu > Service (hold 10 s) > Installation Settings > Operating Thresholds.",
+    "source": "Carrier TIC2015-0008 (distributor copy), Cor & Housewise Thermostats Software Update, Apr 2015"
+   },
+   {
+    "text": "From 8/31/2015 the thermostat downloads the latest software (about 20 MB) within 10-15 minutes of first joining Wi-Fi, then restarts on its own. Finish guided setup within 10 minutes of connecting or the restart sends setup back to step 1; with no home Wi-Fi, a phone hotspot can be used.",
+    "source": "Carrier TIC2015-0015 (distributor copy), Cor / Housewise Software Update Info, Sep 2015"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [
    {
@@ -39167,6 +40328,12 @@ const THERMOSTATS = [
    "installerTest": "Service > Checkout: runs each piece of equipment; zoning checks include Airflow Limits, Damper/Sensor Check and Duct Assessment.",
    "factoryReset": "Service > Setup > Thermostat > Reset Factory Defaults."
   },
+  "techTips": [
+   {
+    "text": "Before V14 the Infinity Touch / Evolution Connex (-A) screen could freeze: Heating or Cooling shown while the system was off, a date/time that stopped updating, and a service icon that wouldn't respond when held. Power cycling restored it, and V14 fixes it along with the nuisance filter notifications.",
+    "source": "Carrier TIC2017-0003 (distributor copy), Infinity Touch / Evolution Connex V14 Software Release, Mar 2017"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Indoor unit not found",
@@ -39390,11 +40557,32 @@ const THERMOSTATS = [
    "installerTest": "Service menus > Checkout.",
    "factoryReset": "Setup > Reset Factory Defaults (program schedule, user settings, install settings, fault history)."
   },
+  "techTips": [
+   {
+    "text": "Ion 3.61 reduced the MTU to fix server-connection drops with certain ISPs, and Ion 3.62 fixed Wi-Fi connection to 802.11n-only and some mixed-mode (b/g/n) routers. Updates can be loaded from a TSTAT folder on an SD card.",
+    "source": "ICP TIC2020-0020, Software 3.62 Release (ION Controls), Dec 2020"
+   },
+   {
+    "text": "Ion 3.60 fixed false G-terminal alerts during the learning check and the main cause of a blank screen after the 3.40 OTA update (the control recovered to v3.00 after a forced reboot).",
+    "source": "ICP TIC2020-0015, Software 3.60 Release (ION Controls), Sep 2020"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Indoor unit not found",
     "meaning": "Communicating furnace/fan coil not found at power-up",
     "action": "Must be fixed before commissioning continues; otherwise the control runs in DEMO mode - fix the bus, then re-install from the Installer menu"
+   },
+   {
+    "code": "Serial Number not valid (at registration)",
+    "meaning": "Ion SYST0101CW controls from week 30 (serials 3020W200001-3020W200820) shipped with duplicate serial numbers; the second control with a given serial cannot be registered.",
+    "action": "The control still works. If registration shows 'Serial Number not valid', remove, replace and scrap the control and claim it under warranty.",
+    "techTips": [
+     {
+      "text": "'Serial Number not valid' on an Ion SYST0101CW with serial 3020W200001-3020W200820 is a duplicate-serial factory escape; the control still works. Replace it and claim it under warranty.",
+      "source": "ICP TIC2021-0002, ION System Control Duplicate Serial Number Escape, Feb 2021"
+     }
+    ]
    }
   ],
   "troubleshooting": [],
@@ -40148,11 +41336,31 @@ const THERMOSTATS = [
    "installerTest": "Service Menu > Test Modes. All test modes auto-terminate after 60 minutes.",
    "factoryReset": "Home > Menu > Service > Technician Access > Proceed > Restore Factory Defaults. Deletes all saved user and installer settings; Z-Wave settings are NOT cleared."
   },
+  "techTips": [
+   {
+    "text": "A momentary power or Wi-Fi blip can leave the thermostat off Wi-Fi without reconnecting: turn Wireless OFF at Menu > Settings > Network for at least 30 s, then back ON. If it still won't connect, reboot from Menu > Settings > Reboot with the HVAC idle - settings are kept and schedules keep running while it's offline.",
+    "source": "Thermostat is Disconnected - Trane XL824/850/1050 (support.tranehome.com article), updated Sep 2026"
+   },
+   {
+    "text": "Check signal at Menu > System Info > About, page 2 - Trane recommends 80% or more, with the router within 30 ft; below that, move the router, add an access point or extender, or run CAT5+ Ethernet. Above 80%, power cycle the router and then the thermostat (which also forces a firmware update if the firmware is corrupted) and move off crowded Wi-Fi channels.",
+    "source": "Thermostat Loses WiFi Connection Often (support.tranehome.com article), updated Aug 2026"
+   },
+   {
+    "text": "Indoor temperature and humidity on the XL824/850/1050 can be corrected at Menu > Settings > Thermostat > Indoor Calibrations. Compare against a reference instrument you know is accurate.",
+    "source": "The Indoor Temperature or Humidity Displayed on My Thermostat Isn't Correct (support.tranehome.com article), updated Sep 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "CRITICAL alert",
     "meaning": "Loss of heating/cooling operation; service call required",
-    "action": "Displayed on the home screen; check Diagnostic screen for Problem Description and Possible Cause"
+    "action": "Displayed on the home screen; check Diagnostic screen for Problem Description and Possible Cause",
+    "techTips": [
+     {
+      "text": "Only critical alerts are pushed to the Trane Home app, and only from the XL824/850/1050 and Link UX360 (not the XL950, XR724 or Z-Wave stats), and the homeowner must opt into Trane Diagnostics. Non-critical alerts show only on the thermostat, so check its alert screens during a visit.",
+      "source": "System Alerts in the Trane Home App (support.tranehome.com article), updated Sep 2026"
+     }
+    ]
    },
    {
     "code": "MAJOR alert",
@@ -40359,11 +41567,31 @@ const THERMOSTATS = [
    "installerTest": "Service Menu > Test Modes (60-minute auto timeout).",
    "factoryReset": "Home > Menu > Service > Technician Access > Proceed > Restore Factory Defaults - clears user/installer/WiFi/Z-Wave settings."
   },
+  "techTips": [
+   {
+    "text": "A momentary power or Wi-Fi blip can leave the thermostat off Wi-Fi without reconnecting: turn Wireless OFF at Menu > Settings > Network for at least 30 s, then back ON. If it still won't connect, reboot from Menu > Settings > Reboot with the HVAC idle - settings are kept and schedules keep running while it's offline.",
+    "source": "Thermostat is Disconnected - Trane XL824/850/1050 (support.tranehome.com article), updated Sep 2026"
+   },
+   {
+    "text": "Check signal at Menu > System Info > About, page 2 - Trane recommends 80% or more, with the router within 30 ft; below that, move the router, add an access point or extender, or run CAT5+ Ethernet. Above 80%, power cycle the router and then the thermostat (which also forces a firmware update if the firmware is corrupted) and move off crowded Wi-Fi channels.",
+    "source": "Thermostat Loses WiFi Connection Often (support.tranehome.com article), updated Aug 2026"
+   },
+   {
+    "text": "Indoor temperature and humidity on the XL824/850/1050 can be corrected at Menu > Settings > Thermostat > Indoor Calibrations. Compare against a reference instrument you know is accurate.",
+    "source": "The Indoor Temperature or Humidity Displayed on My Thermostat Isn't Correct (support.tranehome.com article), updated Sep 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "CRITICAL / MAJOR / MINOR alert severities",
     "meaning": "Same tiering as XL1050/XL850",
-    "action": "Check Diagnostic screen (Service Menu > Diagnostics) for description and cause"
+    "action": "Check Diagnostic screen (Service Menu > Diagnostics) for description and cause",
+    "techTips": [
+     {
+      "text": "Only critical alerts are pushed to the Trane Home app, and only from the XL824/850/1050 and Link UX360 (not the XL950, XR724 or Z-Wave stats), and the homeowner must opt into Trane Diagnostics. Non-critical alerts show only on the thermostat, so check its alert screens during a visit.",
+      "source": "System Alerts in the Trane Home App (support.tranehome.com article), updated Sep 2026"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -40557,11 +41785,31 @@ const THERMOSTATS = [
    "installerTest": "Service Menu > Test Modes (60-minute auto timeout).",
    "factoryReset": "Home > Menu > Service > Technician Access > Proceed > Restore Factory Defaults - clears user/installer settings, keeps Z-Wave pairing."
   },
+  "techTips": [
+   {
+    "text": "A momentary power or Wi-Fi blip can leave the thermostat off Wi-Fi without reconnecting: turn Wireless OFF at Menu > Settings > Network for at least 30 s, then back ON. If it still won't connect, reboot from Menu > Settings > Reboot with the HVAC idle - settings are kept and schedules keep running while it's offline.",
+    "source": "Thermostat is Disconnected - Trane XL824/850/1050 (support.tranehome.com article), updated Sep 2026"
+   },
+   {
+    "text": "Check signal at Menu > System Info > About, page 2 - Trane recommends 80% or more, with the router within 30 ft; below that, move the router, add an access point or extender, or run CAT5+ Ethernet. Above 80%, power cycle the router and then the thermostat (which also forces a firmware update if the firmware is corrupted) and move off crowded Wi-Fi channels.",
+    "source": "Thermostat Loses WiFi Connection Often (support.tranehome.com article), updated Aug 2026"
+   },
+   {
+    "text": "Indoor temperature and humidity on the XL824/850/1050 can be corrected at Menu > Settings > Thermostat > Indoor Calibrations. Compare against a reference instrument you know is accurate.",
+    "source": "The Indoor Temperature or Humidity Displayed on My Thermostat Isn't Correct (support.tranehome.com article), updated Sep 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "CRITICAL / MAJOR / MINOR alert severities",
     "meaning": "Same three-tier severity system as XL1050/XL824: Critical = loss of operation/service required and shown on home screen; Major = reduced functionality, not shown on home screen; Minor = diagnostic-only, Diagnostics screen only",
-    "action": "Check Diagnostic screen for Problem Description and Possible Cause"
+    "action": "Check Diagnostic screen for Problem Description and Possible Cause",
+    "techTips": [
+     {
+      "text": "Only critical alerts are pushed to the Trane Home app, and only from the XL824/850/1050 and Link UX360 (not the XL950, XR724 or Z-Wave stats), and the homeowner must opt into Trane Diagnostics. Non-critical alerts show only on the thermostat, so check its alert screens during a visit.",
+      "source": "System Alerts in the Trane Home App (support.tranehome.com article), updated Sep 2026"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -40939,7 +42187,19 @@ const THERMOSTATS = [
    "installerTest": "Menu > Service > Test Mode (stays on 30 minutes): Blower (Non-VS/VS), Cooling, Comp Heating, Indoor Heating, Aux Relay tests.",
    "factoryReset": "Menu > Service (hold 5s) > Installer Settings > Restore Defaults > Restore Factory Defaults - press and hold Yes until 'Factory' is displayed; resets HVAC and WiFi settings."
   },
-  "diagnostics": [],
+  "diagnostics": [
+   {
+    "code": "Wireless symbol missing or flashing",
+    "meaning": "The XR724 shows in the account but didn't finish enrolling: no data in the app/portal, and the wireless symbol left of the temperature is missing or flashing.",
+    "action": "Under Menu > Next x2 (Nexia) > Status, if it shows ENROLLED choose UNENROLL and wait for WIFI NOT CONFIGED, then enroll again. Next power cycle the router and then the thermostat at the breaker for 20-30 s; if it still fails, the router needs DHCP on, MAC filtering off and the Trane Home TCP ports open.",
+    "techTips": [
+     {
+      "text": "A flashing or missing wireless symbol on an enrolled XR724 means enrollment didn't finish: unenroll, re-enroll, then check the router's DHCP and MAC filtering.",
+      "source": "Trane XR724 Enrolled but not Connected to WiFi (support.tranehome.com article), updated Aug 2026"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [],
   "tips": [
    "XR724 runs either communicating or conventional - the wiring and menu change with the mode.",
@@ -41607,11 +42867,23 @@ const THERMOSTATS = [
    "installerTest": "Test Modes: Test Blower (300-1580 CFM), Test Compressor Cool / Heat (minimum-100% demand), Test Indoor Heat stage 1/2/3, Charge Mode - Cooling, Check Charge Mode - Heating, Pump Down Mode cooling/heating, Test Aux Relay.",
    "factoryReset": "Configuration > General Options: Factory System Restore erases all user and installer settings; Partial Restore resets only the HVAC configuration (zoning, sensor and user settings kept)."
   },
+  "techTips": [
+   {
+    "text": "After a brief power or Wi-Fi blip the UX360 may not rejoin Wi-Fi: turn Wireless OFF at Menu > Settings > Network for at least 30 s, then ON. If that fails, reboot at Menu > Settings > Reboot with the HVAC idle; settings are kept.",
+    "source": "Thermostat is Disconnected - Trane Link (UX360) (support.tranehome.com article), updated Jul 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Critical alert",
     "meaning": "Loss of heating/cooling; service call required",
-    "action": "Shown on the home screen. Menu > System Info > Alerts for description and possible causes"
+    "action": "Shown on the home screen. Menu > System Info > Alerts for description and possible causes",
+    "techTips": [
+     {
+      "text": "Only critical alerts are pushed to the Trane Home app, and only from the XL824/850/1050 and Link UX360 (not the XL950, XR724 or Z-Wave stats), and the homeowner must opt into Trane Diagnostics. Non-critical alerts show only on the thermostat, so check its alert screens during a visit.",
+      "source": "System Alerts in the Trane Home App (support.tranehome.com article), updated Sep 2026"
+     }
+    ]
    },
    {
     "code": "Major alert",
@@ -42276,6 +43548,12 @@ const THERMOSTATS = [
    "installerTest": "Service Menu > Test Mode. System Test: blower 50/100%, cool stage 1/2, compressor heat stage 1/2, indoor heat stage 1/2/3/modulating, compressor + indoor heat, aux contact (max 30 minutes, minimum on/off times defeated, all dampers driven open). Damper Test (max 30 minutes). Variable Speed Test: Charging Mode - Cooling, Check Charge Mode - Heating, Checkout Modes, Pump Down Modes (120 minutes).",
    "factoryReset": "Service menu > Restore Factory Defaults clears all stored settings. Reboot restarts the software; a full power cycle means pulling the control off the sub-base."
   },
+  "techTips": [
+   {
+    "text": "The XL950's final firmware is 4.0.4 (Help > About > Release Version) and the update server was shut down, so the on-screen update always errors. A dealer can load 4.0.4 by SD card, which is only needed if the 'Nexia Home Intelligence' icon is missing.",
+    "source": "XL950 Firmware Updates (support.tranehome.com article), updated Sep 2026"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Critical alert",
@@ -44801,6 +46079,12 @@ const THERMOSTATS = [
    "installerTest": "Service Mode > Menu > Forced Operation. Three modes: Cool Mode (1st/2nd stage cooling, continuous fan), Heat Mode (heat pump compressor heat if present, furnace/gas heat, electric/air-handler heat), IAQ Mode (added IAQ accessories, may need an ERV/HRV interface control). Select a mode, set a run time (bypassable any time with Stop), select the specific operation and press Apply; optional modifiers (Bypass ASCD, Set Airflow) can be layered on. Forced operation suspends normal setpoint/schedule control system-wide until Exit is pressed; from System Map during a forced test the installer can still view Equipment Details/Status/Inputs-Outputs and the fault Log.",
    "factoryReset": "Service Mode > Menu > Tools/Settings > Administrator Tools > Restore Defaults. This returns the control to factory settings and re-runs the Auto Setup screens on reboot; used after a hard-jumper change or equipment swap causes a System Misconfiguration. Administrator Tools also offers Restart Firmware (simulates a power loss / re-validates settings without erasing them) and Firmware update via USB (a firmware flash DOES restore defaults - export the Installer Configuration file first so it can be re-imported after flashing)."
   },
+  "techTips": [
+   {
+    "text": "Many returned controls test No Fault Found - never put more than one wire under a screw terminal (furnace board, zone panel). Before replacing a board or adding an outdoor unit, run Restore Defaults, pull the control, kill power, do the work, then enter the actual outdoor tonnage at setup, or wrong airflow data locks in until the outdoor board is replaced; a firmware USB stick must hold only the 4 unzipped files.",
+    "source": "York (JCI / UPG) Service Tips ST-030-14 (distributor copy), Touch Screen Communicating Control S1-TTSCCxx Warranty Claims, Oct 2014"
+   }
+  ],
   "diagnostics": [
    {
     "code": "Thermostat Fault / Outdoor Equipment Fault / Indoor Equipment Fault (Log entries)",
@@ -44952,6 +46236,16 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "S1-THXU430W software 1.10nz, pushed automatically over Wi-Fi, adds icon titles, on-thermostat scheduling and a QR code on the Wi-Fi setup screen. Without it there's no QR code - enter the thermostat SSID manually in the app instead (it starts with RIPL- and is case sensitive).",
+    "source": "York (JCI / UPG) Service Tips ST-003-2019 (distributor copy), Improved User Interface (UI) Update - HX model thermostats, Jan 2019"
+   },
+   {
+    "text": "After iOS 13 the Hx app could create accounts but couldn't pair to the thermostat, so it couldn't join Wi-Fi. Update the iOS 'Hx thermostat' app to 1.7.6 or later (released 10/29/2019).",
+    "source": "York (JCI / UPG) Service Tips ST-016-2019 (distributor copy), Mobile Application Update - Version 1.7.6 - iOS13, Dec 2019"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [],
   "tips": [
@@ -46046,6 +47340,16 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "Advanced Settings from the main menu > Factory Reset. All settings are lost and the Initial Setup process must be repeated."
   },
+  "techTips": [
+   {
+    "text": "Dual-fuel overshoot on BCC100 firmware 1.9.0 or older and BCC110 2.0.0 or older: the thermostat waits for the stage delay timer before shutting off at setpoint. Reduce the Stage Delay Timer to 5 minutes (Main Menu > Advanced Settings > Installer Access, code 1886, action code ST).",
+    "source": "Bosch Thermostats & Controls FAQ, BCC110 and BCC100/BCC50 sections (bosch-homecomfort.com)"
+   },
+   {
+    "text": "If the display won't come on, plug a working micro-USB charger into the back of the thermostat: if it powers up, the problem is the 24 VAC supply or wiring, not the thermostat. The same trick powers it next to the router to rule out Wi-Fi range (2.4 GHz only).",
+    "source": "Bosch Thermostats & Controls FAQ, BCC110 and BCC100/BCC50 sections (bosch-homecomfort.com)"
+   }
+  ],
   "diagnostics": [
    {
     "code": "High Pressure Alarm (WSHP)",
@@ -46076,6 +47380,17 @@ const THERMOSTATS = [
     "code": "Evaporator Coil Freeze Alarm (WSHP)",
     "meaning": "Freeze condition detected between TXV and water coil (heating mode sensor)",
     "action": "Contact local contractor; press Enter to clear"
+   },
+   {
+    "code": "Critical High Pressure (with a Bosch IDS heat pump)",
+    "meaning": "A false alert caused by a communication misunderstanding between a Bosch IDS heat pump and the Bosch Connected Control; no failure event actually happened.",
+    "action": "System operation isn't affected. Press OK to close the alert.",
+    "techTips": [
+     {
+      "text": "On a BCC with a Bosch IDS heat pump, 'Critical High Pressure' is a known false alert from a communication misunderstanding between the two - no failure event happened. System operation isn't affected; press OK to close it.",
+      "source": "Bosch Thermostats & Controls FAQ, BCC110 and BCC100/BCC50 sections (bosch-homecomfort.com)"
+     }
+    ]
    }
   ],
   "troubleshooting": [
@@ -46462,6 +47777,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": "Main Menu > Reset - this is the only place to access factory reset on the MHK2 controller (also where Unenroll Device / permanently unpair from the receiver lives)."
   },
+  "techTips": [
+   {
+    "text": "With a kumo cloud WI 2 on the same indoor unit, Mitsubishi says to configure the WI 2 in the app first, then connect the MHK2 in series. An MHK2 set to relay its readings becomes kumo's humidity source for that zone.",
+    "source": "Mitsubishi Electric kumo cloud 2.22 Technician Manual for Installer, ver.13, 2023"
+   }
+  ],
   "diagnostics": [
    {
     "code": "134",
@@ -47788,6 +49109,12 @@ const THERMOSTATS = [
    "installerTest": "",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "When an MHK1 or MHK2 shares the unit, configure the WI 2 in the kumo cloud app before connecting it to the controller. LEDs: 4 quick blue flashes = Bluetooth LE setup mode, 3 slow blue = connected, green = power; for a factory reset hold the reset button until amber (about 5 s) to go back to factory firmware, or until it blinks (about 8 s) to also erase settings.",
+    "source": "Mitsubishi Electric kumo cloud 2.22 Technician Manual for Installer, ver.13, 2023"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [],
   "tips": [
@@ -47941,7 +49268,36 @@ const THERMOSTATS = [
    "installerTest": "Settings > Installation Settings > Test Outputs - runs the outputs with no thermostat time delays (e.g. a 1st stage cooling call energizes Y1 and G).",
    "factoryReset": "Settings > Installation Settings > Factory Defaults. Restart Thermostat is on the same menu."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "Venstar finds Wi-Fi much less reliable below 60% signal (Menu > Wifi > Wifi Status). For calibration, let the stat run powered at least an hour with the HVAC idle and hold the reference near the lower-left corner where the sensor is, then use Menu > Settings > Installation Settings > Sensor Settings > Calibrate Sensors.",
+    "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "-501 (Skyport error)",
+    "meaning": "The thermostat can't communicate with the Skyport server: it lost Wi-Fi, or Skyport is rejecting the connection.",
+    "action": "Check Menu > Wifi > Wifi Status; if signal is 0 or there's no IP address, restart the router, then the thermostat (Menu > Settings > Installation Settings > Restart Thermostat), and try another access point or a hotspot. If Wi-Fi is fine, correct the date/time and confirm the router has internet.",
+    "techTips": [
+     {
+      "text": "-501 means the thermostat can't reach the Skyport server: it lost Wi-Fi, or Skyport is rejecting it. A thermostat clock that's far off makes Skyport reject it, so fix the date/time (Menu > Set Time & Date) before chasing -501 further.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   },
+   {
+    "code": "Scheduling Reconnect (Skyport status, repeating)",
+    "meaning": "The thermostat has Wi-Fi but keeps failing to reach Skyport Cloud Services and schedules a retry every few minutes.",
+    "action": "Check the router has internet and the Skyport service status (venstar.com); on corporate or firewalled networks open outbound TCP ports 9001, 9002 and 41414.",
+    "techTips": [
+     {
+      "text": "A repeating 'Scheduling Reconnect' means the thermostat has Wi-Fi but keeps failing to reach Skyport; on corporate or firewalled networks, outbound TCP ports 9001, 9002 and 41414 must be open.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Touchscreen buttons not responsive",
@@ -48166,7 +49522,36 @@ const THERMOSTATS = [
    "installerTest": "Settings > Installation Settings > Test Outputs.",
    "factoryReset": "Settings > Installation Settings > Factory Defaults."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "Venstar finds Wi-Fi much less reliable below 60% signal (Menu > Wifi > Wifi Status). For calibration, let the stat run powered at least an hour with the HVAC idle and hold the reference near the lower-left corner where the sensor is, then use Menu > Settings > Installation Settings > Sensor Settings > Calibrate Sensors.",
+    "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "-501 (Skyport error)",
+    "meaning": "The thermostat can't communicate with the Skyport server: it lost Wi-Fi, or Skyport is rejecting the connection.",
+    "action": "Check Menu > Wifi > Wifi Status; if signal is 0 or there's no IP address, restart the router, then the thermostat (Menu > Settings > Installation Settings > Restart Thermostat), and try another access point or a hotspot. If Wi-Fi is fine, correct the date/time and confirm the router has internet.",
+    "techTips": [
+     {
+      "text": "-501 means the thermostat can't reach the Skyport server: it lost Wi-Fi, or Skyport is rejecting it. A thermostat clock that's far off makes Skyport reject it, so fix the date/time (Menu > Set Time & Date) before chasing -501 further.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   },
+   {
+    "code": "Scheduling Reconnect (Skyport status, repeating)",
+    "meaning": "The thermostat has Wi-Fi but keeps failing to reach Skyport Cloud Services and schedules a retry every few minutes.",
+    "action": "Check the router has internet and the Skyport service status (venstar.com); on corporate or firewalled networks open outbound TCP ports 9001, 9002 and 41414.",
+    "techTips": [
+     {
+      "text": "A repeating 'Scheduling Reconnect' means the thermostat has Wi-Fi but keeps failing to reach Skyport; on corporate or firewalled networks, outbound TCP ports 9001, 9002 and 41414 must be open.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Touchscreen buttons not responsive",
@@ -48337,7 +49722,47 @@ const THERMOSTATS = [
    "installerTest": "Settings menu > Test Outputs.",
    "factoryReset": "Settings menu > Factory Defaults."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "Venstar finds Wi-Fi much less reliable below 60% signal (Menu > Wifi > Wifi Status). For calibration, let the stat run powered at least an hour with the HVAC idle and hold the reference near the lower-left corner where the sensor is, then use Menu > Settings > Installation Settings > Sensor Settings > Calibrate Sensors.",
+    "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "-501 (Skyport error)",
+    "meaning": "The thermostat can't communicate with the Skyport server: it lost Wi-Fi, or Skyport is rejecting the connection.",
+    "action": "Check Menu > Wifi > Wifi Status; if signal is 0 or there's no IP address, restart the router, then the thermostat (Menu > Settings > Installation Settings > Restart Thermostat), and try another access point or a hotspot. If Wi-Fi is fine, correct the date/time and confirm the router has internet.",
+    "techTips": [
+     {
+      "text": "-501 means the thermostat can't reach the Skyport server: it lost Wi-Fi, or Skyport is rejecting it. A thermostat clock that's far off makes Skyport reject it, so fix the date/time (Menu > Set Time & Date) before chasing -501 further.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   },
+   {
+    "code": "Scheduling Reconnect (Skyport status, repeating)",
+    "meaning": "The thermostat has Wi-Fi but keeps failing to reach Skyport Cloud Services and schedules a retry every few minutes.",
+    "action": "Check the router has internet and the Skyport service status (venstar.com); on corporate or firewalled networks open outbound TCP ports 9001, 9002 and 41414.",
+    "techTips": [
+     {
+      "text": "A repeating 'Scheduling Reconnect' means the thermostat has Wi-Fi but keeps failing to reach Skyport; on corporate or firewalled networks, outbound TCP ports 9001, 9002 and 41414 must be open.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   },
+   {
+    "code": "Stuck at 'Connecting to SkyPort' (Wi-Fi key models)",
+    "meaning": "On T5800/T5900/T6800/T6900 with the Wi-Fi key, firmware below 4.xx means a mandatory firmware update was missed.",
+    "action": "Check firmware at Menu > Information > My Thermostat (lower-left, e.g. VH4.08); if below 4.00, get the update from Venstar, then confirm Wi-Fi status shows connected.",
+    "techTips": [
+     {
+      "text": "A 1st-gen ColorTouch with a Wi-Fi key (T5800/T5900/T6800/T6900) stuck at 'Connecting to SkyPort' needs firmware 4.00 or later - check Menu > Information > My Thermostat (lower-left, e.g. VH4.08) and get the update from Venstar if it is below 4.00.",
+      "source": "Venstar Support for ColorTouch - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "Touchscreen buttons not responsive",
@@ -48563,7 +49988,25 @@ const THERMOSTATS = [
    "installerTest": "Technician Setup: press and hold SETUP 10 s until all icons appear. MODE steps through: firmware versions, dip/jumper settings and Dry Contact state, TURN ON EQUIPMENT? (WARMER = yes; WARMER cycles up heat stages, COOLER cycles down cooling stages), CALIBRATE SENSORS?, and on humidity/AUX models CONTROL HUM / DEHUM / AUX OUT. Press SETUP to exit (auto-exits after 10 min).",
    "factoryReset": "Hold SETUP 10 s until all icons appear, release, then hold FAN 5 s until DEFAULTS shows; release and press MODE. Wipes schedule and advanced setup."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "If an Explorer joins Wi-Fi but never gets a 6-digit pairing code, check the module firmware (ACCESSORY STATUS, WARMER, then MODE to MODULE VERSION) - below 2.16 causes this, so contact Venstar for the update. A wired remote sensor that bounces several degrees usually has its cable (max 200 ft) run near AC wiring: reroute it or ask Venstar about adding a capacitor.",
+    "source": "Venstar Support for Explorer - Frequently Asked Questions (venstar.com)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "No accessory module connected (when pressing ACCESSORY SETUP)",
+    "meaning": "The Explorer doesn't see a Wi-Fi module; Explorer models need the optional ACC-VWF2 module for Skyport.",
+    "action": "Install an ACC-VWF2, or check the installed module's part number is exactly ACC-VWF2.",
+    "techTips": [
+     {
+      "text": "Explorer Wi-Fi (Skyport) works only with the optional ACC-VWF2 module; 'No accessory module connected' means the Explorer doesn't see one. Install an ACC-VWF2, or check an installed module's part number is exactly ACC-VWF2.",
+      "source": "Venstar Support for Explorer - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "A/C does not try to turn on",
@@ -48790,7 +50233,25 @@ const THERMOSTATS = [
    "installerTest": "Technician Setup: press and hold SETUP 10 s until all icons appear. MODE steps through: firmware versions, dip/jumper settings and Dry Contact state, TURN ON EQUIPMENT? (WARMER = yes; WARMER cycles up heat stages, COOLER cycles down cooling stages), CALIBRATE SENSORS?, and on humidity/AUX models CONTROL HUM / DEHUM / AUX OUT. Press SETUP to exit (auto-exits after 10 min).",
    "factoryReset": "Hold SETUP 10 s until all icons appear, release, then hold FAN 5 s until DEFAULTS shows; release and press MODE. Wipes schedule and advanced setup."
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "If an Explorer joins Wi-Fi but never gets a 6-digit pairing code, check the module firmware (ACCESSORY STATUS, WARMER, then MODE to MODULE VERSION) - below 2.16 causes this, so contact Venstar for the update. A wired remote sensor that bounces several degrees usually has its cable (max 200 ft) run near AC wiring: reroute it or ask Venstar about adding a capacitor.",
+    "source": "Venstar Support for Explorer - Frequently Asked Questions (venstar.com)"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "No accessory module connected (when pressing ACCESSORY SETUP)",
+    "meaning": "The Explorer doesn't see a Wi-Fi module; Explorer models need the optional ACC-VWF2 module for Skyport.",
+    "action": "Install an ACC-VWF2, or check the installed module's part number is exactly ACC-VWF2.",
+    "techTips": [
+     {
+      "text": "Explorer Wi-Fi (Skyport) works only with the optional ACC-VWF2 module; 'No accessory module connected' means the Explorer doesn't see one. Install an ACC-VWF2, or check an installed module's part number is exactly ACC-VWF2.",
+      "source": "Venstar Support for Explorer - Frequently Asked Questions (venstar.com)"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [
    {
     "symptom": "A/C does not try to turn on",
@@ -51704,7 +53165,81 @@ const THERMOSTATS = [
    "installerTest": "Not published in the QSG.",
    "factoryReset": ""
   },
-  "diagnostics": [],
+  "techTips": [
+   {
+    "text": "The Wyze Thermostat needs both Rc and C, and it will not power on below 24 V measured at the Rc and C pin holes - if there is no C, land a spare conductor on C at the board. If a working unit suddenly goes dark, Wyze points to the control board or HVAC side: check the wiring at both ends, then run Settings > Advanced > System Test.",
+    "source": "My thermostat isn't turning on anymore. (support.wyze.com article), updated Apr 2024"
+   },
+   {
+    "text": "Room temperature rising 2-4 F past setpoint after the call ends can be normal furnace residual heat, and Wyze's fix is to set heat 2-3 F lower. If heat truly keeps running, check the wiring configuration, damaged wires, blocked sensor vents (dust, drapes) and a location on a cold outside wall or in a draft.",
+    "source": "My Wyze Thermostat is not turning off the heat. (support.wyze.com article), updated Mar 2023"
+   },
+   {
+    "text": "Check the firmware (current is 1.2.8, 4 Mar 2024) before replacing a unit. 1.2.7 (4 May 2023) fixed a reboot after Wi-Fi disconnect and a sensor bug with Motion-sensing Comfort off, 1.2.1 (4 May 2022) fixed a disconnection after firmware updates, 1.2.0 (21 Feb 2022) fixed a fan issue on heat pump systems, and 1.1.7 (12 May 2021) fixed the unit showing offline after being unplugged and reattached.",
+    "source": "Wyze Release Notes & Firmware - Wyze Thermostat (support.wyze.com article), updated Sep 2026"
+   },
+   {
+    "text": "On a heat-only system with R, G and W1 and no C, Wyze's method is to move G to the C terminal at the control board, label it C at the thermostat, and select Rc, C and W. To keep fan control, add a jumper between the G and W terminals.",
+    "source": "I have a heat-only system and no C-wire. What do I do? (support.wyze.com article), updated May 2022"
+   }
+  ],
+  "diagnostics": [
+   {
+    "code": "Wire not found",
+    "meaning": "A wire selected in the Wyze app is not detected on a terminal.",
+    "action": "Re-seat the wire and power-cycle so detection re-runs (wait 30 seconds); confirm it is landed at the control board, or unselect it if unused.",
+    "techTips": [
+     {
+      "text": "Wire detection only runs when the Wyze Thermostat first powers up, so pull it off and reconnect, wait at least 30 seconds for it to reach the server, and check the wire is secure at the thermostat and the control board. If that conductor isn't landed at the board it's unused - remove it and unselect it during setup.",
+      "source": "Wire detection error: Wire not found. (support.wyze.com article), updated Dec 2020"
+     }
+    ]
+   },
+   {
+    "code": "Not Tested (System Test)",
+    "meaning": "System Test result not recorded because of an app/thermostat communication delay.",
+    "action": "No action needed - Wyze says it can be ignored.",
+    "techTips": [
+     {
+      "text": "'Not Tested' in System Test results, even after answering Yes, comes from a communication delay between the thermostat and the Wyze app. Wyze says it can be ignored.",
+      "source": "System Test shows 'Not Tested' in my results. (support.wyze.com article), updated Dec 2020"
+     }
+    ]
+   },
+   {
+    "code": "Stuck on Wyze logo",
+    "meaning": "The thermostat won't boot past the logo after installation.",
+    "action": "Check the C-wire adapter terminals and one wire per terminal; factory reset (hold wheel 10 s), or remove the wiring, wait 30 s and rewire.",
+    "techTips": [
+     {
+      "text": "A screen stuck on the Wyze logo after install usually means a wiring problem: with the C-wire adapter, check each lead is on the right terminal and there is only one wire per terminal. Then factory reset (hold the control wheel 10 s), or remove the wiring, wait at least 30 seconds and rewire.",
+      "source": "My Wyze Thermostat screen is stuck on the Wyze logo. (support.wyze.com article), updated Dec 2021"
+     }
+    ]
+   },
+   {
+    "code": "Firmware Upgrade Failed",
+    "meaning": "The thermostat firmware update failed.",
+    "action": "Wait 10 minutes and retry, update the app, reboot the router, then factory reset (hold wheel 10 s) and set up again.",
+    "techTips": [
+     {
+      "text": "For 'Firmware Upgrade Failed', wait about 10 minutes and retry, update the Wyze app, reboot the router, then factory reset if needed. Wyze's release notes say firmware 1.2.4.a2 (19 Oct 2022, later halted) and 1.2.5 (26 Oct 2022) fixed an issue causing firmware updates to fail; the current version is 1.2.8 (4 Mar 2024).",
+      "source": "My Wyze thermostat firmware won't update. (support.wyze.com article), updated Aug 2021; Wyze Release Notes & Firmware (support.wyze.com)"
+     }
+    ]
+   },
+   {
+    "code": "Connecting to the Cloud (stuck)",
+    "meaning": "Setup cannot complete the cloud connection step.",
+    "action": "Update and force-close the app, factory reset and retry; improve the Wi-Fi signal (router placement or an extender).",
+    "techTips": [
+     {
+      "text": "If setup hangs at 'Connecting to the Cloud', update and force-close the Wyze app, factory reset the thermostat (hold the control wheel 10 s) and retry. Weak signal is the other cause, so move the router closer or add a Wi-Fi extender.",
+      "source": "I can't get past 'Connecting to the Cloud.' (support.wyze.com article), updated Aug 2021"
+     }
+    ]
+   }
+  ],
   "troubleshooting": [],
   "tips": [],
   "manuals": [
@@ -51814,6 +53349,24 @@ const THERMOSTATS = [
    "installerTest": "Not published beyond app setup.",
    "factoryReset": ""
   },
+  "techTips": [
+   {
+    "text": "Mysa needs continuous C-wire power, so confirm 24 VAC between R and C at the thermostat. The Mysa Power C-Wire Adapter's green LED shows power: wire red to R, blue to C and white to W (or W/Y/OB), and mount it within 12 in of the control board, away from high voltage. A fuse that keeps blowing means a short, and Mysa wants a pro for dual-transformer, zone-valve or multi-zone, and communicating systems.",
+    "source": "Troubleshooting Your Mysa Smart Thermostat Installation (help.getmysa.com article)"
+   },
+   {
+    "text": "If only heat or only cool shows, or the equipment won't start, the 3-character HVAC configuration code is usually wrong or missing, not a hardware fault - get it from mysacodefinder.com instead of guessing and enter it in the app (Device Settings > Thermostat Configuration) or on the unit (hold both arrows until PREF, scroll to CONF). If a heat pump heats and cools backwards, change the last character (31P and 31L, or 86M and 86I).",
+    "source": "Troubleshooting Your Mysa Smart Thermostat Installation (help.getmysa.com article)"
+   },
+   {
+    "text": "Normal Mysa delays are a 5-minute minimum compressor off time (heat pumps and AC), a 1 F (0.6 C) differential, and cycles-per-hour limits of 12 for electric, 6 for gas/oil and 3 for heat pump or hydronic (one start every 20 minutes). The heat/cool icon shows while a delay runs, and changing the setpoint by hand bypasses the CPH delay for testing.",
+    "source": "Understanding Heating or Cooling Delays (help.getmysa.com article)"
+   },
+   {
+    "text": "Mysa for Central HVAC firmware v4.5.16 (Apr 2026) added auxiliary heat staging and adaptive brightness and fixed 0.5 C setpoint steps not staying set, and app 4.14 fixed LV thermostat display issues in Off, Fan and Auto modes. Update both before troubleshooting a setpoint that won't hold.",
+    "source": "Release Summary 2026 (help.getmysa.com article)"
+   }
+  ],
   "diagnostics": [],
   "troubleshooting": [
    {

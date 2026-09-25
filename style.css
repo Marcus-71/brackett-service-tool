@@ -1689,3 +1689,9 @@ main {
 @media (prefers-color-scheme: light) {
   .detail-section.tech-tip { background: #fff4d6; color: #5a4300; border-left-color: #e0a100; }
 }
+
+/* manufacturer tech tips on thermostat codes (row-level) */
+.tstat-tech-tip { background: #3a3013; color: #ffe08a; border-left: 3px solid #c99a1a; border-radius: 6px; padding: 0.3rem 0.5rem; margin-top: 0.3rem; font-size: 0.88rem; }
+@media (prefers-color-scheme: light) {
+  .tstat-tech-tip { background: #fff4d6; color: #5a4300; border-left-color: #e0a100; }
+}

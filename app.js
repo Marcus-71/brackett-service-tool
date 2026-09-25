@@ -1843,6 +1843,8 @@ function tstatSearchFields(t) {
     t.brand, t.family, (t.models || []).join(" "), t.aka, TSTAT_TYPE_LABELS[t.type] || t.type, t.stages,
     ...(t.terminals || []).map(x => x.t + " " + x.fn),
     ...(t.diagnostics || []).map(x => x.code + " " + x.meaning),
+    ...(t.techTips || []).map(x => x.text),
+    ...(t.diagnostics || []).flatMap(x => (x.techTips || []).map(y => y.text)),
     ...(t.troubleshooting || []).map(x => x.symptom),
     ...(t.wiringNotes || []),
     ...(t.manuals || []).map(x => x.title),
@@ -1946,7 +1948,8 @@ function openTstatDetail(id) {
   const settingRows = (s.keySettings || []).map(x => `
     <tr><td class="tstat-term${String(x.setting).length <= 10 ? " short" : ""}">${escapeHtml(x.setting)}</td><td>${escapeHtml(x.options || "")}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
   const diagRows = (t.diagnostics || []).map(x => `
-    <tr class="${tstatHit(x.code + " " + x.meaning, q) ? "hit" : ""}"><td class="tstat-term${String(x.code).length <= 10 ? " short" : ""}">${escapeHtml(x.code)}</td><td><b>${escapeHtml(x.meaning)}</b>${x.action ? `<div class="tstat-note">${escapeHtml(x.action)}</div>` : ""}</td></tr>`).join("");
+    <tr class="${tstatHit(x.code + " " + x.meaning, q) ? "hit" : ""}"><td class="tstat-term${String(x.code).length <= 10 ? " short" : ""}">${escapeHtml(x.code)}</td><td><b>${escapeHtml(x.meaning)}</b>${x.action ? `<div class="tstat-note">${escapeHtml(x.action)}</div>` : ""}${(x.techTips || []).map(tt => `<div class="tstat-tech-tip">💡 ${escapeHtml(tt.text)}${tt.source ? `<div class="tech-tip-src">${escapeHtml(tt.source)}</div>` : ""}</div>`).join("")}</td></tr>`).join("");
+  const cardTips = (t.techTips || []).map(tt => `<li>${escapeHtml(tt.text)}${tt.source ? `<div class="tech-tip-src">${escapeHtml(tt.source)}</div>` : ""}</li>`).join("");
   const tsBlocks = (t.troubleshooting || []).map(x => `
     <div class="tstat-ts ${tstatHit(x.symptom, q) ? "hit" : ""}"><b>${escapeHtml(x.symptom)}</b>
       ${(x.causes || []).length ? `<div class="tstat-note">Check: ${escapeHtml((x.causes || []).join(" · "))}</div>` : ""}
@@ -1976,6 +1979,7 @@ function openTstatDetail(id) {
       ${s.installerTest ? `<p><b>System test:</b> ${escapeHtml(s.installerTest)}</p>` : ""}
       ${s.factoryReset ? `<p><b>Factory reset:</b> ${escapeHtml(s.factoryReset)}</p>` : ""}
     </div>` : ""}
+    ${cardTips ? `<div class="detail-section tech-tip"><h3>💡 Manufacturer tech tip</h3><ul>${cardTips}</ul></div>` : ""}
     ${diagRows ? `<div class="detail-section"><h3>Codes &amp; alerts</h3><table class="tstat-table">${diagRows}</table></div>` : ""}
     ${tsBlocks ? `<div class="detail-section"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
     ${(t.tips || []).length ? `<div class="detail-section"><h3>Field notes</h3><ul>${(t.tips || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
@@ -7159,7 +7163,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v207";
+const APP_VERSION = "v208";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
