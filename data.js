@@ -6486,6 +6486,9 @@ const ERROR_CODES = [
       "Check EEV operation and coil resistance",
       "Check compressor compression performance if charge and thermistors check out",
     ],
+    techTips: [
+      { text: "17 Series RXB18AXVJU not cooling with F3 and U0: Daikin found moisture can oxidize the EEV. Check the EEV coil resistance against spec and replace the EEV (part 2539348) if it's out; if IC12 or IC13 on the PCB is damaged, replace both the EEV and the PCB (part 4022326). Units shipped from August 1, 2021 have the improved EEV - a green dot on the bar code label.", source: "Daikin TSB-OT-0014, Ductless 17 Series, 18,000 BTU Heat Pump - Potential EEV Malfunction, Nov 2021 (distributor bulletin)" },
+    ],
     confidence: "common",
   },
   {
@@ -6849,6 +6852,10 @@ const ERROR_CODES = [
       "Check EEV and reversing valve operation",
       "Verify stop valves are fully open",
       "Replace outdoor PCB if the above check out",
+    ],
+    techTips: [
+      { text: "19 Series RX18AXVJU/FTX18AXVJU and RX24AXVJU/FTX24AXVJU heat pumps can throw an intermittent F3 that shuts the unit down in heating. Cycling power clears it until it happens again; Daikin's permanent fix is a replacement outdoor PCB or re-flashed outdoor software (factory inventory shipped after 02/15/2021 has the updated software). The 09/12 sizes and the RK/FTK models are not affected.", source: "Daikin TSB-OT-0008, 19 Series (18,000 and 24,000 BTU Heat Pumps) - F3 Error Code, Feb 2021 (distributor bulletin)" },
+      { text: "17 Series RXB18AXVJU not cooling with F3 and U0: Daikin found moisture can oxidize the EEV. Check the EEV coil resistance against spec and replace the EEV (part 2539348) if it's out; if IC12 or IC13 on the PCB is damaged, replace both the EEV and the PCB (part 4022326). Units shipped from August 1, 2021 have the improved EEV - a green dot on the bar code label.", source: "Daikin TSB-OT-0014, Ductless 17 Series, 18,000 BTU Heat Pump - Potential EEV Malfunction, Nov 2021 (distributor bulletin)" },
     ],
     confidence: "common",
   },
@@ -12144,6 +12151,9 @@ const ERROR_CODES = [
       "Check the EEV coil resistance against the service manual",
       "Replace the EEV coil, or the control board if the coil checks good",
     ],
+    techTips: [
+      { text: "On DVFEC and AHVE air handlers, EEV error codes, indoor pressure-sensor error codes or erratic EEV operation can be corrosion in the harness connectors: look for loose pins or corrosion. Minor corrosion - pack the connectors with dielectric grease; severe - cut out the plugs and splice with 18-22 ga insulated butt splices and heat shrink as the TSB shows. Serial 2302 and later have improved grease in the harness; from serial 2406 the connection sits inside the control cabinet.", source: "Daikin TSB C-GN-SP-0023 REV2, DVFEC and AHVE Air Handler Wiring Harness Corrosion, Nov 2024 (distributor bulletin)" },
+    ],
     confidence: "common",
   },
   {
@@ -12200,6 +12210,9 @@ const ERROR_CODES = [
       "Check the pressure sensor connection at the PCB and junction connector",
       "Check the sensor output voltage against the service manual",
       "Replace the sensor, or the control board if the sensor checks good",
+    ],
+    techTips: [
+      { text: "On DVFEC and AHVE air handlers, EEV error codes, indoor pressure-sensor error codes or erratic EEV operation can be corrosion in the harness connectors: look for loose pins or corrosion. Minor corrosion - pack the connectors with dielectric grease; severe - cut out the plugs and splice with 18-22 ga insulated butt splices and heat shrink as the TSB shows. Serial 2302 and later have improved grease in the harness; from serial 2406 the connection sits inside the control cabinet.", source: "Daikin TSB C-GN-SP-0023 REV2, DVFEC and AHVE Air Handler Wiring Harness Corrosion, Nov 2024 (distributor bulletin)" },
     ],
     confidence: "common",
   },
