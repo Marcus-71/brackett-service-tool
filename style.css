@@ -1695,3 +1695,7 @@ main {
 @media (prefers-color-scheme: light) {
   .tstat-tech-tip { background: #fff4d6; color: #5a4300; border-left-color: #e0a100; }
 }
+
+/* long unbroken code strings (e.g. "OUTDOOR/COIL/LIQUID/...") must wrap on phones instead of widening the page */
+.card-top > div { min-width: 0; }
+.card-code, .card-title, .card-meta span, .modal h2 { overflow-wrap: anywhere; }
