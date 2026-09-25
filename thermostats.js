@@ -36835,7 +36835,13 @@ const THERMOSTATS = [
    },
    {
     "code": "Cyan",
-    "meaning": "Indoor unit not connected or cannot communicate"
+    "meaning": "Indoor unit not connected or cannot communicate",
+    "techTips": [
+     {
+      "text": "The two Allied documents disagree on cyan. 508026-01 (10/2024) p5 lists cyan as HVAC Error: \"Indoor unit is not connected or unable to communicate.\" 508063-01 (10/2021) p23 lists cyan as Hardware Error: \"Blinking cyan LED indicates internal communication error.\"",
+      "source": "Allied Air 508063-01 Residential Communicating Systems Service Manual - Parameters and Error Codes-Troubleshooting (10/2021) p23; 508026-01 Comfort Sync A3 Installation and Setup Guide (10/2024) p5"
+     }
+    ]
    },
    {
     "code": "Service Urgent / Service Soon / Information Only",
@@ -36864,7 +36870,8 @@ const THERMOSTATS = [
    }
   ],
   "tips": [
-   "Multiple errors cycle on the status LED one second each, in priority HVAC, thermostat, then Wi-Fi."
+   "Multiple errors cycle on the status LED one second each, in priority HVAC, thermostat, then Wi-Fi.",
+   "Numbered alert codes (10 to 65545, plus \"--\" double dashes) from Table 1 of 508026-01 (pp54-94) are in Error Codes: search \"A3\" plus the code (for example \"A3 601\"), or look for the family \"Allied Air Comfort Sync A3 communicating system - thermostat alert codes\" (170 rows with priority, how to clear and page)."
   ],
   "manuals": [
    {

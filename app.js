@@ -4154,7 +4154,7 @@ const MODEL_PATTERNS = [
   { re: /^AF(80|9[02])/, brand: "Lennox", equipment: "Gas Furnace", series: "Aire-Flo (Lennox) AF80 / AF90 / AF92 / AF92V gas furnace - older badge generation, pre-dates the 80AF/92AF/95AF naming", notes: ["Confirmed label forms from doc titles: AF80MPGBB, AF90MPB, AF92V. MP = multi-position cabinet.","Naming order flip trap: the legacy generation is AF first (AF80/AF90/AF92), the current generation is efficiency first (80AF1/92AF1/95AF1). They are not the same furnaces.","AF90MPB is documented with a White-Rodgers SmartValve I gas valve/control, not a Lennox SureLight board, so the Lennox SureLight tables do not apply. No code table is published for this generation in Error Codes.","Installation Instructions for AF90MPB and AF92V are in Manuals."] },
   // --- end coverage:lennox-furn-legacy ---
   // --- coverage:lennox-furn-current (v124) ---
-  { re: /^ML195/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML195UH / ML195DF 95% gas furnace", notes: ["Two-LED SureLight board (LED #1 red, LED #2 green) - read the DS1/DS2 pattern, not a flash count. Table is in Error Codes.","Flame sense on this board: below 1.5 microamps is a low-flame fault, 0.5 microamps is the minimum sense current.","Rollout code on this table also means the 12-pin connector is not seated - check the harness before condemning the switch.","Serial range 5911J-5912J had the gold-contact pressure switch problem (H-14-01)."] },
+  { re: /^ML195/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML195UH / ML195DF 95% gas furnace", notes: ["Board depends on the dash number: earlier ML195UH / ML195DF use the two-LED SureLight board 100973 (LED #1 red, LED #2 green) - read the DS1/DS2 pattern, not a flash count. ML195UH-03 / ML195DFP-03 use integrated control 103085 with a single RED LED flash count (Lennox S&A Note H-12-10). Both tables are in Error Codes.","Flame sense on this board: below 1.5 microamps is a low-flame fault, 0.5 microamps is the minimum sense current.","Rollout code on this table also means the 12-pin connector is not seated - check the harness before condemning the switch.","Serial range 5911J-5912J had the gold-contact pressure switch problem (H-14-01)."] },
   { re: /^ML197/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML197UHEK 97% R-454B-ready gas furnace (2026 launch)", notes: ["7-segment E-code display, not a flash-count board - the full table is in Error Codes under the ML197UHEK / ML297UHV(K) family.","Carries Low GWP (A2L) refrigerant leak detection: codes E150-E164 and E390 are the sensor set, and E164 is just the test button being pressed.","E106 twin communication fault is unique to this control - it means one twinned furnace lost power or the two 24VAC supplies are out of phase.","Flame signal on this control: normal above 1.5, low 0.5-1.4, drop out below 0.4 microamps.","Lennox has not published Service Literature for ML197 yet - the code table above came out of the Installation Instructions."] },
   // --- end coverage:lennox-furn-current ---
   // --- coverage:allied (v123) ---
@@ -7163,7 +7163,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v209";
+const APP_VERSION = "v210";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
