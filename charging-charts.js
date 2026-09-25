@@ -3563,6 +3563,1048 @@ const CHARGING_CHARTS = [
   ],
   "notes": "Table 10 - Indoor Unit Matches and Sub-cooling Charge Levels (TXV System) and Additional Charge (15 ft. line set). Cooling mode: put SW1 on the display board into charge mode (Table 9 in the manual), run the system 10 minutes to stabilize, then read the subcooling the 2-segment display reports and compare it to the cooling column here. The display does the subcooling math for you in cooling. Heating mode: the display does NOT report subcooling. Connect a gauge and a pipe thermometer to the liquid line, convert the pressure to saturation temperature using Table 11 in the manual, subtract the measured liquid line temperature, and compare that to the heating column here. Additional charge is what to add beyond the factory charge on the nameplate, based on a 15 ft line set. R-454B is a zeotropic blend - charge liquid only, and use saturated LIQUID temperature for subcooling. As printed, the 42K and 48K sections of this table carry identical values for every matchup they share. Printed note: for AHRI certified system match-ups and expanded ratings, visit www.LennoxPros.com.",
   "source": "Lennox ML15KSPV (R-454B) Series Outdoor Units Service Literature, Corp. 100230, June 2026 - Table 10, printed pages 59-60. Verified by two independent pdftotext modes (-table and -lineprinter); -layout misreads this table by one row and was rejected."
+ },
+ {
+  "id": "cc-lennox-xc16-label-normal-operating-pressures-cooling-first-stage",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230, XC16-036-230, XC16-048-230, XC16-060-230 outdoor units (two-stage air conditioner; charging label 580542-02 as reproduced in Corp. 0625-L5; the label does not name model revisions)",
+  "chartType": "pressure-table",
+  "rowAxis": "temperature of air entering outside coil (F)",
+  "colAxis": "outdoor unit size",
+  "units": "psig, printed as Liquid Line Pressure / Vapor Line Pressure (tolerance Liquid +10 & Suction +5 psig)",
+  "rows": [
+   {
+    "row": "65",
+    "values": {
+     "-024": "215/135",
+     "-036": "217/140",
+     "-048": "222/140",
+     "-060": "219/134"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "-024": "250/138",
+     "-036": "249/143",
+     "-048": "259/143",
+     "-060": "252/137"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "-024": "290/142",
+     "-036": "290/145",
+     "-048": "300/145",
+     "-060": "293/140"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "-024": "335/145",
+     "-036": "334/148",
+     "-048": "345/148",
+     "-060": "338/143"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "-024": "384/148",
+     "-036": "383/150",
+     "-048": "394/150",
+     "-060": "386/145"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "-024": "438/151",
+     "-036": "437/153",
+     "-048": "447/154",
+     "-060": "442/149"
+    }
+   }
+  ],
+  "notes": "Printed as 'Charging Temperatures and Pressures - Table 3 - Normal Operating Pressures (Liquid +10 & Suction +5 psig)', First Stage (Low Capacity). As printed: the values are typical pressures; indoor evaporator match-up, indoor air quantity and evaporator load will cause the pressures to vary. Table 3 may be used to help perform maintenance checks; it is not a procedure for charging the system. Significant deviations could mean the system is not properly charged or a component problem exists; pressures higher than listed indicate overcharge, lower than listed indicate undercharge; verify adjusted charge using the approach method. Label procedure as printed: unit is factory-charged for a matching indoor coil and outdoor coil with a 15 ft (4.6 m) line set; charging method is set by outdoor ambient temperature. 64F (17.7C) and below, or system void of refrigerant: repair leaks, evacuate and weigh in the unit nameplate charge (see Installation Instructions for longer line sets). 65F (18.3C) and above: charge by subcooling, or by normal operating pressures/approach, in high capacity; indoor temperature 70-80F (21-26C) for best results. It may be necessary to block the outdoor coil one side at a time with cardboard/plastic to reach 325-375 psig liquid pressure for checking charge. Subcooling = saturation temperature (HFC-410A P/T chart at liquid line pressure) minus liquid line temperature; if greater than Table 1, recover some refrigerant; if less, add refrigerant. Caution: the same manual (Table 3, printed page 27) prints different, revision-specific pressures for XC16-XXX-230-01 and -02/-03 units; use those when the full model revision on the nameplate is known.",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - 'HFC-410A Charging Information' unit charging label (label part no. 580542-02, date code 1117), Table 3 First Stage (Low Capacity), no printed page number (PDF page 33). Verified by -raw and -table modes agreeing cell-for-cell; -layout scrambled the second-stage rows so it was not used; -lineprinter produced no usable table text; all cells confirmed against rendered image corp0625h-p33.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-label-normal-operating-pressures-cooling-second-stage",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230, XC16-036-230, XC16-048-230, XC16-060-230 outdoor units (two-stage air conditioner; charging label 580542-02 as reproduced in Corp. 0625-L5; the label does not name model revisions)",
+  "chartType": "pressure-table",
+  "rowAxis": "temperature of air entering outside coil (F)",
+  "colAxis": "outdoor unit size",
+  "units": "psig, printed as Liquid Line Pressure / Vapor Line Pressure (tolerance Liquid +10 & Suction +5 psig)",
+  "rows": [
+   {
+    "row": "65",
+    "values": {
+     "-024": "226/136",
+     "-036": "228/136",
+     "-048": "236/133",
+     "-060": "230/126"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "-024": "263/139",
+     "-036": "263/138",
+     "-048": "273/138",
+     "-060": "267/131"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "-024": "305/143",
+     "-036": "305/141",
+     "-048": "314/141",
+     "-060": "309/135"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "-024": "351/145",
+     "-036": "351/143",
+     "-048": "361/144",
+     "-060": "356/137"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "-024": "401/148",
+     "-036": "402/146",
+     "-048": "412/146",
+     "-060": "406/140"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "-024": "457/151",
+     "-036": "459/148",
+     "-048": "467/148",
+     "-060": "462/143"
+    }
+   }
+  ],
+  "notes": "Printed as 'Charging Temperatures and Pressures - Table 3 - Normal Operating Pressures (Liquid +10 & Suction +5 psig)', Second Stage (High Capacity). As printed: the values are typical pressures; indoor evaporator match-up, indoor air quantity and evaporator load will cause the pressures to vary. Table 3 may be used to help perform maintenance checks; it is not a procedure for charging the system. Significant deviations could mean the system is not properly charged or a component problem exists; pressures higher than listed indicate overcharge, lower than listed indicate undercharge; verify adjusted charge using the approach method. Label procedure as printed: unit is factory-charged for a matching indoor coil and outdoor coil with a 15 ft (4.6 m) line set; charging method is set by outdoor ambient temperature. 64F (17.7C) and below, or system void of refrigerant: repair leaks, evacuate and weigh in the unit nameplate charge (see Installation Instructions for longer line sets). 65F (18.3C) and above: charge by subcooling, or by normal operating pressures/approach, in high capacity; indoor temperature 70-80F (21-26C) for best results. It may be necessary to block the outdoor coil one side at a time with cardboard/plastic to reach 325-375 psig liquid pressure for checking charge. Subcooling = saturation temperature (HFC-410A P/T chart at liquid line pressure) minus liquid line temperature; if greater than Table 1, recover some refrigerant; if less, add refrigerant. Caution: the same manual (Table 3, printed page 27) prints different, revision-specific pressures for XC16-XXX-230-01 and -02/-03 units; use those when the full model revision on the nameplate is known.",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - 'HFC-410A Charging Information' unit charging label (label part no. 580542-02, date code 1117), Table 3 Second Stage (High Capacity), no printed page number (PDF page 33). Verified by -raw and -table modes agreeing cell-for-cell; -layout scrambled the second-stage rows so it was not used; -lineprinter produced no usable table text; all cells confirmed against rendered image corp0625h-p33.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-label-target-subcooling-high-capacity",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230, XC16-036-230, XC16-048-230, XC16-060-230 outdoor units (two-stage air conditioner; charging label 580542-02 as reproduced in Corp. 0625-L5; the label does not name model revisions)",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "charging stage",
+  "colAxis": "outdoor unit size",
+  "units": "F (C as printed), tolerance + 1F (0.5C); saturation temperature minus liquid line temperature",
+  "rows": [
+   {
+    "row": "Second stage (High Capacity) - Temp. F (C)",
+    "values": {
+     "-024": "7 (-13.9)",
+     "-036": "8 (-13.3)",
+     "-048": "5 (-15.0)",
+     "-060": "7 (-13.9)"
+    }
+   }
+  ],
+  "notes": "Printed as 'Charging Temperatures and Pressures - Table 1 - Subcooling Values (High Capacity)', Saturation Temperature minus Liquid Line Temperature F (C) + 1F (0.5C). Use at outdoor temperature 65F (18.3C) and above with the compressor in high capacity. The Celsius figures in parentheses are reproduced exactly as printed on the label; they are not valid conversions of a temperature difference (5F of subcooling is about 2.8C), so use the F value. Label procedure as printed: unit is factory-charged for a matching indoor coil and outdoor coil with a 15 ft (4.6 m) line set; charging method is set by outdoor ambient temperature. 64F (17.7C) and below, or system void of refrigerant: repair leaks, evacuate and weigh in the unit nameplate charge (see Installation Instructions for longer line sets). 65F (18.3C) and above: charge by subcooling, or by normal operating pressures/approach, in high capacity; indoor temperature 70-80F (21-26C) for best results. It may be necessary to block the outdoor coil one side at a time with cardboard/plastic to reach 325-375 psig liquid pressure for checking charge. Subcooling = saturation temperature (HFC-410A P/T chart at liquid line pressure) minus liquid line temperature; if greater than Table 1, recover some refrigerant; if less, add refrigerant. Label Table 2 (Approach Values, High Capacity) is not included in this chart. Caution: the same manual (Figure 19, printed page 26) prints different subcooling targets for XC16-XXX-230-01 and -02/-03 units (-048: 6F there vs 5F on this label).",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - 'HFC-410A Charging Information' unit charging label (label part no. 580542-02, date code 1117), Table 1, no printed page number (PDF page 33). Verified by -raw and -table modes agreeing cell-for-cell; -layout scrambled the second-stage rows so it was not used; -lineprinter produced no usable table text; all cells confirmed against rendered image corp0625h-p33.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-230-01-normal-operating-pressures-cooling-first-stage",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230-01, XC16-036-230-01, XC16-048-230-01, XC16-060-230-01 outdoor units (two-stage air conditioner)",
+  "chartType": "pressure-table",
+  "rowAxis": "temperature of air entering outdoor coil (F)",
+  "colAxis": "outdoor unit size and line (Liquid / Suction)",
+  "units": "psig (tolerance Liquid +10 and Suction +5 psig)",
+  "rows": [
+   {
+    "row": "65",
+    "values": {
+     "-024 Liquid": "223",
+     "-024 Suction": "141",
+     "-036 Liquid": "227",
+     "-036 Suction": "137",
+     "-048 Liquid": "224",
+     "-048 Suction": "142",
+     "-060 Liquid": "215",
+     "-060 Suction": "136"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "-024 Liquid": "256",
+     "-024 Suction": "143",
+     "-036 Liquid": "261",
+     "-036 Suction": "142",
+     "-048 Liquid": "258",
+     "-048 Suction": "144",
+     "-060 Liquid": "250",
+     "-060 Suction": "139"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "-024 Liquid": "297",
+     "-024 Suction": "145",
+     "-036 Liquid": "302",
+     "-036 Suction": "145",
+     "-048 Liquid": "299",
+     "-048 Suction": "146",
+     "-060 Liquid": "291",
+     "-060 Suction": "142"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "-024 Liquid": "341",
+     "-024 Suction": "148",
+     "-036 Liquid": "347",
+     "-036 Suction": "148",
+     "-048 Liquid": "345",
+     "-048 Suction": "148",
+     "-060 Liquid": "337",
+     "-060 Suction": "144"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "-024 Liquid": "389",
+     "-024 Suction": "150",
+     "-036 Liquid": "396",
+     "-036 Suction": "150",
+     "-048 Liquid": "395",
+     "-048 Suction": "150",
+     "-060 Liquid": "388",
+     "-060 Suction": "146"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "-024 Liquid": "443",
+     "-024 Suction": "153",
+     "-036 Liquid": "452",
+     "-036 Suction": "154",
+     "-048 Liquid": "450",
+     "-048 Suction": "153",
+     "-060 Liquid": "444",
+     "-060 Suction": "148"
+    }
+   }
+  ],
+  "notes": "Printed as 'Table 3. Normal Operating Pressures (Liquid +10 and Suction +5 psig)', XC16-XXX-230-01, First Stage (Low Capacity). As printed: use this table to perform maintenance checks; it is not a procedure for charging the system. Minor variations may be due to differences in installations; significant deviations could mean the system is not properly charged or that a problem exists with some component. Manual charge procedure (Figures 16-19): 65F (18.3C) and above use approach or subcooling in second stage (high capacity), indoor temperature 70-80F (21-26C); 64F (17.7C) and below weigh in (nameplate charge, adjusted 3 oz per 5 ft of 3/8 in. liquid line from 15 ft: add if longer, subtract if shorter). Block the outdoor coil if necessary to reach 325-375 psig for the subcooling check.",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - Table 3, printed page 27 (PDF page 27), XC16-XXX-230-01 First Stage (Low Capacity). Verified by -layout, -raw and -table modes agreeing cell-for-cell (-lineprinter produced no usable table text) and confirmed against rendered image corp0625h-p27.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-230-01-normal-operating-pressures-cooling-second-stage",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230-01, XC16-036-230-01, XC16-048-230-01, XC16-060-230-01 outdoor units (two-stage air conditioner)",
+  "chartType": "pressure-table",
+  "rowAxis": "temperature of air entering outdoor coil (F)",
+  "colAxis": "outdoor unit size and line (Liquid / Suction)",
+  "units": "psig (tolerance Liquid +10 and Suction +5 psig)",
+  "rows": [
+   {
+    "row": "65",
+    "values": {
+     "-024 Liquid": "232",
+     "-024 Suction": "140",
+     "-036 Liquid": "244",
+     "-036 Suction": "132",
+     "-048 Liquid": "235",
+     "-048 Suction": "135",
+     "-060 Liquid": "220",
+     "-060 Suction": "130"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "-024 Liquid": "268",
+     "-024 Suction": "143",
+     "-036 Liquid": "278",
+     "-036 Suction": "139",
+     "-048 Liquid": "269",
+     "-048 Suction": "137",
+     "-060 Liquid": "256",
+     "-060 Suction": "133"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "-024 Liquid": "310",
+     "-024 Suction": "145",
+     "-036 Liquid": "321",
+     "-036 Suction": "142",
+     "-048 Liquid": "313",
+     "-048 Suction": "139",
+     "-060 Liquid": "299",
+     "-060 Suction": "136"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "-024 Liquid": "356",
+     "-024 Suction": "147",
+     "-036 Liquid": "368",
+     "-036 Suction": "144",
+     "-048 Liquid": "361",
+     "-048 Suction": "141",
+     "-060 Liquid": "347",
+     "-060 Suction": "138"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "-024 Liquid": "405",
+     "-024 Suction": "149",
+     "-036 Liquid": "419",
+     "-036 Suction": "147",
+     "-048 Liquid": "412",
+     "-048 Suction": "143",
+     "-060 Liquid": "402",
+     "-060 Suction": "141"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "-024 Liquid": "459",
+     "-024 Suction": "152",
+     "-036 Liquid": "476",
+     "-036 Suction": "150",
+     "-048 Liquid": "471",
+     "-048 Suction": "146",
+     "-060 Liquid": "462",
+     "-060 Suction": "143"
+    }
+   }
+  ],
+  "notes": "Printed as 'Table 3. Normal Operating Pressures (Liquid +10 and Suction +5 psig)', XC16-XXX-230-01, Second Stage (High Capacity). As printed: use this table to perform maintenance checks; it is not a procedure for charging the system. Minor variations may be due to differences in installations; significant deviations could mean the system is not properly charged or that a problem exists with some component. Manual charge procedure (Figures 16-19): 65F (18.3C) and above use approach or subcooling in second stage (high capacity), indoor temperature 70-80F (21-26C); 64F (17.7C) and below weigh in (nameplate charge, adjusted 3 oz per 5 ft of 3/8 in. liquid line from 15 ft: add if longer, subtract if shorter). Block the outdoor coil if necessary to reach 325-375 psig for the subcooling check.",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - Table 3, printed page 27 (PDF page 27), XC16-XXX-230-01 Second Stage (High Capacity). Verified by -layout, -raw and -table modes agreeing cell-for-cell (-lineprinter produced no usable table text) and confirmed against rendered image corp0625h-p27.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-230-02-03-normal-operating-pressures-cooling-first-stage",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230-02, XC16-024-230-03, XC16-036-230-02, XC16-036-230-03, XC16-048-230-02, XC16-048-230-03, XC16-060-230-02, XC16-060-230-03 outdoor units (two-stage air conditioner; table heading reads XC16-XXX-230-02/-03; the manual's specification table lists a -03 only for the XC16-036-230)",
+  "chartType": "pressure-table",
+  "rowAxis": "temperature of air entering outdoor coil (F)",
+  "colAxis": "outdoor unit size and line (Liquid / Suction)",
+  "units": "psig (tolerance Liquid +10 and Suction +5 psig)",
+  "rows": [
+   {
+    "row": "65",
+    "values": {
+     "-024 Liquid": "215",
+     "-024 Suction": "144",
+     "-036 Liquid": "226",
+     "-036 Suction": "142",
+     "-048 Liquid": "224",
+     "-048 Suction": "142",
+     "-060 Liquid": "215",
+     "-060 Suction": "136"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "-024 Liquid": "247",
+     "-024 Suction": "146",
+     "-036 Liquid": "261",
+     "-036 Suction": "144",
+     "-048 Liquid": "258",
+     "-048 Suction": "144",
+     "-060 Liquid": "250",
+     "-060 Suction": "139"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "-024 Liquid": "288",
+     "-024 Suction": "148",
+     "-036 Liquid": "304",
+     "-036 Suction": "145",
+     "-048 Liquid": "299",
+     "-048 Suction": "146",
+     "-060 Liquid": "291",
+     "-060 Suction": "142"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "-024 Liquid": "332",
+     "-024 Suction": "151",
+     "-036 Liquid": "352",
+     "-036 Suction": "147",
+     "-048 Liquid": "345",
+     "-048 Suction": "148",
+     "-060 Liquid": "337",
+     "-060 Suction": "144"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "-024 Liquid": "381",
+     "-024 Suction": "153",
+     "-036 Liquid": "405",
+     "-036 Suction": "150",
+     "-048 Liquid": "395",
+     "-048 Suction": "150",
+     "-060 Liquid": "388",
+     "-060 Suction": "146"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "-024 Liquid": "435",
+     "-024 Suction": "155",
+     "-036 Liquid": "460",
+     "-036 Suction": "150",
+     "-048 Liquid": "450",
+     "-048 Suction": "153",
+     "-060 Liquid": "444",
+     "-060 Suction": "148"
+    }
+   }
+  ],
+  "notes": "Printed as 'Table 3. Normal Operating Pressures (Liquid +10 and Suction +5 psig)', XC16-XXX-230-02/-03, First Stage (Low Capacity). As printed: use this table to perform maintenance checks; it is not a procedure for charging the system. Minor variations may be due to differences in installations; significant deviations could mean the system is not properly charged or that a problem exists with some component. Manual charge procedure (Figures 16-19): 65F (18.3C) and above use approach or subcooling in second stage (high capacity), indoor temperature 70-80F (21-26C); 64F (17.7C) and below weigh in (nameplate charge, adjusted 3 oz per 5 ft of 3/8 in. liquid line from 15 ft: add if longer, subtract if shorter). Block the outdoor coil if necessary to reach 325-375 psig for the subcooling check.",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - Table 3, printed page 27 (PDF page 27), XC16-XXX-230-02/-03 First Stage (Low Capacity). Verified by -layout, -raw and -table modes agreeing cell-for-cell (-lineprinter produced no usable table text) and confirmed against rendered image corp0625h-p27.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-230-02-03-normal-operating-pressures-cooling-second-stage",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230-02, XC16-024-230-03, XC16-036-230-02, XC16-036-230-03, XC16-048-230-02, XC16-048-230-03, XC16-060-230-02, XC16-060-230-03 outdoor units (two-stage air conditioner; table heading reads XC16-XXX-230-02/-03; the manual's specification table lists a -03 only for the XC16-036-230)",
+  "chartType": "pressure-table",
+  "rowAxis": "temperature of air entering outdoor coil (F)",
+  "colAxis": "outdoor unit size and line (Liquid / Suction)",
+  "units": "psig (tolerance Liquid +10 and Suction +5 psig)",
+  "rows": [
+   {
+    "row": "65",
+    "values": {
+     "-024 Liquid": "225",
+     "-024 Suction": "140",
+     "-036 Liquid": "228",
+     "-036 Suction": "144",
+     "-048 Liquid": "235",
+     "-048 Suction": "135",
+     "-060 Liquid": "220",
+     "-060 Suction": "130"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "-024 Liquid": "258",
+     "-024 Suction": "142",
+     "-036 Liquid": "262",
+     "-036 Suction": "146",
+     "-048 Liquid": "269",
+     "-048 Suction": "137",
+     "-060 Liquid": "256",
+     "-060 Suction": "133"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "-024 Liquid": "301",
+     "-024 Suction": "144",
+     "-036 Liquid": "306",
+     "-036 Suction": "148",
+     "-048 Liquid": "313",
+     "-048 Suction": "139",
+     "-060 Liquid": "299",
+     "-060 Suction": "136"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "-024 Liquid": "346",
+     "-024 Suction": "146",
+     "-036 Liquid": "353",
+     "-036 Suction": "150",
+     "-048 Liquid": "361",
+     "-048 Suction": "141",
+     "-060 Liquid": "347",
+     "-060 Suction": "138"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "-024 Liquid": "397",
+     "-024 Suction": "149",
+     "-036 Liquid": "405",
+     "-036 Suction": "151",
+     "-048 Liquid": "412",
+     "-048 Suction": "143",
+     "-060 Liquid": "402",
+     "-060 Suction": "141"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "-024 Liquid": "452",
+     "-024 Suction": "151",
+     "-036 Liquid": "462",
+     "-036 Suction": "154",
+     "-048 Liquid": "471",
+     "-048 Suction": "146",
+     "-060 Liquid": "462",
+     "-060 Suction": "143"
+    }
+   }
+  ],
+  "notes": "Printed as 'Table 3. Normal Operating Pressures (Liquid +10 and Suction +5 psig)', XC16-XXX-230-02/-03, Second Stage (High Capacity). As printed: use this table to perform maintenance checks; it is not a procedure for charging the system. Minor variations may be due to differences in installations; significant deviations could mean the system is not properly charged or that a problem exists with some component. Manual charge procedure (Figures 16-19): 65F (18.3C) and above use approach or subcooling in second stage (high capacity), indoor temperature 70-80F (21-26C); 64F (17.7C) and below weigh in (nameplate charge, adjusted 3 oz per 5 ft of 3/8 in. liquid line from 15 ft: add if longer, subtract if shorter). Block the outdoor coil if necessary to reach 325-375 psig for the subcooling check.",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - Table 3, printed page 27 (PDF page 27), XC16-XXX-230-02/-03 Second Stage (High Capacity). Verified by -layout, -raw and -table modes agreeing cell-for-cell (-lineprinter produced no usable table text) and confirmed against rendered image corp0625h-p27.png (150 dpi)."
+ },
+ {
+  "id": "cc-lennox-xc16-230-01-02-03-target-subcooling",
+  "brand": "Lennox",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV only (as printed: XC16 is designed for use in thermal expansion valve systems; coils with capillary tubes or other non-TXV metering are not approved)",
+  "models": "XC16-024-230-01, XC16-036-230-01, XC16-048-230-01, XC16-060-230-01, XC16-024-230-02, XC16-036-230-02, XC16-048-230-02, XC16-060-230-02, XC16-024-230-03, XC16-036-230-03, XC16-048-230-03, XC16-060-230-03 outdoor units (two-stage air conditioner; headings read XC16-XXX-230-01 and XC16-XXX-230-02/-03)",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "model revision (printed row label 'Any' = any temperature of air entering outdoor coil)",
+  "colAxis": "outdoor unit size",
+  "units": "F (C), tolerance F: +/-1.0 [C: +/-0.6]; saturation temperature minus liquid line temperature",
+  "rows": [
+   {
+    "row": "XC16-XXX-230-01 - Any",
+    "values": {
+     "-024": "5 (2.8)",
+     "-036": "6 (3.3)",
+     "-048": "6 (3.3)",
+     "-060": "9 (5.0)"
+    }
+   },
+   {
+    "row": "XC16-XXX-230-02/-03 - Any",
+    "values": {
+     "-024": "5 (2.8)",
+     "-036": "6 (3.3)",
+     "-048": "6 (3.3)",
+     "-060": "9 (5.0)"
+    }
+   }
+  ],
+  "notes": "Printed as 'SC (Subcooling) Values (F:+/-1.0 [C: +/-0.6])' in 'Figure 19. Using HFC-410A Subcooling (TXV) Charge Method'. Procedure as printed: measure outdoor ambient; 64F and below use the weigh-in method (weigh in or remove refrigerant based upon line length). 65F and above: connect gauges, confirm airflow across the coil (Delta-T chart), compare pressures with Table 3, set thermostat to call for heat to build a cooling load of 70-80F (21-26C), then call for cooling and let temperatures and pressures stabilize; if necessary block outdoor coil to maintain 325-375 psig; SAT (liquid line pressure converted with Table 4) minus LIQ = SC. If value is MORE than shown remove refrigerant; if LESS add refrigerant; if refrigerant is added or removed, verify charge using the Approach Method (Figure 18). Charge in second stage (high capacity). The unit charging label on PDF page 33 of the same manual prints different targets (-048: 5F).",
+  "source": "Lennox Service Literature 'XC16 (HFC-410A) Series Units', Corp. 0625-L5, Revised August 2018 (corp0625h.pdf, https://tech.lennoxintl.com/C03e7o14l/VIu12Ch2uV/corp0625h.pdf) - Figure 19, printed page 26 (PDF page 26). Verified by -raw and -table modes agreeing cell-for-cell and confirmed against rendered image corp0625h-p26.png (150 dpi); -layout agreed for these subcooling rows (it scrambled only the neighbouring Figure 18 approach row); -lineprinter produced no usable text."
+ },
+ {
+  "id": "cc-goodman-r32-glxs4b-txv-superheat-subcooling-targets",
+  "brand": "Goodman (Daikin Comfort Technologies)",
+  "refrigerant": "R-32",
+  "meteringDevice": "TXV",
+  "models": "GLXS4B, GLXS4M, ALXS4B, ALXS4N (e.g. GLXS4BA, GLXS4MA, ALXS4BA, ALXS4NA) R-32 single-stage condensing units with a TXV indoor coil",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "nominal capacity (tons)",
+  "colAxis": "setting (as printed)",
+  "units": "F (target range at the outdoor unit)",
+  "rows": [
+   {
+    "row": "1.5-2.5T",
+    "values": {
+     "SH at Compressor": "10-14F",
+     "SC at OD Liq": "7-9F"
+    }
+   },
+   {
+    "row": "3.0-5.0T",
+    "values": {
+     "SH at Compressor": "9-11F",
+     "SC at OD Liq": "7-9F"
+    }
+   }
+  ],
+  "notes": "Table title as printed: Superheat Settings for Expansion Valve Systems; caption as printed: Superheat setting for TXV systems for GLXS4B, GLXS4M, ALXS4B, and ALXS4N family. Units matched with indoor coils equipped with a TXV should be charged by subcooling only (subcooling formula printed as saturated liquid line temperature minus liquid line temperature). Run the system at least 10 minutes to let pressures stabilize; clamp a thermometer on the liquid line near the liquid line service valve, with good contact. Body text says TXV-based systems should have a subcooling value of 8 F +/- 1 F; add refrigerant to increase subcooling, remove to decrease. Superheat is measured with a thermometer 4-6 in. from the compressor on the suction line (suction line temp minus saturated suction temp); turn the TXV stem clockwise to increase superheat, counterclockwise to decrease. If subcooling and superheat are both low, set the TXV to the tabled superheat, then check subcooling; if subcooling is low and superheat high, add charge to raise subcooling to 8 F +/- 1 F, then check superheat; if both are high, set the TXV to the tabled superheat, then check subcooling; if subcooling is high and superheat low, set the TXV to the tabled superheat and remove charge to lower subcooling to 8 F +/- 1 F. Superheat on adjustable-TXV coils is factory set and normally needs no adjustment except in unique applications (line length, indoor/outdoor height difference, tubing size, poor performance), by qualified service personnel only. Two-stage models charge at low stage. Do not adjust charge based only on suction pressure except for a gross undercharge. Outdoor temperature must be 60 F or higher. The RS6200301r1 caption lists only GLXS4B, ALXS4B and ALXS4N; GLXS4M was added in IOG-4048C.",
+  "source": "Goodman/Amana 'Condensing Unit Air Conditioning Installation & Service Reference', P/N IOG-4048C, December 2024 (partnerlinkmarketing.goodmanmfg.com/Lit/IOG-4048C.pdf) - page 11 (PDF page 11). Same table in 'Service and Troubleshooting - ALXS3/4/5, GLXS3/4/5 Condensing Units, ALZS4/5, GLZS4/5 Heat Pumps', RS6200301r1, August 2024 (daikincomfort.com/docs/default-source/amst/sm-rs6200301r1.pdf) - page 41 (PDF page 41). Verified by pdftotext -layout, -raw and -table on both documents (all three agree cell-for-cell) plus 150 dpi page render."
+ },
+ {
+  "id": "cc-goodman-r32-glxs3b-txv-superheat-subcooling-targets",
+  "brand": "Goodman (Daikin Comfort Technologies)",
+  "refrigerant": "R-32",
+  "meteringDevice": "TXV",
+  "models": "GLXS3B, ALXS3B, ALXS3N (e.g. GLXS3BN, ALXS3BN) R-32 single-stage condensing units with a TXV indoor coil",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "nominal capacity (tons)",
+  "colAxis": "setting (as printed)",
+  "units": "F (target range at the outdoor unit)",
+  "rows": [
+   {
+    "row": "1.5-2.5T",
+    "values": {
+     "SH at Compressor": "10-14F",
+     "SC at OD Liq": "7-9F"
+    }
+   },
+   {
+    "row": "3.0-5.0T",
+    "values": {
+     "SH at Compressor": "10-12F",
+     "SC at OD Liq": "7-9F"
+    }
+   }
+  ],
+  "notes": "Table title as printed: Superheat Settings for Expansion Valve Systems; caption as printed: Superheat setting for TXV systems for GLXS3B, ALXS3B, and ALXS3N family. Units matched with indoor coils equipped with a TXV should be charged by subcooling only (subcooling formula printed as saturated liquid line temperature minus liquid line temperature). Run the system at least 10 minutes to let pressures stabilize; clamp a thermometer on the liquid line near the liquid line service valve, with good contact. Body text says TXV-based systems should have a subcooling value of 8 F +/- 1 F; add refrigerant to increase subcooling, remove to decrease. Superheat is measured with a thermometer 4-6 in. from the compressor on the suction line (suction line temp minus saturated suction temp); turn the TXV stem clockwise to increase superheat, counterclockwise to decrease. If subcooling and superheat are both low, set the TXV to the tabled superheat, then check subcooling; if subcooling is low and superheat high, add charge to raise subcooling to 8 F +/- 1 F, then check superheat; if both are high, set the TXV to the tabled superheat, then check subcooling; if subcooling is high and superheat low, set the TXV to the tabled superheat and remove charge to lower subcooling to 8 F +/- 1 F. Superheat on adjustable-TXV coils is factory set and normally needs no adjustment except in unique applications (line length, indoor/outdoor height difference, tubing size, poor performance), by qualified service personnel only. Two-stage models charge at low stage. Do not adjust charge based only on suction pressure except for a gross undercharge. Outdoor temperature must be 60 F or higher.",
+  "source": "Goodman/Amana 'Condensing Unit Air Conditioning Installation & Service Reference', P/N IOG-4048C, December 2024 (partnerlinkmarketing.goodmanmfg.com/Lit/IOG-4048C.pdf) - page 11 (PDF page 11). Same table in 'Service and Troubleshooting - ALXS3/4/5, GLXS3/4/5 Condensing Units, ALZS4/5, GLZS4/5 Heat Pumps', RS6200301r1, August 2024 (daikincomfort.com/docs/default-source/amst/sm-rs6200301r1.pdf) - page 41 (PDF page 41). Verified by pdftotext -layout, -raw and -table on both documents (all three agree cell-for-cell) plus 150 dpi page render."
+ },
+ {
+  "id": "cc-goodman-r32-glxs5ba-txv-superheat-subcooling-targets",
+  "brand": "Goodman (Daikin Comfort Technologies)",
+  "refrigerant": "R-32",
+  "meteringDevice": "TXV",
+  "models": "GLXS5BA, ALXS5BA R-32 single-stage condensing units with a TXV indoor coil",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "nominal capacity (tons)",
+  "colAxis": "setting (as printed)",
+  "units": "F (target range at the outdoor unit)",
+  "rows": [
+   {
+    "row": "1.5T-4.0T",
+    "values": {
+     "SH at Compressor": "10-12F",
+     "SC at OD Liq": "7-9F"
+    }
+   },
+   {
+    "row": "5.0T",
+    "values": {
+     "SH at Compressor": "10-12F",
+     "SC at OD Liq": "5-7F"
+    }
+   }
+  ],
+  "notes": "Table title as printed: Superheat Settings for Expansion Valve Systems (printed with a ligature glitch as 'Superheat Sengs'); caption as printed: Superheat / Subcool Setting for TXV systems for GLXS5BA and ALXS5BA. Units matched with indoor coils equipped with a TXV should be charged by subcooling only (subcooling formula printed as saturated liquid line temperature minus liquid line temperature). Run the system at least 10 minutes to let pressures stabilize; clamp a thermometer on the liquid line near the liquid line service valve, with good contact. Body text says TXV-based systems should have a subcooling value of 8 F +/- 1 F; add refrigerant to increase subcooling, remove to decrease. Superheat is measured with a thermometer 4-6 in. from the compressor on the suction line (suction line temp minus saturated suction temp); turn the TXV stem clockwise to increase superheat, counterclockwise to decrease. If subcooling and superheat are both low, set the TXV to the tabled superheat, then check subcooling; if subcooling is low and superheat high, add charge to raise subcooling to 8 F +/- 1 F, then check superheat; if both are high, set the TXV to the tabled superheat, then check subcooling; if subcooling is high and superheat low, set the TXV to the tabled superheat and remove charge to lower subcooling to 8 F +/- 1 F. Superheat on adjustable-TXV coils is factory set and normally needs no adjustment except in unique applications (line length, indoor/outdoor height difference, tubing size, poor performance), by qualified service personnel only. Two-stage models charge at low stage. Do not adjust charge based only on suction pressure except for a gross undercharge. Outdoor temperature must be 60 F or higher.",
+  "source": "Goodman/Amana 'Condensing Unit Air Conditioning Installation & Service Reference', P/N IOG-4048C, December 2024 (partnerlinkmarketing.goodmanmfg.com/Lit/IOG-4048C.pdf) - page 11 (PDF page 11). Same table in 'Service and Troubleshooting - ALXS3/4/5, GLXS3/4/5 Condensing Units, ALZS4/5, GLZS4/5 Heat Pumps', RS6200301r1, August 2024 (daikincomfort.com/docs/default-source/amst/sm-rs6200301r1.pdf) - page 41 (PDF page 41). Verified by pdftotext -layout, -raw and -table on both documents (all three agree cell-for-cell) plus 150 dpi page render."
+ },
+ {
+  "id": "cc-goodman-r32-glxs-piston-superheat-targets",
+  "brand": "Goodman (Daikin Comfort Technologies)",
+  "refrigerant": "R-32",
+  "meteringDevice": "fixed orifice",
+  "models": "GLXS3, GLXS4, GLXS5, ALXS3, ALXS4, ALXS5 families: GLXS3B, GLXS3BN, GLXS4B, GLXS4BA, GLXS4M, GLXS4MA, GLXS5BA, ALXS3B, ALXS3BN, ALXS3N, ALXS4B, ALXS4BA, ALXS4N, ALXS4NA, ALXS5BA R-32 single-stage condensing units matched to a piston (fixed orifice) indoor coil",
+  "chartType": "superheat-grid",
+  "rowAxis": "outdoor dry bulb temperature (F)",
+  "colAxis": "indoor wet bulb temperature (F)",
+  "units": "F (target superheat, +/- 1.0 F)",
+  "rows": [
+   {
+    "row": "60",
+    "values": {
+     "55": "10",
+     "57": "13",
+     "59": "17",
+     "61": "20",
+     "63": "23",
+     "65": "26",
+     "67": "29",
+     "69": "30",
+     "71": "31"
+    }
+   },
+   {
+    "row": "65",
+    "values": {
+     "55": "8",
+     "57": "11",
+     "59": "14",
+     "61": "16",
+     "63": "19",
+     "65": "22",
+     "67": "26",
+     "69": "27",
+     "71": "29"
+    }
+   },
+   {
+    "row": "70",
+    "values": {
+     "55": "5",
+     "57": "8",
+     "59": "10",
+     "61": "13",
+     "63": "15",
+     "65": "19",
+     "67": "23",
+     "69": "24",
+     "71": "25"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "6",
+     "61": "9",
+     "63": "11",
+     "65": "15",
+     "67": "20",
+     "69": "21",
+     "71": "23"
+    }
+   },
+   {
+    "row": "80",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "7",
+     "65": "12",
+     "67": "17",
+     "69": "18",
+     "71": "20"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "8",
+     "67": "13",
+     "69": "15",
+     "71": "16"
+    }
+   },
+   {
+    "row": "90",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "7",
+     "67": "10",
+     "69": "11",
+     "71": "13"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "7",
+     "69": "8",
+     "71": "10"
+    }
+   },
+   {
+    "row": "100",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "7",
+     "71": "8"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "---",
+     "71": "7"
+    }
+   },
+   {
+    "row": "110",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "---",
+     "71": "---"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "---",
+     "71": "---"
+    }
+   }
+  ],
+  "notes": "Table title as printed: System Superheat Targets for Piston Match-ups (+/- 1.0 F). Dashes are printed in the source; the manual gives no superheat target for those combinations. Cell-for-cell identical to the Daikin R-32 piston grid (cc-daikin-r32-piston-superheat-targets). Outdoor temperature must be 60 F or higher; thermostat to COOL, fan AUTO, set point well below room temperature. Verify indoor airflow and total static pressure (0.5 in. WC or less) first. Do not make superheat adjustments until indoor conditions have stabilized (can take up to 24 hours); run in cooling 10-15 minutes or until pressures stabilize (the fixed-orifice steps say at least 10 minutes). Thermometer 4-6 in. from the compressor on the suction line, good contact, insulated; use vapor temperature. Superheat Formula printed as Suct. Line Temp. minus Sat. Suct. Temp. Add charge to lower superheat, recover charge to raise it. Units matched to a TXV indoor coil are charged by subcooling only, not with this table. Factory charge covers the AHRI-rated designated tested combination (DTC) coil and 15 ft of line set; beyond 15 ft add refrigerant per the Initial Charge Addition table in the installation instructions (by liquid and suction tube diameter, not reproduced here).",
+  "source": "Goodman/Amana 'Condensing Unit Air Conditioning Installation & Service Reference', P/N IOG-4048C, December 2024 (partnerlinkmarketing.goodmanmfg.com/Lit/IOG-4048C.pdf) - page 9 (PDF page 9). Same table in 'Service and Troubleshooting - ALXS3/4/5, GLXS3/4/5 Condensing Units, ALZS4/5, GLZS4/5 Heat Pumps', RS6200301r1, August 2024 (daikincomfort.com/docs/default-source/amst/sm-rs6200301r1.pdf) - page 38 (PDF page 38). Verified by pdftotext -layout, -raw and -table on both documents (all three agree cell-for-cell) plus 150 dpi page render."
+ },
+ {
+  "id": "cc-goodman-r22-gsc13-txv-target-subcooling",
+  "brand": "Goodman / Amana (Goodman Manufacturing)",
+  "refrigerant": "R-22",
+  "meteringDevice": "TXV",
+  "models": "GSC13 R-22 13 SEER condensing units: GSC13018, GSC13024, GSC13030, GSC13036, GSC13042, GSC13048, GSC13060",
+  "chartType": "target-subcooling-fixed",
+  "rowAxis": "system (all models covered)",
+  "colAxis": null,
+  "units": "F (target subcooling and superheat ranges)",
+  "rows": [
+   {
+    "row": "GSC13 with TXV",
+    "values": {
+     "subcooling": "7 +/- 2F",
+     "superheat": "8 +/- 1F"
+    }
+   }
+  ],
+  "notes": "From Final Charge Adjustment, Expansion Valve System (procedure text, not a printed table). Outdoor temperature must be 60 F or higher; thermostat COOL, fan AUTO, set point well below room temperature; allow 20 minutes to stabilize for expansion valves. Connect gauges to base-valve service ports, run at least 10 minutes. Thermometer on the liquid (small) line near the liquid line service valve, good contact, insulated. Systems with TXV application should have subcooling of 7 +/- 2 F and superheat of 8 +/- 1 F. If subcooling and superheat are both low: adjust TXV to 8 +/- 1 F superheat, then recheck subcooling (stem clockwise increases superheat, counterclockwise decreases). Subcooling low and superheat high: add charge to raise subcooling to 7 +/- 2 F, then recheck superheat. Both high: adjust TXV to 8 +/- 1 F superheat, then recheck subcooling. Subcooling high and superheat low: adjust TXV to 8 +/- 1 F superheat and remove charge to lower subcooling to 7 +/- 2 F. Do not adjust charge based on suction pressure unless there is a gross undercharge. Subcooling Formula printed as Sat. Liquid Temp. minus Liquid Line Temp.",
+  "source": "Goodman IO-402E, Condensing AC Unit, Single / Three Phase Air Conditioners, Installation & Service Reference (GSC13 R-22), December 2011; goodmanmfg.com/Portals/0/pdf/M-Info/IOs/IO-GSC13.pdf via web.archive.org/web/20120324144148 - page 7 (PDF page 7). Verified by pdftotext -layout, -raw and -table (identical wording and values in all three) and by the 150 dpi page image."
+ },
+ {
+  "id": "cc-goodman-r22-gsc13-fixed-orifice-system-superheat",
+  "brand": "Goodman / Amana (Goodman Manufacturing)",
+  "refrigerant": "R-22",
+  "meteringDevice": "fixed orifice",
+  "models": "GSC13 R-22 13 SEER condensing units: GSC13018, GSC13024, GSC13030, GSC13036, GSC13042, GSC13048, GSC13060",
+  "chartType": "superheat-grid",
+  "rowAxis": "outdoor dry bulb temperature (F)",
+  "colAxis": "indoor wet bulb temperature (F)",
+  "units": "F (system superheat)",
+  "rows": [
+   {
+    "row": "60",
+    "values": {
+     "55": "10",
+     "57": "13",
+     "59": "17",
+     "61": "20",
+     "63": "23",
+     "65": "26",
+     "67": "29",
+     "69": "30",
+     "71": "31"
+    }
+   },
+   {
+    "row": "65",
+    "values": {
+     "55": "8",
+     "57": "11",
+     "59": "14",
+     "61": "16",
+     "63": "19",
+     "65": "22",
+     "67": "26",
+     "69": "27",
+     "71": "29"
+    }
+   },
+   {
+    "row": "70",
+    "values": {
+     "55": "5",
+     "57": "8",
+     "59": "10",
+     "61": "13",
+     "63": "15",
+     "65": "19",
+     "67": "23",
+     "69": "24",
+     "71": "25"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "6",
+     "61": "9",
+     "63": "11",
+     "65": "15",
+     "67": "20",
+     "69": "21",
+     "71": "23"
+    }
+   },
+   {
+    "row": "80",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "7",
+     "65": "12",
+     "67": "17",
+     "69": "18",
+     "71": "20"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "8",
+     "67": "13",
+     "69": "15",
+     "71": "16"
+    }
+   },
+   {
+    "row": "90",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "5",
+     "67": "10",
+     "69": "11",
+     "71": "13"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "5",
+     "69": "8",
+     "71": "10"
+    }
+   },
+   {
+    "row": "100",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "5",
+     "71": "8"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "---",
+     "71": "5"
+    }
+   },
+   {
+    "row": "110",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "---",
+     "71": "---"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "55": "---",
+     "57": "---",
+     "59": "---",
+     "61": "---",
+     "63": "---",
+     "65": "---",
+     "67": "---",
+     "69": "---",
+     "71": "---"
+    }
+   }
+  ],
+  "notes": "Table title as printed: SYSTEM SUPERHEAT. Used for the Fixed Orifice final charge adjustment. Dashes are printed in the source; the manual gives no superheat value for those combinations. Outdoor temperature must be 60 F or higher; set thermostat to COOL, fan to AUTO, set point well below room temperature, and let the system stabilize (10 minutes for fixed orifices). Connect gauges to the base-valve service ports and run at least 10 minutes. Thermometer on the suction (large) line near the suction line service valve, good contact, insulated. Add charge to lower superheat, recover charge to raise superheat. Superheat Formula printed as Suct. Line Temp. minus Sat. Suct. Temp. The document states these units ship with a nitrogen/helium holding charge and are only to be used as replacement components for pre-2010 installed systems.",
+  "source": "Goodman IO-402E, Condensing AC Unit, Single / Three Phase Air Conditioners, Installation & Service Reference (GSC13 R-22), December 2011; goodmanmfg.com/Portals/0/pdf/M-Info/IOs/IO-GSC13.pdf via web.archive.org/web/20120324144148 - page 8 (PDF page 8). Same table also printed on PDF page 1. Verified by pdftotext -layout, -raw and -table (all 12 rows agree cell-for-cell) and by the 150 dpi page image."
  }
 
 ];

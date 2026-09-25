@@ -3750,11 +3750,15 @@ function ccApplyScan() {
     autoSet.push("metering: " + (meter === "txv" ? "TXV/EEV" : "fixed orifice/piston") + " from the factory chart");
   }
   // Refrigerant follows the BEST-matched chart - the document beats the
-  // model-family guess when both speak.
+  // model-family guess when both speak. An R-22 chart has no option in the
+  // calc (no R-22 P/T data), so flag it instead of letting the math below
+  // run on the wrong refrigerant.
+  let refrigWarn = "";
   {
     const sel = document.getElementById("cc-refrig");
     const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(hits[0].chart.refrigerant));
-    if (want && sel.value !== want.value) {
+    if (!want) refrigWarn = hits[0].chart.refrigerant;
+    else if (sel.value !== want.value) {
       sel.value = want.value;
       autoSet.push("refrigerant: " + hits[0].chart.refrigerant + " from the factory chart");
     }
@@ -3771,7 +3775,7 @@ function ccApplyScan() {
         `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(String(v))}</li>`).join("");
       rowHtml = `<div class="cc-scan-rowhit"><strong>Your matchup:</strong> ${escapeHtml(r.row)}<ul class="scan-id-facts">${vals}</ul></div>`;
       // Feed the printed cooling subcool target into the calc once.
-      if (!applied && /subcool/i.test(chart.id)) {
+      if (!applied && !refrigWarn && /subcool/i.test(chart.id)) {
         const coolKey = Object.keys(r.values).find(k => /cool/i.test(k) && !/heat/i.test(k)) || Object.keys(r.values)[0];
         const n = parseFloat(String(r.values[coolKey]).replace(/[^0-9.\-]/g, ""));
         if (!isNaN(n)) {
@@ -3791,7 +3795,8 @@ function ccApplyScan() {
   }
   const notes = autoSet.slice();
   if (applied) notes.push(`subcool target: <strong>${applied.n}°F</strong> from the factory table (${escapeHtml(applied.key)}) — the readings below now judge against the printed number, not the 10°F default`);
-  box.innerHTML = cards.join("")
+  box.innerHTML = (refrigWarn ? `<div class="cc-scan-miss">⚠️ This unit's factory chart is for <strong>${escapeHtml(refrigWarn)}</strong>. The calculator below only has R-410A / R-32 / R-454B pressure-temperature data, so don't trust its numbers here. Charge from the chart with an ${escapeHtml(refrigWarn)} P/T chart.</div>` : "")
+    + cards.join("")
     + (notes.length ? `<div class="cc-scan-applied">✅ Auto-set — ${notes.map(n => /</.test(n) ? n : escapeHtml(n)).join("; ")}.</div>` : "");
   box.querySelectorAll(".cc-chart-link").forEach(b => { b.onclick = () => openChargingChart(b.dataset.chart); });
   renderChargeCalc();
@@ -7163,7 +7168,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v211";
+const APP_VERSION = "v212";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
