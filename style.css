@@ -1728,3 +1728,9 @@ main {
 .checker-drop-sub { font-size: 0.85rem; color: var(--text-dim); }
 .checker-drop-steps { margin: 0.3rem 0 0; padding-left: 1.2rem; font-size: 0.85rem; color: var(--text-dim); }
 .checker-launch.secondary { background: transparent; color: var(--text); }
+.checker-guide {
+  display: block; width: 100%; margin: 0 0 0.9rem; padding: 0.75rem 1rem; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+}
+.checker-guide:active { transform: scale(0.99); }

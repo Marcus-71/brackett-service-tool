@@ -3312,6 +3312,12 @@ const TOOLBOX = [
   "equipment": "Condenser/Heat Pump",
   "title": "Play back a D-Checker log on a live refrigerant-circuit diagram",
   "checkerTab": true,
+  "guides": [
+   {
+    "label": "📘 Daikin Checker Field Guide",
+    "url": "guides/daikin-checker-guide.html"
+   }
+  ],
   "launch": {
    "label": "▶ Open Cycle Viewer",
    "url": "dchecker/index.html",

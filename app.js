@@ -1722,6 +1722,8 @@ function openToolboxDetail(id) {
     if (seed) return `<button class="tstat-manual-btn" data-seed="${escapeHtml(seed.file)}">${label}</button>`;
     return "";
   }).join("");
+  // In-app guides (our own pages under guides/): open full-screen, precached for offline.
+  const guideBtns = (t.guides || []).filter(g => g && g.url).map(g => `<button class="tstat-manual-btn" data-guide="${escapeHtml(g.url)}">${escapeHtml(g.label || "Guide")} <span class="tstat-note">opens in the app - works offline</span></button>`).join("");
   const linkBtns = (t.links || []).filter(l => l && l.url).map(l => `<a class="tstat-manual-btn ext" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label || l.url)} <span class="tstat-note">opens in browser - needs signal</span></a>`).join("");
   // In-app tools (e.g. the D-Checker Cycle Viewer) ship with the app and open
   // full-screen in the portal shell; they're precached, so they work offline.
@@ -1736,7 +1738,7 @@ function openToolboxDetail(id) {
     ${steps ? `<div class="detail-section"><h3>Steps</h3><ol>${steps}</ol></div>` : ""}
     ${t.caution ? `<div class="caution-box">⚠ ${escapeHtml(t.caution)}</div>` : ""}
     ${notes ? `<div class="detail-section"><h3>Good to know</h3><ul>${notes}</ul></div>` : ""}
-    ${(manualBtns || linkBtns) ? `<div class="detail-section"><h3>Guides &amp; links</h3><div class="tstat-manuals">${manualBtns}${linkBtns}</div></div>` : ""}
+    ${(guideBtns || manualBtns || linkBtns) ? `<div class="detail-section"><h3>Guides &amp; links</h3><div class="tstat-manuals">${guideBtns}${manualBtns}${linkBtns}</div></div>` : ""}
     ${t.source ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(t.source)}</p></div>` : ""}
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
@@ -1750,6 +1752,9 @@ function openToolboxDetail(id) {
     closeModal();
     openPortalEmbed(t.launch.url, t.launch.title || t.toolName);
   };
+  modal.querySelectorAll(".tstat-manual-btn[data-guide]").forEach(btn => {
+    btn.onclick = () => { const label = btn.firstChild.textContent.trim(); trackEvent("opened toolbox guide: " + label.slice(0, 60)); closeModal(); openPortalEmbed(btn.dataset.guide, label); };
+  });
   modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
     btn.onclick = () => { trackEvent("opened toolbox guide: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
   });
@@ -1859,6 +1864,10 @@ document.getElementById("checkerFile").addEventListener("change", (e) => { openR
 checkerDrop.addEventListener("dragover", (e) => { e.preventDefault(); checkerDrop.classList.add("over"); });
 checkerDrop.addEventListener("dragleave", () => checkerDrop.classList.remove("over"));
 checkerDrop.addEventListener("drop", (e) => { e.preventDefault(); checkerDrop.classList.remove("over"); openRecordingInViewer(e.dataTransfer.files[0]); });
+document.getElementById("checkerGuideBtn").addEventListener("click", () => {
+  trackEvent("opened toolbox guide: Daikin Checker Field Guide");
+  openPortalEmbed("guides/daikin-checker-guide.html", "Daikin Checker Field Guide");
+});
 document.getElementById("checkerLaunchBtn").addEventListener("click", () => {
   const t = TOOLBOX.find(x => x.id === CHECKER_VIEWER_ID);
   trackEvent("opened toolbox app: " + t.toolName.slice(0, 60));
@@ -7226,7 +7235,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v217";
+const APP_VERSION = "v218";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
