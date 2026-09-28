@@ -364,6 +364,24 @@ body.no-dock .dock{display:none}
 body.no-cabinet #indoor-var .cab,body.no-cabinet #indoor-var .hx,body.no-cabinet #indoor-var .flames,body.no-cabinet #indoor-var .burner,body.no-cabinet #indoor-var .strips{display:none}
 .toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
+/* what to check */
+.checks{padding:12px 14px;margin-bottom:12px}
+.checks-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:8px}
+.checks-head b{font-size:15px}
+.checks-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.check{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:6px;padding:8px 10px;background:var(--panel)}
+.check.lvl-alarm{border-left-color:var(--alarm)}.check.lvl-info{border-left-color:var(--idle)}
+.check summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.check summary::-webkit-details-marker{display:none}
+.check summary::before{content:'▸';color:var(--ink2);font-size:12px}
+.check[open] summary::before{content:'▾'}
+.check-title{font-weight:800;font-size:14px}
+.check-when{color:var(--ink2);font-size:12px}
+.check-figs{font-family:var(--mono);font-size:12px;color:var(--ink2);margin:6px 0 4px;overflow-wrap:anywhere}
+.check ol{margin:4px 0 0;padding-left:20px;font-size:13px;display:flex;flex-direction:column;gap:3px}
+.check-rule{font-size:12px;color:var(--ink2);margin:6px 0 0}
+.check-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#checks-more{margin-top:8px}
 /* live feed */
 .livemenu{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
 .livemenu[hidden],.livebar[hidden]{display:none}
@@ -414,6 +432,11 @@ body.no-cabinet #indoor-var .cab,body.no-cabinet #indoor-var .hx,body.no-cabinet
 
   <!-- CYCLE -->
   <section class="panel" id="panel-cycle">
+    <div class="card checks" id="checks" hidden>
+      <div class="checks-head"><b>What to check</b><span class="note">from the recorded figures · confirm with your own gauges before replacing parts</span></div>
+      <ol class="checks-list" id="checks-list"></ol>
+      <button class="btn small" id="checks-more" type="button" hidden></button>
+    </div>
     <div class="card">
       <div class="viewbar">
         <span class="viewlbl">View</span>
@@ -1049,7 +1072,10 @@ function buildDataset(text, name){
   const AUXRX = {furnace:/furnace|gas valve|burner|flame|ignit|combust|\bW[12]\b/i, strips:/\bstrip|electric heat|elec\w* heat|aux\w* heat|\bEH\b|heat kit|backup heat/i};
   const aux = [];
   head.forEach((h, ix) => { const k = AUXRX.furnace.test(h) ? 'furnace' : AUXRX.strips.test(h) ? 'strips' : null; if (k) aux.push({label:h.replace(/^\d+\s*:\s*/, ''), kind:k, vals:rows.slice(1).map(r => (r[ix] || '').trim())}); });
-  return {name, n, t, num, str, mode, runSec, interval, head, aux};
+  // error codes as logged text ("U0", "E7"), which the numeric channel can't hold
+  const rawCol = c => byNum[c] == null ? null : rows.slice(1).map(r => (r[byNum[c]] || '').trim());
+  const err = {odu: rawCol(38), idu: rawCol(116)};
+  return {name, n, t, num, str, mode, runSec, interval, head, aux, err};
 }
 
 /* ---------- rule evaluation ---------- */
@@ -2218,6 +2244,219 @@ async function openFile(buf, name){
   load(new TextDecoder().decode(u8), name);
 }
 
+/* ---------- what to check ----------
+   Turns the signatures and fault patterns found in the log into plain next
+   steps. Keyed by signature code (fault patterns are 'fault-<id>'). Each entry:
+   title (what it may mean), checks (in the order a tech should do them),
+   rule (what tells it apart from the look-alikes). General field practice, not
+   model-specific; every list ends in confirming before replacing parts. */
+const ADVICE = {
+  'fault-under': { title: 'Possible low refrigerant charge', lvl: 'alarm', checks: [
+    'Leak search first: oil spots at flares, brazed joints, service valves and Schrader cores; electronic detector or bubbles.',
+    'Put your own gauges and a clamp thermometer on the liquid line. Compare subcooling with the nameplate / charge chart at steady full speed.',
+    'Before adding refrigerant, rule out a restriction: take the liquid-line temperature on both sides of the filter-drier and any strainer.',
+    'Repair the leak, pull a vacuum to 500 microns, and weigh in the nameplate charge plus the line-set adder.'],
+    rule: 'A temperature drop of more than about 3°F across the drier or a strainer points to a restriction, not low charge.' },
+  'ev-open': { title: 'Expansion valve wide open and still short on subcooling', lvl: 'alarm', checks: [
+    'This is the classic low-charge or liquid-line-restriction picture. Leak search first.',
+    'Check the liquid-line temperature before and after the filter-drier and strainers, and look for a kinked or crushed line set.',
+    'Confirm subcooling with your own gauges at steady full speed before adding or removing refrigerant.'],
+    rule: 'A temperature drop across the drier or a frosted / sweating spot on the liquid line means restriction; an even temperature along the line with low subcooling means charge.' },
+  'fault-restrict': { title: 'Possible liquid-line restriction', lvl: 'alarm', checks: [
+    'Feel / clamp the liquid line along its length: a cold, sweating or frosted spot marks the restriction.',
+    'Measure the temperature on both sides of the filter-drier and any strainer or screen; more than about 3°F drop means it is plugged.',
+    'Check the line set for kinks or crushed sections, and the EEV inlet screen if the unit has one.',
+    'Replace the drier / repair the line, evacuate, and weigh the charge back in.'],
+    rule: 'Low charge shows low subcooling too, but without a temperature drop at one spot on the liquid line.' },
+  'fault-over': { title: 'Possible overcharge', lvl: 'warn', checks: [
+    'Check the outdoor coil and fan first: a dirty coil or weak fan also raises head pressure and subcooling.',
+    'Confirm subcooling and head pressure with your own gauges at steady full speed against the charge chart.',
+    'Check the service history and line-set length: was refrigerant added without weighing?',
+    'If it is overcharged, recover down to the correct weight rather than guessing by pressure.'],
+    rule: 'Non-condensables (air) also raise head and subcooling; a standing-pressure check with the unit off tells them apart.' },
+  'ev-closed': { title: 'Expansion valve nearly closed and subcooling high', lvl: 'warn', checks: [
+    'Usually overcharge. Check the outdoor coil and fan first, since poor airflow looks similar.',
+    'Confirm subcooling with your own gauges at steady speed against the charge chart.',
+    'If the charge is right, suspect a restriction after the valve or an EEV that is not responding.'],
+    rule: 'If the valve position never changes while subcooling moves, see the EEV checks.' },
+  'fault-evstuck': { title: 'Expansion valve not responding', lvl: 'warn', checks: [
+    'Check the EEV coil is fully seated on the valve body and its connector is tight on the board.',
+    'Measure the EEV coil windings against the service manual values.',
+    'At power-up the valve normally clicks as it drives closed; listen or feel for it.',
+    'Check the thermistors the valve is steered by (suction, liquid, discharge) are on the pipe and insulated.'],
+    rule: 'A stuck valve shows the same pulse count while superheat and subcooling drift; a valve at its limit because of charge moves, then pins.' },
+  'fault-hunt': { title: 'Expansion valve hunting', lvl: 'warn', checks: [
+    'Check the suction and liquid thermistors are clamped tight to the pipe and insulated. A loose sensor makes the valve chase.',
+    'Check indoor airflow is steady: filter, blower, dampers or zoning changing mid-run.',
+    'Confirm charge. A system right at the edge of its charge can make the valve swing.'],
+    rule: 'Some swing right after start-up and defrost is normal; it matters when it keeps going at steady speed.' },
+  'fault-noncond': { title: 'Possible air / non-condensables in the system', lvl: 'warn', checks: [
+    'Turn the unit off and let pressures equalize (15+ minutes, fans off).',
+    'Compare the standing pressure with the saturation pressure for the outdoor temperature. Clearly higher means non-condensables.',
+    'If confirmed: recover, replace the drier, evacuate to 500 microns with a decay test, and weigh in fresh charge.'],
+    rule: 'Overcharge also raises head and subcooling, but standing pressure matches saturation.' },
+  'fault-idair': { title: 'Possible low indoor airflow', lvl: 'warn', checks: [
+    'Check the filter, return grilles and supply dampers.',
+    'Check the blower speed / airflow setting matches the outdoor unit and the install.',
+    'Measure total external static pressure and compare with the air handler or furnace rating.',
+    'Inspect the indoor coil face for dirt or ice.'],
+    rule: 'In heating, low airflow drives head pressure and subcooling up; in cooling it drives suction down and can ice the coil.' },
+  'fault-odcoil': { title: 'Outdoor coil airflow or fouling', lvl: 'warn', checks: [
+    'Check the outdoor coil for dirt, cottonwood, grass clippings, or ice in heating.',
+    'Check the fan is turning at full speed with the blade tight, and nothing is blocking discharge air or causing recirculation.',
+    'Check the outdoor coil thermistor is clipped on and insulated.',
+    'Clean the coil and re-check once the system is steady.'],
+    rule: 'If the coil is clean and the fan is fine, compare the coil thermistor with a clamp thermometer; a bad sensor gives the same picture.' },
+  'od-coil': { title: 'Outdoor coil far from saturation', lvl: 'warn', checks: [
+    'Check the outdoor coil for dirt or ice and the fan for full speed.',
+    'Check the coil thermistor is clipped tight and insulated. Compare it with a clamp thermometer.'],
+    rule: 'A sensor off the pipe shows this too, so check the reading before cleaning.' },
+  'fault-fourway': { title: 'Possible reversing (4-way) valve leaking through', lvl: 'alarm', checks: [
+    'With the system at steady speed, feel / clamp the suction line at the reversing valve. It should be cool; hot next to the discharge line means internal leakage.',
+    'Check the solenoid coil gets its voltage and pulls in, in the mode that energizes it.',
+    'Try switching modes a couple of times; a sticking slide can free up. If the leak stays, the valve needs replacing.'],
+    rule: 'Low charge also gives high suction superheat, but with discharge superheat high, not low.' },
+  'fault-compwear': { title: 'Compressor running inefficiently', lvl: 'warn', checks: [
+    'Rule out charge and airflow first; both make a compressor look weak.',
+    'Check supply voltage at the unit under load, and amps with your meter against nameplate.',
+    'Check the discharge line temperature against the recorded discharge thermistor.',
+    'Follow the manufacturer\'s compressor / inverter diagnosis before condemning the compressor.'],
+    rule: 'A worn compressor shows low compression ratio at speed with high discharge temperature, while charge and airflow check out.' },
+  'fault-flood': { title: 'Possible liquid getting back to the compressor', lvl: 'alarm', checks: [
+    'Check suction superheat with your own gauges at steady speed. Near zero is floodback.',
+    'Check the expansion valve is not stuck open (see EEV checks) and the charge is not high.',
+    'In cooling, check indoor airflow. In heating, check the outdoor coil is not iced.',
+    'Check the crankcase heater works.'],
+    rule: 'A short dip right after defrost or start-up is normal; ongoing low discharge superheat at speed is not.' },
+  'floodback': { title: 'Low discharge superheat at speed', lvl: 'alarm', checks: [
+    'Check suction superheat at steady speed; near zero means liquid is returning.',
+    'Check for an EEV stuck open, overcharge, or low airflow over the evaporator.',
+    'Check the crankcase heater.'],
+    rule: 'Ignore it if it only appears for a few minutes after defrost or start-up.' },
+  'lp-fall': { title: 'Suction dropping while the valve opens (starving evaporator)', lvl: 'warn', checks: [
+    'The valve is feeding more but suction keeps falling: the evaporator is short of refrigerant or air.',
+    'Check charge (leak search) and look for a liquid-line restriction.',
+    'Check airflow over the evaporator: indoor filter / blower in cooling, outdoor coil and ice in heating.'],
+    rule: 'Normal for a minute or two after start-up and defrost; it matters when it continues.' },
+  'disch-climb': { title: 'Discharge temperature climbing at steady speed', lvl: 'warn', checks: [
+    'Check the charge: rising discharge with high superheat usually means low charge.',
+    'Check outdoor airflow in cooling (dirty coil, fan).',
+    'Watch whether the unit starts limiting capacity on discharge temperature.'],
+    rule: 'A climb that levels off within a few minutes of start-up is normal.' },
+  'held': { title: 'Unit limiting its own capacity (protection control)', lvl: 'warn', checks: [
+    'HP drop: head pressure is high. Check outdoor airflow in cooling, indoor airflow in heating, and charge.',
+    'LP drop: suction is low. Check charge, restriction, and airflow over the evaporator.',
+    'Discharge temp drop: discharge is hot. Check charge (usually low) and airflow.',
+    'INV current drop: current is high. Check supply voltage under load and the compressor.',
+    'Fin temp drop: the inverter heat sink is hot. Check the outdoor fan and the heat sink for dirt.'],
+    rule: 'The protection named in the title tells you which of these to start with.' },
+  'pt-tc': { title: 'Saturated temp and high pressure disagree', lvl: 'warn', checks: [
+    'Check the nameplate refrigerant matches what the viewer assumed.',
+    'Put your own gauge on the high side and compare with the unit\'s pressure reading.',
+    'If your gauge matches the unit\'s saturated temp, the pressure sensor is off; if not, suspect the thermistor.'],
+    rule: '' },
+  'pt-te': { title: 'Saturated temp and low pressure disagree', lvl: 'warn', checks: [
+    'Check the nameplate refrigerant matches what the viewer assumed.',
+    'Put your own gauge on the low side and compare with the unit\'s pressure reading.',
+    'Whichever of the unit\'s sensors disagrees with your gauge is the one to check.'],
+    rule: '' },
+  'hp-ip': { title: 'Two pressure sensors disagree', lvl: 'warn', checks: [
+    'Put your own gauge on the line and see which of the unit\'s two readings matches.',
+    'Check the connector and wiring of the sensor that is off before replacing it.'],
+    rule: '' },
+  'amps': { title: 'Current per compressor speed above normal for this unit', lvl: 'warn', checks: [
+    'Check supply voltage at the unit under load; low voltage raises current.',
+    'Clamp the amps yourself and compare with the unit\'s reading and the nameplate.',
+    'Check head pressure: high head (dirty coil, airflow, overcharge) raises current too.'],
+    rule: '' },
+  'order': { title: 'Temperature sensors out of order', lvl: 'warn', checks: [
+    'Check each named thermistor is clipped on the right pipe and insulated. Swapped or loose sensors are common after repairs.',
+    'Compare the readings with a clamp thermometer on the same pipe.',
+    'Measure the sensor resistance against the temperature chart in the service manual.'],
+    rule: 'A real reversal is rare; a sensor problem is far more likely.' },
+  'short': { title: 'Short cycling', lvl: 'warn', checks: [
+    'Look for an error code or protection control in the same runs (see below and the Runs tab).',
+    'Check thermostat settings (cycle rate, staging) and location (near a supply register, sunlight, drafts).',
+    'Check for oversized equipment or a small zone calling alone.',
+    'Check the pressure switches and any float / condensate switch that can open the call.'],
+    rule: 'A stop with an error code or retry count points to a fault; a clean stop points to the thermostat or load.' },
+  'sc-never': { title: 'Subcooling never reached its target', lvl: 'warn', checks: [
+    'Confirm the target on the nameplate / charge chart and the actual subcooling with your own gauges at steady full speed.',
+    'Low and staying low: leak search and restriction checks. High and staying high: airflow, then charge.'],
+    rule: '' },
+  'dropout': { title: 'Sensor readings dropping out', lvl: 'info', checks: [
+    'If it is one or two rows, it is a data glitch; ignore it.',
+    'If it repeats, check the checker connection and the unit\'s sensor connectors on the board.'],
+    rule: '' },
+};
+const LVL_RANK = { alarm: 0, warn: 1, info: 2 };
+let checksAll = [], checksShowAll = false;
+function buildChecks(){
+  const box = $('#checks');
+  if (!D){ box.hidden = true; return; }
+  const groups = new Map();
+  D.sig.forEach((arr, i) => arr.forEach(x => {
+    const code = x.code, adv = ADVICE[code];
+    if (!adv) return;
+    let g = groups.get(code);
+    if (!g){ g = { code, adv, rows: [], best: i, bestConf: -1, detail: x.detail, label: x.label }; groups.set(code, g); }
+    g.rows.push(i);
+    const conf = x.conf != null ? x.conf : 0;
+    if (conf > g.bestConf){ g.bestConf = conf; g.best = i; g.detail = x.detail; g.label = x.label; }
+  }));
+  // error codes as logged, outdoor and indoor
+  const errs = new Map();
+  for (const [side, arr] of [['Outdoor', D.err && D.err.odu], ['Indoor', D.err && D.err.idu]]){
+    if (!arr) continue;
+    arr.forEach((v, i) => { if (!v || v === '00' || v === '---' || v === '-') return; const k = side + ' ' + v; if (!errs.has(k)) errs.set(k, { side, code: v, rows: [] }); errs.get(k).rows.push(i); });
+  }
+  const runTxt = rows => { const runs = [...new Set(rows.map(i => D.runOf[i]).filter(k => k >= 0))].map(k => k + 1); return runs.length ? `run${runs.length > 1 ? 's' : ''} ${runs.slice(0, 6).join(', ')}${runs.length > 6 ? '…' : ''}` : ''; };
+  const minutes = rows => (rows.length * D.interval / 60);
+  const items = [];
+  for (const e of errs.values()) items.push({ lvl: 'alarm', sort: -1e9 - e.rows.length, title: `${e.side} error code ${e.code}`, when: `first at ${fmtTime(D.t[e.rows[0]])} · ${e.rows.length === 1 ? 'logged once' : minutes(e.rows) < 1 ? `${e.rows.length} readings` : `${minutes(e.rows).toFixed(0)} min logged`}`, figs: '', checks: [
+    'Look the code up for this unit (button below) and follow its checks.',
+    'Look at the readings just before it appeared: jump to it and step back a few rows.'], rule: 'Some codes clear themselves and never reach the thermostat; the recording can show a code the customer never saw.', row: e.rows[0], lookup: e.code });
+  for (const g of groups.values()){
+    let title = g.adv.title;
+    if (g.code === 'held') title += ` — ${g.label.replace(/^Capacity limited: /, '')}`;
+    items.push({ lvl: g.adv.lvl, sort: LVL_RANK[g.adv.lvl] * 1e6 - g.rows.length - g.bestConf * 1000, title,
+      when: [`${minutes(g.rows) < 1 ? 'under 1' : minutes(g.rows).toFixed(0)} min of the log`, runTxt(g.rows), `e.g. ${fmtTime(D.t[g.best])}`].filter(Boolean).join(' · '),
+      figs: g.detail + (g.code.startsWith('fault-') ? ` (${g.label.match(/\d+\/\d+$/) ? g.label.match(/\d+\/\d+$/)[0] + ' signs' : ''})` : ''),
+      checks: g.adv.checks, rule: g.adv.rule, row: g.best });
+  }
+  items.sort((a, b) => a.sort - b.sort);
+  checksAll = items;
+  box.hidden = !items.length;
+  renderChecks();
+}
+function renderChecks(){
+  const list = $('#checks-list'); list.innerHTML = '';
+  const shown = checksShowAll ? checksAll : checksAll.slice(0, 3);
+  shown.forEach((it, k) => {
+    const li = document.createElement('li');
+    const det = document.createElement('details');
+    det.className = 'check lvl-' + it.lvl;
+    if (k === 0) det.open = true;
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    det.innerHTML = `<summary><span class="check-title">${esc(it.title)}</span><span class="check-when">${esc(it.when)}</span></summary>`
+      + (it.figs ? `<div class="check-figs">${esc(it.figs)}</div>` : '')
+      + `<ol>${it.checks.map(c => `<li>${esc(c)}</li>`).join('')}</ol>`
+      + (it.rule ? `<p class="check-rule">${esc(it.rule)}</p>` : '')
+      + `<div class="check-actions"><button class="btn small" type="button" data-jump="${it.row}">Show on diagram</button>`
+      + (it.lookup && window.parent !== window ? `<button class="btn small" type="button" data-code="${esc(it.lookup)}">Look up ${esc(it.lookup)}</button>` : '')
+      + `</div>`;
+    li.appendChild(det); list.appendChild(li);
+  });
+  const more = $('#checks-more');
+  more.hidden = checksAll.length <= 3;
+  more.textContent = checksShowAll ? 'Show fewer' : `Show ${checksAll.length - 3} more`;
+}
+$('#checks').addEventListener('click', e => {
+  const j = e.target.closest('[data-jump]'); if (j){ setCur(+j.dataset.jump); document.querySelector('#panel-cycle .card:not(.checks)').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+  const c = e.target.closest('[data-code]'); if (c){ window.parent.postMessage({ type: 'dchk-lookup-code', code: c.dataset.code }, location.origin); return; }
+  if (e.target.id === 'checks-more'){ checksShowAll = !checksShowAll; renderChecks(); }
+});
+
 /* ---------- load ---------- */
 function load(text, name, live){
   // live refresh: stay on the newest row if the tech was already there, otherwise hold their place
@@ -2228,7 +2467,7 @@ function load(text, name, live){
   $('#dsname').textContent = `${name} · ${D.n} rows · ${fmtTime(D.t[0], true)} → ${fmtTime(D.t[D.n-1])}`;
   $('#scrub').max = D.n - 1;
   applyEquipment();
-  evalAll(); buildGhosts(); buildTrendPicker(); buildStrips(); buildDataTable(); buildRulesTable(); buildDock(); buildRuns();
+  evalAll(); buildGhosts(); buildTrendPicker(); buildStrips(); buildDataTable(); buildRulesTable(); buildDock(); buildRuns(); buildChecks();
   $('#rulejson').value = JSON.stringify(rules, null, 1);
   if (live){
     const follow = !prevN || prevCur >= prevN - 1;

@@ -1843,6 +1843,17 @@ function openRecordingInViewer(file) {
     openPortalEmbed("dchecker/index.html#wait", "D-Checker Cycle Viewer");
   });
 }
+// "Look up <code>" on the viewer's What-to-check card: open Error Codes on it.
+window.addEventListener("message", (e) => {
+  if (e.origin !== location.origin || !e.data || e.data.type !== "dchk-lookup-code") return;
+  const code = String(e.data.code || "").slice(0, 12);
+  closePortalEmbed(false);
+  codesState.brand = "Daikin";
+  codesState.search = code;
+  document.getElementById("codesSearchInput").value = code;
+  showScreen("codes");
+  trackEvent("looked up code from recording: " + code);
+});
 const checkerDrop = document.getElementById("checkerDrop");
 document.getElementById("checkerFile").addEventListener("change", (e) => { openRecordingInViewer(e.target.files[0]); e.target.value = ""; });
 checkerDrop.addEventListener("dragover", (e) => { e.preventDefault(); checkerDrop.classList.add("over"); });
@@ -7215,7 +7226,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v216";
+const APP_VERSION = "v217";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
