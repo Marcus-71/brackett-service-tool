@@ -4699,6 +4699,8 @@ const MODEL_PATTERNS = [
   // ---- v201: Carrier D5MVHAQ Value-tier high wall - Tag Scanner rules only where the scanner had none ----
   { re: /^D5MVHAQ\d{2}XA/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier D5MVHAQ Value-tier high wall indoor WITH refrigerant leak sensor (XA), R-454B - single-zone 37MVRAQ or multi-zone 37MTRAQ", notes: ["XA = with refrigerant leak sensor. Source: D5MVHA-01SM.", "See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^D5MVHAQ\d{2}XC/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier D5MVHAQ Value-tier high wall indoor WITHOUT leak sensor (XC), R-454B - 37MVRAQ single-zone only, never multi-zone", notes: ["XC = no sensor: cannot be paired with the multi-zone 37MTRAQ. Source: D5MVHAQ-02SI.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^DAQ(?:090|120)3[34]/, brand: "Daikin", equipment: "Air Handler", series: "Daikin DAQ Series commercial single-piece air handler, R-32, 7.5 ton (090) / 10 ton (120), 3-phase (DAQ09033/12033 208-230 V, DAQ09034/12034 460 V)", notes: ["Two 1 HP 5-tap direct-drive motors, two factory TXVs, factory R-32 leak detection (RDS) board - its status LED is seen through the cabinet view port: slow 2 s on / 2 s off = normal; 2, 3, 4 flashes = faults.", "Pairs with DC6TE090 / DH6TE090 (090) or DC6TE120 / DH6TE120 (120).", "Source: Daikin SS-DAQ-R32 (09/24), IOD-1063B (01/2025), RSD6512301 (Nov 2024)."] },
+  { re: /^NAC2(?:18|24|30|36|42|48|60)[AGM]K[AC]/, brand: "ICP (Heil / Tempstar / Comfortmaker / Arcoaire / KeepRite)", equipment: "Condenser/Heat Pump", series: "ICP NAC2 12 SEER R-22 split-system air conditioner, 1-1/2 to 5 ton, 208/230-1-60 (AKA series; the later AKC series has different figures)", notes: ["Decode: N = ICP brand-neutral prefix · AC = air conditioner · 2 = 12 SEER · 18-60 = capacity (24 = 2 ton) · A/G/M = sweat valves / coil guard / mesh · K = 208/230-1-60 · A or C = series.", "Piston at the indoor coil, charge by superheat; no pressure switches, no control board.", "Source: ICP spec sheet 421 11 3101 02 (July 2000), tech data 421 03 3101 02, installation 421 01 3001 07."] },
   // --- end triage additions ---
 ];
 
@@ -7235,7 +7237,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v218";
+const APP_VERSION = "v219";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
