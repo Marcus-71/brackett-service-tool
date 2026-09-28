@@ -3,7 +3,7 @@
  * phone / Bluetooth service and setup apps (current and legacy), with when to
  * use each. Distinct from Error Codes (a specific fault) and Diagnostic Help
  * (a symptom with no code) - this is "how do I use this tool, and when."
- * Built from official manufacturer documentation only (71 entries).
+ * Built from official manufacturer documentation only (73 entries).
  * Fields beyond the original schema: era current|legacy, platforms[], notes[],
  * links[{label,url}], manuals[{title,seedFile}], source. Same starter/verify
  * caveat as the rest of the app.
@@ -3303,5 +3303,107 @@ const TOOLBOX = [
   ],
   "manuals": [],
   "source": "support.generac.com Wi-Fi/cellular/LTE compatibility guide; How Do I Upgrade My CDMA Device to the LTE Device?"
+ },
+ {
+  "id": "tb-daikin-dchecker-viewer",
+  "brand": "Daikin",
+  "family": "Daikin residential / light-commercial inverter (single outdoor + single indoor)",
+  "toolName": "D-Checker Cycle Viewer (built into this app)",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Play back a D-Checker log on a live refrigerant-circuit diagram",
+  "checkerTab": true,
+  "launch": {
+   "label": "▶ Open Cycle Viewer",
+   "url": "dchecker/index.html",
+   "title": "D-Checker Cycle Viewer"
+  },
+  "whenToUse": "You have a D-Checker CSV log from a Daikin inverter system and want to SEE what the system was doing minute by minute - pressures, temperatures, compressor speed, valve positions, superheat and subcooling - drawn on the refrigerant circuit, with diagnostic signatures pointing out what looks wrong. Also good for showing a newer tech how the cycle reacts during startup, defrost and oil return.",
+  "requirements": [
+   "A D-Checker CSV log saved from the Daikin checker software (first column DateTime, the rest numbered items like 61:High pressure)",
+   "The CSV on the phone, tablet or laptop running this app (email it to yourself, AirDrop it, or copy it over USB)",
+   "No signal needed - the viewer ships with the app and works offline"
+  ],
+  "steps": [
+   "Tap Open Cycle Viewer. It opens full-screen with a demo log (a heating run) already loaded so you can see how it looks.",
+   "Tap Open CSV… and pick your log (on a laptop you can also drag the file onto the page).",
+   "Cycle tab: the circuit diagram shows the readings at the current moment. Press Play, drag the scrubber, or use the arrow keys / space bar on a laptop to move through the log.",
+   "Flags on the timeline mark rows where a target or rule was out of range - jump between them with the next-flag button.",
+   "Tap a reading on the diagram to pin it; pinned readings show as trend strips under the diagram. The Trends tab has the full graphs.",
+   "Runs tab: each compressor run summarized, with a steady-state check and the fault signatures that matched.",
+   "Rules tab: turn targets on/off or adjust them (for example superheat or subcooling ranges) - changes are saved on this device.",
+   "Data tab: the raw rows when you need an exact value.",
+   "Close with the ✕ in the top corner or swipe back."
+  ],
+  "caution": "The viewer only has R-410A pressure-temperature tables, so superheat and subcooling are only right on R-410A systems. The diagnostic signatures are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. It reads one outdoor + one indoor unit per log; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
+  "confidence": "verify",
+  "era": "current",
+  "platforms": [
+   "in-app",
+   "offline"
+  ],
+  "notes": [
+   "Built in-house at Brackett (Kenny). Nothing leaves the device - the log is read on the phone and never uploaded.",
+   "The equipment profile (heat pump or AC outdoor; furnace, air handler with strips, or plain air handler indoor) is detected from the log; change it in the viewer's Settings if it guessed wrong.",
+   "°C columns are converted to °F; --- in the log means no reading.",
+   "For VRV systems use the Daikin Service Checker TYPE4 (tb-daikin-checker4-vrv) and its own graphs for now."
+  ],
+  "links": [],
+  "manuals": [],
+  "source": "Brackett D-Checker Cycle Viewer (github.com/KennyJ18code/dchecker), bundled into this app by tools/build-dchecker.js."
+ },
+ {
+  "id": "tb-daikin-checker4-vrv",
+  "brand": "Daikin",
+  "family": "VRV (VRV IV, VRV 5, VRV 6, VRV-S, Aurora cold climate, water-cooled) - RXYQ / REYQ / RXLQ / RELQ / RXTQ / RWEYQ",
+  "toolName": "Daikin Service Checker TYPE4 (box 999176T + Windows software)",
+  "equipment": "Other",
+  "title": "Record and watch VRV operation data from the F1/F2 line with a laptop",
+  "checkerTab": true,
+  "whenToUse": "A VRV system has an intermittent problem, a callback, or a startup you need to document - you want every outdoor and indoor unit on the D3-NET line logged (pressures, temps, compressor, valves, error codes, thermostat on/off) instead of reading the remote controller. It can run live on the laptop while you watch, or log unattended to an SD card for days.",
+  "requirements": [
+   "TYPE4 Checker box (Daikin part 999176T) with its USB cable (USB-B to USB-A)",
+   "Windows laptop (Windows 7 SP1 or later) with the TYPE4 checker software installed - the old TYPE3 software does NOT work with the TYPE4 box",
+   "A two-conductor sheathed control cable about 6 ft (2 m) long, 18-16 AWG (0.75-1.25 mm²), with ring terminals for M3 screws on the checker end - this cable is not in the kit",
+   "USB driver: the checker shows up as \"Silicon Labs CP210x USB to UART Bridge\" - if Windows does not list that COM port, install the CP210x driver from silabs.com",
+   "For unattended SD-card logging only: an SD or SDHC card up to 32 GB formatted FAT32 (SDXC not supported) and a 5 V phone charger (500 mA or more) with a micro-USB plug"
+  ],
+  "steps": [
+   "Before the job: install the software, plug the box into the laptop, switch it on (red LED), open Daikin Service Checker TYPE4 and set Setting > Port to the COM port named Silicon Labs CP210x.",
+   "Wire the cable to the checker's D3-NET terminal FIRST, then land the other end on F1-F2. Doing it the other way round risks shorting F1-F2 at the unit.",
+   "Best connection point is the outdoor unit's OUT-OUT F1-F2 terminals. An indoor unit also works (use the LAST indoor on the line so you do not create a branch), or the centralized controller. F1/F2 have no polarity.",
+   "NEVER land it on power terminals, and never put AC on the checker's D3-NET port - it will burn the box.",
+   "Record > pick or create the customer (a customer ID is required; Record only just looks). The first connection puts the system in stand-by for a few minutes while it scans every unit - warn the customer. Saving the network map avoids the rescan next visit.",
+   "Watch live on the Network map / operation data screens. Data refreshes at the rate the VRV model sends it, usually every 1-5 minutes, no matter what the software is set to.",
+   "To log to the laptop: Record mode > PC rec set > interval (20 s default; 120-300 s if logging for days), stop Manual or Auto after X minutes, tick the systems > OK > Period. rec start.",
+   "To leave it logging without the laptop: SD rec start, then power the box from a 5 V charger on its micro-USB before unplugging the laptop. Next visit: Check SD card recording status to stop, then Load SD card data and open the *_H.bin file in the D3Data folder.",
+   "Afterward: Play > pick the data > CSV data output. It writes one file per unit: name_Ou01.csv for outdoor units, name_In01.csv for indoor units. Header rows ON adds site/unit info; OFF gives data only."
+  ],
+  "caution": "The first connection puts the whole VRV system into stand-by for several minutes while it scans - tell the customer first. The software can also start and stop units and change setpoints (Centralized operation) - leave that alone on a building a BMS controls. If a KRP2A/KRP4A adapter is on the same D3-NET line, prohibit centralized control in the checker options or the BMS will show an error. The checker cannot see past a DTA109 D3-NET expander. Keep the box and laptop out of the rain on long logs.",
+  "confidence": "verify",
+  "era": "current",
+  "platforms": [
+   "Windows"
+  ],
+  "notes": [
+   "Every reading frozen at the same value = the checker lost communication and is repeating the last good data - check the F1/F2 wiring.",
+   "Short-lived faults like L5 (inverter overcurrent) clear themselves and the checker does not latch them the way the remote does - look at inverter current and retry counts instead.",
+   "Outdoor unit icon stays white with no data = that model is newer than your software version - update the software.",
+   "\"Port could not be opened\" or \"Failed to start. Check connection\" = wrong COM port, another program holding the port (restart Windows), or a bad USB cable.",
+   "North American models on Daikin's supported list include RXYQ-T/P (TJU/YDN), REYQ-P (TJU/YDN, PCTJ/PCYD), RXLQ/RELQ-TA cold climate, RXTQ-TAVJU and RWEYP water-cooled. The full list is under Help in the software.",
+   "The software and its updates come from Daikin's business portal - get access through our Daikin VRV rep. The installer is Daikin's; do not pass it around.",
+   "These CSV exports do not open in the D-Checker Cycle Viewer yet."
+  ],
+  "links": [
+   {
+    "label": "Daikin business portal (checker software and updates - needs a Daikin login)",
+    "url": "https://global1d.daikin.com/business_portal/login/"
+   },
+   {
+    "label": "Silicon Labs CP210x USB driver",
+    "url": "https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers"
+   }
+  ],
+  "manuals": [],
+  "source": "Daikin TYPE4 Checker Instruction Manual AS0112F-I (Global Service Dept, Oct 2022), Support Models list (9 Feb 2024) and software change log v1.4.9 (2024-10-29) - paraphrased; the manual is not redistributed."
  }
 ];

@@ -92,6 +92,11 @@
       <span class="tile-label">Toolbox</span>
       <span class="tile-sub">Service apps &amp; board tools — every brand, current + legacy</span>
     </button>
+    <button class="tile tile-checker" data-screen="checker">
+      <span class="tile-icon">📈</span>
+      <span class="tile-label">Daikin Checker</span>
+      <span class="tile-sub">See what the system is doing — D-Checker cycle viewer + VRV Checker</span>
+    </button>
     <button class="tile tile-request" data-screen="request">
       <span class="tile-icon">💬</span>
       <span class="tile-label">Request Info</span>
@@ -224,6 +229,18 @@
   </div>
   <main id="toolboxResults"></main>
   <div id="toolboxEmptyState" class="empty-state hidden">No matching tools. Try a different search, or add one.</div>
+</section>
+
+<!-- DAIKIN CHECKER -->
+<section id="checkerScreen" class="screen hidden">
+  <div class="disclaimer">Daikin's service checkers log what the system is actually doing — pressures, temps, compressor speed, valves, error codes. Open a D-Checker log in the Cycle Viewer to watch it play back on the refrigerant circuit; VRV jobs use the Service Checker TYPE4 on a laptop. Signatures are pointers — confirm with gauges and the service manual.</div>
+  <main>
+    <button id="checkerLaunchBtn" class="checker-launch" type="button">
+      <span class="checker-launch-title">▶ Open Cycle Viewer</span>
+      <span class="checker-launch-sub">Load a D-Checker CSV — works offline, nothing is uploaded</span>
+    </button>
+    <div id="checkerResults"></div>
+  </main>
 </section>
 
 <!-- REQUEST INFO -->

@@ -252,6 +252,7 @@ const SCREEN_TITLES = {
   sqft: "House Size",
   request: "Request Info",
   calllog: "Call Log",
+  checker: "Daikin Checker",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -276,10 +277,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -297,6 +298,7 @@ function showScreen(name, fromBack) {
   if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
+  if (name === "checker") renderChecker();
   if (name === "tstat") renderTstats();
   if (name === "gen") renderGens();
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
@@ -1721,10 +1723,14 @@ function openToolboxDetail(id) {
     return "";
   }).join("");
   const linkBtns = (t.links || []).filter(l => l && l.url).map(l => `<a class="tstat-manual-btn ext" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label || l.url)} <span class="tstat-note">opens in browser - needs signal</span></a>`).join("");
+  // In-app tools (e.g. the D-Checker Cycle Viewer) ship with the app and open
+  // full-screen in the portal shell; they're precached, so they work offline.
+  const launchBtn = t.launch && t.launch.url ? `<button class="primary tbx-launch-btn" id="toolboxLaunchBtn">${escapeHtml(t.launch.label || "Open")}</button>` : "";
   modal.innerHTML = `
     <h2>${escapeHtml(t.toolName)} — ${escapeHtml(t.title)}</h2>
     <div class="sub">${escapeHtml(t.brand)}${t.family ? " · " + escapeHtml(t.family) : ""}</div>
     ${(eraLine || platLine) ? `<div class="tstat-badges">${eraLine}${platLine}</div>` : ""}
+    ${launchBtn}
     <div class="detail-section"><h3>When to use it</h3><p>${escapeHtml(t.whenToUse || "—")}</p></div>
     ${requirements ? `<div class="detail-section"><h3>What you need</h3><ul>${requirements}</ul></div>` : ""}
     ${steps ? `<div class="detail-section"><h3>Steps</h3><ol>${steps}</ol></div>` : ""}
@@ -1739,6 +1745,11 @@ function openToolboxDetail(id) {
   `;
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editToolboxBtn").onclick = () => openToolboxEditForm(t);
+  if (launchBtn) document.getElementById("toolboxLaunchBtn").onclick = () => {
+    trackEvent("opened toolbox app: " + t.toolName.slice(0, 60));
+    closeModal();
+    openPortalEmbed(t.launch.url, t.launch.title || t.toolName);
+  };
   modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
     btn.onclick = () => { trackEvent("opened toolbox guide: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
   });
@@ -1806,6 +1817,22 @@ function openToolboxEditForm(existing) {
 }
 
 document.getElementById("toolboxSearchInput").addEventListener("input", (e) => { toolboxState.search = e.target.value; renderToolbox(); });
+
+// ---- Daikin Checker tab ----
+// The toolbox entries flagged checkerTab (D-Checker Cycle Viewer, VRV Service
+// Checker TYPE4) as cards, under a big button that opens the bundled viewer
+// (dchecker/index.html, built by tools/build-dchecker.js) full-screen.
+const CHECKER_VIEWER_ID = "tb-daikin-dchecker-viewer";
+function renderChecker() {
+  const results = document.getElementById("checkerResults");
+  results.innerHTML = "";
+  for (const t of TOOLBOX.filter(x => x.checkerTab)) results.appendChild(buildToolboxCard(t));
+}
+document.getElementById("checkerLaunchBtn").addEventListener("click", () => {
+  const t = TOOLBOX.find(x => x.id === CHECKER_VIEWER_ID);
+  trackEvent("opened toolbox app: " + t.toolName.slice(0, 60));
+  openPortalEmbed(t.launch.url, t.launch.title);
+});
 
 // ============================================================
 // THERMOSTATS - one card per thermostat family: terminals, wiring
@@ -7168,7 +7195,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v214";
+const APP_VERSION = "v215";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
