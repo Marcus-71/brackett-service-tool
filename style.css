@@ -1716,3 +1716,15 @@ main {
   border: 1px solid var(--accent-2); background: var(--accent-2); color: #06202e;
   font: inherit; font-weight: 700; cursor: pointer;
 }
+.checker-drop {
+  display: flex; flex-direction: column; gap: 0.3rem;
+  margin: 0 0 0.9rem; padding: 1rem; border-radius: 12px;
+  border: 2px dashed var(--accent-2); background: var(--card); color: var(--text);
+  cursor: pointer;
+}
+.checker-drop.over { background: color-mix(in srgb, var(--accent-2) 18%, var(--card)); }
+.checker-drop:focus-within { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+.checker-drop-title { font-weight: 800; font-size: 1.1rem; }
+.checker-drop-sub { font-size: 0.85rem; color: var(--text-dim); }
+.checker-drop-steps { margin: 0.3rem 0 0; padding-left: 1.2rem; font-size: 0.85rem; color: var(--text-dim); }
+.checker-launch.secondary { background: transparent; color: var(--text); }

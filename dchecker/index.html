@@ -364,14 +364,37 @@ body.no-dock .dock{display:none}
 body.no-cabinet #indoor-var .cab,body.no-cabinet #indoor-var .hx,body.no-cabinet #indoor-var .flames,body.no-cabinet #indoor-var .burner,body.no-cabinet #indoor-var .strips{display:none}
 .toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
+/* live feed */
+.livemenu{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.livemenu[hidden],.livebar[hidden]{display:none}
+.livemenu small{color:var(--ink2);font-size:12px;flex-basis:100%}
+.livebar{display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-weight:700;font-size:13px}
+.livebar #livestatus{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.livedot{width:10px;height:10px;border-radius:50%;background:var(--idle);flex:none}
+.livedot.on{background:var(--alarm);animation:livepulse 1.2s ease-in-out infinite}
+.livedot.wait{background:var(--warn)}
+@keyframes livepulse{50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){.livedot.on{animation:none}}
 </style>
 
 <header class="top"><div class="wrap">
   <div class="brand"><h1>D-Checker Cycle Viewer</h1><small>Daikin inverter log · °F / psig</small></div>
   <div class="file">
-    <input type="file" id="csvfile" accept=".csv,text/csv" hidden>
-    <button class="btn primary" id="loadbtn" type="button">Open CSV…</button>
+    <input type="file" id="csvfile" accept=".csv,text/csv,.tgz,.gz,application/gzip,application/x-gzip,application/x-compressed-tar" hidden>
+    <button class="btn primary" id="loadbtn" type="button">Open recording…</button>
+    <button class="btn" id="livebtn" type="button" aria-expanded="false" hidden>● Live</button>
     <span class="dsname" id="dsname"></span>
+  </div>
+  <div class="livemenu" id="livemenu" hidden>
+    <button class="btn primary" id="live-bt" type="button">Connect checker (Bluetooth)</button>
+    <button class="btn" id="live-demo" type="button">Demo live feed</button>
+    <small id="live-note">Plug the Daikin Bluetooth checker into the unit, then connect. Chrome on Android.</small>
+  </div>
+  <div class="livebar" id="livebar" hidden>
+    <span class="livedot" id="livedot"></span>
+    <span id="livestatus">Live</span>
+    <button class="btn" id="livejump" type="button" hidden>Jump to now</button>
+    <button class="btn" id="livestop" type="button">Stop</button>
   </div>
   <div class="tabs" role="tablist" id="tabs">
     <button role="tab" aria-selected="true" data-tab="cycle" id="tab-cycle">Cycle</button>
@@ -2046,19 +2069,239 @@ function buildRuns(){
   });
 }
 
+/* ---------- Daikin app export (.tgz) -> viewer CSV ----------
+   The Service Diagnosis Tool app exports a recording as a .tgz holding
+   datalabel.txt (the item table for that unit - its line numbers are the
+   viewer's column numbers), one or more *.log files of raw records, and
+   customer.txt (never read here). Record layout: 48-byte file header, then
+   per record a 14-char YYYYMMDDhhmmss stamp, blocks {code, idx, len, data},
+   and FF FF. Values are little-endian; 0x8000 = no reading. */
+async function gunzip(buf){
+  const ds = new DecompressionStream('gzip');
+  return new Uint8Array(await new Response(new Blob([buf]).stream().pipeThrough(ds)).arrayBuffer());
+}
+function untar(u8){
+  const files = {}, dec = new TextDecoder();
+  for (let p = 0; p + 512 <= u8.length; ){
+    const name = dec.decode(u8.subarray(p, p + 100)).replace(/\0.*$/s, '');
+    if (!name) break;
+    const size = parseInt(dec.decode(u8.subarray(p + 124, p + 136)).replace(/\0.*$/s, '').trim() || '0', 8);
+    const type = u8[p + 156];
+    if (type === 0 || type === 48) files[name] = u8.subarray(p + 512, p + 512 + size);
+    p += 512 + Math.ceil(size / 512) * 512;
+  }
+  return files;
+}
+const DK = {
+  KGF_PSI: 14.223,                         // psi per kgf/cm2 as Daikin's app converts
+  MODE: {0:'Fan', 1:'Heating', 2:'Cooling', 3:'Dry'},
+  ERR_HI: '0ACEHFJLPU------', ERR_LO: '0123456789AHCJEF',
+  // saturation, degC -> kPa abs, for picking the refrigerant from the unit's own Tc/HP and Te/LP
+  SAT: { R410A: [[-20,399.6],[-15,480.4],[-10,572.9],[-5,678.2],[0,797.9],[5,932.4],[10,1084.9],[15,1255.4],[20,1444.8],[25,1654.1],[30,1884],[35,2135.8],[40,2410.9],[45,2710.2],[50,3035],[55,3390],[60,3780]],
+         R32:   [[-20,405.6],[-15,487.8],[-10,582],[-5,689.3],[0,813.1],[5,951.1],[10,1106.9],[15,1280.1],[20,1474.3],[25,1690.2],[30,1927.9],[35,2191.4],[40,2478.6],[45,2794.8],[50,3140.5],[55,3519],[60,3932]] }
+};
+function dkLabels(text){
+  const items = []; let loop = false;
+  text.replace(/^﻿/, '').split(/\r?\n/).forEach((line, i) => {
+    const c = line.split(',');
+    if (c[0].startsWith('#FOR')){ loop = true; return; }
+    if (c[0].startsWith('#END')){ loop = false; return; }
+    if (!c[0].startsWith('0x') || c.length < 10) return;
+    items.push({ col: i + 1, block: parseInt(c[0], 16), off: +c[1], size: +c[2], code: +c[3], fmt: c[4], show: c[6] === '1',
+                 label: c[9], idu: loop, unit: /^-?\d+$/.test(c[16] || '') ? +c[16] : -1 });
+  });
+  return items;
+}
+function dkRecords(u8){
+  const asc = (a, b) => String.fromCharCode(...u8.subarray(a, b));
+  const recs = [];
+  let p = 48;
+  while (p + 14 <= u8.length){
+    const ts = asc(p, p + 14), blocks = new Map();
+    let q = p + 14;
+    while (q + 3 <= u8.length && !(u8[q] === 0xff && u8[q+1] === 0xff)){
+      const code = u8[q], idx = u8[q+1], len = u8[q+2];
+      let term = -1;
+      for (let k = q + 3; k + 1 < u8.length; k++) if (u8[k] === 0xff && u8[k+1] === 0xff){ term = k; break; }
+      // a block cut short by a dropped byte: its FF FF lands inside the stated length
+      if (term !== -1 && term < q + 3 + len && (term + 2 >= u8.length || asc(term + 2, term + 4) === '20')){
+        const key = code * 256 + idx; if (!blocks.has(key)) blocks.set(key, u8.subarray(q + 3, term));
+        q = term; break;
+      }
+      const key = code * 256 + idx; if (!blocks.has(key)) blocks.set(key, u8.subarray(q + 3, q + 3 + len));
+      q += 3 + len;
+    }
+    if (/^\d{14}$/.test(ts)) recs.push({ ts, blocks });
+    p = q + 2;
+  }
+  return recs;
+}
+function dkTsat(ref, kpa){
+  const t = DK.SAT[ref];
+  for (let i = 1; i < t.length; i++) if (kpa <= t[i][1]) return t[i-1][0] + (t[i][0] - t[i-1][0]) * (kpa - t[i-1][1]) / (t[i][1] - t[i-1][1]);
+  return t[t.length-1][0];
+}
+// Refrigerant is not in the log (Daikin keeps it in the model file); pick whichever
+// fits the unit's own saturated temps vs pressures (block 0x20) best.
+function dkRefrigerant(recs){
+  const err = {R410A: 0, R32: 0}; let n = 0;
+  for (const r of recs){
+    const b = r.blocks.get(0x20 * 256); if (!b || b.length < 20) continue;
+    const dv = new DataView(b.buffer, b.byteOffset, b.byteLength), g = o => dv.getInt16(o, true) / 10;
+    const [hp, lp, tc, te] = [g(12), g(14), g(16), g(18)];
+    if ([hp, lp, tc, te].some(v => v === -3276.8)) continue;
+    for (const ref in err) err[ref] += Math.abs(dkTsat(ref, hp * 98.0665 + 101.325) - tc) + Math.abs(dkTsat(ref, lp * 98.0665 + 101.325) - te);
+    n++;
+  }
+  return n ? (err.R32 < err.R410A ? 'R32' : 'R410A') : 'R410A';
+}
+function dkNum(v, fmt){
+  const m = /%\.(\d)f/.exec(fmt || ''); let s = m ? v.toFixed(+m[1]) : String(v);
+  if (s.includes('.')) s = s.replace(/0+$/, '').replace(/\.$/, '');
+  return (s === '-0' || s === '') ? '0' : s;
+}
+function dkValue(it, b, ref){
+  const c = it.code;
+  if (c === 801) return ref;
+  if (!b || it.off + Math.max(it.size, 1) > b.length) return '---';
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength), v = b[it.off];
+  if (c >= 300 && c <= 307) return (v >> (c - 300)) & 1 ? 'ON' : 'OFF';
+  if (c === 310) return String(v >> 4 & 7);
+  if (c === 311) return String(v & 7);
+  if (c === 105 || c === 107){
+    const raw = dv.getInt16(it.off, true); if (raw === -32768) return '---';
+    let x = raw / 10;
+    if (it.unit === 1) x = x * 1.8 + 32; else if (it.unit === 2) x = x * DK.KGF_PSI; else if (it.unit === 3) x = x * 1.8;
+    return dkNum(x, it.fmt || '%.1f');
+  }
+  if (c === 151) return String(dv.getUint16(it.off, true));
+  if (c === 161) return dkNum(v / 2, '%.1f');
+  if (c === 164) return String(v * 5);
+  if (c === 217) return DK.MODE[v] || String(v);
+  if (c === 313) return DK.MODE[v >> 4] || String(v >> 4);
+  if (c === 203) return v === 0 ? 'Normal' : String(v);
+  if (c === 215){ const hi = DK.ERR_HI[v >> 4]; return hi + (hi === '-' ? '-' : DK.ERR_LO[v & 15]); }
+  if (c === 314) return dv.getUint16(it.off, true).toString(16).toUpperCase().padStart(4, '0');
+  return String(v);
+}
+function dkHeader(it){
+  let h = `${it.col}:${it.label}`;
+  if (it.code === 105 || it.code === 107){
+    if (it.unit === 1 || (it.unit === 3 && !it.idu)) h += '(F)'; else if (it.unit === 2) h += '(psi)';
+  }
+  return h;
+}
+async function daikinExportToCSV(buf){
+  const files = untar(await gunzip(buf)), dec = new TextDecoder();
+  const labelName = Object.keys(files).find(n => /(^|\/)datalabel\.txt$/i.test(n));
+  const logNames = Object.keys(files).filter(n => /\.log$/i.test(n)).sort();
+  if (!labelName || !logNames.length) throw new Error('This is not a Daikin app recording (no datalabel.txt / .log inside).');
+  const cols = dkLabels(dec.decode(files[labelName])).filter(it => it.show && it.code !== 995 && it.code !== 998);
+  const recs = logNames.flatMap(n => dkRecords(files[n]));
+  if (!recs.length) throw new Error('The recording has no readings in it.');
+  const ref = dkRefrigerant(recs);
+  const lines = [['DateTime', ...cols.map(dkHeader)].map(csvCell).join(',')];
+  for (const r of recs){
+    const s = r.ts, dt = `${+s.slice(4,6)}/${+s.slice(6,8)}/${s.slice(0,4)} ${+s.slice(8,10)}:${s.slice(10,12)}:${s.slice(12,14)}`;
+    lines.push([dt, ...cols.map(it => dkValue(it, r.blocks.get(it.block * 256), ref))].map(csvCell).join(','));
+  }
+  return lines.join('\n') + '\n';
+}
+// Opens whatever the tech picked, shared or dropped: a CSV, or Daikin's .tgz export.
+async function openFile(buf, name){
+  const u8 = new Uint8Array(buf);
+  if (u8[0] === 0x1f && u8[1] === 0x8b){
+    try { load(await daikinExportToCSV(buf), name.replace(/\.(tgz|tar\.gz|gz)$/i, '')); }
+    catch(err){ toast('Could not read that recording: ' + err.message); }
+    return;
+  }
+  load(new TextDecoder().decode(u8), name);
+}
+
 /* ---------- load ---------- */
-function load(text, name){
-  try { D = buildDataset(text, name); D._text = text; analyze(); } catch(err){ toast('Could not read that CSV: ' + err.message); return; }
+function load(text, name, live){
+  // live refresh: stay on the newest row if the tech was already there, otherwise hold their place
+  const prevN = D ? D.n : 0, prevCur = cur;
+  try { D = buildDataset(text, name); D._text = text; analyze(); } catch(err){ if (!live) toast('Could not read that CSV: ' + err.message); return; }
+  if (!live && LIVE.src) liveStop();
   if (playing) togglePlay();
   $('#dsname').textContent = `${name} · ${D.n} rows · ${fmtTime(D.t[0], true)} → ${fmtTime(D.t[D.n-1])}`;
   $('#scrub').max = D.n - 1;
   applyEquipment();
   evalAll(); buildGhosts(); buildTrendPicker(); buildStrips(); buildDataTable(); buildRulesTable(); buildDock(); buildRuns();
   $('#rulejson').value = JSON.stringify(rules, null, 1);
+  if (live){
+    const follow = !prevN || prevCur >= prevN - 1;
+    setCur(follow ? D.n - 1 : prevCur);
+    $('#livejump').hidden = follow;
+    return;
+  }
   setCur(0);
   const nflag = evalCache.filter(e => e.worst==='alarm'||e.worst==='warn'||e.worst==='sig').length;
   if (nflag) toast(`${nflag} rows flagged or with signatures — use !> to jump`);
 }
+/* ---------- live feed ----------
+   A live source calls liveStart(source, headerCells, name) once, then liveRow(cells)
+   for every reading, cells in the same shape as a D-Checker CSV row
+   (DateTime, then "N:Label(unit)" items). Rows are appended to the same CSV text
+   the file loader reads, so the diagram, flags, trends and runs all work live
+   unchanged. Sources: the demo replay below, and the Daikin Bluetooth checker. */
+const LIVE = { src:null, head:'', lines:[], name:'', dirty:false, timer:null, last:0 };
+function csvCell(v){ v = v == null ? '' : String(v); return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+function liveStart(src, head, name){
+  liveStop();
+  Object.assign(LIVE, { src, head: head.map(csvCell).join(','), lines: [], name, dirty: false, last: 0 });
+  LIVE.timer = setInterval(liveFlush, 1000);
+  setLiveUI('wait', 'Waiting for the first reading…');
+}
+function liveRow(cells){ LIVE.lines.push(cells.map(csvCell).join(',')); LIVE.dirty = true; LIVE.last = Date.now(); }
+function liveFlush(){
+  if (!LIVE.src) return;
+  if (LIVE.dirty){
+    LIVE.dirty = false;
+    load(LIVE.head + '\n' + LIVE.lines.join('\n') + '\n', LIVE.name, true);
+  }
+  if (LIVE.lines.length){
+    const age = Math.round((Date.now() - LIVE.last) / 1000);
+    setLiveUI(age > 30 ? 'wait' : 'on', `${LIVE.src.label} · ${LIVE.lines.length} readings · last ${age < 2 ? 'just now' : age + ' s ago'}`);
+  }
+}
+function liveStop(){
+  const src = LIVE.src; LIVE.src = null;
+  clearInterval(LIVE.timer); LIVE.timer = null;
+  if (src && src.stop) try { src.stop(); } catch(e){}
+  setLiveUI('off');
+}
+function setLiveUI(state, text){
+  $('#livebar').hidden = state === 'off';
+  $('#livedot').className = 'livedot' + (state === 'on' ? ' on' : state === 'wait' ? ' wait' : '');
+  if (text) $('#livestatus').textContent = text;
+  if (state === 'off') $('#livejump').hidden = true;
+}
+// Demo: replays the built-in sample log one reading every 2 s, stamped with the
+// current time, so the live path can be checked on a phone without a unit.
+function demoSource(){
+  const rows = parseCSV($('#sample-csv').textContent.replace(/^﻿/, ''));
+  const src = { label: 'Demo feed', stop(){ clearInterval(src.t); } };
+  if (rows.length < 2){ toast('No demo log in this build'); return; }
+  liveStart(src, rows[0], 'Live demo');
+  let i = 1;
+  const pad = n => String(n).padStart(2, '0');
+  const tick = () => {
+    const d = new Date(), r = rows[i].slice();
+    r[0] = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()} ${d.getHours()}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    liveRow(r);
+    i = i + 1 < rows.length ? i + 1 : 1;
+  };
+  tick(); src.t = setInterval(tick, 2000);
+}
+// Daikin Bluetooth checker (BTSC / i2S). The link itself is still being built;
+// this gate keeps the message honest on devices that can never do it.
+function checkerSource(){
+  if (!navigator.bluetooth){ toast('Live from the checker needs Chrome on an Android phone'); return; }
+  toast('Checker link is not finished yet — use the demo feed for now');
+}
+
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2800); }
 
 /* ---------- wiring ---------- */
@@ -2070,9 +2313,15 @@ if (window.matchMedia) window.matchMedia('(min-width: 1100px) and (orientation: 
 $('#eqsel').addEventListener('change', e => { if (D) saveJSON('dchk.eq.' + D.name, e.target.value); applyEquipment(); if (D) renderCycle(cur); });
 setThermal(THERMAL);
 $('#loadbtn').addEventListener('click', () => $('#csvfile').click());
-$('#csvfile').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => load(rd.result, f.name); rd.readAsText(f); e.target.value = ''; });
+const liveMenu = open => { $('#livemenu').hidden = !open; $('#livebtn').setAttribute('aria-expanded', open); };
+$('#livebtn').addEventListener('click', () => liveMenu($('#livemenu').hidden));
+$('#live-demo').addEventListener('click', () => { liveMenu(false); demoSource(); });
+$('#live-bt').addEventListener('click', () => { liveMenu(false); checkerSource(); });
+$('#livestop').addEventListener('click', () => { liveStop(); toast('Live feed stopped — the readings so far stay on screen'); });
+$('#livejump').addEventListener('click', () => { if (D) setCur(D.n - 1); $('#livejump').hidden = true; });
+$('#csvfile').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; e.target.value = ''; openFile(await f.arrayBuffer(), f.name); });
 document.addEventListener('dragover', e => e.preventDefault());
-document.addEventListener('drop', e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f){ const rd = new FileReader(); rd.onload = () => load(rd.result, f.name); rd.readAsText(f); } });
+document.addEventListener('drop', async e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) openFile(await f.arrayBuffer(), f.name); });
 $('#tabs').addEventListener('click', e => {
   const b = e.target.closest('[data-tab]'); if (!b) return;
   document.querySelectorAll('#tabs [role=tab]').forEach(t => t.setAttribute('aria-selected', t === b));
@@ -2130,7 +2379,13 @@ setLayout();
 renderCustomList();
 
 $('#cmp').addEventListener('click', () => togglePin('rps'));
+// The Brackett Service Tool hands a recording over by postMessage and opens
+// this page with #wait, so the demo log is skipped.
+window.addEventListener('message', e => {
+  if (e.origin !== location.origin || !e.data || e.data.type !== 'dchk-open' || !e.data.buf) return;
+  openFile(e.data.buf, e.data.name || 'Recording');
+});
 const sample = $('#sample-csv').textContent;
-if (sample && sample.length > 100) load(sample, '(REC only)_20251126-090117.csv');
+if (location.hash !== '#wait' && sample && sample.length > 100) load(sample, '(REC only)_20251126-090117.csv');
 })();
 </script>

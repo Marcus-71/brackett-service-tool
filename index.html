@@ -235,9 +235,19 @@
 <section id="checkerScreen" class="screen hidden">
   <div class="disclaimer">Daikin's service checkers log what the system is actually doing — pressures, temps, compressor speed, valves, error codes. Open a D-Checker log in the Cycle Viewer to watch it play back on the refrigerant circuit; VRV jobs use the Service Checker TYPE4 on a laptop. Signatures are pointers — confirm with gauges and the service manual.</div>
   <main>
-    <button id="checkerLaunchBtn" class="checker-launch" type="button">
-      <span class="checker-launch-title">▶ Open Cycle Viewer</span>
-      <span class="checker-launch-sub">Load a D-Checker CSV — works offline, nothing is uploaded</span>
+    <label id="checkerDrop" class="checker-drop" for="checkerFile">
+      <input id="checkerFile" type="file" accept=".tgz,.gz,.csv,application/gzip,application/x-gzip,application/x-compressed-tar,text/csv,application/octet-stream" hidden>
+      <span class="checker-drop-title">📂 Open a recording</span>
+      <span class="checker-drop-sub">Tap to pick the file from Daikin's app (.tgz) or a D-Checker .csv. On a laptop, drop it here.</span>
+      <ol class="checker-drop-steps">
+        <li>In Daikin's app, save the recording and email it to yourself.</li>
+        <li>Open the email and download the attachment.</li>
+        <li>Tap this box and pick the file from Downloads.</li>
+      </ol>
+    </label>
+    <button id="checkerLaunchBtn" class="checker-launch secondary" type="button">
+      <span class="checker-launch-title">▶ Open Cycle Viewer (demo run)</span>
+      <span class="checker-launch-sub">See how it looks with a sample heating log. Works offline, nothing is uploaded</span>
     </button>
     <div id="checkerResults"></div>
   </main>

@@ -1828,6 +1828,26 @@ function renderChecker() {
   results.innerHTML = "";
   for (const t of TOOLBOX.filter(x => x.checkerTab)) results.appendChild(buildToolboxCard(t));
 }
+// "Open a recording" box: the tech emails the recording from Daikin's app to
+// themselves, saves the attachment, and picks it here (or drags it on a laptop).
+// The viewer opens with #wait and gets the file by postMessage.
+function openRecordingInViewer(file) {
+  if (!file) return;
+  trackEvent("opened recording file: " + (/\.(tgz|gz)$/i.test(file.name) ? "daikin tgz" : "csv"));
+  file.arrayBuffer().then(buf => {
+    const frame = document.getElementById("portalFrame");
+    frame.onload = () => {
+      frame.onload = null;
+      frame.contentWindow.postMessage({ type: "dchk-open", name: file.name, buf }, location.origin, [buf]);
+    };
+    openPortalEmbed("dchecker/index.html#wait", "D-Checker Cycle Viewer");
+  });
+}
+const checkerDrop = document.getElementById("checkerDrop");
+document.getElementById("checkerFile").addEventListener("change", (e) => { openRecordingInViewer(e.target.files[0]); e.target.value = ""; });
+checkerDrop.addEventListener("dragover", (e) => { e.preventDefault(); checkerDrop.classList.add("over"); });
+checkerDrop.addEventListener("dragleave", () => checkerDrop.classList.remove("over"));
+checkerDrop.addEventListener("drop", (e) => { e.preventDefault(); checkerDrop.classList.remove("over"); openRecordingInViewer(e.dataTransfer.files[0]); });
 document.getElementById("checkerLaunchBtn").addEventListener("click", () => {
   const t = TOOLBOX.find(x => x.id === CHECKER_VIEWER_ID);
   trackEvent("opened toolbox app: " + t.toolName.slice(0, 60));
@@ -7195,7 +7215,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v215";
+const APP_VERSION = "v216";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

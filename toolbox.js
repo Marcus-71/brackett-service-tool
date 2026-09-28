@@ -3317,15 +3317,16 @@ const TOOLBOX = [
    "url": "dchecker/index.html",
    "title": "D-Checker Cycle Viewer"
   },
-  "whenToUse": "You have a D-Checker CSV log from a Daikin inverter system and want to SEE what the system was doing minute by minute - pressures, temperatures, compressor speed, valve positions, superheat and subcooling - drawn on the refrigerant circuit, with diagnostic signatures pointing out what looks wrong. Also good for showing a newer tech how the cycle reacts during startup, defrost and oil return.",
+  "whenToUse": "You have a recording from Daikin's service checker app (the .tgz it exports) or a D-Checker CSV log from a Daikin inverter system and want to SEE what the system was doing minute by minute - pressures, temperatures, compressor speed, valve positions, superheat and subcooling - drawn on the refrigerant circuit, with diagnostic signatures pointing out what looks wrong. Also good for showing a newer tech how the cycle reacts during startup, defrost and oil return.",
   "requirements": [
-   "A D-Checker CSV log saved from the Daikin checker software (first column DateTime, the rest numbered items like 61:High pressure)",
-   "The CSV on the phone, tablet or laptop running this app (email it to yourself, AirDrop it, or copy it over USB)",
+   "A recording saved in Daikin's service checker app (Daikin Service Diagnosis Tool with the Bluetooth checker) - its export is a .tgz file - or a D-Checker CSV log",
+   "Email on the phone, to send the recording to yourself",
    "No signal needed - the viewer ships with the app and works offline"
   ],
   "steps": [
-   "Tap Open Cycle Viewer. It opens full-screen with a demo log (a heating run) already loaded so you can see how it looks.",
-   "Tap Open CSV… and pick your log (on a laptop you can also drag the file onto the page).",
+   "In Daikin's app, save the recording and email it to yourself (it attaches as a .tgz file).",
+   "Open that email on the phone and download the attachment - it lands in Downloads.",
+   "In the Service Tool, open the Daikin Checker tab, tap Open a recording, and pick the file. It opens straight on the diagram. On a laptop you can drag the file onto that box instead. (Open Cycle Viewer shows a demo heating run.)",
    "Cycle tab: the circuit diagram shows the readings at the current moment. Press Play, drag the scrubber, or use the arrow keys / space bar on a laptop to move through the log.",
    "Flags on the timeline mark rows where a target or rule was out of range - jump between them with the next-flag button.",
    "Tap a reading on the diagram to pin it; pinned readings show as trend strips under the diagram. The Trends tab has the full graphs.",
@@ -3334,7 +3335,7 @@ const TOOLBOX = [
    "Data tab: the raw rows when you need an exact value.",
    "Close with the ✕ in the top corner or swipe back."
   ],
-  "caution": "The viewer only has R-410A pressure-temperature tables, so superheat and subcooling are only right on R-410A systems. The diagnostic signatures are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. It reads one outdoor + one indoor unit per log; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
+  "caution": "The viewer only has R-410A pressure-temperature tables, so superheat and subcooling are only right on R-410A systems. The diagnostic signatures are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. The refrigerant is not stored in Daikin's recording, so for .tgz files the viewer picks R-410A or R-32 from the unit's own pressures and saturated temps - check it matches the nameplate. It reads one outdoor + one indoor unit per log; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
   "confidence": "verify",
   "era": "current",
   "platforms": [
@@ -3345,7 +3346,8 @@ const TOOLBOX = [
    "Built in-house at Brackett (Kenny). Nothing leaves the device - the log is read on the phone and never uploaded.",
    "The equipment profile (heat pump or AC outdoor; furnace, air handler with strips, or plain air handler indoor) is detected from the log; change it in the viewer's Settings if it guessed wrong.",
    "°C columns are converted to °F; --- in the log means no reading.",
-   "For VRV systems use the Daikin Service Checker TYPE4 (tb-daikin-checker4-vrv) and its own graphs for now."
+   "Live readings straight from the Bluetooth checker are not available yet - record in Daikin's app, email it to yourself, then open it here.",
+  "For VRV systems use the Daikin Service Checker TYPE4 (tb-daikin-checker4-vrv) and its own graphs for now."
   ],
   "links": [],
   "manuals": [],
