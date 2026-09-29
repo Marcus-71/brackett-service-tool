@@ -1846,6 +1846,14 @@ function openRecordingInViewer(file) {
       frame.contentWindow.postMessage({ type: "dchk-open", name: file.name, buf }, location.origin, [buf]);
     };
     openPortalEmbed("dchecker/index.html#wait", "D-Checker Cycle Viewer");
+    // Closing the viewer calls history.back(), which can step the hidden frame
+    // back onto the viewer page. Then the src above is only a #hash change: no
+    // reload, no load event, and the recording never arrives (the old demo or
+    // recording stays up). Reload the frame in that case so onload fires.
+    try {
+      const w = frame.contentWindow;
+      if (w && /\/dchecker\/index\.html$/.test(w.location.pathname)) w.location.reload();
+    } catch (e) { /* frame on another origin: a normal navigation, onload fires */ }
   });
 }
 // "Look up <code>" on the viewer's What-to-check card: open Error Codes on it.
@@ -7237,7 +7245,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v220";
+const APP_VERSION = "v221";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

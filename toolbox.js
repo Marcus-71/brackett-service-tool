@@ -3334,6 +3334,7 @@ const TOOLBOX = [
    "Open that email on the phone and download the attachment - it lands in Downloads.",
    "In the Service Tool, open the Daikin Checker tab, tap Open a recording, and pick the file. It opens straight on the diagram. On a laptop you can drag the file onto that box instead. (Open Cycle Viewer shows a demo heating run.)",
    "Cycle tab: the circuit diagram shows the readings at the current moment. Press Play, drag the scrubber, or use the arrow keys / space bar on a laptop to move through the log.",
+   "Synopsis tab: a plain-language read of the whole recording - findings with the evidence and what to do, a timeline of what happened, and every reading and control summarized. It also opens by itself at the end of playback.",
    "Flags on the timeline mark rows where a target or rule was out of range - jump between them with the next-flag button.",
    "Tap a reading on the diagram to pin it; pinned readings show as trend strips under the diagram. The Trends tab has the full graphs.",
    "Runs tab: each compressor run summarized, with a steady-state check and the fault signatures that matched.",
@@ -3341,7 +3342,7 @@ const TOOLBOX = [
    "Data tab: the raw rows when you need an exact value.",
    "Close with the ✕ in the top corner or swipe back."
   ],
-  "caution": "The viewer only has R-410A pressure-temperature tables, so superheat and subcooling are only right on R-410A systems. The diagnostic signatures are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. The refrigerant is not stored in Daikin's recording, so for .tgz files the viewer picks R-410A or R-32 from the unit's own pressures and saturated temps - check it matches the nameplate. It reads one outdoor + one indoor unit per log; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
+  "caution": "The viewer carries R-410A and R-32 pressure-temperature tables. The refrigerant is not stored in Daikin's recording, so it picks one from the unit's own saturated temps vs pressures (or the model name) - check the Refrigerant box matches the nameplate, since superheat and subcooling depend on it. The diagnostic signatures and Synopsis findings are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. It reads one outdoor + one indoor unit per log, or a 2-5 port multi-zone mini split; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
   "confidence": "verify",
   "era": "current",
   "platforms": [
@@ -3350,7 +3351,7 @@ const TOOLBOX = [
   ],
   "notes": [
    "Built in-house at Brackett (Kenny). Nothing leaves the device - the log is read on the phone and never uploaded.",
-   "The equipment profile (heat pump or AC outdoor; furnace, air handler with strips, or plain air handler indoor) is detected from the log; change it in the viewer's Settings if it guessed wrong.",
+   "The equipment profile (heat pump or AC outdoor, or a multi-zone mini split) is detected from the log and model name; change it in the Equipment box if it guessed wrong. D-Checker logs carry no furnace or strip-heat data, so the indoor side is drawn as a plain air handler.",
    "°C columns are converted to °F; --- in the log means no reading.",
    "Live readings straight from the Bluetooth checker are not available yet - record in Daikin's app, email it to yourself, then open it here.",
   "For VRV systems use the Daikin Service Checker TYPE4 (tb-daikin-checker4-vrv) and its own graphs for now."

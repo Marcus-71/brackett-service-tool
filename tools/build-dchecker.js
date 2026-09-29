@@ -10,8 +10,12 @@
 //    Service Tool offline copy with it. Our sw.js precaches dchecker/index.html.
 //  - its manifest / apple-touch links are dropped (it is not a separate
 //    installable app here); the favicon points at our icon.
-//  - nothing else in the viewer is touched, so re-running this after Kenny
-//    pushes an update picks the update up.
+//  - the build fails if the viewer ever carries a service worker
+//    register/unregister, a Cache Storage or storage-clearing call, or an
+//    outside sync endpoint (Kenny's upstream has Supabase fleet sync; the
+//    Brackett branch leaves it out).
+//  - nothing else in the viewer is touched. Build from the checkout's
+//    brackett-plus-v51 branch (ours + Kenny's v51 features), not Kenny's main.
 const fs = require("fs");
 const path = require("path");
 
@@ -30,11 +34,22 @@ function swap(from, to, label) {
 
 swap("__SAMPLE_CSV__", csv, "__SAMPLE_CSV__ placeholder");
 swap(/<link rel="manifest" href="manifest\.webmanifest">\r?\n/, "", "manifest link");
-swap(/<link rel="apple-touch-icon" href="icons\/apple-touch-icon\.png">\r?\n/, "", "apple-touch-icon link");
-swap('<link rel="icon" href="icons/icon-192.png">', '<link rel="icon" href="../icons/icon-192.png">', "favicon link");
+swap(/<link rel="apple-touch-icon"[^>]*>\r?\n/, "", "apple-touch-icon link");
+// the viewer may carry several favicon links (v51: svg + png); the first becomes ours, the rest go
+swap(/<link rel="icon"[^>]*>/, '<link rel="icon" href="../icons/icon-192.png">', "favicon link");
+html = html.replace(/<link rel="icon"(?! href="\.\.\/icons\/icon-192\.png">)[^>]*>\r?\n/g, "");
 swap("navigator.serviceWorker.register('sw.js')", "Promise.resolve() /* SW disabled inside Brackett Service Tool - see tools/build-dchecker.js */", "service worker registration");
 
-if (/serviceWorker\.register/.test(html)) { console.error("build-dchecker: a service worker registration is still present"); process.exit(1); }
+// Anything that could wipe the Service Tool's own caches / storage, register a
+// worker, or talk to an outside sync service must not ship inside the app.
+for (const [re, what] of [
+  [/serviceWorker\.register/, "a service worker registration"],
+  [/serviceWorker[\s\S]{0,40}unregister|\.unregister\(/, "a service worker unregister call"],
+  [/caches\.(delete|keys|open)\b/, "a Cache Storage call (caches.delete/keys/open)"],
+  [/indexedDB\.deleteDatabase|localStorage\.clear\(|sessionStorage\.clear\(/, "a storage-clearing call"],
+  [/<link rel="(manifest|apple-touch-icon)"/, "a manifest / apple-touch link"],
+  [/supabase\.co|\/rest\/v1\/|\/auth\/v1\//, "an outside sync endpoint (Supabase)"],
+]) if (re.test(html)) { console.error("build-dchecker: " + what + " is present - neutralise it before shipping"); process.exit(1); }
 
 const out = path.join(__dirname, "..", "dchecker", "index.html");
 fs.mkdirSync(path.dirname(out), { recursive: true });
