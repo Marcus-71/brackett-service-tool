@@ -648,6 +648,7 @@ function askBuildIndex() {
       kind: "gen", id: g.id, brand: "Generac", equip: "Generator",
       title: [g.series, g.family].filter(Boolean).join(" · "),
       sub: [g.controller, g.engine].filter(Boolean).join(" · "),
+      titleHay: ["Generac", g.series, g.family, g.controller, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" ")].filter(Boolean).join(" ").toLowerCase(),
       hay: genSearchFields(g).filter(Boolean).join(" ").toLowerCase(),
     });
   }
@@ -931,13 +932,26 @@ function askAiEntries(q, limit) {
   const units = buildSearchUnits(q);
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
-  for (const it of idx) { const { sc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc }); }
-  scored.sort((a, b) => b.sc - a.sc);
+  for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
+  // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
+  // beats a card that only mentions Evolution in a footnote).
+  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc);
   return scored.slice(0, limit || 5).map(({ it }) => ({ kind: ASK_KIND[it.kind].label, title: it.title, text: askEntryText(it) }));
 }
 function askEntryText(it) {
   if (it.kind === "code") { const c = getAllCodes().find(x => x.id === it.id); return c ? [c.meaning, (c.causes || []).join("; "), (c.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
   if (it.kind === "symptom") { const s = getAllSymptoms().find(x => x.id === it.id); return s ? [s.summary, (s.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
+  // Generators: the maintenance specs live on the card, not in any excerpt -
+  // send them so oil capacity / plug gap / filter questions get real numbers.
+  if (it.kind === "gen") {
+    const g = genEntries().find(x => x.id === it.id);
+    if (!g) return it.sub || "";
+    return [
+      g.family, "kW: " + (g.kw || []).join(", "), g.engine,
+      ...genSpecLines(g),
+      ...(g.maintenance || []).map(x => x.interval + ": " + x.task),
+    ].filter(Boolean).join(" | ");
+  }
   return it.sub || "";
 }
 
@@ -983,7 +997,8 @@ async function askAiAnswer(question) {
   wireAskFeedback(box, question);
   // Log EVERY answer with whether the AI actually had a manual to lean on, so
   // even the guys who close it without tapping still tell us what they needed.
-  const grounded = passages.length ? ("grounded:" + passages.length + "p") : "no-manual-match";
+  const grounded = passages.length ? ("grounded:" + passages.length + "p")
+    : entries.length ? ("entries-only:" + entries.length + "e") : "no-manual-match";
   trackEvent("AI answered [" + grounded + "]: " + question);
   askLastAnswer = { question: question, ts: Date.now(), engaged: false };
 }
@@ -2098,9 +2113,18 @@ function genNormModel(s) {
   if ((m = u.match(/^(\d{4})$/))) return m[1];
   return "";
 }
+// Shared by the Generators detail card, its search and the Ask AI grounding, so
+// "generac 22k oil capacity" / "plug gap" questions reach the spec values.
+const GEN_SPEC_LABELS = { oil: "Oil", oilCapacity: "Oil capacity", sparkPlug: "Spark plug", plugGap: "Plug gap", valveClearance: "Valve clearance", compression: "Compression", torque: "Torque specs", battery: "Battery", airFilter: "Air filter", fuelPressure: "Fuel pressure", exercise: "Exercise" };
+function genSpecLines(g) {
+  const sp = g.specs || {};
+  return Object.keys(GEN_SPEC_LABELS).filter(k => sp[k]).map(k => GEN_SPEC_LABELS[k] + ": " + sp[k]);
+}
 function genSearchFields(g) {
   return [
-    g.series, g.family, g.controller, g.engine, (g.kw || []).map(k => k + "kw " + k + " kw").join(" "),
+    "Generac", g.series, g.family, g.controller, g.engine, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" "),
+    ...genSpecLines(g),
+    ...(g.maintenance || []).map(x => x.interval + " " + x.task),
     ...(g.models || []).map(m => [m.g, m.digits, m.desc, "0" + m.digits, "00" + m.digits].join(" ")),
     ...(g.alarms || []).map(a => a.code + " " + a.name + " " + a.meaning),
     ...(g.warnings || []).map(a => a.code + " " + a.name + " " + a.meaning),
@@ -2187,7 +2211,7 @@ function openGenDetail(id, focusModel) {
   const codeRows = (rows) => (rows || []).map(a => `
     <tr class="${hit(a.code + " " + a.name + " " + a.meaning) ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(a.code)}</td><td><b>${escapeHtml(a.name || "")}</b>${a.display ? `<div class="tstat-note">Screen: ${escapeHtml(a.display)}</div>` : ""}${a.meaning ? `<div>${escapeHtml(a.meaning)}</div>` : ""}${(a.causes || []).length ? `<div class="tstat-note">Causes: ${escapeHtml(a.causes.join(" · "))}</div>` : ""}${(a.steps || []).length ? `<ul>${a.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>` : ""}${a.clear ? `<div class="tstat-note">Clear: ${escapeHtml(a.clear)}</div>` : ""}</td></tr>`).join("");
   const sp = g.specs || {};
-  const specLabels = { oil: "Oil", oilCapacity: "Oil capacity", sparkPlug: "Spark plug", plugGap: "Plug gap", valveClearance: "Valve clearance", battery: "Battery", airFilter: "Air filter", fuelPressure: "Fuel pressure", exercise: "Exercise" };
+  const specLabels = GEN_SPEC_LABELS;
   const specRows = Object.keys(specLabels).filter(k => sp[k]).map(k => `<tr><td class="tstat-term short">${escapeHtml(specLabels[k])}</td><td>${escapeHtml(sp[k])}</td></tr>`).join("");
   const maintRows = (g.maintenance || []).map(x => `<tr><td class="tstat-term${String(x.interval).length <= 10 ? " short" : ""}">${escapeHtml(x.interval)}</td><td>${escapeHtml(x.task)}</td></tr>`).join("");
   const tsBlocks = (g.troubleshooting || []).map(x => `
@@ -7245,7 +7269,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v222";
+const APP_VERSION = "v223";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
