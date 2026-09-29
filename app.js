@@ -900,32 +900,380 @@ function askManualCard(h) {
 // tech still has the full keyword search + manuals.
 
 // Fuller page text around the match, for feeding the model as context.
+// The window is the stretch holding the MOST of the question's concepts, not
+// just the first one: on a spec page "22 kW" is in the heading and "oil
+// capacity" 1,500 characters further down, and a window cut at the first hit
+// sent the AI the heading without the number it was asked for.
 function askTrimAround(text, units, len) {
+  if (text.length <= len) return text.trim();
   const low = text.toLowerCase();
-  let idx = -1;
-  for (const u of units) for (const a of u.alts) {
-    const p = low.indexOf(a);
-    if (p >= 0 && (idx < 0 || p < idx)) idx = p;
+  const hits = [];   // [position, unit index]
+  units.forEach((u, k) => {
+    for (const a of u.alts) {
+      for (let p = low.indexOf(a); p >= 0 && hits.length < 400; p = low.indexOf(a, p + a.length)) hits.push([p, k]);
+    }
+  });
+  if (!hits.length) return text.slice(0, len).trim();
+  hits.sort((x, y) => x[0] - y[0]);
+  let bestStart = 0, best = -1;
+  for (const [p] of hits) {
+    const start = Math.max(0, Math.min(p - Math.floor(len / 5), text.length - len));
+    const seen = new Set();
+    for (const [q, k] of hits) if (q >= start && q < start + len) seen.add(k);
+    if (seen.size > best) { best = seen.size; bestStart = start; }
   }
-  if (idx < 0) idx = 0;
-  const start = Math.max(0, idx - Math.floor(len / 3));
-  return text.slice(start, start + len).trim();
+  return text.slice(bestStart, bestStart + len).trim();
 }
+// Passages for the AI, on-device text first. A tech's phone only holds the
+// manuals HE downloaded, so "generac 22k oil capacity" came back
+// no-manual-match even though the library's Evolution repair manual has the
+// table. When the phone's own pages give fewer than 3 strong passages and there
+// is signal, a remote pass reads the page text of the few library manuals the
+// question points at (see askRemotePassages). Remote passages carry remote:true
+// so the answer log can tell them apart; the relay never sees that flag.
 async function askManualPassages(q, limit) {
-  const units = buildSearchUnits(q);
+  const units = askPassageUnits(q);
   const threshold = Math.max(1, Math.ceil(units.length * 0.5));   // relaxed — context for the model
+  const strong = Math.max(threshold, Math.ceil(units.length * 0.75));
+  const lim = limit || 4;
   let recs = [];
-  try { recs = await manualTextGetAll(); } catch (e) { return []; }
+  try { recs = await manualTextGetAll(); } catch (e) { recs = []; }
   const scored = [];
+  const localIds = new Set();
   for (const rec of recs) {
     if (rec.tv !== TEXT_INDEX_VERSION || !rec.pages) continue;
-    for (let i = 0; i < rec.pages.length; i++) {
-      const sc = askUnitHits(units, rec.pages[i].toLowerCase());
-      if (sc >= threshold) scored.push({ id: rec.id, title: rec.title, page: i + 1, sc, raw: rec.pages[i] });
+    localIds.add(rec.id);
+    for (const h of askRankPages(units, rec.pages, threshold, rec.brand)) scored.push({ id: rec.id, title: rec.title, page: h.page, sc: h.sc, own: h.own, w: h.w, raw: rec.pages[h.page - 1] });
+  }
+  scored.sort((a, b) => b.sc - a.sc || b.w - a.w);
+  let out = scored.slice(0, lim).map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, text: askTrimAround(s.raw, units, 1200) }));
+  // "Strong" is judged on what the page itself says, not the free brand hit -
+  // otherwise "generac 26k plug gap" was satisfied by a 9-22 kW manual.
+  if (scored.filter(s => s.own >= strong).length < 3 && navigator.onLine) {
+    let remote = [];
+    try { remote = await askRemotePassages(q, units, threshold, lim, localIds); } catch (e) { remote = []; }
+    if (remote.length) out = out.concat(remote).sort((a, b) => b.sc - a.sc || (a.remote ? 1 : 0) - (b.remote ? 1 : 0) || b.w - a.w).slice(0, lim);
+  }
+  return out.map(s => s.remote ? { id: s.id, title: s.title, page: s.page, text: s.text, remote: true } : { id: s.id, title: s.title, page: s.page, text: s.text });
+}
+
+// Query units for page passages: the normal search units, minus filler a tech
+// says out loud ("uses how MUCH oil", "what is it SUPPOSED to be") that no
+// manual page contains - with the 50% bar each one of those made the right
+// page harder to reach - and with kW / ton / SEER spellings joined up.
+const ASK_PASSAGE_NOISE = new Set(["much", "many", "use", "uses", "used", "using", "supposed", "suppose", "need", "needs", "needed", "tell", "know", "find", "please", "anyone", "someone", "hey", "guys", "gonna", "wanna", "gotta", "thing", "things", "kind", "sort"]);
+function askPassageUnits(q) {
+  const base = buildSearchUnits(q);
+  let units = base.filter(u => !u.alts.every(a => ASK_PASSAGE_NOISE.has(a)));
+  if (!units.length) units = base;
+  // "how much oil" is asking for the oil CAPACITY - the word the spec table uses.
+  if (/\bhow (much|many)\b/.test(normalizeQuery(q))) units.push({ alts: ["capacity", "how much", "amount", "quantity"] });
+  // "20 kw" arrives as two units ("20", "kw"); one "20 kW" concept is what was meant.
+  const joined = [];
+  for (let i = 0; i < units.length; i++) {
+    const a = units[i].alts, b = units[i + 1] && units[i + 1].alts;
+    if (a.length === 1 && /^\d+(\.\d+)?$/.test(a[0]) && b && b.length === 1 && /^(kw|tons?|seer2?)$/.test(b[0])) {
+      joined.push({ alts: [a[0] + (b[0] === "kw" ? "kw" : b[0].startsWith("ton") ? "ton" : "seer")] });
+      i++;
+    } else joined.push(units[i]);
+  }
+  return askExpandNumberUnits(joined);
+}
+// Pages of one manual that clear the bar, scored with askUnitHits like every
+// Ask search. Ties (common: "generac" + "oil" is on half the pages of a
+// generator manual) go to the page holding the concepts that are RARE in that
+// manual - "22 kW" on the spec table beats "Generac" in every page footer.
+// The manual's brand counts as said on every page: the spec table of a Generac
+// owner's manual never prints "Generac", but it is still the Generac answer.
+function askRankPages(units, pages, threshold, brand) {
+  const tag = brand ? " " + String(brand).toLowerCase() : "";
+  const hits = [];
+  const df = new Array(units.length).fill(0);
+  // per-unit version of askUnitHits (same test), so the tie-break knows WHICH concepts hit
+  const test = (hay, u) => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a)));
+  for (let i = 0; i < pages.length; i++) {
+    if (!pages[i]) continue;
+    const low = pages[i].toLowerCase();
+    const own = units.map(u => test(low, u));
+    const got = units.map((u, k) => own[k] || (!!tag && test(tag, u)));
+    let sc = 0;
+    got.forEach((g, k) => { if (g) { df[k]++; sc++; } });
+    if (sc >= threshold) hits.push({ page: i + 1, sc, own: own.filter(Boolean).length, got });
+  }
+  const n = pages.length;
+  for (const h of hits) {
+    h.w = h.got.reduce((w, g, k) => w + (g ? Math.log((n + 1) / (df[k] + 0.5)) : 0), 0);
+    // A contents page lists every topic next to a page number - never the answer.
+    if ((pages[h.page - 1].match(/\.{6,}/g) || []).length >= 4) h.w *= 0.25;
+    delete h.got;
+  }
+  hits.sort((a, b) => b.sc - a.sc || b.w - a.w);
+  hits.forEach((h, k) => { h.rank = k; });
+  return hits;
+}
+// "22k", "22kw" and "22 kW" are the same generator; "3ton"/"3 ton" and
+// "seer16"/"16 seer" likewise. v223 fed those spellings into the generator
+// cards' search text; manual pages and seed metadata can't be rewritten, so the
+// query unit gets the other spellings as alternatives instead.
+function askExpandNumberUnits(units) {
+  return units.map(u => {
+    const extra = [];
+    for (const a of u.alts) {
+      let m;
+      if ((m = a.match(/^(\d+(?:\.\d+)?)kw?$/))) extra.push(m[1] + "k", m[1] + "kw", m[1] + " kw");
+      else if ((m = a.match(/^(\d+(?:\.\d+)?)-?tons?$/))) extra.push(m[1] + "ton", m[1] + " ton", m[1] + "-ton");
+      else if ((m = a.match(/^(\d+(?:\.\d+)?)-?seer2?$/)) || (m = a.match(/^seer2?-?(\d+(?:\.\d+)?)$/))) extra.push(m[1] + "seer", m[1] + " seer", "seer " + m[1], "seer" + m[1]);
+    }
+    if (!extra.length) return u;
+    return { alts: [...new Set([...u.alts, ...extra])] };
+  });
+}
+// The same aliases on the metadata side: "8-22 kW" / "20/22/24 kW" / "3 ton" /
+// "16 SEER" in a seed's model or title become "22kw 22 kw 22k" etc., so a
+// "22k" question finds the owner's manual whose title says "8-22 kW". A kW
+// range lists every whole number in it (the manual covers each size).
+function askNumberAliasText(s) {
+  const out = [];
+  const re = /(\d+(?:\.\d+)?(?:\s*[-–\/]\s*\d+(?:\.\d+)?)*)\s*-?\s*(kw|tons?|seer2?)\b/gi;
+  let m;
+  while ((m = re.exec(String(s || "")))) {
+    const unit = m[2].toLowerCase();
+    const nums = new Set();
+    const parts = m[1].split(/\s*([-–\/])\s*/);
+    for (let i = 0; i < parts.length; i += 2) nums.add(parts[i]);
+    for (let i = 1; i < parts.length; i += 2) {
+      const a = Number(parts[i - 1]), b = Number(parts[i + 1]);
+      if (parts[i] !== "/" && Number.isInteger(a) && Number.isInteger(b) && b > a && b - a <= 40) for (let n = a; n <= b; n++) nums.add(String(n));
+    }
+    for (const n of nums) {
+      if (unit === "kw") out.push(n + "kw", n + " kw", n + "k");
+      else if (unit.startsWith("ton")) out.push(n + "ton", n + " ton", n + "-ton");
+      else out.push(n + "seer", n + " seer", "seer" + n);
     }
   }
-  scored.sort((a, b) => b.sc - a.sc);
-  return scored.slice(0, limit || 4).map(s => ({ id: s.id, title: s.title, page: s.page, text: askTrimAround(s.raw, units, 1200) }));
+  return out.join(" ");
+}
+
+// ---- Remote pass: page text for library manuals that aren't on this phone ----
+// tools/build-manual-text.js (run on the manuals branch) writes
+// manuals-text/<pdf name>.json = {v:1, file, pages:[...]} for every library PDF
+// with a text layer, plus manuals-text/index.json. A big manual is split into
+// <name>.p1.json ... and <name>.json is a stub listing the parts.
+const MANUAL_SEED_BASE = "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/";
+const MANUAL_TEXT_BASE = "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-text/";
+const REMOTE_TEXT_DB = "bfc-manual-text-remote";
+const REMOTE_TEXT_DOCS = "docs";         // {id, file, pages} — pages text, keyed by seed id
+const REMOTE_TEXT_META = "meta";         // {id, bytes, usedAt, fetchedAt, missing} — small, for LRU
+const REMOTE_TEXT_CAP = 40 * 1024 * 1024;         // LRU cap on cached page text
+const REMOTE_TEXT_BUDGET_MS = 6000;               // never hold the AI answer longer than this
+const REMOTE_TEXT_MISS_TTL = 12 * 3600 * 1000;    // re-try a 404 after half a day
+const REMOTE_TEXT_INDEX_TTL = 24 * 3600 * 1000;
+const REMOTE_TEXT_INDEX_ID = "__index__";
+let remoteTextDbPromise = null;
+let remoteSeedRowsCache = null;
+
+function openRemoteTextDb() {
+  if (remoteTextDbPromise) return remoteTextDbPromise;
+  remoteTextDbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open(REMOTE_TEXT_DB, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(REMOTE_TEXT_DOCS)) db.createObjectStore(REMOTE_TEXT_DOCS, { keyPath: "id" });
+      if (!db.objectStoreNames.contains(REMOTE_TEXT_META)) db.createObjectStore(REMOTE_TEXT_META, { keyPath: "id" });
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => { remoteTextDbPromise = null; reject(req.error); };
+  });
+  return remoteTextDbPromise;
+}
+async function remoteTextGet(store, id) {
+  const db = await openRemoteTextDb();
+  return new Promise((resolve) => {
+    const req = db.transaction(store, "readonly").objectStore(store).get(id);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => resolve(null);
+  });
+}
+async function remoteTextPut(doc, meta) {
+  const db = await openRemoteTextDb();
+  await new Promise((resolve) => {
+    const tx = db.transaction([REMOTE_TEXT_DOCS, REMOTE_TEXT_META], "readwrite");
+    if (doc) tx.objectStore(REMOTE_TEXT_DOCS).put(doc);
+    else tx.objectStore(REMOTE_TEXT_DOCS).delete(meta.id);
+    tx.objectStore(REMOTE_TEXT_META).put(meta);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => resolve();   // cache is best effort
+  });
+}
+async function remoteTextTouch(meta) {
+  const db = await openRemoteTextDb();
+  meta.usedAt = Date.now();
+  db.transaction(REMOTE_TEXT_META, "readwrite").objectStore(REMOTE_TEXT_META).put(meta);
+}
+// Least-recently-used out until the cached text fits under the cap.
+async function remoteTextEvict() {
+  const db = await openRemoteTextDb();
+  const metas = await new Promise((resolve) => {
+    const req = db.transaction(REMOTE_TEXT_META, "readonly").objectStore(REMOTE_TEXT_META).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => resolve([]);
+  });
+  let total = metas.reduce((n, m) => n + (m.bytes || 0), 0);
+  if (total <= REMOTE_TEXT_CAP) return;
+  const victims = metas.filter(m => m.id !== REMOTE_TEXT_INDEX_ID && m.bytes).sort((a, b) => (a.usedAt || 0) - (b.usedAt || 0));
+  const tx = db.transaction([REMOTE_TEXT_DOCS, REMOTE_TEXT_META], "readwrite");
+  for (const m of victims) {
+    if (total <= REMOTE_TEXT_CAP) break;
+    tx.objectStore(REMOTE_TEXT_DOCS).delete(m.id);
+    tx.objectStore(REMOTE_TEXT_META).delete(m.id);
+    total -= m.bytes;
+  }
+  await new Promise((resolve) => { tx.oncomplete = resolve; tx.onerror = resolve; });
+}
+// A hung request must not pin the phone's connection forever; the answer
+// itself only ever waits REMOTE_TEXT_BUDGET_MS (see askRemotePassages).
+async function remoteTextFetchJson(url) {
+  const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = ctl ? setTimeout(() => ctl.abort(), 30000) : 0;
+  try {
+    const resp = await fetch(url, ctl ? { signal: ctl.signal } : {});
+    if (resp.status === 404) return { missing: true };
+    if (!resp.ok) return null;
+    const body = await resp.text();
+    return { json: JSON.parse(body), bytes: body.length };
+  } catch (e) { return null; }
+  finally { if (timer) clearTimeout(timer); }
+}
+// manuals-text/index.json → Map(pdf file name → {pages, bytes, parts}), cached
+// for a day. Used to skip scanned manuals that have no text. null = unknown,
+// and the remote pass then just tries each candidate's file.
+async function remoteTextIndex() {
+  let cached = null;
+  try { cached = await remoteTextGet(REMOTE_TEXT_DOCS, REMOTE_TEXT_INDEX_ID); } catch (e) {}
+  if (cached && Date.now() - cached.fetchedAt < REMOTE_TEXT_INDEX_TTL) return new Map(cached.list.map(e => [e.file, e]));
+  const r = await remoteTextFetchJson(MANUAL_TEXT_BASE + "index.json");
+  if (r && Array.isArray(r.json)) {
+    try { await remoteTextPut({ id: REMOTE_TEXT_INDEX_ID, list: r.json, fetchedAt: Date.now() }, { id: REMOTE_TEXT_INDEX_ID, bytes: r.bytes, usedAt: Date.now(), fetchedAt: Date.now() }); } catch (e) {}
+    return new Map(r.json.map(e => [e.file, e]));
+  }
+  return cached ? new Map(cached.list.map(e => [e.file, e])) : null;
+}
+// One library manual's page text: from the cache, else fetched (all its parts).
+async function remoteTextPages(row) {
+  let meta = null;
+  try { meta = await remoteTextGet(REMOTE_TEXT_META, row.id); } catch (e) {}
+  if (meta && meta.missing && Date.now() - (meta.fetchedAt || 0) < REMOTE_TEXT_MISS_TTL) return null;
+  if (meta && !meta.missing) {
+    const doc = await remoteTextGet(REMOTE_TEXT_DOCS, row.id);
+    if (doc && Array.isArray(doc.pages)) { remoteTextTouch(meta).catch(() => {}); return doc.pages; }
+  }
+  const base = row.file.replace(/\.pdf$/i, "");
+  const r = await remoteTextFetchJson(MANUAL_TEXT_BASE + encodeURIComponent(base) + ".json");
+  if (!r) return null;   // network trouble — try again next question
+  if (r.missing || !r.json || r.json.v !== 1) {
+    try { await remoteTextPut(null, { id: row.id, bytes: 0, missing: true, fetchedAt: Date.now(), usedAt: Date.now() }); } catch (e) {}
+    return null;
+  }
+  let pages = r.json.pages, bytes = r.bytes;
+  if (Array.isArray(r.json.parts)) {
+    const got = await Promise.all(r.json.parts.map(p => remoteTextFetchJson(MANUAL_TEXT_BASE + encodeURIComponent(p.name))));
+    if (got.some(g => !g || !g.json || !Array.isArray(g.json.pages))) return null;
+    pages = [];
+    r.json.parts.forEach((p, i) => { got[i].json.pages.forEach((t, j) => { pages[(p.start || 1) - 1 + j] = t; }); bytes += got[i].bytes; });
+    for (let i = 0; i < pages.length; i++) if (typeof pages[i] !== "string") pages[i] = "";
+  }
+  if (!Array.isArray(pages)) return null;
+  const now = Date.now();
+  try {
+    await remoteTextPut({ id: row.id, file: row.file, pages }, { id: row.id, bytes, usedAt: now, fetchedAt: now });
+    await remoteTextEvict();
+  } catch (e) {}
+  return pages;
+}
+
+// Brand words from the library (split "Goodman / Amana" etc.), minus words
+// that are also ordinary words or other product names.
+const ASK_BRAND_SKIP = new Set(["air", "home", "global", "hvac", "electric", "products", "comfort", "national", "others", "sold", "and", "family", "controls", "johnson", "inter", "city", "day", "night", "the", "guardian", "resideo", "american", "standard"]);
+const ASK_MAINT_WORDS = new Set(["oil", "plug", "plugs", "gap", "filter", "filters", "capacity", "torque", "clearance", "battery", "maintenance", "spec", "specs", "specification", "specifications", "fuel", "exercise", "valve", "coolant"]);
+function askRemoteSeedRows() {
+  if (remoteSeedRowsCache) return remoteSeedRowsCache;
+  const rows = [], brands = new Set();
+  if (typeof MANUAL_SEEDS !== "undefined") {
+    for (const s of MANUAL_SEEDS) {
+      if (!s.file || !s.file.startsWith(MANUAL_SEED_BASE)) continue;   // text exists only for manuals-branch PDFs
+      const file = s.file.slice(MANUAL_SEED_BASE.length);
+      const brandLow = (s.brand || "").toLowerCase();
+      for (const w of brandLow.split(/[^a-z0-9]+/)) if (w.length >= 3 && !ASK_BRAND_SKIP.has(w)) brands.add(w);
+      const meta = [s.brand, s.model, s.title, s.notes, file.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ")].filter(Boolean).join(" ");
+      const head = [s.model, s.title, file.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ")].filter(Boolean).join(" ");
+      rows.push({
+        id: seedIdOf(s), file, title: s.title || file, brand: s.brand || "",
+        hay: (meta + " " + askNumberAliasText(meta)).toLowerCase(),
+        headHay: (head + " " + askNumberAliasText(head)).toLowerCase(),
+        brandHay: (brandLow + " " + file.replace(/[-_.]+/g, " ")).toLowerCase(),
+        kind: /diagnos|troubleshoot|service|repair|fault|error|alert|code|techmanual/i.test(s.title + " " + file) ? "service"
+          : /owner|user|operat|homeowner/i.test(s.title + " " + file) ? "owner"
+          : /spec|wiring|schematic|brochure|parts|pmn|marketing|warranty|dimension|catalog|submittal/i.test(s.title + " " + file) ? "sheet" : "install",
+      });
+    }
+  }
+  remoteSeedRowsCache = { rows, brands };
+  return remoteSeedRowsCache;
+}
+// (a) Candidate manuals from the seed metadata, scored like every other Ask
+// search. A brand in the question is required. Top 3, up to 5 on a tie.
+function askRemoteCandidates(q, units, index, skipIds) {
+  const { rows, brands } = askRemoteSeedRows();
+  const words = normalizeQuery(q).split(/\s+/);
+  const named = words.filter(w => brands.has(w));
+  // Maintenance-spec questions (oil, plug gap, filter...) are answered by the
+  // owner's manual spec table; everything else leans on service, then install.
+  const maint = words.some(w => ASK_MAINT_WORDS.has(w));
+  const rank = maint ? { service: 3, owner: 3, install: 1, sheet: 0 } : { service: 3, install: 2, owner: 1, sheet: 0 };
+  const scored = [];
+  for (const r of rows) {
+    if (skipIds && skipIds.has(r.id)) continue;
+    if (index && !index.has(r.file)) continue;                 // scanned / no text layer
+    if (named.length && !named.some(b => hayHasTerm(r.brandHay, b))) continue;
+    const sc = askUnitHits(units, r.hay);
+    if (!sc) continue;
+    const tsc = askUnitHits(units, r.headHay);
+    const pages = index && index.get(r.file) ? index.get(r.file).pages || 0 : 0;
+    scored.push({ r, sc, tsc, pages });
+  }
+  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || rank[b.r.kind] - rank[a.r.kind] || b.pages - a.pages);
+  const out = scored.slice(0, 3);
+  const last = out[out.length - 1];
+  for (let i = 3; i < scored.length && out.length < 5 && last; i++) {
+    if (scored[i].sc === last.sc && scored[i].tsc === last.tsc) out.push(scored[i]); else break;
+  }
+  return out.map(x => x.r);
+}
+// (b)+(c) Fetch the candidates' page text (cached), score each page exactly like
+// the local pass, and return the best pages as passages. Whatever has arrived
+// by REMOTE_TEXT_BUDGET_MS goes to the AI; later arrivals still land in the
+// cache for the next question.
+async function askRemotePassages(q, units, threshold, limit, skipIds) {
+  const found = [];
+  const work = (async () => {
+    let index = null;
+    try { index = await remoteTextIndex(); } catch (e) {}
+    const cands = askRemoteCandidates(q, units, index, skipIds);
+    await Promise.all(cands.map(async (row, ci) => {
+      let pages = null;
+      try { pages = await remoteTextPages(row); } catch (e) {}
+      if (!pages) return;
+      for (const h of askRankPages(units, pages, threshold, row.brand)) found.push({ id: row.id, title: row.title, page: h.page, sc: h.sc, w: h.w, rank: h.rank, ci, raw: pages[h.page - 1] });
+    }));
+  })();
+  let timer = 0;
+  await Promise.race([work.catch(() => {}), new Promise(r => { timer = setTimeout(r, REMOTE_TEXT_BUDGET_MS); })]);
+  clearTimeout(timer);
+  // Equal scores: each manual's best page before any manual's second best,
+  // manuals in candidate order - page weights of different-sized manuals
+  // don't compare, and four pages of one manual crowd out the others.
+  return found.slice().sort((a, b) => b.sc - a.sc || a.rank - b.rank || a.ci - b.ci).slice(0, limit || 4)
+    .map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, remote: true, text: askTrimAround(s.raw, units, 1200) }));
 }
 // Top structured entries, with their meaning/steps, for grounding.
 function askAiEntries(q, limit) {
@@ -968,7 +1316,8 @@ async function askAiAnswer(question) {
   if (token !== askAiToken) return;
   let data = null;
   try {
-    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question, passages, entries, token: ASK_AI_APP_TOKEN }) });
+    const sent = passages.map(p => ({ id: p.id, title: p.title, page: p.page, text: p.text }));   // same shape as before remote passages
+    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question, passages: sent, entries, token: ASK_AI_APP_TOKEN }) });
     data = await resp.json();
   } catch (e) { data = { error: "network" }; }
   if (token !== askAiToken) return;
@@ -997,7 +1346,9 @@ async function askAiAnswer(question) {
   wireAskFeedback(box, question);
   // Log EVERY answer with whether the AI actually had a manual to lean on, so
   // even the guys who close it without tapping still tell us what they needed.
-  const grounded = passages.length ? ("grounded:" + passages.length + "p")
+  // "grounded:1p+3r" = 1 page from this phone's manuals + 3 read from the library.
+  const nRemote = passages.filter(p => p.remote).length;
+  const grounded = passages.length ? ("grounded:" + (passages.length - nRemote) + "p" + (nRemote ? "+" + nRemote + "r" : ""))
     : entries.length ? ("entries-only:" + entries.length + "e") : "no-manual-match";
   trackEvent("AI answered [" + grounded + "]: " + question);
   askLastAnswer = { question: question, ts: Date.now(), engaged: false };
@@ -2480,7 +2831,9 @@ function askSnippet(text, units) {
 // Open a downloaded manual jumped to the page a search hit landed on.
 async function openManualAtPage(id, page) {
   const rec = (await manualsGetAll()).find(x => x.id === id);
-  if (!rec || !rec.blob) { openManualDetail(id); return; }   // download gone — fall back
+  // Not on this phone (a library page the AI cited, or a removed download):
+  // download it, then open at that page.
+  if (!rec || !rec.blob) { openManualDetail(id, { page }); return; }
   // keep listing metadata fresh from the seed index
   const meta = (await manualCatalog()).find(x => x.id === id);
   if (meta) { rec.title = meta.title; rec.brand = meta.brand; rec.model = meta.model; rec.notes = meta.notes; }
@@ -2629,7 +2982,7 @@ function buildManualCard(m) {
   return card;
 }
 
-async function openManualDetail(id) {
+async function openManualDetail(id, opts) {
   const all = await manualCatalog();
   let m = all.find(x => x.id === id);
   if (!m) return;
@@ -2665,7 +3018,7 @@ async function openManualDetail(id) {
   }
 
   closeModal();
-  openPdfReader(m);
+  openPdfReader(m, opts && opts.page ? { page: opts.page } : undefined);
 }
 
 // Detail actions (Save copy / Remove download) live behind the reader's info
@@ -7269,7 +7622,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v223";
+const APP_VERSION = "v224";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
