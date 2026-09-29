@@ -20,6 +20,43 @@ const GENERATORS = [
   "sort": 0,
   "models": [],
   "specs": {},
+  "maintReset": {
+   "title": "Which panel? Maintenance reminder reset by controller",
+   "steps": [
+    "Do the maintenance first, then find the panel below. Each model's card has the full steps.",
+    "Evolution 2.0 / 1.0 / Sync (screen, arrows, ESC, ENTER): ENTER > YES > ENTER.",
+    "Nexus (screen, + / - / ESC / ENTER): ENTER + confirm.",
+    "Power Zone 200 (Next Generation, Guardian Y32; AUTO / OFF / MANUAL / SERVICE, no screen): Field Pro > Maintenance, or hold OFF 3 s > AUTO.",
+    "PowerPact (LEDs, Maintenance Due light): OFF, OFF, AUTO (OFF three times if an alarm light is also on).",
+    "Pre-Nexus 2008 series 10-20 kW (LCD): ENTER + confirm. 2008 8 kW: none.",
+    "Pre-Nexus LED bezel: none - Generac publishes no maintenance reminder.",
+    "CorePower 7 kW: none - Generac publishes no maintenance reminder.",
+    "Liquid-cooled Evolution (Protector RG / QS): OFF, ENTER.",
+    "R-200B (legacy 3600 rpm LED panel): none - Generac publishes no maintenance reminder.",
+    "Liquid-cooled Nexus (Protector QT): ENTER.",
+    "H-100 (SG / larger QT): ACK at the panel; reset only in GenLink."
+   ],
+   "resets": "See the card for the controller you picked.",
+   "notes": [
+    "Generac says the maintenance timer resets automatically when the yellow reminder is cleared."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
+  },
   "maintenance": [],
   "alarms": [
    { "code": "0180", "name": "Comm / Controller Fault (air-cooled + liquid-cooled)", "meaning": "Display board can't communicate with the main control board. Air-cooled Evolution 2.0 may show this as 'Controller Fault' or 'Loss of Serial Link'; liquid-cooled logs it as 0180 (paired with 1001), 'Internal Harness Loop Broken'. Field signature: the 7.5A control fuse blows repeatedly, the On/Manual/Off lights blink, and the gas solenoid cycles. Test: unplug the 2-pin connector at the controller - if the fuse stops blowing, the fault is the controller/display circuit. Check the ribbon/harness + 2-pin connector; usually replace the controller." },
@@ -233,6 +270,78 @@ const GENERATORS = [
    "airFilter": "0E9371AS (10kW) or 0J8478S (14-28kW); recommended oil filter 070185ES - air and oil filter P/Ns agree with Next Gen Repair Manual Sec 3 Table 3-2 p7 (Andy's photo)",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Configured through the Generac Field Pro app, not from the unit - there is no menu on the panel. Frequency Weekly / Biweekly / Monthly (day 1-28 if monthly); duration adjustable 5-20 minutes, default 5; Transfer on Scheduled Exercise default Disabled; Quiet-Test low-speed profile drops to reduced speed about 40 seconds in. Exercise only runs in AUTO. If the unit is not internet-connected, date/time must be reset over Field Pro every time the 12V battery, the 120VAC T1 feed or the fuse is disconnected (A0004332577 p.22)."
+  },
+  "maintReset": {
+   "title": "Power Zone 200 (Next Generation / Guardian Y32): reset the Schedule A / B / C maintenance reminder",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid to reach the control panel.",
+    "Press SERVICE until the blue Service Mode light comes on.",
+    "On your phone, open the Generac Field Pro app.",
+    "Tap Connect to a Generator Now.",
+    "Pick this unit's serial number from the list. It connects over Bluetooth, so stay at the unit.",
+    "On the Generator Details screen, tap Maintenance.",
+    "Mark the due maintenance complete. This clears the reminder.",
+    "If Field Pro offers it, reset the ongoing maintenance schedule.",
+    "Open Maintenance History and check the service is listed and the next due dates moved forward.",
+    "Press SERVICE until the blue light goes out. Service Mode does not time out on its own.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The flashing yellow maintenance reminder. Generac says the maintenance timer resets automatically when the reminder is cleared.",
+   "notes": [
+    "No phone? Generac's help article says: hold OFF for three seconds, then press AUTO. Generac does not say whether that updates the Field Pro / Mobile Link maintenance log, so use Field Pro when you can.",
+    "Owner with a Premium Mobile Link subscription: select Clear Maintenance in the app. Premium can clear maintenance reminders, but not warnings or alarms.",
+    "Yellow light FLASHING = a warning is active or maintenance is due. Yellow light ON steady = the unit is running in MANUAL. That is not a reminder.",
+    "Schedule A = oil, oil filter and battery check. Schedule B = oil, oil filter, battery check, air cleaner and spark plug(s). Schedule C = the oil change after the first 25 hours of run time.",
+    "Only one reminder shows at a time. After you clear one, the next one shows, so check again.",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are not maintenance reminders. They clear on their own once the problem is fixed.",
+    "Service Mode mutes owner and dealer notifications and pauses firmware updates. Always turn it off and put the unit in AUTO before you leave.",
+    "If the unit is not connected to the internet, set the date/time again in Field Pro after the 12 V battery or 120 VAC T1 power is disconnected, or the fuse is removed."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: Manage maintenance and service history in the Field Pro app",
+     "pages": "updated 2025-09-24",
+     "url": "https://support.generac.com/s/article/Manage-maintenance-and-service-history-in-the-Field-Pro-app"
+    },
+    {
+     "title": "Generac Help Center: How to place a generator into Service Mode (PowerZone 200 models)",
+     "pages": "updated 2026-01-02",
+     "url": "https://support.generac.com/s/article/How-to-Place-My-Generator-into-Service-Mode"
+    },
+    {
+     "title": "Generac Help Center: How Do I Connect my Generator in the Field Pro Application?",
+     "pages": "updated 2025-08-13",
+     "url": "https://support.generac.com/s/article/How-Do-I-Connect-my-Generator-in-the-Field-Pro-Application"
+    },
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Owner's Manual, Next Generation 10-28 kW (A0004332577 Rev. C)",
+     "pages": "PDF p.20 (LED lights); p.21 (SERVICE mode, date/time via Field Pro); p.26 (Schedule A/B/C, one alert at a time); p.39 (Select \"Clear Maintenance\" in app)",
+     "seedFile": "generac-next-gen-10-28kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Guardian 22-25 kW Y32 (A0010224539 Rev. A)",
+     "pages": "PDF p.18 (LED lights); p.24 (Schedule A/B/C)",
+     "seedFile": "generac-guardian-22-25kw-y32-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Next Generation 20 kW 3-Phase (A0005171487 Rev. B)",
+     "pages": "PDF p.17 (LED lights); p.24 (Schedule A/B/C)",
+     "seedFile": "generac-next-gen-20kw-3ph-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -1205,6 +1314,78 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Configured through the Generac Field Pro app, not from the unit - there is no menu on the panel. Frequency Weekly / Biweekly / Monthly (day 1-28 if monthly); duration adjustable 5-20 minutes, default 5; Transfer on Scheduled Exercise default Disabled; Quiet-Test low-speed profile drops to reduced speed about 40 seconds in. Exercise only runs in AUTO. If the unit is not internet-connected, date/time must be reset over Field Pro every time the 12V battery, the 120VAC T1 feed or the fuse is disconnected (A0004332577 p.22)."
   },
+  "maintReset": {
+   "title": "Power Zone 200 (Next Generation / Guardian Y32): reset the Schedule A / B / C maintenance reminder",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid to reach the control panel.",
+    "Press SERVICE until the blue Service Mode light comes on.",
+    "On your phone, open the Generac Field Pro app.",
+    "Tap Connect to a Generator Now.",
+    "Pick this unit's serial number from the list. It connects over Bluetooth, so stay at the unit.",
+    "On the Generator Details screen, tap Maintenance.",
+    "Mark the due maintenance complete. This clears the reminder.",
+    "If Field Pro offers it, reset the ongoing maintenance schedule.",
+    "Open Maintenance History and check the service is listed and the next due dates moved forward.",
+    "Press SERVICE until the blue light goes out. Service Mode does not time out on its own.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The flashing yellow maintenance reminder. Generac says the maintenance timer resets automatically when the reminder is cleared.",
+   "notes": [
+    "No phone? Generac's help article says: hold OFF for three seconds, then press AUTO. Generac does not say whether that updates the Field Pro / Mobile Link maintenance log, so use Field Pro when you can.",
+    "Owner with a Premium Mobile Link subscription: select Clear Maintenance in the app. Premium can clear maintenance reminders, but not warnings or alarms.",
+    "Yellow light FLASHING = a warning is active or maintenance is due. Yellow light ON steady = the unit is running in MANUAL. That is not a reminder.",
+    "Schedule A = oil, oil filter and battery check. Schedule B = oil, oil filter, battery check, air cleaner and spark plug(s). Schedule C = the oil change after the first 25 hours of run time.",
+    "Only one reminder shows at a time. After you clear one, the next one shows, so check again.",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are not maintenance reminders. They clear on their own once the problem is fixed.",
+    "Service Mode mutes owner and dealer notifications and pauses firmware updates. Always turn it off and put the unit in AUTO before you leave.",
+    "If the unit is not connected to the internet, set the date/time again in Field Pro after the 12 V battery or 120 VAC T1 power is disconnected, or the fuse is removed."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: Manage maintenance and service history in the Field Pro app",
+     "pages": "updated 2025-09-24",
+     "url": "https://support.generac.com/s/article/Manage-maintenance-and-service-history-in-the-Field-Pro-app"
+    },
+    {
+     "title": "Generac Help Center: How to place a generator into Service Mode (PowerZone 200 models)",
+     "pages": "updated 2026-01-02",
+     "url": "https://support.generac.com/s/article/How-to-Place-My-Generator-into-Service-Mode"
+    },
+    {
+     "title": "Generac Help Center: How Do I Connect my Generator in the Field Pro Application?",
+     "pages": "updated 2025-08-13",
+     "url": "https://support.generac.com/s/article/How-Do-I-Connect-my-Generator-in-the-Field-Pro-Application"
+    },
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Owner's Manual, Next Generation 10-28 kW (A0004332577 Rev. C)",
+     "pages": "PDF p.20 (LED lights); p.21 (SERVICE mode, date/time via Field Pro); p.26 (Schedule A/B/C, one alert at a time); p.39 (Select \"Clear Maintenance\" in app)",
+     "seedFile": "generac-next-gen-10-28kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Guardian 22-25 kW Y32 (A0010224539 Rev. A)",
+     "pages": "PDF p.18 (LED lights); p.24 (Schedule A/B/C)",
+     "seedFile": "generac-guardian-22-25kw-y32-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Next Generation 20 kW 3-Phase (A0005171487 Rev. B)",
+     "pages": "PDF p.17 (LED lights); p.24 (Schedule A/B/C)",
+     "seedFile": "generac-next-gen-20kw-3ph-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously / before each use",
@@ -2146,6 +2327,78 @@ const GENERATORS = [
    "airFilter": "0J8478S; oil filter 070185ES; control panel fuse 0D7178T; harness fuse 0E7403C",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Configured through the Generac Field Pro app, not from the unit - there is no menu on the panel. Frequency Weekly / Biweekly / Monthly (day 1-28 if monthly); duration adjustable 5-20 minutes, default 5; Transfer on Scheduled Exercise default Disabled; Quiet-Test low-speed profile drops to reduced speed about 40 seconds in. Exercise only runs in AUTO. If the unit is not internet-connected, date/time must be reset over Field Pro every time the 12V battery, the 120VAC T1 feed or the fuse is disconnected (A0004332577 p.22)."
+  },
+  "maintReset": {
+   "title": "Power Zone 200 (Next Generation / Guardian Y32): reset the Schedule A / B / C maintenance reminder",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid to reach the control panel.",
+    "Press SERVICE until the blue Service Mode light comes on.",
+    "On your phone, open the Generac Field Pro app.",
+    "Tap Connect to a Generator Now.",
+    "Pick this unit's serial number from the list. It connects over Bluetooth, so stay at the unit.",
+    "On the Generator Details screen, tap Maintenance.",
+    "Mark the due maintenance complete. This clears the reminder.",
+    "If Field Pro offers it, reset the ongoing maintenance schedule.",
+    "Open Maintenance History and check the service is listed and the next due dates moved forward.",
+    "Press SERVICE until the blue light goes out. Service Mode does not time out on its own.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The flashing yellow maintenance reminder. Generac says the maintenance timer resets automatically when the reminder is cleared.",
+   "notes": [
+    "No phone? Generac's help article says: hold OFF for three seconds, then press AUTO. Generac does not say whether that updates the Field Pro / Mobile Link maintenance log, so use Field Pro when you can.",
+    "Owner with a Premium Mobile Link subscription: select Clear Maintenance in the app. Premium can clear maintenance reminders, but not warnings or alarms.",
+    "Yellow light FLASHING = a warning is active or maintenance is due. Yellow light ON steady = the unit is running in MANUAL. That is not a reminder.",
+    "Schedule A = oil, oil filter and battery check. Schedule B = oil, oil filter, battery check, air cleaner and spark plug(s). Schedule C = the oil change after the first 25 hours of run time.",
+    "Only one reminder shows at a time. After you clear one, the next one shows, so check again.",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are not maintenance reminders. They clear on their own once the problem is fixed.",
+    "Service Mode mutes owner and dealer notifications and pauses firmware updates. Always turn it off and put the unit in AUTO before you leave.",
+    "If the unit is not connected to the internet, set the date/time again in Field Pro after the 12 V battery or 120 VAC T1 power is disconnected, or the fuse is removed."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: Manage maintenance and service history in the Field Pro app",
+     "pages": "updated 2025-09-24",
+     "url": "https://support.generac.com/s/article/Manage-maintenance-and-service-history-in-the-Field-Pro-app"
+    },
+    {
+     "title": "Generac Help Center: How to place a generator into Service Mode (PowerZone 200 models)",
+     "pages": "updated 2026-01-02",
+     "url": "https://support.generac.com/s/article/How-to-Place-My-Generator-into-Service-Mode"
+    },
+    {
+     "title": "Generac Help Center: How Do I Connect my Generator in the Field Pro Application?",
+     "pages": "updated 2025-08-13",
+     "url": "https://support.generac.com/s/article/How-Do-I-Connect-my-Generator-in-the-Field-Pro-Application"
+    },
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Owner's Manual, Next Generation 10-28 kW (A0004332577 Rev. C)",
+     "pages": "PDF p.20 (LED lights); p.21 (SERVICE mode, date/time via Field Pro); p.26 (Schedule A/B/C, one alert at a time); p.39 (Select \"Clear Maintenance\" in app)",
+     "seedFile": "generac-next-gen-10-28kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Guardian 22-25 kW Y32 (A0010224539 Rev. A)",
+     "pages": "PDF p.18 (LED lights); p.24 (Schedule A/B/C)",
+     "seedFile": "generac-guardian-22-25kw-y32-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Next Generation 20 kW 3-Phase (A0005171487 Rev. B)",
+     "pages": "PDF p.17 (LED lights); p.24 (Schedule A/B/C)",
+     "seedFile": "generac-next-gen-20kw-3ph-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -3410,6 +3663,86 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Selectable Weekly / Biweekly / Monthly from the control panel; factory default weekly self-test"
   },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously, or before each use",
@@ -4078,6 +4411,86 @@ const GENERATORS = [
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
+  },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -4931,6 +5344,86 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable from control panel"
   },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously / before each use",
@@ -5589,6 +6082,86 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
   },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously, or before each use",
@@ -6199,6 +6772,86 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
   },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously, or before each use",
@@ -6807,6 +7460,86 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
   },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously, or before each use",
@@ -7409,6 +8142,86 @@ const GENERATORS = [
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
+  },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -8020,6 +8833,86 @@ const GENERATORS = [
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
+  },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -8634,6 +9527,86 @@ const GENERATORS = [
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
+  },
+  "maintReset": {
+   "title": "Evolution 2.0: reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared, and the Maint. Log records it. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "WARNING: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: Viewing maintenance history using the generator control panel",
+     "pages": "updated 2026-02-04",
+     "url": "https://support.generac.com/s/article/Viewing-maintenance-history-using-the-generator-control-panel"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
+     "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
+     "pages": "PDF p.29; p.42",
+     "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
+     "pages": "PDF p.25; p.35",
+     "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -9274,6 +10247,88 @@ const GENERATORS = [
    "airFilter": "P/N 0E9371A per the 0K5801 and 0J9943 Replacement Parts tables",
    "fuelPressure": "Natural gas 3.5-7 in water column (7-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg) at the regulator (0K5804).",
    "exercise": "Configurable Weekly/Biweekly/Monthly, 5 or 12 min run, default Wednesday per menu example"
+  },
+  "maintReset": {
+   "title": "Evolution 1.0 / Sync (incl. EcoGen 15 kW and Synergy VSCF): reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to MAINT > Maint Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms.",
+    "Generac's help article gives these steps for Evolution I, II and Sync 2.0 together. The Evolution 1.0 owner's manuals print \"Press ENTER to clear\" in the Quick Reference table."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "Reset Maintenance is the last item on the Evolution 1.0 / Sync 2.0 Dealer Edit list. If you see FACTORY RESET, this is an Evolution 2.0 panel: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
+     "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-evo1-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
+     "pages": "PDF p.23; p.34",
+     "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
+     "pages": "PDF p.37",
+     "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
+     "pages": "PDF p.41",
+     "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -9949,6 +11004,88 @@ const GENERATORS = [
    "airFilter": "P/N 0E9371A per the 0K5801 and 0J9943 Replacement Parts tables",
    "fuelPressure": "Natural gas 3.5-7 in water column (7-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg) at the regulator (0K5804).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
+  },
+  "maintReset": {
+   "title": "Evolution 1.0 / Sync (incl. EcoGen 15 kW and Synergy VSCF): reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to MAINT > Maint Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms.",
+    "Generac's help article gives these steps for Evolution I, II and Sync 2.0 together. The Evolution 1.0 owner's manuals print \"Press ENTER to clear\" in the Quick Reference table."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "Reset Maintenance is the last item on the Evolution 1.0 / Sync 2.0 Dealer Edit list. If you see FACTORY RESET, this is an Evolution 2.0 panel: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
+     "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-evo1-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
+     "pages": "PDF p.23; p.34",
+     "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
+     "pages": "PDF p.37",
+     "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
+     "pages": "PDF p.41",
+     "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -10684,6 +11821,88 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7 in water column (7-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg) at the regulator (0K5804).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
   },
+  "maintReset": {
+   "title": "Evolution 1.0 / Sync (incl. EcoGen 15 kW and Synergy VSCF): reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to MAINT > Maint Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms.",
+    "Generac's help article gives these steps for Evolution I, II and Sync 2.0 together. The Evolution 1.0 owner's manuals print \"Press ENTER to clear\" in the Quick Reference table."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "Reset Maintenance is the last item on the Evolution 1.0 / Sync 2.0 Dealer Edit list. If you see FACTORY RESET, this is an Evolution 2.0 panel: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
+     "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-evo1-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
+     "pages": "PDF p.23; p.34",
+     "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
+     "pages": "PDF p.37",
+     "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
+     "pages": "PDF p.41",
+     "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously, or before each use",
@@ -11410,6 +12629,88 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 3.5-7 in water column (7-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg) at the regulator (0K5804).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
   },
+  "maintReset": {
+   "title": "Evolution 1.0 / Sync (incl. EcoGen 15 kW and Synergy VSCF): reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to MAINT > Maint Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms.",
+    "Generac's help article gives these steps for Evolution I, II and Sync 2.0 together. The Evolution 1.0 owner's manuals print \"Press ENTER to clear\" in the Quick Reference table."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "Reset Maintenance is the last item on the Evolution 1.0 / Sync 2.0 Dealer Edit list. If you see FACTORY RESET, this is an Evolution 2.0 panel: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
+     "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-evo1-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
+     "pages": "PDF p.23; p.34",
+     "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
+     "pages": "PDF p.37",
+     "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
+     "pages": "PDF p.41",
+     "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Daily if running continuously, or before each use",
@@ -11992,6 +13293,88 @@ const GENERATORS = [
    "airFilter": "Part #0J8478",
    "fuelPressure": "Natural gas 3.5-7 in water column (7-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg) at the regulator (0K6047).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
+  },
+  "maintReset": {
+   "title": "Evolution 1.0 / Sync (incl. EcoGen 15 kW and Synergy VSCF): reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to MAINT > Maint Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms.",
+    "Generac's help article gives these steps for Evolution I, II and Sync 2.0 together. The Evolution 1.0 owner's manuals print \"Press ENTER to clear\" in the Quick Reference table."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "Reset Maintenance is the last item on the Evolution 1.0 / Sync 2.0 Dealer Edit list. If you see FACTORY RESET, this is an Evolution 2.0 panel: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
+     "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-evo1-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
+     "pages": "PDF p.23; p.34",
+     "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
+     "pages": "PDF p.37",
+     "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
+     "pages": "PDF p.41",
+     "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -12856,6 +14239,88 @@ const GENERATORS = [
    "airFilter": "P/N 0J8478 (0K2502 Replacement Parts table)",
    "fuelPressure": "Natural gas 3.5-7 in water column (7-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg) at the regulator (0K2503).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
+  },
+  "maintReset": {
+   "title": "Evolution 1.0 / Sync (incl. EcoGen 15 kW and Synergy VSCF): reset the maintenance reminder (SERVICE A / SERVICE B / INSPECT BATTERY)",
+   "steps": [
+    "Do the maintenance first.",
+    "Lift the lid. The reminder is on the screen (SERVICE A, SERVICE B or INSPECT BATTERY).",
+    "Press ENTER.",
+    "When the screen asks \"Service performed?\", press the up or down arrow to pick YES.",
+    "Press ENTER.",
+    "If another reminder shows, repeat steps 3 to 5 for it.",
+    "Press AUTO. With utility power on, the green Ready light comes on."
+   ],
+   "resets": "The reminder on the screen. Generac says the maintenance timer resets automatically when the reminder is cleared. The dealer-menu Reset Maintenance (below) resets all maintenance counters at once.",
+   "notes": [
+    "Only one reminder shows at a time (most have two-year intervals, so they come due together). After you clear one, the next one shows.",
+    "To check it took: press ESC to reach the menu, then go to MAINT > Maint Log. The newest entry should read \"Schedule A Serviced\", \"Schedule B Serviced\" or \"Battery Maintained\".",
+    "Schedule A = oil, oil filter and battery check. Schedule B = Schedule A plus air cleaner, spark plug(s) and valve clearance (where applicable).",
+    "Warnings (LOW BATTERY, BATTERY PROBLEM, CHARGER WARNING, CHARGER MISSING AC) are cleared differently: fix the cause, press OFF, ENTER, ENTER, then AUTO.",
+    "If Wi-Fi is not enabled, set the date/time again every time the 12 V battery is disconnected or the fuse is removed.",
+    "Premium Mobile Link subscribers can also clear maintenance reminders in the app (Clear Maintenance), but not warnings or alarms.",
+    "Generac's help article gives these steps for Evolution I, II and Sync 2.0 together. The Evolution 1.0 owner's manuals print \"Press ENTER to clear\" in the Quick Reference table."
+   ],
+   "dealerSteps": [
+    "Only if the maintenance counters are wrong. You do NOT need this after a normal service.",
+    "Start at the main display.",
+    "Enter the dealer password: UP, UP, ESC, DN, UP, ESC, UP, ENTER. The unit must be activated.",
+    "Go to SUB MENUS > DEALER > DEALER EDIT.",
+    "Press ENTER.",
+    "Press the down arrow until Reset Maintenance shows.",
+    "Reset Maintenance is the last item on the Evolution 1.0 / Sync 2.0 Dealer Edit list. If you see FACTORY RESET, this is an Evolution 2.0 panel: FACTORY RESET is the next item - don't overshoot.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save. The Maint. Log records \"Maintenance Reset\".",
+    "Press ESC until you are back at the main display.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Generac Help Center: How do I clear a yellow maintenance reminder or warning on my standby generator?",
+     "pages": "updated 2025-10-02",
+     "url": "https://support.generac.com/s/article/What-Does-a-Shining-Yellow-Led-Light-Mean-on-the-Control-Panel-of-My-Generator"
+    },
+    {
+     "title": "Generac Help Center: Maintenance timer vs. maintenance alarm: Do I need to reset the maintenance timer?",
+     "url": "https://support.generac.com/s/article/How-do-I-reset-the-maintenance-timer-on-a-home-standby-generator"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
+     "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
+     "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
+     "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
+     "seedFile": "generac-evo1-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
+     "pages": "PDF p.23; p.34",
+     "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
+     "pages": "PDF p.37",
+     "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
+     "pages": "PDF p.41",
+     "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -13761,6 +15226,63 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 5-7 in water column; LP vapor 10-12 in water column (0H8358 Sec 5.1).",
    "exercise": "Configurable Weekly/Biweekly/Monthly, runs 5 or 12 minutes depending on model"
   },
+  "maintReset": {
+   "title": "Nexus air-cooled (Guardian 8-20 kW, EcoGen 6 kW): reset the maintenance message",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid. The maintenance message is on the display.",
+    "Press ENTER.",
+    "The panel asks you to confirm. Confirm the reset.",
+    "If another maintenance message shows, repeat steps 3 and 4.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "Clears the alert and resets the maintenance counters for all conditions it was showing. The history log records it.",
+   "notes": [
+    "Generac does not print the confirm-screen wording. Read the screen.",
+    "Menu route (owner's manual menu map): press ESC until MAIN MENU shows, press + or - until EDIT flashes, press ENTER, press + or - to reach RESET MAINTENANCE, press ENTER, then confirm.",
+    "Only one maintenance alert shows at a time (most have two-year intervals). After you clear one, the next one shows.",
+    "The maintenance counters do not run without battery power. After a battery disconnect the panel asks for the time and date. Always set them.",
+    "An ALARM is cleared differently: switch to OFF, press ENTER twice, then switch back to AUTO. INTERNAL FAULT cannot be cleared - call a service dealer.",
+    "On V-twin units the external yellow LED is the Maintenance light."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
+     "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
+     "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
+     "pages": "PDF p.22 (Maintenance Alerts)",
+     "seedFile": "generac-nexus-eaton-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
+     "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
+     "seedFile": "generac-ecogen-6kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Weekly",
@@ -14150,6 +15672,63 @@ const GENERATORS = [
    "airFilter": "Generac P/N 0E9581 (2008 table)",
    "fuelPressure": "Natural gas 5-7 in water column; LP vapor 10-12 in water column (0H8358 Sec 5.1).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
+  },
+  "maintReset": {
+   "title": "Nexus air-cooled (Guardian 8-20 kW, EcoGen 6 kW): reset the maintenance message",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid. The maintenance message is on the display.",
+    "Press ENTER.",
+    "The panel asks you to confirm. Confirm the reset.",
+    "If another maintenance message shows, repeat steps 3 and 4.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "Clears the alert and resets the maintenance counters for all conditions it was showing. The history log records it.",
+   "notes": [
+    "Generac does not print the confirm-screen wording. Read the screen.",
+    "Menu route (owner's manual menu map): press ESC until MAIN MENU shows, press + or - until EDIT flashes, press ENTER, press + or - to reach RESET MAINTENANCE, press ENTER, then confirm.",
+    "Only one maintenance alert shows at a time (most have two-year intervals). After you clear one, the next one shows.",
+    "The maintenance counters do not run without battery power. After a battery disconnect the panel asks for the time and date. Always set them.",
+    "An ALARM is cleared differently: switch to OFF, press ENTER twice, then switch back to AUTO. INTERNAL FAULT cannot be cleared - call a service dealer.",
+    "On V-twin units the external yellow LED is the Maintenance light."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
+     "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
+     "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
+     "pages": "PDF p.22 (Maintenance Alerts)",
+     "seedFile": "generac-nexus-eaton-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
+     "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
+     "seedFile": "generac-ecogen-6kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -14592,6 +16171,63 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 5-7 in water column; LP vapor 10-12 in water column (0H8358 Sec 5.1).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
   },
+  "maintReset": {
+   "title": "Nexus air-cooled (Guardian 8-20 kW, EcoGen 6 kW): reset the maintenance message",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid. The maintenance message is on the display.",
+    "Press ENTER.",
+    "The panel asks you to confirm. Confirm the reset.",
+    "If another maintenance message shows, repeat steps 3 and 4.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "Clears the alert and resets the maintenance counters for all conditions it was showing. The history log records it.",
+   "notes": [
+    "Generac does not print the confirm-screen wording. Read the screen.",
+    "Menu route (owner's manual menu map): press ESC until MAIN MENU shows, press + or - until EDIT flashes, press ENTER, press + or - to reach RESET MAINTENANCE, press ENTER, then confirm.",
+    "Only one maintenance alert shows at a time (most have two-year intervals). After you clear one, the next one shows.",
+    "The maintenance counters do not run without battery power. After a battery disconnect the panel asks for the time and date. Always set them.",
+    "An ALARM is cleared differently: switch to OFF, press ENTER twice, then switch back to AUTO. INTERNAL FAULT cannot be cleared - call a service dealer.",
+    "On V-twin units the external yellow LED is the Maintenance light."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
+     "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
+     "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
+     "pages": "PDF p.22 (Maintenance Alerts)",
+     "seedFile": "generac-nexus-eaton-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
+     "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
+     "seedFile": "generac-ecogen-6kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "2 years or 200 hrs",
@@ -15033,6 +16669,63 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 5-7 in water column; LP vapor 10-12 in water column (0H8358 Sec 5.1).",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
   },
+  "maintReset": {
+   "title": "Nexus air-cooled (Guardian 8-20 kW, EcoGen 6 kW): reset the maintenance message",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid. The maintenance message is on the display.",
+    "Press ENTER.",
+    "The panel asks you to confirm. Confirm the reset.",
+    "If another maintenance message shows, repeat steps 3 and 4.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "Clears the alert and resets the maintenance counters for all conditions it was showing. The history log records it.",
+   "notes": [
+    "Generac does not print the confirm-screen wording. Read the screen.",
+    "Menu route (owner's manual menu map): press ESC until MAIN MENU shows, press + or - until EDIT flashes, press ENTER, press + or - to reach RESET MAINTENANCE, press ENTER, then confirm.",
+    "Only one maintenance alert shows at a time (most have two-year intervals). After you clear one, the next one shows.",
+    "The maintenance counters do not run without battery power. After a battery disconnect the panel asks for the time and date. Always set them.",
+    "An ALARM is cleared differently: switch to OFF, press ENTER twice, then switch back to AUTO. INTERNAL FAULT cannot be cleared - call a service dealer.",
+    "On V-twin units the external yellow LED is the Maintenance light."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
+     "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
+     "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
+     "pages": "PDF p.22 (Maintenance Alerts)",
+     "seedFile": "generac-nexus-eaton-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
+     "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
+     "seedFile": "generac-ecogen-6kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "2 years or 200 hrs",
@@ -15431,6 +17124,63 @@ const GENERATORS = [
    "airFilter": "Generac P/N 0E9371 (0J0984 Sec 1.5.2)",
    "fuelPressure": "LP vapor only: 10-12 in water column (0.36-0.43 psi); verify it never drops below 10 in wc. The primary LP regulator is NOT included with the unit (0J0984 Sec 1.7). No natural-gas rating exists for this model.",
    "exercise": "Configurable Weekly/Biweekly/Monthly"
+  },
+  "maintReset": {
+   "title": "Nexus air-cooled (Guardian 8-20 kW, EcoGen 6 kW): reset the maintenance message",
+   "steps": [
+    "Do the maintenance first.",
+    "Open the lid. The maintenance message is on the display.",
+    "Press ENTER.",
+    "The panel asks you to confirm. Confirm the reset.",
+    "If another maintenance message shows, repeat steps 3 and 4.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "Clears the alert and resets the maintenance counters for all conditions it was showing. The history log records it.",
+   "notes": [
+    "Generac does not print the confirm-screen wording. Read the screen.",
+    "Menu route (owner's manual menu map): press ESC until MAIN MENU shows, press + or - until EDIT flashes, press ENTER, press + or - to reach RESET MAINTENANCE, press ENTER, then confirm.",
+    "Only one maintenance alert shows at a time (most have two-year intervals). After you clear one, the next one shows.",
+    "The maintenance counters do not run without battery power. After a battery disconnect the panel asks for the time and date. Always set them.",
+    "An ALARM is cleared differently: switch to OFF, press ENTER twice, then switch back to AUTO. INTERNAL FAULT cannot be cleared - call a service dealer.",
+    "On V-twin units the external yellow LED is the Maintenance light."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
+     "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
+     "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
+     "pages": "PDF p.22 (Maintenance Alerts)",
+     "seedFile": "generac-nexus-eaton-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
+     "pages": "PDF p.21",
+     "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
+     "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
+     "seedFile": "generac-ecogen-6kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -15854,6 +17604,42 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 5-7 in water column (9-13 mm Hg); LP vapor 10-12 in water column (19-22 mm Hg). The primary LP regulator is not included with the generator (Install Manual 0K6022).",
    "exercise": "Not a programmable menu schedule - this controller has no LCD menu. Hold SET EXERCISE for 3 seconds at the day and time you want it to run; the unit then exercises every 7 days for about 12 minutes and does not transfer load unless utility is lost. The setting is lost whenever the 12V battery or T1 power is disconnected or the fuse is pulled (0K6020 Sec 3.10)."
   },
+  "maintReset": {
+   "title": "PowerPact 7 / 7.5 kW: reset the Maintenance Due light",
+   "steps": [
+    "Do the maintenance first.",
+    "Press OFF. The generator is now in OFF mode.",
+    "Press OFF again. The Maintenance Due light goes out.",
+    "If an alarm or warning light was also on: press OFF a third time. The alarm must clear before the Maintenance Due light will reset.",
+    "Press AUTO."
+   ],
+   "resets": "The Maintenance Due light, for the 20-hour break-in service or the 1 year / 100 hour service.",
+   "notes": [
+    "Maintenance Due FLASHING = 20-hour break-in service due. ON steady = 1 year / 100 hour service due.",
+    "The unit must be in OFF mode to reset the light.",
+    "Clearing the light does not fix anything. It only turns the light off.",
+    "Pulling the 7.5 A fuse turns off all the panel LEDs, and putting it back runs an LED self-test. That is not a maintenance reset."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, 7.5 kW PowerPact (10000021790 Rev. C)",
+     "pages": "PDF p.19-20 (LED table; OFF / OFF / OFF clearing table); p.23 (Clearing a Maintenance Due Condition)",
+     "seedFile": "generac-powerpact-7.5kw-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-powerpact-7.5kw-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, PowerPact 2014 (0K6020 Rev. A)",
+     "pages": "PDF p.16 (Clearing an Alarm/Warning); p.21 (4.1.1 Clearing a Maintenance Due Condition)",
+     "seedFile": "generac-powerpact-2014-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-powerpact-2014-owners.pdf"
+    },
+    {
+     "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
+     "pages": "updated 2026-02-19",
+     "url": "https://support.generac.com/s/article/How-Do-I-Clear-an-Error-On-My-Home-Standby-Generator"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Monthly",
@@ -16154,6 +17940,37 @@ const GENERATORS = [
    "fuelPressure": "",
    "exercise": "Weekly, set by holding SET EXERCISE on the desired day and time; runs about 12 minutes."
   },
+  "maintReset": {
+   "title": "CorePower 7 kW: no maintenance reminder",
+   "steps": [
+    "Do the maintenance first, on the schedule in the manual.",
+    "This panel has no maintenance reminder to reset (Generac publishes none). Log the service yourself.",
+    "Do not try a key sequence. Leave the AUTO/OFF/MANUAL switch in AUTO."
+   ],
+   "resets": "Nothing. Generac documents no maintenance counter.",
+   "notes": [
+    "The CorePower panel has LEDs, no screen, and an AUTO/OFF/MANUAL rocker switch. Alarms clear when you set the switch to OFF. Warnings clear on their own when the condition goes away.",
+    "All LEDs flashing together = the exercise time is not set. It is not a maintenance reminder. To set it: with utility power on, switch to AUTO and hold SET EXERCISE until the unit starts.",
+    "The Maintenance Due light and the OFF, OFF reset belong to the PowerPact, which replaced the CorePower around 2013."
+   ],
+   "sources": [
+    {
+     "title": "Diagnostic Repair Manual, CorePower 6/7 kW (0H9174 Rev. B) - Generac manual, copy hosted by a parts dealer",
+     "pages": "Clear Alarms / Warnings (Part 3); searched the whole manual - no maintenance reminder",
+     "url": "https://www.generator-parts.com/manuals/home-standby/0H9174.pdf"
+    },
+    {
+     "title": "Generac Help Center: Core Power VS PowerPact: control panel differences",
+     "pages": "updated 2025-12-22",
+     "url": "https://support.generac.com/s/article/What-is-the-PowerPact-or-Core-Power-Control-Panel"
+    },
+    {
+     "title": "Generac Help Center: Why Are All the LED Lights Flashing on the Core Power's Control Board?",
+     "pages": "updated 2024-01-11",
+     "url": "https://support.generac.com/s/article/Why-Are-All-the-LED-Lights-Flashing-on-the-Core-Power-s-Control-Board"
+    }
+   ]
+  },
   "maintenance": [],
   "alarms": [],
   "warnings": [
@@ -16248,6 +18065,33 @@ const GENERATORS = [
    "airFilter": "7 kW: P/N 0C8127 per 0F9421, P/N 0G3332 per the later 0G4869 revision - the two manuals disagree, verify against the unit's own manual. 16/18 kW: P/N 0C8127.",
    "fuelPressure": "Natural gas 5-7 in water column (0.18-0.25 psi); LP vapor 10-12 in water column (0.36-0.43 psi). NG supply must never drop below 4 in wc, LP never below 10 in wc; maximum inlet pressure 14 in wc.",
    "exercise": "Weekly (every 7 days), user-selected day/time set by holding the EXERCISE SET TIME switch; runs approx. 12 minutes then shuts down; does not transfer load unless utility is also out. 16kW has an optional low-speed (2400 RPM, quieter) exercise mode via control-board DIP switch 1 (factory OFF). Timer resets whenever the battery or 15A fuse is disconnected. (0F9421 Sec 3.5)"
+  },
+  "maintReset": {
+   "title": "Pre-Nexus LED bezel (legacy 7-18 kW): no maintenance reminder",
+   "steps": [
+    "Do the maintenance first, on the schedule in the owner's manual.",
+    "This panel has no maintenance reminder to reset (Generac publishes none). Log the service yourself.",
+    "Leave the AUTO/OFF/MANUAL switch in AUTO."
+   ],
+   "resets": "Nothing. There is no maintenance counter to reset.",
+   "notes": [
+    "The LEDs on this panel are fault and status lights. 5 flashing red LEDs = exerciser not set. That is not a maintenance reminder.",
+    "If the unit has an LCD screen, it is a 2008-series panel: use the Pre-Nexus 2008 series card."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Guardian 7/10/13/16 kW Air-Cooled (0F9421 Rev. M)",
+     "pages": "searched the whole manual - no maintenance reminder; control panel LED legend",
+     "seedFile": "generac-legacy-guardian-hsb-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-legacy-guardian-hsb-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, 7-18 kW Air-Cooled universal (0G4869 Rev. E)",
+     "pages": "searched the whole manual - no maintenance reminder",
+     "seedFile": "generac-legacy-aircooled-universal-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-legacy-aircooled-universal-owners.pdf"
+    }
+   ]
   },
   "maintenance": [
    {
@@ -16702,6 +18546,34 @@ const GENERATORS = [
    "fuelPressure": "Natural gas 5-7 in water column (0.18-0.25 psi); LP vapor 10-12 in water column (0.36-0.43 psi). NG supply must never drop below 4 in wc, LP never below 10 in wc; maximum inlet pressure 14 in wc.",
    "exercise": "Weekly (every 7 days), user-set day/time, runs approx. 12 minutes then shuts down; resets after any battery/fuse disconnect. (0G8334 Sec 3.1.2, p.19-20)"
   },
+  "maintReset": {
+   "title": "Pre-Nexus 2008 series: reset the 10-20 kW LCD maintenance message; 8 kW has no reminder",
+   "steps": [
+    "Do the maintenance first.",
+    "8 kW unit: this panel has no maintenance reminder to reset (Generac publishes none). Log the service yourself and stop here.",
+    "10-20 kW (LCD screen): press ENTER while the maintenance message shows.",
+    "The panel asks you to confirm. Confirm the reset.",
+    "If another maintenance message shows, repeat steps 3 and 4.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "10-20 kW: clears the alert and resets the maintenance counters for all conditions it was showing. The history log records it. 8 kW: nothing.",
+   "notes": [
+    "Generac's manual lists Maintenance Alerts for 10-20 kW only.",
+    "Menu route (owner's manual menu map): press ESC until MAIN MENU shows, press + or - to EDIT, press ENTER, press + or - to reach RESET MAINTENANCE, press ENTER, then confirm.",
+    "Maintenance intervals start when the exercise time is first entered. The counters do not run without battery power, so set the time/date again after any battery disconnect.",
+    "Only one alert shows at a time. After you clear one, the next one shows.",
+    "The external yellow Maintenance LED is only on the larger units (the manual says \"16 through 20kW\" in one place and \"17 & 20 KW\" in another).",
+    "Generac does not print the confirm-screen wording. Read the screen."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, 2008 Air-Cooled Home Standby 8-20 kW (0G8334 Rev. F)",
+     "pages": "PDF p.20 (maintenance intervals start when the exercise time is entered); p.24 (3.6.3 Maintenance Alerts, 10-20 kW only); p.34 (menu map: EDIT > RESET MAINTENANCE)",
+     "seedFile": "generac-2008-hsb-aircooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-2008-hsb-aircooled-owners.pdf"
+    }
+   ]
+  },
   "maintenance": [
    {
     "interval": "Monthly (or 24 hrs continuous run)",
@@ -17062,6 +18934,65 @@ const GENERATORS = [
    "fuelPressure": "2.4L: 5-14 in w.c. (NG & LP). 4.5L big-block: LP 7-14 in w.c., NG 3.5-14 in w.c. Measured at the generator fuel inlet.",
    "exercise": "7-day / weekly exerciser, set at the Evolution controller."
   },
+  "maintReset": {
+   "title": "Liquid-cooled Evolution (Protector RG / QS): reset the Schedule A / B / C maintenance warning",
+   "steps": [
+    "Do the maintenance first.",
+    "Read the warning on the screen (for example \"Schedule A Maint\").",
+    "Press OFF.",
+    "Press ENTER. The warning clears and the next one (if any) shows.",
+    "Repeat OFF, ENTER for each maintenance warning left.",
+    "Press AUTO."
+   ],
+   "resets": "OFF, ENTER clears the displayed warning. Generac's training book says ENTER on a maintenance warning resets the counter for that condition, and the Maint. Log shows \"Schedule X Serviced\". Dealer Edit > Reset Maintenance resets ALL maintenance timers.",
+   "notes": [
+    "To check it took: press ESCAPE to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. It should read \"Schedule A Serviced\" (or B / C).",
+    "4.5 L 48-80 kW schedule: A = every year or 125 hours, B = every 2 years or 250 hours, C = every 1000 hours. Check the unit's own manual.",
+    "If Schedule A or B comes due at 900-999 total hours, do the Schedule C tasks too and reset the A-B-C/Year counter. The owner's manual gives that to an IASD (dealer steps below).",
+    "The EDIT menu needs no password. Reset Maintenance is only in DEALER EDIT, with the Level 2 code.",
+    "Generac's yellow-reminder help article (ENTER, then YES) is written for air-cooled units. For liquid-cooled Evolution the manuals print OFF, then ENTER.",
+    "Keys are printed OFF, ESCAPE, ENTER and up/down arrows (up = +, down = -)."
+   ],
+   "dealerSteps": [
+    "Resets ALL maintenance timers. Use it when the owner's manual calls for the A-B-C/Year counter reset (Schedule A or B at 900-999 hours).",
+    "Start from the main menu.",
+    "Enter the Level 2 code: ESC, Up, Up, Dn, Dn, ESC, ESC.",
+    "Select SUB MENUS, then DEALER, then DEALER EDIT.",
+    "Scroll to Reset Maintenance.",
+    "WARNING: Pram Group and Voltage Code are on the same Level 2 list. Do not change them.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save.",
+    "Press ESCAPE until you are back at the home screen.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Protector 48/60/80 kW 4.5 L (A0000253468 Rev. B)",
+     "pages": "PDF p.22 (press OFF then ENTER to clear; EDIT needs no password); p.29 (Service Schedule; 900-999 hour note)",
+     "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Protector RG022-RG060 2.4 L (0K8185 Rev. H)",
+     "pages": "PDF p.24 (clear Alarm/Warning); p.31 (900-999 hour note)",
+     "seedFile": "generac-protector-qs-owners-manual-0k8185.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-qs-owners-manual-0k8185.pdf"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Liquid-Cooled Evolution or Nexus Control (0J1195 Rev. J)",
+     "pages": "PDF p.19 (clear alarm/warning: OFF then ENTER); p.22 (menu map: Schedule A/B/C Maint, Maint. Log); p.28 (Dealer Menu Map, Level 2 code, Reset Maintenance); p.31 (Reset Maintenance resets all maintenance timers)",
+     "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
+    },
+    {
+     "title": "Protector Series Training Reference Book, Ch. 11 Evolution & Nexus Digital Control Panels (0E2221 Rev. L)",
+     "pages": "PDF p.209 (Maintenance Warning: Enter clears and resets the counter for the condition displayed)",
+     "seedFile": "generac-protector-series-training-reference-0e2221.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
+    }
+   ]
+  },
   "maintenance": [
    { "interval": "Weekly", "task": "Confirm the unit is in AUTO and the exercise ran; check for alarms/warnings on the Evolution display." },
    { "interval": "First 25-30 hr, then annually", "task": "Change oil and filter (2.4L ~4 qt, 4.5L ~12 qt); use the oil grade in the owner's manual." },
@@ -17154,6 +19085,73 @@ const GENERATORS = [
    "fuelPressure": "5-14 in w.c. (NG & LP) at the generator inlet.",
    "exercise": "Weekly exerciser at the controller."
   },
+  "maintReset": {
+   "title": "Legacy 3600 rpm liquid-cooled: R-200B has no reminder; Evolution screen clears with OFF, ENTER",
+   "steps": [
+    "Do the maintenance first.",
+    "Look at the panel. R-200B (seven LEDs, no screen): this panel has no maintenance reminder to reset (Generac publishes none). Log the service yourself and stop here.",
+    "Evolution (screen): read the warning on the screen (for example \"Schedule A Maint\").",
+    "Press OFF.",
+    "Press ENTER. The warning clears and the next one (if any) shows.",
+    "Repeat OFF, ENTER for each maintenance warning left.",
+    "Press AUTO."
+   ],
+   "resets": "R-200B: nothing - there is no maintenance counter. Evolution: OFF, ENTER clears the displayed warning and resets that condition's counter; Dealer Edit > Reset Maintenance resets ALL maintenance timers.",
+   "notes": [
+    "R-200B LEDs: System Ready, Low Fuel Pressure, Low Battery, Low Oil Pressure, Hi Coolant Temp/Low Coolant Level, Over Speed/RPM Sensor Loss, Over Crank. 5 flashing red LEDs = exerciser not set. That is not a maintenance reminder.",
+    "To check it took: press ESCAPE to reach the menu, then go to SUB MENUS > MAINT > Maint. Log. It should read \"Schedule A Serviced\" (or B / C).",
+    "4.5 L 48-80 kW schedule: A = every year or 125 hours, B = every 2 years or 250 hours, C = every 1000 hours. Check the unit's own manual.",
+    "If Schedule A or B comes due at 900-999 total hours, do the Schedule C tasks too and reset the A-B-C/Year counter. The owner's manual gives that to an IASD (dealer steps below).",
+    "The EDIT menu needs no password. Reset Maintenance is only in DEALER EDIT, with the Level 2 code.",
+    "Generac's yellow-reminder help article (ENTER, then YES) is written for air-cooled units. For liquid-cooled Evolution the manuals print OFF, then ENTER."
+   ],
+   "dealerSteps": [
+    "Evolution screen only. The R-200B has no dealer maintenance reset.",
+    "Resets ALL maintenance timers. Use it when the owner's manual calls for the A-B-C/Year counter reset (Schedule A or B at 900-999 hours).",
+    "Start from the main menu.",
+    "Enter the Level 2 code: ESC, Up, Up, Dn, Dn, ESC, ESC.",
+    "Select SUB MENUS, then DEALER, then DEALER EDIT.",
+    "Scroll to Reset Maintenance.",
+    "WARNING: Pram Group and Voltage Code are on the same Level 2 list. Do not change them.",
+    "Press ENTER.",
+    "Press the up or down arrow to change No to Yes.",
+    "Press ENTER to save.",
+    "Press ESCAPE until you are back at the home screen.",
+    "Press AUTO."
+   ],
+   "sources": [
+    {
+     "title": "Diagnostic Repair Manual, Liquid-Cooled 2.4 L with R-200B controller (0H0983 Rev. B)",
+     "pages": "PDF p.25 (LED Indicators); searched the whole manual - no maintenance reminder",
+     "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf"
+    },
+    {
+     "title": "Owner's Manual, Protector 48/60/80 kW 4.5 L (A0000253468 Rev. B)",
+     "pages": "PDF p.22 (press OFF then ENTER to clear; EDIT needs no password); p.29 (Service Schedule; 900-999 hour note)",
+     "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf"
+    },
+    {
+     "title": "Owner's Manual, Protector RG022-RG060 2.4 L (0K8185 Rev. H)",
+     "pages": "PDF p.24 (clear Alarm/Warning); p.31 (900-999 hour note)",
+     "seedFile": "generac-protector-qs-owners-manual-0k8185.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-qs-owners-manual-0k8185.pdf"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Liquid-Cooled Evolution or Nexus Control (0J1195 Rev. J)",
+     "pages": "PDF p.19 (clear alarm/warning: OFF then ENTER); p.22 (menu map: Schedule A/B/C Maint, Maint. Log); p.28 (Dealer Menu Map, Level 2 code, Reset Maintenance); p.31 (Reset Maintenance resets all maintenance timers)",
+     "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
+    },
+    {
+     "title": "Protector Series Training Reference Book, Ch. 11 Evolution & Nexus Digital Control Panels (0E2221 Rev. L)",
+     "pages": "PDF p.209 (Maintenance Warning: Enter clears and resets the counter for the condition displayed)",
+     "seedFile": "generac-protector-series-training-reference-0e2221.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
+    }
+   ]
+  },
   "maintenance": [
    { "interval": "Weekly", "task": "Confirm AUTO and that the exercise ran; check the display for alarms." },
    { "interval": "Annually / per hours", "task": "Oil and filter change; check coolant (2 gal on 25/30 kW, 2.5 gal on 36-60 kW), battery, and belts." }
@@ -17205,6 +19203,43 @@ const GENERATORS = [
    "battery": "60 kW Group 26 525 CCA; 70/80/150 kW Group 24F 525 CCA; 100/130 kW Group 27F 700 CCA. 12 V.",
    "fuelPressure": "5-14 in w.c. (<=60 kW), 11-14 in w.c. (70-150 kW) at the inlet.",
    "exercise": "Weekly, ~12-20 min, QuietTest (low-speed) or Normal, set at the Nexus controller."
+  },
+  "maintReset": {
+   "title": "Liquid-cooled Nexus (Protector QT): reset the maintenance warning",
+   "steps": [
+    "Do the maintenance first.",
+    "Read the maintenance warning on the display (for example \"Change oil & filter alert\").",
+    "Press ENTER.",
+    "If another maintenance warning shows, press ENTER again.",
+    "Make sure the AUTO/OFF/MANUAL switch is in AUTO."
+   ],
+   "resets": "ENTER clears the warning and resets the maintenance counter for that condition. The history log records it.",
+   "notes": [
+    "The EDIT menu also has Reset Maintenance, which resets the maintenance warning clock (0J1195). You do not need it after a normal service.",
+    "Maintenance intervals start the first time the clock is set. If the clock is never set, they reset every time power is applied. Set the time and date after any battery disconnect.",
+    "Schedule A items are 1 yr / 100 hrs and the Schedule B spark plugs are 2 yr / 250 hr in the owner's manual Maintenance Alert Chart. Intervals differ by engine.",
+    "Larger QT units may have the H-100 panel (two screens, 7-button keypad). Use the H-100 card for those."
+   ],
+   "sources": [
+    {
+     "title": "Owner's Manual, Protector QT 2.4 L 60 kW, Nexus (0H7320)",
+     "pages": "PDF p.19 (Maintenance Warning; Maintenance Alert Chart, printed p.8-6)",
+     "seedFile": "generac-protector-qt-2p4l-60kw-nexus-owners.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-qt-2p4l-60kw-nexus-owners.pdf"
+    },
+    {
+     "title": "Diagnostic Repair Manual, Liquid-Cooled Evolution or Nexus Control (0J1195 Rev. J)",
+     "pages": "PDF p.34 (Nexus Edit menu: reset maintenance resets the maintenance warning clock)",
+     "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
+    },
+    {
+     "title": "Protector Series Training Reference Book, Ch. 11 Evolution & Nexus Digital Control Panels (0E2221 Rev. L)",
+     "pages": "PDF p.209 (Maintenance Warning: Enter clears and resets the counter for the condition displayed)",
+     "seedFile": "generac-protector-series-training-reference-0e2221.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
+    }
+   ]
   },
   "maintenance": [
    { "interval": "Weekly", "task": "Confirm AUTO and exercise; check the Nexus display for alarms/warnings and check coolant cold." },
@@ -17280,6 +19315,31 @@ const GENERATORS = [
    "battery": "12 VDC - see the unit's battery index in the spec sheet.",
    "fuelPressure": "NG 11-14 in w.c. (optional 7-11) at the inlet.",
    "exercise": "Weekly/Biweekly/Monthly, configurable duration, at the H-100."
+  },
+  "maintReset": {
+   "title": "H-100 panel (SG / larger QT): acknowledge at the panel, reset only in GenLink",
+   "steps": [
+    "Do the maintenance first.",
+    "Press MENU.",
+    "Press ENTER to open the System Alarm and Warning page.",
+    "Move the cursor to ACK on the bottom line.",
+    "Press ENTER. This only acknowledges the warning. It comes back every 15 minutes (without the horn).",
+    "To reset it for good, connect a PC with Generac GenLink and reset that item's maintenance interval. Generac says this can only be done in GenLink."
+   ],
+   "resets": "At the panel: nothing (acknowledge only). In GenLink: that maintenance item's interval.",
+   "notes": [
+    "Maintenance warnings ship turned off. They only exist if someone set them up in GenLink (engine hours, a date, number of operations, or a combination).",
+    "The Maintenance Status pages show the approximate % of life left for each item.",
+    "Generac: NEVER set the \"Installed at\" hours to anything other than zero."
+   ],
+   "sources": [
+    {
+     "title": "H-100 Control Panel Technical Manual (0F3750)",
+     "pages": "PDF p.16 (acknowledge with ACK + ENTER); p.26 (Maintenance Settings: re-occurs after 15 minutes, reset only via GenLink)",
+     "seedFile": "generac-h100-digital-control-panel-technical-manual.pdf",
+     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-h100-digital-control-panel-technical-manual.pdf"
+    }
+   ]
   },
   "maintenance": [
    { "interval": "Weekly", "task": "Confirm the unit is in AUTO; check the H-100 for active alarms/warnings and check coolant cold." },

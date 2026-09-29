@@ -1298,6 +1298,9 @@ function askEntryText(it) {
       g.family, "kW: " + (g.kw || []).join(", "), g.engine,
       ...genSpecLines(g),
       ...(g.maintenance || []).map(x => x.interval + ": " + x.task),
+      // "How do I reset the maintenance light on a <model>" - send the card's own steps.
+      g.maintReset ? "Reset maintenance reminder: " + (g.maintReset.steps || []).join(" ") : "",
+      g.maintReset && (g.maintReset.dealerSteps || []).length ? "Dealer full reset (all counters): " + g.maintReset.dealerSteps.join(" ") : "",
     ].filter(Boolean).join(" | ");
   }
   return it.sub || "";
@@ -2476,6 +2479,7 @@ function genSearchFields(g) {
     "Generac", g.series, g.family, g.controller, g.engine, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" "),
     ...genSpecLines(g),
     ...(g.maintenance || []).map(x => x.interval + " " + x.task),
+    ...(g.maintReset ? [g.maintReset.title, ...(g.maintReset.steps || []), ...(g.maintReset.notes || [])] : []),
     ...(g.models || []).map(m => [m.g, m.digits, m.desc, "0" + m.digits, "00" + m.digits].join(" ")),
     ...(g.alarms || []).map(a => a.code + " " + a.name + " " + a.meaning),
     ...(g.warnings || []).map(a => a.code + " " + a.name + " " + a.meaning),
@@ -2553,6 +2557,23 @@ function genStartupFor(g) {
   return (typeof GEN_STARTUP !== "undefined" && key) ? GEN_STARTUP[key] : null;
 }
 
+// Maintenance reminder reset (maintReset in generators.js): plain steps for the
+// panel on this card, then what it resets, notes, the dealer full reset, sources.
+function genMaintResetHtml(g) {
+  const r = g.maintReset;
+  if (!r || !(r.steps || []).length) return "";
+  const li = (xs) => (xs || []).map(x => `<li>${escapeHtml(x)}</li>`).join("");
+  const src = (r.sources || []).map(s => `<div class="tech-tip-src">${escapeHtml(s.title || "")}${s.pages ? " - " + escapeHtml(s.pages) : ""}</div>`).join("");
+  return `<div class="detail-section"><h3>🔧 Reset the maintenance reminder</h3>
+    ${r.title ? `<p class="tstat-note"><b>${escapeHtml(r.title)}</b></p>` : ""}
+    <div class="tstat-ts"><ol>${li(r.steps)}</ol></div>
+    ${r.resets ? `<div class="tstat-ts"><b>What it resets</b><div class="tstat-note">${escapeHtml(r.resets)}</div></div>` : ""}
+    ${(r.notes || []).length ? `<div class="tstat-ts"><b>Notes</b><ul>${li(r.notes)}</ul></div>` : ""}
+    ${(r.dealerSteps || []).length ? `<details class="tstat-ts"><summary><b>Dealer full reset (all counters)</b></summary><ol>${li(r.dealerSteps)}</ol></details>` : ""}
+    ${src ? `<div class="tstat-ts"><div class="tech-tip-src"><b>Sources</b></div>${src}</div>` : ""}
+  </div>`;
+}
+
 function openGenDetail(id, focusModel) {
   const g = genEntries().find(x => x.id === id);
   if (!g) return;
@@ -2587,6 +2608,7 @@ function openGenDetail(id, focusModel) {
     <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}${g.fuel ? " · " + escapeHtml(g.fuel) : ""}${g.years ? " · " + escapeHtml(g.years) : ""}</div>
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
     ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
+    ${genMaintResetHtml(g)}
     ${(() => { const st = genStartupFor(g); return st ? `<div class="detail-section"><h3>Startup / commissioning</h3>${st.warn ? `<p class="tstat-note"><b>${escapeHtml(st.warn)}</b></p>` : ""}${(st.groups || []).map(gr => `<div class="tstat-ts"><b>${escapeHtml(gr.group)}</b><ol>${(gr.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ol></div>`).join("")}</div>` : ""; })()}
     ${maintRows ? `<div class="detail-section"><h3>Maintenance</h3><table class="tstat-table">${maintRows}</table></div>` : ""}
     ${(g.alarms || []).length ? `<div class="detail-section"><h3>Alarm codes (red - unit shuts down)</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
@@ -7622,7 +7644,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v224";
+const APP_VERSION = "v225";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
