@@ -2469,7 +2469,7 @@ function genNormModel(s) {
 }
 // Shared by the Generators detail card, its search and the Ask AI grounding, so
 // "generac 22k oil capacity" / "plug gap" questions reach the spec values.
-const GEN_SPEC_LABELS = { oil: "Oil", oilCapacity: "Oil capacity", sparkPlug: "Spark plug", plugGap: "Plug gap", valveClearance: "Valve clearance", compression: "Compression", torque: "Torque specs", battery: "Battery", airFilter: "Air filter", fuelPressure: "Fuel pressure", exercise: "Exercise" };
+const GEN_SPEC_LABELS = { oil: "Oil", oilCapacity: "Oil capacity", sparkPlug: "Spark plug", plugGap: "Plug gap", valveClearance: "Valve clearance", compression: "Compression", torque: "Torque specs", battery: "Battery", airFilter: "Air filter", fuelPressure: "Fuel pressure", crankSensorGap: "Sensor / magneto air gap", exercise: "Exercise" };
 function genSpecLines(g) {
   const sp = g.specs || {};
   return Object.keys(GEN_SPEC_LABELS).filter(k => sp[k]).map(k => GEN_SPEC_LABELS[k] + ": " + sp[k]);
@@ -7644,7 +7644,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v225";
+const APP_VERSION = "v226";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
