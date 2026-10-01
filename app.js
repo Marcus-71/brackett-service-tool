@@ -3189,15 +3189,8 @@ const GEN_CL_RECENT_MAX = 20;
 // "Check fuel for correct pressure", "Inspect entire fuel system for corrosion
 // using a gas detector (sniffer)", "Check electrolyte level if necessary".
 const GEN_CL_SECTIONS = [
-  { id: "install", title: "Installation General Condition", items: [
-    { id: "i1", text: "Verify generator is level and not in a low lying area" },
-    { id: "i2", text: "Verify generator is located away from any window, vent, or other opening" },
-    { id: "i3", text: "Verify generator has minimum three (3) feet of clearance in the front and sides with adequate ventilation" },
-    { id: "i4", text: "Verify generator has minimum five (5) feet overhead clearance in a non-enclosed area" },
-    { id: "i5", text: "Verify generator is clear of downspouts and sprinklers" },
-    { id: "i6", text: "Verify fuel and electrical lines are buried or properly secured per local codes" },
-    { id: "i7", text: "Review alarm codes and exercise history" },
-  ] },
+  // Andy 2026-10-01: Installation General Condition dropped; its "review alarm
+  // codes" line moved under Electrical (same id, so old drafts keep the answer).
   { id: "fuel", title: "Fuel System", items: [
     { id: "f1", text: "Check fuel system for leaks" },
     { id: "f2", text: "Tighten all connections as necessary" },
@@ -3209,7 +3202,7 @@ const GEN_CL_SECTIONS = [
     { id: "b2", text: "Clean and tighten battery terminals" },
     { id: "b3", text: "Check battery voltage to verify that it is charging properly", readings: [{ k: "battV", label: "Battery", unit: "V" }] },
     { id: "b4", text: "Load test battery with tester", readings: [{ k: "loadTest", label: "Load test", pass: true }] },
-    { id: "b5", text: "Verify battery charger fuse" },
+    { id: "b6", text: "Verify battery charger is working" },   // Andy 2026-10-01: replaces "Verify battery charger fuse" (b5)
   ] },
   { id: "electrical", title: "Electrical", items: [
     { id: "e1", text: "Check all electrical connections - wiring, wire ties, clamps, terminal ends, connectors" },
@@ -3217,6 +3210,7 @@ const GEN_CL_SECTIONS = [
     { id: "e3", text: "Verify DC voltage before, during, and after starting (this will ensure that the charger is working, battery doesn't drop too low, and charger is working after transfer)", readings: [{ k: "dcBefore", label: "DC before", unit: "V" }, { k: "dcDuring", label: "During", unit: "V" }, { k: "dcAfter", label: "After", unit: "V" }] },
     { id: "e4", text: "Verify DC control fuse" },
     { id: "e5", text: "Verify cold weather accessories are properly connected if installed" },
+    { id: "i7", text: "Review alarm codes and exercise history" },
   ] },
   { id: "enclosure", title: "Enclosure", items: [
     { id: "n1", text: "Apply conditioner and wax if necessary" },
@@ -3228,7 +3222,6 @@ const GEN_CL_SECTIONS = [
     { id: "v3", text: "Inspect for oil leaks" },
     { id: "v4", text: "Place in automatic mode" },
     { id: "v5", text: "Disconnect utility via main breaker to simulate a power outage" },
-    { id: "v6", text: "Check amp draw on each leg when unit is running and powering connected loads", readings: [{ k: "ampL1", label: "L1", unit: "A" }, { k: "ampL2", label: "L2", unit: "A" }] },
     { id: "v7", text: "Connect utility via main breaker to return to utility power" },
     { id: "v8", text: "Lock enclosure lid" },
   ] },
@@ -4215,12 +4208,30 @@ async function genClBuildPdf(d) {
     const v = String(d.readings[r.k] || "").trim();
     return v ? r.label + ": " + v + (r.unit ? " " + r.unit : "") : "";
   }).filter(Boolean).join("   ");
-  const drawSec = (col, s) => { use(col); secHead(col, s.title); s.items.forEach(it => itemRow(col, it.text, d.items[it.id] || "", readingText(it))); col.y += 5; };
-  ["install", "fuel", "battery"].forEach(id => drawSec(cols[0], GEN_CL_SECTIONS.find(s => s.id === id)));
-  // added by Brackett: engine service performed (left column balances the right)
-  use(cols[0]); secHead(cols[0], "Engine service performed");
-  GEN_CL_ENGINE.forEach(e => itemRow(cols[0], e.text, d.engine[e.id] ? "done" : "", ""));
-  ["electrical", "enclosure", "verify"].forEach(id => drawSec(cols[1], GEN_CL_SECTIONS.find(s => s.id === id)));
+  // Every block is a whole section (never split). Engine service is added by
+  // Brackett, not on the Generac form.
+  const blocks = GEN_CL_SECTIONS.map(s => ({ title: s.title, rows: s.items.map(it => ({ text: it.text, st: d.items[it.id] || "", extra: readingText(it) })), gap: 5 }))
+    .concat([{ title: "Engine service performed", rows: GEN_CL_ENGINE.map(e => ({ text: e.text, st: d.engine[e.id] ? "done" : "", extra: "" })), gap: 0 }]);
+  const rowH = (r) => {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.2);
+    const n = doc.splitTextToSize(r.text, colW - 25).length;
+    doc.setFontSize(7.6);
+    const x = r.extra ? doc.splitTextToSize(r.extra, colW - 25).length : 0;
+    return 7 + (n - 1) * LH + x * RH + 7;
+  };
+  blocks.forEach(b => { b.h = 17 + b.rows.reduce((t, r) => t + rowH(r), 0) + b.gap; });
+  // Andy 2026-10-01: "format it evenly as possible without splitting up
+  // categories" - try every left/right split (sections keep their order
+  // within a column) and keep the one with the most even column heights.
+  let best = null;
+  for (let mask = 0; mask < (1 << blocks.length); mask += 2) {   // first section (Fuel) always starts the left column
+    let l = 0, r = 0;
+    blocks.forEach((b, i) => { if (mask & (1 << i)) r += b.h; else l += b.h; });
+    const score = Math.max(l, r) * 1000 + Math.abs(l - r) + (l < r ? 0.5 : 0);   // tie: taller column on the left
+    if (!best || score < best.score) best = { mask, score };
+  }
+  const drawBlock = (col, b) => { use(col); secHead(col, b.title); b.rows.forEach(r => itemRow(col, r.text, r.st, r.extra)); col.y += b.gap; };
+  blocks.forEach((b, i) => drawBlock(cols[(best.mask & (1 << i)) ? 1 : 0], b));
 
   // Notes, full width, under whichever column ends lower.
   const last = cols[0].page > cols[1].page ? cols[0] : cols[1].page > cols[0].page ? cols[1] : (cols[0].y > cols[1].y ? cols[0] : cols[1]);
@@ -9247,7 +9258,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v229";
+const APP_VERSION = "v230";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
