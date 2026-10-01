@@ -301,7 +301,9 @@ function showScreen(name, fromBack) {
   if (name === "toolbox") renderToolbox();
   if (name === "checker") renderChecker();
   if (name === "tstat") renderTstats();
-  if (name === "gen") { renderGens(); if (typeof genClEntryCount === "function") genClEntryCount(); }
+  // Andy 2026-10-01: open Generators at the top so the Annual Maintenance
+  // Checklist box is the first thing seen (the home page scroll carried over).
+  if (name === "gen") { renderGens(); if (typeof genClEntryCount === "function") genClEntryCount(); window.scrollTo(0, 0); }
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
   if (name === "maint") renderMaint();
@@ -3195,7 +3197,6 @@ const GEN_CL_SECTIONS = [
     { id: "f1", text: "Check fuel system for leaks" },
     { id: "f2", text: "Tighten all connections as necessary" },
     { id: "f3", text: "Verify flexible fuel line is in place" },
-    { id: "f4", text: "Use an endoscope to inspect the fuel plenum if generator is so equipped (Reference SIB 10000010967)" },
   ] },
   { id: "battery", title: "Battery", items: [
     { id: "b1", text: "Remove corrosion and ensure dryness" },
@@ -4134,30 +4135,61 @@ async function genClBuildPdf(d) {
   doc.text("Air-cooled home standby generators · " + GEN_CL_DEALER, M + 66, 58);
   draw(ORANGE); doc.setLineWidth(2); doc.line(M, 76, W - M, 76);
 
-  // Header boxes in the form's own layout.
+  // Header boxes in the form's own layout. Andy 2026-10-01 ("size up top to
+  // match bottom", "it's unbalanced on the sheet"): the boxes scale with the
+  // checklist below (same S), so they are drawn once S is chosen.
   let y = 82;
-  const boxRow = (cells) => {
-    doc.setFont("helvetica", "normal"); doc.setFontSize(9.2);
-    const lines = cells.map(c => doc.splitTextToSize(String(c.value || ""), c.w - 10));
-    const h = Math.max(20, 10 + Math.max(...lines.map(l => l.length)) * 10.4);
-    let x = M;
-    cells.forEach((c, i) => {
-      draw(NAVY); doc.setLineWidth(0.6); doc.rect(x, y, c.w, h);
-      doc.setFont("helvetica", "bold"); doc.setFontSize(6.6); setC(NAVY); doc.text(c.label.toUpperCase(), x + 5, y + 7.5);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(9.2); setC(INK); doc.text(lines[i], x + 5, y + 16.5);
-      x += c.w;
-    });
-    y += h;
-  };
   const full = W - 2 * M, half = full / 2;
-  boxRow([{ label: "Customer Name", value: d.customer.name, w: full }]);
-  boxRow([{ label: "Address", value: d.customer.address, w: full }]);
-  boxRow([{ label: "City, State, Zip", value: d.customer.city, w: full }]);
-  boxRow([{ label: "Customer email", value: d.customer.email, w: full }]);
-  boxRow([{ label: "Generator Model", value: model ? model.g + " - " + (model.desc || "") : (d.modelG || ""), w: half }, { label: "Serial Number", value: d.serial, w: half }]);
-  boxRow([{ label: "Dealer Name", value: GEN_CL_DEALER, w: full }]);
-  boxRow([{ label: "Technician Name", value: d.tech, w: full }]);
-  boxRow([{ label: "Spark plug gap / Oil capacity", value: genClFactsLine(facts), w: half }, { label: "Date", value: d.date, w: half }]);
+  const hdrRows = [
+    [{ label: "Customer Name", value: d.customer.name, w: full }],
+    [{ label: "Address", value: d.customer.address, w: full }],
+    [{ label: "City, State, Zip", value: d.customer.city, w: full }],
+    [{ label: "Customer email", value: d.customer.email, w: full }],
+    // Andy 2026-10-01: model number on its own line, description right below;
+    // dealer and technician share one row with a divider.
+    [{ label: "Generator Model", value: model ? model.g : (d.modelG || ""), big: true, sub: model && model.desc ? model.desc : "", w: half }, { label: "Serial Number", value: d.serial, big: true, w: half }],
+    [{ label: "Dealer Name", value: GEN_CL_DEALER, w: half }, { label: "Technician Name", value: d.tech, w: half }],
+    // Andy 2026-10-01: Date box smaller, Spark plug / Oil box bigger.
+    [{ label: "Spark plug gap / Oil capacity", value: genClFactsLine(facts), w: full * 0.78 }, { label: "Date", value: d.date, w: full * 0.22 }],
+  ];
+  // Andy 2026-10-01: model number and serial bigger and bold; the model's
+  // description sits below a rule in the same line color as the boxes.
+  const cellH = (c, S) => {
+    const VF = (c.big ? 11.5 : 9.2) * S;
+    doc.setFont("helvetica", c.big ? "bold" : "normal"); doc.setFontSize(VF);
+    const n = doc.splitTextToSize(String(c.value || ""), c.w - 10 * S).length;
+    let h = 10 * S + n * VF * 1.13 + (c.big ? 2 * S : 0);
+    if (c.sub) {
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9.2 * S);
+      h += 6 * S + doc.splitTextToSize(c.sub, c.w - 10 * S).length * 10.4 * S;
+    }
+    return Math.max(20 * S, h);
+  };
+  const boxRowH = (cells, S) => Math.max(...cells.map(c => cellH(c, S)));
+  const hdrH = (S) => hdrRows.reduce((t, r) => t + boxRowH(r, S), 0);
+  const drawHdr = (S) => {
+    hdrRows.forEach(cells => {
+      const h = boxRowH(cells, S);
+      let x = M;
+      cells.forEach(c => {
+        draw(NAVY); doc.setLineWidth(0.6); doc.rect(x, y, c.w, h);
+        doc.setFont("helvetica", "bold"); doc.setFontSize(6.6 * S); setC(NAVY); doc.text(c.label.toUpperCase(), x + 5 * S, y + 7.5 * S);
+        const VF = (c.big ? 11.5 : 9.2) * S;
+        doc.setFont("helvetica", c.big ? "bold" : "normal"); doc.setFontSize(VF); setC(INK);
+        const lines = doc.splitTextToSize(String(c.value || ""), c.w - 10 * S);
+        const base = y + 9.5 * S + VF * 0.8;
+        doc.text(lines, x + 5 * S, base, { lineHeightFactor: 1.13 });
+        if (c.sub) {
+          const ry = base + (lines.length - 1) * VF * 1.13 + 4 * S;
+          draw(NAVY); doc.setLineWidth(0.6); doc.line(x, ry, x + c.w, ry);   // edge to edge (Andy 2026-10-01)
+          doc.setFont("helvetica", "normal"); doc.setFontSize(9.2 * S); setC(INK);
+          doc.text(doc.splitTextToSize(c.sub, c.w - 10 * S), x + 5 * S, ry + 4 * S + 9.2 * S * 0.8, { lineHeightFactor: 10.4 / 9.2 });
+        }
+        x += c.w;
+      });
+      y += h;
+    });
+  };
 
   // Two columns of items. Each column keeps its own page, so a long left
   // column never draws over the right one.
@@ -4171,79 +4203,114 @@ async function genClBuildPdf(d) {
     col.y = 40;
     use(col);
   };
-  const secHead = (col, title) => {
-    ensure(col, 34);
-    doc.setFillColor(YELLOW[0], YELLOW[1], YELLOW[2]); doc.rect(col.x, col.y, colW, 13, "F");
-    doc.setFillColor(ORANGE[0], ORANGE[1], ORANGE[2]); doc.rect(col.x, col.y, 3, 13, "F");
-    doc.setFont("helvetica", "bold"); doc.setFontSize(9); setC(NAVY); doc.text(title, col.x + 7, col.y + 9.3);
-    col.y += 17;
-  };
-  const statusCell = (x, y0, st) => {
-    draw(NAVY); doc.setLineWidth(0.7); doc.rect(x, y0 - 7, 19, 9.5);
-    if (st === "done") {
-      doc.setLineWidth(1.4); doc.line(x + 5.5, y0 - 2.5, x + 8.5, y0 + 0.5); doc.line(x + 8.5, y0 + 0.5, x + 14, y0 - 5.5);
-    } else if (st === "na") {
-      doc.setFont("helvetica", "bold"); doc.setFontSize(6.2); setC(INK); doc.text("N/A", x + 9.5, y0, { align: "center" });
-    }
-  };
-  const LH = 9.6, RH = 9;
-  const itemRow = (col, text, st, extra) => {
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8.2);
-    const lines = doc.splitTextToSize(text, colW - 25);
-    doc.setFontSize(7.6);
-    const extraLines = extra ? doc.splitTextToSize(extra, colW - 25) : [];
-    ensure(col, 7 + (lines.length - 1) * LH + extraLines.length * RH + 7);
-    const base = col.y + 7;
-    statusCell(col.x, base, st);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8.2); setC(INK); doc.text(lines, col.x + 25, base, { lineHeightFactor: LH / 8.2 });
-    let last = base + (lines.length - 1) * LH;
-    if (extraLines.length) {
-      doc.setFont("helvetica", "bold"); doc.setFontSize(7.6); setC(NAVY);
-      doc.text(extraLines, col.x + 25, last + RH, { lineHeightFactor: RH / 7.6 });
-      last += extraLines.length * RH;
-    }
-    col.y = last + 7;
-  };
   const readingText = (it) => (it.readings || []).map(r => {
     const v = String(d.readings[r.k] || "").trim();
     return v ? r.label + ": " + v + (r.unit ? " " + r.unit : "") : "";
-  }).filter(Boolean).join("   ");
+  }).filter(Boolean);
+  // Readings wrap between readings, never inside one ("After: 12.4 V" stays whole).
+  const packReadings = (parts, width) => {
+    const out = [];
+    parts.forEach(p => {
+      const cur = out.length ? out[out.length - 1] + "   " + p : null;
+      if (cur && doc.getTextWidth(cur) <= width) out[out.length - 1] = cur; else out.push(p);
+    });
+    return out;
+  };
   // Every block is a whole section (never split). Engine service is added by
   // Brackett, not on the Generac form.
-  const blocks = GEN_CL_SECTIONS.map(s => ({ title: s.title, rows: s.items.map(it => ({ text: it.text, st: d.items[it.id] || "", extra: readingText(it) })), gap: 5 }))
-    .concat([{ title: "Engine service performed", rows: GEN_CL_ENGINE.map(e => ({ text: e.text, st: d.engine[e.id] ? "done" : "", extra: "" })), gap: 0 }]);
-  const rowH = (r) => {
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8.2);
-    const n = doc.splitTextToSize(r.text, colW - 25).length;
-    doc.setFontSize(7.6);
-    const x = r.extra ? doc.splitTextToSize(r.extra, colW - 25).length : 0;
-    return 7 + (n - 1) * LH + x * RH + 7;
-  };
-  blocks.forEach(b => { b.h = 17 + b.rows.reduce((t, r) => t + rowH(r), 0) + b.gap; });
-  // Andy 2026-10-01: "format it evenly as possible without splitting up
-  // categories" - try every left/right split (sections keep their order
-  // within a column) and keep the one with the most even column heights.
-  let best = null;
-  for (let mask = 0; mask < (1 << blocks.length); mask += 2) {   // first section (Fuel) always starts the left column
-    let l = 0, r = 0;
-    blocks.forEach((b, i) => { if (mask & (1 << i)) r += b.h; else l += b.h; });
-    const score = Math.max(l, r) * 1000 + Math.abs(l - r) + (l < r ? 0.5 : 0);   // tie: taller column on the left
-    if (!best || score < best.score) best = { mask, score };
-  }
-  const drawBlock = (col, b) => { use(col); secHead(col, b.title); b.rows.forEach(r => itemRow(col, r.text, r.st, r.extra)); col.y += b.gap; };
-  blocks.forEach((b, i) => drawBlock(cols[(best.mask & (1 << i)) ? 1 : 0], b));
+  const blocks = GEN_CL_SECTIONS.map(s => ({ title: s.title, rows: s.items.map(it => ({ text: it.text, st: d.items[it.id] || "", extra: readingText(it) })), gap: true }))
+    .concat([{ title: "Engine service performed", rows: GEN_CL_ENGINE.map(e => ({ text: e.text, st: d.engine[e.id] ? "done" : "", extra: [] })), gap: false }]);
 
-  // Notes, full width, under whichever column ends lower.
+  // Andy 2026-10-01: "format it evenly as possible without splitting up
+  // categories" and "format to fill a page evenly". For a scale S, every size
+  // below the header (fonts, row spacing, check boxes) grows together; each
+  // section is placed whole in the left or right column (sections keep their
+  // order, Fuel always starts the left column) for the most even columns.
+  // The largest S that still leaves room for Notes on page 1 wins, and the
+  // Notes box takes whatever space is left.
+  const topFor = (S) => 82 + hdrH(S) + 10, NOTE_MIN = 54, NOTE_GAP = 8;
+  const layoutFor = (S) => {
+    const L = { S, F: 8.2 * S, RF: 7.6 * S, LH: 9.6 * S, RH: 9 * S, PAD: 7 * S, HEAD: 17 * S, GAP: 5 * S, IND: 25 * S };
+    const rowH = (r) => {
+      doc.setFont("helvetica", "normal"); doc.setFontSize(L.F);
+      const n = doc.splitTextToSize(r.text, colW - L.IND).length;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(L.RF);
+      const x = packReadings(r.extra, colW - L.IND).length;
+      return L.PAD + (n - 1) * L.LH + x * L.RH + L.PAD;
+    };
+    const hs = blocks.map(b => L.HEAD + b.rows.reduce((t, r) => t + rowH(r), 0) + (b.gap ? L.GAP : 0));
+    let best = null;
+    for (let mask = 0; mask < (1 << blocks.length); mask += 2) {
+      let l = 0, r = 0;
+      hs.forEach((h, i) => { if (mask & (1 << i)) r += h; else l += h; });
+      const score = Math.max(l, r) * 1000 + Math.abs(l - r) + (l < r ? 0.5 : 0);   // tie: taller column on the left
+      if (!best || score < best.score) best = { mask, score, colH: Math.max(l, r) };
+    }
+    L.mask = best.mask; L.colH = best.colH;
+    return L;
+  };
+  let L = layoutFor(1);
+  for (let S = 1.02; S <= 1.8; S += 0.02) {
+    const t = layoutFor(S);
+    if (topFor(S) + t.colH + NOTE_GAP + NOTE_MIN > BOTTOM) break;
+    L = t;
+  }
+  // Header at the same scale, then the columns start under it.
+  drawHdr(L.S);
+  cols[0].y = cols[1].y = y + 10;
+
+  const secHead = (col, title) => {
+    ensure(col, L.HEAD * 2);
+    doc.setFillColor(YELLOW[0], YELLOW[1], YELLOW[2]); doc.rect(col.x, col.y, colW, 13 * L.S, "F");
+    doc.setFillColor(ORANGE[0], ORANGE[1], ORANGE[2]); doc.rect(col.x, col.y, 3 * L.S, 13 * L.S, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9 * L.S); setC(NAVY); doc.text(title, col.x + 7 * L.S, col.y + 9.3 * L.S);
+    col.y += L.HEAD;
+  };
+  const statusCell = (x, y0, st) => {
+    const k = L.S;
+    draw(NAVY); doc.setLineWidth(0.7); doc.rect(x, y0 - 7 * k, 19 * k, 9.5 * k);
+    if (st === "done") {
+      doc.setLineWidth(1.4 * k);
+      doc.line(x + 5.5 * k, y0 - 2.5 * k, x + 8.5 * k, y0 + 0.5 * k);
+      doc.line(x + 8.5 * k, y0 + 0.5 * k, x + 14 * k, y0 - 5.5 * k);
+    } else if (st === "na") {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.2 * k); setC(INK); doc.text("N/A", x + 9.5 * k, y0, { align: "center" });
+    }
+  };
+  const itemRow = (col, text, st, extra) => {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(L.F);
+    const lines = doc.splitTextToSize(text, colW - L.IND);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(L.RF);
+    const extraLines = packReadings(extra, colW - L.IND);
+    ensure(col, L.PAD + (lines.length - 1) * L.LH + extraLines.length * L.RH + L.PAD);
+    const base = col.y + L.PAD;
+    statusCell(col.x, base, st);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(L.F); setC(INK); doc.text(lines, col.x + L.IND, base, { lineHeightFactor: L.LH / L.F });
+    let last = base + (lines.length - 1) * L.LH;
+    if (extraLines.length) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(L.RF); setC(NAVY);
+      doc.text(extraLines, col.x + L.IND, last + L.RH, { lineHeightFactor: L.RH / L.RF });
+      last += extraLines.length * L.RH;
+    }
+    col.y = last + L.PAD;
+  };
+  const drawBlock = (col, b) => { use(col); secHead(col, b.title); b.rows.forEach(r => itemRow(col, r.text, r.st, r.extra)); if (b.gap) col.y += L.GAP; };
+  blocks.forEach((b, i) => drawBlock(cols[(L.mask & (1 << i)) ? 1 : 0], b));
+
+  // Notes, full width, under whichever column ends lower; it fills the rest
+  // of the page.
   const last = cols[0].page > cols[1].page ? cols[0] : cols[1].page > cols[0].page ? cols[1] : (cols[0].y > cols[1].y ? cols[0] : cols[1]);
   doc.setPage(last.page);
-  let ny = last.y + 6, page = last.page;
-  doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+  let ny = last.y + NOTE_GAP, page = last.page;
+  const NF = Math.min(11, 9 * L.S);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(NF);
   const noteLines = doc.splitTextToSize(d.notes || "", full - 10);
-  const noteH = Math.max(36, 17 + noteLines.length * 10.5);
-  if (ny + noteH > BOTTOM) { page++; if (doc.getNumberOfPages() < page) doc.addPage(); doc.setPage(page); ny = 40; }
+  const noteNeed = Math.max(NOTE_MIN, 17 + noteLines.length * NF * 1.2);
+  if (ny + noteNeed > BOTTOM) { page++; if (doc.getNumberOfPages() < page) doc.addPage(); doc.setPage(page); ny = 40; }
+  const noteH = Math.max(noteNeed, BOTTOM - ny);
   draw(NAVY); doc.setLineWidth(0.6); doc.rect(M, ny, full, noteH);
   doc.setFont("helvetica", "bold"); doc.setFontSize(6.6); setC(NAVY); doc.text("NOTES", M + 5, ny + 8);
-  doc.setFont("helvetica", "normal"); doc.setFontSize(9); setC(INK); doc.text(noteLines, M + 5, ny + 19);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(NF); setC(INK); doc.text(noteLines, M + 5, ny + 8 + NF * 1.3, { lineHeightFactor: 1.2 });
 
   // Footer on every page.
   const pages = doc.getNumberOfPages();
@@ -9258,7 +9325,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v231";
+const APP_VERSION = "v232";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
