@@ -30,6 +30,12 @@
   "reason": "no text layer (scanned or image-only)"
  },
  {
+  "file": "generac-addendum-problem-18-flow-chart.pdf",
+  "pages": 1,
+  "chars": 0,
+  "reason": "no text layer (scanned or image-only)"
+ },
+ {
   "file": "generac-ecogen-15kw-evo2-wiring.pdf",
   "pages": 6,
   "chars": 0,
@@ -150,8 +156,26 @@
   "reason": "no text layer (scanned or image-only)"
  },
  {
+  "file": "generac-powerpact-auxiliary-shutdown-switch.pdf",
+  "pages": 1,
+  "chars": 26,
+  "reason": "no text layer (scanned or image-only)"
+ },
+ {
+  "file": "generac-prepackaged-hsb-8-20kw-diagnostic-repair-manual-83045.pdf",
+  "pages": 232,
+  "chars": 0,
+  "reason": "no text layer (scanned or image-only)"
+ },
+ {
   "file": "generac-protector-qs-2p4l-wiring-diagram.pdf",
   "pages": 6,
+  "chars": 0,
+  "reason": "no text layer (scanned or image-only)"
+ },
+ {
+  "file": "generac-standby-prime-all-series-diagnostic-repair-manual-79247.pdf",
+  "pages": 365,
   "chars": 0,
   "reason": "no text layer (scanned or image-only)"
  },
