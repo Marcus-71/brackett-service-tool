@@ -3176,7 +3176,7 @@ function genMaintCardWire(root) {
 // Andy deploys relay/Code.gs (Apps Script, andy@brackettcomfort.com) and pastes
 // its /exec URL here. Empty = no relay yet: the phone's share sheet / email is
 // used and the tech is told the office copy must be sent by hand.
-const GEN_CHECKLIST_RELAY = "";
+const GEN_CHECKLIST_RELAY = "https://script.google.com/macros/s/AKfycbzWBEytwbxSHHRpGqbQ6R0cZ89Giv_UQVgQceRoBJMZ5Y8LbdPOSb0oBiE-5vYbhao/exec";
 const GEN_CL_OFFICE_EMAIL = "carlah@brackettcomfort.com";
 const GEN_CL_DEALER = "Brackett Heating, AC and Plumbing";
 const GEN_CL_FOOTER = "Based on Generac checklist 10000046625 rev. B";
@@ -9247,7 +9247,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v227";
+const APP_VERSION = "v228";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
