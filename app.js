@@ -3213,7 +3213,7 @@ const GEN_CL_SECTIONS = [
     { id: "i7", text: "Review alarm codes and exercise history" },
   ] },
   { id: "enclosure", title: "Enclosure", items: [
-    { id: "n1", text: "Apply conditioner and wax if necessary" },
+    { id: "n3", text: "Clean outside cabinet" },   // Andy 2026-10-01: replaces "Apply conditioner and wax if necessary" (n1)
     { id: "n2", text: "Clean any oil that may have spilled during service" },
   ] },
   { id: "verify", title: "System Verification", items: [
@@ -9258,7 +9258,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v230";
+const APP_VERSION = "v231";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
