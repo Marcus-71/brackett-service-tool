@@ -3122,7 +3122,6 @@ function genMaintCardHtml(hit) {
   };
   const kwLine = [f.kw != null ? f.kw + " kW" : "", genEngineLabel(g, f.cc)].filter(Boolean).join(" · ");
   const sched = (g.maintenance || []).map(x => `<tr><td class="maint-label">${escapeHtml(x.interval)}</td><td class="maint-value">${escapeHtml(x.task)}</td></tr>`).join("");
-  const specRows = Object.keys(GEN_SPEC_LABELS).filter(k => sp[k]).map(k => `<tr><td class="maint-label">${escapeHtml(GEN_SPEC_LABELS[k])}</td><td class="maint-value">${escapeHtml(sp[k])}</td></tr>`).join("");
   return `
     <article class="card maint-card gen-maint-card">
       <div class="maint-head gen-maint-head">
@@ -3149,8 +3148,7 @@ function genMaintCardHtml(hit) {
           </table>
         </div>
         ${sched ? `<div class="maint-group"><div class="maint-group-title">Maintenance schedule (Schedule A / B)</div><table class="maint-table">${sched}</table></div>` : ""}
-        ${genMaintResetHtml(g)}
-        ${specRows ? `<details class="gen-maint-more"><summary>Full spec notes for this family</summary><table class="maint-table">${specRows}</table></details>` : ""}
+        ${(() => { const r = genMaintResetHtml(g); return r ? `<details class="gen-maint-more"><summary>How to reset the maintenance light</summary>${r}</details>` : ""; })()}
         <div class="maint-source">From the Generators library - ${escapeHtml(g.family)}. ${escapeHtml(g.years || "")} · Always confirm against the data label on the unit in front of you.</div>
         <button type="button" class="maint-manuals-btn" data-gen-open="${escapeHtml(g.id)}" data-gen-focus="${escapeHtml(m ? m.g : "")}">🔌 Open in Generators (codes, manuals)</button>
       </div>
@@ -3586,7 +3584,7 @@ function genWizFiguresHtml(d) {
       </div>
       <div class="maint-source gwz-fl-src">From the Generators library - ${escapeHtml(g.family)}. Always confirm against the data label on the unit in front of you.</div>
     </article>
-    <details class="gwz-full"><summary>Full maintenance card</summary><div id="gwzFullCard">${genMaintCardHtml({ family: g, model: m })}</div></details>`;
+    <details class="gwz-full"><summary>Maintenance schedule &amp; reset steps</summary><div id="gwzFullCard">${genMaintCardHtml({ family: g, model: m })}</div></details>`;
 }
 
 function genWizCustomerHtml(d) {
