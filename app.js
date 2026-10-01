@@ -3282,6 +3282,8 @@ const GEN_CL_SECTIONS = [
     { id: "v5", text: "Disconnect utility via main breaker to simulate a power outage" },
     { id: "v7", text: "Connect utility via main breaker to return to utility power" },
     { id: "v8", text: "Lock enclosure lid" },
+    // Andy 2026-10-01: a spot for run hours under the lock line.
+    { id: "v9", text: "Record generator run hours", readings: [{ k: "runHours", label: "Run hours", unit: "hrs" }] },
   ] },
 ];
 // added by Brackett - not on the Generac form. Delete this list (and the
@@ -4415,6 +4417,19 @@ async function genClBuildPdf(d) {
     doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); setC(DIM);
     doc.text(GEN_CL_FOOTER, M, H - 22);
     doc.text(GEN_CL_DEALER + " · " + APP_VERSION + " · page " + p + " of " + pages, W - M, H - 22, { align: "right" });
+    // Andy 2026-10-01: every page is watermarked with the visit type.
+    const mark = genClIsVisual(d) ? "VISUAL CHECK" : d.visit === "maint" ? "MAINTENANCE" : "";
+    if (mark) {
+      const gs = doc.GState ? new doc.GState({ opacity: 0.13 }) : null;
+      if (gs) { doc.saveGraphicsState(); doc.setGState(gs); }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(100);
+      const fs = Math.min(100, 100 * 640 / doc.getTextWidth(mark));   // ~640 pt long on the diagonal
+      doc.setFontSize(fs); setC(gs ? NAVY : [225, 228, 234]);
+      const ang = 35 * Math.PI / 180, tw = doc.getTextWidth(mark);
+      // Centre the rotated text on the page (jsPDF rotates about the start point).
+      doc.text(mark, W / 2 - (tw / 2) * Math.cos(ang) + (fs * 0.35) * Math.sin(ang), H / 2 + (tw / 2) * Math.sin(ang) + (fs * 0.35) * Math.cos(ang), { angle: 35 });
+      if (gs) doc.restoreGraphicsState();
+    }
   }
   return { blob: doc.output("blob"), pages };
 }
@@ -9421,7 +9436,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v235";
+const APP_VERSION = "v236";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
