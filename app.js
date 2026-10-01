@@ -3091,7 +3091,8 @@ function genClFactsLine(f) {
 // Generac scheduled maintenance ("tune-up") kits for the checklist's serial
 // box (Andy 2026-10-01, re-checked the same day). Only what Generac prints:
 // - no-oil kits (G00xxxx-0): the accessory table of each family's spec sheet;
-//   the current 26 kW sheet A0002026894 Rev. E 02/17/2026 still names G006485-0,
+//   the current 26 kW sheet A0002026894 Rev. E 02/17/2026 still names G006485-0
+//   (replaced below by 0J93230ESV on Andy's word for the 999cc Evolution units),
 //   Next Gen 22-28 kW A0005151077 Rev. D 08/13/2026 names G007216-0.
 // - with-oil kits (A000...): support.generac.com "What Are Generator
 //   Maintenance Kits" (Apr 20, 2026) lists exact unit numbers per kit; for
@@ -3102,7 +3103,11 @@ const GEN_KIT_EVO2 = [
   { kw: [9, 10], pn: "G006482-0" },   // 9/11, 10/13/16, 10/14/18 kW spec sheets
   { kw: [11, 11], pn: "G006483-0" },  // 9/11 kW and DR 11/20 kW spec sheets
   { kw: [13, 18], notCc: 999, pn: "G007216-0" }, // 10/13/16, 10/14/18 kW spec sheets
-  { kw: [16, 26], cc: 999, pn: "G006485-0" },    // 16/20/22, 20/24, 26 kW spec sheets
+  // 999cc Evolution: the spec sheets still print G006485-0, but Andy (dealer,
+  // 2026-10-01) confirmed the current kit for our 26 kW is 0J93230ESV - Generac
+  // parts store "SM KIT 20KW EVOLUTION", the in-stock kit in the 0J93230 line
+  // (0J93230SSM was the 20/22 kW Evolution kit with oil, now discontinued).
+  { kw: [16, 26], cc: 999, pn: "0J93230ESV" },
 ];
 const GEN_MAINT_KITS = {
   "gen-generac-next-gen-10-28": [{ kw: [10, 10], pn: "G006482-0" }, { kw: [14, 28], pn: "G007216-0" }],
@@ -3112,7 +3117,8 @@ const GEN_MAINT_KITS = {
   "gen-guardian-evo2-10-22-compact": GEN_KIT_EVO2,
   "gen-guardian-evo2-10-26": GEN_KIT_EVO2,
   "gen-guardian-evo2-response-16-22": GEN_KIT_EVO2,
-  "gen-guardian-evo2-dr-11-20": [{ kw: [11, 11], pn: "G006483-0" }, { kw: [20, 20], pn: "G006485-0" }],
+  "gen-guardian-evo2-dr-11-20": [{ kw: [11, 11], pn: "G006483-0" }, { kw: [20, 20], pn: "0J93230ESV" }],
+  "gen-guardian-evo1-20-22": [{ pn: "0J93230ESV" }],
   "gen-synergy-evo2-20": [{ pn: "G006829-0" }],
   "gen-ecogen-evo2-15": [{ pn: "G006829-0" }],
   "gen-ecogen-evo1-15": [{ pn: "G006829-0" }],
@@ -9445,7 +9451,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v233";
+const APP_VERSION = "v234";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
