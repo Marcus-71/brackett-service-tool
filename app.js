@@ -3177,7 +3177,7 @@ function genMaintCardWire(root) {
 // its /exec URL here. Empty = no relay yet: the phone's share sheet / email is
 // used and the tech is told the office copy must be sent by hand.
 const GEN_CHECKLIST_RELAY = "";
-const GEN_CL_OFFICE_EMAIL = "andy@brackettcomfort.com";
+const GEN_CL_OFFICE_EMAIL = "carlah@brackettcomfort.com";
 const GEN_CL_DEALER = "Brackett Heating, AC and Plumbing";
 const GEN_CL_FOOTER = "Based on Generac checklist 10000046625 rev. B";
 const GEN_CL_DRAFT_PREFIX = "bfc-gencl-draft-";
