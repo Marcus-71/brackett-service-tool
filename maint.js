@@ -768,6 +768,17 @@ function renderMaint() {
     });
   }
 
+  // v227: an air-cooled Generac model number (G0072600 / 007260-0 / 0072600 /
+  // 7260) gets its generator card, built from generators.js in app.js. Only
+  // Generac model shapes resolve, so HVAC searches never reach this branch.
+  const genHit = typeof genMaintResolve === "function" ? genMaintResolve(maintState.query) : null;
+  if (genHit) {
+    empty.classList.add("hidden");
+    results.innerHTML = genMaintCardHtml(genHit);
+    genMaintCardWire(results);
+    return;
+  }
+
   let list = MAINT_SPECS.filter(e =>
     (!maintState.equip || e.equip === maintState.equip) &&
     maintMatches(e, maintState.query)

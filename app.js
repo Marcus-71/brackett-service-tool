@@ -253,6 +253,7 @@ const SCREEN_TITLES = {
   request: "Request Info",
   calllog: "Call Log",
   checker: "Daikin Checker",
+  genchecklist: "Generator Checklist",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -277,10 +278,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen", "genChecklistScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -304,6 +305,7 @@ function showScreen(name, fromBack) {
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
   if (name === "maint") renderMaint();
+  if (name === "genchecklist") renderGenChecklist();
   if (name === "calllog" && typeof renderCallLog === "function") renderCallLog();
 
   if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
@@ -2536,7 +2538,9 @@ function buildGenCard(g) {
       ${(g.troubleshooting || []).length ? `<span class="tstat-badge">${(g.troubleshooting || []).length} symptoms</span>` : ""}
       ${nDocs ? `<span class="tstat-badge">${nDocs} manual${nDocs === 1 ? "" : "s"}</span>` : ""}
       ${g.years ? `<span class="tstat-badge">${escapeHtml(g.years)}</span>` : ""}
-    </div>`;
+    </div>
+    ${genIsAirCooled(g) ? genChecklistBtnHtml(g.id, "", "gcl-card-btn") : ""}`;
+  genWireChecklistBtns(card);
   return card;
 }
 
@@ -2600,12 +2604,16 @@ function openGenDetail(id, focusModel) {
     return "";
   }).join("");
   const focus = focusModel ? genNormModel(focusModel) : "";
+  // v227: the checklist button opens prefilled with the model the tech came in on.
+  const focusFull = String(focusModel || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const focusG = focus ? ((g.models || []).find(m => m.g === focusFull || m.g === "G" + focusFull) || (g.models || []).find(m => m.digits === focus) || {}).g || "" : "";
   const modelRows = (g.models || []).map(m => `<tr class="${focus && m.digits === focus ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.digits || "")}</td><td>${escapeHtml(m.g || "")}${m.desc ? `<div class="tstat-note">${escapeHtml(m.desc)}</div>` : ""}</td></tr>`).join("");
 
   modal.innerHTML = `
     ${g.img ? `<img class="tstat-hero" src="${escapeHtml(g.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(g.family)}</h2>
     <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}${g.fuel ? " · " + escapeHtml(g.fuel) : ""}${g.years ? " · " + escapeHtml(g.years) : ""}</div>
+    ${genIsAirCooled(g) ? `<div class="detail-section">${genChecklistBtnHtml(g.id, focusG)}</div>` : ""}
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
     ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
     ${genMaintResetHtml(g)}
@@ -2620,6 +2628,7 @@ function openGenDetail(id, focusModel) {
     ${g.sourceNotes ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(g.sourceNotes)}</p></div>` : ""}
     <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
   document.getElementById("closeModalBtn").onclick = closeModal;
+  genWireChecklistBtns(modal);
   modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
     btn.onclick = () => { trackEvent("opened generator manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
   });
@@ -2646,6 +2655,1187 @@ function genFamilyForModel(model) {
 }
 
 document.getElementById("genSearchInput").addEventListener("input", (e) => { genState.search = e.target.value; renderGens(); });
+
+// ---- v227 genModelFacts START
+// ============================================================
+// v227: per-model generator maintenance facts, parsed at run time from
+// generators.js (GENERATORS). One source of truth: nothing here carries a
+// spec number - every figure comes out of the family's own spec text.
+// genModelFacts(family, modelG) -> { plugGap, oil, oilFilter, airFilter,
+// plug, valve, battery, conflicts:[{field,value,src}] } plus model info.
+// ============================================================
+
+// Liquid-cooled Protector families (and the code quick-lookup) never get the
+// air-cooled checklist.
+function genIsAirCooled(g) {
+  return !!g && !/protector/i.test(g.id || "") && (g.models || []).length > 0 &&
+    !(g.models || []).some(m => m.lc);
+}
+
+// Manual / document numbers look like part numbers (0K5801, A0001846499).
+// Collect every token the data itself uses as a document reference.
+let _genDocIds = null;
+function genDocIds() {
+  if (_genDocIds) return _genDocIds;
+  const ids = new Set();
+  const txt = (typeof GENERATORS !== "undefined") ? JSON.stringify(GENERATORS) : "";
+  const TOK = /\b(A\d{10}|0[A-Z]\d{4}[A-Z]{0,2})\b/g;
+  const AFTER = /^\s*(?:Rev\b|Replacement|engine spec|Sec\b|p\.\s?\d|spec table|production|\(through|lists\b|calls\b|revision|table\b|Specifications|says\b|prints\b|\/\s*0[A-Z]\d{4}\s+(?:engine|Replacement)|and\s+0[A-Z]\d{4}\s+(?:engine|Replacement))/;
+  const BEFORE = /\b(?:per|Generac|issue|in)\s+(?:the\s+)?(?:later\s+|earlier\s+|own\s+)?$/;
+  let m;
+  while ((m = TOK.exec(txt))) {
+    const after = txt.slice(m.index + m[0].length, m.index + m[0].length + 40);
+    const before = txt.slice(Math.max(0, m.index - 30), m.index);
+    if (AFTER.test(after) || BEFORE.test(before)) ids.add(m[1]);
+  }
+  _genDocIds = ids;
+  return ids;
+}
+
+// kW / engine labels inside one clause of spec text, merged when adjacent
+// ("10 kW and 14/18 kW", "9 kW 426cc", "10kW/13-16kW G-Force 400/800").
+function genLabelsIn(seg) {
+  const raw = [];
+  const num = (s) => parseFloat(s);
+  let m;
+  const KW = /((?:\d+(?:\.\d+)?\s*\/\s*)*)(\d+(?:\.\d+)?)(?:\s*-\s*(\d+(?:\.\d+)?))?\s*-?\s*kw\b/gi;
+  while ((m = KW.exec(seg))) {
+    const kw = [];
+    (m[1] || "").split("/").map(s => s.trim()).filter(Boolean).forEach(s => kw.push([num(s), num(s)]));
+    kw.push(m[3] ? [num(m[2]), num(m[3])] : [num(m[2]), num(m[2])]);
+    raw.push({ s: m.index, e: m.index + m[0].length, kw, cc: [] });
+  }
+  const KW2 = /\b(?:all|every)\s+kW\s+(\d+(?:\.\d+)?)(?:\s*-\s*(\d+(?:\.\d+)?))?/gi;
+  while ((m = KW2.exec(seg))) raw.push({ s: m.index, e: m.index + m[0].length, kw: [[num(m[1]), num(m[2] || m[1])]], cc: [] });
+  const CC = [
+    [/((?:\d{3,4}\s*\/\s*)*)(\d{3,4})\s*cc\b/gi, (x) => (x[1] || "").split("/").map(t => t.trim()).filter(Boolean).map(num).concat([num(x[2])])],
+    [/KW\s*\/\s*(\d{3,4})\b/gi, (x) => [num(x[1])]],
+    [/\b(?:GN\/GSH|GTH|GTV|GH|GT|GA|LH|LV|OHV)[- ]?(\d{3,4})(?:\s*\/\s*(\d{3,4}))?\b/g, (x) => [num(x[1])].concat(x[2] ? [num(x[2])] : [])],
+    [/G-Force\s+(\d{3,4})(?:\s*\/\s*(\d{3,4}))?/g, (x) => [x[1], x[2]].filter(Boolean).map(v => ({ "400": 460, "800": 816 }[v] || num(v)))],
+    [/\b(\d{3})\s*\/\s*(\d{3})\s+engine/g, (x) => [num(x[1]), num(x[2])]],
+  ];
+  for (const [re, f] of CC) {
+    re.lastIndex = 0;
+    while ((m = re.exec(seg))) raw.push({ s: m.index, e: m.index + m[0].length, kw: [], cc: f(m) });
+  }
+  raw.sort((a, b) => a.s - b.s || b.e - a.e);
+  const out = [];
+  for (const l of raw) {
+    const last = out[out.length - 1];
+    if (last && l.s < last.e) { last.kw.push(...l.kw); last.cc.push(...l.cc); last.e = Math.max(last.e, l.e); continue; }
+    if (last && /^[\s\/,&()]*(?:(?:and|or)\s+)?[\s\/,&()]*$/.test(seg.slice(last.e, l.s))) {
+      last.kw.push(...l.kw); last.cc.push(...l.cc); last.e = Math.max(last.e, l.e); continue;
+    }
+    out.push({ s: l.s, e: l.e, kw: l.kw.slice(), cc: l.cc.slice() });
+  }
+  return out;
+}
+
+// Split spec text into clauses. Each clause is quoted as the source of any
+// value that came out of it.
+function genClauses(text) {
+  return String(text || "")
+    .split(/;\s+|\.\s+(?=[A-Z(])|\s+(?=(?:Confirmed|CONFLICT|CONFLICTING|Dealer manual|Dealer engine manual|The [A-Z]|Generac P\/N per|Without filter|GH816:|\d{3}\/\d{3} engine manual|GTH \d{3}|its own|Its own)\b)/)
+    .map(s => s.trim()).filter(Boolean);
+}
+
+// Which scope a value at [vs, ve) in a clause carries: a label right after it
+// ("0E9371AS (10kW)", "0.040 in for 20-26 kW", "350 CCA minimum (7kW)") wins;
+// else the nearest label before it inside the same bracket (a value inside a
+// side note never borrows a label from outside it); else a later "for <label>"
+// in the same bracket ("P/N 0G0767B, gap 0.020 in for 10 kW"); else none.
+function genParenStart(seg, pos) {
+  let depth = 0;
+  for (let i = pos - 1; i >= 0; i--) {
+    if (seg[i] === ")") depth++;
+    else if (seg[i] === "(") { if (depth === 0) return i; depth--; }
+  }
+  return -1;
+}
+function genScopeAt(seg, labels, vs, ve) {
+  const trail = (from) => {
+    const m = /^\)?\s*(?:\(\s*|,?\s*for\s+(?:all\s+|the\s+|every\s+)?|,?\s*(?:shown\s+)?as\s+)/i.exec(seg.slice(from));
+    if (!m) return null;
+    const at = from + m[0].length;
+    return labels.find(l => l.s === at) || null;
+  };
+  let at = ve, hit = trail(at);
+  const steps = [/^\s*(?:minimum|min\.?)/i, /^\s*(?:\/\s*\d+(?:\.\d+)?\s*L\b|\([^()]*\))/i];
+  for (const re of steps) {
+    if (hit) break;
+    const m = re.exec(seg.slice(at));
+    if (m) { at += m[0].length; hit = trail(at); }
+  }
+  if (hit) return hit;
+  // The bracket this value sits in; a bracket holding only the value and its
+  // unit ("(0.020 inch)") does not count.
+  let ps = genParenStart(seg, vs);
+  if (ps >= 0) {
+    const close = seg.indexOf(")", ve);
+    if (close >= 0 && (vs - ps) <= 3 && (close - ve) <= 3) ps = genParenStart(seg, ps);
+  }
+  let best = null;
+  for (const l of labels) if (l.s > ps && l.e <= vs) best = l;
+  // "the 6-18 kW dealer manual lists ... for the GT-990 13-18 kW": a label
+  // naming the manual is not the value's scope when a "for <label>" follows.
+  const manualLabel = best && /^\s*(?:dealer\s+|engine\s+|service\s+)*manual/i.test(seg.slice(best.e, best.e + 30));
+  if (best && !manualLabel) return best;
+  let close = seg.length;
+  if (ps >= 0) {
+    let d = 0;
+    for (let i = ps + 1; i < seg.length; i++) {
+      if (seg[i] === "(") d++;
+      else if (seg[i] === ")") { if (d === 0) { close = i; break; } d--; }
+    }
+  }
+  for (const l of labels) {
+    if (l.s < ve || l.s > close) continue;
+    if (/\bfor\s+(?:all\s+|the\s+|every\s+)?$/i.test(seg.slice(ve, l.s))) return l;
+  }
+  return best;
+}
+
+function genScopeHit(scope, mi) {
+  if (!scope) return false;
+  if (scope.cc.length && mi.cc) return scope.cc.some(c => Math.abs(c - mi.cc) <= 3);
+  if (scope.kw.length && mi.kw != null) return scope.kw.some(([a, b]) => mi.kw >= a - 1e-9 && mi.kw <= b + 1e-9);
+  return false;
+}
+
+// Model kW and engine cc: from the desc ("22KW/997", "8KW GH410"), else from
+// the family engine line ("G-Force 800 816cc (13/16, hydraulic)").
+function genEngineSegs(g) {
+  return String(g.engine || "").split(";").map(seg => {
+    const cc = (seg.match(/(\d{3,4})\s*cc/i) || [])[1];
+    const par = (seg.match(/\(([^)]*)\)/) || [])[1] || "";
+    const kw = [];
+    if (/^[\d\s\/,.\-kKwW]+$/.test(par.split(",")[0])) {
+      par.split(",")[0].replace(/kw/ig, "").split("/").forEach(p => {
+        const r = p.trim().split("-").map(parseFloat).filter(x => !isNaN(x));
+        if (r.length) kw.push([r[0], r[r.length - 1]]);
+      });
+    }
+    return { cc: cc ? parseFloat(cc) : null, kw };
+  }).filter(s => s.cc);
+}
+function genModelInfo(g, model) {
+  const d = String((model && model.desc) || "").toUpperCase();
+  const kwM = d.match(/(\d+(?:\.\d+)?)\s*KW/);
+  const kw = kwM ? parseFloat(kwM[1]) : ((g.kw || []).length === 1 ? parseFloat(g.kw[0]) : null);
+  let cc = null;
+  const c1 = d.match(/KW\s*\/\s*(\d{3,4})\b/) || d.match(/\b(?:GTV|GH|GT)-?(\d{3,4})\b/);
+  if (c1) cc = parseFloat(c1[1]);
+  const segs = genEngineSegs(g);
+  if (!cc && kw != null) {
+    const s = segs.find(x => x.kw.some(([a, b]) => kw >= a && kw <= b));
+    if (s) cc = s.cc;
+  }
+  if (!cc && segs.length === 1) cc = segs[0].cc;
+  return { kw, cc };
+}
+// Families whose models run on more than one engine (Next Gen 459/817/997,
+// Guardian 16 kW 999 vs 816) need a labelled value; an unlabelled one is
+// only a last resort there.
+function genMultiEngine(g) {
+  const segs = genEngineSegs(g).filter(s => s.kw.length);
+  const ccs = [];
+  const add = (c) => { if (c && !ccs.some(x => Math.abs(x - c) <= 3)) ccs.push(c); };
+  segs.forEach(s => add(s.cc));
+  (g.models || []).forEach(m => {
+    const d = String(m.desc || "").toUpperCase();
+    const c = d.match(/KW\s*\/\s*(\d{3,4})\b/) || d.match(/\b(?:GTV|GH|GT)-?(\d{3,4})\b/);
+    if (c) add(parseFloat(c[1]));
+  });
+  return ccs.length > 1;
+}
+
+// Pull every value of one kind out of a text, each with its scope and clause.
+function genStatements(text, kind, opts) {
+  const out = [];
+  const docs = genDocIds();
+  genClauses(text).forEach((seg, ci) => {
+    const labels = genLabelsIn(seg);
+    const push = (v, vs, ve, extra) => {
+      const pre = seg.slice(Math.max(0, vs - 45), vs);
+      if (/\bthan\b[^;]{0,40}$/i.test(pre)) return;                         // "larger than the standard 1.9 qt"
+      if (/\(\s*not\s+$/i.test(pre)) return;                                // "RC12YC (not RC14YC)"
+      out.push(Object.assign({ v, scope: genScopeAt(seg, labels, vs, ve), src: seg, ci, pos: vs }, extra || {}));
+    };
+    let m, re;
+    if (kind === "gap") {
+      re = /(\d?\.\d{2,3})(\s*-\s*\d?\.\d{2,3})?\s*(?:inch(?:es)?\b|in\b|")/gi;
+      while ((m = re.exec(seg))) {
+        if (m[2]) continue;
+        if (/\d\s*\/\s*$/.test(seg.slice(0, m.index))) continue;              // "0.020 / 0.030 / 0.040 in" list
+        if (/(?:air gap|coil|sensor)[^;]{0,25}$/i.test(seg.slice(Math.max(0, m.index - 40), m.index))) continue;
+        push(parseFloat(m[1]).toFixed(3) + " in", m.index, m.index + m[0].length);
+      }
+    } else if (kind === "oil") {
+      re = /(\d+(?:\.\d+)?)(?:\s*-\s*(\d+(?:\.\d+)?))?\s*(?:qts?|quarts?)\b/gi;
+      while ((m = re.exec(seg))) {
+        const before = seg.slice(0, m.index);
+        if (/\d\s*\/\s*$/.test(before)) continue;                         // "1.4 / 2.5 / 2.2 qt" list
+        if (/(?:reservoir|tank)[^;]{0,20}$/i.test(before)) continue;       // extended-run reservoir
+        const after = seg.slice(m.index + m[0].length);
+        if (/^\s*(?:\([^()]*\))?\s*without\b/i.test(after)) continue;      // no-filter figure
+        const w = before.search(/without/i);
+        if (w >= 0 && !/with filter|incl|including/i.test(before.slice(w + 7))) continue;
+        const v = m[2] ? m[1] + "-" + m[2] : m[1];
+        push(v, m.index, m.index + m[0].length);
+      }
+    } else if (kind === "plug" || kind === "air") {
+      re = /\b(A\d{10}|0[A-Z]\d{3,4}[A-Z]{0,2})\b/g;
+      while ((m = re.exec(seg))) {
+        if (docs.has(m[1])) continue;
+        const pre = seg.slice(Math.max(0, m.index - 25), m.index);
+        if (/(?:oil filter|fuse)[^;]{0,12}$/i.test(pre)) continue;          // oil filter / fuse P/Ns
+        if (opts && opts.airOnly && !/air filter[^;]{0,12}$/i.test(pre)) continue;
+        if (kind === "plug" && !/^A\d{10}$|^0[A-Z]\d{4}[A-Z]?$/.test(m[1])) continue;
+        push(m[1], m.index, m.index + m[0].length);
+      }
+    } else if (kind === "plugx") {
+      re = /\b(RC\d{1,2}YCA?|BPR\dHS|RL\d{2}YC|F7TC|N9YC)\b/g;
+      while ((m = re.exec(seg))) push(m[1], m.index, m.index + m[0].length);
+    } else if (kind === "oilfilter") {
+      re = /oil filter(?:\s+(?:part\s*#|P\/N))?\s*(0\d{5}[A-Z]{0,3}|0[A-Z]\d{4}[A-Z]?)\b/gi;
+      while ((m = re.exec(seg))) push(m[1], m.index, m.index + m[0].length);
+    } else if (kind === "valve") {
+      re = /(?:(intake|exhaust)\s+)?(\d?\.\d{3})\s*-\s*(\d?\.\d{3})\s*in\b|hydraulic(?:ally)?\s*(?:lifters|adjusted)?/gi;
+      while ((m = re.exec(seg))) {
+        if (/(?:air gap|sensor|coil)[^;]{0,30}$/i.test(seg.slice(Math.max(0, m.index - 40), m.index))) continue;
+        if (m[2]) push(m[2] + "-" + m[3] + " in", m.index, m.index + m[0].length, { side: (m[1] || "").toLowerCase() });
+        else push("hydraulic", m.index, m.index + m[0].length);
+      }
+    } else if (kind === "battery") {
+      re = /(?:Group\s+(BTX\d{2}L|U1|\d{2}R?)|\b(BTX\d{2}L))\b([^;.()]{0,30}?)(\d{3})\s*-?\s*CCA|(\d{3})\s*-?\s*CCA/gi;
+      let lastGroup = "";
+      while ((m = re.exec(seg))) {
+        if (/other\s[^;]{0,25}$/i.test(seg.slice(Math.max(0, m.index - 30), m.index))) continue;
+        let grp, cca, agm = false;
+        if (m[5]) { grp = lastGroup || out.filter(o => o.grp).map(o => o.grp).pop() || ""; cca = m[5]; }
+        else { grp = (m[1] || m[2]).toUpperCase(); cca = m[4]; agm = /AGM/i.test(m[3] || ""); lastGroup = grp; }
+        if (!grp) continue;
+        push((grp ? "Group " + grp + (agm ? " AGM" : "") + ", " : "") + cca + " CCA min", m.index, m.index + m[0].length, { grp });
+      }
+    }
+  });
+  return out;
+}
+
+// Pick this model's value from a statement list. Primary = the first value
+// whose label matches the model (or an unlabelled one, in a one-engine
+// family). Conflicts = other values that also apply to this model.
+function genPick(stmts, mi, multi, opts) {
+  opts = opts || {};
+  const applies = stmts.filter(s => s.scope ? genScopeHit(s.scope, mi) : !multi);
+  const pool = applies.length ? applies : stmts.filter(s => !s.scope);
+  if (!pool.length) return { value: "", src: "", conflicts: [] };
+  let first = pool[0];
+  let value = first.v;
+  if (opts.groupFirstClause) {
+    const same = pool.filter(s => s.ci === first.ci && s.src === first.src);
+    value = [...new Set(same.map(s => s.v))].join(" or ");
+  }
+  const primaryVals = new Set(opts.groupFirstClause ? pool.filter(s => s.ci === first.ci && s.src === first.src).map(s => s.v) : [first.v]);
+  const inRange = (v) => {
+    const r = String(first.v).match(/^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/);
+    const x = parseFloat(v);
+    return r && !isNaN(x) && x >= parseFloat(r[1]) && x <= parseFloat(r[2]);
+  };
+  const conflicts = [];
+  if (applies.length) {
+    for (const s of applies) {
+      if (primaryVals.has(s.v) || inRange(s.v)) continue;
+      if (conflicts.some(c => c.value === s.v)) continue;
+      conflicts.push({ value: s.v, src: s.src });
+    }
+  }
+  return { value, src: first.src, conflicts, fallback: !applies.length };
+}
+
+function genModelFacts(family, modelG) {
+  const g = typeof family === "string" ? genEntries().find(x => x.id === family) : family;
+  if (!g) return null;
+  const sp = g.specs || {};
+  const model = modelG ? (g.models || []).find(m => m.g === modelG) || null : null;
+  const mi = model ? genModelInfo(g, model) : { kw: null, cc: null };
+  const multi = genMultiEngine(g);
+  const conflicts = [];
+  const take = (field, text, kind, opts) => {
+    const r = genPick(genStatements(text, kind), mi, multi, opts);
+    r.conflicts.forEach(c => conflicts.push({ field, value: c.value, src: c.src }));
+    return r;
+  };
+  const gap = take("plugGap", [sp.plugGap, sp.sparkPlug].filter(Boolean).join("; "), "gap");
+  const oil = take("oil", sp.oilCapacity || "", "oil");
+  // Spark plug: Generac P/Ns (A0003637864, 0G0767A) and cross-reference
+  // plugs (RC12YC, BPR6HS). Show what the first clause that applies to this
+  // model prints; a cross-ref sits in brackets after the Generac P/N.
+  const ps = genStatements(sp.sparkPlug || "", "plug").map(s => Object.assign(s, { x: false }))
+    .concat(genStatements(sp.sparkPlug || "", "plugx").map(s => Object.assign(s, { x: true })))
+    .sort((a, b) => a.ci - b.ci || a.pos - b.pos);
+  const pApplies = ps.filter(s => s.scope ? genScopeHit(s.scope, mi) : !multi);
+  const pPool = pApplies.length ? pApplies : ps.filter(s => !s.scope);
+  let plugPn = "";
+  if (pPool.length) {
+    const first = pPool[0];
+    const clause = pPool.filter(s => s.ci === first.ci);
+    const gens = [...new Set(clause.filter(s => !s.x).map(s => s.v))];
+    let xs = [...new Set(clause.filter(s => s.x).map(s => s.v))];
+    let primary;
+    if (gens.length) {
+      if (!xs.length) xs = [...new Set(pApplies.filter(s => s.x && s.scope).map(s => s.v))].slice(0, 1);
+      plugPn = gens[0] + (xs.length ? " (" + xs.join(" / ") + ")" : "");
+      primary = new Set([gens[0]]);
+    } else {
+      plugPn = xs.join(" / ");
+      primary = new Set(xs);
+    }
+    const seen = new Set();
+    for (const s of pApplies) {
+      if (primary.has(s.v) || seen.has(s.v)) continue;
+      if (gens.length && s.x) continue;            // a cross-ref is not a second Generac P/N
+      seen.add(s.v);
+      conflicts.push({ field: "plug", value: s.v, src: s.src });
+    }
+  }
+  let air = take("airFilter", sp.airFilter || "", "air");
+  if (!air.value) {
+    // CorePower prints its air filter inside the oil line ("air filter P/N 0H6104").
+    const r = genPick(genStatements([sp.oilCapacity, sp.sparkPlug].filter(Boolean).join("; "), "air", { airOnly: true }), mi, multi);
+    if (r.value) air = r;
+  }
+  // The oil filter is printed once per family ("all models").
+  const ofs = genStatements([sp.airFilter, sp.sparkPlug, sp.oilCapacity].filter(Boolean).join("; "), "oilfilter");
+  const of = { value: ofs.length ? ofs[0].v : "" };
+  [...new Set(ofs.map(s => s.v))].slice(1).forEach(v => conflicts.push({ field: "oilFilter", value: v, src: ofs.find(s => s.v === v).src }));
+  const vs = genStatements(sp.valveClearance || "", "valve");
+  let valve = genPick(vs, mi, multi);
+  let valveText = valve.value === "hydraulic" ? "Hydraulic lifters - no adjustment"
+    : valve.value ? valve.value + " cold" : "";
+  const side = (vs.find(s => s.v === valve.value && s.src === valve.src) || {}).side;
+  if (side === "intake") {
+    const ex = vs.find(s => s.side === "exhaust");
+    if (ex) { valveText = "Intake " + valve.value + ", exhaust " + ex.v + ", engine cool"; valve.conflicts = valve.conflicts.filter(c => c.value !== ex.v); }
+  }
+  valve.conflicts.forEach(c => conflicts.push({ field: "valve", value: c.value === "hydraulic" ? "hydraulic lifters" : c.value, src: c.src }));
+  const bat = take("battery", sp.battery || "", "battery", { groupFirstClause: true });
+  const fmtOil = (v) => v ? "approx. " + v + " qt with filter" : "";
+  return {
+    family: g.id,
+    model: model ? { g: model.g, desc: model.desc || "" } : null,
+    kw: mi.kw, cc: mi.cc,
+    plugGap: gap.value,
+    plug: plugPn,
+    oil: fmtOil(oil.value),
+    oilQt: oil.value,
+    oilType: sp.oil || "",
+    oilFilter: of.value,
+    airFilter: air.value,
+    valve: valveText,
+    battery: bat.value,
+    conflicts,
+  };
+}
+// ---- v227 genModelFacts END
+
+// ============================================================
+// v227: GENERATOR MAINTENANCE - per-model facts for the Maintenance Figures
+// card and the fillable annual checklist (Generac air-cooled only).
+// Every figure is read out of generators.js at run time; nothing is copied.
+// ============================================================
+
+// Last data plate the scanner read on a Generac (model + serial), so the
+// checklist can drop the serial into its box. Set by the Tag Scanner result
+// and by the Maintenance Figures scan; never stored.
+let genLastScan = null;
+function genNoteScan(model, serial) {
+  const hit = genMaintResolve(model);
+  genLastScan = hit && hit.model ? { modelG: hit.model.g, serial: String(serial || "").trim() } : null;
+}
+
+// Resolve a Maintenance Figures query to an air-cooled Generac family/model.
+// Only Generac model-number shapes count (G0072600, 007260-0, 0072600, 7260),
+// so HVAC searches never land here.
+function genMaintResolve(q) {
+  const u = String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!/^G0\d{6}$|^00\d{5}$|^\d{4}$/.test(u)) return null;
+  if (/^\d{4}$/.test(u)) {
+    const p4 = (typeof MODEL_PATTERNS !== "undefined") ? MODEL_PATTERNS.find(p => p.brand === "Generac" && p.re.test(u)) : null;
+    if (!p4) return null;
+  }
+  const fam = genFamilyForModel(q);
+  if (!fam || !genIsAirCooled(fam)) return null;
+  const full = u.startsWith("G") ? u : (u.length === 7 ? "G" + u : "");
+  const digits = genNormModel(q);
+  const model = (fam.models || []).find(m => full && m.g === full) || (fam.models || []).find(m => m.digits === digits) || null;
+  return { family: fam, model };
+}
+
+// One line for the checklist box that replaces "Technician ID".
+function genClFactsLine(f) {
+  if (!f || !f.model) return "Scan or pick the model";
+  const confl = (field) => [...new Set(f.conflicts.filter(c => c.field === field).map(c => c.value))];
+  const gapC = confl("plugGap");
+  const oilC = confl("oil");
+  const plug = f.plug ? " (" + f.plug.replace(/\s*\(([^)]*)\)/, ", $1") + ")" : "";
+  const gap = f.plugGap ? "Plug gap " + [f.plugGap].concat(gapC).join(" / ") + (gapC.length ? " (manuals differ)" : "") + plug : "Plug gap not in our data" + plug;
+  const oil = f.oilQt ? "Oil approx. " + [f.oilQt].concat(oilC).join(" / ") + " qt with filter" + (oilC.length ? " (manuals differ)" : "") : "Oil capacity not in our data";
+  return gap + " · " + oil;
+}
+
+function genEngineLabel(g, cc) {
+  const segs = String(g.engine || "").split(";").map(s => s.trim()).filter(Boolean);
+  if (!cc) return segs.length === 1 ? segs[0] : "";
+  const hit = segs.find(s => (s.match(/(\d{3,4})\s*cc/gi) || []).some(x => Math.abs(parseFloat(x) - cc) <= 3));
+  return hit || (cc + " cc");
+}
+
+const GEN_FACT_LABELS = { oil: "Oil capacity", plugGap: "Plug gap", plug: "Spark plug", oilFilter: "Oil filter", airFilter: "Air filter", valve: "Valve clearance", battery: "Battery" };
+
+function genChecklistBtnHtml(familyId, modelG, extraClass) {
+  return `<button type="button" class="gcl-start-btn${extraClass ? " " + extraClass : ""}" data-gcl-fam="${escapeHtml(familyId)}" data-gcl-model="${escapeHtml(modelG || "")}">📋 Start annual maintenance checklist</button>`;
+}
+function genWireChecklistBtns(root) {
+  root.querySelectorAll("[data-gcl-fam]").forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      if (!document.getElementById("modalBackdrop").classList.contains("hidden")) closeModal();
+      openGenChecklist({ familyId: b.dataset.gclFam, modelG: b.dataset.gclModel || "" });
+    };
+  });
+}
+
+// The Maintenance Figures card for an air-cooled Generac (same experience as
+// the heating & air entries): this model's figures, conflicts kept with their
+// source, the Schedule A/B list, the reminder reset and the checklist button.
+function genMaintCardHtml(hit) {
+  const g = hit.family, m = hit.model;
+  const f = genModelFacts(g, m ? m.g : "");
+  const sp = g.specs || {};
+  const row = (label, value, field, key) => {
+    const cs = field ? f.conflicts.filter(c => c.field === field) : [];
+    const conf = cs.map(c => `<div class="gen-conflict"><b>Manuals differ:</b> ${escapeHtml(c.value)}${field === "oil" && /^\d/.test(c.value) ? " qt" : ""} <span class="gen-conflict-src">- ${escapeHtml(c.src)}</span></div>`).join("");
+    return `<tr class="${key ? "maint-key" : ""}"><td class="maint-label">${escapeHtml(label)}</td><td class="maint-value">${escapeHtml(value || "Not in our data - check the unit's manual / Replacement Parts")}${conf}</td></tr>`;
+  };
+  const kwLine = [f.kw != null ? f.kw + " kW" : "", genEngineLabel(g, f.cc)].filter(Boolean).join(" · ");
+  const sched = (g.maintenance || []).map(x => `<tr><td class="maint-label">${escapeHtml(x.interval)}</td><td class="maint-value">${escapeHtml(x.task)}</td></tr>`).join("");
+  const specRows = Object.keys(GEN_SPEC_LABELS).filter(k => sp[k]).map(k => `<tr><td class="maint-label">${escapeHtml(GEN_SPEC_LABELS[k])}</td><td class="maint-value">${escapeHtml(sp[k])}</td></tr>`).join("");
+  return `
+    <article class="card maint-card gen-maint-card">
+      <div class="maint-head gen-maint-head">
+        <div>
+          <div class="maint-title">Generac ${escapeHtml(m ? m.g : g.family)}${f.kw != null ? " · " + escapeHtml(f.kw + " kW") : ""}</div>
+          <div class="maint-sub">${escapeHtml(g.family)}${g.controller ? " · " + escapeHtml(g.controller) : ""}</div>
+        </div>
+      </div>
+      <div class="maint-body">
+        ${genChecklistBtnHtml(g.id, m ? m.g : "")}
+        <div class="maint-group">
+          <div class="maint-group-title">This unit</div>
+          <table class="maint-table">
+            ${row("Model", m ? m.g + (m.desc ? " - " + m.desc : "") : "Pick the exact model in the checklist", null, true)}
+            ${row("Size / engine", kwLine)}
+            ${row("Oil capacity", f.oil, "oil", true)}
+            ${row("Oil type", f.oilType)}
+            ${row("Oil filter", f.oilFilter, "oilFilter")}
+            ${row("Air filter", f.airFilter, "airFilter")}
+            ${row("Spark plug", f.plug, "plug")}
+            ${row("Plug gap", f.plugGap, "plugGap", true)}
+            ${row("Valve clearance", f.valve, "valve")}
+            ${row("Battery", f.battery, "battery")}
+          </table>
+        </div>
+        ${sched ? `<div class="maint-group"><div class="maint-group-title">Maintenance schedule (Schedule A / B)</div><table class="maint-table">${sched}</table></div>` : ""}
+        ${genMaintResetHtml(g)}
+        ${specRows ? `<details class="gen-maint-more"><summary>Full spec notes for this family</summary><table class="maint-table">${specRows}</table></details>` : ""}
+        <div class="maint-source">From the Generators library - ${escapeHtml(g.family)}. ${escapeHtml(g.years || "")} · Always confirm against the data label on the unit in front of you.</div>
+        <button type="button" class="maint-manuals-btn" data-gen-open="${escapeHtml(g.id)}" data-gen-focus="${escapeHtml(m ? m.g : "")}">🔌 Open in Generators (codes, manuals)</button>
+      </div>
+    </article>`;
+}
+function genMaintCardWire(root) {
+  genWireChecklistBtns(root);
+  root.querySelectorAll("[data-gen-open]").forEach(b => {
+    b.onclick = () => {
+      genState.search = ""; const gi = document.getElementById("genSearchInput"); if (gi) gi.value = "";
+      showScreen("gen");
+      openGenDetail(b.dataset.genOpen, b.dataset.genFocus || undefined);
+    };
+  });
+}
+
+// ============================================================
+// v227: Generator annual maintenance checklist - fillable on the phone,
+// offline, autosaved per checklist, finished into a one-page PDF. Andy gets
+// a copy EVERY time (the tech cannot turn it off); the customer copy is sent
+// only when a customer email is entered. Rebuilt as our own form from Generac
+// checklist 10000046625 rev. B - no Generac logo or trade dress.
+// ============================================================
+
+// Andy deploys relay/Code.gs (Apps Script, andy@brackettcomfort.com) and pastes
+// its /exec URL here. Empty = no relay yet: the phone's share sheet / email is
+// used and the tech is told the office copy must be sent by hand.
+const GEN_CHECKLIST_RELAY = "";
+const GEN_CL_OFFICE_EMAIL = "andy@brackettcomfort.com";
+const GEN_CL_DEALER = "Brackett Heating, AC and Plumbing";
+const GEN_CL_FOOTER = "Based on Generac checklist 10000046625 rev. B";
+const GEN_CL_DRAFT_PREFIX = "bfc-gencl-draft-";
+const GEN_CL_DB = "bfc-gencl-db";
+const GEN_CL_STORE = "checklists";
+const GEN_CL_RECENT_MAX = 20;
+
+// Items verbatim from the form. Removed on Andy's instruction (2026-10-01):
+// "Check fuel for correct pressure", "Inspect entire fuel system for corrosion
+// using a gas detector (sniffer)", "Check electrolyte level if necessary".
+const GEN_CL_SECTIONS = [
+  { id: "install", title: "Installation General Condition", items: [
+    { id: "i1", text: "Verify generator is level and not in a low lying area" },
+    { id: "i2", text: "Verify generator is located away from any window, vent, or other opening" },
+    { id: "i3", text: "Verify generator has minimum three (3) feet of clearance in the front and sides with adequate ventilation" },
+    { id: "i4", text: "Verify generator has minimum five (5) feet overhead clearance in a non-enclosed area" },
+    { id: "i5", text: "Verify generator is clear of downspouts and sprinklers" },
+    { id: "i6", text: "Verify fuel and electrical lines are buried or properly secured per local codes" },
+    { id: "i7", text: "Review alarm codes and exercise history" },
+  ] },
+  { id: "fuel", title: "Fuel System", items: [
+    { id: "f1", text: "Check fuel system for leaks" },
+    { id: "f2", text: "Tighten all connections as necessary" },
+    { id: "f3", text: "Verify flexible fuel line is in place" },
+    { id: "f4", text: "Use an endoscope to inspect the fuel plenum if generator is so equipped (Reference SIB 10000010967)" },
+  ] },
+  { id: "battery", title: "Battery", items: [
+    { id: "b1", text: "Remove corrosion and ensure dryness" },
+    { id: "b2", text: "Clean and tighten battery terminals" },
+    { id: "b3", text: "Check battery voltage to verify that it is charging properly", readings: [{ k: "battV", label: "Battery", unit: "V" }] },
+    { id: "b4", text: "Load test battery with tester", readings: [{ k: "loadTest", label: "Load test", pass: true }] },
+    { id: "b5", text: "Verify battery charger fuse" },
+  ] },
+  { id: "electrical", title: "Electrical", items: [
+    { id: "e1", text: "Check all electrical connections - wiring, wire ties, clamps, terminal ends, connectors" },
+    { id: "e2", text: "Verify AC output voltage", readings: [{ k: "acV", label: "AC output", unit: "V" }] },
+    { id: "e3", text: "Verify DC voltage before, during, and after starting (this will ensure that the charger is working, battery doesn't drop too low, and charger is working after transfer)", readings: [{ k: "dcBefore", label: "DC before", unit: "V" }, { k: "dcDuring", label: "During", unit: "V" }, { k: "dcAfter", label: "After", unit: "V" }] },
+    { id: "e4", text: "Verify DC control fuse" },
+    { id: "e5", text: "Verify cold weather accessories are properly connected if installed" },
+  ] },
+  { id: "enclosure", title: "Enclosure", items: [
+    { id: "n1", text: "Apply conditioner and wax if necessary" },
+    { id: "n2", text: "Clean any oil that may have spilled during service" },
+  ] },
+  { id: "verify", title: "System Verification", items: [
+    { id: "v1", text: "Place in manual mode and run for 5 minutes" },
+    { id: "v2", text: "Verify no excessive vibration or noise" },
+    { id: "v3", text: "Inspect for oil leaks" },
+    { id: "v4", text: "Place in automatic mode" },
+    { id: "v5", text: "Disconnect utility via main breaker to simulate a power outage" },
+    { id: "v6", text: "Check amp draw on each leg when unit is running and powering connected loads", readings: [{ k: "ampL1", label: "L1", unit: "A" }, { k: "ampL2", label: "L2", unit: "A" }] },
+    { id: "v7", text: "Connect utility via main breaker to return to utility power" },
+    { id: "v8", text: "Lock enclosure lid" },
+  ] },
+];
+// added by Brackett - not on the Generac form. Delete this list (and the
+// "Engine service performed" block it feeds) to drop it.
+const GEN_CL_ENGINE = [
+  { id: "oilFilter", text: "Oil & filter changed" },
+  { id: "airFilter", text: "Air filter replaced" },
+  { id: "plugs", text: "Spark plug(s) replaced / gapped" },
+  { id: "reminder", text: "Maintenance reminder reset" },
+];
+
+let genCl = { draft: null, view: "form", result: null, resumed: false };
+
+function genClToday() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+// Tests override this one function instead of touching the real tech name.
+function genClDefaultTech() { return getTechName(); }
+function genClReadDraft(id) { try { return JSON.parse(localStorage.getItem(GEN_CL_DRAFT_PREFIX + id) || "null"); } catch (e) { return null; } }
+function genClDrafts() {
+  const out = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(GEN_CL_DRAFT_PREFIX)) { const d = genClReadDraft(k.slice(GEN_CL_DRAFT_PREFIX.length)); if (d && !d.finished) out.push(d); }
+    }
+  } catch (e) { /* storage blocked - no drafts */ }
+  return out.sort((a, b) => (b.updated || 0) - (a.updated || 0));
+}
+let genClSaveTimer = null;
+function genClSave(now) {
+  const d = genCl.draft;
+  if (!d || d.finished) return;
+  d.updated = Date.now();
+  clearTimeout(genClSaveTimer);
+  const write = () => { if (!safeSet(GEN_CL_DRAFT_PREFIX + d.id, d)) { const s = document.getElementById("gclSaveState"); if (s) s.textContent = "Could not save the draft on this phone (storage full)"; } };
+  if (now) write(); else genClSaveTimer = setTimeout(write, 250);
+  const s = document.getElementById("gclSaveState");
+  if (s) s.textContent = "Draft saved on this phone " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+function genClDiscard(id) { try { localStorage.removeItem(GEN_CL_DRAFT_PREFIX + id); } catch (e) {} }
+
+function genClNewDraft(familyId, modelG, serial) {
+  return {
+    id: "gcl" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    created: Date.now(), updated: Date.now(), finished: false,
+    familyId: familyId || "", modelG: modelG || "", serial: serial || "", serialFromScan: !!serial,
+    customer: { name: "", address: "", city: "", email: "" },
+    tech: genClDefaultTech() || "", date: genClToday(),
+    items: {}, readings: {}, engine: {}, notes: "",
+  };
+}
+
+// Open the checklist for a family / model. An unfinished checklist for the
+// same unit picks up where the tech left off.
+function openGenChecklist(opts) {
+  opts = opts || {};
+  const fam = genEntries().find(x => x.id === opts.familyId);
+  if (fam && !genIsAirCooled(fam)) return;   // liquid-cooled: not this form
+  const modelG = opts.modelG || "";
+  const scanSerial = genLastScan && modelG && genLastScan.modelG === modelG ? genLastScan.serial : "";
+  const existing = genClDrafts().find(d => modelG ? d.modelG === modelG : (d.familyId === (opts.familyId || "") && !d.modelG));
+  if (existing && !opts.fresh) {
+    genCl.draft = existing; genCl.resumed = true;
+    if (scanSerial && !existing.serial) { existing.serial = scanSerial; existing.serialFromScan = true; }
+  } else {
+    genCl.draft = genClNewDraft(opts.familyId, modelG, opts.serial != null ? opts.serial : scanSerial);
+    genCl.resumed = false;
+  }
+  genCl.view = "form"; genCl.result = null;
+  genClSave(true);
+  showScreen("genchecklist");
+  window.scrollTo(0, 0);
+}
+
+function genClModelOptions(selected) {
+  const fams = genEntries().filter(genIsAirCooled).slice().sort((a, b) => (a.sort || 0) - (b.sort || 0));
+  return `<option value="">Scan or pick the model…</option>` + fams.map(g => `<optgroup label="${escapeHtml(g.family)}">${(g.models || []).map(m =>
+    `<option value="${escapeHtml(g.id + "|" + m.g)}"${m.g === selected ? " selected" : ""}>${escapeHtml(m.g + " - " + (m.desc || ""))}</option>`).join("")}</optgroup>`).join("");
+}
+function genClFamilyOf(d) {
+  return genEntries().find(x => x.id === d.familyId) || (d.modelG ? genEntries().find(x => (x.models || []).some(m => m.g === d.modelG)) : null);
+}
+function genClModelOf(d) {
+  const g = genClFamilyOf(d);
+  return g && d.modelG ? (g.models || []).find(m => m.g === d.modelG) || null : null;
+}
+function genClFacts(d) {
+  const g = genClFamilyOf(d), m = genClModelOf(d);
+  return g && m ? genModelFacts(g, m.g) : null;
+}
+
+function renderGenChecklist() {
+  const body = document.getElementById("genClBody");
+  if (!body) return;
+  const drafts = genClDrafts();
+  const seg = `<div class="cl-seg gcl-seg">
+      <button type="button" class="cl-seg-btn ${genCl.view === "form" ? "on" : ""}" data-gcl-view="form">Checklist</button>
+      <button type="button" class="cl-seg-btn ${genCl.view === "recent" ? "on" : ""}" data-gcl-view="recent">Recent &amp; drafts</button>
+    </div>`;
+  if (genCl.view === "recent" || !genCl.draft) {
+    body.innerHTML = seg + `<div id="gclRecent" class="gcl-recent"><div class="empty-state">Loading…</div></div>`;
+    genClWireSeg(body);
+    genClRenderRecent(drafts);
+    return;
+  }
+  const d = genCl.draft;
+  const g = genClFamilyOf(d);
+  const facts = genClFacts(d);
+  const val = (v) => escapeHtml(v || "");
+  const reading = (r) => {
+    const v = d.readings[r.k] || "";
+    if (r.pass) return `<label class="gcl-reading"><span>${escapeHtml(r.label)}</span><select data-gcl-reading="${r.k}"><option value=""></option><option${v === "Pass" ? " selected" : ""}>Pass</option><option${v === "Fail" ? " selected" : ""}>Fail</option></select></label>`;
+    return `<label class="gcl-reading"><span>${escapeHtml(r.label)}</span><input type="text" inputmode="decimal" data-gcl-reading="${r.k}" value="${val(v)}" autocomplete="off"><em>${escapeHtml(r.unit)}</em></label>`;
+  };
+  const item = (it) => {
+    const st = d.items[it.id] || "";
+    return `<div class="gcl-item ${st ? "is-" + st : ""}" data-gcl-item="${it.id}">
+      <div class="gcl-item-text">${escapeHtml(it.text)}</div>
+      <div class="gcl-states">
+        <button type="button" class="gcl-state ${st === "done" ? "on" : ""}" data-gcl-set="done" aria-pressed="${st === "done"}">✓ Done</button>
+        <button type="button" class="gcl-state ${st === "na" ? "on" : ""}" data-gcl-set="na" aria-pressed="${st === "na"}">N/A</button>
+      </div>
+      ${(it.readings || []).length ? `<div class="gcl-readings">${it.readings.map(reading).join("")}</div>` : ""}
+    </div>`;
+  };
+  body.innerHTML = seg + `
+    ${genCl.resumed ? `<div class="gcl-banner">Picked up your unfinished checklist from ${escapeHtml(new Date(d.updated).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }))}. <button type="button" class="gcl-link" id="gclFresh">Start a fresh one</button></div>` : ""}
+    <article class="gcl-sheet">
+      <header class="gcl-head">
+        <img class="gcl-logo" src="icons/brackett-logo.png" alt="Brackett Heating · Air · Plumbing">
+        <div>
+          <div class="gcl-title">Generator Annual Maintenance Checklist</div>
+          <div class="gcl-subtitle">Air-cooled home standby generators</div>
+        </div>
+      </header>
+      <div class="gcl-grid">
+        <label class="gcl-f full"><span>Customer Name</span><input type="text" data-gcl-field="customer.name" value="${val(d.customer.name)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>Address</span><input type="text" data-gcl-field="customer.address" value="${val(d.customer.address)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>City, State, Zip</span><input type="text" data-gcl-field="customer.city" value="${val(d.customer.city)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>Customer email <em>(optional - gets a copy)</em></span><input type="email" inputmode="email" data-gcl-field="customer.email" value="${val(d.customer.email)}" autocomplete="off"></label>
+        <label class="gcl-f half"><span>Generator Model</span><select id="gclModel">${genClModelOptions(d.modelG)}</select></label>
+        <label class="gcl-f half"><span>Serial Number${d.serialFromScan && d.serial ? ` <em>(from the scan - check the plate)</em>` : ""}</span><input type="text" data-gcl-field="serial" value="${val(d.serial)}" autocomplete="off" autocapitalize="characters"></label>
+        <label class="gcl-f full"><span>Dealer Name</span><input type="text" id="gclDealer" value="${escapeHtml(GEN_CL_DEALER)}" readonly></label>
+        <label class="gcl-f full"><span>Technician Name</span><input type="text" data-gcl-field="tech" value="${val(d.tech)}" autocomplete="off"></label>
+        <div class="gcl-f half gcl-facts"><span>Spark plug gap / Oil capacity</span><div id="gclFacts" class="gcl-facts-val">${escapeHtml(genClFactsLine(facts))}</div></div>
+        <label class="gcl-f half"><span>Date</span><input type="date" data-gcl-field="date" value="${val(d.date)}"></label>
+      </div>
+      ${GEN_CL_SECTIONS.map(s => `<section class="gcl-sec"><h3>${escapeHtml(s.title)}</h3>${s.items.map(item).join("")}</section>`).join("")}
+      <section class="gcl-sec gcl-engine">
+        <h3>Engine service performed</h3>
+        ${GEN_CL_ENGINE.map(e => `<label class="gcl-check"><input type="checkbox" data-gcl-engine="${e.id}"${d.engine[e.id] ? " checked" : ""}><span>${escapeHtml(e.text)}</span></label>`).join("")}
+      </section>
+      <section class="gcl-sec">
+        <h3>Notes</h3>
+        <textarea class="gcl-notes" data-gcl-field="notes" rows="4" placeholder="Anything the customer or office should know">${val(d.notes)}</textarea>
+      </section>
+      <div class="gcl-foot">${escapeHtml(GEN_CL_FOOTER)}</div>
+    </article>
+    <div class="gcl-send">
+      <div class="gcl-send-note">A copy goes to the office (${escapeHtml(GEN_CL_OFFICE_EMAIL)}) <b>every time</b>. The customer gets one only if you entered their email.${GEN_CHECKLIST_RELAY ? "" : `<div class="gcl-warn">The email relay is not set up yet, so the office copy is NOT automatic: Finish opens your share sheet / email with the PDF - send it to ${escapeHtml(GEN_CL_OFFICE_EMAIL)} yourself.</div>`}</div>
+      <button type="button" class="gcl-finish" id="gclFinish">Finish &amp; send PDF</button>
+      <div id="gclResult"></div>
+      <div class="gcl-save-state" id="gclSaveState">Draft saves on this phone as you go</div>
+      <button type="button" class="gcl-link gcl-discard" id="gclDiscard">Discard this checklist</button>
+    </div>`;
+  genClWireSeg(body);
+  genClWireForm(body);
+  if (genCl.result) genClShowResult(genCl.result);
+}
+
+function genClWireSeg(body) {
+  body.querySelectorAll("[data-gcl-view]").forEach(b => { b.onclick = () => { genCl.view = b.dataset.gclView; renderGenChecklist(); }; });
+}
+
+function genClWireForm(body) {
+  const d = genCl.draft;
+  body.querySelectorAll("[data-gcl-field]").forEach(el => {
+    el.addEventListener("input", () => {
+      const path = el.dataset.gclField.split(".");
+      if (path.length === 2) d[path[0]][path[1]] = el.value; else d[path[0]] = el.value;
+      if (path[0] === "serial") d.serialFromScan = false;
+      genClSave();
+    });
+  });
+  body.querySelectorAll("[data-gcl-reading]").forEach(el => {
+    const ev = el.tagName === "SELECT" ? "change" : "input";
+    el.addEventListener(ev, () => { d.readings[el.dataset.gclReading] = el.value; genClSave(); });
+  });
+  body.querySelectorAll("[data-gcl-engine]").forEach(el => {
+    el.addEventListener("change", () => { d.engine[el.dataset.gclEngine] = el.checked; genClSave(); });
+  });
+  body.querySelectorAll("[data-gcl-item]").forEach(row => {
+    row.querySelectorAll("[data-gcl-set]").forEach(b => {
+      b.onclick = () => {
+        const id = row.dataset.gclItem, v = b.dataset.gclSet;
+        d.items[id] = d.items[id] === v ? "" : v;      // tap again = back to blank
+        row.className = "gcl-item" + (d.items[id] ? " is-" + d.items[id] : "");
+        row.querySelectorAll("[data-gcl-set]").forEach(x => { const on = x.dataset.gclSet === d.items[id]; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
+        genClSave();
+      };
+    });
+  });
+  const sel = document.getElementById("gclModel");
+  if (sel) sel.onchange = () => {
+    const [fid, mg] = (sel.value || "|").split("|");
+    d.familyId = fid || d.familyId; d.modelG = mg || "";
+    if (d.serialFromScan) { d.serial = ""; d.serialFromScan = false; }
+    genClSave(true);
+    renderGenChecklist();
+  };
+  const fresh = document.getElementById("gclFresh");
+  if (fresh) fresh.onclick = () => openGenChecklist({ familyId: d.familyId, modelG: d.modelG, fresh: true });
+  const discard = document.getElementById("gclDiscard");
+  if (discard) discard.onclick = () => {
+    if (!confirm("Discard this checklist? What you filled in will be removed from this phone.")) return;
+    genClDiscard(d.id); genCl.draft = null; genCl.view = "recent"; renderGenChecklist();
+  };
+  document.getElementById("gclFinish").onclick = () => genClFinish();
+}
+
+// ---------- storage of finished checklists (queue + recent, IndexedDB) ----------
+let genClDbPromise = null;
+function genClDb() {
+  if (genClDbPromise) return genClDbPromise;
+  genClDbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open(GEN_CL_DB, 1);
+    req.onupgradeneeded = () => { if (!req.result.objectStoreNames.contains(GEN_CL_STORE)) req.result.createObjectStore(GEN_CL_STORE, { keyPath: "id" }); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => { genClDbPromise = null; reject(req.error); };
+  });
+  return genClDbPromise;
+}
+function genClTx(mode, fn) {
+  return genClDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction(GEN_CL_STORE, mode);
+    const st = tx.objectStore(GEN_CL_STORE);
+    let out;
+    Promise.resolve(fn(st, (r) => { out = r; })).catch(reject);
+    tx.oncomplete = () => resolve(out);
+    tx.onerror = () => reject(tx.error);
+  }));
+}
+function genClPut(rec) { return genClTx("readwrite", (st) => { st.put(rec); }); }
+function genClAll() {
+  return genClTx("readonly", (st, set) => { const r = st.getAll(); r.onsuccess = () => set(r.result || []); });
+}
+// Keep the last 20 on the phone; never drop one that is still waiting to send.
+async function genClPrune() {
+  const all = (await genClAll()).sort((a, b) => b.ts - a.ts);
+  const drop = all.slice(GEN_CL_RECENT_MAX).filter(r => r.status !== "queued");
+  if (drop.length) await genClTx("readwrite", (st) => { drop.forEach(r => st.delete(r.id)); });
+}
+
+// ---------- finish: PDF, then send ----------
+function genClSummary(rec) {
+  return [
+    "Generator maintenance checklist",
+    "Customer: " + (rec.customerName || "-"),
+    "Model: " + (rec.model || "-") + (rec.modelDesc ? " (" + rec.modelDesc + ")" : ""),
+    "Serial: " + (rec.serial || "-"),
+    "Technician: " + (rec.tech || "-"),
+    "Date: " + (rec.date || "-"),
+    "Dealer: " + GEN_CL_DEALER,
+  ].join("\n");
+}
+function genClFileName(d) {
+  const safe = (s) => String(s || "").replace(/[^A-Za-z0-9-]+/g, "-").replace(/^-+|-+$/g, "");
+  return "Brackett-generator-checklist-" + (safe(d.modelG) || "model") + "-" + (safe(d.date) || genClToday()) + ".pdf";
+}
+
+async function genClFinish() {
+  const d = genCl.draft;
+  const email = (d.customer.email || "").trim();
+  if (email && !/^[^\s@,;]+@[^\s@,;]+\.[A-Za-z]{2,}$/.test(email)) {
+    genClShowResult({ kind: "error", msg: "That customer email doesn't look right. Fix it or clear it - the office copy goes either way." });
+    return;
+  }
+  if (!d.modelG && !confirm("No generator model picked. Finish anyway?")) return;
+  const btn = document.getElementById("gclFinish");
+  if (btn) { btn.disabled = true; btn.textContent = "Making the PDF…"; }
+  let rec;
+  try {
+    const pdf = await genClBuildPdf(d);
+    const m = genClModelOf(d);
+    rec = {
+      id: d.id, ts: Date.now(), status: "new",
+      model: d.modelG || "", modelDesc: m ? m.desc || "" : "", serial: d.serial || "",
+      customerName: d.customer.name || "", customerEmail: email, tech: d.tech || "", date: d.date || "",
+      fileName: genClFileName(d), pdf: pdf.blob, draft: JSON.parse(JSON.stringify(d)),
+    };
+    await genClPut(rec);
+    d.finished = true; genClDiscard(d.id);
+    genClPrune().catch(() => {});
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "Finish & send PDF"; }
+    genClShowResult({ kind: "error", msg: "Could not make the PDF: " + (e && e.message ? e.message : e) });
+    return;
+  }
+  if (btn) { btn.textContent = "Sending…"; }
+  const res = await genClDeliver(rec);
+  genCl.result = res;
+  if (btn) { btn.disabled = false; btn.textContent = "Finish & send PDF"; }
+  genClShowResult(res);
+}
+
+// Relay first; queue when there is no signal; share sheet / email when there
+// is no relay yet or it refuses.
+async function genClDeliver(rec) {
+  if (GEN_CHECKLIST_RELAY) {
+    if (!navigator.onLine) return genClQueue(rec);
+    let r;
+    try { r = await genClPost(rec); }
+    catch (e) { return genClQueue(rec); }                 // network dropped: retry later
+    if (r && r.ok) {
+      rec.status = "sent"; rec.sentAt = Date.now(); await genClPut(rec);
+      trackEvent("gen checklist sent: " + (rec.model || "no model"));
+      return { kind: "sent", rec, msg: "Sent. The office copy went to " + GEN_CL_OFFICE_EMAIL + (rec.customerEmail ? " and the customer's copy to " + rec.customerEmail : "") + "." };
+    }
+    const why = (r && r.error) || "the relay refused it";
+    return genClFallback(rec, "The email relay failed (" + why + ").");
+  }
+  return genClFallback(rec, "The email relay is not set up yet.");
+}
+async function genClQueue(rec) {
+  rec.status = "queued"; await genClPut(rec);
+  trackEvent("gen checklist queued");
+  return { kind: "queued", rec, msg: "Queued - will send when you have signal" };
+}
+async function genClPost(rec) {
+  const payload = await genClPayload(rec);
+  // String body = text/plain, so no CORS preflight (same as the other relays).
+  const resp = await fetch(GEN_CHECKLIST_RELAY, { method: "POST", body: JSON.stringify(payload) });
+  return resp.json();
+}
+async function genClPayload(rec) {
+  return {
+    pdfBase64: await blobToBase64(rec.pdf),
+    fileName: rec.fileName,
+    customerEmail: rec.customerEmail || "",
+    tech: rec.tech || "",
+    model: rec.model || "",
+    serial: rec.serial || "",
+    customerName: rec.customerName || "",
+    date: rec.date || "",
+    appVersion: APP_VERSION,
+  };
+}
+let genClFlushing = false;
+async function genClFlushQueue() {
+  if (!GEN_CHECKLIST_RELAY || genClFlushing || !navigator.onLine) return;
+  genClFlushing = true;
+  try {
+    const q = (await genClAll()).filter(r => r.status === "queued").sort((a, b) => a.ts - b.ts);
+    for (const rec of q) {
+      let r;
+      try { r = await genClPost(rec); } catch (e) { break; }
+      if (r && r.ok) { rec.status = "sent"; rec.sentAt = Date.now(); await genClPut(rec); trackEvent("gen checklist sent: " + (rec.model || "no model")); }
+      else { rec.status = "failed"; rec.error = (r && r.error) || "relay refused"; await genClPut(rec); }
+    }
+  } catch (e) { /* stays queued */ }
+  genClFlushing = false;
+  if (currentScreen === "genchecklist" && genCl.view === "recent") renderGenChecklist();
+}
+window.addEventListener("online", () => { genClFlushQueue(); });
+
+function genClOpenMailto(url) { window.location.href = url; }
+function genClDownload(rec) {
+  const url = URL.createObjectURL(rec.pdf);
+  const a = document.createElement("a");
+  a.href = url; a.download = rec.fileName; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+// No relay (or it failed): the phone's share sheet with the PDF; without file
+// sharing, download the PDF and open an email to the office (+ customer).
+async function genClFallback(rec, why) {
+  const notice = why + " The office copy must be sent by you until the relay is set up: send this PDF to " + GEN_CL_OFFICE_EMAIL + (rec.customerEmail ? " and " + rec.customerEmail : "") + ".";
+  const file = (typeof File === "function") ? new File([rec.pdf], rec.fileName, { type: "application/pdf" }) : null;
+  if (file && navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: "Generator maintenance checklist", text: genClSummary(rec) + "\n\nSend to: " + GEN_CL_OFFICE_EMAIL + (rec.customerEmail ? ", " + rec.customerEmail : "") });
+      rec.status = "shared"; rec.sentAt = Date.now(); await genClPut(rec);
+      trackEvent("gen checklist shared from phone: " + (rec.model || "no model"));
+      return { kind: "shared", rec, msg: notice };
+    } catch (e) {
+      if (e && e.name === "AbortError") { rec.status = "unsent"; await genClPut(rec); return { kind: "unsent", rec, msg: "Share was cancelled. " + notice }; }
+      // NotAllowedError (the tap expired while the PDF was made): fall to download + email.
+    }
+  }
+  genClDownload(rec);
+  const to = [GEN_CL_OFFICE_EMAIL].concat(rec.customerEmail ? [rec.customerEmail] : []).join(",");
+  const subject = "Generator maintenance checklist - " + (rec.customerName || "customer") + " - " + (rec.date || "");
+  genClOpenMailto("mailto:" + to + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(genClSummary(rec) + "\n\nThe PDF (" + rec.fileName + ") just downloaded to this phone - attach it to this email."));
+  rec.status = "shared"; rec.sentAt = Date.now(); await genClPut(rec);
+  trackEvent("gen checklist shared from phone: " + (rec.model || "no model"));
+  return { kind: "mailto", rec, msg: notice + " The PDF downloaded - attach it to the email that opened." };
+}
+
+function genClShowResult(res) {
+  const box = document.getElementById("gclResult");
+  if (!box || !res) return;
+  const cls = { sent: "ok", queued: "info", shared: "warn", mailto: "warn", unsent: "warn", error: "err" }[res.kind] || "info";
+  box.innerHTML = `<div class="gcl-result ${cls}"><div>${escapeHtml(res.msg)}</div>
+    ${res.rec ? `<div class="gcl-result-actions">
+      <button type="button" data-gcl-act="share" data-id="${escapeHtml(res.rec.id)}">📤 Share / email PDF</button>
+      <button type="button" data-gcl-act="download" data-id="${escapeHtml(res.rec.id)}">⬇ Download PDF</button>
+      <button type="button" data-gcl-act="new">New checklist</button>
+    </div>` : ""}</div>`;
+  genClWireActions(box);
+}
+function genClWireActions(root) {
+  root.querySelectorAll("[data-gcl-act]").forEach(b => {
+    b.onclick = async () => {
+      const act = b.dataset.gclAct;
+      if (act === "new") { const d = genCl.draft || {}; genCl.result = null; openGenChecklist({ familyId: d.familyId, modelG: "", fresh: true }); return; }
+      if (act === "resume") { genCl.draft = genClReadDraft(b.dataset.id); genCl.resumed = true; genCl.view = "form"; genCl.result = null; renderGenChecklist(); return; }
+      const rec = (await genClAll()).find(r => r.id === b.dataset.id);
+      if (!rec) return;
+      if (act === "download") { genClDownload(rec); return; }
+      if (act === "share") { const res = await genClFallback(rec, "Sharing from the phone."); genClToast(res.msg); return; }
+      if (act === "resend") {
+        const res = await genClDeliver(rec);
+        genClToast(res.msg);
+        if (genCl.view === "recent") renderGenChecklist();
+      }
+    };
+  });
+}
+function genClToast(msg) {
+  const el = document.getElementById("gclRecentMsg") || document.getElementById("gclResult");
+  if (el) el.innerHTML = `<div class="gcl-result info">${escapeHtml(msg)}</div>`;
+}
+
+async function genClRenderRecent(drafts) {
+  const box = document.getElementById("gclRecent");
+  if (!box) return;
+  let recs = [];
+  try { recs = (await genClAll()).sort((a, b) => b.ts - a.ts).slice(0, GEN_CL_RECENT_MAX); } catch (e) {}
+  const label = { sent: "Sent", queued: "Queued - will send when you have signal", shared: "Shared from the phone", unsent: "Not sent", failed: "Relay failed - resend or share", new: "Not sent" };
+  const draftRows = drafts.map(d => `<div class="gcl-rec"><div><b>${escapeHtml(d.modelG || "No model yet")}</b> · ${escapeHtml(d.customer.name || "no customer yet")}<div class="gcl-rec-sub">Draft · ${escapeHtml(new Date(d.updated).toLocaleString())}</div></div><div class="gcl-rec-actions"><button type="button" data-gcl-act="resume" data-id="${escapeHtml(d.id)}">Resume</button></div></div>`).join("");
+  const recRows = recs.map(r => `<div class="gcl-rec"><div><b>${escapeHtml(r.model || "No model")}</b> · ${escapeHtml(r.customerName || "-")} · ${escapeHtml(r.date || "")}<div class="gcl-rec-sub st-${escapeHtml(r.status)}">${escapeHtml(label[r.status] || r.status)}</div></div>
+    <div class="gcl-rec-actions"><button type="button" data-gcl-act="resend" data-id="${escapeHtml(r.id)}">Resend</button><button type="button" data-gcl-act="share" data-id="${escapeHtml(r.id)}">Share</button></div></div>`).join("");
+  box.innerHTML = `<div id="gclRecentMsg"></div>
+    ${draftRows ? `<h3 class="gcl-list-h">Unfinished</h3>${draftRows}` : ""}
+    <h3 class="gcl-list-h">Recent checklists (last ${GEN_CL_RECENT_MAX})</h3>
+    ${recRows || `<div class="empty-state">No finished checklists on this phone yet. Start one from a generator card in Generators or Maintenance Figures.</div>`}`;
+  genClWireActions(box);
+}
+
+// ---------- PDF (jsPDF, vendored in vendor/ and precached - works offline) ----------
+let genClPdfLib = null;
+function genClLoadJsPdf() {
+  if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf);
+  if (genClPdfLib) return genClPdfLib;
+  genClPdfLib = new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "vendor/jspdf.umd.min.js";
+    s.onload = () => (window.jspdf && window.jspdf.jsPDF) ? resolve(window.jspdf) : reject(new Error("PDF library did not load"));
+    s.onerror = () => { genClPdfLib = null; reject(new Error("PDF library missing - open the app once with signal to update it")); };
+    document.head.appendChild(s);
+  });
+  return genClPdfLib;
+}
+let genClLogoData = null;
+function genClLogo() {
+  if (genClLogoData) return Promise.resolve(genClLogoData);
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const w = 300, h = Math.round(300 * img.naturalHeight / img.naturalWidth);
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        const x = c.getContext("2d"); x.fillStyle = "#ffffff"; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
+        genClLogoData = { data: c.toDataURL("image/jpeg", 0.92), w, h };
+      } catch (e) { genClLogoData = null; }
+      resolve(genClLogoData);
+    };
+    img.onerror = () => resolve(null);
+    img.src = "icons/brackett-logo.png";
+  });
+}
+
+async function genClBuildPdf(d) {
+  const { jsPDF } = await genClLoadJsPdf();
+  const logo = await genClLogo();
+  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  const W = 612, H = 792, M = 36, BOTTOM = H - 40;
+  const NAVY = [0, 58, 112], ORANGE = [196, 98, 45], YELLOW = [253, 210, 110], INK = [16, 24, 32], DIM = [92, 100, 112];
+  const facts = genClFacts(d);
+  const model = genClModelOf(d);
+  const setC = (c) => doc.setTextColor(c[0], c[1], c[2]);
+  const draw = (c) => doc.setDrawColor(c[0], c[1], c[2]);
+
+  // Header: small logo, title, orange brand rule.
+  if (logo) doc.addImage(logo.data, "JPEG", M, 22, 54, 54 * logo.h / logo.w);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(16); setC(NAVY);
+  doc.text("Generator Annual Maintenance Checklist", M + 66, 44);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); setC(DIM);
+  doc.text("Air-cooled home standby generators · " + GEN_CL_DEALER, M + 66, 58);
+  draw(ORANGE); doc.setLineWidth(2); doc.line(M, 76, W - M, 76);
+
+  // Header boxes in the form's own layout.
+  let y = 82;
+  const boxRow = (cells) => {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9.2);
+    const lines = cells.map(c => doc.splitTextToSize(String(c.value || ""), c.w - 10));
+    const h = Math.max(20, 10 + Math.max(...lines.map(l => l.length)) * 10.4);
+    let x = M;
+    cells.forEach((c, i) => {
+      draw(NAVY); doc.setLineWidth(0.6); doc.rect(x, y, c.w, h);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.6); setC(NAVY); doc.text(c.label.toUpperCase(), x + 5, y + 7.5);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9.2); setC(INK); doc.text(lines[i], x + 5, y + 16.5);
+      x += c.w;
+    });
+    y += h;
+  };
+  const full = W - 2 * M, half = full / 2;
+  boxRow([{ label: "Customer Name", value: d.customer.name, w: full }]);
+  boxRow([{ label: "Address", value: d.customer.address, w: full }]);
+  boxRow([{ label: "City, State, Zip", value: d.customer.city, w: full }]);
+  boxRow([{ label: "Customer email", value: d.customer.email, w: full }]);
+  boxRow([{ label: "Generator Model", value: model ? model.g + " - " + (model.desc || "") : (d.modelG || ""), w: half }, { label: "Serial Number", value: d.serial, w: half }]);
+  boxRow([{ label: "Dealer Name", value: GEN_CL_DEALER, w: full }]);
+  boxRow([{ label: "Technician Name", value: d.tech, w: full }]);
+  boxRow([{ label: "Spark plug gap / Oil capacity", value: genClFactsLine(facts), w: half }, { label: "Date", value: d.date, w: half }]);
+
+  // Two columns of items. Each column keeps its own page, so a long left
+  // column never draws over the right one.
+  const colW = (full - 14) / 2;
+  const cols = [{ x: M, y: y + 10, page: 1 }, { x: M + colW + 14, y: y + 10, page: 1 }];
+  const use = (col) => doc.setPage(col.page);
+  const ensure = (col, need) => {
+    if (col.y + need <= BOTTOM) return;
+    col.page++;
+    if (doc.getNumberOfPages() < col.page) doc.addPage();
+    col.y = 40;
+    use(col);
+  };
+  const secHead = (col, title) => {
+    ensure(col, 34);
+    doc.setFillColor(YELLOW[0], YELLOW[1], YELLOW[2]); doc.rect(col.x, col.y, colW, 13, "F");
+    doc.setFillColor(ORANGE[0], ORANGE[1], ORANGE[2]); doc.rect(col.x, col.y, 3, 13, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); setC(NAVY); doc.text(title, col.x + 7, col.y + 9.3);
+    col.y += 17;
+  };
+  const statusCell = (x, y0, st) => {
+    draw(NAVY); doc.setLineWidth(0.7); doc.rect(x, y0 - 7, 19, 9.5);
+    if (st === "done") {
+      doc.setLineWidth(1.4); doc.line(x + 5.5, y0 - 2.5, x + 8.5, y0 + 0.5); doc.line(x + 8.5, y0 + 0.5, x + 14, y0 - 5.5);
+    } else if (st === "na") {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(6.2); setC(INK); doc.text("N/A", x + 9.5, y0, { align: "center" });
+    }
+  };
+  const LH = 9.6, RH = 9;
+  const itemRow = (col, text, st, extra) => {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.2);
+    const lines = doc.splitTextToSize(text, colW - 25);
+    doc.setFontSize(7.6);
+    const extraLines = extra ? doc.splitTextToSize(extra, colW - 25) : [];
+    ensure(col, 7 + (lines.length - 1) * LH + extraLines.length * RH + 7);
+    const base = col.y + 7;
+    statusCell(col.x, base, st);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.2); setC(INK); doc.text(lines, col.x + 25, base, { lineHeightFactor: LH / 8.2 });
+    let last = base + (lines.length - 1) * LH;
+    if (extraLines.length) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.6); setC(NAVY);
+      doc.text(extraLines, col.x + 25, last + RH, { lineHeightFactor: RH / 7.6 });
+      last += extraLines.length * RH;
+    }
+    col.y = last + 7;
+  };
+  const readingText = (it) => (it.readings || []).map(r => {
+    const v = String(d.readings[r.k] || "").trim();
+    return v ? r.label + ": " + v + (r.unit ? " " + r.unit : "") : "";
+  }).filter(Boolean).join("   ");
+  const drawSec = (col, s) => { use(col); secHead(col, s.title); s.items.forEach(it => itemRow(col, it.text, d.items[it.id] || "", readingText(it))); col.y += 5; };
+  ["install", "fuel", "battery"].forEach(id => drawSec(cols[0], GEN_CL_SECTIONS.find(s => s.id === id)));
+  // added by Brackett: engine service performed (left column balances the right)
+  use(cols[0]); secHead(cols[0], "Engine service performed");
+  GEN_CL_ENGINE.forEach(e => itemRow(cols[0], e.text, d.engine[e.id] ? "done" : "", ""));
+  ["electrical", "enclosure", "verify"].forEach(id => drawSec(cols[1], GEN_CL_SECTIONS.find(s => s.id === id)));
+
+  // Notes, full width, under whichever column ends lower.
+  const last = cols[0].page > cols[1].page ? cols[0] : cols[1].page > cols[0].page ? cols[1] : (cols[0].y > cols[1].y ? cols[0] : cols[1]);
+  doc.setPage(last.page);
+  let ny = last.y + 6, page = last.page;
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+  const noteLines = doc.splitTextToSize(d.notes || "", full - 10);
+  const noteH = Math.max(36, 17 + noteLines.length * 10.5);
+  if (ny + noteH > BOTTOM) { page++; if (doc.getNumberOfPages() < page) doc.addPage(); doc.setPage(page); ny = 40; }
+  draw(NAVY); doc.setLineWidth(0.6); doc.rect(M, ny, full, noteH);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(6.6); setC(NAVY); doc.text("NOTES", M + 5, ny + 8);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9); setC(INK); doc.text(noteLines, M + 5, ny + 19);
+
+  // Footer on every page.
+  const pages = doc.getNumberOfPages();
+  for (let p = 1; p <= pages; p++) {
+    doc.setPage(p);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); setC(DIM);
+    doc.text(GEN_CL_FOOTER, M, H - 22);
+    doc.text(GEN_CL_DEALER + " · " + APP_VERSION + " · page " + p + " of " + pages, W - M, H - 22, { align: "right" });
+  }
+  return { blob: doc.output("blob"), pages };
+}
 
 // ============================================================
 // MANUALS (PDFs stored in IndexedDB, works fully offline)
@@ -6309,6 +7499,8 @@ function scanWebLinks(info) {
 let lastScanInfo = null;
 
 function renderScanResult(info) {
+  // v227: remember a Generac plate's serial for the generator checklist.
+  if (info && info.brand === "Generac" && typeof genNoteScan === "function") genNoteScan(info.model, info.serial);
   scanStatus(null);
   lastScanInfo = info;
   const box = document.getElementById("scanResult");
@@ -6427,7 +7619,8 @@ function maintApplyScannedModel(model) {
   // same kind still show (labelled in the list), but the scan is logged and its
   // photo saved as a coverage gap so the daily triage researches the real model.
   const lk = typeof maintLookup === "function" ? maintLookup(model) : { exact: [], approx: [] };
-  const matched = lk.exact.length > 0;
+  // v227: an air-cooled Generac plate gets its generator card - that is a match.
+  const matched = lk.exact.length > 0 || !!(typeof genMaintResolve === "function" && genMaintResolve(model));
   maintScanStatus(matched ? null : lk.approx.length
     ? ("Read " + model + " — no exact figures for that model yet. Showing the closest look-alikes; check the series on the plate.")
     : ("Read " + model + " — no maintenance figures for that model yet. Check Manuals, or use Request Info."));
@@ -6524,6 +7717,8 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
     const scanned = (fields && fields.model) || "";
     const serialLike = scanned && maintLooksLikeSerial(scanned) && !isKnownModelString(scanned);
     if (scanned && maintModelPlausible(scanned) && !serialLike) {
+      // v227: a serial read off its own S/N label goes into the generator checklist.
+      if (typeof genNoteScan === "function") genNoteScan(scanned, fields && fields.serialSource === "label" ? fields.serial : "");
       const matched = maintApplyScannedModel(scanned);
       // Read fine but no figures for it: that photo is a coverage gap for
       // Andy, same as an unreadable one. Only appends to the existing line.
@@ -7644,7 +8839,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v226";
+const APP_VERSION = "v227";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -7814,6 +9009,8 @@ function startApp() {
 
   // Any failed-scan photos still waiting on the phone go to Andy now.
   try { flushScanPhotos(); } catch (e) {}
+  // v227: generator checklists queued with no signal (only once the relay URL is set).
+  try { genClFlushQueue(); } catch (e) {}
 
   // Only nudge a tech who has already picked their name — the picker overlay sits
   // above everything, so a pill fired underneath it would just be missed.
