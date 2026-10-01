@@ -3088,6 +3088,88 @@ function genClFactsLine(f) {
   return gap + " · " + oil;
 }
 
+// Generac scheduled maintenance ("tune-up") kits for the checklist's serial
+// box (Andy 2026-10-01, re-checked the same day). Only what Generac prints:
+// - no-oil kits (G00xxxx-0): the accessory table of each family's spec sheet;
+//   the current 26 kW sheet A0002026894 Rev. E 02/17/2026 still names G006485-0,
+//   Next Gen 22-28 kW A0005151077 Rev. D 08/13/2026 names G007216-0.
+// - with-oil kits (A000...): support.generac.com "What Are Generator
+//   Maintenance Kits" (Apr 20, 2026) lists exact unit numbers per kit; for
+//   older families, Generac's parts store (generac.ordertree.com) replaces the
+//   discontinued 0J...SM kit with the A000 kit named below.
+// A size the literature does not list gets no kit - never guessed.
+const GEN_KIT_EVO2 = [
+  { kw: [9, 10], pn: "G006482-0" },   // 9/11, 10/13/16, 10/14/18 kW spec sheets
+  { kw: [11, 11], pn: "G006483-0" },  // 9/11 kW and DR 11/20 kW spec sheets
+  { kw: [13, 18], notCc: 999, pn: "G007216-0" }, // 10/13/16, 10/14/18 kW spec sheets
+  { kw: [16, 26], cc: 999, pn: "G006485-0" },    // 16/20/22, 20/24, 26 kW spec sheets
+];
+const GEN_MAINT_KITS = {
+  "gen-generac-next-gen-10-28": [{ kw: [10, 10], pn: "G006482-0" }, { kw: [14, 28], pn: "G007216-0" }],
+  "gen-guardian-next-gen-22-25-y32": [{ pn: "G007216-0" }],
+  "gen-generac-next-gen-20-3ph": [{ pn: "G007216-0" }],
+  "gen-guardian-evo2-9-22": GEN_KIT_EVO2,
+  "gen-guardian-evo2-10-22-compact": GEN_KIT_EVO2,
+  "gen-guardian-evo2-10-26": GEN_KIT_EVO2,
+  "gen-guardian-evo2-response-16-22": GEN_KIT_EVO2,
+  "gen-guardian-evo2-dr-11-20": [{ kw: [11, 11], pn: "G006483-0" }, { kw: [20, 20], pn: "G006485-0" }],
+  "gen-synergy-evo2-20": [{ pn: "G006829-0" }],
+  "gen-ecogen-evo2-15": [{ pn: "G006829-0" }],
+  "gen-ecogen-evo1-15": [{ pn: "G006829-0" }],
+  "gen-powerpact-7-75": [{ kw: [7.5, 7.5], pn: "G006806-0" }],
+};
+// With-oil kits by exact unit number (support.generac.com, Apr 20, 2026).
+// The article also lists G0071421 under the 14-17 kW kit, but that unit is a
+// 22 kW 999cc Response (its twin G0071420 is on the 20-26 kW kit) - left out.
+const GEN_KIT_OIL_UNITS = {
+  A0001484977: "G0072580 G0073230 G0072590 G0073240 G0072600 G0073250 G0072610 G0073260 G0073270 G0073280 G0072820 G0073290 G0071710 G0071730 G0071740 G0071750 G0071760 G0071770 G0071780 G0072260 G0072280",
+  A0002074675: "G0070290 G0070291 G0070300 G0070301 G0070500 G0070570 G0070571 G0070660 G0070661 G0070710 G0070711",
+  A0002074698: "G0068570 G0070310 G0070311 G0070320 G0070321 G0070330 G0070331 G0070440 G0070441 G0070470 G0070471 G0070510 G0070520 G0070580 G0070581 G0070670 G0070671 G0070720 G0070721",
+  A0002074708: "G0069490 G0070530 G0070540 G0070590 G0070591 G0070600 G0070610 G0070680 G0070681 G0070730 G0070731",
+  A0002074712: "G0068590 G0070350 G0070351 G0070360 G0070361 G0070370 G0070371 G0070380 G0070381 G0070390 G0070391 G0070420 G0070421 G0070422 G0070430 G0070431 G0070432 G0070450 G0070451 G0070460 G0070461 G0070480 G0070481 G0070490 G0070491 G0070550 G0070620 G0070621 G0070630 G0070631 G0070640 G0070641 G0070650 G0070651 G0070652 G0070690 G0070691 G0070700 G0070701 G0070702 G0070740 G0070741 G0070750 G0070751 G0070752 G0070770 G0070780 G0070781 G0071410 G0071411 G0071420 G0072090 G0072101",
+  A0002080751: "G0061030 G0061031 G0070400 G0070410 G0070340 G0071630",
+  A0002081076: "G0069980",
+};
+// With-oil kits by family: the A000 kit Generac's store gives for the
+// discontinued 0J...SM kit (0J93200/0J93210/0J93220/0J93230 Evolution,
+// 0J57640/0J57660/0J57670/0J57680 pre-Evolution, 0J57840 EcoGen 6 kW).
+const GEN_KIT_OIL_FAMILY = {
+  "gen-guardian-evo1-8": [{ pn: "A0002074675" }],
+  "gen-guardian-evo1-11": [{ pn: "A0002074698" }],
+  "gen-guardian-evo1-13-17": [{ pn: "A0002074708" }],
+  "gen-guardian-evo1-20-22": [{ pn: "A0002074712" }],
+  "gen-guardian-nexus-8": [{ pn: "A0002075313" }],
+  "gen-guardian-nexus-10-11": [{ kw: [10, 10], pn: "A0002075473" }],
+  "gen-guardian-nexus-12-17": [{ pn: "A0002075499" }],
+  "gen-guardian-nexus-20": [{ pn: "A0002075524" }],
+  "gen-ecogen-nexus-6": [{ pn: "A0002074750" }],
+  "gen-corepower-7": [{ pn: "A0002074753" }],
+  "gen-guardian-pre-nexus-2008-8-20": [{ kw: [8, 8], pn: "A0002075313" }, { kw: [12, 17], pn: "A0002075499" }, { kw: [20, 20], pn: "A0002075524" }],
+};
+function genKitPick(rules, g, model) {
+  if (!rules) return "";
+  const { kw, cc } = genModelInfo(g, model);
+  const near = (a, b) => a != null && b != null && Math.abs(a - b) <= 3;
+  const r = rules.find(x => (!x.kw || (kw != null && kw >= x.kw[0] && kw <= x.kw[1]))
+    && (!x.cc || near(cc, x.cc)) && (!x.notCc || !near(cc, x.notCc)));
+  return r ? r.pn : "";
+}
+function genMaintKit(family, model) {
+  const g = typeof family === "string" ? genEntries().find(x => x.id === family) : family;
+  if (!g || !model) return null;
+  const noOil = genKitPick(GEN_MAINT_KITS[g.id], g, model);
+  const unit = Object.keys(GEN_KIT_OIL_UNITS).find(pn => GEN_KIT_OIL_UNITS[pn].split(" ").includes(model.g));
+  const withOil = unit || genKitPick(GEN_KIT_OIL_FAMILY[g.id], g, model);
+  return noOil || withOil ? { noOil, withOil } : null;
+}
+function genClKitLine(d) {
+  const g = genClFamilyOf(d), m = genClModelOf(d);
+  if (!m) return "";
+  const k = genMaintKit(g, m);
+  if (!k) return "Tune-up kit: not listed - check GenService";
+  return "Tune-up kit " + [k.noOil ? k.noOil + " (no oil)" : "", k.withOil ? k.withOil + " (with oil)" : ""].filter(Boolean).join(" · ");
+}
+
 function genEngineLabel(g, cc) {
   const segs = String(g.engine || "").split(";").map(s => s.trim()).filter(Boolean);
   if (!cc) return segs.length === 1 ? segs[0] : "";
@@ -3170,8 +3252,8 @@ function genMaintCardWire(root) {
 // ============================================================
 // v227: Generator annual maintenance checklist - fillable on the phone,
 // offline, autosaved per checklist, finished into a one-page PDF. Andy gets
-// a copy EVERY time (the tech cannot turn it off); the customer copy is sent
-// only when a customer email is entered. Rebuilt as our own form from Generac
+// a copy EVERY time (the tech cannot turn it off); the customer email is
+// required before Finish (Andy 2026-10-01) and gets its own copy. Rebuilt as our own form from Generac
 // checklist 10000046625 rev. B - no Generac logo or trade dress.
 // ============================================================
 
@@ -3209,7 +3291,6 @@ const GEN_CL_SECTIONS = [
     { id: "e1", text: "Check all electrical connections - wiring, wire ties, clamps, terminal ends, connectors" },
     { id: "e2", text: "Verify AC output voltage", readings: [{ k: "acV", label: "AC output", unit: "V" }] },
     { id: "e3", text: "Verify DC voltage before, during, and after starting (this will ensure that the charger is working, battery doesn't drop too low, and charger is working after transfer)", readings: [{ k: "dcBefore", label: "DC before", unit: "V" }, { k: "dcDuring", label: "During", unit: "V" }, { k: "dcAfter", label: "After", unit: "V" }] },
-    { id: "e4", text: "Verify DC control fuse" },
     { id: "e5", text: "Verify cold weather accessories are properly connected if installed" },
     { id: "i7", text: "Review alarm codes and exercise history" },
   ] },
@@ -3235,6 +3316,11 @@ const GEN_CL_ENGINE = [
   { id: "plugs", text: "Spark plug(s) replaced / gapped" },
   { id: "reminder", text: "Maintenance reminder reset" },
 ];
+// Andy 2026-10-01: picked with the scan - a visual check does no engine
+// service, so every engine row is N/A on the sheet.
+const GEN_CL_VISITS = [{ id: "maint", label: "Annual maintenance" }, { id: "visual", label: "Visual check" }];
+const genClIsVisual = (d) => d && d.visit === "visual";
+const genClVisitLabel = (d) => (GEN_CL_VISITS.find(v => v.id === (d && d.visit)) || {}).label || "";
 
 // v227 (rework): the checklist is a step-by-step wizard. Techs start it from
 // the box at the top of Generators (scan the tag first) or from a "Start
@@ -3301,7 +3387,7 @@ function genClNewDraft(familyId, modelG, serial) {
     serial: serial || "", serialFromScan: !!serial, serialSource: serial ? "label" : "",
     customer: { name: "", address: "", city: "", email: "" },
     tech: genClDefaultTech() || "", date: genClToday(),
-    items: {}, readings: {}, engine: {}, notes: "", visited: {}, step: 0,
+    visit: "", items: {}, readings: {}, engine: {}, notes: "", visited: {}, step: 0,
   };
 }
 
@@ -3309,7 +3395,7 @@ function genClNewDraft(familyId, modelG, serial) {
 function genWizStepDone(d, st) {
   const c = d.customer || {}, v = d.visited || {};
   switch (st.id) {
-    case "scan": return !!genClModelOf(d);
+    case "scan": return !!genClModelOf(d) && !!d.visit;
     case "figures": return !!v.figures;
     case "customer": return !!(String(c.name || "").trim() && String(c.address || "").trim() && String(c.city || "").trim());
     case "engine": return !!v.engine;
@@ -3341,7 +3427,7 @@ function openGenChecklist(opts) {
   } else {
     genCl.draft = genClNewDraft(fam ? fam.id : "", modelG, opts.serial != null ? opts.serial : scanSerial);
     genCl.resumed = false;
-    genCl.step = modelG ? 1 : 0;
+    genCl.step = 0;   // step 1 always: confirm the serial and pick the visit type
   }
   // A family-level button (no exact model yet): step 1 with that family's list open.
   genCl.pickFamily = !modelG && fam ? fam.id : "";
@@ -3506,7 +3592,7 @@ function renderGenChecklist() {
     : st.id === "engine" ? genWizEngineHtml(d)
     : isReview ? genWizReviewHtml(d)
     : genWizSectionHtml(d, st.sec);
-  const nextOk = st.id !== "scan" || !!m;
+  const nextOk = st.id !== "scan" || (!!m && !!d.visit);
   const nextLabel = GEN_WIZ_STEPS[genCl.step + 1] && GEN_WIZ_STEPS[genCl.step + 1].id === "review" ? "Review ›" : "Next ›";
   body.innerHTML = `
     ${genCl.resumed ? `<div class="gcl-banner">Picked up your unfinished checklist from ${escapeHtml(new Date(d.updated).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }))}. <button type="button" class="gcl-link" id="gclFresh">Start a fresh one</button></div>` : ""}
@@ -3549,6 +3635,11 @@ function genWizScanHtml(d) {
       <div id="gwzPick" class="gwz-pick${genCl.pickOpen ? "" : " hidden"}">
         <label class="gcl-f"><span>Generator model (by family / kW)</span><select id="gclModel">${genClModelOptions(d.modelG, genCl.pickFamily || d.familyId)}</select></label>
       </div>
+    </div>
+    <div class="gwz-card gwz-visit">
+      <div class="gwz-card-h">Type of visit</div>
+      <div class="cl-seg gwz-visit-seg" role="group" aria-label="Type of visit">${GEN_CL_VISITS.map(v => `<button type="button" class="cl-seg-btn${d.visit === v.id ? " on" : ""}" data-gwz-visit="${v.id}" aria-pressed="${d.visit === v.id}">${escapeHtml(v.label)}</button>`).join("")}</div>
+      <div class="gwz-hint">${d.visit === "visual" ? "Visual check: engine service is marked N/A on the sheet." : d.visit ? "Annual maintenance: tick the engine service you do." : "Pick one to continue."}</div>
     </div>`;
 }
 
@@ -3591,7 +3682,7 @@ function genWizCustomerHtml(d) {
         <label class="gcl-f full"><span>Customer Name</span><input type="text" data-gcl-field="customer.name" value="${val(d.customer.name)}" autocomplete="off" autocapitalize="words"></label>
         <label class="gcl-f full"><span>Address</span><input type="text" data-gcl-field="customer.address" value="${val(d.customer.address)}" autocomplete="off"></label>
         <label class="gcl-f full"><span>City, State, Zip</span><input type="text" data-gcl-field="customer.city" value="${val(d.customer.city)}" autocomplete="off"></label>
-        <label class="gcl-f full"><span>Customer email <em>(optional - gets a copy)</em></span><input type="email" inputmode="email" data-gcl-field="customer.email" value="${val(d.customer.email)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>Customer email <em>(required - they get a copy)</em></span><input type="email" inputmode="email" required data-gcl-field="customer.email" value="${val(d.customer.email)}" autocomplete="off"></label>
       </div>
     </article>
     <article class="gcl-sheet gwz-auto">
@@ -3602,6 +3693,7 @@ function genWizCustomerHtml(d) {
         <label class="gcl-f full"><span>Technician Name</span><input type="text" data-gcl-field="tech" value="${val(d.tech)}" autocomplete="off" autocapitalize="words"></label>
         ${ro("Generator Model", m ? m.g + " - " + (m.desc || "") : d.modelG, "half")}
         ${ro("Serial Number", d.serial || "Blank", "half", ` <button type="button" class="gcl-link gwz-edit" data-gwz-goto="0">change</button>`)}
+        ${genClKitLine(d) ? ro("Tune-up kit", genClKitLine(d).replace(/^Tune-up kit:? /, ""), "full") : ""}
         <div class="gcl-f full gcl-facts"><span>Spark plug gap / Oil capacity</span><div id="gclFacts" class="gcl-facts-val">${escapeHtml(genClFactsLine(genClFacts(d)))}</div></div>
       </div>
     </article>`;
@@ -3635,6 +3727,18 @@ function genWizSectionHtml(d, sec) {
 }
 // added by Brackett: the "Engine service performed" step (see GEN_CL_ENGINE).
 function genWizEngineHtml(d) {
+  if (genClIsVisual(d)) return `
+    <div class="gcl-banner">Visual check - engine service is marked N/A on the sheet. <button type="button" class="gcl-link" data-gwz-goto="0">Change visit type</button></div>
+    <article class="gcl-sheet">
+      <section class="gcl-sec gcl-engine">
+        <h3>Engine service performed</h3>
+        ${GEN_CL_ENGINE.map(e => `<div class="gcl-check gcl-check-na"><span class="gcl-na-box">N/A</span><span>${escapeHtml(e.text)}</span></div>`).join("")}
+      </section>
+      <section class="gcl-sec">
+        <h3>Notes</h3>
+        <textarea class="gcl-notes" data-gcl-field="notes" rows="5" placeholder="Anything the customer or office should know">${escapeHtml(d.notes || "")}</textarea>
+      </section>
+    </article>`;
   return `
     <div class="gwz-sec-bar"><button type="button" class="gwz-alldone" id="gwzAllDone">✓ All done</button><span class="gwz-count">${GEN_CL_ENGINE.filter(e => d.engine[e.id]).length} of ${GEN_CL_ENGINE.length} ticked</span></div>
     <article class="gcl-sheet">
@@ -3668,10 +3772,11 @@ function genWizReviewHtml(d) {
     </div>`;
   }).join("");
   const eng = GEN_CL_ENGINE.filter(e => d.engine[e.id]).map(e => e.text);
+  const visual = genClIsVisual(d);
   const nOpen = GEN_CL_SECTIONS.reduce((n, sec) => n + sec.items.filter(it => !d.items[it.id]).length, 0);
-  const nMiss = [d.customer.name, d.customer.address || d.customer.city, m ? "x" : "", d.serial, d.tech].filter(v => !String(v || "").trim()).length;
+  const nMiss = [d.customer.name, d.customer.address || d.customer.city, d.customer.email, d.visit, m ? "x" : "", d.serial, d.tech].filter(v => !String(v || "").trim()).length;
   const top = nOpen || nMiss
-    ? `<div class="gwz-rv-top open">${nOpen ? nOpen + " checklist item" + (nOpen === 1 ? "" : "s") + " unanswered" : ""}${nOpen && nMiss ? " and " : ""}${nMiss ? nMiss + " header field" + (nMiss === 1 ? "" : "s") + " blank" : ""} - shown in amber below. Tap one to go fill it in, or finish as it is.</div>`
+    ? `<div class="gwz-rv-top open">${nOpen ? nOpen + " checklist item" + (nOpen === 1 ? "" : "s") + " unanswered" : ""}${nOpen && nMiss ? " and " : ""}${nMiss ? nMiss + " header field" + (nMiss === 1 ? "" : "s") + " blank" : ""} - shown in amber below. Tap one to go fill it in${String(d.customer.email || "").trim() ? ", or finish as it is" : " - the customer email has to be filled in before you can finish"}.</div>`
     : `<div class="gwz-rv-top">Everything is answered. Check it over, then Finish.</div>`;
   return `
     ${top}
@@ -3683,9 +3788,11 @@ function genWizReviewHtml(d) {
       <div class="gwz-rv-fields">
         ${field("Customer", d.customer.name, idx("customer"), true)}
         ${field("Address", [d.customer.address, d.customer.city].filter(Boolean).join(", "), idx("customer"), true)}
-        ${field("Customer email", d.customer.email || "None - office copy only", idx("customer"))}
+        ${field("Customer email", d.customer.email, idx("customer"), true)}
+        ${field("Visit type", genClVisitLabel(d), 0, true)}
         ${field("Model", m ? m.g + " - " + (m.desc || "") : "", 0, true)}
         ${field("Serial", d.serial, 0, true)}
+        ${field("Tune-up kit", genClKitLine(d).replace(/^Tune-up kit:? /, ""), idx("figures"))}
         ${field("Technician", d.tech, idx("customer"), true)}
         ${field("Date", d.date, idx("customer"))}
         ${field("Plug gap / Oil", genClFactsLine(genClFacts(d)), idx("figures"))}
@@ -3693,12 +3800,12 @@ function genWizReviewHtml(d) {
     </article>
     <div class="gwz-rv-secs">${secRows}
       <div class="gwz-rv-sec">
-        <button type="button" class="gwz-rv-head" data-gwz-goto="${idx("engine")}"><b>Engine service performed</b><span>${eng.length} of ${GEN_CL_ENGINE.length} ticked</span></button>
+        <button type="button" class="gwz-rv-head" data-gwz-goto="${idx("engine")}"><b>Engine service performed</b><span>${visual ? "N/A - visual check" : eng.length + " of " + GEN_CL_ENGINE.length + " ticked"}</span></button>
         ${d.notes ? `<div class="gwz-rv-read">Notes: ${escapeHtml(d.notes.length > 160 ? d.notes.slice(0, 160) + "…" : d.notes)}</div>` : ""}
       </div>
     </div>
     <div class="gcl-send">
-      <div class="gcl-send-note">A copy goes to the office (${escapeHtml(GEN_CL_OFFICE_EMAIL)}) <b>every time</b>. The customer gets one only if you entered their email.${GEN_CHECKLIST_RELAY ? "" : `<div class="gcl-warn">The email relay is not set up yet, so the office copy is NOT automatic: Finish opens your share sheet / email with the PDF - send it to ${escapeHtml(GEN_CL_OFFICE_EMAIL)} yourself.</div>`}</div>
+      <div class="gcl-send-note">A copy goes to the office (${escapeHtml(GEN_CL_OFFICE_EMAIL)}) <b>every time</b>. The customer gets one at the email entered above - it is required to finish.${GEN_CHECKLIST_RELAY ? "" : `<div class="gcl-warn">The email relay is not set up yet, so the office copy is NOT automatic: Finish opens your share sheet / email with the PDF - send it to ${escapeHtml(GEN_CL_OFFICE_EMAIL)} yourself.</div>`}</div>
       <button type="button" class="gcl-finish" id="gclFinish">Finish &amp; send PDF</button>
       <div id="gclResult"></div>
       <button type="button" class="gcl-link gcl-discard" id="gclDiscard">Discard this checklist</button>
@@ -3729,7 +3836,7 @@ function genWizRefreshScan() {
   const d = genCl.draft;
   const res = document.getElementById("gwzResolve"); if (res) res.innerHTML = genWizResolveHtml(d);
   const hint = document.getElementById("gwzSerialHint"); if (hint) hint.innerHTML = genWizSerialHint(d);
-  const next = document.getElementById("gwzNext"); if (next) next.disabled = !genClModelOf(d);
+  const next = document.getElementById("gwzNext"); if (next) next.disabled = !genClModelOf(d) || !d.visit;
   const sel = document.getElementById("gclModel"); if (sel) sel.value = d.modelG ? d.familyId + "|" + d.modelG : "";
   const pick = document.getElementById("gwzPick"); if (pick) pick.classList.toggle("hidden", !genCl.pickOpen);
   const gen = document.querySelector("#gwzResolve [data-gwz-open-gen]");
@@ -3806,6 +3913,9 @@ function genWizWire(body) {
     genClSave(true);
     genWizRefreshScan();
   };
+  body.querySelectorAll("[data-gwz-visit]").forEach(b => {
+    b.onclick = () => { d.visit = b.dataset.gwzVisit; genClSave(true); const y = window.scrollY; renderGenChecklist(); window.scrollTo(0, y); };
+  });
   if (st.id === "scan") genWizRefreshScan();
 
   // Step 2: the full maintenance card (without its own checklist button).
@@ -3816,7 +3926,7 @@ function genWizWire(body) {
   if (back) back.onclick = () => genWizGo(genCl.step - 1);
   const next = document.getElementById("gwzNext");
   if (next) next.onclick = () => {
-    if (st.id === "scan" && !genClModelOf(d)) return;
+    if (st.id === "scan" && (!genClModelOf(d) || !d.visit)) return;
     d.visited[st.id] = true;
     genWizGo(genCl.step + 1);
   };
@@ -3885,6 +3995,7 @@ async function genClPrune() {
 function genClSummary(rec) {
   return [
     "Generator maintenance checklist",
+    "Visit: " + (rec.visit || "-"),
     "Customer: " + (rec.customerName || "-"),
     "Model: " + (rec.model || "-") + (rec.modelDesc ? " (" + rec.modelDesc + ")" : ""),
     "Serial: " + (rec.serial || "-"),
@@ -3901,8 +4012,17 @@ function genClFileName(d) {
 async function genClFinish() {
   const d = genCl.draft;
   const email = (d.customer.email || "").trim();
-  if (email && !/^[^\s@,;]+@[^\s@,;]+\.[A-Za-z]{2,}$/.test(email)) {
-    genClShowResult({ kind: "error", msg: "That customer email doesn't look right. Fix it or clear it - the office copy goes either way." });
+  if (!d.visit) {
+    genClShowResult({ kind: "error", msg: "Pick Annual maintenance or Visual check first - tap Visit type above." });
+    return;
+  }
+  // Andy 2026-10-01: the customer email is required before Finish.
+  if (!email) {
+    genClShowResult({ kind: "error", msg: "Enter the customer's email before finishing - tap Customer email above to add it." });
+    return;
+  }
+  if (!/^[^\s@,;]+@[^\s@,;]+\.[A-Za-z]{2,}$/.test(email)) {
+    genClShowResult({ kind: "error", msg: "That customer email doesn't look right. Fix it before finishing." });
     return;
   }
   if (!d.modelG && !confirm("No generator model picked. Finish anyway?")) return;
@@ -3915,7 +4035,7 @@ async function genClFinish() {
     rec = {
       id: d.id, ts: Date.now(), status: "new",
       model: d.modelG || "", modelDesc: m ? m.desc || "" : "", serial: d.serial || "",
-      customerName: d.customer.name || "", customerEmail: email, tech: d.tech || "", date: d.date || "",
+      customerName: d.customer.name || "", customerEmail: email, tech: d.tech || "", date: d.date || "", visit: genClVisitLabel(d),
       fileName: genClFileName(d), pdf: pdf.blob, draft: JSON.parse(JSON.stringify(d)),
     };
     await genClPut(rec);
@@ -4147,7 +4267,7 @@ async function genClBuildPdf(d) {
     [{ label: "Customer email", value: d.customer.email, w: full }],
     // Andy 2026-10-01: model number on its own line, description right below;
     // dealer and technician share one row with a divider.
-    [{ label: "Generator Model", value: model ? model.g : (d.modelG || ""), big: true, sub: model && model.desc ? model.desc : "", w: half }, { label: "Serial Number", value: d.serial, big: true, w: half }],
+    [{ label: "Generator Model", value: model ? model.g : (d.modelG || ""), big: true, sub: model && model.desc ? model.desc : "", w: half }, { label: "Serial Number", value: d.serial, big: true, sub: genClKitLine(d), w: half }],
     [{ label: "Dealer Name", value: GEN_CL_DEALER, w: half }, { label: "Technician Name", value: d.tech, w: half }],
     // Andy 2026-10-01: Date box smaller, Spark plug / Oil box bigger.
     [{ label: "Spark plug gap / Oil capacity", value: genClFactsLine(facts), w: full * 0.78 }, { label: "Date", value: d.date, w: full * 0.22 }],
@@ -4219,7 +4339,7 @@ async function genClBuildPdf(d) {
   // Every block is a whole section (never split). Engine service is added by
   // Brackett, not on the Generac form.
   const blocks = GEN_CL_SECTIONS.map(s => ({ title: s.title, rows: s.items.map(it => ({ text: it.text, st: d.items[it.id] || "", extra: readingText(it) })), gap: true }))
-    .concat([{ title: "Engine service performed", rows: GEN_CL_ENGINE.map(e => ({ text: e.text, st: d.engine[e.id] ? "done" : "", extra: [] })), gap: false }]);
+    .concat([{ title: "Engine service performed" + (genClIsVisual(d) ? " - visual check" : ""), rows: GEN_CL_ENGINE.map(e => ({ text: e.text, st: genClIsVisual(d) ? "na" : d.engine[e.id] ? "done" : "", extra: [] })), gap: false }]);
 
   // Andy 2026-10-01: "format it evenly as possible without splitting up
   // categories" and "format to fill a page evenly". For a scale S, every size
@@ -9325,7 +9445,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v232";
+const APP_VERSION = "v233";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
