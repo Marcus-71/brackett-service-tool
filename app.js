@@ -301,7 +301,7 @@ function showScreen(name, fromBack) {
   if (name === "toolbox") renderToolbox();
   if (name === "checker") renderChecker();
   if (name === "tstat") renderTstats();
-  if (name === "gen") renderGens();
+  if (name === "gen") { renderGens(); if (typeof genClEntryCount === "function") genClEntryCount(); }
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
   if (name === "maint") renderMaint();
@@ -330,6 +330,8 @@ function goBackOneStep() {
   if (!document.getElementById("modalBackdrop").classList.contains("hidden")) { closeModal(); return; }
   if (!document.getElementById("pdfViewer").classList.contains("hidden")) { closePdfReader(false); return; }
   if (!document.getElementById("portalViewer").classList.contains("hidden")) { closePortalEmbed(false); return; }
+  // Generator checklist wizard: a swipe goes back one step, not off the checklist.
+  if (currentScreen === "genchecklist" && genCl.view === "wizard" && genCl.step > 0 && genCl.draft && !genCl.draft.finished) { genWizGo(genCl.step - 1); return; }
   if (currentScreen === "manuals" && (manualsState.model || manualsState.brand)) {
     if (manualsState.model) manualsState.model = null;
     else manualsState.brand = null;
@@ -3242,7 +3244,22 @@ const GEN_CL_ENGINE = [
   { id: "reminder", text: "Maintenance reminder reset" },
 ];
 
-let genCl = { draft: null, view: "form", result: null, resumed: false };
+// v227 (rework): the checklist is a step-by-step wizard. Techs start it from
+// the box at the top of Generators (scan the tag first) or from a "Start
+// annual maintenance checklist" button (straight to step 2 with that model).
+// One screen per step, autosaved on every change to the same draft storage.
+let genCl = { draft: null, view: "wizard", step: 0, result: null, resumed: false, scanMsg: null, pickOpen: false, pickFamily: "" };
+
+// Steps 1-10 count in the progress bar; "Review & send" is the last screen.
+const GEN_WIZ_STEPS = [
+  { id: "scan", title: "Scan the tag" },
+  { id: "figures", title: "This unit's figures" },
+  { id: "customer", title: "Customer" },
+].concat(GEN_CL_SECTIONS.map(s => ({ id: s.id, title: s.title, sec: s })), [
+  { id: "engine", title: "Engine service performed + Notes" },
+  { id: "review", title: "Review & send" },
+]);
+const GEN_WIZ_COUNTED = GEN_WIZ_STEPS.length - 1;
 
 function genClToday() {
   const d = new Date();
@@ -3251,12 +3268,20 @@ function genClToday() {
 // Tests override this one function instead of touching the real tech name.
 function genClDefaultTech() { return getTechName(); }
 function genClReadDraft(id) { try { return JSON.parse(localStorage.getItem(GEN_CL_DRAFT_PREFIX + id) || "null"); } catch (e) { return null; } }
+// Nothing typed, scanned or ticked yet: not worth keeping as a draft.
+function genClIsEmptyDraft(d) {
+  if (!d) return true;
+  const c = d.customer || {};
+  const any = (o) => Object.values(o || {}).some(Boolean);
+  return !d.modelG && !d.modelInput && !d.serial && !c.name && !c.address && !c.city && !c.email && !d.notes &&
+    !any(d.items) && !any(d.readings) && !any(d.engine);
+}
 function genClDrafts() {
   const out = [];
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith(GEN_CL_DRAFT_PREFIX)) { const d = genClReadDraft(k.slice(GEN_CL_DRAFT_PREFIX.length)); if (d && !d.finished) out.push(d); }
+      if (k && k.startsWith(GEN_CL_DRAFT_PREFIX)) { const d = genClReadDraft(k.slice(GEN_CL_DRAFT_PREFIX.length)); if (d && !d.finished && !genClIsEmptyDraft(d)) out.push(d); }
     }
   } catch (e) { /* storage blocked - no drafts */ }
   return out.sort((a, b) => (b.updated || 0) - (a.updated || 0));
@@ -3266,7 +3291,9 @@ function genClSave(now) {
   const d = genCl.draft;
   if (!d || d.finished) return;
   d.updated = Date.now();
+  d.step = genCl.step;
   clearTimeout(genClSaveTimer);
+  if (genClIsEmptyDraft(d)) { genClDiscard(d.id); return; }
   const write = () => { if (!safeSet(GEN_CL_DRAFT_PREFIX + d.id, d)) { const s = document.getElementById("gclSaveState"); if (s) s.textContent = "Could not save the draft on this phone (storage full)"; } };
   if (now) write(); else genClSaveTimer = setTimeout(write, 250);
   const s = document.getElementById("gclSaveState");
@@ -3278,78 +3305,324 @@ function genClNewDraft(familyId, modelG, serial) {
   return {
     id: "gcl" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
     created: Date.now(), updated: Date.now(), finished: false,
-    familyId: familyId || "", modelG: modelG || "", serial: serial || "", serialFromScan: !!serial,
+    familyId: familyId || "", modelG: modelG || "", modelInput: modelG || "",
+    serial: serial || "", serialFromScan: !!serial, serialSource: serial ? "label" : "",
     customer: { name: "", address: "", city: "", email: "" },
     tech: genClDefaultTech() || "", date: genClToday(),
-    items: {}, readings: {}, engine: {}, notes: "",
+    items: {}, readings: {}, engine: {}, notes: "", visited: {}, step: 0,
   };
 }
 
-// Open the checklist for a family / model. An unfinished checklist for the
-// same unit picks up where the tech left off.
+// Is this step finished? Resuming a draft opens the first step that is not.
+function genWizStepDone(d, st) {
+  const c = d.customer || {}, v = d.visited || {};
+  switch (st.id) {
+    case "scan": return !!genClModelOf(d);
+    case "figures": return !!v.figures;
+    case "customer": return !!(String(c.name || "").trim() && String(c.address || "").trim() && String(c.city || "").trim());
+    case "engine": return !!v.engine;
+    case "review": return false;
+    default: return st.sec ? st.sec.items.every(it => d.items[it.id]) : true;
+  }
+}
+function genWizFirstIncomplete(d) {
+  const i = GEN_WIZ_STEPS.findIndex(st => !genWizStepDone(d, st));
+  return i < 0 ? GEN_WIZ_STEPS.length - 1 : i;
+}
+
+// Open the checklist. With a model (generator card / Maintenance Figures
+// button) it jumps straight to step 2; an unfinished checklist for the same
+// unit picks up at its first incomplete step. With nothing (the box on
+// Generators) it starts at step 1, scan the tag.
 function openGenChecklist(opts) {
   opts = opts || {};
-  const fam = genEntries().find(x => x.id === opts.familyId);
+  const fam = opts.familyId ? genEntries().find(x => x.id === opts.familyId) : null;
   if (fam && !genIsAirCooled(fam)) return;   // liquid-cooled: not this form
-  const modelG = opts.modelG || "";
+  let modelG = opts.modelG || "";
+  if (!modelG && fam && (fam.models || []).length === 1) modelG = fam.models[0].g;
   const scanSerial = genLastScan && modelG && genLastScan.modelG === modelG ? genLastScan.serial : "";
-  const existing = genClDrafts().find(d => modelG ? d.modelG === modelG : (d.familyId === (opts.familyId || "") && !d.modelG));
-  if (existing && !opts.fresh) {
+  const existing = modelG && !opts.fresh ? genClDrafts().find(d => d.modelG === modelG) : null;
+  if (existing) {
     genCl.draft = existing; genCl.resumed = true;
     if (scanSerial && !existing.serial) { existing.serial = scanSerial; existing.serialFromScan = true; }
+    genCl.step = genWizFirstIncomplete(existing);
   } else {
-    genCl.draft = genClNewDraft(opts.familyId, modelG, opts.serial != null ? opts.serial : scanSerial);
+    genCl.draft = genClNewDraft(fam ? fam.id : "", modelG, opts.serial != null ? opts.serial : scanSerial);
     genCl.resumed = false;
+    genCl.step = modelG ? 1 : 0;
   }
-  genCl.view = "form"; genCl.result = null;
+  // A family-level button (no exact model yet): step 1 with that family's list open.
+  genCl.pickFamily = !modelG && fam ? fam.id : "";
+  genCl.pickOpen = !!genCl.pickFamily;
+  genCl.view = "wizard"; genCl.result = null; genCl.scanMsg = null;
   genClSave(true);
   showScreen("genchecklist");
   window.scrollTo(0, 0);
 }
 
-function genClModelOptions(selected) {
-  const fams = genEntries().filter(genIsAirCooled).slice().sort((a, b) => (a.sort || 0) - (b.sort || 0));
-  return `<option value="">Scan or pick the model…</option>` + fams.map(g => `<optgroup label="${escapeHtml(g.family)}">${(g.models || []).map(m =>
+function genClModelOptions(selected, firstFamilyId) {
+  const fams = genEntries().filter(genIsAirCooled).slice().sort((a, b) => (a.id === firstFamilyId ? -1 : b.id === firstFamilyId ? 1 : 0) || (a.sort || 0) - (b.sort || 0));
+  return `<option value="">Pick the model…</option>` + fams.map(g => `<optgroup label="${escapeHtml(g.family)}">${(g.models || []).map(m =>
     `<option value="${escapeHtml(g.id + "|" + m.g)}"${m.g === selected ? " selected" : ""}>${escapeHtml(m.g + " - " + (m.desc || ""))}</option>`).join("")}</optgroup>`).join("");
 }
 function genClFamilyOf(d) {
-  return genEntries().find(x => x.id === d.familyId) || (d.modelG ? genEntries().find(x => (x.models || []).some(m => m.g === d.modelG)) : null);
+  return genEntries().find(x => x.id === d.familyId && (!d.modelG || (x.models || []).some(m => m.g === d.modelG))) ||
+    (d.modelG ? genEntries().find(x => (x.models || []).some(m => m.g === d.modelG)) : null) ||
+    genEntries().find(x => x.id === d.familyId) || null;
 }
 function genClModelOf(d) {
   const g = genClFamilyOf(d);
-  return g && d.modelG ? (g.models || []).find(m => m.g === d.modelG) || null : null;
+  return g && d.modelG && genIsAirCooled(g) ? (g.models || []).find(m => m.g === d.modelG) || null : null;
 }
 function genClFacts(d) {
   const g = genClFamilyOf(d), m = genClModelOf(d);
   return g && m ? genModelFacts(g, m.g) : null;
 }
 
+// Step 1 resolver: the same genMaintResolve the Maintenance Figures card uses
+// (G0072600 / 007260-0 / 0072600 / 7260), plus a liquid-cooled check.
+function genWizResolve(q) {
+  const raw = String(q || "").trim();
+  if (!raw) return { kind: "empty" };
+  const hit = genMaintResolve(raw);
+  if (hit && hit.model) return { kind: "ok", family: hit.family, model: hit.model };
+  if (hit) return { kind: "family", family: hit.family };
+  const fam = genFamilyForModel(raw);
+  if (fam && !genIsAirCooled(fam)) return { kind: "liquid", family: fam };
+  return { kind: "unknown" };
+}
+function genWizApplyModel(d, text) {
+  const r = genWizResolve(text);
+  if (r.kind === "ok") { d.familyId = r.family.id; d.modelG = r.model.g; }
+  else { d.modelG = ""; d.familyId = r.family && genIsAirCooled(r.family) ? r.family.id : ""; }
+  if (r.kind === "family") { genCl.pickFamily = r.family.id; genCl.pickOpen = true; }
+  return r;
+}
+
+// ---------- step 1: scan the tag (the Tag Scanner's own OCR pipeline) ----------
+async function genWizScanPhoto(file) {
+  trackEvent("gen checklist: scanned the data plate");
+  genWizScanStatus(escapeHtml("Reading the tag… first scan on a phone takes ~15-30 seconds."), "info");
+  let fields;
+  try {
+    fields = await ocrTagFields(file, (m) => genWizScanStatus(m ? escapeHtml(m) : "", "info"));
+  } catch (err) {
+    genWizScanStatus(escapeHtml("Scan failed: " + (err && err.message ? err.message : err) + " - type the model or pick it from the list."), "warn");
+    return null;
+  }
+  return genWizAfterOcr(fields, file);
+}
+function genWizScanStatus(html, kind) {
+  const el = document.getElementById("gwzScanStatus");
+  if (!el) return;
+  if (!html) { el.className = "gwz-status hidden"; el.innerHTML = ""; return; }
+  el.className = "gwz-status " + (kind || "info");
+  el.innerHTML = html;
+}
+// Post-OCR step: takes the fields ocrTagFields returned (or raw OCR text, for
+// tests) and fills Model / Serial. Unread and unknown plates log telemetry and
+// keep the photo exactly as the Tag Scanner does.
+async function genWizAfterOcr(fields, file) {
+  if (typeof fields === "string") { const t = fields; fields = extractTagFields(t); fields.text = t; }
+  fields = fields || { model: "", serial: "" };
+  const d = genCl.draft;
+  if (!d || d.finished) return null;
+  const model = String(fields.model || "").trim();
+  const serial = String(fields.serial || "").trim();
+  const photoId = file ? newScanPhotoId() : "";
+  if (serial) { d.serial = serial; d.serialFromScan = true; d.serialSource = fields.serialSource || ""; }
+  let r;
+  if (!model) {
+    trackEvent("SCAN - NO MODEL READ" + (serial ? " | serial: " + serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + (photoId ? " | photo: " + photoId : "") + " | gen checklist");
+    if (file) saveFailedScan(file, { id: photoId, kind: "unreadable", read: [serial ? "serial " + serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") }).catch(() => {});
+    r = { kind: "nomodel" };
+    genCl.pickOpen = true;
+  } else {
+    d.modelInput = model;
+    r = genWizApplyModel(d, model);
+    if (r.kind === "ok") {
+      genNoteScan(model, serial);
+      trackEvent("gen checklist scan -> " + r.model.g);
+    } else if (r.kind === "liquid") {
+      trackEvent("gen checklist scan -> liquid-cooled " + model);
+    } else {
+      // A read the library doesn't know: same telemetry line and photo as the Tag Scanner.
+      const info = identifyModel(model, serial, fields.brandHint, photoId);
+      if (info && !info.brand && file) saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: model + (serial ? " / " + serial : "") }).catch(() => {});
+      r.info = info;
+      genCl.pickOpen = true;
+    }
+  }
+  genCl.scanMsg = genWizScanMsg(r, model, serial, fields.serialSource || "");
+  genClSave(true);
+  if (currentScreen === "genchecklist" && genCl.view === "wizard" && GEN_WIZ_STEPS[genCl.step].id === "scan") renderGenChecklist();
+  return { kind: r.kind, model, serial, serialSource: fields.serialSource || "", modelG: d.modelG };
+}
+function genWizScanMsg(r, model, serial, serialSource) {
+  const sn = serial ? ` Serial <b>${escapeHtml(serial)}</b>${serialSource === "label" ? "" : " (read as a bare number - check it against the SERIAL line)"}.` : " No serial read - type it from the plate below.";
+  if (r.kind === "nomodel") return { kind: "warn", html: "Couldn't read the model off that photo." + (serial ? sn : "") + " Scan again (straighter, closer, better lit), type the model, or pick it from the list." };
+  if (r.kind === "ok") return { kind: "ok", html: `Read model <b>${escapeHtml(model)}</b>.${sn} Check both against the plate.` };
+  if (r.kind === "liquid") return { kind: "err", html: `Read model <b>${escapeHtml(model)}</b> - a liquid-cooled unit.` };
+  if (r.kind === "family") return { kind: "warn", html: `Read <b>${escapeHtml(model)}</b>: a ${escapeHtml(r.family.family)} number, but not one in our model list. Pick the exact model below.${serial ? sn : ""}` };
+  const other = r.info && r.info.brand && r.info.brand !== "Generac" ? ` That reads as a ${escapeHtml(r.info.brand)} ${escapeHtml(String(r.info.equipment || "").toLowerCase())}, not a Generac generator.` : "";
+  return { kind: "warn", html: `Read <b>${escapeHtml(model)}</b>, which isn't a Generac air-cooled model we know.${other} Check the MODEL line, type it, or pick it from the list.${serial ? sn : ""}` };
+}
+// What the Model box currently resolves to.
+function genWizResolveHtml(d) {
+  const r = genWizResolve(d.modelInput || d.modelG);
+  if (r.kind === "ok") {
+    const f = genModelFacts(r.family, r.model.g);
+    return `<div class="gwz-res ok">✓ <b>${escapeHtml(r.model.g)}</b> - ${escapeHtml(r.model.desc || "")}<div class="gwz-res-sub">${escapeHtml(r.family.family)}${f && f.kw != null ? " · " + escapeHtml(f.kw + " kW") : ""}</div></div>`;
+  }
+  if (r.kind === "liquid") return `<div class="gwz-res err"><b>This checklist is for air-cooled units.</b> ${escapeHtml(String(d.modelInput || "").toUpperCase())} is a liquid-cooled generator (${escapeHtml(r.family.family)}) with a radiator, coolant and a water pump, so this form doesn't fit it. Open it in Generators for its own maintenance list.<div class="gwz-res-act"><button type="button" class="gwz-mini" data-gwz-open-gen="${escapeHtml(r.family.id)}">🔌 Open in Generators</button></div></div>`;
+  if (r.kind === "family") return `<div class="gwz-res warn">${escapeHtml(r.family.family)} - pick the exact model from the list.</div>`;
+  if (r.kind === "unknown" && String(d.modelInput || "").replace(/[^A-Za-z0-9]/g, "").length >= 4) return `<div class="gwz-res warn">Not a Generac air-cooled model number we know. Use the number on the MODEL line (G0072600, 007260-0 or 7260), or pick it from the list.</div>`;
+  return `<div class="gwz-res">Scan the plate, type the model, or pick it from the list.</div>`;
+}
+function genWizSerialHint(d) {
+  if (!String(d.serial || "").trim()) return `<div class="gwz-hint warn">Serial is blank - it goes on the form, so scan the plate or type it from the SERIAL line.</div>`;
+  if (d.serialFromScan) return `<div class="gwz-hint">From the scan - check it against the plate.</div>`;
+  return "";
+}
+
+// ---------- rendering ----------
 function renderGenChecklist() {
   const body = document.getElementById("genClBody");
   if (!body) return;
-  const drafts = genClDrafts();
-  const seg = `<div class="cl-seg gcl-seg">
-      <button type="button" class="cl-seg-btn ${genCl.view === "form" ? "on" : ""}" data-gcl-view="form">Checklist</button>
-      <button type="button" class="cl-seg-btn ${genCl.view === "recent" ? "on" : ""}" data-gcl-view="recent">Recent &amp; drafts</button>
-    </div>`;
-  if (genCl.view === "recent" || !genCl.draft) {
-    body.innerHTML = seg + `<div id="gclRecent" class="gcl-recent"><div class="empty-state">Loading…</div></div>`;
+  if (genCl.view === "recent") {
+    body.innerHTML = `<div class="cl-seg gcl-seg">
+        <button type="button" class="cl-seg-btn" data-gcl-view="wizard">Checklist</button>
+        <button type="button" class="cl-seg-btn on" data-gcl-view="recent">Recent &amp; drafts</button>
+      </div><div id="gclRecent" class="gcl-recent"><div class="empty-state">Loading…</div></div>`;
     genClWireSeg(body);
-    genClRenderRecent(drafts);
+    genClRenderRecent(genClDrafts());
     return;
   }
+  if (!genCl.draft) { genCl.draft = genClNewDraft("", "", ""); genCl.step = 0; genCl.resumed = false; genCl.scanMsg = null; }
   const d = genCl.draft;
-  const g = genClFamilyOf(d);
-  const facts = genClFacts(d);
+  d.visited = d.visited || {};
+  genCl.step = Math.max(0, Math.min(GEN_WIZ_STEPS.length - 1, genCl.step || 0));
+  const st = GEN_WIZ_STEPS[genCl.step];
+  const n = genCl.step + 1;
+  const isReview = st.id === "review";
+  const pct = Math.round(Math.min(n, GEN_WIZ_COUNTED) / GEN_WIZ_COUNTED * 100);
+  const m = genClModelOf(d);
+  const unit = m && st.id !== "scan" ? `<div class="gwz-unit">${escapeHtml(m.g)} · ${escapeHtml(m.desc || "")}${d.serial ? " · SN " + escapeHtml(d.serial) : ""}</div>` : "";
+  const content = st.id === "scan" ? genWizScanHtml(d)
+    : st.id === "figures" ? genWizFiguresHtml(d)
+    : st.id === "customer" ? genWizCustomerHtml(d)
+    : st.id === "engine" ? genWizEngineHtml(d)
+    : isReview ? genWizReviewHtml(d)
+    : genWizSectionHtml(d, st.sec);
+  const nextOk = st.id !== "scan" || !!m;
+  const nextLabel = GEN_WIZ_STEPS[genCl.step + 1] && GEN_WIZ_STEPS[genCl.step + 1].id === "review" ? "Review ›" : "Next ›";
+  body.innerHTML = `
+    ${genCl.resumed ? `<div class="gcl-banner">Picked up your unfinished checklist from ${escapeHtml(new Date(d.updated).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }))}. <button type="button" class="gcl-link" id="gclFresh">Start a fresh one</button></div>` : ""}
+    <div class="gwz-top">
+      <div class="gwz-top-row"><span class="gwz-stepno">${isReview ? "Last step" : "Step " + n + " of " + GEN_WIZ_COUNTED}</span><button type="button" class="gcl-link gwz-recent-link" data-gcl-view="recent">Recent &amp; drafts</button></div>
+      <div class="gwz-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${GEN_WIZ_COUNTED}" aria-valuenow="${Math.min(n, GEN_WIZ_COUNTED)}"><span style="width:${pct}%"></span></div>
+      <h2 class="gwz-title">${escapeHtml(st.title)}</h2>
+      ${unit}
+    </div>
+    <div class="gwz-body" data-gwz-step="${escapeHtml(st.id)}">${content}</div>
+    <div class="gcl-save-state" id="gclSaveState">${d.finished ? "Finished - saved under Recent &amp; drafts" : "Draft saves on this phone as you go"}</div>
+    <div class="gwz-nav">
+      <button type="button" class="gwz-back" id="gwzBack"${genCl.step === 0 ? " disabled" : ""}>‹ Back</button>
+      ${isReview ? "" : `<button type="button" class="gwz-next" id="gwzNext"${nextOk ? "" : " disabled"}>${nextLabel}</button>`}
+    </div>`;
+  genClWireSeg(body);
+  genWizWire(body);
+  if (isReview && genCl.result) genClShowResult(genCl.result);
+}
+
+function genWizScanHtml(d) {
+  const msg = genCl.scanMsg;
+  return `
+    <div class="gwz-card">
+      <button type="button" class="gwz-scan-btn" id="gwzScanBtn">📷 Scan the data plate</button>
+      <input type="file" id="gwzPhoto" accept="image/*" capture="environment" class="hidden">
+      <div class="gwz-hint">Photograph the generator's data label - the MODEL and SERIAL lines. Straight on, close, good light.</div>
+      <div id="gwzScanStatus" class="gwz-status ${msg ? msg.kind : "hidden"}">${msg ? msg.html : ""}</div>
+    </div>
+    <div class="gwz-card">
+      <div class="gwz-card-h">What was read</div>
+      <label class="gcl-f"><span>Model</span><input type="text" id="gwzModel" value="${escapeHtml(d.modelInput || d.modelG || "")}" placeholder="G0072600, 007260-0 or 7260" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+      <div id="gwzResolve">${genWizResolveHtml(d)}</div>
+      <label class="gcl-f"><span>Serial</span><input type="text" data-gcl-field="serial" value="${escapeHtml(d.serial || "")}" placeholder="From the SERIAL line on the plate" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+      <div id="gwzSerialHint">${genWizSerialHint(d)}</div>
+      <div class="gwz-alt">
+        <button type="button" class="gwz-mini" id="gwzTypeBtn">⌨ Type the model</button>
+        <button type="button" class="gwz-mini" id="gwzPickBtn" aria-expanded="${genCl.pickOpen}">📋 Pick from list</button>
+      </div>
+      <div id="gwzPick" class="gwz-pick${genCl.pickOpen ? "" : " hidden"}">
+        <label class="gcl-f"><span>Generator model (by family / kW)</span><select id="gclModel">${genClModelOptions(d.modelG, genCl.pickFamily || d.familyId)}</select></label>
+      </div>
+    </div>`;
+}
+
+function genWizFiguresHtml(d) {
+  const g = genClFamilyOf(d), m = genClModelOf(d);
+  if (!g || !m) return `<div class="gwz-res warn">No model yet - go back to step 1.</div>`;
+  const f = genModelFacts(g, m.g);
+  const confl = (fields) => f.conflicts.filter(c => fields.includes(c.field))
+    .map(c => `<div class="gen-conflict"><b>Manuals differ:</b> ${escapeHtml(c.value)}${c.field === "oil" && /^\d/.test(c.value) ? " qt" : ""} <span class="gen-conflict-src">- ${escapeHtml(c.src)}</span></div>`).join("");
+  const row = (label, value, fields, key) => `<div class="gwz-fl-row${key ? " key" : ""}${String(value || "").length > 90 ? " long" : ""}${value ? "" : " none"}"><div class="gwz-fl-k">${escapeHtml(label)}</div><div class="gwz-fl-v">${escapeHtml(value || "Not in our data - check the unit's manual / Replacement Parts")}</div>${confl(fields)}</div>`;
+  const plugGap = [f.plugGap ? "Gap " + f.plugGap : "", f.plug].filter(Boolean).join(" · ");
+  const kwLine = [f.kw != null ? f.kw + " kW" : "", genEngineLabel(g, f.cc)].filter(Boolean).join(" · ");
+  return `
+    <article class="card maint-card gen-maint-card gwz-facts">
+      <div class="maint-head gen-maint-head"><div>
+        <div class="maint-title">Generac ${escapeHtml(m.g)}${f.kw != null ? " · " + escapeHtml(f.kw + " kW") : ""}</div>
+        <div class="maint-sub">${escapeHtml(g.family)}${kwLine ? " · " + escapeHtml(kwLine) : ""}</div>
+      </div></div>
+      <div class="gwz-fl">
+        ${row("Spark plug & gap", plugGap, ["plugGap", "plug"], true)}
+        ${row("Oil capacity", f.oil, ["oil"], true)}
+        ${row("Oil type", f.oilType, [])}
+        ${row("Oil filter", f.oilFilter, ["oilFilter"])}
+        ${row("Air filter", f.airFilter, ["airFilter"])}
+        ${row("Valve clearance", f.valve, ["valve"])}
+        ${row("Battery", f.battery, ["battery"])}
+      </div>
+      <div class="maint-source gwz-fl-src">From the Generators library - ${escapeHtml(g.family)}. Always confirm against the data label on the unit in front of you.</div>
+    </article>
+    <details class="gwz-full"><summary>Full maintenance card</summary><div id="gwzFullCard">${genMaintCardHtml({ family: g, model: m })}</div></details>`;
+}
+
+function genWizCustomerHtml(d) {
   const val = (v) => escapeHtml(v || "");
+  const m = genClModelOf(d);
+  const ro = (label, value, cls, extra) => `<div class="gcl-f ${cls || "full"} gwz-ro"><span>${escapeHtml(label)}${extra || ""}</span><div class="gwz-ro-val">${escapeHtml(value || "-")}</div></div>`;
+  return `
+    <article class="gcl-sheet">
+      <div class="gcl-grid">
+        <label class="gcl-f full"><span>Customer Name</span><input type="text" data-gcl-field="customer.name" value="${val(d.customer.name)}" autocomplete="off" autocapitalize="words"></label>
+        <label class="gcl-f full"><span>Address</span><input type="text" data-gcl-field="customer.address" value="${val(d.customer.address)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>City, State, Zip</span><input type="text" data-gcl-field="customer.city" value="${val(d.customer.city)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>Customer email <em>(optional - gets a copy)</em></span><input type="email" inputmode="email" data-gcl-field="customer.email" value="${val(d.customer.email)}" autocomplete="off"></label>
+      </div>
+    </article>
+    <article class="gcl-sheet gwz-auto">
+      <div class="gwz-card-h">Filled in for you</div>
+      <div class="gcl-grid">
+        ${ro("Date", d.date, "half")}
+        ${ro("Dealer Name", GEN_CL_DEALER, "half")}
+        <label class="gcl-f full"><span>Technician Name</span><input type="text" data-gcl-field="tech" value="${val(d.tech)}" autocomplete="off" autocapitalize="words"></label>
+        ${ro("Generator Model", m ? m.g + " - " + (m.desc || "") : d.modelG, "half")}
+        ${ro("Serial Number", d.serial || "Blank", "half", ` <button type="button" class="gcl-link gwz-edit" data-gwz-goto="0">change</button>`)}
+        <div class="gcl-f full gcl-facts"><span>Spark plug gap / Oil capacity</span><div id="gclFacts" class="gcl-facts-val">${escapeHtml(genClFactsLine(genClFacts(d)))}</div></div>
+      </div>
+    </article>`;
+}
+
+function genWizItemHtml(d, it) {
+  const st = d.items[it.id] || "";
   const reading = (r) => {
     const v = d.readings[r.k] || "";
     if (r.pass) return `<label class="gcl-reading"><span>${escapeHtml(r.label)}</span><select data-gcl-reading="${r.k}"><option value=""></option><option${v === "Pass" ? " selected" : ""}>Pass</option><option${v === "Fail" ? " selected" : ""}>Fail</option></select></label>`;
-    return `<label class="gcl-reading"><span>${escapeHtml(r.label)}</span><input type="text" inputmode="decimal" data-gcl-reading="${r.k}" value="${val(v)}" autocomplete="off"><em>${escapeHtml(r.unit)}</em></label>`;
+    return `<label class="gcl-reading"><span>${escapeHtml(r.label)}</span><input type="text" inputmode="decimal" data-gcl-reading="${r.k}" value="${escapeHtml(v)}" autocomplete="off"><em>${escapeHtml(r.unit)}</em></label>`;
   };
-  const item = (it) => {
-    const st = d.items[it.id] || "";
-    return `<div class="gcl-item ${st ? "is-" + st : ""}" data-gcl-item="${it.id}">
+  return `<div class="gcl-item ${st ? "is-" + st : ""}" data-gcl-item="${it.id}">
       <div class="gcl-item-text">${escapeHtml(it.text)}</div>
       <div class="gcl-states">
         <button type="button" class="gcl-state ${st === "done" ? "on" : ""}" data-gcl-set="done" aria-pressed="${st === "done"}">✓ Done</button>
@@ -3357,63 +3630,128 @@ function renderGenChecklist() {
       </div>
       ${(it.readings || []).length ? `<div class="gcl-readings">${it.readings.map(reading).join("")}</div>` : ""}
     </div>`;
-  };
-  body.innerHTML = seg + `
-    ${genCl.resumed ? `<div class="gcl-banner">Picked up your unfinished checklist from ${escapeHtml(new Date(d.updated).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }))}. <button type="button" class="gcl-link" id="gclFresh">Start a fresh one</button></div>` : ""}
+}
+function genWizSecCount(d, sec) {
+  const a = sec.items.filter(it => d.items[it.id]).length;
+  return a + " of " + sec.items.length + " answered";
+}
+function genWizSectionHtml(d, sec) {
+  return `
+    <div class="gwz-sec-bar"><button type="button" class="gwz-alldone" id="gwzAllDone">✓ All done</button><span class="gwz-count" id="gwzCount">${escapeHtml(genWizSecCount(d, sec))}</span></div>
+    <div class="gwz-hint">Tap ✓ Done or N/A on each line (tap again to clear). "All done" ticks every line you haven't marked N/A.</div>
+    <article class="gcl-sheet"><section class="gcl-sec">${sec.items.map(it => genWizItemHtml(d, it)).join("")}</section></article>`;
+}
+// added by Brackett: the "Engine service performed" step (see GEN_CL_ENGINE).
+function genWizEngineHtml(d) {
+  return `
+    <div class="gwz-sec-bar"><button type="button" class="gwz-alldone" id="gwzAllDone">✓ All done</button><span class="gwz-count">${GEN_CL_ENGINE.filter(e => d.engine[e.id]).length} of ${GEN_CL_ENGINE.length} ticked</span></div>
     <article class="gcl-sheet">
-      <header class="gcl-head">
-        <img class="gcl-logo" src="icons/brackett-logo.png" alt="Brackett Heating · Air · Plumbing">
-        <div>
-          <div class="gcl-title">Generator Annual Maintenance Checklist</div>
-          <div class="gcl-subtitle">Air-cooled home standby generators</div>
-        </div>
-      </header>
-      <div class="gcl-grid">
-        <label class="gcl-f full"><span>Customer Name</span><input type="text" data-gcl-field="customer.name" value="${val(d.customer.name)}" autocomplete="off"></label>
-        <label class="gcl-f full"><span>Address</span><input type="text" data-gcl-field="customer.address" value="${val(d.customer.address)}" autocomplete="off"></label>
-        <label class="gcl-f full"><span>City, State, Zip</span><input type="text" data-gcl-field="customer.city" value="${val(d.customer.city)}" autocomplete="off"></label>
-        <label class="gcl-f full"><span>Customer email <em>(optional - gets a copy)</em></span><input type="email" inputmode="email" data-gcl-field="customer.email" value="${val(d.customer.email)}" autocomplete="off"></label>
-        <label class="gcl-f half"><span>Generator Model</span><select id="gclModel">${genClModelOptions(d.modelG)}</select></label>
-        <label class="gcl-f half"><span>Serial Number${d.serialFromScan && d.serial ? ` <em>(from the scan - check the plate)</em>` : ""}</span><input type="text" data-gcl-field="serial" value="${val(d.serial)}" autocomplete="off" autocapitalize="characters"></label>
-        <label class="gcl-f full"><span>Dealer Name</span><input type="text" id="gclDealer" value="${escapeHtml(GEN_CL_DEALER)}" readonly></label>
-        <label class="gcl-f full"><span>Technician Name</span><input type="text" data-gcl-field="tech" value="${val(d.tech)}" autocomplete="off"></label>
-        <div class="gcl-f half gcl-facts"><span>Spark plug gap / Oil capacity</span><div id="gclFacts" class="gcl-facts-val">${escapeHtml(genClFactsLine(facts))}</div></div>
-        <label class="gcl-f half"><span>Date</span><input type="date" data-gcl-field="date" value="${val(d.date)}"></label>
-      </div>
-      ${GEN_CL_SECTIONS.map(s => `<section class="gcl-sec"><h3>${escapeHtml(s.title)}</h3>${s.items.map(item).join("")}</section>`).join("")}
       <section class="gcl-sec gcl-engine">
         <h3>Engine service performed</h3>
         ${GEN_CL_ENGINE.map(e => `<label class="gcl-check"><input type="checkbox" data-gcl-engine="${e.id}"${d.engine[e.id] ? " checked" : ""}><span>${escapeHtml(e.text)}</span></label>`).join("")}
       </section>
       <section class="gcl-sec">
         <h3>Notes</h3>
-        <textarea class="gcl-notes" data-gcl-field="notes" rows="4" placeholder="Anything the customer or office should know">${val(d.notes)}</textarea>
+        <textarea class="gcl-notes" data-gcl-field="notes" rows="5" placeholder="Anything the customer or office should know">${escapeHtml(d.notes || "")}</textarea>
       </section>
-      <div class="gcl-foot">${escapeHtml(GEN_CL_FOOTER)}</div>
+    </article>`;
+}
+
+function genWizReviewHtml(d) {
+  const m = genClModelOf(d);
+  const idx = (id) => GEN_WIZ_STEPS.findIndex(s => s.id === id);
+  const field = (label, value, goto, need) => {
+    const missing = need && !String(value || "").trim();
+    return `<button type="button" class="gwz-rv-f${missing ? " miss" : ""}" data-gwz-goto="${goto}"><span>${escapeHtml(label)}</span><b>${escapeHtml(missing ? "Not filled in - tap to add" : (value || "-"))}</b></button>`;
+  };
+  const secRows = GEN_CL_SECTIONS.map(sec => {
+    const i = idx(sec.id);
+    const open = sec.items.filter(it => !d.items[it.id]);
+    const done = sec.items.filter(it => d.items[it.id] === "done").length, na = sec.items.filter(it => d.items[it.id] === "na").length;
+    const readings = sec.items.flatMap(it => (it.readings || []).map(r => { const v = String(d.readings[r.k] || "").trim(); return v ? r.label + " " + v + (r.unit ? " " + r.unit : "") : ""; })).filter(Boolean).join(" · ");
+    return `<div class="gwz-rv-sec${open.length ? " open" : ""}">
+      <button type="button" class="gwz-rv-head" data-gwz-goto="${i}"><b>${escapeHtml(sec.title)}</b><span>${open.length ? open.length + " unanswered" : "✓ " + done + " done" + (na ? ", " + na + " N/A" : "")}</span></button>
+      ${readings ? `<div class="gwz-rv-read">${escapeHtml(readings)}</div>` : ""}
+      ${open.map(it => `<button type="button" class="gwz-rv-item" data-gwz-goto="${i}" data-gwz-item="${it.id}">${escapeHtml(it.text)}</button>`).join("")}
+    </div>`;
+  }).join("");
+  const eng = GEN_CL_ENGINE.filter(e => d.engine[e.id]).map(e => e.text);
+  const nOpen = GEN_CL_SECTIONS.reduce((n, sec) => n + sec.items.filter(it => !d.items[it.id]).length, 0);
+  const nMiss = [d.customer.name, d.customer.address || d.customer.city, m ? "x" : "", d.serial, d.tech].filter(v => !String(v || "").trim()).length;
+  const top = nOpen || nMiss
+    ? `<div class="gwz-rv-top open">${nOpen ? nOpen + " checklist item" + (nOpen === 1 ? "" : "s") + " unanswered" : ""}${nOpen && nMiss ? " and " : ""}${nMiss ? nMiss + " header field" + (nMiss === 1 ? "" : "s") + " blank" : ""} - shown in amber below. Tap one to go fill it in, or finish as it is.</div>`
+    : `<div class="gwz-rv-top">Everything is answered. Check it over, then Finish.</div>`;
+  return `
+    ${top}
+    <article class="gcl-sheet">
+      <header class="gcl-head">
+        <img class="gcl-logo" src="icons/brackett-logo.png" alt="Brackett Heating · Air · Plumbing">
+        <div><div class="gcl-title">Generator Annual Maintenance Checklist</div><div class="gcl-subtitle">Air-cooled home standby generators</div></div>
+      </header>
+      <div class="gwz-rv-fields">
+        ${field("Customer", d.customer.name, idx("customer"), true)}
+        ${field("Address", [d.customer.address, d.customer.city].filter(Boolean).join(", "), idx("customer"), true)}
+        ${field("Customer email", d.customer.email || "None - office copy only", idx("customer"))}
+        ${field("Model", m ? m.g + " - " + (m.desc || "") : "", 0, true)}
+        ${field("Serial", d.serial, 0, true)}
+        ${field("Technician", d.tech, idx("customer"), true)}
+        ${field("Date", d.date, idx("customer"))}
+        ${field("Plug gap / Oil", genClFactsLine(genClFacts(d)), idx("figures"))}
+      </div>
     </article>
+    <div class="gwz-rv-secs">${secRows}
+      <div class="gwz-rv-sec">
+        <button type="button" class="gwz-rv-head" data-gwz-goto="${idx("engine")}"><b>Engine service performed</b><span>${eng.length} of ${GEN_CL_ENGINE.length} ticked</span></button>
+        ${d.notes ? `<div class="gwz-rv-read">Notes: ${escapeHtml(d.notes.length > 160 ? d.notes.slice(0, 160) + "…" : d.notes)}</div>` : ""}
+      </div>
+    </div>
     <div class="gcl-send">
       <div class="gcl-send-note">A copy goes to the office (${escapeHtml(GEN_CL_OFFICE_EMAIL)}) <b>every time</b>. The customer gets one only if you entered their email.${GEN_CHECKLIST_RELAY ? "" : `<div class="gcl-warn">The email relay is not set up yet, so the office copy is NOT automatic: Finish opens your share sheet / email with the PDF - send it to ${escapeHtml(GEN_CL_OFFICE_EMAIL)} yourself.</div>`}</div>
       <button type="button" class="gcl-finish" id="gclFinish">Finish &amp; send PDF</button>
       <div id="gclResult"></div>
-      <div class="gcl-save-state" id="gclSaveState">Draft saves on this phone as you go</div>
       <button type="button" class="gcl-link gcl-discard" id="gclDiscard">Discard this checklist</button>
-    </div>`;
-  genClWireSeg(body);
-  genClWireForm(body);
-  if (genCl.result) genClShowResult(genCl.result);
+    </div>
+    <div class="gcl-foot gwz-foot">${escapeHtml(GEN_CL_FOOTER)}</div>`;
 }
 
+// ---------- wiring ----------
 function genClWireSeg(body) {
-  body.querySelectorAll("[data-gcl-view]").forEach(b => { b.onclick = () => { genCl.view = b.dataset.gclView; renderGenChecklist(); }; });
+  body.querySelectorAll("[data-gcl-view]").forEach(b => {
+    b.onclick = () => {
+      genCl.view = b.dataset.gclView === "recent" ? "recent" : "wizard";
+      if (genCl.view === "wizard" && genCl.draft && genCl.draft.finished) { genCl.draft = null; genCl.result = null; }
+      renderGenChecklist();
+      window.scrollTo(0, 0);
+    };
+  });
+}
+function genWizGo(i, itemId) {
+  genCl.step = Math.max(0, Math.min(GEN_WIZ_STEPS.length - 1, i));
+  genClSave(true);
+  renderGenChecklist();
+  const row = itemId ? document.querySelector(`#genClBody [data-gcl-item="${itemId}"]`) : null;
+  if (row) { row.scrollIntoView({ block: "center" }); row.classList.add("gwz-flash"); setTimeout(() => row.classList.remove("gwz-flash"), 1600); }
+  else window.scrollTo(0, 0);
+}
+function genWizRefreshScan() {
+  const d = genCl.draft;
+  const res = document.getElementById("gwzResolve"); if (res) res.innerHTML = genWizResolveHtml(d);
+  const hint = document.getElementById("gwzSerialHint"); if (hint) hint.innerHTML = genWizSerialHint(d);
+  const next = document.getElementById("gwzNext"); if (next) next.disabled = !genClModelOf(d);
+  const sel = document.getElementById("gclModel"); if (sel) sel.value = d.modelG ? d.familyId + "|" + d.modelG : "";
+  const pick = document.getElementById("gwzPick"); if (pick) pick.classList.toggle("hidden", !genCl.pickOpen);
+  const gen = document.querySelector("#gwzResolve [data-gwz-open-gen]");
+  if (gen) gen.onclick = () => { showScreen("gen"); openGenDetail(gen.dataset.gwzOpenGen); };
 }
 
-function genClWireForm(body) {
+function genWizWire(body) {
   const d = genCl.draft;
+  const st = GEN_WIZ_STEPS[genCl.step];
   body.querySelectorAll("[data-gcl-field]").forEach(el => {
     el.addEventListener("input", () => {
       const path = el.dataset.gclField.split(".");
       if (path.length === 2) d[path[0]][path[1]] = el.value; else d[path[0]] = el.value;
-      if (path[0] === "serial") d.serialFromScan = false;
+      if (path[0] === "serial") { d.serialFromScan = false; const h = document.getElementById("gwzSerialHint"); if (h) h.innerHTML = genWizSerialHint(d); }
       genClSave();
     });
   });
@@ -3431,17 +3769,64 @@ function genClWireForm(body) {
         d.items[id] = d.items[id] === v ? "" : v;      // tap again = back to blank
         row.className = "gcl-item" + (d.items[id] ? " is-" + d.items[id] : "");
         row.querySelectorAll("[data-gcl-set]").forEach(x => { const on = x.dataset.gclSet === d.items[id]; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
+        const c = document.getElementById("gwzCount"); if (c && st.sec) c.textContent = genWizSecCount(d, st.sec);
         genClSave();
       };
     });
   });
+  const allDone = document.getElementById("gwzAllDone");
+  if (allDone) allDone.onclick = () => {
+    if (st.sec) st.sec.items.forEach(it => { if (!d.items[it.id]) d.items[it.id] = "done"; });
+    if (st.id === "engine") GEN_CL_ENGINE.forEach(e => { d.engine[e.id] = true; });
+    genClSave(true);
+    const y = window.scrollY; renderGenChecklist(); window.scrollTo(0, y);
+  };
+  body.querySelectorAll("[data-gwz-goto]").forEach(b => {
+    b.onclick = (e) => { e.preventDefault(); genWizGo(parseInt(b.dataset.gwzGoto, 10) || 0, b.dataset.gwzItem || ""); };
+  });
+
+  // Step 1: scan / type / pick.
+  const scanBtn = document.getElementById("gwzScanBtn"), photo = document.getElementById("gwzPhoto");
+  if (scanBtn && photo) {
+    scanBtn.onclick = () => photo.click();
+    photo.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = "";
+      if (file) genWizScanPhoto(file);
+    });
+  }
+  const modelEl = document.getElementById("gwzModel");
+  if (modelEl) modelEl.addEventListener("input", () => {
+    d.modelInput = modelEl.value;
+    genWizApplyModel(d, modelEl.value);
+    genClSave();
+    genWizRefreshScan();
+  });
+  const typeBtn = document.getElementById("gwzTypeBtn");
+  if (typeBtn && modelEl) typeBtn.onclick = () => { modelEl.focus(); modelEl.select(); };
+  const pickBtn = document.getElementById("gwzPickBtn");
+  if (pickBtn) pickBtn.onclick = () => { genCl.pickOpen = !genCl.pickOpen; pickBtn.setAttribute("aria-expanded", genCl.pickOpen); genWizRefreshScan(); if (genCl.pickOpen) { const s = document.getElementById("gclModel"); if (s) s.focus(); } };
   const sel = document.getElementById("gclModel");
   if (sel) sel.onchange = () => {
     const [fid, mg] = (sel.value || "|").split("|");
-    d.familyId = fid || d.familyId; d.modelG = mg || "";
-    if (d.serialFromScan) { d.serial = ""; d.serialFromScan = false; }
+    d.familyId = fid || ""; d.modelG = mg || ""; d.modelInput = mg || "";
+    if (modelEl) modelEl.value = d.modelInput;
     genClSave(true);
-    renderGenChecklist();
+    genWizRefreshScan();
+  };
+  if (st.id === "scan") genWizRefreshScan();
+
+  // Step 2: the full maintenance card (without its own checklist button).
+  const full = document.getElementById("gwzFullCard");
+  if (full) { full.querySelectorAll(".gcl-start-btn").forEach(b => b.remove()); genMaintCardWire(full); }
+
+  const back = document.getElementById("gwzBack");
+  if (back) back.onclick = () => genWizGo(genCl.step - 1);
+  const next = document.getElementById("gwzNext");
+  if (next) next.onclick = () => {
+    if (st.id === "scan" && !genClModelOf(d)) return;
+    d.visited[st.id] = true;
+    genWizGo(genCl.step + 1);
   };
   const fresh = document.getElementById("gclFresh");
   if (fresh) fresh.onclick = () => openGenChecklist({ familyId: d.familyId, modelG: d.modelG, fresh: true });
@@ -3450,8 +3835,26 @@ function genClWireForm(body) {
     if (!confirm("Discard this checklist? What you filled in will be removed from this phone.")) return;
     genClDiscard(d.id); genCl.draft = null; genCl.view = "recent"; renderGenChecklist();
   };
-  document.getElementById("gclFinish").onclick = () => genClFinish();
+  const fin = document.getElementById("gclFinish");
+  if (fin) fin.onclick = () => genClFinish();
 }
+
+// The box at the top of Generators: its "Recent & drafts (N)" count.
+async function genClEntryCount() {
+  const el = document.getElementById("genClEntryCount");
+  if (!el) return;
+  const drafts = genClDrafts().length;
+  el.textContent = String(drafts);
+  let done = 0;
+  try { done = Math.min(GEN_CL_RECENT_MAX, (await genClAll()).length); } catch (e) {}
+  el.textContent = String(drafts + done);
+}
+(() => {
+  const box = document.getElementById("genClEntry");
+  if (box) box.onclick = () => { trackEvent("gen checklist: started from Generators"); openGenChecklist({ fresh: true }); };
+  const rec = document.getElementById("genClEntryRecent");
+  if (rec) rec.onclick = () => { genCl.view = "recent"; showScreen("genchecklist"); window.scrollTo(0, 0); };
+})();
 
 // ---------- storage of finished checklists (queue + recent, IndexedDB) ----------
 let genClDbPromise = null;
@@ -3646,8 +4049,15 @@ function genClWireActions(root) {
   root.querySelectorAll("[data-gcl-act]").forEach(b => {
     b.onclick = async () => {
       const act = b.dataset.gclAct;
-      if (act === "new") { const d = genCl.draft || {}; genCl.result = null; openGenChecklist({ familyId: d.familyId, modelG: "", fresh: true }); return; }
-      if (act === "resume") { genCl.draft = genClReadDraft(b.dataset.id); genCl.resumed = true; genCl.view = "form"; genCl.result = null; renderGenChecklist(); return; }
+      if (act === "new") { genCl.result = null; openGenChecklist({ fresh: true }); return; }
+      if (act === "resume") {
+        const dr = genClReadDraft(b.dataset.id);
+        if (!dr) return;
+        // Resume at the first step that is not finished yet.
+        genCl.draft = dr; genCl.resumed = true; genCl.view = "wizard"; genCl.result = null; genCl.scanMsg = null; genCl.pickOpen = false; genCl.pickFamily = "";
+        genCl.step = genWizFirstIncomplete(dr);
+        renderGenChecklist(); window.scrollTo(0, 0); return;
+      }
       const rec = (await genClAll()).find(r => r.id === b.dataset.id);
       if (!rec) return;
       if (act === "download") { genClDownload(rec); return; }
@@ -3677,7 +4087,7 @@ async function genClRenderRecent(drafts) {
   box.innerHTML = `<div id="gclRecentMsg"></div>
     ${draftRows ? `<h3 class="gcl-list-h">Unfinished</h3>${draftRows}` : ""}
     <h3 class="gcl-list-h">Recent checklists (last ${GEN_CL_RECENT_MAX})</h3>
-    ${recRows || `<div class="empty-state">No finished checklists on this phone yet. Start one from a generator card in Generators or Maintenance Figures.</div>`}`;
+    ${recRows || `<div class="empty-state">No finished checklists on this phone yet. Start one from the Annual Maintenance Checklist box at the top of Generators.</div>`}`;
   genClWireActions(box);
 }
 
