@@ -3088,26 +3088,21 @@ function genClFactsLine(f) {
   return gap + " · " + oil;
 }
 
-// Generac scheduled maintenance ("tune-up") kits for the checklist's serial
-// box (Andy 2026-10-01, re-checked the same day). Only what Generac prints:
-// - no-oil kits (G00xxxx-0): the accessory table of each family's spec sheet;
-//   the current 26 kW sheet A0002026894 Rev. E 02/17/2026 still names G006485-0
-//   (replaced below by 0J93230ESV on Andy's word for the 999cc Evolution units),
-//   Next Gen 22-28 kW A0005151077 Rev. D 08/13/2026 names G007216-0.
-// - with-oil kits (A000...): support.generac.com "What Are Generator
-//   Maintenance Kits" (Apr 20, 2026) lists exact unit numbers per kit; for
-//   older families, Generac's parts store (generac.ordertree.com) replaces the
-//   discontinued 0J...SM kit with the A000 kit named below.
-// A size the literature does not list gets no kit - never guessed.
+// Generac scheduled maintenance ("tune-up") kit for the checklist's serial
+// box - always the kit WITHOUT oil, newest number (Andy 2026-10-01).
+// - Dealer service kits (0J932x0ESV Evolution, 0G...SRV / 0E...SRV pre-
+//   Evolution) from Generac's parts store (generac.ordertree.com); Andy
+//   confirmed 0J93230ESV for our 26 kW 999cc Evolution unit, so the Evolution
+//   kits go by engine size across Evolution 1 and 2.
+// - Otherwise the no-oil kit in the family's current spec sheet (G00xxxx-0).
+// A size with no no-oil kit found gets none - never guessed.
 const GEN_KIT_EVO2 = [
   { kw: [9, 10], pn: "G006482-0" },   // 9/11, 10/13/16, 10/14/18 kW spec sheets
-  { kw: [11, 11], pn: "G006483-0" },  // 9/11 kW and DR 11/20 kW spec sheets
+  // 11 kW: 0J93210ESV ("SM KIT 11KW EVOLUTION") shows unavailable on the store,
+  // so the spec-sheet kit stays.
+  { kw: [11, 11], pn: "G006483-0" },
   { kw: [13, 18], notCc: 999, pn: "G007216-0" }, // 10/13/16, 10/14/18 kW spec sheets
-  // 999cc Evolution: the spec sheets still print G006485-0, but Andy (dealer,
-  // 2026-10-01) confirmed the current kit for our 26 kW is 0J93230ESV - Generac
-  // parts store "SM KIT 20KW EVOLUTION", the in-stock kit in the 0J93230 line
-  // (0J93230SSM was the 20/22 kW Evolution kit with oil, now discontinued).
-  { kw: [16, 26], cc: 999, pn: "0J93230ESV" },
+  { kw: [16, 26], cc: 999, pn: "0J93230ESV" },   // "SM KIT 20KW EVOLUTION" (spec sheets: G006485-0)
 ];
 const GEN_MAINT_KITS = {
   "gen-generac-next-gen-10-28": [{ kw: [10, 10], pn: "G006482-0" }, { kw: [14, 28], pn: "G007216-0" }],
@@ -3118,62 +3113,37 @@ const GEN_MAINT_KITS = {
   "gen-guardian-evo2-10-26": GEN_KIT_EVO2,
   "gen-guardian-evo2-response-16-22": GEN_KIT_EVO2,
   "gen-guardian-evo2-dr-11-20": [{ kw: [11, 11], pn: "G006483-0" }, { kw: [20, 20], pn: "0J93230ESV" }],
-  "gen-guardian-evo1-20-22": [{ pn: "0J93230ESV" }],
+  "gen-guardian-evo2-20-3ph": [{ pn: "0J93230ESV" }],
   "gen-synergy-evo2-20": [{ pn: "G006829-0" }],
   "gen-ecogen-evo2-15": [{ pn: "G006829-0" }],
   "gen-ecogen-evo1-15": [{ pn: "G006829-0" }],
   "gen-powerpact-7-75": [{ kw: [7.5, 7.5], pn: "G006806-0" }],
+  "gen-guardian-evo1-8": [{ pn: "0J93200ESV" }],      // SM KIT 8KW EVOLUTION
+  "gen-guardian-evo1-11": [{ pn: "0J93210ESV" }],     // SM KIT 11KW EVOLUTION (store: unavailable)
+  "gen-guardian-evo1-13-17": [{ pn: "0J93220ESV" }],  // SM KIT 14-17 KW EVOLUTION
+  "gen-guardian-evo1-20-22": [{ pn: "0J93230ESV" }],  // SM KIT 20KW EVOLUTION
+  "gen-guardian-nexus-8": [{ pn: "0G95280SRV" }],     // SM KIT 410 8KW HSB 2008
+  "gen-guardian-nexus-10-11": [{ pn: "0G04220ESV" }], // GT530 HSB SM KIT
+  "gen-guardian-nexus-12-17": [{ pn: "0E1126ESRV" }], // SM KIT 760/990 HSB EXT LIFE
+  "gen-guardian-nexus-20": [{ pn: "0G95300SRV" }],    // SM KIT 999 20KW HSB 2008
+  "gen-guardian-pre-nexus-2008-8-20": [{ kw: [8, 8], pn: "0G95280SRV" }, { kw: [10, 10], pn: "0G04220ESV" }, { kw: [12, 17], pn: "0E1126ESRV" }, { kw: [20, 20], pn: "0G95300SRV" }],
+  "gen-guardian-pre-nexus-legacy-7-18": [{ kw: [16, 18], cc: 990, pn: "0E1126ESRV" }],
 };
-// With-oil kits by exact unit number (support.generac.com, Apr 20, 2026).
-// The article also lists G0071421 under the 14-17 kW kit, but that unit is a
-// 22 kW 999cc Response (its twin G0071420 is on the 20-26 kW kit) - left out.
-const GEN_KIT_OIL_UNITS = {
-  A0001484977: "G0072580 G0073230 G0072590 G0073240 G0072600 G0073250 G0072610 G0073260 G0073270 G0073280 G0072820 G0073290 G0071710 G0071730 G0071740 G0071750 G0071760 G0071770 G0071780 G0072260 G0072280",
-  A0002074675: "G0070290 G0070291 G0070300 G0070301 G0070500 G0070570 G0070571 G0070660 G0070661 G0070710 G0070711",
-  A0002074698: "G0068570 G0070310 G0070311 G0070320 G0070321 G0070330 G0070331 G0070440 G0070441 G0070470 G0070471 G0070510 G0070520 G0070580 G0070581 G0070670 G0070671 G0070720 G0070721",
-  A0002074708: "G0069490 G0070530 G0070540 G0070590 G0070591 G0070600 G0070610 G0070680 G0070681 G0070730 G0070731",
-  A0002074712: "G0068590 G0070350 G0070351 G0070360 G0070361 G0070370 G0070371 G0070380 G0070381 G0070390 G0070391 G0070420 G0070421 G0070422 G0070430 G0070431 G0070432 G0070450 G0070451 G0070460 G0070461 G0070480 G0070481 G0070490 G0070491 G0070550 G0070620 G0070621 G0070630 G0070631 G0070640 G0070641 G0070650 G0070651 G0070652 G0070690 G0070691 G0070700 G0070701 G0070702 G0070740 G0070741 G0070750 G0070751 G0070752 G0070770 G0070780 G0070781 G0071410 G0071411 G0071420 G0072090 G0072101",
-  A0002080751: "G0061030 G0061031 G0070400 G0070410 G0070340 G0071630",
-  A0002081076: "G0069980",
-};
-// With-oil kits by family: the A000 kit Generac's store gives for the
-// discontinued 0J...SM kit (0J93200/0J93210/0J93220/0J93230 Evolution,
-// 0J57640/0J57660/0J57670/0J57680 pre-Evolution, 0J57840 EcoGen 6 kW).
-const GEN_KIT_OIL_FAMILY = {
-  "gen-guardian-evo1-8": [{ pn: "A0002074675" }],
-  "gen-guardian-evo1-11": [{ pn: "A0002074698" }],
-  "gen-guardian-evo1-13-17": [{ pn: "A0002074708" }],
-  "gen-guardian-evo1-20-22": [{ pn: "A0002074712" }],
-  "gen-guardian-nexus-8": [{ pn: "A0002075313" }],
-  "gen-guardian-nexus-10-11": [{ kw: [10, 10], pn: "A0002075473" }],
-  "gen-guardian-nexus-12-17": [{ pn: "A0002075499" }],
-  "gen-guardian-nexus-20": [{ pn: "A0002075524" }],
-  "gen-ecogen-nexus-6": [{ pn: "A0002074750" }],
-  "gen-corepower-7": [{ pn: "A0002074753" }],
-  "gen-guardian-pre-nexus-2008-8-20": [{ kw: [8, 8], pn: "A0002075313" }, { kw: [12, 17], pn: "A0002075499" }, { kw: [20, 20], pn: "A0002075524" }],
-};
-function genKitPick(rules, g, model) {
-  if (!rules) return "";
+function genMaintKit(family, model) {
+  const g = typeof family === "string" ? genEntries().find(x => x.id === family) : family;
+  const rules = g && model ? GEN_MAINT_KITS[g.id] : null;
+  if (!rules) return null;
   const { kw, cc } = genModelInfo(g, model);
   const near = (a, b) => a != null && b != null && Math.abs(a - b) <= 3;
   const r = rules.find(x => (!x.kw || (kw != null && kw >= x.kw[0] && kw <= x.kw[1]))
     && (!x.cc || near(cc, x.cc)) && (!x.notCc || !near(cc, x.notCc)));
-  return r ? r.pn : "";
-}
-function genMaintKit(family, model) {
-  const g = typeof family === "string" ? genEntries().find(x => x.id === family) : family;
-  if (!g || !model) return null;
-  const noOil = genKitPick(GEN_MAINT_KITS[g.id], g, model);
-  const unit = Object.keys(GEN_KIT_OIL_UNITS).find(pn => GEN_KIT_OIL_UNITS[pn].split(" ").includes(model.g));
-  const withOil = unit || genKitPick(GEN_KIT_OIL_FAMILY[g.id], g, model);
-  return noOil || withOil ? { noOil, withOil } : null;
+  return r ? { pn: r.pn } : null;
 }
 function genClKitLine(d) {
   const g = genClFamilyOf(d), m = genClModelOf(d);
   if (!m) return "";
   const k = genMaintKit(g, m);
-  if (!k) return "Tune-up kit: not listed - check GenService";
-  return "Tune-up kit " + [k.noOil ? k.noOil + " (no oil)" : "", k.withOil ? k.withOil + " (with oil)" : ""].filter(Boolean).join(" · ");
+  return k ? "Tune-up kit " + k.pn + " (no oil)" : "Tune-up kit: not listed - check GenService";
 }
 
 function genEngineLabel(g, cc) {
@@ -9451,7 +9421,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v234";
+const APP_VERSION = "v235";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
