@@ -505,13 +505,20 @@ const GENERATORS = [
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, flashing RED external LED",
-    "meaning": "Generator output voltage detected above normal range.",
+    "meaning": "Generator output voltage above normal range. On the Power Zone 200 E-code table 1800 is prolonged overvoltage and 1801 is instantaneous overvoltage (Generac A0004542981 Rev E (dealer manual), E-code table).",
     "causes": [
-     "Not detailed beyond dealer-call table entry."
+     "Controller AVR not regulating the field - PWM output on Wires 4/0A wrong or missing (Generac A0004542981 Rev E (dealer manual), p. 63)",
+     "Brush, slip-ring or Wire 4/0A harness fault between the J7 connector and the brushes (Generac A0004542981 Rev E (dealer manual), pp. 63-64)",
+     "Controller voltage calibration off - normally only after a Power Zone 200 controller is replaced (Generac A0004542981 Rev E (dealer manual), p. 71)"
     ],
     "steps": [
-     "No dedicated homeowner troubleshooting article among the harvested pages; per dealer-call table this requires a dealer.",
-     "The generator has experienced an overvoltage alarm. Please contact a dealer."
+     "AC Output Voltage Test (Generac A0004542981 Rev E (dealer manual), pp. 62-63): remove the controller fascia to reach the main line circuit breaker (MLCB). DMM on AC volts; with the engine off, clip the leads across the MLCB load terminals (line-to-line) so they cannot shake loose - stay clear, the unit will be running. MLCB OFF with all loads disconnected, controller to MANUAL, then MLCB ON and read. About 238-244 VAC = output voltage is good. Anything outside that range: go to the AVR PWM Output Test.",
+     "AVR PWM Output Test (Generac A0004542981 Rev E (dealer manual), p. 63): DMM on hertz. Unplug J7 at the controller and fit the J7 breakout harness (male end to the controller, female end to the generator harness). Red lead in the WAGO block for Wire 4, black lead in the block for Wire 0A. Clear all faults and run in MANUAL. About 1500-2000 Hz (1.5-2 kHz) = AVR regulation passes - go to the Brushes and Slip Ring Test. 0 Hz = replace the Power Zone 200 controller and retest.",
+     "Brushes and Slip Ring Test (Generac A0004542981 Rev E (dealer manual), pp. 63-64): expose the brushes and slip rings. Check the brush wires are secure - the straight Wire 4 connectors go on the brush pin closest to the bearing on both brush assemblies, with the right-angle Wire 0A connector behind the straight one. Inspect the brushes for wear or damage. Dull or tarnished slip rings: polish with a fine non-metallic abrasive - never emery cloth, it can ruin the rotor.",
+     "Brushes and Slip Ring Test, continued: unplug the J7 connector (Wires 4 and 0A). Ohm each Wire 0A and each Wire 4 brush-end lead to its J7 pin (back probe) - over 5 ohms or OL on any one = replace the wiring harness and retest. With Wire 4 still off at both brush assemblies, check each Wire 4 lead to frame ground - any resistance reading = replace the harness. Measure across each brush holder against the Section 3 specifications - if in spec, go to the Rotor Assembly Test.",
+     "Brushes and Slip Ring Test, continued: remove the suspect brush assembly and check continuity from the Wire 4 terminal, then the Wire 0 terminal, to the slip-ring side of the brushes. OL = replace the brush assembly and retest; continuity = go to the Rotor Assembly Test.",
+     "Voltage Calibration with the Field Pro app (Generac A0004542981 Rev E (dealer manual), p. 71) - factory calibration does not need adjusting; check it after a controller replacement: MLCB OFF, open the Field Pro Calibration screen, red lead on the generator side of the MLCB terminal for Wire 11 and black on the neutral block. Start in MANUAL, enter the reading as Measured Voltage for A to Neutral and save. Move the red lead to Wire 44 and enter it for B to Neutral, save (C to Neutral too on 3-phase). Shut down and remove the meter.",
+     "Homeowners: this alarm needs a Generac dealer - the tests above are run with the unit live."
     ],
     "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
@@ -1550,13 +1557,20 @@ const GENERATORS = [
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, flashing RED external LED",
-    "meaning": "Generator output voltage detected above normal range.",
+    "meaning": "Generator output voltage above normal range. On the Power Zone 200 E-code table 1800 is prolonged overvoltage and 1801 is instantaneous overvoltage (Generac A0004542981 Rev E (dealer manual), E-code table).",
     "causes": [
-     "Not detailed beyond dealer-call table entry."
+     "Controller AVR not regulating the field - PWM output on Wires 4/0A wrong or missing (Generac A0004542981 Rev E (dealer manual), p. 63)",
+     "Brush, slip-ring or Wire 4/0A harness fault between the J7 connector and the brushes (Generac A0004542981 Rev E (dealer manual), pp. 63-64)",
+     "Controller voltage calibration off - normally only after a Power Zone 200 controller is replaced (Generac A0004542981 Rev E (dealer manual), p. 71)"
     ],
     "steps": [
-     "No dedicated homeowner troubleshooting article among the harvested pages; per dealer-call table this requires a dealer.",
-     "The generator has experienced an overvoltage alarm. Please contact a dealer."
+     "AC Output Voltage Test (Generac A0004542981 Rev E (dealer manual), pp. 62-63): remove the controller fascia to reach the main line circuit breaker (MLCB). DMM on AC volts; with the engine off, clip the leads across the MLCB load terminals (line-to-line) so they cannot shake loose - stay clear, the unit will be running. MLCB OFF with all loads disconnected, controller to MANUAL, then MLCB ON and read. About 238-244 VAC = output voltage is good. Anything outside that range: go to the AVR PWM Output Test.",
+     "AVR PWM Output Test (Generac A0004542981 Rev E (dealer manual), p. 63): DMM on hertz. Unplug J7 at the controller and fit the J7 breakout harness (male end to the controller, female end to the generator harness). Red lead in the WAGO block for Wire 4, black lead in the block for Wire 0A. Clear all faults and run in MANUAL. About 1500-2000 Hz (1.5-2 kHz) = AVR regulation passes - go to the Brushes and Slip Ring Test. 0 Hz = replace the Power Zone 200 controller and retest.",
+     "Brushes and Slip Ring Test (Generac A0004542981 Rev E (dealer manual), pp. 63-64): expose the brushes and slip rings. Check the brush wires are secure - the straight Wire 4 connectors go on the brush pin closest to the bearing on both brush assemblies, with the right-angle Wire 0A connector behind the straight one. Inspect the brushes for wear or damage. Dull or tarnished slip rings: polish with a fine non-metallic abrasive - never emery cloth, it can ruin the rotor.",
+     "Brushes and Slip Ring Test, continued: unplug the J7 connector (Wires 4 and 0A). Ohm each Wire 0A and each Wire 4 brush-end lead to its J7 pin (back probe) - over 5 ohms or OL on any one = replace the wiring harness and retest. With Wire 4 still off at both brush assemblies, check each Wire 4 lead to frame ground - any resistance reading = replace the harness. Measure across each brush holder against the Section 3 specifications - if in spec, go to the Rotor Assembly Test.",
+     "Brushes and Slip Ring Test, continued: remove the suspect brush assembly and check continuity from the Wire 4 terminal, then the Wire 0 terminal, to the slip-ring side of the brushes. OL = replace the brush assembly and retest; continuity = go to the Rotor Assembly Test.",
+     "Voltage Calibration with the Field Pro app (Generac A0004542981 Rev E (dealer manual), p. 71) - factory calibration does not need adjusting; check it after a controller replacement: MLCB OFF, open the Field Pro Calibration screen, red lead on the generator side of the MLCB terminal for Wire 11 and black on the neutral block. Start in MANUAL, enter the reading as Measured Voltage for A to Neutral and save. Move the red lead to Wire 44 and enter it for B to Neutral, save (C to Neutral too on 3-phase). Shut down and remove the meter.",
+     "Homeowners: this alarm needs a Generac dealer - the tests above are run with the unit live."
     ],
     "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
@@ -2566,13 +2580,20 @@ const GENERATORS = [
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, flashing RED external LED",
-    "meaning": "Generator output voltage detected above normal range.",
+    "meaning": "Generator output voltage above normal range. On the Power Zone 200 E-code table 1800 is prolonged overvoltage and 1801 is instantaneous overvoltage (Generac A0004542981 Rev E (dealer manual), E-code table).",
     "causes": [
-     "Not detailed beyond dealer-call table entry."
+     "Controller AVR not regulating the field - PWM output on Wires 4/0A wrong or missing (Generac A0004542981 Rev E (dealer manual), p. 63)",
+     "Brush, slip-ring or Wire 4/0A harness fault between the J7 connector and the brushes (Generac A0004542981 Rev E (dealer manual), pp. 63-64)",
+     "Controller voltage calibration off - normally only after a Power Zone 200 controller is replaced (Generac A0004542981 Rev E (dealer manual), p. 71)"
     ],
     "steps": [
-     "No dedicated homeowner troubleshooting article among the harvested pages; per dealer-call table this requires a dealer.",
-     "The generator has experienced an overvoltage alarm. Please contact a dealer."
+     "AC Output Voltage Test (Generac A0004542981 Rev E (dealer manual), pp. 62-63): remove the controller fascia to reach the main line circuit breaker (MLCB). DMM on AC volts; with the engine off, clip the leads across the MLCB load terminals (line-to-line) so they cannot shake loose - stay clear, the unit will be running. MLCB OFF with all loads disconnected, controller to MANUAL, then MLCB ON and read. About 238-244 VAC = output voltage is good. Anything outside that range: go to the AVR PWM Output Test.",
+     "AVR PWM Output Test (Generac A0004542981 Rev E (dealer manual), p. 63): DMM on hertz. Unplug J7 at the controller and fit the J7 breakout harness (male end to the controller, female end to the generator harness). Red lead in the WAGO block for Wire 4, black lead in the block for Wire 0A. Clear all faults and run in MANUAL. About 1500-2000 Hz (1.5-2 kHz) = AVR regulation passes - go to the Brushes and Slip Ring Test. 0 Hz = replace the Power Zone 200 controller and retest.",
+     "Brushes and Slip Ring Test (Generac A0004542981 Rev E (dealer manual), pp. 63-64): expose the brushes and slip rings. Check the brush wires are secure - the straight Wire 4 connectors go on the brush pin closest to the bearing on both brush assemblies, with the right-angle Wire 0A connector behind the straight one. Inspect the brushes for wear or damage. Dull or tarnished slip rings: polish with a fine non-metallic abrasive - never emery cloth, it can ruin the rotor.",
+     "Brushes and Slip Ring Test, continued: unplug the J7 connector (Wires 4 and 0A). Ohm each Wire 0A and each Wire 4 brush-end lead to its J7 pin (back probe) - over 5 ohms or OL on any one = replace the wiring harness and retest. With Wire 4 still off at both brush assemblies, check each Wire 4 lead to frame ground - any resistance reading = replace the harness. Measure across each brush holder against the Section 3 specifications - if in spec, go to the Rotor Assembly Test.",
+     "Brushes and Slip Ring Test, continued: remove the suspect brush assembly and check continuity from the Wire 4 terminal, then the Wire 0 terminal, to the slip-ring side of the brushes. OL = replace the brush assembly and retest; continuity = go to the Rotor Assembly Test.",
+     "Voltage Calibration with the Field Pro app (Generac A0004542981 Rev E (dealer manual), p. 71) - factory calibration does not need adjusting; check it after a controller replacement: MLCB OFF, open the Field Pro Calibration screen, red lead on the generator side of the MLCB terminal for Wire 11 and black on the neutral block. Start in MANUAL, enter the reading as Measured Voltage for A to Neutral and save. Move the red lead to Wire 44 and enter it for B to Neutral, save (C to Neutral too on 3-phase). Shut down and remove the meter.",
+     "Homeowners: this alarm needs a Generac dealer - the tests above are run with the unit live."
     ],
     "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
