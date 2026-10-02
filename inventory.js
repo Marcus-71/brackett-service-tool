@@ -446,6 +446,9 @@ function invWireFixes(root, after) {
       const m = card.querySelector("[data-fix-model]").value, sr = card.querySelector("[data-fix-serial]").value.trim();
       const fx = (invLoad().fix || []).find(x => x.id === id) || {};
       const r = invAdd(m, sr, "fixed", fx.part);
+      // Andy 2026-10-02: tie the hand-typed answer to the saved photo, so the
+      // triage sees what the reader got next to what is really on the tag.
+      if (fx.photoId) trackEvent("INVENTORY FIX | photo: " + fx.photoId + " | read: model " + (fx.model || "-") + ", serial " + (fx.serial || "-") + " | corrected: model " + invNormModel(m) + ", serial " + (String(sr).toUpperCase() || "-"));
       const t = invResultText(r, m, sr);
       if (r.ok || r.reason === "dup") drop();
       if (invCam) { invCamLine(t.kind, t.text, t.undoId); invCamCount(); } else invMsg = t;
