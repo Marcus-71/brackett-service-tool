@@ -2702,6 +2702,49 @@ function genFamilyForModel(model) {
 }
 
 document.getElementById("genSearchInput").addEventListener("input", (e) => { genState.search = e.target.value; renderGens(); });
+// Andy 2026-10-02: voice search on Generators, same Web Speech API option as
+// Ask Anything (needs signal to transcribe; the search itself is offline).
+// "22 kilowatt" becomes "22kW" so it matches the kW search.
+(function initGenVoice() {
+  const btn = document.getElementById("genMicBtn"), input = document.getElementById("genSearchInput");
+  if (!btn || !input || !AskSpeech) return;   // unsupported: no mic, typing still works
+  let rec = null, listening = false, hintTimer = null;
+  const hint = (msg) => {
+    const el = document.getElementById("genVoiceHint");
+    if (!el) return;
+    el.textContent = msg; el.classList.remove("hidden");
+    clearTimeout(hintTimer); hintTimer = setTimeout(() => el.classList.add("hidden"), 4500);
+  };
+  const norm = (t) => t.trim().replace(/s*(?:kilowatts?|k.?s?w.?)(?=s|$)/gi, "kW").replace(/.$/, "");
+  const apply = (t) => { input.value = t; genState.search = t; renderGens(); };
+  btn.classList.remove("hidden");
+  btn.addEventListener("click", () => {
+    if (listening) { try { rec && rec.stop(); } catch (e) {} return; }
+    try { rec = new AskSpeech(); } catch (e) { return; }
+    const original = input.getAttribute("placeholder");
+    rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+    listening = true; btn.classList.add("listening");
+    input.setAttribute("placeholder", "Listening… say the model, kW, or code");
+    rec.onresult = (ev) => {
+      let text = "";
+      for (let i = ev.resultIndex; i < ev.results.length; i++) text += ev.results[i][0].transcript;
+      if (text.trim()) apply(norm(text));
+    };
+    rec.onerror = (ev) => {
+      const e = ev && ev.error;
+      if (e === "not-allowed" || e === "service-not-allowed") hint("Microphone is blocked - allow mic access in the browser to search by voice.");
+      else if (e === "network") hint("Voice needs signal to hear you - type it instead when you're offline.");
+      else if (e === "no-speech") hint("Didn't catch that - tap the mic and try again.");
+      else if (e === "audio-capture") hint("No microphone found on this device.");
+    };
+    rec.onend = () => {
+      listening = false; btn.classList.remove("listening");
+      input.setAttribute("placeholder", original);
+      if (input.value.trim()) { apply(norm(input.value)); trackEvent("generators: searched by voice"); }
+    };
+    try { rec.start(); } catch (e) { rec.onend(); }
+  });
+})();
 
 // ---- v227 genModelFacts START
 // ============================================================
@@ -9508,7 +9551,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v240";
+const APP_VERSION = "v241";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

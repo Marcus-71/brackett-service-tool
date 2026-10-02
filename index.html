@@ -224,7 +224,11 @@
   </div>
   <div class="disclaimer">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
   <div class="controls">
-    <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model, kW, or code (7043, 22kW, 1100, overcrank…)" autocomplete="off">
+    <div class="ask-input-row">
+      <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model, kW, or code (7043, 22kW, 1100, overcrank…)" autocomplete="off">
+      <button id="genMicBtn" class="ask-mic-btn hidden" type="button" aria-label="Search by voice" title="Search by voice">🎤</button>
+    </div>
+    <div id="genVoiceHint" class="ask-note hidden"></div>
     <div class="filter-row">
       <select id="genSeriesChips" class="filter-select" aria-label="Filter by series"></select>
       <select id="genCtrlChips" class="filter-select" aria-label="Filter by controller"></select>
