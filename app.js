@@ -252,6 +252,7 @@ const SCREEN_TITLES = {
   sqft: "House Size",
   request: "Request Info",
   calllog: "Call Log",
+  inventory: "Inventory",
   checker: "Daikin Checker",
   genchecklist: "Generator Checklist",
 };
@@ -278,10 +279,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen", "genChecklistScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen", "genChecklistScreen", "inventoryScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -309,6 +310,8 @@ function showScreen(name, fromBack) {
   if (name === "maint") renderMaint();
   if (name === "genchecklist") renderGenChecklist();
   if (name === "calllog" && typeof renderCallLog === "function") renderCallLog();
+  if (name !== "inventory" && typeof invCloseCamera === "function") invCloseCamera();
+  if (name === "inventory" && typeof renderInventory === "function") { renderInventory(); window.scrollTo(0, 0); }
 
   if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
 
@@ -9579,7 +9582,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v242";
+const APP_VERSION = "v243";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -9726,7 +9729,7 @@ function showTechPicker() {
     try { localStorage.setItem(TECH_KEY, name); } catch (e) { /* not worth blocking on */ }
     ov.remove();
     if (isBlockedTech(name)) { showAccessRemoved(); return; }
-    syncCallLogTile();
+    syncCallLogTile(); if (typeof syncInventoryTile === "function") syncInventoryTile();
     trackEvent("app opened");
   };
   ov.querySelectorAll(".tech-name-btn").forEach((b) => { b.onclick = () => pick(b.dataset.name); });
@@ -9741,7 +9744,7 @@ async function renderVersionFooter() {
 }
 
 function startApp() {
-  syncCallLogTile();
+  syncCallLogTile(); if (typeof syncInventoryTile === "function") syncInventoryTile();
   renderVersionFooter();
 
   if (getTechName()) trackEvent("app opened");
