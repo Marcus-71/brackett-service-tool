@@ -303,7 +303,7 @@ function showScreen(name, fromBack) {
   if (name === "tstat") renderTstats();
   // Andy 2026-10-01: open Generators at the top so the Annual Maintenance
   // Checklist box is the first thing seen (the home page scroll carried over).
-  if (name === "gen") { renderGens(); if (typeof genClEntryCount === "function") genClEntryCount(); window.scrollTo(0, 0); }
+  if (name === "gen") { renderGens(); if (typeof genClEntryCount === "function") genClEntryCount(); if (typeof genProblemScanStatus === "function") genProblemScanStatus(""); window.scrollTo(0, 0); }
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
   if (name === "maint") renderMaint();
@@ -2642,6 +2642,49 @@ function openGenDetail(id, focusModel) {
   trackEvent("viewed generator: " + g.series + " " + g.family);
 }
 
+// Andy 2026-10-02: "Scan the tag - troubleshoot a problem" sits under the
+// Annual Maintenance Checklist box on Generators. The plate opens that unit's
+// generator page (alarm codes, troubleshooting, specs, manuals) with its model
+// highlighted. Same OCR, telemetry and failed-photo handling as the other scans.
+function genProblemScanStatus(msg, warn) {
+  const el = document.getElementById("genProblemScanStatus");
+  if (!el) return;
+  el.classList.toggle("hidden", !msg);
+  el.classList.toggle("warn", !!warn);
+  el.textContent = msg || "";
+}
+async function genProblemScan(file) {
+  trackEvent("gen problem scan: scanned the data plate");
+  let fields;
+  try {
+    genProblemScanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
+    fields = await ocrTagFields(file, (m) => genProblemScanStatus(m || ""));
+  } catch (err) {
+    genProblemScanStatus("Scan failed: " + (err && err.message ? err.message : err) + " - type the model or code in the search box below.", true);
+    return;
+  }
+  const model = String((fields && fields.model) || "").trim();
+  const serial = String((fields && fields.serial) || "").trim();
+  const fam = model ? genFamilyForModel(model) : null;
+  if (fam) {
+    genNoteScan(model, serial);
+    trackEvent("gen problem scan -> " + model);
+    genProblemScanStatus("Read " + model + (serial ? " · SN " + serial : "") + " - opened its generator page.");
+    openGenDetail(fam.id, model);
+    return;
+  }
+  const photoId = newScanPhotoId();
+  if (!model) {
+    trackEvent("SCAN - NO MODEL READ" + (serial ? " | serial: " + serial : "") + (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId + " | gen problem scan");
+    saveFailedScan(file, { id: photoId, kind: "unreadable", read: serial ? "serial " + serial : "" }).catch(() => {});
+    genProblemScanStatus("Couldn't read the MODEL line. Retake it straight on, close, in good light - or type the model or code in the search box below.", true);
+    return;
+  }
+  trackEvent("gen problem scan -> " + model + " | not in library | photo: " + photoId);
+  saveFailedScan(file, { id: photoId, kind: "not-in-library", read: model + (serial ? " / " + serial : "") }).catch(() => {});
+  genProblemScanStatus("Read " + model + " - not a Generac model in our list. Check the MODEL line and retake, or search the code below.", true);
+}
+
 // Tag scanner hook: a Generac model on the plate opens its family here.
 function genFamilyForModel(model) {
   // Liquid-cooled Protector models are alphanumeric (RG/QT/SG + kW) - match them by the model's `lc` prefix before the numeric-only air-cooled logic.
@@ -3956,6 +3999,8 @@ async function genClEntryCount() {
 (() => {
   const box = document.getElementById("genClEntry");
   if (box) box.onclick = () => { trackEvent("gen checklist: started from Generators"); openGenChecklist({ fresh: true }); };
+  const prob = document.getElementById("genProblemScanFile");
+  if (prob) prob.addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) genProblemScan(f); });
   const rec = document.getElementById("genClEntryRecent");
   if (rec) rec.onclick = () => { genCl.view = "recent"; showScreen("genchecklist"); window.scrollTo(0, 0); };
 })();
@@ -9463,7 +9508,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v239";
+const APP_VERSION = "v240";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -1975,3 +1975,7 @@ main {
 .gcl-csz { display: grid; grid-template-columns: 2.2fr 0.8fr 1.2fr; gap: 0.5rem; }
 .gcl-csz label { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
 .gcl-csz label > span { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-dim); }
+
+/* Generators: Troubleshoot a Problem scan box under the checklist box (Andy 2026-10-02). */
+.gwz-entry-problem { margin-top: 0.35rem; border-color: var(--brand-yellow); }
+#genProblemScanStatus { margin-top: 0.3rem; }

@@ -213,6 +213,14 @@
       <span class="gwz-entry-go" aria-hidden="true">›</span>
     </button>
     <button type="button" id="genClEntryRecent" class="gcl-link gwz-entry-recent">Recent &amp; drafts (<span id="genClEntryCount">0</span>)</button>
+    <!-- Andy 2026-10-02: scan the tag to troubleshoot a problem -->
+    <label class="gwz-entry gwz-entry-problem" for="genProblemScanFile" aria-label="Troubleshoot a problem - Scan the generator tag">
+      <span class="gwz-entry-icon" aria-hidden="true">📷</span>
+      <span class="gwz-entry-text"><b>Troubleshoot a Problem</b><span>Scan the tag - opens that generator's codes and fixes</span></span>
+      <span class="gwz-entry-go" aria-hidden="true">›</span>
+    </label>
+    <input type="file" id="genProblemScanFile" accept="image/*" capture="environment" class="hidden">
+    <div id="genProblemScanStatus" class="scan-status hidden"></div>
   </div>
   <div class="disclaimer">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
   <div class="controls">
