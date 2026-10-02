@@ -3329,7 +3329,7 @@ function genClIsEmptyDraft(d) {
   if (!d) return true;
   const c = d.customer || {};
   const any = (o) => Object.values(o || {}).some(Boolean);
-  return !d.modelG && !d.modelInput && !d.serial && !c.name && !c.address && !c.city && !c.email && !d.notes &&
+  return !d.modelG && !d.modelInput && !d.serial && !c.name && !c.address && !c.city && !c.state && !c.zip && !c.email && !d.notes &&
     !any(d.items) && !any(d.readings) && !any(d.engine);
 }
 function genClDrafts() {
@@ -3363,7 +3363,7 @@ function genClNewDraft(familyId, modelG, serial) {
     created: Date.now(), updated: Date.now(), finished: false,
     familyId: familyId || "", modelG: modelG || "", modelInput: modelG || "",
     serial: serial || "", serialFromScan: !!serial, serialSource: serial ? "label" : "",
-    customer: { name: "", address: "", city: "", email: "" },
+    customer: { name: "", address: "", city: "", state: "", zip: "", email: "" },
     tech: genClDefaultTech() || "", date: genClToday(),
     visit: "", items: {}, readings: {}, engine: {}, notes: "", visited: {}, step: 0,
   };
@@ -3429,6 +3429,19 @@ function genClFamilyOf(d) {
 function genClModelOf(d) {
   const g = genClFamilyOf(d);
   return g && d.modelG && genIsAirCooled(g) ? (g.models || []).find(m => m.g === d.modelG) || null : null;
+}
+// Andy 2026-10-02: City, State and Zip are separate boxes on one line. Older
+// drafts typed all three into the city box - split those on the way out.
+function genClCsz(d) {
+  const c = d.customer || {};
+  if (String(c.state || "").trim() || String(c.zip || "").trim()) return { city: c.city || "", state: c.state || "", zip: c.zip || "" };
+  const raw = String(c.city || "").trim();
+  const m = raw.match(/^(.*?)[,s]+([A-Za-z]{2}).?[,s]+(d{5}(?:-d{4})?)$/) || raw.match(/^(.*?),s*([^,]+?),s*([^,]+)$/);
+  return m ? { city: m[1].trim(), state: m[2].trim(), zip: m[3].trim() } : { city: raw, state: "", zip: "" };
+}
+function genClCszLine(d) {
+  const z = genClCsz(d);
+  return [z.city, [z.state, z.zip].filter(Boolean).join(" ")].filter(Boolean).join(", ");
 }
 function genClFacts(d) {
   const g = genClFamilyOf(d), m = genClModelOf(d);
@@ -3652,14 +3665,20 @@ function genWizFiguresHtml(d) {
 
 function genWizCustomerHtml(d) {
   const val = (v) => escapeHtml(v || "");
+  const csz = genClCsz(d);
+  if (!d.customer.state && !d.customer.zip && csz.state) Object.assign(d.customer, { city: csz.city.toUpperCase(), state: csz.state.toUpperCase(), zip: csz.zip });   // split an old one-box entry
   const m = genClModelOf(d);
   const ro = (label, value, cls, extra) => `<div class="gcl-f ${cls || "full"} gwz-ro"><span>${escapeHtml(label)}${extra || ""}</span><div class="gwz-ro-val">${escapeHtml(value || "-")}</div></div>`;
   return `
     <article class="gcl-sheet">
       <div class="gcl-grid">
-        <label class="gcl-f full"><span>Customer Name</span><input type="text" data-gcl-field="customer.name" value="${val(d.customer.name)}" autocomplete="off" autocapitalize="words"></label>
-        <label class="gcl-f full"><span>Address</span><input type="text" data-gcl-field="customer.address" value="${val(d.customer.address)}" autocomplete="off"></label>
-        <label class="gcl-f full"><span>City, State, Zip</span><input type="text" data-gcl-field="customer.city" value="${val(d.customer.city)}" autocomplete="off"></label>
+        <label class="gcl-f full"><span>Customer Name</span><input type="text" class="gcl-caps" data-gcl-upper data-gcl-field="customer.name" value="${val(d.customer.name)}" autocomplete="off" autocapitalize="characters"></label>
+        <label class="gcl-f full"><span>Address</span><input type="text" class="gcl-caps" data-gcl-upper data-gcl-field="customer.address" value="${val(d.customer.address)}" autocomplete="off" autocapitalize="characters"></label>
+        <div class="gcl-f full gcl-csz">
+          <label><span>City</span><input type="text" class="gcl-caps" data-gcl-upper data-gcl-field="customer.city" value="${val(csz.city)}" autocomplete="off" autocapitalize="characters"></label>
+          <label><span>State</span><input type="text" class="gcl-caps" data-gcl-upper data-gcl-field="customer.state" value="${val(csz.state)}" maxlength="2" autocomplete="off" autocapitalize="characters"></label>
+          <label><span>Zip</span><input type="text" data-gcl-field="customer.zip" value="${val(csz.zip)}" inputmode="numeric" maxlength="10" autocomplete="off"></label>
+        </div>
         <label class="gcl-f full"><span>Customer email <em>(required - they get a copy)</em></span><input type="email" inputmode="email" required data-gcl-field="customer.email" value="${val(d.customer.email)}" autocomplete="off"></label>
       </div>
     </article>
@@ -3764,8 +3783,8 @@ function genWizReviewHtml(d) {
         <div><div class="gcl-title">Generator Annual Maintenance Checklist</div><div class="gcl-subtitle">Air-cooled home standby generators</div></div>
       </header>
       <div class="gwz-rv-fields">
-        ${field("Customer", d.customer.name, idx("customer"), true)}
-        ${field("Address", [d.customer.address, d.customer.city].filter(Boolean).join(", "), idx("customer"), true)}
+        ${field("Customer", String(d.customer.name || "").toUpperCase(), idx("customer"), true)}
+        ${field("Address", [d.customer.address, genClCszLine(d)].filter(Boolean).join(", ").toUpperCase(), idx("customer"), true)}
         ${field("Customer email", d.customer.email, idx("customer"), true)}
         ${field("Visit type", genClVisitLabel(d), 0, true)}
         ${field("Model", m ? m.g + " - " + (m.desc || "") : "", 0, true)}
@@ -3827,6 +3846,11 @@ function genWizWire(body) {
   body.querySelectorAll("[data-gcl-field]").forEach(el => {
     el.addEventListener("input", () => {
       const path = el.dataset.gclField.split(".");
+      if (el.hasAttribute("data-gcl-upper") && el.value !== el.value.toUpperCase()) {
+        const a = el.selectionStart, b = el.selectionEnd;
+        el.value = el.value.toUpperCase();
+        try { el.setSelectionRange(a, b); } catch (e) {}
+      }
       if (path.length === 2) d[path[0]][path[1]] = el.value; else d[path[0]] = el.value;
       if (path[0] === "serial") { d.serialFromScan = false; const h = document.getElementById("gwzSerialHint"); if (h) h.innerHTML = genWizSerialHint(d); }
       genClSave();
@@ -4013,7 +4037,7 @@ async function genClFinish() {
     rec = {
       id: d.id, ts: Date.now(), status: "new",
       model: d.modelG || "", modelDesc: m ? m.desc || "" : "", serial: d.serial || "",
-      customerName: d.customer.name || "", customerEmail: email, tech: d.tech || "", date: d.date || "", visit: genClVisitLabel(d),
+      customerName: String(d.customer.name || "").toUpperCase(), customerEmail: email, tech: d.tech || "", date: d.date || "", visit: genClVisitLabel(d),
       fileName: genClFileName(d), pdf: pdf.blob, draft: JSON.parse(JSON.stringify(d)),
     };
     await genClPut(rec);
@@ -4222,6 +4246,7 @@ async function genClBuildPdf(d) {
   const NAVY = [0, 58, 112], ORANGE = [196, 98, 45], YELLOW = [253, 210, 110], INK = [16, 24, 32], DIM = [92, 100, 112];
   const facts = genClFacts(d);
   const model = genClModelOf(d);
+  const csz = genClCsz(d);
   const setC = (c) => doc.setTextColor(c[0], c[1], c[2]);
   const draw = (c) => doc.setDrawColor(c[0], c[1], c[2]);
 
@@ -4239,9 +4264,11 @@ async function genClBuildPdf(d) {
   let y = 82;
   const full = W - 2 * M, half = full / 2;
   const hdrRows = [
-    [{ label: "Customer Name", value: d.customer.name, w: full }],
-    [{ label: "Address", value: d.customer.address, w: full }],
-    [{ label: "City, State, Zip", value: d.customer.city, w: full }],
+    // Andy 2026-10-02: name and address in capitals; City / State / Zip as
+    // three labelled boxes on one line.
+    [{ label: "Customer Name", value: String(d.customer.name || "").toUpperCase(), w: full }],
+    [{ label: "Address", value: String(d.customer.address || "").toUpperCase(), w: full }],
+    [{ label: "City", value: csz.city.toUpperCase(), w: full * 0.55 }, { label: "State", value: csz.state.toUpperCase(), w: full * 0.15 }, { label: "Zip", value: csz.zip, w: full * 0.30 }],
     [{ label: "Customer email", value: d.customer.email, w: full }],
     // Andy 2026-10-01: model number on its own line, description right below;
     // dealer and technician share one row with a divider.
@@ -9436,7 +9463,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v238";
+const APP_VERSION = "v239";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
