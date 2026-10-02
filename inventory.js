@@ -53,8 +53,37 @@ function invIdentify(model) {
   return p ? { brand: p.brand || "", equip: p.equipment || "" } : { brand: "", equip: "" };
 }
 
+// Model memory (Andy 2026-10-02). Lennox carton barcodes carry the serial and
+// the catalog/part number (1P23K61) but not the model, and the Daikin heat-pump
+// caption carries a 6-digit product code before the serial (364451E000585C).
+// Once one unit of a part/code has its model - read or typed in a fix - every
+// later carton with that code gets the model without typing. Kept apart from
+// the count, so "Start a new count" doesn't forget it. Seeded with the pairs
+// Andy's first test confirmed on the label.
+const INV_MODELS_KEY = "bfc-inventory-models";
+const INV_MODEL_SEED = {
+  P23K61: "EL22XPV-024-230A01", P25U62: "ML17KC2-024-230A02", P19A47: "SLP99DF090XV60C-02", P24X66: "EL297DF070XE48B",
+  P24X49: "EL297UH045XV368", P25K43: "SL22KLV-036-230A01", P19U28: "SL25XPV-060-230A02", P16T33: "CBA38MV-048-230-6-03",
+  P29G21: "LC23/37Y9BG", P16F32: "C35-30B-2-1",
+  D364451: "DH9VSA361C", D500163: "DH9VSA4810", D500170: "DH9VSA6010",
+};
+function invModelMap() {
+  let m = {};
+  try { m = JSON.parse(localStorage.getItem(INV_MODELS_KEY) || "{}") || {}; } catch (e) {}
+  return { ...INV_MODEL_SEED, ...m };
+}
+function invLearnModel(key, model) {
+  if (!key || !model) return;
+  try {
+    const m = JSON.parse(localStorage.getItem(INV_MODELS_KEY) || "{}") || {};
+    if (m[key] === model) return;
+    m[key] = model;
+    localStorage.setItem(INV_MODELS_KEY, JSON.stringify(m));
+  } catch (e) {}
+}
+
 // Add one unit. Returns { ok, id } or { ok:false, reason, dup? }.
-function invAdd(model, serial, source, part) {
+function invAdd(model, serial, source, part, key) {
   const m = invNormModel(model);
   const s = String(serial || "").toUpperCase().trim();
   if (!m) return { ok: false, reason: "nomodel" };
@@ -68,6 +97,7 @@ function invAdd(model, serial, source, part) {
   const who = invIdentify(m);
   d.items.push({ id, model: m, serial: s, part: String(part || "").toUpperCase(), brand: who.brand, equip: who.equip, ts: Date.now(), src: source || "scan" });
   if (!invSave(d)) return { ok: false, reason: "storage" };
+  invLearnModel(key || (part ? "P" + String(part).toUpperCase() : ""), m);
   trackEvent("inventory: added " + m + (s ? " / " + s : " (no serial)"));
   return { ok: true, id };
 }
@@ -107,7 +137,7 @@ function renderInventory() {
         <span class="gwz-entry-go" aria-hidden="true">›</span>
       </button>
       ${msg}
-      ${(d.fix || []).length ? `<div class="inv-fixes"><div class="inv-manual-h">Needs fixing (${d.fix.length}) - only part of the tag was read</div>${invFixHtml(d.fix)}</div>` : ""}
+      ${(d.fix || []).length ? `<div class="inv-fixes"><div class="inv-manual-h">Check or fix (${d.fix.length}) - not counted yet</div>${invFixHtml(d.fix)}</div>` : ""}
       <div class="inv-manual">
         <div class="inv-manual-h">Can't scan it? Type it in</div>
         <div class="inv-manual-row">
@@ -280,70 +310,210 @@ function invCapture() {
 // The plain tag reader missed or mixed these up, so inventory first reads the
 // whole label in greyscale (page + sparse modes) and parses it with carton
 // rules, then falls back to the tag reader for nameplates.
-async function invReadLabel(blob) {
-  const worker = await getTessWorker(() => {});
-  const bmp = await createImageBitmap(blob);
-  const sc = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+// Andy 2026-10-02 (60-photo test, Lennox/Daikin/Amana/Carrier cartons): the
+// label is often a small white patch in a wide shot, and shrinking the whole
+// photo made its text too small to read. So the reader first finds the white
+// label(s) on the brown carton and reads each one cropped at full resolution,
+// and only falls back to the whole photo when no label reads.
+function invFindLabels(bmp) {
+  const W = 320, sc = W / bmp.width, H = Math.max(1, Math.round(bmp.height * sc));
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const g = c.getContext("2d"); g.drawImage(bmp, 0, 0, W, H);
+  const px = g.getImageData(0, 0, W, H).data, n = W * H;
+  // Label stock: bright and grey/white (cardboard is bright but brown).
+  let m = new Uint8Array(n);
+  for (let i = 0; i < n; i++) {
+    const r = px[i * 4], gg = px[i * 4 + 1], b = px[i * 4 + 2], mn = Math.min(r, gg, b), mx = Math.max(r, gg, b);
+    m[i] = mn >= 140 && mx - mn <= 48 ? 1 : 0;
+  }
+  // Close the gaps that printed text and barcodes leave in the white.
+  for (let pass = 0; pass < 2; pass++) {
+    const d = new Uint8Array(n);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      d[i] = m[i] || (x > 0 && m[i - 1]) || (x < W - 1 && m[i + 1]) || (y > 0 && m[i - W]) || (y < H - 1 && m[i + W]) ? 1 : 0;
+    }
+    m = d;
+  }
+  const seen = new Uint8Array(n), comps = [], st = [];
+  for (let s = 0; s < n; s++) {
+    if (!m[s] || seen[s]) continue;
+    let x0 = W, y0 = H, x1 = 0, y1 = 0, area = 0;
+    st.push(s); seen[s] = 1;
+    while (st.length) {
+      const i = st.pop(), x = i % W, y = (i / W) | 0;
+      area++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1]) if (j >= 0 && m[j] && !seen[j]) { seen[j] = 1; st.push(j); }
+    }
+    const bw = x1 - x0 + 1, bh = y1 - y0 + 1, fill = area / (bw * bh);
+    // A label: a solid-ish rectangle, not a speck and not the whole frame.
+    if (area >= n * 0.006 && area <= n * 0.7 && fill >= 0.45 && bw >= 12 && bh >= 8) comps.push({ x0, y0, x1, y1, area });
+  }
+  comps.sort((a, b) => b.area - a.area);
+  // Pad each box (the Lennox model sits on a blue/pink banner above the white)
+  // and map it back to full-resolution pixels.
+  return comps.slice(0, 2).map(k => {
+    const bw = k.x1 - k.x0 + 1, bh = k.y1 - k.y0 + 1;
+    const x = Math.max(0, k.x0 - bw * 0.06), y = Math.max(0, k.y0 - bh * 0.2);
+    const x2 = Math.min(W, k.x1 + 1 + bw * 0.06), y2 = Math.min(H, k.y1 + 1 + bh * 0.2);
+    return { x: x / sc, y: y / sc, w: (x2 - x) / sc, h: (y2 - y) / sc };
+  });
+}
+
+// Greyscale canvas of one region, scaled so the text is a readable size.
+function invRegionCanvas(bmp, r, target) {
+  const sc = Math.min(3, target / Math.max(r.w, r.h), Math.sqrt(4e6 / (r.w * r.h)));
   const c = document.createElement("canvas");
-  c.width = Math.round(bmp.width * sc); c.height = Math.round(bmp.height * sc);
+  c.width = Math.max(1, Math.round(r.w * sc)); c.height = Math.max(1, Math.round(r.h * sc));
   const g = c.getContext("2d");
-  g.drawImage(bmp, 0, 0, c.width, c.height);
+  g.imageSmoothingQuality = "high";
+  g.drawImage(bmp, r.x, r.y, r.w, r.h, 0, 0, c.width, c.height);
   const img = g.getImageData(0, 0, c.width, c.height), px = img.data;
   for (let i = 0; i < px.length; i += 4) { const y = 0.3 * px[i] + 0.59 * px[i + 1] + 0.11 * px[i + 2]; px[i] = px[i + 1] = px[i + 2] = y; }
   g.putImageData(img, 0, 0);
+  return c;
+}
+
+async function invOcrLines(worker, canvas, tag) {
   const lines = [];
+  for (const psm of ["3", "11"]) {
+    await worker.setParameters({ tessedit_pageseg_mode: psm });
+    const { data } = await worker.recognize(canvas);
+    // Each line with Tesseract's own confidence, so a clean read outvotes a
+    // smudged look-alike (LC23/37Y9BG at 74 vs LC23/37v98G). "blk" groups the
+    // lines of one pass so the parser knows which line sits under which.
+    const blk = tag + psm;
+    if (Array.isArray(data.lines) && data.lines.length) data.lines.forEach(l => lines.push({ text: l.text, conf: l.confidence, blk }));
+    else String(data.text || "").split("\n").forEach(t => lines.push({ text: t, conf: 60, blk }));
+  }
+  return lines;
+}
+
+async function invReadLabel(blob, have) {
+  have = have || {};
+  const done = (r) => (r.model || have.model) && (r.serial || have.serial);
+  const worker = await getTessWorker(() => {});
+  const bmp = await createImageBitmap(blob);
+  const lines = [];
+  let r = { model: "", serial: "", part: "" };
   try {
-    for (const psm of ["3", "11"]) {
-      await worker.setParameters({ tessedit_pageseg_mode: psm });
-      const { data } = await worker.recognize(c);
-      // Each line with Tesseract's own confidence, so a clean read outvotes a
-      // smudged look-alike (LC23/37Y9BG at 74 vs LC23/37v98G).
-      if (Array.isArray(data.lines) && data.lines.length) data.lines.forEach(l => lines.push({ text: l.text, conf: l.confidence }));
-      else lines.push(...String(data.text || "").split("\n"));
+    const labels = invFindLabels(bmp);
+    for (let k = 0; k < labels.length; k++) {
+      lines.push(...await invOcrLines(worker, invRegionCanvas(bmp, labels[k], 1800), "L" + k));
+      r = invParseLabel(lines);
+      if (done(r)) break;
+    }
+    if (!done(r)) {
+      lines.push(...await invOcrLines(worker, invRegionCanvas(bmp, { x: 0, y: 0, w: bmp.width, h: bmp.height }, 2000), "F"));
+      r = invParseLabel(lines);
     }
   } finally {
     try { await worker.setParameters({ tessedit_pageseg_mode: "6" }); } catch (e) {}
   }
-  return { lines, ...invParseLabel(lines) };
+  return { lines, ...r };
 }
 
 // Pure text parser - kept separate so it can be tested on saved OCR output.
 const INV_SER_FIX = { "0": "D", "8": "B", "6": "G", "4": "A", "5": "S", "2": "Z", "1": "I" };
+// Reads from Andy's 60-photo test (2026-10-02) set these rules:
+//  - Lennox: model on the banner, often with dashes and no slash
+//    (EL22XPV-024-230A01, SLP99DF090XV60C-02); serial 4 digits + letter +
+//    5 digits (5823H01796).
+//  - Daikin / Amana / Goodman furnaces and coils: a bare 10-digit serial that
+//    starts with year + month (2605278803), printed twice, model under it.
+//  - Daikin heat pumps: "SER. NO. / NO FABR. E000585" and the barcode caption
+//    *364451E000585C* - the serial is the letter + 6 digits.
+//  - Carrier tickets and side labels: "MODEL: 26RCAL", "SERIAL #: 34JYHHPH0951".
+const INV_LABEL_SER = /\b(?:SERIAL|SER\s*\.?\s*NO|S\/N|NO\s*\.?\s*FABR)\b\.?\s*(?:#|NO\b\.?)?\s*:?/;
+const INV_LABEL_MOD = /\bMODEL\b\.?\s*(?:#|NO\b\.?)?\s*:?/;
+function invEdit1(a, b) {   // true when a and b differ by at most one character
+  if (a === b) return true;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0, j = 0, d = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) { i++; j++; continue; }
+    if (++d > 1) return false;
+    if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; }
+  }
+  return d + (a.length - i) + (b.length - j) <= 1;
+}
+// Near-identical reads vote together; the best-read spelling stands for them.
+function invPickVote(map) {
+  const ks = [...map.keys()];
+  let best = "", bestScore = 0;
+  for (const k of ks) {
+    const score = ks.filter(o => invEdit1(k, o)).reduce((s, o) => s + map.get(o), 0);
+    const better = score > bestScore || (score === bestScore && (map.get(k) > map.get(best) || (map.get(k) === map.get(best) && k.length > best.length)));
+    if (better) { best = k; bestScore = score; }
+  }
+  return best;
+}
+function invSerialForm(tok) {
+  let t = tok.replace(/[^A-Z0-9]/g, "");
+  // All ten digits with a real month in places 3-4 is Daikin/Goodman
+  // (2602071568); a Lennox serial's places 3-4 are its year (5823H01796), so
+  // the two can't be mixed up.
+  if (/^(1[5-9]|2\d)(0[1-9]|1[0-2])\d{6}$/.test(t)) return t;
+  if (/^[S85]\d{4}[A-Z0-9]\d{5}$/.test(t)) t = t.slice(1);
+  if (/^\d{4}[A-Z0-9]\d{5}$/.test(t)) {
+    if (/\d/.test(t[4])) t = t.slice(0, 4) + (INV_SER_FIX[t[4]] || t[4]) + t.slice(5);
+    return /^\d{4}[A-Z]\d{5}$/.test(t) && !/^00/.test(t) ? t : "";           // Lennox
+  }
+  if (/^(1[5-9]|2\d)(0[1-9]|1[0-2])\d{6}$/.test(t)) return t;                    // Daikin / Amana / Goodman
+  const cap = t.match(/^\d{6}([A-Z]\d{6})[A-Z0-9]$/);                            // Daikin barcode caption
+  if (cap) return cap[1];
+  return "";
+}
+function invModelForm(tok) {
+  const t = tok.replace(/^[^A-Z0-9]+|[^A-Z0-9]+$/g, "");
+  if (/^[A-Z]\d{5,}[A-Z]?$/.test(t)) return "";   // a Daikin serial (E000585C), not a model
+  if (/^[A-Z]{1,5}\d{2,3}[A-Z]?(?:-\d{1,3})?\/\d{2,3}[A-Z0-9]*(?:-[A-Z0-9]{1,4})*$/.test(t)) return t.length >= 6 ? t : "";   // LC23/37Y9BG
+  if (/^[A-Z]{1,5}\d{2,3}[A-Z0-9]{0,10}(?:-[A-Z0-9]{1,6}){1,5}$/.test(t)) return t;                                          // EL22XPV-024-230A01
+  if (/^[A-Z]{1,6}\d[A-Z0-9]{4,14}$/.test(t) && (t.match(/[A-Z]/g) || []).length >= 2 && (t.match(/\d/g) || []).length >= 2 && !/^(WO|REV|LB|LOT|PO)\d/.test(t)) return t;   // DM97MC1005CN
+  return "";
+}
 function invParseLabel(lines) {
-  // Lines are strings or { text, conf }; a read's weight is its confidence.
-  const items = (lines || []).map(l => typeof l === "string" ? { text: l, conf: 60 } : { text: String(l.text || ""), conf: Number(l.conf) || 0 })
-    .map(l => ({ t: l.text.toUpperCase().replace(/[‒-―−]/g, "-").trim(), w: Math.max(1, l.conf) })).filter(l => l.t);
-  // Serial: Lennox-style 4 digits + letter + 5 digits (7122F47534). The
-  // letter is often read as a digit (D -> 0), and the barcode caption adds an
-  // "S" prefix (S6026D01744, read as 8...). Votes across both passes, plus
-  // partial reads that start or end the same way.
-  const votes = new Map(), parts = [];
-  for (const { t: l, w } of items) {
-    for (let tok of l.replace(/[^A-Z0-9 ]/g, " ").split(/\s+/)) {
-      if (/^[S85]\d{4}[A-Z0-9]\d{5}$/.test(tok)) tok = tok.slice(1);
-      if (/^\d{4}[A-Z0-9]\d{5}$/.test(tok)) {
-        if (/\d/.test(tok[4])) tok = tok.slice(0, 4) + (INV_SER_FIX[tok[4]] || tok[4]) + tok.slice(5);
-        if (/^\d{4}[A-Z]\d{5}$/.test(tok) && !/^00/.test(tok)) votes.set(tok, (votes.get(tok) || 0) + w);
-      } else if (/^[0-9A-Z]{5,9}$/.test(tok) && /\d/.test(tok)) parts.push(tok);
+  // Lines are strings or { text, conf, blk }; a read's weight is its confidence.
+  const items = (lines || []).map(l => typeof l === "string" ? { text: l, conf: 60, blk: "" } : { text: String(l.text || ""), conf: Number(l.conf) || 0, blk: l.blk || "" })
+    .map(l => ({ t: l.text.toUpperCase().replace(/[‒-―−]/g, "-").replace(/[|]/g, " ").replace(/\s+/g, " ").trim(), w: Math.max(1, l.conf), blk: l.blk })).filter(l => l.t);
+  const sv = new Map(), mv = new Map();
+  const add = (map, k, w) => { if (k) map.set(k, (map.get(k) || 0) + w); };
+  const serialish = (tok) => { const t = tok.replace(/[^A-Z0-9]/g, ""); return t.length >= 6 && t.length <= 16 && /\d{3}/.test(t) ? t : ""; };
+  items.forEach((it, i) => {
+    const { t: l, w } = it;
+    // The value after a printed label, or the first thing on the next line
+    // of the same read when the label sits on its own line.
+    const after = (re) => {
+      const m = l.match(re);
+      if (!m) return null;
+      const rest = l.slice(m.index + m[0].length).split(" ").filter(Boolean);
+      const next = items[i + 1] && items[i + 1].blk === it.blk ? items[i + 1].t.split(" ") : [];
+      return { rest, next };
+    };
+    const s = after(INV_LABEL_SER);
+    if (s) {
+      const v = s.rest.map(serialish).find(Boolean) || s.next.map(serialish).find(Boolean) || "";
+      let sn = invSerialForm(v);
+      if (!sn && /^[A-Z][0-9OQDIL]{6}$/.test(v)) sn = v[0] + v.slice(1).replace(/[OQD]/g, "0").replace(/[IL]/g, "1");   // E000585 read as EQ00585
+      if (!sn && !invModelForm(v) && /\d{4}/.test(v)) sn = v;                                                        // Carrier 34JYHHPH0951
+      add(sv, sn, w * 3);
     }
-  }
-  let serial = "", best = -1;
-  for (const [t, n] of votes) {
-    const score = n * 2 + 60 * parts.filter(p => p.length >= 5 && (t.startsWith(p) || t.endsWith(p))).length;
-    if (score > best) { best = score; serial = t; }
-  }
-  // Model: a letter-led model with a slash (LC23/37Y9BG, CRX35-30/36B-6F-1).
-  // It is printed twice on the label, so repeats win.
-  const mv = new Map();
-  for (const { t: l, w } of items) {
-    const t = l.replace(/\s*-\s*/g, "-").replace(/\s*\/\s*/g, "/");
-    for (const m of t.matchAll(/(?:^|[^A-Z0-9])([A-Z]{1,5}\d{2,3}[A-Z]?(?:-\d{1,3})?\/\d{2,3}[A-Z0-9]*(?:-[A-Z0-9]{1,4})*)(?=$|[^A-Z0-9\/-])/g)) {
-      const mod = m[1].replace(/-+$/, "");
-      if (mod.length >= 6) mv.set(mod, (mv.get(mod) || 0) + w);
+    const m = after(INV_LABEL_MOD);
+    if (m) {
+      const v = [...m.rest, ...m.next].map(x => x.replace(/^[^A-Z0-9]+|[^A-Z0-9]+$/g, "")).find(x => x.length >= 4 && /[A-Z]/.test(x) && /\d/.test(x)) || "";
+      add(mv, v, w * 3);
     }
-  }
-  let model = "", mbest = 0;
-  for (const [t, n] of mv) if (n > mbest || (n === mbest && t.length > model.length)) { mbest = n; model = t; }
+    const toks = l.split(" ");
+    for (const tok of toks) add(sv, invSerialForm(tok), w);
+    // A model alone on its line (the banner, or the line under the serial)
+    // counts more than one that turns up inside a sentence.
+    const joined = l.replace(/\s*-\s*/g, "-").replace(/\s*\/\s*/g, "/").split(" ");
+    const lw = joined.length <= 2 ? w * 1.5 : w * 0.6;
+    for (const tok of joined) add(mv, invModelForm(tok), lw);
+  });
+  const serial = invPickVote(sv);
+  if (serial) for (const k of [...mv.keys()]) if (k === serial) mv.delete(k);
+  const model = invPickVote(mv);
   // Part number: Lennox catalog number (22C62, 29A51) - printed three times
   // on the carton; the most-seen read wins.
   const pv = new Map();
@@ -353,45 +523,133 @@ function invParseLabel(lines) {
   return { model, serial, part };
 }
 
-// Read one capture: carton rules first, the tag reader fills any gap.
-// Andy 2026-10-02: the carton has separate barcodes for serial and model in
-// different orientations (serial runs up the left side). Barcode data carries
-// an identifier - "S" = serial, "1P" = part number - so where the phone can
-// read barcodes (Chrome on Android) they settle which number is which. OCR of
-// the picture stays the main reader.
-async function invReadBarcodes(blob) {
-  const out = { serial: "", part: "", model: "" };
-  if (typeof BarcodeDetector === "undefined") return out;
+// ---------- barcodes (read off the same photo) ----------
+// Andy 2026-10-02, 60-photo test: text OCR misread most carton labels, but the
+// barcodes on them hold the exact values - Daikin/Amana/Goodman: Code 128
+// serial (2605278803) + model, and a square code "CYP~MODEL~REV~SERIAL~date";
+// Lennox: "S5823H01796" serial + "1P23K61" part, square code with both; Daikin
+// heat pumps: Code 39 "364451E000585C" (product code + serial + check char).
+// Chrome on Android reads barcodes natively; the bundled zxing-wasm reader
+// (vendor/, MIT) covers every phone and works with no signal.
+let invZxingPromise = null;
+function invLoadZxing() {
+  if (window.ZXingWASM) return Promise.resolve(window.ZXingWASM);
+  if (!invZxingPromise) invZxingPromise = new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "vendor/zxing-reader.js";
+    s.onload = () => {
+      try {
+        ZXingWASM.setZXingModuleOverrides({ locateFile: (p, prefix) => p.endsWith(".wasm") ? new URL("vendor/zxing_reader.wasm", location.href).href : prefix + p });
+        resolve(ZXingWASM);
+      } catch (e) { reject(e); }
+    };
+    s.onerror = () => { invZxingPromise = null; reject(new Error("barcode reader didn't load")); };
+    document.head.appendChild(s);
+  });
+  return invZxingPromise;
+}
+async function invBarcodeTexts(blob) {
+  const out = [];
+  if (typeof BarcodeDetector !== "undefined") {
+    try {
+      const bmp = await createImageBitmap(blob);
+      for (const c of await new BarcodeDetector().detect(bmp)) out.push({ format: String(c.format || ""), text: String(c.rawValue || "") });
+    } catch (e) {}
+  }
   try {
-    const bmp = await createImageBitmap(blob);
-    const codes = await new BarcodeDetector().detect(bmp);
-    for (const c of codes || []) {
-      const v = String(c.rawValue || "").toUpperCase().replace(/\s+/g, "");
-      if (/^S\d{4}[A-Z]\d{5}$/.test(v)) out.serial = v.slice(1);
-      else if (/^1P[A-Z0-9]{3,12}$/.test(v)) out.part = v.slice(2);
-      else if (!out.model && /^[A-Z]{1,5}\d{2,3}[A-Z]?(?:-\d{1,3})?\/\d{2,3}[A-Z0-9-]*$/.test(v)) out.model = v;
+    const Z = await invLoadZxing();
+    for (const b of await Z.readBarcodes(blob, { tryHarder: true, maxNumberOfSymbols: 16 })) out.push({ format: String(b.format || ""), text: String(b.text || "") });
+  } catch (e) {}
+  return out;
+}
+// Pure: barcode texts -> { model, serial, part, key }. Kept separate so it can
+// be tested on saved reads.
+function invParseBarcodes(codes) {
+  const r = { model: "", serial: "", part: "", key: "" };
+  const sv = new Map(), mv = new Map();
+  const add = (map, k, w) => { if (k) map.set(k, (map.get(k) || 0) + w); };
+  for (const c of codes || []) {
+    const raw = String(c.text || "").toUpperCase().trim();
+    if (!raw) continue;
+    let m = raw.match(/^[A-Z]{2,4}~([A-Z0-9\/\-]{4,})~[A-Z0-9]*~([A-Z0-9]{6,})~/);    // CYP~CAPTA6030C3~AA~2605278803~...
+    if (m) { add(mv, m[1], 3); add(sv, m[2], 3); continue; }
+    if (raw.startsWith("[)>")) {                                                     // [)>RS06 GS P23K61 GS S5823H01796
+      for (const f of raw.split(/[\x1d\x1e\x04\u241d\u241e\u2404]/)) {
+        if (/^S[A-Z0-9]{6,}$/.test(f)) add(sv, f.slice(1), 2.5);
+        else if (/^1?P[A-Z0-9]{3,}$/.test(f) && !r.part) r.part = f.replace(/^1?P/, "");
+      }
+      continue;
+    }
+    const t = raw.split(/\s+/)[0];
+    if (/^S\d{4}[A-Z]\d{5}$/.test(t)) { add(sv, t.slice(1), 3); continue; }        // Lennox (S)Serial
+    if (/^1P[A-Z0-9]{3,12}$/.test(t)) { if (!r.part) r.part = t.slice(2); continue; }  // Lennox (1P)Part
+    if (/^2P[A-Z0-9\/\-]{4,}$/.test(t)) { add(mv, t.slice(2), 3); continue; }       // Lennox model (LC23/37Y9BG)
+    if (/^\d{12,14}$/.test(t)) continue;                                              // UPC / EAN
+    if (/^(1[5-9]|2\d)(0[1-9]|1[0-2])\d{6}$/.test(t)) { add(sv, t, 3); continue; }  // Daikin / Amana / Goodman
+    m = t.match(/^(\d{6})([A-Z]\d{6}).$/);                                            // Daikin heat pump caption
+    if (m) { add(sv, m[2], 2); if (!r.key) r.key = "D" + m[1]; continue; }
+    m = t.match(/^([A-Z]\d{6}).$/);                                                   // Daikin side label (E000169 + check)
+    if (m) { add(sv, m[1], 1.5); continue; }
+    const mod = invModelForm(t);
+    if (mod) add(mv, mod, 2);
+  }
+  r.serial = invPickVote(sv);
+  r.model = invPickVote(mv);
+  if (!r.key && r.part) r.key = "P" + r.part;
+  r.serials = [...sv.keys()];
+  return r;
+}
+
+// Read one capture: barcodes first (exact), then the model memory, then text
+// OCR of the label for whatever is still missing, then the tag reader.
+// Small barcodes in a wide shot: read them again on each label, enlarged.
+async function invBarcodeCrops(blob) {
+  const out = [];
+  try {
+    const Z = await invLoadZxing(), bmp = await createImageBitmap(blob);
+    for (const r of invFindLabels(bmp)) {
+      const sc = Math.min(2, Math.sqrt(12e6 / (r.w * r.h)));
+      const c = document.createElement("canvas"); c.width = Math.round(r.w * sc); c.height = Math.round(r.h * sc);
+      const g = c.getContext("2d"); g.imageSmoothingQuality = "high"; g.drawImage(bmp, r.x, r.y, r.w, r.h, 0, 0, c.width, c.height);
+      for (const b of await Z.readBarcodes(g.getImageData(0, 0, c.width, c.height), { tryHarder: true, maxNumberOfSymbols: 16 })) out.push({ format: String(b.format || ""), text: String(b.text || "") });
     }
   } catch (e) {}
   return out;
 }
 async function invReadFields(blob) {
-  let model = "", serial = "", part = "", how = "";
-  const bc = await invReadBarcodes(blob);
-  try { const r = await invReadLabel(blob); model = r.model; serial = r.serial; part = r.part || ""; how = "carton"; } catch (e) {}
-  if (bc.serial) { serial = bc.serial; how += "+barcode"; }
-  if (bc.model && !model) model = bc.model;
-  if (bc.part) part = bc.part;
+  let codes = await invBarcodeTexts(blob);
+  let bc = invParseBarcodes(codes);
+  if (!bc.model || !bc.serial) { codes = codes.concat(await invBarcodeCrops(blob)); bc = invParseBarcodes(codes); }
+  let { model, serial, part, key } = bc, how = model || serial ? "barcode" : "";
+  // Only barcodes and the model memory are exact. A value read from the
+  // label text alone can be off by a character, so the unit waits for Andy
+  // to check it (one tap) instead of being counted wrong.
+  let sureM = !!model, sureS = !!serial;
+  if (!model && key) { const mm = invModelMap()[key]; if (mm) { model = mm; sureM = true; how = how ? how + "+memory" : "memory"; } }
   if (!model || !serial) {
     try {
-      const f = await ocrTagFields(blob, () => {});
-      // A bare digit run (serialSource "digits") is often a lot / order
-      // number on a carton - only trust a serial read off its own label.
-      const fSerial = f && f.serial && f.serialSource !== "digits" ? String(f.serial).trim() : "";
-      if (!model && f && f.model) { model = String(f.model).trim(); how = how ? how + "+tag" : "tag"; }
-      if (!serial && fSerial) { serial = fSerial; how = how ? how + "+tag" : "tag"; }
+      const r = await invReadLabel(blob, { model, serial });
+      if (!model && r.model) {
+        model = r.model; how = how ? how + "+text" : "text";
+        // A text model that is already known (memory, or in this count) is safe.
+        const nm = invNormModel(model);
+        const known = [...new Set([...Object.values(invModelMap()), ...invLoad().items.map(it => it.model)])];
+        sureM = known.includes(nm);
+        // One smudged character off a model already known (DHO9VSA361C): show
+        // the known spelling on the check card - still checked, not counted.
+        if (!sureM) { const near = known.find(k => invEdit1(k, nm)); if (near) model = near; }
+      }
+      if (!serial && r.serial) { serial = r.serial; how = how ? how + "+text" : "text"; }
+      // Two different serials in the barcodes (a neighbour's label in the
+      // shot): the one the text also shows wins.
+      if (bc.serials.length > 1 && r.serial && bc.serials.includes(r.serial)) serial = r.serial;
+      if (!part && r.part) part = r.part;
     } catch (e) {}
   }
-  return { model: invNormModel(model), serial: String(serial || "").toUpperCase().trim(), part, how };
+  // (v246) No tag-reader fallback here: on a blurry carton it added 20-35 s
+  // and found the model once in 60 photos - the check card is faster.
+  if (!key && part) key = "P" + String(part).toUpperCase();
+  return { model: invNormModel(model), serial: String(serial || "").toUpperCase().trim(), part, key, how, sure: !!(model && serial && sureM && sureS) };
 }
 
 async function invReadBlob(blob, cam) {
@@ -400,17 +658,17 @@ async function invReadBlob(blob, cam) {
     line = { kind: "warn", text: "The camera didn't give a picture - tap Capture again." };
   } else {
     const r = await invReadFields(blob);
-    if (r.model && r.serial) {
-      line = invResultText(invAdd(r.model, r.serial, "scan", r.part), r.model, r.serial);
+    if (r.sure) {
+      line = invResultText(invAdd(r.model, r.serial, "scan", r.part, r.key), r.model, r.serial);
     } else {
       // Andy 2026-10-02: a half read is never counted silently - it waits for
       // a fix, and its photo goes to the failed-tag folder for the triage.
-      const kind = !r.model && !r.serial ? "inventory-unreadable" : !r.serial ? "inventory-no-serial" : "inventory-no-model";
+      const kind = r.model && r.serial ? "inventory-check" : !r.model && !r.serial ? "inventory-unreadable" : !r.serial ? "inventory-no-serial" : "inventory-no-model";
       const photoId = typeof newScanPhotoId === "function" ? newScanPhotoId() : "";
-      trackEvent("INVENTORY SCAN - " + (kind === "inventory-unreadable" ? "NOTHING READ" : kind === "inventory-no-serial" ? "NO SERIAL | model: " + r.model : "NO MODEL | serial: " + r.serial) + (photoId ? " | photo: " + photoId : ""));
+      trackEvent("INVENTORY SCAN - " + (kind === "inventory-check" ? "CHECK | model: " + r.model + " | serial: " + r.serial + " | how: " + r.how : kind === "inventory-unreadable" ? "NOTHING READ" : kind === "inventory-no-serial" ? "NO SERIAL | model: " + r.model : "NO MODEL | serial: " + r.serial) + (photoId ? " | photo: " + photoId : ""));
       if (typeof saveFailedScan === "function") saveFailedScan(blob, { id: photoId, kind, read: [r.model ? "model " + r.model : "", r.serial ? "serial " + r.serial : ""].filter(Boolean).join(", ") }).catch(() => {});
-      invAddFix({ model: r.model, serial: r.serial, part: r.part, photoId });
-      line = { kind: "warn", text: !r.model && !r.serial ? "Couldn't read that tag - fix it above, or retake." : "Got the " + (r.model ? "model (" + r.model + ")" : "serial (" + r.serial + ")") + " but not the " + (r.model ? "serial" : "model") + " - fill it in above." };
+      invAddFix({ model: r.model, serial: r.serial, part: r.part, key: r.key, photoId });
+      line = { kind: "warn", text: kind === "inventory-check" ? "Read " + r.model + " · SN " + r.serial + " off the label text - check it above and tap Count." : !r.model && !r.serial ? "Couldn't read that tag - fix it above, or retake." : "Got the " + (r.model ? "model (" + r.model + ")" : "serial (" + r.serial + ")") + " but not the " + (r.model ? "serial" : "model") + " - fill it in above." };
     }
   }
   cam.pending = Math.max(0, cam.pending - 1);
@@ -422,13 +680,13 @@ async function invReadBlob(blob, cam) {
 function invAddFix(f) {
   const d = invLoad();
   d.fix = d.fix || [];
-  d.fix.unshift({ id: "fix" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), model: f.model || "", serial: f.serial || "", part: f.part || "", photoId: f.photoId || "", ts: Date.now() });
+  d.fix.unshift({ id: "fix" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), model: f.model || "", serial: f.serial || "", part: f.part || "", key: f.key || "", photoId: f.photoId || "", ts: Date.now() });
   invSave(d);
 }
 function invFixHtml(fix) {
   return fix.map(f => `
     <div class="inv-fix" data-inv-fix="${f.id}">
-      <div class="inv-fix-h">Needs ${!f.model && !f.serial ? "model and serial" : !f.serial ? "the serial" : "the model"} · ${escapeHtml(invWhen(f.ts))}</div>
+      <div class="inv-fix-h">${f.model && f.serial ? "Check this read - tap Count if it matches the label" : "Needs " + (!f.model && !f.serial ? "model and serial" : !f.serial ? "the serial" : "the model")} · ${escapeHtml(invWhen(f.ts))}</div>
       <div class="inv-manual-row">
         <input class="search-input" data-fix-model type="text" placeholder="Model" value="${escapeHtml(f.model)}" autocomplete="off" autocapitalize="characters" spellcheck="false">
         <input class="search-input" data-fix-serial type="text" placeholder="Serial" value="${escapeHtml(f.serial)}" autocomplete="off" autocapitalize="characters" spellcheck="false">
@@ -445,7 +703,7 @@ function invWireFixes(root, after) {
     card.querySelector("[data-fix-ok]").onclick = () => {
       const m = card.querySelector("[data-fix-model]").value, sr = card.querySelector("[data-fix-serial]").value.trim();
       const fx = (invLoad().fix || []).find(x => x.id === id) || {};
-      const r = invAdd(m, sr, "fixed", fx.part);
+      const r = invAdd(m, sr, "fixed", fx.part, fx.key);
       // Andy 2026-10-02: tie the hand-typed answer to the saved photo, so the
       // triage sees what the reader got next to what is really on the tag.
       if (fx.photoId) trackEvent("INVENTORY FIX | photo: " + fx.photoId + " | read: model " + (fx.model || "-") + ", serial " + (fx.serial || "-") + " | corrected: model " + invNormModel(m) + ", serial " + (String(sr).toUpperCase() || "-"));
