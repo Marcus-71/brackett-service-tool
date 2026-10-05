@@ -673,6 +673,13 @@ function askOpenSeries(id) {
 function askAddModelAlts(units) {
   for (const u of units) {
     const t = (u.alts[0] || "").toUpperCase();
+    // Kohler: a nameplate model (14RES, 38RCLB, RXT) points Ask at that family's card (longest prefix wins).
+    const kTok = t.replace(/[^A-Z0-9.]/g, "");
+    if (!units.kFam && /^(\d{1,2}(\.5)?[A-Z]{3}|RXT|RDT|RRT|RSB|RGEN|6VSG)/.test(kTok) && typeof genFamilyForModel === "function") {
+      let kf = genFamilyForModel(kTok);
+      if (!kf || genBrandOf(kf) !== "Kohler") kf = genEntries().find(g => genBrandOf(g) === "Kohler" && (g.models || []).some(m => String(m.k || "").toUpperCase().startsWith(kTok)));
+      if (kf && genBrandOf(kf) === "Kohler") units.kFam = kf.id;
+    }
     if (t.length < 7 || !/[A-Z]/.test(t) || !/\d/.test(t) || !/^[A-Z0-9\-\/]+$/.test(t)) continue;
     const extra = new Set();
     const fam = codeFamilyPrefix(t, getAllCodes());
@@ -754,10 +761,10 @@ function askBuildIndex() {
   }
   for (const g of genEntries()) {
     items.push({
-      kind: "gen", id: g.id, brand: "Generac", equip: "Generator",
+      kind: "gen", id: g.id, brand: genBrandOf(g), equip: "Generator",
       title: [g.series, g.family].filter(Boolean).join(" · "),
       sub: [g.controller, g.engine].filter(Boolean).join(" · "),
-      titleHay: ["Generac", g.series, g.family, g.controller, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" ")].filter(Boolean).join(" ").toLowerCase(),
+      titleHay: [genBrandOf(g), g.series, g.family, g.controller, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" ")].filter(Boolean).join(" ").toLowerCase(),
       hay: genSearchFields(g).filter(Boolean).join(" ").toLowerCase(),
     });
   }
@@ -846,6 +853,8 @@ function askUnitHits(units, hay) {
 function askScoreItem(units, it) {
   const sc = askUnitHits(units, it.hay);
   const tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
+  // The Kohler family the asked model belongs to outranks sister cards that only share words.
+  if (sc && units.kFam && it.kind === "gen" && it.id === units.kFam) return { sc: sc + 1, tsc: tsc + 5 };
   return { sc, tsc };
 }
 
@@ -1456,7 +1465,10 @@ function askEntryText(it) {
       // "How do I reset the maintenance light on a <model>" - send the card's own steps.
       g.maintReset ? "Reset maintenance reminder: " + (g.maintReset.steps || []).join(" ") : "",
       g.maintReset && (g.maintReset.dealerSteps || []).length ? "Dealer full reset (all counters): " + g.maintReset.dealerSteps.join(" ") : "",
-    ].filter(Boolean).join(" | ");
+      // Fault codes and troubleshooting too (Kohler has no separate Error Codes entries).
+      ...[...(g.alarms || []), ...(g.warnings || [])].map(a => a.code + " " + (a.name || "") + ": " + (a.meaning || "") + ((a.steps || []).length ? " Steps: " + a.steps.join(" ") : "")),
+      ...(g.troubleshooting || []).map(t => t.symptom + ": " + (t.causes || []).join("; ") + " -> " + (t.fixes || []).join("; ")),
+    ].filter(Boolean).join(" | ").slice(0, 6000);
   }
   if (it.kind === "maint" && typeof MAINT_SPECS !== "undefined") {
     const m = MAINT_SPECS.find(x => x.brand + "|" + x.model === it.id);
@@ -2692,9 +2704,15 @@ document.getElementById("tstatSearchInput").addEventListener("input", (e) => { t
 // owner's/install manuals and support articles only.
 // ============================================================
 
-let genState = { search: "", series: "All", ctrl: "All" };
+let genState = { search: "", series: "All", ctrl: "All", brand: "Generac" };
+// Andy 2026-10-05: Kohler (Rehlko) home standby generators and transfer switches
+// live in kohler-gens.js (KOHLER_GENERATORS, same card layout). A family with no
+// brand is Generac.
+const genBrandOf = (g) => (g && g.brand) || "Generac";
 
-function genEntries() { return (typeof GENERATORS !== "undefined") ? GENERATORS : []; }
+function genEntries() {
+  return [...((typeof GENERATORS !== "undefined") ? GENERATORS : []), ...((typeof KOHLER_GENERATORS !== "undefined") ? KOHLER_GENERATORS : [])];
+}
 
 // A tech types "7043", "G0070430", "007043-0", "22kw" or a code like "1100".
 // Normalise the model forms so all of them hit the same family.
@@ -2708,17 +2726,30 @@ function genNormModel(s) {
 // Shared by the Generators detail card, its search and the Ask AI grounding, so
 // "generac 22k oil capacity" / "plug gap" questions reach the spec values.
 const GEN_SPEC_LABELS = { oil: "Oil", oilCapacity: "Oil capacity", sparkPlug: "Spark plug", plugGap: "Plug gap", valveClearance: "Valve clearance", compression: "Compression", torque: "Torque specs", battery: "Battery", airFilter: "Air filter", fuelPressure: "Fuel pressure", crankSensorGap: "Sensor / magneto air gap", exercise: "Exercise" };
-function genSpecLines(g) {
+// Known spec labels first, then any other spec a card carries (Kohler transfer
+// switches / OnCue: ratings, time delays, firmware...) with a readable label.
+const GEN_SPEC_EXTRA_LABELS = { sourceSensing: "Source sensing", timeDelays: "Time delays", contactResistance: "Contact resistance", auxContacts: "Aux contacts", controlWiring: "Control wiring", loadManagement: "Load management", loadShed: "Load shed", cableSizes: "Cable sizes", breakersFor22kA: "Breakers (22 kA)", manualOperation: "Manual operation", frequencyJumper: "Frequency jumper", pcMonitor: "PC monitoring", eam: "EAM",
+  controllerDetail: "Controller", oilPressure: "Oil pressure", magPickup: "Mag pickup", crankSensorGap: "Crank sensor gap", controllerDefaults: "Controller defaults",
+  protectionDefaults: "Protection defaults", tempSensor: "Temp sensor", stepperMotor: "Stepper motor" };
+// Kohler cards carry paragraph-long engine/fuel/years text: keep the header line short and show those in Specs.
+const genShort = (v) => !!v && String(v).length <= 60;
+function genSpecPairs(g) {
   const sp = g.specs || {};
-  return Object.keys(GEN_SPEC_LABELS).filter(k => sp[k]).map(k => GEN_SPEC_LABELS[k] + ": " + sp[k]);
+  const head = [["Engine", g.engine], ["Fuel", g.fuel], ["Years", g.years]].filter(([, v]) => v && !genShort(v));
+  const known = Object.keys(GEN_SPEC_LABELS).filter(k => sp[k]).map(k => [GEN_SPEC_LABELS[k], sp[k]]);
+  const extra = Object.keys(sp).filter(k => sp[k] && !GEN_SPEC_LABELS[k]).map(k => [GEN_SPEC_EXTRA_LABELS[k] || k.replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase()), sp[k]]);
+  return [...head, ...known, ...extra];
+}
+function genSpecLines(g) {
+  return genSpecPairs(g).map(([l, v]) => l + ": " + v);
 }
 function genSearchFields(g) {
   return [
-    "Generac", g.series, g.family, g.controller, g.engine, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" "),
+    genBrandOf(g), g.series, g.family, g.controller, g.engine, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" "),
     ...genSpecLines(g),
     ...(g.maintenance || []).map(x => x.interval + " " + x.task),
     ...(g.maintReset ? [g.maintReset.title, ...(g.maintReset.steps || []), ...(g.maintReset.notes || [])] : []),
-    ...(g.models || []).map(m => [m.g, m.digits, m.desc, "0" + m.digits, "00" + m.digits].join(" ")),
+    ...(g.models || []).map(m => m.k ? [m.k, m.desc].join(" ") : [m.g, m.digits, m.desc, "0" + m.digits, "00" + m.digits].join(" ")),
     ...(g.alarms || []).map(a => a.code + " " + a.name + " " + a.meaning),
     ...(g.warnings || []).map(a => a.code + " " + a.name + " " + a.meaning),
     ...(g.troubleshooting || []).map(x => x.symptom),
@@ -2735,8 +2766,21 @@ function genIncludes(fields, q) {
   return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a))));
 }
 
+// Generac / Kohler tabs: Generac-only boxes (checklist, multi-ATS) hide on Kohler.
+function genSyncBrandTabs() {
+  document.querySelectorAll("#genBrandTabs [data-brand]").forEach(b => b.classList.toggle("active", b.dataset.brand === genState.brand));
+  const generac = genState.brand === "Generac";
+  for (const id of ["genClEntry", "genClEntryRecent", "genMultiAts"]) { const el = document.getElementById(id); if (el) el.classList.toggle("hidden", !generac); }
+  const d = document.getElementById("genBrandNote");
+  if (d) d.textContent = generac
+    ? "Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen - code lists shift between controller generations."
+    : "Kohler (Rehlko) home standby generators and transfer switches: fault messages, troubleshooting, specs, maintenance and manuals from Kohler's own operation, installation and service manuals (Partner HQ technical library). Confirm on the unit's nameplate and controller - fault lists differ by controller.";
+  const inp = document.getElementById("genSearchInput");
+  if (inp) inp.placeholder = generac ? "Search model, kW, or code (7043, 22kW, 1100, overcrank…)" : "Search model, kW, or fault (20RCA, 14RESA, RXT, overcrank…)";
+}
 function renderGens() {
-  const all = genEntries();
+  const all = genEntries().filter(g => genBrandOf(g) === genState.brand);
+  genSyncBrandTabs();
   renderChips("genSeriesChips", ["All", ...uniqueSorted(all.map(g => g.series))], genState.series, (v) => { genState.series = v; renderGens(); }, "All Series");
   renderChips("genCtrlChips", ["All", ...uniqueSorted(all.map(g => g.controller))], genState.ctrl, (v) => { genState.ctrl = v; renderGens(); }, "All Controllers");
   const filtered = all.filter(g =>
@@ -2785,7 +2829,7 @@ function buildGenCard(g) {
       ${g.img ? `<img class="tstat-thumb" src="${escapeHtml(g.img)}" alt="" loading="lazy" onerror="this.remove()">` : ""}
       <div class="tstat-card-text">
         <div class="card-code">${escapeHtml(g.family)}</div>
-        <div class="card-title">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}</div>
+        <div class="card-title">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${genShort(g.engine) ? " · " + escapeHtml(g.engine) : ""}</div>
       </div>
       <span class="tag ${(g.sort || 30) <= 10 ? "common" : "verify"}">${(g.kw || []).length ? escapeHtml((g.kw.length > 1 ? g.kw[0] + "-" + g.kw[g.kw.length - 1] : g.kw[0]) + " kW") : "verify"}</span>
     </div>
@@ -2838,14 +2882,16 @@ function genMaintResetHtml(g) {
 function openGenDetail(id, focusModel) {
   const g = genEntries().find(x => x.id === id);
   if (!g) return;
+  // Opened from a scan or Ask: show that brand's tab under the card.
+  if (genBrandOf(g) !== genState.brand) { genState.brand = genBrandOf(g); genState.series = "All"; genState.ctrl = "All"; if (currentScreen === "gen") renderGens(); }
   const q = genState.search;
   const modal = document.getElementById("modal");
   const hit = (txt) => tstatHit(txt, q);
   const codeRows = (rows) => (rows || []).map(a => `
-    <tr class="${hit(a.code + " " + a.name + " " + a.meaning) ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(a.code)}</td><td><b>${escapeHtml(a.name || "")}</b>${a.display ? `<div class="tstat-note">Screen: ${escapeHtml(a.display)}</div>` : ""}${a.meaning ? `<div>${escapeHtml(a.meaning)}</div>` : ""}${(a.causes || []).length ? `<div class="tstat-note">Causes: ${escapeHtml(a.causes.join(" · "))}</div>` : ""}${(a.steps || []).length ? `<ul>${a.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>` : ""}${a.clear ? `<div class="tstat-note">Clear: ${escapeHtml(a.clear)}</div>` : ""}</td></tr>`).join("");
+    <tr class="${hit(a.code + " " + a.name + " " + a.meaning) ? "hit" : ""}"><td class="tstat-term ${genBrandOf(g) === "Generac" ? "short" : "wrap"}">${escapeHtml(a.code)}</td><td><b>${escapeHtml(a.name || "")}</b>${a.display ? `<div class="tstat-note">Screen: ${escapeHtml(a.display)}</div>` : ""}${a.meaning ? `<div>${escapeHtml(a.meaning)}</div>` : ""}${(a.causes || []).length ? `<div class="tstat-note">Causes: ${escapeHtml(a.causes.join(" · "))}</div>` : ""}${(a.steps || []).length ? `<ul>${a.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>` : ""}${a.clear ? `<div class="tstat-note">Clear: ${escapeHtml(a.clear)}</div>` : ""}</td></tr>`).join("");
   const sp = g.specs || {};
   const specLabels = GEN_SPEC_LABELS;
-  const specRows = Object.keys(specLabels).filter(k => sp[k]).map(k => `<tr><td class="tstat-term short">${escapeHtml(specLabels[k])}</td><td>${escapeHtml(sp[k])}</td></tr>`).join("");
+  const specRows = genSpecPairs(g).map(([l, v]) => `<tr><td class="tstat-term short">${escapeHtml(l)}</td><td>${escapeHtml(v)}</td></tr>`).join("");
   const maintRows = (g.maintenance || []).map(x => `<tr><td class="tstat-term${String(x.interval).length <= 10 ? " short" : ""}">${escapeHtml(x.interval)}</td><td>${escapeHtml(x.task)}</td></tr>`).join("");
   const tsBlocks = (g.troubleshooting || []).map(x => `
     <div class="tstat-ts ${hit(x.symptom) ? "hit" : ""}"><b>${escapeHtml(x.symptom)}</b>
@@ -2864,20 +2910,24 @@ function openGenDetail(id, focusModel) {
   // v227: the checklist button opens prefilled with the model the tech came in on.
   const focusFull = String(focusModel || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   const focusG = focus ? ((g.models || []).find(m => m.g === focusFull || m.g === "G" + focusFull) || (g.models || []).find(m => m.digits === focus) || {}).g || "" : "";
-  const modelRows = (g.models || []).map(m => `<tr class="${focus && m.digits === focus ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.digits || "")}</td><td>${escapeHtml(m.g || "")}${m.desc ? `<div class="tstat-note">${escapeHtml(m.desc)}</div>` : ""}</td></tr>`).join("");
+  const kFocus = String(focusModel || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  // Kohler: highlight only the longest matching prefix (a 14RESAL nameplate is 14RESAL, not also 14RES).
+  const kNorm = (k) => String(k || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const kHit = kFocus ? (g.models || []).map(m => kNorm(m.k)).filter(k => k && kFocus.startsWith(k)).sort((a, b) => b.length - a.length)[0] || "" : "";
+  const modelRows = genBrandOf(g) !== "Generac" ? (g.models || []).map(m => `<tr class="${kHit && kNorm(m.k) === kHit ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.k || "")}</td><td>${escapeHtml(m.desc || "")}</td></tr>`).join("") : (g.models || []).map(m => `<tr class="${focus && m.digits === focus ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.digits || "")}</td><td>${escapeHtml(m.g || "")}${m.desc ? `<div class="tstat-note">${escapeHtml(m.desc)}</div>` : ""}</td></tr>`).join("");
 
   modal.innerHTML = `
     ${g.img ? `<img class="tstat-hero" src="${escapeHtml(g.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(g.family)}</h2>
-    <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${g.engine ? " · " + escapeHtml(g.engine) : ""}${g.fuel ? " · " + escapeHtml(g.fuel) : ""}${g.years ? " · " + escapeHtml(g.years) : ""}</div>
+    <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${genShort(g.engine) ? " · " + escapeHtml(g.engine) : ""}${genShort(g.fuel) ? " · " + escapeHtml(g.fuel) : ""}${genShort(g.years) ? " · " + escapeHtml(g.years) : ""}</div>
     ${genIsAirCooled(g) ? `<div class="detail-section">${genChecklistBtnHtml(g.id, focusG)}</div>` : ""}
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
     ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
     ${genMaintResetHtml(g)}
     ${(() => { const st = genStartupFor(g); return st ? `<div class="detail-section"><h3>Startup / commissioning</h3>${st.warn ? `<p class="tstat-note"><b>${escapeHtml(st.warn)}</b></p>` : ""}${(st.groups || []).map(gr => `<div class="tstat-ts"><b>${escapeHtml(gr.group)}</b><ol>${(gr.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ol></div>`).join("")}</div>` : ""; })()}
     ${maintRows ? `<div class="detail-section"><h3>Maintenance</h3><table class="tstat-table">${maintRows}</table></div>` : ""}
-    ${(g.alarms || []).length ? `<div class="detail-section"><h3>Alarm codes (red - unit shuts down)</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
-    ${(g.warnings || []).length ? `<div class="detail-section"><h3>Warnings (yellow - keeps running)</h3><table class="tstat-table">${codeRows(g.warnings)}</table></div>` : ""}
+    ${(g.alarms || []).length ? `<div class="detail-section"><h3>${genBrandOf(g) === "Generac" ? "Alarm codes (red - unit shuts down)" : "Shutdown faults"}</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
+    ${(g.warnings || []).length ? `<div class="detail-section"><h3>${genBrandOf(g) === "Generac" ? "Warnings (yellow - keeps running)" : "Warnings and status messages"}</h3><table class="tstat-table">${codeRows(g.warnings)}</table></div>` : ""}
     ${tsBlocks ? `<div class="detail-section"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
     ${(g.installNotes || []).length ? `<div class="detail-section"><h3>Install notes</h3><ul>${g.installNotes.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
     ${(g.tips || []).length ? `<div class="detail-section"><h3>Field notes</h3><ul>${g.tips.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
@@ -2944,6 +2994,13 @@ function genFamilyForModel(model) {
   const uLC = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   const lcFam = genEntries().find(g => (g.models || []).some(m => m.lc && uLC.startsWith(m.lc)));
   if (lcFam) return lcFam;
+  // Kohler: the nameplate model starts with the family's model prefix (20RCAL-QS1 -> 20RCAL); longest prefix wins.
+  let kBest = null, kLen = 0;
+  for (const g of genEntries()) for (const m of (g.models || [])) {
+    const k = String(m.k || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (k && k.length > kLen && uLC.startsWith(k)) { kBest = g; kLen = k.length; }
+  }
+  if (kBest) return kBest;
   const d = genNormModel(model);
   if (!d) return null;
   // Exact G-number first (G0070430 and G0070431 can sit in different families), then the 4-digit form.
@@ -2969,7 +3026,7 @@ document.getElementById("genSearchInput").addEventListener("input", (e) => { gen
 // Liquid-cooled Protector families (and the code quick-lookup) never get the
 // air-cooled checklist.
 function genIsAirCooled(g) {
-  return !!g && !/protector/i.test(g.id || "") && (g.models || []).length > 0 &&
+  return !!g && genBrandOf(g) === "Generac" && !/protector/i.test(g.id || "") && (g.models || []).length > 0 &&
     !(g.models || []).some(m => m.lc);
 }
 
@@ -4264,6 +4321,14 @@ async function genClEntryCount() {
   if (prob) prob.addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) genProblemScan(f); });
   const rec = document.getElementById("genClEntryRecent");
   if (rec) rec.onclick = () => { genCl.view = "recent"; showScreen("genchecklist"); window.scrollTo(0, 0); };
+  document.querySelectorAll("#genBrandTabs [data-brand]").forEach(b => {
+    b.onclick = () => {
+      if (genState.brand === b.dataset.brand) return;
+      genState.brand = b.dataset.brand; genState.series = "All"; genState.ctrl = "All";
+      trackEvent("generators: brand tab " + genState.brand);
+      renderGens();
+    };
+  });
   const ats = document.getElementById("genMultiAtsOpen");
   if (ats) ats.onclick = () => { trackEvent("opened generator manual: multiple ATS wiring"); openManualDetail(seedIdOf({ file: "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-multiple-ats-install.pdf" })); };
 })();
@@ -6635,6 +6700,10 @@ fcWeighRender(); fcClockRender(); fcCylRender();
 // brand/equipment strings must match the values used in data.js so the
 // jump-to-codes buttons land on real filter selections.
 const MODEL_PATTERNS = [
+  // Kohler first (Andy 2026-10-05): "24RCLA" otherwise reads as a Carrier 24-series AC.
+  { re: /^(\d{1,2}(\.5)?(RESA|RESAL|RESC|RESCL|RESB|RESD|RESV|RESVL|RESL|RESM1|RESNT|RESHD|RES|TRES|RCAL|RCA|RCLA|RCLB|RCLC|RCL|RYG|REYG)|RGEN\d)/, brand: "Kohler", equipment: "Generator", series: "Kohler (Rehlko) residential home standby generator", notes: ["Kohler model = kW + series letters (20RCA, 14RESAL, 12RESV, 38RCLB). Open in Generators - Kohler tab for its fault messages, troubleshooting, specs and manuals."] },
+  { re: /^6VSG/, brand: "Kohler", equipment: "Generator", series: "Kohler 6VSG variable-speed DC generator", notes: ["Open in Generators - Kohler tab for its faults, troubleshooting and manuals."] },
+  { re: /^(RXT|RDT|RRT|RSB)[A-Z0-9-]/, brand: "Kohler", equipment: "Transfer Switch", series: "Kohler (Rehlko) residential automatic transfer switch", notes: ["RXT / RDT / RRT / RSB: open in Generators - Kohler tab for the switch's settings, LED/fault meanings and manuals."] },
   // --- coverage:lennox-furn-legacy (v125) ---
   { re: /^G(HR)?26Q/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G26 / GHR26 legacy condensing gas furnace (G26Q upflow, GHR26Q horizontal/downflow)", notes: ["Model form is family + Q + design digit + dash + input MBh: G26Q3-75, GHR26Q4/5-100. A trailing -1 on a wiring-diagram title (G26Q3-75-1) is the revision, not part of the size.","G26/GHR26 -1 and -2 units are intermittent pilot (Johnson G776 / Lennox 69J3601 / 41K8701, ONE control LED). -3 through -6 are SureLight with TWO board LEDs - two completely different code tables, both in Error Codes.","GHR26-1 uses the EGC-1 board (DIAG #1 / DIAG #2), which reads right-to-left compared with SureLight - check the board silkscreen before decoding.","Do not read the LEDs with the blower access panel off - there is a sight glass in the panel for that.","LP conversion manifold pressure is 7.5 in. w.c., NOT the 10 in. w.c. used elsewhere in the Lennox line (H-93-12).","Service Literature Corp. 9721-L11 (G26) / 9722-L11 (GHR26) is in Manuals."] },
   { re: /^G(HR)?32[QV]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G32 / GHR32 legacy two-stage condensing gas furnace (Q standard blower, V variable-speed blower)", notes: ["Q = PSC blower, V = variable-speed (VSP-controlled ICM) blower, per the Product Spec titles. Forms: G32Q3-75, G32V5-100/125-4, GHR32Q4/5-120.","TWO different diagnostic tables exist for this family and both are in Error Codes: the 9-pin SureLight two-LED table, and the later two-stage 12-pin control table (DS1/DS2) which adds a separate high-fire pressure switch code (OFF / FAST FLASH).","Low flame signal threshold differs by board: .61 microamps on the SureLight table, .23 microamps on the two-stage table. Read the board part number before judging a flame current.","G32V/GHR32V also carry a VSP blower board with its own DS LEDs - those are blower status, not fault codes.","Service Literature Corp. 9729-L12 (G32Q), 9816-L10 (G32V), 0001-L2 (GHR32Q/GHR32V) are in Manuals."] },
@@ -7459,7 +7528,7 @@ const BRAND_NAME_HINTS = [
   ["LENNOX", "Lennox"], ["TRANE", "Trane"], ["YORK", "York"], ["COLEMAN", "York"],
   ["LUXAIRE", "York"], ["RHEEM", "Rheem"], ["RUUD", "Rheem"], ["MITSUBISHI", "Mitsubishi"],
   ["FRIGIDAIRE", "Nortek"], ["MAYTAG", "Nortek"], ["GIBSON", "Nortek"], ["TAPPAN", "Nortek"], ["KELVINATOR", "Nortek"], ["WESTINGHOUSE", "Nortek"], ["NORDYNE", "Nortek"], ["NORTEK", "Nortek"], ["INTERTHERM", "Nortek"], ["MILLER", "Nortek"], ["BROAN", "Nortek"], ["NUTONE", "Nortek"], ["PHILCO", "Nortek"], ["GRANDAIRE", "Nortek"],
-  ["GENERAC", "Generac"], ["HONEYWELL GENERATOR", "Generac"], ["GUARDIAN", "Generac"], ["CENTURION", "Generac"], ["POWERPACT", "Generac"], ["CORE POWER", "Generac"], ["COREPOWER", "Generac"], ["ECOGEN", "Generac"], ["SYNERGY", "Generac"], ["POWERMATE", "Generac"], ["EATON", "Generac"], ["SIEMENS", "Generac"],
+  ["KOHLER", "Kohler"], ["REHLKO", "Kohler"], ["GENERAC", "Generac"], ["HONEYWELL GENERATOR", "Generac"], ["GUARDIAN", "Generac"], ["CENTURION", "Generac"], ["POWERPACT", "Generac"], ["CORE POWER", "Generac"], ["COREPOWER", "Generac"], ["ECOGEN", "Generac"], ["SYNERGY", "Generac"], ["POWERMATE", "Generac"], ["EATON", "Generac"], ["SIEMENS", "Generac"],
   ["FUJITSU GENERAL", "Fujitsu"], ["FUJITSU", "Fujitsu"], ["HALCYON", "Fujitsu"], ["AIRSTAGE", "Fujitsu"], ["LG ELECTRONICS", "LG"], ["SAMSUNG", "Samsung"],
   ["MERIT", "Lennox"], ["ELITE", "Lennox"], ["DAVE LENNOX SIGNATURE", "Lennox"], ["SIGNATURE COLLECTION", "Lennox"],
   ["AIRE FLO", "Lennox"],
@@ -8534,7 +8603,7 @@ function renderScanResult(info) {
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
           ${nModelManuals ? `<button class="primary-act" id="scanGoModelManuals">📄 Manuals for this model (${nModelManuals})</button>` : ""}
           ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
-          ${(info.brand === "Generac" && typeof genFamilyForModel === "function" && genFamilyForModel(info.model)) ? `<button class="primary-act" id="scanGoGen">🔌 Open in Generators</button>` : ""}
+          ${((info.brand === "Generac" || info.brand === "Kohler") && typeof genFamilyForModel === "function" && genFamilyForModel(info.model)) ? `<button class="primary-act" id="scanGoGen">🔌 Open in Generators</button>` : ""}
           ${scanWebLinks(info)}
         </div>
       </div>
@@ -9826,7 +9895,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v256";
+const APP_VERSION = "v257";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

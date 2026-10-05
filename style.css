@@ -2055,3 +2055,9 @@ body.inv-cam-open { overflow: hidden; }
 .ask-badge-charge  { border-color: #1c7ed6; color: #a5d8ff; }
 .ask-badge-series  { border-color: var(--border); color: var(--text-dim); }
 @media (prefers-color-scheme: light) { .ask-badge-maint { color: #2b8a3e; background: #ebfbee; } .ask-badge-charge { color: #1864ab; background: #e7f5ff; } }
+
+/* Generators: Generac / Kohler tabs (Andy 2026-10-05) */
+.gen-brand-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin: 0.6rem 16px 0.2rem; }
+.gen-brand-tabs button { min-height: 44px; border-radius: var(--radius); border: 2px solid var(--border); background: var(--card); color: inherit; font: inherit; font-weight: 800; }
+.gen-brand-tabs button.active { border-color: var(--brand-orange); background: var(--brand-navy); color: #fff; }
+.tstat-table td.tstat-term.wrap { white-space: normal; width: 30%; overflow-wrap: anywhere; } /* Kohler fault text (v257) */

@@ -283,7 +283,8 @@
       </div>
     </details>
   </div>
-  <div class="disclaimer">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
+  <div class="gen-brand-tabs" id="genBrandTabs" role="tablist"><button type="button" data-brand="Generac" class="active">Generac</button><button type="button" data-brand="Kohler">Kohler</button></div>
+  <div class="disclaimer" id="genBrandNote">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
   <div class="controls">
     <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model, kW, or code (7043, 22kW, 1100, overcrank…)" autocomplete="off">
     <div class="filter-row">
@@ -611,6 +612,7 @@
 <script src="toolbox.js"></script>
 <script src="thermostats.js"></script>
 <script src="generators.js"></script>
+<script src="kohler-gens.js"></script>
 <script src="weather.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
 <script src="maint.js"></script>
