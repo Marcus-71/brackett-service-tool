@@ -639,7 +639,78 @@ const ASK_KIND = {
   gen:     { label: "Generator",  rank: 3, open: (id) => openGenDetail(id) },
   tool:    { label: "Tool",       rank: 4, open: (id) => openToolboxDetail(id) },
   manual:  { label: "Manual",     rank: 5, open: (id) => openManualDetail(id) },
+  guide:   { label: "How-to",     rank: 3, open: (id) => askOpenGuide(id) },
+  maint:   { label: "Specs",      rank: 2, open: (id) => askOpenMaint(id) },
+  charge:  { label: "Charging",   rank: 2, open: (id) => openChargingChart(id) },
+  series:  { label: "Model",      rank: 4, open: (id) => askOpenSeries(id) },
 };
+// Andy 2026-10-05: "ask anything needs to catch all - hvac and generators".
+// Maintenance figures, charging charts and the tag-scanner model/series notes
+// are searched too, not just codes, fixes and manuals.
+function askOpenMaint(id) {
+  if (typeof maintState === "undefined") return;
+  const [, model] = String(id).split("|");
+  maintState.query = model || ""; maintState.equip = ""; maintState.open = id; maintState.tab = "figures";
+  const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = maintState.query;
+  showScreen("maint");
+}
+function askOpenSeries(id) {
+  const p = MODEL_PATTERNS[Number(String(id).replace("series-", ""))];
+  if (!p) return;
+  const modal = document.getElementById("modal");
+  modal.innerHTML = `
+    <h2>${escapeHtml(p.series || "")}</h2>
+    <div class="sub">${escapeHtml([p.brand, p.equipment].filter(Boolean).join(" · "))}</div>
+    ${(p.notes || []).length ? `<div class="detail-section"><ul>${p.notes.map(n => `<li>${escapeHtml(n)}</li>`).join("")}</ul></div>` : ""}
+    <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+}
+// The model prefix a pattern matches, as plain text ("^59SP5" -> "59SP5"), so
+// a typed model number finds its series card.
+// A full model number typed into Ask (59SP5A080E171216) also matches by the
+// front part its code family or tag-pattern names (59SP5A), like Error Codes.
+function askAddModelAlts(units) {
+  for (const u of units) {
+    const t = (u.alts[0] || "").toUpperCase();
+    if (t.length < 7 || !/[A-Z]/.test(t) || !/\d/.test(t) || !/^[A-Z0-9\-\/]+$/.test(t)) continue;
+    const extra = new Set();
+    const fam = codeFamilyPrefix(t, getAllCodes());
+    if (fam) extra.add(fam.toLowerCase());
+    if (typeof MODEL_PATTERNS !== "undefined") {
+      const p = MODEL_PATTERNS.find(x => x.re.test(t.replace(/[^A-Z0-9]/g, "")));
+      const pre = p ? askPatternPrefix(p.re) : "";
+      if (pre.length >= 3) extra.add(pre.toLowerCase());
+    }
+    // Generac model numbers (G00722610, 007226-0) reach their family by the 4 digits.
+    const gd = typeof genNormModel === "function" ? genNormModel(t) : "";
+    if (gd) extra.add(gd);
+    for (const e of extra) if (!u.alts.includes(e)) u.alts.push(e);
+  }
+  return units;
+}
+function askPatternPrefix(re) {
+  const src = String(re && re.source || "").replace(/^\^/, "");
+  const m = src.match(/^[A-Z0-9]+/);
+  return m ? m[0] : "";
+}
+// Step-by-step how-to cards that live on a screen (Andy 2026-10-05: Ask gave
+// a guessed answer for "how to hook up multiple ats" because the Generators
+// card wasn't in its library). Each <details class="gen-guide" id> is one
+// entry; its own text is what Ask searches and what the AI is given.
+function askGuideCards() { return [...document.querySelectorAll("details.gen-guide[id]")]; }
+function askGuideText(el) {
+  const c = el.cloneNode(true);
+  c.querySelectorAll("button, summary").forEach(n => n.remove());
+  return c.textContent.replace(/\s+/g, " ").trim();
+}
+function askOpenGuide(id) {
+  showScreen("gen");
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.open = true;
+  setTimeout(() => el.scrollIntoView({ block: "start" }), 50);
+}
 
 // A broad spread on purpose — not just fault codes. These teach a tech the
 // whole range they can ask across the manuals: specs, sequence of operation,
@@ -696,6 +767,52 @@ function askBuildIndex() {
       title: t.toolName + (t.title ? " — " + t.title : ""),
       sub: [t.brand, t.family].filter(Boolean).join(" · "),
       hay: [t.brand, t.family, t.toolName, t.title, t.whenToUse, t.era, ...(t.platforms || []), ...(t.requirements || []), ...(t.steps || []), ...(t.notes || [])].filter(Boolean).join(" ").toLowerCase(),
+    });
+  }
+  if (typeof MAINT_SPECS !== "undefined") {
+    for (const m of MAINT_SPECS) {
+      const rows = (m.groups || []).flatMap(g => [g.title, ...(g.rows || []).flatMap(r => [r.label, r.value])]);
+      items.push({
+        kind: "maint", id: m.brand + "|" + m.model, brand: m.brand || "", equip: m.equip || "",
+        title: [m.brand, m.model].filter(Boolean).join(" ") + " - maintenance figures",
+        sub: [m.equip, m.summary].filter(Boolean).join(" · "),
+        titleHay: [m.brand, m.model, ...(m.match || []), m.equip, "maintenance specs figures"].filter(Boolean).join(" ").toLowerCase(),
+        hay: [m.brand, m.model, ...(m.match || []), m.equip, m.summary, ...(m.flags || []).flatMap(f => [f.title, f.body]), ...rows].filter(Boolean).join(" ").toLowerCase(),
+      });
+    }
+  }
+  if (typeof CHARGING_CHARTS !== "undefined") {
+    for (const c of CHARGING_CHARTS) {
+      items.push({
+        kind: "charge", id: c.id, brand: c.brand || "", equip: "",
+        title: [c.brand, c.refrigerant, "charging chart"].filter(Boolean).join(" "),
+        sub: [c.models, c.meteringDevice].filter(Boolean).join(" · "),
+        titleHay: [c.brand, c.refrigerant, String(c.refrigerant || "").replace(/-/g, ""), "charging chart charge subcooling superheat"].filter(Boolean).join(" ").toLowerCase(),
+        hay: [c.brand, c.refrigerant, String(c.refrigerant || "").replace(/-/g, ""), "charging chart", c.meteringDevice, c.models, c.chartType, c.rowAxis, c.colAxis, c.units, c.notes, c.source].filter(x => typeof x === "string").join(" ").toLowerCase(),
+      });
+    }
+  }
+  if (typeof MODEL_PATTERNS !== "undefined") {
+    MODEL_PATTERNS.forEach((p, i) => {
+      if (!p.series) return;
+      const pre = askPatternPrefix(p.re);
+      items.push({
+        kind: "series", id: "series-" + i, brand: p.brand || "", equip: p.equipment || "",
+        title: p.series,
+        sub: [p.brand, p.equipment].filter(Boolean).join(" · "),
+        titleHay: [p.brand, pre, p.series].filter(Boolean).join(" ").toLowerCase(),
+        hay: [p.brand, pre, p.equipment, p.series, ...(p.notes || [])].filter(Boolean).join(" ").toLowerCase(),
+      });
+    });
+  }
+  for (const el of askGuideCards()) {
+    const t = el.querySelector("summary b"), sub = el.querySelector("summary .gwz-entry-text span");
+    items.push({
+      kind: "guide", id: el.id, brand: "Generac", equip: "Generator",
+      title: (t ? t.textContent : el.id) + " - step by step",
+      sub: sub ? sub.textContent : "",
+      titleHay: ["Generac", t && t.textContent, sub && sub.textContent, "how to hook up install wire connect multiple transfer switches ats"].filter(Boolean).join(" ").toLowerCase(),
+      hay: askGuideText(el).toLowerCase(),
     });
   }
   // Manuals: the seed index IS the shared library. openManualDetail() takes the
@@ -788,7 +905,7 @@ function renderAsk() {
   }
   examples.classList.add("hidden");
 
-  const units = buildSearchUnits(q);
+  const units = askAddModelAlts(buildSearchUnits(q));
   const need = units.length;
   const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
 
@@ -1315,7 +1432,7 @@ async function askRemotePassages(q, units, threshold, limit, skipIds) {
 }
 // Top structured entries, with their meaning/steps, for grounding.
 function askAiEntries(q, limit) {
-  const units = buildSearchUnits(q);
+  const units = askAddModelAlts(buildSearchUnits(q));
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
   for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
@@ -1341,6 +1458,20 @@ function askEntryText(it) {
       g.maintReset && (g.maintReset.dealerSteps || []).length ? "Dealer full reset (all counters): " + g.maintReset.dealerSteps.join(" ") : "",
     ].filter(Boolean).join(" | ");
   }
+  if (it.kind === "maint" && typeof MAINT_SPECS !== "undefined") {
+    const m = MAINT_SPECS.find(x => x.brand + "|" + x.model === it.id);
+    if (m) return [m.summary, ...(m.flags || []).map(f => f.title + ": " + f.body), ...(m.groups || []).map(g => g.title + ": " + (g.rows || []).map(r => r.label + " " + r.value).join("; ")), m.source ? "Source: " + m.source : ""].filter(Boolean).join(" | ").slice(0, 4000);
+  }
+  if (it.kind === "charge" && typeof CHARGING_CHARTS !== "undefined") {
+    const c = CHARGING_CHARTS.find(x => x.id === it.id);
+    if (c) return [c.models, c.refrigerant, c.meteringDevice, c.chartType, c.rowAxis, c.colAxis, c.units, c.notes, c.source].filter(x => typeof x === "string").join(" | ").slice(0, 3000);
+  }
+  if (it.kind === "series") {
+    const p = MODEL_PATTERNS[Number(String(it.id).replace("series-", ""))];
+    if (p) return [p.brand, p.equipment, p.series, ...(p.notes || [])].filter(Boolean).join(" | ").slice(0, 3000);
+  }
+  // How-to cards: the whole step list, so the answer follows the card.
+  if (it.kind === "guide") { const el = document.getElementById(it.id); return el ? askGuideText(el).slice(0, 4000) : it.sub || ""; }
   return it.sub || "";
 }
 
@@ -2616,7 +2747,28 @@ function renderGens() {
   const results = document.getElementById("genResults");
   const empty = document.getElementById("genEmptyState");
   results.innerHTML = "";
-  empty.classList.toggle("hidden", filtered.length !== 0);
+  // Andy 2026-10-05: "how to hook up multiple ats" typed here showed nothing -
+  // the how-to cards above the search are matched too and listed first.
+  const q = String(genState.search || "").trim();
+  const need = q ? Math.max(2, Math.ceil(buildSearchUnits(q).length / 2)) : Infinity;
+  const guides = q ? askGuideCards().filter(el => searchScore([el.querySelector("summary") ? el.querySelector("summary").textContent : "", askGuideText(el), "transfer switch ats hook up install wire connect"], q) >= need) : [];
+  for (const el of guides) {
+    const b = el.querySelector("summary b"), sub = el.querySelector("summary .gwz-entry-text span");
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<div class="card-top"><div><div class="card-code">📋 ${escapeHtml(b ? b.textContent : "How-to")} - step by step</div><div class="card-sub">${escapeHtml(sub ? sub.textContent : "")}</div></div></div>`;
+    card.onclick = () => askOpenGuide(el.id);
+    results.appendChild(card);
+  }
+  empty.classList.toggle("hidden", filtered.length + guides.length !== 0);
+  // Nothing here: hand the question to Ask Anything (all HVAC + generator content).
+  if (!filtered.length && !guides.length && q && typeof showScreen === "function") {
+    const ask = document.createElement("button");
+    ask.type = "button"; ask.className = "primary-act"; ask.style.width = "100%"; ask.style.marginTop = "0.5rem";
+    ask.textContent = "🔎 Ask Anything: \"" + q + "\"";
+    ask.onclick = () => { askState.search = q; const ai = document.getElementById("askInput"); if (ai) ai.value = q; showScreen("ask"); };
+    results.appendChild(ask);
+  }
   for (const g of filtered) results.appendChild(buildGenCard(g));
 }
 
@@ -9674,7 +9826,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v255";
+const APP_VERSION = "v256";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -2049,3 +2049,9 @@ body.inv-cam-open { overflow: hidden; }
 .gen-guide-body .primary-act { width: 100%; margin: 0.4rem 0; }
 .gen-guide-src { color: var(--text-dim); font-size: 0.8rem; }
 .gen-guide-body h4 { margin: 0.8rem 0 0.2rem; font-size: 0.95rem; }
+.ask-badge-guide   { border-color: var(--brand-yellow); color: #ffd98a; }
+@media (prefers-color-scheme: light) { .ask-badge-guide { color: #7a5a00; background: #fff5d6; } }
+.ask-badge-maint   { border-color: #2f9e44; color: #8ce99a; }
+.ask-badge-charge  { border-color: #1c7ed6; color: #a5d8ff; }
+.ask-badge-series  { border-color: var(--border); color: var(--text-dim); }
+@media (prefers-color-scheme: light) { .ask-badge-maint { color: #2b8a3e; background: #ebfbee; } .ask-badge-charge { color: #1864ab; background: #e7f5ff; } }
