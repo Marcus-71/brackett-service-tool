@@ -585,6 +585,13 @@ function invParseBarcodes(codes) {
     if (!raw) continue;
     let m = raw.match(/^[A-Z]{2,4}~([A-Z0-9\/\-]{4,})~[A-Z0-9]*~([A-Z0-9]{6,})~/);    // CYP~CAPTA6030C3~AA~2605278803~...
     if (m) { add(mv, m[1], 3); add(sv, m[2], 3); continue; }
+    if (raw.includes("&&")) {                                                       // Carrier/Bryant plate code &&S<serial>&&ZI<model>&&
+      for (const f of raw.split("&&")) {
+        if (/^ZI[A-Z0-9][A-Z0-9\-\/]{4,}$/.test(f)) add(mv, f.slice(2), 3);
+        else if (/^S[A-Z0-9]{6,}$/.test(f)) add(sv, f.slice(1), 3);
+      }
+      continue;
+    }
     if (raw.startsWith("[)>")) {                                                     // [)>RS06 GS P23K61 GS S5823H01796
       for (const f of raw.split(/[\x1d\x1e\x04\u241d\u241e\u2404]/)) {
         if (/^S[A-Z0-9]{6,}$/.test(f)) add(sv, f.slice(1), 2.5);

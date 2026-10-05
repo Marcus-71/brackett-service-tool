@@ -2778,7 +2778,7 @@ async function genProblemScan(file) {
   if (!model) {
     trackEvent("SCAN - NO MODEL READ" + (serial ? " | serial: " + serial : "") + (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId + " | gen problem scan");
     saveFailedScan(file, { id: photoId, kind: "unreadable", read: serial ? "serial " + serial : "" }).catch(() => {});
-    genProblemScanStatus("Couldn't read the MODEL line. Retake it straight on, close, in good light - or type the model or code in the search box below.", true);
+    genProblemScanStatus("Couldn't read the MODEL line. Retake it straight on, close, in good light - or type the model or code in the search box below." + tagNoModelHint(fields), true);
     return;
   }
   trackEvent("gen problem scan -> " + model + " | not in library | photo: " + photoId);
@@ -7807,7 +7807,50 @@ function ocrModelFromLine(data, prev) {
 //  * one Sauvola-binarized pass at the best turn before the enhanced pass.
 // Returns the chosen pass's fields, else the best of the failed passes (so a
 // serial found upright is not thrown away) with the model left empty.
+// Barcodes on the data plate (Andy 2026-10-05, Bryce's sideways Carrier
+// 59SP5A label): text OCR missed it, but the plate's square code carries the
+// exact values - "&&S2118A60538&&ZI59SP5A080E171216&&W5A045-21&&". Read with
+// the same reader Inventory uses (native on Android Chrome + bundled zxing).
+// Only structured codes whose fields are labelled count; any other barcode is
+// ignored so a part number or lot number is never taken for the model.
+function tagParseBarcodes(codes) {
+  let model = "", serial = "", brand = null;
+  for (const c of codes || []) {
+    const raw = String(c.text || "").toUpperCase().trim();
+    if (!raw) continue;
+    if (raw.includes("&&")) {                                   // Carrier / Bryant / Payne / ICP plate code
+      for (const f of raw.split("&&")) {
+        if (!model && /^ZI[A-Z0-9][A-Z0-9\-\/]{4,}$/.test(f)) model = f.slice(2);
+        else if (!serial && /^S[A-Z0-9]{6,}$/.test(f)) serial = f.slice(1);
+      }
+      continue;
+    }
+    const m = raw.match(/^[A-Z]{2,4}~([A-Z0-9\/\-]{4,})~[A-Z0-9]*~([A-Z0-9]{6,})~/);   // Daikin / Goodman / Amana
+    if (m) { if (!model) model = m[1]; if (!serial) serial = m[2]; continue; }
+    if (raw.startsWith("[)>")) {                                // Lennox: serial only (no model in it)
+      for (const f of raw.split(/[\x1d\x1e\x04␝␞␄]/)) if (!serial && /^S\d{4}[A-Z]\d{5}$/.test(f)) serial = f.slice(1);
+      continue;
+    }
+    const t = raw.split(/\s+/)[0];
+    if (!model && /^G0\d{6,7}$/.test(t)) { model = t; brand = "Generac"; }
+  }
+  return model ? { model, serial, serialSource: serial ? "label" : "", modelSource: "barcode", brandHint: brand } : null;
+}
+async function tagBarcodeFields(file) {
+  if (typeof invBarcodeTexts !== "function") return null;
+  try { return tagParseBarcodes(await invBarcodeTexts(file)); } catch (e) { return null; }
+}
+// Vern 2026-10-05 scanned the Generac ENGINE sticker (GENERAC OHVI ENGINES,
+// Model No. 0J9322, 992 cc) twice - it isn't the generator's model plate.
+function tagNoModelHint(fields) {
+  return fields && fields.brandHint === "Generac"
+    ? " On a Generac, the engine sticker (GENERAC OHVI ENGINES - Model No. 0J93xx, displacement in cc) is not the generator's model: scan the generator data plate (inside the lid, by the controller)."
+    : "";
+}
+
 async function ocrTagFields(file, onStatus) {
+  const viaBarcode = await tagBarcodeFields(file);
+  if (viaBarcode) { trackEvent("tag read by barcode"); return viaBarcode; }
   const photo = await loadPhotoForOcr(file);
   const base = photo.base;
   const worker = await getTessWorker(onStatus);
@@ -8226,7 +8269,7 @@ async function scanTagPhoto(file) {
     if (!fields.model) {
       const photoId = newScanPhotoId();
       trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
-      scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below.");
+      scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + tagNoModelHint(fields));
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       const box = document.getElementById("scanResult");
       // With the relay on, the photo goes to Andy by itself; the share button
@@ -9629,7 +9672,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v252";
+const APP_VERSION = "v253";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
