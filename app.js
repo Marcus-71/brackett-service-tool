@@ -4112,6 +4112,8 @@ async function genClEntryCount() {
   if (prob) prob.addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) genProblemScan(f); });
   const rec = document.getElementById("genClEntryRecent");
   if (rec) rec.onclick = () => { genCl.view = "recent"; showScreen("genchecklist"); window.scrollTo(0, 0); };
+  const ats = document.getElementById("genMultiAtsOpen");
+  if (ats) ats.onclick = () => { trackEvent("opened generator manual: multiple ATS wiring"); openManualDetail(seedIdOf({ file: "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-multiple-ats-install.pdf" })); };
 })();
 
 // ---------- storage of finished checklists (queue + recent, IndexedDB) ----------
@@ -9672,7 +9674,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v253";
+const APP_VERSION = "v254";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

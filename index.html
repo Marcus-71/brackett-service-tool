@@ -226,6 +226,24 @@
     </label>
     <input type="file" id="genProblemScanFile" accept="image/*" capture="environment" class="hidden">
     <div id="genProblemScanStatus" class="scan-status hidden"></div>
+    <!-- Andy 2026-10-05: one generator, several transfer switches (Generac support drawing) -->
+    <details class="gen-guide" id="genMultiAts">
+      <summary><span class="gwz-entry-icon" aria-hidden="true">🔀</span><span class="gwz-entry-text"><b>Multiple Transfer Switches</b><span>One generator to 2-10 ATS - wiring diagram</span></span></summary>
+      <div class="gen-guide-body">
+        <p>Generac: one air-cooled home standby generator can run up to <b>10</b> transfer switches. <b>More than 2 needs a relay</b> in the generator control panel (for voltage drop on the control circuit).</p>
+        <ul>
+          <li>The generator senses utility from <b>switch #1 only</b>, and only #1 makes the <b>T1</b> battery-charger connection (T1, N1, N2, 0 to the generator, as a single-switch install).</li>
+          <li>Relay in the control panel: battery 12 V through a 5 A fuse = wire <b>15A</b>; generator <b>23</b> drives the relay coil and its contact puts 15A out as <b>23A</b>.</li>
+          <li><b>15A</b> lands on switch #1's 194 terminal and continues as <b>194A</b>.</li>
+          <li>Switches #2, #3 (and up) get <b>only 194A and 23A</b>, daisy-chained from #1. No T1/N1/N2 on them.</li>
+          <li>Two switches: no relay - only 194 / 23 / 0 connect between them.</li>
+        </ul>
+        <p><b>Parts:</b> relay 0C3211E (12 VDC coil, contacts 10 A @ 240 VAC) · socket 0C3211G (8-pin octal) · fuse 0E7403A (5 A ATO) · fuse holder 0E7402 (8" wire loop).</p>
+        <p class="gen-guide-note">Drawing shows RTSC switches - match the terminal labels (0 / 23 / 194 / T1 / N1 / N2) on other models. The generator breaker must not exceed any switch's rating. Main power leads: Generac says consult the install manual / a dealer.</p>
+        <button type="button" class="primary-act" id="genMultiAtsOpen">📐 Open the wiring diagram</button>
+        <div class="gen-guide-src">Source: Generac support - "Can Multiple Transfer Switches Be Installed with a Single Generator?" and its Multiple ATS Install drawing.</div>
+      </div>
+    </details>
   </div>
   <div class="disclaimer">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
   <div class="controls">
