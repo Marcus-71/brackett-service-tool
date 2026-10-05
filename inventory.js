@@ -66,6 +66,8 @@ const INV_MODEL_SEED = {
   P24X49: "EL297UH045XV368", P25K43: "SL22KLV-036-230A01", P19U28: "SL25XPV-060-230A02", P16T33: "CBA38MV-048-230-6-03",
   P29G21: "LC23/37Y9BG", P16F32: "C35-30B-2-1",
   D364451: "DH9VSA361C", D500163: "DH9VSA4810", D500170: "DH9VSA6010",
+  // Generac carton UPCs, read off Andy's 2026-10-05 label photos (26KW / 28KW HSB).
+  U696471104752: "G0073280", U696471104769: "G0073290",
 };
 function invModelMap() {
   let m = {};
@@ -454,6 +456,7 @@ function invSerialForm(tok) {
   // (2602071568); a Lennox serial's places 3-4 are its year (5823H01796), so
   // the two can't be mixed up.
   if (/^(1[5-9]|2\d)(0[1-9]|1[0-2])\d{6}$/.test(t)) return t;
+  if (/^30\d{8}$/.test(t)) return t;                                             // Generac (3019042588) - all digits
   if (/^[S85]\d{4}[A-Z0-9]\d{5}$/.test(t)) t = t.slice(1);
   if (/^\d{4}[A-Z0-9]\d{5}$/.test(t)) {
     if (/\d/.test(t[4])) t = t.slice(0, 4) + (INV_SER_FIX[t[4]] || t[4]) + t.slice(5);
@@ -466,6 +469,7 @@ function invSerialForm(tok) {
 }
 function invModelForm(tok) {
   const t = tok.replace(/^[^A-Z0-9]+|[^A-Z0-9]+$/g, "");
+  if (/^G0\d{6,7}$/.test(t)) return t;             // Generac G-number (G0073290, G00722610)
   if (/^[A-Z]\d{5,}[A-Z]?$/.test(t)) return "";   // a Daikin serial (E000585C), not a model
   if (/^[A-Z]{1,5}\d{2,3}[A-Z]?(?:-\d{1,3})?\/\d{2,3}[A-Z0-9]*(?:-[A-Z0-9]{1,4})*$/.test(t)) return t.length >= 6 ? t : "";   // LC23/37Y9BG
   if (/^[A-Z]{1,5}\d{2,3}[A-Z0-9]{0,10}(?:-[A-Z0-9]{1,6}){1,5}$/.test(t)) return t;                                          // EL22XPV-024-230A01
@@ -487,7 +491,10 @@ function invParseLabel(lines) {
       const m = l.match(re);
       if (!m) return null;
       const rest = l.slice(m.index + m[0].length).split(" ").filter(Boolean);
-      const next = items[i + 1] && items[i + 1].blk === it.blk ? items[i + 1].t.split(" ") : [];
+      // Two lines down too: on Generac cartons the caption sits above the
+      // barcode, and the value is printed under the barcode.
+      const nl = (k) => items[i + k] && items[i + k].blk === it.blk ? items[i + k].t.split(" ") : [];
+      const next = [...nl(1), ...nl(2)];
       return { rest, next };
     };
     const s = after(INV_LABEL_SER);
@@ -568,6 +575,11 @@ function invParseBarcodes(codes) {
   const r = { model: "", serial: "", part: "", key: "" };
   const sv = new Map(), mv = new Map();
   const add = (map, k, w) => { if (k) map.set(k, (map.get(k) || 0) + w); };
+  // Generac carton label (Andy 2026-10-05): "28KW HSB", then UPC, Production
+  // Order (8 digits), Model Number (G0073290) and Serial Number (3019390380)
+  // barcodes. With a Generac model in the shot, a 10-digit number is its serial.
+  const texts = (codes || []).map(c => String(c.text || "").toUpperCase().trim().split(/\s+/)[0]);
+  const generac = texts.some(t => /^G0\d{6,7}$/.test(t) || /^0?696471\d{6}$/.test(t));   // model barcode or Generac's UPC prefix
   for (const c of codes || []) {
     const raw = String(c.text || "").toUpperCase().trim();
     if (!raw) continue;
@@ -584,7 +596,9 @@ function invParseBarcodes(codes) {
     if (/^S\d{4}[A-Z]\d{5}$/.test(t)) { add(sv, t.slice(1), 3); continue; }        // Lennox (S)Serial
     if (/^1P[A-Z0-9]{3,12}$/.test(t)) { if (!r.part) r.part = t.slice(2); continue; }  // Lennox (1P)Part
     if (/^2P[A-Z0-9\/\-]{4,}$/.test(t)) { add(mv, t.slice(2), 3); continue; }       // Lennox model (LC23/37Y9BG)
-    if (/^\d{12,14}$/.test(t)) continue;                                              // UPC / EAN
+    if (/^\d{12,14}$/.test(t)) { if (!r.upc) r.upc = t.slice(-12); continue; }       // UPC / EAN: one per model - a memory key
+    if (/^G0\d{6,7}$/.test(t)) { add(mv, t, 3); continue; }                          // Generac model (G0073290) - not a Daikin serial
+    if (generac && /^\d{10}$/.test(t)) { add(sv, t, 3); continue; }                  // Generac serial (3019390380)
     if (/^(1[5-9]|2\d)(0[1-9]|1[0-2])\d{6}$/.test(t)) { add(sv, t, 3); continue; }  // Daikin / Amana / Goodman
     m = t.match(/^(\d{6})([A-Z]\d{6}).$/);                                            // Daikin heat pump caption
     if (m) { add(sv, m[2], 2); if (!r.key) r.key = "D" + m[1]; continue; }
@@ -596,6 +610,7 @@ function invParseBarcodes(codes) {
   r.serial = invPickVote(sv);
   r.model = invPickVote(mv);
   if (!r.key && r.part) r.key = "P" + r.part;
+  if (!r.key && r.upc) r.key = "U" + r.upc;
   r.serials = [...sv.keys()];
   return r;
 }
