@@ -2048,3 +2048,4 @@ body.inv-cam-open { overflow: hidden; }
 .gen-guide-note { color: var(--text-dim); font-size: 0.88rem; }
 .gen-guide-body .primary-act { width: 100%; margin: 0.4rem 0; }
 .gen-guide-src { color: var(--text-dim); font-size: 0.8rem; }
+.gen-guide-body h4 { margin: 0.8rem 0 0.2rem; font-size: 0.95rem; }

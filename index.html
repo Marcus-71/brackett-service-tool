@@ -228,20 +228,58 @@
     <div id="genProblemScanStatus" class="scan-status hidden"></div>
     <!-- Andy 2026-10-05: one generator, several transfer switches (Generac support drawing) -->
     <details class="gen-guide" id="genMultiAts">
-      <summary><span class="gwz-entry-icon" aria-hidden="true">🔀</span><span class="gwz-entry-text"><b>Multiple Transfer Switches</b><span>One generator to 2-10 ATS - wiring diagram</span></span></summary>
+      <summary><span class="gwz-entry-icon" aria-hidden="true">🔀</span><span class="gwz-entry-text"><b>Multiple Transfer Switches</b><span>One generator to 2-10 ATS - how to do it + wiring diagram</span></span></summary>
       <div class="gen-guide-body">
-        <p>Generac: one air-cooled home standby generator can run up to <b>10</b> transfer switches. <b>More than 2 needs a relay</b> in the generator control panel (for voltage drop on the control circuit).</p>
+        <p>One Generac air-cooled home standby generator can run up to <b>10</b> transfer switches. <b>2 switches: no relay. 3 or more: add a relay</b> in the generator control panel (Generac: it covers voltage drop on the control circuit).</p>
+
+        <h4>1. Do you need more than one switch?</h4>
         <ul>
-          <li>The generator senses utility from <b>switch #1 only</b>, and only #1 makes the <b>T1</b> battery-charger connection (T1, N1, N2, 0 to the generator, as a single-switch install).</li>
-          <li>Relay in the control panel: battery 12 V through a 5 A fuse = wire <b>15A</b>; generator <b>23</b> drives the relay coil and its contact puts 15A out as <b>23A</b>.</li>
-          <li><b>15A</b> lands on switch #1's 194 terminal and continues as <b>194A</b>.</li>
-          <li>Switches #2, #3 (and up) get <b>only 194A and 23A</b>, daisy-chained from #1. No T1/N1/N2 on them.</li>
-          <li>Two switches: no relay - only 194 / 23 / 0 connect between them.</li>
+          <li><b>One service feed split in a junction box</b> (one feed, then two panels): one switch ahead of the split can do it, if local code allows.</li>
+          <li><b>Two or more feeds straight off the meter</b> (no junction box between): one switch <b>per feed</b> - you can't bring an already-split feed back together.</li>
+          <li>Each switch matches the service it transfers (200 A service = 200 A switch), same voltage and phase as the generator. The generator's main breaker must never be bigger than any switch's rating. Size the generator for everything the switches can carry at once.</li>
+          <li>Confirm with local code and the utility before you plan the job.</li>
         </ul>
-        <p><b>Parts:</b> relay 0C3211E (12 VDC coil, contacts 10 A @ 240 VAC) · socket 0C3211G (8-pin octal) · fuse 0E7403A (5 A ATO) · fuse holder 0E7402 (8" wire loop).</p>
-        <p class="gen-guide-note">Drawing shows RTSC switches - match the terminal labels (0 / 23 / 194 / T1 / N1 / N2) on other models. The generator breaker must not exceed any switch's rating. Main power leads: Generac says consult the install manual / a dealer.</p>
+
+        <h4>2. Pick switch #1 (the master)</h4>
+        <ul>
+          <li>The generator watches utility from <b>switch #1 only</b> (N1/N2). When #1's utility drops, every switch transfers together; when it returns, they all go back.</li>
+          <li>Only #1 makes the <b>T1</b> battery-charger connection.</li>
+          <li>So make #1 the switch on the feed you want to watch (usually the main service).</li>
+        </ul>
+
+        <h4>3. Power wiring</h4>
+        <ul>
+          <li>Generator output (E1/E2) lands on E1/E2 in each switch. Generac does not publish a multi-switch power diagram - size the conductors, taps and protection per the switch install manuals and code, and consult a dealer if unsure.</li>
+          <li>In each switch, utility and generator neutrals go to the neutral bar; service and generator equipment grounds go to the ground bar.</li>
+        </ul>
+
+        <h4>4. Control wiring</h4>
+        <ul>
+          <li><b>Switch #1:</b> wired like a single install for T1, N1, N2 and 0. Its 194 and 23 come from the relay (194A / 23A), not straight from the generator.</li>
+          <li><b>Switches #2, #3 and up:</b> only <b>194A and 23A</b>, daisy-chained from #1 to #2 to #3. No T1, N1 or N2 on them.</li>
+          <li><b>2 switches only (no relay):</b> just 194 / 23 / 0 run between the two switches.</li>
+          <li>Wire 194 = +12 VDC to each switch's transfer relay. Wire 23 = the transfer signal - the controller closes it to ground to transfer to Standby. 0 = DC ground.</li>
+        </ul>
+
+        <h4>5. The relay (3+ switches)</h4>
+        <ul>
+          <li>Mount the relay, socket and 5 A fuse holder in the generator control panel.</li>
+          <li>Battery 12 V through the 5 A fuse = wire <b>15A</b>. 15A lands on switch #1's 194 terminal and continues out as <b>194A</b> to the others - so the switch relays run off the battery, not the generator's 194 circuit.</li>
+          <li>Relay coil (socket pins 2 and 7) on the generator's <b>194</b> and <b>23</b>. Contact (pins 1 to 3) connects <b>0</b> to <b>23A</b>: when the controller grounds 23, the relay pulls in and grounds 23A to every switch at once.</li>
+          <li>Parts: relay 0C3211E (12 VDC coil, contacts 10 A @ 240 VAC) · socket 0C3211G (8-pin octal) · fuse 0E7403A (5 A ATO) · fuse holder 0E7402 (8" wire loop).</li>
+        </ul>
+
+        <h4>6. Test it</h4>
+        <ul>
+          <li>At each switch, check E1 and E2 to neutral (120 VAC each) and E1 to E2 (240 VAC) with the generator running.</li>
+          <li>Generator MLCB ON, controller in MANUAL, then turn the utility breaker for switch #1 OFF. After the utility-loss delay, wire 23 closes to ground and <b>all</b> switches should transfer to Standby.</li>
+          <li>A switch that doesn't move: measure 194(A) to ground (12 VDC) and across 23(A) and 194(A) at that switch. No voltage = an open in its 194A/23A run; voltage present = a problem inside that switch.</li>
+          <li>Turn #1's utility back ON and confirm every switch retransfers after the return delay. Put the controller back in AUTO.</li>
+        </ul>
+
+        <p class="gen-guide-note">The drawing shows RTSC switches - match the terminal labels (0 / 23 / 194 / T1 / N1 / N2) on other models.</p>
         <button type="button" class="primary-act" id="genMultiAtsOpen">📐 Open the wiring diagram</button>
-        <div class="gen-guide-src">Source: Generac support - "Can Multiple Transfer Switches Be Installed with a Single Generator?" and its Multiple ATS Install drawing.</div>
+        <div class="gen-guide-src">Sources: Generac support - "Can Multiple Transfer Switches Be Installed with a Single Generator?", "If I have two main panels in my home will I need to use two transfer switches?", "Automatic transfer switch compatibility guide", "Transfer Switch Installation FAQs"; Generac Multiple ATS Install drawing (relay notes 1-3); Generac Wire #23/#194 Quick Diagnostic addendum.</div>
       </div>
     </details>
   </div>
