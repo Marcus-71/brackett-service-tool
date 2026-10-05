@@ -2541,7 +2541,7 @@ function genEntries() { return (typeof GENERATORS !== "undefined") ? GENERATORS 
 function genNormModel(s) {
   const u = String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   let m;
-  if ((m = u.match(/^G?0{1,2}(\d{4})(\d)?$/))) return m[1];         // G0070430 / 0070430 / 007043-0 -> 7043
+  if ((m = u.match(/^G?0{1,2}(\d{4})(\d{1,2})?$/))) return m[1];    // G0070430 / 0070430 / 007043-0 -> 7043; 2024+ plates G00722610 -> 7226
   if ((m = u.match(/^(\d{4})$/))) return m[1];
   return "";
 }
@@ -3179,14 +3179,21 @@ function genNoteScan(model, serial) {
 // so HVAC searches never land here.
 function genMaintResolve(q) {
   const u = String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-  if (!/^G0\d{6}$|^00\d{5}$|^\d{4}$/.test(u)) return null;
+  if (!/^G0\d{6,7}$|^00\d{5}$|^\d{4}$/.test(u)) return null;
   if (/^\d{4}$/.test(u)) {
     const p4 = (typeof MODEL_PATTERNS !== "undefined") ? MODEL_PATTERNS.find(p => p.brand === "Generac" && p.re.test(u)) : null;
     if (!p4) return null;
   }
   const fam = genFamilyForModel(q);
   if (!fam || !genIsAirCooled(fam)) return null;
-  const full = u.startsWith("G") ? u : (u.length === 7 ? "G" + u : "");
+  let full = u.startsWith("G") ? u : (u.length === 7 ? "G" + u : "");
+  // 2024+ plates print an extra digit (G00722610, Vern 2026-10-05). That unit
+  // had Mobile Link Wi-Fi (Andy), so the 9-character form maps to the Wi-Fi
+  // variant (...9) when the list has one - same specs, codes and kit as ...0.
+  if (/^G0\d{7}$/.test(u)) {
+    const base = u.slice(0, 7);
+    full = (fam.models || []).some(m => m.g === base + "9") ? base + "9" : base + "0";
+  }
   const digits = genNormModel(q);
   const model = (fam.models || []).find(m => full && m.g === full) || (fam.models || []).find(m => m.digits === digits) || null;
   return { family: fam, model };
@@ -6875,6 +6882,7 @@ const MODEL_PATTERNS = [
   { re: /^PUMY[A-Z0-9-]/, brand: "Mitsubishi", equipment: "Mini-Split", series: "Mitsubishi PUMY multi-zone outdoor unit (P-series/CITY MULTI S)", notes: ["Check codes surface on the indoor controllers - see Mitsubishi codes in Error Codes."] },
 
   // --- Generac air-cooled home standby generators (data-label model forms G0070430 / 007043-0 / 0070430) ---
+  { re: /^G0\d{7}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Newer data-plate form with an extra digit (G00722610, built 2024 = 7226, the 18 kW Guardian with Wi-Fi - same family as G0072269)","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^G0\d{6}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["G-number form (G0070430) - the same unit prints as 007043-0 on the data tag","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^00\d{4}-\d$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form (007043-0 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^00\d{5}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form with the dash dropped (0070430 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
