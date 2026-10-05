@@ -427,6 +427,20 @@ function renderChips(containerId, values, active, onPick, allLabel) {
   el.onchange = () => onPick(el.value);
 }
 
+// Longest front part (5+ characters) of a model number that a code family's
+// text names - "59SP5A080E171216" -> "59SP5A". "" when the query isn't
+// model-shaped or no family matches.
+function codeFamilyPrefix(q, codes) {
+  const m = String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (m.length < 6 || !/[A-Z]/.test(m) || !/\d/.test(m)) return "";
+  const fams = [...new Set((codes || []).map(c => String(c.family || "").toUpperCase()))];
+  for (let n = m.length - 1; n >= 5; n--) {
+    const p = m.slice(0, n);
+    if (fams.some(f => f.includes(p))) return p;
+  }
+  return "";
+}
+
 function renderCodes() {
   const all = getAllCodes();
   // Chip options reflect the OTHER active filter, so a brand/equipment with zero
@@ -439,16 +453,31 @@ function renderCodes() {
   renderChips("brandChips", brands, codesState.brand, (v) => { codesState.brand = v; renderCodes(); }, "All Brands");
   renderChips("equipChips", equips, codesState.equipment, (v) => { codesState.equipment = v; renderCodes(); }, "All Equipment");
 
-  const filtered = all.filter(c =>
-    (codesState.brand === "All" || c.brand === codesState.brand) &&
-    (codesState.equipment === "All" || c.equipment === codesState.equipment) &&
+  const inFilters = (c) => (codesState.brand === "All" || c.brand === codesState.brand) &&
+    (codesState.equipment === "All" || c.equipment === codesState.equipment);
+  let filtered = all.filter(c => inFilters(c) &&
     textIncludes([c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[]), ...(c.techTips || []).map(t => t.text)], codesState.search)
-  ).sort((a, b) => a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
+  );
+  // A full model typed or pasted (59SP5A080E171216) finds nothing, because the
+  // families are written by series (59SP5A). Fall back to the longest front
+  // part of the model that a family names (Andy 2026-10-05).
+  let viaPrefix = "";
+  if (!filtered.length) {
+    const pre = codeFamilyPrefix(codesState.search, all.filter(inFilters));
+    if (pre) { viaPrefix = pre; filtered = all.filter(c => inFilters(c) && String(c.family || "").toUpperCase().includes(pre)); }
+  }
+  filtered.sort((a, b) => a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
 
   const results = document.getElementById("codesResults");
   const empty = document.getElementById("codesEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
+  if (viaPrefix) {
+    const note = document.createElement("div");
+    note.className = "disclaimer";
+    note.textContent = "No codes list the full model - showing the " + viaPrefix + " family. Match the board and LED type on the unit.";
+    results.appendChild(note);
+  }
   for (const code of filtered) results.appendChild(buildCodeCard(code));
 }
 
@@ -6724,6 +6753,7 @@ const MODEL_PATTERNS = [
   { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["Full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'."] },
   { re: /^59TP[67]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96/97 two-stage furnace (59TP6 / 59TP7)", notes: ["59TP7 = Performance 97 (to 97% AFUE); 59TP6 = Performance 96. Same service platform — manifold Table 26 by input rate + altitude, same temp-rise and altitude-derate. 59TP7A standardizes the 59TP6C on-board 3-digit LCD + NFC diagnostics.","Install/service manual is in Manuals → Carrier."] },
   { re: /^59TN[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 96 two-stage variable-speed gas furnace (59TN6)", notes: ["Infinity communicating control - the Carrier Infinity major.minor status-code table in Error Codes (same family as the 59MN7C) applies.", "Install/service manual (59TN6B) is in Manuals → Carrier."] },
+  { re: /^59SP5/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 59SP5A multipoise condensing gas furnace", notes: ["Its own two-digit amber-LED flash codes (short flashes = first digit, long = second) are in Error Codes under 59SP5A - the Codes button opens them.", "Source: Carrier 59SP5A-18SI installation instructions (same code text in -14SI through -17SI)."] },
   { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["Uses the standard Carrier flash-code board — see Bryant/Payne flash codes in Error Codes."] },
   { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Standard flash-code list in Error Codes applies to most non-communicating models."] },
   // Payne-branded — same Carrier Corp platform, one standard tier (no
@@ -8269,7 +8299,9 @@ function renderScanResult(info) {
     facts.push(["Brand", info.brandGuess + " (read off the tag)"]);
   }
   if (info.age) facts.push(["Age", info.age]);
-  const codeCount = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment).length : 0;
+  const brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
+  const famPre = codeFamilyPrefix(info.model, brandCodes);
+  const codeCount = famPre ? brandCodes.filter(c => String(c.family || "").toUpperCase().includes(famPre)).length : brandCodes.length;
   // Share across with Maintenance Figures: show the link only when this exact
   // model actually resolves to a maintenance entry (uses the same forgiving match).
   // v185: exact entries, or same-kind look-alikes (the list labels those); never
@@ -8300,7 +8332,7 @@ function renderScanResult(info) {
         ${ocrBanner}
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
         <div class="scan-actions">
-          ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${escapeHtml(info.brand)} ${escapeHtml(info.equipment)} codes (${codeCount})</button>` : ""}
+          ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " codes" : escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
           ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
           ${nModelManuals ? `<button class="primary-act" id="scanGoModelManuals">📄 Manuals for this model (${nModelManuals})</button>` : ""}
@@ -8312,8 +8344,12 @@ function renderScanResult(info) {
     </div>`;
   const goCodes = document.getElementById("scanGoCodes");
   if (goCodes) goCodes.onclick = () => {
-    codesState.brand = info.brand; codesState.equipment = info.equipment; codesState.search = "";
-    document.getElementById("codesSearchInput").value = "";
+    codesState.brand = info.brand; codesState.equipment = info.equipment;
+    // Straight to this unit's own family when one is named by the model's
+    // front part (59SP5A080E171216 -> 59SP5A), not every Carrier furnace code.
+    const pre = codeFamilyPrefix(info.model, getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment));
+    codesState.search = pre;
+    document.getElementById("codesSearchInput").value = pre;
     showScreen("codes");
   };
   const goMaint = document.getElementById("scanGoMaint");
@@ -9593,7 +9629,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v250";
+const APP_VERSION = "v251";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
