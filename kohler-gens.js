@@ -14270,7 +14270,7 @@ const KOHLER_GENERATORS = [
    "Do not use the older RCL fuel conversion leads (73A/73B/65) on these units - KG6208 sets use lead 49 to N17, and the RCLC/60RCLB also need FV1/FV2 lead swaps (TP-7101 p.33; TP-7203 p.40).",
    "Break-in oil: run at least 40 h, then change at the normal 150 h service (TP-7102 p.71; TP-7095 p.36).",
    "SB-807: oil filter GM101269 made before 4/1/2021 can leak on 6.2 L engines; replace it with the new design (wrench flats on the bottom) - tightening will not fix it.",
-   "ECM codes: E-Controls kit GM42033 plus 6.2 L harness GM105612 (or update kit GM106069-S) reads/clears active and historic DTCs, records plots and runs ignition cut-out tests; the 4G ECM label says '4G' (SB-750). TP-7124 is the EDIS software manual.",
+   "ECM codes: E-Controls kit GM42033 plus 6.2 L harness GM105612 (or update kit GM106069-S) reads/clears active and historic DTCs, records plots and runs ignition cut-out tests; the 4G ECM label says '4G' (SB-750).",
    "Fault names differ between the service manual (TP-7103) and the newer operation manual (TP-7102), e.g. Frequency High Shutdwn vs Frequency Over Shutdown; both are listed here.",
    "Battery CrLo Warning (below 11 V for 10 s) and Oil Temperature High Warning appear only in TP-7102 (newer firmware).",
    "Spark plug gap is 0.76 mm (0.030 in.) - not the 0.9 mm (0.035 in.) used on the older GM-engine RCL.",
@@ -14313,10 +14313,6 @@ const KOHLER_GENERATORS = [
     "title": "TP-7097 Service Manual, KG6208/TA Fuel System & Diagnostics",
     "docType": "service",
     "seedFile": "kohler-tp-7097.pdf"
-   },
-   {
-    "title": "TP-7124 EDIS Software, KG6208",
-    "docType": "software"
    },
    {
     "title": "TP-6783 Service Manual, FRX permanent-magnet alternator",
