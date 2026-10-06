@@ -673,12 +673,17 @@ function askOpenSeries(id) {
 function askAddModelAlts(units) {
   for (const u of units) {
     const t = (u.alts[0] || "").toUpperCase();
-    // Kohler: a nameplate model (14RES, 38RCLB, RXT) points Ask at that family's card (longest prefix wins).
+    // A generator model number points Ask at that family's card (longest prefix wins):
+    // Kohler nameplates (14RES, 38RCLB, RXT) and Generac G-numbers (G0072580, Vern 2026-10-06).
     const kTok = t.replace(/[^A-Z0-9.]/g, "");
     if (!units.kFam && /^(\d{1,2}(\.5)?[A-Z]{3}|RXT|RDT|RRT|RSB|RGEN|6VSG)/.test(kTok) && typeof genFamilyForModel === "function") {
       let kf = genFamilyForModel(kTok);
       if (!kf || genBrandOf(kf) !== "Kohler") kf = genEntries().find(g => genBrandOf(g) === "Kohler" && (g.models || []).some(m => String(m.k || "").toUpperCase().startsWith(kTok)));
       if (kf && genBrandOf(kf) === "Kohler") units.kFam = kf.id;
+    }
+    if (!units.kFam && /^G0\d{5,8}$/.test(kTok) && typeof genFamilyForModel === "function") {
+      const gf = genFamilyForModel(kTok);
+      if (gf) units.kFam = gf.id;
     }
     if (t.length < 7 || !/[A-Z]/.test(t) || !/\d/.test(t) || !/^[A-Z0-9\-\/]+$/.test(t)) continue;
     const extra = new Set();
@@ -840,6 +845,95 @@ function askBuildIndex() {
 // How many query concepts a haystack contains — same semantics the codes/
 // tstat/gen screens use (word-boundary match, plus a numeric-substring fallback
 // so "1100" finds a code embedded in a longer string).
+// ----- Ask the way techs ask (Andy 2026-10-06, after Vern's G0072580 / code 5417 job) -----
+// Vern typed "wiring hatness for generqc G0072580", then "need the wiring harness" with no
+// model at all, and was sent to the manual's back cover. Three fixes live here:
+//  1. askFixTypos: a word the app has never seen ("hatness", "generqc", "gemerac") is read as
+//     the closest word it has seen (1 letter off, 2 for long words), same first letter.
+//  2. askRetrievalQ: a follow-up with no model of its own borrows the model from the question
+//     just before it (15 min), unless it names a different brand.
+//  3. askFamWiringDocs: a wiring / harness question on a known model shows that model's wiring
+//     diagrams as buttons - they are scanned drawings with no text, so search can never find them.
+let askVocabCache = null;
+function askVocab() {
+  if (askVocabCache) return askVocabCache;
+  const freq = new Map();
+  const add = (s) => { for (const w of String(s || "").toLowerCase().match(/[a-z]{4,}/g) || []) freq.set(w, (freq.get(w) || 0) + 1); };
+  for (const it of (askIndexCache || (askIndexCache = askBuildIndex()))) add(it.hay);
+  if (typeof MANUAL_SEEDS !== "undefined") for (const s of MANUAL_SEEDS) { add(s.brand); add(s.model); add(s.title); }
+  const byFirst = new Map();
+  for (const [w, n] of freq) { if (n < 3) continue; const k = w[0]; if (!byFirst.has(k)) byFirst.set(k, []); byFirst.get(k).push([w, n]); }
+  askVocabCache = { freq, byFirst };
+  return askVocabCache;
+}
+function askFixTypos(q) {
+  const v = askVocab();
+  return String(q || "").replace(/[A-Za-z]{4,}/g, (word) => {
+    const w = word.toLowerCase();
+    if (v.freq.has(w)) return word;
+    const max = w.length >= 7 ? 2 : 1;
+    let best = null, bestD = max + 1, bestN = 0;
+    for (const [c, n] of v.byFirst.get(w[0]) || []) {
+      if (Math.abs(c.length - w.length) > max) continue;
+      const d = ocrEditDistance(w, c);
+      if (d < bestD || (d === bestD && n > bestN)) { best = c; bestD = d; bestN = n; }
+    }
+    return best && bestD <= max ? best : word;
+  });
+}
+// The model-ish words in a question: Generac G-numbers, Kohler nameplates, and anything the
+// Tag Scanner library recognizes.
+function askModelTokens(q) {
+  return String(q || "").toUpperCase().split(/\s+/).map(t => t.replace(/[^A-Z0-9.\-\/]/g, "")).filter(t =>
+    /^G0\d{5,8}$/.test(t) || /^(\d{1,2}(\.5)?[A-Z]{3}|RXT|RDT|RRT|RSB|RGEN|6VSG)[A-Z0-9-]*$/.test(t) ||
+    (t.length >= 6 && /[A-Z]/.test(t) && /\d/.test(t) && typeof identifyModel === "function" && !!(identifyModel(t) || {}).brand));
+}
+let askCtx = null;   // { models: [...], brand, ts } from the last question that named a model
+function askRetrievalQ(q) {
+  let r = askFixTypos(q);
+  const models = askModelTokens(r);
+  const brandOf = (s) => { const m = String(s).toLowerCase().match(/\b(generac|kohler|rehlko|carrier|bryant|lennox|trane|goodman|daikin|amana|rheem|ruud|york|payne|heil|tempstar)\b/); return m ? m[1] : ""; };
+  // Fault codes said in the question (3-4 digits not followed by kW / cc / volts / amps ...).
+  const codesIn = (s) => (String(s).match(/\b\d{3,4}\b(?!\s*(kw|k\b|cc|v\b|volts?|amps?|a\b|rpm|hz|psi|cfh|btu|lbs?|ft|in\b))/gi) || []);
+  const codes = codesIn(r);
+  if (models.length) { askCtx = { models, codes, brand: brandOf(r), ts: Date.now() }; return r; }
+  const b = brandOf(r);
+  // Only a bare follow-up borrows: a question that names its own brand or size ("22kw generac oil
+  // capacity") is about a unit of its own.
+  const ownSize = /\b\d+(\.\d+)?\s*(kw|k|tons?)\b/i.test(r);
+  if (askCtx && Date.now() - askCtx.ts < 15 * 60 * 1000 && !b && !ownSize) {
+    // Vern: "e code 5417 on generac model G0072580", then "need the wiring harness" - same unit, same code.
+    if (codes.length) askCtx.codes = codes;
+    r += " " + askCtx.models.join(" ") + (codes.length ? "" : (askCtx.codes || []).map(c => " " + c).join(""));
+    askCtx.ts = Date.now();
+  }
+  return r;
+}
+function askFamCodeKey(famId) {
+  const g = typeof genEntries === "function" ? genEntries().find(x => x.id === famId) : null;
+  if (!g || genBrandOf(g) !== "Generac") return "";
+  const m = String(g.controller || "").toLowerCase().match(/^(power zone 200|evolution [12]\.0|nexus|pre-nexus|powerpact|corepower|synergy|h-100)/);
+  return m ? m[1] : "";
+}
+const ASK_WIRING_RE = /\b(wir(e|es|ing)|harness|diagram|schematic|pin-?outs?|connectors?|terminals?)\b/i;
+function askFamWiringDocs(famId) {
+  const g = typeof genEntries === "function" ? genEntries().find(x => x.id === famId) : null;
+  if (!g) return [];
+  return (g.manuals || []).filter(m => /wiring|schematic|pin-?out/i.test(m.title || "")).map(m => ({ m, seed: tstatFindSeed(m) })).filter(x => x.seed);
+}
+function askWiringHtml(q, units) {
+  if (!units || !units.kFam || !ASK_WIRING_RE.test(q)) return "";
+  const docs = askFamWiringDocs(units.kFam);
+  if (!docs.length) return "";
+  const g = genEntries().find(x => x.id === units.kFam);
+  return `<div class="ask-wiring"><div class="ask-chip-label">Wiring diagrams for ${escapeHtml(g.family)}</div>` +
+    docs.map(({ m, seed }) => `<button type="button" class="ask-ai-cite ask-wiring-btn" data-seed="${escapeHtml(seed.file)}">📐 ${escapeHtml(m.title)}</button>`).join("") + `</div>`;
+}
+function wireAskWiring(box) {
+  box.querySelectorAll(".ask-wiring-btn").forEach(b => {
+    b.onclick = () => { trackEvent("Ask opened wiring diagram: " + b.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: b.dataset.seed })); };
+  });
+}
 function askUnitHits(units, hay) {
   let score = 0;
   for (const u of units) {
@@ -853,8 +947,13 @@ function askUnitHits(units, hay) {
 function askScoreItem(units, it) {
   const sc = askUnitHits(units, it.hay);
   const tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
-  // The Kohler family the asked model belongs to outranks sister cards that only share words.
+  // The generator family the asked model belongs to outranks sister cards that only share words,
+  // and so do that family's own codes ("5417 on G0072580" is the Next Gen 5415-5417, not a VSCF code).
   if (sc && units.kFam && it.kind === "gen" && it.id === units.kFam) return { sc: sc + 1, tsc: tsc + 5 };
+  if (sc && units.kFam && it.kind === "code") {
+    const key = askFamCodeKey(units.kFam);
+    if (key && String(it.sub || "").toLowerCase().includes(key)) return { sc: sc + 1, tsc: tsc + 3 };
+  }
   return { sc, tsc };
 }
 
@@ -914,7 +1013,7 @@ function renderAsk() {
   }
   examples.classList.add("hidden");
 
-  const units = askAddModelAlts(buildSearchUnits(q));
+  const units = askAddModelAlts(buildSearchUnits(askRetrievalQ(q)));
   const need = units.length;
   const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
 
@@ -941,7 +1040,8 @@ function renderAsk() {
     (askState.equip === "All" || it.equip === askState.equip || !it.equip));
 
   const narrow = document.getElementById("askNarrow");
-  narrow.innerHTML = "";
+  narrow.innerHTML = askWiringHtml(askRetrievalQ(q), units);
+  wireAskWiring(narrow);
 
   const activeTags = [];
   if (askState.brand !== "All") activeTags.push(["brand", askState.brand]);
@@ -1096,7 +1196,9 @@ function askTrimAround(text, units, len) {
 // question points at (see askRemotePassages). Remote passages carry remote:true
 // so the answer log can tell them apart; the relay never sees that flag.
 async function askManualPassages(q, limit) {
-  const units = askPassageUnits(q);
+  const rq = askRetrievalQ(q);
+  const units = askPassageUnits(rq);
+  units.kFam = askAddModelAlts(buildSearchUnits(rq)).kFam;
   const threshold = Math.max(1, Math.ceil(units.length * 0.5));   // relaxed — context for the model
   const strong = Math.max(threshold, Math.ceil(units.length * 0.75));
   const lim = limit || 4;
@@ -1110,17 +1212,60 @@ async function askManualPassages(q, limit) {
     for (const h of askRankPages(units, rec.pages, threshold, rec.brand)) scored.push({ id: rec.id, title: rec.title, page: h.page, sc: h.sc, own: h.own, w: h.w, raw: rec.pages[h.page - 1] });
   }
   scored.sort((a, b) => b.sc - a.sc || b.w - a.w);
-  let out = scored.slice(0, lim).map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, text: askTrimAround(s.raw, units, 1200) }));
+  // The same page can arrive twice (a manual on the phone and in the library, or a manual listed twice) - keep one.
+  const uniqPages = (arr) => { const seen = new Set(); return arr.filter(s => { const k = s.title + "|" + s.page; if (seen.has(k)) return false; seen.add(k); return true; }); };
+  let out = uniqPages(scored).slice(0, lim).map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, text: askTrimAround(s.raw, units, 1200) }));
   // "Strong" is judged on what the page itself says, not the free brand hit -
   // otherwise "generac 26k plug gap" was satisfied by a 9-22 kW manual.
   if (scored.filter(s => s.own >= strong).length < 3 && navigator.onLine) {
     let remote = [];
-    try { remote = await askRemotePassages(q, units, threshold, lim, localIds); } catch (e) { remote = []; }
-    if (remote.length) out = out.concat(remote).sort((a, b) => b.sc - a.sc || (a.remote ? 1 : 0) - (b.remote ? 1 : 0) || b.w - a.w).slice(0, lim);
+    try { remote = await askRemotePassages(rq, units, threshold, lim, localIds); } catch (e) { remote = []; }
+    if (remote.length) out = uniqPages(out.concat(remote).sort((a, b) => b.sc - a.sc || (a.remote ? 1 : 0) - (b.remote ? 1 : 0) || b.w - a.w)).slice(0, lim);
+  }
+  // A code on a known model: its cited procedure pages lead (they never print the code itself).
+  if (navigator.onLine) {
+    let cp = [];
+    try { cp = await askCodePagePassages(rq, units); } catch (e) { cp = []; }
+    if (cp.length) out = uniqPages(cp.concat(out)).slice(0, lim);
   }
   return out.map(s => s.remote ? { id: s.id, title: s.title, page: s.page, text: s.text, remote: true } : { id: s.id, title: s.title, page: s.page, text: s.text });
 }
 
+// A code asked on a known model goes straight to the pages its card entry cites (Vern 2026-10-06:
+// "5417 ... wiring harness" on G0072580 is the Oil Level Sensor Test, A0004542981 p.110 - a page that
+// never prints "5417", so word matching alone can't find it). Only when the entry names exactly one of
+// the family's manuals by part number, so every cited page belongs to that manual.
+async function askCodePagePassages(rq, units) {
+  if (!units || !units.kFam || typeof genEntries !== "function") return [];
+  const g = genEntries().find(x => x.id === units.kFam);
+  if (!g) return [];
+  const asked = String(rq).match(/\b\d{3,4}\b/g) || [];
+  const entries = [...(g.alarms || []), ...(g.warnings || [])].filter(e => asked.includes(String(e.code)));
+  if (!entries.length) return [];
+  const partOf = (t) => (String(t).match(/\b(TP-\d{4}|A\d{10}|[0-9]{8,11}|0[A-Z]\d{4,5}[A-Z]?)\b/) || [])[1] || "";
+  const mans = (g.manuals || []).map(m => ({ m, part: partOf(m.title), seed: tstatFindSeed(m) })).filter(x => x.part && x.seed);
+  const { rows } = askRemoteSeedRows();
+  const out = [];
+  for (const e of entries.slice(0, 2)) {
+    const text = [e.meaning, ...(e.causes || []), ...(e.steps || [])].join(" ");
+    const hit = mans.filter(x => text.includes(x.part));
+    if (hit.length !== 1) continue;
+    // The page the steps cite most is the test procedure; ties go to the later page (tables come first in these manuals).
+    const count = new Map();
+    for (const m of [...(e.causes || []), ...(e.steps || [])].join(" ").matchAll(/\bpp?\.\s*(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?/g)) {
+      const a = +m[1], b = m[2] ? +m[2] : a;
+      for (let n = a; n <= b && n - a < 4; n++) count.set(n, (count.get(n) || 0) + 1);
+    }
+    const pages = [...count.keys()].sort((x, y) => count.get(y) - count.get(x) || y - x);
+    const row = rows.find(r => r.file.split("/").pop() === hit[0].seed.file.split("/").pop());
+    if (!row) continue;
+    let ptxt = null;
+    try { ptxt = await remoteTextPages(row); } catch (err) { ptxt = null; }
+    if (!ptxt) continue;
+    for (const n of pages.filter(p => ptxt[p - 1]).slice(0, 2)) out.push({ id: row.id, title: row.title, page: n, sc: 99, w: 99, remote: true, text: askTrimAround(ptxt[n - 1], units, 1200) });
+  }
+  return out;
+}
 // Query units for page passages: the normal search units, minus filler a tech
 // says out loud ("uses how MUCH oil", "what is it SUPPOSED to be") that no
 // manual page contains - with the 50% bar each one of those made the right
@@ -1158,6 +1303,10 @@ function askRankPages(units, pages, threshold, brand) {
   for (let i = 0; i < pages.length; i++) {
     if (!pages[i]) continue;
     const low = pages[i].toLowerCase();
+    // Covers, back covers and "intentionally left blank" pages are never the answer (Vern was sent to
+    // the Next Gen repair manual's back cover, p.152, for a wiring harness).
+    const words = (low.match(/[a-z]{3,}/g) || []).length;
+    if (words < 25 || (words < 90 && /all rights reserved|intentionally left blank|no reproduction allowed/.test(low))) continue;
     const own = units.map(u => test(low, u));
     const got = units.map((u, k) => own[k] || (!!tag && test(tag, u)));
     let sc = 0;
@@ -1394,16 +1543,26 @@ function askRemoteCandidates(q, units, index, skipIds) {
   // owner's manual spec table; everything else leans on service, then install.
   const maint = words.some(w => ASK_MAINT_WORDS.has(w));
   const rank = maint ? { service: 3, owner: 3, install: 1, sheet: 0 } : { service: 3, install: 2, owner: 1, sheet: 0 };
+  // The asked model's own card lists its manuals (Vern 2026-10-06: G0072580 -> the Next Gen repair manual).
+  const famFiles = new Set();
+  if (units && units.kFam && typeof genEntries === "function") {
+    const g = genEntries().find(x => x.id === units.kFam);
+    for (const m of (g && g.manuals) || []) { const sd = tstatFindSeed(m); if (sd) famFiles.add(sd.file.split("/").pop()); }
+    // A known model means a known brand, even when the question never says it ("need the wiring harness").
+    const fb = g ? genBrandOf(g).toLowerCase() : "";
+    if (fb && brands.has(fb) && !named.includes(fb)) named.push(fb);
+  }
   const scored = [];
   for (const r of rows) {
     if (skipIds && skipIds.has(r.id)) continue;
     if (index && !index.has(r.file)) continue;                 // scanned / no text layer
     if (named.length && !named.some(b => hayHasTerm(r.brandHay, b))) continue;
+    const fam = famFiles.has(r.file.split("/").pop());
     const sc = askUnitHits(units, r.hay);
-    if (!sc) continue;
+    if (!sc && !fam) continue;                                 // the asked model's own manuals always get read
     const tsc = askUnitHits(units, r.headHay);
     const pages = index && index.get(r.file) ? index.get(r.file).pages || 0 : 0;
-    scored.push({ r, sc, tsc, pages });
+    scored.push({ r, sc: sc + (fam ? 2 : 0), tsc, pages });
   }
   scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || rank[b.r.kind] - rank[a.r.kind] || b.pages - a.pages);
   const out = scored.slice(0, 3);
@@ -1436,12 +1595,14 @@ async function askRemotePassages(q, units, threshold, limit, skipIds) {
   // Equal scores: each manual's best page before any manual's second best,
   // manuals in candidate order - page weights of different-sized manuals
   // don't compare, and four pages of one manual crowd out the others.
-  return found.slice().sort((a, b) => b.sc - a.sc || a.rank - b.rank || a.ci - b.ci).slice(0, limit || 4)
+  const seenRP = new Set();
+  return found.slice().sort((a, b) => b.sc - a.sc || a.rank - b.rank || a.ci - b.ci)
+    .filter(s => { const k = s.title + "|" + s.page; if (seenRP.has(k)) return false; seenRP.add(k); return true; }).slice(0, limit || 4)
     .map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, remote: true, text: askTrimAround(s.raw, units, 1200) }));
 }
 // Top structured entries, with their meaning/steps, for grounding.
 function askAiEntries(q, limit) {
-  const units = askAddModelAlts(buildSearchUnits(q));
+  const units = askAddModelAlts(buildSearchUnits(askRetrievalQ(q)));
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
   for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
@@ -1501,7 +1662,7 @@ async function askAiAnswer(question) {
   let data = null;
   try {
     const sent = passages.map(p => ({ id: p.id, title: p.title, page: p.page, text: p.text }));   // same shape as before remote passages
-    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question, passages: sent, entries, token: ASK_AI_APP_TOKEN }) });
+    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question: askRetrievalQ(question), passages: sent, entries, token: ASK_AI_APP_TOKEN }) });
     data = await resp.json();
   } catch (e) { data = { error: "network" }; }
   if (token !== askAiToken) return;
@@ -1512,19 +1673,23 @@ async function askAiAnswer(question) {
     box.innerHTML = `<div class="ask-ai-card ask-ai-err">${msg}</div>`;
     return;
   }
+  const wq = askRetrievalQ(question);
+  const wiring = askWiringHtml(wq, askAddModelAlts(buildSearchUnits(wq)));
   const cites = passages.map(p => `<button class="ask-ai-cite" data-id="${escapeHtml(p.id)}" data-page="${p.page}">${escapeHtml(p.title)} · p.${p.page}</button>`).join("");
   box.innerHTML = `
     <div class="ask-ai-card">
       <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
       <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\n/g, "<br>")}</div>
       ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
+      ${wiring}
       <div class="ask-fb" data-q="${escapeHtml(question)}">
         <span class="ask-fb-q">Did this help?</span>
         <button class="ask-fb-btn" data-fb="up" type="button" aria-label="Yes, this helped">👍</button>
         <button class="ask-fb-btn" data-fb="down" type="button" aria-label="No, it missed">👎</button>
       </div>`;
   // Opening a source = a quiet "yes, this pointed me somewhere useful."
-  box.querySelectorAll(".ask-ai-cite").forEach(b => {
+  wireAskWiring(box);
+  box.querySelectorAll(".ask-ai-cite:not(.ask-wiring-btn)").forEach(b => {
     b.onclick = () => { askMarkEngaged(question); trackEvent("AI opened source: " + question); openManualAtPage(b.dataset.id, Number(b.dataset.page)); };
   });
   wireAskFeedback(box, question);
@@ -9898,7 +10063,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v260";
+const APP_VERSION = "v261";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

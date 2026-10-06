@@ -2061,3 +2061,7 @@ body.inv-cam-open { overflow: hidden; }
 .gen-brand-tabs button { min-height: 44px; border-radius: var(--radius); border: 2px solid var(--border); background: var(--card); color: inherit; font: inherit; font-weight: 800; }
 .gen-brand-tabs button.active { border-color: var(--brand-orange); background: var(--brand-navy); color: #fff; }
 .tstat-table td.tstat-term.wrap { white-space: normal; width: 30%; overflow-wrap: anywhere; } /* Kohler fault text (v257) */
+
+/* Ask: wiring diagrams for the asked model (Vern 2026-10-06) */
+.ask-wiring { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0.5rem 0 0.7rem; }
+.ask-wiring .ask-chip-label { width: 100%; }
