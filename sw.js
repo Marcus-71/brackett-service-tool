@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v259";
+const CACHE_NAME = "bfc-cache-v260";
 const APP_SHELL = [
   "./",
   "./index.html",

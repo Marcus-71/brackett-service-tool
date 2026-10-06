@@ -2980,7 +2980,7 @@ async function genProblemScan(file) {
   if (!model) {
     trackEvent("SCAN - NO MODEL READ" + (serial ? " | serial: " + serial : "") + (fields && fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId + " | gen problem scan");
     saveFailedScan(file, { id: photoId, kind: "unreadable", read: serial ? "serial " + serial : "" }).catch(() => {});
-    genProblemScanStatus("Couldn't read the MODEL line. Retake it straight on, close, in good light - or type the model or code in the search box below." + tagNoModelHint(fields), true);
+    genProblemScanStatus("Couldn't read the MODEL line. Retake it straight on, close, in good light - or type the model or code in the search box below." + SCAN_SHADE_TIP + tagNoModelHint(fields), true);
     return;
   }
   trackEvent("gen problem scan -> " + model + " | not in library | photo: " + photoId);
@@ -3890,7 +3890,7 @@ async function genWizAfterOcr(fields, file) {
 }
 function genWizScanMsg(r, model, serial, serialSource) {
   const sn = serial ? ` Serial <b>${escapeHtml(serial)}</b>${serialSource === "label" ? "" : " (read as a bare number - check it against the SERIAL line)"}.` : " No serial read - type it from the plate below.";
-  if (r.kind === "nomodel") return { kind: "warn", html: "Couldn't read the model off that photo." + (serial ? sn : "") + " Scan again (straighter, closer, better lit), type the model, or pick it from the list." };
+  if (r.kind === "nomodel") return { kind: "warn", html: "Couldn't read the model off that photo." + (serial ? sn : "") + " Scan again (straighter, closer, better lit), type the model, or pick it from the list." + SCAN_SHADE_TIP };
   if (r.kind === "ok") return { kind: "ok", html: `Read model <b>${escapeHtml(model)}</b>.${sn} Check both against the plate.` };
   if (r.kind === "liquid") return { kind: "err", html: `Read model <b>${escapeHtml(model)}</b> - a liquid-cooled unit.` };
   if (r.kind === "family") return { kind: "warn", html: `Read <b>${escapeHtml(model)}</b>: a ${escapeHtml(r.family.family)} number, but not one in our model list. Pick the exact model below.${serial ? sn : ""}` };
@@ -3971,7 +3971,7 @@ function genWizScanHtml(d) {
     <div class="gwz-card">
       <button type="button" class="gwz-scan-btn" id="gwzScanBtn">📷 Scan the data plate</button>
       <input type="file" id="gwzPhoto" accept="image/*" capture="environment" class="hidden">
-      <div class="gwz-hint">Photograph the generator's data label - the MODEL and SERIAL lines. Straight on, close, good light.</div>
+      <div class="gwz-hint">Photograph the generator's data label - the MODEL and SERIAL lines. Straight on, close, good light. In sun, shade the whole label.</div>
       <div id="gwzScanStatus" class="gwz-status ${msg ? msg.kind : "hidden"}">${msg ? msg.html : ""}</div>
     </div>
     <div class="gwz-card">
@@ -8065,6 +8065,9 @@ async function tagBarcodeFields(file) {
 }
 // Vern 2026-10-05 scanned the Generac ENGINE sticker (GENERAC OHVI ENGINES,
 // Model No. 0J9322, 992 cc) twice - it isn't the generator's model plate.
+// Andy 2026-10-06: Vern's Allied plate, half in sun and half in his shadow, read nothing on the first
+// try. A hard shadow line across a label is the worst case for the reader; even shade reads far better.
+const SCAN_SHADE_TIP = " Half in sun, half in shadow? Block the sun so the whole label is in shade, then retake.";
 function tagNoModelHint(fields) {
   return fields && fields.brandHint === "Generac"
     ? " On a Generac, the engine sticker (GENERAC OHVI ENGINES - Model No. 0J93xx, displacement in cc) is not the generator's model: scan the generator data plate (inside the lid, by the controller)."
@@ -8492,7 +8495,7 @@ async function scanTagPhoto(file) {
     if (!fields.model) {
       const photoId = newScanPhotoId();
       trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
-      scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + tagNoModelHint(fields));
+      scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + SCAN_SHADE_TIP + tagNoModelHint(fields));
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       const box = document.getElementById("scanResult");
       // With the relay on, the photo goes to Andy by itself; the share button
@@ -8739,7 +8742,7 @@ function maintScanNoModel(fields, file) {
   const sn = fields && fields.serialSource === "label" && fields.serial ? String(fields.serial).trim() : "";
   el.innerHTML = (sn
       ? "Read the serial (" + escapeHtml(sn) + ") but not the model number. Get the <strong>MODEL</strong> line in the shot — closer and straight-on — or type it above. "
-      : "Couldn't read a model off that photo. Try again — straighter, closer, better lit — or type it above. ") +
+      : "Couldn't read a model off that photo. Try again — straighter, closer, better lit — or type it above." + SCAN_SHADE_TIP + " ") +
     '<button type="button" id="maintToScanner" style="background:none;border:none;color:var(--brand-navy,#003A70);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:0">Open the Tag Scanner ›</button>';
   const b = document.getElementById("maintToScanner");
   if (b) b.onclick = () => { if (typeof showScreen === "function") showScreen("scanner"); };
@@ -9895,7 +9898,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v259";
+const APP_VERSION = "v260";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
