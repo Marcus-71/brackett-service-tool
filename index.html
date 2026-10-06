@@ -282,6 +282,49 @@
         <div class="gen-guide-src">Sources: Generac support - "Can Multiple Transfer Switches Be Installed with a Single Generator?", "If I have two main panels in my home will I need to use two transfer switches?", "Automatic transfer switch compatibility guide", "Transfer Switch Installation FAQs"; Generac Multiple ATS Install drawing (relay notes 1-3); Generac Wire #23/#194 Quick Diagnostic addendum.</div>
       </div>
     </details>
+    <!-- Andy 2026-10-06: Vern asked Ask Anything about "Intellis AC-250 gas meters with home standby generators" and got nothing. -->
+    <details class="gen-guide" id="genGasMeter">
+      <summary><span class="gwz-entry-icon" aria-hidden="true">🔥</span><span class="gwz-entry-text"><b>Smart Gas Meter vs. Generator</b><span>Itron Intelis (Intellis) / AC-250 meter too small or shutting off - what to do</span></span></summary>
+      <div class="gen-guide-body">
+        <p>A home standby generator on natural gas can need as much gas as the rest of the house combined. If the meter can't keep up, the generator starves. On an <b>Itron Intelis</b> smart meter (written "Intellis" a lot; CenterPoint is putting in 3 million of them), the meter can also <b>shut the gas off to the whole house</b>.</p>
+
+        <h4>1. Know the meter</h4>
+        <ul>
+          <li><b>Itron Intelis</b>: small box, digital screen, no dials. Rated <b>250 cfh</b> at ½ in. WC drop.</li>
+          <li><b>Itron Intelis 250</b>: <b>300 cfh</b> at ½ in. WC (400 cfh max).</li>
+          <li><b>Itron Intelis 425</b>: <b>600 cfh</b> at ½ in. WC (750 cfh max). This is the size to ask for with a big generator.</li>
+          <li><b>American Meter AC-250</b> (older diaphragm meter with dials): <b>250 cfh</b> at ½ in. WC.</li>
+        </ul>
+
+        <h4>2. Why it fails</h4>
+        <ul>
+          <li><b>Too much load for the meter.</b> At full load a Generac 20 kW uses about <b>308 cfh</b> and a 22 kW about <b>281 cfh</b> of natural gas. A Kohler 20RCA uses about <b>281 cfh</b> and a 26RCA about <b>290 cfh</b>. Add the furnace and water heater (natural gas: Btu/hr ÷ 1,000 ≈ cfh, so a 100,000 Btu furnace ≈ 100 cfh) and a 250-300 cfh meter is past its rating. Pressure at the generator drops below spec, and the generator surges, won't hold load, or shuts down.</li>
+          <li><b>Intelis safety shutoff.</b> Every Intelis has a shutoff valve inside. The utility sets a <b>high-flow</b> limit meant to catch a broken line; flow over it closes the valve. It can also close on <b>high temperature</b> or (optional) <b>high pressure</b>. When it closes, gas is off to the whole house, not just the generator.</li>
+        </ul>
+
+        <h4>3. Signs</h4>
+        <ul>
+          <li>Generator starts, then surges, drops load or shuts down once the furnace or water heater is also running.</li>
+          <li>All gas off after the generator started: no furnace, no water heater, no generator. The meter screen shows the valve closed or an alarm.</li>
+        </ul>
+
+        <h4>4. What to do</h4>
+        <ul>
+          <li><b>Do not try to open an Intelis valve.</b> Itron requires someone on site at the meter to reopen it after checking it's safe; that's the utility. Call the gas utility (CenterPoint here).</li>
+          <li><b>Add up the gas load</b>: generator full-load cfh (on its card under Specs or in the manual) + every gas appliance's Btu/hr ÷ 1,000. Compare it to the meter's cfh above.</li>
+          <li><b>Check inlet pressure at the generator</b> with a manometer, at full load, with the furnace and water heater running. Generac air-cooled natural gas: <b>3.5-7.0 in. WC</b> at the generator fuel inlet. Kohler RCA/RESA: see Specs on its card.</li>
+          <li><b>Load is over the meter's rating:</b> ask the utility for a <b>meter upgrade</b> (an Intelis 425 or larger) and to check the service regulator. CenterPoint lists installing a gas generator as a reason a meter upgrade may be needed.</li>
+          <li><b>Meter is big enough but keeps shutting off:</b> ask the utility to review that meter's high-flow setting for the real connected load.</li>
+          <li>Also check gas pipe size and length from the meter to the generator against the generator install manual.</li>
+        </ul>
+
+        <h4>5. Before any new generator install</h4>
+        <p>Read the meter model and total the gas load first. If it's over the meter's cfh, get the utility upgrade scheduled before install day.</p>
+
+        <p class="gen-guide-note">Utilities set their own Intelis shutoff limits, so the exact flow that trips the valve varies by utility. Confirm with the utility, not the meter label.</p>
+        <div class="gen-guide-src">Sources: Itron Intelis Gas Meter spec sheet (250 cfh at ½ in. WC); Itron Intelis 250 Gas Meter spec sheet (300 cfh at ½ in. WC, Qmax 400 cfh; high-flow and high-temperature shutoff; optional high-pressure shutoff; "mandatory to be on-site at the meter to re-open the valve"); Itron Intelis 425 Gas Meter spec sheet (600 cfh at ½ in. WC, Qmax 750 cfh); Honeywell American Meter AC-250 (250 SCFH at ½ in. WC); Generac 9-22 kW Guardian spec sheet 0203010 Rev. A (NG full load: 20 kW 308, 22 kW 281 cu ft/hr); Kohler TP-7091 p.22 (20/26RCA NG 281/290 cfh); CenterPoint Energy meter upgrade fact sheet; Itron/CenterPoint Intelis deployment announcement.</div>
+      </div>
+    </details>
   </div>
   <div class="gen-brand-tabs" id="genBrandTabs" role="tablist"><button type="button" data-brand="Generac" class="active">Generac</button><button type="button" data-brand="Kohler">Kohler</button></div>
   <div class="disclaimer" id="genBrandNote">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
