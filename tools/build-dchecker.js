@@ -15,7 +15,7 @@
 //    outside sync endpoint (Kenny's upstream has Supabase fleet sync; the
 //    Brackett branch leaves it out).
 //  - nothing else in the viewer is touched. Build from the checkout's
-//    brackett-plus-v51 branch (ours + Kenny's v51 features), not Kenny's main.
+//    brackett-plus-latest branch (ours + Kenny's features through v72, no shop-library upload), not Kenny's main.
 const fs = require("fs");
 const path = require("path");
 
