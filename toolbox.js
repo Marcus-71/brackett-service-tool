@@ -815,7 +815,7 @@ const TOOLBOX = [
   "manuals": [
    {
     "title": "Lennox S40 Smart Thermostat Installer Quick Start Guide (508295-01)",
-    "seedFile": "toolbox-lennox-s40-installer-quickstart.pdf"
+    "seedFile": "lennox-s40-installer-quickstart.pdf"
    }
   ],
   "source": "Lennox S40 Smart Thermostat Installer Quick Start Guide, 508295-01, October 2022, Step 4 \"Commissioning using the Lennox Smart Technician App\" - https://images.lennoxpros.com/is/content/LennoxIntl/web-dev/other/BigBend/S40-Smart-Thermostat-Installer-Quick-Start-Guide-English-Spanish.pdf (PDF downloaded and text extracted for this entry; the previous gather could not read it)"
@@ -858,7 +858,7 @@ const TOOLBOX = [
   "manuals": [
    {
     "title": "Lennox S40 Smart Thermostat Installer Quick Start Guide (508295-01)",
-    "seedFile": "toolbox-lennox-s40-installer-quickstart.pdf"
+    "seedFile": "lennox-s40-installer-quickstart.pdf"
    }
   ],
   "source": "Lennox S40 Smart Thermostat Installer Quick Start Guide, 508295-01, October 2022, Step 5 \"Helping Homeowner Connect to Wi-Fi\" (PDF downloaded and text extracted for this entry)"

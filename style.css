@@ -2065,3 +2065,14 @@ body.inv-cam-open { overflow: hidden; }
 /* Ask: wiring diagrams for the asked model (Vern 2026-10-06) */
 .ask-wiring { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0.5rem 0 0.7rem; }
 .ask-wiring .ask-chip-label { width: 100%; }
+
+/* Ask instant answer (2026-10-06): the top hit's own meaning / causes / first steps, shown at once
+   above the AI answer so the tech can start testing while the AI writes. */
+.ask-instant { margin: 0.2rem 0 0.5rem; }
+.ask-instant-card { border-color: var(--border); }
+.ask-instant-card .ask-ai-head { color: var(--text-dim); }
+.ask-instant-title { font-weight: 700; font-size: 0.98rem; line-height: 1.35; }
+.ask-instant-body { margin-top: 0.5rem; font-size: 0.92rem; line-height: 1.45; color: var(--text); display: flex; flex-direction: column; gap: 0.35rem; }
+.ask-instant-line { overflow-wrap: anywhere; }
+.ask-instant-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dim); margin-right: 0.15rem; }
+.ask-instant-open { margin-top: 0.6rem; }

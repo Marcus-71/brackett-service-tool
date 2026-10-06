@@ -42408,9 +42408,7 @@ const THERMOSTATS = [
    },
    {
     "symptom": "Forgot keypad lockout code",
-    "causes": [
-     ""
-    ],
+    "causes": [],
     "fixes": [
      "Press and hold the menu key for 20 seconds to unlock"
     ]
@@ -47656,18 +47654,14 @@ const THERMOSTATS = [
    },
    {
     "symptom": "Forgot the thermostat's screen-lock password",
-    "causes": [
-     ""
-    ],
+    "causes": [],
     "fixes": [
      "The unlock code is always shown in the app's top-right corner under the green lock button; enter it on the thermostat or tap the app's green lock button (this is not the same as the schedule-hold lock)"
     ]
    },
    {
     "symptom": "Concern that settings will be lost on a power outage",
-    "causes": [
-     ""
-    ],
+    "causes": [],
     "fixes": [
      "All settings are kept in local memory and survive a power loss; only schedule setpoints live in the cloud"
     ]

@@ -69,6 +69,15 @@ const SEARCH_STOPWORDS = new Set([
   "cant","can't","cannot","isnt","isn't","arent","aren't","wasnt","wasn't",
   "hasnt","hasn't","havent","haven't","wouldnt","wouldn't","couldnt","couldn't",
   "shouldnt","shouldn't","aint","ain't","thats","that's","whats","what's",
+  // Conversation filler from the Ask log (2026-10-06 audit of 77 real questions: "What does the
+  // crankshaft position sensor do? Select all that apply", "keep getting e434", "what would r32
+  // pressure look like"). No card or page prints these, so as REQUIRED words they only pushed the
+  // right entry out. Trade words that double as filler ("running", "stuck", "check", "install")
+  // stay out of here on purpose - see ASK_PASSAGE_NOISE / ASK_ZERO_WORDS for the Ask-only list.
+  "keep","keeps","getting","still","always","select","apply","want","wants","like","look","looks",
+  "else","happen","happens","happening","going","mean","means","something","anything","nothing",
+  "someone","anyone","tell","know","think","maybe","probably","okay","ok","hey","hi","hello",
+  "thanks","thank","please","could","would","dies","doea","dose","doe","ia","fir","thee","unir",
 ]);
 // Field slang and trade shorthand that means the same thing as a term this
 // app's own text uses. A tech typing "low side" needs to find scenarios
@@ -77,6 +86,30 @@ const SEARCH_STOPWORDS = new Set([
 // a group satisfies that whole concept (longest phrase checked first so a
 // multi-word alias is consumed before its component words are).
 const SEARCH_ALIAS_GROUPS = [
+  // Generator engine vocabulary (2026-10-06: three techs asked "what does the crks do" twenty ways
+  // one morning; the cards say CRKS / crank sensor, the manual says crankshaft position sensor).
+  ["crankshaft position sensor", "crank position sensor", "crankshaft sensor", "crank sensor", "engine position sensor", "position sensor", "crks", "ckp", "rpm sensor", "magnetic pickup", "mag pickup", "crank shaft sensor"],
+  // Generac series / controller names the way techs say them ("nexgen 26kw", "powerzone 200").
+  ["next generation", "next gen", "nextgen", "nexgen", "next-gen"],
+  ["power zone 200", "powerzone 200", "powerzone200", "powerzone", "power zone", "pz200", "pz 200"],
+  ["overvoltage", "over voltage", "over-voltage", "high output voltage"],
+  ["undervoltage", "under voltage", "under-voltage", "low output voltage"],
+  ["overcrank", "over crank", "over-crank"],
+  ["overspeed", "over speed", "over-speed"],
+  ["transfer switch", "transfer switches", "ats", "xfer switch"],
+  // "heat pump" must sit ABOVE every group that owns "pump" (pump down below), and "pump down"
+  // must beat the stopword "down" (David 2026-09-01: "pump down xc25" searched as bare "pump").
+  ["heat pump", "heatpump", "heat-pump", "heat pumps"],
+  ["pump down", "pumpdown", "pump-down", "pump the system down", "pump it down", "pump down mode"],
+  ["mini split", "mini-split", "minisplit", "mini splits", "mini-splits", "ductless"],
+  ["air handler", "airhandler", "air-handler", "air handlers", "fan coil", "fancoil"],
+  ["rooftop unit", "rooftop", "roof top", "rtu", "packaged unit", "package unit", "rooftop units"],
+  ["wiring diagram", "wiring diagrams", "wiring dia", "schematic", "schematics", "ladder diagram", "wiring schematic"],
+  ["power extender kit", "power extender", "pek", "splitter", "c wire adapter", "c-wire adapter", "c wire kit"],
+  ["quiet shift", "quietshift", "quiet-shift"],
+  // "does O or B energize in cooling" (an Ask example): the terminal letters are one concept, not
+  // two single-letter words (single letters are zero-weight in Ask, see buildSearchUnits).
+  ["o/b", "o or b", "o b", "o-b", "ob terminal", "o terminal", "b terminal", "o/b terminal"],
   ["low side", "suction"],
   ["high side", "head pressure", "discharge pressure", "head", "discharge"],
   ["not starting", "wont start", "won't start", "doesn't start", "does not start", "not coming on", "wont kick on", "won't kick on", "not turning on", "no start"],
@@ -112,7 +145,7 @@ const SEARCH_ALIAS_GROUPS = [
   // the longest phrase in the first group that matches, so the panel is claimed
   // before bare "damper" below can swallow it. "zone damper" still lands in the
   // damper group, which is what a tech asking about one means.
-  ["zone board", "zone panel", "zoning panel", "damper control", "zone control", "zoning board"],
+  ["zone board", "zone panel", "zoning panel", "damper control", "zone control", "zoning board", "truezone", "true zone", "zone control panel"],
   // Bypass sits above the plain damper group for the same reason: otherwise
   // "bypass damper" gets eaten as "damper" + a leftover "bypass" and becomes
   // two separate concepts the row has to satisfy, instead of the one thing the
@@ -151,25 +184,37 @@ function normalizeQuery(q) {
 }
 // Break a query into match "units" — each unit is either an alias group (any
 // one of its phrases counts as a hit) or a single leftover meaningful word.
+// "code", "error", "fault" are what a tech types around the thing that matters ("generac error
+// 0180", "e code 5417"). They stay in the units (so "error code list" still works and the AI
+// window finds them) but carry no weight: a row never loses for not printing the word "error",
+// and the Wiring Error / CANBus Error rows no longer ride in on it (2026-10-06 audit, F1).
+const ASK_ZERO_WORDS = new Set(["code", "codes", "error", "errors", "fault", "faults", "alarm", "alarms", "ecode", "e-code", "alert", "alerts", "message", "messages"]);
 function buildSearchUnits(q) {
   let text = " " + normalizeQuery(q) + " ";
   const units = [];
   for (const group of SEARCH_ALIAS_GROUPS) {
     const sorted = [...group].sort((a, b) => b.length - a.length);
+    let hit = false;
     for (const phrase of sorted) {
-      const idx = text.indexOf(" " + phrase + " ");
-      if (idx !== -1) {
-        units.push({ alts: group });
-        text = text.slice(0, idx) + " " + text.slice(idx + phrase.length + 2);
-        break;   // one hit per concept group, even if more than one alias appears
-      }
+      let idx = text.indexOf(" " + phrase + " ");
+      if (idx === -1) continue;
+      if (!hit) { units.push({ alts: group }); hit = true; }   // one unit per concept group
+      // Every spelling of the concept comes out of the text, not just the first one found -
+      // "position sensor the crks" is ONE concept, and "crks" must not stay behind as a second
+      // required word (2026-10-06).
+      while (idx !== -1) { text = text.slice(0, idx) + " " + text.slice(idx + phrase.length + 2); idx = text.indexOf(" " + phrase + " "); }
     }
   }
   const leftover = text.split(/\s+/).filter(Boolean).filter(w => !SEARCH_STOPWORDS.has(w));
-  leftover.forEach(w => units.push({ alts: [w] }));
+  // A lone letter ("e code 5417", "no y wire", "manual a0004542981 e") matches something in every
+  // card ("Rev E", terminal Y), so it is zero-weight whenever a real word is left (2026-10-06).
+  const real = leftover.filter(w => w.length > 1 || /\d/.test(w)).filter(w => !ASK_ZERO_WORDS.has(w));
+  leftover.forEach(w => units.push({ alts: [w], word: true, zero: real.length > 0 && (ASK_ZERO_WORDS.has(w) || (w.length === 1 && !/\d/.test(w))) }));
   if (!units.length) q.toLowerCase().split(/\s+/).filter(Boolean).forEach(w => units.push({ alts: [w] }));
   return units;
 }
+// Weight-bearing units only (zero-weight filler stays in the list for snippets, never for scores).
+function askLiveUnits(units) { return units.filter(u => !u.zero); }
 // Plain substring matching lets a short alias bleed into an unrelated word
 // that happens to contain the same letters — "cap" (meant as capacitor
 // shorthand) silently matched inside "capacity", "capable", "cap tube".
@@ -188,7 +233,9 @@ function codeSearchAliases(code) {
   let m = c.match(/^E(\d{2,4})$/i);
   if (m) return [m[1]];
   m = c.match(/^(\d{2,4})$/);
-  if (m) return ["E" + m[1]];
+  // Generac display codes keep their leading zero ("0180"); techs drop it, and the quick-lookup
+  // card is the only place 0180 is written (Gus 2026-08-28). Both spellings go into the haystack.
+  if (m) return m[1][0] === "0" ? ["E" + m[1], m[1].replace(/^0+/, "")] : ["E" + m[1], "0" + m[1]];
   // Bosch Climate 5000 G3 prints its long-scheme codes with a space ("EC 52").
   // Techs type them both ways; feed the other spelling into the haystack.
   m = c.match(/^([A-Za-z]{2})\s([0-9A-Za-z]{2})$/);
@@ -206,10 +253,21 @@ function hayHasTerm(hay, term) {
   }
   return re.test(hay);
 }
+// A number typed on its own must not be found INSIDE a longer number or part number: "0180" sat in
+// the Bryant seed "215SAN01800A" and "236" in capacity-table figures (2026-10-06 audit, F3). Digits
+// are the only boundary that matters - "1100" still finds "1100-1101" and "5417" finds "5415-5417".
+const numRegexCache = new Map();
+function hayHasNumber(hay, a) {
+  let re = numRegexCache.get(a);
+  if (!re) { re = new RegExp("(^|[^0-9])" + a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![0-9])"); numRegexCache.set(a, re); }
+  return re.test(hay);
+}
+// The one test every Ask search uses: word-boundary match, or a digit-bounded match for a number.
+function askTermHit(hay, a) { return hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hayHasNumber(hay, a)); }
 function textIncludes(fields, q) {
   if (!q) return true;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a)));
+  return askLiveUnits(buildSearchUnits(q)).every(u => u.alts.some(a => hayHasTerm(hay, a)));
 }
 // Count of query concepts a card actually contains — used to surface the
 // closest matches when a strict all-units search comes up empty, so a
@@ -217,7 +275,7 @@ function textIncludes(fields, q) {
 function searchScore(fields, q) {
   if (!q) return 0;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return buildSearchUnits(q).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
+  return askLiveUnits(buildSearchUnits(q)).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
 }
 
 function closeModal() {
@@ -670,13 +728,57 @@ function askOpenSeries(id) {
 // a typed model number finds its series card.
 // A full model number typed into Ask (59SP5A080E171216) also matches by the
 // front part its code family or tag-pattern names (59SP5A), like Error Codes.
-function askAddModelAlts(units) {
+// Series, controller and part-number words name a generator family just as surely as a G-number
+// (2026-10-06 audit: "nexgen 26kw", "generac nexus 1800", "powerzone 200", "kohler 25kw wont
+// start", "manual a0004542981" all ran with no family). Each row: the words a tech says -> the
+// cards they can mean. A kW in the question narrows the set; kFam is set only when ONE card is
+// left, otherwise units.kFams still ranks those cards and reads their manuals.
+const ASK_FAMILY_WORDS = [
+  [/\b(nexgen|next ?gen(eration)?|power ?zone ?200|pz ?200|powerzone)\b/, g => genBrandOf(g) === "Generac" && /^power zone 200/i.test(g.controller || "")],
+  [/\bpre[- ]?nexus\b/, g => /^pre-nexus/i.test(g.controller || "")],
+  [/\bnexus\b/, g => /^nexus\b/i.test(g.controller || "") && !/industrial/i.test(g.controller || "")],
+  [/\b(evo(lution)?[ -]?1(\.0)?|sync ?[12](\.0)?)\b/, g => /^evolution 1\.0/i.test(g.controller || "")],
+  [/\b(evo(lution)?[ -]?2(\.0)?)\b/, g => /^evolution 2\.0/i.test(g.controller || "")],
+  [/\bevo(lution)?\b/, g => genBrandOf(g) === "Generac" && /^evolution/i.test(g.controller || "")],
+  [/\bprotector\b/, g => /protector/i.test(g.id || "")],
+  [/\bpowerpact\b/, g => /powerpact/i.test(g.id || "")],
+  [/\bcorepower\b/, g => /corepower/i.test(g.id || "")],
+  [/\bsynergy\b/, g => /synergy/i.test(g.id || "")],
+  [/\becogen\b/, g => /ecogen/i.test(g.id || "")],
+  [/\bguardian\b/, g => /guardian/i.test(g.series || "") && genBrandOf(g) === "Generac"],
+  [/\b(rdc ?2|dc ?2)\b/, g => genBrandOf(g) === "Kohler" && /RDC2|DC2/.test(g.controller || "")],
+  [/\bmpac\b/, g => genBrandOf(g) === "Kohler" && /MPAC/.test(g.controller || "")],
+  [/\b(kohler|rehlko)\b/, g => genBrandOf(g) === "Kohler" && (g.kw || []).length > 0],   // only useful with a kW
+];
+function askFamsFromWords(q) {
+  if (typeof genEntries !== "function") return [];
+  const low = " " + normalizeQuery(q) + " ";
+  const all = genEntries();
+  let fams = [];
+  // A manual part number (A0004542981, 0H9172, TP-6878) belongs to the families whose cards cite it.
+  const part = (low.toUpperCase().match(/\b(A\d{10}|0[A-Z]\d{4,5}[A-Z]?|TP-?\d{4})\b/) || [])[1];
+  if (part) { const p = part.replace(/^TP(\d)/, "TP-$1"); fams = all.filter(g => (g.manuals || []).some(m => String(m.title || "").toUpperCase().includes(p))); }
+  if (!fams.length) for (const [re, pick] of ASK_FAMILY_WORDS) { if (re.test(low)) { fams = all.filter(pick); if (fams.length) break; } }
+  if (!fams.length) return [];
+  // "26kw" / "22 kW" / "25k": the exact size, else the nearest listed size (Kohler has no 25 kW:
+  // 24RCL or 26RCA is meant). The kohler/rehlko row is a brand, not a family, without a kW.
+  const kw = (low.match(/\b(\d{1,2}(?:\.\d)?)\s*-?\s*k(?:w|ilowatts?)?\b/) || [])[1];
+  if (kw) {
+    const exact = fams.filter(g => (g.kw || []).includes(kw) || (g.kw || []).some(k => Number(k) === Number(kw)));
+    const near = exact.length ? exact : fams.filter(g => (g.kw || []).some(k => Math.abs(Number(k) - Number(kw)) <= 2));
+    if (near.length) fams = near;
+  } else if (/\b(kohler|rehlko)\b/.test(low) && !part && fams.every(g => genBrandOf(g) === "Kohler")) return [];
+  return fams.map(g => g.id);
+}
+function askAddModelAlts(units, q) {
   for (const u of units) {
     const t = (u.alts[0] || "").toUpperCase();
     // A generator model number points Ask at that family's card (longest prefix wins):
     // Kohler nameplates (14RES, 38RCLB, RXT) and Generac G-numbers (G0072580, Vern 2026-10-06).
+    // Kohler switch prefixes are followed by a dash or a letter (RXT-JFNA); a digit after RXT is a
+    // Daikin Aurora outdoor unit (RXT12AVJU9), not a switch (content audit 2026-10-06).
     const kTok = t.replace(/[^A-Z0-9.]/g, "");
-    if (!units.kFam && /^(\d{1,2}(\.5)?[A-Z]{3}|RXT|RDT|RRT|RSB|RGEN|6VSG)/.test(kTok) && typeof genFamilyForModel === "function") {
+    if (!units.kFam && /^(\d{1,2}(\.5)?[A-Z]{3}|(RXT|RDT|RRT|RSB)(?![0-9]{2}[A-Z]{1,2}VJU)|RGEN|6VSG)/.test(kTok) && typeof genFamilyForModel === "function") {
       let kf = genFamilyForModel(kTok);
       if (!kf || genBrandOf(kf) !== "Kohler") kf = genEntries().find(g => genBrandOf(g) === "Kohler" && (g.models || []).some(m => String(m.k || "").toUpperCase().startsWith(kTok)));
       if (kf && genBrandOf(kf) === "Kohler") { units.kFam = kf.id; units.kModel = kTok; }
@@ -699,6 +801,12 @@ function askAddModelAlts(units) {
     if (gd) extra.add(gd);
     for (const e of extra) if (!u.alts.includes(e)) u.alts.push(e);
   }
+  // No model number: series / controller / part-number words (ASK_FAMILY_WORDS). kModel stays unset -
+  // askUnitIdentity only speaks for a real model number on the tech's plate.
+  if (!units.kFam) {
+    const fams = askFamsFromWords(q || units.map(u => u.alts[0]).join(" "));
+    if (fams.length) { units.kFams = fams; if (fams.length === 1) units.kFam = fams[0]; }
+  } else units.kFams = [units.kFam];
   return units;
 }
 function askPatternPrefix(re) {
@@ -744,6 +852,7 @@ function askBuildIndex() {
       kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
       title: c.code + " — " + c.title,
       sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
+      codes: askCodeTokens(c.code), codesLit: [String(c.code).toLowerCase().trim(), String(c.code).toLowerCase().replace(/\s+/g, "")],
       titleHay: [c.brand, c.code, ...codeSearchAliases(c.code), c.title].filter(Boolean).join(" ").toLowerCase(),
       hay: [c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes || []), ...(c.steps || []), ...(c.techTips || []).map(t => t.text)].filter(Boolean).join(" ").toLowerCase(),
     });
@@ -769,6 +878,9 @@ function askBuildIndex() {
       kind: "gen", id: g.id, brand: genBrandOf(g), equip: "Generator",
       title: [g.series, g.family].filter(Boolean).join(" · "),
       sub: [g.controller, g.engine].filter(Boolean).join(" · "),
+      // The card's own alarm / warning codes (Kohler faults and Generac display codes live here).
+      codes: [...new Set([...(g.alarms || []), ...(g.warnings || [])].flatMap(a => askCodeTokens(a.code)))],
+      codesLit: [...new Set([...(g.alarms || []), ...(g.warnings || [])].flatMap(a => [String(a.code).toLowerCase().trim(), String(a.code).toLowerCase().replace(/\s+/g, "")]))],
       titleHay: [genBrandOf(g), g.series, g.family, g.controller, (g.kw || []).map(k => k + "kw " + k + " kw " + k + "k").join(" ")].filter(Boolean).join(" ").toLowerCase(),
       hay: genSearchFields(g).filter(Boolean).join(" ").toLowerCase(),
     });
@@ -858,56 +970,110 @@ let askVocabCache = null;
 function askVocab() {
   if (askVocabCache) return askVocabCache;
   const freq = new Map();
-  const add = (s) => { for (const w of String(s || "").toLowerCase().match(/[a-z]{4,}/g) || []) freq.set(w, (freq.get(w) || 0) + 1); };
+  // Apostrophes come out before tokenising, so "doesn't"/"won't" in the cards are the vocab words
+  // "doesnt"/"wont" - before, the fragments "doesn"/"won" were vocab and a typed "doesnt" was
+  // "corrected" to the required word "doesn" (James 2026-09-09; 2026-10-06 audit, F2).
+  const add = (s) => { for (const w of String(s || "").toLowerCase().replace(/['’]/g, "").match(/[a-z]{3,}/g) || []) freq.set(w, (freq.get(w) || 0) + 1); };
   for (const it of (askIndexCache || (askIndexCache = askBuildIndex()))) add(it.hay);
   if (typeof MANUAL_SEEDS !== "undefined") for (const s of MANUAL_SEEDS) { add(s.brand); add(s.model); add(s.title); }
-  const byFirst = new Map();
-  for (const [w, n] of freq) { if (n < 3) continue; const k = w[0]; if (!byFirst.has(k)) byFirst.set(k, []); byFirst.get(k).push([w, n]); }
-  askVocabCache = { freq, byFirst };
+  const byFirst = new Map(), words = [];
+  // Never offer a stopword or a 3-letter word as a correction target (3-letter words are only in
+  // the vocab so "txv", "ecm", "ats", "hsi" are recognised as real).
+  for (const [w, n] of freq) { if (n < 3 || w.length < 4 || SEARCH_STOPWORDS.has(w)) continue; const k = w[0]; if (!byFirst.has(k)) byFirst.set(k, []); byFirst.get(k).push([w, n]); words.push([w, n]); }
+  askVocabCache = { freq, byFirst, words };
   return askVocabCache;
+}
+// A short unknown word one letter off a stopword IS that stopword mistyped ("doe", "fir", "thee",
+// "unir"): drop it rather than find it a real word ("doe" matched "does"-with-plural-s into E214/Eb
+// codes; "thee" would become "three"). Only words the vocab has never seen get here.
+function askNearStopword(w) {
+  for (const s of SEARCH_STOPWORDS) if (Math.abs(s.length - w.length) <= 1 && ocrEditDistance(w, s) <= 1) return true;
+  return false;
+}
+// Trade shorthand the library text never spells out but a tech types ("wiring dia", "xfer switch",
+// "meg the compressor"): never dropped or "corrected". Every word of every alias group counts too.
+const ASK_KEEP_WORDS = new Set(["xfer", "dia", "meg", "megger", "lim", "dif", "diff", "gens", "gen", "pulley", "sats", "sat", "mano", "calor", "doas", "econ", "stat", "tstat", "comp", "cond", "evap", "txv", "eev", "ecm", "hsi", "rtu", "ats", "psi", "wc", "iwc", "cfm", "fpm", "amp", "amps", "ohm", "ohms", "vac", "vdc", "mfd", "uf", "kw", "hz", "rpm", "sub", "sh", "sc", "oem", "pcb", "ifc", "igniter", "ignitor", "ignitors", "inducer", "idm", "odm", "ol", "lp", "ng", "lpg", "hp", "ah", "ahu", "fcu", "vav", "rooftop", "nexgen", "pz", "pz200", "evo", "rdc2", "dc2", "mpac", "oncue", "crks", "ckp", "ttmap", "etmc", "pek", "ob"]);
+let askAliasWordsCache = null;
+function askAliasWords() {
+  if (askAliasWordsCache) return askAliasWordsCache;
+  askAliasWordsCache = new Set();
+  for (const g of SEARCH_ALIAS_GROUPS) for (const p of g) for (const w of p.toLowerCase().split(/[^a-z0-9]+/)) if (w) askAliasWordsCache.add(w);
+  return askAliasWordsCache;
 }
 function askFixTypos(q) {
   const v = askVocab();
-  return String(q || "").replace(/[A-Za-z]{4,}/g, (word) => {
-    const w = word.toLowerCase();
-    if (v.freq.has(w)) return word;
-    const max = w.length >= 7 ? 2 : 1;
-    let best = null, bestD = max + 1, bestN = 0;
-    for (const [c, n] of v.byFirst.get(w[0]) || []) {
+  // Only whole words: a letter run glued to a digit is part of a model / part number (14RCALQS1,
+  // 150REOZJF) and is never a typo to fix (code gate 2026-10-06).
+  return String(q || "").replace(/(?<![A-Za-z0-9])[A-Za-z]{3,}(?:['’]?[A-Za-z]+)?(?![A-Za-z0-9])/g, (word) => {
+    const w = word.toLowerCase().replace(/['’]/g, "");
+    if (SEARCH_STOPWORDS.has(w) || v.freq.has(w) || ASK_KEEP_WORDS.has(w) || askAliasWords().has(w) || word.includes("'") || word.includes("’")) return word;
+    if (w.length <= 5 && askNearStopword(w)) return "";
+    if (w.length === 3) return word;
+    // 6+ letters get two edits ("ponsor" -> sensor, "volate" -> voltage); a 4-5 letter word one.
+    const max = w.length >= 6 ? 2 : 1;
+    // A long word may have its first letter wrong too (ponsor), so 6+ letters scan the whole vocab.
+    let best = null, bestKey = null;
+    const less = (a, b) => { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i]; return false; };
+    for (const [c, n] of (w.length >= 6 ? v.words : (v.byFirst.get(w[0]) || []))) {
       if (Math.abs(c.length - w.length) > max) continue;
       const d = ocrEditDistance(w, c);
-      if (d < bestD || (d === bestD && n > bestN)) { best = c; bestD = d; bestN = n; }
+      if (d > max) continue;
+      // Closest wins; on a tie the word the library uses most ("volate" is voltage, not volume;
+      // "ponsor" is sensor, not poor), then the one sharing the first letter.
+      const key = [d, -n, c[0] === w[0] ? 0 : 1];
+      if (!bestKey || less(key, bestKey)) { best = c; bestKey = key; }
     }
-    return best && bestD <= max ? best : word;
-  });
+    return best ? best : word;
+  }).replace(/\s{2,}/g, " ").trim();
 }
 // The model-ish words in a question: Generac G-numbers, Kohler nameplates, and anything the
-// Tag Scanner library recognizes.
+// Tag Scanner library recognizes (XC25 and SL25XPV alike - 4 characters with a letter and a digit;
+// a bare code like E434 or 5417 never names a family, so it is never a model here).
 function askModelTokens(q) {
   return String(q || "").toUpperCase().split(/\s+/).map(t => t.replace(/[^A-Z0-9.\-\/]/g, "")).filter(t =>
-    /^G0\d{5,8}$/.test(t) || /^(\d{1,2}(\.5)?[A-Z]{3}|RXT|RDT|RRT|RSB|RGEN|6VSG)[A-Z0-9-]*$/.test(t) ||
-    (t.length >= 6 && /[A-Z]/.test(t) && /\d/.test(t) && typeof identifyModel === "function" && !!(identifyModel(t) || {}).brand));
+    /^G0\d{5,8}$/.test(t) || /^(\d{1,2}(\.5)?[A-Z]{3}|(RXT|RDT|RRT|RSB)(?![0-9]{2}[A-Z]{1,2}VJU)|RGEN|6VSG)[A-Z0-9-]*$/.test(t) ||
+    (t.length >= 4 && /[A-Z]/.test(t) && /\d/.test(t) && typeof identifyModel === "function" && !!(identifyModel(t) || {}).brand));
 }
-let askCtx = null;   // { models: [...], brand, ts } from the last question that named a model
+const ASK_BRAND_RE = /\b(generac|kohler|rehlko|carrier|bryant|lennox|trane|goodman|daikin|amana|rheem|ruud|york|payne|heil|tempstar|comfortmaker|arcoaire|bosch|honeywell|ecobee|nest|mitsubishi|fujitsu|samsung|gree|midea|nortek|armstrong|allied|ducane|coleman|luxaire|weatherking|american standard|aire-flo|airease|concord|icp|day & night|keeprite|frigidaire|maytag|westinghouse|intertherm|nordyne|lux|venstar|emerson|white-rodgers|braeburn|pro1|sensi|aprilaire|ameristar)\b/;
+let askCtx = null;   // { models, codes, brand, fam, ts } from the last question that named a unit, brand or family
 function askRetrievalQ(q) {
   let r = askFixTypos(q);
   const models = askModelTokens(r);
-  const brandOf = (s) => { const m = String(s).toLowerCase().match(/\b(generac|kohler|rehlko|carrier|bryant|lennox|trane|goodman|daikin|amana|rheem|ruud|york|payne|heil|tempstar)\b/); return m ? m[1] : ""; };
+  const brandOf = (s) => { const m = String(s).toLowerCase().match(ASK_BRAND_RE); return m ? m[1] : ""; };
   // Fault codes said in the question (3-4 digits not followed by kW / cc / volts / amps ...).
   const codesIn = (s) => (String(s).match(/\b\d{3,4}\b(?!\s*(kw|k\b|cc|v\b|volts?|amps?|a\b|rpm|hz|psi|cfh|btu|lbs?|ft|in\b))/gi) || []);
-  const codes = codesIn(r);
-  if (models.length) { askCtx = { models, codes, brand: brandOf(r), ts: Date.now() }; return r; }
   const b = brandOf(r);
-  // Only a bare follow-up borrows: a question that names its own brand or size ("22kw generac oil
-  // capacity") is about a unit of its own.
+  const nq = normalizeQuery(r);
+  // The family words a follow-up can inherit ("how to reset maintenance on nexgen generator", then
+  // "wiring dia" - Vern 2026-10-02): series / controller names, and short series like SL25 / XC25.
+  // Shared / English words (fit, aurora, infinity, bare evolution) count only next to their brand.
+  const famWord = (nq.match(/\b(nexgen|next ?gen(?:eration)?|power ?zone(?: 200)?|powerzone(?: 200)?|pz ?200|nexus|pre-?nexus|evolution [12](?:\.0)?|evo ?[12]|guardian|protector|powerpact|corepower|synergy|ecogen|sl ?25|sl25xpv?|xc ?2[05]|xp ?2[05]|ml17xp1|el17xp1|greenspeed)\b/) || [])[0]
+    || (nq.match(/\b(daikin (?:fit|aurora)|carrier infinity|bryant evolution|generac evolution|evolution extreme)\b/) || [])[0] || "";
+  // The "200" of "powerzone 200" is not a fault code to carry forward.
+  const codes = codesIn(famWord ? nq.replace(famWord, " ") : r);
+  if (models.length || b || famWord) { askCtx = { models, codes, brand: b, fam: famWord, ts: Date.now() }; return r; }
+  // Only a real follow-up borrows (code gate 2026-10-06: "generac 1800 error code" then "how do I check
+  // the igniter" must NOT become an 1800 question): the question has to read as one - a referent word
+  // ("this", "it", "the unit", "still") or two words or fewer - name no brand or size of its own, and live
+  // in the same world (generator / HVAC) as what it would inherit.
   const ownSize = /\b\d+(\.\d+)?\s*(kw|k|tons?)\b/i.test(r);
-  if (askCtx && Date.now() - askCtx.ts < 15 * 60 * 1000 && !b && !ownSize) {
-    // Vern: "e code 5417 on generac model G0072580", then "need the wiring harness" - same unit, same code.
-    if (codes.length) askCtx.codes = codes;
-    r += " " + askCtx.models.join(" ") + (codes.length ? "" : (askCtx.codes || []).map(c => " " + c).join(""));
-    askCtx.ts = Date.now();
+  if (askCtx && Date.now() - askCtx.ts < 15 * 60 * 1000 && !ownSize) {
+    const live = askLiveUnits(askPassageUnits(r));   // filler ("need") does not count as a word of its own
+    const referent = /\b(this|it|its|that|same|unit|still|also|too|now|then|again|here|one|where|part|parts|replace|replacement)\b/.test(nq) || ASK_WIRING_RE.test(r);
+    const ctxDom = /^(generac|kohler|rehlko)$/.test(askCtx.brand) ? "gen" : askCtx.brand ? "hvac"
+      : /nexgen|next|power|pz|nexus|evo|guardian|protector|powerpact|corepower|synergy|ecogen/.test(askCtx.fam) ? "gen" : askCtx.fam ? "hvac" : "";
+    const qDom = askDomain(live);
+    if ((referent || live.length <= 2) && (!qDom || !ctxDom || qDom === ctxDom)) {
+      // Vern: "e code 5417 on generac model G0072580", then "need the wiring harness" - same unit, same code.
+      // The code rides along only when the follow-up points back at it (referent, wiring or code word).
+      const codeCue = referent || /\b(code|codes|error|fault|alarm|alert)\b/.test(nq);
+      if (codes.length) askCtx.codes = codes;
+      const carry = [...new Set([...askCtx.models, askCtx.brand, ...String(askCtx.fam || "").split(" ")].filter(Boolean))];
+      r += " " + carry.join(" ") + (codes.length || !codeCue ? "" : (askCtx.codes || []).map(c => " " + c).join(""));
+      askCtx.ts = Date.now();
+    }
   }
-  return r;
+  return r.replace(/\s{2,}/g, " ").trim();
 }
 function askFamCodeKey(famId) {
   const g = typeof genEntries === "function" ? genEntries().find(x => x.id === famId) : null;
@@ -922,22 +1088,75 @@ function askFamWiringDocs(famId) {
   return (g.manuals || []).filter(m => /wiring|schematic|pin-?out/i.test(m.title || "")).map(m => ({ m, seed: tstatFindSeed(m) })).filter(x => x.seed);
 }
 function askWiringHtml(q, units) {
-  if (!units || !units.kFam || !ASK_WIRING_RE.test(q)) return "";
-  const docs = askFamWiringDocs(units.kFam);
+  const fams = units ? (units.kFams || (units.kFam ? [units.kFam] : [])) : [];
+  if (!fams.length || !ASK_WIRING_RE.test(q)) return "";
+  // A series word that fits a few cards ("powerzone 200", "A0004542981") shows each card's drawings once.
+  const seen = new Set(), docs = [];
+  for (const f of fams.slice(0, 4)) for (const d of askFamWiringDocs(f)) { if (seen.has(d.seed.file)) continue; seen.add(d.seed.file); docs.push(d); }
   if (!docs.length) return "";
-  const g = genEntries().find(x => x.id === units.kFam);
-  return `<div class="ask-wiring"><div class="ask-chip-label">Wiring diagrams for ${escapeHtml(g.family)}</div>` +
-    docs.map(({ m, seed }) => `<button type="button" class="ask-ai-cite ask-wiring-btn" data-seed="${escapeHtml(seed.file)}">📐 ${escapeHtml(m.title)}</button>`).join("") + `</div>`;
+  const g = genEntries().find(x => x.id === fams[0]);
+  const label = fams.length === 1 ? g.family : (g.series || g.family) + (fams.length > 1 ? " (" + fams.length + " cards)" : "");
+  return `<div class="ask-wiring"><div class="ask-chip-label">Wiring diagrams for ${escapeHtml(label)}</div>` +
+    docs.slice(0, 8).map(({ m, seed }) => `<button type="button" class="ask-ai-cite ask-wiring-btn" data-seed="${escapeHtml(seed.file)}">📐 ${escapeHtml(m.title)}</button>`).join("") + `</div>`;
 }
 function wireAskWiring(box) {
   box.querySelectorAll(".ask-wiring-btn").forEach(b => {
     b.onclick = () => { trackEvent("Ask opened wiring diagram: " + b.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: b.dataset.seed })); };
   });
 }
-function askUnitHits(units, hay) {
+// Brand names as a tech says them. A brand-less generic fix ("low subcooling, not cooling") is
+// written for every brand, so the brand word counts as said on it - otherwise naming the brand
+// excluded exactly the cards that answer the question (2026-10-06 audit, F10).
+const ASK_BRAND_WORDS = new Set(["carrier", "bryant", "payne", "trane", "lennox", "goodman", "amana", "daikin", "rheem", "ruud", "york", "bosch", "generac", "kohler", "rehlko", "honeywell", "ecobee", "nest", "mitsubishi", "fujitsu", "samsung", "gree", "midea", "nortek", "armstrong", "allied", "ducane", "coleman", "luxaire", "weatherking", "heil", "tempstar", "comfortmaker", "arcoaire", "icp", "keeprite", "frigidaire", "maytag", "nordyne", "intertherm", "ameristar", "aire-flo", "airease", "concord", "lg", "panasonic", "whirlpool", "emerson", "venstar", "braeburn", "pro1", "aprilaire"]);
+// Equipment-type words: which world a question lives in. Mixed words (oil, pressure, battery,
+// wiring, voltage, valve) belong to neither list on purpose.
+const ASK_GEN_WORDS = new Set(["generator", "generators", "generac", "kohler", "rehlko", "crankshaft", "crks", "crankshaft position sensor", "ats", "transfer switch", "alternator", "rotor", "stator", "exercise", "overcrank", "overspeed", "overvoltage", "undervoltage", "nexgen", "next generation", "nexus", "evolution", "powerzone", "power zone 200", "guardian", "protector", "powerpact", "corepower", "synergy", "ecogen", "standby", "genset", "rdc2", "mpac", "oncue", "utility", "kw"]);
+const ASK_HVAC_WORDS = new Set(["pump down", "rooftop", "rooftop unit", "rtu", "furnace", "furnaces", "coil", "coils", "refrigerant", "subcooling", "subcool", "superheat", "txv", "expansion valve", "compressor", "condenser", "blower", "thermostat", "tstat", "ton", "seer", "seer2", "heat pump", "mini split", "ductless", "air handler", "defrost", "igniter", "ignitor", "inducer", "suction", "low side", "high side", "head pressure", "evaporator", "reversing valve", "r32", "r-32", "r410a", "r-410a", "410a", "r454b", "r-454b", "r22", "r-22", "pressure switch", "flame sensor", "ecm", "capacitor", "contactor", "aux heat", "emergency heat", "dual fuel", "zone board", "damper", "humidifier", "dehumidif", "filter drier", "line set", "lineset", "charging chart", "manifold pressure", "gas valve"]);
+function askDomain(units) {
+  let g = 0, h = 0;
+  for (const u of askLiveUnits(units)) for (const a of u.alts) {
+    if (ASK_GEN_WORDS.has(a) || /^\d+(\.\d+)?kw$/.test(a)) { g++; break; }
+    if (ASK_HVAC_WORDS.has(a) || /^\d+(\.\d+)?(ton|seer)$/.test(a)) { h++; break; }
+  }
+  return g && !h ? "gen" : h && !g ? "hvac" : "";
+}
+// Code-looking tokens in the question: 0180, 1100, e434, pc03, 14.1, EE1, H6.
+function askCodeToks(units) {
+  const out = [];
+  // A bare two-digit number is a code only when the tech said "code"/"error" ("300 over 50" is pressures).
+  const cue = units.some(u => u.zero && u.alts.some(a => ASK_ZERO_WORDS.has(a)));
+  // Only words the tech typed (not alias-group spellings like "pz200" for Power Zone 200).
+  for (const u of askLiveUnits(units).filter(u => u.word)) for (const a of u.alts) {
+    if (/^r-?\d{2,3}[a-z]?$/.test(a)) continue;                                  // refrigerant, not a code
+    if (/^\d{2}$/.test(a) && !cue) continue;
+    if (/[a-z]/.test(a) && a.length >= 4 && typeof identifyModel === "function" && (identifyModel(a.toUpperCase()) || {}).brand) continue;   // XC25 is a model
+
+    if (/^(e?\d{2,4}|[a-z]{1,2}\s?\d{1,3}[a-z]?|\d{1,2}\.\d{1,2}|[a-z]\d[a-z]?)$/.test(a)) out.push(a.replace(/\s+/g, ""));
+  }
+  return [...new Set(out)];
+}
+// Every spelling a code entry answers to: "5415-5417" is 5415, 5416 and 5417; "2094-2099 / 2098";
+// "EC 52" is also "ec52"; "0180" is also "180" (and the other way round).
+function askCodeTokens(code) {
+  const c = String(code || "").toLowerCase().trim();
+  if (!c) return [];
+  const out = new Set([c, c.replace(/\s+/g, "")]);
+  for (const part of c.split(/\s*[\/,]\s*/)) {
+    const p = part.trim();
+    if (!p) continue;
+    out.add(p); out.add(p.replace(/\s+/g, ""));
+    const m = p.match(/^(\d{2,4})\s*[-–]\s*(\d{2,4})$/);
+    if (m && +m[2] > +m[1] && +m[2] - +m[1] <= 12) for (let n = +m[1]; n <= +m[2]; n++) out.add(String(n).padStart(m[1].length, "0"));
+    for (const a of codeSearchAliases(p)) out.add(a.toLowerCase());
+  }
+  return [...out];
+}
+function askUnitHits(units, hay, it) {
   let score = 0;
   for (const u of units) {
-    if (u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a)))) score++;
+    if (u.zero) continue;
+    if (u.alts.some(a => askTermHit(hay, a))) score++;
+    else if (it && it.kind === "symptom" && !it.brand && u.alts.some(a => ASK_BRAND_WORDS.has(a))) score++;
   }
   return score;
 }
@@ -945,14 +1164,41 @@ function askUnitHits(units, hay) {
 // HEADLINE (code + name) — so for "3 flashes" the row titled "3 flashes" beats
 // a "9 flashes" row that only matched the number somewhere in its steps.
 function askScoreItem(units, it) {
-  const sc = askUnitHits(units, it.hay);
-  const tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
+  let sc = askUnitHits(units, it.hay, it);
+  let tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
+  if (!sc) return { sc, tsc };
+  // A generator question is not answered by an HVAC card and the other way round: an item from the
+  // other world keeps only what its headline says ("rooftop ... 300 over 50" was five generator
+  // cards whose long text happened to hold every word; 2026-10-06 audit, F4).
+  if (units.dom === undefined) units.dom = askDomain(units);
+  if ((units.dom === "hvac" && it.equip === "Generator") || (units.dom === "gen" && it.equip && it.equip !== "Generator" && it.kind !== "manual")) { sc = Math.min(sc, tsc); tsc = 0; }
+  if (!sc) return { sc, tsc };
+  // The code the tech typed wins over cards that merely contain the digits somewhere (F12):
+  // "carrier mini split pc03" is the PC 03 row, not five spec cards whose LED tables list it. The
+  // row printed exactly as typed ("0180") beats a spelling match ("180" <-> "0180").
+  if (units.codeToks === undefined) units.codeToks = askCodeToks(units);
+  if (units.codeToks.length && it.codes && units.codeToks.some(t => it.codes.includes(t))) {
+    const literal = units.codeToks.some(t => (it.codesLit || []).includes(t));
+    sc += 1; tsc += (it.kind === "code" ? 3 : 2) + (literal ? 3 : 0);
+  }
+  // A manual asked for by its part number IS the manual, not the codes that cite it (#67).
+  if (it.kind === "manual" && units.codeToks.length === 0) {
+    const part = askLiveUnits(units).flatMap(u => u.alts).find(a => /^(a\d{10}|0[a-z]\d{4,5}[a-z]?|tp-?\d{4})$/.test(a));
+    if (part && it.hay.includes(part.replace(/^tp(\d)/, "tp-$1"))) { sc += 2; tsc += 6; }
+  }
   // The generator family the asked model belongs to outranks sister cards that only share words,
   // and so do that family's own codes ("5417 on G0072580" is the Next Gen 5415-5417, not a VSCF code).
-  if (sc && units.kFam && it.kind === "gen" && it.id === units.kFam) return { sc: sc + 1, tsc: tsc + 5 };
-  if (sc && units.kFam && it.kind === "code") {
-    const key = askFamCodeKey(units.kFam);
-    if (key && String(it.sub || "").toLowerCase().includes(key)) return { sc: sc + 1, tsc: tsc + 3 };
+  // A series word that fits several cards (kFams, no single kFam) still lifts those cards over the
+  // other families that merely mention the word (F6: "generac nexus 1800" is the Nexus cards'
+  // OVERVOLTAGE row, not the Evolution cards whose clear-steps say "Nexus").
+  const fams = units.kFams || (units.kFam ? [units.kFam] : []);
+  if (fams.length && it.kind === "gen" && fams.includes(it.id)) return { sc: sc + 1, tsc: tsc + (units.kFam ? 5 : 4) };
+  // ...and the other families' cards step back one notch (the Evolution cards say "Nexus" in their
+  // clear-steps; the quick-lookup card is every controller's and stays).
+  if (fams.length && it.kind === "gen" && it.id !== "gen-generac-codes-quicklookup") return { sc: Math.max(1, sc - 1), tsc: Math.min(tsc, 1) };
+  if (fams.length && it.kind === "code") {
+    const sub = String(it.sub || "").toLowerCase();
+    if (fams.some(f => { const key = askFamCodeKey(f); return key && sub.includes(key); })) return { sc: sc + 1, tsc: tsc + 3 };
   }
   return { sc, tsc };
 }
@@ -996,6 +1242,7 @@ function renderAsk() {
     empty.classList.add("hidden");
     document.getElementById("askNarrow").innerHTML = "";
     document.getElementById("askManualHits").innerHTML = "";
+    const inst = document.getElementById("askInstant"); if (inst) inst.innerHTML = "";
     const total = askIndexCache.length;
     const chips = ASK_EXAMPLES.map(x => `<button class="ask-chip" data-q="${escapeHtml(x)}">${escapeHtml(x)}</button>`).join("");
     examples.innerHTML = `
@@ -1013,8 +1260,9 @@ function renderAsk() {
   }
   examples.classList.add("hidden");
 
-  const units = askAddModelAlts(buildSearchUnits(askRetrievalQ(q)));
-  const need = units.length;
+  const rq = askRetrievalQ(q);
+  const units = askQueryUnits(rq);
+  const need = askLiveUnits(units).length;
   const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
 
   const scored = [];
@@ -1079,6 +1327,18 @@ function renderAsk() {
   }
 
   empty.classList.toggle("hidden", shown.length !== 0);
+  // A miss is a content ticket, not a dead end: log it like Diagnostic Help does and offer the same
+  // one-tap web search (streamline review 2026-10-06, rec 10).
+  if (!empty.dataset.base) empty.dataset.base = empty.innerHTML;
+  if (!shown.length && q.length >= 4) {
+    reportUnanswered(q);
+    const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent(q + " hvac generator troubleshooting");
+    empty.innerHTML = empty.dataset.base + (navigator.onLine ? `<div style="margin-top:0.7rem;"><a href="${searchUrl}" target="_blank" rel="noopener" class="chip" style="display:inline-block; text-decoration:none;">🔍 Search the web for this</a></div>` : "");
+  } else empty.innerHTML = empty.dataset.base;
+
+  // Instant answer: the top hit's own meaning / causes / first steps, shown at once so the tech can
+  // start testing during the 10-20 s the AI answer takes (streamline review 2026-10-06, rec 2).
+  renderAskInstant(q, shown.length ? shown[0].it : null, units, partial);
 
   const MAX = 60;
   if (partial && shown.length) {
@@ -1168,6 +1428,9 @@ function askManualCard(h) {
 // just the first one: on a spec page "22 kW" is in the heading and "oil
 // capacity" 1,500 characters further down, and a window cut at the first hit
 // sent the AI the heading without the number it was asked for.
+// 3,000 characters a page (was 1,200): the relay now takes 40k of context, and at 1,200 the AI kept
+// saying "the excerpt cuts off" - the p.110 oil level sensor test lost its Wire 820G step (2026-10-06).
+const ASK_PASSAGE_CHARS = 3000;
 function askTrimAround(text, units, len) {
   if (text.length <= len) return text.trim();
   const low = text.toLowerCase();
@@ -1186,6 +1449,13 @@ function askTrimAround(text, units, len) {
     for (const [q, k] of hits) if (q >= start && q < start + len) seen.add(k);
     if (seen.size > best) { best = seen.size; bestStart = start; }
   }
+  // Centre the window on the matched terms it holds, so the procedure around them is not cut at
+  // the first mention (the window used to start a fifth of the way before the first hit).
+  const inWin = hits.filter(([q]) => q >= bestStart && q < bestStart + len).map(([q]) => q);
+  if (inWin.length) {
+    const mid = (inWin[0] + inWin[inWin.length - 1]) / 2;
+    bestStart = Math.max(0, Math.min(Math.round(mid - len / 2), text.length - len));
+  }
   return text.slice(bestStart, bestStart + len).trim();
 }
 // Passages for the AI, on-device text first. A tech's phone only holds the
@@ -1195,12 +1465,28 @@ function askTrimAround(text, units, len) {
 // is signal, a remote pass reads the page text of the few library manuals the
 // question points at (see askRemotePassages). Remote passages carry remote:true
 // so the answer log can tell them apart; the relay never sees that flag.
-async function askManualPassages(q, limit) {
-  const rq = askRetrievalQ(q);
-  const units = askPassageUnits(rq);
-  units.kFam = askAddModelAlts(buildSearchUnits(rq)).kFam;
-  const threshold = Math.max(1, Math.ceil(units.length * 0.5));   // relaxed — context for the model
-  const strong = Math.max(threshold, Math.ceil(units.length * 0.75));
+// Words that name the equipment or the brand, not the question: a page that only says "Generac
+// generator" (every footer) must not count as an answer about the crank sensor (F7). The kW stays
+// content - the spec table is found by it.
+const ASK_NAME_WORDS = new Set(["generator", "generators", "generac", "kohler", "rehlko", "standby", "genset", "nexgen", "next gen", "next generation", "nextgen", "next-gen", "power zone 200", "powerzone 200", "powerzone200", "powerzone", "power zone", "pz200", "pz 200", "nexus", "pre-nexus", "evolution", "evo", "guardian", "protector", "powerpact", "corepower", "synergy", "ecogen", "rdc2", "mpac",
+  "furnace", "furnaces", "condenser", "heat pump", "heatpump", "heat-pump", "heat pumps", "mini split", "mini-split", "minisplit", "mini splits", "mini-splits", "ductless", "air handler", "airhandler", "air-handler", "air handlers", "fan coil", "fancoil", "rooftop unit", "rooftop", "roof top", "rtu", "packaged unit", "package unit", "rooftop units", "thermostat", "tstat", "stat", "wall stat", "unit", "units", "outdoor unit", "indoor unit", "controller", "controllers", "control", "board", "model"]);
+function askIsContentUnit(u) {
+  return !u.zero && !u.alts.every(a => ASK_BRAND_WORDS.has(a) || ASK_NAME_WORDS.has(a) || /^\d{1,2}$/.test(a));
+}
+// One question -> one set of units for entries, pages and the family: typo-fixed, zero-weight
+// filler dropped, kW/ton joined, number spellings expanded, model/family resolved. Every Ask
+// surface (results list, AI entries, pages) scores the same thing (2026-10-06).
+function askQueryUnits(rq) {
+  const units = askAddModelAlts(askPassageUnits(rq), rq);
+  if (rq) askQueryUnits._q = rq;
+  return units;
+}
+async function askManualPassages(q, limit, rqGiven) {
+  const rq = rqGiven || askRetrievalQ(q);
+  const units = askQueryUnits(rq);
+  const content = units.filter(askIsContentUnit).length || units.length;
+  const threshold = Math.max(1, Math.ceil(content * 0.5));   // relaxed — context for the model
+  const strong = Math.max(threshold, Math.ceil(content * 0.75));
   const lim = limit || 4;
   let recs = [];
   try { recs = await manualTextGetAll(); } catch (e) { recs = []; }
@@ -1214,7 +1500,7 @@ async function askManualPassages(q, limit) {
   scored.sort((a, b) => b.sc - a.sc || b.w - a.w);
   // The same page can arrive twice (a manual on the phone and in the library, or a manual listed twice) - keep one.
   const uniqPages = (arr) => { const seen = new Set(); return arr.filter(s => { const k = s.title + "|" + s.page; if (seen.has(k)) return false; seen.add(k); return true; }); };
-  let out = uniqPages(scored).slice(0, lim).map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, text: askTrimAround(s.raw, units, 1200) }));
+  let out = uniqPages(scored).slice(0, lim).map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, text: askTrimAround(s.raw, units, ASK_PASSAGE_CHARS) }));
   // "Strong" is judged on what the page itself says, not the free brand hit -
   // otherwise "generac 26k plug gap" was satisfied by a 9-22 kW manual.
   if (scored.filter(s => s.own >= strong).length < 3 && navigator.onLine) {
@@ -1236,13 +1522,23 @@ async function askManualPassages(q, limit) {
 // never prints "5417", so word matching alone can't find it). Only when the entry names exactly one of
 // the family's manuals by part number, so every cited page belongs to that manual.
 async function askCodePagePassages(rq, units) {
-  if (!units || !units.kFam || typeof genEntries !== "function") return [];
-  const g = genEntries().find(x => x.id === units.kFam);
-  if (!g) return [];
+  if (!units || typeof genEntries !== "function") return [];
   const asked = String(rq).match(/\b\d{3,4}\b/g) || [];
-  const entries = [...(g.alarms || []), ...(g.warnings || [])].filter(e => asked.includes(String(e.code)));
-  if (!entries.length) return [];
+  if (!asked.length) return [];
   const partOf = (t) => (String(t).match(/\b(TP-\d{4}|A\d{10}|[0-9]{8,11}|0[A-Z]\d{4,5}[A-Z]?)\b/) || [])[1] || "";
+  const codeRows = (fam) => [...(fam.alarms || []), ...(fam.warnings || [])].filter(e => asked.includes(String(e.code)));
+  let g = units.kFam ? genEntries().find(x => x.id === units.kFam) : null;
+  // No model on the question ("e code 5417 on gemerac", 2026-10-06): if every card carrying that code cites
+  // the same single dealer manual for it (5417 lives only on the three Power Zone 200 cards), read that manual.
+  if (!g && !units.kFam) {
+    const carriers = genEntries().filter(x => codeRows(x).length);
+    const parts = new Set(carriers.map(x => codeRows(x).map(e => [e.meaning, ...(e.causes || []), ...(e.steps || [])].join(" ")).join(" "))
+      .map(t => ((t.match(/\b(TP-\d{4}|A\d{10}|[0-9]{8,11}|0[A-Z]\d{4,5}[A-Z]?)\b/g) || []).sort().join(","))));
+    if (carriers.length && parts.size === 1 && [...parts][0]) g = carriers[0];
+  }
+  if (!g) return [];
+  const entries = codeRows(g);
+  if (!entries.length) return [];
   const mans = (g.manuals || []).map(m => ({ m, part: partOf(m.title), seed: tstatFindSeed(m) })).filter(x => x.part && x.seed);
   const { rows } = askRemoteSeedRows();
   const out = [];
@@ -1262,7 +1558,7 @@ async function askCodePagePassages(rq, units) {
     let ptxt = null;
     try { ptxt = await remoteTextPages(row); } catch (err) { ptxt = null; }
     if (!ptxt) continue;
-    for (const n of pages.filter(p => ptxt[p - 1]).slice(0, 2)) out.push({ id: row.id, title: row.title, page: n, sc: 99, w: 99, remote: true, text: askTrimAround(ptxt[n - 1], units, 1200) });
+    for (const n of pages.filter(p => ptxt[p - 1]).slice(0, 2)) out.push({ id: row.id, title: row.title, page: n, sc: 99, w: 99, remote: true, text: askTrimAround(ptxt[n - 1], units, ASK_PASSAGE_CHARS) });
   }
   return out;
 }
@@ -1270,11 +1566,17 @@ async function askCodePagePassages(rq, units) {
 // says out loud ("uses how MUCH oil", "what is it SUPPOSED to be") that no
 // manual page contains - with the 50% bar each one of those made the right
 // page harder to reach - and with kW / ton / SEER spellings joined up.
-const ASK_PASSAGE_NOISE = new Set(["much", "many", "use", "uses", "used", "using", "supposed", "suppose", "need", "needs", "needed", "tell", "know", "find", "please", "anyone", "someone", "hey", "guys", "gonna", "wanna", "gotta", "thing", "things", "kind", "sort"]);
+// Ask-only filler: words that ARE trade words somewhere ("running" in Carrier's "41.2 no blower RPM
+// while running", "fix", "install", "check") stay searchable on the other screens, but in a question
+// typed to Ask they are the tech talking, not the thing asked about (2026-10-06 audit, F1).
+const ASK_PASSAGE_NOISE = new Set(["much", "many", "use", "uses", "used", "using", "supposed", "suppose", "need", "needs", "needed", "tell", "know", "find", "please", "anyone", "someone", "hey", "guys", "gonna", "wanna", "gotta", "thing", "things", "kind", "sort",
+  "while", "running", "put", "fix", "fixed", "fixing", "changed", "change", "after", "before", "hooking", "hook", "hooked", "just", "really", "pretty", "kinda", "sorta", "right", "now", "today", "yesterday", "guy", "customer", "house", "job", "call"]);
 function askPassageUnits(q) {
   const base = buildSearchUnits(q);
-  let units = base.filter(u => !u.alts.every(a => ASK_PASSAGE_NOISE.has(a)));
-  if (!units.length) units = base;
+  // Zero-weight filler ("code", lone letters) never reaches a page score; "e code 5417" is "5417".
+  let units = askLiveUnits(base).filter(u => !u.alts.every(a => ASK_PASSAGE_NOISE.has(a)));
+  if (!units.length) units = askLiveUnits(base);
+  if (!units.length) units = base.map(u => ({ alts: u.alts }));
   // "how much oil" is asking for the oil CAPACITY - the word the spec table uses.
   if (/\bhow (much|many)\b/.test(normalizeQuery(q))) units.push({ alts: ["capacity", "how much", "amount", "quantity"] });
   // "20 kw" arrives as two units ("20", "kw"); one "20 kW" concept is what was meant.
@@ -1299,7 +1601,14 @@ function askRankPages(units, pages, threshold, brand) {
   const hits = [];
   const df = new Array(units.length).fill(0);
   // per-unit version of askUnitHits (same test), so the tie-break knows WHICH concepts hit
-  const test = (hay, u) => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a)));
+  const test = (hay, u) => u.alts.some(a => askTermHit(hay, a));
+  // A page has to say something about the QUESTION itself, not just the brand or the equipment word
+  // ("generac" + "generator" cleared the bar on half the pages of every manual; F7).
+  const content = units.map(askIsContentUnit);
+  const needContent = content.some(Boolean);
+  // A page that prints the code the tech typed ("E 434") is an answer page whatever else it lacks.
+  const codeU = units.map(u => !!u.word && !u.zero && u.alts.some(a => /^e?\d{3,4}$/.test(a) ||
+    (/^[a-z]{1,2}\d{1,3}[a-z]?$/.test(a) && !/^r\d/.test(a) && !(typeof identifyModel === "function" && (identifyModel(a.toUpperCase()) || {}).brand))));
   for (let i = 0; i < pages.length; i++) {
     if (!pages[i]) continue;
     const low = pages[i].toLowerCase();
@@ -1308,19 +1617,25 @@ function askRankPages(units, pages, threshold, brand) {
     const words = (low.match(/[a-z]{3,}/g) || []).length;
     if (words < 25 || (words < 90 && /all rights reserved|intentionally left blank|no reproduction allowed/.test(low))) continue;
     const own = units.map(u => test(low, u));
+    if (needContent && !own.some((o, k) => o && content[k])) continue;
     const got = units.map((u, k) => own[k] || (!!tag && test(tag, u)));
     let sc = 0;
     got.forEach((g, k) => { if (g) { df[k]++; sc++; } });
-    if (sc >= threshold) hits.push({ page: i + 1, sc, own: own.filter(Boolean).length, got });
+    if (sc < threshold && !own.some((o, k) => o && codeU[k])) continue;
+    // How often the page says the matched content words: the CRKS theory page says it twenty
+    // times, the alarm table once - with one concept asked, that is the only tie-break there is.
+    let dens = 0;
+    units.forEach((u, k) => { if (!own[k] || !content[k]) return; for (const a of u.alts) { let p = low.indexOf(a), c = 0; while (p >= 0 && c < 50) { c++; p = low.indexOf(a, p + a.length); } dens += c; } });
+    hits.push({ page: i + 1, sc, own: own.filter(Boolean).length, got, dens });
   }
   const n = pages.length;
   for (const h of hits) {
     h.w = h.got.reduce((w, g, k) => w + (g ? Math.log((n + 1) / (df[k] + 0.5)) : 0), 0);
     // A contents page lists every topic next to a page number - never the answer.
-    if ((pages[h.page - 1].match(/\.{6,}/g) || []).length >= 4) h.w *= 0.25;
+    if ((pages[h.page - 1].match(/\.{6,}/g) || []).length >= 4) { h.w *= 0.25; h.dens = 0; }
     delete h.got;
   }
-  hits.sort((a, b) => b.sc - a.sc || b.w - a.w);
+  hits.sort((a, b) => b.sc - a.sc || b.w - a.w || b.dens - a.dens);
   hits.forEach((h, k) => { h.rank = k; });
   return hits;
 }
@@ -1336,9 +1651,15 @@ function askExpandNumberUnits(units) {
       if ((m = a.match(/^(\d+(?:\.\d+)?)kw?$/))) extra.push(m[1] + "k", m[1] + "kw", m[1] + " kw");
       else if ((m = a.match(/^(\d+(?:\.\d+)?)-?tons?$/))) extra.push(m[1] + "ton", m[1] + " ton", m[1] + "-ton");
       else if ((m = a.match(/^(\d+(?:\.\d+)?)-?seer2?$/)) || (m = a.match(/^seer2?-?(\d+(?:\.\d+)?)$/))) extra.push(m[1] + "seer", m[1] + " seer", "seer " + m[1], "seer" + m[1]);
+      // Refrigerants: "r32" is printed "R-32" in every maint card and manual (Vern 2026-10-02);
+      // "410a" is "R-410A". Lennox alerts: the display says "E434", the manual prints "E 434",
+      // LennoxPros lists "434" (Gus 2026-09-02).
+      else if ((m = a.match(/^r-?(\d{2,3}[a-z]?)$/))) extra.push("r-" + m[1], "r" + m[1]);
+      else if ((m = a.match(/^(\d{3}[a-z])$/))) extra.push("r-" + m[1], "r" + m[1]);
+      else if ((m = a.match(/^e(\d{3})$/))) extra.push("e " + m[1], m[1]);
     }
     if (!extra.length) return u;
-    return { alts: [...new Set([...u.alts, ...extra])] };
+    return { alts: [...new Set([...u.alts, ...extra])], zero: u.zero, word: u.word };
   });
 }
 // The same aliases on the metadata side: "8-22 kW" / "20/22/24 kW" / "3 ton" /
@@ -1544,30 +1865,65 @@ function askRemoteCandidates(q, units, index, skipIds) {
   const maint = words.some(w => ASK_MAINT_WORDS.has(w));
   const rank = maint ? { service: 3, owner: 3, install: 1, sheet: 0 } : { service: 3, install: 2, owner: 1, sheet: 0 };
   // The asked model's own card lists its manuals (Vern 2026-10-06: G0072580 -> the Next Gen repair manual).
+  // A series word that fits a few cards (units.kFams) reads theirs too - the three Power Zone 200
+  // cards share one diagnostic manual, so "nexgen" reaches it without a G-number (F6).
   const famFiles = new Set();
-  if (units && units.kFam && typeof genEntries === "function") {
-    const g = genEntries().find(x => x.id === units.kFam);
-    for (const m of (g && g.manuals) || []) { const sd = tstatFindSeed(m); if (sd) famFiles.add(sd.file.split("/").pop()); }
+  const addFam = (g) => { for (const m of (g && g.manuals) || []) { const sd = tstatFindSeed(m); if (sd) famFiles.add(sd.file.split("/").pop()); } };
+  let fams = units ? (units.kFams || (units.kFam ? [units.kFam] : [])) : [];
+  if (typeof genEntries === "function") {
+    // No family from the question itself: borrow it from the top entries - the card and the codes
+    // that answered "what does the crks do" are Power Zone 200, so its manual is the one to read (F7).
+    if (!fams.length && units) {
+      const tops = askTopItems(units, 5);
+      const ids = new Set(tops.filter(x => x.it.kind === "gen").map(x => x.it.id));
+      const keys = tops.filter(x => x.it.kind === "code" && /generator/i.test(x.it.equip)).map(x => String(x.it.sub || "").toLowerCase());
+      for (const g of genEntries()) { const key = askFamCodeKey(g.id); if (key && keys.some(s => s.includes(key))) ids.add(g.id); }
+      fams = [...ids].filter(id => id !== "gen-generac-codes-quicklookup");
+    }
+    for (const id of fams) addFam(genEntries().find(x => x.id === id));
     // A known model means a known brand, even when the question never says it ("need the wiring harness").
-    const fb = g ? genBrandOf(g).toLowerCase() : "";
+    const g0 = fams.length ? genEntries().find(x => x.id === fams[0]) : null;
+    const fb = g0 ? genBrandOf(g0).toLowerCase() : "";
     if (fb && brands.has(fb) && !named.includes(fb)) named.push(fb);
   }
+  // A generator question never reads an HVAC manual and the other way round (F4).
+  const dom = units ? (units.dom === undefined ? askDomain(units) : units.dom) : "";
+  const isGenRow = (r) => /generac|kohler|rehlko|generator|transfer switch/i.test(r.brand + " " + r.file);
+  const cUnits = units ? (units.filter(askIsContentUnit).length ? units.filter(askIsContentUnit) : askLiveUnits(units)) : [];
   const scored = [];
   for (const r of rows) {
     if (skipIds && skipIds.has(r.id)) continue;
     if (index && !index.has(r.file)) continue;                 // scanned / no text layer
-    if (named.length && !named.some(b => hayHasTerm(r.brandHay, b))) continue;
     const fam = famFiles.has(r.file.split("/").pop());
-    const sc = askUnitHits(units, r.hay);
+    if (!fam && dom === "gen" && !isGenRow(r)) continue;
+    if (!fam && dom === "hvac" && isGenRow(r)) continue;
+    if (named.length && !named.some(b => hayHasTerm(r.brandHay, b))) continue;
+    // Content words only: "generac generator" is in every Generac manual's title and chose the
+    // owner's manual over the diagnostic manual for "what does the crks do" (F7).
+    const sc = askUnitHits(cUnits, r.hay);
     if (!sc && !fam) continue;                                 // the asked model's own manuals always get read
-    const tsc = askUnitHits(units, r.headHay);
+    const tsc = askUnitHits(cUnits, r.headHay);
     const pages = index && index.get(r.file) ? index.get(r.file).pages || 0 : 0;
     scored.push({ r, sc: sc + (fam ? 2 : 0), tsc, pages });
   }
+  // No manual's metadata carries a content word (an alert code, a short series): fall back to the
+  // brand + equipment words, as before, so a Lennox question still reads a Lennox manual (#26).
+  if (!scored.length && cUnits !== units && units) {
+    for (const r of rows) {
+      if (skipIds && skipIds.has(r.id)) continue;
+      if (index && !index.has(r.file)) continue;
+      if (dom === "gen" && !isGenRow(r)) continue;
+      if (dom === "hvac" && isGenRow(r)) continue;
+      if (named.length && !named.some(b => hayHasTerm(r.brandHay, b))) continue;
+      const sc = askUnitHits(units, r.hay);
+      if (!sc) continue;
+      scored.push({ r, sc, tsc: askUnitHits(units, r.headHay), pages: index && index.get(r.file) ? index.get(r.file).pages || 0 : 0 });
+    }
+  }
   scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || rank[b.r.kind] - rank[a.r.kind] || b.pages - a.pages);
-  const out = scored.slice(0, 3);
+  const out = scored.slice(0, 4);
   const last = out[out.length - 1];
-  for (let i = 3; i < scored.length && out.length < 5 && last; i++) {
+  for (let i = 4; i < scored.length && out.length < 6 && last; i++) {
     if (scored[i].sc === last.sc && scored[i].tsc === last.tsc) out.push(scored[i]); else break;
   }
   return out.map(x => x.r);
@@ -1598,18 +1954,57 @@ async function askRemotePassages(q, units, threshold, limit, skipIds) {
   const seenRP = new Set();
   return found.slice().sort((a, b) => b.sc - a.sc || a.rank - b.rank || a.ci - b.ci)
     .filter(s => { const k = s.title + "|" + s.page; if (seenRP.has(k)) return false; seenRP.add(k); return true; }).slice(0, limit || 4)
-    .map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, remote: true, text: askTrimAround(s.raw, units, 1200) }));
+    .map(s => ({ id: s.id, title: s.title, page: s.page, sc: s.sc, w: s.w, remote: true, text: askTrimAround(s.raw, units, ASK_PASSAGE_CHARS) }));
 }
 // Top structured entries, with their meaning/steps, for grounding.
-function askAiEntries(q, limit) {
-  const units = askAddModelAlts(buildSearchUnits(askRetrievalQ(q)));
+// The best-scoring index items for a set of units, one per distinct answer: the same code title
+// on five board families fills the five AI slots with one answer (F9), so a repeat title (or a
+// repeat body) is skipped - the result list below still shows every family.
+function askTopItems(units, limit) {
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
   for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
-  // beats a card that only mentions Evolution in a footnote).
-  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc);
-  const out = scored.slice(0, limit || 5).map(({ it }) => ({ kind: ASK_KIND[it.kind].label, title: it.title, text: askEntryText(it) }));
+  // beats a card that only mentions Evolution in a footnote), then answers before references.
+  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank);
+  const seen = new Set(), out = [];
+  for (const x of scored) {
+    const k = x.it.kind + "|" + x.it.title.replace(/\s+/g, " ").toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k); out.push(x);
+    if (out.length >= (limit || 5)) break;
+  }
+  return out;
+}
+function askAiEntries(q, limit, rqGiven) {
+  const rq = rqGiven || askRetrievalQ(q);
+  const units = askQueryUnits(rq);
+  const tops = askTopItems(units, limit || 5);
+  const seenText = new Set();
+  const out = [];
+  for (const { it } of tops) {
+    const text = askEntryText(it, units);
+    // Sister generator cards carry the same alarm list - send the text once, name the others.
+    const key = it.kind + "|" + text.slice(0, 400);
+    if (text && seenText.has(key)) { const prev = out.find(o => o._key === key); if (prev) prev.title += " (also: " + it.title + ")"; continue; }
+    seenText.add(key);
+    out.push({ kind: ASK_KIND[it.kind].label, title: it.title, text, _key: key });
+  }
+  out.forEach(o => { delete o._key; });
+  // A code the tech named that no entry of that brand carries: say so, instead of letting the AI
+  // guess from five rows that merely contain the digits (James 2026-09-02, "carrier code 236"; F12).
+  if (units.codeToks === undefined) units.codeToks = askCodeToks(units);
+  const brand = (normalizeQuery(rq).match(ASK_BRAND_RE) || [])[1];
+  const cue = /\b(code|codes|error|errors|fault|faults|alarm|alarms|alert|alerts|e-?code|flash(es|ing)?)\b/.test(normalizeQuery(rq));
+  if (brand && units.codeToks.length) {
+    const idx = askIndexCache || (askIndexCache = askBuildIndex());
+    const known = (t) => idx.some(it => it.codes && it.codes.includes(t) && String(it.brand || "").toLowerCase().includes(brand));
+    const unknown = cue ? units.codeToks.filter(t => !known(t)) : [];
+    if (unknown.length && unknown.length === units.codeToks.length) {
+      const B = brand.charAt(0).toUpperCase() + brand.slice(1);
+      out.unshift({ kind: "Note", title: "No " + B + " code " + unknown.join(" / ") + " in the library", text: "The library has no " + B + " entry for code " + unknown.join(" / ") + " - the entries below only share the digits somewhere in their text and are NOT this code. Say plainly that this code is not in the library, ask the tech to confirm the exact display reading and the control/board family, and give only general guidance clearly labelled as such." });
+    }
+  }
   // Say which unit the model number is, so the AI never takes it for a part number
   // (2026-10-06: it called G0072580 "the OLS harness" and said it couldn't confirm it).
   const unit = askUnitIdentity(units);
@@ -1620,7 +2015,9 @@ function askUnitIdentity(units) {
   if (!units.kFam || !units.kModel || typeof genEntries !== "function") return null;
   const g = genEntries().find(x => x.id === units.kFam);
   if (!g) return null;
-  const row = (g.models || []).find(m => String(m.g || m.k || "").toUpperCase().replace(/[^A-Z0-9]/g, "") === units.kModel);
+  // Kohler plates carry more than the row key (8.5RES -> 85RES, 14RCALQS1 -> 14RCAL): prefix match on the bare form.
+  const km = units.kModel.replace(/[^A-Z0-9]/g, "");
+  const row = (g.models || []).find(m => { const k = String(m.g || m.k || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); return k && km.startsWith(k); });
   return {
     kind: "Unit",
     title: "The tech's unit: model " + units.kModel,
@@ -1629,29 +2026,80 @@ function askUnitIdentity(units) {
       ". Answer for this unit.",
   };
 }
-function askEntryText(it) {
-  if (it.kind === "code") { const c = getAllCodes().find(x => x.id === it.id); return c ? [c.meaning, (c.causes || []).join("; "), (c.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
-  if (it.kind === "symptom") { const s = getAllSymptoms().find(x => x.id === it.id); return s ? [s.summary, (s.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
-  // Generators: the maintenance specs live on the card, not in any excerpt -
-  // send them so oil capacity / plug gap / filter questions get real numbers.
+// How many of the question's weight-bearing concepts a piece of card text holds.
+function askTextHits(units, text) { return units ? askUnitHits(units, String(text || "").toLowerCase()) : 0; }
+// The alarm / warning rows of a generator card that answer the question: the code the tech typed
+// first, then rows whose name/meaning share the question's words.
+function askGenRowsFor(g, units) {
+  const rows = [...(g.alarms || []), ...(g.warnings || [])];
+  const toks = units ? (units.codeToks === undefined ? (units.codeToks = askCodeToks(units)) : units.codeToks) : [];
+  const live = units ? askLiveUnits(units) : [];
+  // The words that carry the question count triple; "generator" alone picks nothing (every row says it).
+  const content = live.filter(askIsContentUnit);
+  const score = (a) => {
+    const codes = askCodeTokens(a.code);
+    if (toks.some(t => codes.includes(t))) return 100;
+    if (!live.length) return 0;
+    const text = [a.code, a.name, a.display, a.meaning].join(" ").toLowerCase();
+    const c = askUnitHits(content, text);
+    if (content.length && !c) return 0;
+    // The row NAMED after the question's word ("1800 Overvoltage") beats one that mentions it in passing.
+    return c * 3 + askUnitHits(live, text) - c + (askUnitHits(content, [a.code, a.name, a.display].join(" ").toLowerCase()) ? 2 : 0);
+  };
+  return rows.map(a => ({ a, s: score(a) })).filter(x => x.s > 0).sort((x, y) => y.s - x.s).map(x => x.a);
+}
+function askGenRowText(a) {
+  return a.code + " " + (a.name || "") + ": " + (a.meaning || "") + ((a.causes || []).length ? " Causes: " + a.causes.join("; ") : "") + ((a.steps || []).length ? " Steps: " + a.steps.join(" ") : "") + (a.clear ? " Clear: " + a.clear : "");
+}
+function askEntryText(it, units) {
+  if (it.kind === "code") { const c = getAllCodes().find(x => x.id === it.id); return c ? [c.meaning, (c.causes || []).join("; "), (c.steps || []).slice(0, 8).join("; "), ...(c.techTips || []).slice(0, 2).map(t => "Tip: " + t.text)].filter(Boolean).join(" | ").slice(0, 3000) : ""; }
+  if (it.kind === "symptom") { const s = getAllSymptoms().find(x => x.id === it.id); return s ? [s.summary, (s.steps || []).slice(0, 8).join("; ")].filter(Boolean).join(" | ").slice(0, 3000) : ""; }
+  // Generators: what the question is about comes FIRST, then the rest of the card, capped at 3,000
+  // chars. Before, every spec and maintenance line came first and the alarm table started past the
+  // 6,000-char cut on 26 of 52 cards (all Next Gen, most Evolution, every Kohler family), so the AI
+  // never saw a single code from the card (streamline review 2026-10-06, Finding A).
   if (it.kind === "gen") {
     const g = genEntries().find(x => x.id === it.id);
     if (!g) return it.sub || "";
-    return [
-      g.family, "kW: " + (g.kw || []).join(", "), g.engine,
-      ...genSpecLines(g),
-      ...(g.maintenance || []).map(x => x.interval + ": " + x.task),
+    const head = [g.family, "kW: " + (g.kw || []).join(", "), g.engine].filter(Boolean);
+    const specs = [...genSpecLines(g), ...(g.maintenance || []).map(x => x.interval + ": " + x.task)];
+    const reset = [
       // "How do I reset the maintenance light on a <model>" - send the card's own steps.
       g.maintReset ? "Reset maintenance reminder: " + (g.maintReset.steps || []).join(" ") : "",
       g.maintReset && (g.maintReset.dealerSteps || []).length ? "Dealer full reset (all counters): " + g.maintReset.dealerSteps.join(" ") : "",
-      // Fault codes and troubleshooting too (Kohler has no separate Error Codes entries).
-      ...[...(g.alarms || []), ...(g.warnings || [])].map(a => a.code + " " + (a.name || "") + ": " + (a.meaning || "") + ((a.steps || []).length ? " Steps: " + a.steps.join(" ") : "")),
-      ...(g.troubleshooting || []).map(t => t.symptom + ": " + (t.causes || []).join("; ") + " -> " + (t.fixes || []).join("; ")),
-    ].filter(Boolean).join(" | ").slice(0, 6000);
+    ].filter(Boolean);
+    const rowsAll = [...(g.alarms || []), ...(g.warnings || [])];
+    const rows = askGenRowsFor(g, units);
+    const trouble = (g.troubleshooting || []).map(t => t.symptom + ": " + (t.causes || []).join("; ") + " -> " + (t.fixes || []).join("; "));
+    const troubleHit = units ? trouble.filter(t => askTextHits(units, t) > 0) : [];
+    const asksReset = units && askLiveUnits(units).some(u => u.alts.some(a => /^(reset|maintenance|reminder|service due)$/.test(a)));
+    const asksSpec = units && askLiveUnits(units).some(u => u.alts.some(a => ASK_MAINT_WORDS.has(a) || /^(capacity|gap|psi|wc|torque|cc|rpm)$/.test(a)));
+    const parts = [...head];
+    if (asksReset) parts.push(...reset);
+    if (rows.length) parts.push(...rows.slice(0, 6).map(askGenRowText));
+    if (troubleHit.length) parts.push(...troubleHit.slice(0, 4));
+    if (asksSpec || !rows.length) parts.push(...specs);
+    if (!asksReset) parts.push(...reset);
+    if (!asksSpec && rows.length) parts.push(...specs);
+    if (!rows.length && !troubleHit.length) {
+      // Nothing matched the question: the full lists, as before (summaries only).
+      parts.push(...rowsAll.map(a => a.code + " " + (a.name || "") + ": " + (a.meaning || "")));
+      parts.push(...trouble);
+    } else {
+      parts.push("Other codes on this controller: " + rowsAll.filter(a => !rows.includes(a)).map(a => a.code + " " + (a.name || "")).join(", "));
+    }
+    return parts.filter(Boolean).join(" | ").slice(0, 3000);
   }
+  // Maintenance figures: the groups the question asks about first ("DM96VC manifold pressure" is the
+  // gas group, not the whole 4,000-char table - Finding D), then the rest as room allows.
   if (it.kind === "maint" && typeof MAINT_SPECS !== "undefined") {
     const m = MAINT_SPECS.find(x => x.brand + "|" + x.model === it.id);
-    if (m) return [m.summary, ...(m.flags || []).map(f => f.title + ": " + f.body), ...(m.groups || []).map(g => g.title + ": " + (g.rows || []).map(r => r.label + " " + r.value).join("; ")), m.source ? "Source: " + m.source : ""].filter(Boolean).join(" | ").slice(0, 4000);
+    if (m) {
+      const groups = (m.groups || []).map(g => g.title + ": " + (g.rows || []).map(r => r.label + " " + r.value).join("; "));
+      const hit = units ? groups.filter(t => askTextHits(units, t) > 0) : [];
+      const rest = groups.filter(t => !hit.includes(t));
+      return [m.summary, ...(m.flags || []).map(f => f.title + ": " + f.body), ...hit, ...rest, m.source ? "Source: " + m.source : ""].filter(Boolean).join(" | ").slice(0, 3000);
+    }
   }
   if (it.kind === "charge" && typeof CHARGING_CHARTS !== "undefined") {
     const c = CHARGING_CHARTS.find(x => x.id === it.id);
@@ -1674,15 +2122,17 @@ async function askAiAnswer(question) {
   box.dataset.answeredFor = question;
   box.innerHTML = `<div class="ask-ai-card"><div class="ask-ai-status"><span class="ask-ai-spin"></span>Reading your manuals…</div></div>`;
   let passages = [], entries = [];
-  try { passages = await askManualPassages(question, 4); } catch (e) {}
-  try { entries = askAiEntries(question, 5); } catch (e) {}
+  // One retrieval question for the whole answer (typo fix + follow-up context run once, not six times).
+  const rq0 = askRetrievalQ(question);
+  try { passages = await askManualPassages(question, 4, rq0); } catch (e) {}
+  try { entries = askAiEntries(question, 5, rq0); } catch (e) {}
   if (token !== askAiToken) return;
   const st = box.querySelector(".ask-ai-status");
   if (st) st.innerHTML = `<span class="ask-ai-spin"></span>Writing a full answer (20-40 seconds)…`;
   let data = null;
   try {
     const sent = passages.map(p => ({ id: p.id, title: p.title, page: p.page, text: p.text }));   // same shape as before remote passages
-    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question: askRetrievalQ(question), passages: sent, entries, token: ASK_AI_APP_TOKEN }) });
+    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question: rq0, passages: sent, entries, token: ASK_AI_APP_TOKEN }) });
     data = await resp.json();
   } catch (e) { data = { error: "network" }; }
   if (token !== askAiToken) return;
@@ -1693,13 +2143,13 @@ async function askAiAnswer(question) {
     box.innerHTML = `<div class="ask-ai-card ask-ai-err">${msg}</div>`;
     return;
   }
-  const wq = askRetrievalQ(question);
-  const wiring = askWiringHtml(wq, askAddModelAlts(buildSearchUnits(wq)));
+  const wq = rq0;
+  const wiring = askWiringHtml(wq, askQueryUnits(wq));
   const cites = passages.map(p => `<button class="ask-ai-cite" data-id="${escapeHtml(p.id)}" data-page="${p.page}">${escapeHtml(p.title)} · p.${p.page}</button>`).join("");
   box.innerHTML = `
     <div class="ask-ai-card">
       <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
-      <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,:;]|$)/gm, "$1<em>$2</em>").replace(/^#{1,4}\s*/gm, "").replace(/\n/g, "<br>")}</div>
+      <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>").replace(/(^|[\s(])\*(?=\S)([^*\n]+?)(?<=\S)\*(?=[\s).,:;]|$)/gm, "$1<em>$2</em>").replace(/^#{1,4} +/gm, "").replace(/\n/g, "<br>")}</div>
       ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
       ${wiring}
       <div class="ask-fb" data-q="${escapeHtml(question)}">
@@ -1771,6 +2221,97 @@ function wireAskFeedback(box, question) {
 
 // The "Get a direct answer" control above the results (only when the relay is
 // configured). Enter in the box, or tapping it, fires askAiAnswer.
+// What the top hit itself says about the question, compact: code meaning + causes + first steps, a
+// generator card's matching alarm row (or reset steps / spec lines), a fix's steps, a maint card's
+// matching group. The AI answer renders below it in #askAi and never replaces it.
+// Phone-sized: each line is cut at ~220 characters, at most 3 causes and 3 steps; the full entry is
+// one tap away (code gate 2026-10-06: an 846 px card pushed the results 1.5 screens down).
+const ASK_INSTANT_CHARS = 220;
+function askInstantLines(it, units) {
+  const lines = [];
+  const clip = (s) => { s = String(s); return s.length > ASK_INSTANT_CHARS ? s.slice(0, ASK_INSTANT_CHARS - 1).replace(/\s+\S*$/, "") + "…" : s; };
+  const push = (label, v) => { if (v) lines.push({ label, text: clip(v) }); };
+  const steps = (arr, n) => { const a = (arr || []).filter(Boolean); return a.slice(0, n).map((s, i) => (i + 1) + ". " + clip(s)).join("\n") + (a.length > n ? "\n… " + (a.length - n) + " more in the full entry" : ""); };
+  const causes = (arr) => { const a = (arr || []).filter(Boolean); return a.slice(0, 3).map(clip).join("; ") + (a.length > 3 ? " … +" + (a.length - 3) + " more" : ""); };
+  if (it.kind === "code") {
+    const c = getAllCodes().find(x => x.id === it.id);
+    if (!c) return lines;
+    push("Means", c.meaning);
+    push("Causes", causes(c.causes));
+    push("Check", steps(c.steps, 3));
+  } else if (it.kind === "symptom") {
+    const s = getAllSymptoms().find(x => x.id === it.id);
+    if (!s) return lines;
+    push("", s.summary);
+    push("Check", steps(s.steps, 3));
+  } else if (it.kind === "gen") {
+    const g = genEntries().find(x => x.id === it.id);
+    if (!g) return lines;
+    const live = askLiveUnits(units || []);
+    const toks = units ? (units.codeToks === undefined ? (units.codeToks = askCodeToks(units)) : units.codeToks) : [];
+    const rowsAll = askGenRowsFor(g, units);
+    const codeRow = rowsAll.find(a => toks.some(t => askCodeTokens(a.code).includes(t)));
+    const asksReset = !!g.maintReset && live.some(u => u.alts.some(x => /^(reset|reminder|clear)$/.test(x)));
+    const asksSpec = live.some(u => u.alts.some(a => ASK_MAINT_WORDS.has(a) || /^(capacity|gap|psi|torque|cc|rpm|how much)$/.test(a)));
+    // Only the words that carry the question pick a line ("generac"/"generator" is on every line).
+    const content = live.filter(askIsContentUnit);
+    const hitsIn = (text) => content.length ? askUnitHits(content, String(text || "").toLowerCase()) : 0;
+    const specHit = genSpecLines(g).filter(l => hitsIn(l) > 0);
+    const troHit = (g.troubleshooting || []).map(t => ({ t, s: hitsIn(t.symptom + " " + (t.causes || []).join(" ")) })).filter(x => x.s > 0).sort((a, b) => b.s - a.s);
+    const rowHit = rowsAll.length ? hitsIn([rowsAll[0].code, rowsAll[0].name, rowsAll[0].meaning].join(" ")) : 0;
+    // A code gets its alarm row; "reset the maintenance light" the reset steps; a spec question the
+    // spec lines; a symptom ("wont start") the troubleshooting row; a fault word its alarm row.
+    const rows = codeRow ? [codeRow] : (!asksReset && !asksSpec && rowsAll.length && (!troHit.length || rowHit >= troHit[0].s)) ? rowsAll : [];
+    if (rows.length) {
+      const a = rows[0];
+      push("", a.code + " " + (a.name || "") + (a.display && a.display !== a.name ? " (display: " + a.display + ")" : ""));
+      push("Means", a.meaning);
+      push("Causes", causes(a.causes));
+      push("Check", steps(a.steps, 3));
+      push("Clear", a.clear);
+    } else if (asksReset) {
+      push(g.maintReset.title || "Reset the maintenance reminder", steps(g.maintReset.steps, 5));
+    } else {
+      const tro = troHit.length ? troHit[0].t : null;
+      if (specHit.length) push("Specs", specHit.slice(0, 3).map(clip).join("\n") + (specHit.length > 3 ? "\n… " + (specHit.length - 3) + " more in the full entry" : ""));
+      if (tro) { push(tro.symptom, causes(tro.causes)); push("Fix", causes(tro.fixes)); }
+      if (!specHit.length && !tro && rowsAll.length) { const a = rowsAll[0]; push("", a.code + " " + (a.name || "")); push("Means", a.meaning); push("Check", steps(a.steps, 3)); }
+      if (!specHit.length && !tro && !rowsAll.length) push("", [g.controller, g.engine, (g.kw || []).length ? "kW: " + g.kw.join(", ") : ""].filter(Boolean).join(" · "));
+    }
+  } else if (it.kind === "maint" && typeof MAINT_SPECS !== "undefined") {
+    const m = MAINT_SPECS.find(x => x.brand + "|" + x.model === it.id);
+    if (!m) return lines;
+    const groups = (m.groups || []).map(g => ({ g, s: askTextHits(units, g.title + " " + (g.rows || []).map(r => r.label + " " + r.value).join(" ")) })).sort((a, b) => b.s - a.s);
+    const pick = groups.filter(x => x.s > 0).slice(0, 1).map(x => x.g);
+    for (const g of pick.length ? pick : (m.groups || []).slice(0, 1)) { const rows = g.rows || []; push(g.title, rows.slice(0, 4).map(r => clip(r.label + ": " + r.value)).join("\n") + (rows.length > 4 ? "\n… " + (rows.length - 4) + " more in the full entry" : "")); }
+  } else if (it.kind === "guide") {
+    const el = document.getElementById(it.id);
+    if (el) push("", askGuideText(el).slice(0, 500));
+  } else if (it.kind === "series") {
+    const p = MODEL_PATTERNS[Number(String(it.id).replace("series-", ""))];
+    if (p) push("", (p.notes || []).slice(0, 2).join("\n"));
+  } else push("", it.sub);
+  return lines;
+}
+function renderAskInstant(q, it, units, partial) {
+  const ai = document.getElementById("askAi");
+  if (!ai) return;
+  let box = document.getElementById("askInstant");
+  if (!box) { box = document.createElement("div"); box.id = "askInstant"; box.className = "ask-instant"; ai.parentNode.insertBefore(box, ai); }
+  if (!it || q.trim().length < 3) { box.innerHTML = ""; return; }
+  const lines = askInstantLines(it, units).filter(l => l.text && l.text.trim());
+  if (!lines.length) { box.innerHTML = ""; return; }
+  const body = lines.map(l => `<div class="ask-instant-line">${l.label ? `<span class="ask-instant-label">${escapeHtml(l.label)}</span> ` : ""}${escapeHtml(l.text).replace(/\n/g, "<br>")}</div>`).join("");
+  box.innerHTML = `
+    <div class="ask-ai-card ask-instant-card">
+      <div class="ask-ai-head">⚡ From the library <span class="ask-ai-tag">${escapeHtml(ASK_KIND[it.kind].label)}${partial ? " · closest match" : ""}</span></div>
+      <div class="ask-instant-title">${escapeHtml(it.title)}</div>
+      ${it.sub ? `<div class="card-meta"><span>${escapeHtml(it.sub)}</span></div>` : ""}
+      <div class="ask-instant-body">${body}</div>
+      <button type="button" class="ask-ai-cite ask-instant-open">Open the full entry</button>
+    </div>`;
+  box.querySelector(".ask-instant-open").onclick = () => { trackEvent("Ask opened instant entry: " + it.title.slice(0, 60)); ASK_KIND[it.kind].open(it.id); };
+}
 function renderAskAiControl(q) {
   const box = document.getElementById("askAi");
   if (!box) return;
@@ -1997,7 +2538,7 @@ function renderSymptoms() {
     // decide strict pass/fail AND rank by relevance from that one pass —
     // matches are real answers to a search, not a browse list, so the best
     // one should be first, not buried alphabetically behind an 8th-best hit.
-    const units = buildSearchUnits(query);
+    const units = askLiveUnits(buildSearchUnits(query));
     const scored = scoped.map(s => {
       const title = (s.title || "").toLowerCase();
       const hay = fields(s).filter(Boolean).join(" ").toLowerCase();
@@ -2714,7 +3255,7 @@ function tstatEntries() { return (typeof THERMOSTATS !== "undefined") ? THERMOST
 function tstatIncludes(fields, q) {
   if (!q) return true;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a))));
+  return askLiveUnits(buildSearchUnits(q)).every(u => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a))));
 }
 
 function tstatSearchFields(t) {
@@ -2948,7 +3489,12 @@ function genIncludes(fields, q) {
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
   const norm = genNormModel(q);
   if (norm && hay.includes(norm.toLowerCase())) return true;
-  return buildSearchUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hay.includes(a))));
+  // A model / part number is matched by its typed prefix while the tech is still typing ("G007", "0H91",
+  // "TP-687"); a bare number is digit-bounded in both spellings ("180" finds the 0180 card, not 1180) and
+  // also as a prefix of a longer code while typing (code gate 2026-10-06).
+  return askLiveUnits(buildSearchUnits(q)).every(u => u.alts.some(a => hayHasTerm(hay, a) ||
+    (/\d/.test(a) && a.length >= 3 && (/[a-z]/.test(a) ? hay.includes(a)
+      : (hayHasNumber(hay, a) || hayHasNumber(hay, /^0/.test(a) ? a.replace(/^0+/, "") : "0" + a) || new RegExp("(^|[^0-9])" + a + "[0-9]").test(hay))))));
 }
 
 // Generac / Kohler tabs: Generac-only boxes (checklist, multi-ATS) hide on Kohler.
@@ -2979,7 +3525,7 @@ function renderGens() {
   // Andy 2026-10-05: "how to hook up multiple ats" typed here showed nothing -
   // the how-to cards above the search are matched too and listed first.
   const q = String(genState.search || "").trim();
-  const need = q ? Math.max(2, Math.ceil(buildSearchUnits(q).length / 2)) : Infinity;
+  const need = q ? Math.max(2, Math.ceil(askLiveUnits(buildSearchUnits(q)).length / 2)) : Infinity;
   const guides = q ? askGuideCards().filter(el => searchScore([el.querySelector("summary") ? el.querySelector("summary").textContent : "", askGuideText(el), "transfer switch ats hook up install wire connect"], q) >= need) : [];
   for (const el of guides) {
     const b = el.querySelector("summary b"), sub = el.querySelector("summary .gwz-entry-text span");
@@ -5183,7 +5729,7 @@ async function manualTextCount() {
 // Search the stored page text. Returns the best-matching page per manual so one
 // big manual can't flood the list.
 async function searchManualText(q, limit) {
-  const units = buildSearchUnits(q);
+  const units = askLiveUnits(buildSearchUnits(q));
   const need = units.length;
   const threshold = Math.max(1, Math.ceil(need * 0.6));
   let recs;
@@ -6888,7 +7434,8 @@ const MODEL_PATTERNS = [
   // Kohler first (Andy 2026-10-05): "24RCLA" otherwise reads as a Carrier 24-series AC.
   { re: /^(\d{1,2}(\.5)?(RESA|RESAL|RESC|RESCL|RESB|RESD|RESV|RESVL|RESL|RESM1|RESNT|RESHD|RES|TRES|RCAL|RCA|RCLA|RCLB|RCLC|RCL|RYG|REYG)|RGEN\d)/, brand: "Kohler", equipment: "Generator", series: "Kohler (Rehlko) residential home standby generator", notes: ["Kohler model = kW + series letters (20RCA, 14RESAL, 12RESV, 38RCLB). Open in Generators - Kohler tab for its fault messages, troubleshooting, specs and manuals."] },
   { re: /^6VSG/, brand: "Kohler", equipment: "Generator", series: "Kohler 6VSG variable-speed DC generator", notes: ["Open in Generators - Kohler tab for its faults, troubleshooting and manuals."] },
-  { re: /^(RXT|RDT|RRT|RSB)[A-Z0-9-]/, brand: "Kohler", equipment: "Transfer Switch", series: "Kohler (Rehlko) residential automatic transfer switch", notes: ["RXT / RDT / RRT / RSB: open in Generators - Kohler tab for the switch's settings, LED/fault meanings and manuals."] },
+  // RXT12AVJU9 / RXT24AVJU9 (two digits then the AVJU suffix) is a Daikin Aurora outdoor unit, not a switch; RSB100, RXTA200A, RDT-CFNC-100ASE stay Kohler (content audit 2026-10-06).
+  { re: /^(RXT|RDT|RRT|RSB)(?![0-9]{2}[A-Z]{1,2}VJU)[A-Z0-9-]/, brand: "Kohler", equipment: "Transfer Switch", series: "Kohler (Rehlko) residential automatic transfer switch", notes: ["RXT / RDT / RRT / RSB: open in Generators - Kohler tab for the switch's settings, LED/fault meanings and manuals."] },
   // --- coverage:lennox-furn-legacy (v125) ---
   { re: /^G(HR)?26Q/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G26 / GHR26 legacy condensing gas furnace (G26Q upflow, GHR26Q horizontal/downflow)", notes: ["Model form is family + Q + design digit + dash + input MBh: G26Q3-75, GHR26Q4/5-100. A trailing -1 on a wiring-diagram title (G26Q3-75-1) is the revision, not part of the size.","G26/GHR26 -1 and -2 units are intermittent pilot (Johnson G776 / Lennox 69J3601 / 41K8701, ONE control LED). -3 through -6 are SureLight with TWO board LEDs - two completely different code tables, both in Error Codes.","GHR26-1 uses the EGC-1 board (DIAG #1 / DIAG #2), which reads right-to-left compared with SureLight - check the board silkscreen before decoding.","Do not read the LEDs with the blower access panel off - there is a sight glass in the panel for that.","LP conversion manifold pressure is 7.5 in. w.c., NOT the 10 in. w.c. used elsewhere in the Lennox line (H-93-12).","Service Literature Corp. 9721-L11 (G26) / 9722-L11 (GHR26) is in Manuals."] },
   { re: /^G(HR)?32[QV]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G32 / GHR32 legacy two-stage condensing gas furnace (Q standard blower, V variable-speed blower)", notes: ["Q = PSC blower, V = variable-speed (VSP-controlled ICM) blower, per the Product Spec titles. Forms: G32Q3-75, G32V5-100/125-4, GHR32Q4/5-120.","TWO different diagnostic tables exist for this family and both are in Error Codes: the 9-pin SureLight two-LED table, and the later two-stage 12-pin control table (DS1/DS2) which adds a separate high-fire pressure switch code (OFF / FAST FLASH).","Low flame signal threshold differs by board: .61 microamps on the SureLight table, .23 microamps on the two-stage table. Read the board part number before judging a flame current.","G32V/GHR32V also carry a VSP blower board with its own DS LEDs - those are blower status, not fault codes.","Service Literature Corp. 9729-L12 (G32Q), 9816-L10 (G32V), 0001-L2 (GHR32Q/GHR32V) are in Manuals."] },
@@ -6984,31 +7531,6 @@ const MODEL_PATTERNS = [
   { re: /^L[GCHD][HMTXA][0-9]/, brand: "Lennox", equipment: "Other", series: "Lennox packaged rooftop - Model L (LGM/LCM/LHM/LDM), Enlight (LGT/LCT/LHT/LDT), Xion (LGX/LCX/LHX) R-454B; and legacy Landmark/Energence (LGH/LCH/LHH) R-410A. 2nd letter G=gas/electric, C=electric/electric, H=heat pump, D=dual-fuel", notes: ["Light-commercial single-package rooftop, 3-25+ ton (the 3-12.5 ton sizes are in range). Current Model L / Enlight / Xion are R-454B (A2L, refrigerant digit 5); LGH/LCH/LHH Landmark/Energence are the R-410A predecessors still common in the field. Tonnage: 092=7.5t (NOT 090), 120=10t, 150=12.5t.", "Two controller generations: legacy units run Prodigy 2.0 / M3 (numeric alarm codes 1-193, asterisked codes close the service relay); current units run the Lennox CORE / M4 Unit Controller. Identify the controller before using a code table. Both application guides (Prodigy 507242, CORE 485115) are in Manuals -> Lennox.", "Sample Prodigy/M3 alarm codes: 1=loss of power/single-phase; 4*=smoke; 5*=blower airflow switch open; 6*=dirty filter; 8*=strike-3 blower lockout; 12-18=compressor high-pressure/high-temp trips; 40/41=return-air over-heat/under-cool; 42=blower overload; 91/92=economizer enthalpy sensor; 121-126=line frequency/voltage/phasing; 129=VFD shutdown; 188-191=inverter alarms.", "Distinct from the Lennox LRP residential packaged units and the EL072-240 KC/KP light-commercial SPLIT condensers already in the scanner."] },
   { re: /^2S[AGH]1[3-6]/, brand: "Lennox", equipment: "Other", series: "Aire-Flo 2S packaged units sold through Lennox - 2SA13 cooling only, 2SG13 gas/electric, 2SH13 heat pump", notes: ["These are Allied Air (A.A.C., a Lennox International Inc. company) built units carried in the LennoxPros document library under the Aire-Flo badge. The install books are titled '(2,4)SA13', '(2,4)PGE/SG(13/15)' and '(2,4)SH13' - the 4-prefix sibling is the Allied Air part number, so Allied Air 4PGE / 4SCU / 4SHP information applies to the same hardware.","No Lennox Service Literature exists for this line at all. Everything diagnostic is inside the Installation Instructions.","2SG13 gas heat uses the same one-LED ignition control table as the Lennox packaged gas units: slow flash and fast flash normal, 2/3/4/5 flash faults, steady = micro-controller self-check failure.","2SH13 uses the same two-LED defrost control (DS1 red, DS2 green) as 13CHP and LRP - service note HP-07-01 lists 2SH13, 2HP13 and 13CHP together on defrost control 97M82 / part 100269-01.","HP-07-01: on revision-259 boards a low pressure lockout turns into a FALSE high pressure lockout when the Y signal drops. Revision 285 (catalog 30W87 / part 100269-02) fixes it.","2AC13 / 2HP13 also appear in the Lennox library under Aire-Flo but only as Product Specifications - equipment type unconfirmed, so no rule was written for them."] },
   // --- end coverage:lennox-ah-pkg ---
-  // --- coverage:lennox-furn-legacy (v124) ---
-  { re: /^G(HR)?26Q/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G26 / GHR26 legacy condensing gas furnace (G26Q upflow, GHR26Q horizontal/downflow)", notes: ["Model form is family + Q + design digit + dash + input MBh: G26Q3-75, GHR26Q4/5-100. A trailing -1 on a wiring-diagram title (G26Q3-75-1) is the revision, not part of the size.","G26/GHR26 -1 and -2 units are intermittent pilot (Johnson G776 / Lennox 69J3601 / 41K8701, ONE control LED). -3 through -6 are SureLight with TWO board LEDs - two completely different code tables, both in Error Codes.","GHR26-1 uses the EGC-1 board (DIAG #1 / DIAG #2), which reads right-to-left compared with SureLight - check the board silkscreen before decoding.","Do not read the LEDs with the blower access panel off - there is a sight glass in the panel for that.","LP conversion manifold pressure is 7.5 in. w.c., NOT the 10 in. w.c. used elsewhere in the Lennox line (H-93-12).","Service Literature Corp. 9721-L11 (G26) / 9722-L11 (GHR26) is in Manuals."] },
-  { re: /^G(HR)?32[QV]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G32 / GHR32 legacy two-stage condensing gas furnace (Q standard blower, V variable-speed blower)", notes: ["Q = PSC blower, V = variable-speed (VSP-controlled ICM) blower, per the Product Spec titles. Forms: G32Q3-75, G32V5-100/125-4, GHR32Q4/5-120.","TWO different diagnostic tables exist for this family and both are in Error Codes: the 9-pin SureLight two-LED table, and the later two-stage 12-pin control table (DS1/DS2) which adds a separate high-fire pressure switch code (OFF / FAST FLASH).","Low flame signal threshold differs by board: .61 microamps on the SureLight table, .23 microamps on the two-stage table. Read the board part number before judging a flame current.","G32V/GHR32V also carry a VSP blower board with its own DS LEDs - those are blower status, not fault codes.","Service Literature Corp. 9729-L12 (G32Q), 9816-L10 (G32V), 0001-L2 (GHR32Q/GHR32V) are in Manuals."] },
-  { re: /^G23Q/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G23(X) legacy upflow standard-efficiency gas furnace", notes: ["Spec-table forms: G23Q2-50, G23Q2X-50, G23Q2/3-75, G23Q4/5-75, G23Q3-100. The (X) on the spec table means the X-suffix variant shares that row.","G23-1 through -4 are intermittent pilot on a Johnson G776 control with ONE LED; G23(X)-5 and -6 are SureLight with TWO LEDs. Both tables are in Error Codes.","Nameplate trap: some G23 nameplates print 7 in. w.c. manifold pressure. The correct natural-gas setting is 3.5 in. w.c. (H-93-12).","Repeat ignition lockouts on early units are usually the pilot assembly lifting flame, not the control - improved pilot kit 81J0501PR (H-94-8).","Service Literature Corp. 9814-L8 is in Manuals."] },
-  { re: /^G20R?Q/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G20 / G20E / G20R / G20RE legacy standing-pilot and intermittent-pilot gas furnace (G20 upflow, G20R downflow)", notes: ["Forms: G20Q2-50, G20Q3E-75, G20Q2X-50, G20RQ2/3E-50, G20RQ3XE-75. The E means electronic (intermittent pilot) ignition; no E means standing pilot.","Standing-pilot G20/G20R units have no ignition control and no diagnostic LED at all - troubleshoot the Robertshaw or Honeywell pilot gas valve directly.","G20E/G20RE use a Robertshaw intermittent-pilot module. The service literature does not publish an LED code table for it, so there are no G20 flash codes in Error Codes.","If a Honeywell 80N9201 was fitted as a replacement (kit 53L90), pre-purge becomes 45 s nominal and the trial for ignition 70 s, with no post-purge - it looks like a slow-lighting furnace but is normal (H-01-1).","Service Literature Corp. 9418-L9 (G20) and Corp. 9419-L9 (G20RE) are in Manuals."] },
-  { re: /^(G|GSR)21[QV]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G21 / G21V / GSR21 / GSR21V Pulse-combustion condensing gas furnace", notes: ["Pulse models put the input in the model number with no dash: G21Q360, G21Q4/5100, GSR21V5100. Q = relay/PSC blower, V = VSP-controlled variable-speed blower.","Three interchangeable ignition controls were factory fitted and they signal OPPOSITE ways: on the Lennox GC1 the LED is normally OFF (lit = lockout or fault); on the GC3 and Johnson G891 the LED is normally ON. Both tables are in Error Codes.","GC1 units use a separate external Watchguard board (WG1/A18) above the control box; GC3 and G891 do the Watchguard internally.","G891 flame signal must be read with transducer 78H5401 - a flickering LED above 2.5 microamps is a known control quirk, not a low flame signal (H-05-3).","Indoor blower that will not shut off after a heat cycle on a 52J18 GC-3 control is the ignition control, not the fan timer - kit 60J00 (H-99-5).","Service Literature Corp. 9815-L9 is in Manuals."] },
-  { re: /^G2[47]M/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G24M / G24MCE / G27M legacy multi-position gas furnace (SureLight era)", notes: ["Forms: G24M-45, G24M2-60, G24M3-60, G27M-100, G27M3-75A-1. G24MCE-2T/-4T/-6T is the export T-voltage variant.","SureLight two-LED table applies (Error Codes). Earlier G24M units shipped with a direct-spark-ignition control instead - check which board is actually in the unit.","G27M SureLight board terminal designations are documented jointly with G26 in H-97-7.","Nuisance pressure-switch trips in windy weather on G24M and 80MGF are addressed by induced-draft-blower/pressure-switch kits 11K95/11K96/11K98/11K99 (H-95-4).","Service Literature Corp. 9723-L12 (G24M) and Corp. 9703-L2 (G27M) are in Manuals."] },
-  { re: /^G29M/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G29M multi-position two-stage gas furnace (50 Hz export, EGC-3ACE control)", notes: ["Documented forms are G29M-1T and G29M-2T; the T is the same export voltage convention used on G24MCE.","G29M does NOT use the SureLight two-LED table. Its board is the EGC-3ACE DSI control with DIAG 1 / DIAG 2 LEDs and its own seven-state table - in Error Codes as its own family.","Hard lockout reset sequence is specific: power off, thermostat HEAT to OFF, power on, thermostat OFF to HEAT.","Board has a red diagnostic recall button (hold for the last failure code) and an erase jumper (power off, short 10 s).","Two-stage control replacement kit 40W53 is shared with G27M; wiring diagrams for converted units are in the doc index.","Installation Instructions 504071M are in Manuals - there is no G29M Service Literature."] },
-  { re: /^G25MV/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G25MV multi-position variable-speed gas furnace (RAM burner control)", notes: ["Forms: G25MV3-60, G25MV3-60/75, G25MV5-100, G25MV5-120.","Burner control A3 is a RAM Electronics board with a SINGLE diagnostic LED and a flash-count table (2 to 6 flashes) - it is NOT SureLight and NOT the generic Lennox flash list. Its own family is in Error Codes.","Hot surface ignition: 30 s pre-purge, 35 s ignitor warm-up, 7 s trial. Three trials then 60-minute lockout. Flame current must be 1 to 5 microamps; below 1 microamp the control drops out.","Later units may carry a White-Rodgers HSI ignition board instead (see the G25MV wiring diagram title) - confirm the board before using the RAM table.","Service Literature Corp. 9505-L2 is in Manuals."] },
-  { re: /^G41UF/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G41UF single-pipe upflow condensing gas furnace (SureLight, 12-pin)", notes: ["Full label form is G41UF-24B-045 / G41UF-36C-090 / G41UF-60D-135; the short form G41UF-045 is just the input.","SureLight board with two LEDs and a 12-PIN connector - the rollout code text says 12-pin, unlike the 9-pin G26-era board. Its own table is in Error Codes.","Low flame signal threshold is 0.18 microamps; drop-out is 0.15 microamps.","Timing: 15 s pre-purge, 20 s ignitor warm-up, 4 s trial for ignition, 5 s post-purge, blower on 45 s after the gas valve.","Service Literature Corp. 0303-L2 is in Manuals."] },
-  { re: /^G43UF/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G43UF two-pipe upflow condensing gas furnace (G41UF successor)", notes: ["Forms: G43UF-045 through -135, full label G43UF-24B-045-1, G43UF-36C-090.","Three different control boards were used and the thresholds move with them: 32M88 (DS1 green, low flame 0.18 microamps, 75 V minimum) and 78M47 / 100973-01 (DS1 RED, low flame 1.5 microamps, 90 V minimum). Read the board number first.","On 78M47 and 100973-01 the ignitor energizes only for the first 3 seconds of the 4 second trial.","Pressure-switch faults on upflow units using the left-hand drain connection are often a blocked collector box drain port (H-06-5).","Service Literature Corp. 0416-L4 is in Manuals."] },
-  { re: /^G42UH/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G42UH legacy upflow/horizontal gas furnace (documentation gap)", notes: ["The official Lennox document index carries exactly one document for this family - a wiring diagram. There is no Service Literature, no Installation Instructions and no Product Spec.","No diagnostic code table, sample model forms or nomenclature legend could be confirmed from an official source, so nothing is published for it in Error Codes.","Work from the wiring diagram on the unit and the board part number stamped on the control."] },
-  { re: /^80MGF/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox 80MGF legacy multi-position gas furnace (G24M sibling)", notes: ["Forms: 80MGF-45 through -140, 80MGF2-45, and revision markers 80MGF-1/-5/-9/-11.","Two control generations: EGC / EGC-1 (DIAG #1 / DIAG #2, seven states) on early units and SureLight two-LED on later ones. Both tables are in Error Codes - identify the board before decoding.","80MGF-1 and -3 originally used a RAM ignition control (RAM-to-Heatcraft replacement kit).","80MGF-5 and -7 have a documented pressure switch lockout issue (H-97-1); windy-weather nuisance trips share the G24M induced-draft kits (H-95-4).","Service Literature Corp. 9801-L2 is in Manuals."] },
-  { re: /^80UHG/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox 80UHG legacy upflow/horizontal gas furnace", notes: ["Forms: 80UHG-45 through -120, 80UHG2-45/-60/-75, 80UHG3-60/-75.","This service literature carries BOTH the SureLight two-LED table (low flame signal 0.2 microamps) and the EGC-2 DIAG #1 / DIAG #2 table for 80UHG-1 units. Both are in Error Codes.","The EGC-2 board takes the Lennox Diagnostic Module 11K75 on its edge connector, which spells out the fault in words.","Low gas pressure switch installation is covered jointly with G24M and 80MGF in H-99-8.","Service Literature Corp. 9728-L12 is in Manuals."] },
-  { re: /^90UGF/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox 90UGF / 90UGFA legacy upflow condensing gas furnace (SureLight)", notes: ["Forms: 90UGF-50/-100/-125, 90UGFA-50 through -125, 90UGFA3-75, 90UGFA4/5-125.","SureLight two-LED table applies (Error Codes) - same 9-pin board family as G26/G32.","Shares flue transition kit 59M03 with G26 and G32; the replaced kits were 77K31, 67K45 and 18J20 (H-04-2).","Service Literature Corp. 9720-L11 is in Manuals."] },
-  { re: /^G(SR)?14(?![0-9])/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G14 / GSR14 Pulse-combustion gas furnace (1980s generation)", notes: ["Only one confirmed label fragment exists in the official text (G14-100-2) - the Service Literature for both families is an image-only scan with no text layer, so no nomenclature legend could be confirmed.","No diagnostic code table is published for these families in Error Codes; use the wiring diagram and the Pulse service guidelines (H-93-15) instead.","Pulse platform: gas diaphragm kit H-01-8 and the Pulse Furnace Inspection Record LB-91177 apply to G14/GSR14 as well as G21/GSR21.","Service Literature Corp. 8907-L6 (G14) and Corp. 8902-L2 (GSR14) are in Manuals - they open and are readable as page images."] },
-  { re: /^G16(?![0-9])/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G16 / G16R / G16X legacy upflow gas furnace (standing pilot era)", notes: ["Nomenclature trap: three different pilot/ignition systems were fitted across this one family - White-Rodgers Gas Energy System, Robertshaw Pilot System and Penn Pilot Ignition - and the model number does not tell you which. Confirm from the wiring diagram on the unit.","The Service Literature (Corp. 844-L3, 1984) is an image-only scan, so no model table or code table could be confirmed from text. Nothing is published for G16 in Error Codes.","Service Literature Corp. 844-L3 is in Manuals as page images."] },
-  { re: /^G17Q/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G17 / G17R / G17X legacy upflow gas furnace (standing pilot / Robertshaw intermittent pilot)", notes: ["Spec-table forms: G17Q2-50, G17Q2X50, G17Q3-75, G17Q3X75, G17Q3/4-100, G17Q5/6-125.","G17X units use a Robertshaw intermittent-pilot module. The service literature publishes no LED code table for it, so there are no G17 flash codes in Error Codes.","Damper spring update H-92-5 covers G17 and G20 together.","Service Literature Corp. 9132-L11 is in Manuals."] },
-  { re: /^G19(?![0-9])/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G19 legacy upflow gas furnace (documentation gap)", notes: ["The official Lennox index holds only two documents for this family - an Installation Instructions and a Product Spec sheet. There is no Service Literature.","No sample model forms or diagnostic table could be confirmed, so nothing is published for G19 in Error Codes."] },
-  { re: /^G(8|9)[DQ]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G8 / G9 legacy gas furnace (1960s-70s generation)", notes: ["Confirmed label forms from Product Spec titles only: G8D1, G8Q2, G9D, G9Q1. D and Q are the cabinet/blower letters used across this generation.","No Service Literature exists in the official index for G8 or G9 - only thin installation and spec sheets. No diagnostic table is published in Error Codes.","Deliberately narrow regex: it requires D or Q after the digit so it cannot swallow the Nortek/Nordyne G7S/G8S prefixes."] },
-  { re: /^G1[012][DQRE]/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox G10 / G11E / G12 / G12E legacy gas furnace (1970s generation)", notes: ["Confirmed label forms from Product Spec titles: G10D, G10Q3-110, G11E-200V, G12D, G12Q, G12DE, G12QE, G12RD, G12RQ. E marks the electronic-ignition versions.","The G11E and G12/G12E Service Literature PDFs are image-only scans with no text layer, so no code table could be confirmed - nothing is published for these families in Error Codes.","Known documented complaints: nuisance pilot outage on G12 and G12R-3 (H-80-3) and Robertshaw ignition control miswiring on G11E (H-80-2).","Service Literature CORPG11E and CORPG12 are in Manuals as page images."] },
-  { re: /^GS([6-9]|A7)/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox GS6 / GS7 / GS8 / GS9 legacy gas furnace (oldest documented generation)", notes: ["Confirmed label forms from Product Spec titles: GS6-130, GS6-145, GS7D, GS7Q, GSA7, GS8D, GS8Q, GS81Q, GS9Q.","Only 1960s-era Installation Instructions exist - no Service Literature, no code table. Nothing is published for these families in Error Codes.","The regex requires a digit 6-9 (or A7) after GS so it cannot collide with Goodman GSX / GSZ or with Lennox GSR14 / GSR21."] },
-  { re: /^(80|92|95)AF[12]/, brand: "Lennox", equipment: "Gas Furnace", series: "Aire-Flo (Lennox) 80AF1 / 92AF1 / 95AF1 / 95AF2V gas furnace - Lennox ML/EL platform under the Aire-Flo badge", notes: ["Full label form is efficiency + AF + stage digit + cabinet code + input + blower: 92AF1UH045P08B, 95AF1UH070P12. UH = upflow/horizontal, DF = downflow, V suffix = variable speed.","Aire-Flo is a Lennox value badge - the Installation Instructions carry the Lennox limited-warranty text.","80AF1, 92AF1 and 95AF1 share ONE single-LED integrated-control table (LED off/on plus 1-9 flashes) - it is in Error Codes.","95AF2UHV / 95AF2DFV is two-stage and has a DIFFERENT table on a red LED (3 flashes = low-fire pressure/rollout/limit, 5 flashes not used), plus a green High Heat State LED and an amber CFM LED. Both are in Error Codes.","The control stores the last five faults - press and release the push button to recall, hold longer than 5 seconds to clear.","Installation Instructions 507325-01, 507328-01, 507272-04, 507273-03, 507267-04 and 507054-01 are in Manuals. There is no Aire-Flo Service Literature."] },
-  { re: /^AF(80|9[02])/, brand: "Lennox", equipment: "Gas Furnace", series: "Aire-Flo (Lennox) AF80 / AF90 / AF92 / AF92V gas furnace - older badge generation, pre-dates the 80AF/92AF/95AF naming", notes: ["Confirmed label forms from doc titles: AF80MPGBB, AF90MPB, AF92V. MP = multi-position cabinet.","Naming order flip trap: the legacy generation is AF first (AF80/AF90/AF92), the current generation is efficiency first (80AF1/92AF1/95AF1). They are not the same furnaces.","AF90MPB is documented with a White-Rodgers SmartValve I gas valve/control, not a Lennox SureLight board, so the Lennox SureLight tables do not apply. No code table is published for this generation in Error Codes.","Installation Instructions for AF90MPB and AF92V are in Manuals."] },
-  // --- end coverage:lennox-furn-legacy ---
   // --- coverage:lennox-furn-current (v124) ---
   { re: /^ML195/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML195UH / ML195DF 95% gas furnace", notes: ["Board depends on the dash number: earlier ML195UH / ML195DF use the two-LED SureLight board 100973 (LED #1 red, LED #2 green) - read the DS1/DS2 pattern, not a flash count. ML195UH-03 / ML195DFP-03 use integrated control 103085 with a single RED LED flash count (Lennox S&A Note H-12-10). Both tables are in Error Codes.","Flame sense on this board: below 1.5 microamps is a low-flame fault, 0.5 microamps is the minimum sense current.","Rollout code on this table also means the 12-pin connector is not seated - check the harness before condemning the switch.","Serial range 5911J-5912J had the gold-contact pressure switch problem (H-14-01)."] },
   { re: /^ML197/, brand: "Lennox", equipment: "Gas Furnace", series: "Lennox Merit ML197UHEK 97% R-454B-ready gas furnace (2026 launch)", notes: ["7-segment E-code display, not a flash-count board - the full table is in Error Codes under the ML197UHEK / ML297UHV(K) family.","Carries Low GWP (A2L) refrigerant leak detection: codes E150-E164 and E390 are the sensor set, and E164 is just the test button being pressed.","E106 twin communication fault is unique to this control - it means one twinned furnace lost power or the two 24VAC supplies are out of phase.","Flame signal on this control: normal above 1.5, low 0.5-1.4, drop out below 0.4 microamps.","Lennox has not published Service Literature for ML197 yet - the code table above came out of the Installation Instructions."] },
@@ -7057,9 +7579,9 @@ const MODEL_PATTERNS = [
   { re: /^[CHT]V[AH][5-9]/, brand: "ICP", equipment: "Condenser/Heat Pump", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite (C,H,T)VA9 and (C,H,T)VH8 Ion variable-speed R-410A split air conditioner and heat pump", notes: ["Codes are flash counts on the AMBER STATUS LED of the outdoor AOC board - see Error Codes under 'ICP ... Ion (C,H,T)VA9 / (C,H,T)VH8'. The wall control never shows the number.","The green COMM LED on the same board is a communication indicator, not a fault: OFF until a valid command is received, then ON; it stays OFF on a non-communicating thermostat.","Codes escalate - 31 to 84, 32 to 83, 33 to 48, 49 to 95, 59 to 74, 61 to 76, 62 to 85, 63 to 86, 72 to 82, 79 to 88, 91 to 97, 92 to 96, 98 to 99. Work the base code's cause list when you see the lockout.","VA9 = variable-speed AC, VH8 = variable-speed heat pump. C, H and T are interchangeable first letters for the same unit.","Charge by subcooling in forced high stage; favorable window is 65-100 F outdoor and 70-80 F indoor, 25 minutes to stabilize. Inaccurate charge causes nuisance fault codes."] },
   { re: /^[CHT][CS][AH][5-9](?![BMQ])/, brand: "ICP", equipment: "Condenser/Heat Pump", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite CCA7 / CSA6 / CSA5 Ion System R-410A air conditioner (two-stage and single-stage tiers)", notes: ["CCA7 is the two-stage 17 SEER unit, CSA6 is single-stage 16 SEER, CSA5 is single-stage 15 SEER; CVA9 (variable speed) is caught by its own rule.","No service manual with a code table was sourced for these three tiers - only the variable-speed (C,H,T)VA9/VH8 manual has the Table 6 fault list. Do not assume it carries over.","Position 2 is the compressor/communication tier letter (V variable, C two-stage communicating, S single-stage communicating), position 3 is A or H, position 4 is the SEER digit."] },
   { re: /^[CHT]4[AH][5-9][ST]/, brand: "ICP", equipment: "Condenser/Heat Pump", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite C4A7T / C4A6S / C4H7T / C4H5S Ion-tier R-410A split air conditioner and heat pump (with H4* and T4* twins)", notes: ["The warranty certificate groups C4A7T with H4A7T and T4A7T - the same unit under three brand letters. Position 1 is the brand skin, not a product difference.","4 = R-410A, A or H = AC or heat pump, then the SEER digit, then T (two-stage) or S (single-stage).","No fault-code table was published for this tier - only the variable-speed (C,H,T)VA9/VH8 service manual has one."] },
-  { re: /^F[ESVXM][MUA]4X/, brand: "ICP", equipment: "Air Handler", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite FEM4X / FVM4X / FXM4X / FSM4X / FSA4X / FMU4X / FSU4X R-410A fan coil", notes: ["No diagnostic LED and no status-code board on these fan coils - they are switched by the outdoor unit or the thermostat. A no-airflow call is a blower relay, transformer, limit or motor problem, not a code.","Read FVM4X2400A as F (fan coil) V (motor type: S standard PSC, E high-efficiency ECM, C communicating, X ECM, V variable speed) M (multiposition; U = upflow) 4 (R-410A) X (TXV; P = piston) 2400 (2 ton) then the sales/feature code.","Electric heat kits use their own EHK nomenclature - EHK05AKN1 is a 5 kW, 208/230-1ph kit."] },
+  { re: /^(F[ESVX][MUA]|FMU)4X/, brand: "ICP", equipment: "Air Handler", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite FEM4X / FVM4X / FXM4X / FSM4X / FSA4X / FMU4X / FSU4X R-410A fan coil", notes: ["No diagnostic LED and no status-code board on these fan coils - they are switched by the outdoor unit or the thermostat. A no-airflow call is a blower relay, transformer, limit or motor problem, not a code.","Read FVM4X2400A as F (fan coil) V (motor type: S standard PSC, E high-efficiency ECM, C communicating, X ECM, V variable speed) M (multiposition; U = upflow) 4 (R-410A) X (TXV; P = piston) 2400 (2 ton) then the sales/feature code.","Electric heat kits use their own EHK nomenclature - EHK05AKN1 is a 5 kW, 208/230-1ph kit."] },
   { re: /^P[AHDG][DJRSX][3-9][0-9]{2}/, brand: "ICP", equipment: "Other", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite PGD4 / PGS4 / PGX4 / PHD4 / PHR4 / PHR5 / PAR4 / PAJ4 small package unit (gas-electric, heat pump, AC)", notes: ["No status-code table was published for these packaged units - diagnosis is the high-pressure switch, Time Guard II anti-short-cycle timer, and the furnace section's own controls.","Read PGD424000K002G1 as P (package) G (gas/electric; A = AC, H = heat pump, D = dual fuel) D (tier: D standard, J dedicated horizontal, S stainless HX mainline) 4 (SEER digit) 24 (2 ton) 000 (heat input kBtuh) K (208/230-1-60) 00 (options) then feature, sales and engineering digits.","Motormaster II low-ambient kit is a field accessory required for cooling below 40 F outdoor.","Natural gas manifold pressure on the gas-electric models is 3.2 to 3.8 in. w.c.","Only PGD4 and PGS4 were confirmed against their own Product Data nomenclature page; PGX4, PHR4, PHR5, PAR4 and PAJ4 follow the same table but were not individually confirmed."] },
-  { re: /^(SYST0101CW|TSTAT0101SC|SYSTXCCITC|TSTAT0713)/, brand: "ICP", equipment: "Other", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite / AirQuest Ion System Control (SYST0101CW) and Observer communicating wall control (TSTAT0101SC)", notes: ["There is NO numeric fault-code table for these wall controls. Equipment faults appear as named events only - do not go looking for a number here.","Observer: Service Menus > Last 10 System Faults. Each entry carries an equipment tag - HP heat pump, AC air conditioner, FN furnace, FC fan coil. Set the date in the DATE menu BEFORE logging the history.","Ion System Control: Service Menu > Service Information > Last 10 System Events, Run/Fault History (resettable fault counters, cycle counters, run times) and Model/Serial Numbers - the model/serial list is lost when a board is replaced.","Ion System Control only: View Diagnostics gives the top 3 most likely root causes for the most recent fault, on compatible equipment.","For the number, read the amber STATUS LED on the equipment board itself.","4-wire communicating bus (A, B, C, D). To chase a comm fault, strip the bus down to the indoor unit, prove that link, then add one device at a time.","(F,G)8MV and (F,G)9MV two-stage communicating furnaces do not fully support the Furnace Status screen and do not support Zoning Status."] },
+  { re: /^(SYST0101CW|TSTAT0101SC|TSTAT0713)/, brand: "ICP", equipment: "Other", series: "Heil / Tempstar / Comfortmaker / Arcoaire / Day & Night / KeepRite / AirQuest Ion System Control (SYST0101CW) and Observer communicating wall control (TSTAT0101SC)", notes: ["There is NO numeric fault-code table for these wall controls. Equipment faults appear as named events only - do not go looking for a number here.","Observer: Service Menus > Last 10 System Faults. Each entry carries an equipment tag - HP heat pump, AC air conditioner, FN furnace, FC fan coil. Set the date in the DATE menu BEFORE logging the history.","Ion System Control: Service Menu > Service Information > Last 10 System Events, Run/Fault History (resettable fault counters, cycle counters, run times) and Model/Serial Numbers - the model/serial list is lost when a board is replaced.","Ion System Control only: View Diagnostics gives the top 3 most likely root causes for the most recent fault, on compatible equipment.","For the number, read the amber STATUS LED on the equipment board itself.","4-wire communicating bus (A, B, C, D). To chase a comm fault, strip the bus down to the indoor unit, prove that link, then add one device at a time.","(F,G)8MV and (F,G)9MV two-stage communicating furnaces do not fully support the Furnace Status screen and do not support Zoning Status."] },
   // --- end coverage:icp ---
   // --- Nortek Global HVAC (Frigidaire / Maytag / Gibson / Westinghouse / Tappan / Kelvinator / Intertherm / Miller / Nordyne) ---
   // Kept at the top on purpose: FT5/MSA-style Nortek prefixes would otherwise be swallowed by Carrier/Lennox rules below.
@@ -7185,6 +7707,10 @@ const MODEL_PATTERNS = [
   { re: /^45MUAA/, brand: "Carrier", equipment: "Air Handler", series: "Carrier Comfort Crossover ducted air handler (45MUAAQ) for 37M/38M mini-split systems - R-454B", notes: ["This is the DUCTED indoor air handler that pairs with a 37MURAQ / 38MURAQ mini-split outdoor unit, not a wall head. Same Samsung/Toshiba-Carrier ductless code scheme (EC / EH / EL / PC) as the mini-split system in Error Codes.", "Placed ahead of the generic 45M mini-split rule so it is labeled as the air handler it actually is."] },
   { re: /^(3[78]M|40M|45M|538K|615[AP]HA|619[AMP]H|DHM|D5MAHA)/, brand: "Carrier", equipment: "Mini-Split", series: "Carrier/Bryant/Payne-branded ductless mini-split", notes: ["Same underlying mini-split platform is sold under all three badges."] },
   { re: /^(F[EJTM]5|FE4A|FE5A|FV4C|FX4D|FB4C|PF5M)[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne air handler", notes: [] },
+  // Carrier-badged twins the ICP rules used to claim first (content audit 2026-10-06): the FMA4X
+  // fan coil and the Infinity System Control / Infinity Touch wall control (Bryant Evolution Connex).
+  { re: /^FMA4X/, brand: "Carrier", equipment: "Air Handler", series: "Carrier FMA4X Comfort multipoise R-410A fan coil (same cabinet as the ICP FMU4X / FSA4X)", notes: ["No diagnostic LED and no status-code board on this fan coil - it is switched by the outdoor unit or the thermostat. A no-airflow call is a blower relay, transformer, limit or motor problem, not a code.","Read FMA4X2400A as F (fan coil) M (multipoise) A (motor tier) 4 (R-410A) X (TXV; P = piston) 2400 (2 ton), then the sales/feature code.","Installation instructions are in Manuals -> Carrier (carrier-fma4x-install)."] },
+  { re: /^SYSTX(CC|BB)/, brand: "Carrier", equipment: "Other", series: "Carrier Infinity System Control / Infinity Touch wall control (SYSTXCCITC01, SYSTXCCWIC01) and its Bryant Evolution Connex twin (SYSTXBBECC01)", notes: ["Communicating wall control - equipment faults show as named events and numbered status codes on the control's screen; the numbered codes belong to the furnace / outdoor unit / fan coil and are in Error Codes under that unit's family, not under the control.","Open the installer menu by holding the top-right corner of the home screen for ~10 seconds (Service / Checkout / Setup).","Installation and owner's manuals are in Manuals -> Carrier (carrier-infinity-touch-a-install, carrier-infinity-touch-a-owners-manual)."] },
   { re: /^(FT4|FF[0-9M]|FZ[0-9]|F54)[A-Z0-9]/, brand: "Carrier", equipment: "Air Handler", series: "Carrier/Bryant/Payne current residential fan coil - FT4B, FF-series, FZ-series, F54 (R-454B-ready lineup)", notes: ["Current-generation Carrier fan coils. R-454B-ready models carry the A2L RDS / Dissipation control board (LED codes) - a blower running with no thermostat call can be a leak-mitigation response, not a fault.", "This rule DELIBERATELY excludes the FM* prefixes: Carrier's FMA/FMC/FMU overlap ICP/Heil's F_M4X fan coils (matched by the ICP rule). Confirm the badge before decoding an FM* fan coil.", "No numbered fault code on the blower itself - diagnose blower relay, motor, transformer and the RDS board."] },
   // Prior-generation fan coils, confirmed against Carrier's own product data
   // (FA4A-9PD covers FA4A/FB4A/FC4B; FY4A/FA4C product data on Carrier docs).
@@ -7223,7 +7749,7 @@ const MODEL_PATTERNS = [
   // plus the MCF/MFM/MMD/MWM/3WM indoor heads and M22A/M33C.
   { re: /^(MWLD|MWPD|MWHD|MMPD|MMLD)/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split / multi-split (current MW/MM platform)", notes: ["Full E-code list with Lennox's own troubleshooting steps is in Error Codes — search the E-number.", "E101/C101 (comm error) is the most common: F1/F2 must be 16/2 stranded shielded, straight run, 0.1-0.9 VDC — see Diagnostic Help.", "Service manual 100227 is in Manuals → Lennox."] },
   { re: /^(MLB|MPC|3PC|3PB|MCF[AB]|MFMA|MMD[AB]|MWMC|3WMC|M22A|M33C)/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split (MLB/MPC/3PC legacy platform)", notes: ["This platform uses EC/EH/EL/PC/F-prefix display codes — the code tables are in the service manual, Manuals → Lennox → 3PC/MLB/MPC.", "Outdoor boards have a point check (spot check) function that reads sensor values directly — see Diagnostic Help."] },
-  { re: /^(ML[AB]|MP[AB]|MSA|MHA)[0-9]/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split", notes: ["Mini-split error codes are in Error Codes; service manuals are in Manuals → Lennox."] },
+  { re: /^(ML[AB]|MP[AB]|MSA|MHA)[0-9]{3}/, brand: "Lennox", equipment: "Mini-Split", series: "Lennox mini-split", notes: ["Mini-split error codes are in Error Codes; service manuals are in Manuals → Lennox."] },
   { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: ["Service manuals for CBA27UHE (R-410A, no leak-detection board) and CBK48MVT (R-454B) are in Manuals → Lennox.", "Communicating air handlers report the numbered alert codes in Error Codes.", "On ML15KSPV / ML16KP2 / SL22KLV systems the target subcooling is keyed by THIS indoor model - the matchup tables are in the Charging Calc."] },
   { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Diagnostic Help."] },
   // --- Trane / American Standard ---
@@ -7273,7 +7799,7 @@ const MODEL_PATTERNS = [
   // Air handlers confirmed against JCI's own literature: AHE single-piece
   // 3-position (UIM 697883), AHR technical guide, AVC communicating
   // (york.com), JHET fixed-speed (luxaire.com).
-  { re: /^(AH[ERVX]|AV[CV]|MVC|JH[EC])[0-9A-Z]/, brand: "York", equipment: "Air Handler", series: "York/Luxaire/Coleman air handler (AHE/AHR/AHV/AVC/AVV/MVC/JHE/JHC). JHE/JHC are the current R-454B-matched ECM air handlers — the model number encodes the factory A2L leak sensor (…S = sensor present, …N = none)", notes: ["JHE/JHC pair with the R-454B condensers/heat pumps (YC3/YC4/YC6, YH4/YH5); JHC is the communicating variant. JHE tech guide is in Manuals → York."] },
+  { re: /^(AH[ERVX](?=[0-9])|AV[CV]|MVC|JH[EC])[0-9A-Z]/, brand: "York", equipment: "Air Handler", series: "York/Luxaire/Coleman air handler (AHE/AHR/AHV/AVC/AVV/MVC/JHE/JHC). JHE/JHC are the current R-454B-matched ECM air handlers — the model number encodes the factory A2L leak sensor (…S = sensor present, …N = none)", notes: ["JHE/JHC pair with the R-454B condensers/heat pumps (YC3/YC4/YC6, YH4/YH5); JHC is the communicating variant. JHE tech guide is in Manuals → York."] },
   // Coleman EB-series mobile-home electric furnace (EB10B-EB23B) — the
   // companion to the DGAA/DGAH gas furnaces already covered.
   { re: /^EB[12][0-9][A-Z]/, brand: "York", equipment: "Electric Furnace", series: "Coleman EB-series mobile-home electric furnace", notes: ["Work it with the electric furnace scenarios in Diagnostic Help - sequencers, limits, and element checks all apply.", "Same mobile-home platform as the DGAA/DGAH gas furnaces."] },
@@ -7368,7 +7894,8 @@ const MODEL_PATTERNS = [
   { re: /^WSA1[3-5]/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "WeatherKing WSA13 / WSA14 / WSA15 single-stage air conditioner (legacy cabinet), 1.5 to 2.5 ton", notes: ["The app's existing WeatherKing rule is ^WA1[3-5] and does not reach WSA14AY - this rule covers the S variant.","WSA14AY is 15.2 SEER2 / 12 EER2, 17.1 to 28.6 kBTU, single-stage, in the legacy iC cabinet.","2025-2026 models carry a Patented Refrigerant Detection System (A2L leak detection) - a leak indication on this unit is a safety event, not a nuisance code."] },
   { re: /^(R(QKA|QLA|QMA|SKA|SMA|RKA|RMA|JKA|JMA|LKA|LMA|KKA|KMA|RCF|REF|RGF|PDC)|U(QKA|QLA|QMA|SKA|SMA|RKA|RMA|JKA|JMA|LKA|LMA|KKA|KMA|RCF|REF|UGF|PDC)|W(QKA|QLA|QMA|SKA|SMA|RKA|RMA|JKA|JMA|LKA|LMA|KKA|KMA|RCF|REF|RGF|PDC))/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud / WeatherKing Classic-era packaged equipment (RQKA/RQLA/RQMA, RSKA/RSMA, RRKA/RRMA, RJKA/RJMA, RLKA/RLMA, RKKA/RKMA, RRCF/RREF/RRGF, RPDC and the U / W twins)", notes: ["Packaged unit: the whole system is in one cabinet outdoors, so there is no separate indoor blower or coil to check.","No diagnostic board is documented for this generation.","Warranty trap: compressor coverage was 10 years on RQMA / RSMA / RRMA / RJMA / RLMA / RKMA and their U and W twins.","Ruud's gas-pack letter differs from Rheem's: Rheem RRGF, WeatherKing WRGF, but Ruud UUGF."] },
   { re: /^[RUW]O(BC|NC|UC)/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud / WeatherKing (-)OBC / (-)ONC / (-)OUC oil furnace", notes: ["Oil, not gas - the diagnostics are the oil primary control (lockout, cad cell), not a furnace blink code.","Heat exchanger carried a LIMITED LIFETIME warranty on this family; the oil burner itself carried 3 years."] },
-  { re: /^RC(H|CL|CU)/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud RCH uncased replacement air-handler N-coil and RCCL / RCCU cased coil", notes: ["Coil-only tag: the matched outdoor unit's data plate carries the system charge and electrical data.","Metering device decides the charging method - piston or fixed orifice charges by SUPERHEAT, TXV by SUBCOOLING. Check which this coil actually has.","No diagnostic codes exist for a coil - there is no board."] },
+  // RCH needs a dash or digit next (RCH-4821): RCHT is a Honeywell Home T-series thermostat (content audit 2026-10-06).
+  { re: /^RC(H(?=[-0-9])|CL|CU)/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud RCH uncased replacement air-handler N-coil and RCCL / RCCU cased coil", notes: ["Coil-only tag: the matched outdoor unit's data plate carries the system charge and electrical data.","Metering device decides the charging method - piston or fixed orifice charges by SUPERHEAT, TXV by SUBCOOLING. Check which this coil actually has.","No diagnostic codes exist for a coil - there is no board."] },
   // --- end coverage:rheem ---
   // --- coverage:trane (v123) ---
   { re: /^5T[TW][ABRVX][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane 5TTR/5TTA/5TTX/5TTV air conditioner and 5TWR/5TWA/5TWX/5TWV heat pump - R-454B 5-series, 13-20 SEER2", notes: ["Digit 1 is the refrigerant: 2=R-22, 4=R-410A, 5=R-454B. A 5T unit is R-454B (A2L) - recover, evacuate and charge with A2L-rated equipment.","Digit 4 is the product family (R=wire top grille, X=WeatherGuard top, V=variable speed, A=light commercial, B=XB). Digit 5 is the SEER2 tier (3=13, 4=14, 5=15, 6=16, 7=17, 8=18, 0=20). Digit 4 is NOT a stage count.","5TTA3/5TTA4 and 5TTR3/5TTR4 are the same physical 13/14 SEER2 units - Trane dual-lists them on paperwork.","5TTV/5TWV (TruComfort) are Trane Link communicating - faults show at the thermostat/Trane Home app, not as an outdoor flash code.","Flash codes for the single-stage 5TWR4/5TWR6/5TWX5/5TWX6 defrost board are already in Error Codes - that table has no 8 FLASH and puts low-ambient lockout at 7.","Subcooling target moves 9-12 F by tonnage - pull the target off that model's Product Data table, not a single shop number."] },
@@ -7450,7 +7977,7 @@ const MODEL_PATTERNS = [
   { re: /^RHP1[0-9]/, brand: "York", equipment: "Condenser/Heat Pump", series: "York / Guardian (JCI) RHP-series R-454B single-stage heat pump", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^EBE[0-9]/, brand: "York", equipment: "Electric Furnace", series: "Coleman EBE mobile-home electric furnace", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
   { re: /^MMD[SM][0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox MMD (Powered by Samsung) multi-position air handler, R-32", notes: ["See the Maintenance Figures screen for service specs on this unit."] },
-  { re: /^(RGE|PGE|PRPGE|PRPGN)1[3-6]/, brand: "Lennox", equipment: "Gas Furnace", series: "Allied Air (Armstrong/AirEase/Ducane/Concord) RGE/PGE gas-electric packaged unit", notes: ["This is a GAS-ELECTRIC PACKAGED UNIT - gas heat and electric cooling in one cabinet. It is filed under Gas Furnace because the fault codes come from the integrated gas control board, so that is where its codes and scenarios live in Error Codes and Diagnostics.", "For COOLING-side work on this unit (no-cool, compressor, condenser fan, charge), use the Condenser/Heat Pump scenarios in Diagnostics - the Gas Furnace list will not cover that side of the cabinet.", "See the Maintenance Figures screen for service specs on this unit."] },
+  { re: /^(RGE|PGE|PRPGE|PRPGN)1[3-6]/, brand: "Allied Air", equipment: "Gas Furnace", series: "Allied Air (Armstrong/AirEase/Ducane/Concord) RGE/PGE gas-electric packaged unit", notes: ["This is a GAS-ELECTRIC PACKAGED UNIT - gas heat and electric cooling in one cabinet. It is filed under Gas Furnace because the fault codes come from the integrated gas control board, so that is where its codes and scenarios live in Error Codes and Diagnostics.", "For COOLING-side work on this unit (no-cool, compressor, condenser fan, charge), use the Condenser/Heat Pump scenarios in Diagnostics - the Gas Furnace list will not cover that side of the cabinet.", "See the Maintenance Figures screen for service specs on this unit."] },
   // ---- v165: National Comfort Products NCPC thru-the-wall condensing unit (scanned in the field, was MODEL NOT IN LIBRARY) ----
   { re: /^NCPC-?[0-9]{3}/, brand: "National Comfort Products", equipment: "Condenser/Heat Pump", series: "National Comfort Products (NCP) NCPC thru-the-wall split-system condensing unit - NCPC-018 / 024 / 030 in the 1010, 3010 and 4010 cabinet series, R-22 (e.g. NCPC-024-1010)", notes: ["There are NO fault codes, NO LEDs and NO control board on this unit - the app is not missing a table, the unit genuinely has none. Standard wiring is a contactor and a dual run capacitor; R-Y from the thermostat energizes the contactor. Diagnose it electrically - capacitor under load, contactor coil and contacts, amp draw, superheat/subcooling - not by looking for a code. Use the AC scenarios in Diagnostics for this unit - it is filed under Condenser/Heat Pump because that is what it is, just mounted through the wall.", "R-22 - the whole NCPC line is the R-22 generation and is discontinued. Confirm the refrigerant and charge from the data plate before gauges go on.", "SPLIT system - this is the outdoor condensing section only. The matching indoor coil / air handler is separate equipment with its own plate.", "Capacity from the model (manufacturer ratings): 018 = 18,000, 024 = 23,900, 030 = 28,500 BTU/hr - so 024 is nominal 2 ton. 208/230V single phase.", "A /D suffix (e.g. NCPC-024-1010/D) is the Madison Series variant - same manual, Figure 3 wiring schematic. It adds a high pressure switch, low pressure switch, delay-on-make / delay-on-break timers, fan speed control and a crankcase heater, but it is still relay logic with NO codes and NO board. If the unit has pressure switches, it is a Madison.", "The 20-page NCP installation manual (standard and Madison wiring schematics, superheat charging chart, parts list, dimensional drawings) and the 2-page spec sheet are in Manuals → National Comfort Products."] },
   // --- triage additions (auto) ---
@@ -10083,7 +10610,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v263";
+const APP_VERSION = "v264";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

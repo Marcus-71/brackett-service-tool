@@ -74,7 +74,7 @@ const GENERATORS = [
    { "code": "1401", "name": "High Temperature - via fuel-pressure switch [liquid-cooled gas]", "meaning": "High-temp alarm triggered through the fuel-pressure switch (NG/LP)." },
    { "code": "1500", "name": "RPM Sensor Loss [liquid-cooled]", "meaning": "Lost the magnetic pickup / RPM signal. Check the pickup gap and wiring, and fuel pressure during crank. Related liquid-cooled sub-codes: 1516 1517 1518 1519 1520 1521 (1516/1517 = low fuel pressure during crank/run)." },
    { "code": "1501", "name": "RPM Sensor Loss - 2-cyl, running [air-cooled]", "meaning": "Engine stalled while running (2-cylinder air-cooled)." },
-   { "code": "1505", "name": "RPM Sensor Loss - 2-cyl, cranking [air-cooled]", "meaning": "No RPM signal during crank (2-cylinder air-cooled). Check the magnetic pickup, battery, starter, connections." },
+   { "code": "1505", "name": "RPM Sensor Loss - 2-cyl, cranking [air-cooled]", "meaning": "No RPM signal during crank (2-cylinder air-cooled). Possible cause: starter motor issue, or a missing ignition pulse (loss of one of the primary coils). Air-cooled units read rpm from the ignition magneto on Wire 18 - there is no magnetic pickup. If the engine cranks, Test 64 (Wire 18); if it does not crank, Problem 15 (Generac 10000041488 Rev C p.39; 0H9172 Rev M p.39, 133)." },
    { "code": "1511", "name": "RPM Sensor Loss - 1-cyl, running [air-cooled]", "meaning": "Engine stalled while running (1-cylinder air-cooled)." },
    { "code": "1515", "name": "RPM Sensor Loss - 1-cyl, cranking [air-cooled]", "meaning": "No RPM signal during crank (1-cylinder air-cooled)." },
    { "code": "1516", "name": "RPM/Fuel sub-code [liquid-cooled]", "meaning": "Low fuel pressure >1.2 s while cranking, read as an RPM fault. Part of the 1516 1517 1518 1519 1520 1521 group." },
@@ -121,8 +121,8 @@ const GENERATORS = [
    { "code": "2710", "name": "Ruptured Tank [liquid-cooled diesel]", "meaning": "Fuel detected in the outer basin tank." },
    { "code": "2730", "name": "Exercise Not Set", "meaning": "No exercise schedule programmed - set it at the controller. [air-cooled + liquid-cooled]" },
    { "code": "2750", "name": "Low Battery", "meaning": "Battery under ~12.1 V for 60+ s. Check the battery, connections, and charger. [air-cooled + liquid-cooled]" },
-   { "code": "2760", "name": "Battery Problem", "meaning": "Charging/battery fault (under ~12.5 V, or excess charge current after the charge cycle). [air-cooled + liquid-cooled]" },
-   { "code": "2770", "name": "Charger Warning", "meaning": "Charger output over ~16.1 V - check the charger. [air-cooled + liquid-cooled]" },
+   { "code": "2760", "name": "Battery Problem", "meaning": "Battery Problem - the definitions differ by platform. Air-cooled Evolution: more than 16 V of battery voltage, or 600 mA or more of charge current, at the end of an 18-hour charge - Test 45 (Generac 10000041488 Rev C p.40; 0H9172 Rev M p.40). Liquid-cooled Evolution: completed 26-hour charge cycle with battery voltage below 12.52 V, or charger current still above 600 mA - Problem 30 Inspect Battery (A0005304286 Rev A p.23). [air-cooled + liquid-cooled]" },
+   { "code": "2770", "name": "Charger Warning", "meaning": "Charger Warning - the definitions differ by platform. Air-cooled Evolution: less than 12.5 V of battery voltage at the end of an 18-hour charge - Problem 22 (Generac 10000041488 Rev C p.40; 0H9172 Rev M p.40). Liquid-cooled Evolution: battery voltage above 16.1 V - Problem 29 (A0005304286 Rev A p.23). [air-cooled + liquid-cooled]" },
    { "code": "2780", "name": "Charger Missing AC", "meaning": "No T1 120 V utility power to the battery charger for 5+ min - the battery will slowly discharge (neutral is required on Protector). [air-cooled + liquid-cooled]" },
    { "code": "2790", "name": "SEEPROM Abuse", "meaning": "Controller wrote to its EEPROM excessively (>500 writes/4 min) - possible internal controller failure. [air-cooled + liquid-cooled]" },
    { "code": "2910", "name": "Gaseous Emissions [liquid-cooled gas]", "meaning": "Air/fuel mixture too rich (>10 s) or too lean (>60 s). Check fuel pressure/quality and the O2 sensor." },
@@ -9925,7 +9925,7 @@ const GENERATORS = [
    "compression": "9 kW 426cc 80-120 psi *; 11 kW 530cc 170 psi +/- 10-15%; 16/17/20/22 kW 999cc 185 psi +/- 10-15%. * The 426 cc and 460 cc engines have an Automatic Compression Release (ACR) system that will not allow full compression while cranking; full compression resumes at 650 RPM when ACR disengages. (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the Evolution dealer table prints 426 cc minimum 60 psi - its decompression system gives 60 to 110 psi while cranking (Generac 0H9172 Rev M (dealer manual), p.13); the 426/460 engine manual prints minimum 55 psi (379 kPa) while cranking, cold (Generac 10000016870 Rev B (dealer manual), p.75). CONFLICT: the Evolution dealer table prints 530 cc (GT-530) 150 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13). CONFLICT: the Evolution dealer table prints 999 cc (GT-999) 160 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); the V-twin engine manual prints 160-190 psi (1103-1310 kPa) for GTH/GTV 990/1000 (Generac 0F6923 Rev E (dealer manual), p.87). Cylinders within 25% of each other; valve lash must be right before a compression test (Generac 0H9172 Rev M (dealer manual), p.186-187).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted. No flywheel-nut value is printed for the 426 cc or 530 cc engine. (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217. 426/460 engine manual: spark plug 18.4 ft-lbs (25 Nm), flywheel nut 90.0 ft-lbs (122.0 Nm), rocker jam nut 10.0 ft-lbs (13.5 Nm); cylinder head bolts 30.2 ft-lbs (41.0 Nm) in the table but 33.2 ft-lbs (45 Nm) final in the assembly steps - CONFLICT inside the manual (Generac 10000016870 Rev B (dealer manual), p.77, 69). GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187). 426/460 engine manual: set the ignition coil air gap to 0.010 in; the printed metric figure, 2.54 mm, does not match 0.010 in (Generac 10000016870 Rev B (dealer manual), p.73). CONFLICT: the diagnostic manual says the single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189).",
-   "battery": "12V, Group 26R Wet Cell 540 CCA minimum (P/N 0H3421S) or Group 35 AGM 650 CCA minimum, field supplied",
+   "battery": "12V, Group 26R Wet Cell 540 CCA minimum (P/N 0H3421S) or Group 35 AGM 650 CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts by kW (e.g. 0E9371A for 9-16kW range)",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Selectable Weekly / Biweekly / Monthly from the control panel; factory default weekly self-test"
@@ -10076,8 +10076,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -10101,13 +10107,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -10119,17 +10126,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -10137,60 +10148,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -10211,28 +10239,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -10287,12 +10329,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -10687,7 +10732,7 @@ const GENERATORS = [
    "compression": "10 kW 460cc 80-120 psi *; 13/16 kW 816cc 180-220 psi; 20 kW 999cc 185 psi +/- 10-15%. * The 426 cc and 460 cc engines have an Automatic Compression Release (ACR) system that will not allow full compression while cranking; full compression resumes at 650 RPM when ACR disengages. (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) The 426/460 engine manual prints minimum 55 psi (379 kPa) while cranking, cold engine, because of the compression release (Generac 10000016870 Rev B (dealer manual), p.75). Confirmed: GH816 Normal compression 180-220 psi (1240-1520 kPa) (Generac A0000091269 Rev A (dealer manual), p.17, 76). CONFLICT: the Evolution dealer table prints 999 cc (GT-999) 160 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); the V-twin engine manual prints 160-190 psi (1103-1310 kPa) for GTH/GTV 990/1000 (Generac 0F6923 Rev E (dealer manual), p.87).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 410/460 engines (HEX M20-1.5 G8 YEL CHR) 90 ft-lbs (122 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217. 426/460 engine manual: spark plug 18.4 ft-lbs (25 Nm), flywheel nut 90.0 ft-lbs (122.0 Nm), rocker jam nut 10.0 ft-lbs (13.5 Nm); cylinder head bolts 30.2 ft-lbs (41.0 Nm) in the table but 33.2 ft-lbs (45 Nm) final in the assembly steps - CONFLICT inside the manual (Generac 10000016870 Rev B (dealer manual), p.77, 69). GH816 engine manual: spark plug 14.8-22.1 ft-lbs (20-30 Nm), cylinder head bolts 29.9-36.5 ft-lbs (40.5-49.5 Nm), flywheel nut 135-165 ft-lbs (183-223 Nm) in the table / 150 ft-lb in the procedure (Generac A0000091269 Rev A (dealer manual), p.78, 35). GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "426/460 engine manual: set the ignition coil air gap to 0.010 in; the printed metric figure, 2.54 mm, does not match 0.010 in (Generac 10000016870 Rev B (dealer manual), p.73). CONFLICT: the diagnostic manual says the single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189). GH816: 0.02 in (0.5 mm), ignition coil air gap 0.008-0.012 in (0.2-0.3 mm) (Generac A0000091269 Rev A (dealer manual), p.76). Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187).",
-   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied",
+   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -10834,8 +10879,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -10859,13 +10910,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -10877,17 +10929,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -10895,60 +10951,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -10969,28 +11042,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -11045,12 +11132,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -11634,7 +11724,7 @@ const GENERATORS = [
    "compression": "10 kW 460cc 80-120 psi *; 14/18 kW 816cc 180-220 psi; 20-26 kW 999cc 185 psi +/- 10-15%. * The 426 cc and 460 cc engines have an Automatic Compression Release (ACR) system that will not allow full compression while cranking; full compression resumes at 650 RPM when ACR disengages. (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) The 426/460 engine manual prints minimum 55 psi (379 kPa) while cranking, cold engine, because of the compression release (Generac 10000016870 Rev B (dealer manual), p.75). Confirmed: GH816 Normal compression 180-220 psi (1240-1520 kPa) (Generac A0000091269 Rev A (dealer manual), p.17, 76). CONFLICT: the Evolution dealer table prints 999 cc (GT-999) 160 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); the V-twin engine manual prints 160-190 psi (1103-1310 kPa) for GTH/GTV 990/1000 (Generac 0F6923 Rev E (dealer manual), p.87).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 410/460 engines (HEX M20-1.5 G8 YEL CHR) 90 ft-lbs (122 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217. 426/460 engine manual: spark plug 18.4 ft-lbs (25 Nm), flywheel nut 90.0 ft-lbs (122.0 Nm), rocker jam nut 10.0 ft-lbs (13.5 Nm); cylinder head bolts 30.2 ft-lbs (41.0 Nm) in the table but 33.2 ft-lbs (45 Nm) final in the assembly steps - CONFLICT inside the manual (Generac 10000016870 Rev B (dealer manual), p.77, 69). GH816 engine manual: spark plug 14.8-22.1 ft-lbs (20-30 Nm), cylinder head bolts 29.9-36.5 ft-lbs (40.5-49.5 Nm), flywheel nut 135-165 ft-lbs (183-223 Nm) in the table / 150 ft-lb in the procedure (Generac A0000091269 Rev A (dealer manual), p.78, 35). GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "426/460 engine manual: set the ignition coil air gap to 0.010 in; the printed metric figure, 2.54 mm, does not match 0.010 in (Generac 10000016870 Rev B (dealer manual), p.73). CONFLICT: the diagnostic manual says the single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189). GH816: 0.02 in (0.5 mm), ignition coil air gap 0.008-0.012 in (0.2-0.3 mm) (Generac A0000091269 Rev A (dealer manual), p.76). Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187).",
-   "battery": "12V, Group 26R Wet Cell 540 CCA minimum (P/N 0H3421S) or Group 35 AGM 650 CCA minimum, field supplied",
+   "battery": "12V, Group 26R Wet Cell 540 CCA minimum (P/N 0H3421S) or Group 35 AGM 650 CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "0E9371AS (10kW) or 0J8478S (14-26kW); recommended oil filter 070185ES",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable from control panel"
@@ -11781,8 +11871,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -11806,13 +11902,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -11824,17 +11921,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -11842,60 +11943,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -11916,28 +12034,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -11992,12 +12124,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -12387,7 +12522,7 @@ const GENERATORS = [
    "compression": "999cc: 185 psi +/- 10-15%; 816cc (16KW/816 model): 180-220 psi (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the Evolution dealer table prints 999 cc (GT-999) 160 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); the V-twin engine manual prints 160-190 psi (1103-1310 kPa) for GTH/GTV 990/1000 (Generac 0F6923 Rev E (dealer manual), p.87). Confirmed: GH816 Normal compression 180-220 psi (1240-1520 kPa) (Generac A0000091269 Rev A (dealer manual), p.17, 76).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217. GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50). GH816 engine manual: spark plug 14.8-22.1 ft-lbs (20-30 Nm), cylinder head bolts 29.9-36.5 ft-lbs (40.5-49.5 Nm), flywheel nut 135-165 ft-lbs (183-223 Nm) in the table / 150 ft-lb in the procedure (Generac A0000091269 Rev A (dealer manual), p.78, 35).",
    "crankSensorGap": "Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187). GH816: 0.02 in (0.5 mm), ignition coil air gap 0.008-0.012 in (0.2-0.3 mm) (Generac A0000091269 Rev A (dealer manual), p.76).",
-   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied",
+   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -12538,8 +12673,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -12563,13 +12704,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -12581,17 +12723,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -12599,60 +12745,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -12673,28 +12836,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -12749,12 +12926,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -13089,7 +13269,7 @@ const GENERATORS = [
    "compression": "11 kW 530cc 170 psi +/- 10-15%; 20 kW 999cc 185 psi +/- 10-15% (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the Evolution dealer table prints 530 cc (GT-530) 150 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13). CONFLICT: the Evolution dealer table prints 999 cc (GT-999) 160 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); the V-twin engine manual prints 160-190 psi (1103-1310 kPa) for GTH/GTV 990/1000 (Generac 0F6923 Rev E (dealer manual), p.87). Cylinders within 25% of each other; valve lash must be right before a compression test (Generac 0H9172 Rev M (dealer manual), p.186-187).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted. No flywheel-nut value is printed for the 530 cc engine. (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217. GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187). V-twin engine manual (GTH 990/1000): ignition coil air gap 0.008-0.012 in (0.20-0.30 mm) (Generac 0F6923 Rev E (dealer manual), p.87).",
-   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied",
+   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -13240,8 +13420,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -13265,13 +13451,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -13283,17 +13470,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -13301,60 +13492,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -13375,28 +13583,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -13451,12 +13673,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -13789,7 +14014,7 @@ const GENERATORS = [
    "compression": "530cc 11 kW: 170 psi +/- 10-15% (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the Evolution dealer table prints 530 cc (GT-530) 150 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13). Cylinders within 25% of each other; valve lash must be right before a compression test (Generac 0H9172 Rev M (dealer manual), p.186-187).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted. No flywheel-nut value is printed for the 530 cc engine. (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217.",
    "crankSensorGap": "Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187).",
-   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied",
+   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -13940,8 +14165,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -13965,13 +14196,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -13983,17 +14215,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -14001,60 +14237,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -14075,28 +14328,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -14151,12 +14418,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -14482,7 +14752,7 @@ const GENERATORS = [
    "compression": "999cc 20 kW: 185 psi +/- 10-15% (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the Synergy / EcoGen dealer manual prints 160 psi +/- 10-15% for the GT-999 (Generac 0K9138 Rev B (dealer manual), p.12); CONFLICT: the Evolution dealer table prints 999 cc (GT-999) 160 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); the V-twin engine manual prints 160-190 psi (1103-1310 kPa) for GTH/GTV 990/1000 (Generac 0F6923 Rev E (dealer manual), p.87).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold and Taptite rows confirmed in Generac 0K9138 Rev B (dealer manual), p.214. GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "Magneto air gap 0.008-0.012 in (0.20-0.30 mm); new magnetos set at 0.010 in (Generac 0K9138 Rev B (dealer manual), p.187-188).",
-   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied",
+   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -14633,8 +14903,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -14658,13 +14934,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -14676,17 +14953,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -14694,60 +14975,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -14768,28 +15066,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -14844,12 +15156,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -15185,7 +15500,7 @@ const GENERATORS = [
    "valveClearance": "Cold valve clearance 0.002-0.004 in (0.05-0.1 mm) Confirmed 0.002-0.004 in (0.05-0.1 mm) cold, rocker jam nut 174 in-lbs (19.6 Nm) (Generac 0K9138 Rev B (dealer manual), p.191).",
    "compression": "15 kW EcoGen GT-999: 160 psi +/- 10-15% (Generac 0K9138 Rev B (dealer manual), p.12 - the VSCF dealer manual predates this Y20 printing; same GT-999 engine). The V-twin engine manual prints 160-190 psi (1103-1310 kPa) (Generac 0F6923 Rev E (dealer manual), p.87).",
    "crankSensorGap": "Magneto air gap 0.008-0.012 in (0.20-0.30 mm); new magnetos set at 0.010 in (Generac 0K9138 Rev B (dealer manual), p.187-188).",
-   "battery": "12V, Group 26R 540 CCA minimum or Group 35 AGM 650 CCA minimum, field supplied",
+   "battery": "12V, Group 26R 540 CCA minimum or Group 35 AGM 650 CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -15336,8 +15651,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -15361,13 +15682,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -15379,17 +15701,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -15397,60 +15723,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -15471,28 +15814,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -15547,12 +15904,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -15890,7 +16250,7 @@ const GENERATORS = [
    "compression": "999cc 20 kW: 185 psi +/- 10-15% (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the 3-phase dealer manual prints 160 psi +/- 10-15% for the 999 cc (Generac 10000014636 Rev A (dealer manual), p.86); the GTH 1000 engine manual prints 160-190 psi (Generac 0F6923 Rev E (dealer manual), p.87).",
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "Magneto air gap 0.008-0.012 in (0.20-0.30 mm); new magnetos set at 0.010 inch (Generac 10000014636 Rev A (dealer manual), p.89-90).",
-   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied",
+   "battery": "12V, Group 26R-540CCA minimum or Group 35 AGM-650CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
    "airFilter": "See Replacement Parts",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Weekly / Biweekly / Monthly, selectable"
@@ -16041,8 +16401,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -16066,13 +16432,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -16084,17 +16451,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -16102,60 +16473,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39; 10000014636 Rev A p.50 lists 1600 only). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -16176,28 +16564,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000014636 Rev A (dealer manual), p.51 Table 3-6; same row in 10000041488 Rev C p.40 and 0H9172 Rev M p.40).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -16252,12 +16654,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Listed among the protection systems in the Evolution 2.0 owner's manuals (e.g. 10000024942, A0001846499, 10000032217). Generac's dealer-call table lists it for the Guardian series with no E-code - the 1000-1006 range belongs to the Next Generation / Power Zone 200 controller, not to Evolution 2.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39; 10000014636 Rev A p.50). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -16764,8 +17169,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -16789,13 +17200,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -16807,17 +17219,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -16825,60 +17241,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -16899,28 +17332,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -16975,12 +17422,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Generac's dealer-call table lists this alarm for the Guardian series with no E-code - the numeric range 1000-1006 belongs to the Next Generation / Power Zone 200 controller, not to Evolution 1.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -17531,8 +17981,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -17556,13 +18012,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -17574,17 +18031,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -17592,60 +18053,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -17666,28 +18144,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -17742,12 +18234,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Generac's dealer-call table lists this alarm for the Guardian series with no E-code - the numeric range 1000-1006 belongs to the Next Generation / Power Zone 200 controller, not to Evolution 1.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -18356,8 +18851,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -18381,13 +18882,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -18399,17 +18901,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -18417,60 +18923,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -18491,28 +19014,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -18567,12 +19104,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Generac's dealer-call table lists this alarm for the Guardian series with no E-code - the numeric range 1000-1006 belongs to the Next Generation / Power Zone 200 controller, not to Evolution 1.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -19178,8 +19718,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -19203,13 +19749,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -19221,17 +19768,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -19239,60 +19790,77 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables.",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -19313,28 +19881,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51).",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -19389,12 +19971,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Generac's dealer-call table lists this alarm for the Guardian series with no E-code - the numeric range 1000-1006 belongs to the Next Generation / Power Zone 200 controller, not to Evolution 1.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -19874,8 +20459,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -19899,13 +20490,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -19917,17 +20509,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -19935,60 +20531,79 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables. On VSCF units the voltage is reported to the controller by the AVR over the communication line (0K9138 Rev B p.52).",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Synergy / EcoGen VSCF units: the controller gets its voltage reading from the AVR over the communication line, so the air-cooled Preliminary Output Voltage Test does not apply - verify generator output voltage in the controller's Dealer Menu, check the communication wires between the AVR and the Evolution controller (1901), then perform Test 2 (Generac 0K9138 Rev B (dealer manual), p.52).",
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Synergy / EcoGen VSCF units: the controller gets its voltage reading from the AVR over the communication line, so the air-cooled Preliminary Output Voltage Test does not apply - verify generator output voltage in the controller's Dealer Menu, check the communication wires between the AVR and the Evolution controller (1901), then perform Test 2 (Generac 0K9138 Rev B (dealer manual), p.52).",
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -20009,28 +20624,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51). Not listed in the Synergy/EcoGen VSCF dealer manual 0K9138 Rev B e-code table (p.52); the Evolution 1.0 table above is the source.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 0K9138 Rev B p.52). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -20085,23 +20714,27 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Generac's dealer-call table lists this alarm for the Guardian series with no E-code - the numeric range 1000-1006 belongs to the Next Generation / Power Zone 200 controller, not to Evolution 1.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39; 0K9138 Rev B p.52). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1048",
     "name": "VSCF Overload",
     "display": "1048 VSCF OVERLOAD",
-    "meaning": "Alternator, AVR or wiring damage detected as an overload condition.",
+    "meaning": "Large DC-link (phase) current for 100 microseconds (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
     "causes": [
      "Damaged alternator, AVR or wiring"
     ],
     "steps": [
-     "Contact an Independent Authorized Servicing Dealer."
+     "Possible causes (Generac 0K9138 Rev B (dealer manual), p.53): rotor shorted, AVR phase wire shorted or miswired, or a brush short. Test: perform the Rotor Brush Test.",
+     "Contact an IASD for the rotor or AVR repair."
     ],
     "clear": "Dealer"
    },
@@ -20118,6 +20751,22 @@ const GENERATORS = [
      "Identify and clear the overload, then restart."
     ],
     "clear": "Clear the overload, restart"
+   },
+   {
+    "code": "1050",
+    "name": "VSCF Low Battery",
+    "display": "1050 VSCF LOW BATTERY",
+    "meaning": "Low supply voltage detected at the AVR - under 8 VDC. The AVR supply comes from the controller (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
+    "causes": [
+     "AVR miswired to the controller (Generac 0K9138 Rev B (dealer manual), p.53)",
+     "Controller outputting the wrong voltage (faulty)",
+     "AVR internal issue"
+    ],
+    "steps": [
+     "Check the AVR power and ground circuits from the controller to the AVR for proper voltage and ground (Generac 0K9138 Rev B (dealer manual), p.53).",
+     "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
    },
    {
     "code": "1052",
@@ -20137,12 +20786,14 @@ const GENERATORS = [
     "code": "1053",
     "name": "VSCF Gate Fault",
     "display": "1053 VSCF GATE FAULT",
-    "meaning": "The AVR is damaged.",
+    "meaning": "IGBT gate driver fault (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
     "causes": [
      "AVR failure"
     ],
     "steps": [
-     "Contact an Independent Authorized Servicing Dealer."
+     "Possible causes (Generac 0K9138 Rev B (dealer manual), p.53): brushes incorrectly wired; rotor shorted; brushes arcing or worn; generator severely overloaded (shorted); one of the fans blocked or not working - insufficient air flow; or OFF was pressed while the Small Fan Failure warning (1070) was present.",
+     "Tests: Rotor Brush Test, check for overload conditions, check AVR air flow for restriction, Small Fan test, Large Fan test, Auxiliary Power Supply test (Generac 0K9138 Rev B (dealer manual), p.53).",
+     "Contact an IASD if the AVR itself is at fault."
     ],
     "clear": "Dealer"
    },
@@ -20150,22 +20801,22 @@ const GENERATORS = [
     "code": "1054",
     "name": "VSCF IGBT Overtemp.",
     "display": "1054 VSCF IGBT OVERTEMP.",
-    "meaning": "AVR IGBT electronics over temperature.",
+    "meaning": "AVR IGBT electronics over temperature - set for more than 85 deg C (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
     "causes": [
      "Dirty AVR filter",
      "Blocked intake / exhaust air path",
      "BIG fan not running",
      "Air leak in the AVR enclosure",
      "Engine running hot",
-     "Ambient above 60 F (15.5 C) - derate needed"
+     "Ambient temperature above 50 C (122 F) (Generac 0K9138 Rev B (dealer manual), p.53). NOTE - the owner's-manual text this card carried before said 60 F (15.5 C); the dealer manual prints 50 C - go by the dealer manual."
     ],
     "steps": [
      "Replace the AVR filter and inspect the fan.",
      "Check the intake and exhaust for blockage. KEEP FINGERS AWAY FROM THE FAN HOUSING.",
      "Check the AVR enclosure for air leaks.",
      "Inspect the air intake / exhaust for a hot-running engine.",
-     "Derate output per specifications if ambient is high.",
-     "Contact a dealer if unresolved."
+     "Contact a dealer if unresolved.",
+     "Dealer tests for 1054: check for overload, check AVR air flow for restriction, perform the Small Fan and Large Fan tests, perform the Auxiliary Power Supply test, and check the generator air vents for restriction (Generac 0K9138 Rev B (dealer manual), p.53)."
     ],
     "clear": "Dealer after corrective action"
    },
@@ -20222,12 +20873,14 @@ const GENERATORS = [
     "code": "1058",
     "name": "VSCF DC Undervoltage",
     "display": "1058 VSCF DC UNDERVOLTAGE",
-    "meaning": "DPE winding supply voltage too low.",
+    "meaning": "DPE (auxiliary) winding supply to the AVR under 100 VDC - loss of the aux winding field (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2).",
     "causes": [
      "Alternator damage"
     ],
     "steps": [
-     "Contact an Independent Authorized Servicing Dealer."
+     "Possible faults (Generac 0K9138 Rev B (dealer manual), p.54): DPE miswired or not connected; DPE winding faulty (rotor fault); brushes arcing or worn; brushes miswired or faulty.",
+     "Tests: Power Winding and DPE tests, Rotor Brush test, inspect the harness (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Contact an IASD for alternator repair."
     ],
     "clear": "Dealer"
    },
@@ -20235,12 +20888,14 @@ const GENERATORS = [
     "code": "1059",
     "name": "VSCF Field Loss",
     "display": "1059 VSCF FIELD LOSS",
-    "meaning": "No output voltage detected while starting.",
+    "meaning": "No output voltage while starting - output under 50 Vrms right after the start-up voltage ramp completes (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2, p.153).",
     "causes": [
      "Alternator damage"
     ],
     "steps": [
-     "Contact a dealer."
+     "Probable causes (Generac 0K9138 Rev B (dealer manual), p.54): DPE winding miswired; DPE producing no voltage into the AVR; brushes arcing or worn; brushes miswired or faulty; rotor shorted; AVR damaged.",
+     "Tests: Power Winding and DPE tests, Rotor Brush test, check the harness connections to the AVR (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Contact an IASD for alternator or AVR repair."
     ],
     "clear": "Dealer"
    },
@@ -20248,20 +20903,21 @@ const GENERATORS = [
     "code": "1060",
     "name": "Big Fan Failure",
     "display": "1060 BIG FAN FAILURE",
-    "meaning": "AVR electronics temperature exceeds 158 F (70 C).",
+    "meaning": "AVR electronics (PCB) temperature exceeded 70 C (158 F) (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2).",
     "causes": [
      "Faulty AVR filter",
      "Blocked intake / exhaust",
-     "Big fan not running",
+     "BIG fan not running (it only runs when the engine runs)",
      "Air leak in the AVR enclosure",
      "Engine running hot",
-     "High ambient (over 60 F / 15.6 C) needing derate"
+     "Ambient temperature above 50 C (122 F) (Generac 0K9138 Rev B (dealer manual), p.54). NOTE - the owner's-manual text this card carried before said 60 F (15.6 C); the dealer manual prints 50 C - go by the dealer manual."
     ],
     "steps": [
      "Replace the AVR filter.",
      "Check the intake and exhaust for blockage. KEEP FINGERS AWAY FROM THE FAN HOUSING.",
      "Check the small fan too if the message shows while stopped (the small fan runs 60 min after stop for heat soak).",
-     "Contact a dealer if unresolved."
+     "Contact a dealer if unresolved.",
+     "Dealer tests for 1060: check for overload, check AVR air flow for restriction, perform the Large Fan test and the Small Fan test, perform the Auxiliary Power Supply test, and check the generator air vents for restriction (Generac 0K9138 Rev B (dealer manual), p.54)."
     ],
     "clear": "Dealer after corrective action"
    },
@@ -20269,30 +20925,93 @@ const GENERATORS = [
     "code": "1061",
     "name": "VSCF Field Loss",
     "display": "1061 VSCF FIELD LOSS",
-    "meaning": "Output voltage lost while running.",
+    "meaning": "Output voltage lost while running - output under 20 Vrms for 16 cycles (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2).",
     "causes": [
      "Alternator damage"
     ],
     "steps": [
-     "Contact a dealer."
+     "First listed cause is fuel loss - check fuel supply and fuel pressure (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Then: DPE no longer generating voltage into the AVR, brushes arcing or worn, brushes miswired or faulty, rotor shorted, AVR damaged - Power Winding and DPE tests, Rotor Brush Test, check the harness connections to the AVR (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Contact an IASD for alternator or AVR repair."
     ],
     "clear": "Dealer"
+   },
+   {
+    "code": "1062",
+    "name": "VSCF Comms Loss",
+    "display": "1062 VSCF COMMS LOSS",
+    "meaning": "The main controller detects that no VSCF Modbus messages have been received from the AVR over the shielded communication cable; at 2200 rpm a faulty link shuts the unit down on this code (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2, p.153).",
+    "causes": [
+     "Communication cable or connection faulty (Generac 0K9138 Rev B (dealer manual), p.54)",
+     "Cable incorrectly shielded",
+     "AVR has no power - its green LED should be the only one lit",
+     "One of the controllers damaged",
+     "Firmware download failed",
+     "Can be set by probing these wires with a DMM"
+    ],
+    "steps": [
+     "Check the communication wires between the controller and AVR for shorts, opens and proper routing; check pin fit (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Check the shield wires are properly grounded.",
+     "Check for the correct firmware version.",
+     "Check the static voltages on the communication wires with the unit not running; check the AVR LEDs - only the green one should be lit.",
+     "Contact an IASD if a controller or the AVR is damaged."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+   },
+   {
+    "code": "1063",
+    "name": "VSCF Enable Mismatch",
+    "display": "1063 VSCF ENABLE MISMATCH",
+    "meaning": "The main controller detects that the VSCF Enable state reported by the AVR does not match the state the HSB controller set. At 2200 rpm the controller sends the enable signal to the AVR and reads its state back over the communication link; if they do not match the unit shuts down on this code (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2, p.153).",
+    "causes": [
+     "Enable wire missing between the AVR and HSB controllers (Generac 0K9138 Rev B (dealer manual), p.54)",
+     "Enable wire shorted or miswired, or the connector is loose",
+     "Faulty controller",
+     "Faulty AVR"
+    ],
+    "steps": [
+     "Check the AVR P1 connections (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Check the controller connections.",
+     "Check the Enable circuit for proper operation (wire present, not shorted or miswired, connector tight).",
+     "Contact an IASD if the enable circuit is good - the remaining causes are a faulty controller or AVR."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+   },
+   {
+    "code": "1064",
+    "name": "VSCF Speed PWM Loss",
+    "display": "1064 VSCF SPEED PWM LOSS",
+    "meaning": "The main controller detects that the speed PWM command from the AVR is not being received (Generac 0K9138 Rev B (dealer manual), p.55 Table 2-2, p.153).",
+    "causes": [
+     "Speed signal wire missing between the AVR and HSB controllers (Generac 0K9138 Rev B (dealer manual), p.55)",
+     "Speed signal wire shorted or miswired, or the connector is loose",
+     "Faulty controller",
+     "Faulty AVR"
+    ],
+    "steps": [
+     "Check continuity on the PWM communication lines (Generac 0K9138 Rev B (dealer manual), p.55).",
+     "Check the connector and pin fit.",
+     "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
    },
    {
     "code": "1065",
     "name": "Overfrequency",
     "display": "1065 OVERFREQUENCY",
-    "meaning": "Output frequency exceeded the limit while running.",
+    "meaning": "The main controller detects an over-frequency alarm: engine 25 percent over 60 Hz for 100 ms, OR 20 percent over 60 Hz for 3 s (Generac 0K9138 Rev B (dealer manual), p.55 Table 2-2). NOTE - the owner's-manual text this card carried before listed overload and a failed RPM sensor as causes; the dealer manual lists neither - go by the dealer manual.",
     "causes": [
-     "Overload",
-     "Failed RPM sensor",
-     "Stepper motor problem"
+     "Stepper operation sticking or binding (Generac 0K9138 Rev B (dealer manual), p.55)",
+     "AVR internal issue",
+     "Fuel supply not within specifications",
+     "Incorrect fuel selection"
     ],
     "steps": [
-     "Remove load and restart.",
-     "Contact a dealer if the RPM sensor or stepper motor is suspected."
+     "Check stepper operation for sticking or binding (Test 12 - stepper, linkage and throttle must move freely; coils about 10-11 ohms) (Generac 0K9138 Rev B (dealer manual), p.55; 0H9172 Rev M p.58-60).",
+     "Check the fuel supply and pressure are within the unit's specifications and that the fuel selection matches the fuel (Generac 0K9138 Rev B (dealer manual), p.55).",
+     "If the stepper and fuel check out, the remaining listed cause is an internal AVR issue - contact an IASD."
     ],
-    "clear": "Remove load / dealer"
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
    },
    {
     "code": "1066",
@@ -20312,18 +21031,6 @@ const GENERATORS = [
      "Contact a dealer for a throttle or engine issue."
     ],
     "clear": "Corrective action per cause"
-   },
-   {
-    "code": "1063",
-    "name": "VSCF Mismatch (Error Code 1063)",
-    "display": "1063",
-    "meaning": "Generac's support article states code 1063 indicates a Variable Speed Constant Frequency (VSCF) mismatch. The article does not name a controller generation; the VSCF alternator system in this catalog is the Synergy / CorePower VSCF platform.",
-    "causes": [],
-    "steps": [
-     "A hard reset can be attempted.",
-     "If the issue persists, a certified service technician must inspect the system."
-    ],
-    "clear": "Hard reset procedure."
    }
   ],
   "warnings": [
@@ -20785,12 +21492,15 @@ const GENERATORS = [
     "code": "Controller Fault",
     "name": "Controller Fault",
     "display": "CONTROLLER FAULT, red LED",
-    "meaning": "Internal controller fault. Generac's dealer-call table lists this alarm for the Guardian series with no E-code - the numeric range 1000-1006 belongs to the Next Generation / Power Zone 200 controller, not to Evolution 1.0.",
-    "causes": [],
-    "steps": [
-     "Contact an IASD - no field procedure is published for this alarm on this controller generation."
+    "meaning": "Internal controller fault - no e-code on home standby units. Dealer e-code table action step: Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39; 0K9138 Rev B p.52). The 1000-1006 Controller Fault range belongs to the Power Zone 200 (Next Generation) controller, not Evolution.",
+    "causes": [
+     "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO. Dealer diagnosis required if it returns."
+    "steps": [
+     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1100-1101",
@@ -20831,8 +21541,14 @@ const GENERATORS = [
      "Stepper motor fault"
     ],
     "steps": [
-     "Do not attempt a field governor adjustment - Generac routes this alarm to a dealer.",
-     "Contact an IASD."
+     "Dealer table: 1200 = prolonged, over 72 Hz on a 60 Hz unit (60 Hz on a 50 Hz unit) for 3 s; 1205 = instantaneous, over 75 Hz (62 Hz on 50 Hz) for 0.1 s - both list the stepper motor / mixer body assembly as the possible cause, action step Test 12 (Test 54 in 10000041488); 1207 = AVR zero-cross speed check, 4500 rpm or more for 150 ms when the normal ignition pulses are not seen - Tests 64 and 60 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1201 and 1208 are not in the air-cooled Evolution tables.",
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
+     "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
    },
@@ -20856,13 +21572,14 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temperature",
     "display": "HIGH TEMPERATURE, red LED; unit shuts down during operation",
-    "meaning": "Engine or alternator over-temperature shutdown.",
+    "meaning": "Engine over-temperature shutdown - the high-temperature switch on the engine closed (there is no alternator temperature sensor on air-cooled Evolution; 0H9172 Rev M p.133). ",
     "causes": [
      "Blocked or obstructed intake, exhaust, or rear of the generator",
      "Excessive ambient heat",
      "Excessive load on the generator"
     ],
     "steps": [
+     "Dealer table 1400: air flow impeded / flow issue - check the inlet and outlet for debris, then the temperature sensor and its wiring; action step Test 62 - Check High Oil Temperature Switch, which closes at about 293 F (144 C) and resets when the engine cools (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39, 133). 1401 is a liquid-cooled gas code (Fuel Pressure Low - Running Lean, A0005304286 Rev A p.18), not in the air-cooled tables.",
      "Inspect ventilation around the generator, intake, exhaust, and rear of the unit.",
      "Clear any obstruction (grass, leaves, snow, stored items).",
      "Verify the enclosure roof and doors are in place while running.",
@@ -20874,17 +21591,21 @@ const GENERATORS = [
     "code": "1500-1522",
     "name": "RPM Sense Loss",
     "display": "RPM SENSE LOSS, red LED; unit shut down while running, or would not restart",
-    "meaning": "Controller lost the engine RPM signal (magnetic pickup / flywheel signal) during a run, or saw no valid RPM signal during cranking.",
+    "meaning": "The controller lost the engine rpm signal. On air-cooled Evolution units that signal is the ignition magneto pulse on Wire 18 - there is no separate magnetic pickup (0H9172 Rev M p.133, 194). Sub-codes: 1501 twin-cylinder running, 1505 twin-cylinder cranking, 1511 single-cylinder running, 1515 single-cylinder cranking (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). No rpm within 3 s of cranking latches out; a signal lost for 1 s while running shuts down, waits 15 s and re-cranks once before latching (0H9172 Rev M p.133).",
     "causes": [
-     "Weak or discharged battery",
-     "Failed RPM / ignition pickup",
-     "Loose flywheel or wiring fault",
-     "Fuel or ignition fault during the start attempt"
+     "Running (1501 / 1511): air pocket in the fuel line, dirty fuel, or a missing ignition pulse - loss of one of the primary coils (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Cranking (1505 / 1515): starter motor and/or engine issue, missing ignition pulse (Generac 10000041488 Rev C (dealer manual), p.39)",
+     "Common cause: the engine never cranked - faulty crank circuit, faulty starter, or a weak battery (0H9172 Rev M p.133 note)",
+     "Wire 18 open or shorted to ground (Test 64, 0H9172 Rev M p.194)"
     ],
     "steps": [
-     "If it ran and shut down: clear the alarm, remove household loads, put in AUTO and restart.",
-     "If it will not start: check the BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery.",
-     "If it will not restart after clearing, contact an IASD."
+     "Ran and shut down (1501 / 1511): dealer action step is Test 50 and Test 64. Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "Test 64 - Check Wire 18 Continuity (0H9172 Rev M p.194): set the DMM to AC volts, back-probe Wire 18 at the harness connector (Evolution V-twin and single) and crank in MANUAL - about 3-6 VAC on a V-twin, 2-3 VAC on a single cylinder means the magneto signal is there.",
+     "No voltage: disconnect Wire 18 from the magneto sensing lead and read the magneto lead terminal to engine ground while cranking; still nothing goes to Problem 14 'No Signal' - Test 60 (magnetos).",
+     "Then unplug the Wire 18 harness connector from the controller and ohm Wire 18 to engine ground - a low reading (about 0.01 ohm) means Wire 18 is shorted to ground.",
+     "Would not start (1505 / 1515): if the engine cranks, Test 64 as above; if it does not crank, Problem 15. Engine does not crank: Problem 15/16 (0H9172 Rev M p.168) - utility OFF, switch in AUTO (Test 40), try a MANUAL start (Test 41); no crank in MANUAL: Test 44 the 7.5 A fuse, Test 45 the battery (recharge or replace), Test 46 Wire 56 voltage, Test 47/48 starter contactor relay and contactor, Test 49 starter motor.",
+     "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
+     "Contact an IASD if it will not restart after these checks."
     ],
     "clear": "Press OFF, then ENTER twice, then AUTO."
    },
@@ -20892,60 +21613,79 @@ const GENERATORS = [
     "code": "1600-1603",
     "name": "Underspeed",
     "display": "UNDERSPEED, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Engine speed below the governed setpoint while running.",
+    "meaning": "1600 = the unit is overloaded: engine speed held at 55 Hz for 30 s on a 60 Hz unit (40 Hz on a 50 Hz unit) - the load is slowing the engine, or fuel supply is low, or there is a throttle-control problem. 1603 = the engine never comes up to 3600 rpm (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). Dealer action steps: 1600 - Problem 3, or Test 50, or the stepper test (Test 54 / Test 12); 1603 - check fuel selection and fuel supply.",
     "causes": [
-     "Governor or throttle fault",
-     "Stepper motor fault",
-     "Fuel pressure / carburetion fault"
+     "Overload slowing the engine (the first cause in the dealer table)",
+     "Low fuel supply or pressure",
+     "Throttle (stepper motor) control problem",
+     "1603: wrong fuel selection or inadequate fuel supply - the engine never reaches 3600 rpm"
     ],
     "steps": [
-     "Contact an IASD."
+     "Run it with no load first. If it holds speed unloaded, the problem is load or fuel under load - shed loads and check any load-management module.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Test 50 - Check Fuel Supply and Pressure (0H9172 Rev M p.180): verify the fuel selector is set for the supplied fuel; put a water-column manometer on the regulator test port (Port 1 on all regulators, Port 3 on 12-20 kW) and crank - Evolution needs 3.5-7 in w.c. natural gas or 10-12 in w.c. LP. If it starts but runs rough or lacks power, repeat the reading running and under load; pressure that holds in spec with rough running goes to Problem 18.",
+     "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
     "name": "Overvoltage",
     "display": "OVERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Output voltage rose above the regulation limit.",
+    "meaning": "1800 = prolonged over-voltage; dealer action step Problem 2 (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39). 1801 is a liquid-cooled Evolution code (A0005304286 Rev A p.19) and is not in the air-cooled tables. On VSCF units the voltage is reported to the controller by the AVR over the communication line (0K9138 Rev B p.52).",
     "causes": [
-     "AVR / voltage regulator fault",
-     "Sensing wiring fault"
+     "Engine running fast - frequency high (stepper motor / mixer control, Test 12 - 0H9172 Rev M p.44)",
+     "Controller voltage calibration off (Test 3 - 0H9172 Rev M p.44)",
+     "Stator or rotor fault (Tests 7 and 10 - 0H9172 Rev M p.44)"
     ],
     "steps": [
-     "Contact an IASD. Generac's dealer-call table gives no homeowner step for this code."
+     "Synergy / EcoGen VSCF units: the controller gets its voltage reading from the AVR over the communication line, so the air-cooled Preliminary Output Voltage Test does not apply - verify generator output voltage in the controller's Dealer Menu, check the communication wires between the AVR and the Evolution controller (1901), then perform Test 2 (Generac 0K9138 Rev B (dealer manual), p.52).",
+     "Clear the alarm first (the dealer flowcharts say to clear any faults before running tests), then Problem 2 - Generator Produces High Voltage (0H9172 Rev M p.44): Test 1 - check AC output voltage; Test 11 - AC frequency across Wires 11 and 44 at the MLCB in MANUAL, 59-61 Hz is normal (p.58).",
+     "Frequency high: Test 12 - Check Stepper Motor Control (binding, movement in MANUAL, coils about 10-11 ohms, 0H9172 Rev M p.58-60).",
+     "Frequency OK but voltage wrong: 220-270 VAC at the breaker - Test 3 calibrate voltage; below 220 or above 270 - follow Problem 1 (0H9172 Rev M p.44).",
+     "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
+     "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
     "name": "Undervoltage",
     "display": "UNDERVOLTAGE, red LED; unit will not start in AUTO with utility loss",
-    "meaning": "Sustained generator output undervoltage.",
+    "meaning": "1900 = prolonged undervoltage, below 80 percent for 10+ s. 1901 = instantaneous - sudden loss of voltage (less than 15 V, 2 s). 1902 = both zero crosses missing more than 1.5 s - faulty excitation winding, zero-cross circuit, loose wiring or field-boost hardware. 1906 = one zero cross missing more than 1.5 s - field-boost hardware. The controller shows WARMING UP for 4 minutes (Generac 10000041488 Rev C (dealer manual), p.39; 0H9172 Rev M p.39-40). 1916 is a liquid-cooled code (0J1195 p.56), not in the air-cooled tables.",
     "causes": [
      "Severe overload",
-     "Alternator or AVR fault",
-     "Wiring fault"
+     "Faulty excitation winding, zero-cross circuit or field-boost hardware; loose wiring (1902 / 1906)",
+     "Alternator, AVR or sensing-lead fault (Tests 4-7, 10, FB1/FB2 - 0H9172 Rev M p.41, 44)",
+     "Fuel supply or selection on a new install (Generac support article, error codes 1900-1916)"
     ],
     "steps": [
-     "Contact an IASD."
+     "Synergy / EcoGen VSCF units: the controller gets its voltage reading from the AVR over the communication line, so the air-cooled Preliminary Output Voltage Test does not apply - verify generator output voltage in the controller's Dealer Menu, check the communication wires between the AVR and the Evolution controller (1901), then perform Test 2 (Generac 0K9138 Rev B (dealer manual), p.52).",
+     "Dealer action step for 1900, 1901, 1902 and 1906: Preliminary Output Voltage Test, and update the controller to the latest firmware (Generac 10000041488 Rev C (dealer manual), p.39-40; 0H9172 Rev M p.39-40).",
+     "Preliminary Output Voltage Test (Evolution non-Synergy, firmware v1.12 and above - update the controller to the latest firmware first) (0H9172 Rev M p.41; 10000041488 Rev C p.39-40): set the MLCB to ON; disconnect and isolate Wire 23 at the customer connection so the generator cannot transfer; open the voltage display in the dealer menu; set MANUAL and let it stabilize (up to 4 minutes before an undervoltage shutdown); record the volts the controller displays and a DMM reading across Wires 11 and 44 at the load side of the MLCB; press OFF and reconnect Wire 23. If it shuts down mid-test, press OFF then ENTER and restart.",
+     "Read Table 2-1 (0H9172 Rev M p.41): controller about 0 with 140-180 V measured - Test 6 excitation winding circuit (Wires 2 and 6); both 140-180 - Test FB1 Wire 4; both about 0 - Test FB2 Wire 4A; controller about half of a measured 300 V or more - Test 5 sensing circuit Wires 11(S) and 44(S). Problem 1 then continues to Test 4 (fixed excitation / rotor amp draw), Test 7 (stator) and Test 10 (rotor) (p.44).",
+     "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
+     "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
     "name": "Wiring Error / Transfer Wire Warning",
     "display": "WIRING ERROR or MISWIRE, red LED",
-    "meaning": "The controller detects an incorrect line/neutral, sensing or transfer-switch wiring configuration.",
+    "meaning": "2098 = mis-wired customer connection - insufficient DC voltage on the transfer power output (Wire 194). 2099 = mis-wired customer connection - the low-voltage and high-voltage wires are crossed (2098: Generac 10000041488 Rev C (dealer manual), p.40; 2099: 10000041488 Rev C p.40 and 0H9172 Rev M p.40). 2094 does not appear in the air-cooled Evolution e-code tables (10000041488 Rev C p.39-40; 0H9172 Rev M p.39-40).",
     "causes": [
-     "Incorrect field wiring at the generator or transfer switch",
-     "Miswired control or sensing harness"
+     "2098: Wire 194 shorted to ground, or AC voltage present on Wire 194 at the customer connection (Generac 10000041488 Rev C (dealer manual), p.40)",
+     "2099: low-voltage and high-voltage customer wires crossed at the generator connection (Generac 10000041488 Rev C (dealer manual), p.40)"
     ],
     "steps": [
-     "Do not attempt to rewire without the install manual's interconnect diagram.",
-     "Contact an IASD or the installing dealer."
+     "2098: check for Wire 194 shorted to ground; check for AC voltage on Wire 194 at the customer connection in the generator; refer to the RTS transfer switch diagnostic manual A0001176044 (Generac 10000041488 Rev C (dealer manual), p.40).",
+     "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
+     "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Dealer / installer correction required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -20966,28 +21706,42 @@ const GENERATORS = [
    {
     "code": "2299",
     "name": "Undervoltage Overload",
-    "display": "UNDERVOLTAGE OVERLOAD, red LED (Guardian/Evolution table only)",
-    "meaning": "Output collapsed under load - listed on Generac's dealer-call table for the Guardian series.",
+    "display": "UNDERVOLTAGE OVERLOAD, red LED",
+    "meaning": "The unit was overloaded - it tried to start with a large load already connected and could not ramp the generator voltage up to its normal target voltage. Dealer e-code table action step: Remove Load (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 10000014636 Rev A p.51). Not listed in the Synergy/EcoGen VSCF dealer manual 0K9138 Rev B e-code table (p.52); the Evolution 1.0 table above is the source.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "A large load was connected when the unit started, so it could not bring its output up to the target voltage (dealer e-code table, Generac 10000041488 Rev C (dealer manual), p.40)",
+     "Household load above the generator's rating at start-up - same overload mechanism as 2100 Overload Remove Load"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code - only a one-line contact-a-dealer table entry."
+     "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
+     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
+     "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
+     "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
+     "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
    },
    {
     "code": "2399",
     "name": "Stepper Overcurrent",
     "display": "STEPPER OVERCURRENT, red LED",
-    "meaning": "The stepper motor (governor / fuel mixer actuator) drew excess current.",
+    "meaning": "Current flow in the stepper motor coil(s) is above specification (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40; 0K9138 Rev B p.52). Dealer action step: Test 54 - Check Stepper Motor Control in 10000041488 Rev C (Test 12 in 0H9172 Rev M and 0K9138 Rev B); the table also says to verify the controller has the latest firmware.",
     "causes": [
-     "Cause not detailed in Generac's published documentation - this code appears only as a one-line entry in the Guardian-series dealer-call table"
+     "Stepper motor, linkage or throttle binding (Test 12 checks for binding first - 0H9172 Rev M p.58)",
+     "Stepper motor coil out of specification - about 10-11 ohms red to orange / yellow / brown / black, infinity red to ground (0H9172 Rev M p.60 Table 2-14)",
+     "Six-pin stepper connector not seated at the controller (0H9172 Rev M p.58 step 11)"
     ],
     "steps": [
-     "Contact an IASD. No dedicated troubleshooting article exists for this code."
+     "Test 12 - Check Stepper Motor Control (0H9172 Rev M p.58-60; the same test is Test 54 in 10000041488 Rev C): remove the air cleaner cover and move the throttle by hand - the stepper, linkage and throttle must not bind (the stepper itself has some resistance through its travel). Repair or replace anything that binds.",
+     "Pull the stepper arm toward the idle stop (throttle closed), set the controller to MANUAL and watch: an Evolution stepper cycles the mixer fully open (both venturis), back to closed, then to the start position with the small venturi slightly open. Set OFF, pull the arm away from the stop (open), set MANUAL again and watch, then OFF.",
+     "No movement either time: remove the controller and check the six-pin stepper connector is seated; unplug it, plug it back in and retest (step 11).",
+     "Still no movement: set the DMM to ohms and press the leads on the exposed connector terminals (do not probe into the connector) - red to orange, red to yellow, red to brown and red to black each about 10-11 ohms; red to ground infinity (0H9172 Rev M p.60 Table 2-14).",
+     "Replace the stepper motor if it failed to move the throttle in either direction or any resistance is wrong; if it moved both ways and ohms correctly, go back to the flow chart.",
+     "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
+     "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Dealer diagnosis required."
+    "clear": "Press OFF, then ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -21042,12 +21796,13 @@ const GENERATORS = [
     "code": "1048",
     "name": "VSCF Overload",
     "display": "1048 VSCF OVERLOAD",
-    "meaning": "Alternator, AVR or wiring damage detected as an overload condition.",
+    "meaning": "Large DC-link (phase) current for 100 microseconds (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
     "causes": [
      "Damaged alternator, AVR or wiring"
     ],
     "steps": [
-     "Contact an Independent Authorized Servicing Dealer."
+     "Possible causes (Generac 0K9138 Rev B (dealer manual), p.53): rotor shorted, AVR phase wire shorted or miswired, or a brush short. Test: perform the Rotor Brush Test.",
+     "Contact an IASD for the rotor or AVR repair."
     ],
     "clear": "Dealer"
    },
@@ -21064,6 +21819,22 @@ const GENERATORS = [
      "Identify and clear the overload, then restart."
     ],
     "clear": "Clear the overload, restart"
+   },
+   {
+    "code": "1050",
+    "name": "VSCF Low Battery",
+    "display": "1050 VSCF LOW BATTERY",
+    "meaning": "Low supply voltage detected at the AVR - under 8 VDC. The AVR supply comes from the controller (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
+    "causes": [
+     "AVR miswired to the controller (Generac 0K9138 Rev B (dealer manual), p.53)",
+     "Controller outputting the wrong voltage (faulty)",
+     "AVR internal issue"
+    ],
+    "steps": [
+     "Check the AVR power and ground circuits from the controller to the AVR for proper voltage and ground (Generac 0K9138 Rev B (dealer manual), p.53).",
+     "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
    },
    {
     "code": "1052",
@@ -21083,12 +21854,14 @@ const GENERATORS = [
     "code": "1053",
     "name": "VSCF Gate Fault",
     "display": "1053 VSCF GATE FAULT",
-    "meaning": "The AVR is damaged.",
+    "meaning": "IGBT gate driver fault (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
     "causes": [
      "AVR failure"
     ],
     "steps": [
-     "Contact an Independent Authorized Servicing Dealer."
+     "Possible causes (Generac 0K9138 Rev B (dealer manual), p.53): brushes incorrectly wired; rotor shorted; brushes arcing or worn; generator severely overloaded (shorted); one of the fans blocked or not working - insufficient air flow; or OFF was pressed while the Small Fan Failure warning (1070) was present.",
+     "Tests: Rotor Brush Test, check for overload conditions, check AVR air flow for restriction, Small Fan test, Large Fan test, Auxiliary Power Supply test (Generac 0K9138 Rev B (dealer manual), p.53).",
+     "Contact an IASD if the AVR itself is at fault."
     ],
     "clear": "Dealer"
    },
@@ -21096,22 +21869,22 @@ const GENERATORS = [
     "code": "1054",
     "name": "VSCF IGBT Overtemp.",
     "display": "1054 VSCF IGBT OVERTEMP.",
-    "meaning": "AVR IGBT electronics over temperature.",
+    "meaning": "AVR IGBT electronics over temperature - set for more than 85 deg C (Generac 0K9138 Rev B (dealer manual), p.53 Table 2-2).",
     "causes": [
      "Dirty AVR filter",
      "Blocked intake / exhaust air path",
      "BIG fan not running",
      "Air leak in the AVR enclosure",
      "Engine running hot",
-     "Ambient above 60 F (15.5 C) - derate needed"
+     "Ambient temperature above 50 C (122 F) (Generac 0K9138 Rev B (dealer manual), p.53). NOTE - the owner's-manual text this card carried before said 60 F (15.5 C); the dealer manual prints 50 C - go by the dealer manual."
     ],
     "steps": [
      "Replace the AVR filter and inspect the fan.",
      "Check the intake and exhaust for blockage. KEEP FINGERS AWAY FROM THE FAN HOUSING.",
      "Check the AVR enclosure for air leaks.",
      "Inspect the air intake / exhaust for a hot-running engine.",
-     "Derate output per specifications if ambient is high.",
-     "Contact a dealer if unresolved."
+     "Contact a dealer if unresolved.",
+     "Dealer tests for 1054: check for overload, check AVR air flow for restriction, perform the Small Fan and Large Fan tests, perform the Auxiliary Power Supply test, and check the generator air vents for restriction (Generac 0K9138 Rev B (dealer manual), p.53)."
     ],
     "clear": "Dealer after corrective action"
    },
@@ -21168,12 +21941,14 @@ const GENERATORS = [
     "code": "1058",
     "name": "VSCF DC Undervoltage",
     "display": "1058 VSCF DC UNDERVOLTAGE",
-    "meaning": "DPE winding supply voltage too low.",
+    "meaning": "DPE (auxiliary) winding supply to the AVR under 100 VDC - loss of the aux winding field (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2).",
     "causes": [
      "Alternator damage"
     ],
     "steps": [
-     "Contact an Independent Authorized Servicing Dealer."
+     "Possible faults (Generac 0K9138 Rev B (dealer manual), p.54): DPE miswired or not connected; DPE winding faulty (rotor fault); brushes arcing or worn; brushes miswired or faulty.",
+     "Tests: Power Winding and DPE tests, Rotor Brush test, inspect the harness (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Contact an IASD for alternator repair."
     ],
     "clear": "Dealer"
    },
@@ -21181,12 +21956,14 @@ const GENERATORS = [
     "code": "1059",
     "name": "VSCF Field Loss",
     "display": "1059 VSCF FIELD LOSS",
-    "meaning": "No output voltage detected while starting.",
+    "meaning": "No output voltage while starting - output under 50 Vrms right after the start-up voltage ramp completes (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2, p.153).",
     "causes": [
      "Alternator damage"
     ],
     "steps": [
-     "Contact a dealer."
+     "Probable causes (Generac 0K9138 Rev B (dealer manual), p.54): DPE winding miswired; DPE producing no voltage into the AVR; brushes arcing or worn; brushes miswired or faulty; rotor shorted; AVR damaged.",
+     "Tests: Power Winding and DPE tests, Rotor Brush test, check the harness connections to the AVR (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Contact an IASD for alternator or AVR repair."
     ],
     "clear": "Dealer"
    },
@@ -21194,20 +21971,21 @@ const GENERATORS = [
     "code": "1060",
     "name": "Big Fan Failure",
     "display": "1060 BIG FAN FAILURE",
-    "meaning": "AVR electronics temperature exceeds 158 F (70 C).",
+    "meaning": "AVR electronics (PCB) temperature exceeded 70 C (158 F) (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2).",
     "causes": [
      "Faulty AVR filter",
      "Blocked intake / exhaust",
-     "Big fan not running",
+     "BIG fan not running (it only runs when the engine runs)",
      "Air leak in the AVR enclosure",
      "Engine running hot",
-     "High ambient (over 60 F / 15.6 C) needing derate"
+     "Ambient temperature above 50 C (122 F) (Generac 0K9138 Rev B (dealer manual), p.54). NOTE - the owner's-manual text this card carried before said 60 F (15.6 C); the dealer manual prints 50 C - go by the dealer manual."
     ],
     "steps": [
      "Replace the AVR filter.",
      "Check the intake and exhaust for blockage. KEEP FINGERS AWAY FROM THE FAN HOUSING.",
      "Check the small fan too if the message shows while stopped (the small fan runs 60 min after stop for heat soak).",
-     "Contact a dealer if unresolved."
+     "Contact a dealer if unresolved.",
+     "Dealer tests for 1060: check for overload, check AVR air flow for restriction, perform the Large Fan test and the Small Fan test, perform the Auxiliary Power Supply test, and check the generator air vents for restriction (Generac 0K9138 Rev B (dealer manual), p.54)."
     ],
     "clear": "Dealer after corrective action"
    },
@@ -21215,30 +21993,93 @@ const GENERATORS = [
     "code": "1061",
     "name": "VSCF Field Loss",
     "display": "1061 VSCF FIELD LOSS",
-    "meaning": "Output voltage lost while running.",
+    "meaning": "Output voltage lost while running - output under 20 Vrms for 16 cycles (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2).",
     "causes": [
      "Alternator damage"
     ],
     "steps": [
-     "Contact a dealer."
+     "First listed cause is fuel loss - check fuel supply and fuel pressure (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Then: DPE no longer generating voltage into the AVR, brushes arcing or worn, brushes miswired or faulty, rotor shorted, AVR damaged - Power Winding and DPE tests, Rotor Brush Test, check the harness connections to the AVR (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Contact an IASD for alternator or AVR repair."
     ],
     "clear": "Dealer"
+   },
+   {
+    "code": "1062",
+    "name": "VSCF Comms Loss",
+    "display": "1062 VSCF COMMS LOSS",
+    "meaning": "The main controller detects that no VSCF Modbus messages have been received from the AVR over the shielded communication cable; at 2200 rpm a faulty link shuts the unit down on this code (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2, p.153).",
+    "causes": [
+     "Communication cable or connection faulty (Generac 0K9138 Rev B (dealer manual), p.54)",
+     "Cable incorrectly shielded",
+     "AVR has no power - its green LED should be the only one lit",
+     "One of the controllers damaged",
+     "Firmware download failed",
+     "Can be set by probing these wires with a DMM"
+    ],
+    "steps": [
+     "Check the communication wires between the controller and AVR for shorts, opens and proper routing; check pin fit (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Check the shield wires are properly grounded.",
+     "Check for the correct firmware version.",
+     "Check the static voltages on the communication wires with the unit not running; check the AVR LEDs - only the green one should be lit.",
+     "Contact an IASD if a controller or the AVR is damaged."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+   },
+   {
+    "code": "1063",
+    "name": "VSCF Enable Mismatch",
+    "display": "1063 VSCF ENABLE MISMATCH",
+    "meaning": "The main controller detects that the VSCF Enable state reported by the AVR does not match the state the HSB controller set. At 2200 rpm the controller sends the enable signal to the AVR and reads its state back over the communication link; if they do not match the unit shuts down on this code (Generac 0K9138 Rev B (dealer manual), p.54 Table 2-2, p.153).",
+    "causes": [
+     "Enable wire missing between the AVR and HSB controllers (Generac 0K9138 Rev B (dealer manual), p.54)",
+     "Enable wire shorted or miswired, or the connector is loose",
+     "Faulty controller",
+     "Faulty AVR"
+    ],
+    "steps": [
+     "Check the AVR P1 connections (Generac 0K9138 Rev B (dealer manual), p.54).",
+     "Check the controller connections.",
+     "Check the Enable circuit for proper operation (wire present, not shorted or miswired, connector tight).",
+     "Contact an IASD if the enable circuit is good - the remaining causes are a faulty controller or AVR."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+   },
+   {
+    "code": "1064",
+    "name": "VSCF Speed PWM Loss",
+    "display": "1064 VSCF SPEED PWM LOSS",
+    "meaning": "The main controller detects that the speed PWM command from the AVR is not being received (Generac 0K9138 Rev B (dealer manual), p.55 Table 2-2, p.153).",
+    "causes": [
+     "Speed signal wire missing between the AVR and HSB controllers (Generac 0K9138 Rev B (dealer manual), p.55)",
+     "Speed signal wire shorted or miswired, or the connector is loose",
+     "Faulty controller",
+     "Faulty AVR"
+    ],
+    "steps": [
+     "Check continuity on the PWM communication lines (Generac 0K9138 Rev B (dealer manual), p.55).",
+     "Check the connector and pin fit.",
+     "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
+    ],
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
    },
    {
     "code": "1065",
     "name": "Overfrequency",
     "display": "1065 OVERFREQUENCY",
-    "meaning": "Output frequency exceeded the limit while running.",
+    "meaning": "The main controller detects an over-frequency alarm: engine 25 percent over 60 Hz for 100 ms, OR 20 percent over 60 Hz for 3 s (Generac 0K9138 Rev B (dealer manual), p.55 Table 2-2). NOTE - the owner's-manual text this card carried before listed overload and a failed RPM sensor as causes; the dealer manual lists neither - go by the dealer manual.",
     "causes": [
-     "Overload",
-     "Failed RPM sensor",
-     "Stepper motor problem"
+     "Stepper operation sticking or binding (Generac 0K9138 Rev B (dealer manual), p.55)",
+     "AVR internal issue",
+     "Fuel supply not within specifications",
+     "Incorrect fuel selection"
     ],
     "steps": [
-     "Remove load and restart.",
-     "Contact a dealer if the RPM sensor or stepper motor is suspected."
+     "Check stepper operation for sticking or binding (Test 12 - stepper, linkage and throttle must move freely; coils about 10-11 ohms) (Generac 0K9138 Rev B (dealer manual), p.55; 0H9172 Rev M p.58-60).",
+     "Check the fuel supply and pressure are within the unit's specifications and that the fuel selection matches the fuel (Generac 0K9138 Rev B (dealer manual), p.55).",
+     "If the stepper and fuel check out, the remaining listed cause is an internal AVR issue - contact an IASD."
     ],
-    "clear": "Remove load / dealer"
+    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
    },
    {
     "code": "1066",
@@ -21258,18 +22099,6 @@ const GENERATORS = [
      "Contact a dealer for a throttle or engine issue."
     ],
     "clear": "Corrective action per cause"
-   },
-   {
-    "code": "1063",
-    "name": "VSCF Mismatch (Error Code 1063)",
-    "display": "1063",
-    "meaning": "Generac's support article states code 1063 indicates a Variable Speed Constant Frequency (VSCF) mismatch. The article does not name a controller generation; the VSCF alternator system in this catalog is the Synergy / CorePower VSCF platform.",
-    "causes": [],
-    "steps": [
-     "A hard reset can be attempted.",
-     "If the issue persists, a certified service technician must inspect the system."
-    ],
-    "clear": "Hard reset procedure."
    }
   ],
   "warnings": [
@@ -21668,7 +22497,7 @@ const GENERATORS = [
    "compression": "No Nexus figure is printed. Same GH-410 engine: the Evolution table prints 190 psi +/- 10-15% (Generac 0H9172 Rev M (dealer manual), p.13); CONFLICT - the GN/GSH-410 engine manual prints 55 psi minimum while cranking, cold (Generac 0C1103A Rev C (dealer manual), p.63).",
    "torque": "GN/GSH-410 engine manual: spark plug 20.3 Nm (180 in-lbs); flywheel nut 122 Nm (90 ft-lbs); cylinder head bolts 59.6 Nm (44 ft-lbs); rocker jam nut 19.6 Nm (174 in-lbs) (Generac 0C1103A Rev C (dealer manual), p.67).",
    "crankSensorGap": "Single-cylinder magneto air gap is fixed, not adjustable (Generac 0H9172 Rev M (dealer manual), p.189-190).",
-   "battery": "Group 26R, 12V, 350 CCA minimum (8kW-specific; other kW in this era use 525 CCA min)",
+   "battery": "Group 26R, 12V, 350 CCA minimum (8kW-specific; other kW in this era use 525 CCA min) CONFLICT - the Nexus dealer table prints Group 26R, 12 Volts and 525 CCA Minimum for every Nexus 8-20 kW unit (Generac 0H9172 Rev M (dealer manual), p.14 Table 1-8); 350 CCA is the 2008 pre-Nexus 8 kW figure (Generac 0G9266 (dealer manual), p.6). Fit 525 CCA when replacing.",
    "airFilter": "Generac P/N 0G3332 (2008); 0E9581 shown as 10kW filter in same table - confirm by kW column in doc",
    "fuelPressure": "Natural gas 5-7 in water column; LP vapor 10-12 in water column (0H8358 Sec 5.1).",
    "exercise": "Configurable Weekly/Biweekly/Monthly, runs 5 or 12 minutes depending on model"
@@ -24275,6 +25104,22 @@ const GENERATORS = [
   ],
   "warnings": [
    {
+    "code": "LOW BATTERY",
+    "name": "Low Battery (warning)",
+    "display": "Battery LED warning - the manual's WARNINGS section says 'displayed on the CorePower control panel'; on the PowerPact panel battery trouble shows on the Charger Warning / Battery Problem LED (see those entries)",
+    "meaning": "Warning, not a shutdown. The manual gives low-battery figures only for the CorePower panel: LED warning below 11.9 V for one minute, clears above 12.4 V, not monitored while cranking (Generac 0H9174 Rev D (dealer manual), p.65). It states no PowerPact thresholds - on a PowerPact, read battery trouble on the Charger Warning / Battery Problem LED and test the battery and charger.",
+    "causes": [
+     "Weak or failing battery",
+     "Charger not maintaining the battery",
+     "Loose or corroded battery cables"
+    ],
+    "steps": [
+     "Inspect and clean the battery posts and cables.",
+     "Charge or replace the battery; check the charging circuit conductors on a new install."
+    ],
+    "clear": "CorePower: clears automatically above 12.4 V (Generac 0H9174 Rev D (dealer manual), p.65)."
+   },
+   {
     "code": "CHARGER/BATTERY LED FLASHING",
     "name": "Charger Warning",
     "display": "Charger Warning / Battery Problem LED FLASHING",
@@ -24466,8 +25311,107 @@ const GENERATORS = [
    ]
   },
   "maintenance": [],
-  "alarms": [],
+  "alarms": [
+   {
+    "code": "LOW OIL PRESSURE",
+    "name": "Low Oil Pressure (shutdown alarm)",
+    "display": "CorePower control board LED for low oil pressure (the dealer manual names the shutdown but prints no LED legend - read the label beside the lit LED)",
+    "meaning": "Shutdown alarm. Five-second delay on start-up and eight-second delay once running. The switch has normally closed contacts held open by oil pressure; if pressure drops below the 5 psi range the contacts close and the engine shuts down (Generac 0H9174 Rev D (dealer manual), p.65).",
+    "causes": [
+     "Low or no engine oil",
+     "Failed oil pressure switch or grounded switch wire"
+    ],
+    "steps": [
+     "Do not restart until the oil level is verified (Generac 0H9174 Rev D (dealer manual), p.65).",
+     "Correct the oil level; if the level is right, check the oil pressure switch and its wire.",
+     "Clear the alarm and retest; contact a dealer if it returns with oil at the correct level."
+    ],
+    "clear": "Set the AUTO-OFF-MANUAL switch to OFF (Generac 0H9174 Rev D (dealer manual), p.65 Clear Alarms)."
+   },
+   {
+    "code": "HIGH OIL TEMPERATURE",
+    "name": "High Oil Temperature (shutdown alarm - auto reset)",
+    "display": "CorePower control board LED for high oil temperature (the dealer manual names the shutdown but prints no LED legend - read the label beside the lit LED)",
+    "meaning": "Shutdown alarm with auto reset. Ten-second delay on start-up and one-second delay before shutdown; trips when oil temperature exceeds about 124 C (255 F). CorePower: the switch's normally open contacts close. Auto-resets when the condition clears and restarts the engine if a valid start signal is still present (Generac 0H9174 Rev D (dealer manual), p.65).",
+    "causes": [
+     "Blocked ventilation or air intake / exhaust",
+     "Excessive load or ambient heat",
+     "Failed oil temperature switch (contacts closed cold)"
+    ],
+    "steps": [
+     "Let the engine cool; check the enclosure intake, exhaust and clearance for blockage.",
+     "Check the high oil temperature switch - CorePower contacts should be open when cool (Generac 0H9174 Rev D (dealer manual), p.65).",
+     "Contact a dealer if it repeats with clear airflow."
+    ],
+    "clear": "Set the AUTO-OFF-MANUAL switch to OFF (Generac 0H9174 Rev D (dealer manual), p.65 Clear Alarms)."
+   },
+   {
+    "code": "OVER CRANK",
+    "name": "Over Crank (shutdown alarm)",
+    "display": "CorePower control board LED for overcrank (the dealer manual names the shutdown but prints no LED legend - read the label beside the lit LED)",
+    "meaning": "Shutdown alarm - the engine did not start within the specified crank cycle: 16 s crank, 7 s rest, 16 s crank, 7 s rest, then three cycles of 7 s crank / 7 s rest (Generac 0H9174 Rev D (dealer manual), p.65, 21).",
+    "causes": [
+     "No fuel or low fuel pressure",
+     "Fuel shutoff valve closed",
+     "Ignition or starter problem"
+    ],
+    "steps": [
+     "Check the fuel shutoff valve is ON and fuel pressure is present.",
+     "Clear the alarm and try a MANUAL start.",
+     "Contact a dealer if it still will not start."
+    ],
+    "clear": "Set the AUTO-OFF-MANUAL switch to OFF (Generac 0H9174 Rev D (dealer manual), p.65 Clear Alarms)."
+   },
+   {
+    "code": "OVER SPEED",
+    "name": "Over Speed (shutdown alarm)",
+    "display": "CorePower control board LED for overspeed (the dealer manual names the shutdown but prints no LED legend - read the label beside the lit LED)",
+    "meaning": "Shutdown alarm: 60 Hz units 4320 rpm for three seconds or 4500 rpm immediately (50 Hz: 3600 rpm for three seconds or 3750 rpm immediately) (Generac 0H9174 Rev D (dealer manual), p.65).",
+    "causes": [
+     "Governor / throttle linkage binding or stuck open",
+     "Fuel system fault"
+    ],
+    "steps": [
+     "Check the throttle and governor linkage for binding.",
+     "Contact a dealer for governor diagnosis."
+    ],
+    "clear": "Set the AUTO-OFF-MANUAL switch to OFF (Generac 0H9174 Rev D (dealer manual), p.65 Clear Alarms)."
+   },
+   {
+    "code": "RPM SENSOR LOSS",
+    "name": "RPM Sensor Loss (shutdown alarm)",
+    "display": "CorePower control board LED for RPM sensor loss (the dealer manual names the shutdown but prints no LED legend - read the label beside the lit LED)",
+    "meaning": "Shutdown alarm. During cranking, no valid RPM signal within three seconds shuts down and locks out. While running, a signal lost for two seconds shuts the engine down, waits 15 seconds and re-cranks; a second loss gets one more re-crank before latching out (Generac 0H9174 Rev D (dealer manual), p.65).",
+    "causes": [
+     "Engine did not crank - weak battery, crank circuit or starter",
+     "Magneto (Wire 18) signal missing - the controller receives its speed reference on Wire 18"
+    ],
+    "steps": [
+     "Check the battery and that the engine actually cranks.",
+     "Check Wire 18 and the magneto signal.",
+     "Contact a dealer if the signal is missing with the engine cranking."
+    ],
+    "clear": "Set the AUTO-OFF-MANUAL switch to OFF (Generac 0H9174 Rev D (dealer manual), p.65 Clear Alarms)."
+   }
+  ],
   "warnings": [
+   {
+    "code": "LOW BATTERY",
+    "name": "Low Battery (warning)",
+    "display": "CorePower warning LED (second-priority, non-latching)",
+    "meaning": "Warning, not a shutdown: the controller monitors battery voltage and lights the LED warning if it falls below 11.9 V for one minute. Clears automatically when the battery rises above 12.4 V. Battery voltage is not monitored during the crank cycle. Warnings cannot cause shutdowns (Generac 0H9174 Rev D (dealer manual), p.65).",
+    "causes": [
+     "Weak or failing battery",
+     "Battery charger not maintaining the battery (120 VAC input, 13.4 VDC / 2.5 A output - p.62)",
+     "Loose or corroded battery cables"
+    ],
+    "steps": [
+     "Inspect and clean the battery posts and cables.",
+     "Check the charger: 120 VAC in, 13.4 VDC out (Generac 0H9174 Rev D (dealer manual), p.62).",
+     "Charge or replace the battery."
+    ],
+    "clear": "Clears automatically above 12.4 V (Generac 0H9174 Rev D (dealer manual), p.65)."
+   },
    {
     "code": "ALL RED LEDs FLASHING",
     "name": "All LED lights flashing (exercise time not set)",
@@ -24736,15 +25680,17 @@ const GENERATORS = [
    {
     "code": "NO UTILITY SENSE / EXERCISER NOT SET",
     "name": "No Utility Sense / Exerciser Not Set",
-    "display": "Pre-2008 bezel prints 'NO UTILITY SENSE' and '5 FLASHING RED LEDs = EXERCISER NOT SET'; the System Set green LED flashes rapidly instead of steady-on",
+    "display": "Three panel variants. 0G4338 bezel (6-18 kW: SYSTEM SET, LOW BATTERY, LOW OIL, HIGH TEMP, OVER SPEED / 'NO RPM SENSE IF FLASHING', OVER CRANK): FLASHING GREEN LED = NO UTILITY SENSE, 5 FLASHING RED LEDS = EXERCISER NOT SET (Generac 0G4338 (dealer manual), p.27). 0E3586 bezel (6-15 kW: SYSTEM SET, LOW OIL, HIGH TEMP, OVER SPEED, OVER CRANK - no LOW BATTERY LED): FLASHING GREEN LED = NO UTILITY SENSE, 4 FLASHING RED LEDS = EXERCISER NOT SET (Generac 0E3586 Rev C (dealer manual), p.22). 2008-series 8 kW LED panel (SYSTEM READY, LOW BATTERY, LOW OIL PRESSURE, HIGH OIL TEMPERATURE, OVERSPEED, RPM SENSOR LOSS, OVERCRANK): all red LEDs flash until Set Exercise is held; 10-20 kW 2008 units have the LCD instead (Generac 0G9266 (dealer manual), p.29).",
     "meaning": "The unit will still start in AUTO if needed, but the exercise timer has not been programmed, or utility voltage is not being sensed at the control board (below approx. 150-160 VAC).",
     "causes": [
      "Exercise timer never set, or reset after a battery / fuse disconnect",
      "Utility sense wiring not connected"
     ],
     "steps": [
-     "Set the exercise timer (hold the EXERCISE SET TIME switch on the desired day and time).",
-     "Verify utility sense wiring back to the transfer switch."
+     "0G4338 / 0E3586 bezels: with the switch in AUTO, press and hold SET EXERCISE TIME for several seconds and release - the red LEDs flash about 10 seconds, stop, then the unit starts and runs about 12 minutes; it now exercises weekly at that day and time (Generac 0G4338 (dealer manual), p.27).",
+     "2008 8 kW LED panel: switch in AUTO, press and hold SET EXERCISE for several seconds - all the red LEDs stop flashing immediately and the generator starts for about 12 minutes (Generac 0G9266 (dealer manual), p.29).",
+     "The exerciser must be set again after any battery disconnect or fuse removal (0G4338 p.27; 0G9266 p.29).",
+     "Flashing green only (no utility sense): verify utility sense wiring back to the transfer switch."
     ],
     "clear": "Informational - resolves once the exercise timer is set and utility sense is restored."
    },
@@ -25225,15 +26171,17 @@ const GENERATORS = [
    {
     "code": "NO UTILITY SENSE / EXERCISER NOT SET",
     "name": "No Utility Sense / Exerciser Not Set",
-    "display": "Pre-2008 bezel prints 'NO UTILITY SENSE' and '5 FLASHING RED LEDs = EXERCISER NOT SET'; the System Set green LED flashes rapidly instead of steady-on",
+    "display": "Three panel variants. 0G4338 bezel (6-18 kW: SYSTEM SET, LOW BATTERY, LOW OIL, HIGH TEMP, OVER SPEED / 'NO RPM SENSE IF FLASHING', OVER CRANK): FLASHING GREEN LED = NO UTILITY SENSE, 5 FLASHING RED LEDS = EXERCISER NOT SET (Generac 0G4338 (dealer manual), p.27). 0E3586 bezel (6-15 kW: SYSTEM SET, LOW OIL, HIGH TEMP, OVER SPEED, OVER CRANK - no LOW BATTERY LED): FLASHING GREEN LED = NO UTILITY SENSE, 4 FLASHING RED LEDS = EXERCISER NOT SET (Generac 0E3586 Rev C (dealer manual), p.22). 2008-series 8 kW LED panel (SYSTEM READY, LOW BATTERY, LOW OIL PRESSURE, HIGH OIL TEMPERATURE, OVERSPEED, RPM SENSOR LOSS, OVERCRANK): all red LEDs flash until Set Exercise is held; 10-20 kW 2008 units have the LCD instead (Generac 0G9266 (dealer manual), p.29).",
     "meaning": "The unit will still start in AUTO if needed, but the exercise timer has not been programmed, or utility voltage is not being sensed at the control board (below approx. 150-160 VAC).",
     "causes": [
      "Exercise timer never set, or reset after a battery / fuse disconnect",
      "Utility sense wiring not connected"
     ],
     "steps": [
-     "Set the exercise timer (hold the EXERCISE SET TIME switch on the desired day and time).",
-     "Verify utility sense wiring back to the transfer switch."
+     "0G4338 / 0E3586 bezels: with the switch in AUTO, press and hold SET EXERCISE TIME for several seconds and release - the red LEDs flash about 10 seconds, stop, then the unit starts and runs about 12 minutes; it now exercises weekly at that day and time (Generac 0G4338 (dealer manual), p.27).",
+     "2008 8 kW LED panel: switch in AUTO, press and hold SET EXERCISE for several seconds - all the red LEDs stop flashing immediately and the generator starts for about 12 minutes (Generac 0G9266 (dealer manual), p.29).",
+     "The exerciser must be set again after any battery disconnect or fuse removal (0G4338 p.27; 0G9266 p.29).",
+     "Flashing green only (no utility sense): verify utility sense wiring back to the transfer switch."
     ],
     "clear": "Informational - resolves once the exercise timer is set and utility sense is restored."
    },
@@ -25523,9 +26471,9 @@ const GENERATORS = [
    { "code": "1600", "name": "Underspeed", "meaning": "Speed below ~83% of rated (1601 = low fuel pressure before the trip, 1602 = throttle stuck closed). Engine overloaded or a throttle/fuel problem." },
    { "code": "1800", "name": "Overvoltage", "meaning": "Output above ~110-130% of rated (1800/1801/1803). Check the voltage regulator/field and sensing wiring." },
    { "code": "1900", "name": "Undervoltage", "meaning": "Output below ~80% of rated, zero-cross loss, or field-current fault (1900-1916; 1904 = no field current - check brushes)." },
-   { "code": "2099", "name": "Wiring Error", "meaning": "High- and low-voltage wiring swapped at install - detected on power-up. Correct the field wiring." },
+   { "code": "2098", "name": "Wire Error", "meaning": "Miswired - the generator Transfer Enabled output has been miswired. Procedure: verify the wiring on Wire 194 and Wire 23 (Generac A0005304286 Rev A (dealer manual), p.20)." },
+   { "code": "2099", "name": "Wiring Error", "meaning": "Incorrect DC / AC wiring hook-up at the customer connection (Generac A0005304286 Rev A (dealer manual), p.20). High- and low-voltage wiring swapped at install - detected on power-up. Correct the field wiring." },
    { "code": "2101", "name": "Overload", "meaning": "Unit overloaded with elevated field current. Remove load or add load-shedding (a load manager)." },
-   { "code": "2400", "name": "Fuse Problem", "meaning": "The 7.5 A ATO control fuse is missing or blown (firmware older than 1.30 flags this directly). Replace it and find the cause - a repeatedly blowing 7.5 A fuse with blinking lights is the classic 0180 comm-fault signature." },
    { "code": "2500", "name": "Bosch Actuator", "meaning": "Throttle actuator command/feedback mismatch or stuck (2500/2501 stuck open/2502 stuck closed). Check the actuator, its harness, and the throttle body." },
    { "code": "2600", "name": "Ignition Fault", "meaning": "Ignition coils, cam sensor, or crank circuit (2600/2601 missing cam pulse/2602 crank circuit). Check coil packs and sensors." },
    { "code": "2611", "name": "Cylinder Overcurrent", "meaning": "Ignition coil-pack current too HIGH on a cylinder (2611-2620 = cylinders 1-10). Test and replace the affected coil pack/boot; check its wiring." },
@@ -25535,17 +26483,18 @@ const GENERATORS = [
    { "code": "2671", "name": "CAN Bus Error", "meaning": "External ignition module reports a CAN bus error. Check the module, its CAN wiring, and the controller boot-up sequence." },
    { "code": "2720", "name": "Low Coolant", "meaning": "Coolant level low for 5 s+. Check level cold, look for leaks, and check the level sensor." },
    { "code": "2751", "name": "Very Low Battery", "meaning": "Battery under 9.0 V for 60 s. Load-test/replace the battery; check the charger (T1) and connections." },
-   { "code": "2790", "name": "SEEPROM Abuse", "meaning": "The controller wrote to its EEPROM too many times - possible internal controller failure. If it recurs, replace the controller." },
-   { "code": "2800", "name": "E-Stop / Aux Shutdown", "meaning": "The external emergency-stop or auxiliary shutdown is not in the ON/run position (2800/2801). Check both E-stop and any auxiliary shutdown switches." },
-   { "code": "2810", "name": "Hall Calibration", "meaning": "Hall-effect current sensor not calibrated. Update firmware and reboot the controller; recalibrate per the diagnostic manual." }
+   { "code": "2800", "name": "E-Stop / Aux Shutdown", "meaning": "The external emergency-stop or auxiliary shutdown is not in the ON/run position (2800/2801). Check both E-stop and any auxiliary shutdown switches." }
   ],
   "warnings": [
+   { "code": "2400", "name": "Fuse Problem", "meaning": "WARNING, not a shutdown: the controller fuse is missing or damaged so that it does not work; the fuse problem must be detected for 1.5 seconds; shown on firmware older than V1.30 (Generac A0005304286 Rev A (dealer manual), p.20, class W). Replace the 7.5 A ATO fuse and find the cause - a repeatedly blowing fuse with blinking lights is the classic 0180 comm-fault signature." },
    { "code": "2690", "name": "Low Fuel Pressure", "meaning": "Gaseous fuel pressure low. Check the meter/regulator, upstream demand, and pipe sizing." },
    { "code": "2730", "name": "Exercise Not Set", "meaning": "No exercise schedule programmed - set it at the controller." },
    { "code": "2750", "name": "Low Battery", "meaning": "Battery under ~12.1 V. Check the battery, connections, and charger." },
-   { "code": "2760", "name": "Battery Problem", "meaning": "Charging/battery fault detected." },
-   { "code": "2770", "name": "Charger Overvoltage", "meaning": "Charger output over ~16.1 V - check the charger." },
+   { "code": "2760", "name": "Battery Problem", "meaning": "Completed the 26-hour charge cycle with battery voltage below 12.52 V, or the charger current draw still greater than 600 mA - Problem 30, Inspect Battery (Generac A0005304286 Rev A (dealer manual), p.23)." },
+   { "code": "2770", "name": "Charger Warning", "meaning": "Displayed as CHARGER WARNING: battery voltage above 16.1 V - Problem 29, Low Battery Alarm / Dead Battery (Generac A0005304286 Rev A (dealer manual), p.23). The card previously called this 'Charger Overvoltage'." },
    { "code": "2780", "name": "Charger Missing AC", "meaning": "No T1 utility power to the battery charger - the battery will slowly discharge." },
+   { "code": "2790", "name": "SEEPROM Abuse", "meaning": "WARNING (unit keeps running): the controller wrote to the EEPROM more than 500 times in less than four minutes (Generac 0J1195 (dealer manual), p.58 Warning DTC table). Not listed in A0005304286 Rev A. The manual gives no replace-controller action for this code - log it and watch for repeats; NOTE the card previously said 'replace the controller if it recurs', which the manuals do not say." },
+   { "code": "2810", "name": "Hall Calibration", "meaning": "WARNING (class W in Generac A0005304286 Rev A (dealer manual), p.22): the system detected on power-up that hall calibration was not performed. Update firmware and reboot the controller; recalibrate per the diagnostic manual." },
    { "code": "2910", "name": "Gaseous Emissions", "meaning": "Rich/lean condition beyond limits for 10 s+ (O2 feedback). Check fuel pressure/quality and the O2 sensor." }
   ],
   "installNotes": [
@@ -25679,6 +26628,19 @@ const GENERATORS = [
    { "interval": "Weekly", "task": "Confirm AUTO and that the exercise ran; check the display for alarms." },
    { "interval": "Annually / per hours", "task": "Oil and filter change; check coolant (2 gal on 25/30 kW, 2.5 gal on 36-60 kW), battery, and belts." }
   ],
+  "alarms": [
+   { "code": "OVER CRANK", "name": "Shutdown", "meaning": "Red LED. R-100: occurs if the engine has not started within the total 90-second crank cycle; latched fault, shuts the engine down (Generac 0G4548 Rev A (dealer manual, R-100), p.18). R-200B panel lists the same LED (Generac 0H0983 (dealer manual, R-200B), p.24)." },
+   { "code": "OVER SPEED", "name": "Shutdown", "meaning": "Red LED. R-100: immediate shutdown above 4500 rpm on a 3600 rpm engine, with a lower prolonged-overspeed threshold held for 3 seconds (the digits of that figure did not survive the text extraction of Generac 0G4548 Rev A (dealer manual, R-100) p.18). FLASHING over speed LED = RPM signal failure: no valid speed signal within the first four seconds of a crank cycle locks out; while running the board closes the throttle, shuts off fuel, waits 15 s and re-cranks, repeating once more before locking out on the third failure (Generac 0G4548 Rev A (dealer manual, R-100), p.18)." },
+   { "code": "LOW COOLANT LEVEL", "name": "Shutdown", "meaning": "Panel legend lists a LOW COOLANT LEVEL LED; the R-200B text describes it as the HI COOLANT TEMPERATURE LED FLASHING red. A 5 VDC probe signal (Wire 573, 1 VDC with coolant present, 5 VDC when dry) detects the level; checked after the 10-second hold-off; latched fault, shuts the engine down (Generac 0H0983 (dealer manual, R-200B), p.71, 76). R-100: high coolant temp and low coolant level switches are wired in parallel on one red LED (Generac 0G4548 Rev A (dealer manual, R-100), p.18)." },
+   { "code": "HI COOLANT TEMPERATURE", "name": "Shutdown", "meaning": "Solid red LED. Normally open thermal switch closes when coolant exceeds about 245 F (118 C); the board shuts the engine down after the 10-second hold-off timer (Wire 85 grounded) (Generac 0H0983 (dealer manual, R-200B), p.71, 76)." },
+   { "code": "LOW OIL PRESSURE", "name": "Shutdown", "meaning": "Red LED. Normally closed LOP switch held open by oil pressure; closes when pressure drops below about 8-12 psi (Wire 86 to ground), the board starts a 10-second hold-off, then shuts down and lights the LED (Generac 0H0983 (dealer manual, R-200B), p.71, 76). R-100: latched fault after the hold-off timer (Generac 0G4548 Rev A (dealer manual, R-100), p.18)." }
+  ],
+  "warnings": [
+   { "code": "LOW BATTERY", "name": "Warning (latched shutdown below 6 V cranking / 8 V running)", "meaning": "Red LED. Lit when battery voltage drops below about 12.2 V for longer than one minute; goes off above about 12.5 V - a warning only. If voltage drops below 6 V during cranking or 8 V while running the LED stays lit, the fault latches and the engine shuts down (Generac 0H0983 (dealer manual, R-200B), p.76). R-100: same behaviour, non-latching warning, latched shutdown below 6 VDC during cranking (Generac 0G4548 Rev A (dealer manual, R-100), p.18)." },
+   { "code": "LOW FUEL PRESSURE", "name": "Warning", "meaning": "Yellow LED. Turns on when fuel supply pressure drops below about 5 in w.c. (the low-fuel-pressure switch on the regulator opens, Wire 601). Non-latched, visual warning only, does not trigger the alarm output; active in MANUAL, OFF and AUTO (Generac 0H0983 (dealer manual, R-200B), p.71, 76)." },
+   { "code": "SYSTEM READY", "name": "Status (green LED)", "meaning": "Solid green = switch in AUTO, no other warning present, controller functional, utility power on. Flashing every second (0.5 s on / 0.5 s off) = no utility voltage sensed at the board in AUTO or MANUAL (ATS mode, DIP switch 2 OFF); 5 s on / 1 s off = GTS mode (DIP 2 ON). Panel legend: FLASHING GREEN LED = NO UTILITY SENSE; 5 FLASHING RED LEDs = EXERCISER NOT SET (AUTO mode only) - hold SET EXERCISE TIME for three seconds in AUTO to set it (Generac 0H0983 (dealer manual, R-200B), p.24, 76)." },
+   { "code": "ALL RED LEDs ON SOLID", "name": "Status (R-100)", "meaning": "Invalid Bosch actuator position feedback - all five red LEDs stay on if the Bosch actuator is not in the CLOSED position when the unit is set to AUTO or MANUAL (Generac 0G4548 Rev A (dealer manual, R-100), p.18). Alarm cancel on both panels: set AUTO/OFF/MANUAL to OFF to turn off the fault LED; record which LEDs were on or flashing first (Generac 0G4548 Rev A (dealer manual, R-100), p.18)." }
+  ],
   "installNotes": [
    "This is the older 3600 rpm liquid-cooled platform (R-200B board). It generally uses an older flashing-LED / limited-code diagnostic scheme rather than the full numeric 1100-2910 code list on the current Evolution units - read the board and the unit's own manual before applying a code table.",
    "Liquid-cooled: radiator/coolant/water pump - check coolant cold; do not service like an air-cooled unit."
@@ -25789,15 +26751,15 @@ const GENERATORS = [
    { "code": "Wiring Error", "name": "Shutdown", "meaning": "Miswire detected on power-up. Correct the field wiring." },
    { "code": "Undervoltage", "name": "Shutdown", "meaning": "Output below ~60% for 5 s. Regulator/field/sensing." },
    { "code": "Overvoltage", "name": "Shutdown", "meaning": "Above ~110% for 3 s or ~130% for 0.2 s." },
-   { "code": "Low Battery", "name": "Shutdown", "meaning": "Battery under ~11.9 V for 1 min." },
    { "code": "Internal Failure", "name": "Shutdown", "meaning": "Controller internal fault that will not clear - cycle power; replace the control if it persists." }
   ],
   "warnings": [
-   { "code": "Low Battery", "name": "Warning", "meaning": "Battery under ~12.2 V. Check battery/charger/connections." },
+   { "code": "Low Battery", "name": "Warning", "meaning": "While running, if the average battery voltage falls below 11.9 V for one minute the Low Battery alarm is displayed; the manual states no shutdown action for it (Generac 0J1195 (dealer manual), p.83). The ~12.2 V / 12.5 V figures the card carried before belong to the R-200B LED controller (Generac 0H0983, p.76), not this Nexus. Check battery, charger and connections." },
    { "code": "Low Fuel Pressure", "name": "Warning", "meaning": "Gaseous fuel pressure under ~5 in w.c. Check the meter/regulator and pipe sizing." },
-   { "code": "Canbus Alarm", "name": "Warning", "meaning": "CAN communication fault to an external module." },
-   { "code": "Ignition Alarm", "name": "Warning", "meaning": "Ignition system warning." },
-   { "code": "Maintenance Warning", "name": "Warning", "meaning": "Service interval reached - perform scheduled maintenance." }
+   { "code": "Canbus Alarm", "name": "Warning", "meaning": "CANBUS communications link failed - only on systems with an external ignition module. Causes listed: 1) physical link broken; 2) ignition module fails or resets; 3) controller fails or resets; 4) battery charger's 120 VAC connected without a battery installed; 5) blown 10 A ignition-module fuse (about 12 in from the starter); 6) blown 25 A system fuse (about 12 in from the DC alternator). Does not clear on its own - press ENTER to acknowledge; it returns if the fault is still present. Flowchart Problem 36: Test 36 fuses, Test 91 Wires 0 and 15, Test 106 voltage at Wire 15B at the ignition module, Test 106A CAN bus communication (Generac 0J1195 (dealer manual), p.84, 123)." },
+   { "code": "Ignition Alarm", "name": "Warning", "meaning": "Displays IGNITION FAULT plus a number (Table 3-12, same for internal and external ignition): 0 = ignition fails to spark or quits - cam/crank signal relationship out of sync; 10 = current detected on the coil high side when none expected; 11-20 = coil open, cylinder 1-10; 21-30 = coil short, cylinder 1-10; 50 = not enough outputs on the ignition module for the cylinder count. Problem 37: faults 11-20 - Test 108 ignition coil (replace if bad); faults 21-30 - Test 109 coil wiring (repair wiring, or replace the coil if the wiring is good) (Generac 0J1195 (dealer manual), p.85, 123)." },
+   { "code": "Maintenance Warning", "name": "Warning", "meaning": "Service interval reached - perform scheduled maintenance." },
+   { "code": "Check Engine", "name": "Warning", "meaning": "Emissions-equipped units only - annunciation only, does not shut the unit down. Turns on if the panel sees no O2-sensor signal for one minute after the four-minute warm-up (NG and LP units), or does not see the O2 output modulating. Self-resetting when the condition clears; to clear it manually, start and run the unit in MANUAL four times for six minutes each - if it comes back the fault is still there (Generac 0J1195 (dealer manual), p.84)." }
   ],
   "installNotes": [
    "The alarms on this INDUSTRIAL Nexus are NAMED, not the numeric 1100-2900 codes of the residential air-cooled Nexus/Evolution - do not read residential numeric codes onto this unit.",
@@ -25884,17 +26846,19 @@ const GENERATORS = [
   "alarms": [
    { "code": "Strt Inhib:Oil", "name": "Shutdown", "meaning": "Start inhibited - oil pressure high on a stopped engine (sensor/wiring or a genuinely pressurized crankcase)." },
    { "code": "Overcrank", "name": "Shutdown", "meaning": "Engine did not start within the crank cycle. Check fuel, ignition, and the actuator." },
-   { "code": "Mult Def Digtl/Analg", "name": "Shutdown", "meaning": "Multiple-definition config conflict - a channel is defined both digital and analog. Fix the panel config." },
+   { "code": "Mult Def Digtl/Analg", "name": "Shutdown", "meaning": "Mult Def Digtl: more than one Digital Output Function is assigned to the same Digital Output, or a Digital Output Function is assigned to a reserved Digital Output. Mult Def Analg: more than one Analog Input is assigned to the same Analog Output, or an Analog Input is assigned to a reserved Analog Output. Fix the panel configuration (Generac H-100 Control Panel Technical Manual, Appendix C p.49)." },
    { "code": "WatchDog Fail", "name": "Shutdown", "meaning": "Controller watchdog timeout - internal fault. Cycle power; replace the control if it persists." },
    { "code": "HW Overspeed", "name": "Shutdown", "meaning": "Hardware overspeed trip. Governor/throttle/fuel." },
    { "code": "i2t Gen Tmp HI", "name": "Shutdown", "meaning": "Generator (alternator) thermal I2t - sustained overload heating the windings." },
    { "code": "300% Rated Cur", "name": "Shutdown", "meaning": "Current reached 300% of rated - short or severe overload." },
    { "code": "Eng Stall RPM", "name": "Shutdown", "meaning": "Engine stalled / RPM dropped out while running." },
-   { "code": "HTS Comms / SW Fault / Not Sync / Batt Low", "name": "Alarm", "meaning": "Transfer-switch (HTS) faults - comms lost, switch fault, not synchronized, or transfer-switch battery low. A phantom 'enabled' switch that isn't installed throws the comms warning." }
+   { "code": "HTS Comms / SW Fault / Not Sync / Batt Low", "name": "Alarm", "meaning": "Transfer-switch (HTS) faults - comms lost, switch fault, not synchronized, or transfer-switch battery low. A phantom 'enabled' switch that isn't installed throws the comms warning." },
+   { "code": "No HTS # Batt", "name": "Alarm", "meaning": "HTS number '#' battery is not connected (Generac H-100 Control Panel Technical Manual, Appendix C p.49). Distinct from 'HTS # Batt Low' (battery weak, possibly needs replacing)." }
   ],
   "warnings": [
    { "code": "[Channel] HI/LO WARN", "name": "Warning", "meaning": "A monitored channel crossed its warning threshold (non-shutdown). Channels: Oil Temp, Coolant Temp, Oil Pressure, Coolant Level, Fuel Level, Fuel Pressure, Throttle Position, O2/Emissions, Battery Charge Current, Battery Voltage, Average Current/Voltage, Total Power, Frequency, Engine RPM." },
-   { "code": "[Channel] FAULT (Sn)", "name": "Warning", "meaning": "Sensor failure on a monitored channel (open/short). Check the sensor and its wiring." }
+   { "code": "[Channel] FAULT (Sn)", "name": "Warning", "meaning": "Sensor failure on a monitored channel (open/short). Check the sensor and its wiring." },
+   { "code": "System Reset", "name": "Internal alarm/warning (class not stated)", "meaning": "Microprocessor has reset unexpectedly (Generac H-100 Control Panel Technical Manual, Appendix C p.49). Appendix C lists it among the internal alarms/warnings without a shutdown class - check the power supply and log it; repeated resets point at the panel." }
   ],
   "installNotes": [
    "The H-100 channels are configurable at install: each monitored value can be set as a warning, a non-shutdown alarm, or a shutdown - so the exact fault list is partly site-specific. Display prefix: Wr = warning, Al = non-shutdown alarm, SD = shutdown; suffix Hi/Lo = threshold direction, Sn = sensor failure.",
