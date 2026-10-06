@@ -679,11 +679,11 @@ function askAddModelAlts(units) {
     if (!units.kFam && /^(\d{1,2}(\.5)?[A-Z]{3}|RXT|RDT|RRT|RSB|RGEN|6VSG)/.test(kTok) && typeof genFamilyForModel === "function") {
       let kf = genFamilyForModel(kTok);
       if (!kf || genBrandOf(kf) !== "Kohler") kf = genEntries().find(g => genBrandOf(g) === "Kohler" && (g.models || []).some(m => String(m.k || "").toUpperCase().startsWith(kTok)));
-      if (kf && genBrandOf(kf) === "Kohler") units.kFam = kf.id;
+      if (kf && genBrandOf(kf) === "Kohler") { units.kFam = kf.id; units.kModel = kTok; }
     }
     if (!units.kFam && /^G0\d{5,8}$/.test(kTok) && typeof genFamilyForModel === "function") {
       const gf = genFamilyForModel(kTok);
-      if (gf) units.kFam = gf.id;
+      if (gf) { units.kFam = gf.id; units.kModel = kTok; }
     }
     if (t.length < 7 || !/[A-Z]/.test(t) || !/\d/.test(t) || !/^[A-Z0-9\-\/]+$/.test(t)) continue;
     const extra = new Set();
@@ -1609,7 +1609,25 @@ function askAiEntries(q, limit) {
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
   // beats a card that only mentions Evolution in a footnote).
   scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc);
-  return scored.slice(0, limit || 5).map(({ it }) => ({ kind: ASK_KIND[it.kind].label, title: it.title, text: askEntryText(it) }));
+  const out = scored.slice(0, limit || 5).map(({ it }) => ({ kind: ASK_KIND[it.kind].label, title: it.title, text: askEntryText(it) }));
+  // Say which unit the model number is, so the AI never takes it for a part number
+  // (2026-10-06: it called G0072580 "the OLS harness" and said it couldn't confirm it).
+  const unit = askUnitIdentity(units);
+  if (unit) out.unshift(unit);
+  return out;
+}
+function askUnitIdentity(units) {
+  if (!units.kFam || !units.kModel || typeof genEntries !== "function") return null;
+  const g = genEntries().find(x => x.id === units.kFam);
+  if (!g) return null;
+  const row = (g.models || []).find(m => String(m.g || m.k || "").toUpperCase().replace(/[^A-Z0-9]/g, "") === units.kModel);
+  return {
+    kind: "Unit",
+    title: "The tech's unit: model " + units.kModel,
+    text: "Model " + units.kModel + " is the generator the tech is working on - a model number, not a part number. " +
+      [genBrandOf(g), g.family, row && row.desc ? "(" + row.desc + ")" : "", (g.kw || []).length ? "kW: " + g.kw.join(", ") : "", g.engine ? "Engine: " + g.engine : ""].filter(Boolean).join(" | ") +
+      ". Answer for this unit.",
+  };
 }
 function askEntryText(it) {
   if (it.kind === "code") { const c = getAllCodes().find(x => x.id === it.id); return c ? [c.meaning, (c.causes || []).join("; "), (c.steps || []).slice(0, 5).join("; ")].filter(Boolean).join(" | ") : ""; }
@@ -1659,6 +1677,8 @@ async function askAiAnswer(question) {
   try { passages = await askManualPassages(question, 4); } catch (e) {}
   try { entries = askAiEntries(question, 5); } catch (e) {}
   if (token !== askAiToken) return;
+  const st = box.querySelector(".ask-ai-status");
+  if (st) st.innerHTML = `<span class="ask-ai-spin"></span>Writing a full answer (20-40 seconds)…`;
   let data = null;
   try {
     const sent = passages.map(p => ({ id: p.id, title: p.title, page: p.page, text: p.text }));   // same shape as before remote passages
@@ -1679,7 +1699,7 @@ async function askAiAnswer(question) {
   box.innerHTML = `
     <div class="ask-ai-card">
       <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
-      <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\n/g, "<br>")}</div>
+      <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,:;]|$)/gm, "$1<em>$2</em>").replace(/^#{1,4}\s*/gm, "").replace(/\n/g, "<br>")}</div>
       ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
       ${wiring}
       <div class="ask-fb" data-q="${escapeHtml(question)}">
@@ -10063,7 +10083,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v261";
+const APP_VERSION = "v262";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
