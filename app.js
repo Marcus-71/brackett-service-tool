@@ -1703,8 +1703,8 @@ function askNumberAliasText(s) {
 // manuals-text/<pdf name>.json = {v:1, file, pages:[...]} for every library PDF
 // with a text layer, plus manuals-text/index.json. A big manual is split into
 // <name>.p1.json ... and <name>.json is a stub listing the parts.
-const MANUAL_SEED_BASE = "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/";
-const MANUAL_TEXT_BASE = "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-text/";
+const MANUAL_SEED_BASE = "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/";
+const MANUAL_TEXT_BASE = "https://brackett-manuals.andy-4ae.workers.dev/manuals-text/";
 const REMOTE_TEXT_DB = "bfc-manual-text-remote";
 const REMOTE_TEXT_DOCS = "docs";         // {id, file, pages} — pages text, keyed by seed id
 const REMOTE_TEXT_META = "meta";         // {id, bytes, usedAt, fetchedAt, missing} — small, for LRU
@@ -5353,7 +5353,7 @@ async function genClEntryCount() {
     };
   });
   const ats = document.getElementById("genMultiAtsOpen");
-  if (ats) ats.onclick = () => { trackEvent("opened generator manual: multiple ATS wiring"); openManualDetail(seedIdOf({ file: "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-multiple-ats-install.pdf" })); };
+  if (ats) ats.onclick = () => { trackEvent("opened generator manual: multiple ATS wiring"); openManualDetail(seedIdOf({ file: "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-multiple-ats-install.pdf" })); };
 })();
 
 // ---------- storage of finished checklists (queue + recent, IndexedDB) ----------
@@ -10910,7 +10910,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v266";
+const APP_VERSION = "v267";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

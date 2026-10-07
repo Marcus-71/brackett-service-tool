@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v266";
+const CACHE_NAME = "bfc-cache-v267";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -97,7 +97,8 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.includes("/manuals-seed/")) return;
   // Ask Anything's library page text (manuals-text/*.json) is fetched at run
-  // time from raw.githubusercontent.com — cross-origin, so the check above
+  // time from the Cloudflare R2 manuals Worker (brackett-manuals.andy-4ae.workers.dev,
+  // since v267; raw.githubusercontent.com before) — cross-origin, so the check above
   // already leaves it alone — and the app caches it in its own IndexedDB with
   // an LRU cap. Never cache it here as well, even if it is ever served from
   // this origin.

@@ -329,19 +329,19 @@ const GENERATORS = [
      "title": "Owner's Manual, Next Generation 10-28 kW (A0004332577 Rev. C)",
      "pages": "PDF p.20 (LED lights); p.21 (SERVICE mode, date/time via Field Pro); p.26 (Schedule A/B/C, one alert at a time); p.39 (Select \"Clear Maintenance\" in app)",
      "seedFile": "generac-next-gen-10-28kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
     },
     {
      "title": "Owner's Manual, Guardian 22-25 kW Y32 (A0010224539 Rev. A)",
      "pages": "PDF p.18 (LED lights); p.24 (Schedule A/B/C)",
      "seedFile": "generac-guardian-22-25kw-y32-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
     },
     {
      "title": "Owner's Manual, Next Generation 20 kW 3-Phase (A0005171487 Rev. B)",
      "pages": "PDF p.17 (LED lights); p.24 (Schedule A/B/C)",
      "seedFile": "generac-next-gen-20kw-3ph-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
     }
    ]
   },
@@ -3448,19 +3448,19 @@ const GENERATORS = [
      "title": "Owner's Manual, Next Generation 10-28 kW (A0004332577 Rev. C)",
      "pages": "PDF p.20 (LED lights); p.21 (SERVICE mode, date/time via Field Pro); p.26 (Schedule A/B/C, one alert at a time); p.39 (Select \"Clear Maintenance\" in app)",
      "seedFile": "generac-next-gen-10-28kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
     },
     {
      "title": "Owner's Manual, Guardian 22-25 kW Y32 (A0010224539 Rev. A)",
      "pages": "PDF p.18 (LED lights); p.24 (Schedule A/B/C)",
      "seedFile": "generac-guardian-22-25kw-y32-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
     },
     {
      "title": "Owner's Manual, Next Generation 20 kW 3-Phase (A0005171487 Rev. B)",
      "pages": "PDF p.17 (LED lights); p.24 (Schedule A/B/C)",
      "seedFile": "generac-next-gen-20kw-3ph-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
     }
    ]
   },
@@ -6536,19 +6536,19 @@ const GENERATORS = [
      "title": "Owner's Manual, Next Generation 10-28 kW (A0004332577 Rev. C)",
      "pages": "PDF p.20 (LED lights); p.21 (SERVICE mode, date/time via Field Pro); p.26 (Schedule A/B/C, one alert at a time); p.39 (Select \"Clear Maintenance\" in app)",
      "seedFile": "generac-next-gen-10-28kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-next-gen-10-28kw-owners.pdf"
     },
     {
      "title": "Owner's Manual, Guardian 22-25 kW Y32 (A0010224539 Rev. A)",
      "pages": "PDF p.18 (LED lights); p.24 (Schedule A/B/C)",
      "seedFile": "generac-guardian-22-25kw-y32-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-22-25kw-y32-owners.pdf"
     },
     {
      "title": "Owner's Manual, Next Generation 20 kW 3-Phase (A0005171487 Rev. B)",
      "pages": "PDF p.17 (LED lights); p.24 (Schedule A/B/C)",
      "seedFile": "generac-next-gen-20kw-3ph-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-next-gen-20kw-3ph-owners.pdf"
     }
    ]
   },
@@ -9988,25 +9988,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -10795,25 +10795,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -11787,25 +11787,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -12585,25 +12585,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -13332,25 +13332,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -14077,25 +14077,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -14815,25 +14815,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -15563,25 +15563,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -16313,25 +16313,25 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-26 kW (A0001846499 Rev. C)",
      "pages": "PDF p.19 (OFF then ENTER clears an alarm or warning); p.25 (Schedule A/B, one alert at a time); p.38 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-guardian-10-26kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-26kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 10-22 kW (10000024942 Rev. B)",
      "pages": "PDF p.29; p.42",
      "seedFile": "generac-guardian-10-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-10-22kw-evo2-owners.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 9-22 kW (0L6629 Rev. A)",
      "pages": "PDF p.25; p.35",
      "seedFile": "generac-guardian-9-22kw-evo2-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-guardian-9-22kw-evo2-owners.pdf"
     }
    ]
   },
@@ -17079,31 +17079,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
      "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-evo1-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
      "pages": "PDF p.23; p.34",
      "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
      "pages": "PDF p.37",
      "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
     },
     {
      "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
      "pages": "PDF p.41",
      "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
     }
    ]
   },
@@ -17891,31 +17891,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
      "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-evo1-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
      "pages": "PDF p.23; p.34",
      "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
      "pages": "PDF p.37",
      "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
     },
     {
      "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
      "pages": "PDF p.41",
      "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
     }
    ]
   },
@@ -18761,31 +18761,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
      "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-evo1-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
      "pages": "PDF p.23; p.34",
      "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
      "pages": "PDF p.37",
      "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
     },
     {
      "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
      "pages": "PDF p.41",
      "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
     }
    ]
   },
@@ -19628,31 +19628,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
      "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-evo1-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
      "pages": "PDF p.23; p.34",
      "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
      "pages": "PDF p.37",
      "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
     },
     {
      "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
      "pages": "PDF p.41",
      "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
     }
    ]
   },
@@ -20353,31 +20353,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
      "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-evo1-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
      "pages": "PDF p.23; p.34",
      "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
      "pages": "PDF p.37",
      "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
     },
     {
      "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
      "pages": "PDF p.41",
      "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
     }
    ]
   },
@@ -21433,31 +21433,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Air-Cooled Evolution and Evolution 2.0 Control (10000041488 Rev. C)",
      "pages": "PDF p.16 (Dealer Edit list); p.23 (Figure 1-25, Evolution 2.0 DEALER EDIT map and dealer password); p.30 (Figure 1-32, Evolution 1.0 DEALER EDIT map)",
      "seedFile": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, 60 Hz Air-Cooled 8-22 kW, Evolution (0K5801 Rev. G)",
      "pages": "PDF p.21 (one alert at a time); p.30 (Quick Reference: Press ENTER to clear)",
      "seedFile": "generac-evo1-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, 2013 Home Standby, Evolution (0J9943 Rev. G)",
      "pages": "PDF p.23; p.34",
      "seedFile": "generac-evo1-2013-home-standby-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-evo1-2013-home-standby-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 15 kW Evolution 1.0 (0K6046 Rev. F)",
      "pages": "PDF p.37",
      "seedFile": "generac-ecogen-15kw-evo1-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-15kw-evo1-owners.pdf"
     },
     {
      "title": "Owner's Manual, Synergy 20 kW VSCF (0K2502 Rev. E)",
      "pages": "PDF p.41",
      "seedFile": "generac-synergy-20kw-vscf-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-synergy-20kw-vscf-owners.pdf"
     }
    ]
   },
@@ -22526,31 +22526,31 @@ const GENERATORS = [
      "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
      "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
      "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
      "pages": "PDF p.22 (Maintenance Alerts)",
      "seedFile": "generac-nexus-eaton-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-eaton-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
      "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
      "seedFile": "generac-ecogen-6kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-6kw-owners.pdf"
     },
     {
      "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
@@ -22981,31 +22981,31 @@ const GENERATORS = [
      "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
      "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
      "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
      "pages": "PDF p.22 (Maintenance Alerts)",
      "seedFile": "generac-nexus-eaton-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-eaton-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
      "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
      "seedFile": "generac-ecogen-6kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-6kw-owners.pdf"
     },
     {
      "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
@@ -23487,31 +23487,31 @@ const GENERATORS = [
      "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
      "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
      "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
      "pages": "PDF p.22 (Maintenance Alerts)",
      "seedFile": "generac-nexus-eaton-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-eaton-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
      "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
      "seedFile": "generac-ecogen-6kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-6kw-owners.pdf"
     },
     {
      "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
@@ -23996,31 +23996,31 @@ const GENERATORS = [
      "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
      "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
      "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
      "pages": "PDF p.22 (Maintenance Alerts)",
      "seedFile": "generac-nexus-eaton-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-eaton-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
      "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
      "seedFile": "generac-ecogen-6kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-6kw-owners.pdf"
     },
     {
      "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
@@ -24461,31 +24461,31 @@ const GENERATORS = [
      "title": "Owner's Manual, Air-Cooled Nexus 2010 (0H1911 Rev. C)",
      "pages": "PDF p.23 (3.6.4 Maintenance Alerts); p.32-33 (6.1 Menu System Navigation, menu map: EDIT > RESET MAINTENANCE)",
      "seedFile": "generac-nexus-2010-aircooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2010-aircooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Eaton badge (0H1911 Rev. B)",
      "pages": "PDF p.22 (Maintenance Alerts)",
      "seedFile": "generac-nexus-eaton-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-eaton-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-eaton-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus, Honeywell badge (0H1911 Rev. C)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, Nexus 2011, Honeywell badge (0J4784)",
      "pages": "PDF p.21",
      "seedFile": "generac-nexus-2011-honeywell-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-nexus-2011-honeywell-owners.pdf"
     },
     {
      "title": "Owner's Manual, EcoGen 6 kW (0J0984 Rev. G)",
      "pages": "PDF p.18 (3.5.3 Maintenance Alerts); p.26 (menu map)",
      "seedFile": "generac-ecogen-6kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-ecogen-6kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-ecogen-6kw-owners.pdf"
     },
     {
      "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
@@ -24944,13 +24944,13 @@ const GENERATORS = [
      "title": "Owner's Manual, 7.5 kW PowerPact (10000021790 Rev. C)",
      "pages": "PDF p.19-20 (LED table; OFF / OFF / OFF clearing table); p.23 (Clearing a Maintenance Due Condition)",
      "seedFile": "generac-powerpact-7.5kw-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-powerpact-7.5kw-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-powerpact-7.5kw-owners.pdf"
     },
     {
      "title": "Owner's Manual, PowerPact 2014 (0K6020 Rev. A)",
      "pages": "PDF p.16 (Clearing an Alarm/Warning); p.21 (4.1.1 Clearing a Maintenance Due Condition)",
      "seedFile": "generac-powerpact-2014-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-powerpact-2014-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-powerpact-2014-owners.pdf"
     },
     {
      "title": "Generac Help Center: How Do I Clear an Error or Alarm Code On My Home Standby Generator?",
@@ -25525,13 +25525,13 @@ const GENERATORS = [
      "title": "Owner's Manual, Guardian 7/10/13/16 kW Air-Cooled (0F9421 Rev. M)",
      "pages": "searched the whole manual - no maintenance reminder; control panel LED legend",
      "seedFile": "generac-legacy-guardian-hsb-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-legacy-guardian-hsb-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-legacy-guardian-hsb-owners.pdf"
     },
     {
      "title": "Owner's Manual, 7-18 kW Air-Cooled universal (0G4869 Rev. E)",
      "pages": "searched the whole manual - no maintenance reminder",
      "seedFile": "generac-legacy-aircooled-universal-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-legacy-aircooled-universal-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-legacy-aircooled-universal-owners.pdf"
     }
    ]
   },
@@ -26022,7 +26022,7 @@ const GENERATORS = [
      "title": "Owner's Manual, 2008 Air-Cooled Home Standby 8-20 kW (0G8334 Rev. F)",
      "pages": "PDF p.20 (maintenance intervals start when the exercise time is entered); p.24 (3.6.3 Maintenance Alerts, 10-20 kW only); p.34 (menu map: EDIT > RESET MAINTENANCE)",
      "seedFile": "generac-2008-hsb-aircooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-2008-hsb-aircooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-2008-hsb-aircooled-owners.pdf"
     }
    ]
   },
@@ -26433,25 +26433,25 @@ const GENERATORS = [
      "title": "Owner's Manual, Protector 48/60/80 kW 4.5 L (A0000253468 Rev. B)",
      "pages": "PDF p.22 (press OFF then ENTER to clear; EDIT needs no password); p.29 (Service Schedule; 900-999 hour note)",
      "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Protector RG022-RG060 2.4 L (0K8185 Rev. H)",
      "pages": "PDF p.24 (clear Alarm/Warning); p.31 (900-999 hour note)",
      "seedFile": "generac-protector-qs-owners-manual-0k8185.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-qs-owners-manual-0k8185.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-qs-owners-manual-0k8185.pdf"
     },
     {
      "title": "Diagnostic Repair Manual, Liquid-Cooled Evolution or Nexus Control (0J1195 Rev. J)",
      "pages": "PDF p.19 (clear alarm/warning: OFF then ENTER); p.22 (menu map: Schedule A/B/C Maint, Maint. Log); p.28 (Dealer Menu Map, Level 2 code, Reset Maintenance); p.31 (Reset Maintenance resets all maintenance timers)",
      "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
     },
     {
      "title": "Protector Series Training Reference Book, Ch. 11 Evolution & Nexus Digital Control Panels (0E2221 Rev. L)",
      "pages": "PDF p.209 (Maintenance Warning: Enter clears and resets the counter for the condition displayed)",
      "seedFile": "generac-protector-series-training-reference-0e2221.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
     }
    ]
   },
@@ -26596,31 +26596,31 @@ const GENERATORS = [
      "title": "Diagnostic Repair Manual, Liquid-Cooled 2.4 L with R-200B controller (0H0983 Rev. B)",
      "pages": "PDF p.25 (LED Indicators); searched the whole manual - no maintenance reminder",
      "seedFile": "generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-2p4l-liquidcooled-diagnostic-repair-manual.pdf"
     },
     {
      "title": "Owner's Manual, Protector 48/60/80 kW 4.5 L (A0000253468 Rev. B)",
      "pages": "PDF p.22 (press OFF then ENTER to clear; EDIT needs no password); p.29 (Service Schedule; 900-999 hour note)",
      "seedFile": "generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-48-80kw-4p5l-liquidcooled-owners.pdf"
     },
     {
      "title": "Owner's Manual, Protector RG022-RG060 2.4 L (0K8185 Rev. H)",
      "pages": "PDF p.24 (clear Alarm/Warning); p.31 (900-999 hour note)",
      "seedFile": "generac-protector-qs-owners-manual-0k8185.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-qs-owners-manual-0k8185.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-qs-owners-manual-0k8185.pdf"
     },
     {
      "title": "Diagnostic Repair Manual, Liquid-Cooled Evolution or Nexus Control (0J1195 Rev. J)",
      "pages": "PDF p.19 (clear alarm/warning: OFF then ENTER); p.22 (menu map: Schedule A/B/C Maint, Maint. Log); p.28 (Dealer Menu Map, Level 2 code, Reset Maintenance); p.31 (Reset Maintenance resets all maintenance timers)",
      "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
     },
     {
      "title": "Protector Series Training Reference Book, Ch. 11 Evolution & Nexus Digital Control Panels (0E2221 Rev. L)",
      "pages": "PDF p.209 (Maintenance Warning: Enter clears and resets the counter for the condition displayed)",
      "seedFile": "generac-protector-series-training-reference-0e2221.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
     }
    ]
   },
@@ -26717,19 +26717,19 @@ const GENERATORS = [
      "title": "Owner's Manual, Protector QT 2.4 L 60 kW, Nexus (0H7320)",
      "pages": "PDF p.19 (Maintenance Warning; Maintenance Alert Chart, printed p.8-6)",
      "seedFile": "generac-protector-qt-2p4l-60kw-nexus-owners.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-qt-2p4l-60kw-nexus-owners.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-qt-2p4l-60kw-nexus-owners.pdf"
     },
     {
      "title": "Diagnostic Repair Manual, Liquid-Cooled Evolution or Nexus Control (0J1195 Rev. J)",
      "pages": "PDF p.34 (Nexus Edit menu: reset maintenance resets the maintenance warning clock)",
      "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf"
     },
     {
      "title": "Protector Series Training Reference Book, Ch. 11 Evolution & Nexus Digital Control Panels (0E2221 Rev. L)",
      "pages": "PDF p.209 (Maintenance Warning: Enter clears and resets the counter for the condition displayed)",
      "seedFile": "generac-protector-series-training-reference-0e2221.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-series-training-reference-0e2221.pdf"
     }
    ]
   },
@@ -26835,7 +26835,7 @@ const GENERATORS = [
      "title": "H-100 Control Panel Technical Manual (0F3750)",
      "pages": "PDF p.16 (acknowledge with ACK + ENTER); p.26 (Maintenance Settings: re-occurs after 15 minutes, reset only via GenLink)",
      "seedFile": "generac-h100-digital-control-panel-technical-manual.pdf",
-     "url": "https://raw.githubusercontent.com/Marcus-71/brackett-service-tool/manuals/manuals-seed/generac-h100-digital-control-panel-technical-manual.pdf"
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-h100-digital-control-panel-technical-manual.pdf"
     }
    ]
   },
