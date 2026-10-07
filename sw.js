@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v264";
+const CACHE_NAME = "bfc-cache-v265";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const APP_SHELL = [
   "./kohler-gens.js",
   "./weather.js",
   "./maint.js",
+  "./bulletins.js",
   "./calllog.js",
   "./inventory.js",
   "./dchecker/index.html",

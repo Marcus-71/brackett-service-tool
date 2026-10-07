@@ -632,7 +632,7 @@ const KOHLER_GENERATORS = [
      "Transfer switch fault"
     ],
     "steps": [
-     "Troubleshoot per the RXT manual (TP-7193 / TP-6808)."
+     "Troubleshoot per the RXT manual (TP-7193 / TP-6808); in this app see the Kohler RXT card, troubleshooting rows \"ATS will not transfer to generator after it starts\" and \"ATS will not retransfer to utility\"."
     ],
     "clear": "Self-clears when corrected."
    },
@@ -3082,7 +3082,7 @@ const KOHLER_GENERATORS = [
      "Transfer switch problem"
     ],
     "steps": [
-     "Troubleshoot per the RXT manual (TP-6807/TP-6808)."
+     "Troubleshoot per the RXT manual (TP-6807/TP-6808); in this app see the Kohler RXT card, troubleshooting rows \"ATS will not transfer to generator after it starts\" and \"ATS will not retransfer to utility\"."
     ],
     "clear": "Clears when the condition is gone."
    },
@@ -4224,7 +4224,7 @@ const KOHLER_GENERATORS = [
    "alternator": "Rotor cold: 5.2 ohms (14 kW 2F5/2G5), 5.6 ohms (20 kW 2F7/2G7). Stator cold, 1-ph leads 1-2, 3-4: 0.06 (14 kW) / 0.02 (20 kW); 11-44: 0.13 / 0.04; 55-66: 0.60 / 0.44 ohms. 3-ph windings 0.09 (2G5) / 0.06 (2G7); 55-66 0.19 / 0.18 ohms. Separately excited (12 V battery) minimum output: 1-ph 1-2/3-4 105 V (14 kW) / 88 V (20 kW); 11-44 210 / 176 V; 55-66 142 / 117 V (3-ph: 140/112 V windings, 190/150 V 55-66). Rotor field at rated volts, hot: no load 19 V/3.2 A (2F5), 12 V/2.5 A (2G5), 19 V/3.9 A (2F7), 15 V/2.2 A (2G7); full load 48 V/7.2 A, 63 V/9.8 A, 53 V/7.4 A, 69 V/9.6 A. Aux winding mini-breaker 20 A. Brush length new 19.05 mm (0.75 in.) (TP-6805 p.14).",
    "stepperMotor": "38.5 ohms per half coil across P6 pins 2-3 and pins 1-4 (TP-6805 p.106).",
    "tempSensor": "OTS (oil pan): 2100-2400 ohms at 30 C (86 F); 180-200 ohms at 100 C (212 F), measured P1-9 to P1-10 (TP-6805 p.112).",
-   "protectionDefaults": "Overspeed 115% / 0.3 s; underspeed 85% / 3 s; over/under voltage 120% / 2 s and 80% / 10 s; over/under frequency 110% and 90% / 10 s; loss of AC sensing 3 s; LOP delay 5 s; locked rotor 3 s; high/low battery 125% / 100% of system voltage; low cranking voltage 60% (TP-6805 p.45-46)."
+   "protectionDefaults": "Overspeed 115% / 0.3 s; underspeed 85% / 3 s; over/under voltage 120% / 2 s and 80% / 10 s; over/under frequency 110% and 90% / 10 s; loss of AC sensing 3 s; LOP delay 5 s; locked rotor 3 s; high/low battery 125% / 100% of system voltage; low cranking voltage 60% (TP-6805 p.45-46; 0.3 s overspeed / 3 s underspeed delays in the fault table p.72)."
   },
   "maintReset": {
    "title": "RDC2 / DC2: reset the maintenance reminder (Maint Req'd)",
@@ -4736,7 +4736,7 @@ const KOHLER_GENERATORS = [
      "Transfer switch fault"
     ],
     "steps": [
-     "Troubleshoot per the RXT manual."
+     "Troubleshoot per the RXT manual; in this app see the Kohler RXT card, troubleshooting rows \"ATS will not transfer to generator after it starts\" and \"ATS will not retransfer to utility\"."
     ],
     "clear": "Clears by itself when the condition is gone (warnings do not shut the set down)."
    },
@@ -6303,7 +6303,7 @@ const KOHLER_GENERATORS = [
    "exercise": "Weekly or every two weeks, 20 min. Default Unloaded Cycle: 10 min reduced speed, 3 min full speed with diagnostics, 5 min reduced-speed cooldown. Other modes: Unloaded Full (20 min full speed), Loaded Full (RXT required) (TP-6804 p.26-28). DC2: in AUTO press EXERCISE (twice within 5 s for loaded); repeats every 7 days.",
    "alternator": "2F7 single-phase. Rotor 5.6 ohms cold. Stator cold: leads 1-2, 3-4 0.02 ohms; 11-44 0.04 ohms; 55-66 0.44 ohms. Separately excited minimum output: 1-2/3-4 88 V; 11-44 176 V; 55-66 117 V. Rotor field at rated volts, hot: no load 19 V/3.9 A; full load 53 V/7.4 A. Aux winding mini-breaker 20 A. Brush length new 19.05 mm (0.75 in.) (TP-6805 p.14).",
    "stepperMotor": "38.5 ohms per half coil across P6 pins 2-3 and pins 1-4 (TP-6805 p.106).",
-   "protectionDefaults": "Overspeed 115% / 0.3 s; underspeed 85% / 3 s; over/under voltage 120% / 2 s and 80% / 10 s; over/under frequency 110% and 90% / 10 s; loss of AC sensing 3 s; LOP delay 5 s; locked rotor 3 s; high/low battery 125% / 100% of system voltage; low cranking voltage 60% (TP-6805 p.45-46).",
+   "protectionDefaults": "Overspeed 115% / 0.3 s; underspeed 85% / 3 s; over/under voltage 120% / 2 s and 80% / 10 s; over/under frequency 110% and 90% / 10 s; loss of AC sensing 3 s; LOP delay 5 s; locked rotor 3 s; high/low battery 125% / 100% of system voltage; low cranking voltage 60% (TP-6805 p.45-46; 0.3 s overspeed / 3 s underspeed delays in the fault table p.72).",
    "oilPressure": "172-241 kPa (25-35 psi) (TP-6805 p.13). LOP shutdown: switch closed 5 s, active 30 s after crank disconnect.",
    "tempSensor": "OTS (oil pan): 2100-2400 ohms at 30 C (86 F); 180-200 ohms at 100 C (212 F), measured P1-9 to P1-10 (TP-6805 p.112)."
   },
@@ -6801,7 +6801,7 @@ const KOHLER_GENERATORS = [
      "Transfer switch fault"
     ],
     "steps": [
-     "Troubleshoot per the RXT manual."
+     "Troubleshoot per the RXT manual; in this app see the Kohler RXT card, troubleshooting rows \"ATS will not transfer to generator after it starts\" and \"ATS will not retransfer to utility\"."
     ],
     "clear": "Clears by itself when the condition is gone (warnings do not shut the set down)."
    },
@@ -8978,7 +8978,7 @@ const KOHLER_GENERATORS = [
      "RXT transfer switch mechanism or control fault"
     ],
     "steps": [
-     "Consult the RXT ATS manual (TP-6807 / TP-7193) for troubleshooting."
+     "Consult the RXT ATS manual (TP-6807 / TP-7193) for troubleshooting; in this app see the Kohler RXT card, troubleshooting rows \"ATS will not transfer to generator after it starts\" and \"ATS will not retransfer to utility\"."
     ],
     "clear": "Clears when corrected."
    },
@@ -10549,7 +10549,7 @@ const KOHLER_GENERATORS = [
      "Connector problem at the ECM"
     ],
     "steps": [
-     "Check the coolant temperature sensor circuit and connectors to the ECM; test per the engine ECM manual (TP-6724 PSI ECM manual)."
+     "Check the coolant temperature sensor circuit and connectors to the ECM; test per the engine ECM manual (TP-6724 PSI ECM manual). ECM coolant-temperature DTC 117 (ECT voltage under 0.050 V, shorted) / DTC 118 (over 4.95 V, open): key ON with the DST connected - unplug the ECT sensor connector C007: the DST should jump to 4.90 V or more (117 case) or, with sensor pins A and B jumpered, drop to 0.05 V or less (118 case); if it does, replace the ECT sensor; if not, check ECT signal pin A for a short to ground (117) or the ECT-to-ECM wiring and ECM C001 pins 26 and 3 for an open (118). Sensor check: 2,689 ohm at 79 F, 1,556 at 102 F, 625 at 145 F, 302 at 182 F, 175 at 212 F (+/-10%) (TP-6724 p.127-131)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-6810 p.23)."
    },
@@ -10783,7 +10783,7 @@ const KOHLER_GENERATORS = [
      "Open/shorted oil pressure sensor or wiring"
     ],
     "steps": [
-     "Check the oil pressure sensor and its wiring to the ECM; troubleshoot per the engine ECM manual."
+     "Check the oil pressure sensor and its wiring to the ECM; troubleshoot per the engine ECM manual. ECM oil-pressure sender (DTC 520-524): confirm real pressure with a mechanical gauge first (above 8 psi running; DTC 524 trips below 8 psi for 5 s after 20 s running above 600 rpm). Then, engine running: sender terminal B must have the 5 V reference from the ECM (also at IEPR pin 4); terminal C must carry a signal voltage that rises with pressure (over 3.8 V = high-pressure/open range); the same signal must reach ECM/IEPR pin 25. No 5 V = repair the ECM-to-sender wiring; no signal at C = replace the sender; signal at C but not at pin 25 = repair the C-to-25 wire (TP-6724 p.178-182)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-6810 p.23)."
    },
@@ -10791,7 +10791,7 @@ const KOHLER_GENERATORS = [
     "code": "Over Crank Shutdwn",
     "name": "Overcrank",
     "display": "Over Crank Shutdwn",
-    "meaning": "Engine did not start after the last crank cycle. Default 3 cycles of 15 s crank / 15 s rest; crank disconnect at 750 rpm (TP-6811 p.65; TP-6811 p.35; TP-6810 p.17).",
+    "meaning": "Engine did not start after the last crank cycle. Default 3 cycles of 15 s crank / 15 s rest; crank disconnect at 750 rpm (overcrank: TP-6811 p.65; crank disconnect speed default 750 rpm: TP-6811 p.32, p.59).",
     "causes": [
      "No fuel / closed valve / empty LP tank",
      "Low fuel pressure or undersized gas line",
@@ -10821,7 +10821,7 @@ const KOHLER_GENERATORS = [
      "Engine stalled"
     ],
     "steps": [
-     "Check the speed (crank position) sensor and its circuit to the ECM."
+     "Check the speed (crank position) sensor and its circuit to the ECM. ECM crank sensor DTC 336 (sync noise) / 337 (crank signal loss while cranking): check ECM ground terminals C010, C022 and C023 clean and tight; key OFF, unplug the CKP sensor connector C015, key ON - pin 1 to engine ground must read 5.0 V (check before the power relay drops out); key OFF with ECM connector C001 unplugged - continuity CKP pin 2 to ECM pin 2 and CKP pin 3 to ECM pin 1; inspect both connectors for damage/corrosion; then replace the CKP sensor, and only then the ECM (TP-6724 p.164-168)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-6810 p.23)."
    },
@@ -11340,7 +11340,7 @@ const KOHLER_GENERATORS = [
      "Sensor or wiring fault"
     ],
     "steps": [
-     "Check the oil pressure sensor and wiring to the ECM."
+     "Check the oil pressure sensor and wiring to the ECM. Same checks as Oil Pressure No Sig Shutdwn: mechanical gauge first, then 5 V reference at sender terminal B, signal at terminal C and at ECM/IEPR pin 25 - no 5 V = wiring, no signal at C = sender, signal lost between C and pin 25 = wire (TP-6724 p.178-182)."
     ],
     "clear": "Clears by itself once the condition is corrected (TP-6810 p.23)."
    },
@@ -12547,7 +12547,7 @@ const KOHLER_GENERATORS = [
      "Connector problem at the ECM"
     ],
     "steps": [
-     "Check the coolant temperature sensor circuit and connectors to the ECM; test per the engine ECM manual (TP-7097 KG6208 fuel system and diagnostic manual)."
+     "Check the coolant temperature sensor circuit and connectors to the ECM; test per the engine ECM manual (TP-7097 KG6208 fuel system and diagnostic manual). KG6208 ECM DTC 117 (ECT voltage under 0.050 V) / DTC 118 (over 4.95 V): with the DST, unplug the ECT sensor - the DST should read 4.9 V or more; if yes the sensor is bad, if not the signal wire is shorted to ground (or the ECM). For 118, jumper the two sensor terminals at the connector - the DST should read 0.1 V or less; if yes it is the sensor or its connection, if not jumper the signal to ground: still not 0.1 V = open 5Vrtn1 ground or signal circuit - check ECT input at the ECM header to the sensor plug (under 5 ohm, probe the side of the terminal, never into it) (TP-7097 p.65-68)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-7102 p.31)."
    },
@@ -12781,7 +12781,7 @@ const KOHLER_GENERATORS = [
      "Open/shorted oil pressure sensor or wiring"
     ],
     "steps": [
-     "Check the oil pressure sensor and its wiring to the ECM; troubleshoot per the engine ECM manual."
+     "Check the oil pressure sensor and its wiring to the ECM; troubleshoot per the engine ECM manual. KG6208 ECM oil-pressure sender DTCs 522 (sender low voltage) / 523 (sender high voltage) / 524 (low pressure): engine running, read the sender voltage on the DST; unplug the sender - DST 4.90 V or more = faulty sender, less = signal wire shorted to ground or ECM (522). For 523 jumper the signal to 5Vrtn1 (analog return): still above range = ECM; then jumper the signal to ground - not under 0.1 V = open 5Vrtn1 ground circuit or faulty sender/connection. Before condemning anything on a 524, verify pressure with a mechanical gauge (ECM limits: under 8.0 psi at up to 650 rpm, under 15.0 psi at 3100 rpm and above) (TP-7097 p.103-108)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-7102 p.31)."
    },
@@ -12789,7 +12789,7 @@ const KOHLER_GENERATORS = [
     "code": "Over Crank Shutdwn",
     "name": "Overcrank",
     "display": "Over Crank Shutdwn",
-    "meaning": "Engine did not start after the last crank cycle. Default 3 cycles of 15 s crank / 15 s rest; crank disconnect at 750 rpm (TP-7103 p.66; TP-7103 p.31; TP-7102 p.22).",
+    "meaning": "Engine did not start after the last crank cycle. Default 3 cycles of 15 s crank / 15 s rest; crank disconnect at 750 rpm (overcrank: TP-7103 p.66; crank disconnect speed 750 rpm: TP-7103 p.29, p.59).",
     "causes": [
      "No fuel / closed valve / empty LP tank",
      "Low fuel pressure or undersized gas line",
@@ -12819,7 +12819,7 @@ const KOHLER_GENERATORS = [
      "Engine stalled"
     ],
     "steps": [
-     "Check the speed (crank position) sensor and its circuit to the ECM."
+     "Check the speed (crank position) sensor and its circuit to the ECM. KG6208 ECM crank sensor DTC 336 (crank input noise) / 337 (loss of crankshaft signal - cam pulses with no crank activity): check the wiring and connections between the CKP sensor and the ECM, that the sensor pair is properly twisted and the system ground is good; with a VR (magnetic) sensor, a fault only at high speed means increase the sensor-to-trigger-wheel air gap; otherwise bad CKP sensor, then ECM. Read the exact DTC with the GM42033 E-Controls diagnostic kit (SB-750; DTC text TP-7097 p.93-95)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-7102 p.31)."
    },
@@ -12940,7 +12940,7 @@ const KOHLER_GENERATORS = [
      "CKP sensor, wiring or connector fault"
     ],
     "steps": [
-     "Check the crank position sensor (torque 9 Nm / 8 ft-lb, TP-7096 p.43) and its circuit to the ECM; read ECM codes with GM42033."
+     "Check the crank position sensor (torque 9 Nm / 8 ft-lb, TP-7096 p.43) and its circuit to the ECM; read ECM codes with GM42033. Same crank-sensor checks as Spd Sens Flt Shutdwn: DTC 337 = cam pulses with no crank activity; check CKP-to-ECM wiring, twist and connections, system ground, then the sensor, then the ECM (TP-7097 p.93-95); CKP torque 9 Nm / 8 ft-lb (TP-7096 p.43)."
     ],
     "clear": "Fix the cause, then press OFF to reset the controller (or Select > Overview > Select on the fault > Up to 'Confirm Clear Fault: YES' > Select), then press AUTO (TP-7102 p.31)."
    }
@@ -13362,7 +13362,7 @@ const KOHLER_GENERATORS = [
      "Sensor or wiring fault"
     ],
     "steps": [
-     "Check the oil pressure sensor and wiring to the ECM."
+     "Check the oil pressure sensor and wiring to the ECM. Same checks as Oil Pressure No Sig Shutdwn: sender unplugged should read 4.90 V or more on the DST (else signal shorted to ground / ECM); jumper tests for the 5Vrtn1 ground; mechanical gauge before condemning (TP-7097 p.103-108)."
     ],
     "clear": "Clears by itself once the condition is corrected (TP-7102 p.31)."
    },

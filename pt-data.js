@@ -15,6 +15,8 @@ const R454B_DEW = [[8.39,-40],[8.98,-39],[9.57,-38],[10.19,-37],[10.81,-36],[11.
  *    Daikin's own liquid-line chart on p.73 only agrees once 14.7 is subtracted. Checked against
  *    a published R-32 psig chart (Hudson Technologies: 40 F = 121.0, 100 F = 325.7 psig).
  *    Before this fix every R-32 superheat read ~6-7 F high (at 120 psig suction: 33 F sat vs 40 F).
+ *    Portal check 2026-10-06: the newer R-32 SI for GXV9S/GZV9S/GZV7S (SiUS612417EA p.72, 2025) prints the
+ *    same mislabelled chart (2.0 -> -119.58 F under a PSIG heading); no corrected revision exists - psig table stands.
  *  - R-410A: Daikin FIT (R-410A) Service Instructions SiUS612209EB, Pressure vs Temperature chart.
  *  - R-454B: Chemours Opteon XL41 Thermodynamic Properties (I/P units, 03/2022) saturation
  *    tables — psia converted to psig (-14.696). Bubble (liquid) for subcooling, dew (vapor)

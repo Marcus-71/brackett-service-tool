@@ -1484,12 +1484,12 @@ const THERMOSTATS = [
    {
     "code": "177 Indoor Temperature Sensor Error",
     "meaning": "Wired indoor sensor disconnected or shorted",
-    "action": "Contact dealer for assistance"
+    "action": "Check the wired indoor sensor circuit at the S terminals for an open or a short (manual: sensor not connected or wiring short); fix the wiring or replace the sensor, then clear the alert"
    },
    {
     "code": "178 Outdoor Temperature Sensor Error",
     "meaning": "Wired outdoor sensor disconnected or shorted",
-    "action": "Contact dealer for assistance"
+    "action": "Check the wired outdoor sensor circuit at the S terminals for an open or a short (manual: sensor not connected or wiring short); fix the wiring or replace the sensor, then clear the alert"
    },
    {
     "code": "181/182 Replace Air Filter (1)/(2)",
@@ -6987,7 +6987,26 @@ const THERMOSTATS = [
    "factoryReset": ""
   },
   "diagnostics": [],
-  "troubleshooting": [],
+  "troubleshooting": [
+    {
+      "symptom": "Aux heat runs in cooling, or cool runs on a heat call (heat pump)",
+      "causes": [
+        "A wire landed on W of the UWP on a heat pump system"
+      ],
+      "fixes": [
+        "Remove the wire from W - heat pump aux/em heat lands on the terminals shown in Wiring heat pump systems (install guide p5)"
+      ]
+    },
+    {
+      "symptom": "Display is blank",
+      "causes": [
+        "No power at the UWP: breaker, equipment switch, furnace door switch, or dead AA batteries"
+      ],
+      "fixes": [
+        "Check the breaker and equipment switch, close the furnace door, install fresh AA alkaline batteries"
+      ]
+    }
+  ],
   "tips": [
    "One wall plate serves T4/T5/T6/T9/T10 - the slider tabs, not jumper wires, set R/Rc and U.",
    "R Slider Tab UP = one R wire; DOWN = separate R and Rc."
@@ -10102,7 +10121,72 @@ const THERMOSTATS = [
    "factoryReset": ""
   },
   "diagnostics": [],
-  "troubleshooting": [],
+  "troubleshooting": [
+    {
+      "symptom": "Display does not come on",
+      "causes": [
+        "Thermostat not powered",
+        "AAA batteries missing or dead"
+      ],
+      "fixes": [
+        "Check for 24 VAC between C and Rc",
+        "Check the AAA batteries are good and installed correctly"
+      ]
+    },
+    {
+      "symptom": "Heating or cooling does not come on",
+      "causes": [
+        "System selection not set to Heat or Cool",
+        "System Type (ISU 0170) wrong for the equipment",
+        "Minimum off-time active (Wait on the display)"
+      ],
+      "fixes": [
+        "Set the system selection",
+        "Check Installer Setup 0170 matches the installed equipment",
+        "Wait up to 5 minutes for the compressor timer"
+      ]
+    },
+    {
+      "symptom": "Calling for Heat or Cool but nothing runs",
+      "causes": [
+        "Equipment failure",
+        "Loose or broken wire between thermostat and equipment"
+      ],
+      "fixes": [
+        "Check for 24 VAC between W (or Y) and transformer common - if present the thermostat is working, look at the equipment",
+        "If no voltage, check the wire run; verify operation in System Test"
+      ]
+    },
+    {
+      "symptom": "Heat pump blows cool in heat / warm in cool",
+      "causes": [
+        "Changeover valve setting (ISU 0190) does not match the heat pump"
+      ],
+      "fixes": [
+        "Set ISU 0190 to O or B to match the reversing valve"
+      ]
+    },
+    {
+      "symptom": "Heat and cool run at the same time",
+      "causes": [
+        "System Type 0170 set to Heat Pump on non-heat-pump equipment",
+        "Heating and cooling wires shorted together"
+      ],
+      "fixes": [
+        "Correct ISU 0170",
+        "Separate the shorted wires"
+      ]
+    },
+    {
+      "symptom": "Fan does not run on a heat call (electric furnace)",
+      "causes": [
+        "Fan Control in Heating (ISU 0180) set to Gas or Oil Furnace"
+      ],
+      "fixes": [
+        "Set ISU 0180 to Electric Furnace"
+      ]
+    }
+  ],
   "tips": [
    "On system-powered (C wire) installs the minimum-off timer also runs at startup and after power interruptions."
   ],
@@ -15707,7 +15791,39 @@ const THERMOSTATS = [
    "factoryReset": "Not documented for this specific model in the reviewed excerpt (1F78 sibling uses Up arrow + TIME); treat with caution and verify on unit if a reset is needed."
   },
   "diagnostics": [],
-  "troubleshooting": [],
+  "troubleshooting": [
+    {
+      "symptom": "Blank display or keypad not responding",
+      "causes": [
+        "Voltage spike or static discharge",
+        "Batteries need changing"
+      ],
+      "fixes": [
+        "Reset: press both temperature buttons together while moving the SYSTEM switch from OFF to HEAT (also restores factory defaults)",
+        "Replace the AAA alkaline batteries"
+      ]
+    },
+    {
+      "symptom": "No heat",
+      "causes": [
+        "Blown fuse or tripped breaker; furnace power switch off; blower door not engaging the door switch",
+        "Pilot not lit; SYSTEM switch not on HEAT; loose connection; furnace lockout"
+      ],
+      "fixes": [
+        "Restore power and seat the blower door",
+        "Set SYSTEM to HEAT and raise the setpoint above room temperature; within a few seconds the heat call should start - verify the thermostat and system wires are tight"
+      ]
+    },
+    {
+      "symptom": "Heat runs constantly",
+      "causes": [
+        "Short in the wiring, the thermostat or the heating system"
+      ],
+      "fixes": [
+        "Lift the W wire at the thermostat - if the heat stops, the thermostat is shorted; if not, trace the wiring and equipment"
+      ]
+    }
+  ],
   "tips": [],
   "manuals": [
    {
@@ -21084,7 +21200,28 @@ const THERMOSTATS = [
    "factoryReset": ""
   },
   "diagnostics": [],
-  "troubleshooting": [],
+  "troubleshooting": [
+    {
+      "symptom": "Does not turn on heating or cooling",
+      "causes": [
+        "System lever in OFF",
+        "Equipment fault"
+      ],
+      "fixes": [
+        "Move the system lever to HEAT or COOL and set the temperature lever past room temperature",
+        "Check the equipment"
+      ]
+    },
+    {
+      "symptom": "Heat short-cycles or overshoots",
+      "causes": [
+        "Heat anticipator not matched to the gas valve/relay current"
+      ],
+      "fixes": [
+        "With contacts open, read the circuit on a 0-1 A AC ammeter across W and Rh and set the anticipator arrow to that reading (max 1.2 on millivolt); adjust 0.1 A at a time, toward LONGER to cycle less often"
+      ]
+    }
+  ],
   "tips": [],
   "manuals": [
    {
@@ -33773,7 +33910,7 @@ const THERMOSTATS = [
    "The CTK04 has a USB port on the bottom of the thermostat that is for use by professional installers only."
   ],
   "setup": {
-   "access": "Turn on AC power to the system; the ComfortNet control automatically begins the setup wizard (language, application type, device name, auto equipment identification). Deeper installer-menu steps beyond this basic wizard were not documented in the sources reviewed.",
+   "access": "Turn on AC power to the system; the ComfortNet control automatically begins the setup wizard (language, application type, device name, auto equipment identification). Installer menus: HOME > MENU > COMFORTNET USER MENU, enter the installer password (the thermostat date code, shown at the bottom of MENU > EQUIPMENT STATUS), then pick the equipment (FURNACE / AIR HANDLER / HEAT PUMP / AC) for setup, equipment test and fault history (CTK04 operating manual HID-350 and IC-CNR-1506 training deck in Manuals).",
    "keySettings": [],
    "installerTest": "",
    "factoryReset": ""

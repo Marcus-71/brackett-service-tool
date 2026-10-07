@@ -536,6 +536,16 @@ function renderCodes() {
     note.textContent = "No codes list the full model - showing the " + viaPrefix + " family. Match the board and LED type on the unit.";
     results.appendChild(note);
   }
+  // A model number typed here (59MN7C..., G0072580) gets its bulletins above the code list.
+  try {
+    const bulQ = String(codesState.search || "").trim();
+    if (bulQ.length >= 5 && /\d/.test(bulQ) && /[A-Za-z]/.test(bulQ)) {
+      const bare = bulQ.toUpperCase().replace(/[^A-Z0-9]/g, "");
+      const fam = /^G0\d{5,8}$/.test(bare) && typeof genFamilyForModel === "function" ? genFamilyForModel(bare) : null;
+      const list = bulletinsFor({ genFamily: fam ? fam.id : "", model: bulQ });
+      if (list.length) results.insertAdjacentHTML("beforeend", bulletinsHtml(list, { where: "codes lookup", model: bulQ }));
+    }
+  } catch (e) {}
   for (const code of filtered) results.appendChild(buildCodeCard(code));
 }
 
@@ -2009,6 +2019,16 @@ function askAiEntries(q, limit, rqGiven) {
   // (2026-10-06: it called G0072580 "the OLS harness" and said it couldn't confirm it).
   const unit = askUnitIdentity(units);
   if (unit) out.unshift(unit);
+  // Service bulletins that are about the question (askBulletins: code or content-word match on the
+  // identified unit) go to the AI too (Andy 2026-10-06) - after the Unit line and the top two regular
+  // entries, as up to two EXTRA entries, so they never push the matching code row or card out.
+  try {
+    const buls = askBulletins(units, rq).slice(0, 2).map(askBulletinEntry);
+    if (buls.length) {
+      const reg = []; out.forEach((o, i) => { if (o.kind !== "Unit" && o.kind !== "Note") reg.push(i); });
+      out.splice(reg.length >= 2 ? reg[1] + 1 : out.length, 0, ...buls);
+    }
+  } catch (e) {}
   return out;
 }
 function askUnitIdentity(units) {
@@ -2298,19 +2318,32 @@ function renderAskInstant(q, it, units, partial) {
   if (!ai) return;
   let box = document.getElementById("askInstant");
   if (!box) { box = document.createElement("div"); box.id = "askInstant"; box.className = "ask-instant"; ai.parentNode.insertBefore(box, ai); }
-  if (!it || q.trim().length < 3) { box.innerHTML = ""; return; }
-  const lines = askInstantLines(it, units).filter(l => l.text && l.text.trim());
-  if (!lines.length) { box.innerHTML = ""; return; }
+  if (q.trim().length < 3) { box.innerHTML = ""; return; }
+  // Bulletins for the question's codes + unit: one line each, tap opens the bulletin (Andy 2026-10-06).
+  let buls = [];
+  try { buls = askBulletins(units, q).slice(0, 2); } catch (e) { buls = []; }
+  const bulLines = buls.map(b => `<div class="ask-instant-line bul-ask-line"><span class="ask-instant-label">Bulletin</span> <button type="button" class="ask-ai-cite bul-open${b.priority === "high" ? " bul-open-high" : ""}" data-bul="${escapeHtml(b.id)}">${escapeHtml(b.number)} - ${escapeHtml(b.title)}</button></div>`).join("");
+  const wireBul = () => box.querySelectorAll(".bul-open").forEach(btn => { btn.onclick = () => openBulletinDetail(btn.dataset.bul, "ask instant"); });
+  const lines = it ? askInstantLines(it, units).filter(l => l.text && l.text.trim()) : [];
+  if (!lines.length) {
+    if (!buls.length) { box.innerHTML = ""; return; }
+    bulTrackShown(buls, "ask instant", units && units.kModel);
+    box.innerHTML = `<div class="ask-ai-card ask-instant-card"><div class="ask-ai-head">⚡ From the library <span class="ask-ai-tag">Bulletin</span></div><div class="ask-instant-body">${bulLines}</div></div>`;
+    wireBul();
+    return;
+  }
   const body = lines.map(l => `<div class="ask-instant-line">${l.label ? `<span class="ask-instant-label">${escapeHtml(l.label)}</span> ` : ""}${escapeHtml(l.text).replace(/\n/g, "<br>")}</div>`).join("");
+  if (buls.length) bulTrackShown(buls, "ask instant", units && units.kModel);
   box.innerHTML = `
     <div class="ask-ai-card ask-instant-card">
       <div class="ask-ai-head">⚡ From the library <span class="ask-ai-tag">${escapeHtml(ASK_KIND[it.kind].label)}${partial ? " · closest match" : ""}</span></div>
       <div class="ask-instant-title">${escapeHtml(it.title)}</div>
       ${it.sub ? `<div class="card-meta"><span>${escapeHtml(it.sub)}</span></div>` : ""}
-      <div class="ask-instant-body">${body}</div>
+      <div class="ask-instant-body">${body}${bulLines}</div>
       <button type="button" class="ask-ai-cite ask-instant-open">Open the full entry</button>
     </div>`;
   box.querySelector(".ask-instant-open").onclick = () => { trackEvent("Ask opened instant entry: " + it.title.slice(0, 60)); ASK_KIND[it.kind].open(it.id); };
+  wireBul();
 }
 function renderAskAiControl(q) {
   const box = document.getElementById("askAi");
@@ -3599,7 +3632,10 @@ function genMaintResetHtml(g) {
   const r = g.maintReset;
   if (!r || !(r.steps || []).length) return "";
   const li = (xs) => (xs || []).map(x => `<li>${escapeHtml(x)}</li>`).join("");
-  const src = (r.sources || []).map(s => `<div class="tech-tip-src">${escapeHtml(s.title || "")}${s.pages ? " - " + escapeHtml(s.pages) : ""}</div>`).join("");
+  // kohler-rcl-24-38 carries sources as one string ("TP-6907 p.25-26 ..."), which threw here and kept the
+  // whole RCL/RCLB card from opening (found 2026-10-06 wiring bulletins; same in v264).
+  const srcList = Array.isArray(r.sources) ? r.sources : (r.sources ? [typeof r.sources === "string" ? { title: r.sources } : r.sources] : []);
+  const src = srcList.map(s => `<div class="tech-tip-src">${escapeHtml(s.title || "")}${s.pages ? " - " + escapeHtml(s.pages) : ""}</div>`).join("");
   return `<div class="detail-section"><h3>🔧 Reset the maintenance reminder</h3>
     ${r.title ? `<p class="tstat-note"><b>${escapeHtml(r.title)}</b></p>` : ""}
     <div class="tstat-ts"><ol>${li(r.steps)}</ol></div>
@@ -3610,9 +3646,10 @@ function genMaintResetHtml(g) {
   </div>`;
 }
 
-function openGenDetail(id, focusModel) {
+function openGenDetail(id, focusModel, opts) {
   const g = genEntries().find(x => x.id === id);
   if (!g) return;
+  opts = opts || {};
   // Opened from a scan or Ask: show that brand's tab under the card.
   if (genBrandOf(g) !== genState.brand) { genState.brand = genBrandOf(g); genState.series = "All"; genState.ctrl = "All"; if (currentScreen === "gen") renderGens(); }
   const q = genState.search;
@@ -3651,6 +3688,12 @@ function openGenDetail(id, focusModel) {
     ${g.img ? `<img class="tstat-hero" src="${escapeHtml(g.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(g.family)}</h2>
     <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${genShort(g.engine) ? " · " + escapeHtml(g.engine) : ""}${genShort(g.fuel) ? " · " + escapeHtml(g.fuel) : ""}${genShort(g.years) ? " · " + escapeHtml(g.years) : ""}</div>
+    ${(() => { try {
+      // Bulletins for this family / model sit above everything else (Andy 2026-10-06). The serial comes
+      // from the scan that opened the card, or from the last plate read for this exact model.
+      const serial = opts.serial || (typeof genLastScan !== "undefined" && genLastScan && focusG && genLastScan.modelG === focusG ? genLastScan.serial : "");
+      return bulletinsHtml(bulletinsFor({ genFamily: g.id, model: focusModel || "" }), { where: opts.where || "generator card", serial, model: focusModel || "" });
+    } catch (e) { return ""; } })()}
     ${genIsAirCooled(g) ? `<div class="detail-section">${genChecklistBtnHtml(g.id, focusG)}</div>` : ""}
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
     ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
@@ -3704,7 +3747,7 @@ async function genProblemScan(file) {
     genNoteScan(model, serial);
     trackEvent("gen problem scan -> " + model);
     genProblemScanStatus("Read " + model + (serial ? " · SN " + serial : "") + " - opened its generator page.");
-    openGenDetail(fam.id, model);
+    openGenDetail(fam.id, model, { serial, where: "gen problem scan" });
     return;
   }
   const photoId = newScanPhotoId();
@@ -3744,6 +3787,234 @@ function genFamilyForModel(model) {
 
 document.getElementById("genSearchInput").addEventListener("input", (e) => { genState.search = e.target.value; renderGens(); });
 // Voice search on this box: see addVoiceSearch() (v242).
+
+// ============================================================
+// Service bulletins (bulletins.js -> BULLETINS). Andy 2026-10-06: "if they
+// scan a model with a bulletin make sure they see it". bulletinsFor() picks
+// the bulletins that apply to a unit (generator family id, model number,
+// codes); bulletinsHtml() renders the compact phone card that sits at the top
+// of a generator card and on every scan result; Ask attaches the same text to
+// the AI and shows a one-line link on the instant card. Brand alone never
+// matches (too broad). Confidential bulletins are paraphrase only: no link,
+// no PDF, "Dealer bulletin - summary only".
+// ============================================================
+const BUL_PRI = { high: 0, normal: 1, info: 2 };
+// Badge brands that share a maker's bulletins (code-only matches are brand-gated).
+const BUL_BRAND_ALIAS = { bryant: "carrier", payne: "carrier", heil: "icp", tempstar: "icp", comfortmaker: "icp", arcoaire: "icp", keeprite: "icp", "day & night": "icp", amana: "daikin", goodman: "daikin", rehlko: "kohler" };
+function bulBrandKey(b) { const k = String(b || "").toLowerCase().trim(); return BUL_BRAND_ALIAS[k] || k; }
+const bulReCache = new Map();
+function bulRe(src) {
+  let r = bulReCache.get(src);
+  if (r === undefined) { try { r = new RegExp(src, "i"); } catch (e) { r = null; } bulReCache.set(src, r); }
+  return r;
+}
+// The model as printed, without dashes/spaces, and bare alphanumerics (007258-0 / 0072580 / G0072580).
+function bulModelForms(model) {
+  const u = String(model || "").toUpperCase().trim();
+  if (!u) return [];
+  return [...new Set([u, u.replace(/[\s-]+/g, ""), u.replace(/[^A-Z0-9]/g, "")].filter(Boolean))];
+}
+const bulNormCode = (s) => String(s || "").toLowerCase().replace(/[\s\-–]+/g, "");
+function bulCodeSet(codes) {
+  const out = new Set();
+  for (const c of codes || []) { out.add(bulNormCode(c)); for (const t of askCodeTokens(c)) out.add(bulNormCode(t)); }
+  out.delete("");
+  return out;
+}
+// { genFamily | genFamilies, model, serial, codes[], brand } -> matching bulletins, high > normal > info, newest first.
+// A code-only match needs the brand (a Lennox 31 is not a Carrier 31); a lone 4-digit code is Generac-distinct.
+function bulletinsFor(o) {
+  if (typeof BULLETINS === "undefined" || !Array.isArray(BULLETINS)) return [];
+  o = o || {};
+  const fams = new Set([].concat(o.genFamily || [], o.genFamilies || []).filter(Boolean));
+  const forms = bulModelForms(o.model);
+  const brand = bulBrandKey(o.brand);
+  const qCodes = new Set((o.codes || []).map(bulNormCode).filter(Boolean));
+  const out = [];
+  for (const b of BULLETINS) {
+    const a = b.applies || {};
+    let why = "";
+    if (fams.size && (a.genFamilies || []).some(f => fams.has(f))) why = "family";
+    if (!why && forms.length && (a.modelRe || []).some(src => { const re = bulRe(src); return !!re && forms.some(f => re.test(f)); })) why = "model";
+    if (!why && qCodes.size && (a.codes || []).length) {
+      const hit = [...bulCodeSet(a.codes)].find(t => qCodes.has(t));
+      const brandOk = brand ? bulBrandKey(b.brand) === brand : /^\d{4}$/.test(hit || "");
+      if (hit && brandOk) why = "code";
+    }
+    if (why) out.push(Object.assign({}, b, { _why: why }));
+  }
+  const pri = (b) => BUL_PRI[b.priority] === undefined ? 1 : BUL_PRI[b.priority];
+  return out.sort((x, y) => pri(x) - pri(y) || String(y.date || "").localeCompare(String(x.date || "")) || String(x.number).localeCompare(String(y.number)));
+}
+// Serial / build-date range against the serial the scan read. Generac serials are numeric; Lennox and
+// Kohler ranges are alphanumeric and compared on the range's own length (5906H..5906M vs 5906H12345).
+// Carrier / ICP serials are WWYY + plant letter (4725A = week 47 of 2025): compared as YYWW so week 01 of
+// 2026 sorts after week 47 of 2025. applies.serialToExclusive = true means "fixed from serialTo on", so the
+// serialTo week itself is outside. No badge (null) when the serial's digit/letter shape does not match the
+// range endpoints (an older SGM... Kohler serial against a 34FGGMJM0049 range, letters against a Generac
+// numeric range) - the appliesText still shows.
+function bulSerialStatus(b, serial) {
+  const a = b.applies || {};
+  const s = String(serial || "").toUpperCase().replace(/[\s-]+/g, "");
+  if (!s) return null;
+  if (a.serialFrom || a.serialTo) {
+    const carrier = /^(carrier|icp)$/.test(bulBrandKey(b.brand));
+    const wwyy = (x) => carrier && /^\d{4}[A-Z]/.test(x) ? x.slice(2, 4) + x.slice(0, 2) + x.slice(4) : x;
+    const S = wwyy(s), from = wwyy(String(a.serialFrom || "").toUpperCase()), to = wwyy(String(a.serialTo || "").toUpperCase());
+    const shape = (x) => x.replace(/\d/g, "9").replace(/[A-Z]/g, "A");
+    if (from && shape(S.slice(0, from.length)) !== shape(from)) return null;
+    if (to && shape(S.slice(0, to.length)) !== shape(to)) return null;
+    let inRange;
+    if (/^\d+$/.test(S) && /^\d*$/.test(from) && /^\d*$/.test(to)) {
+      const n = Number(S);
+      inRange = (!from || n >= Number(from)) && (!to || (a.serialToExclusive ? n < Number(to) : n <= Number(to)));
+    } else {
+      const cmp = (x, y) => { const p = x.slice(0, y.length); return p < y ? -1 : p > y ? 1 : 0; };
+      inRange = (!from || cmp(S, from) >= 0) && (!to || (a.serialToExclusive ? cmp(S, to) < 0 : cmp(S, to) <= 0));
+    }
+    return inRange ? { ok: true, label: "Applies to this serial" } : { ok: false, label: "Check serial - outside the listed range" };
+  }
+  if (a.builtFrom || a.builtTo) return { ok: null, label: "Built " + [a.builtFrom, a.builtTo].filter(Boolean).join(" to ") + " - check the build date on the plate" };
+  return null;
+}
+// trackEvent("bulletin shown: <number> | <where>") once per view: the same list for the same place and
+// model is not logged again (renderMaint / renderCodes re-run on every keystroke).
+const bulTracked = {};
+function bulTrackShown(list, where, model) {
+  const key = list.map(b => b.number).join(",") + "|" + (model || "");
+  if (bulTracked[where] === key) return;
+  bulTracked[where] = key;
+  for (const b of list) trackEvent("bulletin shown: " + b.number + " | " + where + (model ? " | " + model : ""));
+}
+// opts: { where, serial, model, open } -> the "Bulletins for this unit (N)" card. High priority opens
+// (the first one, or all when there are at most two); the rest collapse to one line, tap to expand.
+function bulletinsHtml(list, opts) {
+  opts = opts || {};
+  if (!list || !list.length) return "";
+  // Phone-sized: past six rows, the FYI (info) bulletins fold into one "N more" row. Those are logged
+  // as shown only when that row opens (toggle listener below); the visible rows are logged now.
+  const BUL_SHOW = 6;
+  let shown = list, folded = [];
+  if (!opts.open && list.length > BUL_SHOW) {
+    const info = list.filter(b => b.priority === "info");
+    const keep = Math.max(0, BUL_SHOW - (list.length - info.length));
+    folded = info.slice(keep);
+    const foldIds = new Set(folded.map(b => b.id));
+    shown = list.filter(b => !foldIds.has(b.id));
+  }
+  bulTrackShown(shown, opts.where || "unit", opts.model);
+  // A short list (a scan result with one or two bulletins) opens its high-priority rows; a long one
+  // (a Next Gen card with 12) keeps every row to one line - the red High badge is the flag - so the
+  // card stays under a third of a phone screen and the unit's own codes are still right below it.
+  const openHigh = list.length <= 3;
+  const item = (b) => {
+    const pri = BUL_PRI[b.priority] === undefined ? "normal" : b.priority;
+    const open = !!opts.open || (openHigh && pri === "high");
+    const st = bulSerialStatus(b, opts.serial);
+    const stHtml = st ? `<span class="bul-serial ${st.ok === true ? "ok" : st.ok === false ? "out" : "chk"}">${escapeHtml(st.label)}</span>` : "";
+    const steps = (b.steps || []).length ? `<ol class="bul-steps">${b.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ol>` : "";
+    const src = b.confidential
+      ? `<div class="bul-src"><b>Dealer bulletin - summary only.</b>${b.source ? " " + escapeHtml(b.source) : ""}</div>`
+      : (b.source ? `<div class="bul-src">Source: ${escapeHtml(b.source)}</div>` : "");
+    const badge = pri === "high" ? "High" : pri === "info" ? "FYI" : escapeHtml(b.type || "Bulletin");
+    return `<details class="bul-item bul-${pri}" data-bul="${escapeHtml(b.number)}"${open ? ' open data-seen="1"' : ""}>
+      <summary><span class="bul-pri">${badge}</span><span class="bul-num">${escapeHtml(b.number)}</span>${b.date ? `<span class="bul-date">${escapeHtml(b.date)}</span>` : ""}<span class="bul-title">${escapeHtml(b.title)}</span></summary>
+      <div class="bul-body">
+        ${stHtml}
+        <p class="bul-sum">${escapeHtml(b.summary || "")}</p>
+        ${steps}
+        <div class="bul-applies"><b>Applies to:</b> ${escapeHtml(b.appliesText || "")}</div>
+        ${src}
+      </div>
+    </details>`;
+  };
+  const items = shown.map(item).join("");
+  const more = folded.length
+    ? `<details class="bul-more" data-where="${escapeHtml(opts.where || "unit")}" data-model="${escapeHtml(opts.model || "")}" data-nums="${escapeHtml(folded.map(b => b.number).join("|"))}"><summary>${folded.length} more (FYI) - tap to see them</summary>${folded.map(item).join("")}</details>`
+    : "";
+  return `<section class="bul-card" aria-label="Service bulletins for this unit"><div class="bul-head">📌 Bulletins for this unit (${list.length})</div>${items}${more}</section>`;
+}
+// A tap that opens a collapsed bulletin is worth a line too (toggle does not bubble - capture it).
+// Opening the "N more" fold logs those bulletins as shown.
+document.addEventListener("toggle", (e) => {
+  const d = e.target;
+  if (!d || !d.classList || !d.open || d.dataset.seen) return;
+  if (d.classList.contains("bul-item")) { d.dataset.seen = "1"; trackEvent("bulletin opened: " + (d.dataset.bul || "")); }
+  else if (d.classList.contains("bul-more")) {
+    d.dataset.seen = "1";
+    for (const n of String(d.dataset.nums || "").split("|").filter(Boolean)) trackEvent("bulletin shown: " + n + " | " + (d.dataset.where || "unit") + (d.dataset.model ? " | " + d.dataset.model : ""));
+  }
+}, true);
+// One bulletin on its own in the modal (from the Ask instant card's "Bulletin:" line).
+function openBulletinDetail(id, where) {
+  const b = (typeof BULLETINS !== "undefined" ? BULLETINS : []).find(x => x.id === id);
+  if (!b) return;
+  // The detail renders open (data-seen), so the toggle listener never logs it - log the tap here.
+  try { trackEvent("bulletin opened: " + b.number + " | " + (where || "bulletin detail")); } catch (e) {}
+  const modal = document.getElementById("modal");
+  modal.innerHTML = `
+    <h2>${escapeHtml(b.number)}</h2>
+    <div class="sub">${escapeHtml(b.brand)} · ${escapeHtml(b.type || "Service")} bulletin${b.date ? " · " + escapeHtml(b.date) : ""}</div>
+    ${bulletinsHtml([b], { where: where || "bulletin detail", open: true })}
+    <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+}
+// Ask: the bulletins for the question's codes + identified family / model. The brand comes from the
+// question, or from the generator family the words picked ("next gen 3400 code" is Generac).
+function askBulletins(units, rq) {
+  if (!units || typeof bulletinsFor !== "function") return [];
+  const codes = units.codeToks === undefined ? (units.codeToks = askCodeToks(units)) : units.codeToks;
+  const fams = units.kFams || (units.kFam ? [units.kFam] : []);
+  let brand = (normalizeQuery(rq || "").match(ASK_BRAND_RE) || [])[1] || "";
+  if (!brand && fams.length && typeof genEntries === "function") { const g = genEntries().find(x => x.id === fams[0]); if (g) brand = genBrandOf(g); }
+  if (!units.kFam && !units.kModel && !codes.length) return [];
+  const all = bulletinsFor({ genFamily: units.kFam, model: units.kModel, codes, brand });
+  if (!all.length) return [];
+  // Ask is a question, not a plate scan: a bulletin for the unit qualifies only when it is ABOUT the
+  // question - its codes meet the question's code tokens, or its title / summary carries one of the
+  // question's content words ("oil", "voltage", "mixer", "valve"...). Brand, family, model, kW and
+  // code words do not count (coordinator replay 2026-10-06: "nexgen 26kw over voltage" was leading
+  // with the mixer and fuel-valve bulletins and pushing the 1800 Overvoltage row out).
+  const qCodes = new Set(codes.map(bulNormCode).filter(Boolean));
+  const kModel = String(units.kModel || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const skip = (a) => a.length < 3 || /^\d+([.,]\d+)?$/.test(a) || qCodes.has(bulNormCode(a)) || /^\d{1,2}(\.\d)?\s*-?\s*k(w|ilowatts?)?$/.test(a) ||
+    (kModel && a.replace(/[^a-z0-9]/g, "") === kModel) || ASK_FAMILY_WORDS.some(([re]) => re.test(a)) || ASK_ZERO_WORDS.has(a);
+  const words = askLiveUnits(units).filter(askIsContentUnit).flatMap(u => u.alts).filter(a => !skip(a));
+  return all.filter(b => {
+    if (qCodes.size && [...bulCodeSet(b.applies && b.applies.codes)].some(t => qCodes.has(t))) return true;
+    if (!words.length) return false;
+    const hay = String((b.title || "") + " " + (b.summary || "")).toLowerCase();
+    return words.some(a => askTermHit(hay, a));
+  });
+}
+function askBulletinEntry(b) {
+  const text = [b.summary, (b.steps || []).length ? "Steps: " + b.steps.join(" ") : "", b.appliesText ? "Applies to: " + b.appliesText : "",
+    b.confidential ? "Dealer bulletin - summary only, do not quote a link." : (b.source ? "Source: " + b.source : "")].filter(Boolean).join(" | ");
+  return { kind: "Bulletin", title: b.brand + " " + b.number + " - " + b.title, text: text.slice(0, 1200) };
+}
+// Maintenance Figures: maint.js owns renderMaint; wrap it so a model with bulletins gets the card above
+// its figures (or above the "no figures" notice - the bulletin still matters).
+function bulMaintInject() {
+  const results = document.getElementById("maintResults");
+  if (!results || typeof maintState === "undefined") return;
+  const q = String(maintState.query || "").trim();
+  if (q.length < 4 || !/\d/.test(q)) return;
+  const hit = typeof genMaintResolve === "function" ? genMaintResolve(q) : null;
+  const model = hit && hit.model ? hit.model.g : q;
+  const list = bulletinsFor({ genFamily: hit ? hit.family.id : "", model });
+  if (!list.length) return;
+  const serial = hit && hit.model && typeof genLastScan !== "undefined" && genLastScan && genLastScan.modelG === hit.model.g ? genLastScan.serial : "";
+  results.insertAdjacentHTML("afterbegin", bulletinsHtml(list, { where: "maint lookup", serial, model }));
+}
+if (typeof renderMaint === "function") {
+  const bulRenderMaint0 = renderMaint;
+  renderMaint = function () {
+    const r = bulRenderMaint0.apply(this, arguments);
+    try { bulMaintInject(); } catch (e) {}
+    return r;
+  };
+}
 
 // ---- v227 genModelFacts START
 // ============================================================
@@ -4704,6 +4975,7 @@ function genWizScanHtml(d) {
       <input type="file" id="gwzPhoto" accept="image/*" capture="environment" class="hidden">
       <div class="gwz-hint">Photograph the generator's data label - the MODEL and SERIAL lines. Straight on, close, good light. In sun, shade the whole label.</div>
       <div id="gwzScanStatus" class="gwz-status ${msg ? msg.kind : "hidden"}">${msg ? msg.html : ""}</div>
+      ${d.familyId && d.modelG ? bulletinsHtml(bulletinsFor({ genFamily: d.familyId, model: d.modelG }), { where: "gen checklist scan", serial: d.serial, model: d.modelG }) : ""}
     </div>
     <div class="gwz-card">
       <div class="gwz-card-h">What was read</div>
@@ -5050,6 +5322,26 @@ async function genClEntryCount() {
   if (box) box.onclick = () => { trackEvent("gen checklist: started from Generators"); openGenChecklist({ fresh: true }); };
   const prob = document.getElementById("genProblemScanFile");
   if (prob) prob.addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) genProblemScan(f); });
+  // Typed model (Andy 2026-10-06: "only gives you option to scan not type the model in") - same page as a scan.
+  const typed = document.getElementById("genProblemTypeForm");
+  if (typed) typed.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const model = String(document.getElementById("genProblemModel").value || "").trim().toUpperCase();
+    const serial = String(document.getElementById("genProblemSerial").value || "").trim().toUpperCase();
+    if (!model) { genProblemScanStatus("Type the MODEL number from the data tag.", true); return; }
+    const fam = genFamilyForModel(model);
+    if (fam) {
+      genNoteScan(model, serial);
+      trackEvent("gen problem typed -> " + model + (serial ? " | serial: " + serial : ""));
+      genProblemScanStatus("Opened " + model + (serial ? " · SN " + serial : "") + ".");
+      openGenDetail(fam.id, model, { serial, where: "gen problem typed" });
+      return;
+    }
+    trackEvent("gen problem typed -> " + model + " | not in library");
+    genProblemScanStatus(model + " isn't a generator model in our list. Check it against the MODEL line on the tag - or search a code or kW in the box below.", true);
+    const s = document.getElementById("genSearchInput");
+    if (s) { s.value = model; genState.search = model; renderGens(); }
+  });
   const rec = document.getElementById("genClEntryRecent");
   if (rec) rec.onclick = () => { genCl.view = "recent"; showScreen("genchecklist"); window.scrollTo(0, 0); };
   document.querySelectorAll("#genBrandTabs [data-brand]").forEach(b => {
@@ -6761,7 +7053,7 @@ function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, s
       }
     }
   } else {
-    boxes.push(ccTargetBox("Target superheat", "6-15°F", "TXV/EEV self-manages SH — charge to subcooling"));
+    boxes.push(ccTargetBox("Target superheat", "6-15°F", "TXV/EEV self-manages SH (factory settings 7-15°F by platform) — charge to subcooling"));
   }
 
   // Target subcooling — nameplate value always wins; 10°F is a fallback only.
@@ -7658,7 +7950,7 @@ const MODEL_PATTERNS = [
   // literature (SS-GMEC96, SS-GME8, shared install manual GME8/GMH8/GDH8/
   // GMS8/GDS8/GHS8). Field population is huge even though the current
   // manuals in our library cover the newer naming.
-  { re: /^(GMSS|GCSS|GMES|GCES|GMEC|GCEC)9[26]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 92/96% furnace (GMSS/GMES single-stage, GMEC two-stage — prior generation)", notes: ["Flash codes and E-codes in Error Codes apply — same board families as the current lineup."] },
+  { re: /^[GA][MC](SS|ES|EC)9[26]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 92/96% furnace (GMSS/GMES single-stage, GMEC two-stage — prior generation)", notes: ["Flash codes and E-codes in Error Codes apply — same board families as the current lineup."] },
   { re: /^(GMS|GDS|GHS|GME|GMH|GDH)8[0-9]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman 80% furnace (GMS8/GDS8/GHS8 single-stage, GME8/GMH8/GDH8 two-stage — prior generation)", notes: ["Goodman flash codes in Error Codes apply."] },
   // 90-95% legacy lineup, confirmed against Goodman's own spec sheets
   // (SS-GMV95, SS-GMH95, SS-GKS9) and install manual GMH95/GCH95/GME95/GCH9.
@@ -7680,12 +7972,12 @@ const MODEL_PATTERNS = [
   // furnace; the air-handler electrical path in Diagnostic Help covers them.
   { re: /^MBV[CK][0-9]/, brand: "Goodman", equipment: "Air Handler", series: "Goodman/Daikin modular blower (MBVC/MBVK — electric heat or FIT indoor)", notes: ["With an electric heat kit installed, work it as an electric furnace — the air handler power-path and heat-strip scenarios in Diagnostic Help apply.", "On a Daikin FIT system the communicating code table in Error Codes applies."] },
   // --- Carrier / Bryant / Payne ---
-  { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["Full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'."] },
+  { re: /^59MN7/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 98 modulating furnace (59MN7C)", notes: ["59MN7C: full major.minor status-code table (10.1-53.2) is in Error Codes under 'Carrier Infinity'. 59MN7A / 59MN7B: two-digit short/long flash codes - see the 59MN7B rows."] },
   { re: /^59TP[67]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Performance 96/97 two-stage furnace (59TP6 / 59TP7)", notes: ["59TP7 = Performance 97 (to 97% AFUE); 59TP6 = Performance 96. Same service platform — manifold Table 26 by input rate + altitude, same temp-rise and altitude-derate. 59TP7A standardizes the 59TP6C on-board 3-digit LCD + NFC diagnostics.","Install/service manual is in Manuals → Carrier."] },
-  { re: /^59TN[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 96 two-stage variable-speed gas furnace (59TN6)", notes: ["Infinity communicating control - the Carrier Infinity major.minor status-code table in Error Codes (same family as the 59MN7C) applies.", "Install/service manual (59TN6B) is in Manuals → Carrier."] },
+  { re: /^59TN[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Infinity 96 two-stage variable-speed gas furnace (59TN6)", notes: ["59TN6A / 59TN6B: two-digit short/long flash codes - see the 59TN6B rows. 59TN6C / 59TN7A: 3-digit major.minor display; the Carrier Infinity table applies except 31.6 / 31.7 (HPS one-minute vs 75-second) and there is no 31.1 / 31.2 / 35.1 / 42.x on the two-stage board.", "Install/service manual (59TN6B) is in Manuals → Carrier."] },
   { re: /^59SP5/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 59SP5A multipoise condensing gas furnace", notes: ["Its own two-digit amber-LED flash codes (short flashes = first digit, long = second) are in Error Codes under 59SP5A - the Codes button opens them.", "Source: Carrier 59SP5A-18SI installation instructions (same code text in -14SI through -17SI)."] },
-  { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["Uses the standard Carrier flash-code board — see Bryant/Payne flash codes in Error Codes."] },
-  { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Standard flash-code list in Error Codes applies to most non-communicating models."] },
+  { re: /^59(SC|SP)[0-9]/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier Comfort series single-stage furnace", notes: ["59SC5B / 59SC2D / 59SP5A / 59SP6A: two-digit flash codes - see the 58SP0A/59SC2D/59SP6A and 59SP5A rows. 59SC2E / 59SC6A / 59SP6B: 3-digit major.minor display (13.1 = limit lockout, 14.1 = ignition lockout, 32.1 = open LPS) - see the \"59SC2E and 59SC6A\" rows, not the two-digit list."] },
+  { re: /^58[A-Z]{2}/, brand: "Carrier", equipment: "Gas Furnace", series: "Carrier 58-series gas furnace", notes: ["Series A and older (58STA/58SB0A/58TN0A/58TP0A/58SP0A, 58CVA, 58MVC): two-digit short/long flash codes - see their rows in Error Codes. Series B (58TN0B/58TP0B/58SP0B/58CU0B): 3-digit major.minor display read off the furnace troubleshooting guide / service label, NOT the two-digit list."] },
   // Payne-branded — same Carrier Corp platform, one standard tier (no
   // good/better/best split). No official Payne serial-date format exists
   // (checked payne.com/hvacpartners.com/shareddocs.com directly) — the age
@@ -7754,7 +8046,7 @@ const MODEL_PATTERNS = [
   { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Diagnostic Help."] },
   // --- Trane / American Standard ---
   { re: /^S[89][VXB][12]|^L9X1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
-  { re: /^(TUD|TUH|TDD|TDH|TUX|TUC|TDC|TUE|TME|AUD|ADD)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
+  { re: /^(TUD|TUH|TDD|TDH|TUX|TUY|TUC|TDC|TUE|TME|AUD|ADD|AUH|ADH|AUX|AUY|AUC|ADC|AUE)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
   { re: /^4TT[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX; 4TTV = XV18/XV20i variable-speed)", notes: ["Condensing unit installer's guide is in Manuals → Trane.", "4TTV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4TW[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX; 4TWV = XV18/XV20i variable-speed)", notes: ["4TWV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4A7|^4A6/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "American Standard AC/heat pump", notes: ["American Standard = Trane."] },
@@ -7805,7 +8097,7 @@ const MODEL_PATTERNS = [
   { re: /^EB[12][0-9][A-Z]/, brand: "York", equipment: "Electric Furnace", series: "Coleman EB-series mobile-home electric furnace", notes: ["Work it with the electric furnace scenarios in Diagnostic Help - sequencers, limits, and element checks all apply.", "Same mobile-home platform as the DGAA/DGAH gas furnaces."] },
   // --- Rheem / Ruud ---
   { re: /^R9[2567][0-9]?[TVMP]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud R9x condensing gas furnace", notes: ["PlusOne 7-segment diagnostics on board; EcoNet-capable models report codes to the EcoNet stat."] },
-  { re: /^R80[12][TV]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud 80% gas furnace", notes: [] },
+  { re: /^R80[12][TVSP]/, brand: "Rheem", equipment: "Gas Furnace", series: "Rheem/Ruud 80% gas furnace", notes: [] },
   // Legacy Classic-era furnaces, confirmed against Rheem's own literature
   // (G11-518 RGPH spec, G11-532 RGRA/RGRB, and the pts.myrheem historical
   // IO covering RGRA/RGRB/RGTA/RGRS/RGTS/RGRT).
@@ -7864,7 +8156,7 @@ const MODEL_PATTERNS = [
   { re: /^T[CH][GJ][DF][0-9A-Z]/, brand: "York", equipment: "Other", series: "Coleman / Luxaire packaged unit - TCGD / TCGF / TCJD / TCJF gas-electric and AC, THGD / THGF / THJD / THJF heat pump (York badge = YCJD / YCJF / YHJD / YHJF)", notes: ["Same equipment as the York YCJ / YHJ packaged line already in the scanner, sold under the Coleman and Luxaire badges.","No package-unit-specific code table was sourced in this pass - see the generic packaged-unit scenarios in Diagnostic Help."] },
   { re: /^T[CH][34]B[0-9A-Z]/, brand: "York", equipment: "Condenser/Heat Pump", series: "Coleman / Luxaire TC3B / TC4B air conditioner and TH3B / TH4B heat pump (13-14 SEER prior generation)", notes: ["Prior-generation Coleman/Luxaire split systems; no dedicated fault-code table was sourced for them in this pass.","Trap: this is not the Nortek *T-series (FT4B / DT4B / JT5B) - those have the family letter in position 1 and a T in position 2."] },
   { re: /^P[CGDH][35][0-9]/, brand: "York", equipment: "Other", series: "York / Coleman / Luxaire (Johnson Controls Ducted Systems) R-454B packaged unit — PC (AC + optional electric heat), PH (heat pump + electric), PG (AC + gas heat), PD (heat pump + gas heat); tier digit 3 = 13.4 SEER2, 5 = 15.2 SEER2, 2–5 ton", notes: ["R-454B (A2L). Carries a Mitigation Control Board (RDS) with an A2L leak sensor near the coil drain pan. Board RED LED: slow 2s-on/2s-off = normal; 2 flashes + buzzer = refrigerant leak above 15% LFL (ventilate, find/repair the leak — the sensor also trips on gas/propane, so check gas piping too); 3 flashes + buzzer = refrigerant sensor failure (cycle power, else replace the sensor); 4 flashes + buzzer = sensor comms lost (check the A2L sensor plug/cable at the board); solid red = board failure.", "On a leak the board intercepts thermostat calls and forces a mitigation response (blower on, compressor held off) — a blower running with no call can be the RDS doing its job, not a fault. Stored codes persist 30 days: hold the board push-button 2–5 s to display, >5 s to clear (only with no active fault).", "Install manual (PC3 series) is in Manuals → York."] },
-  { re: /^(HMH[0-9]|HMCG[0-9]|H[CH][0-9]{3}[A-Z])/, brand: "York", equipment: "Condenser/Heat Pump", series: "York / Coleman / Luxaire horizontal (side) discharge inverter outdoor unit - HMH7 modulating heat pump, HMCG2 modulating air conditioner, HH8 / HC8 R-454B multi-speed", notes: ["All three families print the SAME numeric outdoor-unit fault table (codes 1-97) - it is in Error Codes as one family. Codes 22 and 97 are heat-pump only; code 16 is a cooling-overload code.","Where the code appears depends on size. 24k/36k HMH7 and HMCG2 show it on LED1 (tens) + LED2 (ones) on the main board; HH8 and the 48k/60k units show it on a 7-segment display. Query parameter P.0 to read the active code.","LED3 changes what LED1/LED2 mean: LED3 ON = the blink count is a DRIVE fault (separate table in Error Codes), LED3 flashing with LED1/LED2 off = compressor preheat, all three off = no fault.","Nomenclature HMCG22B241S: H=horizontal discharge, M=modulating (1/2/3=stages, V=variable), C=air conditioner (H=heat pump), G2=16 SEER2 efficiency series, 2=208/230-1-60, B=R-410A (D=R-454B), 24=2 ton, 1=generation, S=standard control (C=communicating, B/W=wireless).","HH8 uses the newer positional form HH824E2S11: H=horizontal, H=heat pump, 8=18 SEER2, 24=2 ton, E=R-454B, 2=208/230-1-60, S=standard control, 1=factory option, 1=generation, A=style.","HH8 is R-454B (A2L) - it has a refrigerant detection system, and its LED1 is read as a reflection off the delta plate. No 4-ton model exists; a 5-ton HH860 is set to lower-capacity mode for 4-ton jobs.","Setback clearance is only 8 inches on the side-discharge cabinets, versus about 24 inches for a conventional top-discharge unit."] },
+  { re: /^(HMH[0-9]|HMCG[0-9]|HH8|H[CH][0-9]{3}[A-Z])/, brand: "York", equipment: "Condenser/Heat Pump", series: "York / Coleman / Luxaire horizontal (side) discharge inverter outdoor unit - HMH7 modulating heat pump, HMCG2 modulating air conditioner, HH8 / HC8 R-454B multi-speed", notes: ["All three families print the SAME numeric outdoor-unit fault table (codes 1-97) - it is in Error Codes as one family. Codes 22 and 97 are heat-pump only; code 16 is a cooling-overload code.","Where the code appears depends on size. 24k/36k HMH7 and HMCG2 show it on LED1 (tens) + LED2 (ones) on the main board; HH8 and the 48k/60k units show it on a 7-segment display. Query parameter P.0 to read the active code.","LED3 changes what LED1/LED2 mean: LED3 ON = the blink count is a DRIVE fault (separate table in Error Codes), LED3 flashing with LED1/LED2 off = compressor preheat, all three off = no fault.","Nomenclature HMCG22B241S: H=horizontal discharge, M=modulating (1/2/3=stages, V=variable), C=air conditioner (H=heat pump), G2=16 SEER2 efficiency series, 2=208/230-1-60, B=R-410A (D=R-454B), 24=2 ton, 1=generation, S=standard control (C=communicating, B/W=wireless).","HH8 uses the newer positional form HH824E2S11: H=horizontal, H=heat pump, 8=18 SEER2, 24=2 ton, E=R-454B, 2=208/230-1-60, S=standard control, 1=factory option, 1=generation, A=style.","HH8 is R-454B (A2L) - it has a refrigerant detection system, and its LED1 is read as a reflection off the delta plate. No 4-ton model exists; a 5-ton HH860 is set to lower-capacity mode for 4-ton jobs.","Setback clearance is only 8 inches on the side-discharge cabinets, versus about 24 inches for a conventional top-discharge unit."] },
   { re: /^TM9[YTM]|^TML[VTX]|^TL[89]E/, brand: "York", equipment: "Gas Furnace", series: "York / Coleman / Luxaire TM9Y / TM9T / TM9M (96% two-stage standard ECM), TMLV / TMLT / TMLX (80% Low-NOx two-stage variable speed), TL8E / TL9E (80% / 95% single-stage Ultra Low NOx) gas furnace", notes: ["Same standard Integrated Furnace Control and the SAME 1 to 13 red-flash table as TM8 / TM9V / TM9E - see the York UTEC integrated furnace control family in Error Codes.","TMLV is the 80% Low-NOx version of TM8V and ships under the same install manual and document number.","The LAST ERROR button flashes the 5 most recent stored codes, newest first, with a 2 second gap. Two green flashes means the memory is empty; hold the button over 5 seconds to clear it (3 green flashes confirms).","Flame sense reference: about 3.7 microamps DC normal, warning starts at 1.5 microamps, lockout at 0.1 microamps.","A T-prefix model number does NOT identify the badge - the same manual covers York (Y), Coleman (C) and Luxaire (L) versions.","TM9M / TM9T / TMLT / TMLX added from the York LX Series brochure (yorknow.com tm9ybrochure.pdf) - same LX standard-IFC board family"] },
   { re: /^Z[89][EV][ST][0-9A-Z]/, brand: "York", equipment: "Gas Furnace", series: "Coleman / Luxaire Z8ES / Z8ET / Z8VT (80% AFUE) and Z9ES / Z9ET / Z9VT (96-97% AFUE) gas furnace - badge-exclusive naming for the TM/TL platform", notes: ["Coleman and Luxaire sell this platform under their own Z8 / Z9 names alongside the shared TM / TL prefixes. Third letter: E=standard ECM, V=variable speed; fourth letter: S=single stage, T=two stage.","Standard Integrated Furnace Control - use the York UTEC integrated furnace control family in Error Codes, not the modulating table."] },
   { re: /^[YCLT]P(9C|LC)[0-9A-Z]/, brand: "York", equipment: "Gas Furnace", series: "York YP9C / YPLC, Coleman CP9C / CPLC, Luxaire LP9C / LPLC, shared TP9C / TPLC - modulating ECM gas furnace (up to 98% AFUE, and the 80% Low-NOx twin)", notes: ["This board does NOT use the same flash table as the TM/TL standard IFC furnaces. It is a separate family in Error Codes - 6 red flashes here is a GAS VALVE COMMUNICATION error, not the pressure-switch cycling fault it means on the standard board.","Amber flashes on this board are capacity-reduction warnings, not lockouts: 4 amber = circulating air restriction, 5 amber = vent or combustion air restriction (also normal above 4000 ft).","Normal idle is ONE green flash. Two green flashes means the error memory is empty; three means it was just cleared. Rapid green is factory speed-up test mode - cycle power to exit.","Normal firing sequence: inducer proves airflow, igniter heats 17-20 s, valve opens at 70 percent for 30-45 s, drops to the 35 percent minimum, then modulates 35-100 percent. Stepping down mid-call is normal behavior, not short cycling.","The Y / C / L / T first letter is only the badge - all four are the same furnace and the same install manual."] },
@@ -7894,8 +8186,9 @@ const MODEL_PATTERNS = [
   { re: /^WSA1[3-5]/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "WeatherKing WSA13 / WSA14 / WSA15 single-stage air conditioner (legacy cabinet), 1.5 to 2.5 ton", notes: ["The app's existing WeatherKing rule is ^WA1[3-5] and does not reach WSA14AY - this rule covers the S variant.","WSA14AY is 15.2 SEER2 / 12 EER2, 17.1 to 28.6 kBTU, single-stage, in the legacy iC cabinet.","2025-2026 models carry a Patented Refrigerant Detection System (A2L leak detection) - a leak indication on this unit is a safety event, not a nuisance code."] },
   { re: /^(R(QKA|QLA|QMA|SKA|SMA|RKA|RMA|JKA|JMA|LKA|LMA|KKA|KMA|RCF|REF|RGF|PDC)|U(QKA|QLA|QMA|SKA|SMA|RKA|RMA|JKA|JMA|LKA|LMA|KKA|KMA|RCF|REF|UGF|PDC)|W(QKA|QLA|QMA|SKA|SMA|RKA|RMA|JKA|JMA|LKA|LMA|KKA|KMA|RCF|REF|RGF|PDC))/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud / WeatherKing Classic-era packaged equipment (RQKA/RQLA/RQMA, RSKA/RSMA, RRKA/RRMA, RJKA/RJMA, RLKA/RLMA, RKKA/RKMA, RRCF/RREF/RRGF, RPDC and the U / W twins)", notes: ["Packaged unit: the whole system is in one cabinet outdoors, so there is no separate indoor blower or coil to check.","No diagnostic board is documented for this generation.","Warranty trap: compressor coverage was 10 years on RQMA / RSMA / RRMA / RJMA / RLMA / RKMA and their U and W twins.","Ruud's gas-pack letter differs from Rheem's: Rheem RRGF, WeatherKing WRGF, but Ruud UUGF."] },
   { re: /^[RUW]O(BC|NC|UC)/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud / WeatherKing (-)OBC / (-)ONC / (-)OUC oil furnace", notes: ["Oil, not gas - the diagnostics are the oil primary control (lockout, cad cell), not a furnace blink code.","Heat exchanger carried a LIMITED LIFETIME warranty on this family; the oil burner itself carried 3 years."] },
-  // RCH needs a dash or digit next (RCH-4821): RCHT is a Honeywell Home T-series thermostat (content audit 2026-10-06).
-  { re: /^RC(H(?=[-0-9])|CL|CU)/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud RCH uncased replacement air-handler N-coil and RCCL / RCCU cased coil", notes: ["Coil-only tag: the matched outdoor unit's data plate carries the system charge and electrical data.","Metering device decides the charging method - piston or fixed orifice charges by SUPERHEAT, TXV by SUBCOOLING. Check which this coil actually has.","No diagnostic codes exist for a coil - there is no board."] },
+  // RCH needs a dash or a capacity digit 0-8 next (RCH-4821): RCHT is a Honeywell Home T-series thermostat and
+  // RCH93xxWF is the Honeywell Lyric Round - Rheem RCH coils run 24-60 kBtu, never 9x (content audit 2026-10-06).
+  { re: /^RC(H(?=[-0-8])|CL|CU)/, brand: "Rheem", equipment: "Other", series: "Rheem / Ruud RCH uncased replacement air-handler N-coil and RCCL / RCCU cased coil", notes: ["Coil-only tag: the matched outdoor unit's data plate carries the system charge and electrical data.","Metering device decides the charging method - piston or fixed orifice charges by SUPERHEAT, TXV by SUBCOOLING. Check which this coil actually has.","No diagnostic codes exist for a coil - there is no board."] },
   // --- end coverage:rheem ---
   // --- coverage:trane (v123) ---
   { re: /^5T[TW][ABRVX][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane 5TTR/5TTA/5TTX/5TTV air conditioner and 5TWR/5TWA/5TWX/5TWV heat pump - R-454B 5-series, 13-20 SEER2", notes: ["Digit 1 is the refrigerant: 2=R-22, 4=R-410A, 5=R-454B. A 5T unit is R-454B (A2L) - recover, evacuate and charge with A2L-rated equipment.","Digit 4 is the product family (R=wire top grille, X=WeatherGuard top, V=variable speed, A=light commercial, B=XB). Digit 5 is the SEER2 tier (3=13, 4=14, 5=15, 6=16, 7=17, 8=18, 0=20). Digit 4 is NOT a stage count.","5TTA3/5TTA4 and 5TTR3/5TTR4 are the same physical 13/14 SEER2 units - Trane dual-lists them on paperwork.","5TTV/5TWV (TruComfort) are Trane Link communicating - faults show at the thermostat/Trane Home app, not as an outdoor flash code.","Flash codes for the single-stage 5TWR4/5TWR6/5TWX5/5TWX6 defrost board are already in Error Codes - that table has no 8 FLASH and puts low-ambient lockout at 7.","Subcooling target moves 9-12 F by tonnage - pull the target off that model's Product Data table, not a single shop number."] },
@@ -7931,7 +8224,7 @@ const MODEL_PATTERNS = [
   // --- coverage:goodman (v123) ---
   { re: /^(?:GSX|GSZ|ASX|ASZ)[NBMHC][0-9]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman / Amana 2023 SEER2 condenser and heat pump - GSXN4 / GSXB4 / GSXH5 / GSZB4 / GSZH5 and the Amana ASXN4 / ASXB4 / ASXH5 / ASZB4 / ASZH5 twins (R-410A)", notes: ["Read position 4 as the FEATURE letter, not a SEER number: N=Value, B=Classic, M=Multi-Family, H=Enhanced, C=Premium, V=Ultimate. The digit after it is the SEER2 tier. GSXH5 is not '5 SEER'.","GSXH5 / GSZH5 / ASXH5 / ASZH5 replaced the single-stage GSX16 / GSZ16 per service manual RS6200006r103.","Codes: if a diagnostics module is fitted, the Comfort Alert / CoreSense rows already in Error Codes apply. RS6200006r103 documents that module on the Amana-badged ASX/ASZ (and DSX/DSZ) units - do not assume a Goodman-badged GSX/GSZ has one until you look at the board.","Model layout: prefix + 5 digits (3-digit capacity, electrical, refrigerant), e.g. GSXH501810, GSXN403610.","Service manual RS6200006 (already in Manuals) covers this family."] },
   { re: /^[GA]L[XZ]S[35][0-9]{0,2}B/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman / Amana R-32 single-stage condenser and heat pump - GLXS3B / GLXS5B / GLZS5B and Amana ALXS3B / ALXS5B / ALZS5B", notes: ["R-32 is an A2L (mildly flammable) refrigerant. These units carry a factory leak-detection sensor and a dedicated A2L PCB with its own red LED - that flash-pattern table is already in Error Codes under the Daikin R-32 single-stage / A2L PCB family and applies here unchanged.","Nomenclature: G(brand) L(split system R-32) X(condenser) or Z(heat pump) S(single-stage) <SEER2 tier digit> B(standard) <region N/S/A> <2-digit capacity> <electrical> <variation> <revs>, e.g. GLXS3BN1810AA, GLZS560BA10AA.","SEER2 tier digit: 3=13.4-13.7, 4=13.8-14.5, 5=14.6-15.9, 6=16.0-16.9, 7=17.0-17.9, 8=18.0-18.9, 9=19.0+.","GLXS4* and GLZS4* are already matched by the app's existing GLXS4/GLZS4 rules - only the 3 and 5 tiers needed a new rule.","Compressors use POE oil only - not compatible with mineral-oil (3GS) lubricant.","Service manual RS6200301 covers this whole R-32 single-stage line."] },
-  { re: /^G[XZ]V[0-9]S/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman R-32 side-discharge INVERTER condenser and heat pump - GXV6S / GXV9S (AC) and GZV6S / GZV7S / GZV9S (heat pump), communicating", notes: ["Nomenclature: G X(condenser R-32) or Z(heat pump R-32), V(variable speed compressor), SEER2 tier digit, S(side discharge, communicating), region N/S/A, 2-digit capacity, electrical, variation, revisions - e.g. GXV9SA3610AA, GZV7SA4810AA.","SEER2 tier digit: 6=16.0-16.9, 7=17.0-17.9, 9=19.0+.","The outdoor board HAS diagnostic indicator lights, a seven-segment LED display and fault code storage (stated in SS-GXV6S-R32 and SS-GZV9S-R32) - but Goodman has published NO code table for it on any public host as of this pass. Read the display, then use CoolCloud / the communicating thermostat for the fault text.","R-32 is an A2L refrigerant - recover, evacuate and charge with A2L-rated equipment.","GZV6S-M is the Multi-Family variant of GZV6S and matches this rule.","Do not read the older GSXV9/GSZV9 (R-410A inverter) material on these - different refrigerant and different platform."] },
+  { re: /^G[XZ]V[0-9]S/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman R-32 side-discharge INVERTER condenser and heat pump - GXV6S / GXV9S (AC) and GZV6S / GZV7S / GZV9S (heat pump), communicating", notes: ["Nomenclature: G X(condenser R-32) or Z(heat pump R-32), V(variable speed compressor), SEER2 tier digit, S(side discharge, communicating), region N/S/A, 2-digit capacity, electrical, variation, revisions - e.g. GXV9SA3610AA, GZV7SA4810AA.","SEER2 tier digit: 6=16.0-16.9, 7=17.0-17.9, 9=19.0+.","The outdoor board HAS diagnostic indicator lights, a seven-segment LED display and fault code storage (stated in SS-GXV6S-R32 and SS-GZV9S-R32). Its code table is the Daikin FIT ClimateTalk set - look the code up under Daikin FIT in Error Codes. Source: the dealer service manual SiUS612417EA (2025), which covers the double-fan GXV9S / GZV9S / GZV7S only; single-fan GXV6S / GZV6S are not in it - use CoolCloud / the communicating thermostat for their fault text.","R-32 is an A2L refrigerant - recover, evacuate and charge with A2L-rated equipment.","GZV6S-M is the Multi-Family variant of GZV6S and matches this rule.","Do not read the older GSXV9/GSZV9 (R-410A inverter) material on these - different refrigerant and different platform."] },
   { re: /^[GA]L[XZ]T[0-9]C/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman GLXT7C two-stage communicating R-32 condenser and GLZT7C heat pump (top-flow)", notes: ["Nomenclature: G L(split system R-32) X(condenser) or Z(heat pump) T(TWO-STAGE compressor) 7(17.0-17.9 SEER2) C(communicating, top flow) <region> <2-digit capacity> <electrical> <variation> <revs> - e.g. GLXT7CA3610AA.","The T means two-stage. This is NOT an inverter unit - do not confuse it with the GXV/GZV side-discharge inverters.","SS-GLXT7C-R32 lists 'Copeland ComfortAlert built in diagnostics' as a standard feature, so the Comfort Alert / CoreSense rows already in Error Codes apply to this family.","It also lists commissioning and diagnostics via Bluetooth, plus factory-installed filter drier, transformer and high/low pressure switches.","R-32 (A2L) - use A2L-rated recovery and charging equipment."] },
   { re: /^[GAV][MCD]ES80[0-9]{4,5}[A-Z]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman / Amana 80% AFUE single-stage gas furnace - GMES80 / GCES80 / VMES80 / VCES80 and Amana AMES80 / ACES80 / ADES80 (PCBBF145 board)", notes: ["Codes: single RED LED on the PCBBF145(S) board, read through the observation window in the blower access door. That chart is in Error Codes - it stops at 8 flashes plus a continuous/rapid flash for reversed polarity.","A -U (ultra-low NOx) model in this family uses a DIFFERENT board, PCBBF161, with a pressure TRANSDUCER and 'PS NULL' faults - that is a separate family in Error Codes.","Reset from lockout: thermostat off more than 5 and less than 20 seconds, or open the disconnect at least 5 seconds. The board also auto-resets one hour after lockout.","Nomenclature (Goodman, 13 digits): G(brand) M(upflow/horizontal) or D(dedicated downflow) E(constant torque / multi-speed ECM) or S(PSC) S(single stage) 80(AFUE) <3-digit MBTU> <max CFM 3/4/5> <cabinet A=14 B=17.5 C=21 D=24.5 in> <NOx N or X> <major rev> <minor rev>. Amana is 14 digits and uses C for downflow and C/M/S in the gas-valve position.","Manifold pressure 3.5 in. w.c. +/- 0.3 natural gas, 10 in. w.c. +/- 0.3 propane; propane second-stage line regulator 11 in. w.c. with all appliances running.","Control board fuse is a 3A automotive fuse.","Service manual RS6621003 is in Manuals."] },
   { re: /^[GAV][MCD]EC80[0-9]{4,5}[A-Z]/, brand: "Goodman", equipment: "Gas Furnace", series: "Goodman / Amana 80% AFUE TWO-STAGE gas furnace with multi-speed ECM - GMEC80 / GCEC80 and Amana AMEC80 / ACEC80 (PCBBF139 board)", notes: ["THREE LEDs on the PCBBF139 board: RED is faults, AMBER is heat/flame status, GREEN is cool/fan status. Amber and green flashes are normal-operation indications, not faults.","The red list runs to 12 flashes - much longer than the single-stage PCBBF145 list. Do not read one board's chart on the other.","Red 3 SINGLE flashes = 1st stage pressure switch stuck open; red 3 DOUBLE flashes = 2nd stage pressure switch stuck open. Watch the flash shape, not just the count.","Red 5 flashes covers open rollout OR an open board fuse - check the fuse before condemning the rollout switch.","Set the heat anticipator on the room thermostat to 0.7 amps.","Service manual RS6621005 is in Manuals."] },
@@ -7957,7 +8250,7 @@ const MODEL_PATTERNS = [
   // The refrigerant letter sits in the LAST position of the middle block, which is why
   // ...MTB- reads R-454B and ...HDN1- reads R-410A. Keep the two specific patterns above
   // the generic one - the loop takes the first match.
-  { re: /^BO[VWCHB][A-D]-\d{2}[A-Z]{2}B-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS R-454B outdoor unit (2026 Premium / Light / Ultra nameplate form, e.g. BOVA-60MTB-M19E)", notes: ["The B in the refrigerant position of the middle block means R-454B (A2L) - this one is safe to read off the model string.", "Fault codes are in Error Codes under 'Bosch IDS R-454B 2026'.", "b-prefix codes on the outdoor display are INDOOR faults - go to the air handler."] },
+  { re: /^BO[VWCHB][A-D]-?\d{2}[A-Z]{2}B-?M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS R-454B outdoor unit (2026 Premium / Light / Ultra nameplate form, e.g. BOVA-60MTB-M19E; the hyphens are optional so the dashless IDS Light R-454B plate BOVA24RXBM15S / BOVA36RXBM15S reads here too)", notes: ["The B in the refrigerant position of the middle block means R-454B (A2L) - this one is safe to read off the model string.", "Fault codes are in Error Codes under 'Bosch IDS R-454B 2026'.", "b-prefix codes on the outdoor display are INDOOR faults - go to the air handler."] },
   { re: /^BO[VWCHB][A-D]-\d{2}[A-Z]{1,3}N1?-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS R-410A outdoor unit (e.g. BOVA-36HDN1-M20G, BOVA-60HDN1-M20G)", notes: ["The N in the refrigerant position means R-410A - safe to read off the model string.", "Fault codes are in Error Codes under 'Bosch IDS R-410A'.", "IDS 2.0 service manual (07.2021) is in Manuals -> Bosch."] },
   { re: /^BO[VWCHB][A-D]-\d{2}[A-Z0-9]{2,5}-M\d{2}[A-Z]?/, brand: "Bosch", equipment: "Condenser/Heat Pump", series: "Bosch IDS outdoor unit (long nameplate form)", notes: ["Read the refrigerant letter in the last position of the middle block: B = R-454B, N = R-410A.", "Both the R-410A and R-454B IDS code tables are in Error Codes - the family label on each card names the refrigerant."] },
   // Short tags printed on IOM covers and some cartons/labels. Anchored with $ so they do
@@ -9305,12 +9598,19 @@ function renderScanResult(info) {
   // How many library manuals answer to this exact model (or its family).
   const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
   const nModelManuals = modelManuals.closestTo ? 0 : modelManuals.list.length;
+  // Bulletins for the identified unit (family for a generator plate, model prefix for HVAC).
+  let bulHtml = "";
+  try {
+    const bulFam = info.brand && (info.brand === "Generac" || info.brand === "Kohler") && typeof genFamilyForModel === "function" ? genFamilyForModel(info.model) : null;
+    if (info.brand) bulHtml = bulletinsHtml(bulletinsFor({ genFamily: bulFam ? bulFam.id : "", model: info.model, brand: info.brand }), { where: "tag scanner", serial: info.serial, model: info.model });
+  } catch (e) { bulHtml = ""; }
   box.innerHTML = `
     <div class="scan-id-card">
       <div class="card">
         <div class="card-top"><div><div class="card-code">${escapeHtml(info.model)}</div>${info.serial ? `<div class="card-sub">S/N ${escapeHtml(info.serial)}</div>` : ""}</div></div>
         ${unknown}
         ${ocrBanner}
+        ${bulHtml}
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
         <div class="scan-actions">
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " codes" : escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
@@ -10610,7 +10910,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v264";
+const APP_VERSION = "v265";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

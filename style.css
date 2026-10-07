@@ -1979,6 +1979,12 @@ main {
 /* Generators: Troubleshoot a Problem scan box under the checklist box (Andy 2026-10-02). */
 .gwz-entry-problem { margin-top: 0.35rem; border-color: var(--brand-yellow); }
 #genProblemScanStatus { margin-top: 0.3rem; }
+.gen-type-model { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
+.gen-type-model input { flex: 1 1 9rem; min-width: 0; padding: 0.55rem 0.6rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elevated); color: var(--text); text-transform: uppercase; }
+.gen-type-model input#genProblemSerial { flex: 1 1 7rem; }
+.gen-type-model input#genProblemModel { flex: 1 1 100%; }
+.gen-type-model input::placeholder { text-transform: none; }
+.gen-type-model button { flex: 0 0 auto; padding: 0.55rem 1rem; font-weight: 700; border: none; border-radius: 8px; background: var(--brand-yellow); color: #1a1a1a; }
 
 /* Inventory (Andy 2026-10-02) */
 .tile-inventory { border-left: 5px solid var(--brand-orange); }
@@ -2076,3 +2082,41 @@ body.inv-cam-open { overflow: hidden; }
 .ask-instant-line { overflow-wrap: anywhere; }
 .ask-instant-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dim); margin-right: 0.15rem; }
 .ask-instant-open { margin-top: 0.6rem; }
+
+/* Service bulletins (bulletins.js) - "Bulletins for this unit" card at the top of a generator card
+   and on every scan result. Amber rail = look here; red badge = high priority. Tokens only, so light
+   and dark both work; summaries wrap, never overflow a 375 px phone. */
+.bul-card { margin: 0.6rem 0 0.4rem; border: 1px solid var(--border); border-left: 5px solid var(--gwz-amber, #f5a524); border-radius: 10px; background: color-mix(in srgb, var(--gwz-amber, #f5a524) 9%, var(--card)); padding: 0.45rem 0.65rem 0.3rem; font-size: 0.9rem; color: var(--text); max-width: 100%; overflow: hidden; cursor: auto; text-align: left; }
+.bul-head { font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--gwz-amber-ink, var(--text)); margin-bottom: 0.15rem; }
+.bul-item { border-top: 1px solid var(--border); }
+.bul-item:first-of-type { border-top: 0; }
+.bul-item summary { list-style: none; display: grid; grid-template-columns: auto auto 1fr auto; align-items: baseline; column-gap: 0.45rem; row-gap: 0.15rem; padding: 0.45rem 0; cursor: pointer; line-height: 1.3; min-width: 0; }
+.bul-item summary::-webkit-details-marker { display: none; }
+.bul-item summary::after { content: "▸"; grid-column: 4; grid-row: 1; color: var(--text-dim); }
+.bul-item[open] summary::after { content: "▾"; }
+.bul-pri { grid-column: 1; grid-row: 1; font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; border-radius: 5px; padding: 0.08rem 0.4rem; border: 1px solid var(--border); color: var(--text-dim); white-space: nowrap; }
+.bul-high .bul-pri { color: #fff; background: var(--danger); border-color: var(--danger); }
+.bul-num { grid-column: 2; grid-row: 1; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bul-date { grid-column: 3; grid-row: 1; font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.bul-title { grid-column: 1 / -1; grid-row: 2; min-width: 0; overflow-wrap: anywhere; }
+.bul-item:not([open]) .bul-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bul-body { padding: 0 0 0.6rem; line-height: 1.45; }
+.bul-body p, .bul-sum { margin: 0.2rem 0 0.35rem; overflow-wrap: anywhere; }
+.bul-steps { margin: 0.25rem 0 0.4rem; padding-left: 1.25rem; }
+.bul-steps li { margin-bottom: 0.3rem; overflow-wrap: anywhere; }
+.bul-applies { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.3rem; overflow-wrap: anywhere; }
+.bul-applies b { color: var(--text); }
+.bul-src { color: var(--text-dim); font-size: 0.8rem; margin-top: 0.3rem; overflow-wrap: anywhere; }
+.bul-serial { display: inline-block; font-size: 0.78rem; font-weight: 700; border-radius: 999px; padding: 0.1rem 0.6rem; margin: 0.15rem 0 0.3rem; border: 1px solid var(--border); color: var(--text-dim); max-width: 100%; overflow-wrap: anywhere; }
+.bul-serial.ok { color: var(--ok); border-color: var(--ok); }
+.bul-serial.out { color: var(--danger); border-color: var(--danger); }
+/* Ask instant card: one "Bulletin: number - title" line per match, tap opens the bulletin. */
+.bul-ask-line .ask-ai-cite { margin-top: 0.15rem; text-align: left; white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
+.bul-ask-line .bul-open-high { border-color: var(--danger); }
+/* Inside the Maintenance / Codes result lists the card is a sibling of .card articles - keep the gap. */
+#maintResults > .bul-card, #codesResults > .bul-card { margin: 0.2rem 0 0.75rem; }
+.bul-more { border-top: 1px solid var(--border); }
+.bul-more > summary { list-style: none; cursor: pointer; padding: 0.45rem 0; font-size: 0.85rem; font-weight: 700; color: var(--text-dim); }
+.bul-more > summary::-webkit-details-marker { display: none; }
+.bul-more > summary::after { content: " ▸"; }
+.bul-more[open] > summary::after { content: " ▾"; }

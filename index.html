@@ -121,7 +121,7 @@
 
 <!-- ASK ANYTHING -->
 <section id="askScreen" class="screen hidden">
-  <div class="disclaimer">Ask the way you'd say it out loud — "goodman 3 flashes", "what size capacitor", "sequence of operation on a heat call", "does O or B energize in cooling". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once. It only ever shows what's actually stored in here — it never makes up a code, spec, or step. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you).</div>
+  <div class="disclaimer">Ask the way you'd say it out loud — "goodman 3 flashes", "what size capacitor", "sequence of operation on a heat call", "does O or B energize in cooling". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once — the result cards only ever show what's actually stored in here. The 🤖 AI answer is different: it is written from the manual pages and entries it finds plus general HVAC practice, so a number in it that you can't open in a cited page is general practice, not this unit's spec — check it against the unit's own literature before acting on it. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you).</div>
   <div class="controls">
     <div class="ask-input-row">
       <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Ask anything — code, symptom, unit, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -225,6 +225,12 @@
       <span class="gwz-entry-go" aria-hidden="true">›</span>
     </label>
     <input type="file" id="genProblemScanFile" accept="image/*" capture="environment" class="hidden">
+    <!-- Andy 2026-10-06: troubleshooting was scan-only - let the tech type the model too -->
+    <form id="genProblemTypeForm" class="gen-type-model" autocomplete="off">
+      <input type="text" id="genProblemModel" placeholder="Or type the model # - G0072580, 20RCAL" aria-label="Generator model number" autocapitalize="characters" spellcheck="false">
+      <input type="text" id="genProblemSerial" placeholder="Serial (optional)" aria-label="Generator serial number" autocapitalize="characters" spellcheck="false">
+      <button type="submit">Open</button>
+    </form>
     <div id="genProblemScanStatus" class="scan-status hidden"></div>
     <!-- Andy 2026-10-05: one generator, several transfer switches (Generac support drawing) -->
     <details class="gen-guide" id="genMultiAts">
@@ -659,6 +665,7 @@
 <script src="weather.js"></script>
 <script src="manuals-seed/seed-index.js"></script>
 <script src="maint.js"></script>
+<script src="bulletins.js"></script>
 <script src="calllog.js"></script>
 <script src="app.js"></script>
 <script src="inventory.js"></script>

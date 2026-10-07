@@ -595,7 +595,7 @@ const GENERATORS = [
     "code": "1300",
     "name": "Low Oil Pressure",
     "display": "LOW OIL PRESSURE, flashing RED external LED",
-    "meaning": "Engine oil pressure alarm.",
+    "meaning": "Engine oil pressure alarm. NOTE (audit 2026-10-06): the number 1300 is an Evolution e-code (0H9172 Rev M p.133 \"Low Oil Pressure (Evolution e-Code 1300)\"). The Power Zone 200 dealer table has no 1300 - its oil-pressure codes are 3301 (signal below range) and 3304 (signal above range), action step Oil Pressure Switch Test (A0004542981 Rev E p.29, 111). The owner's quick reference lists LOW OIL PRESSURE by name only (A0004332577 Rev C p.37).",
     "causes": [
      "Low oil level",
      "Oil pressure sensor/system issue"
@@ -612,7 +612,7 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temp",
     "display": "HIGH TEMPERATURE, flashing RED external LED; unit shuts down during operation",
-    "meaning": "The generator has overheated.",
+    "meaning": "The generator has overheated. NOTE (audit 2026-10-06): the number 1400 is an Evolution e-code (0H9172 Rev M p.133 \"High Temperature Switch (Evolution e-Code 1400)\"); 1401 is a liquid-cooled code (Nexus / Evolution liquid-cooled diagnostic manual 0J1195 alarm list p.54, p.126). The Power Zone 200 dealer table has no 1400 - its temperature codes are 5200-5217 Cylinder Head Temperature 1, action step Cylinder Head Temperature Sensor Test (A0004542981 Rev E p.31-32, 93-94). The owner's quick reference lists HIGH TEMPERATURE by name only (A0004332577 Rev C p.37).",
     "causes": [
      "Obstructed intake/exhaust ventilation",
      "Inadequate fuel pressure",
@@ -1014,7 +1014,7 @@ const GENERATORS = [
     "code": "2400",
     "name": "Fuse Problem",
     "display": "FUSE PROBLEM, flashing RED external LED",
-    "meaning": "The 7.5-amp controller fuse is missing or blown.",
+    "meaning": "The 7.5-amp controller fuse is missing or blown. NOTE (audit 2026-10-06): 2400 is an Evolution e-code. It is not in the Power Zone 200 dealer E-code table (Generac A0004542981 Rev E p.25-32) and not in the Next Gen owner's quick reference (A0004332577 Rev C p.37-39). On a Power Zone 200 a missing or blown 7.5 A controller fuse shows as a dead controller / no crank, not as a code - pull and inspect the fuse per the Battery and Cables Test (A0004542981 Rev E p.90).",
     "causes": [
      "Improperly seated or blown 7.5A fuse",
      "Generator battery or battery-cable problem"
@@ -3714,7 +3714,7 @@ const GENERATORS = [
     "code": "1300",
     "name": "Low Oil Pressure",
     "display": "LOW OIL PRESSURE, flashing RED external LED",
-    "meaning": "Engine oil pressure alarm.",
+    "meaning": "Engine oil pressure alarm. NOTE (audit 2026-10-06): the number 1300 is an Evolution e-code (0H9172 Rev M p.133 \"Low Oil Pressure (Evolution e-Code 1300)\"). The Power Zone 200 dealer table has no 1300 - its oil-pressure codes are 3301 (signal below range) and 3304 (signal above range), action step Oil Pressure Switch Test (A0004542981 Rev E p.29, 111). The owner's quick reference lists LOW OIL PRESSURE by name only (A0004332577 Rev C p.37).",
     "causes": [
      "Low oil level",
      "Oil pressure sensor/system issue"
@@ -3731,7 +3731,7 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temp",
     "display": "HIGH TEMPERATURE, flashing RED external LED; unit shuts down during operation",
-    "meaning": "The generator has overheated.",
+    "meaning": "The generator has overheated. NOTE (audit 2026-10-06): the number 1400 is an Evolution e-code (0H9172 Rev M p.133 \"High Temperature Switch (Evolution e-Code 1400)\"); 1401 is a liquid-cooled code (Nexus / Evolution liquid-cooled diagnostic manual 0J1195 alarm list p.54, p.126). The Power Zone 200 dealer table has no 1400 - its temperature codes are 5200-5217 Cylinder Head Temperature 1, action step Cylinder Head Temperature Sensor Test (A0004542981 Rev E p.31-32, 93-94). The owner's quick reference lists HIGH TEMPERATURE by name only (A0004332577 Rev C p.37).",
     "causes": [
      "Obstructed intake/exhaust ventilation",
      "Inadequate fuel pressure",
@@ -4133,7 +4133,7 @@ const GENERATORS = [
     "code": "2400",
     "name": "Fuse Problem",
     "display": "FUSE PROBLEM, flashing RED external LED",
-    "meaning": "The 7.5-amp controller fuse is missing or blown.",
+    "meaning": "The 7.5-amp controller fuse is missing or blown. NOTE (audit 2026-10-06): 2400 is an Evolution e-code. It is not in the Power Zone 200 dealer E-code table (Generac A0004542981 Rev E p.25-32) and not in the Next Gen owner's quick reference (A0004332577 Rev C p.37-39). On a Power Zone 200 a missing or blown 7.5 A controller fuse shows as a dead controller / no crank, not as a code - pull and inspect the fuse per the Battery and Cables Test (A0004542981 Rev E p.90).",
     "causes": [
      "Improperly seated or blown 7.5A fuse",
      "Generator battery or battery-cable problem"
@@ -6802,7 +6802,7 @@ const GENERATORS = [
     "code": "1300",
     "name": "Low Oil Pressure",
     "display": "LOW OIL PRESSURE, flashing RED external LED",
-    "meaning": "Engine oil pressure alarm.",
+    "meaning": "Engine oil pressure alarm. NOTE (audit 2026-10-06): the number 1300 is an Evolution e-code (0H9172 Rev M p.133 \"Low Oil Pressure (Evolution e-Code 1300)\"). The Power Zone 200 dealer table has no 1300 - its oil-pressure codes are 3301 (signal below range) and 3304 (signal above range), action step Oil Pressure Switch Test (A0004542981 Rev E p.29, 111). The owner's quick reference lists LOW OIL PRESSURE by name only (A0004332577 Rev C p.37).",
     "causes": [
      "Low oil level",
      "Oil pressure sensor/system issue"
@@ -6819,7 +6819,7 @@ const GENERATORS = [
     "code": "1400-1401",
     "name": "High Temp",
     "display": "HIGH TEMPERATURE, flashing RED external LED; unit shuts down during operation",
-    "meaning": "The generator has overheated.",
+    "meaning": "The generator has overheated. NOTE (audit 2026-10-06): the number 1400 is an Evolution e-code (0H9172 Rev M p.133 \"High Temperature Switch (Evolution e-Code 1400)\"); 1401 is a liquid-cooled code (Nexus / Evolution liquid-cooled diagnostic manual 0J1195 alarm list p.54, p.126). The Power Zone 200 dealer table has no 1400 - its temperature codes are 5200-5217 Cylinder Head Temperature 1, action step Cylinder Head Temperature Sensor Test (A0004542981 Rev E p.31-32, 93-94). The owner's quick reference lists HIGH TEMPERATURE by name only (A0004332577 Rev C p.37).",
     "causes": [
      "Obstructed intake/exhaust ventilation",
      "Inadequate fuel pressure",
@@ -7263,7 +7263,7 @@ const GENERATORS = [
     "code": "2400",
     "name": "Fuse Problem",
     "display": "FUSE PROBLEM, flashing RED external LED",
-    "meaning": "The 7.5-amp controller fuse is missing or blown.",
+    "meaning": "The 7.5-amp controller fuse is missing or blown. NOTE (audit 2026-10-06): 2400 is an Evolution e-code. It is not in the Power Zone 200 dealer E-code table (Generac A0004542981 Rev E p.25-32) and not in the Next Gen owner's quick reference (A0004332577 Rev C p.37-39). On a Power Zone 200 a missing or blown 7.5 A controller fuse shows as a dead controller / no crank, not as a code - pull and inspect the fuse per the Battery and Cables Test (A0004542981 Rev E p.90).",
     "causes": [
      "Improperly seated or blown 7.5A fuse",
      "Generator battery or battery-cable problem"
