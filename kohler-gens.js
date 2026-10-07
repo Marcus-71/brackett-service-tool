@@ -4135,7 +4135,7 @@ const KOHLER_GENERATORS = [
     "seedFile": "kohler-20-690-01.pdf"
    },
    {
-    "title": "32 690 03 Kohler KT610-KT745 Engine Service Manual (10/12RESV engine; file 62_690_01)",
+    "title": "32 690 03 Kohler KT610-KT745 Engine Service Manual (10/12RESV engine)",
     "docType": "service",
     "seedFile": "kohler-32-690-03.pdf"
    },

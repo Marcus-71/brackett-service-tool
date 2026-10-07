@@ -32503,7 +32503,7 @@ const THERMOSTATS = [
    {
     "title": "Daikin One+ Smart Thermostat Installation & Commissioning (Technical Training Module TRC-3)",
     "docType": "install",
-    "seedFile": "daikin-one-plus-thermostat-install.pdf"
+    "seedFile": "toolbox-daikin-oneplus-trc3.pdf"
    },
    {
     "title": "Daikin One+ Unitary Aux Heater Installation and Setup Instructions",

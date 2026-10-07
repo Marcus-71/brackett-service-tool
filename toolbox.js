@@ -1753,7 +1753,7 @@ const TOOLBOX = [
   "manuals": [
    {
     "title": "Bosch BCC100 Thermostat User Guide (76H993390F)",
-    "seedFile": "toolbox-bosch-bcc100-user-guide.pdf"
+    "seedFile": "bosch-bcc100-thermostat-guide.pdf"
    }
   ],
   "source": "Bosch BCC100 User Guide 76H993390F, sections Thermostat Installation, Initial Setup / User Account Setup, and Add Device - https://www.bosch-homecomfort.com/us/media/country_pool/documents/downloads-for-bosch-products/thermostats-controls-manuals/bcc100_user_guide_76h993390f.pdf (PDF downloaded and text extracted for this entry); bosch-homecomfort.com Thermostats & Controls FAQ (live, Aug 2026) for the Connected Control app discontinuation and EasyAir migration; bosch-homecomfort.com BCC100 and BCC110 product pages"
