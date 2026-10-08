@@ -10910,7 +10910,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v270";
+const APP_VERSION = "v271";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -10938,7 +10938,7 @@ const BLOCKED_TECHS = ["Gus", "Lincoln"];   // Lincoln: removed by Andy 2026-10-
 // AND clearing the browser's site data still resets it - a courtesy lock, not security.
 // Only the SHA-256 of the code is here, never the code itself.
 const DEVICE_LOCK_KEY = "bfc-device-locked";
-const OFFICE_UNLOCK_HASH = "003d8d94a01f40831e7576030a746c0473e3a1d491d1fa31b1675093bfe1bd11";
+const OFFICE_UNLOCK_HASH = "100a237e2b30463f38bdc43d8f276ea00bc5ce8f4ae69d4fc212f8af980a8f3d";   // changed v271 (Andy 2026-10-08)
 const OFFICE_UNLOCK_TRIES_KEY = "bfc-office-unlock-tries";
 
 function deviceLockedAs() {
@@ -11092,7 +11092,65 @@ function showAccessRemoved() {
   };
 }
 
-function showTechPicker() {
+// ---- One phone per name (v271, Andy 2026-10-08) --------------------------------
+// Picking a name now takes the office setup code, and the name is claimed for this
+// phone on the work-account registry (scratch\name-registry\Code.gs). A claimed name
+// disappears from the list on every other phone. With no signal the tech can still
+// pick (so nobody is stuck in a basement); the claim is sent once there's signal,
+// and if another phone got the name first the list comes back.
+const NAME_REGISTRY = "https://script.google.com/macros/s/AKfycby6FkdOVkauno6HAlHtItUlKE6p_YLvqJUkE1trZ2mF8sbBVtIsPduikPszHIJaallC-A/exec";
+const NAME_EPOCH = "2026-10-08";            // one-time logout of every phone; change only for another fresh start
+const NAME_EPOCH_KEY = "bfc-name-epoch";
+const DEVICE_ID_KEY = "bfc-device-id";
+const PENDING_CLAIM_KEY = "bfc-pending-claim";
+
+function deviceId() {
+  let id = "";
+  try { id = localStorage.getItem(DEVICE_ID_KEY) || ""; } catch (e) {}
+  if (!id) { const m = document.cookie.match(/(?:^|; )bfc_dev=([^;]*)/); if (m) id = decodeURIComponent(m[1]); }
+  if (!id) {
+    id = (crypto.randomUUID ? crypto.randomUUID()
+      : "d-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12) + Math.random().toString(36).slice(2, 12));
+  }
+  try { localStorage.setItem(DEVICE_ID_KEY, id); } catch (e) {}
+  document.cookie = "bfc_dev=" + encodeURIComponent(id) + "; max-age=315360000; path=/; SameSite=Strict";
+  return id;
+}
+
+async function registryPost(body) {
+  const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = ctl ? setTimeout(() => ctl.abort(), 15000) : 0;
+  try {
+    const r = await fetch(NAME_REGISTRY, { method: "POST", headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(body), ...(ctl ? { signal: ctl.signal } : {}) });
+    return await r.json();
+  } finally { if (timer) clearTimeout(timer); }
+}
+
+// A pick made with no signal is confirmed here once the phone is online.
+let claimFlushing = false;
+async function flushPendingClaim() {
+  if (claimFlushing || !navigator.onLine) return;
+  let p = null;
+  try { p = JSON.parse(localStorage.getItem(PENDING_CLAIM_KEY) || "null"); } catch (e) {}
+  if (!p || !p.name) return;
+  claimFlushing = true;
+  try {
+    const r = await registryPost({ action: "claim", device: deviceId(), name: p.name, code: p.code });
+    if (r && r.ok) {
+      try { localStorage.removeItem(PENDING_CLAIM_KEY); } catch (e) {}
+      trackEvent("name confirmed: " + p.name);
+    } else if (r && (r.taken || r.error === "wrong code")) {
+      try { localStorage.removeItem(PENDING_CLAIM_KEY); localStorage.removeItem(TECH_KEY); } catch (e) {}
+      showTechPicker(r.taken ? p.name + " is already set up on another phone. Pick again, or ask the office to free it." : "");
+    }
+  } catch (e) { /* still no real signal - try again later */ }
+  claimFlushing = false;
+}
+window.addEventListener("online", flushPendingClaim);
+
+function showTechPicker(notice) {
+  if (document.querySelector(".tech-picker-overlay:not(.access-removed)")) return;
   const ov = document.createElement("div");
   ov.className = "tech-picker-overlay";
   const nameBtns = TECH_NAMES.map((n) =>
@@ -11100,25 +11158,153 @@ function showTechPicker() {
   ov.innerHTML =
     `<div class="tech-picker">
       <img src="icons/icon-192.png" alt="" class="tech-picker-logo">
-      <h2>Whose phone is this?</h2>
-      <p>One-time setup — tap your name so the office knows who's using the app. You'll never see this again.</p>
-      <div class="tech-picker-names">${nameBtns}</div>
-      <p class="tech-picker-note">Not on the list? This app is for Brackett employees only. Ask the office to add you.</p>
+      <h2 id="pickerTitle">Whose phone is this?</h2>
+      <p id="pickerLead">Tap your name, then enter the setup code from the office.</p>
+      <p class="tech-picker-note hidden" id="pickerNotice"></p>
+      <div class="tech-picker-names" id="pickerNames">${nameBtns}</div>
+      <form class="tech-picker-other hidden" id="pickerCodeForm" autocomplete="off">
+        <input type="password" id="pickerCode" placeholder="Setup code" aria-label="Setup code">
+        <button type="submit">Continue</button>
+      </form>
+      <button type="button" class="tech-picker-link hidden" id="pickerBack">Back to the names</button>
+      <div class="hidden" id="pickerOffice"></div>
+      <p class="tech-picker-note" id="pickerFoot">Not on the list? This app is for Brackett employees only. Ask the office to add you.</p>
+      <button type="button" class="tech-picker-link" id="pickerOfficeBtn">Office use</button>
     </div>`;
   document.body.appendChild(ov);
-  const pick = (name) => {
-    // The setItem used to come first and unguarded. If localStorage throws —
-    // storage full, or an old private-browsing mode — the overlay never came
-    // down and the app was unusable on first run, which is the worst possible
-    // moment to fail. Dismiss the overlay no matter what; a name we could not
-    // persist just means the picker asks again next launch.
-    try { localStorage.setItem(TECH_KEY, name); } catch (e) { /* not worth blocking on */ }
+  const $ = (id) => ov.querySelector("#" + id);
+  const say = (t) => { $("pickerNotice").textContent = t; $("pickerNotice").classList.toggle("hidden", !t); };
+  if (notice) say(notice);
+  let chosen = "";
+
+  // Hide names other phones have claimed (needs signal; offline shows them all).
+  const refreshTaken = async () => {
+    if (!navigator.onLine) return;
+    try {
+      const r = await registryPost({ action: "list", device: deviceId() });
+      if (!r || !r.ok) return;
+      const taken = new Set(r.taken.map((n) => n.toLowerCase()));
+      ov.querySelectorAll(".tech-name-btn").forEach((b) => {
+        const n = b.dataset.name;
+        b.classList.toggle("hidden", taken.has(n.toLowerCase()) && n !== r.mine);
+      });
+    } catch (e) {}
+  };
+  refreshTaken();
+
+  const showNames = () => {
+    chosen = "";
+    $("pickerTitle").textContent = "Whose phone is this?";
+    $("pickerLead").textContent = "Tap your name, then enter the setup code from the office.";
+    ["pickerNames", "pickerFoot", "pickerOfficeBtn"].forEach((id) => $(id).classList.remove("hidden"));
+    ["pickerCodeForm", "pickerBack", "pickerOffice"].forEach((id) => $(id).classList.add("hidden"));
+  };
+  const showCode = (name) => {
+    chosen = name;
+    say("");
+    $("pickerTitle").textContent = name;
+    $("pickerLead").textContent = "Enter the setup code from the office.";
+    ["pickerNames", "pickerFoot", "pickerOfficeBtn", "pickerOffice"].forEach((id) => $(id).classList.add("hidden"));
+    ["pickerCodeForm", "pickerBack"].forEach((id) => $(id).classList.remove("hidden"));
+    $("pickerCode").value = "";
+    $("pickerCode").focus();
+  };
+  $("pickerBack").onclick = () => { say(""); showNames(); refreshTaken(); };
+  ov.querySelectorAll(".tech-name-btn").forEach((b) => { b.onclick = () => showCode(b.dataset.name); });
+
+  const finish = (name, how) => {
+    // Dismiss the overlay even if storage throws - a name we could not persist
+    // just means the picker asks again next launch.
+    try { localStorage.setItem(TECH_KEY, name); } catch (e) {}
     ov.remove();
+    document.body.style.overflow = "";
     if (isBlockedTech(name)) { showAccessRemoved(); return; }
     syncCallLogTile(); if (typeof syncInventoryTile === "function") syncInventoryTile();
     trackEvent("app opened");
+    trackEvent("set up name: " + name + " (" + how + ")");
   };
-  ov.querySelectorAll(".tech-name-btn").forEach((b) => { b.onclick = () => pick(b.dataset.name); });
+
+  // Wrong-code slowdown, shared with the Access removed screen.
+  const tooManyTries = () => {
+    let t = { n: 0, until: 0 };
+    try { t = JSON.parse(localStorage.getItem(OFFICE_UNLOCK_TRIES_KEY) || "") || t; } catch (e) {}
+    return t;
+  };
+  const noteWrong = () => {
+    let t = tooManyTries();
+    t.n = (t.n || 0) + 1;
+    if (t.n >= 5) t = { n: 0, until: Date.now() + 10 * 60 * 1000 };
+    safeSet(OFFICE_UNLOCK_TRIES_KEY, t);
+  };
+
+  $("pickerCodeForm").onsubmit = async (e) => {
+    e.preventDefault();
+    if (Date.now() < tooManyTries().until) { say("Too many tries. Wait a few minutes and try again."); return; }
+    const code = $("pickerCode").value;
+    let ok = false;
+    try { ok = await officeCodeMatches(code); } catch (err) { say("This phone can't check the code. Contact the office."); return; }
+    if (!ok) { noteWrong(); say("Wrong code."); $("pickerCode").value = ""; return; }
+    try { localStorage.removeItem(OFFICE_UNLOCK_TRIES_KEY); } catch (err) {}
+    if (!navigator.onLine) {
+      safeSet(PENDING_CLAIM_KEY, { name: chosen, code });
+      finish(chosen, "no signal - confirms later");
+      return;
+    }
+    say("Setting up…");
+    let r = null;
+    try { r = await registryPost({ action: "claim", device: deviceId(), name: chosen, code }); } catch (err) {}
+    if (r && r.ok) { try { localStorage.removeItem(PENDING_CLAIM_KEY); } catch (err) {} finish(chosen, "claimed"); return; }
+    if (r && r.taken) { say(chosen + " is already set up on another phone. If this is your new phone, ask the office to free the name."); showNames(); refreshTaken(); return; }
+    if (r && r.error === "too many tries") { say("Too many tries. Wait a while and try again."); return; }
+    // No answer from the registry (weak signal): let them in, confirm later.
+    safeSet(PENDING_CLAIM_KEY, { name: chosen, code });
+    finish(chosen, "weak signal - confirms later");
+  };
+
+  // Office tools: see who has which name, free one (new phone) or all (fresh start).
+  $("pickerOfficeBtn").onclick = () => {
+    say("");
+    const box = $("pickerOffice");
+    ["pickerNames", "pickerFoot", "pickerOfficeBtn"].forEach((id) => $(id).classList.add("hidden"));
+    box.classList.remove("hidden"); $("pickerBack").classList.remove("hidden");
+    $("pickerTitle").textContent = "Office";
+    $("pickerLead").textContent = "Enter the office code to see and free names.";
+    box.innerHTML =
+      `<form class="tech-picker-other" id="officeForm" autocomplete="off">
+        <input type="password" id="officeCode" placeholder="Office code" aria-label="Office code">
+        <button type="submit">Open</button>
+      </form>
+      <div id="officeList"></div>`;
+    let code = "";
+    const render = (claims) => {
+      const list = box.querySelector("#officeList");
+      list.innerHTML = claims.length
+        ? claims.map((c) => `<div class="office-claim"><span>${escapeHtml(c.name)}</span><button type="button" class="tech-picker-link" data-free="${escapeHtml(c.name)}">Free</button></div>`).join("")
+          + `<button type="button" class="tech-picker-link" id="officeFreeAll">Free ALL names (everyone sets up again)</button>`
+        : `<p class="tech-picker-note">No names are set up yet.</p>`;
+      list.querySelectorAll("[data-free]").forEach((b) => {
+        b.onclick = async () => {
+          const r = await registryPost({ action: "release", code, name: b.dataset.free }).catch(() => null);
+          if (r && r.ok) { trackEvent("office freed name: " + b.dataset.free); load(); } else say("Couldn't free it - check signal.");
+        };
+      });
+      const all = list.querySelector("#officeFreeAll");
+      if (all) all.onclick = async () => {
+        if (!confirm("Free every name? Each tech will need the setup code again on their phone.")) return;
+        const r = await registryPost({ action: "releaseAll", code }).catch(() => null);
+        if (r && r.ok) { trackEvent("office freed ALL names"); load(); } else say("Couldn't free them - check signal.");
+      };
+    };
+    const load = async () => {
+      const r = await registryPost({ action: "office", code }).catch(() => null);
+      if (!r) { say("Needs signal."); return; }
+      if (!r.ok) { say(r.error === "too many tries" ? "Too many tries. Wait a while and try again." : "Wrong code."); return; }
+      say("");
+      box.querySelector("#officeForm").classList.add("hidden");
+      render(r.claims || []);
+    };
+    box.querySelector("#officeForm").onsubmit = (e) => { e.preventDefault(); code = box.querySelector("#officeCode").value; load(); };
+  };
 }
 
 async function renderVersionFooter() {
@@ -11133,7 +11319,7 @@ function startApp() {
   syncCallLogTile(); if (typeof syncInventoryTile === "function") syncInventoryTile();
   renderVersionFooter();
 
-  if (getTechName()) trackEvent("app opened");
+  if (getTechName()) { trackEvent("app opened"); flushPendingClaim(); }
   else showTechPicker();
 
   // Any failed-scan photos still waiting on the phone go to Andy now.
@@ -11164,5 +11350,18 @@ if (deviceLockedAs() || isBlockedTech(getTechName())) {
   showAccessRemoved();
   if (typeof trackEvent === "function") trackEvent("BLOCKED: " + (deviceLockedAs() || getTechName()) + " opened the app");
 } else {
+  // v271 one-time logout (Andy 2026-10-08): the first open of this version forgets the
+  // stored name on EVERY phone, signal or not, so each tech sets up again with the
+  // code and the office sees exactly who has the new version. Runs once per NAME_EPOCH.
+  let epoch = "";
+  try { epoch = localStorage.getItem(NAME_EPOCH_KEY) || ""; } catch (e) {}
+  if (epoch !== NAME_EPOCH) {
+    const was = getTechName();
+    // Plain setItem, not safeSet: safeSet JSON-quotes the value and the check above
+    // would never match again - every launch would log the phone out.
+    try { localStorage.removeItem(TECH_KEY); localStorage.removeItem(PENDING_CLAIM_KEY); localStorage.setItem(NAME_EPOCH_KEY, NAME_EPOCH); } catch (e) {}
+    // Queued now, sent under the name they pick next.
+    if (was) trackEvent("logged out for name setup (was " + was + ")");
+  }
   startApp();
 }

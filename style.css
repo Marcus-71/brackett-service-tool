@@ -2120,3 +2120,8 @@ body.inv-cam-open { overflow: hidden; }
 .bul-more > summary::-webkit-details-marker { display: none; }
 .bul-more > summary::after { content: " ▸"; }
 .bul-more[open] > summary::after { content: " ▾"; }
+
+/* v271 office tools in the name picker: claimed names with a Free button */
+.office-claim { display: flex; justify-content: space-between; align-items: center; padding: 0.35rem 0; border-bottom: 1px solid var(--border, #d8dee6); text-align: left; }
+#officeList { margin-top: 0.8rem; max-height: 50vh; overflow-y: auto; }
+#officeFreeAll { margin-top: 0.8rem; color: #b42318; }
