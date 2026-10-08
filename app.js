@@ -10910,7 +10910,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v268";
+const APP_VERSION = "v269";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -10923,14 +10923,14 @@ const APP_VERSION = "v268";
 
 const TRACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfZ9Dv1jlj3h4uzomWlHsgS-OcaDMhb0sbaE2YbXLCP2swsQQ/formResponse";
 const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", version: "entry.872662639" };
-const TECH_NAMES = ["James", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Lincoln", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Nick", "Joe", "Andy"];
+const TECH_NAMES = ["James", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Nick", "Joe", "Andy"];
 const TECH_KEY = "bfc-tech-name";
 const TRACK_QUEUE_KEY = "bfc-track-queue";
 
 // Technicians who have left. Their phones still have the app installed and
 // cached, so this is what stops it — a name match on next launch. Anyone who
 // clears site data gets past it; it is a courtesy stop, not security.
-const BLOCKED_TECHS = ["Gus"];
+const BLOCKED_TECHS = ["Gus", "Lincoln"];   // Lincoln: removed by Andy 2026-10-08 (v269)
 
 function getTechName() {
   try { return localStorage.getItem(TECH_KEY) || ""; } catch (e) { return ""; }
