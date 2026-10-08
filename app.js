@@ -10910,7 +10910,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v269";
+const APP_VERSION = "v270";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -10931,6 +10931,35 @@ const TRACK_QUEUE_KEY = "bfc-track-queue";
 // cached, so this is what stops it — a name match on next launch. Anyone who
 // clears site data gets past it; it is a courtesy stop, not security.
 const BLOCKED_TECHS = ["Gus", "Lincoln"];   // Lincoln: removed by Andy 2026-10-08 (v269)
+
+// v270 (Andy): once a phone hits "Access removed" it STAYS locked. Picking another
+// name is no longer offered; only the office code clears it (for a phone handed
+// to a new tech). The lock lives in localStorage + a cookie, so deleting the app
+// AND clearing the browser's site data still resets it - a courtesy lock, not security.
+// Only the SHA-256 of the code is here, never the code itself.
+const DEVICE_LOCK_KEY = "bfc-device-locked";
+const OFFICE_UNLOCK_HASH = "003d8d94a01f40831e7576030a746c0473e3a1d491d1fa31b1675093bfe1bd11";
+const OFFICE_UNLOCK_TRIES_KEY = "bfc-office-unlock-tries";
+
+function deviceLockedAs() {
+  try { const v = localStorage.getItem(DEVICE_LOCK_KEY); if (v) return v; } catch (e) {}
+  const m = document.cookie.match(/(?:^|; )bfc_locked=([^;]*)/);
+  return m ? decodeURIComponent(m[1]) : "";
+}
+function lockDevice(name) {
+  const who = name || "unknown";
+  try { localStorage.setItem(DEVICE_LOCK_KEY, who); } catch (e) {}
+  document.cookie = "bfc_locked=" + encodeURIComponent(who) + "; max-age=315360000; path=/; SameSite=Strict";
+}
+function unlockDevice() {
+  try { localStorage.removeItem(DEVICE_LOCK_KEY); localStorage.removeItem(TECH_KEY); localStorage.removeItem(OFFICE_UNLOCK_TRIES_KEY); } catch (e) {}
+  document.cookie = "bfc_locked=; max-age=0; path=/; SameSite=Strict";
+}
+async function officeCodeMatches(code) {
+  const data = new TextEncoder().encode("bfc-office-unlock-v1:" + String(code).trim());
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("") === OFFICE_UNLOCK_HASH;
+}
 
 function getTechName() {
   try { return localStorage.getItem(TECH_KEY) || ""; } catch (e) { return ""; }
@@ -11013,10 +11042,12 @@ logSearches("toolboxSearchInput", "searched toolbox");
 logSearches("tstatSearchInput", "searched thermostats");
 
 // Full-screen stop for a departed tech. Same shell as the picker so it reads
-// as part of the app, not an error. The one way out is the "not my phone"
-// link, which forgets the stored name and lets the picker ask again.
+// as part of the app, not an error. Since v270 the phone stays locked: the old
+// "not my phone / pick my name" escape let a blocked tech choose someone else's
+// name. The only way out is the office code (phone handed to a new tech).
 function showAccessRemoved() {
   if (document.querySelector(".tech-picker-overlay.access-removed")) return;
+  lockDevice(deviceLockedAs() || getTechName());
   const ov = document.createElement("div");
   ov.className = "tech-picker-overlay access-removed";
   ov.innerHTML =
@@ -11024,13 +11055,40 @@ function showAccessRemoved() {
       <img src="icons/icon-192.png" alt="" class="tech-picker-logo">
       <h2>Access removed</h2>
       <p>This app is for current Brackett Heating &amp; Air employees. If you think this is a mistake, please contact the office.</p>
-      <button type="button" class="tech-picker-link" id="notMyPhoneBtn">This isn't my phone / pick my name from the list</button>
+      <button type="button" class="tech-picker-link" id="officeUnlockBtn">Office use</button>
+      <form class="tech-picker-other hidden" id="officeUnlockForm" autocomplete="off">
+        <input type="password" id="officeUnlockCode" placeholder="Office code" aria-label="Office code">
+        <button type="submit">Unlock</button>
+      </form>
+      <p class="tech-picker-note hidden" id="officeUnlockMsg"></p>
     </div>`;
   document.body.appendChild(ov);
   document.body.style.overflow = "hidden";
-  ov.querySelector("#notMyPhoneBtn").onclick = () => {
-    try { localStorage.removeItem(TECH_KEY); } catch (e) { /* reload still brings the picker back */ }
-    location.reload();
+  const form = ov.querySelector("#officeUnlockForm"), msg = ov.querySelector("#officeUnlockMsg");
+  ov.querySelector("#officeUnlockBtn").onclick = () => { form.classList.remove("hidden"); ov.querySelector("#officeUnlockCode").focus(); };
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    // 5 wrong tries, then a 10-minute wait - slows down guessing.
+    let tries = { n: 0, until: 0 };
+    try { tries = JSON.parse(localStorage.getItem(OFFICE_UNLOCK_TRIES_KEY) || "") || tries; } catch (err) {}
+    const show = (t) => { msg.textContent = t; msg.classList.remove("hidden"); };
+    if (Date.now() < tries.until) { show("Too many tries. Wait a few minutes and try again."); return; }
+    const code = ov.querySelector("#officeUnlockCode").value;
+    let ok = false;
+    try { ok = await officeCodeMatches(code); } catch (err) { show("This phone can't check the code. Contact the office."); return; }
+    if (ok) {
+      const was = deviceLockedAs();
+      unlockDevice();
+      if (typeof trackEvent === "function") trackEvent("OFFICE UNLOCK: phone was locked as " + was);
+      location.reload();
+      return;
+    }
+    tries.n = (tries.n || 0) + 1;
+    if (tries.n >= 5) { tries = { n: 0, until: Date.now() + 10 * 60 * 1000 }; }
+    safeSet(OFFICE_UNLOCK_TRIES_KEY, tries);
+    if (typeof trackEvent === "function") trackEvent("office unlock: wrong code (phone locked as " + deviceLockedAs() + ")");
+    show("Wrong code.");
+    ov.querySelector("#officeUnlockCode").value = "";
   };
 }
 
@@ -11102,9 +11160,9 @@ showScreen("home");
 // A departed tech's phone stops here: no tile sync, no bulletin, no indexing.
 // The tracked open is the point — it tells the office the app is still being
 // launched on that phone.
-if (isBlockedTech(getTechName())) {
+if (deviceLockedAs() || isBlockedTech(getTechName())) {
   showAccessRemoved();
-  if (typeof trackEvent === "function") trackEvent("BLOCKED: " + getTechName() + " opened the app");
+  if (typeof trackEvent === "function") trackEvent("BLOCKED: " + (deviceLockedAs() || getTechName()) + " opened the app");
 } else {
   startApp();
 }
