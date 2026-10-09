@@ -10674,7 +10674,10 @@ function engagePrcUrl(slug, parcel, yearsBack) {
 //   relay: "fallback" - no readable county source; public property records
 //                       (RentCast) by street + town + state
 //   towns             - shown as a select when the records source needs a town
-const SQFT_RELAY = "https://script.google.com/macros/s/AKfycbwdh3jkS2jYfn5oC2sEyCMaNaNFiq1etmSyZwIxv-h8045PnzebdT3KJQfX3bWStjsPrg/exec";
+// v282: moved to the work account (andy@brackettcomfort.com), project "Brackett
+// House Size Relay" (RENTCAST_KEY in its Script Properties). Old personal-Gmail
+// deployment was AKfycbwdh3jkS2jYfn5oC...; retire it once phones have updated.
+const SQFT_RELAY = "https://script.google.com/macros/s/AKfycbxtowC-CWk53SFiPH-A99ktOXGj3yMe_Wc4gcG9jUteREIcj_n5XU1wAQzQiddGKfp9Aw/exec";
 const SQFT_COUNTIES = {
   vanderburgh: {
     label: "Vanderburgh",
@@ -11318,7 +11321,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v281";
+const APP_VERSION = "v282";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
