@@ -6,8 +6,10 @@
  * ("Brackett Failed Scans") that is shared with Andy's work account. The app
  * side is app.js -> SCAN_PHOTO_RELAY / flushScanPhotos().
  *
- * Runs on a PERSONAL Gmail account (the brackettcomfort.com Workspace account
- * blocks "Anyone" web-app access). Scope is drive.file only: the script can see
+ * Runs on the WORK account andy@brackettcomfort.com (moved 2026-10-09; Andy is
+ * the Workspace admin and "Anyone" web-app access is allowed - the generator
+ * checklist relay has run that way since 2026-10-01). Until 2026-10-09 it ran
+ * on a personal Gmail account because the Workspace then blocked "Anyone". Scope is drive.file only: the script can see
  * and touch ONLY files/folders it created itself — never the rest of the Drive.
  *
  * Drive access goes through the Drive Advanced Service (Drive API v3, symbol
@@ -17,7 +19,7 @@
  *
  * DEPLOY (one time, ~5 minutes)
  * ------------------------------
- *  1. Sign in to the personal Gmail account, open https://script.google.com and
+ *  1. Sign in to the work account (andy@brackettcomfort.com), open https://script.google.com and
  *     click "New project". Name it "Brackett Scan Photo Relay".
  *  2. Gear icon (Project Settings) -> tick "Show 'appsscript.json' manifest file
  *     in editor". Back in the editor, open appsscript.json and replace its
@@ -81,7 +83,7 @@
  */
 
 var FOLDER_NAME = "Brackett Failed Scans";
-var SHARE_WITH  = "andy@brackettcomfort.com";
+var SHARE_WITH  = "";   // the work account owns the folder itself; set an address to also share it
 var DAILY_CAP   = 200;                   // uploads per calendar day (Chicago)
 var MAX_BYTES   = 8 * 1024 * 1024;       // decoded image size cap
 var TZ          = "America/Chicago";
@@ -165,7 +167,7 @@ function doPost(e) {
 function setup() {
   var props = PropertiesService.getScriptProperties();
   var folderId = getFolder_(props);
-  try {
+  if (SHARE_WITH) try {
     Drive.Permissions.create(
       { role: "writer", type: "user", emailAddress: SHARE_WITH },
       folderId,
