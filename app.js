@@ -8457,7 +8457,10 @@ function decodeSerialAge(brand, serial, equipment) {
 // Letters an OCR commonly reports for a stamped DIGIT on a faded or embossed
 // data plate. Used ONLY to recover a missed model (see identifyModel) — we turn
 // these letters back into digits and re-test against the known library.
-const OCR_LETTER_TO_DIGIT = { O: "0", D: "0", Q: "0", I: "1", L: "1", Z: "2", S: "5", G: "6", B: "8" };
+// T: the bold condensed 1 on Lennox plates reads as T ("G6TMP-60C" = G61MP-60C).
+// A real T is safe: an exact library match is always tried first, and a re-read
+// counts only if it lands on a known family.
+const OCR_LETTER_TO_DIGIT = { O: "0", D: "0", Q: "0", I: "1", L: "1", T: "1", Z: "2", S: "5", G: "6", B: "8" };
 
 // Plausible re-reads of a garbled model: every combination of turning the
 // digit-lookalike letters back into digits, fewest changes first (most likely
@@ -8502,7 +8505,7 @@ function looksLikeSerial(s) {
 const loggedMisses = new Map();   // miss -> last logged time, so one scan logs once
 function identifyModel(rawModel, rawSerial, brandHint, photoId, opts) {
   const log = !!(opts && opts.log);
-  const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
+  const model = ocrNormDashes((rawModel || "").toUpperCase()).replace(/\s+/g, "");   // "G61MP – 60C" = G61MP-60C
   if (!model) return null;
   const serial = (rawSerial || "").toUpperCase().trim();
   for (const p of MODEL_PATTERNS) {
@@ -8585,6 +8588,15 @@ function detectBrandInText(up) {
   return null;
 }
 
+// Em/en dashes, minus signs and "~" (how OCR returns a long printed dash) become
+// "-", and the spaces around a dash between letters/digits go: "G6IMP~60C — 111-09"
+// -> "G6IMP-60C-111-09". Expects uppercased text. A doubled dash ("36B—-02")
+// becomes one. Not across a dash to a lone LETTER: "TUD2D060A9421AA — I" is
+// the model and a border line, not model "...AA-I".
+function ocrNormDashes(up) {
+  return up.replace(/[\u2010-\u2015\u2212~]/g, "-").replace(/([A-Z0-9])(?: *-)+ *(?=[A-Z0-9]{2}|[0-9](?![A-Z0-9]))/g, "$1-");
+}
+
 // Pull likely model/serial strings out of raw OCR text.
 function extractTagFields(text) {
   // OCR reads a printed 1 as "!" often enough to cut a model in half
@@ -8593,7 +8605,11 @@ function extractTagFields(text) {
   // model ("59SC5B@8OE14"), which cut the model at that point. Only when it sits
   // between letters/digits, so "RLA 14.1 @ 230V" is left alone.
   const up = text.toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10");
-  const lines = up.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  // Lennox prints its M/N with long spaced dashes ("G61MP – 60C – 111 – 09"); OCR
+  // returns them as em/en dashes or "~" with spaces around, which split the model
+  // into pieces and none of them was found. Lines and tokens use this copy.
+  const upN = ocrNormDashes(up);
+  const lines = upN.split(/\n+/).map(l => l.trim()).filter(Boolean);
   let model = "", serial = "", serialSource = "", stackedModel = "", modelSource = "";
   // "(?:NUMBER|NO...)?" explicitly eats the filler word in "MODEL NUMBER" /
   // "SERIAL NUMBER" / "SERIAL NO." so the capture lands on the actual value —
@@ -8607,8 +8623,9 @@ function extractTagFields(text) {
   // real 2013 Rheem tag scanned as "could not read" for exactly this reason).
   // OCR renders the degree sign as °, º, *, ?, o or 0.
   const FILLER = "(?:[\\s.:#/-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
-  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL)" + FILLER + "[.:#/ ]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
-  const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/ ]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
+  // v275: a "-" may sit between label and value: ocrNormDashes turns "M/N – G61MP" into "M/N-G61MP".
+  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
+  const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
   // A two-column header row ("MODEL NO.   SERIAL NO.") makes the MODEL label
   // capture the NEXT label word — a Trane plate scanned as model "SERIAL". Reject
   // the plate's own label words, and require a real model to carry a digit (every
@@ -8666,9 +8683,12 @@ function extractTagFields(text) {
   }
   // No labels found — look for any token matching a known model pattern.
   if (!model) {
-    const tokens = up.match(/[A-Z0-9./-]{5,24}/g) || [];
+    const tokens = upN.match(/[A-Z0-9./-]{5,24}/g) || [];
     for (const t of tokens) {
-      const cleaned = t.replace(/[./]/g, "");
+      // A slash inside a model is real on Lennox/ADP (LC23/37Y9BG, CRX35-30/36B):
+      // keep it when the family still matches with it, else drop it as before.
+      const kept = t.replace(/\./g, "").replace(/^[\/-]+|[\/-]+$/g, "");
+      const cleaned = /[A-Z0-9]\/[A-Z0-9]/.test(kept) && MODEL_PATTERNS.some(p => p.re.test(kept)) ? kept : t.replace(/[./]/g, "");
       // Every real model carries a digit. Without this a plain plate WORD could
       // hit a pattern prefix: "NAMEPLATE" OCR'd as "PLATE" matched Mitsubishi ^PLA.
       if (/[0-9]/.test(cleaned) && MODEL_PATTERNS.some(p => p.re.test(cleaned))) { model = cleaned; modelSource = "pattern"; break; }
@@ -8678,6 +8698,14 @@ function extractTagFields(text) {
   else if (model && stackedModel && model === stackedModel.replace(/[./]/g, "")) modelSource = "label";   // the token sits right under a MODEL label
   // Serial fallback: many brands (Goodman/Daikin/Amana) use an all-digit
   // serial — grab the longest 8-16 digit run that isn't part of the model.
+  // No labelled serial, but a token shaped like the 4-digits-letter-5-digits
+  // serial Lennox/Allied/ADP, Carrier and Goodman all print (5913M06184,
+  // 7122F47534, 0621A50275): take it before a bare digit run, which is more
+  // often a lot or part number. Never the model's own characters.
+  if (!serial) {
+    const shaped = upN.split(/[^A-Z0-9]+/).find(t => /^\d{4}[A-Z]\d{5}$/.test(t) && !model.includes(t));
+    if (shaped) { serial = shaped; serialSource = "shape"; }
+  }
   if (!serial) {
     // Deliberately written WITHOUT lookbehind. Safari only gained lookbehind in
     // 16.4, and an unsupported lookbehind is a PARSE-time SyntaxError — the
@@ -8918,8 +8946,57 @@ function ocrFuzzyLibrary(s) {
 //    (fixedFrom = the raw read, so the scan result can say "check the tag").
 //  * tier: how far the family match can be trusted (ocrMatchTier).
 // Used on OCR output only; identifyModel() on typed models is unchanged.
+// v275 tail check (Andy 2026-10-09). A family regex checks only the prefix, so
+// a misread later character still came back as an identified unit: DGAX070BDTA
+// read DGAX0708DTA (shown as York), LC23/37Y9BG read LC23/37Y9B6, 59SC5B080E...
+// read 59SC5B0B0E... For families whose format is published, every position
+// present in the read is checked against its allowed characters:
+//  * JCI DGAX: the library entry's own list - DGAX056/070/077/090 + BDTA.
+//  * ADP L-series coil: the nomenclature in its library note (L C 23/37 Y 9 B G,
+//    G = painted, may be absent).
+//  * Carrier 59SC/59SP furnace: 59 S C|P digit letter, then the 3-digit input
+//    (040/060/080...: the furnace input codes decodeCapacity reads).
+// A position that breaks the format gets the letter<->digit lookalike swap for
+// that position only; exactly one allowed reading = fixed (shown as a re-read,
+// "check the tag"); none or several = tailBad, and the scan shows the read as
+// "check the tag" instead of a confident ID. Other families are unchanged.
+const OCR_DIGIT_TO_LETTER = { "0": "ODQ", "1": "ILT", "2": "Z", "5": "S", "6": "G", "8": "B" };
+const OCR_TAIL_FORMATS = [
+  { fam: /^DGAX/, pos: ["D", "G", "A", "X", "0", "579", "067", "B", "D", "T", "A"] },
+  { fam: /^L[CMUHDP][0-9]{2}\/?[0-9]{2}[A-Z]/, pos: ["L", "CMUHDP", "#", "#", "#", "#", "KMNPSTYLUVZ", "19", "ABCDX", "G"] },
+  { fam: /^59S[CP][0-9][A-Z]/, pos: ["5", "9", "S", "CP", "#", "@", "#", "#", "#"], open: true },
+];
+function ocrCheckTail(model) {
+  const f = OCR_TAIL_FORMATS.find(x => x.fam.test(model));
+  if (!f) return { model, fixed: false, bad: false };
+  const slash = model.indexOf("/");
+  const s = model.replace("/", "").split("");
+  const ok = (ch, cls) => cls === "#" ? /[0-9]/.test(ch) : cls === "@" ? /[A-Z]/.test(ch) : cls.includes(ch);
+  let fixed = false;
+  for (let i = 0; i < Math.min(s.length, f.pos.length); i++) {
+    if (ok(s[i], f.pos[i])) continue;
+    const swaps = (/[A-Z]/.test(s[i]) ? (OCR_LETTER_TO_DIGIT[s[i]] || "") : (OCR_DIGIT_TO_LETTER[s[i]] || "")).split("").filter(c => c && ok(c, f.pos[i]));
+    if (swaps.length !== 1) return { model, fixed: false, bad: true };
+    s[i] = swaps[0]; fixed = true;
+  }
+  // past a closed format only a revision suffix (-01, 02) may follow
+  if (!f.open && s.length > f.pos.length && !/^-?[0-9]{1,2}$/.test(s.slice(f.pos.length).join(""))) return { model, fixed: false, bad: true };
+  let out = s.join("");
+  if (slash >= 0) out = out.slice(0, slash) + "/" + out.slice(slash);
+  if (fixed && !ocrLibraryPattern(out)) return { model, fixed: false, bad: true };
+  return { model: out, fixed, bad: false };
+}
 function ocrCleanModel(raw) {
-  const s = (raw || "").toUpperCase().replace(/\s+/g, "");
+  const r = ocrCleanModelPrefix(raw);
+  if (!r.lib) return r;
+  const t = ocrCheckTail(r.model);
+  if (t.fixed) return { ...r, model: t.model, exact: false, fixedFrom: r.fixedFrom || ocrNormDashes((raw || "").toUpperCase()).replace(/\s+/g, "") };
+  if (t.bad) return { ...r, tailBad: true };
+  return r;
+}
+// The prefix clean-up described above OCR_DIGIT_TO_LETTER (O/I after the prefix, lookalike prefix swaps).
+function ocrCleanModelPrefix(raw) {
+  const s = ocrNormDashes((raw || "").toUpperCase()).replace(/\s+/g, "");
   if (!s) return { model: "", lib: null, exact: false, tier: 0 };
   const tail = (str, n) => str.slice(0, n) + str.slice(n).replace(/O/g, "0").replace(/I/g, "1");
   let p = ocrLibraryPattern(s);
@@ -8994,6 +9071,69 @@ function ocrGrayStretch(canvas) {
   return canvas;
 }
 
+// v275 background flattening: each pixel divided by a heavy blur of the photo
+// (two box blurs, ~1/24 of the long side), then a 1%/99% stretch. A cable
+// shadow, a dark corner or glare falloff across a plate becomes an even page,
+// which the global threshold then reads. Measured on the real field photos
+// (scratch/ocr/bench lab2): plain pass read 2 of 20 models, this one 6
+// (James's G61MP plate among them). ~0.1 s at 1600 px on a desktop.
+function ocrFlatten(src0, scale) {
+  // scale: optional resize first (the scan uses 1: at 0.75 it lost reads)
+  let src = src0;
+  if (scale && scale !== 1) {
+    src = document.createElement("canvas");
+    src.width = Math.round(src0.width * scale); src.height = Math.round(src0.height * scale);
+    const sx = src.getContext("2d"); sx.imageSmoothingQuality = "high"; sx.drawImage(src0, 0, 0, src.width, src.height);
+  }
+  const w = src.width, h = src.height, ctx = src.getContext("2d");
+  const img = ctx.getImageData(0, 0, w, h), d = img.data, n = w * h;
+  const g0 = new Float32Array(n);
+  for (let i = 0, p = 0; p < n; i += 4, p++) g0[p] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+  const blur = (a, r) => {   // box blur through an integral image
+    const W1 = w + 1, I = new Float64Array(W1 * (h + 1)), out = new Float32Array(n);
+    for (let y = 0; y < h; y++) { let s = 0; for (let x = 0; x < w; x++) { s += a[y * w + x]; I[(y + 1) * W1 + x + 1] = I[y * W1 + x + 1] + s; } }
+    for (let y = 0; y < h; y++) {
+      const y0 = Math.max(0, y - r), y1 = Math.min(h, y + r + 1);
+      for (let x = 0; x < w; x++) {
+        const x0 = Math.max(0, x - r), x1 = Math.min(w, x + r + 1);
+        out[y * w + x] = (I[y1 * W1 + x1] - I[y0 * W1 + x1] - I[y1 * W1 + x0] + I[y0 * W1 + x0]) / ((y1 - y0) * (x1 - x0));
+      }
+    }
+    return out;
+  };
+  // 3x3 smoothing first: dividing by the background lifts sensor noise in dark
+  // areas into specks, and specks made Tesseract 3-5x slower on the same photo
+  const g = blur(g0, 1);
+  const r = Math.max(4, Math.round(Math.max(w, h) / 48));
+  const bg = blur(blur(g, r), r);
+  const hist = new Uint32Array(256);
+  for (let p = 0; p < n; p++) { g[p] = 255 * Math.min(1.25, g[p] / (bg[p] + 6)); hist[Math.min(255, g[p] | 0)]++; }
+  let lo = 0, hi = 255, acc = 0;
+  for (let i = 0; i < 256; i++) { acc += hist[i]; if (acc > n * 0.01) { lo = i; break; } }
+  acc = 0;
+  for (let i = 255; i >= 0; i--) { acc += hist[i]; if (acc > n * 0.01) { hi = i; break; } }
+  const k = 255 / Math.max(96, hi - lo);   // a near-blank photo is not stretched into noise
+  const out = document.createElement("canvas");
+  out.width = w; out.height = h;
+  const oc = out.getContext("2d"), o = oc.createImageData(w, h), od = o.data;
+  for (let p = 0, i = 0; p < n; p++, i += 4) { od[i] = od[i + 1] = od[i + 2] = Math.max(0, Math.min(255, (g[p] - lo) * k)); od[i + 3] = 255; }
+  oc.putImageData(o, 0, 0);
+  // per 1000 pixels: specks (dark pixels with no dark 4-neighbour), dark
+  // pixels, and dark/light edges along rows - the scan skips a photo these say
+  // is grainy, mostly dark or busy texture
+  let specks = 0, edges = 0, dark = 0;
+  for (let y = 1; y < h - 1; y++) for (let x = 1, p = y * w + 1; x < w - 1; x++, p++) {
+    const d0 = od[p * 4] < 128;
+    if (d0) dark++;
+    if (d0 !== (od[(p + 1) * 4] < 128)) edges++;
+    if (d0 && od[(p - 1) * 4] >= 128 && od[(p + 1) * 4] >= 128 && od[(p - w) * 4] >= 128 && od[(p + w) * 4] >= 128) specks++;
+  }
+  out.specks = 1000 * specks / n;
+  out.edges = 1000 * edges / n;
+  out.dark = 1000 * dark / n;
+  return out;
+}
+
 // Re-read the model line from the full-resolution photo. box is in the pixels
 // of the pass canvas (the 1600 px copy scaled by passScale, then turned deg
 // degrees clockwise by rotateCanvas) as Tesseract reported it: in its own
@@ -9037,7 +9177,8 @@ async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, str
 // Pick the model out of a zoomed line read: a labelled value first, else the
 // token closest to what the full-photo pass read.
 function ocrModelFromLine(data, prev) {
-  const text = (data && data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10");
+  // same dash clean-up as extractTagFields, so a spaced-dash model stays whole
+  const text = ocrNormDashes((data && data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10"));
   const f = extractTagFields(text);
   const toks = text.split(/[^A-Z0-9./-]+/).map(t => t.replace(/^[./-]+|[./-]+$/g, "")).filter(t => t.length >= 4 && /[0-9]/.test(t));
   // distance to what the full-photo pass read; a read that starts the same way
@@ -9091,14 +9232,34 @@ function tagParseBarcodes(codes) {
     }
     const m = raw.match(/^[A-Z]{2,4}~([A-Z0-9\/\-]{4,})~[A-Z0-9]*~([A-Z0-9]{6,})~/);   // Daikin / Goodman / Amana
     if (m) { if (!model) model = m[1]; if (!serial) serial = m[2]; continue; }
-    if (raw.startsWith("[)>")) {                                // Lennox: serial only (no model in it)
-      for (const f of raw.split(/[\x1d\x1e\x04␝␞␄]/)) if (!serial && /^S\d{4}[A-Z]\d{5}$/.test(f)) serial = f.slice(1);
+    // Lennox: serial only (no model in it). The furnace plate's DataMatrix
+    // carries "S5909L17186\r\n1Y25-1359K9" (James 2026-10-09, G61MP), the
+    // barcode label under it "S5909L17186" alone, a carton "[)>..S5823H01796".
+    if (raw.startsWith("[)>") || /^S\d{4}[A-Z]\d{5}(?:[\s\x1d\x1e\x04␝␞␄]|$)/.test(raw)) {
+      for (const f of raw.split(/[\s\x1d\x1e\x04␝␞␄]+/)) if (!serial && /^S\d{4}[A-Z]\d{5}$/.test(f)) serial = f.slice(1);   // no brand: Allied/ADP print it too
       continue;
     }
-    const t = raw.split(/\s+/)[0];
-    if (!model && /^G0\d{6,7}$/.test(t)) { model = t; brand = "Generac"; }
+    // York / Coleman / Luxaire (JCI) plate QR: their serial-lookup link.
+    const jci = raw.match(/^HTTPS?:\/\/M\.UPGNET\.COM\/SN\/([A-Z0-9]{8,14})$/);
+    if (jci) { if (!serial) { serial = jci[1]; if (!brand) brand = "York"; } continue; }
+    const parts = raw.split(/\s+/), t = parts[0];
+    if (!model && /^G0\d{6,7}$/.test(t)) { model = t; brand = "Generac"; continue; }
+    // Lennox carton: "2P" + model (2PCRX35-30/36B-6F-1). Only on a known family.
+    if (!model && /^2P[A-Z0-9][A-Z0-9\/\-]{4,}$/.test(t) && ocrLibraryPattern(t.slice(2).replace(/[\/-]/g, ""))) { model = t.slice(2); continue; }
+    // Trane / American Standard label code: "<model> <serial>*"
+    // ("TUX1B080A9421AC07 9105KYX7G*"). Only when the first part is a specific
+    // library family (ocrMatchTier 2), so a lot or part number never becomes a model.
+    if (!model && parts.length === 2 && /^[A-Z0-9]{6,12}\*?$/.test(parts[1]) && /\d/.test(parts[1])) {
+      const p = /^[A-Z][A-Z0-9]{5,22}$/.test(t) && /\d/.test(t) ? ocrLibraryPattern(t) : null;
+      // Trane models end in two design-sequence letters (...9421AC); the code
+      // appends the label's separate 2-digit field ("07"), which is not the model.
+      if (p && ocrMatchTier(p) === 2) { model = p.brand === "Trane" && /[A-Z]{2}0\d$/.test(t) ? t.slice(0, -2) : t; if (!serial) serial = parts[1].replace(/\*$/, ""); }
+    }
   }
-  return model ? { model, serial, serialSource: serial ? "label" : "", modelSource: "barcode", brandHint: brand } : null;
+  // v275: a serial-only code (Lennox, York) is kept too; ocrTagFields merges it
+  // into the text read, since a barcode is exact where OCR can be a digit off.
+  if (!model && !serial) return null;
+  return { model, serial, serialSource: serial ? "label" : "", modelSource: model ? "barcode" : "", brandHint: brand };
 }
 async function tagBarcodeFields(file) {
   if (typeof invBarcodeTexts !== "function") return null;
@@ -9117,7 +9278,18 @@ function tagNoModelHint(fields) {
 
 async function ocrTagFields(file, onStatus) {
   const viaBarcode = await tagBarcodeFields(file);
-  if (viaBarcode) { trackEvent("tag read by barcode"); return viaBarcode; }
+  if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
+  const fields = await ocrTagText(file, onStatus);
+  // A serial-only code (Lennox DataMatrix / label, York QR) beats the OCR'd
+  // serial: James's G61MP plate read 5909117186 / 550917186 for 5909L17186.
+  if (viaBarcode && viaBarcode.serial && fields) {
+    if (fields.serial !== viaBarcode.serial) trackEvent("tag serial read by barcode");
+    fields.serial = viaBarcode.serial; fields.serialSource = "label";
+    if (!fields.brandHint && viaBarcode.brandHint) fields.brandHint = viaBarcode.brandHint;
+  }
+  return fields;
+}
+async function ocrTagText(file, onStatus) {
   const photo = await loadPhotoForOcr(file);
   const base = photo.base;
   const worker = await getTessWorker(onStatus);
@@ -9125,23 +9297,23 @@ async function ocrTagFields(file, onStatus) {
   const probes = [];
   // Prefer a failed pass that read the serial off its LABEL over one that only
   // found a bare digit run.
-  const rank = (f) => (f.serial ? (f.serialSource === "label" ? 2 : 1) : 0);
+  const rank = (f) => (f.serial ? (f.serialSource === "label" ? 3 : f.serialSource === "shape" ? 2 : 1) : 0);
   const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; };
   // Longer reads of the same family win: "EL297" off a sideways Lennox sticker
   // is the start of EL297UH070XE36B, not the model.
   const score = (c) => (c.tier === 2 ? (c.exact ? 200 : 150) : c.tier === 1 ? 100 : c.lib ? 50 : 0) + c.conf + 2 * Math.min(16, c.model.length);
   // A library family read in under 7 characters is almost always a model cut
   // short, so it cannot end the scan by itself (tier 1 at most).
-  const mkCand = (from, clean, conf, extra) => ({ ...from, model: clean.model, lib: clean.lib, exact: clean.exact, tier: clean.lib ? (clean.model.length < 7 ? Math.min(1, clean.tier) : clean.tier) : -1, fixedFrom: clean.fixedFrom, conf, ...extra });
+  const mkCand = (from, clean, conf, extra) => ({ ...from, model: clean.model, lib: clean.lib, exact: clean.exact, tier: clean.lib ? (clean.model.length < 7 ? Math.min(1, clean.tier) : clean.tier) : -1, fixedFrom: clean.fixedFrom, tailBad: clean.tailBad, conf, ...extra });
   // One full-photo pass. opts: extra per-call Tesseract settings (tesseract.js
   // applies them to this recognize only, so the shared worker is undisturbed).
   // rad: any extra turn already applied to canvas (0 here; rotateAuto's own
   // turn comes back in data.rotateRadians).
-  const read = async (canvas, opts, deg, passScale, event, rad) => {
+  const read = async (canvas, opts, deg, passScale, event, rad, noProbes) => {
     const { data } = await worker.recognize(canvas, opts);
     const turn = (rad || 0) + (data.rotateRadians || 0);
     // Model-shaped words, for a zoomed look if no pass finds a model.
-    for (const w of data.words || []) {
+    for (const w of noProbes ? [] : data.words || []) {
       const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9-]/g, "");
       if (t.length >= 7 && t.length <= 22 && t.length >= (w.text || "").length - 2 && /[A-Z]/.test(t) && w.bbox.y1 - w.bbox.y0 >= 6)
         probes.push({ t, conf: w.confidence || 0, box: w.bbox, rad: turn, deg, passScale, event });
@@ -9218,13 +9390,16 @@ async function ocrTagFields(file, onStatus) {
   const finish = (c) => {
     const fields = c.fields;
     fields.model = c.model;
+    if (c.tailBad) fields.ocrTailBad = true;   // v275: a character breaks the family's format - "check the tag"
     if (c.fixedFrom) {
       fields.ocrFixedFrom = c.fixedFrom;
       if (c.lib) trackEvent("OCR re-read: " + c.fixedFrom + " -> " + c.model + " = " + c.lib.brand + " " + c.lib.series);
     }
     // Serial from the same pass when it has one; else a LABELLED serial seen on
     // another pass (the model and serial are not always legible on one turn).
-    if (!fields.serial && best && best.serialSource === "label" && best.serial) { fields.serial = best.serial; fields.serialSource = "label"; }
+    // v275: also replaces this pass's bare digit run with another pass's labelled
+    // or serial-shaped one (James's G61MP: "550917186" vs S/N 5909L17186).
+    if (best && best.serial && rank(best) >= 2 && rank(best) > rank(fields)) { fields.serial = best.serial; fields.serialSource = best.serialSource; }
     if (c.event) trackEvent(c.event);
     if (c.zoomed) trackEvent("tag model fixed by zoom re-read");
     return fields;
@@ -9255,7 +9430,7 @@ async function ocrTagFields(file, onStatus) {
       let data = null;
       try { data = await ocrZoomLine(worker, photo, p.box, p.rad, p.deg, p.passScale, 44, true); } catch (e) { data = null; }
       if (!data) continue;
-      const text = (data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10");
+      const text = ocrNormDashes((data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10"));
       const f = extractTagFields(text);
       const toks = [f.model, ...text.split(/[^A-Z0-9-]+/)].filter(t => t && t.length >= 5 && /[0-9]/.test(t));
       for (const t of toks) {
@@ -9295,6 +9470,20 @@ async function ocrTagFields(file, onStatus) {
     }
     z = await probeWords(3);
     if (z) return finish(z);
+    // v275: the SINGLE_BLOCK read again on a background-flattened copy
+    // (ocrFlatten) at the turn that read best - a shadow, a dark corner or glare
+    // across the plate. Runs only once every pass above has failed, and adds no
+    // zoom probes, so a photo read before this point reads exactly as before.
+    // Skipped when the flattened copy is full of specks (grainy photo), mostly
+    // dark, or busy texture: Tesseract then took 15-40 s on the bench and read
+    // nothing this pass was needed for (every read it made: specks < 0.15, dark
+    // < 33%, edges < 30 per 1000 px). At 0.75 scale it was faster but lost reads.
+    if (onStatus) onStatus("Evening out shadows and glare on the label...");
+    const flatCanvas = ocrFlatten(bestDeg ? rotateCanvas(base, bestDeg) : base, 1);
+    if (flatCanvas.specks < 0.3 && flatCanvas.dark < 600 && flatCanvas.edges < 40) {
+      const doneF = await settle(await read(flatCanvas, { rotateAuto: true }, bestDeg, 1, "tag read by flattened pass" + (bestDeg ? " rotate " + bestDeg : ""), 0, true));
+      if (doneF) return finish(doneF);
+    }
     if (onStatus) onStatus("Zooming in on the label...");
     // Tesseract's own Sauvola (local) threshold at the turn that read best:
     // shadows and glare across a plate defeat the default global threshold.
@@ -9521,7 +9710,44 @@ async function sendFailedScan(blob, rec) {
   trackEvent("saved unreadable tag photo to device");
 }
 
+// v275 silent-failure capture (Andy 2026-10-09). James shot one Lennox plate 7
+// times in 5 minutes; 3 scans "read" something that did not identify the unit,
+// so they were never uploaded and he just kept retaking. The LAST tag scan's
+// photo stays in memory; a new scan within 3 minutes uploads it (kind
+// "retaken") when that scan had no confident library match. Not when it was a
+// clean match (the tech is likely on a second unit), when it was already
+// uploaded as a failure, or after 3 minutes. A lookalike re-read ("check the
+// tag") counts as handled when the tech used it (tapped anything on its result
+// card) or the next scan cleanly reads a DIFFERENT unit. Nothing changes on screen.
+const SCAN_RETAKE_MS = 3 * 60 * 1000;
+let lastTagScan = null;   // { file, id, ts, model, read, family, guess, confident, uploaded, used }
+function scanRetakeTake(now) {
+  const prev = lastTagScan;
+  lastTagScan = null;
+  return prev && now - prev.ts <= SCAN_RETAKE_MS ? prev : null;
+}
+// prev: the scan before this one (scanRetakeTake); info: what this scan identified (null = nothing)
+function scanRetakeSettle(prev, info) {
+  if (!prev || prev.uploaded || prev.confident || prev.used) return null;
+  if (prev.guess && info && info.brand && !info.ocrGuess && info.brand + "|" + info.series !== prev.family) return null;
+  trackEvent("SCAN RETAKEN | read: " + (prev.model || "none") + " | photo: " + prev.id);
+  return saveFailedScan(prev.file, { id: prev.id, kind: "retaken", read: prev.read }).catch(() => null);
+}
+function scanRetakeRemember(file, id, fields, info, uploaded) {
+  const model = fields && fields.model || "";
+  const read = [model, fields && fields.serial ? (model ? "/ " : "serial ") + fields.serial : "",
+    info && info.brand ? "(" + info.brand + (info.ocrGuess ? ", re-read of " + info.rawModel : "") + ")" : fields && fields.brandHint ? "(brand " + fields.brandHint + ")" : ""].filter(Boolean).join(" ");
+  lastTagScan = { file, id, ts: Date.now(), model, read, family: info && info.brand ? info.brand + "|" + info.series : "",
+    guess: !!(info && info.brand && info.ocrGuess), confident: !!(info && info.brand && !info.ocrGuess), uploaded: !!uploaded, used: false };
+}
+// Any tap on a scan's result card (codes, maintenance, manuals, web links) = the tech used that read.
+document.getElementById("scanResult").addEventListener("click", (e) => {
+  if (lastTagScan && e.target && e.target.closest && e.target.closest("button, a")) lastTagScan.used = true;
+});
+
 async function scanTagPhoto(file) {
+  const prevScan = scanRetakeTake(Date.now());
+  let thisInfo = null;
   trackEvent("scanned a tag photo");
   const preview = document.getElementById("scanPreview");
   preview.src = URL.createObjectURL(file);
@@ -9538,6 +9764,7 @@ async function scanTagPhoto(file) {
       trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
       scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + SCAN_SHADE_TIP + tagNoModelHint(fields));
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
+      scanRetakeRemember(file, photoId, fields, null, true);   // already uploaded: never again as "retaken"
       const box = document.getElementById("scanResult");
       // With the relay on, the photo goes to Andy by itself; the share button
       // stays as a backup. Relay off = the v151 wording, unchanged.
@@ -9559,13 +9786,20 @@ async function scanTagPhoto(file) {
       // (ocrCleanModel) - show the same "check the tag" note identifyModel's own
       // re-read gets.
       if (info && info.brand && !info.ocrGuess && fields.ocrFixedFrom) { info.ocrGuess = true; info.rawModel = fields.ocrFixedFrom; }
+      // v275: a read whose later characters break the family's format is not a confident ID either
+      if (info && info.brand && !info.ocrGuess && fields.ocrTailBad) { info.ocrGuess = true; info.rawModel = fields.model; info.tailBad = true; }
+      scanRetakeRemember(file, photoId, fields, info, !!(info && !info.brand));   // not-in-library is uploaded below
+      thisInfo = info;
       renderScanResult(info);
       if (info && !info.brand) {
         saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: fields.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
       }
     }
   } catch (err) {
+    if (!lastTagScan || lastTagScan.file !== file) scanRetakeRemember(file, newScanPhotoId(), null, null, false);
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
+  } finally {
+    scanRetakeSettle(prevScan, thisInfo);
   }
 }
 
@@ -9629,7 +9863,8 @@ function renderScanResult(info) {
       ? `<p><strong>That looks like a serial number, not a model.</strong> The model number is usually on the line above it on the data plate — check the tag and enter the model number below.</p>`
       : `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>`)
     : "";
-  const ocrBanner = info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
+  const ocrBanner = info.tailBad ? `<p class="scan-ocr-note">📷 Part of <strong>${escapeHtml(info.model)}</strong> doesn't fit this model family's format, so the scan may have misread a character — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O, 1/I, 8/B and 6/G).</p>`
+    : info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
   // How many library manuals answer to this exact model (or its family).
   const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
@@ -10946,7 +11181,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v274";
+const APP_VERSION = "v275";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
