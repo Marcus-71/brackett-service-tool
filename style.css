@@ -2139,3 +2139,11 @@ body.inv-cam-open { overflow: hidden; }
 .edu-title { font-weight: 800; font-size: 1.05rem; }
 .edu-sub { font-size: 0.85rem; color: var(--text-dim); }
 .edu-meta { font-size: 0.78rem; color: var(--text-dim); }
+
+/* v280 Tag Scanner: stop a slow scan and type the model instead */
+.scan-stop {
+  display: block; width: 100%; margin-top: 0.5rem; padding: 0.65rem 1rem; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.scan-stop:disabled { opacity: 0.6; cursor: default; }

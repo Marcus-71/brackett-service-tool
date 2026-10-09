@@ -694,7 +694,11 @@ let askAiToken = 0;
 // Failed Scans" Drive folder. Empty = dormant: photos stay on the phone with
 // the manual "Send this photo" button only, exactly as before. Fill in the
 // deployed Apps Script /exec URL to turn it on.
-const SCAN_PHOTO_RELAY = "https://script.google.com/macros/s/AKfycbwsRf8U7QzFrsolGtZZVpU4RDrMgln7gQ4ywRMp94_2iwZPR67elE6Fhaaq04Unm33X/exec";
+// v280: the relay moved to the work account (andy@brackettcomfort.com) - folder
+// "Brackett Failed Scans" 1pXJoIL6dGmGY1nG8UeJtmbfHde7EJIaT in the work Drive. The
+// old personal-Gmail relay (AKfycbwsRf8U...) stays up a few days for photos
+// already queued on phones by older versions.
+const SCAN_PHOTO_RELAY = "https://script.google.com/macros/s/AKfycbyFqD-FI0xjxZZn9v_AErY-KUoTszCVpDimdGUGWrXMr4x6Nn4TeqnxOmo6O4_dpgW4/exec";
 // Must equal the relay's APP_TOKEN script property. Same weak-shared-secret
 // model as ASK_AI_APP_TOKEN (obscure URL + daily cap do the real work).
 const SCAN_PHOTO_APP_TOKEN = ASK_AI_APP_TOKEN;
@@ -9286,6 +9290,12 @@ function tagNoModelHint(fields) {
     : "";
 }
 
+// v280 (Andy 2026-10-09: failed scans sat 60-90 s on Cameron's phone). The Tag
+// Scanner shows "Stop - I'll type it in" while it reads; the request is checked
+// before every OCR pass and zoom, so it takes effect when the pass in hand
+// finishes. A stopped scan returns no model, exactly like an unreadable tag.
+let ocrStopRequested = false;
+const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
   const viaBarcode = await tagBarcodeFields(file);
   if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
@@ -9329,6 +9339,7 @@ async function ocrTagText(file, onStatus) {
   // rad: any extra turn already applied to canvas (0 here; rotateAuto's own
   // turn comes back in data.rotateRadians).
   const read = async (canvas, opts, deg, passScale, event, rad, noProbes) => {
+    if (ocrStopRequested) throw OCR_STOP;
     const { data } = await worker.recognize(canvas, opts);
     const turn = (rad || 0) + (data.rotateRadians || 0);
     // Model-shaped words, for a zoomed look if no pass finds a model.
@@ -9383,6 +9394,7 @@ async function ocrTagText(file, onStatus) {
   const confirm = async (c) => {
     if (!c.box) return { c, agree: false };
     const zoomRead = async (size, auto) => {
+      if (ocrStopRequested) throw OCR_STOP;
       let data = null;
       try { data = await ocrZoomLine(worker, photo, c.box, c.rad, c.deg, c.passScale, size, auto); } catch (e) { data = null; }
       const z = data && ocrModelFromLine(data, c.model);
@@ -9452,6 +9464,7 @@ async function ocrTagText(file, onStatus) {
     const mixed = (t) => (/[0-9].*[0-9]/.test(t) && /[A-Z].*[A-Z]/.test(t) ? 1 : 0);
     const list = probes.splice(0).sort((a, b) => mixed(b.t) - mixed(a.t) || b.t.length - a.t.length || b.conf - a.conf).slice(0, max);
     for (const p of list) {
+      if (ocrStopRequested) throw OCR_STOP;
       let data = null;
       try { data = await ocrZoomLine(worker, photo, p.box, p.rad, p.deg, p.passScale, 44, true); } catch (e) { data = null; }
       if (!data) continue;
@@ -9475,6 +9488,7 @@ async function ocrTagText(file, onStatus) {
   const labelZoom = async () => {
     const list = serialSeen.splice(0).sort((a, b) => b.rank - a.rank || b.conf - a.conf).slice(0, 1);
     for (const s of list) {
+      if (ocrStopRequested) throw OCR_STOP;
       if (onStatus) onStatus("Reading the label around the serial number...");
       let data = null;
       try { data = await ocrZoomLine(worker, photo, s.box, s.rad, s.deg, s.passScale, 64, false, { l: 12, r: 6, u: 6, d: 4, psm: "11" }); } catch (e) { data = null; }
@@ -9565,6 +9579,12 @@ async function ocrTagText(file, onStatus) {
     // v279: a clean labelled read the library doesn't know yet - shown as "not in
     // the library" (and uploaded for the nightly check) instead of "can't read".
     if (labelCand) return finish({ ...labelCand, event: "tag model read from its label, not in library" });
+  } catch (e) {
+    if (e !== OCR_STOP) throw e;
+    trackEvent("tag scan stopped by tech");
+    const f = best || { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
+    f.model = ""; f.ocrStopped = true;
+    return f;
   } finally {
     // The worker is shared by every later scan: put it back in its default
     // layout mode (SINGLE_BLOCK = "6", per the bundled worker), not PSM 3.
@@ -9811,6 +9831,12 @@ document.getElementById("scanResult").addEventListener("click", (e) => {
   if (lastTagScan && e.target && e.target.closest && e.target.closest("button, a")) lastTagScan.used = true;
 });
 
+document.getElementById("scanStopBtn").addEventListener("click", (e) => {
+  ocrStopRequested = true;
+  e.currentTarget.textContent = "Stopping…";
+  e.currentTarget.disabled = true;
+});
+
 async function scanTagPhoto(file) {
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
@@ -9821,14 +9847,27 @@ async function scanTagPhoto(file) {
   document.getElementById("scanResult").innerHTML = "";
   try {
     scanStatus("Reading the tag… first scan on a phone takes ~15-30 seconds.");
-    const fields = await ocrTagFields(file, scanStatus);
+    // v280: what the tech types while the scan runs is theirs - a scan that
+    // reads nothing (or is stopped) no longer wipes it.
+    const modelEl = document.getElementById("scanModelInput"), serialEl = document.getElementById("scanSerialInput");
+    const typedBefore = [modelEl.value, serialEl.value];
+    ocrStopRequested = false;
+    const stopBtn = document.getElementById("scanStopBtn");
+    stopBtn.textContent = "Stop — I'll type it in"; stopBtn.disabled = false; stopBtn.classList.remove("hidden");
+    let fields;
+    try { fields = await ocrTagFields(file, scanStatus); }
+    finally { stopBtn.classList.add("hidden"); ocrStopRequested = false; }
     scanStatus(null);
-    document.getElementById("scanModelInput").value = fields.model;
-    document.getElementById("scanSerialInput").value = fields.serial;
+    const typedModel = modelEl.value !== typedBefore[0] && modelEl.value.trim();
+    const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value.trim();
+    if (fields.model || !typedModel) modelEl.value = fields.model;
+    if (!typedSerial) serialEl.value = fields.serial;
     if (!fields.model) {
       const photoId = newScanPhotoId();
-      trackEvent("SCAN - NO MODEL READ" + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
-      scanStatus("I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + SCAN_SHADE_TIP + tagNoModelHint(fields));
+      trackEvent("SCAN - NO MODEL READ" + (fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
+      scanStatus(fields.ocrStopped
+        ? "Stopped. Type the model number below and tap Identify unit." + (typedModel ? "" : tagNoModelHint(fields))
+        : "I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + SCAN_SHADE_TIP + tagNoModelHint(fields));
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       scanRetakeRemember(file, photoId, fields, null, true);   // already uploaded: never again as "retaken"
       const box = document.getElementById("scanResult");
@@ -11276,7 +11315,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v279";
+const APP_VERSION = "v280";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
