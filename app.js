@@ -4879,7 +4879,7 @@ async function genWizAfterOcr(fields, file) {
       trackEvent("gen checklist scan -> liquid-cooled " + model);
     } else {
       // A read the library doesn't know: same telemetry line and photo as the Tag Scanner.
-      const info = identifyModel(model, serial, fields.brandHint, photoId);
+      const info = identifyModel(model, serial, fields.brandHint, photoId, { log: true });
       if (info && !info.brand && file) saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: model + (serial ? " / " + serial : "") }).catch(() => {});
       r.info = info;
       genCl.pickOpen = true;
@@ -5424,6 +5424,11 @@ async function genClFinish() {
     return;
   }
   if (!d.modelG && !confirm("No generator model picked. Finish anyway?")) return;
+  // v274 (Andy 2026-10-09): a second checklist today whose model is ONE character off an
+  // earlier one (or has the same serial under a different model) is almost always the
+  // scanner misreading the plate - Vern's G0072101 went to the office again as G0072109.
+  const dupe = await genClLikelyMisread(d).catch(() => null);
+  if (dupe && !confirm(dupe)) return;
   const btn = document.getElementById("gclFinish");
   if (btn) { btn.disabled = true; btn.textContent = "Making the PDF…"; }
   let rec;
@@ -5449,6 +5454,26 @@ async function genClFinish() {
   genCl.result = res;
   if (btn) { btn.disabled = false; btn.textContent = "Finish & send PDF"; }
   genClShowResult(res);
+}
+
+// Checklists already finished today on this phone: is this one probably the same generator
+// with a misread model? Returns the warning text, or null.
+async function genClLikelyMisread(d) {
+  const model = String(d.modelG || "").toUpperCase(), serial = String(d.serial || "").toUpperCase().trim();
+  if (!model && !serial) return null;
+  const today = new Date().toDateString();
+  const oneOff = (a, b) => a.length === b.length && a !== b && [...a].filter((c, i) => c !== b[i]).length === 1;
+  for (const r of await genClAll()) {
+    if (!r || r.id === d.id || new Date(r.ts).toDateString() !== today) continue;
+    const rm = String(r.model || "").toUpperCase(), rs = String(r.serial || "").toUpperCase().trim();
+    const sameSerial = serial && rs && serial === rs && model !== rm;
+    if (sameSerial || (model && rm && oneOff(model, rm))) {
+      return "You already sent a checklist today for " + (rm || "a generator") + (rs ? " (serial " + rs + ")" : "") +
+        (r.customerName ? " - " + r.customerName : "") + ".\n\nThis one says " + (model || "no model") + (serial ? " (serial " + serial + ")" : "") +
+        ". That's usually the scanner misreading the plate.\n\nCheck the MODEL on the data plate. Send this one anyway?";
+    }
+  }
+  return null;
 }
 
 // Relay first; queue when there is no signal; share sheet / email when there
@@ -8471,7 +8496,12 @@ function looksLikeSerial(s) {
 
 // photoId (optional): the failed-scan photo record this read came from, so the
 // "not in library" event can be paired with its picture in the Drive folder.
-function identifyModel(rawModel, rawSerial, brandHint, photoId) {
+// opts.log (v274): only a real scan or a model typed into a scan tool logs misses. Ask and
+// the searches call this to test whether a WORD is a model, and used to log every word that
+// wasn't ("MODEL NOT IN LIBRARY: SOCKET" x31), flooding the daily report.
+const loggedMisses = new Map();   // miss -> last logged time, so one scan logs once
+function identifyModel(rawModel, rawSerial, brandHint, photoId, opts) {
+  const log = !!(opts && opts.log);
   const model = (rawModel || "").toUpperCase().replace(/\s+/g, "");
   if (!model) return null;
   const serial = (rawSerial || "").toUpperCase().trim();
@@ -8494,7 +8524,7 @@ function identifyModel(rawModel, rawSerial, brandHint, photoId) {
   for (const cand of ocrModelCandidates(model)) {
     for (const p of MODEL_PATTERNS) {
       if (p.re.test(cand)) {
-        trackEvent("OCR re-read: " + model + " -> " + cand + " = " + p.brand + " " + p.series);
+        if (log) trackEvent("OCR re-read: " + model + " -> " + cand + " = " + p.brand + " " + p.series);
         return {
           model: cand, serial,
           brand: p.brand, equipment: p.equipment, series: p.series,
@@ -8515,7 +8545,13 @@ function identifyModel(rawModel, rawSerial, brandHint, photoId) {
   // on the office's coverage-gap list (those rows are mined to decide what
   // equipment to add; this is user error, not a gap).
   const serialLike = looksLikeSerial(model);
-  trackEvent((serialLike ? "SERIAL IN MODEL FIELD: " : "MODEL NOT IN LIBRARY: ") + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : "") + (photoId ? " | photo: " + photoId : ""));
+  // A model number always has a digit; a letters-only read (SOCKET, HOURS) is a word, not a
+  // gap in the library. The same miss again within 10 minutes is the same scan.
+  const missKey = (serialLike ? "S:" : "M:") + model + "|" + serial;
+  if (log && /\d/.test(model) && !(Date.now() - (loggedMisses.get(missKey) || 0) < 10 * 60 * 1000)) {
+    loggedMisses.set(missKey, Date.now());
+    trackEvent((serialLike ? "SERIAL IN MODEL FIELD: " : "MODEL NOT IN LIBRARY: ") + model + " | serial: " + (serial || "?") + (brandHint ? " | tag brand: " + brandHint : "") + (photoId ? " | photo: " + photoId : ""));
+  }
   return {
     model, serial, brand: null,
     brandGuess: brandHint || null,
@@ -9518,7 +9554,7 @@ async function scanTagPhoto(file) {
       // as an unreadable one — keep the picture and pair it with the
       // "MODEL NOT IN LIBRARY" line through photoId.
       const photoId = newScanPhotoId();
-      const info = identifyModel(fields.model, fields.serial, fields.brandHint, photoId);
+      const info = identifyModel(fields.model, fields.serial, fields.brandHint, photoId, { log: true });
       // v185: the OCR already swapped lookalike characters to reach the library
       // (ocrCleanModel) - show the same "check the tag" note identifyModel's own
       // re-read gets.
@@ -9816,7 +9852,7 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   if (!model) { scanStatus("Type or scan a model number first."); return; }
   scanStatus(null);
   trackEvent("identified unit: " + model);
-  renderScanResult(identifyModel(model, serial));
+  renderScanResult(identifyModel(model, serial, null, null, { log: true }));
 });
 
 // ============================================================
@@ -9951,7 +9987,7 @@ function warrantyOwnerFields() {
 
 function renderWarrantyResult(model, serial, badgeFromTag) {
   const box = document.getElementById("warrantyResult");
-  const info = model ? identifyModel(model, serial, null) : null;
+  const info = model ? identifyModel(model, serial, null, null, { log: true }) : null;
   let badge = badgeFromTag;
   if (!badge && info && info.brand) badge = BRAND_TO_BADGE[info.brand] || null;
   const portal = badge ? WARRANTY_PORTALS[badge] : null;
@@ -10910,7 +10946,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v273";
+const APP_VERSION = "v274";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
