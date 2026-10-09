@@ -682,7 +682,10 @@ let askManualToken = 0;      // guards the async in-manual search against stale 
 let askManualTimer = null;
 // Server-side AI relay (holds the API key; app never sees it). Empty = feature
 // dormant (no button). Fill in the deployed Apps Script /exec URL to turn it on.
-const ASK_AI_RELAY = "https://script.google.com/macros/s/AKfycbzk5Pv9A4IIs8MSqnmv2xRFDVbS82PMWvStg_gSSUPTSXe0rOTzhUpNA7186htaGAtRjA/exec";
+// v281: moved to the work account (andy@brackettcomfort.com), project "Brackett
+// Ask AI Relay", source tools/ask-ai-relay.gs. Old personal-Gmail deployment was
+// AKfycbzk5Pv9A4IIs8MSq...; retire it once phones have updated.
+const ASK_AI_RELAY = "https://script.google.com/macros/s/AKfycbzMRHkmpTO2Cyu2R7aHr-wA5oWm9hZbGm3In2paXenb9enQ4CF266fcLRVoNyyx9Q8U_w/exec";
 // Shared password the relay checks (its APP_TOKEN script property must match).
 // Not a strong secret — it rides in this public file — but combined with the
 // obscure URL + the relay's daily cap it stops anyone who finds the URL from
@@ -11315,7 +11318,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v280";
+const APP_VERSION = "v281";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
