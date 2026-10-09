@@ -313,6 +313,7 @@ const SCREEN_TITLES = {
   inventory: "Inventory",
   checker: "Daikin Checker",
   genchecklist: "Generator Checklist",
+  education: "Education",
 };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
@@ -337,10 +338,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen", "genChecklistScreen", "inventoryScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -359,6 +360,7 @@ function showScreen(name, fromBack) {
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
   if (name === "checker") renderChecker();
+  if (name === "education") renderEducation();
   if (name === "tstat") renderTstats();
   // Andy 2026-10-01: open Generators at the top so the Annual Maintenance
   // Checklist box is the first thing seen (the home page scroll carried over).
@@ -10239,6 +10241,31 @@ async function warrantyCopy(text, btn) {
 // Full-screen embedded portal (same shell as the PDF reader). Only used for
 // makers whose lookup page allows framing AND pre-fills itself from the URL.
 let portalOpen = false;
+// v277 Education tab (Andy 2026-10-09): Brackett's own training handouts. The
+// PDFs ship with the app (precached in sw.js), so they open in the app's PDF
+// reader with no signal. Add a handout: drop the PDF in education/, add a line
+// here and to sw.js APP_SHELL.
+const EDUCATION = [
+  { file: "education/superheat-subcooling.pdf", title: "Superheat and Subcooling", sub: "Vsat / Lsat, system vs discharge superheat, R-410A and R-32 PT tables, the SH x SC diagnosis matrix, reading it in the D-Checker Cycle Viewer, scenario worksheet", pages: 9 },
+];
+function renderEducation() {
+  const list = document.getElementById("educationList");
+  list.innerHTML = EDUCATION.map((e, i) => `<button class="edu-item" data-edu="${i}" type="button"><span class="edu-title">📘 ${escapeHtml(e.title)}</span><span class="edu-sub">${escapeHtml(e.sub)}</span><span class="edu-meta">${e.pages} pages · works offline</span></button>`).join("");
+}
+document.getElementById("educationList").addEventListener("click", async (ev) => {
+  const btn = ev.target.closest && ev.target.closest("[data-edu]");
+  if (!btn) return;
+  const e = EDUCATION[+btn.dataset.edu];
+  trackEvent("opened education: " + e.title);
+  try {
+    const res = await fetch(e.file);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    openPdfReader({ title: e.title, filename: e.file.split("/").pop(), blob: await res.blob() });
+  } catch (err) {
+    alert("Couldn't open " + e.title + " (" + (err && err.message || err) + "). Open the app once with signal so it can save the handout.");
+  }
+});
+
 function openPortalEmbed(url, title) {
   const v = document.getElementById("portalViewer");
   document.getElementById("portalViewerTitle").textContent = title;
@@ -11227,7 +11254,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v276";
+const APP_VERSION = "v277";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

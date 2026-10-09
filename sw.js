@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v276";
+const CACHE_NAME = "bfc-cache-v277";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -20,6 +20,7 @@ const APP_SHELL = [
   "./inventory.js",
   "./dchecker/index.html",
   "./guides/daikin-checker-guide.html",
+  "./education/superheat-subcooling.pdf",
   "./manuals-seed/seed-index.js",
   "./manifest.json",
   "./vendor/tesseract.min.js",
