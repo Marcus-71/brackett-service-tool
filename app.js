@@ -7751,7 +7751,7 @@ fcWeighRender(); fcClockRender(); fcCylRender();
 // jump-to-codes buttons land on real filter selections.
 const MODEL_PATTERNS = [
   // Kohler first (Andy 2026-10-05): "24RCLA" otherwise reads as a Carrier 24-series AC.
-  { re: /^(\d{1,2}(\.5)?(RESA|RESAL|RESC|RESCL|RESB|RESD|RESV|RESVL|RESL|RESM1|RESNT|RESHD|RES|TRES|RCAL|RCA|RCLA|RCLB|RCLC|RCL|RYG|REYG)|RGEN\d)/, brand: "Kohler", equipment: "Generator", series: "Kohler (Rehlko) residential home standby generator", notes: ["Kohler model = kW + series letters (20RCA, 14RESAL, 12RESV, 38RCLB). Open in Generators - Kohler tab for its fault messages, troubleshooting, specs and manuals."] },
+  { re: /^(\d{1,2}(\.5)?(RESA|RESAL|RESC|RESCL|RESB|RESD|RESV|RESVL|RESL|RESM1|RESNT|RESHD|RES|TRES|RCAL|RCA|RCLA|RCLB|RCLC|RCL|RYG|REYG)(?![A-Z])|RGEN\d)/, brand: "Kohler", equipment: "Generator", series: "Kohler (Rehlko) residential home standby generator", notes: ["Kohler model = kW + series letters (20RCA, 14RESAL, 12RESV, 38RCLB). Open in Generators - Kohler tab for its fault messages, troubleshooting, specs and manuals."] },
   { re: /^6VSG/, brand: "Kohler", equipment: "Generator", series: "Kohler 6VSG variable-speed DC generator", notes: ["Open in Generators - Kohler tab for its faults, troubleshooting and manuals."] },
   // RXT12AVJU9 / RXT24AVJU9 (two digits then the AVJU suffix) is a Daikin Aurora outdoor unit, not a switch; RSB100, RXTA200A, RDT-CFNC-100ASE stay Kohler (content audit 2026-10-06).
   { re: /^(RXT|RDT|RRT|RSB)(?![0-9]{2}[A-Z]{1,2}VJU)[A-Z0-9-]/, brand: "Kohler", equipment: "Transfer Switch", series: "Kohler (Rehlko) residential automatic transfer switch", notes: ["RXT / RDT / RRT / RSB: open in Generators - Kohler tab for the switch's settings, LED/fault meanings and manuals."] },
@@ -8182,6 +8182,8 @@ const MODEL_PATTERNS = [
   { re: /^(TC[DEF]2|XC[346]|CC17|TC17|AC(19|21)|AL(19|21))[0-9A-Z]/, brand: "York", equipment: "Condenser/Heat Pump", series: "Coleman / Luxaire split system - XC3 / XC4 / XC6 and TCD2 / TCE2 / TCF2 single-stage (York YC-tier), CC17 (Coleman) / TC17 (Luxaire) legacy 2-stage, AC19 / AC21 (Coleman) and AL19 / AL21 (Luxaire) flagship 2-stage and variable", notes: ["Coleman and Luxaire do not simply relabel York's model prefixes on this line - the prefixes are genuinely different, so the same hardware appears under three unrelated names.","AC21 / AL21 are the Coleman/Luxaire names for York's YXV / YZV variable-capacity platform; AC19 / AL19 are the YXT / YZT 19 SEER two-stage platform. Use those York families in Error Codes.","XC3 / XC4 / XC6 and TCD2 / TCE2 / TCF2 are the YC single-stage tier - no electronic diagnostics at all.","The legacy 2-stage tier is NOT shared: Coleman calls it CC17, Luxaire calls it TC17.","Trap: this is not Lennox. Lennox XC13 through XC25 always have TWO digits after XC; the York-family prefixes are XC3 / XC4 / XC6 with a single digit."] },
   { re: /^T[CH][GJ][DF][0-9A-Z]/, brand: "York", equipment: "Other", series: "Coleman / Luxaire packaged unit - TCGD / TCGF / TCJD / TCJF gas-electric and AC, THGD / THGF / THJD / THJF heat pump (York badge = YCJD / YCJF / YHJD / YHJF)", notes: ["Same equipment as the York YCJ / YHJ packaged line already in the scanner, sold under the Coleman and Luxaire badges.","No package-unit-specific code table was sourced in this pass - see the generic packaged-unit scenarios in Diagnostic Help."] },
   { re: /^T[CH][34]B[0-9A-Z]/, brand: "York", equipment: "Condenser/Heat Pump", series: "Coleman / Luxaire TC3B / TC4B air conditioner and TH3B / TH4B heat pump (13-14 SEER prior generation)", notes: ["Prior-generation Coleman/Luxaire split systems; no dedicated fault-code table was sourced for them in this pass.","Trap: this is not the Nortek *T-series (FT4B / DT4B / JT5B) - those have the family letter in position 1 and a T in position 2."] },
+  // v279 (Cameron's scan 10/9, PCG4A360752X1A): the R-410A PCG4 the R-454B P*3/P*5 line replaced. Sources: the unit's own data plate; JCI PCG4 product pages (York, Coleman, Luxaire, Fraser-Johnston, Champion).
+  { re: /^PCG4[A-Z]?[0-9]{2}/, brand: "York", equipment: "Other", series: "York / Coleman / Luxaire / Fraser-Johnston (Johnson Controls) PCG4 single-package gas-electric unit - 14 SEER (13.4 SEER2), 81% AFUE gas heat, R-410A, 2-5 ton", notes: ["One cabinet: single-stage scroll air conditioning plus an 81% gas heat section. Same unit under the York, Coleman, Luxaire, Fraser-Johnston, Champion, Guardian and Evcon badges (Johnson Controls, Norman OK).", "Reading the model: in PCG4A360752X1A, 36 is the nominal cooling size (36,000 BTUH = 3 ton) and 075 matches the plate's 75,000 BTUH gas input (60,000 output). Single- and three-phase versions exist - read the voltage on the plate.", "Charge by the SUBCOOLING chart printed on the unit's own data plate (liquid pressure by outdoor dry bulb and indoor wet bulb). The factory charge is on the plate too (8 lb 3 oz R-410A on a PCG4A36).", "Gas heat: the plate gives the orifice drill size (#42 natural gas on the PCG4A36075), the allowed temperature rise (40-70 F) and the 180 F maximum outlet temperature - check the rise after any gas pressure work.", "Technical guides (Generation 4): 5919600 for 208/230 V 1-phase, 5919606 for 208/230 V 3-phase, 5919611 for 460 V 3-phase. The Ultra Low NOx PCG4 has its own guide."] },
   { re: /^P[CGDH][35][0-9]/, brand: "York", equipment: "Other", series: "York / Coleman / Luxaire (Johnson Controls Ducted Systems) R-454B packaged unit — PC (AC + optional electric heat), PH (heat pump + electric), PG (AC + gas heat), PD (heat pump + gas heat); tier digit 3 = 13.4 SEER2, 5 = 15.2 SEER2, 2–5 ton", notes: ["R-454B (A2L). Carries a Mitigation Control Board (RDS) with an A2L leak sensor near the coil drain pan. Board RED LED: slow 2s-on/2s-off = normal; 2 flashes + buzzer = refrigerant leak above 15% LFL (ventilate, find/repair the leak — the sensor also trips on gas/propane, so check gas piping too); 3 flashes + buzzer = refrigerant sensor failure (cycle power, else replace the sensor); 4 flashes + buzzer = sensor comms lost (check the A2L sensor plug/cable at the board); solid red = board failure.", "On a leak the board intercepts thermostat calls and forces a mitigation response (blower on, compressor held off) — a blower running with no call can be the RDS doing its job, not a fault. Stored codes persist 30 days: hold the board push-button 2–5 s to display, >5 s to clear (only with no active fault).", "Install manual (PC3 series) is in Manuals → York."] },
   { re: /^(HMH[0-9]|HMCG[0-9]|HH8|H[CH][0-9]{3}[A-Z])/, brand: "York", equipment: "Condenser/Heat Pump", series: "York / Coleman / Luxaire horizontal (side) discharge inverter outdoor unit - HMH7 modulating heat pump, HMCG2 modulating air conditioner, HH8 / HC8 R-454B multi-speed", notes: ["All three families print the SAME numeric outdoor-unit fault table (codes 1-97) - it is in Error Codes as one family. Codes 22 and 97 are heat-pump only; code 16 is a cooling-overload code.","Where the code appears depends on size. 24k/36k HMH7 and HMCG2 show it on LED1 (tens) + LED2 (ones) on the main board; HH8 and the 48k/60k units show it on a 7-segment display. Query parameter P.0 to read the active code.","LED3 changes what LED1/LED2 mean: LED3 ON = the blink count is a DRIVE fault (separate table in Error Codes), LED3 flashing with LED1/LED2 off = compressor preheat, all three off = no fault.","Nomenclature HMCG22B241S: H=horizontal discharge, M=modulating (1/2/3=stages, V=variable), C=air conditioner (H=heat pump), G2=16 SEER2 efficiency series, 2=208/230-1-60, B=R-410A (D=R-454B), 24=2 ton, 1=generation, S=standard control (C=communicating, B/W=wireless).","HH8 uses the newer positional form HH824E2S11: H=horizontal, H=heat pump, 8=18 SEER2, 24=2 ton, E=R-454B, 2=208/230-1-60, S=standard control, 1=factory option, 1=generation, A=style.","HH8 is R-454B (A2L) - it has a refrigerant detection system, and its LED1 is read as a reflection off the delta plate. No 4-ton model exists; a 5-ton HH860 is set to lower-capacity mode for 4-ton jobs.","Setback clearance is only 8 inches on the side-discharge cabinets, versus about 24 inches for a conventional top-discharge unit."] },
   { re: /^TM9[YTM]|^TML[VTX]|^TL[89]E/, brand: "York", equipment: "Gas Furnace", series: "York / Coleman / Luxaire TM9Y / TM9T / TM9M (96% two-stage standard ECM), TMLV / TMLT / TMLX (80% Low-NOx two-stage variable speed), TL8E / TL9E (80% / 95% single-stage Ultra Low NOx) gas furnace", notes: ["Same standard Integrated Furnace Control and the SAME 1 to 13 red-flash table as TM8 / TM9V / TM9E - see the York UTEC integrated furnace control family in Error Codes.","TMLV is the 80% Low-NOx version of TM8V and ships under the same install manual and document number.","The LAST ERROR button flashes the 5 most recent stored codes, newest first, with a 2 second gap. Two green flashes means the memory is empty; hold the button over 5 seconds to clear it (3 green flashes confirms).","Flame sense reference: about 3.7 microamps DC normal, warning starts at 1.5 microamps, lockout at 0.1 microamps.","A T-prefix model number does NOT identify the badge - the same manual covers York (Y), Coleman (C) and Luxaire (L) versions.","TM9M / TM9T / TMLT / TMLX added from the York LX Series brochure (yorknow.com tm9ybrochure.pdf) - same LX standard-IFC board family"] },
@@ -9302,6 +9304,14 @@ async function ocrTagText(file, onStatus) {
   const base = photo.base;
   const worker = await getTessWorker(onStatus);
   let best = null, bestCand = null, lastConf = 0;
+  // v279 (Cameron's York PCG4A360752X1A, 10/9): a model read off its "Model
+  // Number" label that the library does not know yet. It is kept so the scan
+  // can show it as "not in the library" instead of "can't read the tag", and so
+  // a lookalike-fixed library match read at a DIFFERENT turn with no label
+  // (upside-down "(Compresseur)" -> LRESSA0WOD -> 1RESSA0W0D, a Kohler
+  // generator) cannot beat it.
+  let labelCand = null;
+  const vetoed = (c) => !!(c && c.fixedFrom && !(c.fields && c.fields.modelSource === "label") && labelCand && labelCand.deg !== c.deg);
   const probes = [];
   const serialSeen = [];   // v276: where a serial was read, for the label-zoom pass
   // Prefer a failed pass that read the serial off its LABEL over one that only
@@ -9362,6 +9372,7 @@ async function ocrTagText(file, onStatus) {
     // candidate unless read very confidently.
     if (fields.modelSource === "pattern" && (clean.tier <= 0 || (clean.tier === 1 && clean.model.length < 7)) && (w ? w.conf : 0) < 90) return null;
     const c = mkCand({ fields, box: w && w.box, rad: turn, deg, passScale, event }, clean, w ? w.conf : fields.confidence);
+    if (fields.modelSource === "label" && !clean.lib && clean.model.length >= 8 && c.conf >= 50 && /[A-Z]/.test(clean.model) && /[0-9]/.test(clean.model) && (!labelCand || c.conf > labelCand.conf)) labelCand = c;
     if (!bestCand || score(c) > score(bestCand)) bestCand = c;
     return c;
   };
@@ -9422,7 +9433,7 @@ async function ocrTagText(file, onStatus) {
   // one needs a confident read or an agreeing zoomed re-read; anything else
   // must be read very confidently or confirmed by the zoom.
   const settle = async (c) => {
-    if (!c) return null;
+    if (!c || vetoed(c)) return null;
     // a clean, confident read of a specific family needs no second look
     if (c.tier === 2 && c.exact && c.conf >= 85) return c;
     if (c.tier === 2) return (await confirm(c)).c;
@@ -9454,7 +9465,9 @@ async function ocrTagText(file, onStatus) {
         const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
         fields.text = (fields.text || "") + " \n" + (data.text || "");
         if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
-        return mkCand({ fields, box: null, deg: p.deg, event: "tag read by zoom on a word" + (p.deg ? " rotate " + p.deg : "") }, zc, conf);
+        const pc = mkCand({ fields, box: null, deg: p.deg, event: "tag read by zoom on a word" + (p.deg ? " rotate " + p.deg : "") }, zc, conf);
+        if (vetoed(pc)) continue;
+        return pc;
       }
     }
     return null;
@@ -9477,7 +9490,9 @@ async function ocrTagText(file, onStatus) {
         fields.text = (fields.text || "") + " \n" + (data.text || "");
         if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
         if (f.serial && (!fields.serial || (f.serialSource === "label" && fields.serialSource !== "label"))) { fields.serial = f.serial; fields.serialSource = f.serialSource; }
-        return mkCand({ fields, box: null, deg: s.deg, event: "tag read by label zoom" + (s.deg ? " rotate " + s.deg : "") }, zc, conf);
+        const lc = mkCand({ fields, box: null, deg: s.deg, event: "tag read by label zoom" + (s.deg ? " rotate " + s.deg : "") }, zc, conf);
+        if (vetoed(lc)) continue;
+        return lc;
       }
     }
     return null;
@@ -9546,7 +9561,10 @@ async function ocrTagText(file, onStatus) {
     // model or was read with reasonable confidence; weak garbage is not reported.
     // (a short read - under 7 characters - needs a very confident read)
     const bc = bestCand;
-    if (bc && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || bc.conf >= 80)) return finish(bc);
+    if (bc && !vetoed(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || bc.conf >= 80)) return finish(bc);
+    // v279: a clean labelled read the library doesn't know yet - shown as "not in
+    // the library" (and uploaded for the nightly check) instead of "can't read".
+    if (labelCand) return finish({ ...labelCand, event: "tag model read from its label, not in library" });
   } finally {
     // The worker is shared by every later scan: put it back in its default
     // layout mode (SINGLE_BLOCK = "6", per the bundled worker), not PSM 3.
@@ -11258,7 +11276,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v278";
+const APP_VERSION = "v279";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
