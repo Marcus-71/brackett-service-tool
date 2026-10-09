@@ -10247,6 +10247,10 @@ let portalOpen = false;
 // here and to sw.js APP_SHELL.
 const EDUCATION = [
   { file: "education/superheat-subcooling.pdf", title: "Superheat and Subcooling", sub: "Vsat / Lsat, system vs discharge superheat, R-410A and R-32 PT tables, the SH x SC diagnosis matrix, reading it in the D-Checker Cycle Viewer, scenario worksheet", pages: 9 },
+  { file: "education/thermostat-wiring-heat-pump.pdf", title: "Thermostat Wiring: Heat Pump", sub: "Terminal reference (R C Y G O/B W2/AUX E L Y2), wiring diagram, O vs B, aux vs emergency heat, dual fuel, verification steps, common mistakes", pages: 4 },
+  { file: "education/thermostat-wiring-ac-gas-furnace.pdf", title: "Thermostat Wiring: AC with Gas Furnace", sub: "Terminal reference, wiring diagram, Rc/Rh jumper, thermostat configuration (fan with heat), verification steps, common mistakes", pages: 3 },
+  { file: "education/furnace-pressure-switch-testing.pdf", title: "Furnace Pressure Switch Testing: 80% and 90%", sub: "Field SOP: electrical test, manometer test against the set point, common causes on 80% and 90% furnaces, two-stage and high-altitude notes, verifying the repair", pages: 3 },
+  { file: "education/furnace-gas-pressure-check.pdf", title: "Furnace Gas Pressure Check", sub: "Field SOP: typical NG and LP inlet and manifold pressures, inlet and manifold checks, two-stage and modulating, adjusting the regulator, reading the results", pages: 4 },
 ];
 function renderEducation() {
   const list = document.getElementById("educationList");
@@ -11254,7 +11258,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v277";
+const APP_VERSION = "v278";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

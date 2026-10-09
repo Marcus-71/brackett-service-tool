@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v277";
+const CACHE_NAME = "bfc-cache-v278";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -21,6 +21,10 @@ const APP_SHELL = [
   "./dchecker/index.html",
   "./guides/daikin-checker-guide.html",
   "./education/superheat-subcooling.pdf",
+  "./education/thermostat-wiring-heat-pump.pdf",
+  "./education/thermostat-wiring-ac-gas-furnace.pdf",
+  "./education/furnace-pressure-switch-testing.pdf",
+  "./education/furnace-gas-pressure-check.pdf",
   "./manuals-seed/seed-index.js",
   "./manifest.json",
   "./vendor/tesseract.min.js",
