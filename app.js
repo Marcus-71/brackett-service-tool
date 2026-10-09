@@ -8232,6 +8232,8 @@ const MODEL_PATTERNS = [
   { re: /^A801X|^A951X|^A952V/, brand: "Trane", equipment: "Gas Furnace", series: "Ameristar A801X 80%, A951X 95-96% and A952V 96% variable-speed gas furnace - Trane / American Standard integrated furnace control platform", notes: ["A801X has its own 7-segment IFC e-code table in Error Codes - it is the A951X list minus e09, because an 80% furnace has no condensate/inducer pressure switch.","A951X is the same prefix as the Trane / American Standard A951X already in Error Codes - use that table for A951X and A952V.","Button map: err = active alarm, L6F = last 6 faults (hold Option 5 seconds inside L6F to clear), run = Test Mode, Cr = code release number.","Hold Menu + Option together 15 seconds in Idle to reset factory defaults - the display flashes FD three times.","Some A801X sizes have a separate California Low-NOx model number - read the data label, not the sell sheet."] },
   { re: /^4[TWY]CA4/, brand: "Trane", equipment: "Other", series: "Ameristar 4TCA4 AC, 4WCA4 heat pump and 4YCA4 gas/electric packaged unit - 13.4 SEER2 / 6.7 HSPF2, R-410A", notes: ["Do not confuse with the Trane 4TCC/4WCC/4YCC packaged rule - Ameristar puts A in digit 4 where Trane puts C/Y/Z.","Rotary compressor on the 2 and 2.5 ton sizes, scroll from 3 ton up - start-component diagnosis differs.","Small footprint for tight lot lines and manufactured homes; assembled in Vidalia GA.","4YCA4 gas/electric was still listed COMING SOON on the 2023 sell sheet - confirm the unit shipped before ordering parts to that number."] },
   { re: /^4MXC/, brand: "Trane", equipment: "Air Handler", series: "Ameristar 4MXC multi-position cased evaporator coil - orifice flow control", notes: ["Orifice, not TXV - charge these by superheat.","The Ameristar 4AXA uncased all-aluminum coil is already matched by the Trane / American Standard coil rule; only 4MXC needed a rule of its own.","Cooling and heat pump compatible, approved for manufactured/mobile housing.","Do not read this as the Trane 4MXW mini-split prefix - different product."] },
+  // v276 (Cameron's scan 10/9, M4CXC024BA1CAAA): the older Ameristar cased coil, sold alongside M4AC / M4HP. Source: Ameristar M4CXC submittals and the 2014 coil flyer (092-1004-03).
+  { re: /^M4CXC[0-9]{3}/, brand: "Trane", equipment: "Air Handler", series: "Ameristar M4CXC cased A-coil (older line, 1.5-5 ton, R-410A) - orifice flow control", notes: ["Coil-only tag: the matching outdoor unit's data plate carries the system charge and electrical specs (the coil submittal says ratings: see the outdoor unit).", "Refrigerant control is an ORIFICE (piston), not a TXV - charge by superheat.", "R-410A; the literature says the coil is also compatible with R-22. Brazed line connections; 3/4 in. NPT primary and auxiliary drains.", "The 3-digit number is a coil code, not the tonnage: one coil covers several sizes (M4CXC024BA1CAAA is listed for 1.5-2.5 ton). Match parts and pistons by the full model number.", "No board and no fault codes on a coil."] },
   // --- end coverage:trane ---
   // --- coverage:bryant (v123) ---
   { re: /^11[3-6][A-Z]NA/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Legacy Line single-stage AC with Puron - 113ANA / 114CNA / 116BNA", notes: ["No diagnostic LED and no code board on this class - the outdoor unit is contactor and relay only, so there is nothing to flash a code.","Read it as 1(AC) 1(Legacy Line tier) SEER-digit MajorSeries N(208-230-1) A(dense grille) then 3-digit capacity 018-060.","Tier digit is position 2: 1 = Legacy Line, 2 = Preferred, 8 = Evolution. Do not read the first three digits as SEER."] },
@@ -9138,7 +9140,10 @@ function ocrFlatten(src0, scale) {
 // of the pass canvas (the 1600 px copy scaled by passScale, then turned deg
 // degrees clockwise by rotateCanvas) as Tesseract reported it: in its own
 // straightened frame when rotateAuto turned the page by rad radians.
-async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, straighten) {
+// area (v276, optional): crop this many text-heights left/right/up/down of the
+// box instead of one line, and read it at area.psm - the label-zoom pass reads
+// the whole data label around a serial it found.
+async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, straighten, area) {
   const { bmp, scale } = photo;
   const k = scale * passScale;
   const w = photo.base.width * passScale, h = photo.base.height * passScale;   // pass canvas size BEFORE rotation
@@ -9146,7 +9151,7 @@ async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, str
   const hTxt = box.y1 - box.y0;
   // Generous to the right: OCR often splits a long model ("59SCSBOBOE! 71116"),
   // and only the first piece is in box.
-  const x0 = box.x0 - hTxt * 1.5, y0 = box.y0 - hTxt * 0.6, x1 = box.x1 + Math.max(hTxt * 8, (box.x1 - box.x0) * 0.6), y1 = box.y1 + hTxt * 0.6;
+  const x0 = box.x0 - hTxt * (area ? area.l : 1.5), y0 = box.y0 - hTxt * (area ? area.u : 0.6), x1 = area ? box.x1 + hTxt * area.r : box.x1 + Math.max(hTxt * 8, (box.x1 - box.x0) * 0.6), y1 = box.y1 + hTxt * (area ? area.d : 0.6);
   // straightened frame -> pass canvas: turn back by -rad about the centre
   const cs = Math.cos(-rad || 0), sn = Math.sin(-rad || 0);
   const unskew = ([u, v]) => [pw / 2 + (u - pw / 2) * cs - (v - ph / 2) * sn, ph / 2 + (u - pw / 2) * sn + (v - ph / 2) * cs];
@@ -9170,7 +9175,8 @@ async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, str
   // came back "ToasM0BIMPH1" at PSM 7, exact at PSM 6). Passed per call
   // (tesseract.js applies it to this recognize only), so the shared worker's
   // settings are never disturbed. rotateAuto straightens a line shot at an angle.
-  const { data } = await worker.recognize(line, straighten ? { tessedit_pageseg_mode: "6", rotateAuto: true } : { tessedit_pageseg_mode: "6" });
+  const psm = area && area.psm || "6";
+  const { data } = await worker.recognize(line, straighten ? { tessedit_pageseg_mode: psm, rotateAuto: true } : { tessedit_pageseg_mode: psm });
   return data;
 }
 
@@ -9295,6 +9301,7 @@ async function ocrTagText(file, onStatus) {
   const worker = await getTessWorker(onStatus);
   let best = null, bestCand = null, lastConf = 0;
   const probes = [];
+  const serialSeen = [];   // v276: where a serial was read, for the label-zoom pass
   // Prefer a failed pass that read the serial off its LABEL over one that only
   // found a bare digit run.
   const rank = (f) => (f.serial ? (f.serialSource === "label" ? 3 : f.serialSource === "shape" ? 2 : 1) : 0);
@@ -9322,6 +9329,11 @@ async function ocrTagText(file, onStatus) {
     fields.text = data.text || "";
     fields.confidence = data.confidence || 0;
     keep(fields);
+    if (fields.serial && !fields.model && fields.serial.length >= 6 && !noProbes) {
+      // the word holding the serial, or a 4+ character piece of it ("161651 1642M")
+      const sw = (data.words || []).find(w => { const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); return t.length >= 4 && (t.includes(fields.serial.slice(-4)) || fields.serial.includes(t.slice(0, 4))); });
+      if (sw && sw.bbox.y1 - sw.bbox.y0 >= 6) serialSeen.push({ box: sw.bbox, rad: turn, deg, passScale, rank: rank(fields), conf: sw.confidence || 0 });
+    }
     lastConf = fields.confidence;
     if (!fields.model) {
       // No labelled model and no exact library token: a word that reaches a
@@ -9445,6 +9457,29 @@ async function ocrTagText(file, onStatus) {
     }
     return null;
   };
+  const labelZoom = async () => {
+    const list = serialSeen.splice(0).sort((a, b) => b.rank - a.rank || b.conf - a.conf).slice(0, 1);
+    for (const s of list) {
+      if (onStatus) onStatus("Reading the label around the serial number...");
+      let data = null;
+      try { data = await ocrZoomLine(worker, photo, s.box, s.rad, s.deg, s.passScale, 64, false, { l: 12, r: 6, u: 6, d: 4, psm: "11" }); } catch (e) { data = null; }
+      if (!data) continue;
+      const text = ocrNormDashes((data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10"));
+      const f = extractTagFields(text);
+      const toks = [f.model, ...text.split(/[^A-Z0-9-]+/)].filter(t => t && t.length >= 5 && /[0-9]/.test(t));
+      for (const t of toks) {
+        const zc = ocrCleanModel(t);
+        const w = ocrModelWords(data, t), conf = w ? w.conf : (data.confidence || 0);
+        if (!(zc.tier === 2 || (zc.lib && zc.tier === 1 && conf >= 70))) continue;
+        const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
+        fields.text = (fields.text || "") + " \n" + (data.text || "");
+        if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
+        if (f.serial && (!fields.serial || (f.serialSource === "label" && fields.serialSource !== "label"))) { fields.serial = f.serial; fields.serialSource = f.serialSource; }
+        return mkCand({ fields, box: null, deg: s.deg, event: "tag read by label zoom" + (s.deg ? " rotate " + s.deg : "") }, zc, conf);
+      }
+    }
+    return null;
+  };
   try {
     // SINGLE_BLOCK passes at each turn, upright first, with rotateAuto:
     // Tesseract measures the text-line angle and levels the page before
@@ -9470,6 +9505,14 @@ async function ocrTagText(file, onStatus) {
     }
     z = await probeWords(3);
     if (z) return finish(z);
+    // v276: label zoom. A pass read a serial but no model: the model sits on the
+    // same data label, often in smaller print the full-photo pass skipped
+    // (Cameron's Ameristar coil 10/9: serial 161651642M read, model
+    // M4CXC024BA1CAAA in thin print beside it never seen). Read the area around
+    // that serial, enlarged; only a trusted library family counts, as with the
+    // word probes.
+    z = await labelZoom();
+    if (z) return finish(z);
     // v275: the SINGLE_BLOCK read again on a background-flattened copy
     // (ocrFlatten) at the turn that read best - a shadow, a dark corner or glare
     // across the plate. Runs only once every pass above has failed, and adds no
@@ -9493,6 +9536,9 @@ async function ocrTagText(file, onStatus) {
     const done2 = await settle(await read(bestDeg ? rotateCanvas(big, bestDeg) : big, { tessedit_pageseg_mode: "11" }, bestDeg, 2, "tag read by enhanced pass" + (bestDeg ? " rotate " + bestDeg : ""), 0));
     if (done2) return finish(done2);
     z = await probeWords(3);
+    if (z) return finish(z);
+    // the enlarged pass often reads a serial the 1x passes missed: label zoom on it too
+    z = await labelZoom();
     if (z) return finish(z);
     // Nothing settled: the best candidate still wins if it is a trusted library
     // model or was read with reasonable confidence; weak garbage is not reported.
@@ -11181,7 +11227,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v275";
+const APP_VERSION = "v276";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
