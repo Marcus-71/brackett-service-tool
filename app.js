@@ -3219,7 +3219,56 @@ function renderChecker() {
   const results = document.getElementById("checkerResults");
   results.innerHTML = "";
   for (const t of TOOLBOX.filter(x => x.checkerTab)) results.appendChild(buildToolboxCard(t));
+  renderCheckerSaved();
 }
+// Saved Route checklists. The viewer (dchecker/index.html, same origin) keeps them when the tech taps
+// "Save checklist to this phone": the list in localStorage "dchk.saved", each route's context in
+// "dchk.saved.x.<id>" and its ticks under the entry's "key". Nothing about the customer is in them.
+// Tapping one opens the viewer straight onto that Route with its progress (#saved=<id>).
+function loadSavedChecklists() {
+  try { const a = JSON.parse(localStorage.getItem("dchk.saved") || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+}
+function renderCheckerSaved() {
+  const box = document.getElementById("checkerSaved");
+  if (!box) return;
+  const list = loadSavedChecklists();
+  box.hidden = !list.length;
+  if (!list.length) { box.innerHTML = ""; return; }
+  const when = t => { const d = new Date(t); return isNaN(d) ? "" : d.toLocaleDateString([], { month: "short", day: "numeric" }) + " " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); };
+  const prog = e => e.total ? `${e.done || 0} of ${e.total} stops done` : e.total === 0 ? "not started" : `${e.done || 0} step${e.done === 1 ? "" : "s"} answered`;
+  box.innerHTML = `<div class="checker-saved-title">Saved checklists <span>on this phone · tap one to pick up where you left off</span></div>` + list.map(e => {
+    const title = e.title || e.model || (e.unit || "").replace(/^Multi-split, model not settled: .*/, "Multi-split (outdoor model not settled)") || e.name || "Route checklist";
+    const name = (e.name || "").replace(/^Example: .*\((.+)\)$/, "example $1");
+    return `<div class="checker-saved-row">
+      <button type="button" class="checker-saved-open" data-open="${escapeHtml(e.id)}">
+        <span class="checker-saved-t">${escapeHtml(title)}</span>
+        <span class="checker-saved-s">${escapeHtml(e.src || "Route")} · ${escapeHtml(prog(e))}${e.ended ? " · finished" : ""}</span>
+        <span class="checker-saved-s">${escapeHtml(name)}${e.rec ? " · recorded " + escapeHtml(e.rec) : ""} · saved ${escapeHtml(when(e.at))}</span>
+      </button>
+      <button type="button" class="checker-saved-del" data-del="${escapeHtml(e.id)}" aria-label="Delete this saved checklist">Delete</button>
+    </div>`;
+  }).join("");
+}
+function openSavedChecklist(id) {
+  trackEvent("opened saved route checklist");
+  openPortalEmbed("dchecker/index.html#saved=" + encodeURIComponent(id), "D-Checker Route checklist");
+}
+function deleteSavedChecklist(id) {
+  const list = loadSavedChecklists(), e = list.find(x => x.id === id);
+  if (!e || !confirm("Delete this saved checklist and its ticks from this phone?")) return;
+  try {
+    localStorage.setItem("dchk.saved", JSON.stringify(list.filter(x => x.id !== id)));
+    localStorage.removeItem("dchk.saved.x." + id);
+    if (e.key && /^dchk\.route\./.test(e.key)) localStorage.removeItem(e.key);
+  } catch (err) { /* storage blocked: nothing to delete */ }
+  renderCheckerSaved();
+}
+document.getElementById("checkerSaved").addEventListener("click", (ev) => {
+  const o = ev.target.closest("[data-open]"), d = ev.target.closest("[data-del]");
+  if (o) openSavedChecklist(o.dataset.open); else if (d) deleteSavedChecklist(d.dataset.del);
+});
+// the viewer runs in the portal frame on this origin: its saves and ticks show here as they happen
+window.addEventListener("storage", (ev) => { if (!ev.key || /^dchk\.saved$/.test(ev.key)) renderCheckerSaved(); });
 // "Open a recording" box: the tech emails the recording from Daikin's app to
 // themselves, saves the attachment, and picks it here (or drags it on a laptop).
 // The viewer opens with #wait and gets the file by postMessage.
@@ -10347,6 +10396,7 @@ function closePortalEmbed(fromPop) {
   document.getElementById("portalFrame").src = "about:blank";
   if (portalOpen && !fromPop) history.back();
   portalOpen = false;
+  renderCheckerSaved();   // a Route checklist saved or ticked in the viewer shows on the Daikin Checker screen
 }
 document.getElementById("portalCloseBtn").onclick = () => closePortalEmbed(false);
 
@@ -11322,7 +11372,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v283";
+const APP_VERSION = "v284";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -1734,6 +1734,23 @@ main {
   font: inherit; font-weight: 700; text-align: left; cursor: pointer;
 }
 .checker-guide:active { transform: scale(0.99); }
+/* saved Route checklists (kept by the D-Checker viewer on this phone) */
+.checker-saved { margin: 0 0 0.9rem; }
+.checker-saved[hidden] { display: none; }
+.checker-saved-title { font-weight: 800; font-size: 1rem; margin: 0 0 0.4rem; }
+.checker-saved-title span { font-weight: 400; font-size: 0.82rem; color: var(--text-dim); }
+.checker-saved-row { display: flex; gap: 0.5rem; align-items: stretch; margin: 0 0 0.5rem; }
+.checker-saved-open {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; padding: 0.7rem 0.9rem; border-radius: 12px;
+  border: 1px solid var(--accent-2); background: var(--card); color: var(--text); font: inherit; text-align: left; cursor: pointer;
+}
+.checker-saved-open:active { transform: scale(0.99); }
+.checker-saved-t { font-weight: 800; overflow-wrap: anywhere; }
+.checker-saved-s { font-size: 0.82rem; color: var(--text-dim); overflow-wrap: anywhere; }
+.checker-saved-del {
+  flex: none; padding: 0 0.8rem; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--text);
+  font: inherit; font-size: 0.85rem; cursor: pointer;
+}
 
 /* ---------------- v227: Generator maintenance card + annual checklist ---------------- */
 /* Brand: navy #003A70, orange #C4622D, yellow #FDD26E (tokens at the top).
