@@ -101,7 +101,11 @@ self.addEventListener("fetch", (event) => {
   // Skip by ORIGIN instead: anything not served from this app is not app shell.
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.includes("/manuals-seed/")) return;
+  // v285: but NOT the manual list itself (seed-index.js is in APP_SHELL). The
+  // folder-wide skip sent it to the network on every open - ~60% of startup on
+  // good wifi, a hang on weak signal, and an empty Manuals list offline once the
+  // browser's own cache had expired.
+  if (url.pathname.includes("/manuals-seed/") && !url.pathname.endsWith("/seed-index.js")) return;
   // Ask Anything's library page text (manuals-text/*.json) is fetched at run
   // time from the Cloudflare R2 manuals Worker (brackett-manuals.andy-4ae.workers.dev,
   // since v267; raw.githubusercontent.com before) — cross-origin, so the check above

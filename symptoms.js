@@ -12749,15 +12749,15 @@ const SYMPTOMS = [
  {
   "id": "s-goodman-flame-signal-microamp-measurement",
   "equipment": "Gas Furnace",
-  "title": "Goodman/Daikin furnace - measuring flame signal in microamps (3-10 uA spec)",
-  "summary": "The flame sensor circuit is opened and a micro-amp meter is placed in series to read the actual rectified flame current. On these integrated ignition controls 3-10 uA is healthy, 1-3 uA is low and flashes one amber light, and below 1 uA the unit shuts down.",
+  "title": "Goodman/Daikin furnace - measuring flame signal in microamps (1-4 uA spec)",
+  "summary": "The flame sensor circuit is opened and a micro-amp meter is placed in series to read the actual rectified flame current. The Goodman/Daikin service manuals give 1 to 4 microamps for these integrated ignition controls; a few newer models print their own figure (GR9S96-U and DR96TN: 3-8 uA), so scan the tag for that unit's own page.",
   "steps": [
    "DISCONNECT ALL POWER before servicing and verify the circuit is dead - multiple power sources may be present.",
    "Disconnect the yellow flame sensor wire from the sensor.",
    "Connect a micro-amp meter in series with that wire and the sensor terminal.",
    "Restore power and place the unit into a heating cycle; line voltage is now present.",
    "As soon as flame is established a micro-amp reading should be evident, and once proof of flame is established the hot surface ignitor will de-energize.",
-   "Compare the reading: the integrated ignition controls will have 3-10 microamps; 1-3 microamps is considered low and will flash 1 amber light; anything below 1 microamp and the unit will shut down.",
+   "Compare the reading: the service manuals (GMVC96 p.55, GM9C96 p.32, GMVM97, DM80VC and others) say the integrated ignition controls will have 1 to 4 microamps. GR9S96-U and DR96TN manuals give 3-8 uA instead - use the figure for the unit in front of you.",
    "If the reading is less than the minimum specified, check for high resistance wiring connections, the sensor-to-burner gap, a dirty flame sensor, and poor grounding.",
    "If there is absolutely no reading, check continuity on all components in the sense circuit and, if they are good, replace the ignition control module.",
    "Note that contaminated fuel or combustion air can leave a nearly invisible insulating coating on the sensor - if suspected, clean the flame sensor with steel wool."

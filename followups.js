@@ -14753,16 +14753,12 @@ const SYMPTOM_FOLLOWUPS = {
    "ask": "With a micro-amp meter in series with the yellow flame sensor wire and the unit in a heating cycle, what does it read once flame is established?",
    "options": [
     {
-     "label": "3 to 10 microamps",
-     "verdict": "That is the healthy range for these integrated ignition controls. Flame sense is not your problem."
+     "label": "Within the manual's range (1 to 4 microamps; 3-8 on GR9S96-U / DR96TN)",
+     "verdict": "That matches the service manual's figure for these integrated ignition controls. Flame sense is not your problem."
     },
     {
-     "label": "1 to 3 microamps",
-     "verdict": "Low signal - the control flashes 1 amber light at this level. Check for high resistance wiring connections, the sensor-to-burner gap, a dirty flame sensor, and poor grounding."
-    },
-    {
-     "label": "Below 1 microamp",
-     "verdict": "The unit will shut down at this level. Work the same list - connections, sensor gap, dirty sensor, grounding - and clean the sensor with steel wool if a contamination coating is suspected."
+     "label": "Below that unit's minimum",
+     "verdict": "Low flame signal. The manual's list: high resistance wiring connections, the sensor-to-burner gap, a dirty flame sensor, and poor grounding. Clean the sensor with steel wool if a contamination coating is suspected."
     },
     {
      "label": "Absolutely no reading at all",

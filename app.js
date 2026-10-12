@@ -1292,7 +1292,9 @@ function renderAsk() {
   }
   // Prefer items that contain EVERY concept; if none do, fall back to the
   // closest partial matches so a well-typed sentence never dead-ends.
-  let hits = scored.filter(x => x.sc === need);
+  // >= not ===: the typed-code bonus (above) lifts the right row ONE past need,
+  // and === was throwing exactly that row away ("DM97MC E0 lockout" -> DM80VC).
+  let hits = scored.filter(x => x.sc >= need);
   let partial = false;
   if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
   hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
