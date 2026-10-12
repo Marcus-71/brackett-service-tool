@@ -57,12 +57,13 @@ const MIN_ALNUM_PER_PAGE = 15;      // ...or a multi-page doc with only stamps/p
 function mtime(p) { try { return fs.statSync(p).mtimeMs; } catch (e) { return 0; } }
 function baseOf(file) { return file.replace(/\.pdf$/i, ""); }
 
-function runPdftotext(pdf) {
+function runPdftotext(pdf, page) {
   return new Promise((resolve) => {
     const chunks = [];
     let err = "";
     let done = false;
-    const child = spawn(PDFTOTEXT, ["-enc", "UTF-8", "-q", pdf, "-"], { windowsHide: true });
+    const range = page ? ["-f", String(page), "-l", String(page)] : [];
+    const child = spawn(PDFTOTEXT, ["-enc", "UTF-8", "-q", ...range, pdf, "-"], { windowsHide: true });
     const timer = setTimeout(() => { if (!done) { done = true; child.kill(); resolve({ error: "timeout" }); } }, TIMEOUT_MS);
     child.stdout.on("data", (d) => chunks.push(d));
     child.stderr.on("data", (d) => { err += d; });
@@ -90,6 +91,25 @@ function splitPages(text) {
   const raw = text.split("\f");
   if (raw.length > 1 && raw[raw.length - 1].trim() === "") raw.pop();   // pdftotext ends every page with \f
   return raw.map(normalisePage);
+}
+
+// Some PDFs carry form-feed characters INSIDE a page's text, so splitting the
+// whole-document output on \f gives extra "pages" and every later page lands
+// on the wrong number (59MN7C: +4 from p.30 on - "open at page N" in Ask
+// Anything went 4 pages early). A real page always ends with \f and a page
+// past the end prints nothing, so probe the last split page: if it isn't
+// real, pull the text one page at a time (that page's own \f become spaces).
+async function pagesChecked(pdf, pages) {
+  if (pages.length < 2) return pages;
+  const probe = await runPdftotext(pdf, pages.length);
+  if (probe.error || probe.text.includes("\f")) return pages;
+  const out = [];
+  for (let i = 1; i <= pages.length; i++) {
+    const r = await runPdftotext(pdf, i);
+    if (r.error || !r.text.includes("\f")) break;
+    out.push(normalisePage(r.text.replace(/\f/g, " ")));
+  }
+  return out.length ? out : pages;
 }
 
 function removeOutputs(base) {
@@ -190,7 +210,7 @@ async function main() {
         removeOutputs(baseOf(file));
         noText.push({ file, reason: r.error });
       } else {
-        const pages = splitPages(r.text);
+        const pages = await pagesChecked(pdf, splitPages(r.text));
         const alnum = pages.reduce((n, p) => n + (p.match(/[A-Za-z0-9]/g) || []).length, 0);
         if (!pages.length || alnum < MIN_ALNUM_TOTAL || (pages.length >= 4 && alnum / pages.length < MIN_ALNUM_PER_PAGE)) {
           removeOutputs(baseOf(file));

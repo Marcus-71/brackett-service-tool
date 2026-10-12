@@ -356,6 +356,7 @@ function showScreen(name, fromBack) {
 
   if (name === "ask") { askIndexCache = null; renderAsk(); }
   if (name === "codes") renderCodes();
+  if (name === "home") diagState.unitModel = "";
   if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
@@ -878,10 +879,10 @@ function askBuildIndex() {
   }
   for (const s of getAllSymptoms()) {
     items.push({
-      kind: "symptom", id: s.id, brand: "", equip: s.equipment || "",
+      kind: "symptom", id: s.id, brand: s.brand || "", equip: s.equipment || "",
       title: s.title,
-      sub: [s.equipment, s.summary].filter(Boolean).join(" · "),
-      hay: [s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
+      sub: [s.brand, s.equipment, s.summary].filter(Boolean).join(" · "),
+      hay: [s.brand, s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
     });
   }
   for (const t of tstatEntries()) {
@@ -1722,6 +1723,10 @@ const REMOTE_TEXT_BUDGET_MS = 6000;               // never hold the AI answer lo
 const REMOTE_TEXT_MISS_TTL = 12 * 3600 * 1000;    // re-try a 404 after half a day
 const REMOTE_TEXT_INDEX_TTL = 24 * 3600 * 1000;
 const REMOTE_TEXT_INDEX_ID = "__index__";
+// v285: 137 manuals' page text was rebuilt (stray form feeds had split pages and
+// pushed later pages off by 1-50+). Bumping this drops each phone's cached copy
+// on next use and the ?v= skips the browser's week-long HTTP cache of the old one.
+const REMOTE_TEXT_VER = 2;
 let remoteTextDbPromise = null;
 let remoteSeedRowsCache = null;
 
@@ -1803,10 +1808,10 @@ async function remoteTextFetchJson(url) {
 async function remoteTextIndex() {
   let cached = null;
   try { cached = await remoteTextGet(REMOTE_TEXT_DOCS, REMOTE_TEXT_INDEX_ID); } catch (e) {}
-  if (cached && Date.now() - cached.fetchedAt < REMOTE_TEXT_INDEX_TTL) return new Map(cached.list.map(e => [e.file, e]));
-  const r = await remoteTextFetchJson(MANUAL_TEXT_BASE + "index.json");
+  if (cached && cached.ver === REMOTE_TEXT_VER && Date.now() - cached.fetchedAt < REMOTE_TEXT_INDEX_TTL) return new Map(cached.list.map(e => [e.file, e]));
+  const r = await remoteTextFetchJson(MANUAL_TEXT_BASE + "index.json?v=" + REMOTE_TEXT_VER);
   if (r && Array.isArray(r.json)) {
-    try { await remoteTextPut({ id: REMOTE_TEXT_INDEX_ID, list: r.json, fetchedAt: Date.now() }, { id: REMOTE_TEXT_INDEX_ID, bytes: r.bytes, usedAt: Date.now(), fetchedAt: Date.now() }); } catch (e) {}
+    try { await remoteTextPut({ id: REMOTE_TEXT_INDEX_ID, list: r.json, fetchedAt: Date.now(), ver: REMOTE_TEXT_VER }, { id: REMOTE_TEXT_INDEX_ID, bytes: r.bytes, usedAt: Date.now(), fetchedAt: Date.now() }); } catch (e) {}
     return new Map(r.json.map(e => [e.file, e]));
   }
   return cached ? new Map(cached.list.map(e => [e.file, e])) : null;
@@ -1816,12 +1821,12 @@ async function remoteTextPages(row) {
   let meta = null;
   try { meta = await remoteTextGet(REMOTE_TEXT_META, row.id); } catch (e) {}
   if (meta && meta.missing && Date.now() - (meta.fetchedAt || 0) < REMOTE_TEXT_MISS_TTL) return null;
-  if (meta && !meta.missing) {
+  if (meta && !meta.missing && meta.ver === REMOTE_TEXT_VER) {
     const doc = await remoteTextGet(REMOTE_TEXT_DOCS, row.id);
     if (doc && Array.isArray(doc.pages)) { remoteTextTouch(meta).catch(() => {}); return doc.pages; }
   }
   const base = row.file.replace(/\.pdf$/i, "");
-  const r = await remoteTextFetchJson(MANUAL_TEXT_BASE + encodeURIComponent(base) + ".json");
+  const r = await remoteTextFetchJson(MANUAL_TEXT_BASE + encodeURIComponent(base) + ".json?v=" + REMOTE_TEXT_VER);
   if (!r) return null;   // network trouble — try again next question
   if (r.missing || !r.json || r.json.v !== 1) {
     try { await remoteTextPut(null, { id: row.id, bytes: 0, missing: true, fetchedAt: Date.now(), usedAt: Date.now() }); } catch (e) {}
@@ -1829,7 +1834,7 @@ async function remoteTextPages(row) {
   }
   let pages = r.json.pages, bytes = r.bytes;
   if (Array.isArray(r.json.parts)) {
-    const got = await Promise.all(r.json.parts.map(p => remoteTextFetchJson(MANUAL_TEXT_BASE + encodeURIComponent(p.name))));
+    const got = await Promise.all(r.json.parts.map(p => remoteTextFetchJson(MANUAL_TEXT_BASE + encodeURIComponent(p.name) + "?v=" + REMOTE_TEXT_VER)));
     if (got.some(g => !g || !g.json || !Array.isArray(g.json.pages))) return null;
     pages = [];
     r.json.parts.forEach((p, i) => { got[i].json.pages.forEach((t, j) => { pages[(p.start || 1) - 1 + j] = t; }); bytes += got[i].bytes; });
@@ -1838,7 +1843,7 @@ async function remoteTextPages(row) {
   if (!Array.isArray(pages)) return null;
   const now = Date.now();
   try {
-    await remoteTextPut({ id: row.id, file: row.file, pages }, { id: row.id, bytes, usedAt: now, fetchedAt: now });
+    await remoteTextPut({ id: row.id, file: row.file, pages }, { id: row.id, bytes, usedAt: now, fetchedAt: now, ver: REMOTE_TEXT_VER });
     await remoteTextEvict();
   } catch (e) {}
   return pages;
@@ -2548,7 +2553,22 @@ const voiceKw = (t) => t.replace(/s*(?:kilowatts?|k.?s?w.?)(?=s|$)/gi, "kW");
 
 const DIAG_STORAGE_KEY = "bfc_user_symptoms_v1";
 const DIAG_DELETED_KEY = "bfc_deleted_symptom_ids_v1";
-let diagState = { search: "", equipment: "All" };
+let diagState = { search: "", equipment: "All", unitModel: "" };
+
+// v285: heating problems written for one unit family from its own service
+// manual (unit-scenarios.js). Each carries the library's model pattern, so a
+// scanned SLP98 gets the SLP98's scenarios, not every furnace's.
+let unitScenarioRes = null;
+function unitScenarioList() { return typeof UNIT_SCENARIOS === "undefined" ? [] : UNIT_SCENARIOS; }
+function unitScenariosFor(model) {
+  const m = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!m) return [];
+  if (!unitScenarioRes) {
+    unitScenarioRes = new Map();
+    for (const u of unitScenarioList()) { try { unitScenarioRes.set(u.unit, new RegExp(u.unit)); } catch (e) { /* bad pattern: skip */ } }
+  }
+  return getAllSymptoms().filter(s => s.unit && unitScenarioRes.has(s.unit) && unitScenarioRes.get(s.unit).test(m));
+}
 
 function loadUserSymptoms() { try { return JSON.parse(localStorage.getItem(DIAG_STORAGE_KEY)) || []; } catch { return []; } }
 function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); }
@@ -2559,7 +2579,7 @@ function getAllSymptoms() {
   const userSymptoms = loadUserSymptoms();
   const deleted = new Set(loadDeletedSymptomIds());
   const userIds = new Set(userSymptoms.map(s => s.id));
-  const base = SYMPTOMS.filter(s => !deleted.has(s.id) && !userIds.has(s.id));
+  const base = [...SYMPTOMS, ...unitScenarioList()].filter(s => !deleted.has(s.id) && !userIds.has(s.id));
   return [...base, ...userSymptoms.filter(s => !deleted.has(s.id))];
 }
 
@@ -2569,12 +2589,14 @@ function renderSymptoms() {
   renderChips("diagEquipChips", equips, diagState.equipment, (v) => { diagState.equipment = v; renderSymptoms(); }, "All Equipment");
 
   const scoped = all.filter(s => diagState.equipment === "All" || s.equipment === diagState.equipment);
-  const fields = (s) => [s.title, s.summary, s.equipment, ...(s.steps || [])];
+  const fields = (s) => [s.title, s.summary, s.equipment, s.brand, ...(s.steps || [])];
   const query = diagState.search.trim();
 
   let filtered, usedFallback = false;
+  // Came from a scanned tag: that unit's own manual scenarios lead the list.
+  const ownIds = diagState.unitModel ? new Set(unitScenariosFor(diagState.unitModel).map(s => s.id)) : new Set();
   if (!query) {
-    filtered = scoped.slice().sort((a, b) => a.title.localeCompare(b.title));
+    filtered = scoped.slice().sort((a, b) => (ownIds.has(b.id) - ownIds.has(a.id)) || a.title.localeCompare(b.title));
   } else {
     // Score every candidate once against the same concept units, then both
     // decide strict pass/fail AND rank by relevance from that one pass —
@@ -2624,6 +2646,14 @@ function renderSymptoms() {
     note.className = "diag-fallback-note";
     note.textContent = `No exact match for "${diagState.search.trim()}" — closest topics below.`;
     results.appendChild(note);
+  }
+  const nOwn = query ? 0 : filtered.filter(s => ownIds.has(s.id)).length;
+  if (nOwn) {
+    const note = document.createElement("div");
+    note.className = "diag-fallback-note";
+    note.innerHTML = `First ${nOwn}: written for <strong>${escapeHtml(diagState.unitModel)}</strong> from its own service manual. <a href="#" id="diagUnitClear">Show the general list only</a>`;
+    results.appendChild(note);
+    note.querySelector("#diagUnitClear").onclick = (e) => { e.preventDefault(); diagState.unitModel = ""; renderSymptoms(); };
   }
   for (const s of filtered) results.appendChild(buildSymptomCard(s));
 }
@@ -2681,8 +2711,9 @@ function buildSymptomCard(s) {
       </div>
     </div>
     <div class="card-meta">
-      <span>${escapeHtml(s.equipment)}</span>
+      <span>${escapeHtml([s.brand, s.equipment].filter(Boolean).join(" · "))}</span>
       ${getFollowups(s.id) ? `<span class="fu-badge">Guided</span>` : ""}
+      ${s.confidence === "manual" ? `<span class="fu-badge">From the manual</span>` : ""}
     </div>
     ${s.summary ? `<div class="card-meta">${escapeHtml(s.summary)}</div>` : ""}
   `;
@@ -2696,17 +2727,23 @@ function openSymptomDetail(id) {
   const steps = (s.steps || []).map(x => `<li>${escapeHtml(x)}</li>`).join("");
   modal.innerHTML = `
     <h2>${escapeHtml(s.title)}</h2>
-    <div class="sub">${escapeHtml(s.equipment)}</div>
+    <div class="sub">${escapeHtml([s.brand, s.equipment].filter(Boolean).join(" · "))}</div>
     ${s.summary ? `<div class="detail-section"><p>${escapeHtml(s.summary)}</p></div>` : ""}
     <div id="followupBox"></div>
     ${steps ? `<div class="detail-section"><h3>Checklist</h3><ol>${steps}</ol></div>` : ""}
     ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
+    ${s.confidence === "manual" && s.source ? `<div class="detail-section"><h3>Source</h3><p>${escapeHtml(s.source)}</p>${s.manual ? (s.pages && s.pages.length ? s.pages.slice(0, 3) : [0]).map(pg => `<button class="unit-src-btn" data-page="${pg}">📄 Open the manual${pg ? " at p." + pg : ""}</button>`).join(" ") : ""}</div>` : ""}
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
       <button class="primary" id="editSymptomBtn">Edit / correct</button>
     </div>
   `;
   startFollowups(s);
+  modal.querySelectorAll(".unit-src-btn").forEach(b => b.onclick = () => {
+    const pg = Number(b.dataset.page) || 0;
+    trackEvent("unit scenario manual opened: " + s.id);
+    if (pg) openManualAtPage("manual-seed-" + s.manual, pg); else openManualDetail("manual-seed-" + s.manual);
+  });
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editSymptomBtn").onclick = () => openSymptomEditForm(s);
   document.getElementById("modalBackdrop").classList.remove("hidden");
@@ -8170,7 +8207,7 @@ const MODEL_PATTERNS = [
   { re: /^CK[JL]?[0-9]/, brand: "Goodman", equipment: "Condenser/Heat Pump", series: "Goodman/Amana/Janitrol CK-series legacy R-22 split AC condenser (CK / CKL / CKJ, 10 SEER, 1.5-5 ton; e.g. CK30-1B = 2.5 ton)", notes: ["Legacy R-22 unit - NO diagnostic board. Contactor, run capacitor and internal compressor protection only; diagnose mechanically.", "Capacity code: CK18=1.5t, CK24=2t, CK30=2.5t, CK36=3t, CK42=3.5t, CK48=4t, CK60=5t. The trailing -1 / -1A / -1B / -1D is the revision.", "CKJ = Janitrol badge, CKL = low-profile cabinet; same platform. Goodman service manual RS6100004 covers the CK line."] },
   // Carrier Infinity 48XZ residential DUAL-FUEL (hybrid heat) PACKAGED unit -
   // heat pump + gas furnace in one cabinet. Jon scanned 48XZ-060130311 (5 ton).
-  { re: /^48XZ/, brand: "Carrier", equipment: "Other", series: "Carrier Infinity 48XZ dual-fuel (hybrid heat) packaged unit - heat pump + gas-furnace section in one cabinet (Carrier's Infinity packaged line)", notes: ["Communicating Infinity unit - faults report through the Infinity System Control as major.minor status codes, NOT a flash LED. Check the control's fault history first; see Error Codes -> 'Carrier Infinity'.", "It is an all-in-one PACKAGE unit and DUAL FUEL: both the gas-furnace diagnostics AND the heat-pump/AC diagnostics in Diagnostic Help apply. Capacity 060 = 5 ton."] },
+  { re: /^48XZ/, brand: "Carrier", equipment: "Other", series: "Carrier 48XZ Hybrid Heat dual-fuel packaged unit - heat pump + gas-furnace section in one cabinet", notes: ["Per both 48XZ install manuals in the library (48XZ-03SI, 48XZ-2SI): NOT communicating. A 24 V Thermidistat / dual-fuel thermostat picks heat pump vs gas from its balance-point setting; gas-section faults are 1-9 flashes on the IGC LED (chart inside the burner access panel); the heat pump side has a standard defrost board with high/low pressure switches. If this unit instead has an Infinity control, use its fault history and Error Codes -> 'Carrier Infinity'.", "It is an all-in-one PACKAGE unit and DUAL FUEL: both the gas-furnace diagnostics AND the heat-pump/AC diagnostics in Diagnostic Help apply. Capacity 060 = 5 ton."] },
   // Air handlers confirmed against JCI's own literature: AHE single-piece
   // 3-position (UIM 697883), AHR technical guide, AVC communicating
   // (york.com), JHET fixed-speed (luxaire.com).
@@ -10033,6 +10070,9 @@ function renderScanResult(info) {
     const bulFam = info.brand && (info.brand === "Generac" || info.brand === "Kohler") && typeof genFamilyForModel === "function" ? genFamilyForModel(info.model) : null;
     if (info.brand) bulHtml = bulletinsHtml(bulletinsFor({ genFamily: bulFam ? bulFam.id : "", model: info.model, brand: info.brand }), { where: "tag scanner", serial: info.serial, model: info.model });
   } catch (e) { bulHtml = ""; }
+  // v285: this unit's own heating problems, from its service manual.
+  const ownScen = info.brand ? unitScenariosFor(info.model) : [];
+  const ownScenHtml = ownScen.length ? `<div class="scan-unit-scen"><div class="scan-unit-scen-h">🔥 Problems for this unit, from its own manual (${ownScen.length})</div>${ownScen.map(s => `<button class="scan-unit-scen-btn" data-id="${escapeHtml(s.id)}">${escapeHtml(s.title)}</button>`).join("")}</div>` : "";
   box.innerHTML = `
     <div class="scan-id-card">
       <div class="card">
@@ -10041,6 +10081,7 @@ function renderScanResult(info) {
         ${ocrBanner}
         ${bulHtml}
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
+        ${ownScenHtml}
         <div class="scan-actions">
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " codes" : escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
           ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
@@ -10068,8 +10109,13 @@ function renderScanResult(info) {
     const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = info.model;
     showScreen("maint");
   };
+  box.querySelectorAll(".scan-unit-scen-btn").forEach(b => b.onclick = () => {
+    trackEvent("unit scenario from scan: " + b.dataset.id);
+    openSymptomDetail(b.dataset.id);
+  });
   document.getElementById("scanGoDiag").onclick = () => {
     diagState.equipment = info.equipment || "All"; diagState.search = "";
+    diagState.unitModel = ownScen.length ? info.model : "";
     document.getElementById("diagSearchInput").value = "";
     showScreen("diagnostics");
   };
@@ -11372,7 +11418,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v284";
+const APP_VERSION = "v285";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

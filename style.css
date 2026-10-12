@@ -896,6 +896,11 @@ main {
   color: var(--text);
 }
 .scan-actions .primary-act { background: var(--brand-navy); color: #f2ede2; border-color: var(--brand-orange); }
+/* v285: the scanned unit's own manual scenarios */
+.scan-unit-scen { margin-top: 0.8rem; border: 1px solid var(--brand-orange); border-radius: 10px; padding: 0.6rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.scan-unit-scen-h { font-weight: 700; font-size: 0.95rem; }
+.scan-unit-scen-btn { text-align: left; padding: 0.65rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer; }
+.unit-src-btn { margin: 0.3rem 0.3rem 0 0; padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
 .charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.9rem; }
 .charge-form { margin-bottom: 1rem; }
 .cc-section-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dim); margin: 0.9rem 0 0.4rem; }
