@@ -8853,6 +8853,10 @@ async function getTessWorker(onStatus) {
       corePath: base + "vendor/",
       langPath: base + "vendor",
       gzip: true,
+      // v286: read the language file from the app's own cache and unpack it in
+      // memory once per session, instead of keeping a second, unpacked 23.5 MB
+      // copy in IndexedDB ("keyval-store") - cleared in startApp().
+      cacheMethod: "none",
       logger: (m) => { if (m.status && onStatus) onStatus(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
     });
   }
@@ -11420,7 +11424,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v285";
+const APP_VERSION = "v286";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -11836,6 +11840,10 @@ function startApp() {
   try { flushScanPhotos(); } catch (e) {}
   // v227: generator checklists queued with no signal (only once the relay URL is set).
   try { genClFlushQueue(); } catch (e) {}
+  // v286: the OCR worker no longer keeps its unpacked language copy (23.5 MB);
+  // give phones that already have one the space back. Nothing else uses this
+  // database (it is Tesseract's default idb-keyval store).
+  try { if (!localStorage.getItem("bfc_tess_idb_cleared") && window.indexedDB) { indexedDB.deleteDatabase("keyval-store"); safeSet("bfc_tess_idb_cleared", 1); } } catch (e) {}
 
   // Only nudge a tech who has already picked their name — the picker overlay sits
   // above everything, so a pill fired underneath it would just be missed.
