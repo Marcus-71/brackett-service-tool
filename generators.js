@@ -3263,7 +3263,7 @@ const GENERATORS = [
     ],
     "fixes": [
      "Adjust oil to proper level",
-     "Use specified oil (synthetic 5W-30)",
+     "Use the specified oil: after the 25-hour break-in, Generac 5W-20 Gaseous Engine Oil (GEO), API SJ/SL or better, no additives (factory fill is 5W-30 organic) - see Engine Oil Requirements. Not the synthetic 5W-30 the Evolution cards call for.",
      "Check for oil leaks",
      "Replace air filter"
     ]
@@ -6382,7 +6382,7 @@ const GENERATORS = [
     ],
     "fixes": [
      "Adjust oil to proper level",
-     "Use specified oil (synthetic 5W-30)",
+     "Use the specified oil: after the 25-hour break-in, Generac 5W-20 Gaseous Engine Oil (GEO), API SJ/SL or better, no additives (factory fill is 5W-30 organic) - see Engine Oil Requirements. Not the synthetic 5W-30 the Evolution cards call for.",
      "Check for oil leaks",
      "Replace air filter"
     ]
@@ -9512,7 +9512,7 @@ const GENERATORS = [
     ],
     "fixes": [
      "Adjust oil to proper level",
-     "Use specified oil (synthetic 5W-30)",
+     "Use the specified oil: after the 25-hour break-in, Generac 5W-20 Gaseous Engine Oil (GEO), API SJ/SL or better, no additives (factory fill is 5W-30 organic) - see Engine Oil Requirements. Not the synthetic 5W-30 the Evolution cards call for.",
      "Check for oil leaks",
      "Replace air filter"
     ]
@@ -27123,3 +27123,841 @@ const GEN_STARTUP = {
     ]
   }
 };
+
+// v287 (2026-10-12): "battery keeps dying" (per controller platform) and "LP vapor withdrawal -
+// won't reach speed / backfires / bogs" (per card, with that card's own fuel figures), from the
+// Generac manuals and Fable-verified (scratch\heating-content). Merged into each card on load.
+const GEN_TS_ADDITIONS = [
+ {
+  "familyIds": [
+   "gen-generac-next-gen-10-28",
+   "gen-guardian-next-gen-22-25-y32",
+   "gen-generac-next-gen-20-3ph"
+  ],
+  "item": {
+   "symptom": "Battery keeps dying / won't hold a charge / Low Battery, Battery Problem or Charger Warning (Power Zone 200)",
+   "causes": [
+    "No 120 VAC to the built-in charger. It runs only off T1 + neutral (00) from the LOAD side of the transfer switch, through the T1 fuse in the SACM/FCM, into J6 on the controller. Transfer-switch breaker off, blown T1 fuse, open T1/00 wire or no neutral = no charging (2780 Charger Missing AC after 3 min) and the controller lives on the battery.",
+    "Battery already flat: under 7 V it has to be charged off the unit - the onboard charger will not bring it back.",
+    "Worn-out battery: conductance 75% of rated CCA or less; won't reach 12.5 V after the 18-hour charge (2770 Charger Warning); or still taking over 600 mA at the end of the cycle (2760 Battery Problem).",
+    "Wrong battery. Spec is 12 V AGM Powersport Group BTX30L, 400 CCA minimum (install manual and Rev E dealer manual). Some older Next Gen / Y32 sheets print BTX20L 310 CCA - see the battery spec on this card.",
+    "Loose or corroded cables or grounds (battery posts, rear engine-foot ground, starter).",
+    "Controller charger fault: battery voltage too high (2760; 3815 = over 15 V; 3803 = over 16 V), or Field Pro never shows 'Charging'.",
+    "Engine stator charger / voltage regulator not charging while the engine runs (shows up after long outages).",
+    "Repeated no-starts: one failed start is five crank cycles (16 s crank, 7 s rest, 16 s crank, 7 s rest, then three 7 s cranks). A unit that won't start on exercise flattens a weak battery.",
+    "Cold weather: Generac recommends a battery heater where temperatures fall below 32 F."
+   ],
+   "fixes": [
+    "How it charges: an 18-hour cycle starts when the battery drops below 12.7 V or the engine cranks (weekly exercise counts). It charges between 12.2 and 16.0 V at up to 5 A, higher voltage when cold. Battery Problem and Charger Warning are judged only at the end of the 18 hours. In an outage the charger drops out until the generator carries the load; then the engine stator charger carries the battery (nominal 10 A at 13.5 V at 3600 rpm).",
+    "Read the codes in Field Pro (Generator Details shows charging status and battery volts). 2750 Low Battery = under 12.1 V for 60 s; 2751 Very Low Battery = under 9.0 V for 60 s; 2760 Battery Problem = over 16 V, or 600 mA still flowing after the 18-hour cycle; 2770 Charger Warning = under 12.5 V after the 18-hour cycle; 2780 Charger Missing AC = charger AC gone over 3 min. Work battery and charger codes before anything else.",
+    "Cables first: clean and tighten both posts, the rear engine-foot ground and the starter. Red cable from the starter contactor to (+), black from the frame ground stud to (-).",
+    "Battery volts with the charger off: pull the 7.5 A controller fuse (blown = replace it and bench-charge the battery before going on), unplug J6 to kill the charger, read across the posts. 12.1 V or less, or no crank = conductance test. 12.2-12.6 V or more = refit the fuse and J6 and test the starting circuit.",
+    "Conductance test: replace the battery at 75% of rated CCA or less with a 12 V AGM BTX30L, 400 CCA minimum. A battery under 7 V gets fully charged off the unit before it goes back in.",
+    "Cranking voltage drop (fuel off, MANUAL): max 0.20-0.30 V across each battery cable, 0.20-0.30 V across the starter contactor, 0.00-0.10 V battery post to cable clamp. Higher = clean or replace that part.",
+    "Charger AC: back-probe J6, T1 (blue) to 00 (white) - you need 120 VAC. None: check T1 to 00 at the WAGO customer block, then at the SACM/FCM in the transfer switch, then the T1 fuse in the SACM/FCM. A T1 fuse that keeps blowing = T1/00 shorted to ground. The transfer-switch breaker must be on and powered.",
+    "Charger output (battery reads 12.6 V or more): fuel off, run MANUAL through 5 crank cycles (clear the 1100 Overcrank it sets), then OFF. Field Pro must show 'Charging' and 12.9 V or more - under 12.9 V = replace the controller. Fuel back on. Then J4 Wire 13 to Wire 0, Wire 13 at the starter contactor, and across the battery: 12.8 V or less = check every harness ground, the main battery ground and the J4 pins.",
+    "Battery over 16.5 V: unplug J6. Drops below 14.0 V = controller charger fault, replace the controller. Doesn't drop = replace the battery.",
+    "Running charge (stator/VR): note battery volts, run MANUAL 15 s - volts should climb. If not: Wire 13 VR-to-starter-contactor and Wire 0 VR-to-battery-negative each 5 ohms max, the two yellow stator leads 5 ohms max; then unplug the VR and read AC 696 to 697 while running 15 s: under 70 VAC = replace the engine stator, 70 VAC or more = replace the VR.",
+    "Drain: in normal standby the charger (not the battery) powers the controller; the battery only takes over when charger AC fails. A battery that dies when T1 is lost is a charger-feed problem. Generac's manuals give no standby-draw figure, so restore T1 before chasing a parasitic draw.",
+    "Exercise: leave it enabled - every exercise crank starts a fresh 18-hour charge. Fix any no-start first; the repeated cranking is what kills the battery.",
+    "Cold climate: fit the cold-weather-kit battery heater where temperatures fall below 32 F.",
+    "After the repair: Low Battery alarms (2750 / 2751) do not self-clear - reset at the controller (or remote Clear Alarm), and the next 18-hour charge cycle has to pass. Charger warnings (2760 / 2770 / 2780) clear on their own once the battery or charger reads normal, or with a power cycle."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-9-22",
+   "gen-guardian-evo2-10-22-compact",
+   "gen-guardian-evo2-10-26",
+   "gen-guardian-evo2-response-16-22",
+   "gen-guardian-evo2-dr-11-20",
+   "gen-guardian-evo2-powermate-11",
+   "gen-synergy-evo2-20",
+   "gen-ecogen-evo2-15",
+   "gen-guardian-evo2-20-3ph"
+  ],
+  "item": {
+   "symptom": "Battery keeps dying / won't hold a charge / LOW BATTERY, BATTERY PROBLEM or CHARGER WARNING (Evolution 2.0)",
+   "causes": [
+    "No 120 VAC to the built-in charger. T1 is fused 120 VAC from the LOAD side of the transfer switch (fuse F3), plus neutral, into the controller's J8-J9 connector. It has to stay connected, running or not; without it the battery is carrying the controller.",
+    "Battery already flat - the panel charger is not designed to recharge a dead battery.",
+    "Worn-out battery: conductance 60% of rated CCA or less; under 12.5 V at the end of the 18-hour cycle (CHARGER WARNING); or over 600 mA for 5 s at the end of the cycle (BATTERY PROBLEM).",
+    "Loose or corroded cables or grounds.",
+    "Controller charger fault: negative current on the charge-current test, or battery over 16 V (BATTERY PROBLEM).",
+    "Repeated no-starts: one failed start is five crank cycles, the longest about 15-16 s.",
+    "External battery charger hung on the unit - Generac says not to use one.",
+    "Missing T1 fuse: Generac supplies a kit to put the T1 charger fuse in the transfer switch - a non-Generac or older switch may not have one."
+   ],
+   "fixes": [
+    "How it charges: three charge voltages by temperature - 13.5 V hot, 14.1 V normal, 14.6 V cold. An 18-hour cycle starts when the battery drops below about 12.6 V or the engine cranks (weekly exercise); a crank during the cycle restarts the 18-hour timer. After 18 hours: below about 40 F it keeps floating at 14.1 V, above about 40 F it stops. In an outage it drops out until the generator carries the load.",
+    "Codes: LOW BATTERY = under 12.1 V for 60 s. BATTERY PROBLEM = over 16 V (immediate) or over 600 mA for 5 s after the 18-hour cycle. CHARGER WARNING = under 12.5 V at the end of the 18-hour cycle. CHARGER MISSING AC = no AC at the charger input. Battery volts are on the Display menu: over 12 V = battery-to-controller wiring good; 0 V = open connection; 1-11 V = cables, charge or replace.",
+    "Quick T1 check: pull the 7.5 A controller fuse. Screen stays lit = T1 120 VAC is reaching the controller. Screen goes dark = no T1 - read T1 to neutral at the customer connection block (120 VAC), at the controller harness connector, then at the T1 (F3) fuse holder in the transfer switch. Blown fuse = replace; one that keeps blowing = Problem 10 (Blown T1 Fuse).",
+    "Battery volts with the charger off: pull the T1 fuse in the transfer switch or unplug the J8-J9 T1 connector. 12.1 V or less (but above 9.0 V), or no crank = conductance test. 12.2 V or more = cranking voltage-drop test.",
+    "Conductance test: replace the battery at 60% of rated CCA or less. Generac doesn't recommend a carbon-pile tester - it needs a full battery and a load of half the CCA (540 CCA = 270 A).",
+    "Cranking voltage drop (fuel off, Wire 14 off the fuel solenoid, MANUAL): max 0.00-0.10 V post to clamp, 0.10-0.20 V across any ground, 0.20-0.30 V across a cable, 0.20-0.30 V across the starter contactor, 0.40-0.50 V across a whole circuit.",
+    "Charge-current / drain test: crank 2-3 s in MANUAL, set OFF, lift the negative cable, DC ammeter in series (red lead to the negative post, black to the cable). Positive 50 mA to 2.5 A = charger working. Negative reading = the battery is being drawn down - replace the controller.",
+    "Battery spec: 12 V Group 26R wet cell 540 CCA minimum (P/N 0H3421S) or Group 35 AGM 650 CCA minimum (Evolution 2.0 install manuals). The older Evolution/Nexus dealer manual 0H9172 table prints 26R 525 CCA (Group 35 AGM 650 CCA from 2017) - a 540 CCA 26R meets both.",
+    "Cold climate: a pad-type battery warmer (cold weather kit G007101-0) is recommended where temperatures fall below 0 F; not needed with an AGM battery.",
+    "T1 and its neutral (00) must stay landed or the battery won't charge. Charge any dead battery fully off the unit before installing it.",
+    "Exercise: leave the exerciser on - every crank starts a fresh 18-hour charge. Fix any no-start first.",
+    "Don't leave an external charger on the unit.",
+    "BATTERY MENU (Main Menu): CHECK BATTERY = replace the battery; GOOD with the warning still up = dealer diagnosis."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo1-8",
+   "gen-guardian-evo1-11",
+   "gen-guardian-evo1-13-17",
+   "gen-guardian-evo1-20-22",
+   "gen-ecogen-evo1-15",
+   "gen-synergy-vscf-20"
+  ],
+  "item": {
+   "symptom": "Battery keeps dying / won't hold a charge / LOW BATTERY, BATTERY PROBLEM or CHARGER WARNING (Evolution 1.0)",
+   "causes": [
+    "No 120 VAC to the built-in charger. T1 is fused 120 VAC from the LOAD side of the transfer switch (fuse F3), plus neutral, into the controller's J8-J9 connector. It has to stay connected, running or not; without it the battery is carrying the controller.",
+    "Battery already flat - the panel charger is not designed to recharge a dead battery.",
+    "Worn-out battery: conductance 60% of rated CCA or less; under 12.5 V at the end of the 18-hour cycle (CHARGER WARNING); or over 600 mA for 5 s at the end of the cycle (BATTERY PROBLEM).",
+    "Loose or corroded cables or grounds.",
+    "Controller charger fault: negative current on the charge-current test, or battery over 16 V (BATTERY PROBLEM).",
+    "Repeated no-starts: one failed start is five crank cycles, the longest about 15-16 s.",
+    "Synergy VSCF / EcoGen 15: '1050 VSCF Low Battery' is the AVR supply under 8 V, not the start battery; '1051 VSCF High Battery' (AVR supply over 16.2 V) points to an external charger on the unit (see those codes on this card)."
+   ],
+   "fixes": [
+    "How it charges: three charge voltages by temperature - 13.5 V hot, 14.1 V normal, 14.6 V cold. An 18-hour cycle starts when the battery drops below about 12.6 V or the engine cranks (weekly exercise); a crank during the cycle restarts the 18-hour timer. After 18 hours: below about 40 F it keeps floating at 14.1 V, above about 40 F it stops. In an outage it drops out until the generator carries the load.",
+    "Codes: LOW BATTERY = under 12.1 V for 60 s. BATTERY PROBLEM = over 16 V (immediate) or over 600 mA for 5 s after the 18-hour cycle. CHARGER WARNING = under 12.5 V at the end of the 18-hour cycle. CHARGER MISSING AC = no AC at the charger input. Battery volts are on the Display menu: over 12 V = battery-to-controller wiring good; 0 V = open connection; 1-11 V = cables, charge or replace.",
+    "Quick T1 check: pull the 7.5 A controller fuse. Screen stays lit = T1 120 VAC is reaching the controller. Screen goes dark = no T1 - read T1 to neutral at the customer connection block (120 VAC), at the controller harness connector, then at the T1 (F3) fuse holder in the transfer switch. Blown fuse = replace; one that keeps blowing = Problem 10 (Blown T1 Fuse).",
+    "Battery volts with the charger off: pull the T1 fuse in the transfer switch or unplug the J8-J9 T1 connector. 12.1 V or less (but above 9.0 V), or no crank = conductance test. 12.2 V or more = cranking voltage-drop test.",
+    "Conductance test: replace the battery at 60% of rated CCA or less. Generac doesn't recommend a carbon-pile tester - it needs a full battery and a load of half the CCA (540 CCA = 270 A).",
+    "Cranking voltage drop (fuel off, Wire 14 off the fuel solenoid, MANUAL): max 0.00-0.10 V post to clamp, 0.10-0.20 V across any ground, 0.20-0.30 V across a cable, 0.20-0.30 V across the starter contactor, 0.40-0.50 V across a whole circuit.",
+    "Charge-current / drain test: crank 2-3 s in MANUAL, set OFF, lift the negative cable, DC ammeter in series (red lead to the negative post, black to the cable). Positive 50 mA to 2.5 A = charger working. Negative reading = the battery is being drawn down - replace the controller.",
+    "Battery spec: Group 26R, 12 V, 540 CCA minimum (8-22 kW install 0K5804, Synergy VSCF). The earlier Evolution 1.0 printing (0J9944) and the EcoGen 15 kW install print 525 CCA minimum - a 540 CCA battery meets both.",
+    "Cold climate: a pad-type battery heater (cold weather kit) is recommended where temperatures regularly fall below 32 F.",
+    "T1 and its neutral (00) must stay landed or the battery won't charge. Charge any dead battery fully off the unit before installing it.",
+    "Exercise: leave the exerciser on - every crank starts a fresh 18-hour charge. Fix any no-start first."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-generac-next-gen-10-28"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet, at every load, and it must never drop below 10 in WC once installed. Record static, cranking, running and full-load pressure on the same gauge, under rated load (load bank, or house loads). Holds 10 in WC or more = supply is good, go to the engine-side checks. Drops below 10, or swings more than 2 in WC = supply or regulator problem. A fluttering needle = pipe undersized or restricted, or a step-down regulator too small or too close to the unit.",
+    "Where to measure: the install manual has you put the manometer on the far-right test port of the fuel regulator. The dealer manual uses the fuel shutoff valve (SOV) assembly: Port 1 = static, Port 2 = running. Port 2 below minimum but above 0 while running = replace the SOV assembly; 0 = Wire 14 Test.",
+    "Full-load LP demand (install manual A0004332575): 10 kW 58 ft3/h (1.60 gal/h) = 145,000 BTU/h; 14 kW 106 ft3/h (2.92 gal/h) = 265,000 BTU/h; 18 kW 105 ft3/h (2.87 gal/h) = 262,500 BTU/h; 22 kW 135 ft3/h (3.71 gal/h) = 337,500 BTU/h; 24 kW 135 ft3/h (3.71 gal/h) = 337,500 BTU/h; 26 kW 144 ft3/h (3.95 gal/h) = 360,000 BTU/h; 28 kW 144 ft3/h (3.97 gal/h) = 360,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 360,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 US gal minimum; vertical tanks are OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run from the second-stage regulator outlet to the fuel shutoff valve (schedule 40, 10-12 in WC): 10 kW - 1/2 in 30 ft, 3/4 in 175 ft, 1 in 400 ft; 14/18 kW - 3/4 in 80 ft, 1 in 350 ft, 1-1/4 in 600 ft; 22-28 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft. Add the equivalent length of every fitting.",
+    "Fuel setting: LP/NG is set in Field Pro (guided setup or configuration) - there's no fuel knob. 3002 ECM Faulted = ECM set to the wrong fuel type; 504 = fuel type not selected.",
+    "Rated speed is 3,600 rpm. Slow only during the weekly exercise = the Quiet-Test low-speed exercise (full speed about 5 s, then drops to Quiet-Test speed about 40 s in) - judge it in MANUAL under load. Engine side, once the supply holds 10-12 in WC at full load: codes that go with this complaint are 1600 Underspeed, 3001 (engine not at commanded speed), 3201/3217 (low fuel pressure from the ECM sensor) and 4307 (couldn't hold air/fuel ratio for 5 min). For 3001/3002 first confirm PZ200 firmware V1.4.1 or higher and ECM 14605 or higher. Then the dealer 'Cranks But Does Not Run, Lacks Power, Runs Rough, Hunts or Backfires' sequence: firmware and fuel type, air filter/intake, oil level, Battery and Cables Test, Engine Speed Test, fuel supply test, pipe sizing, ignition coils, compression, leak-down."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-next-gen-22-25-y32"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet, at every load, and it must never drop below 10 in WC once installed. Record static, cranking, running and full-load pressure on the same gauge, under rated load (load bank, or house loads). Holds 10 in WC or more = supply is good, go to the engine-side checks. Drops below 10, or swings more than 2 in WC = supply or regulator problem. A fluttering needle = pipe undersized or restricted, or a step-down regulator too small or too close to the unit.",
+    "Where to measure: the install manual has you put the manometer on the far-right test port of the fuel regulator. The dealer manual uses the fuel shutoff valve (SOV) assembly: Port 1 = static, Port 2 = running. Port 2 below minimum but above 0 while running = replace the SOV assembly; 0 = Wire 14 Test.",
+    "Full-load LP demand (Y32 install manual): 22 kW 135 ft3/h (3.71 gal/h) = 337,500 BTU/h; 25 kW 136 ft3/h (3.75 gal/h) = 340,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 340,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 US gal minimum; vertical tanks are OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run from the second-stage regulator outlet to the fuel shutoff valve (schedule 40, 10-12 in WC): 22-25 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft. Add the equivalent length of every fitting.",
+    "Fuel setting: LP/NG is set in Field Pro (guided setup or configuration) - there's no fuel knob. 3002 ECM Faulted = ECM set to the wrong fuel type; 504 = fuel type not selected.",
+    "Rated speed is 3,600 rpm. Slow only during the weekly exercise = the Quiet-Test low-speed exercise (full speed about 5 s, then drops to Quiet-Test speed about 40 s in) - judge it in MANUAL under load. Engine side, once the supply holds 10-12 in WC at full load: codes that go with this complaint are 1600 Underspeed, 3001 (engine not at commanded speed), 3201/3217 (low fuel pressure from the ECM sensor) and 4307 (couldn't hold air/fuel ratio for 5 min). For 3001/3002 first confirm PZ200 firmware V1.4.1 or higher and ECM 14605 or higher. Then the dealer 'Cranks But Does Not Run, Lacks Power, Runs Rough, Hunts or Backfires' sequence: firmware and fuel type, air filter/intake, oil level, Battery and Cables Test, Engine Speed Test, fuel supply test, pipe sizing, ignition coils, compression, leak-down."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-generac-next-gen-20-3ph"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet, at every load, and it must never drop below 10 in WC once installed. Record static, cranking, running and full-load pressure on the same gauge, under rated load (load bank, or house loads). Holds 10 in WC or more = supply is good, go to the engine-side checks. Drops below 10, or swings more than 2 in WC = supply or regulator problem. A fluttering needle = pipe undersized or restricted, or a step-down regulator too small or too close to the unit.",
+    "Where to measure: the install manual has you put the manometer on the far-right test port of the fuel regulator. The dealer manual uses the fuel shutoff valve (SOV) assembly: Port 1 = static, Port 2 = running. Port 2 below minimum but above 0 while running = replace the SOV assembly; 0 = Wire 14 Test.",
+    "Full-load LP demand (3-phase install manual): 20 kW 3-phase 123.6 ft3/h (3.4 gal/h) = 309,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 309,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 US gal minimum; vertical tanks are OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run from the second-stage regulator outlet to the fuel shutoff valve (schedule 40, 10-12 in WC): 20 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft. Add the equivalent length of every fitting.",
+    "Fuel setting: LP/NG is set in Field Pro (guided setup or configuration) - there's no fuel knob. 3002 ECM Faulted = ECM set to the wrong fuel type; 504 = fuel type not selected.",
+    "Rated speed is 3,600 rpm. Slow only during the weekly exercise = the Quiet-Test low-speed exercise (full speed about 5 s, then drops to Quiet-Test speed about 40 s in) - judge it in MANUAL under load. Engine side, once the supply holds 10-12 in WC at full load: codes that go with this complaint are 1600 Underspeed, 3001 (engine not at commanded speed), 3201/3217 (low fuel pressure from the ECM sensor) and 4307 (couldn't hold air/fuel ratio for 5 min). For 3001/3002 first confirm PZ200 firmware V1.4.1 or higher and ECM 14605 or higher. Then the dealer 'Cranks But Does Not Run, Lacks Power, Runs Rough, Hunts or Backfires' sequence: firmware and fuel type, air filter/intake, oil level, Battery and Cables Test, Engine Speed Test, fuel supply test, pipe sizing, ignition coils, compression, leak-down."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-9-22"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0L6630): 9 kW 54 ft3/h (1.50 gal/h) = 135,000 BTU/h; 11 kW 73 ft3/h (2.01 gal/h) = 182,500 BTU/h; 16 kW 116 ft3/h (3.19 gal/h) = 290,000 BTU/h; 20 kW 140 ft3/h (3.85 gal/h) = 350,000 BTU/h; 22 kW 142 ft3/h (3.90 gal/h) = 355,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). The table has no separate 17 kW row.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 355,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger; vertical tanks OK only if sized for the generator.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run with a second-stage regulator (inside diameter, 10-12 in WC; add 2.5 ft for every bend, tee or angle): 9 kW - 1/2 in 35 ft, 3/4 in 175 ft, 1 in 600 ft; 11 kW - 1/2 in 15 ft, 3/4 in 80 ft, 1 in 350 ft; 16-17 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft; 20-22 kW - 3/4 in 20 ft, 1 in 80 ft, 1-1/4 in 350 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-10-22-compact"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 10000024925): 10 kW 54 ft3/h (1.48 gal/h) = 135,000 BTU/h; 13 kW 90 ft3/h (2.45 gal/h) = 225,000 BTU/h; 16 kW 109 ft3/h (2.99 gal/h) = 272,500 BTU/h; 20 kW 130 ft3/h (3.56 gal/h) = 325,000 BTU/h; 22 kW 142 ft3/h (3.90 gal/h) = 355,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 355,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run from the second-stage regulator outlet to the fuel shutoff valve (schedule 40, 10-12 in WC): 10 kW - 1/2 in 30 ft, 3/4 in 175 ft, 1 in 400 ft; 13/16 kW - 3/4 in 80 ft, 1 in 350 ft, 1-1/4 in 600 ft; 20/22 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft. Add the equivalent length of every fitting.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-10-26"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual A0001846478): 10 kW 54 ft3/h (1.48 gal/h) = 135,000 BTU/h; 14 kW 112 ft3/h (3.07 gal/h) = 280,000 BTU/h; 18 kW 110 ft3/h (3.02 gal/h) = 275,000 BTU/h; 20 kW 136 ft3/h (3.74 gal/h) = 340,000 BTU/h; 22 kW 142 ft3/h (3.90 gal/h) = 355,000 BTU/h; 24 kW 142 ft3/h (3.90 gal/h) = 355,000 BTU/h; 26 kW 132 ft3/h (3.63 gal/h) = 330,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 355,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run from the second-stage regulator outlet to the fuel shutoff valve (schedule 40, 10-12 in WC): 10 kW - 1/2 in 30 ft, 3/4 in 175 ft, 1 in 400 ft; 14/18 kW - 3/4 in 80 ft, 1 in 350 ft, 1-1/4 in 600 ft; 20-26 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft. Add the equivalent length of every fitting.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-response-16-22"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 10000018917): 16 kW 107 ft3/h (2.94 gal/h) = 267,500 BTU/h; 22 kW 142 ft3/h (3.90 gal/h) = 355,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 355,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run with a second-stage regulator (10-12 in WC): 16 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft; 22 kW - 3/4 in 20 ft, 1 in 80 ft, 1-1/4 in 350 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-dr-11-20"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 10000027522): 11 kW 72 ft3/h (1.97 gal/h) = 180,000 BTU/h; 20 kW 130 ft3/h (3.56 gal/h) = 325,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 325,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 11 kW - 1/2 in 15 ft, 3/4 in 80 ft, 1 in 350 ft; 20 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-powermate-11"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 10000027550): 11 kW 72 ft3/h (1.97 gal/h) = 180,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 180,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 11 kW - 1/2 in 15 ft, 3/4 in 80 ft, 1 in 350 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-synergy-evo2-20"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0L6632): 20 kW Synergy 124 ft3/h (3.42 gal/h) = 310,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 310,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 20 kW Synergy - 3/4 in 15 ft, 1 in 115 ft, 1-1/4 in 480 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-ecogen-evo2-15"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 10000032205): 15 kW 100 ft3/h (2.76 gal/h) = 250,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 250,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 15 kW - 3/4 in 40 ft, 1 in 175 ft, 1-1/4 in 550 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo2-20-3ph"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 10000014113): 20 kW 3-phase 130 ft3/h (3.56 gal/h) = 325,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 325,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac recommends 250 gal minimum; vertical tanks OK only if sized for the generator; never a 20 or 30 lb tank.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 20 kW - 3/4 in 20 ft, 1 in 80 ft, 1-1/4 in 350 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (it rotates 180 degrees and slides into the mixer body) AND LP must be selected on the controller (Install Wizard, or EDIT menu > Fuel Selection).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo1-8"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0K5804): 8 kW 52 ft3/h (1.42 gal/h) = 130,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 130,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger. Vertical tanks usually don't make it - 1050 lb vertical minimum.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run with a second-stage regulator (inside diameter, 10-12 in WC; add 2.5 ft for every bend, tee or angle): 8 kW - 3/4 in 165 ft, 1 in 570 ft (no 1-1/4 in figure listed).",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (on top of the mixer on V-twins, under it on single-cylinder) AND LP selected on the controller in the Installation Wizard.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo1-11"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0K5804): 11 kW 73 ft3/h (2.01 gal/h) = 182,500 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 182,500 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger. Vertical tanks usually don't make it - 1050 lb vertical minimum.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run with a second-stage regulator (inside diameter, 10-12 in WC; add 2.5 ft for every bend, tee or angle): 11 kW - 3/4 in 70 ft, 1 in 255 ft, 1-1/4 in 1000 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (on top of the mixer on V-twins, under it on single-cylinder) AND LP selected on the controller in the Installation Wizard.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo1-13-17"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0K5804): 16 kW 116 ft3/h (3.19 gal/h) = 290,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). The earlier printing (0J9944) lists full-load LP in gal/h only: 13 kW row 2.95, 14 kW row 3.07, 15 kW row 2.86, 16 kW row 3.19, 16/17 kW row 3.57 gal/h.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 290,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger. Vertical tanks usually don't make it - 1050 lb vertical minimum.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run with a second-stage regulator (inside diameter, 10-12 in WC; add 2.5 ft for every bend, tee or angle): 16 kW row (the table has no separate 13-15 kW rows) - 3/4 in 25 ft, 1 in 130 ft, 1-1/4 in 540 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (on top of the mixer on V-twins, under it on single-cylinder) AND LP selected on the controller in the Installation Wizard.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-evo1-20-22"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0K5804): 20 kW 140 ft3/h (3.85 gal/h) = 350,000 BTU/h; 22 kW 134 ft3/h (3.68 gal/h) = 335,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 350,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger. Vertical tanks usually don't make it - 1050 lb vertical minimum.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run with a second-stage regulator (inside diameter, 10-12 in WC; add 2.5 ft for every bend, tee or angle): 20-22 kW - 3/4 in 15 ft, 1 in 115 ft, 1-1/4 in 480 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (on top of the mixer on V-twins, under it on single-cylinder) AND LP selected on the controller in the Installation Wizard.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-ecogen-evo1-15"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0K6047): 15 kW EcoGen 104.4 ft3/h (2.62 gal/h) = 261,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 261,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger. Vertical tanks usually don't make it - 1050 lb vertical minimum.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 15 kW EcoGen - 3/4 in 20 ft, 1 in 70 ft, 1-1/4 in 350 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (on top of the mixer on V-twins, under it on single-cylinder) AND LP selected on the controller in the Installation Wizard.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-synergy-vscf-20"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator fuel inlet (dealer manual: 10 in WC minimum, 12 in WC maximum), and it has to hold there running under load. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the fuel regulator, Port 1 = static (the static port is always the one closest to the fuel solenoid); Port 2 or 3 = cranking/running. A fuel shutoff valve with a manometer port lets you read it from outside the enclosure (1/2 in 0K8752, 3/4 in 0K8754, 1 in 0K8184, 1-1/4 in 0L2844).",
+    "Full-load LP demand (install manual 0K2503): 20 kW Synergy 124 ft3/h (3.42 gal/h) = 310,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula).",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 310,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: Generac says 250 gal minimum unless the calculation calls for bigger. Vertical tanks usually don't make it - 1050 lb vertical minimum.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 20 kW Synergy - 3/4 in 15 ft, 1 in 115 ft, 1-1/4 in 480 ft.",
+    "Fuel setting: the orange fuel conversion knob must be turned to LP (on top of the mixer on V-twins, under it on single-cylinder) AND LP selected on the controller in the Installation Wizard.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 (starts hard / runs rough / lacks power / backfires / hunting) - fuel supply test first, then air filter, spark, plugs, valve lash, compression, stepper motor (Test 54), magnetos."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-nexus-8"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - Port 1 (static, before the solenoid) on all units, Port 3 (below the solenoid) on 12-20 kW units. Read static, cranking, running and under load (0H9172 Test 50).",
+    "Full-load LP demand (Nexus owner's manual 0H8358 (row is NG kW / LP kW)): 7/8 kW 62 ft3/h (1.68 gal/h) = 155,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 155,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: on the V-twins slide the carburetor fuel selector pin out from NG to the LP position; single-cylinder units have their own conversion steps in the install guide.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 in the Evolution/Nexus manual (starts hard / runs rough / lacks power / backfires) - fuel supply and pressure test first, then air filter, spark, plugs, valves, compression."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-nexus-10-11"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - Port 1 (static, before the solenoid) on all units, Port 3 (below the solenoid) on 12-20 kW units. Read static, cranking, running and under load (0H9172 Test 50).",
+    "Full-load LP demand (Nexus owner's manual 0H8358 (row is NG kW / LP kW)): 9/10 kW 70 ft3/h (1.93 gal/h) = 175,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 175,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: on the V-twins slide the carburetor fuel selector pin out from NG to the LP position; single-cylinder units have their own conversion steps in the install guide.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 in the Evolution/Nexus manual (starts hard / runs rough / lacks power / backfires) - fuel supply and pressure test first, then air filter, spark, plugs, valves, compression."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-nexus-12-17"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - Port 1 (static, before the solenoid) on all units, Port 3 (below the solenoid) on 12-20 kW units. Read static, cranking, running and under load (0H9172 Test 50).",
+    "Full-load LP demand (Nexus owner's manual 0H8358 (rows are NG kW / LP kW)): 13/13 kW 80 ft3/h (2.18 gal/h) = 200,000 BTU/h; 13/14 kW 84 ft3/h (2.30 gal/h) = 210,000 BTU/h; 16/16 kW 91 ft3/h (2.51 gal/h) = 227,500 BTU/h; 16/17 kW 94 ft3/h (2.57 gal/h) = 235,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 235,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: on the V-twins slide the carburetor fuel selector pin out from NG to the LP position; single-cylinder units have their own conversion steps in the install guide.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 in the Evolution/Nexus manual (starts hard / runs rough / lacks power / backfires) - fuel supply and pressure test first, then air filter, spark, plugs, valves, compression."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-nexus-20"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - Port 1 (static, before the solenoid) on all units, Port 3 (below the solenoid) on 12-20 kW units. Read static, cranking, running and under load (0H9172 Test 50).",
+    "Full-load LP demand (Nexus owner's manual 0H8358 (row is NG kW / LP kW)): 18/20 kW 106 ft3/h (2.90 gal/h) = 265,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 265,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: on the V-twins slide the carburetor fuel selector pin out from NG to the LP position; single-cylinder units have their own conversion steps in the install guide.",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 in the Evolution/Nexus manual (starts hard / runs rough / lacks power / backfires) - fuel supply and pressure test first, then air filter, spark, plugs, valves, compression."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-ecogen-nexus-6"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - Port 1 (static, before the solenoid) on all units, Port 3 (below the solenoid) on 12-20 kW units. Read static, cranking, running and under load (0H9172 Test 50).",
+    "Full-load LP demand (EcoGen 6 kW owner's manual 0J0984): 6 kW 54 ft3/h (1.47 gal/h) = 135,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 135,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: none - this unit is LP vapor only (no NG mode).",
+    "Engine side, once the supply holds 10-12 in WC under load: dealer Problem 18 in the Evolution/Nexus manual (starts hard / runs rough / lacks power / backfires) - fuel supply and pressure test first, then air filter, spark, plugs, valves, compression."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-pre-nexus-legacy-7-18"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - static before the solenoid, then cranking, running and under load (see the platform's dealer fuel supply and pressure test).",
+    "Full-load LP demand (universal owner's manual (rows are NG kW / LP kW)): 6/7 kW 54 ft3/h (1.47 gal/h) = 135,000 BTU/h; 15/16 kW 92 ft3/h (2.51 gal/h) = 230,000 BTU/h; 16/18 kW 103.5 ft3/h (2.85 gal/h) = 258,750 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 258,750 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: 7 kW (410cc) - the demand-regulator hose barb and pipe plug must have been swapped between outlet ports 1 and 2; 10-18 kW V-twins - carburetor fuel selector slid out toward the back of the enclosure (owner's manual reconfiguration steps).",
+    "Engine side: legacy dealer manual 0G4338 Problem 11 (starts hard / runs rough / lacks power) starts with Test 51, fuel supply and pressure."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-guardian-pre-nexus-2008-8-20"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - static before the solenoid, then cranking, running and under load (see the platform's dealer fuel supply and pressure test).",
+    "Full-load LP demand (2008 owner's manual 0G8334 (rows are NG kW / LP kW)): 7/8 kW 62 ft3/h (1.68 gal/h) = 155,000 BTU/h; 9/10 kW 70 ft3/h (1.93 gal/h) = 175,000 BTU/h; 12/12 kW 76 ft3/h (2.08 gal/h) = 190,000 BTU/h; 13/14 kW 84 ft3/h (2.30 gal/h) = 210,000 BTU/h; 16/16 kW 91 ft3/h (2.51 gal/h) = 227,500 BTU/h; 16/17 kW 94 ft3/h (2.57 gal/h) = 235,000 BTU/h; 18/20 kW 106 ft3/h (2.90 gal/h) = 265,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). These older manuals rate LP at 2,520 BTU/ft3, so their own BTU figure runs about 1% higher.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 265,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe: no LP pipe-size table in the library copy of this platform's manuals - size per NFPA 58 / the LP supplier for the full-load figure above.",
+    "Fuel setting: the carburetor fuel selector / demand-regulator reconfiguration for LP must have been done (see the owner's manual reconfiguration steps).",
+    "Engine side: 2008 dealer manual Problem 18 (starts hard / runs rough / lacks power / backfires) starts with Test 66, fuel supply and pressure."
+   ]
+  }
+ },
+ {
+  "familyIds": [
+   "gen-powerpact-7-75"
+  ],
+  "item": {
+   "symptom": "LP: tank too small or too cold (vapor withdrawal) - won't reach speed, backfires, hunts or bogs under load",
+   "causes": [
+    "Tank can't boil off vapor fast enough. These air-cooled units are vapor-withdrawal only: the engine burns the gas boiling off the top of the liquid (no heated vaporizer as on a liquid-withdrawal system). Propane boils at -44 F and pulls that heat in through the tank wall where the liquid touches it, so cold weather, a low tank (less wetted wall) and frost on the tank all cut the vapor rate. Generac's table, tank at 20% full: 250 gal = 507,600 BTU/h at 40 F, 338,400 at 20 F, 169,200 at 0 F; 500 gal = 792,540 / 528,360 / 264,180; 1,000 gal = 1,416,960 / 944,640 / 472,620.",
+    "The same tank also feeds the furnace, water heater, etc. - it has to carry the generator at full load PLUS every appliance.",
+    "Regulator (the primary LP regulator is not supplied with the generator): undersized, too much droop, mounted too close to the unit, or frozen (Generac: freeze-ups are common at 30-45 F, especially on LP).",
+    "Gas pipe too small or too long between the second-stage regulator and the generator.",
+    "Unit set up for the wrong fuel - it can start and idle fine with no load and still fall on its face under load.",
+    "Tank simply too small - see the tank minimum below; never a 20 or 30 lb cylinder."
+   ],
+   "fixes": [
+    "Required LP pressure: 10-12 in WC at the generator, and it must never drop below 10 in WC once installed. The primary LP regulator is not supplied with the generator. Record static, cranking, running and full-load pressure on the same gauge, then recheck running under rated load. It must hold 10 in WC or more at full load. Generac's guideline allows no more than 1-2 in WC drop at any condition; a bigger drop or an unstable reading = pipe undersized or the regulator too close to the generator.",
+    "Where to measure: on the generator's fuel regulator test ports - static before the solenoid, then cranking, running and under load (see the platform's dealer fuel supply and pressure test).",
+    "Full-load LP demand (install manual 10000021782): 7.5 kW 51.6 ft3/h (1.42 gal/h) = 129,000 BTU/h. BTU/h = ft3/h x 2,500 (Generac's air-cooled formula). The 2014 printing (0K6022) lists 46.8 ft3/h (1.3 gal/h) full load for the 6/7 kW - the two printings disagree; use the unit's fuel data decal.",
+    "Tank vs. load: compare the full-load BTU/h above with the tank table at the coldest temperature you expect, at 20% full. A frost band on the tank while it runs = it is at its vaporization limit. Usable fuel is 60% of the tank (80% max fill down to 20%); run time = full-load gal/h x hours. Biggest model on this card: 129,000 BTU/h at full load, vs. 338,400 (20 F) and 169,200 (0 F) for a 250 gal tank at 20% full - before any furnace load. The fix is the LP supplier's: size tank and regulators for full-load BTU/h plus the appliances at the coldest expected temperature, and keep the tank above 20%.",
+    "Tank: size it with the LP supplier for full-load BTU/h at the coldest expected temperature; the 7.5 kW install manual (10000021782) requires a 1,050 lb vertical tank minimum; never a 20 or 30 lb cylinder.",
+    "Regulators: two-stage - first stage at the tank drops tank pressure to line pressure, second stage to inlet pressure. Size for at least 110% of full-load demand, direct-acting, no more than 1-2 in WC droop at any condition (static, cranking, no load, full load). Vents down, no long small vent lines. At least 5 ft of pipe after the regulator before the generator. Dedicated regulator - don't tee off the end of the house low-pressure line.",
+    "Pipe, max run (10-12 in WC): 7.5 kW - 1/2 in 35 ft, 3/4 in 175 ft, 1 in 600 ft. The 2014 printing (0K6022) lists 7 kW - 3/4 in 165 ft, 1 in 450 ft.",
+    "Fuel setting: confirm the LP conversion was done - on PowerPact the NG fuel jet in the fuel inlet is swapped for the supplied smaller-bore LP jet (install manual 10000021782 p.19); there is no knob or controller fuel setting, the jet is the conversion.",
+    "Engine side: CorePower/PowerPact dealer manual Problem 23 (starts hard / runs rough / lacks power / backfires)."
+   ]
+  }
+ }
+];
+const GEN_TIP_ADDITIONS = {
+ "gen-generac-next-gen-10-28": [
+  "Cold Smart Start: with it enabled the warm-up before transfer stretches from the normal 5 s (install manual says 6 s) to 30 s when the start-up ambient is below the set point; the PZ200 dealer manual also allows up to 4 min 'Warming Up' before an undervoltage shutdown. The manuals disagree on the rest - owner's manuals (A0004332577 p.24, Y32 p.22, 3-ph p.21): factory-DISABLED, set point 50 F (10 C) for every model; install manuals (A0004332575 p.35, Y32 p.35, 3-ph p.35): factory-ENABLED, 50 F for 10-18 kW and 20 F (-7 C) for 20 (3-ph) and 22-28 kW, a table copied from the Evolution 2.0 owner's manual. The dealer manual gives no default. Read the actual state in Field Pro > Configuration > Cold smart start before judging a 30 s transfer delay."
+ ],
+ "gen-guardian-next-gen-22-25-y32": [
+  "Cold Smart Start: with it enabled the warm-up before transfer stretches from the normal 5 s (install manual says 6 s) to 30 s when the start-up ambient is below the set point; the PZ200 dealer manual also allows up to 4 min 'Warming Up' before an undervoltage shutdown. The manuals disagree on the rest - owner's manuals (A0004332577 p.24, Y32 p.22, 3-ph p.21): factory-DISABLED, set point 50 F (10 C) for every model; install manuals (A0004332575 p.35, Y32 p.35, 3-ph p.35): factory-ENABLED, 50 F for 10-18 kW and 20 F (-7 C) for 20 (3-ph) and 22-28 kW, a table copied from the Evolution 2.0 owner's manual. The dealer manual gives no default. Read the actual state in Field Pro > Configuration > Cold smart start before judging a 30 s transfer delay."
+ ],
+ "gen-generac-next-gen-20-3ph": [
+  "Cold Smart Start: with it enabled the warm-up before transfer stretches from the normal 5 s (install manual says 6 s) to 30 s when the start-up ambient is below the set point; the PZ200 dealer manual also allows up to 4 min 'Warming Up' before an undervoltage shutdown. The manuals disagree on the rest - owner's manuals (A0004332577 p.24, Y32 p.22, 3-ph p.21): factory-DISABLED, set point 50 F (10 C) for every model; install manuals (A0004332575 p.35, Y32 p.35, 3-ph p.35): factory-ENABLED, 50 F for 10-18 kW and 20 F (-7 C) for 20 (3-ph) and 22-28 kW, a table copied from the Evolution 2.0 owner's manual. The dealer manual gives no default. Read the actual state in Field Pro > Configuration > Cold smart start before judging a 30 s transfer delay."
+ ]
+};
+(function () {
+  for (const g of GENERATORS) {
+    for (const a of GEN_TS_ADDITIONS) if (a.familyIds.includes(g.id)) g.troubleshooting = [...(g.troubleshooting || []), a.item];
+    if (GEN_TIP_ADDITIONS[g.id]) g.tips = [...(g.tips || []), ...GEN_TIP_ADDITIONS[g.id]];
+  }
+})();

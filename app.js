@@ -92,6 +92,9 @@ const SEARCH_ALIAS_GROUPS = [
   // Generac series / controller names the way techs say them ("nexgen 26kw", "powerzone 200").
   ["next generation", "next gen", "nextgen", "nexgen", "next-gen"],
   ["power zone 200", "powerzone 200", "powerzone200", "powerzone", "power zone", "pz200", "pz 200"],
+  // Bryant and Payne are Carrier Corp brands on the same boards and code lists, and every code row
+  // is filed under Carrier - "bryant plus 80" found nothing (Cameron 2026-10-09).
+  ["carrier", "bryant", "payne"],
   ["overvoltage", "over voltage", "over-voltage", "high output voltage"],
   ["undervoltage", "under voltage", "under-voltage", "low output voltage"],
   ["overcrank", "over crank", "over-crank"],
@@ -809,8 +812,10 @@ function askAddModelAlts(units, q) {
     }
     if (t.length < 7 || !/[A-Z]/.test(t) || !/\d/.test(t) || !/^[A-Z0-9\-\/]+$/.test(t)) continue;
     const extra = new Set();
-    const fam = codeFamilyPrefix(t, getAllCodes());
+    const twin = carrierTwinModel(t);
+    const fam = codeFamilyPrefix(t, getAllCodes()) || (twin ? codeFamilyPrefix(twin, getAllCodes()) : "");
     if (fam) extra.add(fam.toLowerCase());
+    if (twin) extra.add(carrierTwinSeries(t).toLowerCase());
     if (typeof MODEL_PATTERNS !== "undefined") {
       const p = MODEL_PATTERNS.find(x => x.re.test(t.replace(/[^A-Z0-9]/g, "")));
       const pre = p ? askPatternPrefix(p.re) : "";
@@ -1297,7 +1302,11 @@ function renderAsk() {
   let hits = scored.filter(x => x.sc >= need);
   let partial = false;
   if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
-  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
+  // A question that names no brand gets the general answer before brand-specific ones on a tie:
+  // "blower runs all the time" led with a Lennox rooftop (Gus 2026-08-17, four tries).
+  const qBranded = ASK_BRAND_RE.test(normalizeQuery(rq));
+  const branded = (it) => (it.brand || ASK_BRAND_RE.test(String(it.title).toLowerCase())) ? 1 : 0;
+  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank || (qBranded ? 0 : branded(a.it) - branded(b.it)) || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
 
   // ----- Narrowing question -----
   // After a broad first search, ask ONE follow-up (brand, then equipment type)
@@ -2569,7 +2578,8 @@ function unitScenariosFor(model) {
     unitScenarioRes = new Map();
     for (const u of unitScenarioList()) { try { unitScenarioRes.set(u.unit, new RegExp(u.unit)); } catch (e) { /* bad pattern: skip */ } }
   }
-  return getAllSymptoms().filter(s => s.unit && unitScenarioRes.has(s.unit) && unitScenarioRes.get(s.unit).test(m));
+  const twin = typeof carrierTwinModel === "function" ? carrierTwinModel(m) : "";
+  return getAllSymptoms().filter(s => s.unit && unitScenarioRes.has(s.unit) && (unitScenarioRes.get(s.unit).test(m) || (twin && unitScenarioRes.get(s.unit).test(twin))));
 }
 
 function loadUserSymptoms() { try { return JSON.parse(localStorage.getItem(DIAG_STORAGE_KEY)) || []; } catch { return []; } }
@@ -7844,6 +7854,116 @@ fcWeighRender(); fcClockRender(); fcCylRender();
 // Model-number pattern table. Order matters: more specific patterns first.
 // brand/equipment strings must match the values used in data.js so the
 // jump-to-codes buttons land on real filter selections.
+// v287: Bryant and Payne are Carrier Corp brands sold on the same platforms. Each pair is a
+// Bryant / Payne model series and its Carrier twin, from one Carrier Corp document naming both
+// (kit tables, joint literature) or the same manual re-badged (scratch\heating-content\
+// bryant-xref.verified.json). Longest prefix first; only full series, never short stems.
+const CARRIER_TWINS = [
+  ["PG80ESAA", "58SB0A"],
+  ["PG80VTLA", "58TP0A"],
+  ["PG96MSAA", "59SC6A"],
+  ["PG96VTAA", "59TP6B"],
+  ["PG96VTAB", "59TP6C"],
+  ["PG92ESA", "59SC2D"],
+  ["PG92SAS", "59SC2A"],
+  ["PG95ESA", "59SC5B"],
+  ["PG95SAS", "59SC5A"],
+  ["180CNV", "24VNA0"],
+  ["186CNV", "24VNA6"],
+  ["280ANV", "25VNA0"],
+  ["284ANV", "25VNA4"],
+  ["310AAV", "58STA"],
+  ["310JAV", "58STX"],
+  ["311AAV", "58DLA"],
+  ["311JAV", "58DLX"],
+  ["312AAV", "58CTA"],
+  ["312JAV", "58CTX"],
+  ["313AAV", "58PHA"],
+  ["313JAV", "58PHX"],
+  ["314AAV", "58CTW"],
+  ["314JAV", "58CTY"],
+  ["315AAV", "58CVA"],
+  ["315JAV", "58CVX"],
+  ["330AAV", "58TUA"],
+  ["330JAV", "58UXT"],
+  ["331AAV", "58TMA"],
+  ["331JAV", "58DXT"],
+  ["333BAV", "58UHV"],
+  ["333JAV", "58UXV"],
+  ["340AAV", "58MCB"],
+  ["340MAV", "58MCA"],
+  ["345MAV", "58MSA"],
+  ["350AAV", "58MXB"],
+  ["350MAV", "58MXA"],
+  ["352AAV", "58MTB"],
+  ["352MAV", "58MTA"],
+  ["353AAV", "58MEB"],
+  ["355AAV", "58MVB"],
+  ["355BAV", "58UVB"],
+  ["355CAV", "58MVC"],
+  ["355MAV", "58MVP"],
+  ["PG8JAA", "58STX"],
+  ["PG8MAA", "58STA"],
+  ["PG9MAA", "58MCA"],
+  ["PG9MAB", "58MCB"],
+  ["800SA", "58SB0A"],
+  ["800SB", "58SB0B"],
+  ["801SA", "58SB1A"],
+  ["801SB", "58SB1B"],
+  ["810SA", "58SC0A"],
+  ["810SB", "58SC0B"],
+  ["811SA", "58SC1A"],
+  ["811SB", "58SC1B"],
+  ["820SA", "58SP0A"],
+  ["820SB", "58SP0B"],
+  ["820TA", "58TP0A"],
+  ["820TB", "58TP0B"],
+  ["821SA", "58SP1A"],
+  ["821SB", "58SP1B"],
+  ["821TA", "58TP1A"],
+  ["821TB", "58TP1B"],
+  ["830CA", "58CU0A"],
+  ["830CB", "58CU0B"],
+  ["880TA", "58TN0A"],
+  ["880TB", "58TN0B"],
+  ["881TA", "58TN1A"],
+  ["881TB", "58TN1B"],
+  ["912SA", "59SC2A"],
+  ["912SB", "59SC2B"],
+  ["912SC", "59SC2C"],
+  ["912SD", "59SC2D"],
+  ["912SE", "59SC2E"],
+  ["915SA", "59SC5A"],
+  ["915SB", "59SC5B"],
+  ["916SA", "59SC6A"],
+  ["925SA", "59SP5A"],
+  ["925TA", "59TP5A"],
+  ["926SA", "59SP6A"],
+  ["926SB", "59SP6B"],
+  ["926TA", "59TP6A"],
+  ["926TB", "59TP6B"],
+  ["926TC", "59TP6C"],
+  ["927TA", "59TP7A"],
+  ["986TA", "59TN6A"],
+  ["986TB", "59TN6A"],
+  ["986TC", "59TN6B"],
+  ["986TD", "59TN6C"],
+  ["987MA", "59MN7A"],
+  ["987MB", "59MN7B"],
+  ["987MC", "59MN7C"],
+  ["987TA", "59TN7A"],
+];
+function carrierTwinModel(model) {
+  const m = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  for (const [b, c] of CARRIER_TWINS) if (m.startsWith(b)) return c + m.slice(b.length);
+  return "";
+}
+function carrierTwinSeries(model) {
+  const m = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  for (const [b, c] of CARRIER_TWINS) if (m.startsWith(b)) return c;
+  return "";
+}
+
 const MODEL_PATTERNS = [
   // Kohler first (Andy 2026-10-05): "24RCLA" otherwise reads as a Carrier 24-series AC.
   { re: /^(\d{1,2}(\.5)?(RESA|RESAL|RESC|RESCL|RESB|RESD|RESV|RESVL|RESL|RESM1|RESNT|RESHD|RES|TRES|RCAL|RCA|RCLA|RCLB|RCLC|RCL|RYG|REYG)(?![A-Z])|RGEN\d)/, brand: "Kohler", equipment: "Generator", series: "Kohler (Rehlko) residential home standby generator", notes: ["Kohler model = kW + series letters (20RCA, 14RESAL, 12RESV, 38RCLB). Open in Generators - Kohler tab for its fault messages, troubleshooting, specs and manuals."] },
@@ -8344,7 +8464,7 @@ const MODEL_PATTERNS = [
   { re: /^(186C|284A)NV/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Evolution Extreme variable-speed AC/HP, second generation - 186CNV / 284ANV (PCM + VFD, Bluetooth)", notes: ["Different code scheme from 180CNV/280ANV: two-part base-expansion codes (for example 31-58) reported by the wall control - see Error Codes under 'Carrier Greenspeed PCM/VFD platform'.","Position 13 is the compressor build: F = variable-speed rotary, E = variable-speed scroll. Parts differ.","Bluetooth module feeds the Bryant Service Tech App - recent fault codes and reprogramming come from there, not from a flash count.","Model plug lives on the PCM and must be present at power-up; installing one with power on will not clear a 25-62."] },
   { re: /^(189B|288B)NV/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Evolution V variable-speed AC/HP - 189BNV / 288BNV (inverter, 18-19 SEER tier)", notes: ["Evolution V is the smaller-cabinet inverter tier below Evolution Extreme - do not read 186B, 186CNV and 189BNV as the same product.","Layout: product digit, 8 = Evolution tier, SEER digit, B = Puron, N = 208-230-1, V = variable speed, then capacity.","Fault reporting is through the Evolution wall control; no separate flash-code table was found for this tier."] },
   { re: /^186B[A-Z]/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Evolution Series fixed-speed 16 SEER AC with Puron - 186B", notes: ["NAME TRAP: 186B is the fixed-speed Evolution AC. 186CNV is the Evolution Extreme variable-speed AC. Match the fourth through sixth characters, not just '186'.","No diagnostic LED documented on the fixed-speed sibling."] },
-  { re: /^(31[05][AJ]|(340|350|352|355)[ACM])AV/, brand: "Carrier", equipment: "Gas Furnace", series: "Bryant 4-way multipoise gas furnace - 310/315 (80% AFUE) and 340/350/352/355 (90%+ condensing)", notes: ["Standard Carrier/Bryant/Payne integrated furnace control with a 2-digit amber status LED - the existing Carrier/Bryant/Payne flash-code list in Error Codes applies.","Tier letter: A = fixed-capacity or 2-stage fixed, J = low NOx, C = deluxe 2-stage variable speed, M = modulating (Perfect Heat gas valve).","The AAV suffix is overloaded - 310AAV is an 80% single-stage, 355AAV is a 90%+ 2-stage. The leading 3-digit size code decides, not the suffix.","310/315 model string reads type code, model code, brand, V, electrical, 3-digit cooling CFM code, 3-digit heating Btuh code, series letter, then a variations suffix."] },
+  { re: /^(31[0-5][AJ]|(340|345|350|352|353|355)[ABCM])AV/, brand: "Carrier", equipment: "Gas Furnace", series: "Bryant 4-way multipoise gas furnace - 310-315 (80% AFUE) and 340/345/350/352/353/355 (90%+ condensing)", notes: ["Standard Carrier/Bryant/Payne integrated furnace control with a 2-digit amber status LED - the existing Carrier/Bryant/Payne flash-code list in Error Codes applies.","Tier letter: A = fixed-capacity or 2-stage fixed, J = low NOx, C = deluxe 2-stage variable speed, M = modulating (Perfect Heat gas valve).","The AAV suffix is overloaded - 310AAV is an 80% single-stage, 355AAV is a 90%+ 2-stage. The leading 3-digit size code decides, not the suffix.","310/315 model string reads type code, model code, brand, V, electrical, 3-digit cooling CFM code, 3-digit heating Btuh code, series letter, then a variations suffix."] },
   { re: /^38(TX|TD|TR|YC|YD|YZ|HD)[A-Z]/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier legacy 38-series split-system AC/HP (pre-24/25 numbering, 10-13 SEER class, some R-22)", notes: ["No diagnostic LED and no communicating control on this class - nothing to read but pressures, amps and the contactor.","38TRA is R-22 with an AccuRater fixed-orifice metering device; vintage decides the refrigerant, so confirm on the rating plate before recovering.","Reads as the 38xxx type code, 3-digit nominal capacity 018-060, electrical code, then a series/packaging digit - for example 38TRA018-31.","Do not confuse with 38M ductless (38MURA and similar), which is a different platform entirely."] },
   // --- end coverage:bryant ---
   // --- coverage:goodman (v123) ---
@@ -10045,7 +10165,9 @@ function renderScanResult(info) {
   }
   if (info.age) facts.push(["Age", info.age]);
   const brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
-  const famPre = codeFamilyPrefix(info.model, brandCodes);
+  const twinModel = info.brand === "Carrier" ? carrierTwinModel(info.model) : "";
+  const famPre = codeFamilyPrefix(info.model, brandCodes) || (twinModel ? codeFamilyPrefix(twinModel, brandCodes) : "");
+  if (twinModel && !(info.notes || []).some(n => /Carrier twin/.test(n))) info.notes = [...(info.notes || []), "Carrier twin: " + carrierTwinSeries(info.model) + " - same platform, so that model's codes, manuals and scenarios apply."];
   const codeCount = famPre ? brandCodes.filter(c => String(c.family || "").toUpperCase().includes(famPre)).length : brandCodes.length;
   // Share across with Maintenance Figures: show the link only when this exact
   // model actually resolves to a maintenance entry (uses the same forgiving match).
@@ -10104,7 +10226,7 @@ function renderScanResult(info) {
     codesState.brand = info.brand; codesState.equipment = info.equipment;
     // Straight to this unit's own family when one is named by the model's
     // front part (59SP5A080E171216 -> 59SP5A), not every Carrier furnace code.
-    const pre = codeFamilyPrefix(info.model, getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment));
+    const pre = famPre;
     codesState.search = pre;
     document.getElementById("codesSearchInput").value = pre;
     showScreen("codes");
@@ -11424,7 +11546,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v286";
+const APP_VERSION = "v287";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

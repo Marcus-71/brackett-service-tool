@@ -24935,7 +24935,7 @@ const THERMOSTATS = [
    "T715"
   ],
   "type": "programmable",
-  "stages": "2H/2C conventional or 2H/1C heat pump (with or without aux - W2/Y2 second stage), multi-stage capable",
+  "stages": "2H/2C conventional, or 2H/2C heat pump WITHOUT aux/emergency heat (application guide: Heat Pump with Aux. or Emergency Heat = No); separate O and B terminals, no O/B setting; multi-stage capable",
   "sort": 20,
   "confidence": "verify",
   "power": {
@@ -24996,7 +24996,7 @@ const THERMOSTATS = [
    }
   ],
   "wiringNotes": [
-   "Supports 2H/2C conventional and 2H/1C heat pump (without aux) wiring diagrams shown for 1- and 2-transformer systems.",
+   "Wiring diagrams: 2H/2C conventional for 1- and 2-transformer systems, and a 2H/2C heat pump WITHOUT aux. Not rated for a heat pump with aux or emergency heat.",
    "Same RH-RC jumper convention as other 700-series models."
   ],
   "setup": {
@@ -53553,3 +53553,657 @@ const THERMOSTATS = [
   "img": ""
  }
 ];
+
+// v287 (2026-10-12): heating-season additions from real tech questions, each checked against the
+// manufacturer's own documents (scratch\heating-content, Fable-verified): Honeywell TrueZONE zone
+// panels (new entry), ecobee PEK on Rheem/Ruud pigtails, Pro1 T705 on a heat pump, T6 Pro O/B.
+const THERMOSTAT_ADDITIONS = {
+ "add": {
+  "tst-ecobee-pek": {
+   "troubleshooting": [
+    {
+     "symptom": "PEK on a Rheem/Ruud air handler - no terminal board, just pigtails and wire nuts",
+     "causes": [
+      "Rheem/Ruud air handlers (e.g. RHAL/RHBL, HLL/HSL) bring low voltage out on pigtails joined to the field wiring with wire nuts, so the thermostat wires meet the equipment at splices, not on a board",
+      "The outdoor unit's wires share the C and Y splices (ecobee: the C and Y splices 'may have an extra wire in them - do not remove')"
+     ],
+     "fixes": [
+      "Use ecobee's 'Installing the PEK if there is a splice' procedure: shut off power, photograph the splices, label the wires on both sides, and find the C splice by following C (Common) from the control board",
+      "Move the thermostat-cable R, G, Y, W conductors one at a time into the PEK's R, G, Y, W inputs",
+      "Connect the PEK's five output leads to the matching splice points. Leave the extra wire in the C and Y splices - ecobee says it is needed for the AC/outdoor unit to run",
+      "At the ecobee (ecobee's Premium steps): R wire to the R terminal, the old G conductor to C, the old Y conductor to the PEK terminal (PEK+ on backplates that label it so), W to W1. Then restore power and let the thermostat run configuration",
+      "Heat pump: the PEK carries only R/G/Y/W. Per the Carrier-branded ecobee install guide (EB-STATE6CR), 'Additional wires would bypass the PEK and connect directly to the equipment' - O/B and AUX go straight through"
+     ]
+    },
+    {
+     "symptom": "Thermostat cable has no Y at the air handler - Y runs straight from the thermostat to the condenser",
+     "causes": [
+      "The PEK must sit where R, G, Y and W from the thermostat AND the equipment's C can all be connected; it separates the combined G/Y signal back into two wires at that point (ecobee support article and EB-STATE6CR guide)",
+      "Inferred, not an ecobee statement: if the condenser's Y conductor never passes through the air handler cabinet, there is no Y splice for the PEK's Y output lead to join",
+      "If the thermostat cable has no Y conductor at all, the PEK can't work - it needs at least Y, G and R (3 wires) or W, Y, G, R (4 wires); ecobee lists heat-only systems as not compatible"
+     ],
+     "fixes": [
+      "Trace Y first: if it is spliced to the outdoor cable anywhere at the air handler, install the PEK at that splice (keep the outdoor wire in the Y splice)",
+      "If Y truly goes direct to the condenser, ecobee's PEK procedure doesn't cover it - don't improvise. ecobee's documented alternatives: repurpose an unused spare wire as C (it must be connected to C at the equipment), run additional wire from the equipment's C, or third-party components",
+      "Have photos of the old thermostat wiring, the air handler pigtails/splices and the condenser low-voltage before calling ecobee support"
+     ]
+    },
+    {
+     "symptom": "Old heat pump thermostat has a wire on B and no C - is B the common?",
+     "causes": [
+      "ecobee notes a wire labeled B is sometimes actually the common",
+      "On Rheem/Ruud heat pumps B is NOT common: the outdoor unit's reversing valve pigtail goes to the thermostat's B terminal and is energized in HEAT",
+      "Only the Trane TCONT, XR and BAYSTAT/Weathertron thermostats with separate O and B are listed by ecobee as 'B goes to C'"
+     ],
+     "fixes": [
+      "Confirm at the equipment where the B conductor lands before calling it C - on a Rheem/Ruud heat pump it is the reversing valve",
+      "For a Rheem/Ruud heat pump, land that conductor on the ecobee's O/B terminal (ecobee: a lone B wire goes to O/B) and configure the reversing valve to energize on HEAT, not cool (older Smart Si wording: 'OB energize on cool' = No; current-model menu wording not verified)",
+      "Measure Rc to C at the thermostat with a meter that has metal probes (ecobee: no-contact testers may not be sensitive enough). Under 24 VAC: check the breaker/power switch, that the equipment access panel is secured (door switch), that C is actually connected at the control board, and the system fuse near the board"
+     ]
+    }
+   ],
+   "keySettings": [],
+   "techTips": [
+    {
+     "text": "ecobee's documented C-wire options: a real C wire; an unused spare wire repurposed as C (connected to the C connector at the equipment); the PEK; running additional wire from the equipment's C connector; or third-party components. Only two wires at the thermostat (R and W, or T and T) means no PEK - ecobee says it requires a third wire, so a new wire from the equipment C or third-party parts is needed.",
+     "source": "ecobee support: 'Installing your ecobee thermostat with the Power Extender Kit (no C wire)', 'Troubleshooting ecobee Clicking Noise and Power Issue', 'What types of HVAC systems are ecobee thermostats compatible with?'"
+    },
+    {
+     "text": "On Rheem/Ruud heat pumps the reversing valve is energized in HEAT and the outdoor pigtail is meant for the thermostat's B terminal. Configure the ecobee reversing valve to energize on heat, or it will heat in cooling mode.",
+     "source": "Rheem RP14AZ/RP15AZ, RP13-RP15 Endeavor and (-)P14AY/P15AY install instructions sec. 7.7 Reversing Valve; ecobee Smart Si install p.26 ('OB energize on cool' - current-model wording not verified)"
+    }
+   ]
+  },
+  "tst-pro1-t705": {
+   "troubleshooting": [
+    {
+     "symptom": "Heat pump blows warm in Cool (and cool in Heat)",
+     "causes": [
+      "Changeover wire on the wrong terminal. The T705 has NO O/B menu setting - it has separate O (energized in cooling) and B (energized in heating) terminals, and the terminal you land on IS the setting",
+      "Rheem/Ruud heat pumps energize the reversing valve in HEAT and need B; most other heat pumps use O",
+      "Reversing valve or its coil stuck - mechanical, not a thermostat problem"
+     ],
+     "fixes": [
+      "Check the heat pump's literature/diagram for which mode energizes the valve, then move the changeover wire to O or B",
+      "Confirm with a meter on a cooling call: a cool-changeover (O-type) valve should see 24 VAC on O; a heat-changeover (B-type, Rheem/Ruud) valve should see 24 VAC on B only on a heat call. (Follows from the T705 terminal definitions; Pro1 gives no meter procedure)",
+      "If the right terminal is used and it still heats in cooling, see scenario 'Heat pump stuck in one mode - won't switch between heat and cool' (s-hp-reversing-valve-stuck-onemode)"
+     ]
+    },
+    {
+     "symptom": "Electric heat runs during cooling / warm air on a cooling call (heat pump with strip heat on a T705)",
+     "causes": [
+      "The T705 is NOT rated for a heat pump with aux or emergency heat - its application guide says No",
+      "Check, don't assume: the heat pump wiring diagram jumpers W to Y, which makes W and Y one circuit, so a strip-heat wire landed on W would get 24 VAC whenever Y does - including cooling. Pro1 does not state this failure; it is inferred from the jumper. Resideo warns the same way for the T6 Pro: 'DO NOT CONNECT ANY WIRE TO W FOR HEAT PUMP APPLICATIONS'"
+     ],
+     "fixes": [
+      "With the system on a cooling call, meter the air handler's strip-heat (W/E/AUX) terminal to C: 24 VAC there with the compressor running proves the strips are being called. Then find which thermostat terminal that wire comes from",
+      "Remove any strip-heat conductor from the T705's W when the W-Y jumper is in place - the T705 cannot control aux heat",
+      "If the system has aux/emergency heat, replace the T705 with a Pro1 model whose application guide says 'Heat Pump (With Aux. or Emergency Heat): Yes': T725 (programmable, one-transformer only), T755 / T755H (programmable), T721 or T731 (non-programmable, one-transformer only), T751. Set its Heat Pump tech setting ON (default ON on T721/T725/T731, OFF on T751/T755)",
+      "Do not use the T715 for this - its application guide also says No for heat pump with aux"
+     ]
+    },
+    {
+     "symptom": "Blower doesn't come on with a heat pump heat call",
+     "causes": [
+      "Fan Operation tech setting left at the default GAS, where the equipment is expected to start the fan on a heat call",
+      "The manual's heat pump wiring diagram calls for Fan Operation set to Electric"
+     ],
+     "fixes": [
+      "Tech Set > Fan Operation: change GS to EL so the thermostat energizes G on a heat call"
+     ]
+    }
+   ],
+   "keySettings": [
+    {
+     "setting": "Changeover valve (O or B) - wiring choice, no menu item",
+     "options": "O terminal = energized in cooling; B terminal = energized in heating",
+     "notes": "Use either O or B per the heat pump (manual: 'Use either O or B terminals for changeover valve'). Rheem/Ruud = B. Heat pump with no aux only: jumper W to Y and set Fan Operation to ELEC."
+    }
+   ],
+   "techTips": [
+    {
+     "text": "T705 heat pump support is limited to heat pumps with NO aux or emergency heat (application guide: 'Heat Pump (With Aux. or Emergency Heat): No'; also 'Multi-Stage Systems: No'). Most air-handler heat pumps have strip heat - on those, the fix is a different thermostat, not a setting.",
+     "source": "Pro1 T705 Installation Manual Rev. 1751, p.1 Application Guide"
+    }
+   ]
+  },
+  "tst-honeywell-t6-pro": {
+   "troubleshooting": [
+    {
+     "symptom": "Heat pump heats in Cool mode and cools in Heat mode",
+     "causes": [
+      "ISU 218 Reversing Valve set opposite to what the heat pump needs: 0 = O/B energized in cool, 1 = O/B energized in heat",
+      "Some heat pumps use B rather than O - Rheem/Ruud heat pumps energize the reversing valve in HEAT",
+      "Different from 'Aux heat runs in cooling', which is a wire on W"
+     ],
+     "fixes": [
+      "Check the heat pump literature for whether the valve is energized in heat or cool, then set ISU 218 to match (B / O/B on Heat for Rheem/Ruud)",
+      "Confirm with a meter on a cooling call: 24 VAC on O/B in cooling is correct only for an O-type heat pump",
+      "If ISU 218 is right and it still heats in cool, suspect a stuck reversing valve"
+     ]
+    }
+   ],
+   "keySettings": [],
+   "techTips": []
+  },
+  "tst-honeywell-t6-pro-wifi": {
+   "troubleshooting": [
+    {
+     "symptom": "Heat pump heats in Cool mode and cools in Heat mode",
+     "causes": [
+      "ISU 218 Reversing Valve set opposite to what the heat pump needs (options O/B on Cool, O/B on Heat)",
+      "Some heat pumps use B rather than O - Rheem/Ruud heat pumps energize the reversing valve in HEAT",
+      "Different from 'Aux heat runs in cooling', which is a wire on W"
+     ],
+     "fixes": [
+      "Check the heat pump literature for whether the valve is energized in heat or cool, then set ISU 218 to match (B / O/B on Heat for Rheem/Ruud)",
+      "Confirm with a meter on a cooling call: 24 VAC on O/B in cooling is correct only for an O-type heat pump",
+      "If ISU 218 is right and it still heats in cool, suspect a stuck reversing valve"
+     ]
+    }
+   ],
+   "keySettings": [],
+   "techTips": []
+  },
+  "tst-honeywell-t6-pro-zwave": {
+   "troubleshooting": [
+    {
+     "symptom": "Heat pump heats in Cool mode and cools in Heat mode",
+     "causes": [
+      "ISU 218 Reversing Valve set opposite to what the heat pump needs: 0 = O/B on Cool (O wire), 1 = O/B on Heat (B wire)",
+      "Some heat pumps use B rather than O - Rheem/Ruud heat pumps energize the reversing valve in HEAT",
+      "Different from 'Aux heat runs in cooling', which is a wire on W"
+     ],
+     "fixes": [
+      "Check the heat pump literature for whether the valve is energized in heat or cool, then set ISU 218 to match (B / O/B on Heat for Rheem/Ruud)",
+      "Confirm with a meter on a cooling call: 24 VAC on O/B in cooling is correct only for an O-type heat pump",
+      "If ISU 218 is right and it still heats in cool, suspect a stuck reversing valve"
+     ]
+    }
+   ],
+   "keySettings": [],
+   "techTips": []
+  },
+  "tst-pro1-t715": {
+   "troubleshooting": [],
+   "keySettings": [],
+   "techTips": [
+    {
+     "text": "T715 application guide: 'Heat Pump (With Aux. or Emergency Heat): No' - it is rated only for a heat pump WITHOUT aux/emergency heat (its only heat pump diagram is 'Typical 2H/2C Heat Pump System w/o Aux.'). It has separate O and B terminals and no O/B setting, like the T705. For a heat pump with strip heat use a T721, T725, T731, T751 or T755.",
+     "source": "Pro1 T715 Installation Manual Rev. 1751, p.1 Application Guide and p.3 wiring diagrams"
+    }
+   ]
+  }
+ },
+ "newEntries": [
+  {
+   "id": "tst-honeywell-truezone-hz-panels",
+   "brand": "Honeywell Home",
+   "family": "TrueZONE zone panels (HZ221 / HZ311 / HZ322 / HZ432)",
+   "aka": "Resideo TrueZONE; kits HZ221K / HZ311K / HZ322K / HZ432K; Honeywell zone panel",
+   "models": [
+    "HZ221",
+    "HZ311",
+    "HZ322",
+    "HZ432",
+    "HZ221K",
+    "HZ311K",
+    "HZ322K",
+    "HZ432K"
+   ],
+   "type": "zone-control",
+   "stages": "HZ311: 1 heat / 1 cool conventional only, up to 3 zones (no O/B terminals - not a heat pump panel). HZ221: heat pump with aux (2H/1C), 2 zones. HZ322: conventional up to 2H/2C, or heat pump with 1-stage compressor + aux, or 2-stage heat pump with no aux; 2-3 zones. HZ432: up to 3H/2C conventional or heat pump, dual fuel (2 heat pump + 2 fossil stages); 2-4 zones, expandable to 32 with TAZ-4 Add-A-Zone panels (wired thermostats only).",
+   "sort": 40,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "",
+    "notes": "Each panel runs from its own dedicated 18-30 VAC transformer of 40 VA or more (panel R and C 'POWER' terminals). Panel draw per the install guides: HZ221 6.25 VA, HZ311 6.25 VA, HZ322 7.5 VA, HZ432 8.5 VA; THM4000R wireless adapter adds 2 VA. (The TrueZONE FAQ 50-9694 lists HZ322 and HZ432 at 10 VA - use the larger figure when sizing.) Size the transformer for panel + all dampers + wireless adapter; the FAQ says a 75 VA transformer may be used to run multiple dampers per zone. Wire the whole panel before applying transformer power."
+   },
+   "terminals": [
+    {
+     "t": "POWER R / C",
+     "fn": "Dedicated 24 VAC transformer for the panel",
+     "notes": "All models. 18-30 VAC, 40 VA or more."
+    },
+    {
+     "t": "Zone damper M1 / M4 / M6",
+     "fn": "M1 = damper common, M4 = open, M6 = closed (one set per zone)",
+     "notes": "All models. Spring-open/power-closed ARD and ZD dampers use M1 + M6 only (24 VAC on M1-M6 drives them closed). Power-open/power-closed RRD and MARD dampers use M1, M4 and M6. Multiple dampers may be wired in parallel on one zone."
+    },
+    {
+     "t": "Zone thermostat R, C, W, Y, G",
+     "fn": "Zone thermostat connections",
+     "notes": "HZ311 (each of zones 1-3)."
+    },
+    {
+     "t": "Zone thermostat R, C, E/AUX, Y, G, O, L",
+     "fn": "Zone thermostat connections",
+     "notes": "HZ221 (zones 1-2). Thermostats MUST be configured for O (cool changeover) on the HZ221 even if the heat pump uses B."
+    },
+    {
+     "t": "Zone thermostat R, C, W1/E, W2, Y1, Y2, G, O/B, L",
+     "fn": "Zone thermostat connections",
+     "notes": "HZ322 (zones 1-3). HZ432 adds W3 (zones 1-4)."
+    },
+    {
+     "t": "Equipment Rh, Rc, W, Y, G, DS/BK",
+     "fn": "To the furnace / air conditioner",
+     "notes": "HZ311. Rh-Rc jumper is removed only for oil heat with a separate cooling transformer."
+    },
+    {
+     "t": "Equipment R, C, E/Aux, Y, G, O, B, DS/BK, L",
+     "fn": "To the air handler and heat pump",
+     "notes": "HZ221. Land the heat pump's changeover wire on B if the heat pump changes over in heat; the zone thermostats still use O."
+    },
+    {
+     "t": "Equipment RH, RC, W1/E, W2, (W3), Y1, Y2, G, O, B, DS/BK",
+     "fn": "To the HVAC equipment",
+     "notes": "HZ322 and HZ432 (W3 on HZ432 only). RH-RC jumper: remove only for oil heat with a separate cooling transformer; otherwise leave it and wire to the HVAC R terminal."
+    },
+    {
+     "t": "DS/BK",
+     "fn": "Variable-speed blower low-speed signal",
+     "notes": "Wire to DS, BK, ODD or DHUM on the equipment. Per the FAQ: 0 VAC at DS/BK = panel wants low fan speed, 24 VAC = normal/high speed. HZ311 and HZ221 guides: low speed when only one zone calls for heat, cool or fan. HZ322 guide: low speed when only 1 zone calls for cooling. HZ432 guide: low speed when 1 zone or fewer than 25 percent of zones call for cooling."
+    },
+    {
+     "t": "SENSOR DATS / DATS",
+     "fn": "C7735A1000 discharge air temperature sensor (the panel's 'LAT' sensor)",
+     "notes": "All models."
+    },
+    {
+     "t": "SENSORS OT / OT",
+     "fn": "C7089U1006 wired outdoor air sensor",
+     "notes": "HZ432 only. Required for dual fuel; optional for multistage OT lockout. HZ322 reads outdoor temperature only through a wireless C7089R sensor + THM4000R."
+    },
+    {
+     "t": "WIRELESS A / B / C / D",
+     "fn": "THM4000R wireless adapter only",
+     "notes": "HZ322 and HZ432. Never wire a THM5320R or THM5421R EIM to these terminals - it damages the components."
+    },
+    {
+     "t": "ACCESSORIES AZ1 / AZ2",
+     "fn": "Labeled accessory terminals",
+     "notes": "HZ432 only. Not described in 69-2198; the guide sends more-than-4-zone wiring to the TAZ-4 Add-A-Zone instructions (form 69-1366)."
+    }
+   ],
+   "wiringNotes": [
+    "HZ311 and HZ432 differ a lot: the HZ311 has NO setup menu at all (fixed 2-minute purge, fixed DATS limits 160 F high / 45 F low, no O/B terminals, conventional 1H/1C only). The HZ432 (and HZ322) are set up from an LCD menu with a Mode button - there are no DIP switches, pots or jumpers on HZ322/HZ432.",
+    "Use 18-gauge (HZ311) or 18- to 20-gauge (HZ221/HZ322/HZ432) SOLID wire - push-in terminals; press the button on top of the terminal to release a wire.",
+    "Damper capacity per zone: 28.8 VA max at 100 F ambient, 16.8 VA max at 160 F. Current ARD/ZD actuators (M847D-ZONE) are 8 VA each (the HZ432 guide's table still lists 6 VA). Use an SDCR slave damper control relay to exceed the per-zone VA.",
+    "Heat pump on HZ322/HZ432: jump W1/E to W2 (2H/1C) or W1/E to W3 (HZ432 3H/2C) at the thermostat connections on all zones, per the heat pump diagrams. If the equipment has no separate E and auxiliary terminals, jumper E to W2 (or W3) on the panel and wire to E.",
+    "Reversing valve on HZ322/HZ432: the HZ432 diagram note reads 'FOR THERMOSTATS WITH SEPARATE O AND B TERMINALS, ATTACH O FOR COOL CHANGEOVER VALVES OR ATTACH B FOR HEAT CHANGEOVER VALVES' - the callout sits on the ZONE THERMOSTAT O/B input, so it tells you which thermostat wire (O or B) to land on the zone's O/B terminal. The panel's EQUIPMENT strip has separate O and B terminals; the HZ432/HZ322 heat pump diagrams show the reversing valve on O, and only the HZ221 guide states it outright: 'If heat pump uses changeover in heat mode, wire the changeover to B on equipment terminals.' Treat B-for-heat-changeover on HZ322/HZ432 as the same convention and verify at the panel with a meter (B should carry 24 VAC on a heat call). Rheem/Ruud heat pumps energize the valve in HEAT = B. Separately, set each wired zone's TSTAT TYPE to HTPUMP-O or HTPUMP-B to match how that zone thermostat is configured.",
+    "HZ221: the zone thermostats must be configured for O (cool changeover) even when the heat pump uses B; wire the heat pump changeover to B on the equipment terminals.",
+    "A conventional thermostat can run a heat pump through HZ322/HZ432, but em heat can then only be controlled by heat pump thermostats (HZ322 guide) or, per the HZ432 guide, by the panel's Emergency Heat button.",
+    "DATS location: supply trunk between the bypass damper and the coil/heat exchanger (between the zone dampers and the coil if there is no bypass), at least 3 ft from the plenum, and never near the heat exchanger or strip heat (false readings).",
+    "Dual fuel (HZ432 only) requires an outdoor sensor: C7089U1006 wired, or C7089R1013 wireless with THM4000R.",
+    "THM4000R wireless adapter limits the HZ432 to 4 zones; TAZ-4 Add-A-Zone cannot be used when RF ENABLED = YES."
+   ],
+   "setup": {
+    "access": "HZ322 / HZ432: press the Mode button until the CONFIG LED lights, use Back / Next to move through the menu and the Adjust Setting left/right arrows to change a value; Next enters the value and advances. Answer ADVANCED CONFIG = YES to reach the advanced items, and SAVE CHANGES = YES at the end or nothing is kept. HZ311 and HZ221: no configuration menu - only the PURGE OVERRIDE button (on the HZ221 it is the EMERGENCY HEAT / PURGE OVERRIDE button). These panels have NO DIP switches.",
+    "keySettings": [
+     {
+      "setting": "SYSTEM TYPE",
+      "options": "CONV / HEATPUMP (CONV is the bracketed selection in the guide's flowchart)",
+      "notes": "HZ322, HZ432. HEATPUMP then asks COMPRESSOR STAGES 1/2, AUX HT ENABLED YES/NO and (HZ432) DUAL FUEL OPER NO/YES + DFUEL HT STAGES. HZ322 will not offer aux heat with 2 compressor stages - the HZ432 is required for a 3H/2C heat pump. Note: the basic-config flowchart marks one option in brackets (CONV, 1 stage, OFF, RF ENABLED YES, ADVANCED CONFIG NO) but does not label those as defaults; only the Advanced Configuration table marks defaults (bold)."
+     },
+     {
+      "setting": "COOL STAGES / HEAT STAGES",
+      "options": "Cool 0, 1, 2; Heat 0, 1, 2 (HZ432 also 3). '1' is the bracketed flowchart selection",
+      "notes": "Conventional systems."
+     },
+     {
+      "setting": "ZONE n TSTAT TYPE",
+      "options": "RF or WIRED; for wired zones HTPUMP-O, HTPUMP-B or CONVENTIONAL",
+      "notes": "Asked for every zone. Must match the thermostat's own O/B configuration - a mismatch is a heat-in-cool / cool-in-heat suspect."
+     },
+     {
+      "setting": "STAGE 2 CONTROL / STAGE 3 CONTROL",
+      "options": "TSTAT, TIMER, % ZONES, OFF (OFF is the bracketed flowchart selection)",
+      "notes": "Stage 3 HZ432 only. Per the FAQ, % ZONES brings 2nd-stage cooling on when 50 percent or more of zones call, 2nd-stage heat when more than 25 percent of zones call, and 3rd-stage heat when more than 50 percent."
+     },
+     {
+      "setting": "HEAT FAN CONTROL",
+      "options": "HVAC (default) / PANEL",
+      "notes": "Advanced. In heat mode the fan is controlled by the equipment, or turned on by the panel on a call for heat."
+     },
+     {
+      "setting": "STAGE 2 TIMER / STAGE 3 TIMER",
+      "options": "5-60 min, default 5 min",
+      "notes": "Advanced. Stage 3 timer HZ432 only."
+     },
+     {
+      "setting": "PURGE TIME",
+      "options": "2 (default), 3.5, 5 min",
+      "notes": "Advanced, HZ322/HZ432. HZ311 and HZ221 purge is fixed at 2 minutes."
+     },
+     {
+      "setting": "FAN IN PURGE",
+      "options": "HVAC (default) / PANEL",
+      "notes": "Advanced. Per the FAQ the HZ311 does not turn on the fan during purge."
+     },
+     {
+      "setting": "PURGE DAMPERS",
+      "options": "UNCHANGD (default) / OPEN",
+      "notes": "Advanced. Dampers stay where they were, or all open, during purge."
+     },
+     {
+      "setting": "CHANGEOVER DELAY",
+      "options": "15, 20 (default), 30 min",
+      "notes": "Advanced. Delay before the panel switches between heat and cool when zones disagree - a heat call can wait this long."
+     },
+     {
+      "setting": "DISCHARGE SENSOR (DATS enabled)",
+      "options": "NO / YES",
+      "notes": "Advanced, HZ322/HZ432. If disabled, DAT MSTG INHIBIT is also disabled. Default not legible in the guide's table (no bold shown)."
+     },
+     {
+      "setting": "DAT HIGH LIMIT",
+      "options": "110-180 F, default 160 F",
+      "notes": "HZ322/HZ432. For furnaces set about 15 F below the furnace high limit. HZ311 is fixed at 160 F; HZ221 is fixed at 120 F (heat pump only) / 160 F (heat pump + aux)."
+     },
+     {
+      "setting": "DAT LOW LIMIT",
+      "options": "30-60 F, default 40 F",
+      "notes": "HZ322/HZ432. HZ311 and HZ221 are fixed at 45 F."
+     },
+     {
+      "setting": "DAT MSTG INHIBIT",
+      "options": "NO / YES (default YES)",
+      "notes": "Lets the panel drop to first stage when discharge air nears the high or low limit."
+     },
+     {
+      "setting": "OT SENSOR / MSTG OT LOCKOUT / OT LOCKOUT TEMP",
+      "options": "Sensor NO (default) / YES; lockout temp 0-50 F, default 50 F",
+      "notes": "Locks out 2nd/3rd stage heat above the OT lockout temperature (conventional and heat pump, not dual fuel). HZ322 needs a wireless C7089R + THM4000R for OT."
+     },
+     {
+      "setting": "OT BALANCE TEMP / DUALFUEL CHGOVR / CHANGEOVER DELAY (dual fuel)",
+      "options": "Balance 0-50 F, default 30 F; changeover OT (default) or MULTISTG; fossil changeover delay 15-180 min, default 30 min",
+      "notes": "HZ432 dual fuel only. In MULTISTG mode a 2nd-stage call above the balance point switches to fossil fuel: the install guide says for a minimum of one hour, the FAQ says the panel stays on fossil for three hours - the two Resideo documents disagree."
+     }
+    ],
+    "installerTest": "HZ322 / HZ432: with the cover off, press Mode until the CHECK OUT LED lights, then use Adjust Setting and Next. Steps: OT value, DATS value, heat stages test, EM heat test, cool stages test, fan test, a damper test for each zone (cycles OPEN/CLOSED with the fan on), then VIEW TSTAT INPUTS for each zone - shows which thermostat terminals are actually energized, with the HVAC off. Steps that test equipment and dampers energize those terminals. HZ311 / HZ221: no checkout menu; press PURGE OVERRIDE to end the purge during service.",
+    "factoryReset": ""
+   },
+   "techTips": [
+    {
+     "text": "James's 'zone 2 flashing red' call: no TrueZONE LED table defines a flashing RED zone LED. A zone LED is solid green (open/opening), solid red (closed/closing) or blinking AMBER - on HZ322/HZ432 that means the damper VA on that zone exceeds the zone rating or a short on that zone's damper or thermostat wiring tripped the zone's breaker; the HZ311 and HZ221 tables list only the short/breaker cause. The HZ311 and HZ221 cover labels say simply 'Zone LEDs: Green - Open, Red - Closed, Flashing - Short' with no color named, so a tech reading 'flashing red' is almost certainly seeing the amber short/overload blink. Treat it as a short or overload on that zone.",
+     "source": "Resideo 69-2198-09 HZ432 Table 6, 69-2199-11 HZ322 Table 7, 69-2069EFS-05 HZ311 Table 5 and cover label, 69-2200-03 HZ221 Table 5 and cover label"
+    },
+    {
+     "text": "Copper-colored pads beside each terminal are test points - put the meter probe on the pad instead of into the push-in terminal.",
+     "source": "Resideo TrueZONE Panel FAQ 50-9694"
+    },
+    {
+     "text": "The HZ221 is for heat pumps only. Its fixed DATS high limit is 120 F with the heat pump alone and 160 F with heat pump + aux; aux heat is disabled at 150 F. The HZ311's fixed 160 F high limit can be too high for furnaces with low limit settings - Resideo says to use the adjustable HZ322/HZ432 there.",
+     "source": "Resideo 69-2200-03 HZ221 LED table; 69-1521EFS-03 C7735A1000 DATS; 69-2069EFS-05 HZ311 specifications"
+    },
+    {
+     "text": "Purge-at-power-up: the install guides say the PURGE LED blinks for 3 minutes at power-up when no DATS is connected; the FAQ says two minutes. Either way, a purge LED that keeps blinking past that means a failed, open or shorted DATS.",
+     "source": "Resideo 69-2198-09 / 69-2199-11 LED tables vs FAQ 50-9694"
+    }
+   ],
+   "diagnostics": [
+    {
+     "code": "ZONE LED solid green",
+     "meaning": "That zone's damper is open or opening",
+     "action": "Normal. Spring-open ARD/ZD dampers should read 0 VAC across M1-M6 in this state."
+    },
+    {
+     "code": "ZONE LED solid red",
+     "meaning": "That zone's damper is closed or closing",
+     "action": "Normal when another zone is being served. Spring-open ARD/ZD dampers should read 24 VAC across M1-M6."
+    },
+    {
+     "code": "ZONE LED blinking amber (cover label: 'Flashing - Short'; often reported as 'flashing red')",
+     "meaning": "HZ322/HZ432: damper VA on that zone exceeds the zone rating, or a short on that zone's damper or thermostat wiring tripped the zone's circuit breaker. HZ311/HZ221: damper or thermostat short circuit (circuit breaker trip)",
+     "action": "Add up the damper VA on that zone (28.8 VA max at 100 F, 16.8 VA at 160 F; ARD/ZD M847D actuators 8 VA each) and inspect that zone's damper and thermostat wiring for a short. Use an SDCR for extra dampers."
+    },
+    {
+     "code": "HEAT / HEAT 1 LED solid",
+     "meaning": "Heat (stage 1) is on",
+     "action": ""
+    },
+    {
+     "code": "HEAT / HEAT 1 LED blinking",
+     "meaning": "DATS high limit reached (HZ311: fixed 160 F; HZ322/HZ432: adjustable). HZ221: blinking when DATS is over 120 F calling heat pump only, or over 160 F calling heat pump + aux",
+     "action": "Check airflow to the calling zone(s), bypass operation and the DAT HIGH LIMIT setting (about 15 F below the furnace limit). See the small-zone limit scenario."
+    },
+    {
+     "code": "HEAT 2 / HEAT 3 LED solid",
+     "meaning": "Heat stage 2 / 3 is on",
+     "action": "HEAT 3 on HZ432 only."
+    },
+    {
+     "code": "HEAT 2 / HEAT 3 LED blinking",
+     "meaning": "That stage is locked out by the DATS or by the outdoor temperature (OT) lockout",
+     "action": "Normal protective behavior; check DAT limits and OT LOCKOUT TEMP if 2nd stage never comes on."
+    },
+    {
+     "code": "COOL / COOL 1 LED blinking",
+     "meaning": "DATS low limit reached (HZ311/HZ221 fixed 45 F; HZ322/HZ432 adjustable)",
+     "action": "Check airflow and coil."
+    },
+    {
+     "code": "COOL 2 LED blinking",
+     "meaning": "Cool stage 2 locked out by the DATS",
+     "action": ""
+    },
+    {
+     "code": "PURGE LED solid",
+     "meaning": "Panel is purging - at power-up and after every heat or cool call (HZ311/HZ221 fixed 2 minutes; HZ322/HZ432 2, 3.5 or 5 minutes)",
+     "action": "Wait it out, or press PURGE OVERRIDE (HZ311/HZ221) during service."
+    },
+    {
+     "code": "PURGE LED blinking",
+     "meaning": "DATS has failed, or its wires are shorted or open. Also blinks for a few minutes at power-up if no DATS is connected",
+     "action": "Check the DATS wiring and compare the sensor's resistance against Table 1 in the C7735A1000 instructions (69-1521EFS). On HZ322/HZ432 a panel with no DATS installed can have DISCHARGE SENSOR set to NO."
+    },
+    {
+     "code": "FAN LED solid",
+     "meaning": "There is a call for fan",
+     "action": "If the blower should be off, find which zone's thermostat is calling G (Checkout > VIEW TSTAT INPUTS on HZ322/HZ432)."
+    },
+    {
+     "code": "EM HEAT LED solid",
+     "meaning": "Panel is in emergency heat mode - this does NOT mean there is a call for heat",
+     "action": "Emergency heat only runs when both HEAT and EM HEAT are lit."
+    },
+    {
+     "code": "Mode LEDs CONFIG / CHECK OUT / WIRELESS (HZ322, HZ432)",
+     "meaning": "Shows which menu mode the Mode button has selected",
+     "action": "HOME is the remaining position; its meaning is not described in the guides."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "Zone LED flashing ('zone 2 flashing red')",
+     "causes": [
+      "Blinking amber zone LED = damper VA on that zone is over the zone rating",
+      "Short on that zone's damper wiring or thermostat wiring tripped that zone's breaker",
+      "Too many dampers paralleled on one zone without an SDCR"
+     ],
+     "fixes": [
+      "Total the damper VA on that zone: 28.8 VA max at 100 F ambient, 16.8 VA max at 160 F (attic). ARD/ZD actuators are 8 VA each",
+      "Inspect that zone's damper run and thermostat cable for a short (pinched, stapled, or strands touching at the terminals)",
+      "Move extra dampers to an SDCR slave damper control relay",
+      "Confirm the panel transformer is sized for panel + all dampers (40 VA minimum; 75 VA allowed for multiple dampers per zone)"
+     ]
+    },
+    {
+     "symptom": "Zone damper stays open - zone over-heats or steals air (spring-open ARD/ZD)",
+     "causes": [
+      "Panel is not commanding the zone closed (zone LED green)",
+      "Panel commands closed (LED red) but 24 VAC is not reaching the actuator",
+      "Actuator, linkage or range stops not driving the blade closed",
+      "Older ARD/ZD with the 7/16 in. coupling: new actuator does not fit"
+     ],
+     "fixes": [
+      "Read the zone LED first: green = panel wants it open, red = panel wants it closed",
+      "With LED red, measure M1 to M6 on the panel's copper test pads - 24 VAC should be present; then measure at the actuator",
+      "24 VAC at the actuator and no movement after its rated 30 s drive time: check the range-stop levers (lower lever full left, upper lever full right) and the coupling, then replace the M847D-ZONE actuator",
+      "On HZ322/HZ432 use Checkout > TEST Zn DAMPER to cycle it OPEN/CLOSED",
+      "If the actuator won't fit an older-style damper, Resideo says replace the damper"
+     ]
+    },
+    {
+     "symptom": "Zone gets no air / damper stuck closed",
+     "causes": [
+      "Zone LED red while that zone calls = panel doesn't see the call",
+      "Spring-open damper still powered (24 VAC on M1-M6) when it should be open",
+      "Spring return or blade stuck, so it stays shut with power removed",
+      "Power-open/power-closed RRD or MARD not getting 24 VAC on M1-M4 (open)"
+     ],
+     "fixes": [
+      "HZ322/HZ432: Checkout > VIEW TSTAT INPUTS for that zone - if no terminals show active, the problem is the thermostat or its cable, not the damper",
+      "LED green: measure M1-M6 - a spring-open damper should have 0 VAC and spring open (about 10 s rated return); if 0 VAC and still shut, the blade/spring/actuator is bound",
+      "RRD/MARD: check M1-M4 for 24 VAC when the zone is open",
+      "See also the general scenario 'Zoning system - one zone gets no airflow / damper won't open'"
+     ]
+    },
+    {
+     "symptom": "Zone calls for heat but equipment doesn't start (or starts late)",
+     "causes": [
+      "Panel still in purge after the last call",
+      "Another zone is calling cool and the auto changeover delay (default 20 min on HZ322/HZ432) is running",
+      "Zone thermostat wiring or TSTAT TYPE wrong, so the panel doesn't read the call",
+      "2nd/3rd stage held off by stage timer, DATS or OT lockout"
+     ],
+     "fixes": [
+      "Watch the PURGE LED; HZ311/HZ221: press PURGE OVERRIDE during service",
+      "Check CHANGEOVER DELAY and whether any zone is calling the opposite mode",
+      "Checkout > VIEW TSTAT INPUTS confirms which terminals the zone thermostat is actually energizing",
+      "A blinking HEAT 2/HEAT 3 LED means that stage is locked out by DATS or OT - not a failure"
+     ]
+    },
+    {
+     "symptom": "Heat cycles off early / short heat cycles / HEAT LED blinking",
+     "causes": [
+      "Discharge air hit the DATS high limit (small zone calling, bypass not opening, dirty filter)",
+      "DAT HIGH LIMIT set at or above what the furnace can reach before its own limit",
+      "HZ311 fixed 160 F limit used on a furnace with a lower high limit",
+      "DATS mounted near the heat exchanger or strip heat (reads high)"
+     ],
+     "fixes": [
+      "Set DAT HIGH LIMIT about 15 F below the furnace high limit (HZ322/HZ432)",
+      "On furnaces with low limit settings use an HZ322/HZ432 instead of an HZ311",
+      "Relocate the DATS to the supply trunk past the bypass, at least 3 ft from the plenum, away from the heat exchanger/strips",
+      "Check bypass and small-zone airflow - see scenario 'Equipment tripping limits or freezing when only a small zone calls'"
+     ]
+    },
+    {
+     "symptom": "Zoned heat pump heats in cooling / cools in heating",
+     "causes": [
+      "Heat pump changeover wire on the wrong panel equipment terminal (O vs B)",
+      "Zone TSTAT TYPE set HTPUMP-O but the thermostat is configured B (or the reverse)",
+      "HZ221: zone thermostat configured for B (the HZ221 requires O at the thermostat)"
+     ],
+     "fixes": [
+      "Equipment side: the panel has separate O and B equipment terminals. HZ221 guide: wire a heat-changeover valve to B. HZ322/HZ432 diagrams show the valve on O and give no explicit B instruction - use B for a valve energized in heat (Rheem/Ruud) and confirm with a meter that B has 24 VAC on a heat call",
+      "Zone side: the HZ432 note 'ATTACH O FOR COOL CHANGEOVER VALVES OR ATTACH B FOR HEAT CHANGEOVER VALVES' is about the thermostat's O or B wire landing on the zone O/B terminal; then set that zone's TSTAT TYPE (HTPUMP-O / HTPUMP-B) to match the thermostat's own O/B setting",
+      "HZ221: configure every zone thermostat for O; wire the heat pump changeover to B on the equipment terminals if it changes over in heat"
+     ]
+    },
+    {
+     "symptom": "Emergency heat selected but no heat",
+     "causes": [
+      "EM HEAT LED only shows the mode, not a call",
+      "Conventional zone thermostats can't call em heat",
+      "Equipment has no separate E and AUX terminals and the E jumper wasn't added"
+     ],
+     "fixes": [
+      "Em heat runs only when HEAT and EM HEAT are both lit",
+      "With conventional thermostats use the panel's Emergency Heat button",
+      "Per the heat pump diagrams, jumper E to W2 (W3 on a 3H/2C HZ432) on the panel and wire to E when the equipment has no separate E and AUX"
+     ]
+    },
+    {
+     "symptom": "Blower keeps running after a zone satisfies",
+     "causes": [
+      "Normal purge (2-5 minutes depending on model/setting)",
+      "FAN IN PURGE = PANEL",
+      "A zone thermostat is calling fan (FAN LED solid)"
+     ],
+     "fixes": [
+      "Time it - purge ends on its own",
+      "Check FAN IN PURGE and HEAT FAN CONTROL in Advanced Config (HZ322/HZ432)",
+      "If the FAN LED stays lit, use VIEW TSTAT INPUTS to find the zone calling G",
+      "See scenarios 'Zone panel purge/blower-off delay mistaken for a fault' and 'Indoor blower never shuts off'"
+     ]
+    }
+   ],
+   "tips": [
+    "No DIP switches on any TrueZONE panel: HZ311/HZ221 are fixed, HZ322/HZ432 are menu-configured.",
+    "Zone LED: green = open, red = closed, blinking amber = short (zone breaker tripped) or, on HZ322/HZ432, damper VA overload. The cover label just says 'Flashing - Short'.",
+    "Spring-open ARD/ZD dampers: 24 VAC across M1-M6 = closed; 0 VAC = springs open.",
+    "PURGE blinking = bad, open or shorted DATS.",
+    "EM HEAT LED alone is not a heat call - em heat runs only with HEAT and EM HEAT both lit.",
+    "Heat pumps: valve on equipment O (cool changeover) or B (heat changeover - explicit only in the HZ221 guide) AND TSTAT TYPE HTPUMP-O/-B per zone; HZ221 thermostats must be configured O.",
+    "Measure on the copper test pads, not inside the push-in terminals."
+   ],
+   "manuals": [
+    {
+     "title": "HZ432 TrueZONE Zone Panel Professional Installation Guide (69-2198-09)",
+     "docType": "install",
+     "seedFile": "",
+     "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-2198.pdf"
+    },
+    {
+     "title": "HZ322 TrueZONE Zone Panel Professional Installation Guide (69-2199-11)",
+     "docType": "install",
+     "seedFile": "",
+     "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-2199.pdf"
+    },
+    {
+     "title": "HZ311 TrueZONE Zone Panel Professional Installation Guide (69-2069EFS-05)",
+     "docType": "install",
+     "seedFile": "",
+     "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-2069EFS.pdf"
+    },
+    {
+     "title": "HZ221 TrueZONE Zone Panel Professional Installation Guide (69-2200-03)",
+     "docType": "install",
+     "seedFile": "",
+     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2200.pdf"
+    },
+    {
+     "title": "TrueZONE Panel Frequently Asked Questions (50-9694)",
+     "docType": "spec",
+     "seedFile": "",
+     "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/50-9694.pdf"
+    },
+    {
+     "title": "C7735A1000 Duct Air Temperature Sensor (DATS) Installation Instructions (69-1521EFS-03)",
+     "docType": "install",
+     "seedFile": "",
+     "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-1521EFS.pdf"
+    },
+    {
+     "title": "TrueZone Direct Drive Damper Actuator M847D-ZONE / M847D-VENT (33-00038-03)",
+     "docType": "install",
+     "seedFile": "",
+     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00038.pdf"
+    },
+    {
+     "title": "ZD Series Damper Submittal Sheet (33-00264-02)",
+     "docType": "spec",
+     "seedFile": "",
+     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00264.pdf"
+    }
+   ],
+   "sourceNotes": "Resideo 69-2198-09 HZ432 Professional Installation Guide (2020); 69-2199-11 HZ322 Professional Installation Guide (2020); 69-2069EFS-05 HZ311 Professional Installation Guide (2020); 69-2200-03 HZ221 Professional Installation Guide; 50-9694 TrueZONE Panel FAQ (06/20); 69-1521EFS-03 C7735A1000 DATS; 33-00038-03 M847D actuator; 33-00264-02 ZD submittal. HZ322 heat-pump diagram notes are glyph-encoded in the PDF; the matching HZ432 notes were used instead. Verified 2026-10-12 against the local PDFs with PyMuPDF (defaults read from bold font in Table 5/6; DISCHARGE SENSOR has no bold default). HZ432 Fig. 13 note 2 (O vs B) is a zone-thermostat callout, not an equipment callout.",
+   "img": ""
+  }
+ ]
+};
+(function () {
+  for (const e of THERMOSTATS) {
+    const a = THERMOSTAT_ADDITIONS.add[e.id];
+    if (!a) continue;
+    e.troubleshooting = [...(e.troubleshooting || []), ...a.troubleshooting];
+    e.techTips = [...(e.techTips || []), ...a.techTips];
+    if (a.keySettings.length) { e.setup = e.setup || {}; e.setup.keySettings = [...(e.setup.keySettings || []), ...a.keySettings]; }
+  }
+  for (const n of THERMOSTAT_ADDITIONS.newEntries) if (!THERMOSTATS.some(e => e.id === n.id)) THERMOSTATS.push(n);
+})();
