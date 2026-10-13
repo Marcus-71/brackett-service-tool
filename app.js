@@ -10214,9 +10214,17 @@ async function openInAppCamera(inp) {
     cam.stream = await navigator.mediaDevices.getUserMedia({ audio: false,
       video: { facingMode: { ideal: "environment" }, width: { ideal: 4096 }, height: { ideal: 2160 } } });
   } catch (err) {
-    trackEvent("in-app camera could not start: " + String(err && (err.name || err.message) || err).slice(0, 60));
+    // v297 (Dave and Joe 10/13): the first time, closing Android's "Allow camera?"
+    // prompt also comes back NotAllowedError - the permission is still "ask", and
+    // tapping again brings the prompt back. Only a real "Don't allow" (denied)
+    // needs the phone's settings.
+    let perm = "";
+    if (err && err.name === "NotAllowedError") { try { perm = (await navigator.permissions.query({ name: "camera" })).state; } catch (e) {} }
+    trackEvent("in-app camera could not start: " + String(err && (err.name || err.message) || err).slice(0, 60) + (perm ? " (" + perm + ")" : ""));
     camMsg(err && err.name === "NotAllowedError"
-      ? "Camera permission is off for this app. Allow the camera in the phone's settings, or use the phone's camera below."
+      ? (perm === "denied"
+        ? "Camera permission is off for this app. Allow the camera in the phone's settings, or use the phone's camera below."
+        : "The phone didn't get an OK for the camera. Tap Cancel, take the photo again, and tap Allow when the phone asks. Or use the phone's camera below.")
       : "This phone's camera couldn't start inside the app. Use the phone's camera below.");
     return;
   }
@@ -11894,7 +11902,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v296";
+const APP_VERSION = "v297";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
