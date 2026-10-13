@@ -710,7 +710,8 @@ const MAINT_EQUIP_COMPAT = {
   "Condenser/Heat Pump": ["Condenser", "Heat Pump", "Condenser/Heat Pump"],
   "Air Handler": ["Air Handler", "Electric Furnace"],
   "Electric Furnace": ["Electric Furnace", "Air Handler"],
-  "Mini-Split": ["Mini-Split"]
+  "Mini-Split": ["Mini-Split"],
+  "Generator": ["Generator"]
 };
 function maintEsc(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
@@ -925,3 +926,3898 @@ function maintBody(entry) {
       ${typeof openManualsForModel === "function" ? `<button type="button" class="maint-manuals-btn" data-maint-manuals="${maintEsc(maintManualQuery(entry))}">📄 Manuals for this unit</button>` : ""}
     </div>`;
 }
+
+// v291 (2026-10-13): Generac air-cooled tune-up figures, one entry per Generators card
+// (genIds) - oil, filters, spark plug and gap, valve clearance, the no-oil tune-up kit
+// (same as genMaintKit), battery, service intervals - from each family's own manuals,
+// Fable-verified (scratch\gen-tuneup). Andy 9/29 asked for oil capacity and plug gap.
+const MAINT_GEN_TUNEUP = [
+ {
+  "brand": "Generac",
+  "model": "Generac Next Gen 10-28 kW (Power Zone 200)",
+  "equip": "Generator",
+  "summary": "Power Zone 200 (Field Pro app, no screen); G-Force 459 cc 10 kW, 817 cc 14-18 kW, 997 cc 22-28 kW; hydraulic lifters",
+  "genIds": [
+   "gen-generac-next-gen-10-28"
+  ],
+  "match": [
+   "G0072570",
+   "0072570",
+   "G0072580",
+   "0072580",
+   "G0072590",
+   "0072590",
+   "G0072600",
+   "0072600",
+   "G0072610",
+   "0072610",
+   "G0072820",
+   "0072820",
+   "G0073210",
+   "0073210",
+   "G0073230",
+   "0073230",
+   "G0073240",
+   "0073240",
+   "G0073241",
+   "0073241",
+   "G0073250",
+   "0073250",
+   "G0073251",
+   "0073251",
+   "G0073260",
+   "0073260",
+   "G0073261",
+   "0073261",
+   "G0073270",
+   "0073270",
+   "G0073280",
+   "0073280",
+   "G0073281",
+   "0073281",
+   "G0073290",
+   "0073290",
+   "G0073291",
+   "0073291",
+   "007257",
+   "007258",
+   "007259",
+   "007260",
+   "007261",
+   "007282",
+   "007321",
+   "007323",
+   "007324",
+   "007325",
+   "007326",
+   "007327",
+   "007328",
+   "007329",
+   "G007257",
+   "G007258",
+   "G007259",
+   "G007260",
+   "G007261",
+   "G007282",
+   "G007321",
+   "G007323",
+   "G007324",
+   "G007325",
+   "G007326",
+   "G007327",
+   "G007328",
+   "G007329"
+  ],
+  "source": "Generac owner's manual A0004332577; PZ200 diagnostic manual A0004542981 Rev E; 459/817/997 cc engine manuals; spec sheets A0005151081, A0005151077",
+  "flags": [
+   {
+    "title": "Battery group differs between documents",
+    "body": "Owner's and Rev E dealer manuals: BTX30L, 400 CCA. The 10-18 kW spec sheet A0005151081 and an older repair-manual page print BTX20L, 310 CCA. Check what is fitted; kit G00735230 is the bracket for going from 20L to 30L."
+   },
+   {
+    "title": "Oil after break-in",
+    "body": "The owner's manual recommends Generac 5W-20 GEO. The dealer manual's spec note says convert to full synthetic after 25 hours. Neither is the 5W-30 synthetic used on Evolution units."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Plug torque: dealer and engine manuals give a range, 14.8-22.1 ft-lb (20-30 Nm); the 459 cc engine manual maintenance page says 168 in-lb (18.9 Nm). 997 cc engine manual prints 2.3 qt without filter, more than the 2.2 qt with filter - fill to the dipstick."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 10 kW (459 cc)",
+      "value": "G006482-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 14-28 kW (817 and 997 cc)",
+      "value": "G007216-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Generac 5W-20 gaseous engine oil (GEO) after 25-hr break-in; API SJ, SL or better"
+     },
+     {
+      "label": "Oil capacity - 10 kW (459 cc)",
+      "value": "Approx. 1.4 qt (1.3 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 14-18 kW (817 cc)",
+      "value": "Approx. 2.5 qt (2.4 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 22-28 kW (997 cc)",
+      "value": "Approx. 2.2 qt (2.1 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185ES"
+     },
+     {
+      "label": "Air filter - 10 kW",
+      "value": "0E9371AS"
+     },
+     {
+      "label": "Air filter - 14-28 kW",
+      "value": "0J8478S"
+     },
+     {
+      "label": "Spark plug",
+      "value": "A0003637864 (all kW)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.020 in (0.508 mm), all kW",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "Hydraulic lifters - no adjustment (all kW)"
+     },
+     {
+      "label": "Battery",
+      "value": "AGM Powersport BTX30L, 400 CCA min (A0010137451 or A0010137452)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 25 hrs (Schedule C)",
+      "value": "Oil and oil filter change"
+     },
+     {
+      "label": "Every year",
+      "value": "Water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil, oil filter, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, battery check, air filter, spark plugs"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian Next Gen 22-25 kW Y32 (Power Zone 200)",
+  "equip": "Generator",
+  "summary": "Power Zone 200 (Field Pro app, no screen); G-Force 1000 997 cc, hydraulic lifters; 22 and 25 kW",
+  "genIds": [
+   "gen-guardian-next-gen-22-25-y32"
+  ],
+  "match": [
+   "G0072680",
+   "0072680",
+   "G0072690",
+   "0072690",
+   "007268",
+   "007269",
+   "G007268",
+   "G007269"
+  ],
+  "source": "Guardian owner's manual A0010224539 (Y32); PZ200 diagnostic manual A0004542981 Rev E; 997 cc engine manual A0005618620; spec sheet A0010224535",
+  "flags": [
+   {
+    "title": "Battery group differs between documents",
+    "body": "Owner's and Rev E dealer manuals: BTX30L, 400 CCA. This family's own Y32 spec sheet A0010224535 and an older repair-manual page print BTX20L, 310 CCA. Check what is fitted; kit G00735230 is the 20L-to-30L bracket."
+   },
+   {
+    "title": "Oil after break-in",
+    "body": "The owner's manual recommends Generac 5W-20 GEO. The dealer manual's spec note says convert to full synthetic after 25 hours."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Plug torque: dealer and engine manuals give a 14.8-22.1 ft-lb (20-30 Nm) range. The 997 cc engine manual prints 2.3 qt without filter, more than 2.2 qt with filter - fill to the dipstick."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 22 and 25 kW",
+      "value": "G007216-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Generac 5W-20 gaseous engine oil (GEO) after 25-hr break-in; API SJ, SL or better"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 2.2 qt (2.1 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185ES"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478S"
+     },
+     {
+      "label": "Spark plug",
+      "value": "A0003637864"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "Hydraulic lifters - no adjustment"
+     },
+     {
+      "label": "Battery",
+      "value": "AGM Powersport BTX30L, 400 CCA min (A0010137451 or A0010137452)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 25 hrs (Schedule C)",
+      "value": "Oil and oil filter change"
+     },
+     {
+      "label": "Every year",
+      "value": "Water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil, oil filter, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, battery check, air filter, spark plugs"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Generac Next Gen 20 kW 3-phase (Power Zone 200)",
+  "equip": "Generator",
+  "summary": "Power Zone 200 (Field Pro app, no screen); G-Force 1000 997 cc, hydraulic lifters; 20 kW 208 V 3-phase",
+  "genIds": [
+   "gen-generac-next-gen-20-3ph"
+  ],
+  "match": [
+   "G0072710",
+   "0072710",
+   "007271",
+   "G007271"
+  ],
+  "source": "Generac 3-phase owner's manual A0005171487; PZ200 diagnostic manual A0004542981 Rev E; 997 cc engine manual A0005618620",
+  "flags": [
+   {
+    "title": "Oil after break-in",
+    "body": "The owner's manual recommends Generac 5W-20 GEO. The dealer manual's spec note says convert to full synthetic after 25 hours."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Plug torque: dealer and engine manuals give a 14.8-22.1 ft-lb (20-30 Nm) range. The 997 cc engine manual prints 2.3 qt without filter, more than 2.2 qt with filter - fill to the dipstick."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "G007216-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Generac 5W-20 gaseous engine oil (GEO) after 25-hr break-in; API SJ, SL or better"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 2.2 qt (2.1 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185ES"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478S"
+     },
+     {
+      "label": "Spark plug",
+      "value": "A0003637864"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "Hydraulic lifters - no adjustment"
+     },
+     {
+      "label": "Battery",
+      "value": "AGM Powersport BTX30L, 400 CCA min (A0010137451 or A0010137452)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 25 hrs (Schedule C)",
+      "value": "Oil and oil filter change"
+     },
+     {
+      "label": "Every year",
+      "value": "Water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil, oil filter, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, battery check, air filter, spark plugs"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 9-22 kW (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0; GH-426 426 cc 9 kW, GTH-530 530 cc 11 kW, GT-999 999 cc 16-22 kW (Guardian, Honeywell, Eaton, Siemens badges)",
+  "genIds": [
+   "gen-guardian-evo2-9-22"
+  ],
+  "match": [
+   "G0070290",
+   "0070290",
+   "G0070291",
+   "0070291",
+   "G0070300",
+   "0070300",
+   "G0070301",
+   "0070301",
+   "G0070310",
+   "0070310",
+   "G0070311",
+   "0070311",
+   "G0070320",
+   "0070320",
+   "G0070321",
+   "0070321",
+   "G0070330",
+   "0070330",
+   "G0070331",
+   "0070331",
+   "G0070350",
+   "0070350",
+   "G0070351",
+   "0070351",
+   "G0070360",
+   "0070360",
+   "G0070361",
+   "0070361",
+   "G0070370",
+   "0070370",
+   "G0070371",
+   "0070371",
+   "G0070380",
+   "0070380",
+   "G0070381",
+   "0070381",
+   "G0070390",
+   "0070390",
+   "G0070391",
+   "0070391",
+   "G0070420",
+   "0070420",
+   "G0070421",
+   "0070421",
+   "G0070422",
+   "0070422",
+   "G0070428",
+   "0070428",
+   "G0070430",
+   "0070430",
+   "G0070431",
+   "0070431",
+   "G0070432",
+   "0070432",
+   "G0070438",
+   "0070438",
+   "G0070570",
+   "0070570",
+   "G0070571",
+   "0070571",
+   "G0070580",
+   "0070580",
+   "G0070581",
+   "0070581",
+   "G0070590",
+   "0070590",
+   "G0070591",
+   "0070591",
+   "G0070600",
+   "0070600",
+   "G0070610",
+   "0070610",
+   "G0070620",
+   "0070620",
+   "G0070621",
+   "0070621",
+   "G0070630",
+   "0070630",
+   "G0070631",
+   "0070631",
+   "G0070632",
+   "0070632",
+   "G0070650",
+   "0070650",
+   "G0070651",
+   "0070651",
+   "G0070652",
+   "0070652",
+   "G0070658",
+   "0070658",
+   "G0070660",
+   "0070660",
+   "G0070670",
+   "0070670",
+   "G0070680",
+   "0070680",
+   "G0070690",
+   "0070690",
+   "G0070700",
+   "0070700",
+   "G0070701",
+   "0070701",
+   "G0070710",
+   "0070710",
+   "G0070711",
+   "0070711",
+   "G0070720",
+   "0070720",
+   "G0070721",
+   "0070721",
+   "G0070730",
+   "0070730",
+   "G0070731",
+   "0070731",
+   "G0070740",
+   "0070740",
+   "G0070741",
+   "0070741",
+   "G0070750",
+   "0070750",
+   "G0070751",
+   "0070751",
+   "G0070752",
+   "0070752",
+   "G0071400",
+   "0071400",
+   "007029",
+   "007030",
+   "007031",
+   "007032",
+   "007033",
+   "007035",
+   "007036",
+   "007037",
+   "007057",
+   "007058",
+   "007059",
+   "007060",
+   "007061",
+   "007066",
+   "007067",
+   "007068",
+   "007069",
+   "007070",
+   "007071",
+   "007072",
+   "007073",
+   "007074",
+   "007075",
+   "007140",
+   "G007029",
+   "G007030",
+   "G007031",
+   "G007032",
+   "G007033",
+   "G007035",
+   "G007036",
+   "G007037",
+   "G007057",
+   "G007058",
+   "G007059",
+   "G007060",
+   "G007061",
+   "G007066",
+   "G007067",
+   "G007068",
+   "G007069",
+   "G007070",
+   "G007071",
+   "G007072",
+   "G007073",
+   "G007074",
+   "G007075",
+   "G007140"
+  ],
+  "source": "Guardian owner's manual 0L6629 (Y20); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "9 kW plug part number",
+    "body": "Owner's manual: 0G0767B. Evolution dealer manual 10000041488 Table 1-3: 0G0767A. Both RC12YC at 0.020 in - match the plug fitted."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 9 kW (426 cc)",
+      "value": "G006482-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 11 kW (530 cc)",
+      "value": "G006483-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 16-22 kW (999 cc)",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic SAE 5W-30, all temperatures (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity - 9 kW (426 cc)",
+      "value": "Approx. 1.1 qt (1.03 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 11 kW (530 cc)",
+      "value": "Approx. 1.7 qt (1.6 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 16-22 kW (999 cc)",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter - 9 and 11 kW",
+      "value": "0E9371A"
+     },
+     {
+      "label": "Air filter - 16-22 kW",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug - 9 kW",
+      "value": "0G0767B (RC12YC)"
+     },
+     {
+      "label": "Spark plug - 11 kW",
+      "value": "0E9368 (RL87YC)"
+     },
+     {
+      "label": "Spark plug - 16-22 kW",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Plug gap - 9 kW",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 11 kW",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 16-22 kW",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold, all kW"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 13-20 kW compact re-rate (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0; G-Force 800 816 cc 13 and 16 kW (hydraulic lifters), G-Force 1000 999 cc 20 kW",
+  "genIds": [
+   "gen-guardian-evo2-10-22-compact"
+  ],
+  "match": [
+   "G0070383",
+   "0070383",
+   "G0071730",
+   "0071730",
+   "G0071740",
+   "0071740",
+   "G0071750",
+   "0071750",
+   "G0071760",
+   "0071760",
+   "G0071770",
+   "0071770",
+   "G0071780",
+   "0071780",
+   "G0071800",
+   "0071800",
+   "G0071810",
+   "0071810",
+   "G0071820",
+   "0071820",
+   "007173",
+   "007174",
+   "007175",
+   "007176",
+   "007177",
+   "007178",
+   "007180",
+   "007181",
+   "007182",
+   "G007173",
+   "G007174",
+   "G007175",
+   "G007176",
+   "G007177",
+   "G007178",
+   "G007180",
+   "G007181",
+   "G007182"
+  ],
+  "source": "Guardian owner's manual 10000024942 (10-22 kW Y20); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; GH816 and GTH 990/1000 engine manuals",
+  "flags": [
+   {
+    "title": "13 and 16 kW (816 cc) plug part number",
+    "body": "Owner's manual: 0G0767B. Evolution dealer manual 10000041488 Table 1-3: 0G0767A. Both RC12YC at 0.020 in - match the plug fitted."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). GH816 engine manual gives plug torque as a range, 14.8-22.1 ft-lb. Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 13 and 16 kW (816 cc)",
+      "value": "G007216-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 20 kW (999 cc)",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic SAE 5W-30, all temperatures (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity - 13 and 16 kW (816 cc)",
+      "value": "Approx. 2.2 qt (2.1 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 20 kW (999 cc)",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug - 13 and 16 kW",
+      "value": "0G0767B (RC12YC)"
+     },
+     {
+      "label": "Spark plug - 20 kW",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Plug gap - 13 and 16 kW",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 20 kW",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance - 13 and 16 kW",
+      "value": "Hydraulic lifters - no adjustment"
+     },
+     {
+      "label": "Valve clearance - 20 kW",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs; valve clearance on 20 kW"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; valve check on 20 kW (not 816 cc)"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 10-26 kW (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0; G-Force 400 460 cc 10 kW, G-Force 800 816 cc 14-18 kW (hydraulic lifters), G-Force 1000 999 cc 20-26 kW",
+  "genIds": [
+   "gen-guardian-evo2-10-26"
+  ],
+  "match": [
+   "G0070393",
+   "0070393",
+   "G0070423",
+   "0070423",
+   "G0070429",
+   "0070429",
+   "G0070433",
+   "0070433",
+   "G0070439",
+   "0070439",
+   "G0070623",
+   "0070623",
+   "G0070633",
+   "0070633",
+   "G0070653",
+   "0070653",
+   "G0070659",
+   "0070659",
+   "G0071710",
+   "0071710",
+   "G0071719",
+   "0071719",
+   "G0071720",
+   "0071720",
+   "G0071729",
+   "0071729",
+   "G0071790",
+   "0071790",
+   "G0071799",
+   "0071799",
+   "G0072090",
+   "0072090",
+   "G0072099",
+   "0072099",
+   "G0072100",
+   "0072100",
+   "G0072101",
+   "0072101",
+   "G0072109",
+   "0072109",
+   "G0072130",
+   "0072130",
+   "G0072139",
+   "0072139",
+   "G0072230",
+   "0072230",
+   "G0072239",
+   "0072239",
+   "G0072240",
+   "0072240",
+   "G0072249",
+   "0072249",
+   "G0072250",
+   "0072250",
+   "G0072259",
+   "0072259",
+   "G0072260",
+   "0072260",
+   "G0072269",
+   "0072269",
+   "G0072280",
+   "0072280",
+   "G0072289",
+   "0072289",
+   "G0072290",
+   "0072290",
+   "G0072299",
+   "0072299",
+   "G0072300",
+   "0072300",
+   "G0072309",
+   "0072309",
+   "G0072310",
+   "0072310",
+   "G0072319",
+   "0072319",
+   "G0072350",
+   "0072350",
+   "G0072359",
+   "0072359",
+   "G0072360",
+   "0072360",
+   "G0072369",
+   "0072369",
+   "G0072900",
+   "0072900",
+   "G0072909",
+   "0072909",
+   "G0072910",
+   "0072910",
+   "G0072919",
+   "0072919",
+   "G0072920",
+   "0072920",
+   "G0072929",
+   "0072929",
+   "G0073120",
+   "0073120",
+   "007171",
+   "007172",
+   "007179",
+   "007209",
+   "007210",
+   "007213",
+   "007223",
+   "007224",
+   "007225",
+   "007226",
+   "007228",
+   "007229",
+   "007230",
+   "007231",
+   "007235",
+   "007236",
+   "007290",
+   "007291",
+   "007292",
+   "007312",
+   "G007171",
+   "G007172",
+   "G007179",
+   "G007209",
+   "G007210",
+   "G007213",
+   "G007223",
+   "G007224",
+   "G007225",
+   "G007226",
+   "G007228",
+   "G007229",
+   "G007230",
+   "G007231",
+   "G007235",
+   "G007236",
+   "G007290",
+   "G007291",
+   "G007292",
+   "G007312"
+  ],
+  "source": "Guardian owner's manual A0001846499 Rev C (10-26 kW Y20); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; 426/460, GH816 and GTH 990/1000 engine manuals",
+  "flags": [
+   {
+    "title": "Oil type: owner's manual says 5W-20 GEO",
+    "body": "This owner's manual (A0001846499 Rev C, 2023) recommends Generac 5W-20 gaseous engine oil after the 25-hr break-in. The generator card and the older Evolution manuals say synthetic 5W-30."
+   },
+   {
+    "title": "10-18 kW plug part number",
+    "body": "Owner's manual: 0G0767B for 460 and 816 cc. Evolution dealer manual 10000041488 Table 1-3: 0G0767A. Both RC12YC at 0.020 in - match the plug fitted."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both. Filter numbers print with and without the S suffix in this manual (0E9371AS or 0E9371A, 0J8478S or 0J8478)."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 10 kW (460 cc)",
+      "value": "G006482-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 14 and 18 kW (816 cc)",
+      "value": "G007216-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 20-26 kW (999 cc)",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Generac 5W-20 gaseous engine oil (GEO) after 25-hr break-in; API SJ, SL or better"
+     },
+     {
+      "label": "Oil capacity - 10 kW (460 cc)",
+      "value": "Approx. 1.1 qt (1.03 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 14 and 18 kW (816 cc)",
+      "value": "Approx. 2.2 qt (2.1 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 20-26 kW (999 cc)",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185ES"
+     },
+     {
+      "label": "Air filter - 10 kW",
+      "value": "0E9371AS"
+     },
+     {
+      "label": "Air filter - 14-26 kW",
+      "value": "0J8478S"
+     },
+     {
+      "label": "Spark plug - 10-18 kW (460 and 816 cc)",
+      "value": "0G0767B"
+     },
+     {
+      "label": "Spark plug - 20-26 kW (999 cc)",
+      "value": "0G0767A"
+     },
+     {
+      "label": "Plug gap - 10-18 kW",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 20-26 kW",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance - 10 kW and 20-26 kW",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Valve clearance - 14 and 18 kW",
+      "value": "Hydraulic lifters - no adjustment"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil, oil filter, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs; valve clearance except 14 and 18 kW"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; valve check except 14 and 18 kW"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Response Series 16 and 22 kW (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0; G-Force 1000 999 cc 16 and 22 kW (one 16 kW model, G0072170, lists an 816 cc engine)",
+  "genIds": [
+   "gen-guardian-evo2-response-16-22"
+  ],
+  "match": [
+   "G0071410",
+   "0071410",
+   "G0071411",
+   "0071411",
+   "G0071420",
+   "0071420",
+   "G0071421",
+   "0071421",
+   "G0072170",
+   "0072170",
+   "G0072180",
+   "0072180",
+   "G0072189",
+   "0072189",
+   "007141",
+   "007142",
+   "007217",
+   "007218",
+   "Response Series",
+   "G007141",
+   "G007142",
+   "G007217",
+   "G007218"
+  ],
+  "source": "Response owner's manual 10000018942 (Y20); Evolution dealer manual 10000041488 Rev C (816 cc row); GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "G0072170 is a 16 kW 816 cc unit",
+    "body": "The Response owner's manual covers only the 999 cc engine. The 816 cc rows come from Evolution dealer manual 10000041488 Table 1-3. The Guardian 10-26 kW owner's manual prints plug 0G0767B for the 816 cc, not 0G0767A. Check the engine on the data label."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 16 and 22 kW (999 cc)",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 16 kW 816 cc (G0072170)",
+      "value": "G007216-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic SAE 5W-30, all temperatures (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity - 999 cc",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 816 cc (G0072170)",
+      "value": "Approx. 2.2 qt (2.1 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug - 999 cc",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Spark plug - 816 cc (G0072170)",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Plug gap - 999 cc",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 816 cc (G0072170)",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance - 999 cc",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Valve clearance - 816 cc (G0072170)",
+      "value": "Hydraulic lifters - no adjustment"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance (999 cc)"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "DR 11 and 20 kW (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0, DR badge; GTH-530 530 cc 11 kW, G-Force 1000 999 cc 20 kW",
+  "genIds": [
+   "gen-guardian-evo2-dr-11-20"
+  ],
+  "match": [
+   "G0071640",
+   "0071640",
+   "G0071650",
+   "0071650",
+   "007164",
+   "007165",
+   "G007164",
+   "G007165"
+  ],
+  "source": "DR owner's manual 10000027504 (Y25); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 11 kW (530 cc)",
+      "value": "G006483-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 20 kW (999 cc)",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic SAE 5W-30, all temperatures (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity - 11 kW (530 cc)",
+      "value": "Approx. 1.7 qt (1.6 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 20 kW (999 cc)",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter - 11 kW",
+      "value": "0E9371A"
+     },
+     {
+      "label": "Air filter - 20 kW",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug - 11 kW",
+      "value": "0E9368 (RL87YC)"
+     },
+     {
+      "label": "Spark plug - 20 kW",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Plug gap - 11 kW",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 20 kW",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold, both kW"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Powermate 11 kW (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0, Powermate badge; GTH-530 530 cc, 11 kW",
+  "genIds": [
+   "gen-guardian-evo2-powermate-11"
+  ],
+  "match": [
+   "G0071660",
+   "0071660",
+   "007166",
+   "Powermate",
+   "G007166"
+  ],
+  "source": "Powermate owner's manual 10000027540 (11-20 kW Y19); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M",
+  "flags": [
+   {
+    "title": "No tune-up kit in the app table",
+    "body": "GEN_MAINT_KITS has no row for this family, so no kit number is shown. Check GenService before ordering."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "Not listed - check GenService",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic SAE 5W-30, all temperatures (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.7 qt (1.6 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0E9371A"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0E9368 (RL87YC)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Synergy Evo 2.0 20 kW (999 cc VSCF)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0 Synergy variable-speed; G-Force 1000 999 cc; 20 kW; has an AVR filter and brushes",
+  "genIds": [
+   "gen-synergy-evo2-20"
+  ],
+  "match": [
+   "G0070400",
+   "0070400",
+   "G0070410",
+   "0070410",
+   "007040",
+   "007041",
+   "G007040",
+   "G007041"
+  ],
+  "source": "Synergy owner's manual 0L6631 (Y20); Synergy/EcoGen dealer manual 0K9138 Rev B; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "G006829-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic SAE 5W-30, all temperatures (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "AVR filter",
+      "value": "0K3054"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0G0767A"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter, AVR filter, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Schedule A plus air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "Every 1000 hrs",
+      "value": "Replace brushes"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; adjust valve clearance"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "EcoGen Evo 2.0 15 kW (999 cc)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0 EcoGen extended-run; G-Force 1000 999 cc; 15 kW; large oil system, rotor brushes",
+  "genIds": [
+   "gen-ecogen-evo2-15"
+  ],
+  "match": [
+   "G0070340",
+   "0070340",
+   "G0071630",
+   "0071630",
+   "007034",
+   "007163",
+   "G007034",
+   "G007163"
+  ],
+  "source": "EcoGen owner's manual 10000032217 (Y20); Synergy/EcoGen dealer manual 0K9138 Rev B; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Oil type: owner's manual says 5W-20 GEO",
+    "body": "This owner's manual recommends Generac 5W-20 gaseous engine oil after the 25-hr break-in. The generator card says synthetic 5W-30."
+   },
+   {
+    "title": "Longer service hours than standard Evolution",
+    "body": "Schedule A is every 2 years or 500 hrs and Schedule B every 4 years or 1000 hrs."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "GTH 990/1000 engine manual plug torque is 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "G006829-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Generac 5W-20 gaseous engine oil (GEO) after 25-hr break-in; API SJ, SL or better"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 3.75 qt (3.55 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug",
+      "value": "A0002081582"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     },
+     {
+      "label": "Rotor brushes",
+      "value": "0J8415"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 500 hrs",
+      "value": "Oil and oil filter, air filter, valve clearance, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 1000 hrs",
+      "value": "Schedule A plus spark plugs and rotor brushes"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check valve clearance"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 20 kW 3-phase (Evolution 2.0)",
+  "equip": "Generator",
+  "summary": "Evolution 2.0; G-Force 1000 999 cc; 20 kW 208 V 3-phase",
+  "genIds": [
+   "gen-guardian-evo2-20-3ph"
+  ],
+  "match": [
+   "G0070770",
+   "0070770",
+   "G0070771",
+   "0070771",
+   "007077",
+   "G007077"
+  ],
+  "source": "Owner's manual 10000014077 (20 kW 3-phase Y20); 3-phase dealer manual 10000014636 Rev A; Evolution dealer manual 10000041488 Rev C; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Plug gap differs: 0.040 vs 0.030 in",
+    "body": "Owner's manual: 0.040 in (1.02 mm). The 3-phase dealer manual 10000014636 Table 3-9: RC12YC at 0.030 in. The GTH 1000 engine manual says 0.040 in. Check the plug and decal."
+   },
+   {
+    "title": "Oil type: owner's manual says 5W-20 GEO",
+    "body": "This owner's manual recommends Generac 5W-20 gaseous engine oil after the 25-hr break-in. The generator card says synthetic 5W-30."
+   },
+   {
+    "title": "Plug part number differs",
+    "body": "Owner's manual parts table: A0002081582. Evolution dealer manual 10000041488 (999 cc row): 0G0767A."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the Evolution dealer manual 0H9172 lists a lower 26R minimum, 525 CCA. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Generac 5W-20 gaseous engine oil (GEO) after 25-hr break-in; API SJ, SL or better"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug",
+      "value": "A0002081582"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R 540 CCA min (0H3421S) or Group 35 AGM 650 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion; fuel system leak test"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 8 kW GH-410 (Evolution 1.0)",
+  "equip": "Generator",
+  "summary": "Evolution 1.0 (also Sync badges); GH-410 410 cc single cylinder; 8 kW (Guardian, Centurion, Siemens, Eaton, Honeywell)",
+  "genIds": [
+   "gen-guardian-evo1-8"
+  ],
+  "match": [
+   "G0062370",
+   "0062370",
+   "G0062371",
+   "0062371",
+   "G0062450",
+   "0062450",
+   "G0062510",
+   "0062510",
+   "G0062630",
+   "0062630",
+   "G0062720",
+   "0062720",
+   "G0067030",
+   "0067030",
+   "006237",
+   "006245",
+   "006251",
+   "006263",
+   "006272",
+   "006703",
+   "G006237",
+   "G006245",
+   "G006251",
+   "G006263",
+   "G006272",
+   "G006703"
+  ],
+  "source": "Evolution owner's manuals 0K5801 Rev G and 0J9943 Rev G (2013); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; GN/GSH-410 engine manual 0C1103A",
+  "flags": [
+   {
+    "title": "Plug gap differs: 0.020 vs 0.030 in",
+    "body": "Owner's manual 0K5801: 0G0767B at 0.020 in. The 2013 owner's manual 0J9943, the Evolution dealer manual 0H9172 and the GN-410 engine manual: RC14YC at 0.030 in. Dealer manual 10000041488: 0G0767A at 0.020 in. Gap to match the plug fitted."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Battery: the earlier 2013 owner's manual 0J9943 says 525 CCA minimum. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0J93200ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.5 qt (1.4 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0E9371A"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0G0767B"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.020 in (0.508 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 540 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 11 kW GT-530 (Evolution 1.0)",
+  "equip": "Generator",
+  "summary": "Evolution 1.0 (also Sync badges); GTH-530 or GT-530 530 cc V-twin; 11 kW (Guardian, Centurion, Honeywell, Siemens)",
+  "genIds": [
+   "gen-guardian-evo1-11"
+  ],
+  "match": [
+   "G0064370",
+   "0064370",
+   "G0064371",
+   "0064371",
+   "G0064380",
+   "0064380",
+   "G0064381",
+   "0064381",
+   "G0064382",
+   "0064382",
+   "G0064383",
+   "0064383",
+   "G0064390",
+   "0064390",
+   "G0064391",
+   "0064391",
+   "G0064400",
+   "0064400",
+   "G0064401",
+   "0064401",
+   "G0064410",
+   "0064410",
+   "G0064412",
+   "0064412",
+   "G0064413",
+   "0064413",
+   "G0064420",
+   "0064420",
+   "G0064421",
+   "0064421",
+   "G0064430",
+   "0064430",
+   "G0064431",
+   "0064431",
+   "G0067240",
+   "0067240",
+   "G0067241",
+   "0067241",
+   "006437",
+   "006438",
+   "006439",
+   "006440",
+   "006441",
+   "006442",
+   "006443",
+   "006724",
+   "G006437",
+   "G006438",
+   "G006439",
+   "G006440",
+   "G006441",
+   "G006442",
+   "G006443",
+   "G006724"
+  ],
+  "source": "Evolution owner's manuals 0K5801 Rev G and 0J9943 Rev G (2013); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M",
+  "flags": [
+   {
+    "title": "Kit availability",
+    "body": "The app table notes the Generac store showed 0J93210ESV (SM KIT 11KW EVOLUTION) as unavailable. Check GenService."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "The 2013 owner's manual 0J9943 lists the plug as BPR6HS (same 0.030 in gap). Battery: the earlier 2013 owner's manual 0J9943 says 525 CCA minimum. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0J93210ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.7 qt (1.6 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0E9371A"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0E9368 (BPR6HS in 0J9943)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 540 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 13-17 kW GT-990 (Evolution 1.0)",
+  "equip": "Generator",
+  "summary": "Evolution 1.0 (also Sync badges); GT-990 992 cc V-twin; 13-17 kW (Guardian, Centurion, Honeywell, Siemens, Eaton)",
+  "genIds": [
+   "gen-guardian-evo1-13-17"
+  ],
+  "match": [
+   "G0062410",
+   "0062410",
+   "G0062420",
+   "0062420",
+   "G0062430",
+   "0062430",
+   "G0062480",
+   "0062480",
+   "G0062490",
+   "0062490",
+   "G0062540",
+   "0062540",
+   "G0062550",
+   "0062550",
+   "G0062560",
+   "0062560",
+   "G0062561",
+   "0062561",
+   "G0062600",
+   "0062600",
+   "G0062601",
+   "0062601",
+   "G0062602",
+   "0062602",
+   "G0062610",
+   "0062610",
+   "G0062670",
+   "0062670",
+   "G0062740",
+   "0062740",
+   "G0062750",
+   "0062750",
+   "G0062760",
+   "0062760",
+   "G0062810",
+   "0062810",
+   "G0062820",
+   "0062820",
+   "G0062821",
+   "0062821",
+   "G0064610",
+   "0064610",
+   "G0064611",
+   "0064611",
+   "G0064620",
+   "0064620",
+   "G0064621",
+   "0064621",
+   "G0064622",
+   "0064622",
+   "G0067000",
+   "0067000",
+   "G0067001",
+   "0067001",
+   "G0067210",
+   "0067210",
+   "G0067211",
+   "0067211",
+   "G0067250",
+   "0067250",
+   "G0067251",
+   "0067251",
+   "006241",
+   "006242",
+   "006243",
+   "006248",
+   "006249",
+   "006254",
+   "006255",
+   "006256",
+   "006260",
+   "006261",
+   "006267",
+   "006274",
+   "006275",
+   "006276",
+   "006281",
+   "006282",
+   "006461",
+   "006462",
+   "006700",
+   "006721",
+   "006725",
+   "G006241",
+   "G006242",
+   "G006243",
+   "G006248",
+   "G006249",
+   "G006254",
+   "G006255",
+   "G006256",
+   "G006260",
+   "G006261",
+   "G006267",
+   "G006274",
+   "G006275",
+   "G006276",
+   "G006281",
+   "G006282",
+   "G006461",
+   "G006462",
+   "G006700",
+   "G006721",
+   "G006725"
+  ],
+  "source": "Evolution owner's manuals 0K5801 Rev G (16 kW column) and 0J9943 Rev G (13-17 kW); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Plug: 0K5801 lists 0E7585A, 0J9943 lists RC14YC, dealer manual 10000041488 lists 0E7585 (no suffix) - all at 0.040 in. GTH 990 engine manual: 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick), plug torque 168 in-lb (19 Nm), sets valves at 0.003 in. Battery: the earlier 2013 owner's manual 0J9943 says 525 CCA minimum. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0J93220ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0E7585A (RC14YC)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 540 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 20-22 kW GT-999 (Evolution 1.0)",
+  "equip": "Generator",
+  "summary": "Evolution 1.0 (also Sync badges); GT-999 999 cc V-twin; 20 and 22 kW (Guardian, Centurion, Honeywell, Siemens, Eaton)",
+  "genIds": [
+   "gen-guardian-evo1-20-22"
+  ],
+  "match": [
+   "G0062440",
+   "0062440",
+   "G0062500",
+   "0062500",
+   "G0062580",
+   "0062580",
+   "G0062581",
+   "0062581",
+   "G0062582",
+   "0062582",
+   "G0062583",
+   "0062583",
+   "G0062620",
+   "0062620",
+   "G0062621",
+   "0062621",
+   "G0062770",
+   "0062770",
+   "G0062771",
+   "0062771",
+   "G0065510",
+   "0065510",
+   "G0065511",
+   "0065511",
+   "G0065512",
+   "0065512",
+   "G0065520",
+   "0065520",
+   "G0065521",
+   "0065521",
+   "G0065530",
+   "0065530",
+   "G0065531",
+   "0065531",
+   "G0065532",
+   "0065532",
+   "G0065540",
+   "0065540",
+   "G0065541",
+   "0065541",
+   "G0065550",
+   "0065550",
+   "G0065551",
+   "0065551",
+   "G0067270",
+   "0067270",
+   "G0067290",
+   "0067290",
+   "G0067291",
+   "0067291",
+   "G0067292",
+   "0067292",
+   "G0067300",
+   "0067300",
+   "G0067301",
+   "0067301",
+   "G0067320",
+   "0067320",
+   "G0067330",
+   "0067330",
+   "006244",
+   "006250",
+   "006258",
+   "006262",
+   "006277",
+   "006551",
+   "006552",
+   "006553",
+   "006554",
+   "006555",
+   "006727",
+   "006729",
+   "006730",
+   "006732",
+   "006733",
+   "G006244",
+   "G006250",
+   "G006258",
+   "G006262",
+   "G006277",
+   "G006551",
+   "G006552",
+   "G006553",
+   "G006554",
+   "G006555",
+   "G006727",
+   "G006729",
+   "G006730",
+   "G006732",
+   "G006733"
+  ],
+  "source": "Evolution owner's manuals 0K5801 Rev G and 0J9943 Rev G (2013); Evolution dealer manuals 10000041488 Rev C and 0H9172 Rev M; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Early 20 kW plug gap: 0.030 in",
+    "body": "Owner's manual 0K5801 and dealer manuals: 0G0767A (RC12YC) at 0.040 in. The 2013 owner's manual 0J9943 lists the 20 kW as RC12YC at 0.030 in. Gap to match the plug fitted."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "On the 999 cc: the GTH 990/1000 engine manual (0F6923) prints 2.3 qt with filter (generator manuals say 1.9 qt - fill to the dipstick) and plug torque 168 in-lb (19 Nm). Battery: the earlier 2013 owner's manual 0J9943 says 525 CCA minimum. A 540 CCA 26R meets both."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0J93230ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 540 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter; battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Oil and filter, air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     },
+     {
+      "label": "Cold (below 40 F) or hot (above 85 F) duty",
+      "value": "Oil and filter every year or 100 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "EcoGen Evo 1.0 15 kW (999 cc)",
+  "equip": "Generator",
+  "summary": "Evolution 1.0 EcoGen extended-run with G-Flex VSCF alternator; GT-999 999 cc; 15 kW; AVR filter and rotor brushes",
+  "genIds": [
+   "gen-ecogen-evo1-15"
+  ],
+  "match": [
+   "G0061030",
+   "0061030",
+   "G0061031",
+   "0061031",
+   "006103",
+   "G006103"
+  ],
+  "source": "EcoGen owner's manual 0K6046; Synergy/EcoGen dealer manual 0K9138 Rev B; Evolution dealer manual 10000041488 Rev C",
+  "flags": [
+   {
+    "title": "Longer service hours than standard Evolution",
+    "body": "Schedule A is every 2 years or 500 hrs and Schedule B every 4 years or 1000 hrs. Valve clearance is in Schedule A."
+   },
+   {
+    "title": "Where some figures come from",
+    "body": "The owner's manual prints no valve clearance or plug torque. Valve clearance is from dealer manual 0K9138; plug torque from Evolution dealer manual 10000041488. The GTH 990/1000 engine manual says 168 in-lb (19 Nm)."
+   },
+   {
+    "title": "Oil filter number differs (minor)",
+    "body": "Owner's manual 0K6046: 070185E. Synergy/EcoGen dealer manual 0K9138 Table 1-3: 070185F. Same filter, later suffix."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "G006829-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 3.75 qt (3.55 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "AVR filter",
+      "value": "0K3054"
+     },
+     {
+      "label": "Spark plug",
+      "value": "RC12YC (Generac 0G0767A)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "18.4 ft-lb (25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 525 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every 3 months",
+      "value": "Check AVR and engine filter, oil level, spark plugs, fuel lines"
+     },
+     {
+      "label": "Every year",
+      "value": "Battery check"
+     },
+     {
+      "label": "Schedule A - every 2 years or 500 hrs",
+      "value": "Oil and filter (oil tank too), AVR filter, air filter, spark plugs, valve clearance, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 1000 hrs",
+      "value": "Schedule A plus rotor brushes (dealer only)"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; check/adjust valve clearance"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Synergy VSCF 20 kW (Evolution 1.0)",
+  "equip": "Generator",
+  "summary": "Synergy VSCF controller on an Evolution 1.0 base; GT-999 999 cc; 20 kW; AVR filter and brushes",
+  "genIds": [
+   "gen-synergy-vscf-20"
+  ],
+  "match": [
+   "G0060550",
+   "0060550",
+   "G0060551",
+   "0060551",
+   "G0060980",
+   "0060980",
+   "G0060981",
+   "0060981",
+   "006055",
+   "006098",
+   "G006055",
+   "G006098"
+  ],
+  "source": "Synergy owner's manual 0K2502; Synergy/EcoGen dealer manual 0K9138 Rev B; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "No tune-up kit in the app table",
+    "body": "GEN_MAINT_KITS has no row for this family, so no kit number is shown. Check GenService before ordering."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Plug torque: this owner's manual says 15-18 ft-lb (20-25 Nm); the GTH 990/1000 engine manual says 168 in-lb (19 Nm). Battery: dealer manual 0K9138 lists 525 CCA minimum. GTH engine manual oil 2.3 qt with filter vs 1.9 qt here - fill to the dipstick. Oil filter: owner's manual 0K2502 070185E, dealer manual 0K9138 070185F."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "Not listed - check GenService",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt (1.8 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185E"
+     },
+     {
+      "label": "Air filter",
+      "value": "0J8478"
+     },
+     {
+      "label": "AVR filter",
+      "value": "0K3054"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0G0767A"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "15-18 ft-lb (20-25 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 540 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every year",
+      "value": "Battery check; water intrusion"
+     },
+     {
+      "label": "Schedule A - every 2 years or 200 hrs",
+      "value": "Oil and oil filter, AVR filter, battery check"
+     },
+     {
+      "label": "Schedule B - every 4 years or 400 hrs",
+      "value": "Schedule A plus air filter, spark plugs, valve clearance"
+     },
+     {
+      "label": "Every 1000 hrs",
+      "value": "Replace brushes"
+     },
+     {
+      "label": "First 25 hrs (break-in)",
+      "value": "Oil and oil filter; adjust valve clearance"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian Nexus 8 kW (GH-410)",
+  "equip": "Generator",
+  "summary": "Nexus 2-line LCD; GH-410 410 cc single cylinder; 8 kW (Guardian, Centurion, Siemens)",
+  "genIds": [
+   "gen-guardian-nexus-8"
+  ],
+  "match": [
+   "G0058700",
+   "0058700",
+   "G0058701",
+   "0058701",
+   "G0058702",
+   "0058702",
+   "G0058820",
+   "0058820",
+   "G0058821",
+   "0058821",
+   "G0058822",
+   "0058822",
+   "G0059080",
+   "0059080",
+   "G0059081",
+   "0059081",
+   "005870",
+   "005882",
+   "005908",
+   "G005870",
+   "G005882",
+   "G005908"
+  ],
+  "source": "Nexus owner's manual 0H8358 (2010); Evolution/Nexus dealer manual 0H9172 Rev M; GN/GSH-410 engine manual 0C1103A Rev C",
+  "flags": [
+   {
+    "title": "Battery CCA differs: 350 vs 525",
+    "body": "The Nexus owner's manual prints 350 CCA minimum for the 8 kW. The dealer manual 0H9172 prints 525 CCA for every Nexus 8-20 kW unit. Fit 525 CCA when replacing."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0G95280SRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 at 10 F and below (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.5 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter",
+      "value": "0G3332"
+     },
+     {
+      "label": "Spark plug",
+      "value": "RC14YC"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "180 in-lb (20 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 350 CCA min (dealer manual: 525)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every 2 years or 200 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Monthly",
+      "value": "Oil level (or every 24 hrs running); fuel lines; battery terminals"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     },
+     {
+      "label": "Heavy load, dust or heat",
+      "value": "Change oil and filter sooner"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian Nexus 10 kW (GT-530)",
+  "equip": "Generator",
+  "summary": "Nexus 2-line LCD; GT-530 530 cc V-twin; 10 kW (Centurion, Guardian)",
+  "genIds": [
+   "gen-guardian-nexus-10-11"
+  ],
+  "match": [
+   "G0058920",
+   "0058920",
+   "G0058921",
+   "0058921",
+   "005892",
+   "G005892"
+  ],
+  "source": "Nexus owner's manual 0H8358 (2010); Evolution/Nexus dealer manual 0H9172 Rev M",
+  "flags": [
+   {
+    "title": "No plug torque in our manuals",
+    "body": "Neither the owner's nor the dealer manual prints a plug torque for the GT-530, so none is shown."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0G04220ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 at 10 F and below (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.7 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter",
+      "value": "0E9581"
+     },
+     {
+      "label": "Spark plug",
+      "value": "BPR6HS"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 525 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every 2 years or 200 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Monthly",
+      "value": "Oil level (or every 24 hrs running); fuel lines; battery terminals"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     },
+     {
+      "label": "Heavy load, dust or heat",
+      "value": "Change oil and filter sooner"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian Nexus 12-17 kW (GT-990)",
+  "equip": "Generator",
+  "summary": "Nexus 2-line LCD; GT-990 992 cc V-twin; 12-17 kW (Guardian, Centurion, Honeywell)",
+  "genIds": [
+   "gen-guardian-nexus-12-17"
+  ],
+  "match": [
+   "G0058730",
+   "0058730",
+   "G0058731",
+   "0058731",
+   "G0058740",
+   "0058740",
+   "G0058850",
+   "0058850",
+   "G0058851",
+   "0058851",
+   "G0058930",
+   "0058930",
+   "G0058931",
+   "0058931",
+   "G0058950",
+   "0058950",
+   "G0060540",
+   "0060540",
+   "G0060541",
+   "0060541",
+   "005873",
+   "005874",
+   "005885",
+   "005893",
+   "005895",
+   "006054",
+   "G005873",
+   "G005874",
+   "G005885",
+   "G005893",
+   "G005895",
+   "G006054"
+  ],
+  "source": "Nexus owner's manuals 0H8358 (2010) and Honeywell 0J4784; Evolution/Nexus dealer manual 0H9172 Rev M; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Oil: the 2008 owner's table 0G8334 prints 1.7 qt; the Nexus owner's and dealer manuals print 1.9 qt; the GTH engine manual 2.3 qt. Fill to the dipstick."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0E1126ESRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 at 10 F and below (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter",
+      "value": "0C8127"
+     },
+     {
+      "label": "Spark plug",
+      "value": "RC14YC (Generac 0E7585A)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "168 in-lb (19 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 525 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every 2 years or 200 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Monthly",
+      "value": "Oil level (or every 24 hrs running); fuel lines; battery terminals"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     },
+     {
+      "label": "Heavy load, dust or heat",
+      "value": "Change oil and filter sooner"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian Nexus 20 kW (GT-999)",
+  "equip": "Generator",
+  "summary": "Nexus 2-line LCD; GT-999 999 cc V-twin; 20 kW (Guardian, Centurion, Eaton)",
+  "genIds": [
+   "gen-guardian-nexus-20"
+  ],
+  "match": [
+   "G0058750",
+   "0058750",
+   "G0058751",
+   "0058751",
+   "G0058870",
+   "0058870",
+   "G0058871",
+   "0058871",
+   "G0058960",
+   "0058960",
+   "G0058961",
+   "0058961",
+   "G0059240",
+   "0059240",
+   "G0059241",
+   "0059241",
+   "005875",
+   "005887",
+   "005896",
+   "005924",
+   "G005875",
+   "G005887",
+   "G005896",
+   "G005924"
+  ],
+  "source": "Nexus owner's manual 0H8358 (2010); Evolution/Nexus dealer manual 0H9172 Rev M; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "Plug gap differs: 0.030 vs 0.040 in",
+    "body": "Nexus owner's and dealer manuals: RC12YC at 0.030 in. The GTH 1000 engine manual and the Evolution 20-22 kW GT-999 use 0.040 in. Check the plug and decal."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "GTH engine manual oil 2.3 qt with filter vs 1.9 qt here - fill to the dipstick."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "0G95300SRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 at 10 F and below (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.9 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter",
+      "value": "0G5894"
+     },
+     {
+      "label": "Spark plug",
+      "value": "RC12YC (Generac 0G0767A)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque",
+      "value": "168 in-lb (19 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 525 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Every 2 years or 200 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Monthly",
+      "value": "Oil level (or every 24 hrs running); fuel lines; battery terminals"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     },
+     {
+      "label": "Heavy load, dust or heat",
+      "value": "Change oil and filter sooner"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "EcoGen Nexus 6 kW (GTV-530)",
+  "equip": "Generator",
+  "summary": "Nexus; GTV-530 530 cc V-twin at 2,600 rpm with external oil reservoir; 6 kW extended run",
+  "genIds": [
+   "gen-ecogen-nexus-6"
+  ],
+  "match": [
+   "G0058180",
+   "0058180",
+   "G0058181",
+   "0058181",
+   "005818",
+   "EcoGen 6",
+   "G005818"
+  ],
+  "source": "EcoGen 6 kW owner's manual 0J0984; Evolution/Nexus dealer manual 0H9172 Rev M",
+  "flags": [
+   {
+    "title": "Two oil fills",
+    "body": "Change the engine oil and drain and refill the oil reservoir too. The reservoir level drops in normal use, especially in the first 500 hrs."
+   },
+   {
+    "title": "No tune-up kit in the app table",
+    "body": "GEN_MAINT_KITS has no row for this family, so no kit number is shown. Check GenService before ordering."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Air filter: owner's manual 0E9371, dealer manual 0E9371A. No plug torque is printed in our manuals."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "Not listed - check GenService",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "Synthetic 5W-30, all conditions (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.7 qt with filter; oil reservoir 4.2 qt (4.0 L)",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter",
+      "value": "0E9371"
+     },
+     {
+      "label": "Spark plug",
+      "value": "BPR6HS"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 525 CCA min (0H3421S)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "Weekly",
+      "value": "Check engine oil level and enclosure louvers"
+     },
+     {
+      "label": "Every 2 years or 500 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "First 6 months or 500 hrs, then every 500 hrs",
+      "value": "Check valve clearance"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     },
+     {
+      "label": "Every 2,500 hrs",
+      "value": "Replace alternator rotor brushes"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "PowerPact 7 and 7.5 kW",
+  "equip": "Generator",
+  "summary": "PowerPact LED controller; GA-420 420 cc single cylinder (LH-420 on some SKUs); 7 and 7.5 kW",
+  "genIds": [
+   "gen-powerpact-7-75"
+  ],
+  "match": [
+   "G0065180",
+   "0065180",
+   "G0065181",
+   "0065181",
+   "G0065190",
+   "0065190",
+   "G0065191",
+   "0065191",
+   "G0065610",
+   "0065610",
+   "G0065611",
+   "0065611",
+   "G0069980",
+   "0069980",
+   "G0069981",
+   "0069981",
+   "006518",
+   "006519",
+   "006561",
+   "006998",
+   "PowerPact",
+   "G006518",
+   "G006519",
+   "G006561",
+   "G006998"
+  ],
+  "source": "PowerPact owner's manuals 0K6020 (2014, 7 kW) and 10000021790 (7.5 kW); CorePower/PowerPact dealer manual 0H9174 Rev D",
+  "flags": [
+   {
+    "title": "No oil filter part number",
+    "body": "Neither owner's manual lists an oil filter, and the dealer spec table shows a dash for PowerPact."
+   },
+   {
+    "title": "Spark plug differs by manual",
+    "body": "7 kW owner's manual 0K6020: F7TC or Champion N9YC. 7.5 kW owner's manual and the dealer manual: 0L3059 (RC9YC). All at 0.030 in."
+   },
+   {
+    "title": "Synthetic only after 100 hrs",
+    "body": "The 2014 owner's manual says synthetic oil should only be used after 100 hours of operation."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 7.5 kW",
+      "value": "G006806-0 (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 7 kW",
+      "value": "Not listed - check GenService",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.2 qt (1.1 L)",
+      "key": true
+     },
+     {
+      "label": "Air filter",
+      "value": "0E9371A"
+     },
+     {
+      "label": "Spark plug - 7 kW",
+      "value": "F7TC or Champion N9YC"
+     },
+     {
+      "label": "Spark plug - 7.5 kW",
+      "value": "0L3059 (RC9YC)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque - 7.5 kW",
+      "value": "20-22 ft-lb (27-30 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery - 7 kW",
+      "value": "Group U1, 300 CCA min (0K6020 prints OD4575)"
+     },
+     {
+      "label": "Battery - 7.5 kW",
+      "value": "Group U1, 300 CCA min (0J5584)"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 20 hrs or 1 month",
+      "value": "Change oil; check valve clearance"
+     },
+     {
+      "label": "Every 6 months or 100 hrs",
+      "value": "Change oil; inspect spark plug"
+     },
+     {
+      "label": "Every 3 months or 50 hrs",
+      "value": "Clean air cleaner"
+     },
+     {
+      "label": "Every year or 300 hrs",
+      "value": "Replace air cleaner and spark plug; check valve clearance; battery check"
+     },
+     {
+      "label": "Severe duty oil change",
+      "value": "Cold (below 40 F): 6 months or 50 hrs; hot (above 85 F) or dusty: 3 months or 50 hrs"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "CorePower 7 kW (OHV-432)",
+  "equip": "Generator",
+  "summary": "CorePower LED control board; OHV-432 432 cc single cylinder; 7 kW",
+  "genIds": [
+   "gen-corepower-7"
+  ],
+  "match": [
+   "G0058370",
+   "0058370",
+   "005837",
+   "CorePower",
+   "G005837"
+  ],
+  "source": "CorePower/PowerPact dealer manual 0H9174 Rev D (no CorePower owner's manual in the library)",
+  "flags": [
+   {
+    "title": "Valve clearance is not the usual Generac figure",
+    "body": "CorePower intake 0.005-0.007 in and exhaust 0.007-0.009 in, wider than the 0.002-0.004 in on other air-cooled units."
+   },
+   {
+    "title": "No tune-up kit in the app table",
+    "body": "GEN_MAINT_KITS has no row for this family, so no kit number is shown. Check GenService before ordering."
+   },
+   {
+    "title": "Dealer manual only",
+    "body": "All figures are from dealer manual 0H9174. There is no plug torque in it."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit",
+      "value": "Not listed - check GenService",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 all temps (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity",
+      "value": "Approx. 1.1 qt (1.0 L) with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "0H9039"
+     },
+     {
+      "label": "Air filter",
+      "value": "0H6104"
+     },
+     {
+      "label": "Spark plug",
+      "value": "0G0767A (RC12YC)"
+     },
+     {
+      "label": "Plug gap",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Valve clearance",
+      "value": "Intake 0.005-0.007 in (0.13-0.17 mm); exhaust 0.007-0.009 in (0.18-0.22 mm); cold, TDC"
+     },
+     {
+      "label": "Battery",
+      "value": "Group 26R, 525 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 8 hrs",
+      "value": "Change oil and filter"
+     },
+     {
+      "label": "Every year or 100 hrs",
+      "value": "Change oil and filter"
+     },
+     {
+      "label": "Every year or 200 hrs",
+      "value": "Air cleaner, spark plug, dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian legacy 7-18 kW (Pre-Nexus LED bezel)",
+  "equip": "Generator",
+  "summary": "Pre-Nexus LED bezel; GH-410 410 cc 7 kW, GT-990 992 cc 16 and 18 kW (Guardian, Centurion)",
+  "genIds": [
+   "gen-guardian-pre-nexus-legacy-7-18"
+  ],
+  "match": [
+   "G0052430",
+   "0052430",
+   "G0052440",
+   "0052440",
+   "G0052470",
+   "0052470",
+   "G0054160",
+   "0054160",
+   "005243",
+   "005244",
+   "005247",
+   "005416",
+   "G005243",
+   "G005244",
+   "G005247",
+   "G005416"
+  ],
+  "source": "Legacy owner's manuals 0F9421 and 0G4869; 6-18 kW dealer manual 0G4338; GN/GSH-410 engine manual 0C1103A; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "7 kW air filter differs by manual revision",
+    "body": "0F9421 lists 0C8127 for the GH-410; the later 0G4869 lists 0G3332. Match the unit's own manual or the filter fitted."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "GT-990 plug: owner's manuals RC14YC, dealer manual 0G4338 RC12YC, both 0.040 in. Oil filter: owner's 070185F, dealer 070185B. Plug torques are from the engine manuals, not the owner's manuals."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 16 and 18 kW (990 cc)",
+      "value": "0E1126ESRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 7 kW (410 cc)",
+      "value": "Not listed - check GenService",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 40 F; 10W-30 from 40 F down to 10 F; synthetic 5W-30 below 10 F (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity - 7 kW (GH-410)",
+      "value": "Approx. 1.5 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 16 and 18 kW (GT-990)",
+      "value": "Approx. 1.7 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter - 7 kW",
+      "value": "0G3332 (0C8127 in the earlier 0F9421)"
+     },
+     {
+      "label": "Air filter - 16 and 18 kW",
+      "value": "0C8127"
+     },
+     {
+      "label": "Spark plug",
+      "value": "RC14YC (7, 16 and 18 kW)"
+     },
+     {
+      "label": "Plug gap - 7 kW",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 16 and 18 kW",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque - 7 kW (GH-410)",
+      "value": "180 in-lb (20 Nm)"
+     },
+     {
+      "label": "Plug torque - 16 and 18 kW (GT-990)",
+      "value": "168 in-lb (19 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery - 7 kW",
+      "value": "Group 26, 350 CCA min"
+     },
+     {
+      "label": "Battery - 16 and 18 kW",
+      "value": "Group 26, 525 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 8 hrs",
+      "value": "Change oil and filter"
+     },
+     {
+      "label": "Every 2 years or 200 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Monthly",
+      "value": "Oil level; fuel lines; battery terminals"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "brand": "Generac",
+  "model": "Guardian 2008 series 8-20 kW (Pre-Nexus)",
+  "equip": "Generator",
+  "summary": "2008-series LCD; GH-410 410 cc 8 kW, GT-530 530 cc 10 kW, GT-990 992 cc 12-17 kW, GT-999 999 cc 20 kW (Guardian, Centurion, Carrier)",
+  "genIds": [
+   "gen-guardian-pre-nexus-2008-8-20"
+  ],
+  "match": [
+   "G0055010",
+   "0055010",
+   "G0055020",
+   "0055020",
+   "G0055030",
+   "0055030",
+   "G0055040",
+   "0055040",
+   "G0055050",
+   "0055050",
+   "G0055060",
+   "0055060",
+   "G0055230",
+   "0055230",
+   "G0055231",
+   "0055231",
+   "G0055250",
+   "0055250",
+   "G0055251",
+   "0055251",
+   "G0055310",
+   "0055310",
+   "G0055330",
+   "0055330",
+   "G0055360",
+   "0055360",
+   "G0055390",
+   "0055390",
+   "G0055470",
+   "0055470",
+   "G0057440",
+   "0057440",
+   "G0058130",
+   "0058130",
+   "G0058260",
+   "0058260",
+   "005501",
+   "005502",
+   "005503",
+   "005504",
+   "005505",
+   "005506",
+   "005523",
+   "005525",
+   "005531",
+   "005533",
+   "005536",
+   "005539",
+   "005547",
+   "005744",
+   "005813",
+   "005826",
+   "G005501",
+   "G005502",
+   "G005503",
+   "G005504",
+   "G005505",
+   "G005506",
+   "G005523",
+   "G005525",
+   "G005531",
+   "G005533",
+   "G005536",
+   "G005539",
+   "G005547",
+   "G005744",
+   "G005813",
+   "G005826"
+  ],
+  "source": "2008 owner's manual 0G8334; 2008 dealer manual 0G9266 Rev A; GN/GSH-410 engine manual 0C1103A; GTH 990/1000 engine manual 0F6923",
+  "flags": [
+   {
+    "title": "20 kW plug gap differs: 0.030 vs 0.040 in",
+    "body": "Owner's manual 0G8334: RC12YC at 0.030 in. The 2008 dealer manual 0G9266: 0.040 in. Check the plug and decal."
+   },
+   {
+    "title": "Oil capacity differs by manual",
+    "body": "Owner's manual: 1.7 qt for 10-20 kW. Dealer manual 0G9266: 10 kW 1.8 qt, 12-20 kW 1.9 qt. Fill to the dipstick."
+   },
+   {
+    "title": "Manuals differ (minor)",
+    "body": "Dealer manual lists the 12-17 kW plug as RC14YCA. Plug torques are from the engine manuals, not the owner's manual; none is printed for the GT-530."
+   }
+  ],
+  "groups": [
+   {
+    "title": "Tune-up figures",
+    "rows": [
+     {
+      "label": "Tune-up kit - 8 kW (410 cc)",
+      "value": "0G95280SRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 10 kW (530 cc)",
+      "value": "0G04220ESV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 12-17 kW (990 cc)",
+      "value": "0E1126ESRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Tune-up kit - 20 kW (999 cc)",
+      "value": "0G95300SRV (no oil)",
+      "key": true
+     },
+     {
+      "label": "Oil type",
+      "value": "SAE 30 above 32 F; 10W-30 from 40 F to -10 F; synthetic 5W-30 at 10 F and below (API SJ, SL or better)"
+     },
+     {
+      "label": "Oil capacity - 8 kW",
+      "value": "Approx. 1.5 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil capacity - 10-20 kW",
+      "value": "Approx. 1.7 qt with filter",
+      "key": true
+     },
+     {
+      "label": "Oil filter",
+      "value": "070185F"
+     },
+     {
+      "label": "Air filter - 8 kW",
+      "value": "0G3332"
+     },
+     {
+      "label": "Air filter - 10 kW",
+      "value": "0E9581"
+     },
+     {
+      "label": "Air filter - 12-17 kW",
+      "value": "0C8127"
+     },
+     {
+      "label": "Air filter - 20 kW",
+      "value": "0G5894"
+     },
+     {
+      "label": "Spark plug - 8 kW",
+      "value": "RC14YC"
+     },
+     {
+      "label": "Spark plug - 10 kW",
+      "value": "BPR6HS"
+     },
+     {
+      "label": "Spark plug - 12-17 kW",
+      "value": "RC14YC"
+     },
+     {
+      "label": "Spark plug - 20 kW",
+      "value": "RC12YC"
+     },
+     {
+      "label": "Plug gap - 8 and 10 kW",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 12-17 kW",
+      "value": "0.040 in (1.02 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug gap - 20 kW",
+      "value": "0.030 in (0.76 mm)",
+      "key": true
+     },
+     {
+      "label": "Plug torque - 8 kW (GH-410)",
+      "value": "180 in-lb (20 Nm)"
+     },
+     {
+      "label": "Plug torque - 12-20 kW (GT-990, GT-999)",
+      "value": "168 in-lb (19 Nm)"
+     },
+     {
+      "label": "Valve clearance",
+      "value": "0.002-0.004 in (0.05-0.1 mm), cold"
+     },
+     {
+      "label": "Battery - 8 kW",
+      "value": "Group 26R, 350 CCA min"
+     },
+     {
+      "label": "Battery - 10-20 kW",
+      "value": "Group 26R, 525 CCA min"
+     }
+    ]
+   },
+   {
+    "title": "Service intervals",
+    "rows": [
+     {
+      "label": "First 8 hrs",
+      "value": "Change oil and filter"
+     },
+     {
+      "label": "Every 2 years or 200 hrs",
+      "value": "Oil and filter, air cleaner, spark plugs; dealer tune-up"
+     },
+     {
+      "label": "After first 6 months",
+      "value": "Check/adjust valve clearance"
+     },
+     {
+      "label": "Monthly",
+      "value": "Oil level; fuel lines; battery terminals"
+     },
+     {
+      "label": "Every 6 months",
+      "value": "Battery charge state and electrolyte level"
+     }
+    ]
+   }
+  ]
+ }
+];
+MAINT_SPECS.push(...MAINT_GEN_TUNEUP);

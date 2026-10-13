@@ -3803,7 +3803,7 @@ function openGenDetail(id, focusModel, opts) {
       const serial = opts.serial || (typeof genLastScan !== "undefined" && genLastScan && focusG && genLastScan.modelG === focusG ? genLastScan.serial : "");
       return bulletinsHtml(bulletinsFor({ genFamily: g.id, model: focusModel || "" }), { where: opts.where || "generator card", serial, model: focusModel || "" });
     } catch (e) { return ""; } })()}
-    ${genIsAirCooled(g) ? `<div class="detail-section">${genChecklistBtnHtml(g.id, focusG)}</div>` : ""}
+    ${genIsAirCooled(g) ? `<div class="detail-section">${genChecklistBtnHtml(g.id, focusG)}${genTuneupEntry(g) ? `<button type="button" class="gcl-start-btn gen-tuneup-btn" data-tuneup="${escapeHtml(focusG || (genTuneupEntry(g).match || [])[0] || "")}">🔧 Tune-up figures (oil, plug, filters, kit)</button>` : ""}</div>` : ""}
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
     ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
     ${genMaintResetHtml(g)}
@@ -3819,6 +3819,16 @@ function openGenDetail(id, focusModel, opts) {
     <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
   document.getElementById("closeModalBtn").onclick = closeModal;
   genWireChecklistBtns(modal);
+  // v291: the family's tune-up figures live in Maintenance Figures (maint.js MAINT_GEN_TUNEUP).
+  modal.querySelectorAll("[data-tuneup]").forEach(b => {
+    b.onclick = () => {
+      trackEvent("opened generator tune-up figures: " + g.family);
+      closeModal();
+      if (typeof maintState !== "undefined") { maintState.query = b.dataset.tuneup; maintState.equip = ""; maintState.open = null; }
+      const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = b.dataset.tuneup;
+      showScreen("maint");
+    };
+  });
   modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
     btn.onclick = () => { trackEvent("opened generator manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
   });
@@ -4627,6 +4637,9 @@ function genEngineLabel(g, cc) {
 
 const GEN_FACT_LABELS = { oil: "Oil capacity", plugGap: "Plug gap", plug: "Spark plug", oilFilter: "Oil filter", airFilter: "Air filter", valve: "Valve clearance", battery: "Battery" };
 
+function genTuneupEntry(g) {
+  return typeof MAINT_SPECS === "undefined" || !g ? null : MAINT_SPECS.find(e => (e.genIds || []).includes(g.id)) || null;
+}
 function genChecklistBtnHtml(familyId, modelG, extraClass) {
   return `<button type="button" class="gcl-start-btn${extraClass ? " " + extraClass : ""}" data-gcl-fam="${escapeHtml(familyId)}" data-gcl-model="${escapeHtml(modelG || "")}">📋 Start annual maintenance checklist</button>`;
 }
@@ -11758,7 +11771,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v290";
+const APP_VERSION = "v291";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

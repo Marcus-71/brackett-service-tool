@@ -355,12 +355,12 @@ const GENERATORS = [
     "task": "Inspect for water intrusion; perform fuel system leak test"
    },
    {
-    "interval": "Schedule A - 2 yrs/200 hrs (app calls this oil, oil filter, battery check)",
-    "task": "Check battery condition"
+    "interval": "Schedule A - 2 yrs/200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Schedule B - 4 yrs/400 hrs (adds air cleaner and spark plugs)",
-    "task": "Replace engine oil/oil filter, air filter, spark plug(s); inspect/adjust valve clearance where applicable"
+    "interval": "Schedule B - 4 yrs/400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); check battery condition"
    },
    {
     "interval": "Schedule C - first 25-hour break-in",
@@ -3474,12 +3474,12 @@ const GENERATORS = [
     "task": "Inspect for water intrusion; perform fuel system leak test"
    },
    {
-    "interval": "Schedule A - 2 yrs/200 hrs (app calls this oil, oil filter, battery check)",
-    "task": "Check battery condition"
+    "interval": "Schedule A - 2 yrs/200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Schedule B - 4 yrs/400 hrs (adds air cleaner and spark plugs)",
-    "task": "Replace engine oil/oil filter, air filter, spark plug(s); inspect/adjust valve clearance where applicable"
+    "interval": "Schedule B - 4 yrs/400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); check battery condition"
    },
    {
     "interval": "Schedule C - first 25-hour break-in",
@@ -6562,12 +6562,12 @@ const GENERATORS = [
     "task": "Inspect for water intrusion; perform fuel system leak test"
    },
    {
-    "interval": "Schedule A - 2 yrs/200 hrs (app calls this oil, oil filter, battery check)",
-    "task": "Check battery condition"
+    "interval": "Schedule A - 2 yrs/200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Schedule B - 4 yrs/400 hrs (adds air cleaner and spark plugs)",
-    "task": "Replace engine oil/oil filter, air filter, spark plug(s); inspect/adjust valve clearance where applicable"
+    "interval": "Schedule B - 4 yrs/400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); check battery condition"
    },
    {
     "interval": "Schedule C - first 25-hour break-in",
@@ -9926,7 +9926,7 @@ const GENERATORS = [
    "torque": "Spark plug 18 ft-lbs (25 Nm) · Flywheel nut 816/999 engines (HEX M24-2.0 G8 YEL CHR) 150 ft-lbs (204.0 Nm) · Stator bolts 6 ft-lbs (+1 / -0) (8.13 Nm) · Rotor bolt 30 ft-lbs (40.6 Nm) · Engine adapter 25 ft-lbs (33.8 Nm) · Exhaust manifold 18 ft-lbs (25 Nm) · M5-0.8 Taptite screw into aluminum or pierced hole 25-50 in-lbs (2.82-5.64 Nm) · M6-1.0 Taptite screw into aluminum, pierced hole or weldnut 50-96 in-lbs (5.64-10.84 Nm) · M8-1.25 Taptite screw into aluminum or pierced hole 12-18 ft-lbs (16-25 Nm) · M6-1.0 Nylok nut onto weld stud 16-65 in-lbs (1.8-7.34 Nm) · M6-1.0 Nylok nut onto hinge stud 30-36 in-lbs (3.39-4.0 Nm) · Stator terminal block mounting/cover fasteners 15 in-lbs (1.69 Nm) · Stator terminal lead stud fasteners 35 in-lbs (3.95 Nm) · torque values dynamic ±10% unless noted. No flywheel-nut value is printed for the 426 cc or 530 cc engine. (Evolution 2.0 repair manual Sec 1.1 Torque Specifications, Andy's photo) Stator, rotor, engine adapter, exhaust manifold, Taptite and Nylok rows confirmed in Generac 0H9172 Rev M (dealer manual), p.217. 426/460 engine manual: spark plug 18.4 ft-lbs (25 Nm), flywheel nut 90.0 ft-lbs (122.0 Nm), rocker jam nut 10.0 ft-lbs (13.5 Nm); cylinder head bolts 30.2 ft-lbs (41.0 Nm) in the table but 33.2 ft-lbs (45 Nm) final in the assembly steps - CONFLICT inside the manual (Generac 10000016870 Rev B (dealer manual), p.77, 69). GTH 990/1000 engine manual: flywheel nut 150 ft lb (204.0 Nm), cylinder head bolts 22 ft-lb (29.9 Nm), spark plugs 168 in-lb (19 Nm) - CONFLICT with the 18 ft-lbs (25 Nm) plug value above (Generac 0F6923 Rev E (dealer manual), p.32, 49-50).",
    "crankSensorGap": "Magneto air gap on V-twins 0.008-0.012 in (0.20-0.30 mm) with a non-metallic gauge; new magnetos are set at 0.010 in; single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189-191). Engine rpm is read from the magneto pulse on Wire 18 (Generac 0H9172 Rev M (dealer manual), p.187). 426/460 engine manual: set the ignition coil air gap to 0.010 in; the printed metric figure, 2.54 mm, does not match 0.010 in (Generac 10000016870 Rev B (dealer manual), p.73). CONFLICT: the diagnostic manual says the single-cylinder magneto gap is fixed (Generac 0H9172 Rev M (dealer manual), p.189).",
    "battery": "12V, Group 26R Wet Cell 540 CCA minimum (P/N 0H3421S) or Group 35 AGM 650 CCA minimum, field supplied CONFLICT - the dealer manual prints a lower minimum: Group 26R, 12 Volts and 525 CCA Minimum, or (2017) Group 35 AGM, 12 Volts and 650 CCA Minimum (Generac 0H9172 Rev M (dealer manual), p.12 Table 1-1). The 540 CCA figure is from the owner's / spec documents this card was built from - either battery meets both.",
-   "airFilter": "See Replacement Parts by kW (e.g. 0E9371A for 9-16kW range)",
+   "airFilter": "0E9371A (9 and 11 kW); 0J8478 (16, 20 and 22 kW) (0L6629 Replacement Parts); oil filter 070185E",
    "fuelPressure": "Natural gas 3.5-7.0 in water column (0.87-1.74 kPa); LP vapor 10-12 in water column (2.49-2.99 kPa), measured at the generator fuel inlet.",
    "exercise": "Selectable Weekly / Biweekly / Monthly from the control panel; factory default weekly self-test"
   },
@@ -11716,7 +11716,7 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "Synthetic SAE 5W-30",
+   "oil": "Generac 5W-20 gaseous engine oil (GEO) after the 25-hour break-in, API Service Class SJ, SL or better, no special additives (A0001846499 Rev C p.27). Older Evolution 2.0 manuals say synthetic SAE 5W-30.",
    "oilCapacity": "10 kW approx. 1.1 qt (1.03 L); 14/18 kW approx. 2.2 qt (2.1 L); 20-26 kW approx. 1.9 qt (1.8 L) Without filter change the 426/460 engine takes 30 oz (0.95 qt / 0.9 L); with filter 35 oz (1.1 qt / 1.03 L) (Generac 10000016870 Rev B (dealer manual), p.75). GH816: 2.2 qt (2.1 L) with filter change, 2.0 qt (1.95 L) without (Generac A0000091269 Rev A (dealer manual), p.76). 999 cc approx. 1.9 qt (1.8 L) incl. filter (Generac 0H9172 Rev M (dealer manual), p.13). CONFLICT for the 999 cc: the V-twin engine service manual prints GTH 990/1000 2.3 qt (2.2 L) with filter change and 2.0 qt (1.9 L) without (Generac 0F6923 Rev E (dealer manual), p.87) - a generic engine figure; the generator manuals say approx. 1.9 qt, so fill to the dipstick.",
    "sparkPlug": "P/N 0G0767B, gap 0.020 in (0.508 mm) for 10 kW and 14/18 kW; P/N 0G0767A, gap 0.040 in (1.02 mm) for 20-26 kW (A0001846499 engine spec table - the 0G0767B / 0.020 in cells span both the 460 cc and 816 cc columns). Spark plug torque 18.4 ft-lbs (25 Nm). CONFLICTING DOCS - Evolution 2.0 repair manual Sec 1.1 Table 1-3 (Andy's photo) prints Generac P/N 0G0767A for the 460cc (10 kW) and 816cc (14/18 kW) engines, vs 0G0767B in A0001846499 - verify against the plug fitted; both agree on 0G0767A for 999cc and on the gaps.",
    "plugGap": "10 kW and 14/18 kW 0.020 in (0.508 mm); 20-26 kW 0.040 in (1.02 mm) (A0001846499 engine spec table) 426/460 engine manual: 0.020 in (0.50 mm) (Generac 10000016870 Rev B (dealer manual), p.23). GH816: 0.02 in (0.5 mm), ignition coil air gap 0.008-0.012 in (0.2-0.3 mm) (Generac A0000091269 Rev A (dealer manual), p.76). 999 cc 0.040 in (Generac 0H9172 Rev M (dealer manual), p.13); GTH 990/1000 engine manual: 0.040 in (1.01 mm) (Generac 0F6923 Rev E (dealer manual), p.87).",
@@ -11820,7 +11820,7 @@ const GENERATORS = [
    },
    {
     "interval": "Schedule A - 2 yrs/200 hrs",
-    "task": "Check battery condition"
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
     "interval": "Schedule B - 4 yrs/400 hrs",
@@ -15493,7 +15493,7 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "Synthetic SAE 5W-30",
+   "oil": "Generac 5W-20 gaseous engine oil (GEO) after the 25-hour break-in, API Service Class SJ, SL or better, no special additives (10000032217 p.29).",
    "oilCapacity": "Approx. 3.75 qt (3.55 L) including filter (10000032217 engine spec table) Confirmed approx. 3.75 qt (3.55 L) incl. filter for the 15 kW EcoGen (Generac 0K9138 Rev B (dealer manual), p.12).",
    "sparkPlug": "P/N A0002081582; gap 0.040 in (1.02 mm) (10000032217)",
    "plugGap": "0.040 in (1.02 mm) (10000032217 engine spec table)",
@@ -16242,9 +16242,9 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "Synthetic SAE 5W-30",
+   "oil": "Generac 5W-20 gaseous engine oil (GEO) after the 25-hour break-in, API Service Class SJ, SL or better, no special additives (10000014077 p.29).",
    "oilCapacity": "Approx. 1.9 qt (1.8 L) including filter CONFLICT for the 999 cc: the V-twin engine service manual prints GTH 990/1000 2.3 qt (2.2 L) with filter change and 2.0 qt (1.9 L) without (Generac 0F6923 Rev E (dealer manual), p.87) - a generic engine figure; the generator manuals say approx. 1.9 qt, so fill to the dipstick.",
-   "sparkPlug": "See Replacement Parts; gap 0.040 in (1.02 mm). Generac P/N 0G0767A for the 999cc engine (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo)",
+   "sparkPlug": "P/N A0002081582 (10000014077 Replacement Parts); gap 0.040 in (1.02 mm); torque 18.4 ft-lbs (25 Nm). The Evolution 2.0 repair manual Sec 1.1 Table 1-3 (Andy's photo) prints 0G0767A (RC12YC) for the 999cc engine - match the plug fitted",
    "plugGap": "0.040 in (1.02 mm) (10000014077 engine spec table) CONFLICT: the 3-phase Evolution 2.0 dealer manual lists the 20 kW 999 cc as RC12YC gapped 0.030 inch (Generac 10000014636 Rev A (dealer manual), p.86), not 0.040 in; the GTH 1000 engine manual says 0.040 in (1.01 mm) (Generac 0F6923 Rev E (dealer manual), p.87). Check the plug and decal.",
    "valveClearance": "0.002-0.004 in (0.05-0.1 mm), cold Confirmed 0.002-0.004 in (0.05-0.1 mm) cold; rocker jam nut 174 in-lbs (19.68 Nm) (Generac 10000014636 Rev A (dealer manual), p.92-93).",
    "compression": "999cc 20 kW: 185 psi +/- 10-15% (Evolution 2.0 repair manual Sec 1.1 Table 1-3, Andy's photo) CONFLICT: the 3-phase dealer manual prints 160 psi +/- 10-15% for the 999 cc (Generac 10000014636 Rev A (dealer manual), p.86); the GTH 1000 engine manual prints 160-190 psi (Generac 0F6923 Rev E (dealer manual), p.87).",
@@ -17012,7 +17012,7 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "SAE 30 above 32F; 10W-30 between 40F and -10F; synthetic 5W-30 at 10F and below",
+   "oil": "SAE 30 above 32 F; 10W-30 between 40 F and -10 F; synthetic 5W-30 for all temperature ranges (0K5801 p.23). API Service Class SJ, SL or better, no special additives.",
    "oilCapacity": "Approx. 1.5 qt / 1.4 L including filter Confirmed approx. 1.5 qt (1.4 L) incl. filter (Generac 0H9172 Rev M (dealer manual), p.13). GN/GSH-410 engine manual: 47 oz (1.40 L) with filter change, 37 oz (1.10 L) without (Generac 0C1103A Rev C (dealer manual), p.63).",
    "sparkPlug": "P/N 0G0767B, gap 0.020 in (0.508 mm) per 0K5801 Replacement Parts (through Rev G); earlier 0J9943 production (2011-2013) lists RC14YC, gap 0.030 in (0.76 mm) - verify against the plug fitted. CONFLICTING DOCS - Evolution 2.0 repair manual Sec 1.1 Table 1-3 (Andy's photo) prints Generac P/N 0G0767A, gap 0.508 mm (0.020 inch) for the 410cc 8 kW engine, vs 0G0767B in 0K5801 - verify against the plug fitted",
    "plugGap": "0.020 in (0.508 mm) per 0K5801; earlier 0J9943 production 0.030 in (0.76 mm) - verify against the plug fitted; Evolution 2.0 repair manual Sec 1.1 Table 1-3 prints 0.508 mm (0.020 inch) for 410cc, agreeing with 0K5801 (Andy's photo) CONFLICT: the Evolution dealer manual prints 8 kW GH-410 RC14YC at 0.76 mm (0.030 inch) (Generac 0H9172 Rev M (dealer manual), p.13); its own plug-gap table says 0.030 inch with RC12YC (Generac 0H9172 Rev M (dealer manual), p.186); the GN/GSH-410 engine manual also says 0.030 inch (0.76 mm) (Generac 0C1103A Rev C (dealer manual), p.11). Check the plug fitted.",
@@ -17113,16 +17113,16 @@ const GENERATORS = [
     "task": "Check enclosure louvers, fuel/oil lines and connections, engine oil level, water intrusion"
    },
    {
-    "interval": "Every year (Schedule A)",
-    "task": "Check battery condition/electrolyte/charge; replace engine oil & filter (first service at 25 hrs)"
+    "interval": "Every year",
+    "task": "Check for water intrusion; check battery condition, electrolyte level and state of charge"
    },
    {
-    "interval": "Every 2 years or 200 hrs (Schedule B)",
-    "task": "Replace engine oil & filter, air filter, spark plug(s); inspect/adjust valve clearance"
+    "interval": "Schedule A - every 2 years or 200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Every 4 years or 400 hrs",
-    "task": "Full Schedule B service repeated per table markers"
+    "interval": "Schedule B - every 4 years or 400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); inspect/adjust valve clearance; check battery condition"
    },
    {
     "interval": "First 25 hrs",
@@ -17925,16 +17925,16 @@ const GENERATORS = [
     "task": "Check enclosure louvers, fuel/oil lines and connections, engine oil level, water intrusion"
    },
    {
-    "interval": "Every year (Schedule A)",
-    "task": "Check battery condition/electrolyte/charge; replace engine oil & filter (first service at 25 hrs)"
+    "interval": "Every year",
+    "task": "Check for water intrusion; check battery condition, electrolyte level and state of charge"
    },
    {
-    "interval": "Every 2 years or 200 hrs (Schedule B)",
-    "task": "Replace engine oil & filter, air filter, spark plug(s); inspect/adjust valve clearance"
+    "interval": "Schedule A - every 2 years or 200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Every 4 years or 400 hrs",
-    "task": "Full Schedule B service repeated per table markers"
+    "interval": "Schedule B - every 4 years or 400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); inspect/adjust valve clearance; check battery condition"
    },
    {
     "interval": "First 25 hrs",
@@ -18795,16 +18795,16 @@ const GENERATORS = [
     "task": "Check enclosure louvers, fuel/oil lines and connections, engine oil level, water intrusion"
    },
    {
-    "interval": "Every year (Schedule A)",
-    "task": "Check battery condition/electrolyte/charge; replace engine oil & filter (first service at 25 hrs)"
+    "interval": "Every year",
+    "task": "Check for water intrusion; check battery condition, electrolyte level and state of charge"
    },
    {
-    "interval": "Every 2 years or 200 hrs (Schedule B)",
-    "task": "Replace engine oil & filter, air filter, spark plug(s); inspect/adjust valve clearance"
+    "interval": "Schedule A - every 2 years or 200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Every 4 years or 400 hrs",
-    "task": "Full Schedule B service repeated per table markers"
+    "interval": "Schedule B - every 4 years or 400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); inspect/adjust valve clearance; check battery condition"
    },
    {
     "interval": "First 25 hrs",
@@ -19662,16 +19662,16 @@ const GENERATORS = [
     "task": "Check enclosure louvers, fuel/oil lines and connections, engine oil level, water intrusion"
    },
    {
-    "interval": "Every year (Schedule A)",
-    "task": "Check battery condition/electrolyte/charge; replace engine oil & filter (first service at 25 hrs)"
+    "interval": "Every year",
+    "task": "Check for water intrusion; check battery condition, electrolyte level and state of charge"
    },
    {
-    "interval": "Every 2 years or 200 hrs (Schedule B)",
-    "task": "Replace engine oil & filter, air filter, spark plug(s); inspect/adjust valve clearance"
+    "interval": "Schedule A - every 2 years or 200 hrs",
+    "task": "Replace engine oil and oil filter; check battery condition"
    },
    {
-    "interval": "Every 4 years or 400 hrs",
-    "task": "Full Schedule B service repeated per table markers"
+    "interval": "Schedule B - every 4 years or 400 hrs",
+    "task": "Replace engine oil and oil filter, air filter, spark plug(s); inspect/adjust valve clearance; check battery condition"
    },
    {
     "interval": "First 25 hrs",
@@ -20287,7 +20287,7 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "SAE 30 above 32F; 10W-30 between 40F and -10F; synthetic 5W-30 at 10F and below (same viscosity chart as other Evolution 1.0 GT-engines)",
+   "oil": "SAE 30 above 32 F; 10W-30 between 40 F and -10 F; synthetic 5W-30 for all temperature ranges (0K6046 p.27). API Service Class SJ, SL or better, no special additives.",
    "oilCapacity": "Approx. 3.75 qt / 3.55 L including filter (larger than the standard 20kW GT-999 1.9 qt - extended-run oil system) Confirmed approx. 3.75 qt (3.55 L) incl. filter for the 15 kW EcoGen (Generac 0K9138 Rev B (dealer manual), p.12).",
    "sparkPlug": "RC12YC, gap 0.040 in (1.02 mm)",
    "plugGap": "0.040 in (1.02 mm) (0K6046 engine spec table)",
@@ -20383,40 +20383,28 @@ const GENERATORS = [
   },
   "maintenance": [
    {
-    "interval": "Same Evolution 1.0 Service Schedule A/B structure",
-    "task": "Oil/filter/air filter/spark plug/valve clearance per 0K6046 Sec 4.12"
+    "interval": "Weekly",
+    "task": "Check enclosure louvers for dirt and debris"
    },
    {
-    "interval": "Daily if running continuously, or before each use",
-    "task": "Check enclosure louvers, fuel/oil lines and connections, engine oil level, water intrusion"
+    "interval": "Every 3 months",
+    "task": "Check AVR filter and engine air filter; check lines and connections for fuel or oil leaks; check engine oil level; check spark plugs"
    },
    {
-    "interval": "Every year (Schedule A)",
-    "task": "Check battery condition/electrolyte/charge; replace engine oil & filter (first service at 25 hrs)"
+    "interval": "Every year",
+    "task": "Check battery condition"
    },
    {
-    "interval": "Every 2 years or 200 hrs (Schedule B)",
-    "task": "Replace engine oil & filter, air filter, spark plug(s); inspect/adjust valve clearance"
+    "interval": "Schedule A - every 2 years or 500 hrs",
+    "task": "Check battery; replace AVR filter (more often in dusty conditions); replace engine oil filter and the oil in the oil tank; replace engine air filter; replace spark plugs; adjust valve clearance"
    },
    {
-    "interval": "Every 4 years or 400 hrs",
-    "task": "Full Schedule B service repeated per table markers"
+    "interval": "Schedule B - every 4 years or 1000 hrs",
+    "task": "All Schedule A items plus replace rotor brushes (IASD only)"
    },
    {
     "interval": "First 25 hrs",
-    "task": "Change initial break-in oil & filter; check/adjust valve clearance"
-   },
-   {
-    "interval": "Every three months",
-    "task": "Check the AVR and engine filter (0K6046 Service Schedule)"
-   },
-   {
-    "interval": "Schedule A - every 2 years or 500 hours",
-    "task": "Replace the AVR filter (more often in dusty conditions) (0K6046 Service Schedule)"
-   },
-   {
-    "interval": "Schedule B - every 4 years or 1000 hours",
-    "task": "Replace rotor brushes - IASD only (0K6046 Service Schedule)"
+    "task": "Change engine oil and filter; check/adjust valve clearance"
    }
   ],
   "alarms": [
@@ -21366,7 +21354,7 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "SAE 30 above 32F; 10W-30 between 40F and -10F; synthetic 5W-30 at 10F and below (same viscosity chart as other GT-999 units)",
+   "oil": "SAE 30 above 32 F; 10W-30 between 40 F and -10 F; synthetic 5W-30 for all temperature ranges (0K2502 p.28). API Service Class SJ, SL or better, no special additives.",
    "oilCapacity": "Approx. 1.9 qt (1.8 L) including filter Confirmed approx. 1.9 qt (1.8 L) incl. filter (Generac 0K9138 Rev B (dealer manual), p.12). CONFLICT for the 999 cc: the V-twin engine service manual prints GTH 990/1000 2.3 qt (2.2 L) with filter change and 2.0 qt (1.9 L) without (Generac 0F6923 Rev E (dealer manual), p.87) - a generic engine figure; the generator manuals say approx. 1.9 qt, so fill to the dipstick.",
    "sparkPlug": "P/N 0G0767A, gap 0.040 in (1.02 mm) (0K2502 Replacement Parts and engine spec table)",
    "plugGap": "0.040 in (1.02 mm) (0K2502 engine spec table)",
@@ -21471,16 +21459,20 @@ const GENERATORS = [
     "task": "Check enclosure louvers, fuel/oil lines and connections, engine oil level, water intrusion"
    },
    {
-    "interval": "Every year (Schedule A)",
-    "task": "Check battery condition/electrolyte/charge; replace engine oil & filter (first service at 25 hrs)"
+    "interval": "Every year",
+    "task": "Check for water intrusion; check battery condition, electrolyte level and state of charge"
    },
    {
-    "interval": "Every 2 years or 200 hrs (Schedule B)",
-    "task": "Replace engine oil & filter, air filter, spark plug(s); inspect/adjust valve clearance"
+    "interval": "Schedule A - every 2 years or 200 hrs",
+    "task": "Replace engine oil and oil filter; replace AVR filter (more often in dust); check battery condition"
    },
    {
-    "interval": "Every 4 years or 400 hrs",
-    "task": "Full Schedule B service repeated per table markers"
+    "interval": "Schedule B - every 4 years or 400 hrs",
+    "task": "Schedule A items plus engine air filter, spark plugs and valve clearance"
+   },
+   {
+    "interval": "Every 1000 hrs",
+    "task": "Replace brushes"
    },
    {
     "interval": "First 25 hrs",
@@ -24911,9 +24903,9 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "SAE 30 above 32 F; 10W-30 between 40 F and -10 F; synthetic 5W-30 at 10 F and below. API Service Class SJ, SL or better, no special additives (0K6020).",
+   "oil": "SAE 30 above 32 F; 10W-30 between 40 F and -10 F; synthetic 5W-30 for all temperature ranges, but only after the first 100 hours of operation. API Service Class SJ, SL or better, no special additives (0K6020 p.24).",
    "oilCapacity": "Approx. 1.2 qt / 1.1 L including filter Confirmed approx. 1.2 qt (1.1 L) incl. filter, GA-420 420 cc (Generac 0H9174 Rev D (dealer manual), p.6).",
-   "sparkPlug": "F7TC / Champion N9YC, gap 0.76 mm (0.030 in) (0K6020 Sec 2.4.2) CONFLICT: the CorePower / PowerPact dealer manual lists P/N 0L3059 (RC9YC) at 0.76 mm (0.030 inch) for all PowerPact models (Generac 0H9174 Rev D (dealer manual), p.6).",
+   "sparkPlug": "7 kW (0K6020 Sec 2.4.2): F7TC / Champion N9YC. 7.5 kW (10000021790 Replacement Parts): P/N 0L3059 (RC9YC), the same plug the CorePower / PowerPact dealer manual lists for all PowerPact models (Generac 0H9174 Rev D (dealer manual), p.6). Gap 0.030 in (0.76 mm) on both; 7.5 kW torque 20-22 ft-lb (27-30 Nm).",
    "plugGap": "0.030 in (0.76 mm) (0K6020 Sec 2.4.2) Confirmed 0.030 inch (0.76 mm) (Generac 0H9174 Rev D (dealer manual), p.6).",
    "valveClearance": "0.002-0.004 in (0.05-0.1 mm) cold, engine at 60-80 F; rocker jam nut torque 174 in-lb (19.68 Nm). Check after the first 20 hours, then every 300 hours (0K6020 Sec 4.6). Confirmed 0.002-0.004 in (0.05-0.1 mm) intake and exhaust, engine cool (Generac 0H9174 Rev D (dealer manual), p.89). CONFLICT on the jam nut: the dealer manual says 70 to 106 in-lbs (Generac 0H9174 Rev D (dealer manual), p.90) vs 174 in-lb above.",
    "compression": "Minimum allowable compression 60 psi on a cold engine (Generac 0H9174 Rev D (dealer manual), p.86).",
@@ -25495,7 +25487,7 @@ const GENERATORS = [
    }
   ],
   "specs": {
-   "oil": "API Service Class SJ, SL or better, no special additives; 10W-30 (or Synthetic 5W-30) general use, SAE 30 in hot climates - per viscosity chart (0F9421 p.20/0G4869 equivalent)",
+   "oil": "API Service Class SJ, SL or better, no special additives; SAE 30 above 40 F; 10W-30 below 40 F down to 10 F; synthetic 5W-30 below 10 F (0G4869 p.21; 0F9421 p.21 prints the same chart)",
    "oilCapacity": "7kW (GH-410): approx. 1.5 qts incl. filter. 16/18kW (GT-990): approx. 1.7 qts incl. filter. Oil filter part # 070185F all models. (0F9421 p.8, 0G4869 p.8) Confirmed approx. 1.5 qt (GH-410) and 1.7 qt (GT-990) incl. filter; this dealer manual lists oil filter P/N 070185B (Generac 0G4338 Rev C (dealer manual), p.7).",
    "sparkPlug": "7kW: RC14YC, gap 0.76mm (0.030in). 16/18kW (GT-990): RC14YC, gap 1.02mm (0.040in). (0F9421/0G4869 Sec 1.5.2) CONFLICT: the 6-18 kW dealer manual lists RC12YC (not RC14YC) at 1.02 mm (0.040 inch) for the GT-990 13-18 kW, and RC14YC at 0.76 mm (0.030 inch) for the GH-410 (Generac 0G4338 Rev C (dealer manual), p.7); the older 6/7-15 kW manual agrees on the 7 kW row (Generac 0E3586 Rev C (dealer manual), p.5).",
    "plugGap": "7 kW 0.030 in (0.76 mm); 16/18 kW 0.040 in (1.02 mm) (0F9421 / 0G4869 engine spec table) Confirmed 0.030 in (GH-410) and 0.040 in (GT-990) (Generac 0G4338 Rev C (dealer manual), p.7).",
