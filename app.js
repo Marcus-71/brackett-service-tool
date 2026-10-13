@@ -10009,7 +10009,7 @@ const cam = { stream: null, input: null, overlay: null, armed: false, busy: fals
 // Pilot first: real phone cameras (focus, sharpness, light) can't be tested on the
 // PC, so it starts on these techs' phones. null = everyone. Any phone can opt in or
 // out with localStorage "bfc_inapp_camera" = "1" / "0".
-const CAMERA_PILOT = ["Andy"];
+const CAMERA_PILOT = null;   // v290: on for everyone (Andy tried it on his phone 2026-10-13)
 function inAppCameraSupported() {
   if (!(window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && typeof DataTransfer !== "undefined")) return false;
   let pref = null;
@@ -11758,7 +11758,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v289";
+const APP_VERSION = "v290";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
