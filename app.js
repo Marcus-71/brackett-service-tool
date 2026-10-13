@@ -9995,6 +9995,139 @@ function checkLostCameraScan() {
 }
 const CAMERA_LOST_MSG = "Your phone closed this app while the camera was open, so that photo never got here. Try again. If it keeps happening, close other apps first, or take the picture with the phone's own camera and use \"Use a photo you already took\".";
 
+// v289 in-app camera (Andy 2026-10-13). Every "take a photo" button used to hand
+// off to the phone's own camera app, and Android can close this app while that
+// camera is open - the photo is then lost (Joe 10/12, four times in 90 s). The
+// camera now runs INSIDE the app: live view, shutter, light toggle. The app never
+// leaves the screen, so there is nothing for the phone to close. Covers every
+// file input with a capture attribute (Tag Scanner, Maintenance, generator tag,
+// charging photos, warranty) by catching the input's own click - from a label
+// or from code - and handing the photo back through the same input, so each
+// screen's existing change handler runs unchanged. "Use the phone's camera
+// instead" is always there (and is the fallback when the camera can't start).
+const cam = { stream: null, input: null, overlay: null, armed: false, busy: false };
+// Pilot first: real phone cameras (focus, sharpness, light) can't be tested on the
+// PC, so it starts on these techs' phones. null = everyone. Any phone can opt in or
+// out with localStorage "bfc_inapp_camera" = "1" / "0".
+const CAMERA_PILOT = ["Andy"];
+function inAppCameraSupported() {
+  if (!(window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && typeof DataTransfer !== "undefined")) return false;
+  let pref = null;
+  try { pref = localStorage.getItem("bfc_inapp_camera"); } catch (e) {}
+  if (pref === "1") return true;
+  if (pref === "0") return false;
+  const me = getTechName().trim().toLowerCase();
+  return !CAMERA_PILOT || CAMERA_PILOT.some(n => n.toLowerCase() === me);
+}
+document.addEventListener("click", (e) => {
+  const inp = e.target;
+  if (!inp || inp.tagName !== "INPUT" || inp.type !== "file" || !inp.hasAttribute("capture")) return;
+  if (inp.dataset.nativeOnce) { delete inp.dataset.nativeOnce; return; }   // tech chose the phone's camera
+  if (!inAppCameraSupported()) return;
+  e.preventDefault();
+  try { localStorage.removeItem(CAMERA_OPEN_KEY); } catch (x) {}   // the app never leaves the screen
+  openInAppCamera(inp);
+}, true);
+
+function camMsg(text) {
+  const el = cam.overlay && cam.overlay.querySelector(".cam-msg");
+  if (!el) return;
+  el.textContent = text || "";
+  el.classList.toggle("hidden", !text);
+}
+function closeInAppCamera(fromPop) {
+  if (cam.stream) { cam.stream.getTracks().forEach(t => t.stop()); cam.stream = null; }
+  if (cam.overlay) { cam.overlay.remove(); cam.overlay = null; }
+  cam.busy = false;
+  if (cam.armed && !fromPop) history.back();
+  cam.armed = false;
+}
+window.addEventListener("popstate", () => { if (cam.overlay) closeInAppCamera(true); });
+// Phone locked or app switched away: let the camera go (it is reopened by tapping again).
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden" && cam.overlay) closeInAppCamera(false); });
+
+function camUseNative(inp) {
+  closeInAppCamera(false);
+  inp.dataset.nativeOnce = "1";
+  inp.click();   // still inside the tap that asked for it, so the phone allows it
+}
+
+async function openInAppCamera(inp) {
+  if (cam.overlay) return;
+  cam.input = inp;
+  const ov = document.createElement("div");
+  ov.className = "cam-overlay";
+  ov.innerHTML = `
+    <video class="cam-video" autoplay playsinline muted></video>
+    <div class="cam-guide"><div class="cam-box"></div><div class="cam-hint">Fit the whole label in the box and hold steady</div></div>
+    <div class="cam-msg hidden"></div>
+    <div class="cam-bar">
+      <button type="button" class="cam-btn" data-cam="cancel">✕ Cancel</button>
+      <button type="button" class="cam-shutter" data-cam="shoot" aria-label="Take photo" disabled></button>
+      <button type="button" class="cam-btn cam-torch hidden" data-cam="torch">🔦 Light</button>
+    </div>
+    <button type="button" class="cam-native" data-cam="native">Use the phone's camera instead</button>`;
+  document.body.appendChild(ov);
+  cam.overlay = ov;
+  history.pushState({ bfcCam: 1 }, "");   // Android back closes the camera, not the app
+  cam.armed = true;
+  ov.querySelector('[data-cam="cancel"]').onclick = () => closeInAppCamera(false);
+  ov.querySelector('[data-cam="native"]').onclick = () => { trackEvent("in-app camera: tech chose the phone camera"); camUseNative(inp); };
+  const video = ov.querySelector(".cam-video");
+  try {
+    cam.stream = await navigator.mediaDevices.getUserMedia({ audio: false,
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 4096 }, height: { ideal: 2160 } } });
+  } catch (err) {
+    trackEvent("in-app camera could not start: " + String(err && (err.name || err.message) || err).slice(0, 60));
+    camMsg(err && err.name === "NotAllowedError"
+      ? "Camera permission is off for this app. Allow the camera in the phone's settings, or use the phone's camera below."
+      : "This phone's camera couldn't start inside the app. Use the phone's camera below.");
+    return;
+  }
+  if (!cam.overlay) { cam.stream.getTracks().forEach(t => t.stop()); cam.stream = null; return; }   // cancelled while starting
+  video.srcObject = cam.stream;
+  try { await video.play(); } catch (e) {}
+  const track = cam.stream.getVideoTracks()[0];
+  const caps = track && track.getCapabilities ? track.getCapabilities() : {};
+  if (caps && caps.torch) {
+    const tb = ov.querySelector('[data-cam="torch"]');
+    let on = false;
+    tb.classList.remove("hidden");
+    tb.onclick = async () => {
+      on = !on;
+      try { await track.applyConstraints({ advanced: [{ torch: on }] }); tb.classList.toggle("on", on); } catch (e) { on = !on; }
+    };
+  }
+  const shoot = ov.querySelector('[data-cam="shoot"]');
+  shoot.disabled = false;
+  shoot.onclick = async () => {
+    if (cam.busy) return;
+    cam.busy = true;
+    shoot.disabled = true;
+    camMsg("Taking photo…");
+    let blob = null, how = "";
+    // Full-resolution still where the phone supports it, else the live frame.
+    if (typeof ImageCapture !== "undefined" && track) {
+      try { blob = await new ImageCapture(track).takePhoto(); how = "still"; } catch (e) { blob = null; }
+    }
+    if (!blob || blob.size < 20000) {
+      const c = document.createElement("canvas");
+      c.width = video.videoWidth; c.height = video.videoHeight;
+      c.getContext("2d").drawImage(video, 0, 0);
+      blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
+      how = "frame " + c.width + "x" + c.height;
+    }
+    const target = cam.input;
+    closeInAppCamera(false);
+    if (!blob || !target) return;
+    trackEvent("in-app camera photo (" + how + ")");
+    const dt = new DataTransfer();
+    dt.items.add(new File([blob], "photo-" + Date.now() + ".jpg", { type: blob.type || "image/jpeg" }));
+    target.files = dt.files;
+    target.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+}
+
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const fr = new FileReader();
@@ -11625,7 +11758,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v288";
+const APP_VERSION = "v289";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
