@@ -1377,7 +1377,7 @@ const SYMPTOM_FOLLOWUPS = {
  ],
  "s-capacitor-ohmmeter-swing-test": [
   {
-   "ask": "With power off and the capacitor discharged through a 20 to 30 ohm resistor, which meter are you testing with?",
+   "ask": "With power off and the capacitor discharged through a 200 to 300 ohm resistor, which meter are you testing with?",
    "options": [
     {
      "label": "Digital ohmmeter",
@@ -8225,7 +8225,7 @@ const SYMPTOM_FOLLOWUPS = {
  ],
  "s-discharge-capacitor-before-handling": [
   {
-   "ask": "With all power off, discharge the capacitor through a 20 to 30 ohm resistor, then check the terminals with your meter. What do you read?",
+   "ask": "With all power off, discharge the capacitor through a 200 to 300 ohm resistor, then check the terminals with your meter. What do you read?",
    "options": [
     {
      "label": "Zero volts at the terminals",

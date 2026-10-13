@@ -6740,7 +6740,7 @@ const SYMPTOMS = [
   "title": "Checking a capacitor with an ohmmeter when you have no capacitance meter",
   "summary": "You suspect a capacitor but your meter has no capacitance function. Both digital and analog ohmmeters can show whether the capacitor still charges, using the momentary reading and how it settles. Always discharge the capacitor before you touch it.",
   "steps": [
-   "Disconnect all power and discharge the capacitor through a 20 to 30 ohm resistor before handling it.",
+   "Disconnect all power and discharge the capacitor through a 200 to 300 ohm resistor before handling it.",
    "Digital meter: set the meter to an ohm range of at least 1k ohm.",
    "Connect the meter leads to the capacitor terminals and note the momentary reading that appears.",
    "Watch the display return immediately to OL (open line); repeating the connection should give the same behavior each time, which indicates the capacitor is good.",
@@ -7249,7 +7249,7 @@ const SYMPTOMS = [
   "summary": "A run or start capacitor holds a charge after the disconnect is pulled, and every capacitor test in these manuals begins with the same instruction. Discharging through a resistor rather than a direct short protects both you and the capacitor you are about to test.",
   "steps": [
    "Disconnect all power and confirm the unit is dead, remembering multiple power sources may be present.",
-   "Discharge the capacitor through a 20 to 30 ohm resistor before handling it.",
+   "Discharge the capacitor through a 200 to 300 ohm resistor before handling it.",
    "Verify with a meter that the terminals read zero volts before touching them.",
    "Remove the capacitor from the circuit before performing a capacitance test.",
    "Select capacitance mode on the multimeter and connect the leads to the capacitor terminals.",
