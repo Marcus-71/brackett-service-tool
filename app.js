@@ -9529,6 +9529,19 @@ function tagParseBarcodes(codes) {
       // Trane models end in two design-sequence letters (...9421AC); the code
       // appends the label's separate 2-digit field ("07"), which is not the model.
       if (p && ocrMatchTier(p) === 2) { model = p.brand === "Trane" && /[A-Z]{2}0\d$/.test(t) ? t.slice(0, -2) : t; if (!serial) serial = parts[1].replace(/\*$/, ""); }
+      continue;
+    }
+    // v294 (Nick's Payne PG9MAA036080AFKA plate, 10/12): plain Code 128 bars over the
+    // "Model Number" / "Serial Number" print carry just the value. Four digits, a letter,
+    // five digits is the Carrier / Bryant / Payne / ICP / Lennox / Allied serial format;
+    // a code that is a specific library family (ocrMatchTier 2) is the model. Any other
+    // plain code is still ignored.
+    if (parts.length === 1) {
+      if (!serial && /^\d{4}[A-Z]\d{5}$/.test(t)) { serial = t; continue; }
+      if (!model && t.length >= 8 && /^[A-Z][A-Z0-9\/\-]+$/.test(t) && /\d/.test(t)) {
+        const p = ocrLibraryPattern(t.replace(/[\/-]/g, ""));
+        if (p && ocrMatchTier(p) === 2) model = t;
+      }
     }
   }
   // v275: a serial-only code (Lennox, York) is kept too; ocrTagFields merges it
@@ -9539,6 +9552,25 @@ function tagParseBarcodes(codes) {
 async function tagBarcodeFields(file) {
   if (typeof invBarcodeTexts !== "function") return null;
   try { return tagParseBarcodes(await invBarcodeTexts(file)); } catch (e) { return null; }
+}
+// v294: on a lower-resolution photo (a gallery pick, a shared copy) plate bars are 1-2 px wide
+// and zxing misses them; enlarged 1.3-2x (long side up to 3200 px) the same bars read - Nick's
+// 1200x1600 Payne photo gave its serial at 1.5x and nothing at 1x. A full-size camera photo is
+// already big enough and is skipped.
+async function tagBarcodeFieldsEnlarged(file) {
+  if (typeof invBarcodeTexts !== "function" || typeof createImageBitmap !== "function") return null;
+  try {
+    const bmp = await createImageBitmap(file);
+    const sc = Math.min(2, 3200 / Math.max(bmp.width, bmp.height));
+    if (sc < 1.3) { if (bmp.close) bmp.close(); return null; }
+    const c = document.createElement("canvas");
+    c.width = Math.round(bmp.width * sc); c.height = Math.round(bmp.height * sc);
+    const x = c.getContext("2d"); x.imageSmoothingQuality = "high";
+    x.drawImage(bmp, 0, 0, c.width, c.height);
+    if (bmp.close) bmp.close();
+    const blob = await new Promise(res => c.toBlob(res, "image/png"));
+    return blob ? tagParseBarcodes(await invBarcodeTexts(blob)) : null;
+  } catch (e) { return null; }
 }
 // Vern 2026-10-05 scanned the Generac ENGINE sticker (GENERAC OHVI ENGINES,
 // Model No. 0J9322, 992 cc) twice - it isn't the generator's model plate.
@@ -9560,13 +9592,23 @@ const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
   const viaBarcode = await tagBarcodeFields(file);
   if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
+  // The enlarged barcode read runs on this thread while Tesseract reads in its worker.
+  const enlargedP = tagBarcodeFieldsEnlarged(file);
   const fields = await ocrTagText(file, onStatus);
-  // A serial-only code (Lennox DataMatrix / label, York QR) beats the OCR'd
-  // serial: James's G61MP plate read 5909117186 / 550917186 for 5909L17186.
-  if (viaBarcode && viaBarcode.serial && fields) {
-    if (fields.serial !== viaBarcode.serial) trackEvent("tag serial read by barcode");
-    fields.serial = viaBarcode.serial; fields.serialSource = "label";
-    if (!fields.brandHint && viaBarcode.brandHint) fields.brandHint = viaBarcode.brandHint;
+  const enlarged = await enlargedP;
+  if (enlarged && enlarged.model && !(fields && fields.model)) {
+    trackEvent("tag read by barcode (enlarged)");
+    const serial = (viaBarcode && viaBarcode.serial) || enlarged.serial || (fields && fields.serial) || "";
+    return { ...enlarged, serial, serialSource: serial && serial !== (fields && fields.serial) ? "label" : (fields && fields.serialSource) || enlarged.serialSource,
+      brandHint: enlarged.brandHint || (viaBarcode && viaBarcode.brandHint) || (fields && fields.brandHint) || null };
+  }
+  const code = (viaBarcode && viaBarcode.serial) ? viaBarcode : (enlarged && enlarged.serial) ? enlarged : null;
+  // A serial-only code (Lennox DataMatrix / label, York QR, a plain serial bar) beats the
+  // OCR'd serial: James's G61MP plate read 5909117186 / 550917186 for 5909L17186.
+  if (code && fields) {
+    if (fields.serial !== code.serial) trackEvent(code === enlarged ? "tag serial read by barcode (enlarged)" : "tag serial read by barcode");
+    fields.serial = code.serial; fields.serialSource = "label";
+    if (!fields.brandHint && code.brandHint) fields.brandHint = code.brandHint;
   }
   return fields;
 }
@@ -11801,7 +11843,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v293";
+const APP_VERSION = "v294";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
