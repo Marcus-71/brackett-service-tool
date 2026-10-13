@@ -26662,7 +26662,7 @@ const GENERATORS = [
   "controller": "Nexus (industrial liquid-cooled) - 2-line LCD; distinct firmware from the residential air-cooled Nexus",
   "startupKey": "protector_qt",
   "kw": ["22","27","30","36","45","48","60","70","80","100","130","150"],
-  "engine": "Generac gaseous: 2.4L (<=60 kW), 6.8L (70-150 kW), 9.0L on the largest. NG/LP.",
+  "engine": "Generac gaseous: 2.4L (<=60 kW), 4.2L V6 1800 rpm on the QT048 (engine code 42), 6.8L (70-150 kW), 9.0L on the largest. NG/LP.",
   "fuel": "Natural gas or LP vapor. Fuel pressure at inlet: 5-14 in w.c. (2.4L / <=60 kW), 11-14 in w.c. (6.8L 70-150 kW).",
   "years": "-",
   "sort": 7,
@@ -26672,7 +26672,7 @@ const GENERATORS = [
    { "g": "", "lc": "QT030", "digits": "QT030", "desc": "30 kW, Nexus (e.g. QT03015)" },
    { "g": "", "lc": "QT036", "digits": "QT036", "desc": "36 kW, 2.4L, Nexus" },
    { "g": "", "lc": "QT045", "digits": "QT045", "desc": "45 kW, 2.4L, Nexus (e.g. QT04524)" },
-   { "g": "", "lc": "QT048", "digits": "QT048", "desc": "48 kW, Nexus" },
+   { "g": "", "lc": "QT048", "digits": "QT048", "desc": "48 kW, 4.2L V6 1800 rpm. Ends in X (QT04842ANAX) = Nexus; ends in N (QT04842ANAN/GNAN/JNAN/KNAN) = R-200B LED panel, see the tip" },
    { "g": "", "lc": "QT060", "digits": "QT060", "desc": "60 kW, 2.4L, Nexus" },
    { "g": "", "lc": "QT070", "digits": "QT070", "desc": "70 kW, 6.8L, Nexus (e.g. QT07068ANAX)" },
    { "g": "", "lc": "QT100", "digits": "QT100", "desc": "100 kW, 6.8L, Nexus (QT10068)" },
@@ -26755,10 +26755,11 @@ const GENERATORS = [
   ],
   "installNotes": [
    "The alarms on this INDUSTRIAL Nexus are NAMED, not the numeric 1100-2900 codes of the residential air-cooled Nexus/Evolution - do not read residential numeric codes onto this unit.",
-   "Model decode: QT + kW (3-digit) + engine code (24=2.4L, 68=6.8L) + voltage letter (A=120/240 1ph, G=120/208 3ph-Y, J=120/240 3ph-Delta, K=277/480 3ph, L=346/600) + fuel (N=NG) + enclosure (A=aluminum).",
+   "Model decode: QT + kW (3-digit) + engine code (24=2.4L, 42=4.2L, 68=6.8L) + voltage letter (A=120/240 1ph, G=120/208 3ph-Y, J=120/240 3ph-Delta, K=277/480 3ph, L=346/600) + fuel (N=NG) + enclosure (A=aluminum).",
    "3-phase: Y (wye) for the G/K/L voltage codes, Delta for the J code."
   ],
   "tips": [
+   "QT048 ending in N (QT04842ANAN, GNAN, JNAN, KNAN) is NOT Nexus: it has the R-200B panel (LEDs, no screen) and the 4.2L V6. Write down which LEDs are lit before switching to OFF, and read them with the R-200B LED list on the Protector legacy liquid-cooled card. Its weekly exercise runs at 1400 rpm (low-speed mode), and oil pressure, high coolant temp and low coolant level are only checked after a 10 second hold-off - so a shutdown about 10 s after start points at those three first (R-200B technical manual 0G9375 p.7-8). Owner's manual 0H0996 and the 0G9256 wiring / 0G9257 schematic are in Manuals below.",
    "Identify the controller first (Nexus 2-line LCD vs H-100 dual LCD) - it decides which fault table and manual to use.",
    "The QT 60 kW owner's manual (Manuals below) carries the Nexus alarm list, fuel system, and wiring diagrams."
   ],
@@ -26771,6 +26772,11 @@ const GENERATORS = [
    { "title": "Protector QT 2.4L 60 kW - Owner's Manual (Nexus alarms, fuel, wiring)", "docType": "owner", "seedFile": "generac-protector-qt-2p4l-60kw-nexus-owners.pdf" },
    { "title": "Protector QT 70-150 kW Commercial - Spec Sheet (Nexus, model decode, dimensions)", "docType": "spec", "seedFile": "generac-protector-qt-70-150kw-commercial-spec.pdf" },
    { "title": "LC Product (Evolution or Nexus Control) - Diagnostic Manual (0J1195) - covers the industrial Nexus", "docType": "diagnostic", "seedFile": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf" },
+   { "title": "Protector QT048 4.2L 48 kW - Owner's Manual (0H0996; R-200B models ending in N)", "docType": "owner", "seedFile": "generac-protector-qt048-4p2l-48kw-owner.pdf" },
+   { "title": "R-200A/R-200B Digital Controller - Technical Manual (0G9375 Rev D; LEDs, exercise, DIP switches)", "docType": "diagnostic", "seedFile": "generac-r200b-control-panel-technical-manual.pdf" },
+   { "title": "QT048 4.2L R-200B - Wiring Diagram (0G9256)", "docType": "wiring", "seedFile": "generac-protector-qt048-4p2l-r200b-wiring-diagram.pdf" },
+   { "title": "QT048 4.2L R-200B - Schematic (0G9257)", "docType": "wiring", "seedFile": "generac-protector-qt048-4p2l-r200b-schematic.pdf" },
+   { "title": "Installation Manual - Stationary Emergency Generator, liquid-cooled (0F8751 Rev J)", "docType": "install", "seedFile": "generac-liquidcooled-stationary-emergency-install-manual-0f8751.pdf" },
    { "title": "H-100 Digital Control Panel - Technical Manual (used on larger QT)", "docType": "diagnostic", "seedFile": "generac-h100-digital-control-panel-technical-manual.pdf" },
    { "title": "Generac product support lookup - every document for this model number", "docType": "other", "url": "https://www.generac.com/service-support/product-support-lookup/" }
   ],

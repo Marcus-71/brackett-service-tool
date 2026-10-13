@@ -4821,3 +4821,262 @@ const MAINT_GEN_TUNEUP = [
  }
 ];
 MAINT_SPECS.push(...MAINT_GEN_TUNEUP);
+
+// v292 (2026-10-13): Carrier CH14NB heat pump (triage 10/12: a tech had one and the app had no
+// figures). From the CH14NB product data and install manual, Fable-verified (scratch292).
+MAINT_SPECS.push({
+ "brand": "Carrier",
+ "model": "CH14NB (Comfort 14 single-stage heat pump, R-410A)",
+ "equip": "Heat Pump",
+ "summary": "Carrier Comfort 14 SEER single-stage split-system heat pump with scroll compressor and Puron R-410A, sizes 018-060 (1.5-5 tons), 208/230-1-60 only. 14 SEER, 11.5-11.7 EER, 8.2 HSPF. Cooling meters through a hard-shutoff TXV at the indoor coil; heating through a piston in the outdoor liquid service valve. Time/temperature defrost on an HK32EA001 (PSC fan) or HK32EA009 (ECM fan) board with quick-connect interval tabs and SPEEDUP pins. High-pressure and loss-of-charge switches are standard on every size.",
+ "match": [
+  "CH14NB"
+ ],
+ "source": "Carrier CH14NB Product Data, Cat. CH14NB-03PD (03/15); Carrier CH14NB / CH16NA Installation Instructions, Cat. CH14NB-16NA-03SI (08/17)",
+ "flags": [
+  {
+   "title": "Charge from the unit's own tables, not an app chart",
+   "body": "No charging chart is authored for the CH14NB. Use the printed tables in the install instructions: Table 5 (liquid pressure vs required subcooling, TXV indoor) and Table 6 (superheat by outdoor temperature and indoor wet bulb, piston indoor). The rating plate gives the factory charge and the subcooling target; the product data lists them too (SI p8-10; PD p8)."
+  },
+  {
+   "title": "Some indoor units need extra subcooling for heating",
+   "body": "SI Table 4 adds +3 or +5 F to the rating-plate subcooling for certain CAP, FV4CN and FX4DN coils (for example on a 042: CAP**4321AL* and CAP**4817AL* +5, CAP**4821AL* and CAP**4824AL* +3, FV4CN(B,F)005L +3, FV4CNB006L +5, FX4DN(B,F)049L +3, FX4DN(B,F)061L +5). Check the installed coil against the table before calling the charge right (SI p3, p9)."
+  },
+  {
+   "title": "Heating piston lives in the liquid service valve",
+   "body": "The heating piston ships in the piston body of the liquid service valve, held by a plastic cap. The stamped size must match the rating plate. A wrong or missing piston shows up as poor heating. Units built with an outdoor TXV have no piston body (SI p3)."
+  },
+  {
+   "title": "Fan motor size changes with unit size",
+   "body": "Do not assume 1/4 HP. PD physical data: 018 = 1/12 HP, 024 = 1/10, 030 = 1/4, 036 = 1/5, 042-060 = 1/4; 1100 RPM on all but the 060 (800 RPM). The 036 is series B, the rest series A (PD p3)."
+  },
+  {
+   "title": "Switch set points are not published",
+   "body": "High-pressure and loss-of-charge switches are standard on all sizes, but neither the product data nor the install instructions print their trip or reset pressures. Read the switch label. Do not disable the low-pressure switch on these scroll units (PD p2; SI p6)."
+  },
+  {
+   "title": "Low-ambient kit on ECM-fan units",
+   "body": "On a unit with the ECM outdoor motor, MotorMaster needs a replacement motor kit that comes with a new defrost board, and the unit no longer meets its AHRI rating afterwards. A low-ambient pressure switch or MotorMaster is required for cooling below 55 F (SI p3 Table 1 note; PD p6)."
+  }
+ ],
+ "groups": [
+  {
+   "title": "Identify it right first",
+   "rows": [
+    {
+     "label": "Model decode (CH14NB042A00G)",
+     "value": "CH14 = 14 SEER heat pump with Puron · N = 208/230-60-1 · 018-060 = nominal capacity (018 = 1.5 ton, 024 = 2, 030 = 2.5, 036 = 3, 042 = 3.5, 048 = 4, 060 = 5) · B = Puron · A = series · 00G = dense grille. The 036 is series B, every other size is series A (PD p2-3)"
+    },
+    {
+     "label": "Ratings",
+     "value": "14 SEER, 11.5-11.7 EER, 8.2 HSPF with the matched fan coil (PD p1, p13). Voltage 208/230-1-60 only; no 3-phase or 460 V versions (PD p8)"
+    }
+   ]
+  },
+  {
+   "title": "Refrigerant & charging",
+   "rows": [
+    {
+     "label": "Refrigerant / compressor",
+     "value": "Puron R-410A, scroll compressor with internal pressure relief valve and internal thermal overload. Suction-line accumulator standard (PD p2-3)",
+     "key": true
+    },
+    {
+     "label": "Factory charge, lb (covers 15 ft of line set)",
+     "value": "018: 5.3 · 024: 5.6 · 030: 6.4 · 036: 7.67 · 042: 8.25 · 048: 8.68 · 060: 10.6 (PD p3). Charge covers the approved AHRI-rated indoor unit with 15 ft of tubing and the factory filter drier (SI p3). The rating plate governs (SI p8)",
+     "key": true
+    },
+    {
+     "label": "Charge adjustment",
+     "value": "Add or remove 0.6 oz per ft of 3/8 in. liquid line above or below 15 ft (SI p8)"
+    },
+    {
+     "label": "Cooling metering",
+     "value": "Hard-shutoff Puron TXV at the indoor coil (PD p3). Capillary-tube indoor coils are not allowed; an R-22 TXV or R-22 piston must be changed to a hard-shutoff Puron TXV (SI p4, p11)"
+    },
+    {
+     "label": "Heating metering",
+     "value": "Piston in the piston body of the outdoor liquid service valve; stamped size must match the rating plate. Adapter tube nut: finger tight plus 1/2 turn (15 ft-lb). Units with an outdoor TXV have no piston body (SI p3). Piston sizes are not printed in the PD or SI",
+     "key": true
+    },
+    {
+     "label": "Charging method",
+     "value": "TXV indoor = subcooling, piston indoor = superheat; the method is on the information plate inside the unit. Favourable conditions: 70-100 F outdoor and 70-80 F indoor, after at least 15 minutes in cooling (at least 10 minutes before reading). Outside those conditions adjust by weight for line length only and come back (SI p8)",
+     "key": true
+    },
+    {
+     "label": "Required subcooling, F (TXV indoor)",
+     "value": "018: 11 · 024: 11 · 030: 10 · 036: 10 · 042: 10 · 048: 14 · 060: 15 (PD p8). Rating plate governs; tolerance 3 F. Measure liquid pressure at the liquid service valve and liquid temperature near the outdoor coil (SI p8)",
+     "key": true
+    },
+    {
+     "label": "Extra subcooling for some indoor units (SI Table 4)",
+     "value": "Add to the rating-plate value. 018: none · 024: CAP**2517AL* +5, FX4DN(B,F)037L +5 · 030: CAP**3717AL* +5, CAP**3721AL* +5, FV4CN(B,F)005L +5, FX4DN(B,F)037L +3, FX4DN(B,F)043L +3 · 036: FV4CN(B,F)005L +3, FV4CNB006L +5, FX4DN(B,F)049L +3 · 042: CAP**4321AL* +5, CAP**4817AL* +5, CAP**4821AL* +3, CAP**4824AL* +3, FV4CN(B,F)005L +3, FV4CNB006L +5, FX4DN(B,F)049L +3, FX4DN(B,F)061L +5 · 048: CAP**6124AL* +3, FV4CNB006L +3, FX4DN(B,F)061L +3 · 060: none. Every other listed coil is a dash (no change) (SI p9)"
+    },
+    {
+     "label": "Subcooling table (SI Table 5)",
+     "value": "Required liquid line temperature for 8-18 F subcooling at 251-511 psig liquid pressure. Example: 10 F subcooling at 354 psig = 98 F liquid line; at 416 psig = 110 F (SI p9)"
+    },
+    {
+     "label": "Superheat table (SI Table 6)",
+     "value": "Superheat at the suction service port by outdoor dry bulb (55-115 F) and indoor wet bulb (50-76 F); tolerance 3 F; valid only when indoor airflow is within 21 percent of rated. Optimum is 5-6 F superheat at 82 F outdoor and 80/67 F indoor. Where the table shows a dash do not charge by superheat, weigh the charge in. Add refrigerant as liquid through a flow-restricting device into the suction port (SI p8, p10)"
+    },
+    {
+     "label": "Indoor piston size if replacing into a piston fan coil",
+     "value": "FB4CNF / FFM / FPMA: 018: 0.052 / 0.050 / 0.050 · 024: 0.057 / 0.057 / 0.056 · 030: 0.067 / 0.070 / 0.067 · 036: 0.070 / 0.072 / 0.069 · 042: 0.078 (FB4CNF only) · 048: 0.084 (FB4CNF only) · 060: not available (PD p8)"
+    },
+    {
+     "label": "Heating Check Chart on the unit",
+     "value": "Verify only; never adjust charge from it (SI p8)"
+    },
+    {
+     "label": "Filter drier",
+     "value": "Factory-supplied liquid-line filter drier is field installed and required: braze a 5 in. liquid tube to the indoor coil, wrap the drier in a damp cloth, braze it in. Rated working pressure must be at least 600 psig (PD p2; SI p4, p11)"
+    },
+    {
+     "label": "Evacuation",
+     "value": "Deep vacuum to 500 microns; a tight dry system holds 1000 microns after about 7 minutes. Always break vacuum with dry nitrogen. Never use the compressor as a vacuum pump (SI p5)"
+    }
+   ]
+  },
+  {
+   "title": "Line set & long line",
+   "rows": [
+    {
+     "label": "Rated line sizes",
+     "value": "Liquid 3/8 in. on all sizes (3/8 is also the maximum liquid line). Vapor valve connection and rated tube: 018/024 = 5/8 · 030/036 = 3/4 · 042/048 = 7/8 · 060 = 7/8 valve with 1-1/8 rated tube (PD p3; SI p4 Table 2). Alternate vapor sizes and capacity loss: PD p3 table",
+     "key": true
+    },
+    {
+     "label": "Rating basis",
+     "value": "Rated with 25 ft of line set; the factory charge covers 15 ft (PD p3; SI p3)"
+    },
+    {
+     "label": "Maximum length",
+     "value": "200 ft actual and 250 ft total equivalent. Outdoor unit above indoor unit: up to 200 ft vertical (PD p4)"
+    },
+    {
+     "label": "Outdoor unit below indoor unit, max equivalent length",
+     "value": "018-036: 250 ft up to 80 ft of lift · 042: 250 ft up to 70 ft, 150 ft at 71-80 ft · 048: 250 ft up to 50 ft, 230 ft at 51-60, 160 ft at 61-70, not allowed beyond 70 ft · 060: 250 ft up to 20 ft, 225 at 21-30, 190 at 31-40, 150 at 41-50, 110 at 51-60, not allowed beyond 60 ft. Actual length never over 200 ft (PD p4)"
+    },
+    {
+     "label": "Long line threshold",
+     "value": "More than 80 ft total, or outdoor unit more than 20 ft below the indoor unit. Beyond that follow the Residential Piping and Long Line Guideline: crankcase heater, start capacitor and relay, hard-shutoff TXV, liquid line solenoid as the guideline calls for, and special charging (PD p4, p6; SI p3, p6, p8)"
+    },
+    {
+     "label": "Brazing",
+     "value": "Wrap service valves in a wet cloth. Liquid valve with piston body: braze the line to the adapter tube BEFORE bolting the adapter to the valve. Vapor valve: pull the Schrader core first, replace it after. Sil-Fos or Phos-copper; no soft solder. Buried line no longer than 36 in., with a 6 in. rise at the valve (SI p3-4)"
+    }
+   ]
+  },
+  {
+   "title": "Electrical: LRA / RLA / fan FLA / MCA / max fuse or breaker (PD p8)",
+   "rows": [
+    {
+     "label": "208/230-1-60 (197-253 V)",
+     "value": "018: 48.0 / 9.0 / 0.50 / 11.8 / 20 · 024: 62.9 / 10.9 / 0.60 / 14.2 / 25 · 030: 72.5 / 13.5 / 1.40 / 18.3 / 30 · 036: 75.0 / 14.7 / 1.10 / 19.5 / 30 · 042: 105.5 / 15.5 / 1.40 / 24.0 / 40 · 048: 108.0 / 19.0 / 1.40 / 25.2 / 40 · 060: 144.2 / 24.4 / 1.52 / 32.0 / 50. Time-delay fuse. Copper wire only from the disconnect",
+     "key": true
+    },
+    {
+     "label": "Control circuit",
+     "value": "24 V from the indoor transformer, 40 VA minimum; No. 18 AWG, or No. 16 AWG beyond 100 ft (PD p8; SI p5)"
+    },
+    {
+     "label": "Reversing valve",
+     "value": "O terminal, energized in cooling (R-O), de-energized in heating. Heating call is R-Y and R-G; R-W2 brings on supplemental heat. Indoor blower runs 90 s after the call if the indoor unit has a time-delay relay (SI p6)",
+     "key": true
+    },
+    {
+     "label": "Capacitor",
+     "value": "Not printed in the PD or SI; see the rating plate or wiring label"
+    }
+   ]
+  },
+  {
+   "title": "Fan motor, compressor & switches",
+   "rows": [
+    {
+     "label": "Outdoor fan motor (HP / RPM)",
+     "value": "018: 1/12 / 1100 · 024: 1/10 / 1100 · 030: 1/4 / 1100 · 036: 1/5 / 1100 · 042: 1/4 / 1100 · 048: 1/4 / 1100 · 060: 1/4 / 800. Direct drive, vertical discharge. Units were built with either a PSC motor (defrost board HK32EA001, fan lead on OF2) or an ECM motor (board HK32EA009, fan lead on ODF) (PD p3; SI p7)",
+     "key": true
+    },
+    {
+     "label": "Ball-bearing fan motor (MotorMaster) accessory",
+     "value": "HC32GE234 (018) · HC34GE240 (024) · HC38GE219 (036) · HC40GE226 (030, 042, 048) · HC40GE228 (060) (PD p5)"
+    },
+    {
+     "label": "Pressure switches",
+     "value": "High-pressure switch and loss-of-charge switch standard on all sizes. Set points are not published in the PD or SI; read the switch label. Do not disable the low-pressure switch (PD p2; SI p6)",
+     "key": true
+    },
+    {
+     "label": "Crankcase heater",
+     "value": "Accessory, not standard: KAACH1701AAA (018-036), KAACH1601AAA (042, 048); none listed for 060. Required for long line and low-ambient cooling; power it 24 hours before start-up with the thermostat OFF and the disconnect closed (PD p5-6; SI p6)"
+    },
+    {
+     "label": "Other accessories",
+     "value": "Hard start KSAHS1701AAA, PTC start assist KAACS0201PTC, low-ambient pressure switch KSALA0301410 (holds head pressure to 0 F), MotorMaster KSALA0601AAA (to -20 F), isolation relay KHAIR0201AAA and freeze thermostat KAAFT0101AAA (both required with a low-ambient kit), liquid line solenoid KHALS0401LLS, cycle protector KSACY0101AAA (PD p5-6)"
+    }
+   ]
+  },
+  {
+   "title": "Defrost & forced defrost test",
+   "rows": [
+    {
+     "label": "Defrost board",
+     "value": "HK32EA001 on PSC-fan units (Fig. 11), HK32EA009 on ECM-fan units (Fig. 12). Both are time/temperature boards with quick-connect interval tabs (30 / 60 / 90) at the board edge and SPEEDUP pins (SI p7)"
+    },
+    {
+     "label": "Defrost type / interval",
+     "value": "Time/temperature. Field-selectable 30, 60 or 90 minutes between defrosts, factory set to either 60 or 90 (check the tab). The timer is enabled by T1 and runs only while the defrost thermostat is closed and the contactor is energized (SI p7)",
+     "key": true
+    },
+    {
+     "label": "Defrost thermostat (DFT)",
+     "value": "On the 3/8 in. OD stub tube, about 2 in. long, at the end of a feeder tube off the liquid header, usually the bottom circuit. Closes at about 30 F liquid line, reopens at about 65 F (SI p2, p7)",
+     "key": true
+    },
+    {
+     "label": "What a defrost looks like",
+     "value": "Same as cooling except the outdoor fan stops and second-stage heat (W2) is on. Normal defrost is a 10-minute cycle or until the DFT reopens at about 65 F (SI p7)"
+    },
+    {
+     "label": "Forced defrost",
+     "value": "1. Power off the outdoor unit. 2. Pull the fan lead off OF2 (PSC board) or ODF (ECM board) and tape it. 3. Restart in heating and let frost build. 4. After a few minutes the liquid line should drop below the DFT closing point (about 30 F). 5. Short the SPEEDUP pins with a flat-blade screwdriver; timing runs at 1/25 (Table 3). 6. When you hear the reversing valve shift, pull the screwdriver immediately, otherwise the board ends the normal 10-minute defrost in about 2 seconds. 7. Unit stays in defrost for the rest of the cycle or until the DFT reopens at about 65 F. 8. Power off and reconnect the fan lead (SI p7)",
+     "key": true
+    },
+    {
+     "label": "Speed-up times (SI Table 3)",
+     "value": "As printed: 30-minute cycle (27-33 min) = 7 s · 50-minute cycle (45-55 min) = 12 s · 90-minute cycle (81-99 min) = 21 s · 10-minute cycle (9-11 min) = 2 s · 5 minutes (4.5-5.5) = 1 s. The table labels the 60-minute tab as a 50-minute cycle (SI p7)"
+    },
+    {
+     "label": "Checks / codes",
+     "value": "No fault codes on these boards. Check that the DFT is on the stub tube and securely attached before start-up (SI p2). If the timer never runs: it is enabled only while T1 is energized, the DFT is closed and the contactor is pulled in (SI p7)"
+    }
+   ]
+  },
+  {
+   "title": "Start-up & operating range",
+   "rows": [
+    {
+     "label": "Operating range",
+     "value": "Cooling 55 F to 125 F outdoor without accessories; below 55 F needs a low-ambient pressure switch (to 0 F) or MotorMaster (to -20 F) plus the accessories in Table 1. Heating: maximum 66 F outdoor (PD p1, p6; SI p2-3)",
+     "key": true
+    },
+    {
+     "label": "Start-up",
+     "value": "Open both service valves fully after evacuation, caps back on finger tight plus 1/12 turn, run 15 minutes, then check charge. Unit must be level within 2 degrees (3/8 in. per ft) (SI p2, p6)"
+    },
+    {
+     "label": "Clearances",
+     "value": "24 in. at the service end, 48 in. above, 6 in. on one side and 12 in. on the others; 24 in. between units (18 in. with wire grille and no overhang within 12 ft); 6 in. above a roof surface (PD p9; SI p2)"
+    },
+    {
+     "label": "Puron service notes",
+     "value": "Charge liquid through a metering device into the suction line with the compressor running. Manifold 700 psig high side, 180 psig low side with 550 psig retard; hoses rated 700 psig; recovery cylinder 400 psig. POE oil only; suction-line drier no longer than 72 hours (SI p11)"
+    }
+   ]
+  }
+ ],
+ "checklist": "heatpump"
+});

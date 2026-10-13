@@ -2699,8 +2699,23 @@ function renderDiagEmptyState() {
     return;
   }
   reportUnanswered(query);
+  // A code typed into Diagnostic Help ("32.1", "E5", "code 1902") belongs in Error
+  // Codes (10/12 usage digest: techs searched codes here and got nothing).
+  const codeTok = diagCodeToken(query);
+  const codeHits = codeTok ? diagCodeHits(codeTok) : 0;
+  const codeBtn = codeHits ? `<button type="button" class="chip" id="diagGoCodes" style="margin-right:0.4rem;">⚡ Error Codes for "${escapeHtml(codeTok)}" (${codeHits})</button>` : "";
+  const wireCodeBtn = () => {
+    const b = document.getElementById("diagGoCodes");
+    if (b) b.onclick = () => {
+      trackEvent("diag -> codes: " + codeTok);
+      codesState.brand = "All"; codesState.equipment = "All"; codesState.search = codeTok;
+      document.getElementById("codesSearchInput").value = codeTok;
+      showScreen("codes");
+    };
+  };
   if (!navigator.onLine) {
-    empty.innerHTML = `No matching symptoms for "${escapeHtml(query)}". Try a different search, or add this one. (You're offline — web search isn't available right now.)`;
+    empty.innerHTML = `No matching symptoms for "${escapeHtml(query)}". Try a different search, or add this one. (You're offline — web search isn't available right now.)${codeBtn ? `<div style="margin-top:0.7rem;">${codeBtn}</div>` : ""}`;
+    wireCodeBtn();
     return;
   }
   const parts = [query, "hvac troubleshooting"];
@@ -2709,9 +2724,23 @@ function renderDiagEmptyState() {
   empty.innerHTML = `
     No matching symptoms for "${escapeHtml(query)}". Try a different search, or add this one.
     <div style="margin-top:0.7rem;">
-      <a href="${searchUrl}" target="_blank" rel="noopener" class="chip" style="display:inline-block; text-decoration:none;">🔍 Search the web for this</a>
+      ${codeBtn}<a href="${searchUrl}" target="_blank" rel="noopener" class="chip" style="display:inline-block; text-decoration:none;">🔍 Search the web for this</a>
     </div>
   `;
+  wireCodeBtn();
+}
+
+// "32.1", "E5", "LO-3", "code 1902", "flashing 33" -> the code itself; anything else -> "".
+function diagCodeToken(q) {
+  const t = String(q || "").trim().replace(/^(error|fault|alarm|status|flash(ing)?|blink(ing)?|code)(\s+(code|flash(es)?))?\s*:?\s*/i, "").trim();
+  return /^[a-z]{0,3}-?\d{1,4}([.\-]\d{1,2})?[a-z]?$/i.test(t) ? t.toUpperCase() : "";
+}
+function diagCodeHits(tok) {
+  const norm = (s) => String(s || "").toUpperCase().replace(/\s+/g, "");
+  const n = norm(tok);
+  try {
+    return getAllCodes().filter(c => [c.code, ...codeSearchAliases(c.code)].some(x => norm(x) === n)).length;
+  } catch (e) { return 0; }
 }
 
 function buildSymptomCard(s) {
@@ -8241,6 +8270,7 @@ const MODEL_PATTERNS = [
   // field will come back blank for these, and that's correct, not a bug.
   { re: /^PG(9[0-9]|8[0-9])[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Payne-branded gas furnace (Carrier platform)", notes: ["Payne = Carrier — the standard Carrier/Bryant/Payne flash-code list in Error Codes applies.", "No official source documents a Payne serial date format — the tag's own date/warranty info is more reliable than a guess."] },
   { re: /^2[4567][A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity/Performance/Comfort AC or heat pump (24/25/26/27-series)", notes: ["24VNA9/25VNA8: full 39-code fault table is in Error Codes."] },
+  { re: /^CH14NB/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Comfort 14 single-stage heat pump, R-410A (CH14NB018-060)", notes: ["Charge from the unit's own charging tables in the install manual (subcooling 10-15 F by size, plus Table 4 extra subcooling for some indoor coils) - Maintenance Figures has every size.", "Install manual and product data are in Manuals - Carrier."] },
   { re: /^G[AH][0-9][ST]AN/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier/Bryant Builder (new-construction) R-454B AC (GA) / heat pump (GH) - GA4SAN5 / GA5SAN5 / GA8TAN5, GH5SAN5 / GH8TAN5", notes: ["R-454B (A2L) Builder tier - the SAME model number is sold under both Carrier and Bryant badges. NO diagnostic control board: single-stage (GA4/GA5/GH5) are contactor-only; two-stage GA8TAN5 / GH8TAN5 troubleshoot on compressor winding / unloader tests, no LED fault table.", "Read GH8TAN5 as G (Builder tier) H (heat pump; A = air conditioner) 8 (efficiency; 4/5 = single-stage, 8 = two-stage) T (compressor: S single-stage, T two-stage) A N 5 (R-454B), then capacity digits.", "Install manuals for GA4SAN5 / GA8TAN5 / GH8TAN5 are in Manuals → Carrier. Charge R-454B by the metering device: piston = superheat, TXV = subcooling."] },
   { re: /^P[AH](8T|5S|4S|13|14|15|16)[A-Z]/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Payne-branded AC or heat pump (Carrier platform)", notes: ["Payne = Carrier — standard fault-code list in Error Codes applies where the board matches."] },
   // Bryant-branded furnaces use a bare 3-digit-plus-letter model number (no
@@ -11771,7 +11801,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v291";
+const APP_VERSION = "v292";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
