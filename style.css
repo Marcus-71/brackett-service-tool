@@ -832,6 +832,10 @@ main {
   border: 2px solid var(--brand-orange);
 }
 
+/* v288: pick a photo already taken - the workaround when the phone closes the app
+   while its camera is open */
+.scan-btn-alt { display: block; text-align: center; margin-top: 0.5rem; padding: 0.7rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer; }
+
 .scan-status {
   margin-top: 0.7rem;
   padding: 0.6rem 0.9rem;

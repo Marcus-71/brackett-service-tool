@@ -360,6 +360,8 @@ function showScreen(name, fromBack) {
   if (name === "ask") { askIndexCache = null; renderAsk(); }
   if (name === "codes") renderCodes();
   if (name === "home") diagState.unitModel = "";
+  if (name === "scanner" && cameraLostInput === "tagPhotoInput") { cameraLostInput = ""; scanStatus(CAMERA_LOST_MSG); }
+  if (name === "maint" && cameraLostInput === "maintPhotoInput") { cameraLostInput = ""; maintScanStatus(CAMERA_LOST_MSG); }
   if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
@@ -9929,6 +9931,70 @@ async function saveFailedScan(blob, meta) {
     return rec;
   } catch (e) { return null; }
 }
+// v288: no failed tag scan goes unreviewed (Andy 2026-10-13 - Joe had 4 bad scans
+// before one came right, and none of them reached Andy). Two gaps:
+// 1. The app can be closed while a photo is being read (the phone kills it, the
+//    tech swipes it away). The photo is now held on the phone while it is read;
+//    if it is still held at the next start, it uploads as "interrupted".
+// 2. Android can close the app while the phone's own camera is open, and the
+//    photo never reaches the app at all (Joe 10/12: "app opened" four times in
+//    90 seconds, no scan events). The camera opening is noted; a fresh start
+//    within 10 minutes with no photo received logs "SCAN LOST" and tells the
+//    tech what happened and how to work around it.
+async function holdScanPhoto(file, id) {
+  try {
+    const db = await openFailedScansDb();
+    await failedScansPut(db, { id, blob: await downscaleScanPhoto(file), tech: getTechName(), ts: new Date().toLocaleString(),
+      kind: "interrupted", read: "app closed while this photo was being read", version: APP_VERSION, uploaded: false, held: true });
+  } catch (e) {}
+}
+async function releaseScanPhoto(id) {
+  try {
+    const db = await openFailedScansDb();
+    await new Promise((resolve) => {
+      const tx = db.transaction(FAILED_SCANS_STORE, "readwrite");
+      tx.objectStore(FAILED_SCANS_STORE).delete(id);
+      tx.oncomplete = resolve; tx.onerror = resolve; tx.onabort = resolve;
+    });
+  } catch (e) {}
+}
+async function recoverInterruptedScans() {
+  try {
+    const db = await openFailedScansDb();
+    const held = (await failedScansGetAll(db)).filter(r => r && r.held);
+    for (const r of held) {
+      r.held = false;
+      await failedScansPut(db, r);
+      trackEvent("SCAN INTERRUPTED | app closed while reading the photo | photo: " + r.id);
+    }
+    if (held.length) flushScanPhotos();
+  } catch (e) {}
+}
+const CAMERA_OPEN_KEY = "bfc_camera_open_v1";
+let cameraLostInput = "";   // input id whose photo was lost to a restart (shown once on that screen)
+document.addEventListener("click", (e) => {
+  const t = e.target;
+  const lab = t && t.closest ? t.closest("label[for]") : null;
+  const inp = lab ? document.getElementById(lab.getAttribute("for")) : (t && t.tagName === "INPUT" ? t : null);
+  if (inp && inp.type === "file" && inp.hasAttribute("capture")) safeSet(CAMERA_OPEN_KEY, { id: inp.id, ts: Date.now() });
+}, true);
+document.addEventListener("change", (e) => {
+  if (e.target && e.target.type === "file") { try { localStorage.removeItem(CAMERA_OPEN_KEY); } catch (x) {} }
+}, true);
+// Camera closed without a photo (tech backed out): the page comes back with no
+// file - not a lost scan. The photo's change event, when there is one, fires first.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") setTimeout(() => { try { localStorage.removeItem(CAMERA_OPEN_KEY); } catch (x) {} }, 4000);
+});
+function checkLostCameraScan() {
+  let m = null;
+  try { m = JSON.parse(localStorage.getItem(CAMERA_OPEN_KEY)); localStorage.removeItem(CAMERA_OPEN_KEY); } catch (e) {}
+  if (!m || !m.ts || Date.now() - m.ts > 10 * 60 * 1000) return;
+  trackEvent("SCAN LOST | app restarted while the camera was open, the photo never reached the app | " + m.id);
+  cameraLostInput = m.id;
+}
+const CAMERA_LOST_MSG = "Your phone closed this app while the camera was open, so that photo never got here. Try again. If it keeps happening, close other apps first, or take the picture with the phone's own camera and use \"Use a photo you already took\".";
+
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const fr = new FileReader();
@@ -9950,7 +10016,7 @@ async function flushScanPhotos() {
   try {
     const db = await openFailedScansDb();
     const pending = (await failedScansGetAll(db))
-      .filter(r => r && r.blob && r.uploaded !== true && !r.gaveUp)
+      .filter(r => r && r.blob && r.uploaded !== true && !r.gaveUp && !r.held)
       .sort((a, b) => (a.id < b.id ? -1 : 1));
     for (const rec of pending) {
       if (!navigator.onLine) break;
@@ -10057,6 +10123,8 @@ async function scanTagPhoto(file) {
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
   trackEvent("scanned a tag photo");
+  const heldId = newScanPhotoId();
+  const held = holdScanPhoto(file, heldId);   // uploads at the next start only if this scan never finishes
   const preview = document.getElementById("scanPreview");
   preview.src = URL.createObjectURL(file);
   preview.classList.remove("hidden");
@@ -10109,18 +10177,29 @@ async function scanTagPhoto(file) {
       if (info && info.brand && !info.ocrGuess && fields.ocrFixedFrom) { info.ocrGuess = true; info.rawModel = fields.ocrFixedFrom; }
       // v275: a read whose later characters break the family's format is not a confident ID either
       if (info && info.brand && !info.ocrGuess && fields.ocrTailBad) { info.ocrGuess = true; info.rawModel = fields.model; info.tailBad = true; }
-      scanRetakeRemember(file, photoId, fields, info, !!(info && !info.brand));   // not-in-library is uploaded below
+      // v288: a "check the tag" re-read is not a confident ID - Andy reviews every one.
+      const guessed = !!(info && info.brand && info.ocrGuess);
+      scanRetakeRemember(file, photoId, fields, info, !!(info && !info.brand) || guessed);   // uploaded below
       thisInfo = info;
       renderScanResult(info);
       if (info && !info.brand) {
         saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: fields.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
+      } else if (guessed) {
+        trackEvent("SCAN CHECK-TAG GUESS | read: " + (info.rawModel || fields.model) + " | shown: " + info.model + " | photo: " + photoId);
+        saveFailedScan(file, { id: photoId, kind: "check-tag", read: (info.rawModel || fields.model) + " -> shown " + info.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
       }
     }
   } catch (err) {
-    if (!lastTagScan || lastTagScan.file !== file) scanRetakeRemember(file, newScanPhotoId(), null, null, false);
+    // v288: a scan that errors out goes to Andy now, not only if the tech retakes.
+    const photoId = newScanPhotoId();
+    const msg = String(err && err.message ? err.message : err).slice(0, 80);
+    trackEvent("SCAN ERROR | " + msg + " | photo: " + photoId);
+    saveFailedScan(file, { id: photoId, kind: "error", read: "scan error: " + msg }).catch(() => {});
+    if (!lastTagScan || lastTagScan.file !== file) scanRetakeRemember(file, photoId, null, null, true);
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
   } finally {
     scanRetakeSettle(prevScan, thisInfo);
+    held.then(() => releaseScanPhoto(heldId));
   }
 }
 
@@ -10270,11 +10349,11 @@ window.addEventListener("online", () => {
   if (lastScanInfo && document.getElementById("scanResult").innerHTML) renderScanResult(lastScanInfo);
 });
 
-document.getElementById("tagPhotoInput").addEventListener("change", (e) => {
+["tagPhotoInput", "tagPhotoPick"].forEach(id => document.getElementById(id).addEventListener("change", (e) => {
   const file = e.target.files && e.target.files[0];
   if (file) scanTagPhoto(file);
   e.target.value = "";
-});
+}));
 
 // Maintenance Figures shares the Tag Scanner's photo-OCR: snap the data plate
 // on the Maintenance screen and the read model drops straight into its search.
@@ -11546,7 +11625,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v287";
+const APP_VERSION = "v288";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -11958,6 +12037,9 @@ function startApp() {
   if (getTechName()) { trackEvent("app opened"); flushPendingClaim(); }
   else showTechPicker();
 
+  // v288: a scan photo the app was still reading when it closed, and a camera
+  // photo lost to a restart, are reported before anything else.
+  try { recoverInterruptedScans(); checkLostCameraScan(); } catch (e) {}
   // Any failed-scan photos still waiting on the phone go to Andy now.
   try { flushScanPhotos(); } catch (e) {}
   // v227: generator checklists queued with no signal (only once the relay URL is set).
