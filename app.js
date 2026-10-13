@@ -9235,7 +9235,8 @@ const OCR_DIGIT_TO_LETTER = { "0": "ODQ", "1": "ILT", "2": "Z", "5": "S", "6": "
 const OCR_TAIL_FORMATS = [
   { fam: /^DGAX/, pos: ["D", "G", "A", "X", "0", "579", "067", "B", "D", "T", "A"] },
   { fam: /^L[CMUHDP][0-9]{2}\/?[0-9]{2}[A-Z]/, pos: ["L", "CMUHDP", "#", "#", "#", "#", "KMNPSTYLUVZ", "19", "ABCDX", "G"] },
-  { fam: /^59S[CP][0-9][A-Z]/, pos: ["5", "9", "S", "CP", "#", "@", "#", "#", "#"], open: true },
+  // v296: the input is 040-140 in steps of 20 (a read 59SC2E050M is "check the tag", not a size)
+  { fam: /^59S[CP][0-9][A-Z]/, pos: ["5", "9", "S", "CP", "#", "@", "01", "02468", "0"], open: true },
 ];
 function ocrCheckTail(model) {
   const f = OCR_TAIL_FORMATS.find(x => x.fam.test(model));
@@ -9405,6 +9406,25 @@ function ocrFlatten(src0, scale) {
   return out;
 }
 
+// Which way the text lines run on a flattened photo, without OCR: in 4x4 tiles
+// that hold some ink, compare how much the ink varies row to row against
+// column to column. Average log2 ratio > 0: lines run across (turn 0/180);
+// < 0: they run up and down (turn 90/270). ~0.1 s.
+function ocrTextDirection(flat) {
+  const w = flat.width, h = flat.height, d = flat.getContext("2d").getImageData(0, 0, w, h).data;
+  const tiles = 4; let sum = 0, n = 0;
+  const vr = (a, len) => { let m = 0; for (const v of a) m += v / len; m /= a.length; let s = 0; for (const v of a) s += (v / len - m) ** 2; return s / a.length; };
+  for (let ty = 0; ty < tiles; ty++) for (let tx = 0; tx < tiles; tx++) {
+    const x0 = Math.floor(tx * w / tiles), x1 = Math.floor((tx + 1) * w / tiles), y0 = Math.floor(ty * h / tiles), y1 = Math.floor((ty + 1) * h / tiles);
+    const rows = new Float64Array(y1 - y0), cols = new Float64Array(x1 - x0); let ink = 0;
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { if (d[(y * w + x) * 4] < 128) { rows[y - y0]++; cols[x - x0]++; ink++; } }
+    const frac = ink / ((x1 - x0) * (y1 - y0));
+    if (frac < 0.02 || frac > 0.5) continue;
+    sum += Math.log2((vr(rows, x1 - x0) + 1e-9) / (vr(cols, y1 - y0) + 1e-9)); n++;
+  }
+  return n ? sum / n : 0;
+}
+
 // Re-read the model line from the full-resolution photo. box is in the pixels
 // of the pass canvas (the 1600 px copy scaled by passScale, then turned deg
 // degrees clockwise by rotateCanvas) as Tesseract reported it: in its own
@@ -9412,7 +9432,7 @@ function ocrFlatten(src0, scale) {
 // area (v276, optional): crop this many text-heights left/right/up/down of the
 // box instead of one line, and read it at area.psm - the label-zoom pass reads
 // the whole data label around a serial it found.
-async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, straighten, area) {
+async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, straighten, area, flat) {
   const { bmp, scale } = photo;
   const k = scale * passScale;
   const w = photo.base.width * passScale, h = photo.base.height * passScale;   // pass canvas size BEFORE rotation
@@ -9438,7 +9458,7 @@ async function ocrZoomLine(worker, photo, box, rad, deg, passScale, glyphPx, str
   const cx = crop.getContext("2d");
   cx.imageSmoothingQuality = "high";
   cx.drawImage(bmp, sx, sy, ex - sx, ey - sy, 0, 0, crop.width, crop.height);
-  const line = ocrGrayStretch(deg ? rotateCanvas(crop, deg) : crop);
+  const line = flat ? ocrFlatten(deg ? rotateCanvas(crop, deg) : crop, 1) : ocrGrayStretch(deg ? rotateCanvas(crop, deg) : crop);
   // PSM 6 (a block), not 7 (one line): the crop always catches slivers of the
   // lines above and below, and single-line mode then reads garbage (TG8S040B12MP11
   // came back "ToasM0BIMPH1" at PSM 7, exact at PSM 6). Passed per call
@@ -9616,7 +9636,7 @@ async function ocrTagText(file, onStatus) {
   const photo = await loadPhotoForOcr(file);
   const base = photo.base;
   const worker = await getTessWorker(onStatus);
-  let best = null, bestCand = null, lastConf = 0;
+  let best = null, bestCand = null, lastConf = 0, lastScore = 0;
   // v279 (Cameron's York PCG4A360752X1A, 10/9): a model read off its "Model
   // Number" label that the library does not know yet. It is kept so the scan
   // can show it as "not in the library" instead of "can't read the tag", and so
@@ -9661,6 +9681,14 @@ async function ocrTagText(file, onStatus) {
       if (sw && sw.bbox.y1 - sw.bbox.y0 >= 6) serialSeen.push({ box: sw.bbox, rad: turn, deg, passScale, rank: rank(fields), conf: sw.confidence || 0 });
     }
     lastConf = fields.confidence;
+    // v296 turn score for picking the turn the later passes use: characters in
+    // clean, confident words (3+ characters, confidence 60+), page confidence
+    // only as a tie-break. Page confidence alone picked a wrong turn on 6 of the
+    // 9 unread field photos (garbage read sideways scores as high as text read
+    // upright); clean words picked right on Vern's Trane and the Carrier.
+    lastScore = 0;
+    for (const w of data.words || []) { const t = w.text || ""; if ((w.confidence || 0) >= 60 && /^[A-Za-z0-9][A-Za-z0-9.,:'\-\/()]{2,}$/.test(t)) lastScore += t.length; }
+    lastScore += (data.confidence || 0) / 100;
     if (!fields.model) {
       // No labelled model and no exact library token: a word that reaches a
       // specific family only after a lookalike fix ("N4AG42BKA") is still
@@ -9699,7 +9727,7 @@ async function ocrTagText(file, onStatus) {
     const zoomRead = async (size, auto) => {
       if (ocrStopRequested) throw OCR_STOP;
       let data = null;
-      try { data = await ocrZoomLine(worker, photo, c.box, c.rad, c.deg, c.passScale, size, auto); } catch (e) { data = null; }
+      try { data = await ocrZoomLine(worker, photo, c.box, c.rad, c.deg, c.passScale, size, auto, undefined, /flattened/.test(c.event || "")); } catch (e) { data = null; }
       const z = data && ocrModelFromLine(data, c.model);
       if (!z) return null;
       const zc = ocrCleanModel(z.raw);
@@ -9715,7 +9743,7 @@ async function ocrTagText(file, onStatus) {
     for (let i = 0; i < reads.length; i++) for (let j = i + 1; j < reads.length; j++)
       // two zoomed reads agreeing on a non-library string must not replace a
       // library read ("TMOVO060C12MP11" twice vs TM9V060C12MP1)
-      if (reads[i].model === reads[j].model && reads[i].tier >= c.tier) return { c: { ...reads[i], conf: Math.max(reads[i].conf, reads[j].conf) }, agree: true };
+      if (reads[i].model === reads[j].model && reads[i].tier >= c.tier && !(c.model.length > reads[i].model.length && c.model.startsWith(reads[i].model))) return { c: { ...reads[i], conf: Math.max(reads[i].conf, reads[j].conf) }, agree: true };
     // three same-length reads, no two identical: character-by-character majority
     if (reads.length === 3 && reads.every(r => r.model.length === c.model.length)) {
       let v = "";
@@ -9769,7 +9797,7 @@ async function ocrTagText(file, onStatus) {
     for (const p of list) {
       if (ocrStopRequested) throw OCR_STOP;
       let data = null;
-      try { data = await ocrZoomLine(worker, photo, p.box, p.rad, p.deg, p.passScale, 44, true); } catch (e) { data = null; }
+      try { data = await ocrZoomLine(worker, photo, p.box, p.rad, p.deg, p.passScale, 44, true, undefined, /flattened/.test(p.event || "")); } catch (e) { data = null; }
       if (!data) continue;
       const text = ocrNormDashes((data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10"));
       const f = extractTagFields(text);
@@ -9826,7 +9854,7 @@ async function ocrTagText(file, onStatus) {
       if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
       const done = await settle(await read(deg ? rotateCanvas(base, deg) : base, { rotateAuto: true }, deg, 1, deg ? "tag read after rotate " + deg : "", 0));
       if (done) return finish(done);
-      if (lastConf > bestConf) { bestConf = lastConf; bestDeg = deg; }
+      if (lastScore > bestConf) { bestConf = lastScore; bestDeg = deg; }
     }
     if (onStatus) onStatus("Taking a closer look at the label...");
     let z = await probeWords(3);
@@ -9855,11 +9883,32 @@ async function ocrTagText(file, onStatus) {
     // dark, or busy texture: Tesseract then took 15-40 s on the bench and read
     // nothing this pass was needed for (every read it made: specks < 0.15, dark
     // < 33%, edges < 30 per 1000 px). At 0.75 scale it was faster but lost reads.
+    // v296 (Andy 2026-10-13, "work on the 9 that still fail"):
+    //  * a SPARSE read of the flattened copy as well - James's close G61MP plate
+    //    read G61MP-60C-111-09 only that way; the block read stops at G61MP-60C;
+    //  * the photo is flattened once and turned, and when the text-line direction
+    //    (ocrTextDirection) clearly disagrees with the chosen turn, the other two
+    //    turns are read too - Bryce's sideways Lennox label read nothing at the
+    //    chosen upright turn and EL196UH070XE36B-01 at 90;
+    //  * zoomed re-reads of a word found here are flattened too (ocrZoomLine flat),
+    //    or the glare comes back in the crop.
+    // Field-photo bench: models 16 -> 19 of 30, nothing lost; synthetic 240
+    // unchanged (+1); +1.5 s only on photos that reach this point.
     if (onStatus) onStatus("Evening out shadows and glare on the label...");
-    const flatCanvas = ocrFlatten(bestDeg ? rotateCanvas(base, bestDeg) : base, 1);
-    if (flatCanvas.specks < 0.3 && flatCanvas.dark < 600 && flatCanvas.edges < 40) {
-      const doneF = await settle(await read(flatCanvas, { rotateAuto: true }, bestDeg, 1, "tag read by flattened pass" + (bestDeg ? " rotate " + bestDeg : ""), 0, true));
+    const flat0 = ocrFlatten(base, 1);
+    const flatOk = flat0.specks < 0.3 && flat0.dark < 600 && flat0.edges < 40;
+    const dir = flatOk ? ocrTextDirection(flat0) : 0;
+    const flatTurns = [bestDeg];
+    if (dir < -1.5 && bestDeg % 180 === 0) flatTurns.push(90, 270);
+    else if (dir > 1.5 && bestDeg % 180 !== 0) flatTurns.push(0, 180);
+    for (const fd of flatOk ? flatTurns : []) {
+      const flatCanvas = fd ? rotateCanvas(flat0, fd) : flat0;
+      const doneF = await settle(await read(flatCanvas, { rotateAuto: true }, fd, 1, "tag read by flattened pass" + (fd ? " rotate " + fd : ""), 0, true));
+      const doneS = await settle(await read(flatCanvas, { tessedit_pageseg_mode: "11" }, fd, 1, "tag read by flattened sparse pass" + (fd ? " rotate " + fd : ""), 0, true));
+      // the block read can stop short of the sparse one (G61MP-60C vs G61MP-60C-111-09)
+      if (doneF && doneS && doneS.model.length > doneF.model.length && doneS.model.startsWith(doneF.model)) return finish(doneS);
       if (doneF) return finish(doneF);
+      if (doneS) return finish(doneS);
     }
     if (onStatus) onStatus("Zooming in on the label...");
     // Tesseract's own Sauvola (local) threshold at the turn that read best:
@@ -9876,9 +9925,11 @@ async function ocrTagText(file, onStatus) {
     if (z) return finish(z);
     // Nothing settled: the best candidate still wins if it is a trusted library
     // model or was read with reasonable confidence; weak garbage is not reported.
-    // (a short read - under 7 characters - needs a very confident read)
+    // (a short read - under 7 characters - needs a very confident read, and v296:
+    // must be a library family - "JAOW3H" off Cameron's 1993 ICP plate read
+    // upside down was reported as the model)
     const bc = bestCand;
-    if (bc && !vetoed(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || bc.conf >= 80)) return finish(bc);
+    if (bc && !vetoed(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7)))) return finish(bc);
     // v279: a clean labelled read the library doesn't know yet - shown as "not in
     // the library" (and uploaded for the nightly check) instead of "can't read".
     if (labelCand) return finish({ ...labelCand, event: "tag model read from its label, not in library" });
@@ -11843,7 +11894,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v295";
+const APP_VERSION = "v296";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
