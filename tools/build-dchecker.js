@@ -8,12 +8,13 @@
 // picker, e.g. the copies Andy downloaded from Kenny's shop library. Without
 // them the picker still gets whatever EXAMPLES below finds in samples/.
 //
-// Build from the checkout's brackett-plus-v105 branch: our viewer (Service Tool
+// Build from the checkout's brackett-plus-v106 branch: our viewer (Service Tool
 // hand-off by postMessage with #wait, Daikin .tgz opener, What to check card,
 // live feed engine, Start diagnosis, saved Route checklists, the Examples
-// picker) plus Kenny's on-device features through his v105 (service-manual
+// picker) plus Kenny's on-device features through his v106 (service-manual
 // rules, his decoder for every .tgz, the Route tab with multi-split routes,
-// Route evidence, the printable sheet). Left out of that branch: his Supabase
+// Route evidence, the printable sheet, the thermistor chart on every thermistor
+// chip). Left out of that branch: his Supabase
 // shop library (uploads, sign-in, Library tab, usage events), short route links
 // (#r=) and the QR code that carried them, call notes, and the required
 // customer name / address job-details gate. Never build from Kenny's main.
