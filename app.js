@@ -8431,6 +8431,7 @@ const MODEL_PATTERNS = [
   { re: /^00\d{5}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["Data-tag form with the dash dropped (0070430 = G0070430)","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^(52|54|55|57|58|59|60|61|62|64|65|67|69|70|71|72|73)\d{2}$/, brand: "Generac", equipment: "Generator", series: "Generac air-cooled home standby generator", notes: ["4-digit form (7043 = G0070430 / 007043-0)","Open in Generators for the family: specs, alarm codes, manuals"] },
   { re: /^RG0\d{2}/, brand: "Generac", equipment: "Generator", series: "Generac Protector liquid-cooled home standby (RG, 22-80 kW, Evolution)", notes: ["LIQUID-COOLED - it has a radiator, coolant and a water pump; do NOT service it like an air-cooled unit.","RG022 = 22 kW ... RG060 = 60 kW, RG080 = 80 kW. The digits after the kW code are a platform code, not a fuel/voltage value.","Open in Generators for specs, the Evolution alarm/warning codes, startup, and the diagnostic manual."] },
+  { re: /^QT048\d{2}[A-Z]{3}N$/, brand: "Generac", equipment: "Generator", series: "Generac Protector QT048 industrial liquid-cooled (48 kW, 4.2L V6, R-200B LED panel)", notes: ["QT048 ending in N (QT04842ANAN, GNAN, JNAN, KNAN) is NOT Nexus: R-200B panel (LEDs, no screen), 4.2L V6 at 1800 rpm.","Write down which LEDs are lit before switching to OFF - the R-200B LED list is on the Protector legacy liquid-cooled card.","Weekly exercise runs at 1400 rpm. Oil pressure, high coolant temp and low coolant level are only checked after a 10 s hold-off, so a shutdown about 10 s after start points at those three first (R-200B technical manual 0G9375).","Open in Generators for the QT card, the owner's manual 0H0996 and the 0G9256 wiring / 0G9257 schematic."] },
   { re: /^QT\d{3}/, brand: "Generac", equipment: "Generator", series: "Generac Protector QT industrial liquid-cooled (Nexus, 22-150 kW)", notes: ["Industrial liquid-cooled genset on the Nexus 2-line-LCD panel. QT022 = 22 kW ... QT150 = 150 kW.","Open in Generators for the Nexus named-alarm list, startup, and manuals.","This industrial Nexus is NOT the residential air-cooled Nexus - the fault codes differ."] },
   { re: /^SG\d{3}/, brand: "Generac", equipment: "Generator", series: "Generac SG industrial spark-ignited gaseous (H-100, 35-150 kW)", notes: ["Industrial spark-ignited gaseous genset on the H-100 dual-LCD control panel. SG035 = 35 kW ... SG150 = 150 kW.","Open in Generators for the H-100 alarm channels, startup, and manuals.","Not a Lennox SG rooftop: Generac SG is followed by DIGITS (SG035); Lennox Strategos is SG followed by a letter (SGH)."] },
   // --- end Generac ---
@@ -8609,6 +8610,8 @@ const MODEL_PATTERNS = [
 // Keyed off equipment type: cooling gear embeds tonnage codes (BTU/12),
 // furnaces embed input BTU, mini-splits embed BTU in thousands directly.
 function decodeCapacity(model, equipment) {
+  // Generator digits are kW (QT048 = 48 kW), not cooling tonnage.
+  if (equipment === "Generator") return null;
   if (equipment === "Gas Furnace") {
     // 054/072/096/108/126/144 are Nortek (Frigidaire/Maytag/Gibson/Intertherm) furnace input codes.
     const f = model.match(/(040|045|054|060|070|072|080|090|096|100|108|110|115|120|126|130|140|144)(?=[A-Z0-9]|$)/);
@@ -10543,6 +10546,7 @@ function renderScanResult(info) {
       : `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>`)
     : "";
   const ocrBanner = info.tailBad ? `<p class="scan-ocr-note">📷 Part of <strong>${escapeHtml(info.model)}</strong> doesn't fit this model family's format, so the scan may have misread a character — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O, 1/I, 8/B and 6/G).</p>`
+    : info.ocrGuess && info.typed ? `<p class="scan-ocr-note">⌨️ You entered <strong>${escapeHtml(info.rawModel)}</strong>, which isn't a known model. Closest known model is <strong>${escapeHtml(info.model)}</strong> (a letter swapped for a lookalike digit) — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>`
     : info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
   // How many library manuals answer to this exact model (or its family).
@@ -10775,7 +10779,9 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   if (!model) { scanStatus("Type or scan a model number first."); return; }
   scanStatus(null);
   trackEvent("identified unit: " + model);
-  renderScanResult(identifyModel(model, serial, null, null, { log: true }));
+  const info = identifyModel(model, serial, null, null, { log: true });
+  if (info) info.typed = true;
+  renderScanResult(info);
 });
 
 // ============================================================
@@ -11902,7 +11908,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v298";
+const APP_VERSION = "v299";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
