@@ -9001,11 +9001,16 @@ function extractTagFields(text) {
   // the plate's own label words, and require a real model to carry a digit (every
   // HVAC model number does; a label word like SERIAL/TYPE/MODEL never does).
   const TAG_NONVALUE = /^(?:SERIAL|SERIES|MODEL|MODELE|NUMBER|NUM|TYPE|MFG|MFR|MFD|SER|S\/?N|M\/?N|NO)\.?$/;
+  // v301 (Andy 2026-10-14): a real serial never holds a word - 4+ letters in a row
+  // ("823-PHASE" off James's Goodman plate, the PHASE beside SERIAL NO.). None of
+  // the 246 serials in the bench truth has one. Such a read is skipped, so the
+  // later serial passes (serial-shaped token, longest digit run) still get a go.
+  const SERIAL_WORDY = /[A-Z]{4}/;
   for (const line of lines) {
     if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { model = m[1]; modelSource = "label"; } }
     // v185: every serial carries a digit. A misread label word ("NUMEER",
     // "ARCOAIRE" after SER...) is not a serial - keep looking on later lines.
-    if (!serial) { const m = line.match(serialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+    if (!serial) { const m = line.match(serialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1]) && !SERIAL_WORDY.test(m[1])) { serial = m[1]; serialSource = "label"; } }
   }
   // v185: label on its own line with the value on the line BELOW - a stacked
   // "SERIAL NO." / "0716J65571" sticker, or a two-column header row
@@ -9033,7 +9038,7 @@ function extractTagFields(text) {
       // used only if no library-shaped token turns up (below): a misread header
       // can put the serial under MODEL
       if (!model && !stackedModel && mv && (/[A-Z]/.test(mv) || mv.length >= 8)) stackedModel = mv;
-      if (!serial && sv && sv.length >= 6) { serial = sv; serialSource = "label"; }
+      if (!serial && sv && sv.length >= 6 && !SERIAL_WORDY.test(sv)) { serial = sv; serialSource = "label"; }
     }
   }
   // OCR routinely drops or mangles the slash in "M/N:" / "S/N:". A sideways
@@ -9048,7 +9053,7 @@ function extractTagFields(text) {
   if (!model || !serial) {
     for (const line of lines) {
       if (!model) { const m = line.match(weakModelLabel); if (m && /[0-9]/.test(m[1]) && /[A-Z]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { model = m[1]; modelSource = "label"; } }
-      if (!serial) { const m = line.match(weakSerialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { serial = m[1]; serialSource = "label"; } }
+      if (!serial) { const m = line.match(weakSerialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1]) && !SERIAL_WORDY.test(m[1])) { serial = m[1]; serialSource = "label"; } }
     }
   }
   // No labels found — look for any token matching a known model pattern.
@@ -9640,6 +9645,15 @@ function tagParseBarcodes(codes) {
     // York / Coleman / Luxaire (JCI) plate QR: their serial-lookup link.
     const jci = raw.match(/^HTTPS?:\/\/M\.UPGNET\.COM\/SN\/([A-Z0-9]{8,14})$/);
     if (jci) { if (!serial) { serial = jci[1]; if (!brand) brand = "York"; } continue; }
+    // v301 (Cameron's Daikin CAPEA4830C3AA coil, 10/14): the newer Daikin / Goodman
+    // R-32 plates carry a DataMatrix "<model>:<serial>" ("CAPEA4830C3:2504338042").
+    // Only when the model part is a specific library family (ocrMatchTier 2).
+    const dk = raw.match(/^([A-Z][A-Z0-9\/-]{4,22}):([A-Z0-9]{6,14})$/);
+    if (dk) {
+      const p = ocrLibraryPattern(dk[1].replace(/[\/-]/g, ""));
+      if (p && ocrMatchTier(p) === 2) { if (!model) model = dk[1]; if (!serial) serial = dk[2]; }
+      continue;
+    }
     const parts = raw.split(/\s+/), t = parts[0];
     if (!model && /^G0\d{6,7}$/.test(t)) { model = t; brand = "Generac"; continue; }
     // Lennox carton: "2P" + model (2PCRX35-30/36B-6F-1). Only on a known family.
@@ -12017,7 +12031,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v300";
+const APP_VERSION = "v301";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
