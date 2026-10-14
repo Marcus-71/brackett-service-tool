@@ -8634,94 +8634,190 @@ function decodeCapacity(model, equipment) {
   return null;
 }
 
-// Manufacture-date estimate from serial number, by brand convention.
-// These are estimates — conventions changed over the years.
-//
-// Sanity guards matter more than coverage here: a mis-read data plate must NOT
-// produce a confident-looking date. A tech uses this for warranty decisions, so
-// "no decode" is always better than a wrong year.
+// Year of manufacture from the serial number, by brand (v300, Andy 2026-10-14:
+// "add year from serial number on all tags", year only). Every rule below is
+// from a manufacturer document - sources beside each rule, full notes in
+// scratch\serial-year. A brand with no published rule gets NO year from the
+// serial; the plate's own printed date (plateDateYear) covers those.
+// "No year" is always better than a wrong year: techs use this for warranty.
 const SERIAL_YEAR_MAX = new Date().getFullYear() + 1;   // allow a little stock lead time
-function plausibleYear(yy) {
-  const y = 2000 + Number(yy);
-  return y >= 1990 && y <= SERIAL_YEAR_MAX ? y : null;
+// Two-digit year -> 4 digits: up to next year's YY is 20YY, anything higher 19YY.
+function serialYear2(yy) {
+  const n = Number(yy), cur = SERIAL_YEAR_MAX % 100;
+  const y = n <= cur ? 2000 + n : 1900 + n;
+  return y >= 1970 && y <= SERIAL_YEAR_MAX ? y : null;
 }
-function plausibleWeek(ww) {
-  const w = Number(ww);
-  return w >= 1 && w <= 53 ? w : null;   // there is no week 00
+const serialWeekOk = (ww) => Number(ww) >= 1 && Number(ww) <= 53;
+// Trane residential year letters, 1980-2001 (catalog 22-8301-39 p.137, ACIN-3).
+const TRANE_YEAR_LETTERS = { O: 1980, A: 1980, T: 1981, U: 1982, W: 1983, X: 1984, Y: 1985, S: 1986, B: 1987, C: 1988, D: 1989, E: 1990, F: 1991, G: 1992, H: 1993, J: 1994, K: 1995, L: 1996, M: 1997, N: 1998, P: 1999, R: 2000, Z: 2001 };
+// York pre-Oct-2004 year letter (3rd letter), 21-year cycle from A = 1971 (JCI SI0418 fig. 1).
+const YORK_YEAR_LETTERS = "ABCDEFGHJKLMNPRSTVWXY";
+// Brand names as the model library and the OCR brand hints spell them -> rule family.
+function serialBrandFamily(brand) {
+  const b = String(brand || "");
+  if (/^(Carrier|Bryant|Payne)/.test(b)) return "carrier";
+  if (/^ICP/.test(b)) return "icp";
+  if (/^(Lennox|Allied Air|ADP)/.test(b)) return "lennox";
+  if (/^(Goodman|Amana|Daikin)/.test(b)) return "goodman";
+  if (/^(Trane|American Standard|Ameristar)/.test(b)) return "trane";
+  if (/^Nortek/.test(b)) return "nortek";
+  if (/^(York|Coleman|Luxaire)/.test(b)) return "york";
+  if (/^Bosch/.test(b)) return "bosch";
+  if (/^LG$/.test(b)) return "lg";
+  return "";
 }
-function decodeSerialAge(brand, serial, equipment) {
+// Returns { year, alt?, how } or null.
+function decodeSerialYear(brand, serial, equipment) {
   if (!serial) return null;
-  const s = serial.replace(/[^A-Z0-9]/g, "");
+  const s = String(serial).toUpperCase().replace(/[^A-Z0-9]/g, "");
   // Too short, or a degenerate string like 0000000000 / 1111111111 that usually
   // means the OCR grabbed a border or a run of repeated characters.
   if (s.length < 6) return null;
   if (/^(.)\1+$/.test(s)) return null;
   if (/^0+$/.test(s.replace(/[A-Z]/g, ""))) return null;
-  let m, y, w;
-  if (brand === "Goodman" || brand === "Daikin") {
-    if ((m = s.match(/^([0-9]{2})(0[1-9]|1[0-2])/)) && (y = plausibleYear(m[1])))
-      return `Made ${m[2]}/${y} (Goodman/Daikin serials start YYMM — estimate)`;
+  const fam = serialBrandFamily(brand);
+  const ductless = equipment === "Mini-Split";
+  let m, y;
+  if (fam === "carrier") {
+    // WW YY plant NNNNN - Carrier/Bryant split AC/HP service manuals ("01 18 E 00001"),
+    // ductless 38M/40M manuals ("25 18 V 10001"), and furnaces: TIC2025-0036
+    // (12/03/2025) names "serial # 4725A and later" on 59MN7/987M furnaces.
+    if ((m = s.match(/^(\d{2})(\d{2})[A-Z]\d{5}$/)) && serialWeekOk(m[1]) && (y = serialYear2(m[2])))
+      return { year: y, how: "Carrier serial: week, then year" };
+    return null;
   }
-  if (brand === "Carrier") {
-    // Confirmed against Carrier's own residential AC/HP service manual
-    // (catalog 24-25-2SM) and a matching Bryant install manual (Bryant is
-    // built on the same Carrier Corp line): WW YY [plant] NNNNN, units 2006+.
-    // Document explicitly scopes this to split-system AC/HP — not confirmed
-    // for furnaces or air handlers, so only decode there.
-    if (equipment === "Condenser/Heat Pump") {
-      if ((m = s.match(/^([0-9]{2})([0-9]{2})([A-Z])/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
-        return `Made week ${w} of ${y}, plant ${m[3]} (confirmed Carrier/Bryant format, 2006+ split AC/HP)`;
-      if ((m = s.match(/^([0-9]{2})([0-9]{2})/)) && (w = plausibleWeek(m[1])) && (y = plausibleYear(m[2])))
-        return `Made week ${w} of ${y} (confirmed Carrier/Bryant format, 2006+ split AC/HP)`;
+  if (fam === "icp") {
+    // Plant letter, YY, WW, sequence - ICP serial nomenclature supplement (2015).
+    if ((m = s.match(/^[A-Z](\d{2})(\d{2})\d{5,6}$/)) && serialWeekOk(m[2]) && (y = serialYear2(m[1])))
+      return { year: y, how: "ICP serial: plant letter, then year" };
+    return null;
+  }
+  if (fam === "lennox") {
+    // PPYYMNNNNN - plant, year, month letter A-M (no I). Lennox unit information
+    // ("19 09 C 05716", 09 = 2009) and the Allied Air ComfortSync A3 manual.
+    // Lennox ductless is Samsung-built: different serial.
+    if (ductless) return null;
+    if ((m = s.match(/^\d{2}(\d{2})[A-HJ-M]\d{5,6}$/)) && (y = serialYear2(m[1])))
+      return { year: y, how: "Lennox/Allied serial: plant, then year" };
+    return null;
+  }
+  if (fam === "goodman") {
+    // YYMM + sequence - Goodman/Amana/Daikin limited warranty: "The first four
+    // digits of the serial number (YYMM)". Not Daikin ductless (Japan/Thai built).
+    if (ductless) return null;
+    if ((m = s.match(/^(\d{2})(0[1-9]|1[0-2])\d{4,7}$/)) && (y = serialYear2(m[1])))
+      return { year: y, how: "Goodman/Daikin serial: first 2 digits are the year" };
+    return null;
+  }
+  if (fam === "trane") {
+    // Trane "Equipment Date Identification 1980-2029" (22-8301-39 p.137).
+    // Mitsubishi-built Trane ductless is a different serial.
+    if (ductless) return null;
+    // 10 characters (2010+): YY WW day(1-7) + 5.
+    if ((m = s.match(/^(\d{2})(\d{2})[1-7][A-Z0-9]{5}$/)) && serialWeekOk(m[2]) && +m[1] >= 9 && (y = serialYear2(m[1])))
+      return { year: y, how: "Trane serial: first 2 digits are the year" };
+    // 9 characters, 2002-2009: the year's tens digit is printed as a blank.
+    if ((m = s.match(/^([2-9])(\d{2})[1-7][A-Z0-9]{5}$/)) && serialWeekOk(m[2]))
+      return { year: 2000 + Number(m[1]), how: "Trane 9-character serial: first digit is the year (200x)" };
+    // 9 characters, 1980-2001: year letter.
+    if ((m = s.match(/^([A-Z])(\d{2})[1-7][A-Z0-9]{5}$/)) && TRANE_YEAR_LETTERS[m[1]] && serialWeekOk(m[2]))
+      return { year: TRANE_YEAR_LETTERS[m[1]], how: "Trane serial: year letter" };
+    return null;
+  }
+  if (fam === "nortek") {
+    // XX P YY MM sequence(5-6) - Nortek addendum 7091540 and the product identifier sheets.
+    if ((m = s.match(/^[A-Z0-9]{2}[A-Z0-9](\d{2})(0[1-9]|1[0-2])\d{5,6}$/)) && (y = serialYear2(m[1])))
+      return { year: y, how: "Nortek serial: 4th-5th characters are the year" };
+    return null;
+  }
+  if (fam === "york") {
+    // Oct 2004 on: plant, year tens, month letter (no I/J), year units, 6 digits (JCI SI0418 fig. 2).
+    if ((m = s.match(/^[A-Z](\d)[A-HK-N](\d)\d{6}$/))) {
+      const yr = 2000 + Number(m[1]) * 10 + Number(m[2]);
+      if (yr >= 2004 && yr <= SERIAL_YEAR_MAX) return { year: yr, how: "York serial: 2nd and 4th characters are the year" };
+      return null;
     }
-    // Furnaces/air handlers on this platform (including Payne, which has no
-    // official serial documentation at all): no confirmed source — don't guess.
+    // Before Oct 2004: 4 letters + 6 digits, 3rd letter = year on a 21-year cycle.
+    if ((m = s.match(/^[A-Z]{2}([A-Z])[A-Z]\d{6}$/))) {
+      const i = YORK_YEAR_LETTERS.indexOf(m[1]);
+      if (i < 0) return null;
+      const early = 1971 + i, late = early + 21;
+      if (early >= 1984) return { year: early, how: "York serial: 3rd letter is the year" };   // P-Y: 1984-1991 only
+      return { year: late, alt: early, how: "York serial: 3rd letter is the year (same letter 21 years earlier)" };
+    }
+    return null;
   }
-  if (brand === "Trane") {
-    // No official Trane/American Standard document states a residential serial
-    // date format (the light-commercial WWYY format they DO publish explicitly
-    // excludes residential equipment). What IS confirmed: Trane/American
-    // Standard data plates print an explicit date field — furnaces say "DATE OF
-    // MANUFACTURE: MM/YY", coils/air handlers say "MFG DATE"/"MFR. DATE". Point
-    // the tech at that instead of a serial guess.
-    return "Not decoded from serial — Trane/American Standard plates print an explicit manufacture date field (look for \"DATE OF MANUFACTURE\" or \"MFG DATE\" on the tag)";
+  if (fam === "bosch") {
+    // Bosch "Serial Number Locations" guide (BTC 310004101 K, 07.2026): characters
+    // 5-7 = year digit + month code; the month range gives the decade.
+    if ((m = s.match(/^[A-Z0-9]{4}(\d)(\d{2})/))) {
+      const d = Number(m[1]), mm = Number(m[2]);
+      if (d <= 3 && mm >= 1 && mm <= 12) return { year: 2010 + d, how: "Bosch serial date code" };
+      if (d >= 4 && ((mm >= 17 && mm <= 20) || (mm >= 53 && mm <= 60))) return { year: 2010 + d, how: "Bosch serial date code" };
+      if ((mm >= 37 && mm <= 40) || (mm >= 73 && mm <= 80)) { const yr = 2020 + d; if (yr <= SERIAL_YEAR_MAX) return { year: yr, how: "Bosch serial date code" }; }
+    }
+    return null;
   }
-  if (brand === "ICP") {
-    // ICP doc 516 01 2310 00SS (Electrical Data Supplement, 5/26/2015) prints the
-    // serial as 10 characters: plant letter, YY, WW (fiscal week), 5-digit sequence
-    // (U1523 12345 = plant U, 2015, week 23). That doc covers the RHS light-commercial
-    // rooftop, so on a residential split this is an estimate - the rating plate wins.
-    if ((m = s.match(/^[A-Z]([0-9]{2})([0-4][0-9]|5[0-3])[0-9]{5}$/)) && (y = plausibleYear(m[1])) && +m[2] >= 1)
-      return `Made ${y}, week ${m[2]} (ICP 10-character serial: plant-YY-WW-sequence per ICP doc 516 01 2310 00SS, stated for light-commercial - estimate on residential splits; the board's own WWYY date code is NOT the unit serial)`;
+  if (fam === "lg") {
+    // LG "Serial Number Nomenclature - ALL PRODUCTS": year digit, month, 2-letter factory.
+    // One digit per decade, so give the newest year that isn't in the future and the one before.
+    if ((m = s.match(/^(\d)(0[1-9]|1[0-2])[A-Z]{2}/))) {
+      let yr = 2020 + Number(m[1]);
+      if (yr > SERIAL_YEAR_MAX) yr -= 10;
+      return { year: yr, alt: yr - 10, how: "LG serial: first digit is the year's last digit" };
+    }
+    return null;
   }
-  if (brand === "Nortek") {
-    // Nordyne/Nortek install-instructions addendum 7091540 (10/13) itemizes the
-    // 12-digit serial as XX P YY MM SSSSS - unit type, plant, 2-digit year,
-    // 2-digit month, sequence; the Product Identifier posters (599B/837F/838F/840F)
-    // describe the same plant + year + month + sequence order without digit
-    // positions. Decode only when the string is the full 12 digits and the
-    // month is real, and say it is an estimate.
-    if ((m = s.match(/^[0-9]{2}[0-9A-Z]([0-9]{2})(0[1-9]|1[0-2])[0-9]{5}$/)) && (y = plausibleYear(m[1])))
-      return `Made ${m[2]}/${y} (Nortek/Nordyne 12-digit serial: type-plant-YY-MM-sequence per addendum 7091540 - estimate)`;
-  }
-  if (brand === "Lennox") {
-    // Confirmed against Lennox alert code guide 100017: the nameplate serial is
-    // PPYYMNNNNN — plant, year, month letter, sequence (their own example, 5817F,
-    // reads as plant 58 / 2017 / month F). Lennox doesn't publish the month-letter
-    // map in that doc, so show the letter rather than guess at a month.
-    if ((m = s.match(/^[0-9]{2}([0-9]{2})([A-Z])/)) && (y = plausibleYear(m[1])))
-      return `Made ${y}, month code ${m[2]} (Lennox nameplate serial is PPYYM… — plant, year, month)`;
-    if ((m = s.match(/^[0-9]{2}([0-9]{2})[0-9]/)) && (y = plausibleYear(m[1])))
-      return `Made ${y} (Lennox nameplate serial is PPYYM… — digits 3-4 are the year)`;
-  }
-  // Rheem/Ruud: checked directly against rheem.com's and ruud.com's own serial
-  // pages — both show only where the tag is, no decode. Neither WWYY nor MMYY
-  // (both circulate as "common knowledge") is officially confirmed either way,
-  // so — unlike the brands above — deliberately no decode here at all.
-  // York/Luxaire/Coleman and Mitsubishi: same story, no official date format
-  // found; York/JCI's own resolution path is their serial lookup tool
-  // (m.upgnet.com/SN/<serial>), not a local decode.
   return null;
+}
+// The year printed on the plate itself ("MFG DATE 12/2009", "DATE OF MANUFACTURE
+// 03/17", Generac "PROD DATE 20180621"). Rheem, Trane, Generac and many ductless
+// plates print it; it beats any serial decode.
+function plateDateYear(text) {
+  const up = String(text || "").toUpperCase();
+  const re = /(?:MFG|MFD|MFR|MANUF(?:ACTURE[D]?|ACTURING)?|PROD(?:UCTION)?)\.?\s*(?:DATE)?(?:\s*OF\s*MANUFACTURE)?(?:\/FRQ)?\s*[:.#-]?\s*([0-9][0-9\/.\-\s]{3,11}[0-9])/g;
+  const re2 = /DATE\s*OF\s*MANUFACTURE\s*[:.#-]?\s*([0-9][0-9\/.\-\s]{3,11}[0-9])/g;
+  for (const r of [re2, re]) {
+    let m;
+    r.lastIndex = 0;
+    while ((m = r.exec(up))) {
+      // "12/2009 60HZ": try the first token alone, then the run with spaces dropped ("06 / 2018").
+      for (const v of [m[1].trim().split(/\s+/)[0], m[1].replace(/\s+/g, "")]) {
+      let y = null, mo = 0, x;
+      if ((x = v.match(/^(19[7-9]\d|20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/))) { y = +x[1]; mo = +x[2]; }       // 20180621
+      else if ((x = v.match(/^(19[7-9]\d|20\d{2})[\/.\-](0?[1-9]|1[0-2])(?:[\/.\-]\d{1,2})?$/))) { y = +x[1]; mo = +x[2]; }   // 2018-06(-21)
+      else if ((x = v.match(/^(0?[1-9]|1[0-2])[\/.\-](?:\d{1,2}[\/.\-])?(19[7-9]\d|20\d{2})$/))) { y = +x[2]; mo = +x[1]; }   // 12/2009, 06/21/2018
+      else if ((x = v.match(/^(0?[1-9]|1[0-2])[\/.\-](\d{2})$/))) { y = serialYear2(x[2]); mo = +x[1]; }                   // 03/17
+      if (y && y >= 1970 && y <= SERIAL_YEAR_MAX) return { year: y, raw: m[0].trim() };
+      }
+    }
+  }
+  return null;
+}
+// One line for the scan result: "Made 2018 (about 8 years old) - Carrier serial: ...".
+function serialYearText(r, fromPlate) {
+  if (!r) return null;
+  const age = new Date().getFullYear() - r.year;
+  const ageTxt = age <= 0 ? "this year" : age === 1 ? "about 1 year old" : `about ${age} years old`;
+  if (fromPlate) return `Made ${r.year} (${ageTxt}) - printed on the plate`;
+  if (r.alt) return `Made ${r.year} (${ageTxt}) or ${r.alt} - ${r.how}; the same code repeats, so check the unit's style`;
+  return `Made ${r.year} (${ageTxt}) - ${r.how}`;
+}
+// No brand known (model not read): a 4-digit + letter + 5-digit serial has the year
+// in digits 3-4 on every brand that prints that shape - Carrier/Bryant/Payne (WWYY),
+// Lennox/Allied/ADP (PPYY). A brand we know but have no rule for still gets nothing.
+function decodeSerialYearAny(brand, serial, equipment) {
+  if (brand) return decodeSerialYear(brand, serial, equipment);
+  const s = String(serial || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m = s.match(/^\d{2}(\d{2})[A-Z]\d{5}$/);
+  const y = m && serialYear2(m[1]);
+  return y ? { year: y, how: "serial digits 3-4 (Carrier, Bryant, Payne, Lennox and Allied all put the year there)" } : null;
+}
+// The printed date seen on the photo being scanned (reset per photo in ocrTagFields).
+let scanPlateDate = null;
+// Kept for every caller: the scan screens, warranty screen and generator checklist.
+function decodeSerialAge(brand, serial, equipment) {
+  return serialYearText(decodeSerialYear(brand, serial, equipment));
 }
 
 // Letters an OCR commonly reports for a stamped DIGIT on a faded or embossed
@@ -8828,7 +8924,7 @@ function identifyModel(rawModel, rawSerial, brandHint, photoId, opts) {
   return {
     model, serial, brand: null,
     brandGuess: brandHint || null,
-    age: brandHint ? decodeSerialAge(brandHint, serial) : null,
+    age: serialYearText(decodeSerialYearAny(brandHint, serial)),
     serialLike,
   };
 }
@@ -8879,6 +8975,10 @@ function extractTagFields(text) {
   // returns them as em/en dashes or "~" with spaces around, which split the model
   // into pieces and none of them was found. Lines and tokens use this copy.
   const upN = ocrNormDashes(up);
+  // v300: the plate's own printed date (MFG DATE / DATE OF MANUFACTURE / PROD DATE).
+  // Kept from the first OCR pass that sees it - later passes may crop it away.
+  const plateDate = plateDateYear(up);
+  if (plateDate && !scanPlateDate) scanPlateDate = plateDate;
   const lines = upN.split(/\n+/).map(l => l.trim()).filter(Boolean);
   let model = "", serial = "", serialSource = "", stackedModel = "", modelSource = "";
   // "(?:NUMBER|NO...)?" explicitly eats the filler word in "MODEL NUMBER" /
@@ -9613,6 +9713,7 @@ function tagNoModelHint(fields) {
 let ocrStopRequested = false;
 const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
+  scanPlateDate = null;   // v300: set by extractTagFields from any OCR pass of this photo
   const viaBarcode = await tagBarcodeFields(file);
   if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
   // The enlarged barcode read runs on this thread while Tesseract reads in its worker.
@@ -10435,6 +10536,8 @@ async function scanTagPhoto(file) {
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       scanRetakeRemember(file, photoId, fields, null, true);   // already uploaded: never again as "retaken"
       const box = document.getElementById("scanResult");
+      // v300: the year still shows when only the serial or the printed date was read.
+      const noModelYear = scanPlateDate ? serialYearText(scanPlateDate, true) : serialYearText(decodeSerialYearAny(fields.brandHint, fields.serial));
       // With the relay on, the photo goes to Andy by itself; the share button
       // stays as a backup. Relay off = the v151 wording, unchanged.
       const autoNote = SCAN_PHOTO_RELAY
@@ -10442,7 +10545,7 @@ async function scanTagPhoto(file) {
           ? "📷 Photo sent to Andy automatically so he can add the unit. If you can't get a clean scan, enter the model number below."
           : "📷 Photo saved — it will send to Andy automatically when you're back in signal. If you can't get a clean scan, enter the model number below.")
         : "📷 Photo saved on this phone. If you can't get a clean scan, send it to Andy and he'll add the unit.";
-      box.innerHTML = `<div class="scan-id-card"><div class="card"><p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
+      box.innerHTML = `<div class="scan-id-card"><div class="card">${noModelYear ? `<p>📅 <strong>${escapeHtml(noModelYear)}</strong></p>` : ""}<p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
       const btn = document.getElementById("scanSendFail");
       if (btn) btn.onclick = () => sendFailedScan(file, rec);
     } else {
@@ -10451,6 +10554,7 @@ async function scanTagPhoto(file) {
       // "MODEL NOT IN LIBRARY" line through photoId.
       const photoId = newScanPhotoId();
       const info = identifyModel(fields.model, fields.serial, fields.brandHint, photoId, { log: true });
+      if (info && scanPlateDate) info.plateDate = scanPlateDate;
       // v185: the OCR already swapped lookalike characters to reach the library
       // (ocrCleanModel) - show the same "check the tag" note identifyModel's own
       // re-read gets.
@@ -10498,7 +10602,7 @@ function scanWebLinks(info) {
   }
   links.push(`<a href="${g(`${brand} ${info.model} hvac specifications`.trim())}" target="_blank" rel="noopener">🔍 Web: ${escapeHtml(info.model)} specs</a>`);
   links.push(`<a href="${g(`"${info.model}" installation OR service manual pdf`)}" target="_blank" rel="noopener">📄 Web: find the manual (PDF)</a>`);
-  if (info.serial && !info.age) {
+  if (info.serial && !info.age && !info.plateDate) {
     links.push(`<a href="${g(`${brand || "hvac"} serial number ${info.serial} manufacture date`)}" target="_blank" rel="noopener">📅 Web: unit age from serial</a>`);
   }
   return links.join("");
@@ -10522,7 +10626,12 @@ function renderScanResult(info) {
   } else if (info.brandGuess) {
     facts.push(["Brand", info.brandGuess + " (read off the tag)"]);
   }
-  if (info.age) facts.push(["Age", info.age]);
+  // v300: the date printed on the plate wins; the serial decode shows when it agrees or there is no printed date.
+  if (info.plateDate) {
+    facts.push(["Year made", serialYearText(info.plateDate, true)]);
+    const sy = decodeSerialYear(info.brand || info.brandGuess, info.serial, info.equipment);
+    if (sy && sy.year !== info.plateDate.year) facts.push(["Serial says", serialYearText(sy) + " - the printed date is the one to trust"]);
+  } else if (info.age) facts.push(["Year made", info.age]);
   const brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
   const twinModel = info.brand === "Carrier" ? carrierTwinModel(info.model) : "";
   const famPre = codeFamilyPrefix(info.model, brandCodes) || (twinModel ? codeFamilyPrefix(twinModel, brandCodes) : "");
@@ -10952,7 +11061,7 @@ function renderWarrantyResult(model, serial, badgeFromTag) {
   const portal = badge ? WARRANTY_PORTALS[badge] : null;
 
   const facts = [];
-  if (info && info.brand) { facts.push(["Unit", info.brand + " " + (info.equipment || "")]); if (info.age) facts.push(["Age (from serial)", info.age]); }
+  if (info && info.brand) { facts.push(["Unit", info.brand + " " + (info.equipment || "")]); if (info.age) facts.push(["Year made", info.age]); }
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
 
   const offline = !navigator.onLine;
@@ -11908,7 +12017,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v299";
+const APP_VERSION = "v300";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
