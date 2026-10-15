@@ -11257,11 +11257,60 @@ if ("serviceWorker" in navigator) {
   // reload instead of forcing one: an automatic refresh mid-job would wipe out
   // whatever they were part-way through on screen.
   let updateOffered = false;
-  function offerUpdate() {
+  // v303: forced update (Andy 2026-10-14 - Cameron scanned on v279 while the
+  // rest of the crew was on v300). A ready update now applies by itself at a
+  // moment when nothing can be lost: the tech just opened the app or brought it
+  // back (and hasn't touched it yet), or, when this phone is FORCE_UPDATE_BEHIND
+  // or more versions back, any time it has sat untouched for a minute. Never
+  // while a tag is being read or a box has typing in it (generator checklists
+  // are saved as drafts already).
+  const FORCE_UPDATE_BEHIND = 5;
+  let updateReady = false, updateBehind = 0, latestVersion = 0;
+  let wakeAt = Date.now(), touchedSinceWake = false, lastTouch = 0, hiddenAt = 0;
+  ["pointerdown", "keydown"].forEach(ev => window.addEventListener(ev, () => { touchedSinceWake = true; lastTouch = Date.now(); }, true));
+  const versionNum = (v) => parseInt(String(v).replace(/\D/g, ""), 10) || 0;
+  async function checkLatestVersion() {
+    try {
+      const m = (await (await fetch("sw.js", { cache: "no-store" })).text()).match(/bfc-cache-v(\d+)/);
+      if (m) latestVersion = +m[1];
+    } catch (e) {}
+    updateBehind = latestVersion ? Math.max(0, latestVersion - versionNum(APP_VERSION)) : 0;
+    return updateBehind;
+  }
+  function safeToReload() {
+    if (tagScanRunning > 0) return false;
+    const el = document.activeElement;
+    return !(el && /^(INPUT|TEXTAREA)$/.test(el.tagName) && String(el.value || "").trim());
+  }
+  function tryForcedUpdate() {
+    if (!updateReady || !safeToReload()) return false;
+    const atWake = !touchedSinceWake && Date.now() - wakeAt < 30000;
+    const farIdle = updateBehind >= FORCE_UPDATE_BEHIND && Date.now() - lastTouch > 60000;
+    if (!atWake && !farIdle) return false;
+    trackEvent("forced update " + APP_VERSION + " -> " + (latestVersion ? "v" + latestVersion : "new") + (atWake ? " (on open)" : " (idle)"));
+    location.reload();
+    return true;
+  }
+  async function offerUpdate() {
+    updateReady = true;
+    await checkLatestVersion();
+    if (tryForcedUpdate()) return;
     if (updateOffered) return;
     updateOffered = true;
-    showUpdatePill();
+    showUpdatePill(updateBehind >= FORCE_UPDATE_BEHIND);
   }
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) { hiddenAt = Date.now(); return; }
+    if (hiddenAt && Date.now() - hiddenAt > 60000) { wakeAt = Date.now(); touchedSinceWake = false; }
+    tryForcedUpdate();
+  });
+  setInterval(tryForcedUpdate, 15000);
+  // A phone far behind with no update arriving (download failing, no signal at
+  // the right moment) shows up in the daily report instead of going unnoticed.
+  window.addEventListener("load", () => setTimeout(async () => {
+    if (updateReady || await checkLatestVersion() < FORCE_UPDATE_BEHIND) return;
+    trackEvent("BEHIND ON UPDATES | running " + APP_VERSION + ", latest v" + latestVersion);
+  }, 120000));
 
   // Watch a freshly-downloading worker and surface the pill the moment it
   // reaches "installed" (its cache is complete and it's ready to serve). This
@@ -11318,18 +11367,19 @@ function pillStack() {
   return stack;
 }
 
-function showUpdatePill() {
+function showUpdatePill(needed) {
   if (document.getElementById("updatePill")) return;
   const pill = document.createElement("button");
   pill.id = "updatePill";
   pill.className = "update-pill";
   pill.type = "button";
-  pill.innerHTML = `<span>Update ready</span><span class="update-pill-cta">Tap to reload</span>`;
+  const label = needed ? "Update needed - app is out of date" : "Update ready";
+  pill.innerHTML = `<span>${label}</span><span class="update-pill-cta">Tap to reload</span>`;
   pill.onclick = () => {
     if (tagScanRunning > 0) {
       pill.firstElementChild.textContent = "Reading a tag";
       pill.lastElementChild.textContent = "Tap again when it's done";
-      setTimeout(() => { pill.firstElementChild.textContent = "Update ready"; pill.lastElementChild.textContent = "Tap to reload"; }, 4000);
+      setTimeout(() => { pill.firstElementChild.textContent = label; pill.lastElementChild.textContent = "Tap to reload"; }, 4000);
       return;
     }
     trackEvent("took an update"); location.reload();
@@ -12053,7 +12103,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v302";
+const APP_VERSION = "v303";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
