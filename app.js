@@ -1063,8 +1063,17 @@ function askModelTokens(q) {
 }
 const ASK_BRAND_RE = /\b(generac|kohler|rehlko|carrier|bryant|lennox|trane|goodman|daikin|amana|rheem|ruud|york|payne|heil|tempstar|comfortmaker|arcoaire|bosch|honeywell|ecobee|nest|mitsubishi|fujitsu|samsung|gree|midea|nortek|armstrong|allied|ducane|coleman|luxaire|weatherking|american standard|aire-flo|airease|concord|icp|day & night|keeprite|frigidaire|maytag|westinghouse|intertherm|nordyne|lux|venstar|emerson|white-rodgers|braeburn|pro1|sensi|aprilaire|ameristar)\b/;
 let askCtx = null;   // { models, codes, brand, fam, ts } from the last question that named a unit, brand or family
+// v302: a model typed with a letter for a lookalike digit searches as the real model -
+// Vern typed "goo73240" twice and got nothing (2026-10-14); identifyModel already knew G0073240.
+function askFixModelLookalikes(q) {
+  if (typeof identifyModel !== "function") return q;
+  return String(q || "").replace(/(?<![A-Za-z0-9])(?=[A-Za-z0-9]*\d)(?=[A-Za-z0-9]*[OoIi])[A-Za-z0-9]{5,}(?![A-Za-z0-9])/g, (t) => {
+    const info = identifyModel(t) || {};
+    return info.brand && info.ocrGuess && info.model ? info.model : t;
+  });
+}
 function askRetrievalQ(q) {
-  let r = askFixTypos(q);
+  let r = askFixTypos(askFixModelLookalikes(q));
   const models = askModelTokens(r);
   const brandOf = (s) => { const m = String(s).toLowerCase().match(ASK_BRAND_RE); return m ? m[1] : ""; };
   // Fault codes said in the question (3-4 digits not followed by kW / cc / volts / amps ...).
@@ -9725,6 +9734,9 @@ function tagNoModelHint(fields) {
 // before every OCR pass and zoom, so it takes effect when the pass in hand
 // finishes. A stopped scan returns no model, exactly like an unreadable tag.
 let ocrStopRequested = false;
+// v302: a tag photo is being read. The update pill waits for it (Cameron
+// 2026-10-14 tapped "Tap to reload" mid-scan at 2:06 and lost the read).
+let tagScanRunning = 0;
 const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
   scanPlateDate = null;   // v300: set by extractTagFields from any OCR pass of this photo
@@ -10520,6 +10532,7 @@ async function scanTagPhoto(file) {
   trackEvent("scanned a tag photo");
   const heldId = newScanPhotoId();
   const held = holdScanPhoto(file, heldId);   // uploads at the next start only if this scan never finishes
+  tagScanRunning++;
   const preview = document.getElementById("scanPreview");
   preview.src = URL.createObjectURL(file);
   preview.classList.remove("hidden");
@@ -10596,6 +10609,7 @@ async function scanTagPhoto(file) {
     if (!lastTagScan || lastTagScan.file !== file) scanRetakeRemember(file, photoId, null, null, true);
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
   } finally {
+    tagScanRunning--;
     scanRetakeSettle(prevScan, thisInfo);
     held.then(() => releaseScanPhoto(heldId));
   }
@@ -11311,7 +11325,15 @@ function showUpdatePill() {
   pill.className = "update-pill";
   pill.type = "button";
   pill.innerHTML = `<span>Update ready</span><span class="update-pill-cta">Tap to reload</span>`;
-  pill.onclick = () => { trackEvent("took an update"); location.reload(); };
+  pill.onclick = () => {
+    if (tagScanRunning > 0) {
+      pill.firstElementChild.textContent = "Reading a tag";
+      pill.lastElementChild.textContent = "Tap again when it's done";
+      setTimeout(() => { pill.firstElementChild.textContent = "Update ready"; pill.lastElementChild.textContent = "Tap to reload"; }, 4000);
+      return;
+    }
+    trackEvent("took an update"); location.reload();
+  };
   pillStack().appendChild(pill);
 }
 
@@ -12031,7 +12053,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v301";
+const APP_VERSION = "v302";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
