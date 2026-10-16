@@ -8342,7 +8342,10 @@ const MODEL_PATTERNS = [
   { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Diagnostic Help."] },
   // --- Trane / American Standard ---
   { re: /^S[89][VXB][12]|^L9X1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
-  { re: /^(TUD|TUH|TDD|TDH|TUX|TUY|TUC|TDC|TUE|TME|AUD|ADD|AUH|ADH|AUX|AUY|AUC|ADC|AUE)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
+  // v310 (Bryce, 10/16: TDX100C948D3 came back "not in library", so no Error Codes button): TDX / ADX are
+  // the downflow twins of TUX / AUX - Trane XL90 / XR90 literature (22-1674-10; the library's own seed
+  // "TUX1 / AUX1 / TDX1 / ADX1 (XR90)" installer's guide) covers both.
+  { re: /^(TUD|TUH|TDD|TDH|TUX|TDX|TUY|TUC|TDC|TUE|TME|AUD|ADD|AUH|ADH|AUX|ADX|AUY|AUC|ADC|AUE)[12]?[A-Z0-9]/, brand: "Trane", equipment: "Gas Furnace", series: "Trane/American Standard gas furnace (legacy lettered platform)", notes: [] },
   { re: /^4TT[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane AC condenser (4TTR/4TTX; 4TTV = XV18/XV20i variable-speed)", notes: ["Condensing unit installer's guide is in Manuals → Trane.", "4TTV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4TW[RXBZV][0-9]/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "Trane heat pump (4TWR/4TWX; 4TWV = XV18/XV20i variable-speed)", notes: ["4TWV variable-speed units are communicating — codes surface on the thermostat/Diagnostics app, not a flash LED."] },
   { re: /^4A7|^4A6/, brand: "Trane", equipment: "Condenser/Heat Pump", series: "American Standard AC/heat pump", notes: ["American Standard = Trane."] },
@@ -12154,7 +12157,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v309";
+const APP_VERSION = "v310";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
