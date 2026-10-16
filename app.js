@@ -8656,6 +8656,10 @@ const MODEL_PATTERNS = [
   { re: /^AP(18|24|30|36|37|42|48|60)[BCD]/, brand: "York", equipment: "Air Handler", series: "York / Coleman / Luxaire AP-series standard PSC single-piece multi-position air handler (PSC twin of the AE series)", notes: ["AP is the standard PSC single-piece multi-position air handler line, usable for cooling or heat pump with or without electric heat (5373256-UIM-C-0717 p1)."] },
   { re: /^H[CL]19B(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "Luxaire HL19B / Coleman HC19B 19 SEER two-stage split heat pump, R-410A, 2-5 ton (twin of York YZT)", notes: ["Nomenclature: H = heat pump, L = Luxaire brand, 19 = 19 SEER / 2-stage, B = R-410A, capacity 24/36/48/60, 2 = 208/230-1-60 (5490689-LTG-F-0620 p2).","Outdoor model numbers ending in 'H' have a factory hard-start kit, required when a TXV is installed (5391577-UIM-B-0718 p6)."] },
   { re: /^YHM(24|36|48|60)B/, brand: "York", equipment: "Condenser/Heat Pump", series: "York YHM 16 SEER inverter modulating split heat pump, R-410A, 2-5 ton (twin of Coleman CH16 / Luxaire TH16)", notes: ["With a conventional two-stage heat pump thermostat the system modulates capacity and airflow from 50% to 100% of nominal in 10% increments (TH16 twin guide 5547667-LTG-C-0419 p1)."] },
+  // ---- v313: Coleman / Luxaire heat pumps (Andy 2026-10-16, "add the th16 and coleman ones too") ----
+  { re: /^[CT]H16B(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "Luxaire TH16 / Coleman CH16 16 SEER inverter modulating split heat pump, R-410A, 2-5 ton (twin of York YHM)", notes: ["Reading the model: TH16B3622S = H heat pump, 16 = 16 SEER modulating, B = R-410A, 36 = 3 ton, 2 = 208/230-1-60, 2 = 2nd generation, S = standard. Source: Luxaire tech guide 5547667-LTG-C-0419 p2.", "With a conventional two-stage heat pump thermostat it modulates capacity and airflow from 50% to 100% in 10% steps; the main control and the inverter control both have self-diagnostics. Source: 5547667-LTG-C-0419 p1."] },
+  { re: /^H[CL]6B0?(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "Coleman HC6B / Luxaire HL6B 16 SEER split heat pump, R-410A, 2-5 ton (twin of York YZF)", notes: ["Only the 060 size is two-stage. Two-stage units are not designed for a low ambient kit - do not modify the control for one. Source: York install manual 835966-UIM-G-0716."] },
+  { re: /^(YZH|H[CL]8B)0?(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "York YZH / Coleman HC8B / Luxaire HL8B 18 SEER two-stage split heat pump, R-410A, 2-5 ton (Affinity)", notes: ["All sizes are two-stage and are not designed for a low ambient kit - do not modify the control for one. Source: York install manual 835966-UIM-G-0716."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -12251,7 +12255,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v312";
+const APP_VERSION = "v313";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
