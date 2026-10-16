@@ -8278,6 +8278,11 @@ const MODEL_PATTERNS = [
   // (checked payne.com/hvacpartners.com/shareddocs.com directly) — the age
   // field will come back blank for these, and that's correct, not a bug.
   { re: /^PG(9[0-9]|8[0-9])[A-Z]/, brand: "Carrier", equipment: "Gas Furnace", series: "Payne-branded gas furnace (Carrier platform)", notes: ["Payne = Carrier — the standard Carrier/Bryant/Payne flash-code list in Error Codes applies.", "No official source documents a Payne serial date format — the tag's own date/warranty info is more reliable than a guess."] },
+  // v311 (Dave's 24ANB648A300, 10/16): the same family, pinned down by Carrier's model number
+  // nomenclature (24-25-9SM p3, 24-25-7SM p2): series 24-27, family / tier / major series
+  // letters, the SEER digit, then the cooling capacity 18-60 in positions 7-8. Specific enough
+  // for the Tag Scanner to trust a clean read; the loose line below still catches the rest.
+  { re: /^2[4567][A-Z]{3}[0-9](18|24|30|36|42|48|60)/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity/Performance/Comfort AC or heat pump (24/25/26/27-series)", notes: ["24VNA9/25VNA8: full 39-code fault table is in Error Codes."] },
   { re: /^2[4567][A-Z]{3}/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Infinity/Performance/Comfort AC or heat pump (24/25/26/27-series)", notes: ["24VNA9/25VNA8: full 39-code fault table is in Error Codes."] },
   { re: /^CH14NB/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier Comfort 14 single-stage heat pump, R-410A (CH14NB018-060)", notes: ["Charge from the unit's own charging tables in the install manual (subcooling 10-15 F by size, plus Table 4 extra subcooling for some indoor coils) - Maintenance Figures has every size.", "Install manual and product data are in Manuals - Carrier."] },
   { re: /^G[AH][0-9][ST]AN/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Carrier/Bryant Builder (new-construction) R-454B AC (GA) / heat pump (GH) - GA4SAN5 / GA5SAN5 / GA8TAN5, GH5SAN5 / GH8TAN5", notes: ["R-454B (A2L) Builder tier - the SAME model number is sold under both Carrier and Bryant badges. NO diagnostic control board: single-stage (GA4/GA5/GH5) are contactor-only; two-stage GA8TAN5 / GH8TAN5 troubleshoot on compressor winding / unloader tests, no LED fault table.", "Read GH8TAN5 as G (Builder tier) H (heat pump; A = air conditioner) 8 (efficiency; 4/5 = single-stage, 8 = two-stage) T (compressor: S single-stage, T two-stage) A N 5 (R-454B), then capacity digits.", "Install manuals for GA4SAN5 / GA8TAN5 / GH8TAN5 are in Manuals → Carrier. Charge R-454B by the metering device: piston = superheat, TXV = subcooling."] },
@@ -8636,6 +8641,15 @@ function decodeCapacity(model, equipment) {
     if (s) return `~${parseInt(s[1],10)},000 BTU/h nominal`;
     return null;
   }
+  // v311 (Dave's 24ANB648A300 showed "~2 ton"; it is 4 ton): Carrier 24/25/26/27-series split
+  // systems carry the cooling capacity in positions 7-8 (24-25-9SM p3: 18 = 1-1/2 ... 60 = 5).
+  // The leading 24/25 is the series (AC / heat pump), not a size, and the 3-digit search below
+  // misread a trailing factory code ("24ACC624A0030" as 2.5 ton).
+  const carrier = model.match(/^2[4567][A-Z]{3}[0-9](18|24|30|36|42|48|60)(?=[A-Z0-9-]|$)/);
+  if (carrier) {
+    const btu = parseInt(carrier[1], 10);
+    return `~${Math.round((btu / 12) * 2) / 2} ton (${btu},000 BTU/h nominal)`;
+  }
   let m = model.match(/(018|024|030|036|042|048|060)(?=[A-Z0-9-]|$)/);
   // Some brands (Carrier 24VNA936, 25VNA836) embed 2-digit tonnage codes instead.
   if (!m) m = model.match(/(18|24|30|36|42|48|60)(?=[A-Z])/);
@@ -8882,6 +8896,12 @@ function looksLikeSerial(s) {
 // (a Goodman serial, a part number) is not taken for one. Scanner use only: a serial
 // fallback, and a guard so such a read is never reported as the MODEL - Dustin's tilted
 // TDD plate came back with model 60463AK1G.
+// v311 (Dave's Carrier 24ANB648A300): the "PROD" production number Carrier prints above the
+// model - the model's first 9 characters (24ANB648A) then 6-8 digits (0030010). The short model
+// on the MODEL line never ends that way. Such a read never ends a scan on its own.
+function ocrCarrierProdShape(s) {
+  return /^2[4-7][A-Z]{3}[0-9]{3}[A-Z][0-9OD]{6,8}$/.test(s || "");
+}
 function ocrTraneSerialShape(s) {
   return /^(?:\d{2}|[2-9])(?:0[1-9]|[1-4]\d|5[0-3])[1-7](?=[A-Z0-9]{5}$)[0-9]*[A-Z]/.test(s || "");
 }
@@ -9003,7 +9023,7 @@ function extractTagFields(text) {
   const plateDate = plateDateYear(up);
   if (plateDate && !scanPlateDate) scanPlateDate = plateDate;
   const lines = upN.split(/\n+/).map(l => l.trim()).filter(Boolean);
-  let model = "", serial = "", serialSource = "", stackedModel = "", modelSource = "";
+  let model = "", serial = "", serialSource = "", stackedModel = "", modelSource = "", modelFromProd = false;
   // "(?:NUMBER|NO...)?" explicitly eats the filler word in "MODEL NUMBER" /
   // "SERIAL NUMBER" / "SERIAL NO." so the capture lands on the actual value —
   // otherwise the word NUMBER itself gets captured, rejected, and the real
@@ -9015,9 +9035,12 @@ function extractTagFields(text) {
   // regex stalls on the "/" and the real model number is never captured (a
   // real 2013 Rheem tag scanned as "could not read" for exactly this reason).
   // OCR renders the degree sign as °, º, *, ?, o or 0.
-  const FILLER = "(?:[\\s.:#/-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
+  // v311: "NC." / "NC " is a misread "NO." (a Rheem plate's "SER. NC C684595433" kept no serial);
+  // only before a space or dot, so a serial that starts with NC is not cut.
+  const FILLER = "(?:[\\s.:#/-]*(?:NUMBER|NUM|N[O0\\u00B0\\u00BA*?]\\.?|NC(?=[\\s.])\\.?|MOD[E\\u00C8\\u00C9]LE|MODELE|DE\\s+S[E\\u00C8\\u00C9]RIE|S[E\\u00C8\\u00C9]RIE))*";
   // v275: a "-" may sit between label and value: ocrNormDashes turns "M/N – G61MP" into "M/N-G61MP".
-  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
+  // v311: NODEL / HODEL / MOOEL - OCR's misreads of the MODEL label on Dave's Carrier plate.
+  const modelLabel = new RegExp("(?:MODEL|MODLE|M/N|MOD|M0DEL|NODEL|HODEL|MOOEL)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9./-]{4,24})");
   const serialLabel = new RegExp("(?:SERIAL|SER|S/N|5/N)" + FILLER + "[.:#/ -]*\\s*([A-Z0-9][A-Z0-9-]{5,24})");
   // A two-column header row ("MODEL NO.   SERIAL NO.") makes the MODEL label
   // capture the NEXT label word — a Trane plate scanned as model "SERIAL". Reject
@@ -9050,7 +9073,11 @@ function extractTagFields(text) {
       if (/[A-Z0-9]*[0-9][A-Z0-9]*/.test(line.replace(LABEL_WORDS, " ").replace(/\b[A-Z]{1,2}\b/g, " "))) continue;
       // the value(s) must START the next line (after OCR specks), so "MFG DATE
       // 02/2016" under a label is not taken for its value
-      const raw = lines[i + 1].split(/\s+/).map(valueTok);
+      // v311: a sparse read of Dave's Carrier plate came back "PROD / MODEL / 24ANB648A0030010 /
+      // 24ANB648A300" - two stacked labels, then their two values in the same order. A MODEL label
+      // right under a bare PROD label takes the SECOND value, not the production number.
+      const vi = (mAt >= 0 && sAt < 0 && i > 0 && i + 2 < lines.length && /^[^A-Z0-9]*PR[O0]D(?:UCT)?[^A-Z0-9]*$/.test(lines[i - 1])) ? i + 2 : i + 1;
+      const raw = lines[vi].split(/\s+/).map(valueTok);
       while (raw.length && raw[0].length <= 2) raw.shift();
       const toks = raw.slice(0, 2).filter(t => /^[A-Z0-9-]{5,24}$/.test(t) && /[0-9]/.test(t) && !TAG_NONVALUE.test(t));
       if (!toks.length || toks[0] !== raw[0]) continue;
@@ -9081,8 +9108,24 @@ function extractTagFields(text) {
   }
   // No labels found — look for any token matching a known model pattern.
   if (!model) {
-    const tokens = upN.match(/[A-Z0-9./-]{5,24}/g) || [];
-    for (const t of tokens) {
+    // v311: a Carrier plate prints "PROD 24ANB648A0030010" (the production number) right above
+    // "MODEL 24ANB648A300"; both fit the family, so the PROD line's token is tried last.
+    // A sparse pass prints each word on its own line, so "PROD" can be the whole line before it.
+    // ("PROD / MODEL / 24ANB648A0030010 / 24ANB648A300": after a bare PROD label and any bare
+    // labels stacked under it, the next line is the production number).
+    const prodIdx = new Set();
+    lines.forEach((l, i) => {
+      if (!/^[^A-Z0-9]*PR[O0]D(?:UCT)?[^A-Z0-9]*$/.test(l)) return;
+      let j = i + 1;
+      while (j < lines.length && /^[^A-Z0-9]*(?:MODEL|NODEL|HODEL|MOOEL|M\/N|SERIAL|S\/N)[^A-Z0-9]*$/.test(lines[j])) j++;
+      prodIdx.add(j);
+    });
+    const prodLine = (l, i) => /^[^A-Z0-9]*PR[O0]D(?:UCT)?\b/.test(l) || prodIdx.has(i);
+    const plain = [].concat(...lines.filter((l, i) => !prodLine(l, i)).map(l => l.match(/[A-Z0-9./-]{5,24}/g) || []));
+    const tokens = plain.concat(...lines.filter((l, i) => prodLine(l, i)).map(l => l.match(/[A-Z0-9./-]{5,24}/g) || []));
+    for (let ti = 0; ti < tokens.length; ti++) {
+      const t = tokens[ti];
+      if (ti >= plain.length) modelFromProd = true;   // read in ocrTagText: cannot end a scan on its own
       // A slash inside a model is real on Lennox/ADP (LC23/37Y9BG, CRX35-30/36B):
       // keep it when the family still matches with it, else drop it as before.
       const kept = t.replace(/\./g, "").replace(/^[\/-]+|[\/-]+$/g, "");
@@ -9133,7 +9176,7 @@ function extractTagFields(text) {
   // barcode caption) — never treat that alone as proof the tech shot the serial.
   // modelSource (v185): "pattern" = no label, just a token that fits a
   // MODEL_PATTERNS prefix - weaker evidence, which ocrTagFields weighs.
-  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, modelSource, brandHint: detectBrandInText(up) };
+  return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, modelSource, brandHint: detectBrandInText(up), modelFromProd: !!(model && modelFromProd) };
 }
 
 let tessWorkerPromise = null;
@@ -9847,10 +9890,14 @@ async function ocrTagTextPasses(file, onStatus) {
     const { data } = await worker.recognize(canvas, opts);
     const turn = (rad || 0) + (data.rotateRadians || 0);
     // Model-shaped words, for a zoomed look if no pass finds a model.
-    for (const w of noProbes ? [] : data.words || []) {
+    const words = noProbes ? [] : data.words || [];
+    for (let k = 0; k < words.length; k++) {
+      const w = words[k];
       const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9-]/g, "");
+      // v311: the word right after "PROD" is a Carrier production number - zoomed last
+      const prod = k > 0 && /^PR[O0]D(UCT)?\W*$/i.test(words[k - 1].text || "");
       if (t.length >= 7 && t.length <= 22 && t.length >= (w.text || "").length - 2 && /[A-Z]/.test(t) && w.bbox.y1 - w.bbox.y0 >= 6)
-        probes.push({ t, conf: w.confidence || 0, box: w.bbox, rad: turn, deg, passScale, event });
+        probes.push({ t, conf: w.confidence || 0, box: w.bbox, rad: turn, deg, passScale, event, prod });
     }
     const fields = extractTagFields(data.text || "");
     fields.text = data.text || "";
@@ -9891,12 +9938,14 @@ async function ocrTagTextPasses(file, onStatus) {
     const clean = ocrCleanModel(fields.model);
     if (!clean.lib && !ocrPlausibleModel(clean.model)) return null;
     if (!clean.lib && ocrTraneSerialShape(clean.model)) return null;   // v309: the serial, not the model
+    if (ocrCarrierProdShape(clean.model)) fields.modelFromProd = true;  // v311: settle keeps it only as a fallback
     const w = ocrModelWords(data, fields.model);
     // No MODEL label and only a loose or short family match - "ZH09/0S" off
     // an upside-down "24V COIL", "Q31SN" off an upside-down "LISTED": not a
     // candidate unless read very confidently.
     if (fields.modelSource === "pattern" && (clean.tier <= 0 || (clean.tier === 1 && clean.model.length < 7)) && (w ? w.conf : 0) < 90) return null;
     const c = mkCand({ fields, box: w && w.box, rad: turn, deg, passScale, event }, clean, w ? w.conf : fields.confidence);
+    if (fields.modelFromProd && c.tier > 1) c.tier = 1;   // v311: a PROD-line number needs a second look, a later pass may read the MODEL line
     if (fields.modelSource === "label" && !clean.lib && clean.model.length >= 8 && c.conf >= 50 && /[A-Z]/.test(clean.model) && /[0-9]/.test(clean.model) && (!labelCand || c.conf > labelCand.conf)) labelCand = c;
     if (!bestCand || score(c) > score(bestCand)) bestCand = c;
     return c;
@@ -9920,7 +9969,10 @@ async function ocrTagTextPasses(file, onStatus) {
     const z1 = await zoomRead(44, true);
     if (!z1) return { c, agree: false };
     if (z1.model === c.model) return { c: { ...c, conf: Math.max(c.conf, z1.conf) }, agree: true };
-    if (z1.tier >= 1 && z1.model.length > c.model.length && z1.model.startsWith(c.model)) return { c: z1, agree: false };
+    // v311: not when the "extension" is just the last character read twice ("24ANB648A300" ->
+    // "24ANB648A3000" off Dave's Carrier plate); a real cut-off ending adds more than a repeat.
+    const dupTail = z1.model.length === c.model.length + 1 && z1.model.slice(-1) === c.model.slice(-1);
+    if (z1.tier >= 1 && z1.model.length > c.model.length && z1.model.startsWith(c.model) && !dupTail) return { c: z1, agree: false };
     const z2 = await zoomRead(30, false);
     const reads = [c, z1, z2].filter(Boolean);
     for (let i = 0; i < reads.length; i++) for (let j = i + 1; j < reads.length; j++)
@@ -9960,6 +10012,9 @@ async function ocrTagTextPasses(file, onStatus) {
   // must be read very confidently or confirmed by the zoom.
   const settle = async (c) => {
     if (!c || vetoed(c) || serialAsModel(c)) return null;
+    // v311: a Carrier PROD-line number never ends the scan - later passes may read the MODEL line.
+    // It stays the best candidate, so it is still shown if nothing better turns up.
+    if (c.fields && c.fields.modelFromProd) { if (!bestCand || score(c) > score(bestCand)) bestCand = c; return null; }
     // a clean, confident read of a specific family needs no second look
     if (c.tier === 2 && c.exact && c.conf >= 85) return c;
     if (c.tier === 2) { const t2 = (await confirm(c)).c; return serialAsModel(t2) ? c : t2; }
@@ -9977,7 +10032,7 @@ async function ocrTagTextPasses(file, onStatus) {
   const probeWords = async (max) => {
     // letters AND digits first (a model), then length: "N4AG42BKA" before "REFRIGERANT"
     const mixed = (t) => (/[0-9].*[0-9]/.test(t) && /[A-Z].*[A-Z]/.test(t) ? 1 : 0);
-    const list = probes.splice(0).sort((a, b) => mixed(b.t) - mixed(a.t) || b.t.length - a.t.length || b.conf - a.conf).slice(0, max);
+    const list = probes.splice(0).sort((a, b) => (a.prod ? 1 : 0) - (b.prod ? 1 : 0) || mixed(b.t) - mixed(a.t) || b.t.length - a.t.length || b.conf - a.conf).slice(0, max);
     for (const p of list) {
       if (ocrStopRequested) throw OCR_STOP;
       let data = null;
@@ -9990,6 +10045,7 @@ async function ocrTagTextPasses(file, onStatus) {
         const zc = ocrCleanModel(t);
         const w = ocrModelWords(data, t), conf = w ? w.conf : (data.confidence || 0);
         if (!(zc.tier === 2 || (zc.lib && zc.tier === 1 && conf >= 70))) continue;
+        if (ocrCarrierProdShape(zc.model)) continue;   // v311: a PROD number is not the model
         const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
         fields.text = (fields.text || "") + " \n" + (data.text || "");
         if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
@@ -10015,6 +10071,7 @@ async function ocrTagTextPasses(file, onStatus) {
         const zc = ocrCleanModel(t);
         const w = ocrModelWords(data, t), conf = w ? w.conf : (data.confidence || 0);
         if (!(zc.tier === 2 || (zc.lib && zc.tier === 1 && conf >= 70))) continue;
+        if (ocrCarrierProdShape(zc.model)) continue;   // v311: a PROD number is not the model
         const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
         fields.text = (fields.text || "") + " \n" + (data.text || "");
         if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
@@ -12157,7 +12214,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v310";
+const APP_VERSION = "v311";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
