@@ -9355,6 +9355,11 @@ const OCR_TAIL_FORMATS = [
   { fam: /^L[CMUHDP][0-9]{2}\/?[0-9]{2}[A-Z]/, pos: ["L", "CMUHDP", "#", "#", "#", "#", "KMNPSTYLUVZ", "19", "ABCDX", "G"] },
   // v296: the input is 040-140 in steps of 20 (a read 59SC2E050M is "check the tag", not a size)
   { fam: /^59S[CP][0-9][A-Z]/, pos: ["5", "9", "S", "CP", "#", "@", "01", "02468", "0"], open: true },
+  // v306 (Cameron's EL195UH110XE60C-04, 10/15, read "...XEG0C"): Lennox Elite EL195/196/296/297
+  // furnaces end in NOx X|N, blower E|V, blower size (24/36/48/60) and cabinet A-D
+  // (Lennox EHB 210615). Only checked once the read is sound up to the blower letter; the
+  // -NN design revision after it is left as read.
+  { fam: /^EL(19[56]|29[67])(UH|DF)[0-9]{3}[XN][EV]/, pos: ["E", "L", "12", "89", "567", "UD", "HF", "#", "#", "#", "XN", "EV", "2346", "0468", "ABCD"], open: true },
 ];
 function ocrCheckTail(model) {
   const f = OCR_TAIL_FORMATS.find(x => x.fam.test(model));
@@ -9668,6 +9673,12 @@ function tagParseBarcodes(codes) {
     if (!model && /^G0\d{6,7}$/.test(t)) { model = t; brand = "Generac"; continue; }
     // Lennox carton: "2P" + model (2PCRX35-30/36B-6F-1). Only on a known family.
     if (!model && /^2P[A-Z0-9][A-Z0-9\/\-]{4,}$/.test(t) && ocrLibraryPattern(t.slice(2).replace(/[\/-]/g, ""))) { model = t.slice(2); continue; }
+    // v306 (James's Carrier 48FCEM14A3A5-0A0A0 rooftop, 10/15): Carrier commercial plates print
+    // Code 39 bars with ANSI data identifiers - "1P" + catalog/model (with its dash), "S" +
+    // serial, "ZI" + the MFG code (the model without the dash). Same rule as the carton: only
+    // on a known family. The 1P code wins over the ZI one.
+    if (/^1P[A-Z0-9][A-Z0-9\/\-]{4,}$/.test(t) && (!model || model === t.slice(2).replace(/-/g, "")) && ocrLibraryPattern(t.slice(2).replace(/[\/-]/g, ""))) { model = t.slice(2); continue; }
+    if (!model && /^ZI[0-9]{2}[A-Z][A-Z0-9\-]{4,}$/.test(t) && ocrLibraryPattern(t.slice(2).replace(/-/g, ""))) { model = t.slice(2); continue; }
     // Trane / American Standard label code: "<model> <serial>*"
     // ("TUX1B080A9421AC07 9105KYX7G*"). Only when the first part is a specific
     // library family (ocrMatchTier 2), so a lot or part number never becomes a model.
@@ -12104,7 +12115,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v305";
+const APP_VERSION = "v306";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
