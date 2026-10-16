@@ -8872,6 +8872,16 @@ function ocrModelCandidates(model) {
 function looksLikeSerial(s) {
   return /^\d{4}[A-Z]{1,2}\d{3,}$/.test(s) || /^\d{8,}$/.test(s);
 }
+// v309 (Dustin's Trane TDD1A060A9241AA / TAM9A0C48V41DAA plates, 10/16): the Trane serial
+// shapes from "Equipment Date Identification" (catalog 22-8301-39 p.137, the same rule
+// decodeSerialAge uses): 10 characters YY WW day(1-7) + 5 (17322H1Y1V), or 9 characters
+// Y WW day + 5 (60463AK1G). At least one letter in the last five, so an all-digit run
+// (a Goodman serial, a part number) is not taken for one. Scanner use only: a serial
+// fallback, and a guard so such a read is never reported as the MODEL - Dustin's tilted
+// TDD plate came back with model 60463AK1G.
+function ocrTraneSerialShape(s) {
+  return /^(?:\d{2}|[2-9])(?:0[1-9]|[1-4]\d|5[0-3])[1-7](?=[A-Z0-9]{5}$)[0-9]*[A-Z]/.test(s || "");
+}
 
 // photoId (optional): the failed-scan photo record this read came from, so the
 // "not in library" event can be paired with its picture in the Drive folder.
@@ -9089,6 +9099,13 @@ function extractTagFields(text) {
   // often a lot or part number. Never the model's own characters.
   if (!serial) {
     const shaped = upN.split(/[^A-Z0-9]+/).find(t => /^\d{4}[A-Z]\d{5}$/.test(t) && !model.includes(t));
+    if (shaped) { serial = shaped; serialSource = "shape"; }
+  }
+  // v309: the Trane serial shapes (ocrTraneSerialShape). Trane prints the values ABOVE the
+  // "MODEL NO.  SERIAL NO." label row, so the label rules above miss them (Dustin's TAM9
+  // plate read "TAMOAOCABVA1DAA [[17322H1Y1V" and kept no serial).
+  if (!serial) {
+    const shaped = upN.split(/[^A-Z0-9]+/).find(t => ocrTraneSerialShape(t) && !model.includes(t) && !ocrLibraryPattern(t));
     if (shaped) { serial = shaped; serialSource = "shape"; }
   }
   if (!serial) {
@@ -9774,7 +9791,19 @@ async function ocrTagFields(file, onStatus) {
   }
   return fields;
 }
+// v309 (Joe's 10/16 scan of a whole furnace: 2 min 17 s before "no model"): once a scan
+// has run this long, every status line also says a closer photo reads faster. Reads are
+// unchanged; the Tag Scanner's own Stop button ("I'll type it in") is already on screen.
+const OCR_SLOW_MS = 25000;
+const OCR_SLOW_HINT = " — still reading. A closer photo of just the tag reads faster.";
 async function ocrTagText(file, onStatus) {
+  const userStatus = onStatus, t0 = Date.now();
+  let lastMsg = "";
+  if (userStatus) onStatus = (m) => { lastMsg = m || ""; userStatus(m && Date.now() - t0 > OCR_SLOW_MS ? m + OCR_SLOW_HINT : m); };
+  const slowTimer = userStatus ? setTimeout(() => userStatus((lastMsg || "Reading the tag...") + OCR_SLOW_HINT), OCR_SLOW_MS) : null;
+  try { return await ocrTagTextPasses(file, onStatus); } finally { if (slowTimer) clearTimeout(slowTimer); }
+}
+async function ocrTagTextPasses(file, onStatus) {
   const photo = await loadPhotoForOcr(file);
   const base = photo.base;
   const worker = await getTessWorker(onStatus);
@@ -9787,6 +9816,13 @@ async function ocrTagText(file, onStatus) {
   // generator) cannot beat it.
   let labelCand = null;
   const vetoed = (c) => !!(c && c.fixedFrom && !(c.fields && c.fields.modelSource === "label") && labelCand && labelCand.deg !== c.deg);
+  // v309: a non-library read shaped like a Trane serial is the serial, never the model. On
+  // Dustin's tilted TDD plate the values sit a line above their labels, so the value under
+  // "MODEL NUMBER:" was the serial ("463AK1G"), and a zoom re-read "confirmed" 60463AK1G.
+  // Also a piece of a serial another pass read off its label or by its shape ("463AK1G").
+  const serialsRead = new Set();
+  const serialAsModel = (c) => !!(c && !c.lib && c.model && (ocrTraneSerialShape(c.model) ||
+    (c.model.length >= 6 && [...serialsRead].some(s => s.includes(c.model) || c.model.includes(s)))));
   const probes = [];
   const serialSeen = [];   // v276: where a serial was read, for the label-zoom pass
   // Prefer a failed pass that read the serial off its LABEL over one that only
@@ -9817,6 +9853,7 @@ async function ocrTagText(file, onStatus) {
     fields.text = data.text || "";
     fields.confidence = data.confidence || 0;
     keep(fields);
+    if (fields.serial && rank(fields) >= 2 && fields.serial.length >= 6) serialsRead.add(fields.serial);
     if (fields.serial && !fields.model && fields.serial.length >= 6 && !noProbes) {
       // the word holding the serial, or a 4+ character piece of it ("161651 1642M")
       const sw = (data.words || []).find(w => { const t = (w.text || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); return t.length >= 4 && (t.includes(fields.serial.slice(-4)) || fields.serial.includes(t.slice(0, 4))); });
@@ -9850,6 +9887,7 @@ async function ocrTagText(file, onStatus) {
     }
     const clean = ocrCleanModel(fields.model);
     if (!clean.lib && !ocrPlausibleModel(clean.model)) return null;
+    if (!clean.lib && ocrTraneSerialShape(clean.model)) return null;   // v309: the serial, not the model
     const w = ocrModelWords(data, fields.model);
     // No MODEL label and only a loose or short family match - "ZH09/0S" off
     // an upside-down "24V COIL", "Q31SN" off an upside-down "LISTED": not a
@@ -9918,12 +9956,13 @@ async function ocrTagText(file, onStatus) {
   // one needs a confident read or an agreeing zoomed re-read; anything else
   // must be read very confidently or confirmed by the zoom.
   const settle = async (c) => {
-    if (!c || vetoed(c)) return null;
+    if (!c || vetoed(c) || serialAsModel(c)) return null;
     // a clean, confident read of a specific family needs no second look
     if (c.tier === 2 && c.exact && c.conf >= 85) return c;
-    if (c.tier === 2) return (await confirm(c)).c;
+    if (c.tier === 2) { const t2 = (await confirm(c)).c; return serialAsModel(t2) ? c : t2; }
     if (c.conf >= 90) return c;
     const r = await confirm(c);
+    if (serialAsModel(r.c)) return null;   // v309: a zoom "confirmed" the serial (60463AK1G)
     // Two reads agreeing is not enough on its own: an upside-down "24V COIL"
     // reads "ZH09/0S" both times. It has to be a decently confident read too.
     if (r.c.tier === 2 || (r.c.tier === 1 && (r.agree || r.c.conf >= 60)) || (r.agree && r.c.conf >= 70) || r.c.conf >= 85) return r.c;
@@ -10071,10 +10110,10 @@ async function ocrTagText(file, onStatus) {
     // must be a library family - "JAOW3H" off Cameron's 1993 ICP plate read
     // upside down was reported as the model)
     const bc = bestCand;
-    if (bc && !vetoed(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7)))) return finish(bc);
+    if (bc && !vetoed(bc) && !serialAsModel(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7)))) return finish(bc);
     // v279: a clean labelled read the library doesn't know yet - shown as "not in
     // the library" (and uploaded for the nightly check) instead of "can't read".
-    if (labelCand) return finish({ ...labelCand, event: "tag model read from its label, not in library" });
+    if (labelCand && !serialAsModel(labelCand)) return finish({ ...labelCand, event: "tag model read from its label, not in library" });
   } catch (e) {
     if (e !== OCR_STOP) throw e;
     trackEvent("tag scan stopped by tech");
@@ -12115,7 +12154,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v308";
+const APP_VERSION = "v309";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
