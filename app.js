@@ -10291,6 +10291,9 @@ async function ocrTagTextPasses(file, onStatus) {
         const w = ocrModelWords(data, t), conf = w ? w.conf : (data.confidence || 0);
         if (!(zc.tier === 2 || (zc.lib && zc.tier === 1 && conf >= 70))) continue;
         if (ocrCarrierProdShape(zc.model)) continue;   // v311: a PROD number is not the model
+        // v319: an all-digit read with more digits right after it on its line is a piece of a
+        // longer number (James's 48FC: release number 009001288295 read "0090071 1288295" -> Generac)
+        if (/^\d+$/.test(zc.model) && new RegExp("(^|[^A-Z0-9-])" + t.replace(/-/g, "\\-") + " +\\d{4,}").test(text)) continue;
         const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
         fields.text = (fields.text || "") + " \n" + (data.text || "");
         if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
@@ -12501,7 +12504,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v318";
+const APP_VERSION = "v319";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
