@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v314";
+const CACHE_NAME = "bfc-cache-v315";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -136,6 +136,9 @@ self.addEventListener("fetch", (event) => {
   // an LRU cap. Never cache it here as well, even if it is ever served from
   // this origin.
   if (url.pathname.includes("/manuals-text/")) return;
+  // v315: the app reads sw.js itself to learn the newest version; never answer that
+  // from (or store it in) this cache, or the check reads the old version forever.
+  if (url.pathname.endsWith("/sw.js")) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;

@@ -11410,20 +11410,39 @@ if ("serviceWorker" in navigator) {
   // whatever they were part-way through on screen.
   let updateOffered = false;
   // v303: forced update (Andy 2026-10-14 - Cameron scanned on v279 while the
-  // rest of the crew was on v300). A ready update now applies by itself at a
-  // moment when nothing can be lost: the tech just opened the app or brought it
-  // back (and hasn't touched it yet), or, when this phone is FORCE_UPDATE_BEHIND
-  // or more versions back, any time it has sat untouched for a minute. Never
-  // while a tag is being read or a box has typing in it (generator checklists
-  // are saved as drafts already).
+  // rest of the crew was on v300). A ready update applies by itself at a moment
+  // when nothing can be lost. Never while a tag is being read or a box has
+  // typing in it (generator checklists are saved as drafts already).
+  // v315 (Andy 2026-10-19, "guys still have to hit update ... make it update
+  // automatically as soon as they open it"): the v303 rule only fired if the
+  // download had ALREADY finished within 30 s of opening and before the first
+  // tap, so on field signal most phones still got the "Update ready" pill (since
+  // 10/14: 25 taps, 4 automatic). Now:
+  //  * on open, or back after 30 s+ in the background, the app asks the server
+  //    for the newest version (sw.js, no-store). If this phone is behind, an
+  //    "Updating..." screen covers the app while the new version downloads, and
+  //    the app reloads itself the moment the new version is in control. The tech
+  //    can tap "Use this version for now" after a few seconds; after 30 s the
+  //    screen gives up by itself (no signal, captive Wi-Fi), and the old rules
+  //    and the "Update ready" pill take over once the download does finish.
+  //  * a ready update also applies whenever the app goes to the background, so
+  //    the next look at it is already the new version.
+  //  * the reload waits for the new version to be ACTIVE, not just downloaded.
+  //    Vern 10/16 tapped "Update ready" on v304 and came back on v304: the pill
+  //    showed at "installed", and a fast tap reloaded under the old worker.
   const FORCE_UPDATE_BEHIND = 5;
-  let updateReady = false, updateBehind = 0, latestVersion = 0;
+  const WAKE_AFTER_MS = 30000, WAKE_SCREEN_MAX_MS = 30000, WAKE_SKIP_AFTER_MS = 5000;
+  let updateReady = false, updateBehind = 0, latestVersion = 0, swReg = null;
   let wakeAt = Date.now(), touchedSinceWake = false, lastTouch = 0, hiddenAt = 0;
+  let wakeScreen = null, wakeScreenTimer = 0, wakeChecking = false;
+  const hadControllerAtLoad = !!navigator.serviceWorker.controller;   // false on a first-ever install
   ["pointerdown", "keydown"].forEach(ev => window.addEventListener(ev, () => { touchedSinceWake = true; lastTouch = Date.now(); }, true));
   const versionNum = (v) => parseInt(String(v).replace(/\D/g, ""), 10) || 0;
   async function checkLatestVersion() {
     try {
-      const m = (await (await fetch("sw.js", { cache: "no-store" })).text()).match(/bfc-cache-v(\d+)/);
+      // v315: a one-off query so the service worker cannot answer from its cache - it stored
+      // sw.js the first time it was asked, and every later check read that old copy back.
+      const m = (await (await fetch("sw.js?check=" + Date.now(), { cache: "no-store" })).text()).match(/bfc-cache-v(\d+)/);
       if (m) latestVersion = +m[1];
     } catch (e) {}
     updateBehind = latestVersion ? Math.max(0, latestVersion - versionNum(APP_VERSION)) : 0;
@@ -11434,26 +11453,69 @@ if ("serviceWorker" in navigator) {
     const el = document.activeElement;
     return !(el && /^(INPUT|TEXTAREA)$/.test(el.tagName) && String(el.value || "").trim());
   }
+  let reloading = false;
+  function reloadForUpdate(how) {
+    if (reloading) return;
+    reloading = true;
+    trackEvent("forced update " + APP_VERSION + " -> " + (latestVersion ? "v" + latestVersion : "new") + " (" + how + ")");
+    location.reload();
+  }
   function tryForcedUpdate() {
     if (!updateReady || !safeToReload()) return false;
+    if (wakeScreen) { reloadForUpdate("on open"); return true; }
+    if (document.hidden) { reloadForUpdate("in background"); return true; }
     const atWake = !touchedSinceWake && Date.now() - wakeAt < 30000;
     const farIdle = updateBehind >= FORCE_UPDATE_BEHIND && Date.now() - lastTouch > 60000;
     if (!atWake && !farIdle) return false;
-    trackEvent("forced update " + APP_VERSION + " -> " + (latestVersion ? "v" + latestVersion : "new") + (atWake ? " (on open)" : " (idle)"));
-    location.reload();
+    reloadForUpdate(atWake ? "on open" : "idle");
     return true;
   }
+  function hideWakeScreen() {
+    clearTimeout(wakeScreenTimer);
+    if (wakeScreen) { wakeScreen.remove(); wakeScreen = null; }
+  }
+  function giveUpWakeScreen(why) {
+    trackEvent("update screen " + why + " " + APP_VERSION + " -> v" + latestVersion);
+    hideWakeScreen();   // the pill shows once the update is actually in (offerUpdate)
+  }
+  function showWakeScreen() {
+    if (wakeScreen) return;
+    const el = document.createElement("div");
+    el.id = "updateScreen";
+    el.setAttribute("role", "alertdialog");
+    el.style.cssText = "position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:var(--bg);color:var(--text);font-size:18px";
+    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div><button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
+    const skip = el.querySelector("button");
+    skip.onclick = () => giveUpWakeScreen("skipped");
+    setTimeout(() => { skip.style.visibility = "visible"; }, WAKE_SKIP_AFTER_MS);
+    wakeScreenTimer = setTimeout(() => giveUpWakeScreen("timed out"), WAKE_SCREEN_MAX_MS);
+    wakeScreen = el;
+    document.body.appendChild(el);
+  }
+  // On open / back from the background: behind the server -> cover the app and update now.
+  async function wakeUpdateCheck() {
+    if (wakeChecking || wakeScreen || !navigator.onLine) return;
+    wakeChecking = true;
+    try {
+      if (await checkLatestVersion() <= 0) return;
+      if (updateReady) { if (safeToReload()) reloadForUpdate("on open"); return; }
+      if (!safeToReload()) return;
+      showWakeScreen();
+      if (swReg) swReg.update().catch(() => {});
+    } finally { wakeChecking = false; }
+  }
   async function offerUpdate() {
+    // not newer than what is running (a first install claiming the page): nothing to reload for
+    if (await checkLatestVersion() <= 0 && latestVersion) return;
     updateReady = true;
-    await checkLatestVersion();
     if (tryForcedUpdate()) return;
     if (updateOffered) return;
     updateOffered = true;
     showUpdatePill(updateBehind >= FORCE_UPDATE_BEHIND);
   }
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) { hiddenAt = Date.now(); return; }
-    if (hiddenAt && Date.now() - hiddenAt > 60000) { wakeAt = Date.now(); touchedSinceWake = false; }
+    if (document.hidden) { hiddenAt = Date.now(); tryForcedUpdate(); return; }
+    if (hiddenAt && Date.now() - hiddenAt > WAKE_AFTER_MS) { wakeAt = Date.now(); touchedSinceWake = false; wakeUpdateCheck(); }
     tryForcedUpdate();
   });
   setInterval(tryForcedUpdate, 15000);
@@ -11464,28 +11526,27 @@ if ("serviceWorker" in navigator) {
     trackEvent("BEHIND ON UPDATES | running " + APP_VERSION + ", latest v" + latestVersion);
   }, 120000));
 
-  // Watch a freshly-downloading worker and surface the pill the moment it
-  // reaches "installed" (its cache is complete and it's ready to serve). This
-  // is the earliest, most reliable signal: it fires as soon as the download
-  // finishes, so a tech who opens the app once on signal sees the nudge on
-  // THAT open instead of only after a second launch. We only pill when a
-  // controller already exists — a first-ever install (no controller yet) is
-  // the initial setup, not an update worth reloading for.
+  // Watch a freshly-downloading worker. v315: the update counts as ready once
+  // the new worker is ACTIVE (sw.js skipWaiting makes that follow "installed"
+  // at once) - reloading at "installed" could still be served by the old one.
+  // Only when a controller already exists: a first-ever install is the initial
+  // setup, not an update worth reloading for.
   function watchWorker(worker) {
     if (!worker) return;
-    worker.addEventListener("statechange", () => {
-      if (worker.state === "installed" && navigator.serviceWorker.controller) offerUpdate();
-    });
+    const ready = () => { if (worker.state === "activated" && hadControllerAtLoad) offerUpdate(); };
+    worker.addEventListener("statechange", ready);
+    ready();
   }
 
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").then((reg) => {
-      // A version that finished installing between sessions is already waiting.
-      if (reg.waiting && navigator.serviceWorker.controller) offerUpdate();
+      swReg = reg;
+      // A version that finished installing between sessions is still on its way in.
+      if (reg.waiting) watchWorker(reg.waiting);
       watchWorker(reg.installing);
       reg.addEventListener("updatefound", () => watchWorker(reg.installing));
 
-      // Check for a new deploy promptly — on open, and again whenever the app
+      // Check for a new deploy promptly - on open, and again whenever the app
       // returns to the foreground or regains signal. A PWA a tech leaves open
       // for days would otherwise only ever check at a cold start.
       const check = () => { reg.update().catch(() => {}); };
@@ -11493,11 +11554,12 @@ if ("serviceWorker" in navigator) {
       document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
       window.addEventListener("online", check);
     }).catch(() => {});
+    wakeUpdateCheck();
   });
 
   // Secondary trigger: the new worker took control of this page (skipWaiting +
   // clients.claim). A page loaded before its worker claimed it starts with no
-  // controller, so the first handover is the initial claim, not an update —
+  // controller, so the first handover is the initial claim, not an update -
   // track that so the initial setup isn't mistaken for a new version.
   let haveBaselineController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -12255,7 +12317,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v314";
+const APP_VERSION = "v315";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
