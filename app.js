@@ -9047,6 +9047,41 @@ function ocrNormDashes(up) {
   return up.replace(/[\u2010-\u2015\u2212~]/g, "-").replace(/([A-Z0-9])(?: *-)+ *(?=[A-Z0-9]{2}|[0-9](?![A-Z0-9]))/g, "$1-");
 }
 
+// v314 (Andy 2026-10-19, "run bad scans" -> "do all three fixes"): lookalike repair for the
+// 4-digits + letter + 5-digits serial (Carrier, Lennox, ADP, Goodman). Dave's 24ANB6 plate prints
+// its serial big and thin and OCR reads "3616E06923" as "36 1 6EQ6923" / "3616EQ6923". Only a
+// 10-character read whose 5th character is a letter, with at most 2 characters fixed, and only
+// to that exact shape. Lowercase keeps its own look-alikes ("b" is a 6, "B" an 8).
+function ocrShapeSerialFix(s) {
+  const t = String(s || "").replace(/[^A-Za-z0-9]/g, "");
+  if (t.length !== 10) return "";
+  const LOW = { b: "6", o: "0", l: "1", i: "1", s: "5", g: "9", z: "2" };
+  const UP = { O: "0", Q: "0", D: "0", U: "0", I: "1", L: "1", T: "1", Z: "2", S: "5", B: "8", G: "6" };
+  let out = "", fixes = 0;
+  for (let i = 0; i < 10; i++) {
+    const c = t[i];
+    if (i === 4) { if (!/[A-Za-z]/.test(c)) return ""; out += c.toUpperCase(); continue; }
+    if (/[0-9]/.test(c)) { out += c; continue; }
+    const d = LOW[c] || UP[c.toUpperCase()];
+    if (!d) return "";
+    out += d; fixes++;
+  }
+  return fixes <= 2 ? out : "";
+}
+// v314: the serial after a SERIAL / S/N label, read in pieces ("SERIAL 36 1 6EQ6923"): the
+// pieces are joined and repaired by ocrShapeSerialFix. Works on the original-case text.
+function ocrJoinedLabelSerial(text) {
+  for (const line of ocrNormDashes(String(text || "")).split(/\n+/)) {
+    const m = line.match(/(?:SERIAL|S\/N|5\/N|SER\.)\s*(?:N[O0]\.?|NUMBER|#)?[\s.:#-]*([A-Za-z0-9][A-Za-z0-9 ]{8,20})/i);
+    if (!m) continue;
+    let joined = "";
+    for (const piece of m[1].trim().split(/\s+/)) { if (joined.length >= 10) break; joined += piece; }
+    const fixed = joined.length === 10 ? ocrShapeSerialFix(joined) : "";
+    if (fixed) return fixed;
+  }
+  return "";
+}
+
 // Pull likely model/serial strings out of raw OCR text.
 function extractTagFields(text) {
   // OCR reads a printed 1 as "!" often enough to cut a model in half
@@ -9147,6 +9182,10 @@ function extractTagFields(text) {
       if (!serial) { const m = line.match(weakSerialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1]) && !SERIAL_WORDY.test(m[1])) { serial = m[1]; serialSource = "label"; } }
     }
   }
+  // v314: a labelled serial one or two look-alikes off the 4-digit + letter + 5-digit shape
+  // ("3616EQ6923") is repaired; no labelled serial, the label's pieces are joined ("36 1 6EQ6923").
+  if (serial && serialSource === "label" && !/^\d{4}[A-Z]\d{5}$/.test(serial)) { const fx = ocrShapeSerialFix(serial); if (fx) serial = fx; }
+  if (!serial) { const js = ocrJoinedLabelSerial(text.replace(/!/g, "1")); if (js) { serial = js; serialSource = "label"; } }
   // No labels found — look for any token matching a known model pattern.
   if (!model) {
     // v311: a Carrier plate prints "PROD 24ANB648A0030010" (the production number) right above
@@ -9911,6 +9950,7 @@ async function ocrTagTextPasses(file, onStatus) {
   const serialAsModel = (c) => !!(c && !c.lib && c.model && (ocrTraneSerialShape(c.model) ||
     (c.model.length >= 6 && [...serialsRead].some(s => s.includes(c.model) || c.model.includes(s)))));
   const probes = [];
+  const anchors = [];      // v314: MODEL / SERIAL label words seen on any pass
   const serialSeen = [];   // v276: where a serial was read, for the label-zoom pass
   // Prefer a failed pass that read the serial off its LABEL over one that only
   // found a bare digit run.
@@ -9939,6 +9979,16 @@ async function ocrTagTextPasses(file, onStatus) {
       const prod = k > 0 && /^PR[O0]D(UCT)?\W*$/i.test(words[k - 1].text || "");
       if (t.length >= 7 && t.length <= 22 && t.length >= (w.text || "").length - 2 && /[A-Z]/.test(t) && w.bbox.y1 - w.bbox.y0 >= 6)
         probes.push({ t, conf: w.confidence || 0, box: w.bbox, rad: turn, deg, passScale, event, prod });
+    }
+    // v314: where the MODEL / SERIAL label words are, for the label-anchor zoom. French labels
+    // (MODELE, SERIE) sit to the RIGHT of the values on a bilingual plate (Cameron's TUC1).
+    for (const w of noProbes ? [] : data.words || []) {
+      const t = (w.text || "").toUpperCase();
+      const m = t.match(/^(?:(MODEL|M0DEL|NODEL|M\/N)|(SERIAL|S\/N)|(MOD[EÈÉ]LE)|(S[EÈÉ]RIE))/);
+      if (!m || w.bbox.y1 - w.bbox.y0 < 6) continue;
+      const kind = m[1] || m[3] ? "model" : "serial", fr = !!(m[3] || m[4]);
+      if (anchors.filter(a => a.kind === kind).length >= 4) continue;
+      anchors.push({ kind, fr, box: w.bbox, rad: turn, deg, passScale, conf: w.confidence || 0, event });
     }
     const fields = extractTagFields(data.text || "");
     fields.text = data.text || "";
@@ -9995,6 +10045,14 @@ async function ocrTagTextPasses(file, onStatus) {
   // photo. Agreement confirms the read; a zoomed read that EXTENDS it recovers a
   // model the full-photo pass cut short (GMES920404 -> GMES920404CN); any other
   // disagreement gets a third read at a different zoom and the reads vote.
+  // v314: the reads of one model line, same length, disagree beyond a fair vote: a character
+  // where three reads all differ, or where the kept read is outvoted. Two reads that simply
+  // differ are not enough (8 of 14 such flags on the synthetic set were on right reads).
+  const voteSplit = (models, kept) => {
+    const rs = models.filter(m => m && m.length === kept.length);
+    if (rs.length < 3) return false;
+    return [...kept].some((ch, k) => { const col = rs.map(m => m[k]); const n = (x) => col.filter(y => y === x).length; return new Set(col).size === rs.length || col.some(x => n(x) > n(ch)); });
+  };
   const confirm = async (c) => {
     if (!c.box) return { c, agree: false };
     const zoomRead = async (size, auto) => {
@@ -10025,13 +10083,19 @@ async function ocrTagTextPasses(file, onStatus) {
       let v = "";
       for (let k = 0; k < c.model.length; k++) { const ch = reads.map(r => r.model[k]); v += ch[1] === ch[2] ? ch[1] : ch[0]; }
       const vc = ocrCleanModel(v);
-      if (vc.lib && vc.tier >= c.tier) return { c: mkCand(c, { ...vc, fixedFrom: vc.fixedFrom || c.fixedFrom }, c.conf, { zoomed: v !== c.model }), agree: false };
+      // v314: a position where all three reads differ (A306 / A300 / A309) has no majority
+      const split3 = voteSplit(reads.map(r => r.model), v);
+      if (vc.lib && vc.tier >= c.tier) return { c: mkCand(c, { ...vc, fixedFrom: vc.fixedFrom || c.fixedFrom }, c.conf, { zoomed: v !== c.model }), agree: false, split: split3 };
     }
     // still split: the full-photo read stands unless a zoomed read is clearly better
     const bestZ = reads.slice(1).sort((a, b) => score(b) - score(a))[0];
-    return { c: score(bestZ) > score(c) + 20 ? bestZ : c, agree: false };
+    // v314: split = a same-length zoomed read disagrees with the one kept (Dave's 24ANB6: A306 /
+    // A300 / A360 off one line). The caller marks a tier-2 read "check the tag".
+    const kept = score(bestZ) > score(c) + 20 ? bestZ : c;
+    const split = voteSplit(reads.map(r => r.model), kept.model);
+    return { c: kept, agree: false, split };
   };
-  const finish = (c) => {
+  const finish = async (c) => {
     const fields = c.fields;
     fields.model = c.model;
     if (c.tailBad) fields.ocrTailBad = true;   // v275: a character breaks the family's format - "check the tag"
@@ -10044,6 +10108,16 @@ async function ocrTagTextPasses(file, onStatus) {
     // v275: also replaces this pass's bare digit run with another pass's labelled
     // or serial-shaped one (James's G61MP: "550917186" vs S/N 5909L17186).
     if (best && best.serial && rank(best) >= 2 && rank(best) > rank(fields)) { fields.serial = best.serial; fields.serialSource = best.serialSource; }
+    // v314: no labelled or serial-shaped serial yet - read beside the SERIAL label word (Dave's
+    // 24ANB6: big thin print read "E361 bEQET23" on the full photo). A stop here keeps the model.
+    const nearAt = c.box ? c : c.zat;
+    if (rank(fields) < 2 && (anchors.some(a => a.kind === "serial") || nearAt)) {
+      try {
+        let sf = anchors.some(a => a.kind === "serial") ? await anchorSerial() : null;
+        if (!sf && nearAt) sf = await nearModelSerial(nearAt);
+        if (sf && !(fields.model && (fields.model.includes(sf.serial) || sf.serial.includes(fields.model))) && !(fields.serial && fields.serial.includes(sf.serial))) { fields.serial = sf.serial; fields.serialSource = sf.serialSource; trackEvent("tag serial read by label-anchor zoom"); }
+      } catch (e) { if (e !== OCR_STOP) throw e; }
+    }
     if (c.event) trackEvent(c.event);
     if (c.zoomed) trackEvent("tag model fixed by zoom re-read");
     return fields;
@@ -10056,9 +10130,14 @@ async function ocrTagTextPasses(file, onStatus) {
     // v311: a Carrier PROD-line number never ends the scan - later passes may read the MODEL line.
     // It stays the best candidate, so it is still shown if nothing better turns up.
     if (c.fields && c.fields.modelFromProd) { if (!bestCand || score(c) > score(bestCand)) bestCand = c; return null; }
-    // a clean, confident read of a specific family needs no second look
-    if (c.tier === 2 && c.exact && c.conf >= 85) return c;
-    if (c.tier === 2) { const t2 = (await confirm(c)).c; return serialAsModel(t2) ? c : t2; }
+    // v314: a clean, confident read of a specific family still gets one zoomed look - Dave's
+    // sharp 24ANB6 plate read 24ANB648A306 (for A300) at conf 85+ on the first pass. If the
+    // zoomed reads split on it, the read is shown as "check the tag", not as a sure thing.
+    if (c.tier === 2) {
+      const r2 = await confirm(c);
+      const t2 = serialAsModel(r2.c) ? c : r2.c;
+      return r2.split ? { ...t2, tailBad: true } : t2;
+    }
     if (c.conf >= 90) return c;
     const r = await confirm(c);
     if (serialAsModel(r.c)) return null;   // v309: a zoom "confirmed" the serial (60463AK1G)
@@ -10067,6 +10146,41 @@ async function ocrTagTextPasses(file, onStatus) {
     if (r.c.tier === 2 || (r.c.tier === 1 && (r.agree || r.c.conf >= 60)) || (r.agree && r.c.conf >= 70) || r.c.conf >= 85) return r.c;
     if (score(r.c) > score(bestCand)) bestCand = r.c;
     return null;
+  };
+  // v314: a zoomed word read used to end the scan on ONE read (Dave's 24ANB6: "24ANB648A306").
+  // Two more reads of the same spot at other sizes; same-length reads vote per character. A
+  // clear majority wins quietly; a three-way split is shown as "check the tag".
+  const verifyZoomHit = async (pc, at, flat) => {
+    const more = [];
+    for (const [size, straight] of [[30, false], [64, true]]) {
+      if (ocrStopRequested) throw OCR_STOP;
+      let data = null;
+      try { data = await ocrZoomLine(worker, photo, at.box, at.rad, at.deg, at.passScale, size, straight, at.area, flat); } catch (e) { data = null; }
+      // the same-length token nearest the hit (ocrModelFromLine can pick the PROD number above it)
+      const text = ocrNormDashes((data && data.text || "").toUpperCase().replace(/!/g, "1"));
+      let pick = "", pd = 4;
+      for (const t of text.split(/[^A-Z0-9-]+/)) {
+        if (t.length !== pc.model.length) continue;
+        const m = ocrCleanModel(t).model, d = ocrEditDistance(m, pc.model);
+        if (m.length === pc.model.length && d < pd) { pd = d; pick = m; }
+      }
+      if (pick) more.push(pick);
+    }
+    if (!more.length || more.every(m => m === pc.model)) return pc;
+    const reads = [pc.model, ...more];
+    if (more.length === 2 && more[0] === more[1]) {
+      const mc = ocrCleanModel(more[0]);
+      if (mc.lib && (mc.tier >= pc.tier || mc.tier === 2)) return mkCand(pc, mc, pc.conf, { zoomed: true });
+    }
+    let v = "";
+    for (let k = 0; k < pc.model.length; k++) {
+      const ch = reads.map(r => r[k]);
+      v += ch.find(x => ch.filter(y => y === x).length * 2 > ch.length) || pc.model[k];
+    }
+    const vc = ocrCleanModel(v);
+    const out = vc.lib && vc.tier >= pc.tier ? mkCand(pc, vc, pc.conf, { zoomed: v !== pc.model }) : pc;
+    const split = voteSplit(reads, out.model);
+    return split ? { ...out, tailBad: true } : out;
   };
   // Zoom into the longest model-shaped words seen so far; only a read that
   // lands on a trusted library family counts (a garbled word is not a model).
@@ -10090,9 +10204,71 @@ async function ocrTagTextPasses(file, onStatus) {
         const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
         fields.text = (fields.text || "") + " \n" + (data.text || "");
         if (!fields.brandHint) fields.brandHint = detectBrandInText(text);
-        const pc = mkCand({ fields, box: null, deg: p.deg, event: "tag read by zoom on a word" + (p.deg ? " rotate " + p.deg : "") }, zc, conf);
+        const pc = mkCand({ fields, box: null, deg: p.deg, zat: p, event: "tag read by zoom on a word" + (p.deg ? " rotate " + p.deg : "") }, zc, conf);
         if (vetoed(pc)) continue;
-        return pc;
+        return await verifyZoomHit(pc, p, /flattened/.test(p.event || ""));
+      }
+    }
+    return null;
+  };
+  // v314: label-anchor zoom. Read the band beside a MODEL / SERIAL label word, enlarged and
+  // levelled. Cameron's two TUC1 photos (shiny plate, text tilted 12-15 deg, small print) never
+  // read the boxed "MODEL NO: TUC1B060A9361AE" line, and the probes zoomed on body-text words.
+  // Returns the zoomed text read(s), best label first.
+  const anchorReads = async (kind, max) => {
+    const list = anchors.filter(a => a.kind === kind).sort((a, b) => (a.fr ? 1 : 0) - (b.fr ? 1 : 0) || b.conf - a.conf).slice(0, max);
+    const out = [];
+    for (const a of list) {
+      if (ocrStopRequested) throw OCR_STOP;
+      const area = a.fr ? { l: 26, r: 3, u: 2.2, d: 1.4, psm: "6" } : { l: 1, r: 24, u: 2.2, d: 1.4, psm: "6" };
+      let data = null;
+      try { data = await ocrZoomLine(worker, photo, a.box, a.rad, a.deg, a.passScale, 36, true, area, /flattened/.test(a.event || "")); } catch (e) { data = null; }
+      if (data && data.text) out.push({ a, area, data, text: ocrNormDashes((data.text || "").toUpperCase().replace(/!/g, "1").replace(/([A-Z0-9])@(?=[A-Z0-9])/g, "$10")) });
+    }
+    return out;
+  };
+  const anchorModel = async () => {
+    for (const r of await anchorReads("model", 2)) {
+      const f = extractTagFields(r.data.text || "");
+      const toks = [f.model, ...r.text.split(/[^A-Z0-9-]+/)].filter(t => t && t.length >= 5 && /[0-9]/.test(t));
+      for (const t of toks) {
+        const zc = ocrCleanModel(t);
+        const w = ocrModelWords(r.data, t), conf = w ? w.conf : (r.data.confidence || 0);
+        if (!(zc.tier === 2 || (zc.lib && zc.tier === 1 && conf >= 70))) continue;
+        if (ocrCarrierProdShape(zc.model)) continue;
+        const fields = best ? { ...best } : { model: "", serial: "", serialSource: "", brandHint: null, text: "", confidence: 0 };
+        fields.text = (fields.text || "") + " \n" + (r.data.text || "");
+        if (!fields.brandHint) fields.brandHint = detectBrandInText(r.text);
+        if (f.serial && f.serialSource === "label" && rank(fields) < 3) { fields.serial = f.serial; fields.serialSource = "label"; }
+        const ac = mkCand({ fields, box: null, deg: r.a.deg, zat: r.a, event: "tag read by label-anchor zoom" + (r.a.deg ? " rotate " + r.a.deg : "") }, zc, conf);
+        if (vetoed(ac) || serialAsModel(ac)) continue;
+        return await verifyZoomHit(ac, { ...r.a, area: r.area }, /flattened/.test(r.a.event || ""));
+      }
+    }
+    return null;
+  };
+  const anchorSerial = async () => {
+    for (const r of await anchorReads("serial", 2)) {
+      const f = extractTagFields(r.data.text || "");
+      if (f.serial && (f.serialSource === "label" || f.serialSource === "shape") && f.serial.length >= 6) return f;
+    }
+    return null;
+  };
+  // v314: no SERIAL label word was read at all ("san 36 1 6EQ6F23" on Dave's plate): read the
+  // block around the model line just accepted - the serial is a line or two above or below it.
+  const nearModelSerial = async (at) => {
+    if (ocrStopRequested) throw OCR_STOP;
+    let data = null;
+    try { data = await ocrZoomLine(worker, photo, at.box, at.rad, at.deg, at.passScale, 30, true, { l: 6, r: 3, u: 4.5, d: 4.5, psm: "6" }, /flattened/.test(at.event || "")); } catch (e) { data = null; }
+    const f = data && extractTagFields(data.text || "");
+    if (f && f.serial && (f.serialSource === "label" || f.serialSource === "shape") && f.serial.length >= 6) return f;
+    // the label itself garbled ("wn 361 6E06923"): 2-3 neighbouring pieces that join to exactly
+    // the 4-digit + letter + 5-digit shape, at most 2 look-alikes fixed (ocrShapeSerialFix)
+    for (const line of String(data && data.text || "").split(/\n+/)) {
+      const p = line.split(/\s+/).map(t => t.replace(/[^A-Za-z0-9]/g, "")).filter(Boolean);
+      for (let i = 0; i < p.length; i++) for (let n = 2; n <= 3 && i + n <= p.length; n++) {
+        const j = p.slice(i, i + n).join(""), fx = /\d/.test(p[i]) && j.length === 10 ? ocrShapeSerialFix(j) : "";
+        if (fx) return { serial: fx, serialSource: "shape" };
       }
     }
     return null;
@@ -10135,20 +10311,20 @@ async function ocrTagTextPasses(file, onStatus) {
     for (const deg of [0, 90, 270, 180]) {
       if (deg && onStatus) onStatus("No model number yet - reading the photo turned " + deg + " degrees...");
       const done = await settle(await read(deg ? rotateCanvas(base, deg) : base, { rotateAuto: true }, deg, 1, deg ? "tag read after rotate " + deg : "", 0));
-      if (done) return finish(done);
+      if (done) return await finish(done);
       if (lastScore > bestConf) { bestConf = lastScore; bestDeg = deg; }
     }
     if (onStatus) onStatus("Taking a closer look at the label...");
     let z = await probeWords(3);
-    if (z) return finish(z);
+    if (z) return await finish(z);
     // Sparse passes stay un-straightened: on real cluttered photos the angle
     // estimate went wrong and lost reads the plain sparse pass made.
     for (const deg of [0, 90, 270, 180]) {
       const done = await settle(await read(deg ? rotateCanvas(base, deg) : base, { tessedit_pageseg_mode: "11" }, deg, 1, "tag read by sparse pass" + (deg ? " rotate " + deg : ""), 0));
-      if (done) return finish(done);
+      if (done) return await finish(done);
     }
     z = await probeWords(3);
-    if (z) return finish(z);
+    if (z) return await finish(z);
     // v276: label zoom. A pass read a serial but no model: the model sits on the
     // same data label, often in smaller print the full-photo pass skipped
     // (Cameron's Ameristar coil 10/9: serial 161651642M read, model
@@ -10156,7 +10332,7 @@ async function ocrTagTextPasses(file, onStatus) {
     // that serial, enlarged; only a trusted library family counts, as with the
     // word probes.
     z = await labelZoom();
-    if (z) return finish(z);
+    if (z) return await finish(z);
     // v275: the SINGLE_BLOCK read again on a background-flattened copy
     // (ocrFlatten) at the turn that read best - a shadow, a dark corner or glare
     // across the plate. Runs only once every pass above has failed, and adds no
@@ -10188,33 +10364,39 @@ async function ocrTagTextPasses(file, onStatus) {
       const doneF = await settle(await read(flatCanvas, { rotateAuto: true }, fd, 1, "tag read by flattened pass" + (fd ? " rotate " + fd : ""), 0, true));
       const doneS = await settle(await read(flatCanvas, { tessedit_pageseg_mode: "11" }, fd, 1, "tag read by flattened sparse pass" + (fd ? " rotate " + fd : ""), 0, true));
       // the block read can stop short of the sparse one (G61MP-60C vs G61MP-60C-111-09)
-      if (doneF && doneS && doneS.model.length > doneF.model.length && doneS.model.startsWith(doneF.model)) return finish(doneS);
-      if (doneF) return finish(doneF);
-      if (doneS) return finish(doneS);
+      if (doneF && doneS && doneS.model.length > doneF.model.length && doneS.model.startsWith(doneF.model)) return await finish(doneS);
+      if (doneF) return await finish(doneF);
+      if (doneS) return await finish(doneS);
     }
     if (onStatus) onStatus("Zooming in on the label...");
     // Tesseract's own Sauvola (local) threshold at the turn that read best:
     // shadows and glare across a plate defeat the default global threshold.
     const done1 = await settle(await read(bestDeg ? rotateCanvas(base, bestDeg) : base, { rotateAuto: true, thresholding_method: "2" }, bestDeg, 1, "tag read by local-threshold pass" + (bestDeg ? " rotate " + bestDeg : ""), 0));
-    if (done1) return finish(done1);
+    if (done1) return await finish(done1);
     const big = enhanceForOcr(base, 2);
     const done2 = await settle(await read(bestDeg ? rotateCanvas(big, bestDeg) : big, { tessedit_pageseg_mode: "11" }, bestDeg, 2, "tag read by enhanced pass" + (bestDeg ? " rotate " + bestDeg : ""), 0));
-    if (done2) return finish(done2);
+    if (done2) return await finish(done2);
     z = await probeWords(3);
-    if (z) return finish(z);
+    if (z) return await finish(z);
     // the enlarged pass often reads a serial the 1x passes missed: label zoom on it too
     z = await labelZoom();
-    if (z) return finish(z);
+    if (z) return await finish(z);
+    // v314: read beside the MODEL label word(s) any pass saw
+    if (anchors.some(a => a.kind === "model")) {
+      if (onStatus) onStatus("Reading beside the MODEL label...");
+      z = await anchorModel();
+      if (z) return await finish(z);
+    }
     // Nothing settled: the best candidate still wins if it is a trusted library
     // model or was read with reasonable confidence; weak garbage is not reported.
     // (a short read - under 7 characters - needs a very confident read, and v296:
     // must be a library family - "JAOW3H" off Cameron's 1993 ICP plate read
     // upside down was reported as the model)
     const bc = bestCand;
-    if (bc && !vetoed(bc) && !serialAsModel(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7)))) return finish(bc);
+    if (bc && !vetoed(bc) && !serialAsModel(bc) && (bc.tier === 2 || (bc.model.length >= 7 && bc.conf >= (bc.tier === 1 ? 50 : 65)) || (bc.conf >= 80 && (bc.lib || bc.model.length >= 7)))) return await finish(bc);
     // v279: a clean labelled read the library doesn't know yet - shown as "not in
     // the library" (and uploaded for the nightly check) instead of "can't read".
-    if (labelCand && !serialAsModel(labelCand)) return finish({ ...labelCand, event: "tag model read from its label, not in library" });
+    if (labelCand && !serialAsModel(labelCand)) return await finish({ ...labelCand, event: "tag model read from its label, not in library" });
   } catch (e) {
     if (e !== OCR_STOP) throw e;
     trackEvent("tag scan stopped by tech");
@@ -12317,7 +12499,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v315";
+const APP_VERSION = "v316";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
