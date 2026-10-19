@@ -8660,6 +8660,8 @@ const MODEL_PATTERNS = [
   { re: /^[CT]H16B(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "Luxaire TH16 / Coleman CH16 16 SEER inverter modulating split heat pump, R-410A, 2-5 ton (twin of York YHM)", notes: ["Reading the model: TH16B3622S = H heat pump, 16 = 16 SEER modulating, B = R-410A, 36 = 3 ton, 2 = 208/230-1-60, 2 = 2nd generation, S = standard. Source: Luxaire tech guide 5547667-LTG-C-0419 p2.", "With a conventional two-stage heat pump thermostat it modulates capacity and airflow from 50% to 100% in 10% steps; the main control and the inverter control both have self-diagnostics. Source: 5547667-LTG-C-0419 p1."] },
   { re: /^H[CL]6B0?(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "Coleman HC6B / Luxaire HL6B 16 SEER split heat pump, R-410A, 2-5 ton (twin of York YZF)", notes: ["Only the 060 size is two-stage. Two-stage units are not designed for a low ambient kit - do not modify the control for one. Source: York install manual 835966-UIM-G-0716."] },
   { re: /^(YZH|H[CL]8B)0?(24|36|48|60)/, brand: "York", equipment: "Condenser/Heat Pump", series: "York YZH / Coleman HC8B / Luxaire HL8B 18 SEER two-stage split heat pump, R-410A, 2-5 ton (Affinity)", notes: ["All sizes are two-stage and are not designed for a low ambient kit - do not modify the control for one. Source: York install manual 835966-UIM-G-0716."] },
+  // ---- v317: Friedrich-brand Rheem heat pumps (Andy 2026-10-19, "add the friedrich ones too") ----
+  { re: /^FP1[45]AY(18|24|30|36|42|48|60)/, brand: "Rheem", equipment: "Condenser/Heat Pump", series: "Friedrich-brand FP14AY / FP15AY split heat pump, R-454B (A2L), 1-1/2 to 5 ton - built by Rheem, same unit as the Rheem RP14AY / RP15AY", notes: ["Reading the model: FP14AY36AJ2NA = F Friedrich, P heat pump, 14 = 14.3 SEER2 (15 = 15.2), A all regions, Y = R-454B, 36 = 36,000 BTU, A major series, J = 1ph 208-230 (C = 3ph 208-230, D = 3ph 460), 2 = two-stage, N non-communicating. Source: Rheem/Ruud install manual 92-104921-54-10 p8.", "R-454B is an A2L refrigerant - follow the A2L safety steps in the install manual (92-104921-54-10).", "The RP14AY / RP15AY install manual covers this unit and is in Manuals -> Rheem."] },
 ];
 
 // Nominal capacity from the digits embedded in most model numbers.
@@ -12499,7 +12501,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v316";
+const APP_VERSION = "v317";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
