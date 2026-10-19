@@ -10664,7 +10664,7 @@ async function openInAppCamera(inp) {
   ov.className = "cam-overlay";
   ov.innerHTML = `
     <video class="cam-video" autoplay playsinline muted></video>
-    <div class="cam-guide"><div class="cam-box"></div><div class="cam-hint">Fit the whole label in the box and hold steady</div></div>
+    <div class="cam-guide"><div class="cam-box"></div><div class="cam-hint">Fit the whole label in the box, then tap the round button</div></div>
     <div class="cam-msg hidden"></div>
     <div class="cam-bar">
       <button type="button" class="cam-btn" data-cam="cancel">✕ Cancel</button>
@@ -10712,6 +10712,10 @@ async function openInAppCamera(inp) {
     };
   }
   const shoot = ov.querySelector('[data-cam="shoot"]');
+  // v326 (Bryce 10/19): the shutter waits for the first real frame - a press before
+  // the camera has delivered one used to hand the scanner a blank picture.
+  if (!video.videoWidth) await new Promise(r => { video.addEventListener("loadeddata", r, { once: true }); setTimeout(r, 3000); });
+  if (!cam.overlay) return;   // cancelled while waiting
   shoot.disabled = false;
   shoot.onclick = async () => {
     if (cam.busy) return;
@@ -10723,12 +10727,21 @@ async function openInAppCamera(inp) {
     if (typeof ImageCapture !== "undefined" && track) {
       try { blob = await new ImageCapture(track).takePhoto(); how = "still"; } catch (e) { blob = null; }
     }
-    if (!blob || blob.size < 20000) {
-      const c = document.createElement("canvas");
-      c.width = video.videoWidth; c.height = video.videoHeight;
-      c.getContext("2d").drawImage(video, 0, 0);
-      blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
-      how = "frame " + c.width + "x" + c.height;
+    // v326 (Bryce 10/19): his photo came back as an empty 844x1600 frame (8.7 KB) and
+    // the scanner spent 30 s reading nothing. A tiny or blank still is dropped; the
+    // live frame is then tried up to 3 times, each on a fresh frame.
+    if (blob && (blob.size < 20000 || await camBlobIsBlank(blob))) blob = null;
+    for (let i = 0; !blob && i < 3 && cam.overlay; i++) {
+      const f = await camGrabFrame(video);
+      if (f && !(await camBlobIsBlank(f))) { blob = f; how = "frame " + video.videoWidth + "x" + video.videoHeight + (i ? " try " + (i + 1) : ""); }
+    }
+    if (!cam.overlay) return;   // cancelled while taking it
+    if (!blob) {
+      trackEvent("in-app camera: blank photo");
+      camMsg("That photo came out blank. Tap the round button again, or use the phone's camera below.");
+      cam.busy = false;
+      shoot.disabled = false;
+      return;
     }
     const target = cam.input;
     closeInAppCamera(false);
@@ -10740,6 +10753,44 @@ async function openInAppCamera(inp) {
     target.dispatchEvent(new Event("change", { bubbles: true }));
   };
 }
+
+// v326: one live-view frame as a JPEG, taken on the NEXT frame the camera delivers
+// (right after a failed takePhoto() some phones show a black frame for a moment).
+async function camGrabFrame(video) {
+  await new Promise(r => {
+    if (typeof video.requestVideoFrameCallback === "function") { video.requestVideoFrameCallback(() => r()); setTimeout(r, 600); }
+    else setTimeout(r, 200);
+  });
+  if (!video.videoWidth || !video.videoHeight) return null;
+  const c = document.createElement("canvas");
+  c.width = video.videoWidth; c.height = video.videoHeight;
+  c.getContext("2d").drawImage(video, 0, 0);
+  return await new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
+}
+// v326: true when a photo has essentially no picture in it - one flat color (black,
+// grey or white). Shrunk to 64x64; a real label, even a dark or blurry one, varies far
+// more than this. If the check itself fails, the photo is kept (never block a scan).
+async function camBlobIsBlank(blob) {
+  try {
+    const bmp = await createImageBitmap(blob);
+    const c = document.createElement("canvas");
+    c.width = 64; c.height = 64;
+    const g = c.getContext("2d");
+    g.drawImage(bmp, 0, 0, 64, 64);
+    if (bmp.close) bmp.close();
+    const d = g.getImageData(0, 0, 64, 64).data;
+    let sum = 0, sum2 = 0, lo = 255, hi = 0;
+    for (let i = 0; i < d.length; i += 4) {
+      const y = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      sum += y; sum2 += y * y; if (y < lo) lo = y; if (y > hi) hi = y;
+    }
+    const n = d.length / 4, mean = sum / n, sd = Math.sqrt(Math.max(0, sum2 / n - mean * mean));
+    return sd < CAM_BLANK_SD && hi - lo < CAM_BLANK_RANGE;
+  } catch (e) { return false; }
+}
+// Test 10/19: blank frames (Bryce's, plus black/grey/white) measure sd 0.0 / range 0; every real
+// label photo, even darkened to 5% brightness, measured sd >= 1.7 / range >= 8. Cut-off well between.
+const CAM_BLANK_SD = 1.2, CAM_BLANK_RANGE = 6;
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -12504,7 +12555,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v325";
+const APP_VERSION = "v326";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
