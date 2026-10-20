@@ -5666,12 +5666,15 @@ async function genClLikelyMisread(d) {
 
 // Relay first; queue when there is no signal; share sheet / email when there
 // is no relay yet or it refuses.
-async function genClDeliver(rec) {
+async function genClDeliver(rec, opts) {
   if (GEN_CHECKLIST_RELAY) {
     if (!navigator.onLine) return genClQueue(rec);
+    // A Resend the tech taps is a deliberate new email (fresh sendId); every automatic try uses the record's id.
+    const sendId = opts && opts.resend ? rec.id + "-r" + Date.now().toString(36) : rec.id;
     let r;
-    try { r = await genClPost(rec); }
-    catch (e) { return genClQueue(rec); }                 // network dropped: retry later
+    try { r = await genClPost(rec, sendId); }
+    catch (e) { return genClQueue(rec); }                 // network dropped or timed out: retry later
+    if (r && !r.ok && r.error === "busy, try again") return genClQueue(rec);
     if (r && r.ok) {
       rec.status = "sent"; rec.sentAt = Date.now(); await genClPut(rec);
       trackEvent("gen checklist sent: " + (rec.model || "no model"));
@@ -5687,11 +5690,20 @@ async function genClQueue(rec) {
   trackEvent("gen checklist queued");
   return { kind: "queued", rec, msg: "Queued - will send when you have signal" };
 }
-async function genClPost(rec) {
+// v338 (audit CODE-05): a send on half-working signal used to hang on "Sending…" with no end, and
+// a send cut off by the app closing was never retried. Now it gives up after 90 s and queues, the
+// queue also picks up records stuck at "new", and the relay emails each sendId only once - so a
+// retry of a send that did get through can't email Carla or the customer twice.
+async function genClPost(rec, sendId) {
   const payload = await genClPayload(rec);
-  // String body = text/plain, so no CORS preflight (same as the other relays).
-  const resp = await fetch(GEN_CHECKLIST_RELAY, { method: "POST", body: JSON.stringify(payload) });
-  return resp.json();
+  payload.sendId = sendId || rec.id;
+  const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = ctl ? setTimeout(() => ctl.abort(), 90000) : 0;
+  try {
+    // String body = text/plain, so no CORS preflight (same as the other relays).
+    const resp = await fetch(GEN_CHECKLIST_RELAY, { method: "POST", body: JSON.stringify(payload), ...(ctl ? { signal: ctl.signal } : {}) });
+    return await resp.json();
+  } finally { if (timer) clearTimeout(timer); }
 }
 async function genClPayload(rec) {
   return {
@@ -5712,10 +5724,13 @@ async function genClFlushQueue() {
   if (!GEN_CHECKLIST_RELAY || genClFlushing || !navigator.onLine) return;
   genClFlushing = true;
   try {
-    const q = (await genClAll()).filter(r => r.status === "queued").sort((a, b) => a.ts - b.ts);
+    // "new" for more than 2 minutes = the app was closed while it was sending (a live send gives up at 90 s).
+    // Only the last 2 days: an older stuck one is left for the tech's Resend, not emailed out of the blue.
+    const q = (await genClAll()).filter(r => r.status === "queued" || (r.status === "new" && Date.now() - r.ts > 120000 && Date.now() - r.ts < 2 * 86400000)).sort((a, b) => a.ts - b.ts);
     for (const rec of q) {
       let r;
-      try { r = await genClPost(rec); } catch (e) { break; }
+      try { r = await genClPost(rec, rec.id); } catch (e) { break; }
+      if (r && !r.ok && r.error === "busy, try again") break;   // still being sent - try again later
       if (r && r.ok) { rec.status = "sent"; rec.sentAt = Date.now(); await genClPut(rec); trackEvent("gen checklist sent: " + (rec.model || "no model")); }
       else { rec.status = "failed"; rec.error = (r && r.error) || "relay refused"; await genClPut(rec); }
     }
@@ -5787,7 +5802,7 @@ function genClWireActions(root) {
       if (act === "download") { genClDownload(rec); return; }
       if (act === "share") { const res = await genClFallback(rec, "Sharing from the phone."); genClToast(res.msg); return; }
       if (act === "resend") {
-        const res = await genClDeliver(rec);
+        const res = await genClDeliver(rec, { resend: true });
         genClToast(res.msg);
         if (genCl.view === "recent") renderGenChecklist();
       }
