@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v335";
+const CACHE_NAME = "bfc-cache-v336";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -95,7 +95,24 @@ self.addEventListener("install", (event) => {
       await stat.put(url, old && old.ok ? old : await fetchChecked(url));
     }));
     const cache = await caches.open(CACHE_NAME);
-    await Promise.all(APP_SHELL.map((url) => fetchChecked(url).then((response) => cache.put(url, response))));
+    // v336 (audit CODE-03b): right after a publish the web host can still hand out the previous
+    // app.js for a few minutes. Storing that under this version's name would leave the phone
+    // running the old version for good (and showing the Updating screen on every open). Refuse
+    // it: the install fails, the previous version stays, and the next check tries again.
+    try {
+      await Promise.all(APP_SHELL.map((url) => fetchChecked(url).then(async (response) => {
+        if (url === "./app.js") {
+          const m = (await response.clone().text()).match(/const APP_VERSION = "([^"]+)"/);
+          if (m && m[1] !== CACHE_NAME.replace("bfc-cache-", "")) throw new Error("precache app.js is " + m[1] + ", not " + CACHE_NAME + " - old copy from the web host, try later");
+        }
+        return cache.put(url, response);
+      })));
+    } catch (err) {
+      // Don't leave a half-filled cache under this version's name behind (the fetch handler
+      // searches every cache); the next install starts clean.
+      await caches.delete(CACHE_NAME).catch(() => {});
+      throw err;
+    }
   })());
   self.skipWaiting();
 });

@@ -11788,7 +11788,25 @@ if ("serviceWorker" in navigator) {
       if (updateReady) { if (safeToReload()) reloadForUpdate("on open"); return; }
       if (!safeToReload()) return;
       showWakeScreen();
-      if (swReg) swReg.update().catch(() => {});
+      // v336 (audit CODE-03): right after a publish the web host can still hand out the previous
+      // sw.js for a few minutes, while the check above already sees the new one. Then no new
+      // version is coming yet - drop the screen at once instead of holding the tech 30 s, and the
+      // same if the download fails. The "Update ready" pill takes over once it does arrive.
+      const reg = swReg || await navigator.serviceWorker.getRegistration().catch(() => null);
+      if (!reg) return;
+      const before = reg.active;
+      // A download that ends "redundant" may only have been overtaken by a second check's download,
+      // so look again before calling it failed.
+      const settle = () => {
+        if (!wakeScreen || updateReady) return;
+        const w = reg.installing || reg.waiting;
+        if (w) { w.addEventListener("statechange", () => { if (w.state === "redundant") settle(); }, { once: true }); return; }
+        if (reg.active === before) giveUpWakeScreen(wakeDownloadSeen ? "download failed" : "no new version yet");
+      };
+      let wakeDownloadSeen = false;
+      reg.addEventListener("updatefound", () => { wakeDownloadSeen = true; }, { once: true });
+      if (reg.installing || reg.waiting) wakeDownloadSeen = true;
+      reg.update().then(settle).catch(() => { if (wakeScreen && !updateReady) giveUpWakeScreen("could not check"); });
     } finally { wakeChecking = false; }
   }
   async function offerUpdate() {
@@ -12604,7 +12622,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v335";
+const APP_VERSION = "v336";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
