@@ -9375,6 +9375,9 @@ function extractTagFields(text) {
   // barcode caption) — never treat that alone as proof the tech shot the serial.
   // modelSource (v185): "pattern" = no label, just a token that fits a
   // MODEL_PATTERNS prefix - weaker evidence, which ocrTagFields weighs.
+  // v344: Generac's stencil G reads as 3, 5 or S (Vern's G0072101 came back "30072101" and
+  // "S0072101", 2026-10-20). Only on a plate that shows Generac's own words.
+  if (/^[35S]0\d{6,7}$/.test(model) && /NERAC|LPV\s*AM|NG\s*AMP/.test(up)) model = "G" + model.slice(1);
   return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, modelSource, brandHint: detectBrandInText(up), modelFromProd: !!(model && modelFromProd) };
 }
 
@@ -12705,7 +12708,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v343";
+const APP_VERSION = "v344";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
