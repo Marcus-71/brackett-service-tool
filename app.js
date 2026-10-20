@@ -12382,6 +12382,9 @@ async function sqftLookup() {
 async function sqftRelayCall(params) {
   const clean = {};
   for (const k of Object.keys(params)) if (params[k] !== "" && params[k] != null) clean[k] = params[k];
+  // v341 (audit SEC-06): the relay spends a paid RentCast lookup only for a phone set up in the name
+  // registry, so it gets this phone's id (the same random id the registry already has).
+  try { if (typeof deviceId === "function") clean.device = deviceId(); } catch (e) {}
   const url = SQFT_RELAY + "?" + new URLSearchParams(clean).toString();
   // Apps Script's edge intermittently 404s (and sometimes drops) requests -
   // measured 3 failures in 12 hits the hour after deploy. Three attempts
@@ -12659,7 +12662,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v340";
+const APP_VERSION = "v341";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
