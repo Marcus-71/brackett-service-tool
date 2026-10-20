@@ -6777,6 +6777,9 @@ function manualSearch(all, q) {
     if (textIncludes([m.brand, m.model, m.title, m.notes], q)) add(m, 1);
     if (qn.length >= 3) { const s = manualTokenScore(m, qn); if (s) add(m, s); }
   }
+  // v345: Generac data tags print the model without its "G" (0064620 for G0064620), and that bare
+  // number found no manual (daily run 10-20; Andy: "do it"). Search the G-number as well.
+  if (/^00\d{5}$/.test(qn)) for (const m of all) { const s = manualTokenScore(m, "G" + qn); if (s) add(m, s); }
   // The Maintenance Figures library knows which family a full model belongs
   // to (and its other names) — use those tokens too.
   if (/[0-9]/.test(qn) && qn.length >= 4 && typeof maintLookup === "function" && typeof MAINT_SPECS !== "undefined") {
@@ -12708,7 +12711,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v344";
+const APP_VERSION = "v345";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

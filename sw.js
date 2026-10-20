@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v344";
+const CACHE_NAME = "bfc-cache-v345";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -117,13 +117,23 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
+// Versions before v303 have no forced update: their page only offers a reload, so a tech could keep
+// working on the old code for the rest of the day. When this worker replaces one of them it reloads
+// the open app itself (Andy 2026-10-20: "so they dont have a choice"). Newer pages reload on their
+// own at a safe moment, so they are left alone.
+const FORCED_UPDATE_SINCE = 303;
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((names) =>
-      Promise.all(names.filter((n) => n !== CACHE_NAME && n !== STATIC_CACHE).map((n) => caches.delete(n)))
-    )
-  );
-  self.clients.claim();
+  event.waitUntil((async () => {
+    const names = (await caches.keys()).filter((n) => n !== CACHE_NAME && n !== STATIC_CACHE);
+    const oldVersions = names.map((n) => +((/^bfc-cache-v(\d+)$/.exec(n) || [])[1] || 0)).filter(Boolean);
+    await Promise.all(names.map((n) => caches.delete(n)));
+    await self.clients.claim();
+    // NOT awaited: the reload's own request waits until this worker has finished activating, so
+    // waiting on it here would deadlock (the page hung on the old version in the v273 test).
+    if (oldVersions.length && Math.min(...oldVersions) < FORCED_UPDATE_SINCE) {
+      self.clients.matchAll({ type: "window" }).then((pages) => pages.forEach((c) => c.navigate(c.url).catch(() => {})));
+    }
+  })());
 });
 
 // Cache-first for app shell, so the tool works with zero signal in the field.
@@ -156,8 +166,15 @@ self.addEventListener("fetch", (event) => {
   // v315: the app reads sw.js itself to learn the newest version; never answer that
   // from (or store it in) this cache, or the check reads the old version forever.
   if (url.pathname.endsWith("/sw.js")) return;
+  // v345: look only in THIS version's caches. caches.match() searches every cache, oldest first,
+  // and the old version's cache is still there for a moment while activate deletes it - so the
+  // forced reload right after an update got the OLD app.js back and the phone stayed old
+  // (Cameron v304 / Joe v308 10-19/20: "forced update" then reopened on the same version;
+  // reproduced in scratch\sw-race\e2e-old-phone.js).
+  const ownMatch = (req) => caches.open(CACHE_NAME).then((c) => c.match(req))
+    .then((hit) => hit || caches.open(STATIC_CACHE).then((c) => c.match(req)));
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    ownMatch(event.request).then((cached) => {
       if (cached) return cached;
       return fetch(event.request)
         .then((response) => {
@@ -177,7 +194,7 @@ self.addEventListener("fetch", (event) => {
           // the app instead of a browser error page; query strings and deep
           // links included.
           event.request.mode === "navigate"
-            ? caches.match("./index.html").then((shell) => shell || Response.error())
+            ? ownMatch("./index.html").then((shell) => shell || Response.error())
             : Response.error()
         );
     })
