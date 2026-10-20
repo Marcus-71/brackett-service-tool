@@ -171,12 +171,24 @@ const SEARCH_ALIAS_GROUPS = [
 // Strip the punctuation that only ever ends up attached to a word, and keep
 // the characters that live INSIDE real terms — hyphens (live-dead-live,
 // R-410A), apostrophes (doesn't) and slashes (on/off, C/S/R).
+let dottedCodes = null;
+function dottedCodeSet() {
+  if (!dottedCodes) {
+    dottedCodes = new Set();
+    try { for (const c of ERROR_CODES) { const k = String(c.code || "").toLowerCase(); if (/^[a-z0-9]{2,4}$/.test(k) && /[a-z]/.test(k)) dottedCodes.add(k); } } catch (e) {}
+  }
+  return dottedCodes;
+}
 function normalizeQuery(q) {
   const DOT = "";                              // stands in for a real decimal point
   return String(q || "")
     .toLowerCase()
     .replace(/(\d)\.(\d)/g, "$1" + DOT + "$2")       // protect 0.5 before periods are stripped
     .replace(/[‘’]/g, "'")                 // smart apostrophe off a phone keyboard
+    // A display code typed with dots between its characters ("E.A.L" for EAL, the R-32 leak
+    // alarm) is one code, not three letters (audit CODES-06, 2026-10-20). Only when the joined
+    // letters ARE a code in the library - "w.c.", "e.g.", "o.d." stay as they were.
+    .replace(/(^|\s)((?:[a-z0-9]\.){1,3}[a-z0-9])\.?(?=\s|$)/g, (m, sp, run) => { const j = run.replace(/\./g, ""); return dottedCodeSet().has(j) ? sp + j : m; })
     .replace(/[.,;:!?()\[\]{}"“”]+/g, " ") // sentence punctuation only
     .split(/\s+/)
     .map(w => w.replace(/^['\-\/]+|['\-\/]+$/g, "")) // trim edge dashes/quotes, keep inner ones
@@ -4598,7 +4610,15 @@ function genMaintResolve(q) {
     full = (fam.models || []).some(m => m.g === base + "9") ? base + "9" : base + "0";
   }
   const digits = genNormModel(q);
-  const model = (fam.models || []).find(m => full && m.g === full) || (fam.models || []).find(m => m.digits === digits) || null;
+  const exact = (fam.models || []).find(m => full && m.g === full) || null;
+  // v337 (audit GENS-05): the bare 4 digits of seven Evolution 2.0 models sit in two families
+  // (7043 = G0070430 in 9-22 kW, G0070433 in 10-26 kW). Don't pick the first silently - the
+  // tech picks the exact G-number from the plate.
+  if (!exact && digits) {
+    const fams = genEntries().filter(g => genIsAirCooled(g) && (g.models || []).some(m => m.digits === digits));
+    if (fams.length > 1) return { family: fam, model: null, ambiguous: fams.map(g => ({ family: g, model: g.models.find(m => m.digits === digits) })) };
+  }
+  const model = exact || (fam.models || []).find(m => m.digits === digits) || null;
   return { family: fam, model };
 }
 
@@ -4984,7 +5004,7 @@ function genWizResolve(q) {
   if (!raw) return { kind: "empty" };
   const hit = genMaintResolve(raw);
   if (hit && hit.model) return { kind: "ok", family: hit.family, model: hit.model };
-  if (hit) return { kind: "family", family: hit.family };
+  if (hit) return { kind: "family", family: hit.family, ambiguous: hit.ambiguous };
   const fam = genFamilyForModel(raw);
   if (fam && !genIsAirCooled(fam)) return { kind: "liquid", family: fam };
   return { kind: "unknown" };
@@ -5061,6 +5081,7 @@ function genWizScanMsg(r, model, serial, serialSource) {
   if (r.kind === "nomodel") return { kind: "warn", html: "Couldn't read the model off that photo." + (serial ? sn : "") + " Scan again (straighter, closer, better lit), type the model, or pick it from the list." + SCAN_SHADE_TIP };
   if (r.kind === "ok") return { kind: "ok", html: `Read model <b>${escapeHtml(model)}</b>.${sn} Check both against the plate.` };
   if (r.kind === "liquid") return { kind: "err", html: `Read model <b>${escapeHtml(model)}</b> - a liquid-cooled unit.` };
+  if (r.kind === "family" && r.ambiguous) return { kind: "warn", html: `Read <b>${escapeHtml(model)}</b>: that number fits ${r.ambiguous.map(a => "<b>" + escapeHtml(a.model.g) + "</b>").join(" and ")} (different families). Pick the exact model from the MODEL line below.${serial ? sn : ""}` };
   if (r.kind === "family") return { kind: "warn", html: `Read <b>${escapeHtml(model)}</b>: a ${escapeHtml(r.family.family)} number, but not one in our model list. Pick the exact model below.${serial ? sn : ""}` };
   const other = r.info && r.info.brand && r.info.brand !== "Generac" ? ` That reads as a ${escapeHtml(r.info.brand)} ${escapeHtml(String(r.info.equipment || "").toLowerCase())}, not a Generac generator.` : "";
   return { kind: "warn", html: `Read <b>${escapeHtml(model)}</b>, which isn't a Generac air-cooled model we know.${other} Check the MODEL line, type it, or pick it from the list.${serial ? sn : ""}` };
@@ -5073,6 +5094,7 @@ function genWizResolveHtml(d) {
     return `<div class="gwz-res ok">✓ <b>${escapeHtml(r.model.g)}</b> - ${escapeHtml(r.model.desc || "")}<div class="gwz-res-sub">${escapeHtml(r.family.family)}${f && f.kw != null ? " · " + escapeHtml(f.kw + " kW") : ""}</div></div>`;
   }
   if (r.kind === "liquid") return `<div class="gwz-res err"><b>This checklist is for air-cooled units.</b> ${escapeHtml(String(d.modelInput || "").toUpperCase())} is a liquid-cooled generator (${escapeHtml(r.family.family)}) with a radiator, coolant and a water pump, so this form doesn't fit it. Open it in Generators for its own maintenance list.<div class="gwz-res-act"><button type="button" class="gwz-mini" data-gwz-open-gen="${escapeHtml(r.family.id)}">🔌 Open in Generators</button></div></div>`;
+  if (r.kind === "family" && r.ambiguous) return `<div class="gwz-res warn">${r.ambiguous.map(a => escapeHtml(a.model.g)).join(" or ")}? Those 4 digits are in two families - pick the exact model on the MODEL line from the list.</div>`;
   if (r.kind === "family") return `<div class="gwz-res warn">${escapeHtml(r.family.family)} - pick the exact model from the list.</div>`;
   if (r.kind === "unknown" && String(d.modelInput || "").replace(/[^A-Za-z0-9]/g, "").length >= 4) return `<div class="gwz-res warn">Not a Generac air-cooled model number we know. Use the number on the MODEL line (G0072600, 007260-0 or 7260), or pick it from the list.</div>`;
   return `<div class="gwz-res">Scan the plate, type the model, or pick it from the list.</div>`;
@@ -12622,7 +12644,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v336";
+const APP_VERSION = "v337";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
