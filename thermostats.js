@@ -53740,7 +53740,7 @@ const THERMOSTAT_ADDITIONS = {
    "id": "tst-honeywell-truezone-hz-panels",
    "brand": "Honeywell Home",
    "family": "TrueZONE zone panels (HZ221 / HZ311 / HZ322 / HZ432)",
-   "aka": "Resideo TrueZONE; kits HZ221K / HZ311K / HZ322K / HZ432K; Honeywell zone panel",
+   "aka": "Resideo TrueZONE; kits HZ221K / HZ311K / HZ322K / HZ432K; Honeywell zone panel; Honeywell zone board / zone control board",
    "models": [
     "HZ221",
     "HZ311",
@@ -54146,49 +54146,49 @@ const THERMOSTAT_ADDITIONS = {
     {
      "title": "HZ432 TrueZONE Zone Panel Professional Installation Guide (69-2198-09)",
      "docType": "install",
-     "seedFile": "",
+     "seedFile": "honeywell-truezone-hz432-install-69-2198.pdf",
      "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-2198.pdf"
     },
     {
      "title": "HZ322 TrueZONE Zone Panel Professional Installation Guide (69-2199-11)",
      "docType": "install",
-     "seedFile": "",
+     "seedFile": "honeywell-truezone-hz322-install-69-2199.pdf",
      "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-2199.pdf"
     },
     {
      "title": "HZ311 TrueZONE Zone Panel Professional Installation Guide (69-2069EFS-05)",
      "docType": "install",
-     "seedFile": "",
+     "seedFile": "honeywell-truezone-hz311-install-69-2069efs.pdf",
      "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-2069EFS.pdf"
     },
     {
      "title": "HZ221 TrueZONE Zone Panel Professional Installation Guide (69-2200-03)",
      "docType": "install",
-     "seedFile": "",
+     "seedFile": "honeywell-truezone-hz221-install-69-2200.pdf",
      "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/69-0000s/69-2200.pdf"
     },
     {
      "title": "TrueZONE Panel Frequently Asked Questions (50-9694)",
      "docType": "spec",
-     "seedFile": "",
+     "seedFile": "honeywell-truezone-faq-50-9694.pdf",
      "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/50-9694.pdf"
     },
     {
      "title": "C7735A1000 Duct Air Temperature Sensor (DATS) Installation Instructions (69-1521EFS-03)",
      "docType": "install",
-     "seedFile": "",
+     "seedFile": "honeywell-c7735a-dats-install-69-1521efs.pdf",
      "url": "https://res.cloudinary.com/dzhpkjoqj/Resideo/69-1521EFS.pdf"
     },
     {
      "title": "TrueZone Direct Drive Damper Actuator M847D-ZONE / M847D-VENT (33-00038-03)",
      "docType": "install",
-     "seedFile": "",
+     "seedFile": "honeywell-m847d-damper-actuator-33-00038.pdf",
      "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00038.pdf"
     },
     {
      "title": "ZD Series Damper Submittal Sheet (33-00264-02)",
      "docType": "spec",
-     "seedFile": "",
+     "seedFile": "honeywell-zd-damper-submittal-33-00264.pdf",
      "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00264.pdf"
     }
    ],
