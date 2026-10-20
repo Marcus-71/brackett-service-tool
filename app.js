@@ -2409,7 +2409,13 @@ function askCard(it) {
   return card;
 }
 
-document.getElementById("askInput").addEventListener("input", (e) => { askState.search = e.target.value; renderAsk(); });
+let askTypeTimer = null;
+document.getElementById("askInput").addEventListener("input", (e) => {
+  askState.search = e.target.value;
+  // One scoring pass per pause in typing, not per keystroke (every pass scores ~12,000 entries).
+  clearTimeout(askTypeTimer);
+  askTypeTimer = setTimeout(renderAsk, 150);
+});
 // Enter / the phone keyboard's Search-Go key = submit the question: drop the
 // keyboard so results are visible (was "just sitting there" behind it), make
 // sure they're rendered, and fire the AI answer when the relay is set up.
@@ -5676,6 +5682,7 @@ async function genClPayload(rec) {
     customerName: rec.customerName || "",
     date: rec.date || "",
     appVersion: APP_VERSION,
+    token: ASK_AI_APP_TOKEN,   // relay rejects posts without it (same shared password as the other relays)
   };
 }
 let genClFlushing = false;
@@ -6864,6 +6871,8 @@ async function downloadSeedManual(m, onStatus) {
   const resp = await fetch(m.seedFile);
   if (!resp.ok) throw new Error("Server returned " + resp.status);
   const blob = await resp.blob();
+  // Captive Wi-Fi portals answer 200 text/html for every URL (see sw.js): never store that as a manual.
+  if (!/^%PDF/.test(await blob.slice(0, 5).text())) throw new Error("that wasn't a PDF - sign in to the Wi-Fi or switch to mobile data, then tap it again");
   const record = {
     id: m.id, brand: m.brand, model: m.model, title: m.title, notes: m.notes,
     filename: m.filename, mimeType: "application/pdf", size: blob.size, blob, addedAt: Date.now(),
@@ -7193,6 +7202,28 @@ function ccTargetBox(label, value, sub) {
 // This is deliberately built only from the industry rule-of-thumb ranges
 // already cited elsewhere in this file, not invented per-model numbers — a
 // real per-model charging chart from the unit's own literature always wins.
+// Goodman / Daikin / Amana factory piston (fixed-orifice) superheat table (audit 10-19, TOOLS-01).
+// The generic rule of thumb ((3 x WB) - 80 - OD) / 2 reads 1.5-9 F HIGHER than this printed grid (95 F out /
+// 67 F WB: rule 13 F, table 7 F), so judging a Goodman/Daikin/Amana piston system on the rule alone calls a
+// correctly charged unit "overcharged". The same grid is printed in the Daikin R-32 install p.9, Goodman
+// IOG-4048C p.9 and GSC13 IO-402E p.8. Returns the bilinearly interpolated target, "dash" where the table
+// prints no target (too cool / dry to charge by superheat), or null outside the table.
+function ccPistonTableTarget(od, wb) {
+  if (typeof CHARGING_CHARTS === "undefined" || od == null || wb == null) return null;
+  const c = CHARGING_CHARTS.find(x => x.id === "cc-daikin-r32-piston-superheat-targets");
+  if (!c || !c.rows) return null;
+  const rows = c.rows.map(r => +r.row).sort((a, b) => a - b);
+  const cols = Object.keys(c.rows[0].values).map(Number).sort((a, b) => a - b);
+  if (od < rows[0] || od > rows[rows.length - 1] || wb < cols[0] || wb > cols[cols.length - 1]) return null;
+  const cell = (r, k) => { const v = (c.rows.find(x => +x.row === r) || {}).values; const n = parseFloat(v && v[String(k)]); return isNaN(n) ? null : n; };
+  const pick = (arr, v) => { const i = arr.findIndex(x => x >= v); if (i <= 0 || arr[i] === v) return [arr[Math.max(i, 0)], arr[Math.max(i, 0)]]; return [arr[i - 1], arr[i]]; };
+  const [r0, r1] = pick(rows, od), [k0, k1] = pick(cols, wb);
+  const q = [cell(r0, k0), cell(r0, k1), cell(r1, k0), cell(r1, k1)];
+  if (q.some(v => v == null)) return "dash";
+  const tr = r1 === r0 ? 0 : (od - r0) / (r1 - r0), tk = k1 === k0 ? 0 : (wb - k0) / (k1 - k0);
+  return (q[0] * (1 - tk) + q[1] * tk) * (1 - tr) + (q[2] * (1 - tk) + q[3] * tk) * tr;
+}
+
 function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, scTargetIsDefault) {
   const boxes = [];
 
@@ -7231,10 +7262,12 @@ function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, s
       boxes.push(ccTargetBox("Target superheat", "—", "orifice needs outdoor temp + indoor wet bulb"));
     } else {
       const target = ((3 * wb) - 80 - od) / 2;
+      const tbl = ccPistonTableTarget(od, wb);
+      const tblNote = typeof tbl === "number" ? ` · Goodman/Daikin/Amana piston table: ${Math.round(tbl)}°F` : tbl === "dash" ? " · Goodman/Daikin/Amana table prints no target here" : "";
       if (target < 5) {
-        boxes.push(ccTargetBox("Target superheat", "too low to use", "cool/dry conditions — weigh the charge instead"));
+        boxes.push(ccTargetBox("Target superheat", "too low to use", "cool/dry conditions — weigh the charge instead" + tblNote));
       } else {
-        boxes.push(ccTargetBox("Target superheat", `~${Math.round(target)}°F`, `fixed-orifice, ${od}°F out / ${wb}°F WB in`));
+        boxes.push(ccTargetBox("Target superheat", `~${Math.round(target)}°F`, `rule of thumb, ${od}°F out / ${wb}°F WB in${tblNote} — the unit's own chart wins`));
       }
     }
   } else {
@@ -7375,10 +7408,15 @@ function renderChargeCalc() {
     if (meter === "orifice") {
       if (od != null && wb != null) {
         const target = ((3 * wb) - 80 - od) / 2;
+        // TOOLS-01: Goodman/Daikin/Amana pistons charge to their printed table, which runs below the rule of thumb.
+        const tbl = ccPistonTableTarget(od, wb);
+        const onTbl = typeof tbl === "number" && Math.abs(sh - tbl) <= 4;
+        const tblTxt = typeof tbl === "number" ? ` (Goodman/Daikin/Amana piston table: ${tbl.toFixed(0)}°F)` : "";
         if (target < 5) out.push(ccVerdict("warn", txt + ` Target superheat computes to ${target.toFixed(0)}°F for ${od}°F outdoor / ${wb}°F indoor WB — too low to charge by superheat in these conditions.`, "Don't add charge on a cool/dry day using superheat — recover conditions or weigh the charge."));
-        else if (Math.abs(sh - target) <= 4) out.push(ccVerdict("ok", txt + ` Target ≈ ${target.toFixed(0)}°F for these conditions — on target.`));
-        else if (sh > target + 4) { flags.lowCharge++; out.push(ccVerdict("bad", txt + ` Target ≈ ${target.toFixed(0)}°F — HIGH superheat, coil is being starved.`, "Common causes: low charge, restriction, low indoor load.")); }
-        else { flags.overcharge++; out.push(ccVerdict("bad", txt + ` Target ≈ ${target.toFixed(0)}°F — LOW superheat, risk of flooding the compressor.`, "Common causes: overcharge on a fixed orifice, high indoor load/humidity. Below ~5°F, stop and recover charge before running.")); }
+        else if (Math.abs(sh - target) <= 4) out.push(ccVerdict("ok", txt + ` Target ≈ ${target.toFixed(0)}°F for these conditions${tblTxt} — on target.`));
+        else if (onTbl) out.push(ccVerdict("ok", txt + ` On target for a Goodman/Daikin/Amana piston system: their factory table says ${tbl.toFixed(0)}°F here (the generic rule of thumb says ~${target.toFixed(0)}°F).`, "Other brands: go by the superheat chart on the unit's panel or in its install manual - Charging Charts below."));
+        else if (sh > target + 4) { flags.lowCharge++; out.push(ccVerdict("bad", txt + ` Target ≈ ${target.toFixed(0)}°F${tblTxt} — HIGH superheat, coil is being starved.`, "Common causes: low charge, restriction, low indoor load.")); }
+        else { flags.overcharge++; out.push(ccVerdict("bad", txt + ` Target ≈ ${target.toFixed(0)}°F${tblTxt} — LOW superheat, risk of flooding the compressor.`, "Common causes: overcharge on a fixed orifice, high indoor load/humidity. Below ~5°F, stop and recover charge before running.")); }
       } else {
         out.push(ccVerdict("need", txt, "Fixed-orifice target superheat needs outdoor temp AND indoor wet bulb — enter both and the target computes here."));
       }
@@ -9896,6 +9934,12 @@ let ocrStopRequested = false;
 let tagScanRunning = 0;
 const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
+  // Every screen's scan (Maintenance, generator checklist/problem, Charging Calc, Warranty) holds off the
+  // forced update and the Update pill, not only the Tag Scanner (whose own ++/-- stays balanced).
+  tagScanRunning++;
+  try { return await ocrTagFieldsInner(file, onStatus); } finally { tagScanRunning--; }
+}
+async function ocrTagFieldsInner(file, onStatus) {
   scanPlateDate = null;   // v300: set by extractTagFields from any OCR pass of this photo
   const viaBarcode = await tagBarcodeFields(file);
   if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
@@ -10924,6 +10968,7 @@ async function scanTagPhoto(file) {
   const held = holdScanPhoto(file, heldId);   // uploads at the next start only if this scan never finishes
   tagScanRunning++;
   const preview = document.getElementById("scanPreview");
+  if (preview.src && preview.src.startsWith("blob:")) URL.revokeObjectURL(preview.src);   // free the last photo (in-app camera stills are 2-5 MB in memory)
   preview.src = URL.createObjectURL(file);
   preview.classList.remove("hidden");
   document.getElementById("scanResult").innerHTML = "";
@@ -11689,7 +11734,11 @@ if ("serviceWorker" in navigator) {
   function safeToReload() {
     if (tagScanRunning > 0) return false;
     const el = document.activeElement;
-    return !(el && /^(INPUT|TEXTAREA)$/.test(el.tagName) && String(el.value || "").trim());
+    if (el && /^(INPUT|TEXTAREA)$/.test(el.tagName) && String(el.value || "").trim()) return false;
+  // Anything typed on the open screen (Charging Calc readings, Request Info, Warranty owner fields) and an
+  // AI answer still on screen are work in progress too - a reload would wipe them.
+  if ([...document.querySelectorAll('.screen:not(.hidden) input:not([type="file"]):not([type="search"]), .screen:not(.hidden) textarea')].some(x => String(x.value || "").trim())) return false;
+  return !document.querySelector("#askAi .ask-ai-body");
   }
   let reloading = false;
   function reloadForUpdate(how) {
@@ -12209,7 +12258,7 @@ async function sqftLookup() {
   const typed = document.getElementById("sqftAddrInput").value.trim();
   const result = document.getElementById("sqftResult");
   result.innerHTML = "";
-  if (!typed) { sqftStatus("Type a street address first - number and street, like 10526 Stephanie Ln."); return; }
+  if (!typed) { sqftStatus("Type a street address first - number and street, like 1234 Oak St."); return; }
 
   // Peel town/state/zip off the typed text; a recognized town also flips the
   // Town select so "210 maryland street jasper, IN" just works.
@@ -12555,7 +12604,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v332";
+const APP_VERSION = "v333";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

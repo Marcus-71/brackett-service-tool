@@ -1079,7 +1079,7 @@ const THERMOSTATS = [
      "notes": "Not on all models"
     },
     {
-     "setting": "ISU 1415 Clock Format / 1420 Daylight Saving / 1401 Idle Brightness",
+     "setting": "ISU 1410 Clock Format / 1415 Daylight Saving / 1420 Temp Offset / 1401 Idle Brightness",
      "options": "12/24hr, On/Off, 0-5",
      "notes": ""
     }
@@ -32854,11 +32854,6 @@ const THERMOSTATS = [
   "tips": [],
   "manuals": [
    {
-    "title": "New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin)",
-    "docType": "other",
-    "seedFile": "daikin-one-wireless-rht-sensor-pmn.pdf"
-   },
-   {
     "title": "Daikin One Touch / One+ Unitary Commissioning Menu Outline (v3.9) - Remote Sensors calibration ranges",
     "docType": "other",
     "seedFile": "daikin-one-touch-unitary-commissioning-menu-outline.pdf"
@@ -37312,7 +37307,7 @@ const THERMOSTATS = [
    }
   ],
   "wiringNotes": [
-   "Tech Specs sheet states the thermostat is 'designed for quick and easy installation' and lists an Installation Manual as part of the box contents, but that Installation Manual PDF was not found on a public carrier.com/bryant.com URL - only the Tech Specs sheet (which includes the wire-terminal diagram above) was available.",
+   "Tech Specs sheet states the thermostat is 'designed for quick and easy installation' and lists an Installation Manual as part of the box contents, and that Installation Manual (TSTATCCEWF-02SI, 04/26) is in Manuals under this thermostat: setup through the Carrier Service Technician App pp.16-22, manual configuration and per-stage equipment tests (A1, A2, C1 ...) pp.22-23, cycle-rate settings p.25, troubleshooting p.28; terminals p.34.",
    "Compatible with gas, oil, electric, heat pump and dual-fuel systems; supports humidifier, dehumidifier, and ventilator accessories per the Tech Specs sheet.",
    "Carrier's own marketing copy states the thermostat is intended to be 'installed by a Carrier contractor' for optimal configuration."
   ],
@@ -46354,7 +46349,7 @@ const THERMOSTATS = [
   "wiringNotes": [
    "The Hx3 controls heating/cooling outputs over RS485 Modbus to a compatible Johnson Controls/York/Luxaire/Coleman/Champion/Fraser-Johnston communicating indoor unit - it is not a conventional W/Y/G thermostat.",
    "Supports an optional remote/wired sensor: a standard 10k NTC thermistor, Johnson Controls part number S1-02542683000.",
-   "The publicly available User's Information Manual (5407935-UUM-E-1020) does not include the terminal/wiring diagram or base-unit wiring instructions - those appear to be in a separate Installation Instructions document not found on an official host this session."
+   "Wiring per the Installation Manual 5407934-UIM-D-1020 (in Manuals), p.8 Table 2: A (+) = data, non-inverted; R = 24 VAC hot; C = 24 VAC common and data ground; B (-) = data, inverted. Four wires thermostat-to-indoor unit (A green, R red, C black, B blue/white per Fig. 3 p.9). Variable-capacity outdoor units get only A, C and B - the manual's p.8 WARNING: do NOT connect to the R terminal of a variable-capacity outdoor control board (it has its own transformer). Standard 18 AWG thermostat wire; keep it a foot away from contactors/motors/electronic air cleaners, shielded only if noise persists (p.8). Fault and system-event text tables are on pp.46-62 (Tables 11-23); turn them on under System Settings > Efficiency / Warning / Status Faults (Fig. 32 p.46)."
   ],
   "setup": {
    "access": "Most equipment configuration is done through Dealer Access in the Hx Thermostat App (Installer, Diagnostic, and Status role permissions) rather than an on-thermostat installer menu; the homeowner must grant a dealer access via an emailed link opened on a smart device.",
