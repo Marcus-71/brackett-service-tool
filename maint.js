@@ -5326,8 +5326,8 @@ MAINT_SPECS.push({
  "source": "Carrier CH14NB Product Data, Cat. CH14NB-03PD (03/15); Carrier CH14NB / CH16NA Installation Instructions, Cat. CH14NB-16NA-03SI (08/17)",
  "flags": [
   {
-   "title": "Charge from the unit's own tables, not an app chart",
-   "body": "No charging chart is authored for the CH14NB. Use the printed tables in the install instructions: Table 5 (liquid pressure vs required subcooling, TXV indoor) and Table 6 (superheat by outdoor temperature and indoor wet bulb, piston indoor). The rating plate gives the factory charge and the subcooling target; the product data lists them too (SI p8-10; PD p8)."
+   "title": "Charge from the unit's own tables (now in Charging Calc)",
+   "body": "Charging Calc has both of the install instructions' tables for the CH14NB / CH16NA (added v343; scan the outdoor tag there to open them): Table 5 (liquid pressure vs required subcooling, TXV indoor) and Table 6 (superheat by outdoor temperature and indoor wet bulb, piston indoor). The rating plate gives the factory charge and the subcooling target; the product data lists them too (SI p8-10; PD p8)."
   },
   {
    "title": "Some indoor units need extra subcooling for heating",

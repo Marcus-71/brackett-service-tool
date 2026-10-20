@@ -4605,6 +4605,580 @@ const CHARGING_CHARTS = [
   ],
   "notes": "Table title as printed: SYSTEM SUPERHEAT. Used for the Fixed Orifice final charge adjustment. Dashes are printed in the source; the manual gives no superheat value for those combinations. Outdoor temperature must be 60 F or higher; set thermostat to COOL, fan to AUTO, set point well below room temperature, and let the system stabilize (10 minutes for fixed orifices). Connect gauges to the base-valve service ports and run at least 10 minutes. Thermometer on the suction (large) line near the suction line service valve, good contact, insulated. Add charge to lower superheat, recover charge to raise superheat. Superheat Formula printed as Suct. Line Temp. minus Sat. Suct. Temp. The document states these units ship with a nitrogen/helium holding charge and are only to be used as replacement components for pre-2010 installed systems.",
   "source": "Goodman IO-402E, Condensing AC Unit, Single / Three Phase Air Conditioners, Installation & Service Reference (GSC13 R-22), December 2011; goodmanmfg.com/Portals/0/pdf/M-Info/IOs/IO-GSC13.pdf via web.archive.org/web/20120324144148 - page 8 (PDF page 8). Same table also printed on PDF page 1. Verified by pdftotext -layout, -raw and -table (all 12 rows agree cell-for-cell) and by the 150 dpi page image."
+ },
+ {
+  "id": "cc-carrier-ch14nb-ch16na-r410a-required-liquid-line-temperature",
+  "brand": "Carrier",
+  "refrigerant": "R-410A",
+  "meteringDevice": "TXV (cooling mode TXV indoor - charge by subcooling)",
+  "models": "CH14NB and CH16NA split-system heat pumps with Puron (R-410A): CH14NB018-060, CH16NA018-060",
+  "chartType": "pressure-table",
+  "rowAxis": "liquid pressure at service valve (PSIG)",
+  "colAxis": "required subcooling temperature (F)",
+  "units": "rows PSIG; columns F of subcooling; cell values F (required liquid line temperature)",
+  "rows": [
+   {
+    "row": "251",
+    "values": {
+     "8": "76",
+     "10": "74",
+     "12": "72",
+     "14": "70",
+     "16": "68",
+     "18": "66"
+    }
+   },
+   {
+    "row": "259",
+    "values": {
+     "8": "78",
+     "10": "76",
+     "12": "74",
+     "14": "72",
+     "16": "70",
+     "18": "68"
+    }
+   },
+   {
+    "row": "266",
+    "values": {
+     "8": "80",
+     "10": "78",
+     "12": "76",
+     "14": "74",
+     "16": "72",
+     "18": "70"
+    }
+   },
+   {
+    "row": "274",
+    "values": {
+     "8": "82",
+     "10": "80",
+     "12": "78",
+     "14": "76",
+     "16": "74",
+     "18": "72"
+    }
+   },
+   {
+    "row": "283",
+    "values": {
+     "8": "84",
+     "10": "82",
+     "12": "80",
+     "14": "78",
+     "16": "76",
+     "18": "74"
+    }
+   },
+   {
+    "row": "291",
+    "values": {
+     "8": "86",
+     "10": "84",
+     "12": "82",
+     "14": "80",
+     "16": "78",
+     "18": "76"
+    }
+   },
+   {
+    "row": "299",
+    "values": {
+     "8": "88",
+     "10": "86",
+     "12": "84",
+     "14": "82",
+     "16": "80",
+     "18": "78"
+    }
+   },
+   {
+    "row": "308",
+    "values": {
+     "8": "90",
+     "10": "88",
+     "12": "86",
+     "14": "84",
+     "16": "82",
+     "18": "80"
+    }
+   },
+   {
+    "row": "317",
+    "values": {
+     "8": "92",
+     "10": "90",
+     "12": "88",
+     "14": "86",
+     "16": "84",
+     "18": "82"
+    }
+   },
+   {
+    "row": "326",
+    "values": {
+     "8": "94",
+     "10": "92",
+     "12": "90",
+     "14": "88",
+     "16": "86",
+     "18": "84"
+    }
+   },
+   {
+    "row": "335",
+    "values": {
+     "8": "96",
+     "10": "94",
+     "12": "92",
+     "14": "90",
+     "16": "88",
+     "18": "86"
+    }
+   },
+   {
+    "row": "345",
+    "values": {
+     "8": "98",
+     "10": "96",
+     "12": "94",
+     "14": "92",
+     "16": "90",
+     "18": "88"
+    }
+   },
+   {
+    "row": "354",
+    "values": {
+     "8": "100",
+     "10": "98",
+     "12": "96",
+     "14": "94",
+     "16": "92",
+     "18": "90"
+    }
+   },
+   {
+    "row": "364",
+    "values": {
+     "8": "102",
+     "10": "100",
+     "12": "98",
+     "14": "96",
+     "16": "94",
+     "18": "92"
+    }
+   },
+   {
+    "row": "374",
+    "values": {
+     "8": "104",
+     "10": "102",
+     "12": "100",
+     "14": "98",
+     "16": "96",
+     "18": "94"
+    }
+   },
+   {
+    "row": "384",
+    "values": {
+     "8": "106",
+     "10": "104",
+     "12": "102",
+     "14": "100",
+     "16": "98",
+     "18": "96"
+    }
+   },
+   {
+    "row": "395",
+    "values": {
+     "8": "108",
+     "10": "106",
+     "12": "104",
+     "14": "102",
+     "16": "100",
+     "18": "98"
+    }
+   },
+   {
+    "row": "406",
+    "values": {
+     "8": "110",
+     "10": "108",
+     "12": "106",
+     "14": "104",
+     "16": "102",
+     "18": "100"
+    }
+   },
+   {
+    "row": "416",
+    "values": {
+     "8": "112",
+     "10": "110",
+     "12": "108",
+     "14": "106",
+     "16": "104",
+     "18": "102"
+    }
+   },
+   {
+    "row": "427",
+    "values": {
+     "8": "114",
+     "10": "112",
+     "12": "110",
+     "14": "108",
+     "16": "106",
+     "18": "104"
+    }
+   },
+   {
+    "row": "439",
+    "values": {
+     "8": "116",
+     "10": "114",
+     "12": "112",
+     "14": "110",
+     "16": "108",
+     "18": "106"
+    }
+   },
+   {
+    "row": "450",
+    "values": {
+     "8": "118",
+     "10": "116",
+     "12": "114",
+     "14": "112",
+     "16": "110",
+     "18": "108"
+    }
+   },
+   {
+    "row": "462",
+    "values": {
+     "8": "120",
+     "10": "118",
+     "12": "116",
+     "14": "114",
+     "16": "112",
+     "18": "110"
+    }
+   },
+   {
+    "row": "474",
+    "values": {
+     "8": "122",
+     "10": "120",
+     "12": "118",
+     "14": "116",
+     "16": "114",
+     "18": "112"
+    }
+   },
+   {
+    "row": "486",
+    "values": {
+     "8": "124",
+     "10": "122",
+     "12": "120",
+     "14": "118",
+     "16": "116",
+     "18": "114"
+    }
+   },
+   {
+    "row": "499",
+    "values": {
+     "8": "126",
+     "10": "124",
+     "12": "122",
+     "14": "120",
+     "16": "118",
+     "18": "116"
+    }
+   },
+   {
+    "row": "511",
+    "values": {
+     "8": "128",
+     "10": "126",
+     "12": "124",
+     "14": "122",
+     "16": "120",
+     "18": "118"
+    }
+   }
+  ],
+  "notes": "Table title as printed: Table 5 - Required Liquid Line Temperatures F. Units with a cooling mode TXV charge by subcooling: run at least 10 minutes, measure liquid service valve pressure and the liquid line temperature near the outdoor coil, take the required subcooling from the unit RATING PLATE, find where it meets the measured pressure, add refrigerant if the liquid line is warmer than the chart and recover if cooler; tolerance 3 F. Factory charge is for 15 ft of line set; adjust 0.6 oz per ft of 3/8 liquid line. Favorable conditions: outdoor 70-100 F, indoor 70-80 F (otherwise weigh in by line length). Additional subcooling for heating performance depends on the installed indoor unit (Table 4 in the instructions, not in the app). Line sets over 80 ft or 20 ft vertical: Residential Piping and Long Line Guideline.",
+  "source": "Carrier CH14NB, CH16NA Split-System Heat Pump Installation Instructions, Cat. No. CH14NB-16NA-03SI (08/17), in the app library as carrier-ch14nb-install.pdf - Table 5, page 9. Verified by pdftotext -layout, -raw and -table (all 27 rows agree cell for cell); every row steps 2 F per subcooling column."
+ },
+ {
+  "id": "cc-carrier-ch14nb-ch16na-r410a-piston-superheat",
+  "brand": "Carrier",
+  "refrigerant": "R-410A",
+  "meteringDevice": "fixed orifice (indoor piston - charge by superheat)",
+  "models": "CH14NB and CH16NA split-system heat pumps with Puron (R-410A): CH14NB018-060, CH16NA018-060",
+  "chartType": "superheat-grid",
+  "rowAxis": "outdoor temperature (F)",
+  "colAxis": "evaporator entering air temperature (F WB)",
+  "units": "F (target superheat at the low-side service port)",
+  "rows": [
+   {
+    "row": "55",
+    "values": {
+     "50": "11",
+     "52": "11",
+     "54": "12",
+     "56": "12",
+     "58": "12",
+     "60": "13",
+     "62": "17",
+     "64": "20",
+     "67": "24",
+     "68": "24",
+     "70": "25",
+     "72": "25",
+     "74": "25",
+     "76": "25"
+    }
+   },
+   {
+    "row": "60",
+    "values": {
+     "50": "6",
+     "52": "6",
+     "54": "7",
+     "56": "7",
+     "58": "7",
+     "60": "7",
+     "62": "12",
+     "64": "16",
+     "67": "21",
+     "68": "22",
+     "70": "23",
+     "72": "23",
+     "74": "23",
+     "76": "23"
+    }
+   },
+   {
+    "row": "65",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "3",
+     "62": "7",
+     "64": "12",
+     "67": "18",
+     "68": "19",
+     "70": "21",
+     "72": "21",
+     "74": "22",
+     "76": "22"
+    }
+   },
+   {
+    "row": "70",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "7",
+     "67": "14",
+     "68": "16",
+     "70": "18",
+     "72": "20",
+     "74": "20",
+     "76": "20"
+    }
+   },
+   {
+    "row": "75",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "3",
+     "67": "11",
+     "68": "13",
+     "70": "16",
+     "72": "18",
+     "74": "18",
+     "76": "19"
+    }
+   },
+   {
+    "row": "82",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "6",
+     "68": "8",
+     "70": "12",
+     "72": "15",
+     "74": "16",
+     "76": "17"
+    }
+   },
+   {
+    "row": "85",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "4",
+     "68": "7",
+     "70": "11",
+     "72": "14",
+     "74": "15",
+     "76": "16"
+    }
+   },
+   {
+    "row": "90",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "-",
+     "68": "4",
+     "70": "8",
+     "72": "12",
+     "74": "14",
+     "76": "15"
+    }
+   },
+   {
+    "row": "95",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "-",
+     "68": "-",
+     "70": "6",
+     "72": "10",
+     "74": "12",
+     "76": "14"
+    }
+   },
+   {
+    "row": "100",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "-",
+     "68": "-",
+     "70": "4",
+     "72": "8",
+     "74": "11",
+     "76": "12"
+    }
+   },
+   {
+    "row": "105",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "-",
+     "68": "-",
+     "70": "3",
+     "72": "6",
+     "74": "9",
+     "76": "11"
+    }
+   },
+   {
+    "row": "110",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "-",
+     "68": "-",
+     "70": "-",
+     "72": "5",
+     "74": "7",
+     "76": "10"
+    }
+   },
+   {
+    "row": "115",
+    "values": {
+     "50": "-",
+     "52": "-",
+     "54": "-",
+     "56": "-",
+     "58": "-",
+     "60": "-",
+     "62": "-",
+     "64": "-",
+     "67": "-",
+     "68": "-",
+     "70": "-",
+     "72": "3",
+     "74": "6",
+     "76": "8"
+    }
+   }
+  ],
+  "notes": "Table title as printed: Table 6 - Superheat Charging (Heat Pump Only). For units with INDOOR PISTONS (superheat method), valid when indoor airflow is within 21 percent of rated CFM: run at least 10 minutes, read suction pressure and suction line temperature at the service valve, outdoor dry bulb, and indoor entering wet bulb (sling psychrometer); the intersection is the target superheat at the low-side port, tolerance 3 F; indoor dry bulb 70-80 F. Where a dash is printed do not charge by superheat (refrigerant slugging may occur) - weigh the charge in, 0.6 oz per ft of 3/8 liquid line above or below 15 ft. The optimum point is printed at 82 F outdoor / 67 F WB (6 F, marked with an asterisk). Higher suction line temperature than charted: add refrigerant; lower: recover.",
+  "source": "Carrier CH14NB, CH16NA Split-System Heat Pump Installation Instructions, Cat. No. CH14NB-16NA-03SI (08/17), in the app library as carrier-ch14nb-install.pdf - Table 6, page 10. Verified by pdftotext -layout, -raw and -table (all 13 rows x 14 columns agree); row labels from the -raw text (the -layout text offsets them); the asterisked optimum point sits at 82 F / 67 F WB as the footnote says."
  }
 
 ];
