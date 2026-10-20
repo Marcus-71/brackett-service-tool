@@ -369,7 +369,9 @@ function showScreen(name, fromBack) {
     addBtn.onclick = ADD_HANDLERS[name];
   }
 
-  if (name === "ask") { askIndexCache = null; renderAsk(); }
+  // v342 (audit CODE-07): the ~12,000-item Ask index is rebuilt only when a tech's own code / scenario /
+  // tool changes (the save functions drop it), not on every visit - 85-98 ms here, several hundred on a phone.
+  if (name === "ask") renderAsk();
   if (name === "codes") renderCodes();
   if (name === "home") diagState.unitModel = "";
   if (name === "scanner" && cameraLostInput === "tagPhotoInput") { cameraLostInput = ""; scanStatus(CAMERA_LOST_MSG); }
@@ -478,9 +480,9 @@ function safeSet(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); return true; }
   catch (e) { return false; }
 }
-function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); }
+function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); askIndexCache = null; }
 function loadDeletedCodeIds() { try { return JSON.parse(localStorage.getItem(CODES_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); }
+function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); askIndexCache = null; }
 
 function getAllCodes() {
   const userCodes = loadUserCodes();
@@ -1265,6 +1267,7 @@ function renderAsk() {
     askState.brand = "All"; askState.equip = "All"; askState._lastQ = q;
     const mh = document.getElementById("askManualHits"); if (mh) mh.innerHTML = "";
     const ai = document.getElementById("askAi"); if (ai) { ai.innerHTML = ""; ai.dataset.answeredFor = ""; }
+    askAiToken++;   // v342 (audit CODE-09): an answer still in flight is for the old question - drop it, don't paint it under the new one
   }
 
   if (!askIndexCache) askIndexCache = askBuildIndex();
@@ -1344,6 +1347,10 @@ function renderAsk() {
   const narrow = document.getElementById("askNarrow");
   narrow.innerHTML = askWiringHtml(askRetrievalQ(q), units);
   wireAskWiring(narrow);
+  if (isPressureQuestion(q)) {   // v342 (FIELD-08): point pressure questions at the tool that answers them
+    narrow.insertAdjacentHTML("afterbegin", `<div class="ask-chip-row"><button type="button" class="ask-chip" id="askGoCharge">${CHARGE_CHIP_TEXT}</button></div>`);
+    narrow.querySelector("#askGoCharge").onclick = () => { trackEvent("ask -> charging calc"); showScreen("charge"); };
+  }
 
   const activeTags = [];
   if (askState.brand !== "All") activeTags.push(["brand", askState.brand]);
@@ -2612,9 +2619,9 @@ function unitScenariosFor(model) {
 }
 
 function loadUserSymptoms() { try { return JSON.parse(localStorage.getItem(DIAG_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); }
+function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); askIndexCache = null; }
 function loadDeletedSymptomIds() { try { return JSON.parse(localStorage.getItem(DIAG_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); }
+function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); askIndexCache = null; }
 
 function getAllSymptoms() {
   const userSymptoms = loadUserSymptoms();
@@ -2728,9 +2735,10 @@ function renderDiagEmptyState() {
   reportUnanswered(query);
   // A code typed into Diagnostic Help ("32.1", "E5", "code 1902") belongs in Error
   // Codes (10/12 usage digest: techs searched codes here and got nothing).
-  const codeTok = diagCodeToken(query);
+  const codeTok = diagCodeToken(query) || diagCodeInSentence(query);
   const codeHits = codeTok ? diagCodeHits(codeTok) : 0;
-  const codeBtn = codeHits ? `<button type="button" class="chip" id="diagGoCodes" style="margin-right:0.4rem;">⚡ Error Codes for "${escapeHtml(codeTok)}" (${codeHits})</button>` : "";
+  const codeBtn = (codeHits ? `<button type="button" class="chip" id="diagGoCodes" style="margin-right:0.4rem;">⚡ Error Codes for "${escapeHtml(codeTok)}" (${codeHits})</button>` : "") +
+    (isPressureQuestion(query) ? `<button type="button" class="chip" id="diagGoCharge" style="margin-right:0.4rem;">${CHARGE_CHIP_TEXT}</button>` : "");
   const wireCodeBtn = () => {
     const b = document.getElementById("diagGoCodes");
     if (b) b.onclick = () => {
@@ -2739,6 +2747,8 @@ function renderDiagEmptyState() {
       document.getElementById("codesSearchInput").value = codeTok;
       showScreen("codes");
     };
+    const c = document.getElementById("diagGoCharge");
+    if (c) c.onclick = () => { trackEvent("diag -> charging calc"); showScreen("charge"); };
   };
   if (!navigator.onLine) {
     empty.innerHTML = `No matching symptoms for "${escapeHtml(query)}". Try a different search, or add this one. (You're offline — web search isn't available right now.)${codeBtn ? `<div style="margin-top:0.7rem;">${codeBtn}</div>` : ""}`;
@@ -2762,6 +2772,30 @@ function diagCodeToken(q) {
   const t = String(q || "").trim().replace(/^(error|fault|alarm|status|flash(ing)?|blink(ing)?|code)(\s+(code|flash(es)?))?\s*:?\s*/i, "").trim();
   return /^[a-z]{0,3}-?\d{1,4}([.\-]\d{1,2})?[a-z]?$/i.test(t) ? t.toUpperCase() : "";
 }
+// v342 (audit FIELD-07): a code inside a sentence ("Carrier furnace is giving 32.1 error code" - Dustin
+// 10/12 got nothing and retyped 32.1 in Error Codes). Decimal codes, E-style codes, or a number right next
+// to code / error / flash - and only one the library actually has, so "92 outside" never counts.
+function diagCodeInSentence(q) {
+  const s = String(q || ""), cands = [];
+  for (const m of s.matchAll(/\b(\d{1,3}\.\d)\b/g)) cands.push(m[1]);
+  for (const m of s.matchAll(/\b([A-Za-z]{1,2}\d{1,4})\b/g)) if (!/^r\d/i.test(m[1])) cands.push(m[1]);   // E13, LO3 - not R410 / R22
+  for (const m of s.matchAll(/\b(?:code|error|fault|alarm|flash(?:es|ing)?|blink(?:s|ing)?)\s*(?:code\s*)?:?\s*(\d{1,4})\b|\b(\d{1,4})\s+(?:code|error|fault|flash(?:es)?|blinks?)\b/gi)) cands.push(m[1] || m[2]);
+  for (const c of cands) if (c && diagCodeHits(c)) return c.toUpperCase();
+  return "";
+}
+// v342 (audit FIELD-08): pressure questions ("410a 92 outside what should my pressures be", "152 over 325
+// is this correct") have no text answer in the library - the Charging Calc is the tool. Pressure wording
+// plus a refrigerant or a temperature.
+function isPressureQuestion(q) {
+  const s = String(q || "").toLowerCase();
+  const press = /\b(pressures?(?!\s*(switch|sw\b|tap|port|tube|hose|test))|psig?|head pressure|subcool(ing)?|superheat)\b/.test(s) || /\b\d{2,3}\s*(over|\/)\s*\d{2,3}\b/.test(s);
+  const ctx = /\b(r-?\s?(410a?|22|32|454b?)|410a?|454b|puron|freon|refrigerant)\b/.test(s) ||
+    /\b\d{2,3}\s*(°|degrees?\b|deg\b|f\b|outside|outdoor|inside|indoor|ambient)/.test(s);
+  // "300 over 50" / "152 over 325" is how techs say pressures - enough on its own (the word "over", so
+  // "120/240" volts never counts).
+  return (press && ctx) || /\b\d{2,3}\s+over\s+\d{2,3}\b/.test(s);
+}
+const CHARGE_CHIP_TEXT = "📈 Charging Calc - check pressures for this unit";
 function diagCodeHits(tok) {
   const norm = (s) => String(s || "").toUpperCase().replace(/\s+/g, "");
   const n = norm(tok);
@@ -3145,9 +3179,9 @@ let toolboxState = { search: "", brand: "All", era: "All" };
 const TOOLBOX_ERA_LABEL = { current: "Current", legacy: "Legacy" };
 
 function loadUserToolbox() { try { return JSON.parse(localStorage.getItem(TOOLBOX_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); }
+function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); askIndexCache = null; }
 function loadDeletedToolboxIds() { try { return JSON.parse(localStorage.getItem(TOOLBOX_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); }
+function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); askIndexCache = null; }
 
 function getAllToolboxEntries() {
   const userEntries = loadUserToolbox();
@@ -7040,12 +7074,18 @@ async function pdfRenderPage(n) {
   if (!pdfView.doc || pdfView.rendered.has(n) || pdfView.rendering.has(n)) return;
   pdfView.rendering.add(n);
   const doc = pdfView.doc;
+  // v342 (audit CODE-12): a zoom (or rotate) while this page renders made it land at the OLD size and stay
+  // that way. If the size changed meanwhile, drop this canvas and render the page again at the new size.
+  let stale = false;
+  const zoomAtStart = pdfView.zoom, baseAtStart = pdfBaseWidth();
+  const changed = () => pdfView.zoom !== zoomAtStart || pdfBaseWidth() !== baseAtStart;
   try {
     const page = await doc.getPage(n);
     if (pdfView.doc !== doc) return;
+    if (changed()) { stale = true; return; }
     const holder = pdfView.holders[n - 1];
     const vp1 = page.getViewport({ scale: 1 });
-    const scale = (pdfBaseWidth() / vp1.width) * pdfView.zoom;
+    const scale = (baseAtStart / vp1.width) * zoomAtStart;
     const vp = page.getViewport({ scale });
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const canvas = document.createElement("canvas");
@@ -7061,6 +7101,7 @@ async function pdfRenderPage(n) {
       transform: ratio !== 1 ? [ratio, 0, 0, ratio, 0, 0] : null,
     }).promise;
     if (pdfView.doc !== doc) return;
+    if (changed()) { stale = true; return; }
     holder.replaceChildren(canvas);
     pdfView.rendered.add(n);
     pdfTrimRendered();
@@ -7068,6 +7109,7 @@ async function pdfRenderPage(n) {
     // render errors on one page shouldn't kill the reader
   } finally {
     pdfView.rendering.delete(n);
+    if (stale && pdfView.doc === doc && pdfView.holders[n - 1]) pdfRenderPage(n);
   }
 }
 
@@ -11466,6 +11508,7 @@ function warrantyStatus(msg) {
 async function warrantyScanPhoto(file) {
   trackEvent("warranty scanned a tag");
   const preview = document.getElementById("warrantyPreview");
+  if (preview.src && preview.src.startsWith("blob:")) URL.revokeObjectURL(preview.src);   // free the last photo (v342, same as the Tag Scanner)
   preview.src = URL.createObjectURL(file);
   preview.classList.remove("hidden");
   document.getElementById("warrantyResult").innerHTML = "";
@@ -12662,7 +12705,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v341";
+const APP_VERSION = "v342";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
