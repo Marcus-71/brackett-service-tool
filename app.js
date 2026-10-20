@@ -811,7 +811,10 @@ function askFamsFromWords(q) {
 }
 function askAddModelAlts(units, q) {
   for (const u of units) {
-    const t = (u.alts[0] || "").toUpperCase();
+    let t = (u.alts[0] || "").toUpperCase();
+    // v346: a bare Generac plate number (0064620) is asked as its G-number too; manual pages print G0064620.
+    const bareG = typeof genBareToG === "function" ? genBareToG(t) : "";
+    if (bareG) { u.alts = [...new Set([bareG.toLowerCase(), ...u.alts])]; t = bareG; }
     // A generator model number points Ask at that family's card (longest prefix wins):
     // Kohler nameplates (14RES, 38RCLB, RXT) and Generac G-numbers (G0072580, Vern 2026-10-06).
     // Kohler switch prefixes are followed by a dash or a letter (RXT-JFNA); a digit after RXT is a
@@ -3992,6 +3995,13 @@ function genFamilyForModel(model) {
   const full = m5 ? "G00" + m5[1] : "";
   return (full && genEntries().find(g => (g.models || []).some(m => m.g === full)))
     || genEntries().find(g => (g.models || []).some(m => m.digits === d)) || null;
+}
+// v346: Generac data tags print the model without its "G" (Vern's plate: 0064620 for G0064620).
+// Returns the G-number when the bare number is one the generator library lists exactly, else "".
+function genBareToG(model) {
+  const u = String(model || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!/^00\d{5}$/.test(u) || typeof genEntries !== "function") return "";
+  return genEntries().some(g => (g.models || []).some(m => m.g === "G" + u)) ? "G" + u : "";
 }
 
 document.getElementById("genSearchInput").addEventListener("input", (e) => { genState.search = e.target.value; renderGens(); });
@@ -9381,6 +9391,8 @@ function extractTagFields(text) {
   // v344: Generac's stencil G reads as 3, 5 or S (Vern's G0072101 came back "30072101" and
   // "S0072101", 2026-10-20). Only on a plate that shows Generac's own words.
   if (/^[35S]0\d{6,7}$/.test(model) && /NERAC|LPV\s*AM|NG\s*AMP/.test(up)) model = "G" + model.slice(1);
+  // v346: the bare plate number becomes its G-number, so the checklist and history carry the real model.
+  else if (typeof genBareToG === "function" && genBareToG(model)) model = genBareToG(model);
   return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, modelSource, brandHint: detectBrandInText(up), modelFromProd: !!(model && modelFromProd) };
 }
 
@@ -12711,7 +12723,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v345";
+const APP_VERSION = "v346";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
