@@ -32854,6 +32854,11 @@ const THERMOSTATS = [
   "tips": [],
   "manuals": [
    {
+    "title": "New Daikin ONE Wireless RHT Sensor for Daikin ONE+ Smart Thermostat (Sales Bulletin)",
+    "docType": "other",
+    "seedFile": "daikin-one-wireless-rht-sensor-pmn.pdf"
+   },
+   {
     "title": "Daikin One Touch / One+ Unitary Commissioning Menu Outline (v3.9) - Remote Sensors calibration ranges",
     "docType": "other",
     "seedFile": "daikin-one-touch-unitary-commissioning-menu-outline.pdf"
