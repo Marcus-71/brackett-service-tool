@@ -12604,7 +12604,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v334";
+const APP_VERSION = "v335";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -12630,9 +12630,9 @@ const BLOCKED_TECHS = ["Gus", "Lincoln"];   // Lincoln: removed by Andy 2026-10-
 // name is no longer offered; only the office code clears it (for a phone handed
 // to a new tech). The lock lives in localStorage + a cookie, so deleting the app
 // AND clearing the browser's site data still resets it - a courtesy lock, not security.
-// Only the SHA-256 of the code is here, never the code itself.
+// v335 (Andy 2026-10-20, "Two codes"): the app carries no copy of any code. The name
+// registry checks them: the setup code (techs) and the office code (Andy only).
 const DEVICE_LOCK_KEY = "bfc-device-locked";
-const OFFICE_UNLOCK_HASH = "100a237e2b30463f38bdc43d8f276ea00bc5ce8f4ae69d4fc212f8af980a8f3d";   // changed v271 (Andy 2026-10-08)
 const OFFICE_UNLOCK_TRIES_KEY = "bfc-office-unlock-tries";
 
 function deviceLockedAs() {
@@ -12648,11 +12648,6 @@ function lockDevice(name) {
 function unlockDevice() {
   try { localStorage.removeItem(DEVICE_LOCK_KEY); localStorage.removeItem(TECH_KEY); localStorage.removeItem(OFFICE_UNLOCK_TRIES_KEY); } catch (e) {}
   document.cookie = "bfc_locked=; max-age=0; path=/; SameSite=Strict";
-}
-async function officeCodeMatches(code) {
-  const data = new TextEncoder().encode("bfc-office-unlock-v1:" + String(code).trim());
-  const buf = await crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("") === OFFICE_UNLOCK_HASH;
 }
 
 function getTechName() {
@@ -12768,9 +12763,13 @@ function showAccessRemoved() {
     const show = (t) => { msg.textContent = t; msg.classList.remove("hidden"); };
     if (Date.now() < tries.until) { show("Too many tries. Wait a few minutes and try again."); return; }
     const code = ov.querySelector("#officeUnlockCode").value;
-    let ok = false;
-    try { ok = await officeCodeMatches(code); } catch (err) { show("This phone can't check the code. Contact the office."); return; }
-    if (ok) {
+    if (!navigator.onLine) { show("Needs signal to check the code."); return; }
+    show("Checking…");
+    let r = null;
+    try { r = await registryPost({ action: "unlock", code }); } catch (err) {}
+    if (!r) { show("Couldn't reach the office list - check signal and try again."); return; }
+    if (r.error === "too many tries") { show("Too many tries. Wait a while and try again."); return; }
+    if (r.ok) {
       const was = deviceLockedAs();
       unlockDevice();
       if (typeof trackEvent === "function") trackEvent("OFFICE UNLOCK: phone was locked as " + was);
@@ -12836,7 +12835,7 @@ async function flushPendingClaim() {
       trackEvent("name confirmed: " + p.name);
     } else if (r && (r.taken || r.error === "wrong code")) {
       try { localStorage.removeItem(PENDING_CLAIM_KEY); localStorage.removeItem(TECH_KEY); } catch (e) {}
-      showTechPicker(r.taken ? p.name + " is already set up on another phone. Pick again, or ask the office to free it." : "");
+      showTechPicker(r.taken ? p.name + " is already set up on another phone. Pick again, or ask the office to free it." : "The setup code was wrong. Pick your name and try again.");
     }
   } catch (e) { /* still no real signal - try again later */ }
   claimFlushing = false;
@@ -12935,10 +12934,9 @@ function showTechPicker(notice) {
     e.preventDefault();
     if (Date.now() < tooManyTries().until) { say("Too many tries. Wait a few minutes and try again."); return; }
     const code = $("pickerCode").value;
-    let ok = false;
-    try { ok = await officeCodeMatches(code); } catch (err) { say("This phone can't check the code. Contact the office."); return; }
-    if (!ok) { noteWrong(); say("Wrong code."); $("pickerCode").value = ""; return; }
-    try { localStorage.removeItem(OFFICE_UNLOCK_TRIES_KEY); } catch (err) {}
+    if (!String(code).trim()) { say("Enter the setup code."); return; }
+    // v335: the registry checks the code. With no signal the tech gets in now and the
+    // code is checked once there's signal (a wrong one sends them back to this list).
     if (!navigator.onLine) {
       safeSet(PENDING_CLAIM_KEY, { name: chosen, code });
       finish(chosen, "no signal - confirms later");
@@ -12947,7 +12945,8 @@ function showTechPicker(notice) {
     say("Setting up…");
     let r = null;
     try { r = await registryPost({ action: "claim", device: deviceId(), name: chosen, code }); } catch (err) {}
-    if (r && r.ok) { try { localStorage.removeItem(PENDING_CLAIM_KEY); } catch (err) {} finish(chosen, "claimed"); return; }
+    if (r && r.ok) { try { localStorage.removeItem(PENDING_CLAIM_KEY); localStorage.removeItem(OFFICE_UNLOCK_TRIES_KEY); } catch (err) {} finish(chosen, "claimed"); return; }
+    if (r && r.error === "wrong code") { noteWrong(); say("Wrong code."); $("pickerCode").value = ""; return; }
     if (r && r.taken) { say(chosen + " is already set up on another phone. If this is your new phone, ask the office to free the name."); showNames(); refreshTaken(); return; }
     if (r && r.error === "too many tries") { say("Too many tries. Wait a while and try again."); return; }
     // No answer from the registry (weak signal): let them in, confirm later.
