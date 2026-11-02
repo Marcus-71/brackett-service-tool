@@ -89,6 +89,96 @@ const BULLETINS = [
     source: "Generac PIB25-15-XG (A0010386799) Rev A, Jan 2026"
   },
   {
+    id: "gen-30l-battery-transition", brand: "Generac", number: "Support article (30L battery)", docNo: "A0010137451 / A0010137452 battery, G00735230 tray kit", rev: "", date: "2026-07", type: "Product",
+    title: "Next Gen battery change: BTX20L (310 CCA) replaced by AGM 30L (400 CCA)",
+    applies: { genFamilies: BUL_GEN_NEXTGEN, controllers: ["Power Zone 200"], codes: ["2670"] },
+    appliesText: "All Next Generation Series air-cooled home standby generators (Power Zone 200). Rolling change: units built from early May 2026 ship with the 30L tray; older units were built for the BTX20L.",
+    summary: "Generac moved Next Gen from the AGM BTX20L (310 CCA, A0002359535) to the AGM 30L (400 CCA, A0010137452 or A0010137451) for more starting capacity in outages and cold starts. A 30L does not fit the original 20L tray - it needs tray kit G00735230.",
+    steps: [
+      "Replacing a Next Gen battery: use the AGM PowerSports Group 30L, 400 CCA minimum (A0010137452 or A0010137451). That is the current spec in the Rev E dealer manual and Generac's battery page.",
+      "Unit built for the BTX20L (smaller tray): install tray kit G00735230 with the 30L - the 30L will not sit correctly in the original tray. Units that came with a 30L need no kit.",
+      "Keeping a BTX20L is still allowed by Generac (no tray needed), but it is the 310 CCA battery the change was made to replace - on a hard-starting unit, cold climate, or battery / CANBus codes, upgrade to the 30L.",
+      "Test before condemning: conductance tester, result must be at least 75 % of the battery's rated CCA, otherwise replace it and retest (A0004542981 Rev E).",
+      "With several codes logged, work the battery, charging and CANBus (2670) codes first - a weak battery dipping on crank can set them (A0004542981 Rev E p.25)."
+    ],
+    priority: "high",
+    source: "Generac support articles 'Do I need a different battery tray when using the AGM 30L battery' (Jul 2026) and 'What battery do I need'; Next Gen dealer manual A0004542981 Rev E (Aug 2026) p.17, p.25"
+  },
+  {
+    id: "gen-fw-v14901-2670", brand: "Generac", number: "Fleet alert: firmware v14901", docNo: "", rev: "", date: "2026-07", type: "Service",
+    title: "Next Gen firmware v14901 (from 7/15/26) can set a 2670 CANBus alarm",
+    applies: { genFamilies: BUL_GEN_NEXTGEN, controllers: ["Power Zone 200"], codes: ["2670"] },
+    appliesText: "Next Gen air-cooled standby generators receiving the over-the-air firmware v14901 (rollout began 7/15/26). Guardian series models are not affected.",
+    summary: "Some Next Gen units show a 2670 CANBus alarm while the v14901 update installs. Generac says that is expected and clears on its own within 24 hours.",
+    steps: [
+      "2670 on a Next Gen with no other symptoms: check whether it just took the v14901 update (Mobile Link / FLEET history). If so, it should clear on its own within 24 hours.",
+      "Dealers with FLEET can clear it sooner with Clear Alarm remotely.",
+      "Still there after a remote clear, or after 24 hours: diagnose it as a real 2670 with the dealer manual - battery and cranking voltage first, then CAN wiring 743/744, terminating resistance and the ECM enable wire.",
+      "Release notes for v14901 are on GENservice."
+    ],
+    priority: "normal",
+    source: "Mobile Link Fleet support alert 'FIRMWARE UPDATE ALERT - Rollout Beginning 7/15/26' (Generac)"
+  },
+  {
+    id: "gen-pib-a0013232997-pz200-fw162", brand: "Generac", number: "A0013232997", docNo: "A0013232997", rev: "A", date: "2026-10", type: "Product",
+    title: "PZ200 firmware 1.6.2 cuts phantom battery, sync and transfer warnings",
+    applies: { genFamilies: BUL_GEN_NEXTGEN, controllers: ["Power Zone 200"], codes: ["2780", "2750", "2760", "2090", "2120", "2125", "2095", "2738"] },
+    appliesText: "All air-cooled generators with Power Zone 200 controllers (Next Gen).",
+    summary: "Firmware 1.6.2 changes the settings for 8 warnings so they fire less often as phantom / non-actionable alarms: Battery Charger AC Missing 2780, Battery Low Voltage 2750, Battery Problem 2760, Model ID Sync 2090, Serial Number Sync 2120, Run Hours Sync 2125, Fuel Type Sync 2095, Transfer Not Detected 2738.",
+    steps: [
+      "One of these warnings with no real fault found: check the controller firmware first. Below 1.6.2, update it before chasing the warning.",
+      "Connected units (cellular or Wi-Fi) got 1.6.2 over the air from Oct 9, 2026; new units ship with it.",
+      "Units not connected: load it with the Offline Mode instructions (PZ200 dealer manual).",
+      "Information only - no warranty labor for the update."
+    ],
+    priority: "normal", confidential: true,
+    source: "Generac PIB A0013232997 Rev A, Oct 2026"
+  },
+  {
+    id: "gen-pib-a0012860447-18-22-alternators", brand: "Generac", number: "A0012860447", docNo: "A0012860447", rev: "A", date: "2026-10", type: "Product",
+    title: "Next Gen 18 and 22 kW now ship with one of two alternators - order parts by serial",
+    applies: { genFamilies: ["gen-generac-next-gen-10-28", "gen-guardian-next-gen-22-25-y32"], controllers: ["Power Zone 200"] },
+    appliesText: "Next Gen air-cooled home standby, 18 kW and 22 kW only. Same four-digit model number and UPC for both builds.",
+    summary: "Generac builds the 18 and 22 kW Next Gen with either of two alternator configurations. Performance is the same, but the alternators and their related parts are not interchangeable.",
+    steps: [
+      "Ordering an alternator or alternator part for an 18 / 22 kW Next Gen: look it up by the unit's serial number, not the model number - the model number does not tell you which build it is.",
+      "Spec sheet or manual: search the serial on Generac's Product Information / support page for the documents for that build.",
+      "Information only - no corrective action."
+    ],
+    priority: "normal", confidential: true,
+    source: "Generac PIB A0012860447 Rev A, Oct 2026"
+  },
+  {
+    id: "gen-sib-a0013257462-pz410-fw", brand: "Generac", number: "A0013257462", docNo: "A0013257462", rev: "B", date: "2026-10", type: "Service",
+    title: "PZ410 firmware 1.17 / 1.18 key-switch fault breaks the cool-down timer - go back to 1.16.02",
+    applies: { genFamilies: [], controllers: ["Power Zone 410"], serialFrom: "3019065163", serialTo: "3020155210" },
+    appliesText: "Power Zone 410 units on the D2.2 line listed in the bulletin's Appendix A (115 serials, 3019065163 to 3020155210 - not every serial in that range; confirm the exact serial against the list).",
+    summary: "On these units PZ410 firmware 1.17 and 1.18 set a false key-switch fault that upsets the cool-down timer. The fix is PZ410 firmware 1.16 (D2.2L 1.16.02) from a USB drive.",
+    steps: [
+      "Confirm the serial is on the Appendix A list in GENservice.",
+      "Load PZ410 firmware D2.2L 1.16.02 from a USB flash drive (dealer menu > Settings > Firmware Update; laptop to prepare the drive).",
+      "NOTE: the bulletin's step list says to download '1.18 or above' - that line is copied from the XG uptime bulletin and contradicts its own fix. Follow the corrective action: 1.16.02.",
+      "Warranty: new claim, A0013257462 as primary failed part and in comments, 0.25 hr + standard travel."
+    ],
+    priority: "high", confidential: true,
+    source: "Generac SIB A0013257462 Rev B, Oct 2026"
+  },
+  {
+    id: "gen-sib-a0011691554-xg-uptime", brand: "Generac", number: "A0011691554", docNo: "A0011691554", rev: "A", date: "2026-07", type: "Service",
+    title: "Protector XG uptime fix: firmware, push-button shutdown switch, 2099 resistor harness",
+    applies: { genFamilies: [], controllers: ["Power Zone 410"], codes: ["1902", "2099", "2101", "2670", "2801", "3401", "5100"], serialFrom: "3015915994", serialTo: "3019510564" },
+    appliesText: "Protector XG Series units listed in the bulletin's appendix (61 serials, 3015915994 to 3019510564 - confirm the exact serial against the list) that have logged 1902, 2099, 2101, 2670, 2801, 3401 or 5100.",
+    summary: "Listed XG units with uptime codes get three fixes in one visit: new ECM and PZ410 firmware, the rocker shutdown switch swapped for a push-button kit, and the 2099 resistor harness if the mis-wire alarm is a verified nuisance.",
+    steps: [
+      "Firmware from a USB drive: ECM first (G11AE30102 or newer, dealer menu > Edit Settings > ECU Firmware Update), then PZ410 (1.18 or newer, Settings > Firmware Update). If the serial is also on the A0013257462 list, that bulletin says to use PZ410 1.16.02 instead.",
+      "Shutdown switch: test the old rocker shuts the unit down; MLCB locked OFF and battery negative off; drill a 1 in hole where the rocker was; fit kit G0099851 (bezel with o-ring, push button, non-polarized jumper harness); reconnect, test the new button, move the shutdown decal next to it.",
+      "2099 mis-wire: check customer wiring is landed right and nothing is shorted. Verified nuisance only, with the unit fully de-energized: resistor harness A0010070719 between wires 194, 23 and ground at TB3.",
+      "Warranty: new claim, A0011691554 as primary failed part, 'SIB XG Uptime' in comments, A0010070719 in purchased parts, 1.25 hr + one trip."
+    ],
+    priority: "high", confidential: true,
+    source: "Generac SIB A0011691554 Rev A, Jul 2026"
+  },
+  {
     id: "gen-sib-a0011009365-mixer", brand: "Generac", number: "A0011009365", docNo: "A0011009365", rev: "C", date: "2026-09", type: "Service",
     title: "Next Gen air-cooled mixer E-codes 3000, 3400s, 3500s",
     applies: { genFamilies: ["gen-generac-next-gen-10-28"], modelRe: ["^G00(72590|73240|72580|73230|72820|73270|73280|72600|73250|73260|73290|72610)$"], controllers: ["Power Zone 200"], codes: ["3000", "3400", "3500"] },

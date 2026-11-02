@@ -6026,12 +6026,22 @@ async function rtShare(){
 }
 async function rtMail(){ const url = (await rtShortUrl()) || rtLinkUrl(), t = rtText(); if (/#r=/.test(url)) buildRoute(); location.href = 'mailto:?subject=' + encodeURIComponent('Diagnostic route') + '&body=' + encodeURIComponent(t.slice(0, 1500) + '\n\nOpen it on your phone: ' + url); }
 async function rtPrint(){ if (await rtShortUrl(2500)) buildRoute(); document.body.classList.add('rt-print'); const done = () => { document.body.classList.remove('rt-print'); window.removeEventListener('afterprint', done); }; window.addEventListener('afterprint', done); setTimeout(() => window.print(), 50); }
+// Brackett: a #route= link is someone else's data. Strip HTML characters from every text value and key it carries, and keep only the
+// known leans, so nothing in a crafted link can become markup when the route is drawn (Route share-link XSS, found 2026-10-12).
+function rtSafe(v, d){ d = d || 0; if (d > 12) return null;
+  if (typeof v === 'string') return v.replace(/[<>"'`&\\]/g, '').slice(0, 2000);
+  if (typeof v === 'number') return isFinite(v) ? v : null;
+  if (typeof v === 'boolean' || v == null) return v;
+  if (Array.isArray(v)) return v.slice(0, 500).map(x => rtSafe(x, d + 1));
+  if (typeof v === 'object'){ const o = {}; for (const k of Object.keys(v).slice(0, 500)){ const sk = rtSafe(k, d + 1); if (sk && sk !== '__proto__' && sk !== 'constructor' && sk !== 'prototype') o[sk] = rtSafe(v[k], d + 1); }
+    if ('lean' in o && !['toward', 'away', 'note'].includes(o.lean)) o.lean = 'note'; return o; }
+  return null; }
 function rtFromHash(){
   const h = location.hash || '', sh = /^#r=([0-9a-f]{10})$/.exec(h);
   if (sh){ RT_LINK = {id:'r.' + sh[1], code:sh[1], err:true}; RT_XC = null; return true; }   // a short link needs Kenny's shop library: say so, fetch nothing
   if (!h.startsWith('#route=')) return false;
   try { const s = rtUnB64(h.slice(7)), j = JSON.parse(s); if (!j || !j.X) return false; let id = 0; for (let i = 0; i < Math.min(s.length, 4000); i++) id = (id * 31 + s.charCodeAt(i)) | 0;
-    j.X.live = false; RT_LINK = {id:(id >>> 0).toString(36), X:j.X, st:j.st || {}}; RT_XC = null; return true; } catch(e){ toast('That route link could not be read'); return false; }
+    const X = rtSafe(j.X), st = rtSafe(j.st || {}); if (!X || typeof X !== 'object') return false; X.live = false; RT_LINK = {id:(id >>> 0).toString(36), X, st:st && typeof st === 'object' ? st : {}}; RT_XC = null; return true; } catch(e){ toast('That route link could not be read'); return false; }
 }
 function rtRefresh(){ const p = $('#panel-route'); if (p && !p.hidden) buildRoute(); startDxUpdate(); }
 // why a recording gives no route (the Route tab and the Start diagnosis card say the same); a logged code with no flowchart is named
