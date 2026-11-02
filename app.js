@@ -9585,7 +9585,48 @@ function ocrMatchTier(p) {
 // Glyphs Tesseract swaps on plate fonts, both ways (a stamped 8 read as B, a
 // condensed S read as 8 - Carrier's "59SC5B" came back "598C5B" - and a 9 read
 // as S - Lennox "EL297" came back "EL2ST").
-const OCR_CONFUSABLE = { "0": "OD", O: "0D", D: "0O", Q: "0O", "1": "IL7", I: "1L", L: "1I", T: "7", "7": "1T", "2": "Z", Z: "2", "5": "S", S: "589", "8": "BS", B: "8", "6": "G", G: "6", "9": "S" };
+const OCR_CONFUSABLE = { "0": "OD", O: "0D", D: "0O", Q: "0O", "1": "IL7", I: "1L9", L: "1I", T: "7", "7": "1T", "2": "Z", Z: "2", "5": "S", S: "589", "8": "BS", B: "8", "6": "G", G: "6", "9": "S" };
+
+// v350: the top-level alternative of a family regex that matches cand and spells a literal 9
+// at position i in its fixed prefix (^TM9V|^TM9E -> "TM9E"; ^PG9M -> "PG9M"; but not
+// ^PG(9[0-9]|8[0-9]), whose 9 is one of a choice). Returns that alternative's bits, or null.
+function ocrLiteralNineAlt(p, cand, i) {
+  const src = p.re.source, alts = [];
+  let depth = 0, cls = false, start = 0;
+  for (let k = 0; k < src.length; k++) {
+    const ch = src[k];
+    if (ch === "\\") { k++; continue; }
+    if (cls) { if (ch === "]") cls = false; continue; }
+    if (ch === "[") cls = true;
+    else if (ch === "(") depth++;
+    else if (ch === ")") depth--;
+    else if (ch === "|" && depth === 0) { alts.push(src.slice(start, k)); start = k + 1; }
+  }
+  alts.push(src.slice(start));
+  for (const a of alts) {
+    if (a[0] !== "^") continue;
+    let lit = "";
+    for (let k = 1; k < a.length && /[A-Z0-9]/.test(a[k]); k++) {
+      if (/[?*{]/.test(a[k + 1] || "")) break;
+      lit += a[k];
+    }
+    if (i >= lit.length || lit[i] !== "9") continue;
+    let re;
+    try { re = new RegExp(a); } catch (e) { continue; }
+    if (!re.test(cand)) continue;
+    return { bits: ocrPatternBits({ re }) };
+  }
+  return null;
+}
+
+// v350: a serial read beside the SERIAL label for a York / Coleman / Luxaire (JCI) family must
+// have a JCI shape (decodeSerialAge): plant letter, year digit, month letter, year digit,
+// 6 digits (Oct 2004 on), or 4 letters + 6 digits (before). Vern's TM9E read "WOH1407347" for
+// W2H1407347 there. Other brands are not checked.
+function ocrSerialFitsBrand(brand, serial) {
+  if (brand !== "York") return true;
+  return /^[A-Z][0-9][A-Z][0-9]{7}$/.test(serial) || /^[A-Z]{4}[0-9]{6}$/.test(serial);
+}
 
 // Library look-up that forgives OCR lookalikes in the family prefix: up to two
 // swaps among the first 7 characters, accepted only on a tier-2 family match
@@ -9601,8 +9642,18 @@ function ocrFuzzyLibrary(s) {
     const c = s.split("");
     for (const [i, ch] of edits) c[i] = ch;
     const cand = c.join(""), p = ocrLibraryPattern(cand);
+    if (!p || ocrMatchTier(p) < 2) continue;
+    // v350: I read for 9 (Vern's TM9E "TMIE080...", Nick's PG9MAA "PGIMAA...") only where the
+    // family itself spells a 9 at that spot; the bits are then those of that spelled-out family.
+    const nine = edits.filter(([i, ch]) => ch === "9" && s[i] === "I");
+    let bits = ocrPatternBits(p);
+    if (nine.length) {
+      const alt = nine.length === 1 ? ocrLiteralNineAlt(p, cand, nine[0][0]) : null;
+      if (!alt) continue;
+      bits = alt.bits;
+    }
     // each swap spends ~5 bits of the family's evidence; keep 12 in hand
-    if (!p || ocrMatchTier(p) < 2 || ocrPatternBits(p) - 5 * edits.length < 12) continue;
+    if (bits - 5 * edits.length < 12) continue;
     const len = cand.match(p.re)[0].length;
     if (len >= 4 && (edits.length === 1 || len >= 5)) return { cand, p, len };
   }
@@ -9643,6 +9694,15 @@ const OCR_TAIL_FORMATS = [
   // (Lennox EHB 210615). Only checked once the read is sound up to the blower letter; the
   // -NN design revision after it is left as read.
   { fam: /^EL(19[56]|29[67])(UH|DF)[0-9]{3}[XN][EV]/, pos: ["E", "L", "12", "89", "567", "UD", "HF", "#", "#", "#", "XN", "EV", "2346", "0468", "ABCD"], open: true },
+  // v350 (Nick's PG9MAA060120AFKA, 11/2, read "PGIMAADGO120"): Payne PG9MAA / PG9MAB furnaces
+  // carry a 6-digit size after the series letter - cooling airflow 024/036/048/060 then input
+  // 040-140 (the size list in IM-PG9MAB-05: 024040 ... 060120, 060140). Checked only once the
+  // read reaches the size; the letters after it are left as read.
+  { fam: /^PG9MA[AB][0-9A-Z]{6}/, pos: ["P", "G", "9", "M", "A", "AB", "0", "2346", "0468", "01", "02468", "0"], open: true },
+  // v350 (Vern's TM9E080B12MP12A, 10/22, also read "TMIE0B0B12MP12A"): York TM9E sizes are
+  // input 026/040/060/080/100/120, cabinet A-D, airflow 08/10/12/16/20 (2023 TM9E install
+  // manual size table: TM9E026A08 ... TM9E120D20). The MP12A letters after it are left as read.
+  { fam: /^TM9E[0-9A-Z]{6}/, pos: ["T", "M", "9", "E", "01", "02468", "06", "ABCD", "012", "0268"], open: true },
 ];
 function ocrCheckTail(model) {
   const f = OCR_TAIL_FORMATS.find(x => x.fam.test(model));
@@ -10259,8 +10319,9 @@ async function ocrTagTextPasses(file, onStatus) {
     const nearAt = c.box ? c : c.zat;
     if (rank(fields) < 2 && (anchors.some(a => a.kind === "serial") || nearAt)) {
       try {
-        let sf = anchors.some(a => a.kind === "serial") ? await anchorSerial() : null;
-        if (!sf && nearAt) sf = await nearModelSerial(nearAt);
+        const sb = c.lib ? c.lib.brand : "";
+        let sf = anchors.some(a => a.kind === "serial") ? await anchorSerial(sb) : null;
+        if (!sf && nearAt) sf = await nearModelSerial(nearAt, sb);
         if (sf && !(fields.model && (fields.model.includes(sf.serial) || sf.serial.includes(fields.model))) && !(fields.serial && fields.serial.includes(sf.serial))) { fields.serial = sf.serial; fields.serialSource = sf.serialSource; trackEvent("tag serial read by label-anchor zoom"); }
       } catch (e) { if (e !== OCR_STOP) throw e; }
     }
@@ -10393,21 +10454,21 @@ async function ocrTagTextPasses(file, onStatus) {
     }
     return null;
   };
-  const anchorSerial = async () => {
+  const anchorSerial = async (brand) => {
     for (const r of await anchorReads("serial", 2)) {
       const f = extractTagFields(r.data.text || "");
-      if (f.serial && (f.serialSource === "label" || f.serialSource === "shape") && f.serial.length >= 6) return f;
+      if (f.serial && (f.serialSource === "label" || f.serialSource === "shape") && f.serial.length >= 6 && ocrSerialFitsBrand(brand, f.serial)) return f;
     }
     return null;
   };
   // v314: no SERIAL label word was read at all ("san 36 1 6EQ6F23" on Dave's plate): read the
   // block around the model line just accepted - the serial is a line or two above or below it.
-  const nearModelSerial = async (at) => {
+  const nearModelSerial = async (at, brand) => {
     if (ocrStopRequested) throw OCR_STOP;
     let data = null;
     try { data = await ocrZoomLine(worker, photo, at.box, at.rad, at.deg, at.passScale, 30, true, { l: 6, r: 3, u: 4.5, d: 4.5, psm: "6" }, /flattened/.test(at.event || "")); } catch (e) { data = null; }
     const f = data && extractTagFields(data.text || "");
-    if (f && f.serial && (f.serialSource === "label" || f.serialSource === "shape") && f.serial.length >= 6) return f;
+    if (f && f.serial && (f.serialSource === "label" || f.serialSource === "shape") && f.serial.length >= 6 && ocrSerialFitsBrand(brand, f.serial)) return f;
     // the label itself garbled ("wn 361 6E06923"): 2-3 neighbouring pieces that join to exactly
     // the 4-digit + letter + 5-digit shape, at most 2 look-alikes fixed (ocrShapeSerialFix)
     for (const line of String(data && data.text || "").split(/\n+/)) {
@@ -12726,7 +12787,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v349";
+const APP_VERSION = "v350";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
