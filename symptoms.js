@@ -21006,5 +21006,23 @@ const SYMPTOMS = [
   ],
   "safety": "Line voltage. Disconnect and lock out all power, since more than one source may be present. Discharge every capacitor through a resistor before touching terminals: both sections of the dual, the add-on single, and the old can. Use run capacitors only, rated at or above the original's voltage. Leave 1/2 inch clear above each can so its internal pressure interrupter can work.",
   "confidence": "common"
+ },
+ {
+  "id": "s-generator-not-getting-fuel",
+  "equipment": "Generator",
+  "title": "Generator not getting fuel (Generac, Kohler or other standby) - cranks but won't start, or starts and dies",
+  "summary": "A standby generator that cranks but won't fire, or fires and then quits, is most often short of gas. Work it in order: supply pressure at the inlet, then 12 V to the fuel solenoid, then gas past the solenoid, then the engine side. The readings below are Generac air-cooled figures; on other brands use the unit's install manual.",
+  "steps": [
+   "Quick checks first: the gas valve at the unit is open, the LP tank gauge is not near empty, and on natural gas the other gas appliances in the house work. Note the alarm before you clear it - Overcrank, RPM Sensor Loss or a low fuel pressure warning all point at fuel (look the code up in Error Codes).",
+   "Make sure the unit is set up for the fuel it is on. On a Generac, check the fuel selector; if it was converted to LP, confirm the conversion was done per the manual. Set wrong, it cranks and won't start.",
+   "Put a manometer on the static (inlet) port of the fuel regulator - on Generac it is the port closest to the fuel solenoid. Set the controller to MANUAL and crank. Expect NG 3.5-7 in. w.c. (Evolution) or 5-7 (Nexus), LP 10-12 in. w.c. (Generac air-cooled diagnostic manual 0H9172, Test 50). Low or zero: go to the next step. Good: skip to the 12 V check.",
+   "Low, or drops while cranking: the problem is the supply, not the generator. Look for a closed or partly closed valve upstream, a gas line or meter too small for the generator's full-load BTU, an LP tank too small or frosting in cold weather (vapor withdrawal only), or air in a new line. The primary regulator setting belongs to the gas supplier or installer. Max inlet is NG 7 / LP 12 in. w.c.; Generac allows no more than a 1 in. drop from no load to full load on Nexus units.",
+   "Pressure good at the inlet: check for 12 V DC to the fuel solenoid while it cranks. On Generac, disconnect Wire 14 at the solenoid, meter from it to battery negative, set MANUAL - you should see battery voltage once the engine turns (Test 51; see the Wire 14 test on the unit's card in Generators). No voltage: the controller only powers Wire 14 when it sees an RPM signal, so check Wire 18 and the magnetos first, then the harness, then the controller.",
+   "12 V is there: move the manometer to the port after the solenoid (Port 2 on Generac) and crank. Gas pressure there means the solenoid opens. None means a bad solenoid (Generac FS1 about 15-16 ohms; FS2 about 29 ohms on 10 kW units). Cold weather can also make a solenoid stick.",
+   "Gas is getting past the solenoid and it still won't run: check that the throttle stepper moves when cranking starts, the choke solenoid (Nexus), the air filter, then spark plugs, spark and valve lash, using the engine section of the unit's service manual.",
+   "Stop and call the office or the manufacturer's tech line if the controller still won't power the fuel solenoid after the RPM-signal checks, or if the gas supply itself is undersized (meter or LP tank sizing is the gas supplier's call). Don't keep cranking - long cranking drains the battery and can damage the starter."
+  ],
+  "safety": "Gas: no flame or sparks near the unit while testing, and leak-check every fitting you open with soap solution or a detector. Shut the gas off before opening the fuel train. Set the generator to OFF and remove the 7.5 A control fuse or disconnect the battery before working inside it, so it can't start on its own.",
+  "confidence": "common"
  }
 ];
