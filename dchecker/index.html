@@ -766,6 +766,8 @@ body.no-cabinet #indoor-var .cab{display:none}
 .lvpill.watch{border-color:var(--accent);color:var(--accent)}.lvpill.bad{border-color:var(--warn);color:var(--warn)}
 @keyframes lvblink{to{visibility:hidden}}
 @media (prefers-reduced-motion:reduce){.lvpill i{animation:none}}
+/* Brackett: popup styles from Kenny v108 (they came with his job-ask dialog, left out of this build; the Live screen needs them) */
+.jobask{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}.jobbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);width:min(440px,100%);padding:16px 18px;display:flex;flex-direction:column;gap:10px}.jobbox .jt{font-size:17px}.jobbox .note{margin:0;font-size:12.5px;color:var(--muted)}.jobbox label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700}.jobbox .req{font-weight:600;font-size:11px;color:var(--alarm);margin-left:6px}.jobbox input{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:16px;font-family:var(--sans)}.jobacts{display:flex;gap:8px;justify-content:space-between;margin-top:4px}.jobacts .btn{padding:10px 14px;font-size:14px}.jobacts .primary{flex:1}.jobacts .primary:disabled{opacity:.45}
 .liveask[hidden]{display:none}
 .lvbox{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto}
 .lvhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -8340,7 +8342,8 @@ setInterval(() => { if (LV.on) lvUi(); }, 1000);
     <div id="lv-direct"><p class="note" id="lv-dnote"></p><a class="btn primary lvgo" id="lv-go" hidden></a>
       <div class="lvrow"><label><span>Read every</span><select id="lv-every"><option value="5">5 seconds</option><option value="10">10 seconds</option><option value="30">30 seconds</option></select></label>
       <label><span>Unit</span><select id="lv-model"><option value="">Auto</option>${opts.map(([m, t]) => `<option value="${synEsc(m)}">${synEsc(t)}</option>`).join('')}</select></label></div>
-      <button class="btn primary" type="button" id="lv-connect">Connect to the adapter</button></div>
+      <button class="btn primary" type="button" id="lv-connect">Connect to the adapter</button>
+      <button class="btn" type="button" id="lv-addrec">📂 Add a recording instead</button></div>
     <div class="lvstat" id="lv-stat"></div><ol class="lvhelp" id="lv-help" hidden></ol><div class="lvinfo" id="lv-info"></div>
     <div class="jobacts"><button class="btn primary" type="button" id="lv-stop" hidden>Stop and save</button></div>
     <details class="lvlog"><summary>Connection log</summary><pre id="lv-log"></pre><button class="btn small" type="button" id="lv-copylog">Copy log</button></details></div>`;
@@ -8353,6 +8356,7 @@ setInterval(() => { if (LV.on) lvUi(); }, 1000);
   $('#lv-every').addEventListener('change', e => { LV.every = +e.target.value || 5; saveJSON('dchk.live.every', LV.every); });
   $('#lv-model').addEventListener('change', e => { LV.pick = e.target.value; if (LV.recs.length){ lvSetModel(); lvRefresh(); lvUi(); } });
   $('#lv-connect').addEventListener('click', () => lvRead());
+  $('#lv-addrec').addEventListener('click', () => { open(false); $('#csvfile').click(); });   // Brackett: pick a recording file instead of reading live
   $('#lv-stop').addEventListener('click', () => { open(false); lvStop(); });
   $('#lv-copylog').addEventListener('click', async () => { try { await navigator.clipboard.writeText(LV.log.join('\n')); toast('Connection log copied'); } catch(e){ toast('Could not copy here'); } });
   document.addEventListener('visibilitychange', () => { if (LV.mode === 'read' && LV.on && document.visibilityState === 'visible') lvWake(true); });
@@ -8537,7 +8541,7 @@ $('#cmp').addEventListener('click', () => togglePin('rps'));
 // this page with #wait, so the demo log is skipped.
 window.addEventListener('message', e => {
   if (e.origin !== location.origin || !e.data || e.data.type !== 'dchk-open' || !e.data.buf) return;
-  openFile(e.data.buf, e.data.name || 'Recording');
+  openFile(e.data.buf, e.data.name || 'Recording').then(() => { window.scrollTo(0, 0); showTab('cycle'); });   // Brackett: a new recording opens at the top, on the diagram
 });
 const sample = $('#sample-csv').textContent;
 /* ---------- Brackett: example recordings ----------
@@ -8569,6 +8573,11 @@ if (DEMOS.length){
 for (const s of ['#eqsel', '#refsel', '#sizesel']) if ($(s)) $(s).addEventListener('change', () => setTimeout(startDxUpdate, 0));
 window.dchkDemos = () => DEMOS.map(d => ({id:d.id, file:d.file, model:d.model, note:d.note}));   // test hook
 window.dchkDemo = demoOpen;                                                                     // test hook
+// Brackett (Andy 11-03): open at the top of the page; #live (the Service Tool's Live button) opens straight onto Live's Connect screen
+try { history.scrollRestoration = 'manual'; } catch(e){}
+window.scrollTo(0, 0);
+function lvOpenFromHash(){ if (location.hash !== '#live') return false; try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} setTimeout(() => { window.scrollTo(0, 0); if ($('#livesheet').hidden) $('#livebtn').click(); }, 0); return true; }
+lvOpenFromHash();
 if (location.hash !== '#wait') (async () => {
   { const sv = /^#saved=([\w-]+)$/.exec(location.hash); if (sv && await rtOpenSaved(sv[1])) return; }
   { const bak = loadJSON('dchk.live.bak', null);   // Brackett: a live reading the app closed on before Stop and save - open it and keep it in My logs
@@ -8577,12 +8586,12 @@ if (location.hash !== '#wait') (async () => {
   const last = loadJSON('dchk.last', null); let x = null;
   if (last && last.sha){ try { x = (await mineAll()).find(r => r.sha === last.sha); } catch(e){} }
   if (D) return;   // a recording arrived while the store was being read
-  if (x){ mineOpen(x); if (D && D.sha === x.sha){ if (isN(last.cur)) setCur(last.cur); if (last.tab && last.tab !== 'cycle') showTab(last.tab); } }
+  if (x) mineOpen(x);   // Brackett (Andy 11-03 "start from top not mid way"): the last recording reopens at its start, on the diagram
   else if (sample && sample.length > 100) load(sample, '(REC only)_20251126-090117.csv');
   if (rtFromHash()) showTab('route');
 })();
 $('#routehost').addEventListener('click', rtOnClick);
 $('#routehost').addEventListener('input', rtOnInput);
-window.addEventListener('hashchange', () => { const sv = /^#saved=([\w-]+)$/.exec(location.hash); if (sv){ rtOpenSaved(sv[1]); return; } if (rtFromHash()) showTab('route'); });
+window.addEventListener('hashchange', () => { if (lvOpenFromHash()) return; const sv = /^#saved=([\w-]+)$/.exec(location.hash); if (sv){ rtOpenSaved(sv[1]); return; } if (rtFromHash()) showTab('route'); });
 })();
 </script>

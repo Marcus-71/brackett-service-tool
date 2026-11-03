@@ -373,9 +373,13 @@
 <section id="checkerScreen" class="screen hidden">
   <div class="disclaimer">Daikin's service checkers log what the system is actually doing — pressures, temps, compressor speed, valves, error codes. Open a D-Checker log in the Cycle Viewer to watch it play back on the refrigerant circuit; VRV jobs use the Service Checker TYPE4 on a laptop. Signatures are pointers — confirm with gauges and the service manual.</div>
   <main>
+    <button id="checkerLiveBtn" class="checker-launch" type="button">
+      <span class="checker-launch-title">● Live from the unit: connect to the adapter</span>
+      <span class="checker-launch-sub">Android phone with Chrome and Daikin's Bluetooth adapter (BTSC) on the outdoor board. Opens straight on Connect; readings save to My logs when you tap Stop and save.</span>
+    </button>
     <label id="checkerDrop" class="checker-drop" for="checkerFile">
       <input id="checkerFile" type="file" accept=".tgz,.gz,.csv,application/gzip,application/x-gzip,application/x-compressed-tar,text/csv,application/octet-stream" hidden>
-      <span class="checker-drop-title">📂 Open a recording</span>
+      <span class="checker-drop-title">📂 Add a recording</span>
       <span class="checker-drop-sub">Tap to pick the file from Daikin's app (.tgz) or a D-Checker .csv. On a laptop, drop it here.</span>
       <ol class="checker-drop-steps">
         <li>In Daikin's app, save the recording and email it to yourself.</li>

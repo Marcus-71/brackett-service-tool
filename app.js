@@ -3456,6 +3456,13 @@ document.getElementById("checkerGuideBtn").addEventListener("click", () => {
   trackEvent("opened toolbox guide: Daikin Checker Field Guide");
   openPortalEmbed("guides/daikin-checker-guide.html", "Daikin Checker Field Guide");
 });
+// "Live from the unit" (Andy 2026-11-03): open the viewer straight onto Live's Connect screen (#live).
+// If the hidden frame is already on the viewer, the new src is only a hash change; the viewer's
+// hashchange handler opens Connect then, so no reload is needed.
+document.getElementById("checkerLiveBtn").addEventListener("click", () => {
+  trackEvent("opened D-Checker Live");
+  openPortalEmbed("dchecker/index.html#live", "D-Checker Live");
+});
 document.getElementById("checkerLaunchBtn").addEventListener("click", () => {
   const t = TOOLBOX.find(x => x.id === CHECKER_VIEWER_ID);
   trackEvent("opened toolbox app: " + t.toolName.slice(0, 60));
@@ -12787,7 +12794,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v354";
+const APP_VERSION = "v355";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

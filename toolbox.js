@@ -3333,7 +3333,7 @@ const TOOLBOX = [
   "steps": [
    "In Daikin's app, save the recording and email it to yourself (it attaches as a .tgz file).",
    "Open that email on the phone and download the attachment - it lands in Downloads.",
-   "In the Service Tool, open the Daikin Checker tab, tap Open a recording, and pick the file. It opens straight on the diagram. On a laptop you can drag the file onto that box instead. (Open Cycle Viewer shows a demo heating run.)",
+   "In the Service Tool, open the Daikin Checker tab, tap Add a recording, and pick the file. It opens straight on the diagram. On a laptop you can drag the file onto that box instead. (Open Cycle Viewer shows a demo heating run.)",
    "Cycle tab: the circuit diagram shows the readings at the current moment. Press Play, drag the scrubber, or use the arrow keys / space bar on a laptop to move through the log.",
    "Synopsis tab: a plain-language read of the whole recording - findings with the evidence and what to do, a timeline of what happened, and every reading and control summarized. It also opens by itself at the end of playback.",
    "Flags on the timeline mark rows where a target or rule was out of range - jump between them with the next-flag button.",
@@ -3342,7 +3342,7 @@ const TOOLBOX = [
    "Rules tab: turn targets on/off or adjust them (for example superheat or subcooling ranges) - changes are saved on this device.",
    "Data tab: the raw rows when you need an exact value.",
    "Close with the ✕ in the top corner or swipe back.",
-   "Live (Android + Chrome): Open Cycle Viewer, tap ● Live, then Connect to the adapter and pick it from Chrome's list. Tap Stop and save when done - the reading goes to My logs on the phone. Full steps and fixes for an empty adapter list are in the Daikin Checker Field Guide."
+   "Live (Android + Chrome): on the Daikin Checker tab tap ● Live from the unit, then Connect to the adapter and pick it from Chrome's list. Tap Stop and save when done - the reading goes to My logs on the phone. Full steps and fixes for an empty adapter list are in the Daikin Checker Field Guide."
   ],
   "caution": "The viewer carries R-410A and R-32 pressure-temperature tables. The refrigerant is not stored in Daikin's recording, so it picks one from the unit's own saturated temps vs pressures (or the model name) - check the Refrigerant box matches the nameplate, since superheat and subcooling depend on it. The diagnostic signatures and Synopsis findings are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. It reads one outdoor + one indoor unit per log, or a 2-5 port multi-zone mini split; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
   "confidence": "verify",
