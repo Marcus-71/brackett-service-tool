@@ -3327,7 +3327,8 @@ const TOOLBOX = [
   "requirements": [
    "A recording saved in Daikin's service checker app (Daikin Service Diagnosis Tool with the Bluetooth checker) - its export is a .tgz file - or a D-Checker CSV log",
    "Email on the phone, to send the recording to yourself",
-   "No signal needed - the viewer ships with the app and works offline"
+   "No signal needed - the viewer ships with the app and works offline",
+   "For Live readings instead: an Android phone with Chrome 137 or newer and Daikin's Bluetooth adapter (BTSC), paired once with code 3131. iPhones can't read live."
   ],
   "steps": [
    "In Daikin's app, save the recording and email it to yourself (it attaches as a .tgz file).",
@@ -3340,7 +3341,8 @@ const TOOLBOX = [
    "Runs tab: each compressor run summarized, with a steady-state check and the fault signatures that matched.",
    "Rules tab: turn targets on/off or adjust them (for example superheat or subcooling ranges) - changes are saved on this device.",
    "Data tab: the raw rows when you need an exact value.",
-   "Close with the ✕ in the top corner or swipe back."
+   "Close with the ✕ in the top corner or swipe back.",
+   "Live (Android + Chrome): Open Cycle Viewer, tap ● Live, then Connect to the adapter and pick it from Chrome's list. Tap Stop and save when done - the reading goes to My logs on the phone. Full steps and fixes for an empty adapter list are in the Daikin Checker Field Guide."
   ],
   "caution": "The viewer carries R-410A and R-32 pressure-temperature tables. The refrigerant is not stored in Daikin's recording, so it picks one from the unit's own saturated temps vs pressures (or the model name) - check the Refrigerant box matches the nameplate, since superheat and subcooling depend on it. The diagnostic signatures and Synopsis findings are pointers, not a verdict - confirm with gauges, the unit's own error history and the service manual before condemning a part. It reads one outdoor + one indoor unit per log, or a 2-5 port multi-zone mini split; VRV Service Checker TYPE4 exports are a different format and will not load yet.",
   "confidence": "verify",

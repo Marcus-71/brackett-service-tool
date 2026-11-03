@@ -101,6 +101,29 @@ footer{font-size:.85rem;color:var(--ink2);border-top:1px solid var(--line);paddi
   </section>
 
   <section>
+    <h2>Live readings (Android phone)</h2>
+    <p>Read the unit while it runs, straight into the viewer, instead of recording in Daikin's app first. You need an <b>Android phone with Chrome 137 or newer</b> and Daikin's <b>Bluetooth adapter (BTSC)</b>. iPhones can't do this: no iPhone browser can reach the adapter.</p>
+    <ol class="steps">
+      <li><span class="ui">Use Chrome, not Samsung Internet.</span>
+        <p>Samsung Internet never shows the adapter list. If the Live screen says so, tap <span class="ui">Open in Chrome</span>. If it says Chrome is too old, tap <span class="ui">Update Chrome</span>, then open the page again.</p></li>
+      <li><span class="ui">Plug the adapter into the outdoor board's D-Checker connector</span>, with the unit powered.</li>
+      <li><span class="ui">First time only: pair the adapter.</span>
+        <p>Phone Settings › Bluetooth, pick the adapter, pairing code <span class="mono">3131</span>.</p></li>
+      <li><span class="ui">First time only: let Chrome use nearby devices.</span>
+        <p>Settings › Apps › Chrome › Permissions › Nearby devices › Allow.</p></li>
+      <li><span class="ui">Service Tool › Daikin Checker › Open Cycle Viewer › ● Live.</span>
+        <p>Pick <span class="ui">Read every</span> (5, 10 or 30 seconds). Leave <span class="ui">Unit</span> on Auto unless it picks the wrong model.</p></li>
+      <li><span class="ui">Tap Connect to the adapter</span> and choose the adapter in Chrome's list.
+        <p>Empty list? Check steps 3 and 4, then force stop Chrome (Settings › Apps › Chrome › Force stop), open the app again and tap Connect. The adapter takes one connection at a time: close Daikin's app or any other phone on it first.</p></li>
+      <li><span class="ui">Watch it run.</span>
+        <p>A red LIVE pill shows the time and row count. The diagram, trends and What to check update with each reading, and the screen stays on. If the adapter drops, it reconnects by itself and keeps the readings so far.</p></li>
+      <li><span class="ui">Tap Stop and save when you're done.</span>
+        <p>The reading is kept in <span class="ui">My logs</span> on this phone and nothing is uploaded. <span class="ui">Save CSV</span> gives you the file to send. If the app closes mid-reading, the reading reopens the next time you open the viewer.</p></li>
+    </ol>
+    <div class="note">Still won't connect? On the Live screen open <b>Connection log</b>, tap <b>Copy log</b>, and send it to Andy. Live is new: if a reading looks different from Daikin's own app, tell Andy which unit and when.</div>
+  </section>
+
+  <section>
     <h2>Reading What to check</h2>
     <p>The card lists what the recording shows, most serious first. Error codes always come first. This is what it showed on the built-in demo log (a heat pump, heating):</p>
     <div class="mock" aria-label="Example of the What to check card">
@@ -154,7 +177,7 @@ footer{font-size:.85rem;color:var(--ink2);border-top:1px solid var(--line);paddi
   <section>
     <h2>What it doesn't do yet</h2>
     <ul class="plain">
-      <li><b>No live readings from the checker.</b> Record in Daikin's app first, then open the recording here.</li>
+      <li><b>No live readings on an iPhone.</b> Record in Daikin's app, then open the recording here; or read live with an Android phone.</li>
       <li><b>One outdoor and one indoor unit.</b> VRV systems use the Daikin Service Checker TYPE4 on a laptop; see its card on the Daikin Checker tab.</li>
     </ul>
     <div class="note">Something looks wrong, or a card sent you the wrong way? Tell Andy, with the recording file if you still have it. That's how the checks get better.</div>

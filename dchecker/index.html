@@ -758,6 +758,30 @@ body.no-cabinet #indoor-var .cab{display:none}
 .tagtip .tt-f{margin-top:5px;font-family:var(--mono);font-size:11.5px;color:var(--ink2)}
 .tagtip .tt-s{margin-top:5px;font-size:11.5px;color:var(--ink2)}
 .tagtip .tt-p{margin-top:6px;font-size:11px;color:var(--muted)}
+/* live reading: a fixed pill in the stamp row (no layout shift) and the Live sheet */
+.stamprow{position:relative}
+.lvpill{position:absolute;right:0;top:12px;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:12px;border:1px solid var(--alarm);background:var(--panel);color:var(--alarm);font:700 12px/1 var(--mono);white-space:nowrap;cursor:pointer;z-index:3}
+.lvpill[hidden]{display:none}
+.lvpill i{width:8px;height:8px;border-radius:50%;background:currentColor;animation:lvblink 1.2s steps(2,start) infinite}
+.lvpill.watch{border-color:var(--accent);color:var(--accent)}.lvpill.bad{border-color:var(--warn);color:var(--warn)}
+@keyframes lvblink{to{visibility:hidden}}
+@media (prefers-reduced-motion:reduce){.lvpill i{animation:none}}
+.liveask[hidden]{display:none}
+.lvbox{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto}
+.lvhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lvrow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}.lvrow label{flex:1 1 180px;min-width:0}
+.lvrow select,.lvrow input{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:9px 10px;font-size:15px;font-family:var(--sans);width:100%;min-width:0}
+.lvrow input{flex:1 1 200px;width:auto}
+#lv-connect{width:100%;padding:11px 14px;font-size:15px;margin-top:4px}#lv-connect:disabled{opacity:.45}
+.lvgo{display:block;text-align:center;padding:11px 14px;font-size:15px;text-decoration:none;margin-bottom:10px}.lvgo[hidden]{display:none}
+.lvstat{font-size:13.5px;font-weight:700;min-height:1.3em}.lvstat.bad{color:var(--warn)}
+.lvhelp{margin:0;padding-left:20px;font-size:13px;line-height:1.4}.lvhelp[hidden]{display:none}.lvhelp li+li{margin-top:4px}
+.lvinfo{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.lvshare{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px dashed var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px}
+.lvshare[hidden]{display:none}.lvshare .code{font-family:var(--mono);letter-spacing:.06em}.lvshare .acts{display:flex;gap:6px}
+.lvlog summary{cursor:pointer;font-size:12px;color:var(--muted)}
+.lvlog pre{max-height:220px;overflow:auto;font-size:10.5px;line-height:1.35;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px;white-space:pre-wrap;word-break:break-all}
+@media (max-width:600px){.lvpill{right:16px;top:8px}}
 </style>
 
 <header class="top"><div class="wrap">
@@ -765,14 +789,9 @@ body.no-cabinet #indoor-var .cab{display:none}
   <div class="file">
     <input type="file" id="csvfile" accept=".csv,text/csv,.tgz,.gz,application/gzip,application/x-gzip,application/x-compressed-tar" hidden>
     <button class="btn primary" id="loadbtn" type="button">Open recording…</button><button class="btn small" id="savecsv" type="button" hidden title="Save the decoded recording as the same CSV the PC app makes">Save CSV</button>
-    <button class="btn" id="livebtn" type="button" aria-expanded="false" hidden>● Live</button>
+    <button class="btn" id="livebtn" type="button" title="Read the unit live through Daikin's Bluetooth adapter (Android phone, Chrome)">● Live</button>
     <button class="btn" id="demobtn" type="button" aria-expanded="false" hidden>Examples</button>
     <span class="dsname" id="dsname"></span>
-  </div>
-  <div class="livemenu" id="livemenu" hidden>
-    <button class="btn primary" id="live-bt" type="button">Connect checker (Bluetooth)</button>
-    <button class="btn" id="live-demo" type="button">Demo live feed</button>
-    <small id="live-note">Plug the Daikin Bluetooth checker into the unit, then connect. Chrome on Android.</small>
   </div>
   <div class="demomenu" id="demomenu" hidden></div>
   <div class="livebar" id="livebar" hidden>
@@ -794,7 +813,7 @@ body.no-cabinet #indoor-var .cab{display:none}
 </div></header>
 
 <main class="wrap">
-  <div class="stamprow"><span class="stamp num" id="stamp">—</span><span class="idx num" id="stampidx"></span></div>
+  <div class="stamprow"><span class="stamp num" id="stamp">—</span><span class="idx num" id="stampidx"></span><button type="button" class="lvpill" id="lvpill" hidden title="Live reading: tap for the session"><i></i><span id="lvpill-t">LIVE</span></button></div>
   <div class="nowbar">
     <div class="chips" id="modechips"></div>
   </div>
@@ -1940,8 +1959,8 @@ const ERR_TABLES = {
     manual: 'SiUS612209EA p.30-31, 60-71 (R-410A); SiUS612412E p.29-30, 59-69 (R-32); IOD-4054B DFVE P1300 p.23-26 (R-32); IOD-4039B DFVE/DMVE p.20-22 (R-410A); RS6215002r10 AVPEC p.41, 46-47 and MBVC p.34-38',
     field: 'indoor byte: column 116 "Error code" (FIT), 118 "Indoor err code" (DH9-type), 107 "Error code" (VC/VZC); Daikin conversion 215',
     keying: 'hex',
-    decode: 'The cell is the byte as two hex digits and the byte is the indoor board\'s 2-digit code: 0x73 = 73, 0xB9 = b9, 0x9B = 9b, 0xEB = Eb, 0xED = Ed, 0xD0 = d0, 0xA0 = A0. Show the code the way the board writes it (b and d lower-case), as "E_xx" on the board display. 0xE7 was logged by the shop recording (HP + gas furnace + EEV cased coil) and printed "E7" by Daikin\'s own PC app: it is in no air-handler or cased-coil list, but on Daikin communicating gas furnaces E7 is the igniter fault (RSD6620001r1 p.40, p.45). Coverage differs by unit: EEV cased coils report only EE, d0, d4, 70 and 73-78 (CAPEA/CAPE installation manual p.18-19), so a b- or E-code beside a cased coil comes from the furnace or blower (inference); b4/b6/b7 are in the R-410A FIT, DFVE/DMVE and AVPEC lists but not the R-32 ones; A0/A1/AF only on R-32 (A2L) indoor units; b5 (locked rotor) and Ec (heater kit) appear on air handlers in the Daikin One+ ClimateTalk fault list as well as on the Goodman MBVC (TXV) blower, whose other displays C1, C2, P1, P2, h1, h2 are operating states, not error codes.',
-    missing: 'not in the air-handler / cased-coil / MBVC lists (SiUS612209EA, SiUS612412E, IOD-4054B, IOD-4039B, RS6215002r10)',
+    decode: 'The cell is the byte as two hex digits and the byte is the indoor board\'s 2-digit code: 0x73 = 73, 0xB9 = b9, 0x9B = 9b, 0xEB = Eb, 0xED = Ed, 0xD0 = d0, 0xA0 = A0. Show the code the way the board writes it (b and d lower-case), as "E_xx" on the board display. A communicating gas furnace on the same bus reports into this cell too: the shop recording (HP + gas furnace + EEV cased coil) logged 0xE7, which Daikin\'s own PC app prints "E7", the furnace igniter fault. Furnace codes are in the gas-furnace table; a code both tables hold with different meanings (EE, Eb, Ec, Ed) shows both, since the log does not say which unit raised it. Coverage differs by unit: EEV cased coils report only EE, d0, d4, 70 and 73-78 (CAPEA/CAPE installation manual p.18-19), so a b- or E-code beside a cased coil comes from the furnace or blower (inference); b4/b6/b7 are in the R-410A FIT, DFVE/DMVE and AVPEC lists but not the R-32 ones; A0/A1/AF only on R-32 (A2L) indoor units; b5 (locked rotor) and Ec (heater kit) appear on air handlers in the Daikin One+ ClimateTalk fault list as well as on the Goodman MBVC (TXV) blower, whose other displays C1, C2, P1, P2, h1, h2 are operating states, not error codes.',
+    missing: 'not in the air-handler, cased-coil, modular-blower or gas-furnace lists (SiUS612209EA, SiUS612412E, IOD-4054B, IOD-4039B, RS6215002r10; furnace manuals as in the gas-furnace table)',
     codes: {
       'EE': {disp:'EE', t:'Emergency mode (display "EE"); no display at all = no 24 V or internal fault', u:'indoor', d:'No display: no 24 V to the board, blown fuse or breaker, internal fault, disconnect off. "EE" shown: the unit is in emergency mode.', ch:['cfm'], c:['Confirm line voltage and 24 V at the board; check fuse F2U.', 'Look for a short in the line or 24 V circuits; replace the board if it has an internal fault.'], src:'SiUS612209EA p.30 · SiUS612412E p.29 · IOD-4054B p.23 · RS6215002r10 p.46'},
       'EB': {disp:'Eb', t:'No heater kit selected but electric heat called (minor)', u:'indoor', d:'Heater kit set to "none" while electric heat is demanded. R-32: also when a 115 V air handler has Defrost Heat / Backup Defrost Heat set to anything but OFF.', ch:[], c:['Select the right heater kit at the thermostat and check the DIP selection is in range.', '115 V air handler: set Defrost Heat (outdoor) and Backup Defrost Heat (thermostat) to OFF.'], src:'SiUS612209EA p.30 · SiUS612412E p.29 · IOD-4054B p.23 · RS6215002r10 p.46'},
@@ -1966,13 +1985,85 @@ const ERR_TABLES = {
       '73': {disp:'73', t:'Indoor liquid thermistor abnormal', u:'indoor', d:'Open or shorted: reads below about -43.6 °C (-46.5 °F) or above 90 °C (194 °F) for 20 s, or resistance below 1342 Ω or above 1.7 MΩ (20 kΩ at 77 °F).', ch:['iliq','coildt','scid'], c:['Check the liquid thermistor plug at the board and junction connector (X5A).', 'Resistance-check against the table (20 kΩ at 77 °F); replace the thermistor, then the board.'], src:'SiUS612209EA p.31, 65 · SiUS612412E p.30, 62 · IOD-4054B p.24 · RS6215002r10 p.47'},
       '74': {disp:'74', t:'Indoor gas thermistor abnormal', u:'indoor', d:'Open or shorted: reads below about -43.6 °C (-46.5 °F) or above 165 °C (329 °F) for 20 s, output below about 0.04 VDC, or resistance below 309 Ω or above 1.7 MΩ. A wrong reading inside that window raises no code.', ch:['igas','ish','coildt'], c:['Check the gas thermistor plug at the board and junction connector (X5A).', 'Resistance-check against the table; replace the thermistor, then the board.'], src:'SiUS612209EA p.31, 66 · SiUS612412E p.30, 63 · IOD-4054B p.24 · RS6215002r10 p.47'},
       '75': {disp:'75', t:'Indoor pressure sensor abnormal', u:'indoor', d:'Reads below -0.049 MPa (-7.11 psig) or above 4.41 MPa (640 psig) for 5 minutes, or output below about 0.13 VDC or above 4.63 VDC.', ch:['ipress','ish','hpip'], c:['Check the sensor plug at the board and junction connector.', 'Measure the output voltage against the pressure curve with a gauge on; replace the sensor, then the board.'], src:'SiUS612209EA p.31, 67 · SiUS612412E p.30, 64 · IOD-4054B p.24 · RS6215002r10 p.47'},
-      'E7': {disp:'E7', t:'Not an air-handler or EEV-coil code; on a Daikin communicating gas furnace E7 = igniter fault', u:'indoor', d:'In no air-handler or cased-coil list. Daikin communicating gas furnaces show E7 for an igniter fault: igniter circuit, an improperly connected or shorted igniter, poor unit ground, or the igniter relay (RSD6620001r1 p.40, p.45). With a furnace behind an EEV coil this byte is probably the furnace\'s (inference: the log does not name the furnace).', ch:[], c:['Read the furnace control\'s status LED.', 'Check the igniter and its connection, the unit ground, then the igniter relay on the furnace control (RSD6620001r1 p.45).'], src:'RSD6620001r1 p.40, p.45 (DM80VC / DC80VC communicating furnaces)'},
       '76': {disp:'76', t:'Indoor to outdoor / furnace / blower communication lost during operation', u:'comm', d:'Outdoor or indoor drops off the node list after the system matched. EEV cased coils report it too (CAPEA/CAPE installation manual p.18-19).', ch:[], c:['Check the communication circuit is connected and wired right.', 'Check power to the outdoor unit, furnace or blower; then the board. R-32 cased coil with a Dragonfly board: read its LED (leak, mitigation, sensor faults).'], src:'SiUS612209EA p.31, 68 · SiUS612412E p.30, 65'},
       '77': {disp:'77', t:'Indoor to thermostat communication error', u:'comm', d:'Thermostat not on the node list 60 s after a node list is received (the 60 s restart on each new list). Emergency mode is allowed with this code (AVPEC).', ch:[], c:['Check the indoor-to-thermostat wiring.', 'Check power to the units.', 'Hold LEARN on the board for more than 5 s; replace the thermostat or board if it returns.'], src:'SiUS612209EA p.31, 69 · SiUS612412E p.30, 66 · IOD-4054B p.24 · RS6215002r10 p.47, 51'},
       '78': {disp:'78', t:'Indoor to outdoor / furnace / blower communication error at start-up', u:'comm', d:'The system never reaches "system matching" after power-on (5 min after the latest node list). EEV cased coils report it too (CAPEA/CAPE installation manual p.18-19).', ch:[], c:['Check the communication circuit wiring.', 'Check power to the outdoor unit, furnace or blower; then the board.'], src:'SiUS612209EA p.31, 70 · SiUS612412E p.30, 67'},
       'A0': {disp:'A0', t:'A2L refrigerant leak (R-32 indoor units)', u:'indoor', d:'A2L sensor reads more than 7 % LFL; the unit runs the fan and energizes relay K4R (5-minute mitigation).', ch:['cfm'], c:['Ventilate; no ignition sources.', 'If the code persists past the 5-minute mitigation or cycles every 5 minutes, leak-check the coil and tubing.', 'If no leak is found, replace the A2L sensor, then the board.'], src:'SiUS612412E p.30, 68 · IOD-4054B p.18, 24, 26'},
       'A1': {disp:'A1', t:'A2L sensor internal error (R-32 indoor units)', u:'indoor', d:'A2L sensor failure; fan runs and K4R energizes as for A0.', ch:['cfm'], c:['Replace the A2L sensor, then the board.'], src:'SiUS612412E p.30 · IOD-4054B p.18, 24, 26'},
       'AF': {disp:'AF', t:'A2L sensor communication error (R-32 indoor units)', u:'indoor', d:'A2L sensor not connected or wired wrong; fan runs and K4R energizes as for A0.', ch:['cfm'], c:['Check the A2L sensor connection (X9A) and wiring.', 'Replace the sensor, then the board.'], src:'SiUS612412E p.30 · IOD-4054B p.18, 24, 26, 29'},
+    },
+  },
+  gasFurnace: {
+    name: 'Communicating gas furnaces on the same bus (Daikin DM97MC, DM96VC, DM80VC, ULN DM96SC-U / DM80SC-U, R-32 DR97MC / DR96TC / DR80TC / DR80SC-U / DR96SC; Goodman / Amana ComfortNet *MVM96 / *MVM97 / *MVC95 / *MVC96 / *MVC8, ComfortBridge *VC96 / *VM97 / *VC80, ULN *MVS80 / *MVS96 / CCVS, R-32 *RVT80 / *RVT96 / *RVM97 / *RVS80 / *RVS96)',
+    manual: 'Daikin: DM97MC RSD6612009r5 p.62-67; DM96VC RSD6612010r5 p.45-49; DM80VC IOD-2012H p.35-39 and RSD6620001r1 p.40, 45; DM96SC-U RSD6612017r1 p.12, 32-36; DR97MC IOD-2045 p.47-50; DR96TC IOD-2044 p.47-51; DR80SC-U IOD-2041A p.33-41. Goodman / Amana: *MVC96 RS6612010r6 p.47-51; *MVM97 RS6612009r4 p.63-68; *VC96 RS6612014r3 p.35, 56-63 (alarm code definition table p.56); *VM97 RS6612015r9 p.43-51; ULN *MVS96 RS6612019r4 p.29-31; *RVT96 RS6612305r1 p.16, 40-43; *RVS96 RS6612303r1 p.35-38. Network-only codes: Daikin One+ unitary fault list p.4',
+    field: 'indoor byte: the same cell as the air-handler codes (column 116 "Error code" on FIT, 118 "Indoor err code" on DH9-type, 107 on VC/VZC)',
+    keying: 'hex',
+    decode: 'A communicating furnace puts its two-digit alarm code on the bus and the log carries it as the indoor byte: 0xE7 = E7. ComfortNet boards (Daikin DM97MC, DM96VC, DM80VC; Goodman / Amana *MVM96, *MVM97, *MVC95, *MVC96, *MVC8) display the code as it is (E7, b0, d4), and the ComfortNet thermostat shows the same code. ComfortBridge boards (Goodman / Amana *VC96, *VM97, *VC80, every ULN furnace and every R-32 DR / DD / *RV furnace) show "E" plus the code in their Status menu: EE7, Eb0, Ed1, E1b (RSD6612017r1 p.12; RS6612014r3 p.35). A few codes mean different things on the two board families; those entries name both. Where the Daikin One+ list differs (Ed as rollout on every furnace; c2, c3, d5, d6) the furnace manuals are followed. c0, c4, c5, d2, d7 and 76-78 are on the One+ list only: network and thermostat alarms no furnace manual lists. A non-communicating furnace cannot put a code on the bus.',
+    missing: 'not in the gas-furnace lists',
+    codes: {
+      'B0': {disp:'b0', alt:'Eb0', ah:'same', t:'Circulator blower motor not running when it should be', u:'furnace', d:'Loose or disconnected motor power leads; open circuit or loose wiring at the inductor (3/4 and 1 HP models); failed blower motor.', ch:['cfm','reqcfm'], c:['Tighten or correct the motor wiring.', 'Check the inductor for continuity (3/4 and 1 HP models); replace it if open or shorted.', 'Check the circulator blower motor; replace if necessary.'], src:'RSD6612009r5 p.65 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.50 · RS6612014r3 p.62'},
+      'B1': {disp:'b1', alt:'Eb1', ah:'same', t:'Furnace control lost communication with the circulator blower motor', u:'furnace', d:'Loose motor control leads, failed blower motor, or failed integrated control module.', ch:['cfm'], c:['Tighten or correct the motor control wiring.', 'Check the circulator blower motor; replace if necessary.', 'Check the integrated control module; replace if necessary.'], src:'RSD6612009r5 p.65 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.50 · RS6612014r3 p.63'},
+      'B2': {disp:'b2', alt:'Eb2', ah:'same', t:'Blower motor horsepower does not match the shared data', u:'furnace', d:'Wrong circulator blower motor in the furnace, or the wrong shared data set in the control.', ch:[], c:['Check the motor horsepower against the furnace model and nameplate; replace a wrong motor.', 'Check the shared data set is right for the model; reload it (memory card, Data Loader or CoolCloud HVAC app).'], src:'RSD6612009r5 p.65 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.50 · RS6612014r3 p.63'},
+      'B3': {disp:'b3', alt:'Eb3', ah:'same', t:'Blower motor running in a power, temperature or speed limit', u:'furnace', d:'Blocked filters, restrictive or undersized duct, high ambient temperature.', ch:['cfm','reqcfm'], c:['Check filters and duct for blockage; open all registers.', 'Check the duct is sized for the system.', 'Check the furnace location meets the installation requirements (ambient temperature).'], src:'RSD6612009r5 p.65 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.50 · RS6612014r3 p.63'},
+      'B4': {disp:'b4', alt:'Eb4', ah:'same', t:'Blower motor lost rotor control or sensed high current', u:'furnace', d:'Abnormal motor loading, a sudden change in speed or torque, or a sudden blockage of the furnace air inlet or outlet; high loading, blocked filters or very restrictive duct.', ch:['cfm','reqcfm'], c:['Check filters, grilles, registers, the duct and the furnace air inlet and outlet for blockage; correct and retest.'], src:'RSD6612009r5 p.66 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.51 · RS6612014r3 p.63'},
+      'B5': {disp:'b5', alt:'Eb5', ah:'same', t:'Blower motor failed to start 10 times in a row', u:'furnace', d:'Obstruction in the blower housing, seized motor bearings, or a failed motor.', ch:['cfm'], c:['Check the blower for obstructions; repair or replace the wheel or motor.', 'Check the motor shaft turns freely.'], src:'RSD6612009r5 p.66 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.51 · RS6612014r3 p.63'},
+      'B6': {disp:'b6', alt:'Eb6', ah:'same', t:'Blower motor shut down on over or under voltage, or over temperature', u:'furnace', d:'High or low line voltage to the furnace; high ambient temperature.', ch:['cfm'], c:['Check the line voltage to the furnace against the rating plate.', 'Check the furnace location meets the installation requirements.'], src:'RSD6612009r5 p.66 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.51 · RS6612014r3 p.63'},
+      'B7': {disp:'b7', alt:'Eb7', ah:'same', t:'Blower motor lacks the information to run, or failed to start 40 times', u:'furnace', d:'Integrated control module error (shared data), or a locked rotor.', ch:['cfm'], c:['Check the control holds the correct shared data set.', 'Check for a locked rotor (see b5).'], src:'RSD6612009r5 p.66 · RSD6612017r1 p.32 · IOD-2044 p.47 · RS6612010r6 p.51 · RS6612014r3 p.63'},
+      'B9': {disp:'b9', alt:'Eb9', ah:'same', minor:true, t:'Airflow lower than demanded', u:'furnace', d:'Blocked filters, restrictive or undersized duct.', ch:['cfm','reqcfm'], c:['Check filters and duct for blockage; open all registers.', 'Check the duct is sized for the system.'], src:'RSD6612009r5 p.66 · RSD6612017r1 p.33 · IOD-2044 p.48 · RS6612010r6 p.51 · RS6612014r3 p.63'},
+      'BF': {disp:'bF', alt:'EbF', t:'Inducer communication error (modulating ComfortBridge and R-32 ULN furnaces)', u:'furnace', d:'Loose wiring between the furnace control and the inducer; inducer connector or line / neutral connections not fully seated; poor control-board ground.', ch:[], c:['Check the red, black and white harness and its connections at the inducer and the control board.', 'Check the control board ground.'], src:'IOD-2045 p.50 · IOD-2041A p.40 · IOG-2017H p.47 · RS6612303r1 p.38'},
+      'C0': {disp:'c0', t:'Unit missing (Daikin One+ list only)', u:'comm', d:'Listed as a furnace ClimateTalk alarm on the Daikin One+ list; no furnace manual lists it.', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'Daikin One+ unitary fault list p.4'},
+      'C1': {disp:'c1', alt:'EC1', t:'Network communication alarm', u:'comm', d:'In the ComfortBridge alarm code definition table and the Daikin One+ list; no troubleshooting chart has a row for it.', ch:[], c:['Use the furnace Learn menu to reset the network and rediscover the devices on it (RS6612014r3 p.35).', 'Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'RS6612014r3 p.56 · RS6612015r9 p.43 · Daikin One+ unitary fault list p.4'},
+      'C2': {disp:'c2', alt:'EC2', t:'E-module network communication alarm (the Daikin One+ list says "unrecognized command")', u:'comm', d:'Meaning from the ComfortBridge alarm code definition table; no troubleshooting chart has a row for it.', ch:[], c:['Use the furnace Learn menu to reset the network and rediscover the devices on it (RS6612014r3 p.35).'], src:'RS6612014r3 p.56 · RS6612015r9 p.43 · Daikin One+ unitary fault list p.4'},
+      'C3': {disp:'c3', alt:'EC3', t:'Bluetooth module network communication alarm (the Daikin One+ list says "unrecognized data ID")', u:'comm', d:'Meaning from the ComfortBridge alarm code definition table; no troubleshooting chart has a row for it.', ch:[], c:['Use the furnace Learn menu to reset the network and rediscover the devices on it (RS6612014r3 p.35).'], src:'RS6612014r3 p.56 · RS6612015r9 p.43 · Daikin One+ unitary fault list p.4'},
+      'C4': {disp:'c4', t:'Invalid downloaded shared data (Daikin One+ list only)', u:'comm', d:'On the Daikin One+ list only; the ComfortBridge alarm code table has no c4 (it lists invalid external shared data as d4).', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'Daikin One+ unitary fault list p.4'},
+      'C5': {disp:'c5', t:'Invalid downloaded firmware (Daikin One+ list only)', u:'comm', d:'On the Daikin One+ list only; the ComfortBridge alarm code table lists invalid downloaded firmware as d5.', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'Daikin One+ unitary fault list p.4'},
+      'CF': {disp:'cF', alt:'ECF', t:'Gas valve stepper motor communication error (modulating ComfortBridge furnaces)', u:'furnace', d:'The control cannot reach the modulating gas valve\'s stepper motor.', ch:[], c:['Check the gas valve harness is plugged in at the valve and at the board; check continuity through the harness.'], src:'IOD-2045 p.50 · RS6612015r9 p.43, 50 · RS6612306r1 p.44'},
+      'D0': {disp:'d0', alt:'Ed0', ah:'same', t:'Shared data not on the network (furnace lacks shared data)', u:'furnace', d:'The furnace control holds no shared data set.', ch:[], c:['Load the shared data set: memory card, the Daikin Data Loader app, or the CoolCloud HVAC app on 2024 and later R-32 furnaces.'], src:'RSD6612009r5 p.64 · RSD6612017r1 p.32, 34 · IOD-2044 p.47, 49 · RS6612010r6 p.49 · RS6612014r3 p.62'},
+      'D1': {disp:'d1', alt:'Ed1', ah:'same', t:'Invalid shared data on the network (ComfortBridge boards; ComfortNet boards report it as d4)', u:'furnace', d:'The shared data set is not right for this furnace ("invalid memory card data" on the older ComfortBridge and ULN charts).', ch:[], c:['Check the shared data set is right for the model; reload it (memory card, or the CoolCloud HVAC app on R-32 furnaces).'], src:'RSD6612017r1 p.34 · IOD-2044 p.49 · IOD-2041A p.35 · RS6612014r3 p.56, 62 · RS6612305r1 p.41'},
+      'D2': {disp:'d2', t:'Invalid system combination (Daikin One+ list only)', u:'comm', d:'Listed as a furnace ClimateTalk alarm on the Daikin One+ list; no furnace manual lists it.', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'Daikin One+ unitary fault list p.4'},
+      'D4': {disp:'d4', alt:'Ed4', ah:'same', t:'Invalid memory card data (ComfortNet boards) / invalid external shared data (ComfortBridge alarm code table)', u:'furnace', d:'The control rejected the shared data set on the memory card.', ch:[], c:['Check the shared data set is right for the model; reload it with the correct memory card.'], src:'RSD6612009r5 p.65 · RSD6612010r5 p.48 · IOD-2012H p.37 · RS6612010r6 p.50 · RS6612014r3 p.56'},
+      'D5': {disp:'d5', alt:'Ed5', t:'Invalid downloaded firmware (the Daikin One+ list says "no cooling unit installed")', u:'furnace', d:'Meaning from the ComfortBridge alarm code definition table; no troubleshooting chart has a row for it.', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'RS6612014r3 p.56 · RS6612015r9 p.43 · Daikin One+ unitary fault list p.4'},
+      'D6': {disp:'d6', alt:'Ed6', t:'Unrecognized data ID (the Daikin One+ list says "no dehumidifier installed")', u:'furnace', d:'Meaning from the ComfortBridge alarm code definition table; no troubleshooting chart has a row for it.', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'RS6612014r3 p.56 · RS6612015r9 p.43 · Daikin One+ unitary fault list p.4'},
+      'D7': {disp:'d7', minor:true, t:'Wrong legacy thermostat setup (Daikin One+ list only)', u:'comm', d:'Listed as a minor furnace ClimateTalk alarm on the Daikin One+ list; no furnace manual lists it.', ch:[], c:['Read the One+ thermostat\'s error history (system optimization, error history): each entry keeps the code, the unit that raised it, a description and the time (PM-ONE+ ST p.52).'], src:'Daikin One+ unitary fault list p.4'},
+      'E0': {disp:'E0', alt:'EE0', t:'Furnace lockout: too many ignition retries or flame recycles (3)', u:'furnace', d:'No flame: no gas to the burners, front-cover pressure switch stuck open, bad or misaligned igniter, wrong orifices, or a coated, oxidized or loose flame sensor. Or the flame was lost after it lit: interrupted gas, a lazy flame (gas pressure, restricted fuel or combustion-air piping), the front-cover pressure switch opening, or poor inducer performance.', ch:[], c:['Find and correct a gas interruption.', 'Check the front-cover pressure switch (hose, wiring, contacts) and that the furnace drains properly.', 'Replace or realign the igniter.', 'Check the flame-sense signal; clean a coated or oxidized sensor.', 'Check the flue piping for blockage, length, elbows and termination; check the inducer performance.'], src:'RSD6612009r5 p.62 · RSD6612017r1 p.34 · IOD-2044 p.50 · RS6612010r6 p.47 · RS6612014r3 p.60'},
+      'E1': {disp:'E1', alt:'EE1', t:'Low-stage pressure switch closed at the start of a heating cycle', u:'furnace', d:'Sticking low-stage pressure switch contacts, or a short in the pressure switch wiring.', ch:[], c:['Replace the low-stage pressure switch.', 'Repair a short in the wiring.'], src:'RSD6612009r5 p.62 · RSD6612017r1 p.34 · IOD-2044 p.50 · RS6612010r6 p.47 · RS6612014r3 p.60'},
+      'E2': {disp:'E2', alt:'EE2', t:'Low-stage pressure switch not closed', u:'furnace', d:'Pressure switch hose blocked, pinched or misconnected; blocked flue or inlet air pipe, blocked drain or a weak inducer; wrong set point or bad switch contacts; loose wiring.', ch:[], c:['Inspect the pressure switch hose.', 'Inspect the flue and inlet air piping (blockage, length, elbows, termination); check the drain.', 'Check the inducer performance.', 'Check the switch set point and contacts; tighten the wiring.'], src:'RSD6612009r5 p.62 · RSD6612017r1 p.34 · IOD-2044 p.50 · RS6612010r6 p.48 · RS6612014r3 p.60'},
+      'E3': {disp:'E3', alt:'EE3', t:'Primary limit open (ComfortNet two-stage boards: also the auxiliary or rollout limit)', u:'furnace', d:'Not enough air over the heat exchanger: blocked filters, restrictive duct, wrong blower speed or a failed blower motor; loose wiring. On the ComfortNet two-stage boards (DM96VC, DM80VC, *MVC96, *MVC8) E3 also covers an open auxiliary or rollout limit: flame rollout, misaligned burners, blocked flue or inlet pipe, or a failed inducer.', ch:['cfm','reqcfm'], c:['Check filters and duct for blockage.', 'Check the blower speed and performance; correct the speed or replace the motor.', 'ComfortNet two-stage boards: check the burner alignment, the flue and inlet piping, and the inducer.', 'Tighten or correct the wiring.'], src:'RSD6612009r5 p.63 · RSD6612010r5 p.46 · RSD6612017r1 p.34 · IOD-2044 p.50 · RS6612010r6 p.48 · RS6612014r3 p.60'},
+      'E4': {disp:'E4', alt:'EE4', t:'Flame sensed with no call for heat', u:'furnace', d:'Short to ground in the flame-sense circuit, a lingering burner flame, or a slow-closing gas valve.', ch:[], c:['Correct a short at the flame sensor or in its wiring.', 'Check for a lingering flame.', 'Check the gas valve closes properly; replace it if needed.'], src:'RSD6612009r5 p.63 · RSD6612017r1 p.35 · IOD-2044 p.50 · RS6612010r6 p.48 · RS6612014r3 p.61'},
+      'E5': {disp:'E5', alt:'EE5', ah:'same', t:'Open fuse on the furnace control', u:'furnace', d:'Short in the low-voltage wiring (IOD-2041A: also a control board touching its mounting panel where standoffs are missing). The ComfortNet thermostat does not show E5 from a ComfortNet board (it shows "Battery Power").', ch:[], c:['Replace the fuse.', 'Find and correct the short in the low-voltage wiring.'], src:'RSD6612009r5 p.63 · RSD6612017r1 p.35 · IOD-2044 p.50 · IOD-2041A p.36 · RS6612014r3 p.61'},
+      'E6': {disp:'E6', alt:'EE6', t:'Low flame-sense signal', u:'furnace', d:'Coated or oxidized flame sensor, sensor out of position in the flame, or a lazy flame from wrong gas pressure or combustion air.', ch:[], c:['Clean a coated or oxidized flame sensor.', 'Check the sensor alignment.', 'Check the inlet air piping (blockage, length, elbows, termination).', 'Compare the gas pressure with the rating plate; adjust.'], src:'RSD6612009r5 p.63 · RSD6612017r1 p.35 · IOD-2044 p.50 · RS6612010r6 p.48 · RS6612014r3 p.61'},
+      'E7': {disp:'E7', alt:'EE7', t:'Igniter circuit fault (igniter fault or improper grounding)', u:'furnace', d:'Igniter wired wrong or shorted, poor unit ground, or the igniter relay on the furnace control.', ch:[], c:['Check the wiring from the control to the igniter.', 'Replace a shorted igniter.', 'Check and correct the unit ground.', 'Check the igniter output from the control; replace the control if needed.'], src:'RSD6612009r5 p.67 · RSD6612010r5 p.47 · RSD6620001r1 p.40, 45 · RSD6612017r1 p.35 · IOD-2044 p.51 · RS6612010r6 p.49 · RS6612014r3 p.61'},
+      'E8': {disp:'E8', alt:'EE8', t:'High-stage pressure switch closed at the start of a heating cycle', u:'furnace', d:'Sticking high-stage pressure switch contacts, or a short in its wiring. The furnace runs on low stage only.', ch:[], c:['Replace the high-stage pressure switch.', 'Repair a short in the wiring.'], src:'RSD6612009r5 p.64 · RSD6612017r1 p.35 · IOD-2044 p.51 · RS6612010r6 p.49 · RS6612014r3 p.61'},
+      'E9': {disp:'E9', alt:'EE9', t:'High-stage pressure switch not closed', u:'furnace', d:'Pressure switch hose blocked, pinched or misconnected; blocked flue or inlet air pipe, blocked drain or a weak inducer; wrong set point or bad switch contacts; loose wiring. The furnace runs on low stage only.', ch:[], c:['Inspect the pressure switch hose.', 'Inspect the flue and inlet air piping; check the drain.', 'Check the inducer performance.', 'Tighten or correct the wiring.'], src:'RSD6612009r5 p.64 · RSD6612017r1 p.35 · IOD-2044 p.51 · RS6612010r6 p.49 · RS6612014r3 p.61'},
+      'EA': {disp:'EA', alt:'EEA', t:'Reversed 115 VAC polarity', u:'furnace', d:'Line polarity to the furnace or its control is reversed; poor unit ground.', ch:[], c:['Correct the polarity per the wiring diagram.', 'Verify the unit ground.', 'Check and correct the wiring.'], src:'RSD6612009r5 p.64 · RSD6612017r1 p.35 · IOD-2044 p.51 · RS6612010r6 p.49 · RS6612014r3 p.61'},
+      'EB': {disp:'Eb', alt:'EEb', ah:'differs', t:'Gas valve not energized when it should be (ComfortBridge boards)', u:'furnace', d:'Miswired or open gas valve circuit, or the gas valve relay on the control stuck open. The troubleshooting charts call this the external gas valve error and the alarm code tables (and the Daikin One+ list) the internal one; the description is the same in all of them.', ch:[], c:['Check the wiring in the gas valve circuit.', 'Replace the integrated control board; the R-32 manuals say not to replace the gas valve.'], src:'RSD6612017r1 p.35 · IOD-2044 p.51 · IOD-2041A p.40 · RS6612014r3 p.56, 61 · RS6612305r1 p.42'},
+      'EC': {disp:'Ec', alt:'EEC', ah:'differs', t:'ComfortNet modulating furnaces (DM97MC, *MVM96, *MVM97): inducer motor overcurrent · ComfortBridge boards: gas valve energized when it should be off', u:'furnace', d:'ComfortNet modulating: a lingering inducer overcurrent (the thermostat shows "INDUCER FAULT OR INDUCER LOCKOUT"). ComfortBridge boards: miswired or shorted gas valve wiring, or the gas valve relay on the control; the charts call it the internal gas valve error, the alarm code tables the external one, and the R-32 manuals a wiring issue outside the control board.', ch:[], c:['ComfortNet modulating: reset the power and check the inducer runs properly; replace the inducer or the control if needed.', 'ComfortBridge boards: cycle 120 V to the furnace control; if the code stays, turn the power off and inspect the gas valve and system wiring for damage or miswiring.', 'ComfortBridge boards: replace the integrated control board if the wiring is right.'], src:'RSD6612009r5 p.63 · RSD6612017r1 p.35 · IOD-2044 p.51 · RS6612009r4 p.64 · RS6612014r3 p.56, 62 · RS6612305r1 p.42'},
+      'ED': {disp:'Ed', alt:'EEd', ah:'differs', t:'ComfortNet modulating furnaces (DM97MC, *MVM96, *MVM97): manual-reset rollout switch open · ComfortBridge boards: auxiliary limit open (blower compartment)', u:'furnace', d:'ComfortNet modulating: orifice plate out of position, blocked or defective heat exchanger, or burners out of line. ComfortBridge boards: not enough air over the heat exchanger (filters, duct, blower speed or motor), or the line power shut off during a heat cycle; rollout on these boards is code 11.', ch:['cfm','reqcfm'], c:['ComfortNet modulating: line up the orifice plate and burners, clear the heat exchanger, and watch the flame at the rollout switch when the blower starts; reset the switch.', 'ComfortBridge boards: check filters and duct for blockage; check the blower speed and performance; tighten the wiring.'], src:'RSD6612009r5 p.63 · RSD6612017r1 p.36 · IOD-2044 p.51 · RS6612009r4 p.64 · RS6612014r3 p.56, 62 · RS6612305r1 p.43'},
+      'EE': {disp:'EE', alt:'EEE', ah:'differs', t:'Furnace internal control fault (ComfortNet thermostat code EE; the DM97MC / *MVM97 board shows IF, ComfortBridge boards show EEE)', u:'furnace', d:'ComfortNet modulating: improper wiring to the furnace or control, unstable power, or a failed control. ComfortNet two-stage: no 115 V to the furnace or no 24 V to the control (disconnect off, door switch open, loose 24 V wire), a blown fuse or breaker, or a control internal fault; the furnace display is blank. R-32 boards: loose or damaged 120 V wiring, a poor ground wire, or damaged or miswired 120 V or 24 V wiring.', ch:[], c:['Turn the furnace power off for at least 3 minutes and back on to see if the code resets.', 'Check 115 V and 24 V to and on the furnace for damage or miswiring; check the ground wire.', 'ComfortNet two-stage: check the control fuse (3 A) and look for shorts in the 115 V and 24 V circuits.', 'Replace the integrated control module.'], src:'RSD6612009r5 p.62 · RSD6612010r5 p.45 · RS6612009r4 p.63 · RS6612010r6 p.47 · RS6612014r3 p.56 · RS6612305r1 p.43'},
+      'EF': {disp:'EF', alt:'EEF', ah:'same', t:'Auxiliary (condensate) switch open', u:'furnace', d:'High water in the evaporator coil drain pan or the auxiliary pan; on the ComfortNet modulating boards also an open aux in / aux out circuit or a missing jumper.', ch:[], c:['Check the evaporator drain pan, trap and piping, and the auxiliary pan.', 'ComfortNet modulating: fit the aux jumper if no float switch is used.'], src:'RSD6612009r5 p.63 · RSD6612017r1 p.36 · IOD-2041A p.41 · RS6612010r6 p.49 · RS6612014r3 p.62'},
+      '10': {disp:'10', alt:'E10', t:'Grounding fault: poor neutral connection (ComfortBridge boards)', u:'furnace', d:'Poor neutral connection to the furnace.', ch:[], c:['Check the neutral connection to the furnace and its continuity to ground.'], src:'RSD6612017r1 p.34 · IOD-2044 p.48 · IOD-2041A p.37 · RS6612014r3 p.62 · RS6612305r1 p.42'},
+      '11': {disp:'11', alt:'E11', t:'Rollout switch open (burner box limit; ComfortBridge boards)', u:'furnace', d:'Gas pressure too high, burners misaligned, or a restricted heat exchanger or vent.', ch:[], c:['Check and correct the gas pressure.', 'Check and correct the burner alignment.', 'Clear a burner, heat exchanger or vent restriction.'], src:'RSD6612017r1 p.34 · IOD-2044 p.48 · IOD-2041A p.37 · RS6612014r3 p.62 · RS6612305r1 p.42'},
+      '12': {disp:'12', alt:'E12', t:'Redundant relay open (R-32 ULN furnaces; ComfortBridge alarm code tables)', u:'furnace', d:'A relay fault on the furnace control.', ch:[], c:['Replace the integrated control board.'], src:'IOD-2041A p.37 · RS6612014r3 p.56 · RS6612303r1 p.36'},
+      '13': {disp:'13', alt:'E13', t:'Redundant relay stuck closed (R-32 ULN furnaces; ComfortBridge alarm code tables)', u:'furnace', d:'A relay fault on the furnace control.', ch:[], c:['Replace the integrated control board.'], src:'IOD-2041A p.37 · RS6612014r3 p.56 · RS6612303r1 p.37'},
+      '14': {disp:'14', alt:'E14', t:'External flash fault (R-32 ULN furnaces)', u:'furnace', d:'Data error in the control\'s storage (fault history, system status).', ch:[], c:['Replace the integrated control board if the code does not reset.'], src:'IOD-2041A p.37 · RS6612303r1 p.37'},
+      '15': {disp:'15', alt:'E15', minor:true, t:'Return air temperature sensor open (external probe; R-32 and later ComfortBridge furnaces)', u:'furnace', d:'The external return air probe reads open.', ch:[], c:['Allow up to 90 s for the control to detect its sensors.', 'Check the probe is plugged in all the way and its connector is properly crimped.', 'Check the probe reads 10 kΩ at 77 °F (less when warmer).'], src:'IOD-2045 p.48 · IOD-2044 p.48 · IOD-2041A p.38 · RS6612305r1 p.42'},
+      '16': {disp:'16', alt:'E16', minor:true, t:'Return air temperature sensor shorted (external probe; R-32 and later ComfortBridge furnaces)', u:'furnace', d:'The external return air probe reads shorted.', ch:[], c:['Check the probe terminals and wires for a short.', 'If the code shows with the probe unplugged, check the board connector for a short; replace the board.'], src:'IOD-2045 p.48 · IOD-2044 p.48 · IOD-2041A p.38 · RS6612305r1 p.42'},
+      '17': {disp:'17', alt:'E17', minor:true, t:'Supply air temperature sensor open (external probe; R-32 and later ComfortBridge furnaces)', u:'furnace', d:'The external supply air probe reads open.', ch:[], c:['Allow up to 90 s for the control to detect its sensors.', 'Check the probe is plugged in all the way and its connector is properly crimped.', 'Check the probe reads 10 kΩ at 77 °F (less when warmer).'], src:'IOD-2045 p.48 · IOD-2044 p.49 · IOD-2041A p.38 · RS6612305r1 p.42'},
+      '18': {disp:'18', alt:'E18', minor:true, t:'Supply air temperature sensor shorted (external probe; R-32 and later ComfortBridge furnaces)', u:'furnace', d:'The external supply air probe reads shorted.', ch:[], c:['Check the probe terminals and wires for a short.', 'If the code shows with the probe unplugged, check the board connector for a short; replace the board.'], src:'IOD-2045 p.48 · IOD-2044 p.49 · IOD-2041A p.39 · RS6612305r1 p.42'},
+      '19': {disp:'19', alt:'E19', minor:true, t:'Onboard return air temperature sensor unplugged (R311 on the furnace control)', u:'furnace', d:'The control does not detect its onboard sensor R311.', ch:[], c:['Power-cycle the furnace; the control may take up to 90 s to detect its sensors.', 'Check the board for damage at sensor R311.', 'Replace the board.'], src:'IOD-2045 p.48 · IOD-2044 p.49 · IOD-2041A p.39 · RS6612305r1 p.42'},
+      '1A': {disp:'1A', alt:'E1A', minor:true, t:'Onboard return air temperature sensor shorted (R311 on the furnace control)', u:'furnace', d:'The onboard sensor R311 reads shorted.', ch:[], c:['Power-cycle the furnace.', 'Check nothing on the board shorts sensor R311.', 'Replace the board.'], src:'IOD-2045 p.48 · IOD-2044 p.49 · IOD-2041A p.39 · RS6612305r1 p.42'},
+      '1B': {disp:'1b', alt:'E1b', t:'Analog pressure sensor reference error (ULN furnaces)', u:'furnace', d:'The sensor\'s 5 V reference is outside 5.0 ± 0.2 V for 5 s.', ch:[], c:['Check the red, black and white harness and its connections at the inducer and the control.', 'Replace the pressure sensor.'], src:'RSD6612017r1 p.33 · IOD-2041A p.39 · RS6612019r4 p.29 · RS6612303r1 p.37'},
+      '1C': {disp:'1c', alt:'E1c', t:'Analog pressure sensor null error (ULN furnaces)', u:'furnace', d:'The pressure reading is out of range with the inducer off.', ch:[], c:['Check the harness and its connections at the inducer and the control.', 'Check the hoses to the pressure sensor and the pressure switch.'], src:'RSD6612017r1 p.33 · IOD-2041A p.39 · RS6612019r4 p.29 · RS6612303r1 p.37'},
+      '1D': {disp:'1d', alt:'E1d', t:'Analog pressure sensor span error (ULN furnaces)', u:'furnace', d:'The pressure reading is out of range with the inducer on, or the pressure switch opens and closes outside the expected sensor range.', ch:[], c:['Check the harness and its connections.', 'Check the hoses to the pressure sensor and the pressure switch.', 'Replace the pressure switch if the code continues.'], src:'RSD6612017r1 p.33 · IOD-2041A p.39 · RS6612019r4 p.29 · RS6612303r1 p.37'},
+      '1E': {disp:'1E', alt:'E1E', t:'Analog pressure error: blocked vent (ULN furnaces)', u:'furnace', d:'The target pressure was not reached with the inducer at its maximum speed: blocked flue pipe.', ch:[], c:['Check the harness and its connections.', 'Check the flue piping for blockage, length, elbows and termination.', 'Replace the pressure sensor if needed.'], src:'RSD6612017r1 p.33 · IOD-2041A p.40 · RS6612019r4 p.30 · RS6612303r1 p.37'},
+      '1F': {disp:'1F', alt:'E1F', t:'Analog pressure sensor input error (ULN furnaces)', u:'furnace', d:'The sensor voltage is outside the range for the selected vent size; the wrong sensor may be fitted.', ch:[], c:['Check the harness and its connections.', 'Replace the pressure sensor.'], src:'RSD6612017r1 p.33 · IOD-2041A p.40 · RS6612019r4 p.30 · RS6612303r1 p.38'},
+      'A0': {disp:'A0', alt:'EA0', ah:'same', t:'R-32 sensor detected a refrigerant leak; furnace in mitigation', u:'furnace', d:'The furnace stops heating and only the fan runs; it resumes once no leak is detected and the 5-minute delay is over.', ch:['cfm'], c:['Look for a refrigerant leak at the indoor coil.'], src:'IOD-2045 p.50 · IOD-2044 p.51 · IOD-2041A p.41 · RS6612305r1 p.43'},
+      'A1': {disp:'A1', alt:'EA1', ah:'same', t:'R-32 sensor fault; furnace in mitigation', u:'furnace', d:'The furnace stops heating and only the fan runs.', ch:['cfm'], c:['Check the R-32 sensor; replace it.'], src:'IOD-2045 p.50 · IOD-2044 p.51 · IOD-2041A p.41 · RS6612305r1 p.43'},
+      'A2': {disp:'A2', alt:'EA2', t:'A2L relay fault on the furnace control; furnace in mitigation', u:'furnace', d:'The furnace stops heating and only the fan runs.', ch:['cfm'], c:['Check the A2L relay.', 'Power-cycle the furnace.', 'Replace the integrated control board.'], src:'IOD-2045 p.50 · IOD-2044 p.51 · IOD-2041A p.41 · RS6612305r1 p.43'},
+      'AF': {disp:'AF', alt:'EAF', ah:'same', t:'Furnace lost communication with the R-32 sensor; furnace in mitigation', u:'furnace', d:'Loose or damaged sensor wire; on IOD-2041A also a furnace not paired with an R-32 cooling unit.', ch:['cfm'], c:['Check the sensor wire connection and the wire itself.', 'Replace the R-32 sensor.'], src:'IOD-2045 p.50 · IOD-2044 p.51 · IOD-2041A p.41 · RS6612305r1 p.43'},
+      '76': {disp:'76', ah:'same', t:'Equipment communication loss (Daikin One+ list)', u:'comm', d:'The Daikin One+ list gives it for furnaces as for air handlers and coils; no furnace manual lists it.', ch:[], c:[], src:'Daikin One+ unitary fault list p.4'},
+      '77': {disp:'77', ah:'same', t:'Thermostat communication loss (Daikin One+ list)', u:'comm', d:'The Daikin One+ list gives it for furnaces as for air handlers and coils; no furnace manual lists it.', ch:[], c:[], src:'Daikin One+ unitary fault list p.4'},
+      '78': {disp:'78', ah:'same', t:'Need to connect the outdoor unit (Daikin One+ list)', u:'comm', d:'The Daikin One+ list gives it for furnaces as for air handlers and coils; no furnace manual lists it.', ch:[], c:[], src:'Daikin One+ unitary fault list p.4'},
     },
   },
   mxsOutdoor: {
@@ -2262,6 +2353,17 @@ function errFam(who){
   if (who !== 'outdoor') return 'ahIndoor';
   return {fit410:'fitOutdoor', fit32:'fitOutdoor', dh9:'dh9Outdoor', vzc:'goodmanOutdoor'}[unitPlat()] || null;
 }
+// the indoor byte comes from whichever indoor unit raised it: the air handler, EEV coil or modular blower, or a communicating gas furnace on the same
+// bus (its two-digit alarm code: 0xE7 = E7). The log does not say which unit it was, so a code the two tables give different meanings shows both
+function indoorCode(key){
+  const a = ERR_TABLES.ahIndoor.codes[key], f = ERR_TABLES.gasFurnace.codes[key];
+  if (!f) return a || null;
+  const shows = f.alt ? ` ComfortBridge furnace boards show ${f.alt}.` : '';
+  if (!a) return Object.assign({}, f, {t:'Gas furnace: ' + f.t, d:f.d + shows});
+  if (f.ah === 'same') return Object.assign({}, a, {d:`${a.d} A communicating gas furnace raises the same code: ${f.t}.${shows}`, c:[...a.c, ...f.c.map(x => 'Gas furnace: ' + x)], src:`${a.src} · furnace: ${f.src}`});
+  return {disp:a.disp, u:'indoor', t:`Air handler or coil: ${a.t} · gas furnace: ${f.t}`, d:`Air handler or EEV coil: ${a.d} Gas furnace: ${f.d}${shows}`,
+    ch:[...new Set([...a.ch, ...f.ch])], c:[...a.c.map(x => 'Air handler: ' + x), ...f.c.map(x => 'Gas furnace: ' + x)], src:`${a.src} · furnace: ${f.src}`, minor:!!(a.minor && f.minor)};
+}
 // one logged cell → {code (as the board or thermostat shows it), key, raw, rawTxt, k (the table entry), t (meaning), cls (Daikin error type: Error / Warning / Caution)}
 function errInfo(cell, fam){
   const raw = String(cell == null ? '' : cell).trim(); if (!raw || /^(0+|normal|---|-)$/i.test(raw)) return null;
@@ -2269,7 +2371,7 @@ function errInfo(cell, fam){
   const T = fam && ERR_TABLES[fam];
   if (!T) return {code:null, raw, rawTxt:`raw ${raw}`, t:'no service manual in hand for this model: look the code up on the unit'};
   const hex = T.keying === 'hex', byte = hex ? parseInt(raw, 16) : (/^\d+$/.test(raw) ? parseInt(raw, 10) : errByteOf(raw));
-  const key = hex ? errKeyHex(raw) : errNibble(raw), k = key ? T.codes[key] : null;
+  const key = hex ? errKeyHex(raw) : errNibble(raw), k = key ? (fam === 'ahIndoor' ? indoorCode(key) : T.codes[key]) : null;
   const bx = Number.isFinite(byte) ? '0x' + byte.toString(16).toUpperCase().padStart(2, '0') : null;
   const rawTxt = !bx ? `raw ${raw}` : hex ? `byte ${bx}` : `byte ${byte} (${bx})`;
   const code = k ? (k.led || k.disp || (k.tstat ? k.tstat + (k.minor ? ' (minor)' : '') : key)) : (hex ? null : key);
@@ -2309,11 +2411,11 @@ function buildSrcMap(){
 }
 function buildErrRef(){
   const host = $('#errref'); if (!host) return;
-  const mine = D ? [errFam('outdoor'), errFam(D.fam === 'multi' ? 'head' : 'indoor')].filter(Boolean) : [];
+  const mine = D ? [errFam('outdoor'), errFam(D.fam === 'multi' ? 'head' : 'indoor'), D.fam === 'multi' ? null : 'gasFurnace'].filter(Boolean) : [];
   const sel = host.dataset.fam && ERR_TABLES[host.dataset.fam] ? host.dataset.fam : (mine[0] || 'fitOutdoor'), T = ERR_TABLES[sel];
-  const shown = (key, k) => k.led || k.disp || (k.tstat ? k.tstat + (k.minor ? ' (minor)' : '') : key);
+  const shown = (key, k) => (k.led || k.disp || (k.tstat ? k.tstat + (k.minor ? ' (minor)' : '') : key)) + (k.alt ? ' · ' + k.alt : '');
   const rows = Object.entries(T.codes).map(([key, k]) => `<tr><td class="code">${synEsc(shown(key, k))}</td><td>${synEsc(k.t)}${k.d ? `<br><small>${synEsc(k.d)}</small>` : ''}</td><td class="u">${k.u}</td><td>${k.c.map(x => synEsc(x)).join('<br>')}<br><small>${synEsc(k.src)}</small></td></tr>`).join('');
-  host.innerHTML = `<p class="note">Error codes as each platform's own service manual lists them. On FIT, DH9VS-type, Goodman and air-handler logs the logged byte is the code itself, which Daikin's PC app prints as two hex digits (0x15 = E15, 0xB0 = Eb0, indoor 0x73 = 73). On multi-split logs the byte is turned into its letter code with the same two tables Daikin's PC D-Checker uses (its CSV export prints the letters; " 0" = no error), and the raw byte is shown beside it. The board's "Error type" column reads Normal, Error, Warning or Caution (Daikin's names). A code that is not in the platform's manual is shown as its byte, never with a meaning borrowed from another family.${D && D.fam !== 'multi' && !errFam('outdoor') ? ' This log\'s outdoor model has no service manual in hand, so its outdoor codes are shown raw.' : ''}</p>
+  host.innerHTML = `<p class="note">Error codes as each platform's own service manual lists them. On FIT, DH9VS-type, Goodman and air-handler logs the logged byte is the code itself, which Daikin's PC app prints as two hex digits (0x15 = E15, 0xB0 = Eb0, indoor 0x73 = 73). The indoor byte can also come from a communicating gas furnace on the same bus (0xE7 = furnace E7, igniter): indoor codes are looked up in both the air-handler and the gas-furnace tables, and a code the two give different meanings shows both. On multi-split logs the byte is turned into its letter code with the same two tables Daikin's PC D-Checker uses (its CSV export prints the letters; " 0" = no error), and the raw byte is shown beside it. The board's "Error type" column reads Normal, Error, Warning or Caution (Daikin's names). A code that is not in the platform's manual is shown as its byte, never with a meaning borrowed from another family.${D && D.fam !== 'multi' && !errFam('outdoor') ? ' This log\'s outdoor model has no service manual in hand, so its outdoor codes are shown raw.' : ''}</p>
     <label class="errfam">Table <select id="errfam">${Object.keys(ERR_TABLES).map(f => `<option value="${f}"${f === sel ? ' selected' : ''}>${synEsc(ERR_TABLES[f].name)}${mine.includes(f) ? ' · this log' : ''}</option>`).join('')}</select></label>
     <p class="note">${synEsc(T.manual)}. ${synEsc(T.decode)}</p>
     <input class="errsearch" id="errsearch" placeholder="Filter: code or words, e.g. E15, b9, U4, fan" aria-label="Filter error codes">
@@ -6639,6 +6741,7 @@ async function daikinExportToCSV(buf){
 // A multi-split recording (Multi_Split.txt, one label block per head) goes through
 // Kenny's decoder below; everything else through ours above.
 async function openFile(buf, name, opts = {}){   // opts (Brackett): {example:true, label} for a built-in example, kept out of My logs
+  if (lvBusy()) return;
   const u8 = new Uint8Array(buf), prev = D;
   if (u8[0] === 0x1f && u8[1] === 0x8b){
     try {
@@ -6759,7 +6862,7 @@ function dlExportToCSV(files){
 function logEvent(){}
 // Kenny's v53+ code also feeds the shop library (grille measurements, learned compressor calibrations, feedback);
 // the Brackett build keeps everything on the phone, so these do nothing.
-const APP_VERSION = 'v106 Brackett';   // shown in Settings and on the Route sheet; Kenny's on-device features through v106 (no library, sign-in, short links, call notes or job-details gate), built for the Service Tool
+const APP_VERSION = 'v108 Brackett';   // shown in Settings and on the Route sheet; Kenny's on-device features through v108 (no library, sign-in, short links, call notes or job-details gate), built for the Service Tool
 let CURRENT_REC = null;
 function scheduleMeasurement(){}
 function sendCalibration(){}
@@ -6787,7 +6890,7 @@ async function mineSave(fileName, model){
   } catch(e){ console.warn('mine', e); }
   if (!$('#panel-mine').hidden) mineRender();
 }
-function mineOpen(x){ load(x.text, x.fileName || 'recording.csv', false, x.model); if (D){ D.sha = x.sha; $('#savecsv').hidden = true; saveJSON('dchk.last', {sha:x.sha, cur:0, tab:'cycle'}); } }
+function mineOpen(x){ if (lvBusy()) return; load(x.text, x.fileName || 'recording.csv', false, x.model); if (D){ D.sha = x.sha; $('#savecsv').hidden = true; saveJSON('dchk.last', {sha:x.sha, cur:0, tab:'cycle'}); } }
 async function mineRender(){
   const host = $('#minelist'), q = ($('#minefilter').value || '').trim().toLowerCase(); if (!host) return;
   let all = []; try { all = (await mineAll()).sort((a, b) => b.at - a.at); } catch(e){}
@@ -7847,6 +7950,419 @@ function checkerSource(){
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2800); }
 
 
+/* ---------- Live: read the unit while it runs, and keep the session as an ordinary recording ----------
+   Reading: Daikin's Bluetooth adapter (BTSC/i2S, paired in the phone's Bluetooth settings) or a USB D-Checker cable, through the browser's Web Serial
+   API (Chrome 137+ on Android, Chrome or Edge on a computer). No iPhone browser can reach a serial or Bluetooth Classic device.
+   Brackett build: no shared sessions and no watching (Kenny's Supabase is not in this build); a reading stays on the phone and saves to My logs.
+   The requests are the PC D-Checker's own (Dchecker.exe 3.8.0.7 CommModule, read as data, never run): the adapter is an RN42 serial bridge that
+   "$$$" then "U,<baud>,E" sets to the unit's speed; unitary outdoor boards answer protocol '@' at 9600 8E1 (ask [len] 40 <reg> [addr] <bcc>,
+   reply 40 <reg> <len> data… <bcc>, bcc = NOT of the byte sum); RA / multi-split boards answer protocol 'M' at 2400 8E2 (ask 04 4D <grp> <addr> <bcc>,
+   21-byte reply). Only read requests are ever sent. Each poll is kept as one record of the phone app's .log layout ([group][address][length] data…)
+   and decoded by the phone-recording code with Daikin's label table for the model, so a live session opens, saves and uploads like any recording. */
+const LV_SPP = '00001101-0000-1000-8000-00805f9b34fb';
+// Daikin's label layouts (PC D-Checker 3.8.0.7 label files, read as data; names as the phone app and the PC export print them): rows are
+// 'group.offset.bytes.conv.kind.name' (name = base-36 index), '' = an item the file keeps disabled, 'R' = the refrigerant item, the only difference between R-410A and R-32 twins
+const LV_LAB = {"names":["Op mode","Restart standby","Startup ctrl","Defrost op.","Oil ret op.","Demand signal","Low noise ctrl.","Freeze protection","Error type","Error code","Disch temp. drop","Disch prtc rtry qty","INV cur. drop","INV cur prtc rtry qty","HP drop ctrl.","HP prtc rtry qty","LP drop ctrl.","LP prtc rtry qty","Fin temp drop ctr","Fin tmp prtc rtry qty","Retry code","Demand %","NextDataGrid","Outdoor air temp.","ODU hex temp.","Disch temp.","Suction temp.","ODU hex mid temp.","Liquid pipe temp.","High pressure","Low pressure","Cond temp","Evap temp","INV prim cur(A)","INV scnd cur(A)","INV fin temp.","Fan1 Fin temp.","Sys. Op. Current","Fan current1 (A)","Comp (rps)","Fan (step)","EV (pls)","4way vlv (off:energizing/on:de-energizing)","Crank case heater","Comp op command","Fan op command","Trgt comp. (rps)","Target OU_fan (rpm)","OU Fan (rpm)","In-Out separator","IDU address","Indoor operation mode","Indoor liquid temp.","Indoor gas temp.","IDU EV (pls)","Request CFM(x10)","Present CFM(x10)","Indoor pressure","Therm. on/off","Other drop ctrl.","SV (hot gas)","Target SC","Target SH","OU Error type","OU Error code","Comp. INV 2nd Drop","Fan2 Fin temp.","System operation current (A)","Fan current2 (A)","EV (main) (pls)","4 way valve","SV (drain pan)","Fan1 op command","Fan2 op command","Trgt o_fan1 (rpm)","O_fan1 (rpm)","Trgt o_fan2 (rpm)","O_fan2 (rpm)","EV (injection)(pls)","Indoor err code","Req IDU air vol (x10CFM)","Pre IDU air vol (x10CFM)","IDU Target SH","Out Target SC","IDU Target SC","Outdoor Target SC","Trgt. Dsch.Temp.","Max Hz(peak cut)","Max Hz(frz prtc)","Max Hz(Td)","Max Hz(INV cur)","Max Hz(OA_T)","Max Hz (rps)","Min Hz (rps)","Comp stop timer","OD fan dly timer","Hz limit 1 (rps)","Hz limit 2 (rps)","Hz limit 3 (rps)","Hz limit 4 (rps)","Hz limit 5 (rps)","Hz limit 6 (rps)","Hz limit 7 (rps)","Hz limit 8 (rps)","Hz limit 9 (rps)","Timer 1","Timer 2","Timer 3","Timer 4","Timer 5","Timer 6","Timer 7","Timer 8","Timer 9","Timer 10","Timer 11","Timer 12","ODU monitor 1","ODU monitor 2","ODU monitor 3","ODU monitor 4","ODU monitor 5","ODU monitor 6","ODU monitor 7","ODU monitor 8","ODU monitor 9","Rm_A gas temp.","Rm_B gas temp.","Rm_C gas temp.","Rm_D gas temp.","Rm_E gas temp.","Rm_F gas temp.","Rm_G gas temp.","Rm_A liquid temp.","Rm_B liquid temp.","Rm_C liquid temp.","Rm_D liquid temp.","Rm_E liquid temp.","Rm_F liquid temp.","Rm_G liquid temp.","Fin temp.","Humidifier temp.","Operation cur(A)","AC voltage (V)","DC voltage (V)","ODU sensor 1","ODU sensor 2","ODU sensor 3","ODU sensor 4","ODU sensor 5","Compressor","Comp. (rps)","Out fan1 tap","Out fan2 tap","4way valve on/off","4way vlv op. mode","Port A EV (pls)","Port B EV (pls)","Port C EV (pls)","Port D EV (pls)","Port E EV (pls)","Port F EV (pls)","Port G EV (pls)","Humidifier","ODU actuator 1","ODU actuator 2","ODU actuator 3","ODU actuator 4","Operation mode","Thermostat ON/OFF","Demand frequency(rps)","Freq. indirrect cmd.","Delta-D","Return air temp.","Heat exchanger temp.","Gas pipe temp.","Indoor humidity(%)","Target humidity(%)","Solenoid valve","Fan frequency","Fan tap","Flap angle","Flap angle2","Louver angle","R/C setpoint","Target temp.","Flap Setting (cooling)","Louver Setting (cooling)","Airflow (C)","Flap Setting (heating)","Louver Setting (heating)","Airflow (H)","In/out transmission"],"lays":[{"models":[["DX17VSS181-601A_DZ17VSA181-601A","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..15;30.4.1.307..16;;;;;;;;30.5.1.307..17;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107..1l;"},{"models":[["DX17VSS181-601B","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;;;;;;;;;;;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107..1l;"},{"models":[["DZ17VSA181-601B","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..15;30.4.1.307..16;;;;;;;;30.5.1.307..1o;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107..1l;"},{"models":[["DZ20VC0601CA","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.1p;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..15;30.4.1.307..16;;;;;;;;30.5.1.307..1o;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107..1l;50.23.2.107.3.1q;"},{"models":[["Goodman_Amana_GSXV9_ASXV9","R410A"],["INV_Unitary_DX9VC","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;;20.4.2.105.1.p;;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.1p;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;;;;;;;;;;;;;;;;;;30.6.1.307..18;30.6.1.306..19;;30.7.1.152..1a;30.8.1.164..1b;30.9.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;50.23.2.107.3.1q;"},{"models":[["Goodman_Amana_GSXV9_ASXV9_5ton","R410A"],["INV_Unitary_DX9VC_5ton","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;;20.4.2.105.1.p;;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.1p;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;;;;;;;;;30.4.1.307..17;;;;;;;;;30.6.1.307..18;30.6.1.306..19;;30.7.1.152..1a;30.8.1.164..1b;30.9.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;50.23.2.107.3.1q;"},{"models":[["Goodman_Amana_GSZV9_ASZV9","R410A"],["INV_Unitary_DZ9VC","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.1p;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..15;30.4.1.307..16;;;;;;;;;;;;;;;;30.6.1.307..18;30.6.1.306..19;;30.7.1.152..1a;30.8.1.164..1b;30.9.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;50.23.2.107.3.1q;"},{"models":[["Goodman_Amana_GVXC_AVXC20","R410A"],["INV_Unitary_DX20VC","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;;20.4.2.105.1.p;;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;;;;;;;;;;;;;;;;;;30.6.1.307..18;30.6.1.306..19;;30.7.1.152..1a;30.8.1.164..1b;30.9.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;"},{"models":[["Goodman_Amana_GVXC_AVXC20_5ton","R410A"],["INV_Unitary_DX20VC_5ton","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;;20.4.2.105.1.p;;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;;;;;;;;;;30.5.1.307..17;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;"},{"models":[["Goodman_Amana_GVZC_AVZC20","R410A"],["INV_Unitary_DZ20VC","R410A"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..15;30.4.1.307..16;;;;;;;;;;;;;;;;30.6.1.307..18;30.6.1.306..19;;30.7.1.152..1a;30.8.1.164..1b;30.9.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;"},{"models":[["Goodman_Amana_GXV7S_AXV7S","R32"],["INV_Unitary_DC7VS","R32"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..1r;10.5.1.215..1s;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..1t;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;21.8.2.105.1.1u;21.10.2.105..1v;21.12.2.105..12;21.14.2.105..1w;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..1x;30.4.1.307..1y;;;;;;;;30.5.1.307..1o;;;;;;;;30.6.1.307..1z;;;;;;;;30.7.1.307..18;30.7.1.306..20;30.7.1.305..21;30.8.1.152..1a;30.9.1.164..22;30.10.1.164..23;30.11.1.164..24;30.12.1.164..25;30.13.2.151..26;;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;50.3.1.215..27;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..28;50.20.1.152..29;50.21.2.105.2.1l;50.23.2.107.3.2a;;"},{"models":[["Goodman_Amana_GXV9S_AXV9S","R32"],["INV_Unitary_DC9VS","R32"],["INV_Unitary_DC9VSA6010","R32"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;21.8.2.105.1.1u;21.10.2.105..11;21.12.2.105..12;21.14.2.105..1w;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..1x;30.4.1.307..1y;;;;;;;;30.5.1.307..1o;;;;;;;;30.6.1.307..1z;;;;;;;;30.7.1.307..18;30.7.1.306..20;30.7.1.305..21;30.8.1.152..1a;30.9.1.164..22;30.10.1.164..23;30.11.1.164..24;30.12.1.164..25;30.13.2.151..26;;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;50.2.1.303..1m;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.105.2.1l;50.23.2.107.3.1q;;"},{"models":[["Goodman_Amana_GZV7S_AZV7S","R32"],["Goodman_Amana_GZV9S_AZV9S","R32"],["INV_Unitary_DH7VS","R32"],["INV_Unitary_DH9VS","R32"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..1r;10.5.1.215..1s;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..1t;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.2b;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;21.8.2.105.1.1u;21.10.2.105..1v;21.12.2.105..12;21.14.2.105..1w;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..1x;30.4.1.307..1y;;;;;;;;30.5.1.307..1o;;;;;;;;30.6.1.307..1z;;;;;;;;30.7.1.307..18;30.7.1.306..20;30.7.1.305..21;30.8.1.152..1a;30.9.1.164..22;30.10.1.164..23;30.11.1.164..24;30.12.1.164..25;30.13.2.151..26;;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;50.3.1.215..27;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..28;50.20.1.152..29;50.21.2.105.2.1l;50.23.2.107.3.2a;50.25.2.107.3.2c;"},{"models":[["INV_Unitary_ASXS6S","R410A"],["INV_Unitary_AXV6S","R32"],["INV_Unitary_AXV9SA2410-4810","R32"],["INV_Unitary_AXV9SA6010","R32"],["INV_Unitary_DC6VS","R32"],["INV_Unitary_DX6VS","R410A"],["INV_Unitary_GSXS6S","R410A"],["INV_Unitary_GXV6S","R32"],["INV_Unitary_GXV9SA2410-4810","R32"],["INV_Unitary_GXV9SA6010","R32"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.1p;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;;;;;;;;;;;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;50.23.2.107.3.1q;"},{"models":[["INV_Unitary_ASZS6S","R410A"],["INV_Unitary_AZV6S","R32"],["INV_Unitary_AZV7SA2410-4810","R32"],["INV_Unitary_AZV7SA6010","R32"],["INV_Unitary_DC9VSA2410-4810","R32"],["INV_Unitary_DH6VS","R32"],["INV_Unitary_DH7VSA2410-4810","R32"],["INV_Unitary_DZ6VS","R410A"],["INV_Unitary_GSZS6S","R410A"],["INV_Unitary_GZV6S","R32"],["INV_Unitary_GZV7SA2410-4810","R32"],["INV_Unitary_GZV7SA6010","R32"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;20.8.2.105.1.r;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.1p;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;;21.10.2.105..11;21.12.2.105..12;;;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..15;30.4.1.307..16;;;;;;;;30.5.1.307..1o;;;;;;;;;;;;;;;;30.7.1.307..18;30.7.1.306..19;;30.8.1.152..1a;30.9.1.164..1b;30.10.1.164..1c;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;;;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.107.2.1l;50.23.2.107.3.1q;"},{"models":[["INV_Unitary_DH7VSA6010","R32"]],"rows":"R;;;;;;;;;;;10.0.1.217..0;10.1.1.307..1m;10.1.1.306..1;10.1.1.305..2;10.1.1.304..3;10.1.1.303..4;;10.1.1.301..5;10.1.1.300..6;10.2.1.307..7;;;;;;;;;;;;;;;;10.4.1.203..8;10.5.1.215..9;;;10.10.1.307..a;10.10.1.310..b;10.10.1.303..c;10.10.1.311..d;10.11.1.307..e;10.11.1.310..f;10.11.1.303..g;10.11.1.311..h;10.12.1.307..i;10.12.1.310..j;10.12.1.303..1n;10.13.1.152..k;10.14.1.161..l;00.0.1.995..m;20.0.2.105.1.n;20.2.2.105.1.o;20.4.2.105.1.p;20.6.2.105.1.q;;20.10.2.105.1.s;20.12.2.105.2.t;20.14.2.105.2.u;20.16.2.105.1.v;20.18.2.105.1.w;20.20.2.107.3.2d;21.0.2.105..x;21.2.2.105..y;21.4.2.105.1.z;21.6.2.105.1.10;21.8.2.105.1.1u;21.10.2.105..11;21.12.2.105..12;21.14.2.105..1w;;00.0.1.995..m;30.0.1.152..13;30.1.1.211..14;30.2.2.151..1x;30.4.1.307..1y;;;;;;;;30.5.1.307..1o;;;;;;;;30.6.1.307..1z;;;;;;;;30.7.1.307..18;30.7.1.306..20;30.7.1.305..21;30.8.1.152..1a;30.9.1.164..22;30.10.1.164..23;30.11.1.164..24;30.12.1.164..25;30.13.2.151..26;;00.0.1.998..1d;;50.1.1.152..1e;50.2.1.313..1f;50.2.1.303..1m;50.3.1.215..9;;;;;50.11.2.107.1.1g;50.13.2.107.1.1h;50.15.2.151..1i;;50.19.1.152..1j;50.20.1.152..1k;50.21.2.105.2.1l;50.23.2.107.3.1q;50.25.2.107.3.1p;"},{"models":[["Multi_Split",null]],"rows":"40.2.1.202..0;40.4.1.200..3;40.3.1.204..9;00.12.1.161.1.2e;06.2.1.152..2f;06.3.1.152..2g;06.4.1.152..2h;06.5.1.152..2i;06.6.1.152..2j;06.7.1.152..2k;06.8.1.152..2l;07.2.2.165..2m;07.4.2.165..2n;06.9.1.152..2o;06.10.1.152..2p;06.11.1.152..2q;06.12.1.152..2r;06.13.1.152..2s;06.14.1.152..2t;06.15.1.152..2u;06.16.1.152..2v;06.17.1.152..2w;07.6.1.152..2x;07.7.1.152..2y;07.8.1.152..2z;07.9.1.152..30;07.10.1.152..31;07.11.1.152..32;07.12.1.152..33;07.13.1.152..34;07.14.1.152..35;07.15.1.152..36;07.16.1.152..37;07.17.1.152..38;40.9.1.152..39;40.10.1.152..3a;40.11.1.152..3b;40.12.1.152..3c;40.13.1.152..3d;40.14.1.152..3e;40.15.1.152..3f;40.16.1.152..3g;40.17.1.152..3h;00.0.1.995..m;00.2.1.162.1.n;00.3.1.162.1.o;00.4.1.161.1.p;01.2.1.162.1.3i;01.3.1.162.1.3j;01.4.1.162.1.3k;01.5.1.162.1.3l;01.6.1.162.1.3m;01.7.1.162.1.3n;01.8.1.162.1.3o;02.2.1.162.1.3p;02.3.1.162.1.3q;02.4.1.162.1.3r;02.5.1.162.1.3s;02.6.1.162.1.3t;02.7.1.162.1.3u;02.8.1.162.1.3v;00.5.1.161.1.3w;00.11.1.162.1.3x;00.6.1.163..3y;00.7.2.155..3z;00.9.2.155..40;00.13.1.162..41;00.14.1.162..42;00.15.1.162..43;00.16.1.162..44;00.17.1.162..45;00.0.1.995..m;40.5.1.200..46;04.2.1.152..47;04.3.1.152..1a;04.4.2.151..22;04.6.2.151..23;04.8.2.151..24;04.10.2.151..25;04.12.1.152..48;04.13.1.152..49;40.6.1.200..4a;40.7.1.205..4b;05.2.2.151..4c;05.4.2.151..4d;05.6.2.151..4e;05.8.2.151..4f;05.10.2.151..4g;05.12.2.151..4h;05.14.2.151..4i;40.8.1.200..4j;04.14.1.152..4k;04.15.1.152..4l;04.16.1.152..4m;04.17.1.152..4n;00.0.1.998..1d;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..59;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..59;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..5a;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..59;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..59;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..59;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c;41.2.1.152..1e;41.3.1.201..4o;41.4.1.200..4p;41.5.1.204..9;41.6.1.152..4q;41.7.1.152..4r;41.8.1.152.3.4s;41.9.1.162.1.4t;41.10.1.162.1.4u;41.11.1.162.1.s;41.12.1.162.1.4v;41.15.1.152..4w;41.16.1.152..4x;41.13.1.200..4y;42.3.2.151..4z;42.5.1.206..50;42.6.1.207..51;42.7.1.207..52;42.8.1.207..53;42.9.1.161.1.54;42.10.1.161.1.55;42.11.1.208..56;42.12.1.208..57;42.13.1.209..58;42.14.1.208..59;42.15.1.208..5a;42.16.1.209..5b;41.14.1.210..5c"}]};
+// the PC's sampling lists (CommProtocolConfigA / M): [kind, request…]. Kind 0 plain; 1 continues to the next register while the reply's last data byte is set;
+// 2 one ask per indoor unit; 3 one per boost unit, and continues; 4 the rest of its 0xA_ group is skipped once one goes unanswered
+const LV_CMD_A = [[0, 3, 0x40, 0x00], [0, 3, 0x40, 0x10], ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 10, 11, 12, 13, 14, 15].map(k => [4, 3, 0x40, 0xA0 + k]), [1, 3, 0x40, 0x20], [1, 3, 0x40, 0x30], [2, 4, 0x40, 0x50, 0], [3, 4, 0x40, 0x70, 0]];
+const LV_CMD_M = [...[0x00, 0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x40].map(g => [0, 4, 0x4D, g, 0]), [2, 4, 0x4D, 0x41, 0], [2, 4, 0x4D, 0x42, 0]];
+const LV_T = {a:1300, m:900, bt:1500, gap:200, every:0, watch:3000};   // reply timeouts (the PC's 1000 / 500 ms plus a Bluetooth margin), retry gap; window.dchkLiveT overrides them in the test harness
+const lvT = k => (window.dchkLiveT && window.dchkLiveT[k] != null ? window.dchkLiveT[k] : LV_T[k]);
+const LV = {mode:null, on:false, open:false, port:null, rd:null, wr:null, loop:null, rx:[], waiter:null, log:[], t0:Date.now(), help:null, bt:false, proto:null, cfg:null, lens:{}, idu:[], boost:[], softVer:false,
+  cmds:[], prev:{}, recs:[], raw:[], seq:0, labels:null, model:null, auto:null, pick:'', name:null, every:+loadJSON('dchk.live.every', 5) || 5, loaded:false, D:null,
+  status:'', bad:false, wake:null, session:null, up:[], pushing:false, pubOk:null, pubOff:false, after:-1, ended:false, saved:false, startAt:0, dirtyData:false};
+const lvSleep = ms => new Promise(r => setTimeout(r, ms));
+const lvHex = a => Array.from(a || [], b => b.toString(16).padStart(2, '0')).join('');
+const lvB64 = u8 => btoa(String.fromCharCode(...u8));
+const lvUnB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const lvCode = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => (b & 15).toString(16)).join('');
+const lvStamp = d => d.getFullYear() + [d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()].map(pad).join('');
+const lvBcc = (a, n) => { let s = 0; for (let i = 0; i < n; i++) s = (s + a[i]) & 255; return ~s & 255; };
+const lvFrame = cmd => { const f = new Uint8Array(cmd.length + 1); f.set(cmd); f[cmd.length] = lvBcc(cmd, cmd[0]); return f; };   // the length byte counts the request bytes the check byte covers
+function lvLog(dir, x){
+  const t = ((Date.now() - LV.t0) / 1000).toFixed(2).padStart(7, ' '), s = typeof x === 'string' ? x.replace(/\r/g, '\\r').replace(/\n/g, '\\n') : Array.from(x, b => b.toString(16).padStart(2, '0')).join(' ');
+  LV.log.push(t + ' ' + dir + ' ' + s); if (LV.log.length > 800) LV.log.splice(0, LV.log.length - 800);
+}
+function lvStatus(s, bad){ LV.status = s; LV.bad = !!bad; lvLog('*', s); lvUi(); }
+
+// ---- the port: Web Serial, or an iPhone app that hosts this page and opens Daikin's adapter through Apple's accessory channel. That app sets
+//      window.dchkNative = {open(baud, stopBits), write(base64), close()} (each returns a promise) and calls window.dchkNativeRx(base64) with what the
+//      adapter sends and window.dchkNativeGone() when it drops. Either way one queue takes the bytes and each ask waits on it with a timeout ----
+const lvRx = u8 => { for (const b of u8) LV.rx.push(b); lvLog('<', u8); if (LV.waiter) LV.waiter(); };
+window.dchkNativeRx = b64 => { if (LV.open && LV.native) lvRx(lvUnB64(b64)); };
+window.dchkNativeGone = () => { LV.gone = true; lvLog('!', 'the iPhone app reports the adapter gone'); };
+const lvAlive = () => LV.native ? !LV.gone : !!(LV.port && LV.port.readable);
+async function lvReadLoop(){
+  while (LV.open && LV.port && LV.port.readable){
+    let rd; try { rd = LV.port.readable.getReader(); } catch(e){ lvLog('!', 'reader: ' + e.message); break; }
+    LV.rd = rd;
+    try { for (;;){ const {value, done} = await rd.read(); if (done) break; if (value && value.length) lvRx(value); } }
+    catch(e){ lvLog('!', 'read: ' + (e && e.name) + ' ' + (e && e.message)); if (LV.open) await lvSleep(50); }   // a parity or framing error ends one reader; the port carries on with a new one
+    finally { try { rd.releaseLock(); } catch(_){} LV.rd = null; }
+  }
+}
+function lvTake(n, ms){   // n bytes, or null after ms
+  return new Promise(res => {
+    let done = false; const fin = v => { if (done) return; done = true; LV.waiter = null; clearTimeout(tm); res(v); };
+    const tm = setTimeout(() => fin(null), ms);
+    LV.waiter = () => { if (LV.rx.length >= n) fin(Uint8Array.from(LV.rx.splice(0, n))); }; LV.waiter();
+  });
+}
+function lvTakeText(re, ms){   // the adapter's own answers (CMD, AOK)
+  return new Promise(res => {
+    let done = false; const fin = v => { if (done) return; done = true; LV.waiter = null; clearTimeout(tm); res(v); };
+    const tm = setTimeout(() => fin(null), ms);
+    LV.waiter = () => { const s = String.fromCharCode(...LV.rx.slice(-64)); if (re.test(s)){ LV.rx.length = 0; fin(s); } }; LV.waiter();
+  });
+}
+async function lvWrite(u8){
+  if (!LV.open || !(LV.native || LV.wr)) throw new Error('the port is closed');
+  lvLog('>', u8); if (LV.native) await window.dchkNative.write(lvB64(u8)); else await LV.wr.write(u8);
+}
+async function lvOpen(baud, two){   // over Bluetooth the line settings are ignored (the adapter's "U" command sets them); a USB cable takes them as given
+  if (LV.open) await lvClose(true);
+  if (LV.native) await window.dchkNative.open(baud, two ? 2 : 1);
+  else { await LV.port.open({baudRate:baud, dataBits:8, parity:'even', stopBits:two ? 2 : 1, bufferSize:4096}); LV.wr = LV.port.writable.getWriter(); }
+  LV.open = true; LV.rx.length = 0; if (!LV.native) LV.loop = lvReadLoop(); lvLog('*', `port open ${baud} 8E${two ? 2 : 1}`);
+}
+async function lvClose(keep){
+  if (LV.native){ const was = LV.open; LV.open = false; if (was) try { await window.dchkNative.close(); } catch(_){} return; }
+  const was = LV.open; LV.open = false;
+  try { if (LV.rd) await LV.rd.cancel(); } catch(_){}
+  try { if (LV.loop) await LV.loop; } catch(_){}
+  try { if (LV.wr) LV.wr.releaseLock(); } catch(_){}
+  LV.wr = null; LV.loop = null;
+  if (was && LV.port) try { await LV.port.close(); } catch(e){ lvLog('!', 'close: ' + e.message); }
+  if (!keep) LV.port = null;
+}
+
+// ---- asks (DCHK CommProtocolA / M sendReceive, sendReceiveByLR) ----
+async function lvAskA(cmd){   // protocol '@': three tries; the reply's third byte says how many bytes follow
+  const f = lvFrame(cmd);
+  for (let k = 0; k < 3 && LV.open && lvAlive(); k++){
+    LV.rx.length = 0; await lvWrite(f);
+    const h = await lvTake(3, lvT('a'));
+    if (h && h[0] === 0x40 && h[1] === f[2] && h[2] > 1){
+      const rest = await lvTake(h[2] - 1, lvT('a'));
+      if (rest){ const r = new Uint8Array(3 + rest.length); r.set(h); r.set(rest, 3); if (lvBcc(r, r.length - 1) === r[r.length - 1]) return r; lvLog('!', 'check byte'); }
+    }
+    await lvSleep(lvT('gap'));
+  }
+  return null;
+}
+async function lvAskLR(cmd, len, lead){   // 'L' (soft-version check) and 'R' (memory read): one try, fixed length
+  LV.rx.length = 0; await lvWrite(lvFrame(cmd));
+  const r = await lvTake(len, lvT('a')); return r && r[0] === lead && lvBcc(r, len - 1) === r[len - 1] ? r : null;
+}
+async function lvAskM(cmd, raw){   // protocol 'M': 21-byte replies; the detect frame carries its own check byte and gets one byte back
+  const f = raw ? Uint8Array.from(cmd) : lvFrame(cmd), n = raw ? 1 : 21;
+  for (let k = 0; k < 3 && LV.open && lvAlive(); k++){
+    LV.rx.length = 0; await lvWrite(f);
+    const r = await lvTake(n, lvT('m'));
+    if (r && (raw || lvBcc(r, n - 1) === r[n - 1])) return r;
+    await lvSleep(lvT('gap'));
+  }
+  return null;
+}
+async function lvAdapter(baud){   // Daikin's BTSC/i2S is a Roving Networks RN42: "$$$" opens its command mode, "U,<baud>,E" sets the unit side and closes it (DCHK PortOpen)
+  LV.rx.length = 0; await lvWrite(new TextEncoder().encode('$$$'));
+  if (!await lvTakeText(/CMD/, lvT('bt'))){ lvLog('!', 'the adapter did not answer $$$'); return false; }
+  LV.rx.length = 0; await lvWrite(new TextEncoder().encode(`U,${baud},E\r`));
+  const ok = await lvTakeText(/AOK/, lvT('bt')); if (!ok) lvLog('!', `the adapter did not take U,${baud},E`); return !!ok;
+}
+const lvIsIdu = (c, A) => A ? (c.cmd[2] === 0x50 || c.cmd[2] === 0x60) : (c.kind === 2 && (c.cmd[2] === 0x41 || c.cmd[2] === 0x42));
+const lvIsBoost = (c, A) => A && (c.cmd[2] & 0xF0) === 0x70;
+const lvAdrResp = (r, A) => A ? (r[1] === 0x50 || r[1] === 0x60 || (r[1] & 0xF0) === 0x70) : (r[1] === 0x41 || r[1] === 0x42);
+
+// ---- find the board, then the list of asks it answers (DCHK TryDetect, prepareSampling, PrepareSampling) ----
+async function lvDetect(){
+  lvStatus('Opening the adapter…'); await lvOpen(9600, false);
+  if (LV.bt && !await lvAdapter(9600)) lvLog('*', 'no command mode on the adapter: trying the unit at the speed it is set to');
+  for (let k = 0; k < 4 && LV.open; k++){   // unitary boards first, as the PC does
+    lvStatus(`Looking for the outdoor board (unitary, try ${k + 1} of 4)…`);
+    const r = await lvAskA([3, 0x40, 0x00]);
+    if (r && r.length >= 14){ LV.proto = '@'; LV.cfg = Array.from(r.subarray(3, r.length - 1)); return true; }
+  }
+  if (!LV.open) return false;
+  if (LV.bt){ if (!await lvAdapter(2400)) lvLog('*', 'the adapter did not take 2400'); } else await lvOpen(2400, true);
+  for (let k = 0; k < 3 && LV.open; k++){
+    lvStatus(`Looking for the outdoor board (mini / multi split, try ${k + 1} of 3)…`);
+    const r = await lvAskM([0x02, 0x4E, 0xAF, 0x30, 0x30, 0x30, 0x30, 0xBD, 0x03], true);
+    if (r && r[0] === 0x4E){ LV.proto = 'M'; return true; }
+  }
+  return false;
+}
+async function lvPrepare(){
+  LV.idu = []; LV.boost = [];
+  if (LV.proto === '@'){
+    lvStatus('Found a unitary outdoor board. Checking its software…');
+    const l = await lvAskLR([2, 0x4C], 6, 0x4C); LV.softVer = !!(l && l[1] === 4 && l[2] === 0x41 && l[3] === 1 && l[4] === 0x17);   // North-American soft version: four readings come from memory reads
+    for (const [base, list, what] of [[0x40, LV.idu, 'indoor units'], [0x60, LV.boost, 'boost units']]){
+      for (let k = 0; k < 15 && LV.open; k++){   // one register per line of addresses, until one goes unanswered
+        lvStatus(`Asking the board for its ${what}…`);
+        const a = await lvAskA([3, 0x40, base + k]); if (!a) break;
+        if (a.length >= 6) for (let j = 0; j < a[2] - 3; j++) list.push(a[3 + j]);
+      }
+      list.sort((x, y) => x - y);
+    }
+  } else {
+    for (let k = 0; k < 7 && LV.open; k++){   // seven head addresses; a head is there when its first two bytes are not both zero
+      lvStatus(`Found a mini / multi split board. Looking for heads (${k + 1} of 7)…`);
+      const r = await lvAskM([4, 0x4D, 0x41, k]); if (r && r[4] === k && (r[2] || r[3])) LV.idu.push(k);
+    }
+  }
+  const A = LV.proto === '@', out = [], seen = new Set(), skip = new Set();
+  for (const [kind, ...cmd0] of A ? LV_CMD_A : LV_CMD_M){
+    const c0 = {kind, cmd:cmd0}, key = cmd0[2] * 256 + (lvIsIdu(c0, A) || lvIsBoost(c0, A) ? cmd0[3] : 0); if (seen.has(key)) continue; seen.add(key);   // 0xA0 is listed twice; the PC keeps one
+    const grp = cmd0[2] & 0xF0; if (skip.has(grp)) continue;
+    const c = {kind, cmd:cmd0.slice()}; let qi = LV.idu.slice(), qb = LV.boost.slice();
+    for (let g = 0; g < 64 && LV.open; g++){
+      const isI = lvIsIdu(c, A), isB = lvIsBoost(c, A);
+      if (isI){ if (!qi.length) break; c.cmd[3] = qi.shift(); } else if (isB){ if (!qb.length) break; c.cmd[3] = qb.shift(); }
+      lvStatus(`Checking what the board reports (${out.length} found)…`);
+      const r = A ? await lvAskA(c.cmd) : await lvAskM(c.cmd);
+      if (!r){ if (kind === 4 || kind === 5) skip.add(grp); break; }
+      out.push({kind, cmd:c.cmd.slice()});
+      if (kind === 3 && (isI ? qi.length : isB ? qb.length : 0)) continue;
+      if (A && (kind === 1 || kind === 3) && r[r.length - 2]){ c.cmd[2]++; if (kind === 3){ qi = LV.idu.slice(); qb = LV.boost.slice(); } continue; }
+      if (lvAdrResp(r, A)) continue;
+      break;
+    }
+  }
+  LV.cmds = out;
+}
+async function lvSoftVer(r){   // DCHK softVerChkProcess: memory floats written over the reply (indoor liquid, indoor gas, demand) and the fan rpm / 5 inserted
+  const rd = (hi, lo) => lvAskLR([4, 0x52, hi, lo], 18, 0x52), f32 = a => new DataView(a.buffer, a.byteOffset + 1, 4).getFloat32(0, true);
+  const put16 = (i, v) => { v = Math.trunc(v) & 0xFFFF; r[i] = v & 255; r[i + 1] = v >> 8; };
+  if (r[1] === 0x50 && r.length > 16){ const a = await rd(0xCA, 0x2D); if (a) put16(14, f32(a) * 10); }
+  if (r[1] === 0x50 && r.length > 18){ const a = await rd(0xEE, 0x2D); if (a) put16(16, f32(a) * 10); }
+  if (r[1] === 0x10 && r.length > 18){ const a = await rd(0x88, 0x2C); if (a) r[17] = Math.trunc(f32(a) * 2) & 255; }
+  if (r[1] === 0x30 && r.length > 14){ const a = await rd(0x8A, 0x26); if (a){ const n = new Uint8Array(16); n.set(r.subarray(0, 13)); n[13] = Math.trunc(((a[1] | a[2] << 8) << 16 >> 16) * 0.2) & 255; n[14] = r[13]; n[15] = r[14]; n[2] = 14; return n; } }
+  return r;
+}
+async function lvPoll(){   // one record: every ask the board answered at start-up, in the PC's order
+  const A = LV.proto === '@', bytes = [];
+  for (const c of LV.cmds){
+    if (!LV.open || !lvAlive()) return null;
+    const idu = lvIsIdu(c, A), key = c.cmd[2] * 256 + (idu || lvIsBoost(c, A) ? c.cmd[3] : 0);
+    let r = A ? await lvAskA(c.cmd) : await lvAskM(c.cmd);
+    if (r && A && LV.softVer) r = await lvSoftVer(r);
+    if (r){ if (idu) LV.prev[key] = r; } else if (idu && LV.prev[key]) r = LV.prev[key]; else continue;   // an indoor unit that misses one poll keeps its last answer, as the PC does
+    const data = A ? r.subarray(3, r.length - 1) : r.subarray(2, r.length - 1);
+    bytes.push(r[1], lvAdrResp(r, A) ? r[4] : 0, data.length, ...data);
+  }
+  return bytes.length ? Uint8Array.from(bytes) : null;
+}
+function lvGroups(u8, A){   // [group][address][length] data… → groups by id; a multi head goes at its own address, so an empty port leaves a gap
+  const g = {}; let p = 0;
+  while (p + 3 <= u8.length){ const gid = u8[p], adr = u8[p + 1], ln = u8[p + 2], d = u8.subarray(p + 3, p + 3 + ln); p += 3 + ln;
+    const a = g[gid] || (g[gid] = []); if (!A && (gid === 0x41 || gid === 0x42)) a[adr] = d; else a.push(d); }
+  return g;
+}
+
+// ---- which of Daikin's label layouts fits the board: the length of each reply, the 0x00 equipment counts (4-way valves, fans) ----
+const LV_PREF = ['INV_Unitary_DZ6VS', 'INV_Unitary_DX6VS', 'INV_Unitary_DH9VS', 'INV_Unitary_DC9VS', 'INV_Unitary_DC7VS', 'INV_Unitary_DZ20VC', 'INV_Unitary_DX20VC', 'INV_Unitary_DZ9VC', 'INV_Unitary_DX9VC'];   // the name shown when several models share a layout
+function lvAuto(){
+  if (LV.proto === 'M') return 'Multi_Split';
+  const cfg = LV.cfg || [], has4 = cfg[5] > 0, fans2 = cfg[3] >= 2; let best = null;
+  for (const lay of LV_LAB.lays){
+    if (lay.models[0][0] === 'Multi_Split') continue;
+    const need = {}; let four = false, fan2 = false;
+    for (const r of lay.rows.split(';')){ if (!r || r === 'R') continue; const f = r.split('.'), g = parseInt(f[0], 16), nm = LV_LAB.names[parseInt(f[5], 36)];
+      need[g] = Math.max(need[g] || 0, +f[1] + +f[2]); if (/4\s*way/i.test(nm)) four = true; if (/fan\s*2/i.test(nm)) fan2 = true; }
+    let ok = true, slack = 0;
+    for (const g in need){ const have = LV.lens[g]; if (have == null || have < need[g]){ ok = false; break; } slack += have - need[g]; }
+    if (!ok) continue;
+    const score = slack + (cfg.length > 5 && four !== has4 ? 100 : 0) + (cfg.length > 3 && fan2 !== fans2 ? 50 : 0) + (lay.models.some(m => /^INV_Unitary_D/.test(m[0])) ? 0 : 0.5);   // a tie goes to Daikin's own FIT / DH9 / VC names
+    if (!best || score < best.score) best = {lay, score};
+  }
+  if (!best) return 'INV_Unitary_DZ6VS';
+  const ms = best.lay.models.map(m => m[0]), pref = LV_PREF.find(p => ms.includes(p)); return pref || ms.find(m => /^INV_Unitary_D/.test(m)) || ms[0];
+}
+function lvLabels(model, keepRef){   // the same objects dlParseLabels makes from a phone recording's datalabel.txt
+  const lay = LV_LAB.lays.find(l => l.models.some(m => m[0] === model)); if (!lay) return null;
+  const ref = (lay.models.find(m => m[0] === model) || [])[1], one = lay.models.every(m => m[1] === ref), seen = new Map();   // the stated refrigerant is kept when the model was picked by hand or every model of the layout has the same one
+  return lay.rows.split(';').map((r, i) => {
+    if (!r) return null;
+    if (r === 'R') return (keepRef || one) && ref ? {n:i + 1, grp:0, off:0, size:0, type:ref === 'R32' ? 802 : 801, vis:true, label:'*Refrigerant type', kind:-1, plot:0, inst:0} : null;   // picked by hand: the model says it; auto: the readings decide
+    const f = r.split('.'), label = LV_LAB.names[parseInt(f[5], 36)], key = f.slice(0, 4).join('|') + '|' + label, inst = seen.get(key) || 0; seen.set(key, inst + 1);
+    return {n:i + 1, grp:parseInt(f[0], 16), off:+f[1], size:+f[2], type:+f[3], vis:true, label, kind:f[4] === '' ? -1 : +f[4], plot:0, inst};
+  });
+}
+const lvPretty = m => m === 'Multi_Split' ? 'Mini / multi split' : m.replace(/^INV_Unitary_/, '').replace(/^Goodman_Amana_/, 'Goodman / Amana ').replace(/_/g, ' ');
+function lvSetModel(){ LV.auto = lvAuto(); LV.model = LV.pick || LV.auto; LV.labels = lvLabels(LV.model, !!LV.pick); LV.loaded = false; }
+
+// ---- every new record: into the recording, the view, the shared session, the backup ----
+function lvAdd(ts, u8, quiet){
+  const A = LV.proto === '@'; LV.recs.push({ts, groups:lvGroups(u8, A)}); LV.raw.push({s:LV.seq, t:ts, r:lvB64(u8)}); LV.seq++;
+  if (LV.recs.length === 1){ LV.lens = {}; for (const g in LV.recs[0].groups){ const a = LV.recs[0].groups[g].find(x => x); if (a) LV.lens[g] = a.length; } lvSetModel(); }
+  if (LV.mode === 'read'){ LV.up.push(LV.raw[LV.raw.length - 1]); if (LV.up.length > 3000) LV.up.splice(0, LV.up.length - 3000); lvPush(); if (LV.recs.length % 6 === 0) lvBackup(true); }
+  if (!quiet){ lvRefresh(); lvUi(); }
+}
+function lvRefresh(){
+  if (LV.recs.length < 2 || !LV.labels) return;
+  if (LV.loaded && D !== LV.D) return;   // the view has moved to another recording (only after the session stopped): leave it there
+  const text = dlToCsv(LV.labels, LV.recs);
+  if (!LV.loaded){ load(text, LV.name, false, LV.model); if (D){ D.sha = null; LV.D = D; LV.loaded = true; $('#savecsv').hidden = false; setCur(D.n - 1); } return; }
+  const follow = cur >= D.n - 1, at = cur, t0 = performance.now();
+  D = buildDataset(text, LV.name, LV.model); D._text = text; D.model = LV.model; LV.D = D; const t1 = performance.now(); analyze(); const t2 = performance.now();
+  applyRefrigerant(); const t3 = performance.now(); evalAll(); const t4 = performance.now(); buildTrendPicker(); buildStrips(); buildDock(); buildRuns(); const t5 = performance.now();
+  if (!$('#panel-data').hidden) buildDataTable(); else LV.dirtyData = true;
+  if (!$('#panel-synopsis').hidden) buildSynopsis();
+  if (!$('#panel-route').hidden) buildRoute();
+  $('#scrub').max = D.n - 1; $('#dsname').textContent = `${LV.name} · ${D.n} rows · ${fmtTime(D.t[0], true)} → ${fmtTime(D.t[D.n-1])}`;
+  setCur(follow ? D.n - 1 : at); LV.ms = {build:t1 - t0, analyze:t2 - t1, refrig:t3 - t2, eval:t4 - t3, ui:t5 - t4, view:performance.now() - t5};
+}
+const lvMeta = end => ({proto:LV.proto, cfg:lvHex(LV.cfg), model:LV.model, every:LV.every, state:end ? 'ended' : 'reading', source:'app ' + APP_VERSION});
+function lvPush(){}   // Brackett: no shared sessions (Kenny's Supabase is not in this build), so nothing leaves the phone
+function lvBackup(on){ try { if (on && LV.recs.length >= 2 && LV.labels){ const b = JSON.stringify({name:LV.name, model:LV.model, text:dlToCsv(LV.labels, LV.recs)}); if (b.length < 1000000) localStorage.setItem('dchk.live.bak', b); } else if (!on) localStorage.removeItem('dchk.live.bak'); } catch(e){} }   // Brackett: capped, the Service Tool shares this storage
+async function lvWake(on){ try { if (on && !LV.wake && navigator.wakeLock){ LV.wake = await navigator.wakeLock.request('screen'); LV.wake.addEventListener('release', () => { LV.wake = null; }); } else if (!on && LV.wake){ const w = LV.wake; LV.wake = null; await w.release(); } } catch(e){} }
+
+// ---- which browser, and what to tell someone whose browser cannot read (the first field test, Oct 2026: Samsung Internet has the serial API but
+//      never shows the adapter list; Android Chrome reads serial from 137 on; Chrome lists nothing until it may use Bluetooth and has seen the pairing) ----
+function lvWhere(){
+  const ua = navigator.userAgent || '', android = /Android/.test(ua) || !!(navigator.userAgentData && navigator.userAgentData.platform === 'Android');
+  const samsung = /SamsungBrowser\//.test(ua), webview = android && /; wv\)/.test(ua), other = /EdgA\/|OPR\/|Firefox\/|YaBrowser\/|DuckDuckGo\//.test(ua);
+  return {android, samsung, chrome:samsung || webview || other ? 0 : +((/Chrome\/(\d+)/.exec(ua) || [])[1] || 0)};
+}
+const lvChromeLink = () => `intent://${location.host}${location.pathname}${location.search}#Intent;scheme=${location.protocol.replace(':', '')};package=com.android.chrome;end`;
+function lvSheetHelp(){   // the sheet's opening note, and a button to Chrome (or to its update) when this browser will not read
+  const b = lvWhere(), serial = 'serial' in navigator, go = $('#lv-go'); let note, link = null;
+  if (window.dchkNative) note = 'Plug Daikin\'s Bluetooth adapter into the outdoor board\'s D-Checker connector; the iPhone reaches it the way Daikin\'s app does. Every reading is recorded and saves like any recording when you stop.';
+  else if (b.samsung){ note = 'Samsung Internet does not show the list of adapters, so it cannot read the unit. Open this page in Chrome to read it.'; link = ['Open in Chrome', lvChromeLink()]; }
+  else if (b.android && !b.chrome){ note = serial ? 'Reading is made for Chrome: this browser may not list the adapter. If Connect shows no list, open this page in Chrome.' : 'This browser cannot reach the adapter. Open this page in Chrome to read the unit.'; link = ['Open in Chrome', lvChromeLink()]; }
+  else if (serial) note = 'Plug Daikin\'s Bluetooth adapter into the outdoor board\'s D-Checker connector and pair it in the phone\'s Bluetooth settings (first time only; code 3131). On a computer a USB D-Checker cable works too. Every reading is recorded and saves like any recording when you stop.';
+  else if (b.android){ note = (b.chrome < 137 ? `This Chrome is version ${b.chrome}; reading the adapter takes Chrome 137 or newer.` : 'This Chrome does not offer serial ports, so it cannot reach the adapter.') + ' Update Chrome in the Play Store, then open this page again.'; link = ['Update Chrome', 'https://play.google.com/store/apps/details?id=com.android.chrome']; }
+  else note = 'This browser cannot reach the adapter: reading takes Chrome on an Android phone, or Chrome or Edge on a computer. No iPhone browser can.';
+  $('#lv-dnote').textContent = note; go.hidden = !link; if (link){ go.textContent = link[0]; go.href = link[1]; }
+  $('#lv-connect').classList.toggle('primary', !link);
+}
+function lvNoPick(){   // requestPort came back without a port: the list was cancelled, or had nothing in it
+  const b = lvWhere();
+  if (b.samsung) return lvStatus('Samsung Internet did not show the adapter list. Tap Open in Chrome and connect there.', true);
+  if (b.android && !b.chrome) return lvStatus('This browser did not offer the adapter. Tap Open in Chrome and connect there.', true);
+  if (!b.android) return lvStatus('No adapter picked. Plug in the USB D-Checker cable, or pair Daikin\'s adapter in the computer\'s Bluetooth settings (code 3131), then tap Connect and choose it.', true);
+  LV.help = ['Pair Daikin\'s adapter in the phone\'s Bluetooth settings (code 3131).',
+    'Let Chrome use Bluetooth: Settings › Apps › Chrome › Permissions › Nearby devices › Allow.',
+    'Force stop Chrome (Settings › Apps › Chrome › Force stop), open this page again and tap Connect: Chrome may not see a new pairing or permission until it restarts.'];
+  lvStatus('No adapter picked. If the list was empty:', true);
+}
+
+// ---- start, run, stop ----
+function lvReset(mode){
+  Object.assign(LV, {mode, on:false, native:false, gone:false, help:null, proto:null, cfg:null, lens:{}, idu:[], boost:[], softVer:false, cmds:[], prev:{}, recs:[], raw:[], seq:0, labels:null, model:null, auto:null,
+    loaded:false, D:null, session:null, up:[], pubOk:null, pubOff:false, after:-1, ended:false, saved:false, startAt:Date.now(), log:[], t0:Date.now(), dirtyData:false});
+  LV.pick = $('#lv-model') ? $('#lv-model').value : '';
+}
+const lvName = () => { const d = new Date(); return `Live ${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}-${pad(d.getMinutes())}`; };
+async function lvReconnect(){   // the adapter dropped (out of range, unplugged for a moment): reopen the same port, set it up again and carry on with the same session
+  const A = LV.proto === '@', baud = A ? 9600 : 2400;
+  for (let k = 1; k <= 12 && LV.on; k++){
+    lvStatus(`The adapter dropped the connection. Reconnecting (try ${k} of 12); the readings so far are kept…`, true);
+    await lvClose(true); LV.gone = false; await lvSleep(k === 1 ? 1500 : 5000); if (!LV.on) return false;
+    try {
+      await lvOpen(baud, !A); if (LV.bt) await lvAdapter(baud);
+      const r = A ? await lvAskA(LV.cmds[0].cmd) : await lvAskM(LV.cmds[0].cmd);
+      if (r){ lvStatus(`Reconnected. Reading every ${LV.every} s`); return true; }
+    } catch(e){ lvLog('!', 'reconnect: ' + e.message); }
+  }
+  lvStatus('Could not reconnect to the adapter. The readings so far are kept: tap Stop and save.', true); return false;
+}
+async function lvRead(){
+  if (LV.on) return;
+  const native = !!window.dchkNative; LV.help = null;
+  if (!native && !('serial' in navigator)){ lvStatus('This browser cannot open a serial adapter. Use Chrome on an Android phone, or Chrome or Edge on a computer. No iPhone browser can.', true); return; }
+  let port = null; const asked = Date.now();
+  if (!native) try { port = await navigator.serial.requestPort({allowedBluetoothServiceClassIds:[LV_SPP]}); }
+  catch(e){ lvLog('!', `adapter list: ${e && e.name} ${e && e.message} after ${Date.now() - asked} ms · ${navigator.userAgent}`); if (e && e.name === 'NotFoundError') lvNoPick(); else lvStatus('Could not open the adapter list: ' + (e && e.message), true); return; }
+  lvReset('read'); LV.port = port; LV.native = native; LV.gone = false; LV.on = true; lvUi();
+  const info = port && port.getInfo ? port.getInfo() : {}; LV.bt = native || !!info.bluetoothServiceClassId || !info.usbVendorId; lvLog('*', native ? 'adapter through the iPhone app' : 'port ' + JSON.stringify(info));
+  let reading = false;
+  try {
+    if (!await lvDetect()){ lvStatus('No answer from the outdoor board. Check that the adapter is plugged into the board\'s D-Checker connector and the unit has power, then tap Connect again.', true); await lvClose(); LV.on = false; LV.mode = null; lvUi(); return; }
+    await lvPrepare();
+    if (!LV.cmds.length){ lvStatus('The board answered but reported nothing to read. Tap Connect to try again.', true); await lvClose(); LV.on = false; LV.mode = null; lvUi(); return; }
+    LV.session = lvCode(10); LV.name = lvName(); lvWake(true); lvStatus(`Reading every ${LV.every} s`); reading = true;
+    $('#livesheet').hidden = true; document.body.classList.remove('modal');
+    while (LV.on && LV.open){
+      const t0 = Date.now(); let rec = null;
+      try { rec = await lvPoll(); } catch(e){ lvLog('!', 'poll: ' + e.message); }
+      if (!LV.on) break;
+      if (!lvAlive() || !LV.open){ if (await lvReconnect()) continue; break; }
+      if (rec){ lvAdd(lvStamp(new Date()), rec); if (LV.bad) lvStatus(`Reading every ${LV.every} s`); } else lvStatus(`No answer at ${new Date().toLocaleTimeString()}. Still trying…`, true);
+      const wait = (lvT('every') || LV.every * 1000) - (Date.now() - t0); if (wait > 0) await lvSleep(wait);
+    }
+  } catch(e){
+    if (reading && LV.recs.length) lvStatus('Lost the adapter: ' + e.message + '. The readings so far are kept: tap Stop and save.', true);
+    else {   // it never got going, most often because the port would not open (the adapter unpowered, out of reach or held by another phone): back to Connect
+      lvLog('!', `start: ${e && e.name} ${e && e.message} · ${navigator.userAgent}`); await lvClose(); lvWake(false); LV.on = false; LV.mode = null;
+      lvStatus(`Could not connect to the adapter (${String((e && e.message) || e).replace(/\.$/, '')}). Check that it is plugged into the outdoor board's D-Checker connector with the unit powered, and that no other phone, tablet or Daikin app is connected to it (it takes one connection at a time). Then tap Connect again.`, true);
+      if ($('#livesheet').hidden) toast('Could not connect to the adapter: open Live for the details');
+    }
+  }
+  if (LV.on && LV.mode === 'read' && LV.recs.length && !LV.open) lvLog('*', 'reading stopped; waiting for Stop and save');
+  lvUi();
+}
+async function lvStop(silent){
+  const was = LV.mode; LV.on = false;
+  if (was === 'read'){ await lvClose(); lvWake(false); lvPush(true); }
+  if (!silent && LV.recs.length >= 2 && !LV.saved){
+    if (D !== LV.D){ LV.loaded = false; lvRefresh(); } else lvRefresh();
+    LV.saved = true; lvBackup(false);
+    if (D === LV.D){ await mineSave(LV.name + '.csv', LV.model); $('#savecsv').hidden = false; toast('Live recording saved to My logs'); }   // Brackett: My logs on this phone (no shop library)
+    LV.status = `Saved: ${LV.recs.length} rows, in My logs`; LV.bad = false;
+  } else if (!silent && LV.recs.length < 2) toast('Nothing to save yet: no full readings came in');
+  LV.mode = null; lvUi();
+}
+function lvBusy(){ if (LV.mode && LV.on){ toast('Stop the live reading first (Live ▸ Stop and save)'); return true; } return false; }
+
+// ---- the sheet and the pill ----
+function lvUi(){
+  const sh = $('#livesheet'); if (!sh) return;
+  const reading = LV.mode === 'read' && LV.on, watching = LV.mode === 'watch' && LV.on, busy = reading || watching;
+  $('#lv-direct').hidden = busy;
+  $('#lv-connect').disabled = !('serial' in navigator) && !window.dchkNative;
+  $('#lv-stat').textContent = LV.status || ''; $('#lv-stat').classList.toggle('bad', !!LV.bad);
+  const hp = $('#lv-help'); hp.hidden = !LV.help; if (LV.help) hp.innerHTML = LV.help.map(x => `<li>${synEsc(x)}</li>`).join('');
+  const rows = LV.recs.length, mins = LV.startAt ? Math.floor((Date.now() - LV.startAt) / 60000) : 0;
+  $('#lv-info').textContent = LV.proto ? [LV.proto === '@' ? 'Unitary board' : 'Mini / multi split board', LV.model ? (LV.pick ? '' : 'auto: ') + lvPretty(LV.model) : '', rows ? rows + ' rows' : '', LV.softVer ? 'soft-version board' : ''].filter(Boolean).join(' · ') : '';
+  $('#lv-stop').hidden = !(busy || (LV.recs.length >= 2 && !LV.saved && LV.mode));
+  $('#lv-log').textContent = LV.log.slice(-200).join('\n');
+  const p = $('#lvpill'); p.hidden = !busy;
+  if (busy){ const s = Math.floor((Date.now() - LV.startAt) / 1000); p.classList.toggle('watch', watching); p.classList.toggle('bad', !!LV.bad); $('#lvpill-t').textContent = `${watching ? 'WATCH' : 'LIVE'} ${Math.floor(s / 60)}:${pad(s % 60)} · ${rows}`; }
+}
+setInterval(() => { if (LV.on) lvUi(); }, 1000);
+(() => {
+  const sh = document.createElement('div'); sh.className = 'jobask liveask'; sh.id = 'livesheet'; sh.hidden = true;
+  const opts = LV_LAB.lays.flatMap(l => l.models).map(([m, r]) => [m, lvPretty(m) + (r ? ' · ' + (r === 'R32' ? 'R-32' : 'R-410A') : '')]).sort((a, b) => a[1].localeCompare(b[1]));
+  sh.innerHTML = `<div class="jobbox lvbox" role="dialog" aria-label="Live from the unit"><div class="lvhead"><b class="jt">Live from the unit</b><button class="btn small" type="button" id="lv-close">Close</button></div>
+    <div id="lv-direct"><p class="note" id="lv-dnote"></p><a class="btn primary lvgo" id="lv-go" hidden></a>
+      <div class="lvrow"><label><span>Read every</span><select id="lv-every"><option value="5">5 seconds</option><option value="10">10 seconds</option><option value="30">30 seconds</option></select></label>
+      <label><span>Unit</span><select id="lv-model"><option value="">Auto</option>${opts.map(([m, t]) => `<option value="${synEsc(m)}">${synEsc(t)}</option>`).join('')}</select></label></div>
+      <button class="btn primary" type="button" id="lv-connect">Connect to the adapter</button></div>
+    <div class="lvstat" id="lv-stat"></div><ol class="lvhelp" id="lv-help" hidden></ol><div class="lvinfo" id="lv-info"></div>
+    <div class="jobacts"><button class="btn primary" type="button" id="lv-stop" hidden>Stop and save</button></div>
+    <details class="lvlog"><summary>Connection log</summary><pre id="lv-log"></pre><button class="btn small" type="button" id="lv-copylog">Copy log</button></details></div>`;
+  document.body.appendChild(sh);
+  lvSheetHelp();
+  $('#lv-every').value = String(LV.every);
+  const open = on => { sh.hidden = !on; document.body.classList.toggle('modal', on); if (on){ lvSheetHelp(); lvUi(); } };
+  $('#livebtn').addEventListener('click', () => open(true)); $('#lvpill').addEventListener('click', () => open(true));
+  $('#lv-close').addEventListener('click', () => open(false)); sh.addEventListener('click', e => { if (e.target === sh) open(false); });
+  $('#lv-every').addEventListener('change', e => { LV.every = +e.target.value || 5; saveJSON('dchk.live.every', LV.every); });
+  $('#lv-model').addEventListener('change', e => { LV.pick = e.target.value; if (LV.recs.length){ lvSetModel(); lvRefresh(); lvUi(); } });
+  $('#lv-connect').addEventListener('click', () => lvRead());
+  $('#lv-stop').addEventListener('click', () => { open(false); lvStop(); });
+  $('#lv-copylog').addEventListener('click', async () => { try { await navigator.clipboard.writeText(LV.log.join('\n')); toast('Connection log copied'); } catch(e){ toast('Could not copy here'); } });
+  document.addEventListener('visibilitychange', () => { if (LV.mode === 'read' && LV.on && document.visibilityState === 'visible') lvWake(true); });
+  window.addEventListener('pagehide', () => { if (LV.mode === 'read' && LV.recs.length >= 2 && !LV.saved) lvBackup(true); });
+  lvUi();
+})();
+window.dchkLive = () => ({mode:LV.mode, on:LV.on, open:LV.open, proto:LV.proto, model:LV.model, auto:LV.auto, pick:LV.pick, bt:LV.bt, softVer:LV.softVer, idu:LV.idu, boost:LV.boost, cfg:LV.cfg, lens:LV.lens,
+  cmds:LV.cmds.map(c => c.kind + ':' + lvHex(c.cmd)), rows:LV.recs.length, status:LV.status, bad:LV.bad, session:LV.session, pubOk:LV.pubOk, pubOff:LV.pubOff, saved:LV.saved, shown:D === LV.D, ms:LV.ms, log:LV.log.slice(-60)});
+
+
 /* ===== phone layout wiring ===== */
 (() => {
   const ic = {cycle:'<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/>',
@@ -7939,10 +8455,6 @@ $('#sizesel').addEventListener('change', e => { SIZE = e.target.value; if (D){ D
 $('#eqsel').addEventListener('change', e => { if (D) saveJSON('dchk.eq.' + D.name, e.target.value); logEvent('equipment', {value:e.target.value}); applyEquipment(); if (D) renderCycle(cur); });
 setThermal(THERMAL);
 $('#loadbtn').addEventListener('click', () => $('#csvfile').click());
-const liveMenu = open => { $('#livemenu').hidden = !open; $('#livebtn').setAttribute('aria-expanded', open); };
-$('#livebtn').addEventListener('click', () => liveMenu($('#livemenu').hidden));
-$('#live-demo').addEventListener('click', () => { liveMenu(false); demoSource(); });
-$('#live-bt').addEventListener('click', () => { liveMenu(false); checkerSource(); });
 $('#livestop').addEventListener('click', () => { liveStop(); toast('Live feed stopped — the readings so far stay on screen'); });
 $('#livejump').addEventListener('click', () => { if (D) setCur(D.n - 1); $('#livejump').hidden = true; });
 $('#csvfile').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; e.target.value = ''; openFile(await f.arrayBuffer(), f.name); });
@@ -7956,7 +8468,7 @@ $('#tabs').addEventListener('click', e => {
   document.querySelectorAll('.panel').forEach(p => p.hidden = p.id !== 'panel-' + b.dataset.tab);
   if (b.dataset.tab === 'cycle' && V3) V3.resize();
   if (b.dataset.tab === 'trends') drawAllStrips();
-  if (b.dataset.tab === 'data'){ highlightRow(); if (D){ renderPtNow(cur); renderCapNow(cur); } }
+  if (b.dataset.tab === 'data'){ if (LV.dirtyData && D && D === LV.D){ LV.dirtyData = false; buildDataTable(); } highlightRow(); if (D){ renderPtNow(cur); renderCapNow(cur); } }
   if (b.dataset.tab === 'synopsis' && D) buildSynopsis();
   if (b.dataset.tab === 'mine') mineRender();
   rememberPlace();
@@ -8059,6 +8571,9 @@ window.dchkDemos = () => DEMOS.map(d => ({id:d.id, file:d.file, model:d.model, n
 window.dchkDemo = demoOpen;                                                                     // test hook
 if (location.hash !== '#wait') (async () => {
   { const sv = /^#saved=([\w-]+)$/.exec(location.hash); if (sv && await rtOpenSaved(sv[1])) return; }
+  { const bak = loadJSON('dchk.live.bak', null);   // Brackett: a live reading the app closed on before Stop and save - open it and keep it in My logs
+    if (bak && bak.text){ try { localStorage.removeItem('dchk.live.bak'); } catch(e){} const bn = bak.name || 'Live recording'; load(bak.text, bn, false, bak.model || null);
+      if (D){ await mineSave(bn + '.csv', bak.model || null); toast('Opened the live reading that was not saved. It is in My logs now.'); return; } } }
   const last = loadJSON('dchk.last', null); let x = null;
   if (last && last.sha){ try { x = (await mineAll()).find(r => r.sha === last.sha); } catch(e){} }
   if (D) return;   // a recording arrived while the store was being read
