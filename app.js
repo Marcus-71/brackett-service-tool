@@ -347,7 +347,12 @@ let currentScreen = "home";
 // a time (scanner -> codes -> swipe -> scanner) instead of dumping to Home.
 let screenHistory = [];
 
+// v356 (Andy 2026-11-03 "still opens in the middle instead from the top"): a screen opened from a tile starts
+// at the top. The page kept the home screen's scroll, so the Daikin Checker tile (low on home) opened its screen
+// part-way down. Back returns to where that screen was left.
+const screenScrollY = {};
 function showScreen(name, fromBack) {
+  if (name !== currentScreen) screenScrollY[currentScreen] = window.scrollY;
   if (!fromBack && name !== currentScreen) {
     screenHistory.push(currentScreen);
     if (screenHistory.length > 20) screenHistory.shift();
@@ -360,6 +365,7 @@ function showScreen(name, fromBack) {
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
+  window.scrollTo(0, fromBack ? (screenScrollY[name] || 0) : 0);
 
   const addBtn = document.getElementById("addBtn");
   if (name === "home" || !ADD_HANDLERS[name]) {
@@ -12794,7 +12800,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v355";
+const APP_VERSION = "v356";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
