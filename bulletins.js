@@ -1017,10 +1017,12 @@ const BULLETINS = [
     steps: [
       "Blower surging on a -C control below 2.05, or heat pump checkout ending at the cooling checkout time on a control below 2.10: update the control software before chasing the equipment.",
       "Earlier: 2.00 (July 2025) fixed indoor dissipation fault 184 and added the 454B line-length charge note; 1.64 (May 2025) fixed nuisance 160 humidity sensor faults.",
-      "Do not install 2.00 on a system with an old 58MVC / 355CAV step-modulating furnace without reading TIC2025-0032."
+      "Do not install 2.00 on a system with an old 58MVC / 355CAV step-modulating furnace without reading TIC2025-0032.",
+      "Older releases: 1.59 (Jan 2025) better outdoor staging, fan coil heat kit learning and airflow verification; 1.55 (Nov 2024) heat pump max defrost 30 min on Next Gen Greenspeed / Evolution Extreme (15 min on others), indoor / outdoor compatibility check, pump down and checkout fixes; 1.50 (Apr 2024) dissipation handling improved, outdoor Quiet mode off by default; 1.43 (Nov 2023) added the new communicating furnaces and fan coil, fixed outdoor temperature reading below zero.",
+      "Manual update or roll back with a USB-C stick (TIC2024-0019): software 1.50 and newer goes in a folder named TSTAT on the stick; older than 1.50 goes in a folder named FW. Plug it into the control's USB-C port and load it."
     ],
     priority: "info", confidential: true,
-    source: "HVACpartners TIC2026-0011 / TIC2025-0038"
+    source: "HVACpartners TIC2026-0011 / TIC2025-0038 (history: TIC2025-0025, -0017, -0002, TIC2024-0028, -0019, -0012, TIC2023-0017, -0001, TIC2022-0024)"
   },
   {
     id: "carrier-tic2025-0034", brand: "Carrier", number: "TIC2025-0034", docNo: "", rev: "", date: "2025-11-11", type: "Technical",
@@ -1030,10 +1032,12 @@ const BULLETINS = [
     summary: "4.79 removed compressor demand response from the CFM calculation to stop fan surges, added per-zone airflow limits for hydronic heat zoning, a maintenance reminder reset button and better on-screen diagnostics. 4.74 (June 2025, limited) fixed hanging at 'Please Wait' during an update, geothermal freeze protection being overwritten, and refined high humidity fault 160.",
     steps: [
       "Fan surging on a -B control below 4.79: update the control software before replacing a motor.",
-      "Old 58MVC / 355CAV step-modulating furnace stopped staging after 4.74: see TIC2025-0032 (roll back to 4.70)."
+      "Old 58MVC / 355CAV step-modulating furnace stopped staging after 4.74: see TIC2025-0032 (roll back to 4.70).",
+      "Older releases: 4.70 (Jan 2025) better outdoor staging, fan coil heat kit learning, airflow verification, SD card updates; 4.66 (Oct 2024) heater selection at setup, more geothermal / fan coil combinations, partial weigh-in in the charge calculator; 4.64 (Sep 2024) max defrost 30 min on 25VNA4 Greenspeed / 284ANV Extreme and 15 min on 2-stage, 25VNA0, 280A and 5-stage, fixed false 'incompatible motor' error and furnace re-learn after setting changes.",
+      "4.56 (Apr 2024) added R-454B dissipation handling (checkout, charging and static tests are blocked while dissipation runs; new 454B dissipation board faults) and set variable speed outdoor quiet mode OFF by default; 4.47 (Aug 2023) first A2L mitigation response; 4.38 (Apr 2023) fixed System Monitor alerts 140-148 when the control is set to Celsius."
     ],
     priority: "info", confidential: true,
-    source: "HVACpartners TIC2025-0034"
+    source: "HVACpartners TIC2025-0034 (history: TIC2025-0020, -0001, TIC2024-0026, -0023, -0004, TIC2023-0011, -0004)"
   },
   {
     id: "carrier-tic2025-0033", brand: "Carrier", number: "TIC2025-0033", docNo: "", rev: "", date: "2025-11-12", type: "Technical",
@@ -1117,6 +1121,139 @@ const BULLETINS = [
     source: "HVACpartners DSB24-0013"
   },
 
+  // --- HVACpartners check 2026-11-03 afternoon run (TIC backlog, newest first) ---
+  {
+    id: "carrier-tic2025-0031", brand: "Carrier", number: "TIC2025-0031", docNo: "", rev: "", date: "2025-09-01", type: "Technical",
+    title: "Ductless air handler + 5/8/10 kW heater on ONE power circuit - needs a 15 A inline fuse",
+    applies: { modelRe: ["^45MUAAQ(18|24|30|36|48|60)", "^45MUHAQ(24|36|60)"] },
+    appliesText: "Carrier ductless communicating air handlers 45MUAAQ18-60 and 45MUHAQ24-60 with a 5, 8 or 10 kW EHKM heater kit, when the air handler and heater share one supply circuit (single-point wiring).",
+    summary: "The air handler and its electric heater may be fed from one combined circuit, but only with the wiring the bulletin shows. Combined MCA / MOP values for each air handler and heater size are in the bulletin table.",
+    steps: [
+      "Single-point wiring: the air handler circuit needs an inline 15 A fuse (matches the air handler's MOP) wired to the load side of the circuit 1 breaker. Use certified parts.",
+      "Size the supply wire and breaker from the combined MCA / MOP table in TIC2025-0031 (ask the office for it), not from the air handler plate alone.",
+      "Leave a copy of the bulletin with the unit's paperwork - the corrected electrical tables have to stay with the unit. The local inspector must approve the installation."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2025-0031"
+  },
+  {
+    id: "carrier-tic2025-0029", brand: "Bryant", number: "TIC2025-0029", docNo: "", rev: "", date: "2025-09-08", type: "Technical",
+    title: "Bryant 986TA furnace does not work with the new variable-speed outdoor units",
+    applies: { modelRe: ["^986TA", "^290VAN", "^291VAN", "^293VAN", "^191VAN"] },
+    appliesText: "Bryant 986TA gas furnaces only, paired with the new variable speed outdoor units 290VAN, 291VAN, 293VAN or 191VAN.",
+    summary: "A 986TA furnace is not compatible with the 290VAN, 291VAN, 293VAN or 191VAN outdoor units. The wall control shows an indoor / outdoor not compatible error; the furnace is found and runs normally, but the outdoor unit is ignored.",
+    steps: [
+      "Wall control says indoor and outdoor are not compatible on a 986TA job: check the outdoor model. A 290VAN / 291VAN / 293VAN / 191VAN will never run with that furnace.",
+      "Do not quote or install one of those outdoor units with an existing 986TA - pick a compatible outdoor unit or replace the furnace."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2025-0029"
+  },
+  {
+    id: "carrier-tic2025-0027", brand: "Carrier", number: "TIC2025-0027", docNo: "", rev: "", date: "2025-07-31", type: "Technical",
+    title: "EHK3 heater kits built before 2446V do not fit R-454B ceiling-mount fan coils",
+    applies: { modelRe: ["^EHK3", "^FMC4[XZ]", "^FMU4[XZ]"], serialTo: "2446V" },
+    appliesText: "EHK3 electric heaters for ceiling-mount multifamily fan coils. Heaters built from serial week 2446V on fit both R-410A and R-454B ceiling-mount fan coils (label on the box says so); older heaters fit only the R-410A fan coils FMC4X, FMU4X, FMC4Z, FMU4Z.",
+    summary: "The heater back plate was changed for the R-454B ceiling-mount fan coils (the transformer was rotated and the mounting holes moved). New heaters fit old and new fan coils; old heaters do not fit the new R-454B fan coils.",
+    steps: [
+      "Before installing an EHK3 in an R-454B ceiling-mount fan coil, check the heater serial: it must be week 2446V or later (look for the R-410A & R-454B label on the box).",
+      "A heater built before 2446V goes only in an R-410A FMC4X / FMU4X / FMC4Z / FMU4Z fan coil."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0027"
+  },
+  {
+    id: "carrier-tic2025-0014", brand: "Carrier", number: "TIC2025-0014", docNo: "", rev: "", date: "2025-04-28", type: "Technical",
+    title: "Small packaged units: TXV label says R410A but the valve is the correct R-454B one - no action",
+    applies: { modelRe: ["^48NT-?B48(090|115)", "^50NT-?B48", "^605C[ENP]XB48", "^675CNWB48115", "^PH5GNAB48"], serialFrom: "4924F", serialTo: "1625F" },
+    appliesText: "4-ton small packaged units, serials 4924F to 1625F: Carrier 48NT-B48090, 48NT-B48115, 50NT-B48---30/50/60; Bryant 605CEXB48000, 605CNXB48000, 605CPXB48000, 675CNWB48115; Payne PH5GNAB48000.",
+    summary: "The TXV in these units may carry a label that says R410A. The valve is calibrated for R-454B and works as designed.",
+    steps: [
+      "TXV label reads R410A on one of these units: no action needed - do not replace the valve for the label alone."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0014"
+  },
+  {
+    id: "carrier-tic2025-0012", brand: "Carrier", number: "TIC2025-0012", docNo: "", rev: "", date: "2025-04-24", type: "Technical",
+    title: "Modulating furnace (series C) limit trips - load the higher intermediate airflow recipe",
+    applies: { modelRe: ["^59MN7C", "^987MC"] },
+    appliesText: "Carrier 59MN7 series C and Bryant 987M series C modulating gas furnaces. New recipe versions released April 23, 2025 in Service Technician App 6.133.7.",
+    summary: "Series C modulating furnaces were getting nuisance limit trips and limit lockouts. The temperature rise is highest at middle firing rates (50-70%). Carrier raised the intermediate (65%) airflows; the new values load from the Service Technician App.",
+    steps: [
+      "Limit trips or limit lockout on a series C modulating furnace: update the furnace recipe before replacing parts.",
+      "Use Carrier / Bryant Service Technician App version 6.133.7 or newer. Installer Setup > connect to the furnace by NFC or Bluetooth. If a newer recipe is offered, tap Update Now and scan it into the furnace control; wait for the success popup.",
+      "New recipe versions: 60K 17 in. recipe 600 v7; 80K 3.5 ton 17 in. recipe 602 v7; 100K 21 in. recipe 604 v7; 120K 24 in. recipe 605 v8. (The 80K 5 ton 21 in. got higher airflows in Oct 2024 with recipe version 6.)",
+      "Example new Eff2 intermediate airflow: 640 CFM (60K), 930 (80K), 1090 (100K), 1375 (120K)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2025-0012"
+  },
+  {
+    id: "carrier-tic2025-0007", brand: "Carrier", number: "TIC2025-0007", docNo: "", rev: "", date: "2025-04-03", type: "Technical",
+    title: "R-454B multipoise V coils: horizontal dissipation-sensor label may be in the wrong place",
+    applies: { modelRe: ["^CVAMA"], serialTo: "1025J00001" },
+    appliesText: "Carrier / Bryant / Payne R-454B multipoise V furnace coils CVAMA2414XMA through CVAMA6124XMA built before March 3, 2025 (serials before 1025J00001).",
+    summary: "The label that shows where to move the A2L dissipation sensor for a horizontal install may be in the wrong spot. The installation instructions and the pre-drilled holes in the aluminum coil extension are correct.",
+    steps: [
+      "Horizontal install: mount the dissipation sensor at the existing holes in the aluminum coil extension, as the installation instructions show - ignore the label position.",
+      "Do not drill new holes for the sensor."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0007"
+  },
+  {
+    id: "carrier-tic2023-0013", brand: "Carrier", number: "TIC2023-0013", docNo: "", rev: "", date: "2023-09-05", type: "Technical",
+    title: "CVPMA multipoise furnace coil leaks where the two drain pans join",
+    applies: { modelRe: ["^CVPMA"], serialTo: "2123J" },
+    appliesText: "Vertex multipoise furnace coils CVPMA built before week 21 of 2023 (clean point June 5, 2023, serial 2123Jxxxxx).",
+    summary: "An air gap between the two drain pans lets water get pulled out of the pan and leak through the coil casing. Factory added more silicone lines from week 21 of 2023; every reported leak was on coils built before that.",
+    steps: [
+      "Water leaking from the casing of a CVPMA coil built before 2123J: check the joint between the two pans.",
+      "On older CVPMA coils, run a bead of ordinary high-temperature RTV on the base pan joints - before installation if you can."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2023-0013"
+  },
+  {
+    id: "carrier-tic2023-0007", brand: "Carrier", number: "TIC2023-0007", docNo: "", rev: "", date: "2023-06-30", type: "Technical",
+    title: "FJ4DNXA18 fan coil: no blower on a heat call (W) without G on units before week 24 2023",
+    applies: { modelRe: ["^FJ4DNXA18"] },
+    appliesText: "FJ4DNXA18 (018 size) fan coils. From week 24 of 2023 the harness has a white wire from W to motor tap 4 like the rest of the family.",
+    summary: "Older 018 fan coils have no W-to-motor wire, so the blower only runs if the thermostat also energizes G. Heat strips can come on with no fan.",
+    steps: [
+      "Electric heat on but no blower on an FJ4DNXA18 built before week 24 2023: check whether the thermostat sends G with W.",
+      "Fix: set the thermostat to energize G with Y or W, or add a wire from W to motor tap 4."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2023-0007"
+  },
+  {
+    id: "carrier-tic2023-0005", brand: "Carrier", number: "TIC2023-0005", docNo: "", rev: "", date: "2023-05-19", type: "Technical",
+    title: "Ductless 38MPRBQ09XA3 with old 40MPHAQ09XA3 high wall needs a line-set conversion joint",
+    applies: { modelRe: ["^38MPRBQ09", "^40MPHAQ09"] },
+    appliesText: "Carrier ductless high tier 9K: new outdoor 38MPRBQ09XA3 paired with the phased-out high wall 40MPHAQ09XA3.",
+    summary: "The 38MPRBQ09XA3 has a 1/2 in. suction line; the old 40MPHAQ09XA3 has a 3/8 in. line, so they need a conversion joint.",
+    steps: [
+      "Order conversion joint RC part 15500303002544 for a 38MPRBQ09XA3 + 40MPHAQ09XA3 pair.",
+      "40MPHBQ09XA3 with the earlier 38MPRAQ09XA3: no extra part - the adapter comes in the indoor unit box."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2023-0005"
+  },
+  {
+    id: "carrier-tic2022-0013", brand: "Carrier", number: "TIC2022-0013", docNo: "", rev: "", date: "2022-07-01", type: "Technical",
+    title: "80% ULN furnaces: remove the cardboard heat exchanger shipping brace before installing",
+    applies: { modelRe: ["^58SU0", "^58CU0"] },
+    appliesText: "All 80% Ultra Low NOx (ULN) furnaces, from week 20 of 2022 (Carrier 58SU0 / 58CU0 shown here; Bryant / Payne ULN 80% models are covered too).",
+    summary: "Loose heat exchanger bundles led Carrier to add a removable cardboard shipping brace in the furnace packaging to stop the tubes shifting in transit.",
+    steps: [
+      "On a new ULN 80% furnace, find and remove the cardboard shipping brace before installation (the warning on the brace says so).",
+      "A loose heat exchanger bundle found on an older unit is what this brace was added for - report it rather than run it."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2022-0013"
+  },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
