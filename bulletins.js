@@ -1036,10 +1036,11 @@ const BULLETINS = [
       "Older releases: 4.70 (Jan 2025) better outdoor staging, fan coil heat kit learning, airflow verification, SD card updates; 4.66 (Oct 2024) heater selection at setup, more geothermal / fan coil combinations, partial weigh-in in the charge calculator; 4.64 (Sep 2024) max defrost 30 min on 25VNA4 Greenspeed / 284ANV Extreme and 15 min on 2-stage, 25VNA0, 280A and 5-stage, fixed false 'incompatible motor' error and furnace re-learn after setting changes.",
       "4.56 (Apr 2024) added R-454B dissipation handling (checkout, charging and static tests are blocked while dissipation runs; new 454B dissipation board faults) and set variable speed outdoor quiet mode OFF by default; 4.47 (Aug 2023) first A2L mitigation response; 4.38 (Apr 2023) fixed System Monitor alerts 140-148 when the control is set to Celsius.",
       "2020-2022 releases: 4.31 (Nov 2022) System Monitor (off by default, can be turned on), clear stored Wi-Fi for a new owner, new V coils in the charging coil list; 4.22 (Jul 2022) temperature / humidity alert trip points (codes 187-191, 191 = low humidity), filter check from the pressure monitor; 4.18 = a renamed copy of 4.05 after the 4.17 app problem; 4.05 (Sep 2021) two limit 33 faults in a row now open the heating-call zone dampers fully (wall control shows 126 - Active Heat Cycle Active), a ULN 2-stage furnace fault 34 locks out high heat for one cycle, 18/19VS 5-stage with FER furnace boards runs continuous fan at least at minimum CFM.",
-      "3.94 (Jul 2021) blower motor code 41 changed from malfunction to fault, fixed running in the wrong mode; 3.62 / 3.61 (late 2020) Wi-Fi fixes only (some 802.11n routers, some internet providers) - no need to load them without a Wi-Fi problem; 3.60 (Sep 2020) fixed a blank screen after the 3.40 update and false G-terminal alerts during learning; 3.40 (Jun 2020) fixed learning of 2-ton units with an FE4ANF002 fan coil and 24VNA624 with FE4ANB005, and stopped an SD card left in the control from re-loading the same outdoor software; 2.30 (Nov 2019) fixed FER furnace airflow in charging and in dual fuel heat pump heating (needs the furnace board replaced too) and the geothermal lake loop heat stage override."
+      "3.94 (Jul 2021) blower motor code 41 changed from malfunction to fault, fixed running in the wrong mode; 3.62 / 3.61 (late 2020) Wi-Fi fixes only (some 802.11n routers, some internet providers) - no need to load them without a Wi-Fi problem; 3.60 (Sep 2020) fixed a blank screen after the 3.40 update and false G-terminal alerts during learning; 3.40 (Jun 2020) fixed learning of 2-ton units with an FE4ANF002 fan coil and 24VNA624 with FE4ANB005, and stopped an SD card left in the control from re-loading the same outdoor software; 2.30 (Nov 2019) fixed FER furnace airflow in charging and in dual fuel heat pump heating (needs the furnace board replaced too) and the geothermal lake loop heat stage override.",
+      "2017-2020: 2.40 (Feb 2020) added OpenADR 2.0b (utility demand response); 2.00 (Aug 2018) better Wi-Fi / server connection, a wired remote room sensor on zone 1 through the 4-zone control is now recognized, postal code fixes for the weather forecast; 1.32 (Apr 2018) better wireless connection and support for the variable capacity A/C outdoor unit (the older -A control got the same support in 14.02); 1.3 (Nov 2017) more robust Wi-Fi / server connection, occupancy hold changed to 2 hours with unoccupied override to Away, and the homeowner can force a reboot by holding a finger anywhere on the home screen for 10 seconds."
     ],
     priority: "info", confidential: true,
-    source: "HVACpartners TIC2025-0034 (history: TIC2025-0020, -0001, TIC2024-0026, -0023, -0004, TIC2023-0011, -0004, TIC2022-0022, -0015, -0006, TIC2021-0017, -0003, TIC2020-0020, -0016, -0015, -0009, TIC2019-0023)"
+    source: "HVACpartners TIC2025-0034 (history: TIC2025-0020, -0001, TIC2024-0026, -0023, -0004, TIC2023-0011, -0004, TIC2022-0022, -0015, -0006, TIC2021-0017, -0003, TIC2020-0020, -0016, -0015, -0009, -0001, TIC2019-0023, TIC2018-0008, -0002, TIC2017-0008)"
   },
   {
     id: "carrier-tic2025-0033", brand: "Carrier", number: "TIC2025-0033", docNo: "", rev: "", date: "2025-11-12", type: "Technical",
@@ -1399,6 +1400,313 @@ const BULLETINS = [
     ],
     priority: "normal", confidential: true,
     source: "HVACpartners TIC2019-0001"
+  },
+  {
+    id: "carrier-tic2025-0016", brand: "Carrier", number: "TIC2025-0016", docNo: "", rev: "", date: "2025-05-28", type: "Technical",
+    title: "37MUHA / 37MURA crossover: new oil return software (oil recovery every 2 hours, not 30 min)",
+    applies: { modelRe: ["^37MU[HR]AQ"] },
+    appliesText: "Carrier DLS crossover 37MUHA and 37MURA condensing units paired with non-communicating Carrier residential fan coils and furnaces. Communicating systems are not affected. Built-in from 37MUHA serials 18: 1825V24120, 24: 1825V24129, 30: 1825V24174, 36: 1825V24186, 48: 1825V24210, 60: 1825V11225; 37MURA starting serials 18: 1825V11240, 24: 1825V11249, 30: 1825V11276, 36: 1825V11312, 48: 1825V11384, 60: 1825V11444 (37MURA software and PCB were still TBD).",
+    summary: "Carrier changed the outdoor board software to fix the initial ratings and efficiency. With a non-communicating fan coil or furnace the oil recovery run now comes every 2 hours instead of every 30 minutes. Product number 37MUHAQxxAA302 has it from the factory; older 37MUHAQxxAA301 units can be flashed or get a new outdoor PCB (available from 6/25/2025).",
+    steps: [
+      "Older unit cycling into oil recovery every 30 minutes: it needs the software update. Flash kits go through the local DLS / VRF TSM - call them first.",
+      "Flashing: power off, remove the top cover and the plastic PCB cover, find the 5 exposed pins on the left corner of the PCB (small chassis).",
+      "Hold the programmer pins fully against the 5 pins and press and hold Write until the display shows C_S (success) or E_O (failed). On E_O, re-align and flash again.",
+      "Each size (18, 24, 30, 36, 48, 60K) has its own chip - change the chip between outdoor unit sizes. Pin location changes with tonnage."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2025-0016"
+  },
+  {
+    id: "carrier-tic2025-0015", brand: "Carrier", number: "TIC2025-0015", docNo: "", rev: "", date: "2025-04-28", type: "Technical",
+    title: "Light commercial R-454B units with R-410A TXV part numbers - not a problem",
+    applies: { modelRe: ["^48FE", "^50FE"] },
+    appliesText: "Current Carrier light commercial R-454B units. Most FE units use R-410A valve numbers; later tiers use R-454B valve numbers and / or have a dual refrigerant sticker.",
+    summary: "Some R-454B light commercial units have TXVs with R-410A part numbers because the valves were developed before R-454B was available. Carrier says the valve works correctly with R-454B.",
+    steps: [
+      "Do not replace a TXV just because its number is an R-410A valve on an R-454B unit.",
+      "Replace a TXV only for an actual metering fault, with the part listed for that unit."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0015"
+  },
+  {
+    id: "carrier-tic2025-0006", brand: "Carrier", number: "TIC2025-0006", docNo: "", rev: "", date: "2025-02-19", type: "Technical",
+    title: "50FCQ / 50GCQ / 547K / 549K heat pump: defrost thermostat clamp is loose",
+    applies: { modelRe: ["^50[FG]CQ", "^54[79]K"] },
+    appliesText: "Light commercial 50FCQ / 50GCQ and Bryant 547K / 549K packaged heat pumps with a P in the serial number. Fixed from week 51 2024 (clean date).",
+    summary: "The defrost thermostat (DFT) clamp was made for 3/8 in. pipe but used on 5/16 in. pipe, so the DFT sits loose. It still touches the pipe and works, but it can give poor defrost.",
+    steps: [
+      "Defrost complaint on one of these units with a P in the serial: check the DFT is tight on its pipe.",
+      "Re-fit the clamp per the TIC drawing, or simply fasten the DFT to the pipe with a zip tie."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2025-0006"
+  },
+  {
+    id: "carrier-tic2024-0017", brand: "Carrier", number: "TIC2024-0017", docNo: "", rev: "", date: "2024-05-10", type: "Technical",
+    title: "40MBAA / 40MBAB / 40MUAA ducted air handler: move the T1 return air sensor if the system underperforms",
+    applies: { modelRe: ["^40MBA[AB]", "^40MUAA"] },
+    appliesText: "Carrier DLS and crossover air handlers 40MBAA, 40MBAB and 40MUAA. The sensor location drawing in the TIC is for downflow or horizontal right installs only.",
+    summary: "The unit runs off the T1 return air sensor. Where a downflow or horizontal right install underperforms or short cycles, moving T1 to a spot that reads the true return air can fix comfort and cycling. It will not fix airflow, duct, charge or insulation problems.",
+    steps: [
+      "Check charge, airflow and duct design first.",
+      "Downflow or horizontal right install still underperforming: relocate the T1 return air sensor to the position shown in TIC2024-0017 so it reads mixed return air."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2024-0017"
+  },
+  {
+    id: "carrier-tic2024-0015", brand: "Carrier", number: "TIC2024-0015", docNo: "", rev: "", date: "2024-04-25", type: "Technical",
+    title: "48JC / 50JC 5-ton: E-12 inverter overheat lockouts above 105 F - SystemVu settings",
+    applies: { modelRe: ["^48JC[A-Z]{2}06", "^50JC[A-Z]{2}06"] },
+    appliesText: "Carrier 48JC and 50JC rooftop units size 06 (5 ton). These settings are the default on current 5-ton production units.",
+    summary: "In high ambient (above 105 F) the compressor inverter can overheat: E-12 on the inverter board shows on the analog board, and SystemVu shows compressor alerts / faults such as 310, 312, 317, 321.",
+    steps: [
+      "100-115 F areas: MAIN MENU > SETTINGS > UNIT CONFIGURATION > COOLING > COMPRESSOR CONFIGURATION = 5000 RPM; OUTDOOR FAN > ODF MAX SPEED = 1200 RPM; ODF FAN DELAY = 60 seconds; ODF OVR TEMP = 100 F.",
+      "Areas that routinely see 115-120 F: compressor 4100 RPM, ODF MAX SPEED 1200 RPM, ODF FAN DELAY 60 seconds, ODF OVR TEMP 95 F.",
+      "120 F or higher: an auxiliary cooling fan for the inverter heat sink may be needed - call the Carrier rep."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2024-0015"
+  },
+  {
+    id: "carrier-tic2024-0001", brand: "Carrier", number: "TIC2024-0001", docNo: "", rev: "", date: "2024-01-23", type: "Technical",
+    title: "Packaged unit pressure switch HK06WC061 failures - use HK06MB061",
+    applies: { modelRe: ["^48TC", "^50TC", "^48HC", "^50HC", "^48KC", "^50KC", "^48LC", "^50LC", "^48VL", "^48VT", "^50VL", "^50VT", "^577C", "^PY4G"] },
+    appliesText: "Carrier SRT, MRT and SPP packaged units using pressure switch HK06WC061 (the model list here is the common SRT / MRT / SPP prefixes).",
+    summary: "More HK06WC061 pressure switches were failing - mostly stuck closed, some stuck open. Either way the unit shuts down safely. SRT / MRT moved to the new HK06MB061 from week 2 of 2024 and SPP from about week 5 of 2024.",
+    steps: [
+      "HK06WC061 and HK06MB061 are interchangeable for field replacement.",
+      "Replacement Components supersedes HK06WC061 to HK06MB061 while the old part is short.",
+      "Emergency only: pressure switch IS20224-5236 may be substituted."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2024-0001"
+  },
+  {
+    id: "carrier-tic2023-0009", brand: "Carrier", number: "TIC2023-0009", docNo: "", rev: "", date: "2023-06-29", type: "Technical",
+    title: "48JC / 50JC on a conventional thermostat: set THERMOSTAT TYPE to CONV 2C2H",
+    applies: { modelRe: ["^48JC", "^50JC"] },
+    appliesText: "Carrier JC rooftop units with SystemVu software version 3.0 controlled by a conventional thermostat.",
+    summary: "A SystemVu 3.0 software glitch can stop high cooling with a conventional thermostat unless the thermostat type is set right.",
+    steps: [
+      "SETTINGS > UNIT CONFIGURATION > GENERAL: UNIT CONTROL TYPE = TSTAT and THERMOSTAT TYPE = CONV 2C2H.",
+      "Use CONV 2C2H on every conventional thermostat install."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2023-0009"
+  },
+  {
+    id: "carrier-tic2023-0006", brand: "Carrier", number: "TIC2023-0006", docNo: "", rev: "", date: "2023-07-06", type: "Technical",
+    title: "48JC / 50JC variable speed (Copeland ZPV): check the power supply type before install",
+    applies: { modelRe: ["^48JC", "^50JC"] },
+    appliesText: "Carrier 48JC and 50JC ultra high efficiency rooftop units with the Copeland ZPV variable speed compressor.",
+    summary: "The variable speed compressor drive needs the right power supply. Measure each leg to ground before installing. Wye supply is fine; a corner grounded delta should get an isolation delta-wye transformer; a high leg (wild leg) supply must have one or components fail early.",
+    steps: [
+      "3-phase wye (most common): 208 V system reads about 120 V on each leg to ground; 480 V system about 277 V. No change needed.",
+      "Corner grounded delta: two legs read the same (240 V or 480 V) and one leg (normally L2) reads 0 V to ground. Carrier / Emerson recommend an isolation delta-wye transformer.",
+      "High leg / wild leg: 240 V system reads about 120 / 208 / 120 V to ground; 480 V system about 277 / 415 / 277 V. A delta-wye transformer is REQUIRED."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2023-0006"
+  },
+  {
+    id: "carrier-tic2022-0023", brand: "Carrier", number: "TIC2022-0023", docNo: "", rev: "", date: "2022-11-02", type: "Technical",
+    title: "Ductless wired controller KSACN0801AAA: wire colours change between the whip and the extension cable",
+    applies: { modelRe: ["^KSACN0801"] },
+    appliesText: "Carrier DLS wired controller kit KSACN0801AAA, wired to CN41 / CN42 screw terminals on the multi-function board in the kit.",
+    summary: "The four wires (X, Y, E, 12/5V) can come from the 33 in. factory whip or from the cut and stripped 17 ft extension cable, and the colours are different.",
+    steps: [
+      "33 in. whip: X = white, Y = yellow, E = brown, 12/5V = red.",
+      "17 ft extension cable: X = brown, Y = yellow, E = black, 12/5V = red.",
+      "The black wire's insulation is very short - stripping it leaves bare copper. Tape or heat shrink it."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2022-0023"
+  },
+  {
+    id: "carrier-tic2022-0021", brand: "Carrier", number: "TIC2022-0021", docNo: "", rev: "", date: "2022-10-11", type: "Technical",
+    title: "40MBAB FL09 with a 24 V thermostat on older outdoor units",
+    applies: { modelRe: ["^40MBABQ"], codes: ["FL09"] },
+    appliesText: "40MBABQ18XB3 before serial 3522V10662, 40MBABQ24XB3 before 3522V10372, 40MBABQ30XB3 before 3522V10680, 40MBABQ36XA3 before 3322V24527, 40MBABQ48XA3 before 3322V24635, 40MBABQ60XA3 before 4122V10286 - with 38MAQ, 38MBRB or 38MGR outdoor units. Later serials have the fixed software.",
+    summary: "FL09 is a platform compatibility error. It only happens with a 24 V thermostat setup on the 38MAQ, 38MBRB and 38MGR outdoor units. A corrected PCB was sent to Replacement Components.",
+    steps: [
+      "FL09 on an older 40MBAB with a 24 V thermostat: order the corrected PCB.",
+      "Until then: run the KSACN1001AAA wired controller that ships with the unit, on an extra 2-core stranded / shielded cable run along with the thermostat cable. Set the DIP switches for the wired controller per the install manual.",
+      "Check the compatibility chart CAR-DLSS-12CC on HVACpartners."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2022-0021"
+  },
+  {
+    id: "carrier-tic2022-0019", brand: "Carrier", number: "TIC2022-0019", docNo: "", rev: "", date: "2022-10-20", type: "Technical",
+    title: "48/50 TC / HC rooftop: condensate overflow switch will not reset - miswired power",
+    applies: { modelRe: ["^48TC", "^50TC", "^48HC", "^50HC"] },
+    appliesText: "Carrier 48/50 TC and HC rooftop units with the factory installed condensate overflow switch (COFS).",
+    summary: "The COFS logic was powered from the accessory terminal, which the switch itself kills through JMP-4 when it trips. With no power the COFS logic cannot reset.",
+    steps: [
+      "Unit stays off after a condensate trip even with the pan dry: move the COFS red power wire off the accessory terminal to the 24 VAC out terminal on the main terminal board."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2022-0019"
+  },
+  {
+    id: "carrier-tic2021-0011", brand: "Carrier", number: "TIC2021-0011", docNo: "", rev: "2021-06-18", date: "2021-05-27", type: "Technical",
+    title: "2021 Infinity / Evolution systems put in with a temporary 24 V thermostat",
+    applies: { modelRe: ["^24VNA[069]", "^25VNA[048]", "^24ANB[167]", "^25HNB6", "^58TN[01]", "^59MN7", "^59TN6", "^186CNV", "^189BNV", "^18[067]B", "^284ANV", "^280A", "^286B", "^288BNV", "^880T", "^935CA", "^987M", "^986T"] },
+    appliesText: "Infinity / Evolution 1-stage, 2-stage, 5-stage and 18/19VS systems with a gas furnace sold during the 2021 wall control shortage (system controls SYSTXCCITC01-B, SYSTXCCWIC01-B, SYSTXBBECC01-B, SYSTXBBWEC01-B). 26/24 variable speed systems and FE fan coils had to keep the communicating control.",
+    summary: "During the 2021 chip shortage many communicating systems were installed with a temporary 24 V thermostat, meant to be swapped for the Infinity / Evolution control later. Until swapped they run only to their non-communicating ratings.",
+    steps: [
+      "Communicating system on a plain 24 V thermostat: zoning does not work (all dampers must be fully open), humidity and staging are limited, and fault history is empty. Ask whether the swap to the system control was ever done.",
+      "2-stage thermostat: Y1 and Y2 at the outdoor unit, Y and Y/Y2 at the thermostat, Y1 and Y2 at the furnace.",
+      "1-stage thermostat: jumper Y1 and Y2 together at the outdoor unit and at the furnace, use Y at the thermostat.",
+      "Heat pump outdoor unit needs a heat pump thermostat. FE fan coil needs the communicating control or a 1-stage thermostat."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2021-0011"
+  },
+  {
+    id: "carrier-tic2020-0012", brand: "Carrier", number: "TIC2020-0012", docNo: "", rev: "", date: "2020-08-20", type: "Technical",
+    title: "59MN7 / 987M 060 and 080: lower maximum constant fan airflow (software V05)",
+    applies: { modelRe: ["^59MN7B0(60|80)C17", "^987MB420(60|80)C17"] },
+    appliesText: "Carrier 59MN7B060C171114 and 59MN7B080C171114; Bryant 987MB42060C17A-A and 987MB42080C17A-A. Software V05 from production week of August 17, 2020 (serial 3420A).",
+    summary: "To meet the Fan Efficiency Rating, furnace control software went from V04 to V05 and caps constant fan airflow: 1050 CFM on the 60K units and 875 CFM on the 80K units. Part numbers did not change (production HK42FZ069, service HK42FZ090).",
+    steps: [
+      "060 size: constant fan switch settings that used to give 1225 or 1400 CFM now give 1050 CFM.",
+      "080 size: settings that used to give 1050, 1225 or 1400 CFM now give 875 CFM.",
+      "Lower constant fan than the old chart is normal on V05 - not a motor or board fault."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2020-0012"
+  },
+  {
+    id: "carrier-tic2019-0006", brand: "Carrier", number: "TIC2019-0006", docNo: "", rev: "", date: "2019-04-23", type: "Technical",
+    title: "Split AC factory charge not enough for 15 ft line set on some sizes",
+    applies: { modelRe: ["^105A", "^113A", "^114CNA", "^123A", "^24AAA5", "^24ABB3", "^24ACB3", "^24ACC4", "^[BCP]A1[345]N[AC]"] },
+    appliesText: "Carrier 24AAA5, 24ABB3, 24ACB3, 24ACC4; Bryant 105A, 113A, 114CNA, 123A; BA13NA / BA14NA / BA15NA, CA13NA / CA14NA / CA15NA, Payne PA13NA / PA14NC / PA15NC. Sizes not listed below ship with enough charge for 15 ft.",
+    summary: "On some models the factory charge does not cover the rated coil match with 15 ft of line set. Listed as factory charge -> charge needed with 15 ft (lbs).",
+    steps: [
+      "24AAA5 / 105A: 018 3.83 -> 4.82. BA15NA / CA15NA / PA15NC: 018 3.70 -> 4.82.",
+      "24ABB3 / 113A (single phase): 018 3.15 -> 4.20, 024 3.15 -> 4.17, 030 4.30 -> 4.90, 036 4.67 -> 5.36, 048 7.10 -> 8.20. BA13NA / CA13NA / PA13NA: the same five sizes and numbers.",
+      "24ACB3 / 123A: 018 3.15 -> 4.20.",
+      "24ACC4 / 114CNA: 018 3.72 -> 4.77, 024 3.87 -> 4.20. BA14NA / CA14NA / PA14NC: 018 3.18 -> 4.77, 024 3.73 -> 4.20, 036 4.67 -> 5.42.",
+      "3-phase 24ABB3 and PA13NA also have sizes that need more charge - see the TIC table. Always finish charging by the method on the unit's charging label."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2019-0006"
+  },
+  {
+    id: "carrier-tic2018-0009", brand: "Carrier", number: "TIC2018-0009", docNo: "", rev: "", date: "2018-10-25", type: "Safety",
+    title: "Gas valve exposed to over-pressure (above 0.5 PSIG): replace the valve",
+    applies: { modelRe: ["^58[A-Z]{2}", "^59[A-Z]{2}", "^(310|312|313|315|800|801|811|812|813|820|830|880|886|887)[A-Z]{2}", "^9(15|25|26|45|50|55|70|73|82|86|87)[A-Z]{2}", "^PG[89]", "^48VL", "^48VT", "^577C", "^PY4G"] },
+    appliesText: "All Carrier / Bryant / Payne gas furnaces and gas small packaged (SPP) units (the model list here is the common prefixes).",
+    summary: "Residential and light commercial gas valves are rated to 0.5 PSIG (14 in. w.c.) maximum. Even a short exposure above that can permanently damage the valve and lead to a gas leak.",
+    steps: [
+      "If there is reason to think the valve saw a high pressure event (utility over-pressure, gas line test left connected): replace the gas valve right away.",
+      "Pressure testing gas piping above 0.5 PSIG: disconnect the furnace supply pipe and cap it before and during the test.",
+      "Test at or below 0.5 PSIG: turn off the valve's switch and the manual shutoff before and during the test.",
+      "After connecting: purge the lines and leak check at the furnace before running it."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2018-0009"
+  },
+  {
+    id: "carrier-tic2018-0007", brand: "Carrier", number: "TIC2018-0007", docNo: "", rev: "", date: "2018-07-19", type: "Technical",
+    title: "Geothermal open loop (well water): test the water, pick copper / cupronickel or a plate heat exchanger",
+    applies: { modelRe: ["^G[BCPTZ]0[0-9]{2}"] },
+    appliesText: "Carrier residential geothermal heat pumps on ground water / open loop systems.",
+    summary: "Well water must be tested and compared with the water quality table in the unit install manual. Using a geothermal unit on water outside those limits is a misapplication and coax failures are not covered by warranty.",
+    steps: [
+      "Scaling check: pH under 7.5 and calcium hardness under 100 ppm = low scaling risk. Outside that, set up a monitoring plan.",
+      "Also look for iron fouling, corrosion, erosion and clogging.",
+      "Copper coax is fine for low-mineral water; use cupronickel for moderate scaling or brackish water.",
+      "Bad water: isolate the unit with a serviceable brazed plate heat exchanger (sized from GPM both sides, entering water temps, antifreeze and total BTUH). Local code may require double-wall vented."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2018-0007"
+  },
+  {
+    id: "carrier-tic2018-0005", brand: "Carrier", number: "TIC2018-0005", docNo: "", rev: "", date: "2018-05-02", type: "Technical",
+    title: "Rooftop power exhaust harness too short on Economizer X (W7220) units",
+    applies: { modelRe: ["^48KC", "^50KC", "^48TC", "^50TC", "^48HC", "^50HC", "^48LC", "^50LC"] },
+    appliesText: "48/50KC(Q) 04-06, 48/50TC(Q) 07-30, 48/50HC(Q) 04-28 and 48/50LC 04-25 with Economizer X (JADE W7220 controller) and accessory power exhaust CRPWREXH0xx kits.",
+    summary: "The 24 in. harness supplied with accessory power exhausts reaches where the old 7212 economizer controller sat, but the W7220 controller is in the control box, so it does not reach.",
+    steps: [
+      "Splice an extension into the power exhaust harness so it reaches the W7220 in the control box.",
+      "Later kits were to include the extension or have a longer harness part number."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2018-0005"
+  },
+  {
+    id: "carrier-tic2017-0009", brand: "Carrier", number: "TIC2017-0009", docNo: "", rev: "", date: "2017-12-14", type: "Technical",
+    title: "CAPMP coil installed horizontal right: install the drain pan extension",
+    applies: { modelRe: ["^CAPMP"] },
+    appliesText: "Carrier CAPMP furnace A-coils, all sizes. Extra pan bracket and pan seal from week 3817; pan extension carton included from week 5017.",
+    summary: "In horizontal right, CAPMP coils could blow water off the coil into the airstream at high CFM, or push water between the drain pans and out the cabinet corners.",
+    steps: [
+      "Horizontal right only: install the pan extension from the carton with the self-tapping screws, and put the cork tape strip under the extension in front of the vertical pan to seal it (install instructions IM-CAPM-09).",
+      "Other positions: the extension can be discarded.",
+      "Water blowing off an older CAPMP in horizontal right: replacement pan extension kit 343679-701."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2017-0009"
+  },
+  {
+    id: "carrier-tic2017-0007", brand: "Carrier", number: "TIC2017-0007", docNo: "", rev: "", date: "2017-06-22", type: "Technical",
+    title: "Geothermal: Geo-Prime tank with a two-pump pressurized variable speed flow center - pump cavitation",
+    applies: { modelRe: ["^ACGP", "^G[BCPTZ]0[0-9]{2}"] },
+    appliesText: "Variable speed two-pump pressurized flow centers used with the Geo-Prime tank (P/N ACGP). Single-pump flow centers are not affected.",
+    summary: "When the constant-speed pump is off and the tank is near atmospheric pressure, the variable speed pump can see negative suction pressure and cavitate.",
+    steps: [
+      "Existing install: move the constant-speed pump power wiring off the UPC-GEO controller to the T (load) side of the compressor contactor, so it runs whenever the compressor runs.",
+      "New install: do not pair the Geo-Prime tank with a two-pump pressurized variable speed flow center unless the second pump is wired that way or mounted below the flow center. Alternatives: Geo-Booster pressurization or an NP (non-pressurized) two-pump flow center."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2017-0007"
+  },
+  {
+    id: "carrier-tic2017-0005", brand: "Carrier", number: "TIC2017-0005", docNo: "", rev: "", date: "2017-04-28", type: "Technical",
+    title: "3-6 ton rooftop: remove the wood base pan protectors before setting the unit",
+    applies: { modelRe: ["^48TC", "^50TC", "^48KC", "^50KC", "^48HC", "^50HC", "^48LC", "^50LC", "^5(58|80|48)J", "^5(59|82|47)J", "^5(51|81|49)J"] },
+    appliesText: "Small rooftop chassis 1 and 2: 48/50TC(Q) 3-6 ton (558J / 580J / 548J), 48/50KC(Q) 3-5 ton (559J / 582J / 547J), 48/50HC(Q) 3-5 ton (551J / 581J / 549J), 48/50LC 3-5 ton, from serial 1417Cxxxxx.",
+    summary: "Two wood pieces are bolted under the unit to protect the base pan from forklift damage. Left in place they block the ductwork.",
+    steps: [
+      "Remove the 12 screws (3 brackets per wood piece, 2 screws each) and throw away the wood and brackets before installing.",
+      "Forking from the side: keep the forks level until fully engaged before tilting, or they can go between the wood and the base."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2017-0005"
+  },
+  {
+    id: "carrier-tic2016-0004", brand: "Carrier", number: "TIC2016-0004", docNo: "", rev: "", date: "2016-06-21", type: "Technical",
+    title: "GZ / GC communicating geothermal: thermostat, line set and heater tips",
+    applies: { modelRe: ["^GZ0[0-9]{2}", "^GC0[0-9]{2}"] },
+    appliesText: "Carrier GZ split and GC packaged communicating geothermal units.",
+    summary: "GZ works with Infinity / Evolution (2 wires on AB) or a 24 V thermostat; GC is communicating only. Line set and lift limits apply to GZ splits.",
+    steps: [
+      "GZ with a 24 V thermostat and a gas furnace: the thermostat must be a 3-stage heat / 2-stage cool dual fuel heat pump type. An ABCD adaptor ships with the unit.",
+      "The outdoor air sensor connects to the furnace or fan coil board, not the GZ.",
+      "GZ line set: 75 ft total equivalent maximum. Up to 20 ft height difference is normal; 20-40 ft add a liquid line solenoid (and an inverted trap before the drop if the indoor unit is above the GZ). Never over 40 ft.",
+      "GZ outdoors: the flow center must stay indoors, and protect the coax from freezing.",
+      "GC will not run on a 24 V thermostat. If the communicating control fails, emergency heat gives electric heat only (if installed). Communicating heaters are KWCEH (5-20 kW); they do not fit GT / GP / GB units."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2016-0004"
+  },
+  {
+    id: "carrier-tic2013-0009", brand: "Carrier", number: "TIC2013-0009", docNo: "", rev: "2014-05-14", date: "2013-10-02", type: "Technical",
+    title: "Heat pump liquid service valve adapter breaking: hand tight plus 1/2 turn",
+    applies: { modelRe: ["^25H[A-Z]{2}", "^25VNA", "^2(1[0-9]|2[0-9]|8[0-9])[A-Z]", "^PH1[3-6]"] },
+    appliesText: "All Carrier / Bryant / Payne split heat pumps with the liquid line adapter. Thicker adapter wall from week 7, 2014 (serial 0714Exxxxx) - the same install steps still apply.",
+    summary: "Heat pump liquid line adapter connectors were breaking off during install because the adapter nut was over-torqued.",
+    steps: [
+      "Tighten the adapter nut finger tight, then 1/2 turn more (180 degrees) with a wrench - no more.",
+      "Remove the Teflon O-ring before brazing the liquid line sweat connection so it does not melt or deform.",
+      "Always use a heat sink such as a wet rag while brazing."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2013-0009"
   },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
