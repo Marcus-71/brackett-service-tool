@@ -930,6 +930,193 @@ const BULLETINS = [
     source: "Carrier PTC2022-0006 (as cited in the app's code table and symptoms)"
   },
 
+  // --- HVACpartners weekly check 2026-11-03 (dashboard bulletins, TIC list, Dealer Service Bulletins) ---
+  {
+    id: "carrier-dsb26-0018", brand: "Carrier", number: "DSB26-0018", docNo: "", rev: "A", date: "2026-10-22", type: "Service",
+    title: "R-454B two-stage AC: compressor noise / failure linked to 'YU' TXVs - check superheat first",
+    applies: { modelRe: ["^26TPA8", "^148TAN", "^GA8TAN5", "^PA8TAN5"] },
+    appliesText: "Two-stage R-454B air conditioners Carrier 26TPA8, Bryant 148TAN, GA8TAN5, PA8TAN5 and the matched R-454B fan coils and furnace coils. Investigation still open (bulletin expires 12/31/2027).",
+    summary: "Carrier is investigating 2-stage R-454B AC compressor noise and failures. Low-stage running with a TXV whose part number contains 'YU' (for example EA66YU010) can leave little or no superheat for long periods, which can make noise or damage the compressor. 'YP' TXVs (for example EA66YP002) respond better. Units sent back for noise mostly tested normal in the lab.",
+    steps: [
+      "Do not condemn the compressor on noise alone - many returned outdoor units showed no abnormal noise in the lab.",
+      "Measure superheat, subcooling and the charge amount. Do NOT add charge to hit target subcooling when superheat is below 8 F, and do not go over the calculated charge for the line-set length.",
+      "Check the things that make it worse: oversized or short-cycling system, poor airflow / high static / dirty filter / zoning bypass, low return temperature, no crankcase heater on long or buried line sets, wrong airflow or thermostat setup, TXV bulb not fully insulated, over- or under-charge, moisture or non-condensables.",
+      "You cannot tell YU from YP by the coil model or the RC kit number - look at the part number stamped on the TXV itself.",
+      "Replacement TXV kits with YP valves: 340620-727 (2 ton), 340620-728 (3 ton), 340620-731 (4 and 5 ton). Factory: A-coils changed to YP from week 43 2026 (all sizes); V and slab coils 4-5 ton from week 43, 1.5-3.5 ton about week 48. Fan coil TXV change not decided yet.",
+      "Compressors named in the policy: YAS49K1E-PFV-8A1, YAS40K1E-PFV-8A1, YAS30K1E-PFV-8A1, YAS20K1E-PFV-8A1. Claims within 2 years of start-up go against the 2-stage AC unit (TXV kit claimed against the indoor unit) - give the office the labor key: SMB260018A compressor + TXV, SMB260018B unit + TXV, SMB260018C TXV only.",
+      "Report coil freezing, TXV or compressor concerns to Carrier tech support, send start-up sheets and field data, and return parts when asked."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB26-0018"
+  },
+  {
+    id: "carrier-dsb25-0018", brand: "Carrier", number: "DSB25-0018", docNo: "", rev: "B", date: "2025-11-30", type: "Service",
+    title: "90% furnace condensate leaks - gray gaskets, replace with green",
+    applies: { modelRe: ["^59SC2", "^59SC5", "^59SC6", "^59SP6", "^59TN6", "^59TN7", "^59TP6", "^59TP7", "^59MN7", "^912S", "^915S", "^916S", "^926S", "^926T", "^927T", "^986T", "^987M", "^987T", "^PG92", "^PG95", "^PG96", "^PG97", "^GG96V"], serialFrom: "3622A", serialTo: "2125A" },
+    appliesText: "90% furnaces Carrier 59SC2, 59SC5, 59SC6, 59SP6, 59TN6, 59TN7, 59TP6, 59TP7, 59MN7; Bryant 912S, 915S, 916S, 926S, 926T, 927T, 986T, 987M, 987T; Payne PG92, PG95, PG96, PG97 (also listed: GG96V). Serials 3622A00001 to 2125A99999. Green gaskets in production from week 22 of 2025.",
+    summary: "The gray gasket material on the collector box, inducer drain and drain trap can start leaking condensate. Replace leaking gray gaskets with the green ones. Always fit a new trap gasket when you pull the trap for annual cleaning.",
+    steps: [
+      "Condensate leak at the collector box, inducer housing drain or trap on a furnace in the serial range: look for gray gaskets.",
+      "Green gasket part numbers: collector box 339715-401 (14 in.), 339715-402 (17 in.), 339715-403 (21 in.), 339715-404 (24 in.); housing drain 339805-401; trap 339806-401.",
+      "Replacing gray with green before they leak is recommended at maintenance but is not paid by the policy.",
+      "Warranty only when a gray gasket is confirmed leaking (fix on fail): tell the office labor key SMB250018A."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB25-0018"
+  },
+  {
+    id: "carrier-101-26-09", brand: "Carrier", number: "101-26-09", docNo: "", rev: "V4", date: "2026-10-20", type: "Product",
+    title: "Next Gen A2L furnaces and Gen 2 furnace coils - mixed pairings need a dissipation kit",
+    applies: { modelRe: ["^58SC[01]", "^58SB[01]", "^58SU0", "^58SP[01]", "^58TP[01]", "^58TN[01]", "^58CU0", "^59SC[256]", "^59SU5", "^59SP6", "^59TP[67]", "^59TN[67]", "^59MN7", "^59CU5"] },
+    appliesText: "All Carrier gas furnaces and furnace coils. Gen 2 (Next Gen) furnaces have a new series letter (for example 58SC0B -> 58SC0C, 59SC6A -> 59SC6B, 59TP6C/59TP7 -> 59TP7B, 59TN7A -> 59TN7B, 59MN7C -> 59MN7D). Entry / mid tier ship from Jan 2027, deluxe and ULN later in 2027.",
+    summary: "Gen 2 furnaces run the A2L leak dissipation from the furnace board, and Gen 2 furnace coils ship with only a sensor that plugs straight into that board - no separate dissipation board or harness on the coil. Gen 1 coils still come with the dissipation control kit in the box.",
+    steps: [
+      "Gen 2 coil (sensor only) on a Gen 1 or older furnace: the system has no dissipation control. Remove the Gen 2 sensor from the coil and install transition kit 350047-701 (Gen 1 sensor, enclosure, dissipation board, harness) per its instructions.",
+      "Gen 1 coil on a Gen 2 furnace: install the dissipation kit that came in the Gen 1 coil box and plug the Gen 1 sensor into the Gen 1 port of that board.",
+      "Permanent kit ACAENCDIS01A (takes either sensor, Gen 1 or Gen 2 port) is due January 2027.",
+      "Gen 2 furnace boards also have an input for the A2L audible alarm accessory, RAT / SAT sensor terminals (sensors are an accessory on Comfort series), and Y1 / Y2 for 2-stage cooling on every Comfort series furnace.",
+      "Check the coil and furnace generation on both rating plates before start-up - a mixed pair without the kit has no leak dissipation."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners 101-26-09"
+  },
+  {
+    id: "carrier-tic2026-0020", brand: "Carrier", number: "TIC2026-0020", docNo: "", rev: "", date: "2026-09-17", type: "Technical",
+    title: "Smart Thermostat (InteliSense): screen works but no heat, cool or fan after a power blip - firmware 1766.05.20.00",
+    applies: { modelRe: ["^TSTATCCIEWF", "^TSTATBBIEWF"] },
+    appliesText: "Carrier TSTATCCIEWF-01 and Bryant TSTATBBIEWF-01 Smart Thermostat with InteliSense. Fixed in firmware 1766.05.20.00 (released September 16, 2026), sent over Wi-Fi only.",
+    summary: "After some short power dips the thermostat's relay chip goes into standby while the display keeps working, so it looks normal but never turns on heat, cool or the fan. Firmware 1766.05.20.00 fixes it; no hardware change.",
+    steps: [
+      "Thermostat display normal but the equipment gets no call: pull the thermostat off its wall plate, wait about 30 seconds, put it back, and confirm heat / cool / fan now runs.",
+      "Check the firmware version; it needs 1766.05.20.00 or later. The update only arrives over Wi-Fi - a thermostat not on the internet keeps the problem.",
+      "Do not replace the thermostat or chase the equipment for this - it is a firmware issue."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2026-0020"
+  },
+  {
+    id: "carrier-tic2025-0032", brand: "Carrier", number: "TIC2025-0032", docNo: "", rev: "", date: "2025-11-12", type: "Technical",
+    title: "Old step-modulating furnace (58MVC / 355CAV) seen as single-stage after wall control update",
+    applies: { modelRe: ["^58MVC", "^355CAV"] },
+    appliesText: "Carrier 58MVC and Bryant 355CAV step-modulating furnaces built before 2012, paired with a -B or -C system control. Systems with a -A control are not affected.",
+    summary: "After the -B control's 4.74 or the -C control's 2.00 update, the wall control identifies the step-modulating furnace as single-stage, so it will not stage and the staging setting is greyed out.",
+    steps: [
+      "Furnace not staging and staging adjustment greyed out: check the wall control software version.",
+      "Fix: roll the wall control software back by hand - 4.70 on a -B control, 1.59 on a -C control. That brings back staging and the staging adjustment.",
+      "Carrier planned a permanent fix in the next update (-B 4.79 and the next -C release)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2025-0032"
+  },
+  {
+    id: "carrier-tic2026-0011", brand: "Carrier", number: "TIC2026-0011", docNo: "", rev: "", date: "2026-04-20", type: "Technical",
+    title: "-C wall control software 2.10 (and 2.05) - what changed",
+    applies: { modelRe: ["^SYSTXCCITC01-?C", "^SYSTXCCWIC01-?C", "^SYSTXBBECC01-?C", "^SYSTXBBWEC01-?C"] },
+    appliesText: "Carrier SYSTXCCITC01-C, SYSTXCCWIC01-C; Bryant SYSTXBBECC01-C, SYSTXBBWEC01-C. 2.10 sent over the air from the week of April 27, 2026; 2.05 from the week of January 5, 2026 (TIC2025-0038).",
+    summary: "2.10: the heat pump heating checkout was using the cooling checkout time (fixed); medium-heat checkout added for modulating furnaces; 6-ton geothermal discovery fixed; indoor / outdoor status display sync. 2.05: fixed an indoor blower surge, zone damper error detection improved, operating readings added to the charging and checkout screens, heat pump lockout shown on the status screen, maintenance reminder reset option.",
+    steps: [
+      "Blower surging on a -C control below 2.05, or heat pump checkout ending at the cooling checkout time on a control below 2.10: update the control software before chasing the equipment.",
+      "Earlier: 2.00 (July 2025) fixed indoor dissipation fault 184 and added the 454B line-length charge note; 1.64 (May 2025) fixed nuisance 160 humidity sensor faults.",
+      "Do not install 2.00 on a system with an old 58MVC / 355CAV step-modulating furnace without reading TIC2025-0032."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2026-0011 / TIC2025-0038"
+  },
+  {
+    id: "carrier-tic2025-0034", brand: "Carrier", number: "TIC2025-0034", docNo: "", rev: "", date: "2025-11-11", type: "Technical",
+    title: "-B wall control software 4.79 - what changed",
+    applies: { modelRe: ["^SYSTXCCITC01-?B", "^SYSTXCCWIC01-?B", "^SYSTXCCICF01-?B", "^SYSTXCCWIF01-?B", "^SYSTXBBECC01-?B", "^SYSTXBBWEC01-?B", "^SYSTXBBECF01-?B", "^SYSTBXBWEF01-?B"] },
+    appliesText: "Carrier Infinity SYSTXCCITC01-B, SYSTXCCWIC01-B, SYSTXCCICF01-B, SYSTXCCWIF01-B; Bryant Evolution Connex SYSTXBBECC01-B, SYSTXBBWEC01-B, SYSTXBBECF01-B, SYSTBXBWEF01-B. Over the air from the week of December 1, 2025, then on HVACpartners.",
+    summary: "4.79 removed compressor demand response from the CFM calculation to stop fan surges, added per-zone airflow limits for hydronic heat zoning, a maintenance reminder reset button and better on-screen diagnostics. 4.74 (June 2025, limited) fixed hanging at 'Please Wait' during an update, geothermal freeze protection being overwritten, and refined high humidity fault 160.",
+    steps: [
+      "Fan surging on a -B control below 4.79: update the control software before replacing a motor.",
+      "Old 58MVC / 355CAV step-modulating furnace stopped staging after 4.74: see TIC2025-0032 (roll back to 4.70)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0034"
+  },
+  {
+    id: "carrier-tic2025-0033", brand: "Carrier", number: "TIC2025-0033", docNo: "", rev: "", date: "2025-11-12", type: "Technical",
+    title: "Smart Thermostat update: aux heat and compressor lockout ranges, 45 F heat setpoint",
+    applies: { modelRe: ["^TSTATCCEWF", "^TSTATBBEWF"] },
+    appliesText: "Carrier TSTATCCEWF-01 and Bryant TSTATBBEWF-01 Smart Thermostat. Over-the-air update from November 12, 2025; needs firmware 1758.03.16.00 or later.",
+    summary: "Lowest heat setpoint now 45 F (was 55). Aux heat lockout range now 10-60 F (default 35 F); compressor lockout range now 0-50 F (default 25 F). Adds a Fan Test in the Service Tech App installer setup, reverse logic for dehumidify, and a display dimming setting.",
+    steps: [
+      "The new settings only appear after the thermostat is on Wi-Fi and updated. To do it in the shop: press FAN 3 times after start-up, pair it to the Carrier SmartHome app (a generic account works), wait about 20 minutes, check Settings > Information shows 1758.03.16.00 or later.",
+      "Then factory reset: hold MODE + FAN 10 seconds, arrow to Fr, press FAN twice. Reconnect with the Service Tech App by Bluetooth, do the normal setup, then set the aux heat lockout under Advanced Settings.",
+      "At a home with the owner present: set up with the Service Tech App, the owner pairs it in the SmartHome app and shares data with the dealer, then change aux lockout in the Connected Portal."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0033"
+  },
+  {
+    id: "carrier-tic2026-0001", brand: "Carrier", number: "TIC2026-0001", docNo: "", rev: "", date: "2026-02-06", type: "Technical",
+    title: "R-454B ducted splits back to 15 ft factory charge (some shipped with 30 ft)",
+    applies: { modelRe: [] },
+    appliesText: "All Carrier R-454B residential ducted split system units. 30 ft pre-charge from June 1, 2025 (TIC2025-0018); back to 15 ft starting week 4 of 2026, mixed production through February 2, 2026 and mixed stock until warehouses empty.",
+    summary: "Know which pre-charge the unit has before you calculate added charge for the line set. 15 ft units: yellow shipping label (2026), charging label and rating plate show the 15 ft charge, no Installer Notice label. 30 ft units: light gray shipping label and an Installer Notice label.",
+    steps: [
+      "Check the unit's charging label and rating plate - they state the line length the factory charge covers. An Installer Notice label means the increased (30 ft) pre-charge.",
+      "Add refrigerant only for line length beyond what the factory charge covers; adding for 15-30 ft on a 30 ft unit overcharges it."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2026-0001"
+  },
+  {
+    id: "carrier-tic2026-0005", brand: "Carrier", number: "TIC2026-0005", docNo: "", rev: "", date: "2026-03-02", type: "Technical",
+    title: "New-style furnace door sight glass hides the status LED on older condensing furnaces",
+    applies: { modelRe: ["^59(SC|SP|SU|TN|TP|MN|CU)"] },
+    appliesText: "All Carrier / Bryant / Payne condensing gas furnaces. Replacement door kits now all come with the new sight glass made for the 3-digit display controls (product bulletins 101-24-19, BY-103-24-18, PA-103-24-13).",
+    summary: "A new replacement blower door on an older condensing furnace (control with a status LED, no 3-digit display) may not let you see the status code LED.",
+    steps: [
+      "To see the LED again, fit the old-style sight glass, part 345272-401, into the new door by drilling a 3/8 in. hole at the spot shown in the bulletin's Fig. 1.",
+      "Information only - no change to how the furnace runs."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2026-0005"
+  },
+  {
+    id: "carrier-tic2026-0006", brand: "Carrier", number: "TIC2026-0006", docNo: "", rev: "", date: "2026-03-12", type: "Technical",
+    title: "Light commercial ECM units: check the 3-phase power type before install",
+    applies: { modelRe: [] },
+    appliesText: "Carrier light commercial units with ECM motors up to 10 tons (the model list in our copy of the bulletin was not readable - confirm on HVACpartners).",
+    summary: "ECM motors need the right kind of 3-phase supply. Measure each leg to ground to tell the supply type; corner-grounded delta and high-leg supplies may need extra parts.",
+    steps: [
+      "Wye: each leg about 120 V to ground on 240 V, or about 277 V on 480 V. No change needed.",
+      "Corner-grounded delta: two legs read about 240 V (or 480 V) to ground and one leg (normally L2) reads 0 V. Noise problems may need line reactors or a delta-wye isolation transformer.",
+      "High leg (wild / stinger leg): two legs about 120 V and one about 208 V to ground on 240 V (277 / 415 V on 480 V). A delta-wye transformer may be needed to run the ECM."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2026-0006"
+  },
+  {
+    id: "carrier-tic2025-0037", brand: "Carrier", number: "TIC2025-0037", docNo: "", rev: "", date: "2025-12-10", type: "Technical",
+    title: "Ductless ducted air handler + 15/20/25 kW heat kit on one supply circuit",
+    applies: { modelRe: ["^45MUAA", "^45MUHA"] },
+    appliesText: "Ductless communicating air handlers 45MUAA and 45MUHA with a 15, 20 or 25 kW heater kit (the outdoor unit size sets the rating because 45MUHA can be set to two capacities).",
+    summary: "Wiring change that lets the 115 V air handler be fed from the heat kit's circuit instead of its own supply. Keep the bulletin's corrected electrical tables with the unit's paperwork.",
+    steps: [
+      "The air handler circuit needs a 15 A inline fuse (its MOP) wired to the load side of heat kit circuit breaker 1 (CB1); use certified parts and get the change approved by the local inspector.",
+      "Each heat kit breaker still needs its own 208/230 V supply - this is not a single-point connection for the whole indoor unit.",
+      "Indoor power connector: CN11 on the 45MUAA main board, CN1 on the 45MUHA main board. Follow the 15/20 kW or 25 kW wiring figure in the bulletin."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2025-0037"
+  },
+  {
+    id: "carrier-dsb24-0013", brand: "Carrier", number: "DSB24-0013", docNo: "", rev: "", date: "2024-09-06", type: "Service",
+    title: "Infinity / Evolution controls with duplicate serial numbers lose cloud connection",
+    applies: { modelRe: ["^SYSTXCCITC01-?[BC]", "^SYSTXCCWIC01-?B", "^SYSTXBBECC01-?[BC]"], serialFrom: "2424W200001", serialTo: "3124W204434" },
+    appliesText: "SYSTXCCITC01-B / -C, SYSTXCCWIC01-B, SYSTXBBECC01-B / -C with serials 2424W200001-2424W202950, 3124W201501-3124W202025 or 3124W204001-3124W204434 (three separate ranges; the serial badge only checks the outer ends). The repair policy ended 12/31/2024.",
+    summary: "A build error gave some controls the same serial number. When a second control with the same serial goes online, the first one loses its connection to the Carrier / Bryant app and the dealer tools.",
+    steps: [
+      "Do not install a control with a serial in those ranges.",
+      "An installed control in the range that lost its cloud connection because its twin is online: replace it with one outside the ranges. If only one control with that serial is connected, it is not affected."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB24-0013"
+  },
+
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
