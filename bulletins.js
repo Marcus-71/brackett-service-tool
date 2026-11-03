@@ -1018,11 +1018,11 @@ const BULLETINS = [
       "Blower surging on a -C control below 2.05, or heat pump checkout ending at the cooling checkout time on a control below 2.10: update the control software before chasing the equipment.",
       "Earlier: 2.00 (July 2025) fixed indoor dissipation fault 184 and added the 454B line-length charge note; 1.64 (May 2025) fixed nuisance 160 humidity sensor faults.",
       "Do not install 2.00 on a system with an old 58MVC / 355CAV step-modulating furnace without reading TIC2025-0032.",
-      "Older releases: 1.59 (Jan 2025) better outdoor staging, fan coil heat kit learning and airflow verification; 1.55 (Nov 2024) heat pump max defrost 30 min on Next Gen Greenspeed / Evolution Extreme (15 min on others), indoor / outdoor compatibility check, pump down and checkout fixes; 1.50 (Apr 2024) dissipation handling improved, outdoor Quiet mode off by default; 1.43 (Nov 2023) added the new communicating furnaces and fan coil, fixed outdoor temperature reading below zero.",
+      "Older releases: 1.59 (Jan 2025) better outdoor staging, fan coil heat kit learning and airflow verification; 1.55 (Nov 2024) heat pump max defrost 30 min on Next Gen Greenspeed / Evolution Extreme (15 min on others), indoor / outdoor compatibility check, pump down and checkout fixes; 1.50 (Apr 2024) dissipation handling improved, outdoor Quiet mode off by default; 1.43 (Nov 2023) added the new communicating furnaces and fan coil, fixed outdoor temperature reading below zero; 1.11 (Jul 2022) added over-the-air equipment firmware updates, System Monitor high / low temperature alerts, WPA3 Wi-Fi and corrected variable speed outdoor cooling airflow limits; 1.05 (Feb 2022) first release.",
       "Manual update or roll back with a USB-C stick (TIC2024-0019): software 1.50 and newer goes in a folder named TSTAT on the stick; older than 1.50 goes in a folder named FW. Plug it into the control's USB-C port and load it."
     ],
     priority: "info", confidential: true,
-    source: "HVACpartners TIC2026-0011 / TIC2025-0038 (history: TIC2025-0025, -0017, -0002, TIC2024-0028, -0019, -0012, TIC2023-0017, -0001, TIC2022-0024)"
+    source: "HVACpartners TIC2026-0011 / TIC2025-0038 (history: TIC2025-0025, -0017, -0002, TIC2024-0028, -0019, -0012, TIC2023-0017, -0001, TIC2022-0024, -0012)"
   },
   {
     id: "carrier-tic2025-0034", brand: "Carrier", number: "TIC2025-0034", docNo: "", rev: "", date: "2025-11-11", type: "Technical",
@@ -1034,10 +1034,12 @@ const BULLETINS = [
       "Fan surging on a -B control below 4.79: update the control software before replacing a motor.",
       "Old 58MVC / 355CAV step-modulating furnace stopped staging after 4.74: see TIC2025-0032 (roll back to 4.70).",
       "Older releases: 4.70 (Jan 2025) better outdoor staging, fan coil heat kit learning, airflow verification, SD card updates; 4.66 (Oct 2024) heater selection at setup, more geothermal / fan coil combinations, partial weigh-in in the charge calculator; 4.64 (Sep 2024) max defrost 30 min on 25VNA4 Greenspeed / 284ANV Extreme and 15 min on 2-stage, 25VNA0, 280A and 5-stage, fixed false 'incompatible motor' error and furnace re-learn after setting changes.",
-      "4.56 (Apr 2024) added R-454B dissipation handling (checkout, charging and static tests are blocked while dissipation runs; new 454B dissipation board faults) and set variable speed outdoor quiet mode OFF by default; 4.47 (Aug 2023) first A2L mitigation response; 4.38 (Apr 2023) fixed System Monitor alerts 140-148 when the control is set to Celsius."
+      "4.56 (Apr 2024) added R-454B dissipation handling (checkout, charging and static tests are blocked while dissipation runs; new 454B dissipation board faults) and set variable speed outdoor quiet mode OFF by default; 4.47 (Aug 2023) first A2L mitigation response; 4.38 (Apr 2023) fixed System Monitor alerts 140-148 when the control is set to Celsius.",
+      "2020-2022 releases: 4.31 (Nov 2022) System Monitor (off by default, can be turned on), clear stored Wi-Fi for a new owner, new V coils in the charging coil list; 4.22 (Jul 2022) temperature / humidity alert trip points (codes 187-191, 191 = low humidity), filter check from the pressure monitor; 4.18 = a renamed copy of 4.05 after the 4.17 app problem; 4.05 (Sep 2021) two limit 33 faults in a row now open the heating-call zone dampers fully (wall control shows 126 - Active Heat Cycle Active), a ULN 2-stage furnace fault 34 locks out high heat for one cycle, 18/19VS 5-stage with FER furnace boards runs continuous fan at least at minimum CFM.",
+      "3.94 (Jul 2021) blower motor code 41 changed from malfunction to fault, fixed running in the wrong mode; 3.62 / 3.61 (late 2020) Wi-Fi fixes only (some 802.11n routers, some internet providers) - no need to load them without a Wi-Fi problem; 3.60 (Sep 2020) fixed a blank screen after the 3.40 update and false G-terminal alerts during learning; 3.40 (Jun 2020) fixed learning of 2-ton units with an FE4ANF002 fan coil and 24VNA624 with FE4ANB005, and stopped an SD card left in the control from re-loading the same outdoor software; 2.30 (Nov 2019) fixed FER furnace airflow in charging and in dual fuel heat pump heating (needs the furnace board replaced too) and the geothermal lake loop heat stage override."
     ],
     priority: "info", confidential: true,
-    source: "HVACpartners TIC2025-0034 (history: TIC2025-0020, -0001, TIC2024-0026, -0023, -0004, TIC2023-0011, -0004)"
+    source: "HVACpartners TIC2025-0034 (history: TIC2025-0020, -0001, TIC2024-0026, -0023, -0004, TIC2023-0011, -0004, TIC2022-0022, -0015, -0006, TIC2021-0017, -0003, TIC2020-0020, -0016, -0015, -0009, TIC2019-0023)"
   },
   {
     id: "carrier-tic2025-0033", brand: "Carrier", number: "TIC2025-0033", docNo: "", rev: "", date: "2025-11-12", type: "Technical",
@@ -1253,6 +1255,150 @@ const BULLETINS = [
     ],
     priority: "normal", confidential: true,
     source: "HVACpartners TIC2022-0013"
+  },
+  {
+    id: "carrier-tic2022-0011", brand: "Carrier", number: "TIC2022-0011", docNo: "", rev: "2023-04-17", date: "2022-06-13", type: "Technical",
+    title: "Condensing furnace vent: no cellular / foam core ABS or PVC pipe on installs from Dec 1, 2022",
+    applies: { modelRe: ["^59[A-Z]{2}", "^9(15|25|26|45|50|55|70|73|82|86|87)[A-Z]{2}", "^PG9"] },
+    appliesText: "All Carrier / Bryant / Payne condensing gas furnaces (the TIC covers every condensing furnace; the model list here is the common 90%+ prefixes).",
+    summary: "The furnace design standard (ANSI Z21.47 / CSA 2.3) no longer allows ABS or PVC cellular / foam core pipe in the VENT. It was removed from every condensing furnace installation manual. Installs done before December 1, 2022 with foam core vent pipe stay compliant where the local inspector allows it.",
+    steps: [
+      "Install or vent rework on or after December 1, 2022: use solid-wall pipe for the vent. Cellular / foam core ABS or PVC is NOT approved for the vent.",
+      "Foam core pipe is still allowed for the combustion AIR INTAKE pipe where the local code allows it.",
+      "Existing foam core vent on a furnace installed before December 1, 2022 is not a violation by itself - check local code."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2022-0011"
+  },
+  {
+    id: "carrier-tic2022-0007", brand: "Carrier", number: "TIC2022-0007", docNo: "", rev: "", date: "2022-05-10", type: "Technical",
+    title: "Condensing furnace upflow, left-side drain: revised Z-pipe / drain elbow install (trap pulls loose)",
+    applies: { modelRe: ["^59[A-Z]{2}", "^9(15|25|26|45|50|55|70|73|82|86|87)[A-Z]{2}", "^PG9"] },
+    appliesText: "Title: modulating 4-way multipoise condensing gas furnace; the TIC lists all 90% condensing furnace models. Only the UPFLOW position with the drain out the LEFT side.",
+    summary: "The joint between the condensate trap and the drain elbow was hard to keep secure in upflow with a left-side drain. The install steps changed: build the Z-pipe, rubber elbow and trap outside the furnace, use the formed grommet in the left casing knockout, and keep the Z-pipe level and off the sheet metal.",
+    steps: [
+      "Remove the inducer housing and the condensate trap. Cut the rubber drain elbow as shown in the install guide (Fig. 15) - keep the formed grommet and the elbow.",
+      "Knock out the left side of the casing and fit the FORMED GROMMET. Assemble Z-pipe, rubber elbow and trap outside the unit; slide the spring clamp over the Z-tube.",
+      "Set the Z-pipe as level as possible and NOT resting on any sheet metal, clamp the grommet to the Z-pipe, then refit the trap with the Z-pipe assembly.",
+      "Prime the trap: take out the upper and middle collector box drain plugs opposite the trap, pour 1 quart of water through a 5/8 in. ID tube and funnel into each port in turn until water runs out the open drain, then refit the plugs.",
+      "Inducer housing and trap screws: 17.5 +/- 2.5 in-lb, hand tools only, 20 in-lb maximum."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2022-0007"
+  },
+  {
+    id: "carrier-tic2022-0005", brand: "Carrier", number: "TIC2022-0005", docNo: "", rev: "", date: "2022-04-19", type: "Technical",
+    title: "40MBAA ducted ductless: setting up DRY (dehumidify) mode with an ecobee thermostat",
+    applies: { modelRe: ["^40MBAAQ"] },
+    appliesText: "Carrier 40MBAAQ__XA3 ducted ductless air handler, sizes 24-36, all serials. ecobee thermostats only.",
+    summary: "The ecobee drives DRY mode through its one-wire accessory terminal (Acc+) set up as a dehumidifier. DRY only works with the thermostat in cooling, and a cooling call always wins over dehumidify.",
+    steps: [
+      "ecobee: Settings > Installation Settings > Equipment > Wiring - confirm it sees a wire on Acc+.",
+      "Reconfigure equipment: accessory = Dehumidifier, 1 wire (Acc+), relay state when dehumidifier is active = Closed. Under Equipment > Dehumidifier answer NO to 'dehumidify in heat mode'.",
+      "Test: Installation Settings > Test Equipment > Dehumidifier ON. At the air handler the interface board should show mode 4 (dry). Turn the test off.",
+      "Main menu > System > Dehumidifier ON, then set the humidity level wanted. The thermostat must be in COOL.",
+      "Cooling calls run first; after cooling is satisfied the unit goes back to DRY if humidity is still high. With dry-mode DIP switch 3-1 ON, auxiliary heat will not run."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2022-0005"
+  },
+  {
+    id: "carrier-tic2021-0014", brand: "Carrier", number: "TIC2021-0014", docNo: "", rev: "", date: "2022-01-11", type: "Technical",
+    title: "Blower motor groan / harmonic noise at shut-down - HD44SE125 / HD52SE124 motors before date code K20V",
+    applies: { modelRe: ["^58TN0A135", "^58TNA070", "^58TN1A070", "^58TN1A135", "^59CU5A080", "^59TN6B", "^880TA", "^881TA", "^935CA60080", "^986TC"] },
+    appliesText: "Furnaces with variable speed blower motor HD44SE125 (1 hp) or HD52SE124 (1/2 hp). Models listed in the TIC: 58TN0A135C241122/1222, 58TNA070C171116/1216, 58TN1A070C171116/1216, 58TN1A135C241122, 59CU5A080C211120, 59TN6B060C171114, 59TN6B080C171114, 59TN6B120C241122, 880TA48070C17A-A/-B, 880TA66135C24A-A/-B, 881TA48070C17A-A/-B, 881TA66135C24A-A, 935CA60080C21A-A, 986TC42060C17A-A, 986TC42080C17A-A, 986TC66120C24A-A.",
+    summary: "Some of these motors made a harmonic coast-down noise when the blower shut off (system resonance). The motor supplier fixed it in production; motors with date code K20V (November 2020) or later do not do it. RC replacement HD44SE125 motors older than K20V were reprogrammed with a stop brake and carry a GREEN DOT sticker.",
+    steps: [
+      "Noise only when the blower winds down: read the motor date code on its label. J20V or earlier = the known issue; K20V or later = this is not the cause.",
+      "Fix: replace with a motor dated K20V or later (or an RC stock HD44SE125 with the green dot sticker).",
+      "Same noise on a motor dated K20V or later: contact the field support engineer and file an FRS report."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2021-0014"
+  },
+  {
+    id: "carrier-tic2021-0009", brand: "Carrier", number: "TIC2021-0009", docNo: "", rev: "", date: "2021-04-13", type: "Technical",
+    title: "Gas packaged unit marked 'Unit not for conversion to propane' - LP needs a field tee for the low-pressure switch",
+    applies: { modelRe: ["^48VL", "^48VT", "^577C", "^PY4G"], serialFrom: "1221F49697", serialTo: "1321F49849" },
+    appliesText: "Carrier 48VL / 48VT, Bryant 577C, Payne PY4G small packaged gas units, serials 1221F49697 through 1321F49849.",
+    summary: "A gas valve shortage put an alternate valve on these units. Its pressure tap cannot take the LP low-pressure switch, so the units were labeled natural gas only. They CAN still be converted to propane.",
+    steps: [
+      "Natural gas: no action.",
+      "Propane conversion: use the normal LP conversion kit plus a field-supplied 3/4 in. NPT tee with a reducer to 1/8 in. NPT on the INLET side of the gas valve, and connect the low-pressure switch there. The tee and reducer are not in the kit."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2021-0009"
+  },
+  {
+    id: "carrier-tic2021-0008", brand: "Carrier", number: "TIC2021-0008", docNo: "", rev: "", date: "2021-03-29", type: "Technical",
+    title: "Electronic air purifier on an open (non-ducted) return needs the safety screen kit - shock hazard",
+    applies: { modelRe: ["^DGAPAXX"] },
+    appliesText: "Electronic air purifiers DGAPAXX1625, DGAPAXX2025, DGAPAXX1620, DGAPAXX2020, DGAPAXX2420 installed with an open return (no return duct).",
+    summary: "Without the safety screen the Filter Enhancement Module (FEM) can be reached by the homeowner or pets and is a shock hazard. A screen kit is required wherever the FEM is reachable during operation or service.",
+    steps: [
+      "Open return install: fit the screen kit for that purifier - DGAPAXX1625 = KIT170000, DGAPAXX2025 = KIT171000, DGAPAXX1620 = KIT172000, DGAPAXX2020 = KIT173000, DGAPAXX2420 = KIT174000.",
+      "Found one already installed on an open return with no screen: tell the homeowner it is unsafe and install the kit."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2021-0008"
+  },
+  {
+    id: "carrier-tic2021-0006", brand: "Carrier", number: "TIC2021-0006", docNo: "", rev: "", date: "2021-03-29", type: "Technical",
+    title: "Slime (biofilm) clogging coil pans and condensate drains - how Carrier says to clean it",
+    applies: { modelRe: [] },
+    appliesText: "Evaporator coils and fan coils (any brand - Carrier calls it an industry-wide issue), worst in areas with long cooling / dehumidifying seasons.",
+    summary: "The white (or red, pink, gray) slime is a bacterial biofilm carried in with the condensate. It builds wherever water moves slowly and never dries: drain connections, the trap and the drain end. There is no cheap way to remove it for good, so the answer is cleaning before it blocks and regular checks.",
+    steps: [
+      "Vacuum the slime out of the pan and off the coil face. Optional: pour 2 quarts of Totaline Cooling Coil Treatment P902-1101 into the pan and let it sit 10 minutes.",
+      "Drain end reachable: fill the pan with clean water, vacuum from the drain END to pull everything through, then flush with 5 gallons of water or a hose.",
+      "Drain end not reachable: put a hose into the pan's drain outlet and let water pressure push the clog through; if it will not clear, run a long small wire brush through the line and repeat.",
+      "Between visits a Totaline condensate pan strip (P902-38003 to P902-38007, by system size) near the pan outlet slows regrowth; replace it at each PM.",
+      "Do NOT rely on UV lights in the drain, antimicrobial pipe or bleach - testing showed little effect, and bleach fumes corrode HVAC parts. Carrier does not recommend bleach near the equipment."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2021-0006"
+  },
+  {
+    id: "carrier-tic2021-0005", brand: "Carrier", number: "TIC2021-0005", docNo: "", rev: "", date: "2021-02-17", type: "Technical",
+    title: "Greenspeed / Extreme 26-24 variable speed: what the % on the wall control means, and capacity limiting",
+    applies: { modelRe: ["^24VNA6", "^25VNA4", "^186CNV", "^284ANV"] },
+    appliesText: "Carrier Infinity 24VNA6 / 25VNA4, Bryant Evolution Extreme 186CNV / 284ANV.",
+    summary: "The system control picks one of 8 operating tables (by airflow setting, heat or cool, and outdoor temperature) and speeds the compressor up and down inside a safe operating envelope. The % shown is where it sits in THAT table's range, not % of the unit's rated capacity - 40% in one table is a different output than 40% in another.",
+    steps: [
+      "A low % on the status screen is not by itself a sign of low capacity - judge by temperatures and pressures.",
+      "The unit also slows or speeds the compressor on its own to protect itself (pressures, temperatures, airflow, fan speed). That is normal.",
+      "Capacity limiting is under Service > Setup > AC/Heat Pump Setup > Capacity Limiting (Cooling / Heating), 10% to 100% in steps of 10. Carrier recommends leaving it at default and letting the system adjust.",
+      "Example from the TIC: minimum 900 rpm, maximum 3660 rpm, a 50% limit caps the compressor at the midpoint, 2280 rpm."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2021-0005"
+  },
+  {
+    id: "carrier-tic2020-0007", brand: "Carrier", number: "TIC2020-0007", docNo: "", rev: "", date: "2020-05-13", type: "Technical",
+    title: "Ultra Low NOx 80% furnace: new furnace control HK42FZ076 and 12 VDC transducer HK05ZZ006",
+    applies: { modelRe: ["^58SU0A(040|060|080|100)", "^830SA", "^PG80ESUA"] },
+    appliesText: "California Ultra Low NOx non-condensing furnaces: Carrier 58SU0A040E17-12, 58SU0A060E17-16, 58SU0A080E21-20, 58SU0A100E21-20; Bryant 830SA36040E17A, 830SA48060E17A, 830SA60080E21A, 830SA60100E21A; Payne PG80ESUA36040B, PG80ESUA48060B, PG80ESUA60080C, PG80ESUA60100C. Minor series change in 2020.",
+    summary: "These models moved to a new furnace control with new model plugs, a revised wiring diagram and a fault code label with the more standard codes. The pressure transducer changed too.",
+    steps: [
+      "Furnace control: old HK42EB001, new HK42FZ076. Model plugs changed to match the new control.",
+      "Transducer: old 5 VDC, 0-2 in. W.C. HK05ZZ003; new 12 VDC, 0-4 in. W.C. HK05ZZ006.",
+      "Use the wiring diagram and fault code label on the unit in front of you - they differ between the old and new series. Revised install manuals and product data are on HVACpartners."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2020-0007"
+  },
+  {
+    id: "carrier-tic2019-0001", brand: "Carrier", number: "TIC2019-0001", docNo: "", rev: "2019-07-16", date: "2019-01-28", type: "Technical",
+    title: "GZ024 geothermal split with FE/FV4CN 003 fan coil: charge is 60 oz, not 80 oz",
+    applies: { modelRe: ["^GZ024"] },
+    appliesText: "Residential geothermal communicating split GZ024 (Cu, GZ024SXXC******1, and CuNi, GZ024SXXN******1) paired with the F(E/V)4CN(B/F)003 fan coil.",
+    summary: "Testing showed the 024 size with this fan coil needs 60 oz, not the 80 oz nameplate charge - a 20 oz reduction, not the 7 oz reduction in the GZ install manual.",
+    steps: [
+      "GZ024 with an FE4CN / FV4CN 003 fan coil: charge to 60 oz total.",
+      "Other GZ sizes: follow the current installation instructions; Carrier said more charge changes could follow."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2019-0001"
   },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
