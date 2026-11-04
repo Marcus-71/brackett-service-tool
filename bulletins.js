@@ -3122,6 +3122,116 @@ const BULLETINS = [
     priority: "normal", confidential: true,
     source: "HVACpartners DSB11-0046"
   },
+  // --- HVACpartners hourly catch-up 2026-11-03 10 PM: last Dealer Service Bulletins 2011 ---
+  {
+    id: "carrier-dsb11-0038", brand: "Carrier", number: "DSB11-0038", docNo: "", rev: "", date: "2011-12-08", type: "Safety",
+    title: "Infinity / Perfect Air purifiers: use only the factory filter cartridge, arrows with the airflow",
+    applies: { modelRe: ["^GAPAAXCC", "^GAPABXCC", "^GAPAAXBB", "^GAPABXBB"] },
+    appliesText: "All Carrier Infinity and Bryant Perfect Air electronic air purifiers (GAPAAXCC / GAPABXCC, GAPAAXBB / GAPABXBB, sizes 1625, 2025, 1620, 2020, 2420), all serials.",
+    summary: "Warranty returns found purifier problems caused by non-factory filter cartridges and by factory cartridges put in the wrong way. The wrong cartridge upsets how the purifier works and can be a safety hazard.",
+    steps: [
+      "Only fit the factory replacement cartridge for that purifier. The bulletin's table lists Carrier cartridges GAPCCCAR1625, GAPCCCAR2025, GAPCCCAR1620, GAPCCCAR2020, GAPCCCAR2420 and Bryant cartridges GAPBBCAR1625, GAPBBCAR2025, GAPBBCAR1620, GAPBBCAR2020, GAPBBCAR2420 - match the size number on the purifier model.",
+      "The arrows on the cartridge must point the same way as the airflow and match the arrows on the cabinet label.",
+      "At install and after every maintenance visit, check the right cartridge is in and facing the right way, and tell the homeowner not to use other brands."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0038"
+  },
+  {
+    id: "carrier-dsb11-0035", brand: "Carrier", number: "DSB11-0035", docNo: "", rev: "", date: "2011-11-22", type: "Service",
+    title: "Modulating furnace 59MN7A / 987MA with UI version 21: heat keeps running when mode is switched to cool",
+    applies: { modelRe: ["^59MN7A", "^987MA", "^SYSTXCCUI[DZ]01", "^SYSTXBBUI[DZ]01"] },
+    appliesText: "Carrier 59MN7A and Bryant 987MA modulating furnaces (all sizes, all serials) with Infinity / Evolution UI SYSTXCCUID01-V, SYSTXCCUIZ01-V, SYSTXBBUID01-D or SYSTXBBUIZ01-D running version 21. Not the *9MAC furnaces or any other model.",
+    summary: "With UI version 21, if the mode is changed from heat to cool while a heat call is still running, the furnace keeps heating and the AC runs at the same time. Replacing the furnace board does not fix it. Version 23 UI software fixes it.",
+    steps: [
+      "Check the UI software version. Version 21 on a 59MN7A or 987MA: update to version 23 or later.",
+      "Until then: use Auto changeover, or switch the mode to Off and wait 10 seconds before changing modes.",
+      "A version 16 or 18 UI also stops it, but the furnace then runs as a 3-stage furnace, not fully modulating. A plain single-stage thermostat also works.",
+      "Do not change the furnace control board for this."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0035"
+  },
+  {
+    id: "carrier-dsb11-0034", brand: "Carrier", number: "DSB11-0034", docNo: "", rev: "", date: "2011-11-18", type: "Service",
+    title: "59TN6A furnace will not stage up to high heat - HK42FZ043 board needs version 19 software",
+    applies: { modelRe: ["^59TN6A"], serialFrom: "2711A", serialTo: "4311A" },
+    appliesText: "Carrier 59TN6A furnaces, serials 2711A to 4311A, with the HK42FZ043 control board. Other furnaces using HK42FZ043 are not affected.",
+    summary: "The board software in these furnaces never stages up to high heat - not after 16 minutes on a single-stage thermostat, not with a version 21 Infinity UI, and not when the board controls staging. Version 19 (V19) board software is correct. V19 boards have a board serial starting 4411N; furnaces from serial 4411A have it.",
+    steps: [
+      "Look at the software version and board serial on the HK42FZ043 label (bottom of the board).",
+      "Older software in a 2711A-4311A furnace: replace the board with an HK42FZ043 with V19 software from the distributor.",
+      "Return the old board in the box the new one came in, and tell the office for the warranty labor claim."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0034"
+  },
+  {
+    id: "carrier-dsb11-0033", brand: "Carrier", number: "DSB11-0033", docNo: "", rev: "", date: "2011-11-17", type: "Service",
+    title: "Small packaged AC units: condensate drips on the outdoor board - insulated cover kit 50XL400065",
+    applies: { modelRe: ["^50XL", "^50XT", "^48XL", "^48XT", "^707D", "^607D", "^577D", "^677D"], serialFrom: "1409C", serialTo: "2211C" },
+    appliesText: "Carrier 50XL, 50XT, 48XL, 48XT and Bryant 707D, 607D, 577D, 677D, serials 1409C to 2211C.",
+    summary: "The outdoor control board sits under the indoor blower. In high humidity, condensate can collect on the blower housing and drip onto the board, causing nuisance faults or a failed board. Not every unit sees it.",
+    steps: [
+      "Nuisance faults or a failed outdoor board with signs of water on it: fit kit 50XL400065 (insulated cover, insulated board bracket, label, grommet, wire ties).",
+      "If you replace the outdoor board for water or nuisance faults, install the 50XL400065 kit with the new board."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0033"
+  },
+  {
+    id: "carrier-dsb11-0031", brand: "Carrier", number: "DSB11-0031", docNo: "", rev: "", date: "2011-11-01", type: "Service",
+    title: "5 ton mobile home packaged AC: filter drier installed backwards - replace with KH43LG074",
+    applies: { modelRe: ["^50ZPB060", "^PA3ZNB060"], serialFrom: "0110A", serialTo: "4211A" },
+    appliesText: "Carrier 50ZPB060, Bryant and Payne PA3ZNB060000, serials 0110A to 4211A. Reworked units have a green dot on the shipping label.",
+    summary: "The one-way filter drier was put in backwards at the factory. It is not a safety problem, but it should flow the right way.",
+    steps: [
+      "On a unit in the range with no green dot, check the flow arrow on the filter drier.",
+      "Backwards: recover, cut out the drier and fit a new one, p/n KH43LG074, with the arrow in the direction of refrigerant flow."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0031"
+  },
+  {
+    id: "carrier-dsb11-0030", brand: "Carrier", number: "DSB11-0030", docNo: "", rev: "", date: "2011-10-19", type: "Wiring",
+    title: "25VNA with a utility (load shed) relay: wire it across the two UTIL terminals only, not UTIL to C",
+    applies: { modelRe: ["^25VNA0"] },
+    appliesText: "Carrier 25VNA* variable speed heat pumps, all sizes, all serials (the bulletin is from 2011, so the 25VNA0 Infinity heat pumps of that time - not the later 25VNA4 / 25VNA8).",
+    summary: "The 25VNA-3SI install instructions said to wire the utility interface relay between UTIL and C on the outdoor board. Wired that way it blows the fuse on the outdoor board.",
+    steps: [
+      "Utility saver / load shed relay on a 25VNA: it must connect between the UTIL connections only - no wire to C.",
+      "Blown outdoor board fuse on a 25VNA with a utility relay: check this wiring first, correct it, then replace the fuse."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0030"
+  },
+  {
+    id: "carrier-dsb11-0026", brand: "Carrier", number: "DSB11-0026", docNo: "", rev: "", date: "2011-09-09", type: "Service",
+    title: "38AUZ / 38AUD / 541A / 569J: Comfort Alert fault code 6 nuisance trips - module software from week 25 2011",
+    applies: { modelRe: ["^38AUZ", "^38AUD", "^541A", "^569J"], codes: ["6"] },
+    appliesText: "Carrier 38AUZ / 38AUD and Bryant 541A / 569J light commercial split condensing units, serials 3211G and 3211U, with Comfort Alert module HK60EC002.",
+    summary: "The Comfort Alert module was too sensitive to current imbalance from system operation or loose wiring, giving fault code 6 (missing phase or wrong compressor rotation), delayed starts and lockout - mostly now and then at start-up. Emerson changed the module software; the part number stays HK60EC002, and updated modules have a module serial of 1125xxxxx or later.",
+    steps: [
+      "Fault code 6: first check every power and compressor wire connection is tight and the phase voltages and currents are balanced.",
+      "Module serial before 1125xxxxx: replace it with an updated HK60EC002 (serial 1125xxxxx or later).",
+      "Open delta or center-tapped grounded open delta power can still cause code 6 with the new module - tell the office so it can call Carrier post-sale support."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0026"
+  },
+  {
+    id: "carrier-dsb11-0024", brand: "Carrier", number: "DSB11-0024", docNo: "", rev: "", date: "2011-09-07", type: "Service",
+    title: "Fan coil ECM module must be changed when a Bristol 2-stage outdoor unit is replaced with a Copeland one",
+    applies: { modelRe: ["^FK4C", "^FK4D", "^FV4A", "^FV4B", "^40FKA", "^40FKB"] },
+    appliesText: "Carrier 40FKA / 40FKB and Carrier / Bryant FK4C, FK4D, FV4A, FV4B fan coils, where a failed Bristol two-stage outdoor unit (failed on or after September 12, 2011) was replaced under Carrier's program with a unit that has a Copeland scroll.",
+    summary: "With the Copeland replacement unit, the fan coil's low-speed airflow setting is wrong. The ECM 2.3 control module has to be replaced with one that has the right low-speed airflow. The new module part number is slightly different from the old one.",
+    steps: [
+      "Fan coil in the list, outdoor unit replaced under the Bristol program with a Copeland scroll unit: replace the ECM 2.3 control module (motor stays).",
+      "Kits in the bulletin's table: HD44AE131 -> RMOD44AR131, HD44AE132 -> RMOD44AR132, HD44AE133 -> RMOD44AR133, HD46AE244 -> RMOD46AR244. Match the part number on the existing motor / module; ask the office if it is not one of these."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0024"
+  },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
