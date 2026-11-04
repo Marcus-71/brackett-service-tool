@@ -2768,6 +2768,360 @@ const BULLETINS = [
     priority: "normal", confidential: true,
     source: "HVACpartners DSB13-0024"
   },
+  // --- HVACpartners hourly catch-up 2026-11-03 9 PM: Dealer Service Bulletins 2011-2013 ---
+  {
+    id: "carrier-dsb13-0027", brand: "Carrier", number: "DSB13-0027", docNo: "", rev: "", date: "2013-10-03", type: "Service",
+    title: "13 SEER 3 to 4 ton outdoor units: fan blade can come off the motor shaft at start-up",
+    applies: { modelRe: ["^CA13NA0(36|42)", "^PA13NR036", "^PH13NR0(42|48)"], serialFrom: "0113X", serialTo: "2813X" },
+    appliesText: "Carrier / Bryant CA13NA036 and 042, Payne PA13NR036, PH13NR042 and 048, serials 0113X through 2813X.",
+    summary: "Some of these outdoor units were built with the fan blade not torqued tight enough to the motor shaft, so the blade can work loose and come off at start-up or soon after. The factory added a torque tool from week 2813X.",
+    steps: [
+      "On a unit in the serial range, check the fan blade set screw is tight on the motor shaft flat and the blade sits at the right height.",
+      "Fan blade loose or off on a unit built after 2813X: tell the office so it can be reported to Carrier, and keep the motor and blade for return."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0027"
+  },
+  {
+    id: "carrier-dsb13-0026", brand: "Carrier", number: "DSB13-0026", docNo: "", rev: "", date: "2013-10-02", type: "Installation",
+    title: "CNPH furnace coils laid horizontal: horizontal RIGHT is OK for AC and heat pump, horizontal LEFT is AC only",
+    applies: { modelRe: ["^CNPH"] },
+    appliesText: "All brands, all CNPH* furnace coils, all serials.",
+    summary: "How the coil sits on the furnace matters for airflow, capacity and efficiency. The bulletin has a table by furnace width and coil width that says which of 10 layouts are allowed. Horizontal-right layouts are allowed for air conditioners and heat pumps; horizontal-left layouts are allowed for air conditioners only.",
+    steps: [
+      "On a horizontal furnace with a CNPH coil, check which side the air leaves.",
+      "Coil on a heat pump installed horizontal-left: not an approved layout - tell the office; the coil should be turned to a horizontal-right layout.",
+      "Furnace width and coil width must be a combination the coil install instructions allow."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0026"
+  },
+  {
+    id: "carrier-dsb13-0023", brand: "Carrier", number: "DSB13-0023", docNo: "", rev: "", date: "2013-08-27", type: "Service",
+    title: "Hydronic heat kit KFAIF0101HWC shows up as a 255 kW heater - wrong identifier resistor",
+    applies: { modelRe: ["^KFA[I1]F0101HWC", "^FE4A", "^FE5A"] },
+    appliesText: "Carrier / Bryant hydronic heat interface kit KFAIF0101HWC (also printed KFA1F0101HWC) on Infinity / Evolution FE4A and FE5A fan coils, kits with quarterly code 132 and 133.",
+    summary: "Some kits were built with a 270 ohm identifier resistor instead of 270,000 ohms. The fan coil then cannot identify the kit and the wall control may call it a 255 kW heater instead of hydronic heat.",
+    steps: [
+      "Wall control shows a 255 kW heater on an FE4A / FE5A with hydronic heat: check the kit's identifier resistor - it must be 270,000 ohms.",
+      "Wrong resistor (about 270 ohms): replace the kit with a correct KFA1F0101HWC kit."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0023"
+  },
+  {
+    id: "carrier-dsb13-0021", brand: "Carrier", number: "DSB13-0021", docNo: "", rev: "", date: "2013-06-19", type: "Product",
+    title: "2013 limited-run aluminum coil condensing units ('L' in the 11th digit, blue label)",
+    applies: { modelRe: ["^213CNA0(18|60)0L0", "^213C[PE]A0600L0", "^113AN[AW]0240L0", "^25HCD3(18|60)A0L", "^24ABB324[AW]0L3"] },
+    appliesText: "Bryant 213CNA0180L0, 213CNA0600L0, 213CPA0600L0, 213CEA0600L0, 113ANA0240L0, 113ANW0240L0; Carrier 25HCD318A0L3, 25HCD360A0L3, 25HCD360A0L5, 25HCD360A0L6, 24ABB324A0L3, 24ABB324W0L3 (built 2013).",
+    summary: "A small 2013 run of these models used all-aluminum outdoor coils with copper stub-outs. Same size, ratings and electrical data as the copper models. They are not coastal units.",
+    steps: [
+      "An 'L' in the 11th digit of the model number means the aluminum coil version.",
+      "Aluminum replacement coils cannot go into the copper-tube models. For aluminum coil repairs the service part listed is 337748-751.",
+      "Do not use them on the coast or within 5 miles of the seacoast - use coastal or copper units there.",
+      "Any unit problem: tell the office; Carrier asks for a system check sheet."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB13-0021"
+  },
+  {
+    id: "carrier-dsb13-0020", brand: "Carrier", number: "DSB13-0020", docNo: "", rev: "", date: "2013-06-14", type: "Service",
+    title: "Infinity Touch / Evolution Connex version 08: low high-stage cooling airflow with 2-stage outdoor units - update to V09",
+    applies: { modelRe: ["^SYSTXCCIT[WN]01", "^SYSTXBBEC[WN]01"] },
+    appliesText: "Carrier SYSTXCCITW01 / SYSTXCCITN01 and Bryant SYSTXBBECW01 / SYSTXBBECN01 controls with version 08 software, with 2-stage outdoor units.",
+    summary: "With version 08 and the airflow set to Comfort (factory default), high-stage cooling may not get enough airflow, which can give a coil freezing notice and low capacity.",
+    steps: [
+      "Check the control's software version. Version 08 with a 2-stage outdoor unit: update to version 09 or later (instructions on HVACpartners under the control's Software / Firmware downloads).",
+      "Until it is updated, set cooling airflow to Quiet, Efficiency or Maximum instead of Comfort."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0020"
+  },
+  {
+    id: "carrier-dsb13-0016", brand: "Carrier", number: "DSB13-0016", docNo: "", rev: "", date: "2013-05-28", type: "Service",
+    title: "Aluminum round-tube coils: most shelf coil cleaners attack them - use mild detergent or the two approved cleaners",
+    applies: { modelRe: [] },
+    appliesText: "All Carrier / Bryant / Payne residential aluminum round-tube, plate-fin coils, indoor and outdoor. Updates DSB12-0030 (indoor only) to cover outdoor coils too.",
+    summary: "Testing found many common coil cleaners are highly aggressive to aluminum tube coils. Mild detergent stays the recommended way to clean both copper and aluminum residential coils.",
+    steps: [
+      "Clean with mild detergent and water.",
+      "If a chemical cleaner is needed, only these are approved for aluminum round-tube coils (indoor and outdoor): Extreme Simple Green Aircraft & Precision Cleaner, and Environmentally Sound Coil Cleaner.",
+      "Rinse the coil well after any cleaner, and check local code before letting rinse water reach storm drains."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0016 (and DSB12-0030)"
+  },
+  {
+    id: "carrier-dsb13-0011", brand: "Carrier", number: "DSB13-0011", docNo: "", rev: "", date: "2013-04-09", type: "Service",
+    title: "Edge / Totaline Premier thermostats wired straight to a supply fan contactor can overheat or smoke",
+    applies: { modelRe: ["^(TP|T6)-(PAC|PHP|NAC|NHP)01", "^(TP|T6)-(PRH|NRH)01", "^P730-(11PAC|11NAC|32PHP|32NHP|32PRH|32NRH)"] },
+    appliesText: "Carrier Edge TP-PAC01, TP-PHP01, TP-PRH01-A, TP-NAC01, TP-NHP01, TP-NRH01-A, T6-PAC01, T6-PHP01, T6-PRH01-A, T6-NAC01, T6-NHP01, T6-NRH01-A and Totaline P730-11PAC, P730-32PHP, P730-32PRH, P730-11NAC, P730-32NHP, P730-32NRH, shipped 2007-2013, only when G drives a supply fan contactor coil directly.",
+    summary: "Driving a contactor coil straight from G can fatigue a capacitor on the thermostat's control module and make it overheat or smoke. Residential fan coils, furnaces, condensing units, heat pumps and small packaged units are NOT affected, nor are units with DDC controls, gas rooftops with an IGC, or units with a time delay relay in the fan circuit (rooftops 5 tons and under).",
+    steps: [
+      "On light commercial split or electromechanical equipment, check whether the thermostat G wire goes straight to a supply fan contactor coil.",
+      "If it does, the thermostat's control module needs the mandatory rework - tell the office to contact the distributor (reference SMB 13-0010)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0011"
+  },
+  {
+    id: "carrier-dsb13-0008", brand: "Carrier", number: "DSB13-0008", docNo: "", rev: "", date: "2013-03-18", type: "Service",
+    title: "Small packaged units with X-13 blower motors: replace only the control module (after 3 motor tests)",
+    applies: { modelRe: ["^48ES", "^48VL", "^48VT", "^48XL", "^50ES", "^50EZ", "^50GL", "^50JZ", "^50VL", "^50VT", "^50XL", "^50XT", "^50ZH", "^50ZP", "^574D", "^577[CD]", "^604D", "^607[CD]", "^674D", "^677[CD]", "^704D", "^707C", "^P[AHY]3G", "^PA3Z", "^PH3Z"] },
+    appliesText: "Carrier, Bryant and Payne small packaged units with X-13 blower motors built before 3712. The bulletin lists by motor part number, not model; the families here are the small packaged lines of that era. Field units with 5 years of service or less and valid warranty.",
+    summary: "X-13 blower motor control modules fail in some operating conditions. When a replacement module is available, replace only the module, not the whole motor - but only after the motor section passes three tests.",
+    steps: [
+      "Test the motor first: the blower wheel spins freely; more than 100k ohms from any connector pin to the motor end plate; less than 20 ohms between any two of the three motor leads, all three within 10% of each other.",
+      "Fails any test: do not fit a module (a new module can fail on a bad motor) - replace the whole motor under normal warranty.",
+      "Passes: replace the module. Motor -> module: HD42AR234 -> HK42ER210, HD42AR235 -> HK42ER211, HD44AE232 -> HK44ER220, HD44AE234 -> HK44ER221, HD44AE235 -> HK44ER222, HD44AR236 -> HK44ER223, HD44AR237 -> HK44ER224, HD44AR238 -> HK44ER225, HD46AE224 -> HK46ER230, HD46AR220 -> HK46ER231, HD46AR233 -> HK46ER232, HD46AR243 -> HK46ER233, HD52AE136 -> HK52ER240, HD52AE137 -> HK52ER241, HD52AE141 -> HK52ER242, HD52AR135 -> HK52ER243, HD52AR223 -> HK52ER244.",
+      "The label on each module lists the motors it fits. Motor not on the list: replace the whole motor. The bulletin will not pay a whole motor when a module is listed."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0008"
+  },
+  {
+    id: "carrier-dsb13-0007", brand: "Carrier", number: "DSB13-0007", docNo: "", rev: "", date: "2013-03-12", type: "Service",
+    title: "25VNA / 280ANV variable speed heat pump: water in the control box gives false sensor readings or comm faults",
+    applies: { modelRe: ["^25VNA", "^280ANV"], serialTo: "0713E" },
+    appliesText: "Carrier 25VNA and Bryant 280ANV, all sizes, built before 0813E.",
+    summary: "Water can run down the protective sleeves of the suction thermistor, suction pressure transducer and EXV wires into the control box and drip on the board, causing false readings or communication faults.",
+    steps: [
+      "Lift off the outlet grille with the fan motor still attached and rest it upside down on the top cover.",
+      "Put a wire tie around the end of the protective sleeve at the suction temperature thermistor and at the suction pressure transducer to close them.",
+      "Slide the suction thermistor down the suction tube (still in its factory wire tie) to about the level of the reversing valve body.",
+      "In the control box: all unsleeved wires coming through the lower opening go in the highest wire tie above it. Pull the EXV sleeve toward the board plug so its end near the EXV lies flat.",
+      "Tie the three sleeved wires to the other wires just above the opening so they form an upside-down drip loop."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0007"
+  },
+  {
+    id: "carrier-dsb13-0001", brand: "Carrier", number: "DSB13-0001", docNo: "", rev: "", date: "2013-02-04", type: "Service",
+    title: "Fan coils with X-13 blower motors: replace only the control module (after 3 motor tests)",
+    applies: { modelRe: ["^FB4C", "^FC4D", "^FX4C", "^FX4D", "^FF1E(019|025|031|037)", "^PF1MNC", "^PF4MN[AB]"] },
+    appliesText: "Carrier / Bryant FB4C, FC4D, FX4C, FX4D (all sizes), FF1E 019-037; Payne PF1MNC, PF4MNA / PF4MNB 019-061; built before 3712.",
+    summary: "X-13 fan coil motor control modules fail in some conditions. Replace only the control module, after the motor section passes three tests.",
+    steps: [
+      "Test the motor first: the blower wheel spins freely; more than 100k ohms from any connector pin to the motor end plate; less than 20 ohms between any two of the three motor leads, all three within 10% of each other.",
+      "Fails any test: do not fit a module - replace the whole motor under normal warranty.",
+      "Passes: fit the module whose label lists your motor part number. Modules in the bulletin: HK42ER223 to HK42ER229 and HK42ER235 to HK42ER237 (HD42 motors), HK44ER155 / 156 and HK44ER232 to HK44ER242 (HD44 motors), HK46ER248 to HK46ER255 (HD46 motors)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0001"
+  },
+  {
+    id: "carrier-dsb13-0004", brand: "Carrier", number: "DSB13-0004", docNo: "", rev: "", date: "2013-02-01", type: "Service",
+    title: "90% furnace collector box minor condensate leaks - replacement kit, tighten screws by hand",
+    applies: { modelRe: [], serialFrom: "2711A", serialTo: "4012A" },
+    appliesText: "Carrier 90% furnaces, serials 2711A to 4012A, with collector box 336850-701, -702, -703 or -704 (the model list is not readable in the bulletin copy).",
+    summary: "Some collector boxes had defects that can cause minor condensate leaks - not a safety, performance or efficiency problem. The factory now uses lower screw torque, a set tightening order and rubber-backed washers.",
+    steps: [
+      "Leaking collector box: replace with kit 336850-751, -752, -753 or -754 (matches factory part 336850-701 to -704). The kit has screws with rubber-backed washers.",
+      "Follow the kit's tightening sequence and tighten the screws BY HAND - a power screwdriver can crack the collector box."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0004"
+  },
+  {
+    id: "carrier-dsb13-0002", brand: "Carrier", number: "DSB13-0002", docNo: "", rev: "", date: "2013-01-21", type: "Service",
+    title: "CH13 heat pump rating plate wrongly says FIELD CHARGED - it is factory charged",
+    applies: { modelRe: ["^CH13NA0(18|24|30|36|42|48|60)"], serialFrom: "1712X", serialTo: "5012X" },
+    appliesText: "Carrier / Bryant CH13NA018 through 060, serials 1712X through 5012X.",
+    summary: "The rating plate says FIELD CHARGED, but these units are factory charged with the refrigerant type and amount shown on the plate. Not a safety or agency issue.",
+    steps: ["Ignore 'FIELD CHARGED' - treat the plate charge as the factory charge and adjust for line set length as the install instructions say."],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB13-0002"
+  },
+  {
+    id: "carrier-dsb13-0003", brand: "Carrier", number: "DSB13-0003", docNo: "", rev: "", date: "2013-01-21", type: "Service",
+    title: "2-stage heat pump board HK38EA016 on a standard thermostat: out-of-phase transformers can burn PTC1 in defrost",
+    applies: { modelRe: ["^25HNB[69]", "^28[69]B"], serialFrom: "2912E" },
+    appliesText: "Carrier 25HNB6 / 25HNB9 and Bryant 286B / 289B, 24 through 60 sizes, from serial 2912E, non-communicating (standard thermostat on ST1). Communicating Infinity / Evolution systems are not affected.",
+    summary: "If the indoor and outdoor 24 V transformers are out of phase, PTC1 (above the W1 terminal on ST1) can fail during defrost when W1 calls for backup heat.",
+    steps: [
+      "Check phasing: take Y1 off ST1 and put one meter lead on it (AC volts). Call for cool or heat so Y1 has 24 V from the indoor unit. Put the other lead on SEC1 or UTIL of ST1.",
+      "10 VAC or less = in phase, OK. 40 VAC or more = out of phase - reverse one transformer.",
+      "If the thermostat turns on backup heat by itself when it sees O during defrost, do NOT connect W1 on the board's ST1. Thermostats that do this: TP-PHP, TP-NHP, TC-PHP, TC-NHP, TB-PHP, TB-NHP, T6-PHP, T6-NHP, T2-PHP, T2-NHP, T1-PHP, T1-NHP."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0003"
+  },
+  {
+    id: "carrier-dsb11-0016a", brand: "Carrier", number: "DSB11-0016A", docNo: "", rev: "A", date: "2012-10-15", type: "Service",
+    title: "Single-speed heat pumps with larger indoor coils: add extra subcooling to the plate value",
+    applies: { modelRe: ["^25HBC[35]", "^25HCB3", "^25HCC5", "^25HNB5", "^25HNH5", "^25HPA5", "^21[35]B", "^223A", "^225B", "^285B", "^CH13", "^PH1[35]"] },
+    appliesText: "Single-speed heat pumps: Carrier 25HBC3, 25HBC5, 25HCB3, 25HCC5, 25HNB5, 25HNH5, 25HPA5H, CH13; Bryant 213B, 215B, 223A, 225B, 285B, CH13; Payne PH13, PH15.",
+    summary: "With larger indoor coil matches these heat pumps may need more subcooling for best heating capacity. The bulletin has a table of extra subcooling for each outdoor unit + coil match (until the install instructions were updated).",
+    steps: [
+      "Target subcooling = rating plate subcooling + the table adjustment for that outdoor unit and coil match.",
+      "Charge to within 3 F of that total.",
+      "The adjustment table is in the bulletin (ask the office) or in the current install instructions for the unit."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0016A"
+  },
+  {
+    id: "carrier-dsb12-0033", brand: "Carrier", number: "DSB12-0033", docNo: "", rev: "", date: "2012-10-03", type: "Service",
+    title: "Small packaged units built 3112C-3612C may be undercharged (no green dot)",
+    applies: { modelRe: ["^48ES", "^48VL", "^48VT", "^48XL", "^50ES", "^50EZ", "^50GL", "^50JZ", "^50VL", "^50VT", "^50XL", "^50XT", "^50ZH", "^50ZP", "^574D", "^577[CD]", "^604D", "^607[CD]", "^674D", "^677[CD]", "^704D", "^707C", "^P[AHY]3G", "^PA3Z", "^PH3Z"], serialFrom: "3112C", serialTo: "3612C" },
+    appliesText: "Bryant 574D, 577C, 577D, 604D, 607C, 607D, 674D, 677C, 677D, 704D, 707C; Carrier 48ES, 48VL, 48VT, 48XL, 50ES, 50EZ, 50GL, 50JZ, 50VL, 50VT, 50XL, 50XT, 50ZH, 50ZP; Payne PA3G, PH3G, PY3G, PA3Z, PH3Z; serials 3112C through 3612C.",
+    summary: "Units in this range may be short of refrigerant and underperform. Units with a green dot on the shipping label or rating plate were already reworked.",
+    steps: [
+      "Green dot on the label or plate: already fixed, nothing to do.",
+      "No green dot, at start-up or when performance is poor - AC: adjust charge per the install instructions at 75 F outdoor or warmer.",
+      "Heat pump, plate in kg: add the number after the comma - plate 4,35 kg means add 0,35 kg.",
+      "Heat pump, plate in lb: add the amount from the bulletin's Table A for the plate charge (example: plate 3.2 lb = add 0.95 lb). Ask the office for Table A."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0033"
+  },
+  {
+    id: "carrier-dsb12-0029", brand: "Carrier", number: "DSB12-0029", docNo: "", rev: "", date: "2012-08-24", type: "Service",
+    title: "48/50LC 3-5 ton and 48/50HC-011: hot zener diodes trip the transformer breaker - kit 48LC660001",
+    applies: { modelRe: ["^(48|50)LC[A-Z]{2}0[4-6]", "^(48|50)HC[A-Z]{2}11"], serialFrom: "0412G", serialTo: "2612G" },
+    appliesText: "Carrier 48/50LC-004 to 006 and 48/50HC-011, serials 0412G00001-2612G99999 and 0412C00001-2612C99999.",
+    summary: "The noise-suppression zener diodes run hot when the 24 V supply is on the high side, tripping the transformer circuit breaker / secondary fuse.",
+    steps: [
+      "Transformer breaker or secondary fuse trips: power off and feel the diodes. Warm = this problem.",
+      "Replace them with kit 48LC660001 (higher rated diodes).",
+      "Until the kit arrives the unit can run with the diodes taken out of the circuit."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0029"
+  },
+  {
+    id: "carrier-dsb12-0025", brand: "Carrier", number: "DSB12-0025", docNo: "", rev: "", date: "2012-07-11", type: "Service",
+    title: "Old FV4A / FV4B air handler with a new 2-stage outdoor unit: change the ECM module to get an AHRI match",
+    applies: { modelRe: ["^FV4A", "^FV4B"] },
+    appliesText: "Carrier / Bryant FV4A and FV4B air handlers, all sizes, when only the outdoor unit is replaced (for example under DSB11-0024 / DSB11-0025).",
+    summary: "FV4A / B were built for the earlier 2-stage outdoor units, so with a new Copeland 2-stage unit they are not an AHRI listed match.",
+    steps: ["Replace the ECM variable speed control module as DSB11-0024 describes - the FV4A / B then performs as an FV4C and meets the AHRI combination."],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB12-0025"
+  },
+  {
+    id: "carrier-dsb12-0028", brand: "Carrier", number: "DSB12-0028", docNo: "", rev: "", date: "2012-07-02", type: "Service",
+    title: "Infinity / Evolution UI version 18-23 will not restart cooling after code 71 or 72 - update to version 24",
+    applies: { modelRe: ["^SYSTXCCUI[DZ]01", "^SYSTXBBUI[DZ]01"], codes: ["71", "72"] },
+    appliesText: "Carrier SYSTXCCUID01-V / SYSTXCCUIZ01-V and Bryant SYSTXBBUID01-D / SYSTXBBUIZ01-D, versions 18 to 23, with 2-stage AC or heat pump.",
+    summary: "After a code 71 (low stage thermal cutout) or 72 (high stage thermal cutout) at the 2-stage outdoor unit, these UIs end the cooling call and never restart it until power is cycled.",
+    steps: [
+      "Check the UI software version (back of the UI or service screen).",
+      "Versions 18-23: install UI software version 24. A new outdoor board will NOT fix this.",
+      "Still find out why the compressor tripped on code 71 / 72."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0028"
+  },
+  {
+    id: "carrier-dsb12-0021", brand: "Carrier", number: "DSB12-0021", docNo: "", rev: "", date: "2012-06-21", type: "Service",
+    title: "TB-PAC01 builder thermostat shipped with a jumper between Y and C - remove it",
+    applies: { modelRe: ["^TB-PAC01"], serialFrom: "1712N037115", serialTo: "1712N061744" },
+    appliesText: "Carrier TB-PAC01, serials 1712N037115 to 1712N037939 and 1712N061595 to 1712N061744.",
+    summary: "A jumper wire was left between the Y and C terminals on the thermostat base plate.",
+    steps: ["Look at the base plate. Jumper between Y and C: remove and throw it away."],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0021"
+  },
+  {
+    id: "carrier-dsb12-0020", brand: "Carrier", number: "DSB12-0020", docNo: "", rev: "", date: "2012-06-13", type: "Service",
+    title: "ECM 3.0 service motor modules HK44EA123 / HK52EA123 built 2/2011-8/2011 run too slow",
+    applies: { modelRe: ["^59MN7A", "^59TN6A", "^FE4AN[BF]", "^FE5ANB", "^355[ABCM]AV", "^315[AJ]AV", "^PG9UAA"] },
+    appliesText: "Service replacement modules HK44EA123 and HK52EA123 (1 hp) built February 21 to August 15, 2011 (box date code 0211-0911), on furnaces, fan coils and small packaged units that use them - Table 1 lists 59MN7A, 59TN6A, FE4ANB, FE4ANF, FE5ANB, 355CAV, 355BAV, 355AAV, 355MAV, 315AAV, 315JAV, PG9UAA among others. HK46EA123 is not affected; neither are factory motors or complete service motor assemblies.",
+    summary: "About 1600 service modules were programmed wrong, so the motor runs below the needed speed - low airflow, high temperature rise, limit trips or a frozen coil.",
+    steps: [
+      "Low airflow on one of these units where the module was already replaced: pull the blower and check for a service module (it has an extra part number label).",
+      "Read the group code (GC07 or GC08) and serial on the module and check it against the bulletin's serial list (serials start 005...). Ask the office for the list.",
+      "Affected: replace the module. Not affected: check the setup, airflow selections and duct static instead.",
+      "Good modules from stock after 2/27/2012 had a green dot on the carton until May 2012."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0020"
+  },
+  {
+    id: "carrier-dsb12-0019", brand: "Carrier", number: "DSB12-0019", docNo: "", rev: "", date: "2012-06-05", type: "Service",
+    title: "X-13 blower motors with control date codes March 5 - April 20, 2012 cycle on and off when hot",
+    applies: { modelRe: ["^FB4C", "^FX4D", "^PF4MN[AB]", "^48ES", "^48VL", "^48VT", "^50ES", "^50EZ", "^50VL", "^50VT", "^50ZP", "^574D", "^577C", "^604D", "^607C", "^677C", "^704D", "^P[AHY]3G", "^PA3Z", "^PH3Z"] },
+    appliesText: "Fan coils FB4C, FX4D, Payne PF4MNA / PF4MNB (serials 1212A-2012A) and small packaged units 48ES, 48VL, 48VT, 50ES, 50EZ, 50VL, 50VT (24, 36), 50ZP (30, 36), Bryant 574D, 577C, 604D, 607C, 677C, 704D, Payne PA3G, PH3G, PY3G, PA3Z, PH3Z (serials 1112C-2012C). Only the specific serials on the distributor's list.",
+    summary: "Parts inside the X-13 motor control can make the motor cycle on and off, worse at higher temperatures. Affected motor controls have date codes between March 5 and April 20, 2012.",
+    steps: [
+      "Blower cycling on and off: read the date code on the motor control label.",
+      "Packaged unit: replace the failed motor with one outside that date range. Fan coil: replace the failed control module with one outside that date range.",
+      "Reworked stock has a black dot on the control and a green dot on the box.",
+      "Return the failed part as the warranty system says."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0019"
+  },
+  {
+    id: "carrier-dsb12-0015", brand: "Carrier", number: "DSB12-0015", docNo: "", rev: "", date: "2012-05-17", type: "Service",
+    title: "Rooftop condenser fan motors built Dec 2011 - Mar 2012: brittle bearing clip screws break",
+    applies: { modelRe: ["^48TC", "^50TC", "^48HC", "^50HC", "^50HT", "^580J[PE]", "^558JE"], serialFrom: "4411G", serialTo: "1312G" },
+    appliesText: "Carrier 48/50TC, 48/50HC, 50HT and Bryant 580JP, 580JE, 558JE, serials 4411G to 1312G, condenser fan motors with serials starting L11J, A12J, B12J or C12J.",
+    summary: "Screws holding the bearing clip on the end opposite the shaft can go brittle and break. If it is going to happen it usually happens at or soon after start-up.",
+    steps: ["Failed condenser fan motor with a motor serial starting L11J, A12J, B12J or C12J: replace the motor (current stock is not affected)."],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB12-0015"
+  },
+  {
+    id: "carrier-dsb12-0014", brand: "Carrier", number: "DSB12-0014", docNo: "", rev: "", date: "2012-05-16", type: "Service",
+    title: "25VNA / 280ANV inverter faults on 'dirty' utility power - inverter with updated software",
+    applies: { modelRe: ["^25VNA", "^280ANV"], serialTo: "1712E" },
+    appliesText: "Carrier 25VNA and Bryant 280ANV, all sizes, built before 1812E.",
+    summary: "Where the utility power has high harmonic content, the inverter can misread its voltage and log over-current or under-voltage faults (inverter over current, VDC-out under voltage, VDC under voltage lockout, 230 VAC under voltage).",
+    steps: [
+      "Repeated inverter over-current or under-voltage codes on a unit built before 1812E: check the software version on the inverter's label.",
+      "Old software: replace the inverter with one from RC that has the updated software (see PMB12-034). The bulletin names 337737-751 for the 24 and 36 sizes."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0014"
+  },
+  {
+    id: "carrier-dsb12-0007", brand: "Carrier", number: "DSB12-0007", docNo: "", rev: "", date: "2012-02-22", type: "Service",
+    title: "2010 condensing furnaces: pressure switch HK06ZB104 fails - replace with HK06NB123 / HK06NB124",
+    applies: { modelRe: ["^340AAV", "^350AAV", "^353AAV", "^PG9MAB"], serialFrom: "0110A", serialTo: "5210A" },
+    appliesText: "Condensing furnaces built 2010 (serials 0110A to 5210A) with the HK06ZB104 single-stage pressure switch - Bryant 340AAV, 350AAV, 353AAV and Payne PG9MAB are listed. Not used on 80% furnaces.",
+    summary: "The HK06ZB104 single-stage differential pressure switch fails more often than expected.",
+    steps: ["Failed HK06ZB104 (complaint only): replace with HK06NB123, or HK06NB124 (same switch with a removable mounting bracket). Exact fit."],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0007"
+  },
+  {
+    id: "carrier-dsb12-0002", brand: "Carrier", number: "DSB12-0002", docNo: "", rev: "", date: "2012-01-10", type: "Service",
+    title: "326 fan coils with an early-failure blower motor (extended harness) - replace on failure",
+    applies: { modelRe: ["^FB4CNF0(24|30|36)", "^FX4DN[FB]0(25|31|37|43|49)", "^PF4MNB0(25|31|37|43|49)"] },
+    appliesText: "Carrier / Bryant FB4CNF024, 030, 036; FX4DNF025, 031, 037, 043, 049; FX4DNB049; Payne PF4MNB025-049 - only the 326 serials on the bulletin's list.",
+    summary: "A small run of fan coils got a motor with an extended harness and connector that can fail early.",
+    steps: [
+      "Motor failed and has the extended harness: replace the motor (ask the office for the replacement part and serial list).",
+      "On FB4CNF024 the replacement motor has a different horsepower - that is expected; the nameplate FLA already covers it."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB12-0002"
+  },
+  {
+    id: "carrier-dsb12-0001", brand: "Carrier", number: "DSB12-0001", docNo: "", rev: "", date: "2012-01-05", type: "Service",
+    title: "48TC 16 size high-fire rooftops: wrong limit switch HH18HA150 - change to HH18HA141",
+    applies: { modelRe: ["^48TC[FT].16", "^580J[EP]16"], serialFrom: "0111G", serialTo: "4811G" },
+    appliesText: "Carrier 48TCF*16, 48TCT*16 and Bryant 580JE16, 580JP16, serials 0111G00001-4811G99999 (high fire, ten-tube heat exchangers).",
+    summary: "The factory fitted limit HH18HA150 (opens 150 F, closes 110 F) instead of HH18HA141 (opens 140 F, closes 100 F). Not a safety issue but it does not match the unit's certification.",
+    steps: ["Check the limit. HH18HA150 fitted: replace it with HH18HA141."],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB12-0001"
+  },
+  {
+    id: "carrier-dsb11-0046", brand: "Carrier", number: "DSB11-0046", docNo: "", rev: "", date: "2011-12-14", type: "Service",
+    title: "48CE / 574C packaged units: no heat with Infinity / Evolution UI versions 18-21",
+    applies: { modelRe: ["^48CE", "^574C"], codes: ["16"] },
+    appliesText: "Carrier 48CE and Bryant 574C single-stage heating packaged units, all serials, with UI SYSTXBBUID01-D, SYSTXBBUIZ01-D, SYSTXCCUID01-D or SYSTXCCUIZ01-D version 18, 19, 20 or 21.",
+    summary: "UI versions 18-21 do not recognise these as gas heat units, so they never start in heating.",
+    steps: [
+      "Use a UI with version 16 or earlier, or version 23 or later.",
+      "A standard 24 V thermostat on the terminal strip will run it, but status code 16 (system communication fault) shows and no more diagnostics are available until communication is restored."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB11-0046"
+  },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
