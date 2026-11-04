@@ -1708,6 +1708,328 @@ const BULLETINS = [
     priority: "normal", confidential: true,
     source: "HVACpartners TIC2013-0009"
   },
+  // --- HVACpartners hourly catch-up 2026-11-03 evening: Dealer Service Bulletins (DSB) ---
+  {
+    id: "carrier-dsb25-0013a", brand: "Carrier", number: "DSB25-0013A", docNo: "", rev: "02", date: "2025-10-20", type: "Service",
+    title: "48/50GC-GE, 581K/551K 3-5 ton: Broad Ocean condenser fan motor loses high speed - add the diode harness",
+    applies: { modelRe: ["^48GC", "^50GC", "^48GE", "^50GE", "^581K", "^551K"] },
+    appliesText: "Light commercial 3-5 ton packaged units Carrier 48/50GC and 48/50GE, Bryant 581K / 551K with Broad Ocean ECM condenser fan motors HC42GQ462 or HC42GQ463. All 2024 and 2025 units built so far. Replaces DSB25-0013 and TIC2025-0028.",
+    summary: "On units built from 2024 the condenser fan motor can fail in hot weather so it no longer runs on high speed. The earlier resistor fix did not save motors that were already damaged. Redesigned motors are now available from RC.",
+    steps: [
+      "Motor whose high-speed tap (yellow low-voltage wire) has failed: replace the motor. If someone moved the wiring to the medium tap (white wire) as a stopgap, put all wiring back to factory after the new motor is in.",
+      "Original motor still working on high speed: do NOT replace it. Kill power, then fit the zener diode harness 48TCHSRSN--A00 in the control box between the yellow and brown wires going to the outdoor fan motor (cut both wires and rejoin with crimp connectors - 3 wires in each: two yellow or two brown plus one lead from the diode assembly).",
+      "Interim only, until a motor arrives: running high-speed cooling on the medium tap (white wire) is acceptable - about 20% less fan RPM, and Carrier says head pressure stays OK."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB25-0013A"
+  },
+  {
+    id: "carrier-dsb21-0010", brand: "Carrier", number: "DSB21-0010", docNo: "", rev: "", date: "2021-11-17", type: "Service",
+    title: "ULN non-condensing furnace in an attic: BTS trips / burner noise from fiberglass - add a combustion air filter on the door",
+    applies: { modelRe: ["^58SU0", "^58CU0"] },
+    appliesText: "Non-condensing Ultra-Low NOx (ULN) gas furnaces, mainly attic installs. The bulletin's model table did not come through in the copy read: Carrier 58SU0 / 58CU0 are shown here; Bryant / Payne ULN 80% models are likely covered too.",
+    summary: "Airborne fiberglass from attic insulation gets pulled into the ULN burner box and plugs the burner mesh and diffuser plate. That causes combustion noise, a hotter burner box and Burner Thermal Switch (BTS) trips. Carrier's approved fix is a pleated filter over the combustion air louvers on the outside of the furnace door.",
+    steps: [
+      "Use a 1 in. or 2 in. pleated MERV 5-8 filter with a UL mark, sized to cover the door louvers. Not for closet or similar enclosed installs. Keep 3 in. clear in front of the filter.",
+      "Stick it to the door around the louvers with double-sided foam tape rated at least 50-200 F (acrylic, indoor/outdoor type), or seal all 4 edges with aluminum foil tape. Clean the surfaces with isopropyl alcohol first. Do not block the louvers or the door latch; remove the logo badge and foil-tape its holes if needed.",
+      "Seal every casing penetration so air cannot bypass the filter: gas pipe (gasket KA56SL100 from the 90% furnaces may be used), wiring, thermostat wire, and around the flue opening (sheet metal, high-temp flue tape or silicone, stove gasket or fine steel wool). The door edge itself does not need sealing.",
+      "Fix the notice label from the bulletin on the furnace so later techs know the filter is there. Check it every maintenance visit; vacuum the face if dirty. Expected life 5-15 years in most attics."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB21-0010"
+  },
+  {
+    id: "carrier-dsb20-0006", brand: "Carrier", number: "DSB20-0006", docNo: "", rev: "", date: "2020-09-03", type: "Service",
+    title: "Communicating furnace + heat pump (dual fuel): low airflow in HP heat / charging - replace V03 board with HK42FZ090 / HK42FZ092",
+    applies: { modelRe: ["^58TN0A", "^58TN1A", "^59MN7B", "^59TN6B", "^880TA", "^881TA", "^986TC", "^987MB"] },
+    appliesText: "Carrier 58TN0A, 58TN1A, 59MN7B, 59TN6B; Bryant 880TA, 881TA, 986TC, 987MB - only when run by a communicating wall control (UI) with a heat pump. Modulating boards HK42FZ069 built before week 8 of 2020; variable-speed boards HK42FZ070 built before week 47 of 2019.",
+    summary: "Furnace software written for the Fan Efficiency Rating (FER) rules caps airflow at the highest constant-fan airflow during heat pump heating, charging mode and airflow verification. Fixed by furnace board software V04 or later plus wall control 2.4 or later.",
+    steps: [
+      "Dual fuel system with low airflow in heat pump heating or charging mode: check the furnace board part number and software label.",
+      "Replace a V03 board with HK42FZ090 (modulating) or HK42FZ092 (standard variable speed) - these carry V04 or later. All RC stock has been exchanged.",
+      "Update the wall control to 2.40 or later (over the air or with a microSD card).",
+      "Policy labor key A: replace the V03 board in a field dual-fuel system and confirm UI 2.40 or higher - tell the office."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB20-0006"
+  },
+  {
+    id: "carrier-dsb19-0022", brand: "Carrier", number: "DSB19-0022", docNo: "", rev: "", date: "2019-11-29", type: "Service",
+    title: "40 in. tall 90% furnace (58M*, 340-355, PG9M/PG9U): secondary heat exchanger failure - $800 furnace replacement option",
+    applies: { modelRe: ["^58MCA", "^58MCB", "^58MXA", "^58MXB", "^58MSA", "^58UVB", "^58MVP", "^58MVB", "^58MVC", "^58MTA", "^58MTB", "^58MEB", "^58MEC", "^340A", "^340M", "^345M", "^350A", "^350M", "^351D", "^352A", "^352M", "^353A", "^353B", "^355[ABCM]", "^490A", "^PG9M", "^PG9U"], serialFrom: "2993A", serialTo: "5211A" },
+    appliesText: "Legacy 40 in. tall multipoise 90% furnaces: Carrier 58MCA, 58MCB, 58MXA, 58MXB, 58MSA, 58UVB, 58MVP, 58MVB, 58MVC, 58MTA, 58MTB, 58MEB, 58MEC; Bryant 340A, 340M, 345M, 350A, 350M, 351D, 352A, 352M, 353A, 353B, 355A, 355B, 355C, 355M; Payne 490A, PG9M, PG9U. Serials 2993A00001 - 5211A99999. Printed expiry June 2020 (to be reviewed for extension) - ask the distributor whether it is still open.",
+    summary: "If the secondary heat exchanger fails within 15 years of service, the homeowner can choose a new comparable 90% furnace for an $800 buy-in plus the dealer's labor, instead of the SMB 09-0024 option or the trade-in allowance.",
+    steps: [
+      "Inspect the secondary heat exchanger per SMB / DSB 09-0022 (90% Furnace Heat Exchanger Inspection Procedure) and fill in the inspection certificate - it must go with the claim.",
+      "The homeowner must also be offered the SMB 09-0024 options.",
+      "Only the like-for-like replacement in the bulletin's Approved Furnace Replacement table is allowed (for example 58MCA1 -> 59SC2 / 59SP2, 58MXA -> 59SC5 / 59SP5; the replacements listed are 59SC2, 59SP2, 59SC5, 59SP5, 59TP6, 59TN6, 59MN7; Bryant 912S, 922S, 915S, 925S, 926T, 986T, 987M; Payne PG92E, PG92S, PG96V, PG95XAT). Get the exact match from the office. A size change within the table is allowed; an upgrade is not (use the trade-in program for that).",
+      "Office files it as a unit exchange under SMB19-0022 with the certificate."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB19-0022"
+  },
+  {
+    id: "carrier-dsb15-0028", brand: "Carrier", number: "DSB15-0028", docNo: "", rev: "", date: "2015-10-30", type: "Service",
+    title: "40 in. 90% furnace primary HX replaced: gap at the inducer - shorten the inducer stand-off legs",
+    applies: { modelRe: ["^58MCA", "^58MCB", "^58MXA", "^58MXB", "^58MSA", "^58UVB", "^58MVP", "^58MVB", "^58MVC", "^58MTA", "^58MTB", "^340A", "^340M", "^345M", "^350A", "^350M", "^351D", "^352A", "^352M", "^355[ABCM]", "^PG9M", "^PG9U"] },
+    appliesText: "Legacy 40 in. tall condensing furnaces Carrier 58MCA, MCB, MXA, MXB, MSA, UVB, MVP, MVB, MVC, MTA, MTB; Bryant 340A, 340M, 345M, 350A, 350M, 351D, 352A, 352M, 355A, 355B, 355C, 355M; Payne PG9M, PG9U.",
+    summary: "After a primary heat exchanger change the cell panel often ends up slightly bowed, leaving a gap between the condensing heat exchanger outlet and the inducer inlet. Shortening the inducer mounting stand-offs lets the inducer seal; Carrier says this is safe.",
+    steps: [
+      "Hold the inducer (legs removed) in its sealed position on the condensing HX outlet and measure from each leg socket to the cell panel.",
+      "Mark that length on the stand-off and cut the extra off with a fine-tooth hacksaw - from the end opposite the taper and step.",
+      "Refit the stand-off, mount the inducer with its screw and check the seal. Repeat as needed. Usually only the upper legs need cutting."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB15-0028"
+  },
+  {
+    id: "carrier-dsb19-0021", brand: "Carrier", number: "DSB19-0021", docNo: "", rev: "", date: "2019-11-18", type: "Service",
+    title: "Fan coil heat kits KFCEH (week 27-45 of 2019): factory miswire blows fuses on first heat call",
+    applies: { modelRe: ["^KFCEH3201F20B", "^KFCEH3301C20B", "^KFCEH2001318B", "^KFCEH3401F24B", "^KFCEH3501F30B"], serialFrom: "2719V", serialTo: "4519V" },
+    appliesText: "Carrier / Bryant / Payne fan coil electric heat kits KFCEH3201F20B, KFCEH3301C20B, KFCEH2001318B, KFCEH3401F24B, KFCEH3501F30B, serials 2719V00000 - 4519V99999. Kits built before week 27 of 2019 are fine; reworked kits carry an orange dot on the label.",
+    summary: "A factory wiring error in these heat kits can blow fuses, trip breakers or fail relays and other parts the first time the electric heat runs. Not a safety issue, and a kit that is installed and already heating is fine long term.",
+    steps: [
+      "Kit installed and heating normally: no action.",
+      "New install or first heat call with blown fuses / tripped breakers / failed relays: check the kit serial. Uninstalled kits in the range go back through the distributor for reworked ones (orange dot).",
+      "The 20 kW kits KFCEH3201F20B and KFCEH3301C20B only may be installed if L1, L2, L3 and L4 are wired exactly per the Appendix A sheet in the bulletin - get that sheet from the office before wiring."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB19-0021"
+  },
+  {
+    id: "carrier-dsb19-0012", brand: "Carrier", number: "DSB19-0012", docNo: "", rev: "", date: "2019-06-20", type: "Service",
+    title: "Rooftop / commercial split hail guard tabs bent out - sharp edge, wear gloves",
+    applies: { modelRe: ["^48HC", "^50HC", "^48LC", "^50LC", "^48TC", "^50TC", "^50HCQ", "^50TCQ", "^38AU", "^548J", "^549J", "^551J", "^581J", "^558J", "^580J", "^569J", "^575J"] },
+    appliesText: "Bryant 548J08-24, 549J07-12, 551J/581J07-28, 558J/580J08-30, 569J16 / 25, 575J16 / 25; Carrier 38AU**16 / 25, 48/50HC07-12 and 17-24, 48/50LC07 and 14-26, 48/50TC08-14 and 17-30, 50HCQ07-09, 50TCQ08-12 and 17-24. Serials 0110Gnnnnn - 1319Gnnnnn and 0110Pnnnnn - 1319Pnnnnn; tab redesigned from 1419P.",
+    summary: "The shipping crate can bend the hail guard louver panel tabs outward, leaving an edge that can cut you while uncrating or servicing.",
+    steps: [
+      "Wear gloves and safety glasses when uncrating or servicing these units.",
+      "Tabs sticking out above the top cover: remove the panel, bend the tabs flush with the panel (do not mar the paint) and refit it with every tab under the top cover."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB19-0012"
+  },
+  {
+    id: "carrier-dsb19-0010", brand: "Carrier", number: "DSB19-0010", docNo: "", rev: "", date: "2019-06-14", type: "Service",
+    title: "2015 fan coils with Digi-Motor: failed motor control module - test the motor before fitting a new module",
+    applies: { modelRe: ["^F[BEVXY]4[A-Z]", "^PF[0-9]"], serialFrom: "0115A", serialTo: "5215A" },
+    appliesText: "All Carrier, Bryant and Payne residential fan coils built in 2015 (serials 0115A00000 - 5215A99999) with a Digi-Motor blower motor. The bulletin's motor / module part number table did not come through in the copy read - check the motor label. Policy ended April 1, 2021; the motor checks still apply.",
+    summary: "Some 2015 fan coils with Digi-Motor blowers lost the motor's control module. Replacing just the module is OK only if the motor section passes three checks - a new module on a bad motor will fail too.",
+    steps: [
+      "Power off. Blower wheel must spin freely.",
+      "Ohmmeter from each pin of the motor's 3-pin power connector to the aluminum end plate: must be more than 100k ohms (no short to ground).",
+      "Phase to phase across each pair of the 3 leads: each under 20 ohms and all three within +/-10% of each other.",
+      "Any check fails: replace the whole motor, not the module."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB19-0010"
+  },
+  {
+    id: "carrier-dsb19-0009", brand: "Carrier", number: "DSB19-0009", docNo: "", rev: "", date: "2019-06-14", type: "Service",
+    title: "2015 fan coils with Endura Pro: failed motor control module - test the motor before fitting a new module",
+    applies: { modelRe: ["^F[BEVXY]4[A-Z]", "^PF[0-9]"], serialFrom: "0115A", serialTo: "5215A" },
+    appliesText: "All Carrier, Bryant and Payne residential fan coils built in 2015 (serials 0115A00000 - 5215A99999) with an Endura Pro blower motor. The bulletin's motor / module part number table did not come through in the copy read - check the motor label. Policy ended April 1, 2021; the motor checks still apply.",
+    summary: "Same as the Digi-Motor bulletin DSB19-0010, for Endura Pro motors: replace only the control module if the motor section tests good.",
+    steps: [
+      "Blower wheel spins freely; each motor connector pin to the aluminum end plate more than 100k ohms; each lead-to-lead reading under 20 ohms and within +/-10% of the others.",
+      "Any check fails: replace the whole motor - a new module will fail on a bad motor."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB19-0009"
+  },
+  {
+    id: "carrier-dsb18-0010", brand: "Carrier", number: "DSB18-0010", docNo: "", rev: "", date: "2019-02-20", type: "Service",
+    title: "5-stage 24VNA9 / 25VNA8 inverter (IGBT) failures - confirm before replacing, discharge before removing",
+    applies: { modelRe: ["^24VNA9", "^25VNA8", "^189BNV", "^288BNV"], codes: ["179"], serialFrom: "0114E", serialTo: "5118E" },
+    appliesText: "Carrier 24VNA9 / 25VNA8 and Bryant 189BNV / 288BNV, all sizes, serials 0114E00001 - 5118E99999. Hardware improved from early 2019. The 2T inverter in the 13 and 24B sizes did not get the IGBT changes.",
+    summary: "Inverter IGBT failures ran higher than expected (worst on spring 2017 builds). A failed inverter shows as fault 179 ODU Communication Fault on the wall control, no LD1 / LED1 status lights, or a tripped breaker.",
+    steps: [
+      "Confirm correct supply voltage per the nameplate first. Replace the inverter only if it will not power up with correct power.",
+      "After locking out power wait at least 5 minutes, then check DC+ to DC- on the inverter with a meter on DC volts - it must read zero before you pull wires.",
+      "Big inrush when the capacitors charge: re-energize with the breaker at the panel when you can.",
+      "Use the new inverter part numbers (see also TIC2015-0017 for the hardware changes)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB18-0010"
+  },
+  {
+    id: "carrier-dsb18-0002", brand: "Carrier", number: "DSB18-0002", docNo: "", rev: "", date: "2018-02-09", type: "Service",
+    title: "25VNA0 / 280ANV: discharge muffler stub leak - replace muffler LM10KH022 and remove the rubber shipping block",
+    applies: { modelRe: ["^25VNA0", "^280ANV"], serialTo: "3517E" },
+    appliesText: "Carrier 25VNA0 and Bryant 280ANV variable speed heat pumps, all sizes, serials before 3617E.",
+    summary: "The discharge muffler copper stub can leak from vibration when the rubber mass dampener (really a shipping block) gets frozen into ice in the base pan.",
+    steps: [
+      "Recover charge. Cut the discharge tube 1 in. below and 1 in. above the muffler stubs; do not bend any tubes.",
+      "Pull the tube that goes to the reversing valve up about 2 in. so it slopes back toward the valve; vertical legs stay vertical.",
+      "Fit new muffler LM10KH022 and braze (no low-temp solder), with nitrogen flowing.",
+      "Remove the rubber mass dampener for good - leaves 2 in. or more clearance to the base pan.",
+      "Evacuate to 500 microns. Weigh in nameplate charge plus 0.60 oz per ft of line set; the bulletin's table also calls for an extra 2.0 lb for the indoor coil on listed sizes."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB18-0002"
+  },
+  {
+    id: "carrier-dsb18-0001", brand: "Carrier", number: "DSB18-0001", docNo: "", rev: "", date: "2018-02-09", type: "Service",
+    title: "25VNA813 / 824B, 288BNV013 / 024B: leak where the PEV joins the suction line - braze and add mass dampeners",
+    applies: { modelRe: ["^25VNA813", "^25VNA824", "^288BNV013", "^288BNV024"], serialTo: "4917E" },
+    appliesText: "Carrier 25VNA813A, 25VNA824B; Bryant 288BNV013, 288BNV024B; serials before 5017E.",
+    summary: "Discharge line vibration can crack the joint where the PEV connects to the suction line.",
+    steps: [
+      "Recover charge, braze the leak with 5-15% silver phos-copper alloy under nitrogen (no low-temp solder).",
+      "Wire-tie two mass dampeners on the discharge line: 60 g block 308421-202 near the PEV and 30 g block 308421-203 per the bulletin drawing.",
+      "Evacuate to 500 microns and weigh in the charge using the wall control weigh-in method."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB18-0001"
+  },
+  {
+    id: "carrier-dsb17-0011", brand: "Carrier", number: "DSB17-0011", docNo: "", rev: "", date: "2018-01-19", type: "Service",
+    title: "5-stage 37 size stuck at about 1700 rpm on a communicating system - inverter kit 340481-783",
+    applies: { modelRe: ["^24VNA937", "^25VNA837", "^189BNV037", "^288BNV037"] },
+    appliesText: "24VNA937, 25VNA837, 189BNV037, 288BNV037 with the factory inverter (serials 1716E15893 - 3817E) or with replacement inverter kits 340481-777 / -781 (any serial). Communicating systems only.",
+    summary: "A stage 1 request (1200 rpm) is below the inverter software's 1500 rpm minimum, so the compressor gets stuck near 1700 rpm and will not go up until the call ends.",
+    steps: [
+      "Fix: replacement inverter kit 340481-783 (corrected software).",
+      "Until then: in the wall control service menu, AC / heat pump setup > stage / latch, set minimum stage to Stage 2, outdoor temperature 'always', for cooling (and heating on heat pumps)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB17-0011"
+  },
+  {
+    id: "carrier-dsb17-0016", brand: "Carrier", number: "DSB17-0016", docNo: "", rev: "", date: "2017-11-15", type: "Service",
+    title: "Screens on condensing furnace vent / intake terminations - allowed, but build them this way",
+    applies: { modelRe: ["^59S", "^59T", "^59M", "^59C", "^58M[A-Z]{2}", "^91[2-6]S", "^92[5-7][ST]", "^98[67][TM]", "^PG9"] },
+    appliesText: "All Carrier-built condensing gas furnaces (Category IV, 1-pipe or 2-pipe).",
+    summary: "Code and Carrier do not require screens on the vent or intake termination. They are allowed as an option (SMB 87-17) but can cause intake frost, vent icing and nuisance pressure switch trips. If screens cause a problem, removing them is not paid by Carrier.",
+    steps: [
+      "Exhaust: round screen per the bulletin drawing; mesh no smaller than 1/2 in.; turn the mesh in a diamond pattern so water drips off.",
+      "2-pipe intake: needs more screen area - a cylinder about 6 1/2 in. long on a 2 in. elbow or 10 in. long on a 3 in. elbow, same mesh. Do not make it shorter.",
+      "Secure with the termination bracket, or drill two 1/8 in. holes on opposite sides of the elbow and tie with stainless wire.",
+      "Frost-ups or pressure switch trips on a screened termination: remove the screens first."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB17-0016"
+  },
+  {
+    id: "carrier-dsb17-0003", brand: "Carrier", number: "DSB17-0003", docNo: "", rev: "", date: "2017-05-11", type: "Service",
+    title: "SAFETY RECALL 25VNA0 / 280ANV: inverter fuse board can overheat - mandatory rework kit 342830-751 / -752",
+    applies: { modelRe: ["^25VNA0(24|36|48|60)", "^280ANV0(24|36|48|60)"] },
+    appliesText: "Carrier 25VNA0 and Bryant 280ANV variable speed heat pumps in the serial list of the bulletin's Appendix A (mostly 2011-2014 builds, for example 25VNA024 1811E08513 - 2414E17187, 280ANV024 0412E99277 - 2014E17376). Check the HVACpartners recall database or the office for a specific serial.",
+    summary: "A part in the inverter fuse board can overheat, melting an internal plastic cover and making the outside sheet metal hot enough to burn or ignite things touching it. Replacing the fuse board with the updated design prevents it.",
+    steps: [
+      "Any 25VNA0 / 280ANV from 2011-2014: ask the office to check the serial against the recall list, and look for a fuse board that has already been replaced.",
+      "Signs: melted plastic inside the inverter area or a hot spot on the cabinet. Keep anything flammable away from the unit.",
+      "Kit 342830-751 (2 and 3 ton) or 342830-752 (4 and 5 ton): fuse board, rework instructions, T10 and T20 Torx bits, 2 large and 3 small screws."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB17-0003"
+  },
+  {
+    id: "carrier-dsb16-0019", brand: "Carrier", number: "DSB16-0019", docNo: "", rev: "", date: "2016-12-06", type: "Service",
+    title: "GC geothermal packaged: high pressure codes 31 / 84 in Comfort heat - use Efficiency mode",
+    applies: { modelRe: ["^GC0[0-9]{2}"], codes: ["31", "84"] },
+    appliesText: "Carrier and Bryant GC communicating geothermal packaged units, all serials, with communicating thermostat software 13.",
+    summary: "With heat set to Comfort, a big setpoint jump from standby sends the compressor straight to high stage while the 30-second cold-blow fan delay is still running, so the high pressure switch trips: code 31 (15-minute soft lock) or 84 (4-hour hard lock).",
+    steps: [
+      "Set heating to Efficiency mode instead of Comfort until the thermostat has software 14 or later.",
+      "Web-capable thermostats prompt for the update; others update by flash drive with software from HVACpartners."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB16-0019"
+  },
+  {
+    id: "carrier-dsb16-0018", brand: "Carrier", number: "DSB16-0018", docNo: "", rev: "", date: "2016-11-07", type: "Service",
+    title: "35 in. single-stage condensing furnace nuisance code 31: V04 board software ignores pressure switch blips under 4 s",
+    applies: { modelRe: ["^59SC[25]", "^912S", "^915S", "^PG92", "^PG95"], codes: ["31"] },
+    appliesText: "35 in. tall single-stage condensing gas furnaces; boards with software V04 from week 40 of 2016 (serial 4016A). The bulletin's model / board table did not come through in the copy read - Carrier 59SC2 / 59SC5, Bryant 912S / 915S, Payne PG92 / PG95 are shown here as the 35 in. single-stage families.",
+    summary: "Condensate droplets passing over the inducer housing pressure port can blip the housing pressure switch open (a magnehelic 'bounces'), giving status code 31. Board software V04 adds a 4-second delay so those blips are ignored; longer losses still run the normal code 31 routine.",
+    steps: [
+      "Code 31 nuisance trips: first fix sizing, venting and condensate piping / drainage.",
+      "Still tripping: replace the control board with one that has the latest software. The version is on a label after the barcode and part number (for example V04 on HK42FZ061). RC stock was exchanged (boxes first marked with a colored dot).",
+      "Not having code 31 problems: no action."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB16-0018"
+  },
+  {
+    id: "carrier-dsb15-0022a", brand: "Carrier", number: "DSB15-0022A", docNo: "", rev: "A", date: "2016-08-10", type: "Service",
+    title: "SAFETY REWORK small rooftops 460 V: blower motor P4/P5/P6 capped together bypasses the overload",
+    applies: { modelRe: ["^48HC", "^50HC", "^48TC", "^50TC", "^50HT", "^581J", "^548J", "^558J", "^580J"], serialFrom: "0114P", serialTo: "1815P" },
+    appliesText: "460 volt units only: Carrier 48/50HC, 48/50TC, 50HT; Bryant 581JE, 548J, 558J, 580J, 580JE, 558JE. Serials 0114Pxxxxx - 1815Pxxxxx.",
+    summary: "On some 460 V units the blower motor's internal leads P4, P5 and P6 were capped together, bypassing the motor's internal overload. The motor can overheat, melt insulation and put smoke in the space.",
+    steps: [
+      "Lock out and tag out. Remove the blower access panel and the motor's electrical cover (an inspection mirror may save pulling the motor).",
+      "If P4, P5 and P6 are under one wire nut: separate them and cap each one on its own. Tuck the wires back without pinching.",
+      "Refit covers, restore power. Check belt tension and motor amps against the nameplate.",
+      "Fill in the 460 Volt Miswire Rework Verification Sheet from the bulletin for the claim."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB15-0022A"
+  },
+  {
+    id: "carrier-dsb16-0007", brand: "Carrier", number: "DSB16-0007", docNo: "", rev: "", date: "2016-05-16", type: "Service",
+    title: "GC / GZ geothermal on Infinity / Evolution: no cooling and 'HP Defrost' if the UPM freeze dip switch is moved",
+    applies: { modelRe: ["^GZ0[0-9]{2}", "^GC0[0-9]{2}"] },
+    appliesText: "Carrier and Bryant GC and GZ communicating geothermal units, all serials.",
+    summary: "With an Infinity / Evolution wall control, setting the UPM board freeze dip switch to 15 F / ON causes no cooling, shows 'HP Defrost' and may run backup electric heat. The wall control handles freeze protection, not the dip switch.",
+    steps: [
+      "Communicating wall control: leave the UPM freeze dip switch at the factory 26 F / OFF and set freeze protection in the wall control.",
+      "26 F is for open loop / well water; 15 F is for closed loop.",
+      "Non-communicating thermostat or NIM on a GZ: the dip switch works normally at either setting."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB16-0007"
+  },
+  {
+    id: "carrier-dsb16-0003", brand: "Carrier", number: "DSB16-0003", docNo: "", rev: "", date: "2016-04-04", type: "Service",
+    title: "40MKC18B / 22B ductless: never plug the blue 5-pin connector into CN11 - instant board failure",
+    applies: { modelRe: ["^40MKC18", "^40MKC22"] },
+    appliesText: "Carrier ductless 40MKC18B and 40MKC22B (40MKCB / MKQB high wall indoor units).",
+    summary: "The blue 5-pin connector is for the display board when a wired controller is used. Plugged into CN11 it shorts the EPROM and kills the board at power-up. CN11 is only used on the 24K and 36K units (vertical swing motor).",
+    steps: [
+      "On 18K / 22K units leave CN11 empty.",
+      "Newer connecting cables come without the yellow wire in the harness so the board survives start-up."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB16-0003"
+  },
+  {
+    id: "carrier-dsb16-0001", brand: "Carrier", number: "DSB16-0001", docNo: "", rev: "", date: "2016-02-25", type: "Service",
+    title: "Ductless ceiling cassette grille harness: match plug colours or the unit will not run",
+    applies: { modelRe: ["^40MBQB", "^619REQ"] },
+    appliesText: "Carrier 40MBQB*C---3 and Bryant 619REQ*CBMA ceiling cassettes.",
+    summary: "If the white 5-pin female grille connector is plugged into the red male port, the cassette will not operate (no board damage).",
+    steps: ["Match each grille plug to the port of the same colour."],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB16-0001"
+  },
+  {
+    id: "carrier-dsb15-0026", brand: "Carrier", number: "DSB15-0026", docNo: "", rev: "", date: "2016-01-14", type: "Service",
+    title: "24VNA9 / 25VNA8 AOC board: replace software V1-V3 boards with V5 / V7 (HK38EA032 / 033 / 036 / 037)",
+    applies: { modelRe: ["^24VNA9", "^25VNA8", "^189BNV", "^288BNV"] },
+    appliesText: "Carrier 24VNA9 / 25VNA8, Bryant 189BNV / 288BNV: 2 ton built before week 47 of 2014 (4714E), 3-5 ton built before week 3 of 2015 (0315E).",
+    summary: "Later AOC software adds self-recovery and removes nuisance fault codes. Boards with software V1, V2 or V3 can be swapped for V4, V5 or V7 when a board fails or nuisance codes show up. V4 only needs changing on a non-communicating AC (see DSB15-0018).",
+    steps: [
+      "13 and 24B sizes: HK38EA032 (V5) or HK38EA036 (V7).",
+      "24A, 25, 36, 37, 48, 49 and 60 sizes: HK38EA033 (V5) or HK38EA037 (V7)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB15-0026"
+  },
+  {
+    id: "carrier-dsb15-0027", brand: "Carrier", number: "DSB15-0027", docNo: "", rev: "", date: "2015-09-25", type: "Service",
+    title: "Whole-house dehumidifier DEHXXCDA1070 / 1095: E4 shutdown with board firmware 1.1 - replace board 5478",
+    applies: { modelRe: ["^DEHXXCDA1070", "^DEHXXCDA1095"], codes: ["E4"], serialTo: "2714V" },
+    appliesText: "Carrier IAQ dehumidifiers DEHXXCDA1070 and DEHXXCDA1095 with serials earlier than week 28 of 2014 (2814V).",
+    summary: "Internal control board firmware 1.1 can raise a false E4 'insufficient capacity' alert and shut the unit down.",
+    steps: [
+      "Open the unit and read the internal control board firmware revision.",
+      "Revision 1.1: replace the internal control board, part number 5478 (same board for both models).",
+      "Then troubleshoot any remaining E4 per the steps in the bulletin."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB15-0027"
+  },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
