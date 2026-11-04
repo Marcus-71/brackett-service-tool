@@ -2030,6 +2030,353 @@ const BULLETINS = [
     priority: "normal", confidential: true,
     source: "HVACpartners DSB15-0027"
   },
+  // --- HVACpartners hourly catch-up 2026-11-03 7 PM: Dealer Service Bulletins 2013-2017 ---
+  {
+    id: "carrier-dsb17-0013", brand: "Carrier", number: "DSB17-0013", docNo: "", rev: "", date: "2017-10-13", type: "Service",
+    title: "Mobile home packaged units (SPP MH) 42AC, 36 and 42HP: beating 'wah-wah' fan noise - fit 4-blade fan LA01AB204",
+    applies: { modelRe: [] },
+    appliesText: "Carrier small packaged mobile home units (SPP MH) in the 42AC, 36HP and 42HP chassis sizes built before week 38 of 2017 (Sept 18, 2017). The bulletin gives no model numbers.",
+    summary: "A beating or 'wah-wah' noise can come from resonance when the 3-blade condenser fan and the compressor run at matching frequencies. Production changed to a 4-blade fan from week 38 of 2017.",
+    steps: [
+      "Customer complains of a pulsing / beating fan noise on one of these units built before week 38 of 2017.",
+      "Replace the original 3-blade fan LA01RA033 with the 4-blade fan LA01AB204 (stocked by RC)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB17-0013"
+  },
+  {
+    id: "carrier-dsb16-0012", brand: "Carrier", number: "DSB16-0012", docNo: "", rev: "", date: "2016-08-17", type: "Service",
+    title: "BWB gas water boiler: ERR62 ignition lockout from oxide on the pilot flame sensor - series B single-wire pilot",
+    applies: { modelRe: ["^BWBAAN", "^BWBBAN"], codes: ["62", "ERR62"] },
+    appliesText: "Natural draft gas-fired hot water boilers BWBAAN000045AAAA (series A, all serials). Series B boilers are BWBBAN.",
+    summary: "A few series A boilers get repeated ignition failures and lock out on Error 62 because oxide builds up on the 2-wire pilot's flame sensor. Series B uses a single-wire pilot that senses flame through the pilot to ground, with a changed Honeywell control and harness.",
+    steps: [
+      "Check the pilot flame first: high inlet gas pressure can lift the flame off the pilot (intermittent ignition failures); a flame that is too low may not touch the pilot hood to complete the sensing circuit. Adjust per the boiler Installation Instructions.",
+      "Series A boiler with repeated oxide build-up on the sensor: fit the Honeywell control conversion kit (single-wire pilot, ignition control, harness adapter, conversion label, instructions).",
+      "Series B parts are not individually backward compatible with series A - use the kit, not single series B parts."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB16-0012"
+  },
+  {
+    id: "carrier-dsb15-0023", brand: "Carrier", number: "DSB15-0023", docNo: "", rev: "", date: "2015-07-07", type: "Service",
+    title: "Multi-zone 38MGQD27 / 538TEQ027 (27K 3-zone): rating plate MCA / MOP wrong - correct is 19 A / 25 A",
+    applies: { modelRe: ["^38MGQD27", "^538TEQ027"] },
+    appliesText: "Carrier 38MGQD27---3 serials 0415V10485-0415V10875, 1115V22592-1115V22715, 5214V16703-5214V16840; Bryant 538TEQ027RDMA serials 0415V13189-0415V13201, 1115V22159-1115V22183, 5214V15604-5214V15625.",
+    summary: "The factory plate shows MCA 27 A and MOP 45 A. The correct values are MCA 19 A and MOP 25 A. Not a safety issue - the board has internal protection above 18.5 A.",
+    steps: [
+      "Size wire and breaker from MCA 19 A / MOP 25 A, not the plate values.",
+      "Already-installed units need no correction. New installs: put the corrected label (shipped on the carton) over the plate values."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB15-0023"
+  },
+  {
+    id: "carrier-dsb15-0019", brand: "Carrier", number: "DSB15-0019", docNo: "", rev: "", date: "2015-06-25", type: "Service",
+    title: "Infinity / Evolution single-zone high wall on a multi-zone outdoor unit: communication fault - swap L1 and L2 at the indoor unit",
+    applies: { modelRe: ["^40GRQB", "^619FB", "^619FEQ"], serialFrom: "5014V77178", serialTo: "1615V73262" },
+    appliesText: "Carrier 40GRQB (Infinity) and Bryant 619FB / 619FEQ (Evolution) high wall indoor units, serials 5014V77178 - 1615V73262, connected to Infinity / Evolution multi-zone outdoor units (38GJQ etc.).",
+    summary: "The first production run had the indoor wiring terminals labeled the wrong way round, so the high wall will not communicate with the multi-zone outdoor unit.",
+    steps: [
+      "Communication fault on this pairing: wire indoor L1 to outdoor L2 and indoor L2 to outdoor L1 (reverse the L1 / L2 wires at the indoor unit)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB15-0019"
+  },
+  {
+    id: "carrier-dsb15-0020", brand: "Carrier", number: "DSB15-0020", docNo: "", rev: "", date: "2015-06-23", type: "Safety",
+    title: "MANDATORY SAFETY REWORK fan coil heater kits KFCEH: limit switch date code 1511-1518 may not open - replace",
+    applies: { modelRe: ["^KFCEH0501N05", "^KFCEH0801N08", "^KFCEH0901N10", "^KFCEH2501C08", "^KFCEH2601C10", "^KFCEH3001F15", "^KFCEH3201F20", "^KFCEH3301C20", "^KFCEH16"] },
+    appliesText: "Fan coil accessory electric heater kits installed in fan coils, 2015 builds - the bulletin's table includes KFCEH0501N05A, KFCEH0801N08A, KFCEH0901N10A, KFCEH2501C08A, KFCEH2601C10A, KFCEH3001F15A, KFCEH3201F20A, KFCEH3301C20A (heater serial ranges are in the bulletin table). Also covers DSB15-0017 (uninstalled kits returned to the factory by 7/31/2015).",
+    summary: "The heater limit switch may not open with low or no airflow (failed blower), so the fan coil and nearby materials can overheat. Every installed kit must be checked; any switch with an affected date code is replaced.",
+    steps: [
+      "Power off and lock out. Remove the 4 screws (5/16 in.) holding the upper panel.",
+      "Find the limit switch(es) in the heater control compartment and read the date code on the switch label.",
+      "Date code 1511, 1513, 1514 or 1518: the switch MUST be replaced. Write down the date code with the model and serial.",
+      "Pull the yellow wire, remove the 1/4 in. screw, take the switch out and destroy it. Fit the new switch for that kit (HH19ZA940, HH19ZA950 or HH19ZA965 - order by the switch part number and the quantity for the kit model). Do not over-tighten - a stripped hole leaves the switch without good contact with the panel.",
+      "Refit the yellow wire and the upper panel."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB15-0020"
+  },
+  {
+    id: "carrier-dsb15-0018", brand: "Carrier", number: "DSB15-0018", docNo: "", rev: "", date: "2015-06-18", type: "Service",
+    title: "24VNA9 / 189BNV variable speed AC on a non-communicating thermostat: high stage only 75% capacity - replace AOC board",
+    applies: { modelRe: ["^24VNA9", "^189BNV"], serialFrom: "2414E", serialTo: "2115E" },
+    appliesText: "Carrier 24VNA9 and Bryant 189BNV variable speed air conditioners, serials 2414E to 2115E, installed with a non-communicating (24 V) thermostat. Communicating Infinity / Evolution systems and heat pumps are not affected.",
+    summary: "An AOC control software setting limits high stage (Y1+Y2 or Y2 only) to 75% of full cooling capacity in non-communicating mode. Low stage is fine. Can cause comfort complaints in humid areas or where the unit is not oversized.",
+    steps: [
+      "Power off, lock out and wait 2 minutes for the capacitors to drain. Remove the control box door - the AOC board is at the bottom of the inverter (no need to remove the inverter cover).",
+      "Unplug the 7 harnesses (PL10 RVS/PEV, PL20 MOC/AOC, PL19 SPT, PL17 OST, PL16 ODT, PL15 OCT/OAT, ST1 RCY1Y2) and remove the 4 corner screws.",
+      "MOVE THE MODEL PLUG PL8 from the old board to the new one.",
+      "New AOC board: HK38EA032 for sizes 13 and 24B; HK38EA033 for sizes 24A, 25, 36, 37, 48, 49 and 60. Corrected V5 boards are marked with green marker or a green dot.",
+      "See DSB15-0026 for the later V7 boards."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB15-0018"
+  },
+  {
+    id: "carrier-dsb15-0011", brand: "Carrier", number: "DSB15-0011", docNo: "", rev: "", date: "2015-06-09", type: "Service",
+    title: "Multi-zone 38MGQ / 538TEQ sizes 27 and 36 shipped without gas (suction) pipe size adapters",
+    applies: { modelRe: ["^38MGQD27", "^38MGQF36", "^538TEQ"] },
+    appliesText: "Carrier 38MGQD27 / 38MGQF36 and Bryant 538TEQ (RDMA / RFMA) multi-zone outdoor units in the 2014-2015 serial ranges listed in the bulletin (for example 0415V10485-0415V11133, 1115V22592-1115V22900, 5214V16703-5214V16947).",
+    summary: "These outdoor units left the factory without the adapters needed to reduce the gas pipe connection to match some smaller indoor units (see the Product Data for line set sizes).",
+    steps: [
+      "Use a field-supplied reducer and braze it in with nitrogen flowing through the pipes.",
+      "The TSM can have the reducers shipped (allow about two weeks)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB15-0011"
+  },
+  {
+    id: "carrier-dsb15-0013", brand: "Carrier", number: "DSB15-0013", docNo: "", rev: "", date: "2015-06-01", type: "Safety",
+    title: "MANDATORY SAFETY REWORK condensing furnaces 1815A-1915A: limit switch date code 1511-1518 may not open - replace",
+    applies: { modelRe: ["^59MN7A", "^59TN6A", "^59TP6A", "^59TP5A", "^59SP5A", "^59SC5A", "^59SC2C", "^987MA", "^926TA", "^925TA", "^915SA", "^912SC", "^PG96VAT", "^PG92SCS"], serialFrom: "1815A46638", serialTo: "1915A45581" },
+    appliesText: "Carrier / Bryant / Payne condensing gas furnaces with serials 1815A46638 to 1915A45581 - the bulletin's table lists 59MN7A, 59TN6A, 59TP6A, 59TP5A, 59SP5A, 59SC5A, 59SC2C, 987MA, 926TA, 925TA, 915SA, 912SC, PG96VAT, PG92SCS sizes.",
+    summary: "The main limit switch may not open before the maximum leaving air temperature is reached. With a high temperature rise or a failed blower motor, the furnace and nearby materials can overheat. Replacement is mandatory when the switch date code is in the affected range.",
+    steps: [
+      "Power off and lock out. Remove the burner compartment door and find the limit switch.",
+      "Read the switch date code: 1511 to 1518 = replace.",
+      "Remove the two red wires and the two mounting screws (long 1/4 in. nut driver). Pull the tabs off the old switch with pliers so it can't be reused. Record the date code of BOTH old and new switches - the warranty claim needs them.",
+      "Fit the new limit switch assembly (switch plus gasket) of the same part number for that furnace, reconnect the two red wires, and check continuity through the limit circuit.",
+      "Run the furnace and check the temperature rise is within the rating plate range."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB15-0013"
+  },
+  {
+    id: "carrier-dsb15-0015", brand: "Carrier", number: "DSB15-0015", docNo: "", rev: "", date: "2015-06-01", type: "Safety",
+    title: "MANDATORY SAFETY REWORK gas packaged units 1115C-1915C: limit switch date code 1511 may not open - replace with HH18HA211",
+    applies: { modelRe: ["^48ES", "^48EZ", "^48VG", "^48VL", "^48VR", "^48VT", "^574DP", "^577CN", "^577EN", "^677CN", "^PY3G", "^PY4G"], serialFrom: "1115C03520", serialTo: "1915C07810" },
+    appliesText: "Carrier / Bryant / Payne small packaged gas units with serials 1115C03520 to 1915C07810 - the bulletin's table lists 48ES, 48EZ, 48VG, 48VL, 48VR, 48VT, 574DPW, 577CNW, 577ENW, 677CNW, PY3GPA, PY4GNA sizes.",
+    summary: "The main limit switch may not open before the maximum leaving air temperature. With a high temperature rise or a failed blower, the unit and nearby materials can overheat. Switches with date code 1511 must be replaced.",
+    steps: [
+      "Power off and lock out. Remove the 7 screws (5/16 in.) on the blower access panel.",
+      "Disconnect the purple and red wires from the limit, unplug the two blower motor harnesses, remove the capacitor bracket (2 screws) and slide the blower assembly out (3 screws).",
+      "Read the limit date code; 1511 = replace. Remove the 2 Phillips screws, pull the tabs off the old switch, and record the date code of both old and new switches for the claim.",
+      "Fit new limit HH18HA211 (do not over-tighten), then reassemble in reverse: blower, red and purple wires clear of moving parts and sharp edges, motor harnesses, capacitor and panel."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB15-0015"
+  },
+  {
+    id: "carrier-dsb15-0014", brand: "Carrier", number: "DSB15-0014", docNo: "", rev: "", date: "2015-06-01", type: "Safety",
+    title: "MANDATORY SAFETY REWORK FB4CNF fan coils with electric heat 1215A-1915A: limit switch date code 1511-1518 - replace",
+    applies: { modelRe: ["^FB4CNF"], serialFrom: "1215A69926", serialTo: "1915A71040" },
+    appliesText: "Carrier / Bryant / Payne FB4CNF fan coils with factory electric heat (for example FB4CNF018L05, 024L05/L10, 030L08/L10, 036L10, 042L10, 048L10/L15), serials 1215A69926 to 1915A71040.",
+    summary: "The heater limit switch may not open with low or no airflow (failed blower), so the fan coil and nearby materials can overheat. Every affected unit must be checked and switches with an affected date code replaced.",
+    steps: [
+      "Power off and lock out. Remove the 4 screws (5/16 in.) on the upper panel and find the limit switch(es) in the heater control compartment.",
+      "Date code 1511, 1512, 1513, 1514, 1515, 1516 or 1518: replace. Any other date code: no change.",
+      "Pull the yellow wire, remove the 1/4 in. screw, take the switch out and destroy it. Record old and new date codes with model and serial for the claim.",
+      "Fit the new switch (HH19ZA950 or HH19ZA965 - order the part number and quantity listed for the fan coil model), do not over-tighten, refit the yellow wire and the panel."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners DSB15-0014"
+  },
+  {
+    id: "carrier-dsb15-0009", brand: "Carrier", number: "DSB15-0009", docNo: "", rev: "", date: "2015-05-12", type: "Service",
+    title: "Packaged unit heaters CPHEATER050A02 / 051A02 / 054A02 / 066A02: dual point data tag shows 3-phase data - replace tag",
+    applies: { modelRe: ["^CPHEATER05[014]A02", "^CPHEATER066A02"] },
+    appliesText: "Small packaged unit accessory electric heaters CPHEATER050A02, CPHEATER051A02, CPHEATER054A02 and CPHEATER066A02 (single phase). Only dual point (separate heater supply) installs are affected.",
+    summary: "The dual point wiring data tag on these single-phase heaters was printed with 3-phase data, which leads to wrong wire and breaker sizing if followed. Single point installs are not affected.",
+    steps: [
+      "On a dual point install of one of these heaters, do not size wire or breaker from the old tag - use the single-phase data from the installation instructions.",
+      "Replace the tag with the corrected one (packets went to distributor service managers). The rework is mandatory on dual point sites."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB15-0009"
+  },
+  {
+    id: "carrier-dsb14-0015", brand: "Carrier", number: "DSB14-0015", docNo: "", rev: "", date: "2014-12-24", type: "Service",
+    title: "24VNA9 / 25VNA8 / 189BNV / 288BNV 2414E-0115E: stator heat not enabled (code 79 risk) - replace AOC board HK38EA029",
+    applies: { modelRe: ["^24VNA9", "^25VNA8", "^189BNV", "^288BNV"], codes: ["79"], serialFrom: "2414E", serialTo: "0115E" },
+    appliesText: "Carrier 24VNA9 / 25VNA8 and Bryant 189BNV / 288BNV variable speed units, serials 2414E to 0115E. Rework was due by March 31, 2015.",
+    summary: "These units left the factory with the compressor stator heat turned off. Refrigerant can collect in the compressor during the off cycle, wash out the oil and damage the bearings; code 79 (compressor / inverter fault) can appear as the bearing loses oil.",
+    steps: [
+      "Power off, lock out and wait 2 minutes for the capacitors to drain. The AOC board is at the bottom of the inverter.",
+      "Unplug the 8 harnesses (PL10 RVS/PEV, PL20 MOC/AOC, PL5 EXV on heat pumps, PL19 SPT, PL17 OST, PL16 ODT, PL15 OCT/OAT, PL18 ABCD) and remove the 4 corner screws.",
+      "MOVE THE MODEL PLUG PL8 to the new board. Fit AOC board HK38EA029 (or a later board per DSB15-0026) and reconnect all 8 harnesses.",
+      "Corrected inverters have a black check mark on the inverter rail rating plate and a blue dot on the inverter box label."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0015"
+  },
+  {
+    id: "carrier-dsb14-0013", brand: "Carrier", number: "DSB14-0013", docNo: "", rev: "", date: "2014-10-30", type: "Service",
+    title: "Electronic air purifiers GAPA: corroded filter contact springs - spring kit KIT191000",
+    applies: { modelRe: ["^GAPAAXCC", "^GAPABXCC", "^GAPAAXBB", "^GAPABXBB"] },
+    appliesText: "Air purifiers GAPAAXCC / GAPAAXBB (1625, 2025) and GAPABXCC / GAPABXBB (1620, 2020, 2420) built before serial 0114V. Most cases are installs downstream of a humidifier.",
+    summary: "The springs in the filter status circuit can corrode, mostly from the environment (humidifier upstream). The spring coating was improved.",
+    steps: [
+      "Corroded springs: fit kit KIT191000 (two front screen ground springs, two filter ground springs, one FEM ground spring and hardware).",
+      "Bent or damaged door latch springs (often from shutting a misaligned door): kit KIT190000."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB14-0013"
+  },
+  {
+    id: "carrier-dsb14-0012", brand: "Carrier", number: "DSB14-0012", docNo: "", rev: "", date: "2014-10-23", type: "Service",
+    title: "1.5-2.5 ton AC / HP 2013-2014: high superheat, low suction, frozen coil from TXV restriction - one-time additive 040232191046",
+    applies: { modelRe: ["^113AN[ACW]0(18|24|30)", "^113APA030", "^116BNA0(18|24|30)", "^123ANA0(18|24|30)", "^126BNA0(18|24|30)", "^127ANA024", "^180BNA024", "^186BNA0(18|24|30)", "^187BN[AC]024", "^213ANC0(18|24|30)", "^213CNA0(18|24|30)", "^213CPA030", "^214CNA0(18|24|30)", "^215BNA0(18|24|30)", "^223ANA0(18|24|30)", "^225BNA0(18|24|30)", "^226ANA024", "^280ANV024", "^285BNA0(18|24|30)", "^286BN[AC]024", "^289BNA024", "^BA13NA0(18|24|30)", "^BA16NA0(18|24|30)", "^BH13NA0(18|24|30)", "^BH14NA0(18|24|30)", "^24ABB3(18|24|30)", "^24ABC6(18|24|30)", "^24ACB3(18|24|30)", "^24ACB724", "^24ACC6(18|24|30)", "^24ANB124", "^24ANB6(18|24|30)", "^24ANB724", "^25HBB3(18|24|30)", "^25HBC3(18|24|30)", "^25HBC5(18|24|30)", "^25HCB3(18|24|30)", "^25HCB624", "^25HCC5(18|24|30)", "^25HCD3(18|24|30)", "^25HCD4(18|24|30)", "^25HNB5(18|24|30)", "^25HNB624", "^25HNB924", "^25HNH5(24|30)", "^25VNA024", "^C4A3(18|24|30)", "^CA13NA0(18|24|30)", "^CA16NA0(18|24|30)", "^CH13NA0(18|19|24|25|30|31)", "^CH14NA0(18|24|30)", "^PA13NA0(18|24|30)", "^PA16NA0(18|24|30)", "^PA17NA024", "^PH13NB0(18|19|24|25|30|31)", "^PH15NB0(18|24|30)", "^PH16NA024"] },
+    appliesText: "1.5, 2 and 2.5 ton Carrier, Bryant and Payne split AC / heat pump outdoor units with serials from week 44 of 2013 to week 38 of 2014 (4413X - 3814X and 4413E - 3814E). Also replaces the interim DSB14-0008 for 1.5-2.5 ton furnace coils (4813X - 3814X), which said to change the TXV and filter drier only at failure.",
+    summary: "A supplier changed a rust inhibitor in one outdoor unit component. The substance collects at the indoor TXV and restricts it: high superheat, low suction pressure, poor cooling or a frozen coil. It is not a TXV or coil defect.",
+    steps: [
+      "First rule out the usual causes: refrigerant charge, static pressure, airflow, and correct coil size / orientation / alignment.",
+      "Still high superheat and low suction: inject ONE 4 oz bottle of additive 040232191046 (the only approved additive, from the distributor) with a 4 oz oil/dye injection tool.",
+      "Cycle the TXV, method 1 (furnace coil or heat pump): run heat 15 min to warm the indoor coil, then cooling 15 min, and recheck superheat and suction.",
+      "Method 2 (or if method 1 did not help): pull the TXV bulb, run cooling, and move the bulb between an ice water bath and a hot water bath every 30 seconds for 5 minutes. Refit the bulb in its factory spot with an OEM clamp and insulation (no tape or tie wraps), run 15 min and recheck.",
+      "No improvement: replace the TXV. NEVER inject a system twice. Write down the outdoor model, serial and injection date on the ticket."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0012"
+  },
+  {
+    id: "carrier-dsb14-0011", brand: "Carrier", number: "DSB14-0011", docNo: "", rev: "", date: "2014-09-10", type: "Service",
+    title: "35 in. condensing furnaces: revised vent tables and vent rules (wind, inside corners, exposed vent length)",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^912S", "^915S", "^925S", "^925T", "^986T", "^PG92S", "^PG95S", "^PG95X"], codes: ["31"] },
+    appliesText: "All 35 in. tall condensing gas furnaces from serial 2711A. The model list is not printed in this bulletin; the families shown are the 35 in. families named in DSB14-0002 / DSB14-0003.",
+    summary: "The original vent tables pushed the vent system to its limits in high-pressure zones, prevailing winds over 31 MPH or cold weather, causing pressure switch trips (code 31) or vent freezing. A safety factor was added: shorter maximum equivalent vent lengths, new maximum exposed (unheated) vent length and insulation tables, and prevailing wind guidance.",
+    steps: [
+      "Code 31 or a frozen vent on one of these furnaces: check the install against the CURRENT Installation Instructions vent tables, not the original 2011-2013 ones.",
+      "No inside-corner sidewall terminations; account for prevailing wind when locating the termination.",
+      "Long exposed vent runs in unheated space need the insulation shown in the exposed vent length table."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0011"
+  },
+  {
+    id: "carrier-dsb14-0010", brand: "Carrier", number: "DSB14-0010", docNo: "", rev: "", date: "2014-08-12", type: "Service",
+    title: "Single-stage 90% furnaces: 3-hour lockout after repeated code 31 - board with date code 2414 or later clears the count",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^912S", "^915S", "^925S", "^PG92S", "^PG95S"], codes: ["31"] },
+    appliesText: "All single-stage 35 in. condensing (90%) gas furnaces. Boards with enhanced code 31 software have a date code of 2414 or later right after the part number; furnaces built after week 24 of 2014 have them.",
+    summary: "Older boards remember every pressure switch trip, even after normal burner runs, and lock out for 3 hours after more than three code 31 faults - a no-heat call in gusty wind or with condensate slugging. Newer software clears the count after the burner runs more than one minute.",
+    steps: [
+      "First fix any install problems that cause code 31 (vent, condensate drain, pitch, wind - see DSB14-0002 / DSB14-0003 / DSB14-0004). A new board will not cure a non-compliant install.",
+      "Then, if code 31 lockouts continue, replace the board with one dated 2414 or later (check the date code after the part number).",
+      "Boards dated 2314 or earlier are fine for other failures, but not for wind / condensate code 31 lockouts."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0010"
+  },
+  {
+    id: "carrier-dsb14-0009", brand: "Carrier", number: "DSB14-0009", docNo: "", rev: "", date: "2014-07-24", type: "Service",
+    title: "Packaged units: oil on the coil fins of a new unit is usually fin processing oil, not a leak",
+    applies: { modelRe: [] },
+    appliesText: "All Carrier, Bryant and Payne small packaged products (SPP), all serials. Fin oil was cut by 53% from date code 0213.",
+    summary: "Units were refused at delivery for oily fins that looked like a refrigerant leak, but the charge was there and no leak was found - it was leftover fin oil from manufacturing. Some residue is normal.",
+    steps: [
+      "Oil on the fins of a new packaged unit: put a gauge set on it and confirm refrigerant is present before calling it a leak."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB14-0009"
+  },
+  {
+    id: "carrier-dsb14-0007", brand: "Carrier", number: "DSB14-0007", docNo: "", rev: "", date: "2014-04-28", type: "Service",
+    title: "25HNH536 / 285BNH036 heat pump with FV4CN(F,B)005 fan coil: charge to nameplate subcooling (no +3 F)",
+    applies: { modelRe: ["^25HNH536", "^285BNH036"] },
+    appliesText: "Carrier 25HNH536A**31 and Bryant 285BNH036****B single-speed heat pumps matched with FV4CNF005 or FV4CNB005 fan coils.",
+    summary: "SMB11-0016A and the installation instructions wrongly said to add 3 F to the nameplate subcooling for this combination. It is a tested combination, so the nameplate value is correct.",
+    steps: [
+      "With an FV4CN(F,B)005 fan coil, charge to the nameplate subcooling - do not add the +3."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0007"
+  },
+  {
+    id: "carrier-dsb14-0005", brand: "Carrier", number: "DSB14-0005", docNo: "", rev: "", date: "2014-04-28", type: "Service",
+    title: "Small rooftops 208/230 V 5113P-1514P: outdoor fan motor HD52AK002 jumper plug set to 460 V - slow fan, high head",
+    applies: { modelRe: ["^580J", "^581J", "^48TC", "^48HC", "^50HC", "^50TC", "^50HT"], serialFrom: "5113P", serialTo: "1514P" },
+    appliesText: "208/230 V small rooftops with dual-voltage outdoor fan motor HD52AK002, serials 5113P through 1514P (the bulletin lists sizes such as 580J 14, 581J 12, 48/50HC 12, 48/50TC 14, 50HCQ 09, 50TCQ 12, 50HTQ 12).",
+    summary: "The motor's voltage jumper plug may be in the 460 V position on a 208/230 V unit. The fan then runs slow: low airflow over the condenser, reduced capacity, high head pressure and an overheating compressor.",
+    steps: [
+      "Power off and lock out. Remove the fan grille and the motor wiring cover.",
+      "Check the voltage connector; move it to the 208/230 V position if needed (instructions are also on the motor).",
+      "Refit the cover and grille. Factory-reworked units carry an identification mark."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0005"
+  },
+  {
+    id: "carrier-dsb14-0004", brand: "Carrier", number: "DSB14-0004", docNo: "", rev: "", date: "2014-04-22", type: "Service",
+    title: "35 in. condensing furnaces from 1514A: inducer housing pressure port enlarged to 3/16 in. (X mark, green gaskets)",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^912S", "^915S", "^925S", "^925T", "^986T", "^PG92S", "^PG95S", "^PG95X"], codes: ["31"] },
+    appliesText: "Non-modulating 35 in. condensing furnaces from serial 1514A (modulating models have no inducer housing pressure tap and are not affected).",
+    summary: "Condensed flue gas droplets can wick into the inducer housing pressure port and briefly block the signal, opening the housing pressure switch. Production inducers now have a 3/16 in. port - the same size as the field drill-out in DSB14-0002.",
+    steps: [
+      "New inducers are marked with a recessed 'X' on the triangular flange under the exhaust outlet and have green drain gaskets into the collector box.",
+      "No need to replace an inducer in the field: nuisance trips are fixed per DSB14-0002 and TIC2013-0007 (install checks first, then the port drill-out)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB14-0004"
+  },
+  {
+    id: "carrier-dsb14-0003", brand: "Carrier", number: "DSB14-0003", docNo: "", rev: "", date: "2014-03-21", type: "Service",
+    title: "35 in. single-stage condensing furnaces: code 31 root causes and stricter vent rules (25% shorter, 1/4 in. per ft slope)",
+    applies: { modelRe: ["^59SC2A", "^59SC2B", "^59SC5A", "^59SP5A", "^912SA", "^912SB", "^915SA", "^925SA", "^PG92SAS", "^PG92SBS", "^PG95SAS"], codes: ["31"] },
+    appliesText: "Carrier 59SC2A, 59SC2B, 59SC5A, 59SP5A; Bryant 912SA, 912SB, 915SA, 925SA; Payne PG92SAS, PG92SBS, PG95SAS, from serial 2711A.",
+    summary: "Code 31 (pressure switch open) sites had sagging vent pipe with less than 1/4 in. per foot slope, terminations in high-pressure zones (inside corners), terminations into strong prevailing wind (over 31 MPH), or the 40k inducer outlet choke used with more than 10 ft of vent.",
+    steps: [
+      "Check vent slope: at least 1/4 in. per foot (1 in. per 4 ft), no sags. Thin wall, double wall corrugated and foam / cellular core PVC need supports every 3 ft; Schedule 40 every 5 ft.",
+      "Terminate through the roof where possible. No sidewall terminations in an inside corner.",
+      "Maximum vent lengths are cut by 25%: if the equivalent length is over 75% of the old table maximum, go up one 1/2 in. pipe size (never more than 1 in. larger). Example: 80k, 62 ft of 2 in. vs 70 ft max -> new max 52 ft -> use 2 1/2 or 3 in.",
+      "40k input: the inducer outlet choke is used ONLY when the total vent length is 10 ft or less.",
+      "Use 45 degree elbows where possible to help drainage. Existing installs without code 31 trouble do not need changing; inside-corner or high-wind code 31 sites - call the distributor service manager."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0003"
+  },
+  {
+    id: "carrier-dsb14-0002", brand: "Carrier", number: "DSB14-0002", docNo: "", rev: "", date: "2014-01-20", type: "Service",
+    title: "35 in. condensing furnaces 2711A-5313: nuisance code 31 in the first minutes of heat - drill the inducer pressure port to 3/16 in.",
+    applies: { modelRe: ["^59SC2A", "^59SC2B", "^59SC5A", "^59SP5A", "^59TP5A", "^59TN6A", "^912SA", "^912SB", "^915SA", "^925SA", "^925TA", "^986TA", "^PG92SAS", "^PG92SBS", "^PG95SAS", "^PG95XAT"], codes: ["31"] },
+    appliesText: "All sizes EXCEPT 140k input of Carrier 59SC2A, 59SC2B, 59SC5A, 59SP5A, 59TP5A, 59TN6A; Bryant 912SA, 912SB, 915SA, 925SA, 925TA, 986TA; Payne PG92SAS, PG92SBS, PG95SAS, PG95XAT; serials 2711A to 5313. Modulating furnaces are not affected.",
+    summary: "Cold combustion air chills the inducer housing during pre-purge; condensate droplets form and wick into the housing pressure tap, briefly opening the housing pressure switch in the first few minutes of a heat call. Single-stage models (and two-stage models that start on high) are affected.",
+    steps: [
+      "First make the install right per the Installation Instructions and TIC2013-0007: vent and combustion air piping, condensate drain, furnace pitch and cabinet seals, home ventilation. The drill-out will not fix those.",
+      "Still tripping: remove the pressure switch assembly (label the two tubes) and the inducer assembly (vent, motor harness, 5 screws).",
+      "Mark a 5/32 in. and a 3/16 in. drill bit with tape at 1 1/2 in. depth. Drill the port with the 5/32 in. bit FIRST, then the 3/16 in. bit - drill straight, lowest speed, following the existing hole, never deeper than 1 1/2 in. Starting with 3/16 in. can ruin the housing.",
+      "Reassemble, prime the condensate trap and check operation. To read the switch with the door on, run the tube through a 7/8 in. knockout and plug the knockout afterwards."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB14-0002"
+  },
+  {
+    id: "carrier-dsb13-0019", brand: "Carrier", number: "DSB13-0019", docNo: "", rev: "", date: "2013-10-18", type: "Service",
+    title: "Light commercial rooftops and splits: liquid line filter drier plugging after start-up - use the new factory driers",
+    applies: { modelRe: ["^580J", "^558J", "^569J", "^575J", "^48HC", "^50HC", "^48TC", "^50TC", "^48LC", "^50LC", "^38AUD", "^38AUQ", "^38AUZ"] },
+    appliesText: "Bryant 580J, 558J, 569J, 575J; Carrier 48/50HC, HCQ, TC, TCQ, LC and 38AUD / AUQ / AUZ.",
+    summary: "Liquid line filter driers were found restricted with debris soon after start-up, tripping the compressor on the pressure switch. Improved driers are now used in production.",
+    steps: [
+      "If the drier is restricted, or whenever the system is opened, replace it with the new factory-authorized drier. The bulletin's table names KH43LE102, KH43LE118, KH43LG093 and KH43LG085 - confirm the current-to-new match for the unit with the distributor."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB13-0019"
+  },
+  {
+    id: "carrier-dsb13-0029", brand: "Carrier", number: "DSB13-0029", docNo: "", rev: "", date: "2013-10-14", type: "Service",
+    title: "1.5 ton heat pump CH13NA018 / 25HCD318 / PH13NB018 with CNPH*2417 coil: change heating piston from #42 to #38",
+    applies: { modelRe: ["^CH13NA018", "^25HCD318", "^PH13NB018"] },
+    appliesText: "Bryant CH13NA018****A, Carrier 25HCD318(A,W)**30, Payne PH13NB018****A matched with a CNPH*2417* furnace coil.",
+    summary: "For best performance across more field conditions, this combination should use a #38 heating piston instead of the factory-suggested #42.",
+    steps: [
+      "New installs of this combination: fit heating piston #38 (EA52PH038). Existing installs need no change."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB13-0029"
+  },
+  {
+    id: "carrier-dsb13-0030", brand: "Carrier", number: "DSB13-0030", docNo: "", rev: "", date: "2013-10-14", type: "Service",
+    title: "CNPV furnace coils: use the preferred transition from furnace to coil (adapter kits KGADA)",
+    applies: { modelRe: ["^CNPV"] },
+    appliesText: "All brands' CNPV* cased furnace coils, all serials.",
+    summary: "Airflow, capacity and efficiency depend on how the furnace outlet transitions into the coil cabinet; the bulletin shows 'preferred' installations.",
+    steps: [
+      "On new installs, match the furnace outlet to the coil cabinet the preferred way; use furnace coil adapter kit KGADA0101ALL, KGADA0201ALL or KGADA0301ALL where the sizes differ. Existing installs need no action."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB13-0030"
+  },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
