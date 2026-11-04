@@ -408,8 +408,35 @@ function showScreen(name, fromBack) {
 }
 
 document.querySelectorAll(".tile").forEach(tile => {
-  tile.addEventListener("click", () => showScreen(tile.dataset.screen));
+  if (tile.dataset.screen) tile.addEventListener("click", () => showScreen(tile.dataset.screen));
 });
+
+// ---- Set Up My Pad (v366, Andy 2026-11-04: "the qr can be put on the phone app since they all have that") ----
+// The phone shows a QR code of the app's address; the tech points the pad's camera at
+// it, opens the link in Chrome, picks "<Name> pad" and taps Install. The code is drawn
+// inline so it works with no signal. Hidden on a pad itself.
+const PAD_QR_URL = "https://marcus-71.github.io/brackett-service-tool/";
+const PAD_QR_SVG = '<svg viewBox="0 0 37 37" class="pad-qr-svg" role="img" aria-label="QR code for the Service Tool"><path fill="#fff" d="M0 0h37v37h-37z"/><path class="qrline" stroke="#003a70" d="M2 2.5h7m7 0h1m1 0h1m1 0h3m1 0h2m2 0h7m-33 1h1m5 0h1m3 0h3m2 0h1m2 0h1m2 0h2m3 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m1 0h5m1 0h1m5 0h3m3 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m2 0h1m2 0h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h4m2 0h5m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h1m1 0h4m4 0h2m6 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h1m7 0h1m1 0h5m-23 1h1m1 0h5m6 0h2m2 0h1m1 0h2m5 0h5m-31 1h1m8 0h1m1 0h1m1 0h1m2 0h2m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1m-33 1h5m1 0h1m2 0h1m3 0h5m2 0h3m2 0h1m2 0h1m1 0h2m-32 1h5m2 0h1m1 0h2m1 0h2m2 0h3m2 0h1m1 0h3m2 0h5m-33 1h2m1 0h5m2 0h3m1 0h1m1 0h1m2 0h1m2 0h1m1 0h2m1 0h3m2 0h1m-33 1h1m4 0h1m2 0h3m4 0h1m2 0h1m4 0h1m1 0h2m2 0h4m-33 1h5m1 0h2m1 0h2m1 0h1m1 0h3m4 0h2m2 0h2m1 0h4m-32 1h1m2 0h3m3 0h1m1 0h5m5 0h7m1 0h2m-31 1h5m1 0h3m2 0h3m1 0h1m1 0h1m6 0h2m1 0h3m2 0h1m-33 1h2m2 0h2m1 0h1m1 0h3m2 0h1m3 0h3m1 0h2m2 0h2m1 0h2m1 0h1m-30 1h1m1 0h3m1 0h1m1 0h1m1 0h4m1 0h1m1 0h1m1 0h1m1 0h1m2 0h2m1 0h2m-32 1h1m1 0h4m1 0h3m6 0h1m2 0h6m1 0h7m-27 1h1m2 0h1m3 0h2m3 0h1m3 0h1m1 0h2m2 0h2m-30 1h6m1 0h4m3 0h3m4 0h1m1 0h1m1 0h2m2 0h2m1 0h1m-33 1h1m2 0h4m2 0h3m5 0h2m1 0h1m1 0h1m2 0h2m3 0h2m-32 1h1m1 0h1m6 0h1m1 0h3m2 0h1m1 0h5m1 0h2m2 0h3m1 0h1m-33 1h1m2 0h1m1 0h2m1 0h1m1 0h1m2 0h2m2 0h3m3 0h7m-22 1h1m1 0h1m1 0h1m3 0h5m1 0h3m3 0h1m1 0h1m1 0h1m-33 1h7m2 0h1m1 0h1m2 0h4m4 0h3m1 0h1m1 0h1m1 0h2m-32 1h1m5 0h1m1 0h1m1 0h3m1 0h2m1 0h8m3 0h4m-32 1h1m1 0h3m1 0h1m1 0h2m6 0h1m2 0h1m2 0h1m1 0h6m-30 1h1m1 0h3m1 0h1m1 0h1m1 0h1m4 0h1m1 0h3m1 0h1m1 0h3m2 0h5m-33 1h1m1 0h3m1 0h1m1 0h5m1 0h4m3 0h1m2 0h1m1 0h2m2 0h1m-31 1h1m5 0h1m3 0h1m1 0h1m1 0h2m2 0h1m1 0h3m2 0h1m2 0h1m1 0h1m-31 1h7m1 0h3m2 0h1m1 0h1m1 0h1m1 0h1m3 0h2m1 0h2m3 0h1"/></svg>';
+function showPadSetup() {
+  document.getElementById("modal").innerHTML = `
+    <h2>Set up your pad</h2>
+    <div class="sub">Point the pad's camera at this code and tap the link that pops up.</div>
+    <div class="pad-qr">${PAD_QR_SVG}</div>
+    <div class="pad-qr-url">${escapeHtml(PAD_QR_URL.replace(/^https:\/\//, "").replace(/\/$/, ""))}</div>
+    <div class="detail-section"><h3>Then on the pad</h3><ol>
+      <li>If it opens in Samsung Internet, use its menu to <b>Open in Chrome</b>.</li>
+      <li>Tap your name <b>with "pad"</b> after it (like <b>Nick pad</b>) and enter the setup code from the office.</li>
+      <li>Tap the orange <b>Install the Service Tool on this pad</b> button, then <b>Install</b>.</li>
+      <li>Open <b>Service Tool</b> from the pad's home screen from now on.</li>
+    </ol></div>
+    <div class="sub">Your phone keeps your regular name - both work at the same time.</div>
+    <div class="modal-actions"><button class="primary" id="closeModalBtn">Done</button></div>`;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+  if (typeof trackEvent === "function") trackEvent("opened Set Up My Pad");
+}
+document.getElementById("tilePadSetup")?.addEventListener("click", showPadSetup);
+document.getElementById("tilePadSetup")?.classList.toggle("hidden", isPadScreen());
 document.getElementById("backBtn").addEventListener("click", () => showScreen("home"));
 
 // ---- Swipe right = back up ONE level ----
@@ -4928,7 +4955,7 @@ function genClToday() {
   return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
 }
 // Tests override this one function instead of touching the real tech name.
-function genClDefaultTech() { return getTechName(); }
+function genClDefaultTech() { return techPerson(getTechName()); }
 function genClReadDraft(id) { try { return JSON.parse(localStorage.getItem(GEN_CL_DRAFT_PREFIX + id) || "null"); } catch (e) { return null; } }
 // Nothing typed, scanned or ticked yet: not worth keeping as a draft.
 function genClIsEmptyDraft(d) {
@@ -11836,27 +11863,6 @@ window.addEventListener("online", updateNetStatus);
 window.addEventListener("offline", updateNetStatus);
 
 // ============================================================
-// Install prompt (Android/Chrome)
-// ============================================================
-
-let deferredInstallPrompt = null;
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  document.getElementById("installBanner").classList.remove("hidden");
-});
-document.getElementById("installBtn").addEventListener("click", async () => {
-  if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  document.getElementById("installBanner").classList.add("hidden");
-});
-document.getElementById("dismissInstall").addEventListener("click", () => {
-  document.getElementById("installBanner").classList.add("hidden");
-});
-
-// ============================================================
 // Service worker
 // ============================================================
 
@@ -12017,6 +12023,66 @@ if ("serviceWorker" in navigator) {
     worker.addEventListener("statechange", ready);
     ready();
   }
+
+// ---- Install button (v366, Andy 2026-11-04: "we need a way for the pads to install") ----
+// A pad (or new phone) opens the app's link in Chrome; the home screen then shows a big
+// Install button. Chrome hands us its install prompt (beforeinstallprompt); when it
+// has not (another browser, or Chrome still deciding), the button shows the menu steps.
+let installPromptEvent = null;
+function appIsInstalled() {
+  try { if (matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches) return true; } catch (e) {}
+  return navigator.standalone === true;
+}
+function syncInstallBanner() {
+  const b = document.getElementById("installBanner");
+  if (!b) return;
+  const android = /Android/i.test(navigator.userAgent || "");
+  const show = !appIsInstalled() && (installPromptEvent || android);
+  b.classList.toggle("hidden", !show);
+  const t = document.getElementById("installBannerTitle");
+  if (t) t.textContent = "Install the Service Tool on this " + (isPadScreen() ? "pad" : "phone");
+}
+function showInstallSteps() {
+  const chrome = /Chrome\//.test(navigator.userAgent || "") && !/SamsungBrowser|EdgA|OPR|Firefox/i.test(navigator.userAgent || "");
+  document.getElementById("modal").innerHTML = `
+    <h2>Install the Service Tool</h2>
+    <div class="sub">${chrome ? "Chrome is getting it ready - use its menu:" : "Open this page in Chrome, then:"}</div>
+    <div class="detail-section"><ol>
+      ${chrome ? "" : `<li>Open <b>Chrome</b> and go to <b>${escapeHtml(location.origin + location.pathname)}</b></li>`}
+      <li>Tap the <b>⋮</b> menu (top right).</li>
+      <li>Tap <b>Install app</b> (or <b>Add to home screen</b>, then <b>Install</b>).</li>
+      <li>Open <b>Service Tool</b> from the home screen.</li>
+    </ol></div>
+    <div class="modal-actions"><button class="primary" id="closeModalBtn">OK</button></div>`;
+  document.getElementById("closeModalBtn").onclick = closeModal;
+  document.getElementById("modalBackdrop").classList.remove("hidden");
+}
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();            // our button replaces Chrome's small bar
+  installPromptEvent = e;
+  syncInstallBanner();
+});
+window.addEventListener("appinstalled", () => {
+  installPromptEvent = null;
+  syncInstallBanner();
+  if (typeof trackEvent === "function") trackEvent("installed the app (" + (isPadScreen() ? "pad" : "phone") + ")");
+});
+document.getElementById("installBanner")?.addEventListener("click", async () => {
+  if (!installPromptEvent) { showInstallSteps(); return; }
+  const ev = installPromptEvent;
+  installPromptEvent = null;
+  try { ev.prompt(); await ev.userChoice; } catch (e) { showInstallSteps(); }
+  syncInstallBanner();
+});
+syncInstallBanner();
+
+// The manifest allows any screen direction so a pad can turn sideways (v366); an
+// installed phone stays upright like before.
+function lockPhonePortrait() {
+  if (!appIsInstalled() || isPadScreen()) return;
+  try { screen.orientation?.lock?.("portrait").catch(() => {}); } catch (e) {}
+}
+lockPhonePortrait();
 
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").then((reg) => {
@@ -12800,7 +12866,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v365";
+const APP_VERSION = "v366";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -12814,6 +12880,19 @@ const APP_VERSION = "v365";
 const TRACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfZ9Dv1jlj3h4uzomWlHsgS-OcaDMhb0sbaE2YbXLCP2swsQQ/formResponse";
 const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", version: "entry.872662639" };
 const TECH_NAMES = ["James", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Nick", "Joe", "Andy"];
+// v366 (Andy 2026-11-04): the app also runs on Android pads (tablets). Each tech
+// gets a second name "<Name> pad" so the pad claims its own name and the phone keeps
+// theirs. TECH_NAMES stays the list of people (Call Log, reports); ALL_NAMES is what
+// the picker offers and what is allowed in.
+const PAD_SUFFIX = " pad";
+const PAD_NAMES = TECH_NAMES.map((n) => n + PAD_SUFFIX);
+const ALL_NAMES = TECH_NAMES.concat(PAD_NAMES);
+// "Nick pad" -> "Nick": per-person features (Call Log, inventory, checklist name) follow the person.
+function techPerson(name) { return String(name || "").replace(/\s+pad$/i, "").trim(); }
+// A tablet-sized screen (short side 600 px or more): the picker shows the pad names first.
+function isPadScreen() {
+  try { return Math.min(screen.width, screen.height) >= 600; } catch (e) { return false; }
+}
 const TECH_KEY = "bfc-tech-name";
 const TRACK_QUEUE_KEY = "bfc-track-queue";
 
@@ -12857,14 +12936,15 @@ function isBlockedTech(name) {
   const n = String(name || "").trim().toLowerCase();
   if (!n) return false;
   if (BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === n)) return true;
-  return !TECH_NAMES.some((t) => t.trim().toLowerCase() === n);
+  if (BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === techPerson(n))) return true;
+  return !ALL_NAMES.some((t) => t.trim().toLowerCase() === n);
 }
 
 // The Call Log is the service manager's own tool — the tile only shows on
 // Andy's phone. Every other tech keeps the home screen they already know.
 // Runs at startup and again the moment the picker sets a name.
 function syncCallLogTile() {
-  const t = (getTechName() || "").trim().toLowerCase();
+  const t = techPerson(getTechName()).trim().toLowerCase();
   document.getElementById("tileCallLog")?.classList.toggle("hidden", t !== "andy");
 }
 
@@ -13042,15 +13122,21 @@ function showTechPicker(notice) {
   if (document.querySelector(".tech-picker-overlay:not(.access-removed)")) return;
   const ov = document.createElement("div");
   ov.className = "tech-picker-overlay";
-  const nameBtns = TECH_NAMES.map((n) =>
+  // v366: phone names and pad names in two lists; a tablet sees its pad list first.
+  const pad = isPadScreen();
+  const btns = (list) => list.map((n) =>
     `<button class="tech-name-btn" data-name="${n}">${n}</button>`).join("");
+  const phoneList = `<h3 class="tech-picker-group">Phone</h3><div class="tech-picker-names">${btns(TECH_NAMES)}</div>`;
+  const padList = `<h3 class="tech-picker-group">Pad (tablet)</h3><div class="tech-picker-names">${btns(PAD_NAMES)}</div>`;
+  const nameBtns = pad ? padList + phoneList : phoneList + padList;
+  const askTitle = pad ? "Whose pad is this?" : "Whose phone is this?";
   ov.innerHTML =
     `<div class="tech-picker">
       <img src="icons/icon-192.png" alt="" class="tech-picker-logo">
-      <h2 id="pickerTitle">Whose phone is this?</h2>
+      <h2 id="pickerTitle">${askTitle}</h2>
       <p id="pickerLead">Tap your name, then enter the setup code from the office.</p>
       <p class="tech-picker-note hidden" id="pickerNotice"></p>
-      <div class="tech-picker-names" id="pickerNames">${nameBtns}</div>
+      <div id="pickerNames">${nameBtns}</div>
       <form class="tech-picker-other hidden" id="pickerCodeForm" autocomplete="off">
         <input type="password" id="pickerCode" placeholder="Setup code" aria-label="Setup code">
         <button type="submit">Continue</button>
@@ -13083,7 +13169,7 @@ function showTechPicker(notice) {
 
   const showNames = () => {
     chosen = "";
-    $("pickerTitle").textContent = "Whose phone is this?";
+    $("pickerTitle").textContent = askTitle;
     $("pickerLead").textContent = "Tap your name, then enter the setup code from the office.";
     ["pickerNames", "pickerFoot", "pickerOfficeBtn"].forEach((id) => $(id).classList.remove("hidden"));
     ["pickerCodeForm", "pickerBack", "pickerOffice"].forEach((id) => $(id).classList.add("hidden"));

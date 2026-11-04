@@ -24,7 +24,7 @@ const INV_XLSX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheet
 let invMsg = null;   // { kind: "ok"|"warn"|"info", text, undoId? }
 
 function invCanUse() {
-  const t = (typeof getTechName === "function" ? getTechName() : "").trim().toLowerCase();
+  const t = (typeof getTechName === "function" ? (typeof techPerson === "function" ? techPerson(getTechName()) : getTechName()) : "").trim().toLowerCase();
   return INV_USERS.includes(t);
 }
 function syncInventoryTile() {

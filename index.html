@@ -26,6 +26,7 @@
 <!-- HOME -->
 <section id="homeScreen" class="screen">
   <img class="home-logo" src="icons/brackett-logo.png" alt="Brackett Heating · Air · Plumbing">
+  <button type="button" id="installBanner" class="install-banner hidden"><span class="install-banner-icon">⬇</span><span><b id="installBannerTitle">Install the Service Tool</b><span class="install-banner-sub">Puts it on the home screen and makes it work with no signal</span></span></button>
   <div class="home-tiles">
     <button class="tile tile-ask" data-screen="ask">
       <span class="tile-icon">🔎</span>
@@ -106,6 +107,11 @@
       <span class="tile-icon">💬</span>
       <span class="tile-label">Request Info</span>
       <span class="tile-sub">Missing a code, manual, or unit? Tell the office</span>
+    </button>
+    <button id="tilePadSetup" class="tile tile-padsetup" type="button">
+      <span class="tile-icon">📲</span>
+      <span class="tile-label">Set Up My Pad</span>
+      <span class="tile-sub">Shows a QR code - scan it with the pad's camera to install the app there</span>
     </button>
     <button id="tileInventory" class="tile tile-inventory hidden" data-screen="inventory">
       <span class="tile-icon">📦</span>
@@ -616,11 +622,6 @@
   </main>
 </section>
 
-<div id="installBanner" class="install-banner hidden">
-  <span>Install this app on your phone for offline use.</span>
-  <button id="installBtn">Install</button>
-  <button id="dismissInstall" class="ghost">Not now</button>
-</div>
 
 <!-- Detail / Edit modal -->
 <div id="modalBackdrop" class="modal-backdrop hidden">
