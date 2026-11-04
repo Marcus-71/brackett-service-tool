@@ -2377,6 +2377,397 @@ const BULLETINS = [
     priority: "info", confidential: true,
     source: "HVACpartners DSB13-0030"
   },
+  // --- HVACpartners hourly catch-up 2026-11-03 8 PM: dashboard 101-26-20 / 101-26-05, TICs 2013-2019, DSB13-0028 / 0024 ---
+  {
+    id: "carrier-101-26-20", brand: "Carrier", number: "101-26-20", docNo: "", rev: "v2", date: "2026-10-30", type: "Product",
+    title: "Ductless multi-zone with 1-way cassettes: new max cassette counts, leave one port open (replaces the count-as-18K rule)",
+    applies: { modelRe: ["^37MG[RH]AQ", "^45MCCAQ"] },
+    appliesText: "Carrier 37MGRAQ / 37MGHAQ multi-zone outdoor units with 45MCCAQ 1-way cassette indoor units, in systems without an air handler (AHU). With an AHU in the system the limits may differ - see the current Quick Reference Guide.",
+    summary: "Testing found incomplete outdoor defrost (and weaker oil return and pressure control) when a multi-zone ran many 1-way cassettes. Version 1 (June 1, 2026) said to count every 1-way cassette (6K, 9K, 12K, 18K) as 18K. Version 2 drops that: 6K, 9K and 12K cassettes count at their own size, but the number of cassettes is capped and one port should stay unused.",
+    steps: [
+      "Max 1-way cassettes (total ports): 37MG(R/H)AQ18CA3 (3 ports) - 2; 24DA3 (4) - 3; 30EA3 (5) - 4; 36EA3 (5) - 4; 48FA3 (6) - 5; 55FA3 (6) - 5.",
+      "When any 1-way cassette is on the system, leave one connection port unused.",
+      "Systems already installed under the old rule need no field action.",
+      "Installed system with defrost, oil return or pressure problems: collect operating data and contact your Technical Service Manager (TSM) for an application review.",
+      "Carrier said the combination charts, QRG and manuals would be updated by Nov 6, 2026."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners 101-26-20"
+  },
+  {
+    id: "carrier-101-26-05", brand: "Carrier", number: "101-26-05", docNo: "", rev: "v3 2026-08-07", date: "2026-03-24", type: "Product",
+    title: "GH5SAN5 heat pumps and GA5SAN5 / GA4SAN5 ACs: new models with factory high and low pressure switches (1 in the 10th digit)",
+    applies: { modelRe: ["^GH5SAN5", "^GA[45]SAN5"] },
+    appliesText: "Carrier G-series single-stage GH5SAN5 heat pumps (national) and GA5SAN5 (South) / GA4SAN5 (North) air conditioners. The new models have a 1 in the 10th digit, for example GH5SAN53610A, GA5SAN53610W, GA4SAN53610N. First shipments January 2027.",
+    summary: "Current G-series units ship with only a low pressure switch (LPS) on the heat pumps and no pressure switches on the ACs. The new models with a 1 in the 10th digit leave the factory with both a high (HPS) and a low pressure switch. Electrical data, dimensions and AHRI ratings are the same, and the older models are not phased out.",
+    steps: [
+      "Read the 10th digit of the model: 0 = current build (heat pump: LPS only; AC: no pressure switches); 1 = factory LPS and HPS.",
+      "On a 10th-digit-1 unit, expect both pressure switches in the control circuit when troubleshooting."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners 101-26-05"
+  },
+  {
+    id: "carrier-tic2015-0019", brand: "Carrier", number: "TIC2015-0019", docNo: "", rev: "", date: "2015-10-23", type: "Technical",
+    title: "FPMAN pancake ceiling fan coils (AC): piston not seating from debris - clean it and add neoprene O-ring C70104",
+    applies: { modelRe: ["^FPMA"] },
+    appliesText: "Multi-family horizontal (pancake) ceiling hung fan coils FPMAN(U,C), air conditioner systems only.",
+    summary: "Debris in the piston body keeps the piston from seating. Signs: low head pressure, high suction pressure, little or no superheat, often heavy sweat off the compressor and water running out under the condenser pad. Carrier qualified a neoprene O-ring that holds the piston fully seated.",
+    steps: [
+      "O-ring: neoprene part C70104 (The O-ring Store, 208-413-6377). Do NOT substitute any other material.",
+      "Gauges on the liquid and suction valves. Close the liquid valve and pump down, ready to close the suction valve fast. The scroll gets noisy as pressures equalize (suction about 20 PSIG) - that is normal. Never run the scroll into a vacuum.",
+      "When it rattles, cut power and quickly close the suction valve. Recover what is left in the line set down to 5 PSIG.",
+      "Open the piston body nut with two 8 in. adjustable wrenches (use the backup wrench). Clean the body with a Q-tip and the piston with a rag. Injecting Zerol Ice did not clean these pistons - clean them by hand.",
+      "Put the piston back, place the O-ring behind it, nut finger tight then 1/4 turn with the backup wrench. Do not over-tighten.",
+      "Nitrogen leak check, evacuate the line set, open both valves, check the charge by the superheat method in the outdoor unit instructions.",
+      "Pistons: size 018 #50 (201600800978), 024 #56 (201600800873), 030 #67 (201600800874), 036 #70 (201600801081)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2015-0019"
+  },
+  {
+    id: "carrier-tic2015-0014", brand: "Carrier", number: "TIC2015-0014", docNo: "", rev: "", date: "2015-08-04", type: "Technical",
+    title: "Uncased pancake fan coils on a fiberboard plenum: supply air blows water out of the drain pan - add a sheet metal angle",
+    applies: { modelRe: ["^FPMA"] },
+    appliesText: "Uncased horizontal (pancake) ceiling fan coil units.",
+    summary: "If the field-built fiberboard plenum is not sealed to the supply duct flange (opening cut crooked or misaligned), supply air blows back into the condensate drain pan and pushes water out.",
+    steps: [
+      "Parts: locally bought 1 1/2 x 1 1/2 in. sheet metal angle and self-tapping screws.",
+      "Lay the fan coil ceiling-mount side down, drain pan on top. Cut one side of the angle at 6 3/8 in. (the supply flange can be used as a template).",
+      "Bend the angle around the corner and screw it to the supply air flange; repeat on the other side. The angle must sit in front of the drain pan.",
+      "Turn the unit back over and install the fiberboard plenum the normal way.",
+      "Before bolting it to the ceiling, check the ceiling slope and shim so the pan drains toward the main drain line."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2015-0014"
+  },
+  {
+    id: "carrier-tic2015-0018", brand: "Carrier", number: "TIC2015-0018", docNo: "", rev: "", date: "2015-11-05", type: "Technical",
+    title: "Infinity Touch / Evolution Connex software Version 13: communicating geothermal, Bryant energy tracking, fixes",
+    applies: { modelRe: ["^SYSTXCCIT[WCN]01", "^SYSTXBBEC[WCN]01"] },
+    appliesText: "Carrier SYSTXCCITW01-A, SYSTXCCITC01-A, SYSTXCCITN01-A and Bryant SYSTXBBECW01-A, SYSTXBBECC01-A, SYSTXBBECN01-A.",
+    summary: "V13 added Infinity geothermal split heat pumps (communicating) and energy tracking for Bryant, plus fixes: fewer faults during software updates, utility curtailment on 19VS AC systems, window protect, Super A coils in the coil list, humidity / fresh air menus greyed out when that equipment is not installed, and the status screen wrongly showing heat in Fan-Only or Off.",
+    steps: [
+      "Wi-Fi controls on V10 or later download updates themselves.",
+      "Non-Wi-Fi controls or software older than V10: download from the Infinity / Evolution consumer download site (EULA link), or HVACpartners > Products > Thermostats and Controls > the control > Documents and Downloads > Firmware Installer.",
+      "Details: marketing bulletins 101-15-72 (Carrier) and BY-103-15-62 (Bryant)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2015-0018"
+  },
+  {
+    id: "carrier-tic2015-0004", brand: "Carrier", number: "TIC2015-0004", docNo: "", rev: "", date: "2015-02-27", type: "Technical",
+    title: "Infinity Touch / Evolution Connex software Version 12: expanded CFM / static control, airflow verification, more dealer portal data",
+    applies: { modelRe: ["^SYSTXCCIT[WCN]01", "^SYSTXBBEC[WCN]01"] },
+    appliesText: "Carrier SYSTXCCITW01-A, SYSTXCCITC01-A, SYSTXCCITN01-A and Bryant SYSTXBBECW01-A, SYSTXBBECC01-A, SYSTXBBECN01-A.",
+    summary: "V12 expanded CFM and static pressure control for the new indoor blowers, added Airflow Verification screens, Greenspeed / Evolution Extreme heat pump charging, more indoor coils, the 13k size for Infinity 18VS / Evolution V, and updated service and install screens. With V11 or later the HVACpartners dealer portal shows much more: indoor and outdoor status and faults, the last 10 system events, root cause and history data, and indoor / outdoor setup.",
+    steps: [
+      "Update the control to V12 or later to get the expanded remote dealer portal data.",
+      "Details: marketing bulletins 101-15-13 (Carrier) and BY-103-15-11 (Bryant)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2015-0004"
+  },
+  {
+    id: "carrier-tic2014-0003", brand: "Carrier", number: "TIC2014-0003", docNo: "", rev: "", date: "2014-04-25", type: "Technical",
+    title: "Infinity / Evolution touch controls before V11: blower cutback (code 161) keeps the system at low capacity",
+    applies: { modelRe: ["^SYSTXCCIT[WCN]01", "^SYSTXBBEC[WCN]01"], codes: ["161"] },
+    appliesText: "Bryant SYSTXBBECN01, SYSTXBBECW01, SYSTXBBECC01 and Carrier SYSTXCCITN01, SYSTXCCITW01, SYSTXCCITC01 on software Version 10 or earlier.",
+    summary: "Restrictive ductwork, or zone airflow limits set higher than the ducts can deliver, force a blower cutback (code 161). On V10 or earlier the cutback stays set until the call is satisfied or ended, so the system keeps running at reduced capacity and will not stage up.",
+    steps: [
+      "Find and fix the high static cause (ducts, filter, zone airflow limit settings).",
+      "Update to Version 11 or later: it resets the cutback after 30 minutes so the system can deliver higher airflow / stages again.",
+      "Update all Wi-Fi capable controls to V11 so later releases download automatically."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2014-0003"
+  },
+  {
+    id: "carrier-tic2015-0016", brand: "Carrier", number: "TIC2015-0016", docNo: "", rev: "", date: "2015-09-10", type: "Technical",
+    title: "48 / 50 series small and medium rooftops: tighten the red bottom drain plug before setting the unit",
+    applies: { modelRe: ["^48TC", "^50TC", "^48HC", "^50HC", "^48FC", "^50FC", "^48GC", "^50GC"] },
+    appliesText: "All Carrier 48 and 50 series small and medium rooftop units that use the standard side drain connection.",
+    summary: "Field reports found the center drain plug loose, missing or installed wrong. The install instructions say: when using the side drain, make sure the red plug in the alternate bottom drain connection is tight before setting the unit on the curb.",
+    steps: [
+      "Water leaking into the curb or building on a rooftop that drains out the side: check the red bottom drain plug.",
+      "Tighten it with a 1/2 in. square socket drive extension (easiest before the unit is set)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2015-0016"
+  },
+  {
+    id: "carrier-tic2015-0010b", brand: "Carrier", number: "TIC2015-0010B", docNo: "", rev: "B 2015-08-17", date: "2015-08-17", type: "Technical",
+    title: "Supplement to DSB14-0012 (1.5-2.5 ton TXV restriction, high superheat): Zerol Ice best practice and liquid line injection",
+    applies: { modelRe: ["^113AN[ACW]0(18|24|30)", "^113APA030", "^116BNA0(18|24|30)", "^123ANA0(18|24|30)", "^126BNA0(18|24|30)", "^127ANA024", "^180BNA024", "^186BNA0(18|24|30)", "^187BN[AC]024", "^213ANC0(18|24|30)", "^213CNA0(18|24|30)", "^213CPA030", "^214CNA0(18|24|30)", "^215BNA0(18|24|30)", "^223ANA0(18|24|30)", "^225BNA0(18|24|30)", "^226ANA024", "^280ANV024", "^285BNA0(18|24|30)", "^286BN[AC]024", "^289BNA024", "^BA13NA0(18|24|30)", "^BA16NA0(18|24|30)", "^BH13NA0(18|24|30)", "^BH14NA0(18|24|30)", "^24ABB3(18|24|30)", "^24ABC6(18|24|30)", "^24ACB3(18|24|30)", "^24ACB724", "^24ACC6(18|24|30)", "^24ANB124", "^24ANB6(18|24|30)", "^24ANB724", "^25HBB3(18|24|30)", "^25HBC3(18|24|30)", "^25HBC5(18|24|30)", "^25HCB3(18|24|30)", "^25HCB624", "^25HCC5(18|24|30)", "^25HCD3(18|24|30)", "^25HCD4(18|24|30)", "^25HNB5(18|24|30)", "^25HNB624", "^25HNB924", "^25HNH5(24|30)", "^25VNA024", "^C4A3(18|24|30)", "^CA13NA0(18|24|30)", "^CA16NA0(18|24|30)", "^CH13NA0(18|19|24|25|30|31)", "^CH14NA0(18|24|30)", "^PA13NA0(18|24|30)", "^PA16NA0(18|24|30)", "^PA17NA024", "^PH13NB0(18|19|24|25|30|31)", "^PH15NB0(18|24|30)", "^PH16NA024"] },
+    appliesText: "The 1.5, 2 and 2.5 ton Carrier / Bryant / Payne split ACs and heat pumps listed in DSB14-0012. DSB14-0012 was extended through 12/31/2015.",
+    summary: "Suction pressure and superheat should improve soon after the additive goes in and the TXV is exercised, but full capacity can take up to 24 hours of run time - the tech does not need to stay. The additive travels with the oil, not the refrigerant, so recovering and recharging does not help, and longer line sets do not need more additive.",
+    steps: [
+      "Fastest way to exercise the TXV: DSB14-0012 method #2, ice water and hot tap water baths with the bulb removed from the coil. Do not warm the bulb on the coil with a MAP torch or heat gun - it is less effective and can damage the TXV.",
+      "Do not adjust the charge for 24 hours after adding the additive (only exception: weighing the charge out and weighing the correct charge back in).",
+      "Alternative for split systems, liquid line injection: gauges on the liquid and vapor valves, close the liquid valve and pump down. Never run the scroll into a vacuum.",
+      "At about 50 psi on both sides, close the vapor valve and cut outdoor power. Put the injection tool between the liquid valve and the manifold, fill it with 4 oz of Zerol Ice and turn it so the additive gravity-feeds into the liquid line.",
+      "Purge the hoses and tool from a virgin refrigerant cylinder, then push the additive in with refrigerant GAS (not liquid) until the tool feels empty (about a 10 psi rise).",
+      "Remove the tool, reconnect the high side hose, open the tool to confirm all 4 oz went in. Open the vapor valve slowly, then the liquid valve. Restart and confirm pressures improved; you may still need to exercise the TXV per DSB14-0012.",
+      "Make sure your injection tool is suitable for this method (ask its maker if unsure)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2015-0010B"
+  },
+  {
+    id: "carrier-tic2015-0002", brand: "Carrier", number: "TIC2015-0002", docNo: "", rev: "", date: "2015-01-29", type: "Technical",
+    title: "Dry R-22 Payne PA13 / PH13 (and export 38CKC / 38CKD): R-407C allowed only in units with a POE oil compressor",
+    applies: { modelRe: ["^PA13[NP]R", "^PH13[NP]R", "^38CK[CD]"] },
+    appliesText: "Payne PA13(N,P)R and PH13(N,P)R and Carrier 38CKC / 38CKD (export) dry R-22 units. POE units: serial digit 5 = E with date 4014 or 5114 (CVL built), or digit 5 = X from 0115 on (CMXA built).",
+    summary: "R-22 is still the recommended refrigerant. If R-22 is not available, R-407C may be used for service only in a dry R-22 unit with a POE oil compressor. Expect a typical 3-8% loss of capacity and performance - tell the customer first.",
+    steps: [
+      "Confirm POE from the serial (digit 5 = E and 4014 / 5114, or digit 5 = X and 0115 or later). Not a POE unit = no R-407C.",
+      "Never mix refrigerants.",
+      "Install a 100% molecular sieve filter drier with XH-11 desiccant (the same drier as R-410A units). XH-6 (R-22 driers) absorbs the R-32 in R-407C.",
+      "Charge with liquid only, using the R-407C charging charts (piston: superheat method; cooling TXV: subcooling method) from the TIC or installation instructions."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2015-0002"
+  },
+  {
+    id: "carrier-tic2014-0010", brand: "Carrier", number: "TIC2014-0010", docNo: "", rev: "", date: "2014-09-02", type: "Technical",
+    title: "Residential gas furnaces: size to the load (Manual J) - no gas furnace under a 20,000 BTU load; excessive oversizing voids the warranty",
+    applies: { modelRe: ["^58[A-Z]{2}", "^59[A-Z]{2}", "^(310|312|313|315|800|801|811|812|813|820|830|880|886|887)[A-Z]{2}", "^9(15|25|26|45|50|55|70|73|82|86|87)[A-Z]{2}", "^PG[89]"] },
+    appliesText: "All Carrier / Bryant / Payne residential gas furnaces.",
+    summary: "Furnaces with twice the home's heat load short-cycle: temperature swings, frozen vent terminations and shorter life. The installation instructions now say the furnace should cover 100% of the design heating load plus only the margin from size steps, gas furnaces are not to be used if the heating load is below 20,000 BTU, and failing these guidelines voids the warranty.",
+    steps: [
+      "Do a load calculation (ACCA Manual J / S or another approved method) before choosing the furnace size.",
+      "Short cycling, a frozen vent terminal or comfort complaints on a newer install: compare the furnace output with the load (see also TIC2014-0002)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2014-0010"
+  },
+  {
+    id: "carrier-tic2014-0009", brand: "Carrier", number: "TIC2014-0009", docNo: "", rev: "", date: "2014-07-11", type: "Technical",
+    title: "Condensing furnace run on propane while set up for natural gas: heavy soot, CO, cracked primary heat exchanger",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "Carrier / Bryant / Payne 35 in. condensing gas furnaces. Every furnace, condensing or not, must be converted before running on propane.",
+    summary: "Furnaces ship set for natural gas. Running one on propane without the conversion can build heavy soot within 2 days (16 hours) of running - in the primary and secondary heat exchangers, collector box, inducer, trap and vent - with CO and aldehydes. The first pass of the primary heat exchanger overheats and can crack. Switching it to natural gas afterward does not fix it: the soot keeps choking the combustion air. Not covered by warranty.",
+    steps: [
+      "New install on propane: convert with the kit listed on the rating plate only - change the orifices, add spoiler screws to the burners and set line and manifold pressure per the kit.",
+      "Found running on propane unconverted: clean the primary and secondary heat exchangers, collector box, inducer housing, condensate trap and vent pipe.",
+      "Inspect the first pass of the primary heat exchanger; an open stress crack = replace the primary heat exchanger.",
+      "Then convert with the rating plate kit. A furnace converted to propane and then put back on natural gas must be converted back with the listed propane-to-natural-gas kit."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2014-0009"
+  },
+  {
+    id: "carrier-tic2014-0004", brand: "Carrier", number: "TIC2014-0004", docNo: "", rev: "", date: "2014-05-22", type: "Technical",
+    title: "35 in. condensing furnaces: no holes in the blower shelf, no trap / drain on the vent pipe, only the model's own inducer",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "Carrier / Bryant / Payne 35 in. residential condensing gas furnaces.",
+    summary: "Three practices are not approved and can create a hazard if the flue passage blocks: holes in the blower shelf (the blower pulls combustion air away from the burners and CO rises), a field vent drain or trap on the vent pipe, and an inducer assembly meant for another model (a stronger inducer). The pressure switches are meant to shut the furnace down before it reaches 400 ppm CO (air free) in the vent.",
+    steps: [
+      "Blower shelf holes are only allowed for the vent / combustion air pipes with Internal Vent Kit KGADC0101BVC. Seal any other hole with a sheet metal patch and RTV.",
+      "Remove any unauthorized trap or drain from the vent pipe and seal the pipe. For a vent trap use External Vent Trap Kit KGAET0201ETK per its instructions.",
+      "Wrong (stronger) inducer: replace it with the assembly listed for that furnace model. The single-stage replacement inducer uses a 2-stage motor; its high stage equals the single-stage motor.",
+      "These must be corrected immediately."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2014-0004"
+  },
+  {
+    id: "carrier-tic2014-0002", brand: "Carrier", number: "TIC2014-0002", docNo: "", rev: "", date: "2014-05-22", type: "Technical",
+    title: "Condensing furnace oversized for the house: concentric vent freezing - heat tape, insulation, 5 minute minimum run",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "Carrier / Bryant / Payne 35 in. residential condensing gas furnaces.",
+    summary: "Best operation is long, steady run times: output no more than 40% above the Manual J heat load. Vents froze where output was 2x the load (sometimes less, depending on outdoor temp and vent location). At -10 F a furnace at 2x the load needs at least an 8 minute run to keep a concentric vent from freezing.",
+    steps: [
+      "Existing install with outdoor temps of -10 F and above - all four of these are needed:",
+      "1) 12 ft of self-regulating, roof-rated heat tape coiled on the vent pipe from the base of the concentric termination back toward the furnace (or starting 1 ft inside the roof / wall penetration). Max 130 F and it must allow insulation over it.",
+      "2) R7 or better insulation on the vent pipe from the furnace to the base of the termination (not outside the structure).",
+      "3) Combustion air from a properly ventilated space, or change to an indirect vent setup (make sure the space has enough air for combustion).",
+      "4) Minimum 5 minute run time and no night setback (setback is OK when outdoor temps are 32 F or above). A timing relay can hold the minimum run; with setback a longer run is needed.",
+      "Colder than -10 F may need more heat tape, insulation and run time."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2014-0002"
+  },
+  {
+    id: "carrier-tic2014-0001", brand: "Carrier", number: "TIC2014-0001", docNo: "", rev: "", date: "2014-01-14", type: "Technical",
+    title: "Condensate trap heater kit KGAHT0201CFP for 35 in. condensing furnaces in spaces that drop below freezing",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "Carrier / Bryant / Payne 35 in. condensing gas furnaces installed where it can get below 32 F (0 C).",
+    summary: "The kit is a new condensate trap with a heat pad attached, a step-down transformer for the 24 V pad, and an in-line thermostat that turns the pad on at 35 F. Available from Jan 1, 2014.",
+    steps: [
+      "Furnace in an attic, garage or crawl space that can freeze: install KGAHT0201CFP so the trap does not freeze.",
+      "Details: bulletins 101-14-01, BY-103-14-01, PY-103-14-01."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2014-0001"
+  },
+  {
+    id: "carrier-tic2014-0007", brand: "Carrier", number: "TIC2014-0007", docNo: "", rev: "", date: "2014-04-07", type: "Technical",
+    title: "Safety alert: never use R-22a or any propane / hydrocarbon refrigerant in an R-22 unit",
+    applies: { modelRe: [] },
+    appliesText: "All residential and commercial split and packaged air conditioners and heat pumps designed for R-22.",
+    summary: "R-22a is a highly flammable hydrocarbon refrigerant - it is NOT R-22. Carrier had reports of property damage and personal injury from dry R-22 outdoor units charged with R-22a at installation. The EPA says using R-22a in R-22 systems is illegal and warns against any propane or hydrocarbon refrigerant in them.",
+    steps: [
+      "Use only R-22 in R-22 equipment; R-22a is not a substitute (see SMB 11-0005).",
+      "Make sure every installer and tech knows only approved refrigerants go in these units."
+    ],
+    priority: "high", confidential: true,
+    source: "HVACpartners TIC2014-0007"
+  },
+  {
+    id: "carrier-tic2014-0006", brand: "Carrier", number: "TIC2014-0006", docNo: "", rev: "", date: "2014-03-24", type: "Technical",
+    title: "R-22 replacement compressors and dry R-22 units with POE oil (E in the 7th position of the compressor model)",
+    applies: { modelRe: [] },
+    appliesText: "All service R-22 replacement compressors (RC from February 2014) and dry R-22 condensing units built from June 2014.",
+    summary: "Copeland R-22 compressors now come with POE oil instead of mineral oil (MO). Identify them by an E in the 7th position of the compressor model (ZR34K5-PFV = MO, ZR34K5E-PFV = POE) and the oil type on the compressor plate. POE mixes with R-22 and works with leftover mineral oil at any percentage.",
+    steps: [
+      "No extra system cleaning is needed unless the system is dirty (for example after a burn-out).",
+      "A liquid line filter drier is REQUIRED with POE oil (it soaks up moisture) - use the drier RC lists for the job.",
+      "Only the nameplate refrigerants (R-22 or R-410A) were approved for residential AC / heat pumps (Copeland SB2013CC-1 R1)."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2014-0006"
+  },
+  {
+    id: "carrier-tic2014-0005", brand: "Carrier", number: "TIC2014-0005", docNo: "", rev: "", date: "2014-03-14", type: "Technical",
+    title: "Comfort Alert (CADM) flash code 3 on 38AU / 569J / 575J: usually not the module - check cycle times and wiring",
+    applies: { modelRe: ["^38AU", "^569J", "^575J"] },
+    appliesText: "Carrier 38AU and Bryant 569J / 575J split condensing units with the Comfort Alert Diagnostic Module.",
+    summary: "Returned CADMs tested good. Flash code 3 (compressor short cycling) sets after four straight cycles under 3 minutes each on the Y terminal. Real causes: low or high pressure trips, oversized equipment, thermostat cycling, voltage drop from undersized wire, loose connections, or a miswired CADM / liquid line solenoid.",
+    steps: [
+      "Before replacing the CADM, time the compressor cycles when code 3 shows.",
+      "Check the transformer voltage tap on 208/230 V systems and every low voltage connection.",
+      "Thermostat wire: up to 50 ft use #18 AWG; 50-75 ft #16; over 75 ft #14 (35 C minimum insulation).",
+      "Check the CADM and liquid line solenoid wiring against the unit wiring diagram."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2014-0005"
+  },
+  {
+    id: "carrier-tic2013-0014", brand: "Carrier", number: "TIC2013-0014", docNo: "", rev: "2019-05-29", date: "2013-10-30", type: "Technical",
+    title: "35 in. condensing furnaces: condensation dripping onto the gas valve / inducer (no heat) - add a drain or trap on the combustion air pipe",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "New 35 in. condensing gas furnaces. Also covers TIC2013-0010 (same subject, shorter).",
+    summary: "Water getting into the cabinet drips on the gas valve or inducer (no heat), soaks the insulation and rusts parts. Two sources: the combustion air pipe and the evaporator coil / suction line. In cooling season a tight, depressurized house pulls hot humid outdoor air in through the combustion air pipe, and the pipe sweats inside.",
+    steps: [
+      "Carrier recommends a drain or External Trap Kit on the combustion air pipe, especially on upflow installs with the air pipe on the top plate.",
+      "Check and correct: house depressurization / poor ventilation with an unsealed cabinet; vent and combustion air design or termination location; unapproved holes in the blower shelf or cabinet; unbalanced ducts.",
+      "No holes in the blower shelf except with the Internal Vent Kit (KGAD0101BVC). Seal all cabinet openings on a direct vent install and use the combustion air pipe adapter with its gasket.",
+      "Do not put a field-made shield between the combustion air opening and the burners - it upsets combustion and causes early part failures.",
+      "Water dripping off the suction line: seal the suction line to the coil cabinet and insulate it."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2013-0014"
+  },
+  {
+    id: "carrier-tic2013-0013", brand: "Carrier", number: "TIC2013-0013", docNo: "", rev: "", date: "2013-11-08", type: "Technical",
+    title: "Residential split AC / heat pump run capacitors changed from 370 V to 440 V - retrofit notes",
+    applies: { modelRe: [] },
+    appliesText: "Carrier / Bryant / Payne residential split air conditioners and heat pumps: X-serial (CMX) units from Q4 2013, E-serial (CVL) units from Q1 2014.",
+    summary: "440 V run capacitors are a reliability upgrade for areas with poor power and high outdoor temperatures. Existing working units need no rework.",
+    steps: [
+      "A failed 370 V capacitor can be replaced with a 440 V one - you can go up from 370 to 440 V, never down.",
+      "The larger 440 V can may need a bigger capacitor strap.",
+      "If the contactor's 24 V terminals sit close to the capacitor (angled terminals), change the 24 V leads on that side to insulated terminals."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2013-0013"
+  },
+  {
+    id: "carrier-tic2013-0008", brand: "Carrier", number: "TIC2013-0008", docNo: "", rev: "", date: "2013-08-20", type: "Technical",
+    title: "Fan coil cabinet sweating outside conditioned space: keep 300 CFM/ton, plus duct, gasket and insulation fixes",
+    applies: { modelRe: ["^F[BEVXY]4[A-Z]", "^PF[0-9]"] },
+    appliesText: "All Carrier / Bryant / Payne fan coils installed in a humid, unconditioned space.",
+    summary: "Fan coils belong in conditioned space. Installed in a humid unconditioned space, the cabinet can sweat in three areas (zones 1-3 in the TIC).",
+    steps: [
+      "Keep airflow above 300 CFM per ton.",
+      "Zone 1 (behind the discharge knockout): bring insulated duct, or a duct board false panel / wedge, forward to the knockout and gasket the duct to the cabinet.",
+      "Zone 2: add a 2 in. wide x 1/8 in. thick door gasket.",
+      "Zone 3: build an insulated partition / duct extension inside the discharge flange (1 in. UL duct insulation about 1/2 in. below the metal extension flange), gasket and screw it to the cabinet flange; caulk or gasket the insulation overhang."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2013-0008"
+  },
+  {
+    id: "carrier-tic2013-0003", brand: "Carrier", number: "TIC2013-0003", docNo: "", rev: "", date: "2013-10-01", type: "Technical",
+    title: "Gas furnace used as construction heat: drywall dust kills blower and inducer motors - no warranty without a sealed vent and filters",
+    applies: { modelRe: ["^58[A-Z]{2}", "^59[A-Z]{2}", "^(310|312|313|315|800|801|811|812|813|820|830|880|886|887)[A-Z]{2}", "^9(15|25|26|45|50|55|70|73|82|86|87)[A-Z]{2}", "^PG[89]"] },
+    appliesText: "All Carrier / Bryant / Payne gas furnaces.",
+    summary: "40% of the failed blower and inducer motors returned through the SRP program failed from drywall or construction dust. A furnace used for temporary construction heat is not covered unless the permanent vent system is complete and sealed to the unit and filters are installed and kept up the whole time.",
+    steps: [
+      "Motor failure on a new-construction furnace: look for a dust coating on the motor - a sign it ran without a filter.",
+      "Also: return air below the minimum temperature causes condensation and corrosion, and finishing work brings corrosive fumes. Some local codes forbid construction heat with the furnace no matter what."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2013-0003"
+  },
+  {
+    id: "carrier-tic2013-0002", brand: "Carrier", number: "TIC2013-0002", docNo: "", rev: "", date: "2013-07-01", type: "Technical",
+    title: "Condensing furnace condensate drain lines must be supported - a sagging line causes pressure switch trips and leaks",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "New Carrier / Bryant / Payne condensing gas furnaces.",
+    summary: "Unsupported drain lines (especially in attics under insulation) get knocked: the slope reverses and water backs up to the trap (nuisance pressure switch trips), the line breaks and leaks, or the trap mounting post breaks and leaks at the collector box.",
+    steps: [
+      "Support the drain line per National Standard Plumbing Code 2009 section 8.7 (US) or the National Plumbing Code of Canada 2010, spaced so it cannot sag.",
+      "Use plastic pipe hangers / clamps or perforated hanger strap. Avoid hand-cut sheet steel straps (sharp edges), wire or rope."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2013-0002"
+  },
+  {
+    id: "carrier-tic2013-0001", brand: "Carrier", number: "TIC2013-0001", docNo: "", rev: "", date: "2013-07-01", type: "Technical",
+    title: "Condensing furnace condensate trap screw: hand tools only, 20 in-lb max",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "New Carrier / Bryant / Payne condensing gas furnaces.",
+    summary: "Power tools break the trap attachment screw or the plastic mounting post on the collector box, which leaks condensate where the trap seals to the collector box. The screw is made to bottom out in a brass insert so the foam gasket is not crushed; crushing it ruptures the foam cells and lets condensate seep through.",
+    steps: [
+      "When turning the trap to a new position, remove and install the screw with hand tools only.",
+      "Max torque 20 in-lb - most power tools go past that."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2013-0001"
+  },
+  {
+    id: "carrier-tic2019-0014", brand: "Carrier", number: "TIC2019-0014", docNo: "", rev: "", date: "2019-08-01", type: "Technical",
+    title: "Ductless single zone heat pumps 38MPRA / 38MA*R / 38MHRQ: optional extended-defrost software for extreme weather",
+    applies: { modelRe: ["^38MPRA", "^38MA.R", "^38MHRQ"] },
+    appliesText: "Carrier ductless single zone heat pump outdoor units in the 38MPRA, 38MA*R and 38MHRQ families.",
+    summary: "Carrier reviewed defrost complaints (mostly from Quebec) and says the standard defrost is right for all applications (tested 3 days at 32 F / 85% RH outdoors and 50 F indoors; coil at least 95% clear after each defrost). In some extreme weather an extended defrost may help heating and defrost; a software update tool is available through the distributor.",
+    steps: [
+      "Defrost / ice build-up complaint after the install and charge check out: call your distributor's technical support to judge whether the extended-defrost update fits.",
+      "The update is optional and does not extend or change the warranty."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2019-0014"
+  },
+  {
+    id: "carrier-dsb13-0028", brand: "Carrier", number: "DSB13-0028", docNo: "", rev: "", date: "2013-10-10", type: "Service",
+    title: "New 35 in. condensing furnaces: odor / smoke on the first heat cycles - run the full 25 minute start-up, ventilate the home",
+    applies: { modelRe: ["^59SC[25]", "^59SP5", "^59TP5", "^59TN6", "^59MN7", "^912S", "^915S", "^925S", "^925T", "^926T", "^986T", "^987M", "^PG92S", "^PG95S", "^PG95X", "^PG96V"] },
+    appliesText: "All new 35 in. condensing (90%) gas furnace models. Factory improvements in units built week 38 of 2013 and later.",
+    summary: "Leftover manufacturing oils and adhesives can give minor smoke or odor on the first cycles. From week 38 of 2013: less heat exchanger fin lubricant (cut 50% from week 11), 75% less gasket adhesive (week 17) and the process label removed. A new furnace with more airflow can also stir up dust and dirt in old ducts and filters.",
+    steps: [
+      "Run the full start-up from the install instructions - at least 25 minutes: set and check input rate (about 10 min), temperature rise (5-10 min), safety checks (about 10 min). Nearly all smoke and odor burns off during it.",
+      "Open doors and windows during the first heating cycle.",
+      "Dust or dirt blowing from the old duct system: the fix is duct cleaning and / or a new filter."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners DSB13-0028"
+  },
+  {
+    id: "carrier-dsb13-0024", brand: "Carrier", number: "DSB13-0024", docNo: "", rev: "", date: "2013-10-08", type: "Service",
+    title: "25VNA0 / 280ANV 24 and 36 size: board HK38EA017 version 04 loses heating capacity in EFFICIENCY mode - replace with HK38EA028 V5",
+    applies: { modelRe: ["^25VNA0(24|36)", "^280ANV0(24|36)"], serialFrom: "4212E", serialTo: "3713E" },
+    appliesText: "Carrier 25VNA0 and Bryant 280ANV variable speed heat pumps, 24 and 36 sizes, serials 4212E through 3713E, plus earlier units that got an HK38EA017 version 04 board as a service part. The 048 and 060 sizes are not affected (they can use HK38EA017 or HK38EA028).",
+    summary: "A software coefficient error in the version 04 heat pump board (the first energy tracking board) cuts heating capacity and HSPF at low outdoor temperatures when the unit is set to EFFICIENCY mode. COMFORT mode (the factory default) is not affected.",
+    steps: [
+      "Check the heat pump board: HK38EA017 version 04 on a 24 or 36 size.",
+      "For correct operation in EFFICIENCY mode, replace it with HK38EA028 version 5 (HK38EA017 is superseded to HK38EA028).",
+      "Units 4212E to 0813E may also need the SMB 13-0007 field fix - do both in one visit (two separate claims)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners DSB13-0024"
+  },
   // ===================== DAIKIN / GOODMAN / AMANA (TSB) =====================
   {
     id: "daikin-tsb-ot-0011", brand: "Daikin", number: "TSB-OT-0011", docNo: "", rev: "", date: "2021-07-22", type: "Technical",
