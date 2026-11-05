@@ -12874,7 +12874,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v369";
+const APP_VERSION = "v370";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -13290,7 +13290,15 @@ async function renderVersionFooter() {
   el.textContent = APP_VERSION + " · " + getAllCodes().length + " codes · " + getAllSymptoms().length + " scenarios · " + tstatEntries().length + " thermostats" + manualCount;
 }
 
+// v370 (Andy 2026-11-05 "wipe them"): the Call Log was removed in v369; delete the calls it saved on
+// this phone (IndexedDB bfc-calllog-db) and its last-tech setting. Harmless where nothing was saved.
+function wipeOldCallLog() {
+  try { localStorage.removeItem("bfc-calllog-last-tech"); } catch (e) {}
+  try { if (window.indexedDB) indexedDB.deleteDatabase("bfc-calllog-db"); } catch (e) {}
+}
+
 function startApp() {
+  wipeOldCallLog();
   if (typeof syncInventoryTile === "function") syncInventoryTile();
   renderVersionFooter();
 
