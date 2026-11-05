@@ -118,11 +118,6 @@
       <span class="tile-label">Inventory</span>
       <span class="tile-sub">Scan each unit's tag - totals by model, emails an Excel count</span>
     </button>
-    <button id="tileCallLog" class="tile tile-calllog hidden" data-screen="calllog">
-      <span class="tile-icon">📞</span>
-      <span class="tile-label">Call Log</span>
-      <span class="tile-sub">Log a tech's call — builds the queue of what's missing</span>
-    </button>
   </div>
   <div class="home-footer">
     <span id="homeNetNote"></span>
@@ -656,26 +651,12 @@
   <main id="wxBody"></main>
 </section>
 
-<!-- CALL LOG (service manager only) -->
 <!-- INVENTORY (Andy / Kenny only) -->
 <section id="inventoryScreen" class="screen hidden">
   <div class="disclaimer">Scan the data plate on every unit - the count totals by model number. A serial already counted is skipped. The count stays on this phone (works with zero signal) until you email it and start a new one.</div>
   <main id="inventoryBody"></main>
 </section>
 
-<section id="calllogScreen" class="screen hidden">
-  <div class="disclaimer">Every call a tech makes in is knowledge the app is missing. Log it in 20 seconds — who, how long, what they had, what you told them. <strong>Queue</strong> is what still needs adding to the app. <strong>Summary</strong> is where the day went. Stays on this phone; works with zero signal.</div>
-  <div class="controls">
-    <div class="cl-seg" id="calllogSeg">
-      <button type="button" class="cl-seg-btn on" data-view="log">Log</button>
-      <button type="button" class="cl-seg-btn" data-view="queue">Queue <span id="calllogQueueCount" class="cl-seg-badge hidden"></span></button>
-      <button type="button" class="cl-seg-btn" data-view="summary">Summary</button>
-    </div>
-  </div>
-  <main id="calllogLogView"></main>
-  <main id="calllogQueueView" class="hidden"></main>
-  <main id="calllogSummaryView" class="hidden"></main>
-</section>
 <script src="pt-data.js"></script>
 <script src="data.js"></script>
 <script src="symptoms.js"></script>
@@ -690,7 +671,6 @@
 <script src="manuals-seed/seed-index.js"></script>
 <script src="maint.js"></script>
 <script src="bulletins.js"></script>
-<script src="calllog.js"></script>
 <script src="app.js"></script>
 <script src="inventory.js"></script>
 </body>

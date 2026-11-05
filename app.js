@@ -324,7 +324,6 @@ const SCREEN_TITLES = {
   warranty: "Warranty Check",
   sqft: "House Size",
   request: "Request Info",
-  calllog: "Call Log",
   inventory: "Inventory",
   checker: "Daikin Checker",
   genchecklist: "Generator Checklist",
@@ -339,7 +338,6 @@ const ADD_HANDLERS = {
     model: manualsState.model && manualsState.model !== GENERAL_MODEL ? manualsState.model : "",
   }),
   toolbox: () => openToolboxEditForm(null),
-  calllog: () => openCallEntryForm(null),
 };
 
 let currentScreen = "home";
@@ -358,10 +356,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "calllogScreen", "checkerScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "checkerScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", calllog: "calllogScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -395,7 +393,6 @@ function showScreen(name, fromBack) {
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
   if (name === "maint") renderMaint();
   if (name === "genchecklist") renderGenChecklist();
-  if (name === "calllog" && typeof renderCallLog === "function") renderCallLog();
   if (name !== "inventory" && typeof invCloseCamera === "function") invCloseCamera();
   if (name === "inventory" && typeof renderInventory === "function") { renderInventory(); window.scrollTo(0, 0); }
 
@@ -12877,7 +12874,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v368";
+const APP_VERSION = "v369";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
@@ -12893,12 +12890,12 @@ const TRACK_FIELDS = { tech: "entry.1065853688", event: "entry.1998798241", vers
 const TECH_NAMES = ["James", "Jon", "Cameron", "Bryce", "Ron", "Dustin", "Dave", "Adam", "Kenny", "Mark", "Damien", "Vern", "Joey", "Drew", "Nick", "Joe", "Andy"];
 // v366 (Andy 2026-11-04): the app also runs on Android pads (tablets). Each tech
 // gets a second name "<Name> pad" so the pad claims its own name and the phone keeps
-// theirs. TECH_NAMES stays the list of people (Call Log, reports); ALL_NAMES is what
+// theirs. TECH_NAMES stays the list of people (reports); ALL_NAMES is what
 // the picker offers and what is allowed in.
 const PAD_SUFFIX = " pad";
 const PAD_NAMES = TECH_NAMES.map((n) => n + PAD_SUFFIX);
 const ALL_NAMES = TECH_NAMES.concat(PAD_NAMES);
-// "Nick pad" -> "Nick": per-person features (Call Log, inventory, checklist name) follow the person.
+// "Nick pad" -> "Nick": per-person features (inventory, checklist name) follow the person.
 function techPerson(name) { return String(name || "").replace(/\s+pad$/i, "").trim(); }
 // A tablet-sized screen (short side 600 px or more): the picker shows the pad names first.
 function isPadScreen() {
@@ -12949,14 +12946,6 @@ function isBlockedTech(name) {
   if (BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === n)) return true;
   if (BLOCKED_TECHS.some((b) => b.trim().toLowerCase() === techPerson(n))) return true;
   return !ALL_NAMES.some((t) => t.trim().toLowerCase() === n);
-}
-
-// The Call Log is the service manager's own tool — the tile only shows on
-// Andy's phone. Every other tech keeps the home screen they already know.
-// Runs at startup and again the moment the picker sets a name.
-function syncCallLogTile() {
-  const t = techPerson(getTechName()).trim().toLowerCase();
-  document.getElementById("tileCallLog")?.classList.toggle("hidden", t !== "andy");
 }
 
 function readTrackQueue() {
@@ -13205,7 +13194,7 @@ function showTechPicker(notice) {
     ov.remove();
     document.body.style.overflow = "";
     if (isBlockedTech(name)) { showAccessRemoved(); return; }
-    syncCallLogTile(); if (typeof syncInventoryTile === "function") syncInventoryTile();
+    if (typeof syncInventoryTile === "function") syncInventoryTile();
     trackEvent("app opened");
     trackEvent("set up name: " + name + " (" + how + ")");
   };
@@ -13302,7 +13291,7 @@ async function renderVersionFooter() {
 }
 
 function startApp() {
-  syncCallLogTile(); if (typeof syncInventoryTile === "function") syncInventoryTile();
+  if (typeof syncInventoryTile === "function") syncInventoryTile();
   renderVersionFooter();
 
   if (getTechName()) { trackEvent("app opened"); flushPendingClaim(); }
