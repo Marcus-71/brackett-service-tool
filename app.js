@@ -8794,6 +8794,7 @@ const MODEL_PATTERNS = [
   { re: /^CMA3-?(?:50|75)D36/, brand: "Thermo Pride (Thermo Products)", equipment: "Gas Furnace", series: "Thermo Pride CMA3 95% condensing downflow direct-vent gas furnace for manufactured homes (CMA3-50D36N / CMA3-75D36N)", notes: ["CMA3-75D36N = 75,000 BTUH input, downflow; shipped for natural gas (#42 orifices), LP kit AOPS7743.", "Category IV, 2-in. PVC vent and intake; installs on the No. 70 floor base.", "Source: Thermo Products Installation and Service Manual MG-517 (ECN 5396-MA, 2014)."] },
   { re: /^13GCSXA?V?-?(?:24|30|36|42|48|60)/, brand: "Lennox", equipment: "Other", series: "Lennox 13GCSX 13 SEER R-410A single-phase packaged gas/electric unit, 2-5 ton (13GCS = R-22 version)", notes: ["Short form 13GCSXA-36-02 = 3 ton, -02 version; heat options -68X/-83X/-90X/-110X/-138X (90X = 90,000 Btuh in).", "The -01 and -02 versions differ in charge and electrical - check the plate.", "Source: Lennox Service Literature Corp. 0519-L8, 13GCS/13GCSX Series Units (Sept 2011)."] },
   { re: /^213B[NPE][AW](?:018|024|030|036|042|048|060)/, brand: "Bryant", equipment: "Condenser/Heat Pump", series: "Bryant 213B Legacy Line 13 SEER split heat pump, Puron (R-410A), 1-1/2 to 5 ton", notes: ["Read 213BNA024 as 2 (heat pump) 1 (Legacy) 3 (13 SEER) B (Puron) N (208/230-1; P = 208/230-3, E = 460-3) A (dense grille; W = wide) 024 (24,000 Btuh); last letter = minor series.", "Time/temperature defrost board HK32EA001.", "Source: Bryant Product Data PDS213B-04 (09/12), model number nomenclature p.2."] },
+  { re: /^RCB(?:18|24|30|36|42|48|60)B2[AD]/, brand: "Amana", equipment: "Condenser/Heat Pump", series: "Amana RCB series remote cooling unit (split AC condensing unit, around 2001)", notes: ["Amana's parts manual lists RCB18B2A, RCB24B2A, RCB30B2A, RCB36B2A, RCB42B2A, RCB48B2A and RCB60B2A, plus the same sizes ending B2D (the D models were added in Rev. 1).", "Parts are listed by manufacturing number (P1223301C ... P1223314C) - give the P number off the plate when ordering.", "Source: Amana Heating and Air Conditioning, RCB Series Remote Cooling parts manual RP6110014 Rev. 1 (October 2001), page 1 model list."] },
   // --- end triage additions ---
   // ---- v312: library gap audit (Andy 2026-10-16, "push the gaps when tests pass") - each family checked against its manual's model list or nomenclature ----
   { re: /^28[69]BNA0(24|36|48|60)/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Evolution Series 286B / 289B 2-stage heat pump with Puron (R-410A), 2 to 5 tons - 286BNA / 289BNA 024-060", notes: ["Table 5 lists one model plug per size: 286BNA024 HK70EZ041 through 289BNA060 HK70EZ016. Source: Bryant II286-289B-07 p10.","On 286B the outdoor fan is a PSC motor. On 289B it is an ECM motor run by PWM outputs from the control board. Source: II286-289B-07 p7.","Can be wired to an Evolution control or a standard 2-stage thermostat. Source: II286-289B-07 p1."] },
@@ -9728,7 +9729,9 @@ const OCR_TAIL_FORMATS = [
   { fam: /^DGAX/, pos: ["D", "G", "A", "X", "0", "579", "067", "B", "D", "T", "A"] },
   { fam: /^L[CMUHDP][0-9]{2}\/?[0-9]{2}[A-Z]/, pos: ["L", "CMUHDP", "#", "#", "#", "#", "KMNPSTYLUVZ", "19", "ABCDX", "G"] },
   // v296: the input is 040-140 in steps of 20 (a read 59SC2E050M is "check the tag", not a size)
-  { fam: /^59S[CP][0-9][A-Z]/, pos: ["5", "9", "S", "CP", "#", "@", "01", "02468", "0"], open: true },
+  // v367 (Nick's 59SC6A080M171116, 10/26, read "59SCOA..." and shown as 59SC0A): the digit after
+  // 59SC/59SP is the efficiency series 2, 5 or 6 - there is no 0. A round 0/O there is the 6.
+  { fam: /^59S[CP][0-9][A-Z]/, pos: ["5", "9", "S", "CP", "256", "@", "01", "02468", "0"], open: true, swap: { 4: { "0": "6", "O": "6" } } },
   // v306 (Cameron's EL195UH110XE60C-04, 10/15, read "...XEG0C"): Lennox Elite EL195/196/296/297
   // furnaces end in NOx X|N, blower E|V, blower size (24/36/48/60) and cabinet A-D
   // (Lennox EHB 210615). Only checked once the read is sound up to the blower letter; the
@@ -9753,7 +9756,7 @@ function ocrCheckTail(model) {
   let fixed = false;
   for (let i = 0; i < Math.min(s.length, f.pos.length); i++) {
     if (ok(s[i], f.pos[i])) continue;
-    const swaps = (/[A-Z]/.test(s[i]) ? (OCR_LETTER_TO_DIGIT[s[i]] || "") : (OCR_DIGIT_TO_LETTER[s[i]] || "")).split("").filter(c => c && ok(c, f.pos[i]));
+    const swaps = ((/[A-Z]/.test(s[i]) ? (OCR_LETTER_TO_DIGIT[s[i]] || "") : (OCR_DIGIT_TO_LETTER[s[i]] || "")) + ((f.swap && f.swap[i] && f.swap[i][s[i]]) || "")).split("").filter((c, k, a) => c && ok(c, f.pos[i]) && a.indexOf(c) === k);
     if (swaps.length !== 1) return { model, fixed: false, bad: true };
     s[i] = swaps[0]; fixed = true;
   }
@@ -12866,7 +12869,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v366";
+const APP_VERSION = "v367";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

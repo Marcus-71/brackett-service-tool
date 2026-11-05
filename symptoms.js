@@ -1002,7 +1002,7 @@ const SYMPTOMS = [
   "id": "s-blower-wont-run-any-mode",
   "equipment": "Air Handler",
   "title": "Blower motor doesn't run in any mode (heat, cool, or fan-only)",
-  "summary": "Indoor blower is completely dead regardless of what the system calls for.",
+  "summary": "Indoor blower is completely dead regardless of what the system calls for - blower not running when the thermostat is calling for heat, cool or fan.",
   "steps": [
    "Check power to the air handler/furnace at the disconnect and breaker",
    "Check the blower door safety switch is fully engaged — most units won't run at all with the door open or the switch not depressed",
