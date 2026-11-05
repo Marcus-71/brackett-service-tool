@@ -4138,12 +4138,20 @@ function bulSerialStatus(b, serial) {
 }
 // trackEvent("bulletin shown: <number> | <where>") once per view: the same list for the same place and
 // model is not logged again (renderMaint / renderCodes re-run on every keystroke).
+// v368: logged only once the list has stayed on screen 1.5 s, so typing a model one key at a time logs the
+// finished model once instead of every half-typed one (Bryce 11/4: ~180 rows in 2 minutes).
 const bulTracked = {};
+const bulTrackTimers = {};
 function bulTrackShown(list, where, model) {
   const key = list.map(b => b.number).join(",") + "|" + (model || "");
+  clearTimeout(bulTrackTimers[where]);
   if (bulTracked[where] === key) return;
-  bulTracked[where] = key;
-  for (const b of list) trackEvent("bulletin shown: " + b.number + " | " + where + (model ? " | " + model : ""));
+  const items = list.slice();
+  bulTrackTimers[where] = setTimeout(() => {
+    if (bulTracked[where] === key) return;
+    bulTracked[where] = key;
+    for (const b of items) trackEvent("bulletin shown: " + b.number + " | " + where + (model ? " | " + model : ""));
+  }, 1500);
 }
 // opts: { where, serial, model, open } -> the "Bulletins for this unit (N)" card. High priority opens
 // (the first one, or all when there are at most two); the rest collapse to one line, tap to expand.
@@ -12869,7 +12877,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v367";
+const APP_VERSION = "v368";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
