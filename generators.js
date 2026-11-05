@@ -26659,6 +26659,602 @@ const GENERATORS = [
   "sourceNotes": "Generac RG025-060 legacy 3600 rpm spec sheet (Bulletin 0L0037SBY-N) and the Liquid-Cooled 2.4L (R-200B) Diagnostic Repair Manual."
  },
  {
+  "id": "gen-generac-protector-qt048-r200b",
+  "series": "Generac (Protector - liquid-cooled industrial)",
+  "family": "Generac Protector QT048 48 kW 4.2L V6 liquid-cooled - R-200B LED panel (models ending in N: QT04842ANAN / GNAN / JNAN / KNAN)",
+  "controller": "R-200B digital controller - 7 LEDs, no screen (board 0G8455, 1800 rpm)",
+  "kw": [
+   "48"
+  ],
+  "engine": "Generac 4.2L G3 V6 (Ford-built), 1800 rpm, naturally aspirated, 9.4:1, hydraulic roller lifters, firing order 1-4-2-5-3-6",
+  "fuel": "Natural gas from the factory, field-convertible to LP vapor (jets + DIP 4). 5-14 in. w.c. at the regulator inlet.",
+  "years": "about 2008-2010 (documents dated 2008-2011); Generac lists it obsolete. QT048 ending in X is the later Nexus version.",
+  "sort": 7,
+  "models": [
+   {
+    "g": "",
+    "lc": "QT04842ANAN",
+    "digits": "QT04842ANAN",
+    "desc": "48 kW, 120/240 V 1-phase, NG, aluminum - Vern's unit, serial 5597845"
+   },
+   {
+    "g": "",
+    "lc": "QTO4842ANAN",
+    "digits": "QTO4842ANAN",
+    "desc": "Same unit typed with the letter O for zero (how it was first searched)"
+   },
+   {
+    "g": "",
+    "lc": "QT04842GNAN",
+    "digits": "QT04842GNAN",
+    "desc": "48 kW, 120/208 V 3-phase Y, NG"
+   },
+   {
+    "g": "",
+    "lc": "QT04842JNAN",
+    "digits": "QT04842JNAN",
+    "desc": "48 kW, 120/240 V 3-phase Delta, NG"
+   },
+   {
+    "g": "",
+    "lc": "QT04842KNAN",
+    "digits": "QT04842KNAN",
+    "desc": "48 kW, 277/480 V 3-phase Y, NG"
+   }
+  ],
+  "specs": {
+   "oil": "Factory fill 5W-20 (Ford break-in oil is tinted GREEN - looks like coolant in it, but is normal; change it at 3 months or 30 hours - PIB08-11-S). After that 5W-30; below 32 F 5W-30 synthetic (0H0996 p.3-1).",
+   "oilCapacity": "5.0 U.S. qt total (0H0996 p.6-1; Ford 0G7223 p.17). The 2009 spec sheet says 6 qt - fill to the dipstick FULL mark.",
+   "sparkPlug": "0G49690110 (Generac LC gaseous kit sheet). Torque 15 Nm / 11 lb-ft; coil bolts 7 Nm / 62 lb-in (0G7223 p.150). Six coils 0F2842 (0H0169).",
+   "plugGap": "0.052-0.056 in (1.3-1.4 mm) (0H0996 p.10-4; 0G7223 p.150). Not the 2.4L 0.042-0.046 in.",
+   "valveClearance": "Hydraulic roller lifters - no adjustment.",
+   "airFilter": "0C8127 (0F9809; kit sheet).",
+   "battery": "Group 24F, 525 CCA, 12 V (058208S). Charger 2.5 A float 0G8023A (about 13.4 V float). DC alternator 12 V 30 A on 25 A fuse F2; panel fuse F1 15 A (0H0996 p.4-1, 6-1; 0H0209D).",
+   "fuelPressure": "5-14 in. w.c. at the regulator inlet, NG or LP vapor; running may drop no more than 1 in. (0H0983 Test 68). Yellow LED below about 5 in.",
+   "crankSensorGap": "R-200B speed sensor = magnetic pickup MP1 (0D2244M) on the flywheel: touch a tooth, back out ONE full turn, adjust for about 1.0 VAC cranking with the fuel off, Loctite 222MS (PIB08-15-S Rev L). About 1,000 ohms. The ignition module has its own 36-1 crank sensor and cam sensor.",
+   "exercise": "Every 7 days for about 12 minutes. DIP 3 OFF = low-speed exercise at 1400 rpm; ON = normal 1800 rpm (0G9375 p.5).",
+   "oilPressure": "40-125 psi hot at 2,500 rpm (Ford 0G7223 p.17). Shutdown switch about 8-10 psi.",
+   "coolant": "3.0 gal (11.4 L) 50/50 low-silicate ethylene glycol + distilled water. Thermostat 192 F (045772, later 0G49690203). Radiator cap 13 psi (090283) (0H0996 p.6-1; 0H0169; 0G5854).",
+   "ignitionTiming": "15 deg BTDC, NG and LP - set by the ignition module, not adjustable (0H0996 p.6-2).",
+   "belts": "Serpentine 0D3488E; fan V-belt A58 0E3256 (0H0169; 0G5854).",
+   "tuneUpKit": "Yearly SM kit 0G596200PM (dealer kit sheet). 2- and 4-year cooling kits: 0J7968ASRV without block heater, 0J7922ASRV with block heater (hoses, cap, belt, thermostat, air and oil filter - no oil). Oil filter 0E7080. Generac's store shows these unavailable 11/2026 - order the parts singly if needed."
+  },
+  "maintReset": {
+   "title": "R-200B (QT048 4.2L): no maintenance reminder to reset",
+   "steps": [
+    "Do the maintenance.",
+    "The R-200B has 7 LEDs and no screen - there is no maintenance counter to clear. Log the service yourself.",
+    "If all 5 red LEDs are flashing after you disconnected the battery: AUTO, hold Set Exercise 5 s to set the weekly exercise again."
+   ],
+   "resets": "Nothing - the R-200B keeps no maintenance timer. The hour meter cannot be reset.",
+   "notes": [
+    "Owner's manual schedule: break-in oil and filter at 30 h; again at 100 h; then every 150 h or 6 months. Air cleaner every 500 h; plugs, governor test and coolant flush yearly; safety-device test every 6 months (0H0996 p.10-1).",
+    "Check the cam sensor is still fully counterclockwise against its washer every year (0H0996 p.10-1)."
+   ],
+   "sources": [
+    {
+     "title": "QT048 4.2L Owner's Manual (0H0996)",
+     "pages": "p.10-1 to 10-4 (maintenance)",
+     "seedFile": "generac-protector-qt048-4p2l-48kw-owner.pdf",
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-protector-qt048-4p2l-48kw-owner.pdf"
+    },
+    {
+     "title": "R-200A/R-200B Technical Manual (0G9375 Rev D)",
+     "pages": "p.5 (exercise set, all 5 LEDs flashing)",
+     "seedFile": "generac-r200b-control-panel-technical-manual.pdf",
+     "url": "https://brackett-manuals.andy-4ae.workers.dev/manuals-seed/generac-r200b-control-panel-technical-manual.pdf"
+    }
+   ]
+  },
+  "startupKey": "protector_qt048_r200b",
+  "maintenance": [
+   {
+    "interval": "Weekly",
+    "task": "AUTO with green System Ready solid; exercise ran (12 min). Note any lit LED before touching the switch."
+   },
+   {
+    "interval": "Every 3 months",
+    "task": "Battery, fuel system, transfer switch, exhaust, ignition, belts (0H0996 p.10-1)."
+   },
+   {
+    "interval": "Every 6 months",
+    "task": "Test the shutdowns: low oil pressure, low coolant level, high coolant temp (0H0996 p.10-1)."
+   },
+   {
+    "interval": "150 h / 6 months",
+    "task": "Oil and filter 0E7080 (after the 30 h and 100 h break-in changes)."
+   },
+   {
+    "interval": "Yearly",
+    "task": "Plugs 0G49690110 gapped 0.052-0.056 in; governor check; coolant flush; cam sensor position; inspect the coolant probe tip."
+   },
+   {
+    "interval": "500 h",
+    "task": "Air filter 0C8127; check starter and DC alternator."
+   }
+  ],
+  "alarms": [
+   {
+    "code": "OVER CRANK (solid red)",
+    "name": "Shutdown - failed to start",
+    "meaning": "The engine did not start in the full crank cycle: 15 s crank, 7 s rest, then 5 more 7 s crank / 7 s rest cycles - 6 tries, about 90 s. Latched. It is also set after two failed re-cranks that follow a lost speed signal while running (0G9375 p.5-7; 0H0996 p.4-1).",
+    "causes": [
+     "Fuel off, low or wrong pressure",
+     "Fuel solenoid FS / cold-start solenoid FS2 not opening",
+     "No Wire 14 (run relay RL2) or Wire 56 (crank relay RL1)",
+     "No spark: coil, plug, ignition module (ICM)",
+     "Governor driver or Bosch actuator",
+     "Low compression"
+    ],
+    "steps": [
+     "Look at the ignition module red LED through the holes in the customer connection box during the FIRST crank (unit OFF for 60 s before) - a blink code sends you straight to that entry (0H0983 p.95, 112; 0H0996 p.6-3).",
+     "Fuel (Test 68): manometer on the regulator inlet port - 5-14 in. w.c. static and running; running may drop no more than 1 in. (0H0983 p.114-115).",
+     "Wire 14 (Test 69): battery voltage at the fuel solenoid while cranking - a screwdriver held over it should be pulled in. None: run relay RL2 (Test 70) - Wire 15 at terminal 87 always, Wire 15A at 86 in AUTO, Wire 14A pulled to ground by the board in MANUAL; coil about 90 ohms; Wire 14 at TB1 terminal 9 (0H0983 p.115-116).",
+     "Regulator (Test 72): 5-14 in. w.c. at port C while cranking; cold-start solenoid FS2 gets Wire 56 only while cranking (0H0983 p.116-117).",
+     "Spark (Tests 62/64): on the 4.2L there are six coils on Wires 451-456 with a 15D feed (0G9257); coils 0F2842 (0H0169). Plug gap 0.052-0.056 in, plugs torque 15 Nm / 11 lb-ft (0H0996 p.10-4; 0G7223 p.150) - NOT the 2.4L 0.042-0.046 in printed in 0H0983 Test 63.",
+     "Governor driver (Test 73): about 10 VDC between pin 4 (Wire 14) and pin 1 of the driver plug while cranking; none = replace the R-200B board (0H0983 p.117-118).",
+     "Actuator (Test 74): butterfly moves freely its full travel; about 10 VDC on Wires 770/771 at the actuator plug while cranking; a 9 V battery on 770/771 should open it fully (0H0983 p.118-119; Bosch actuator test TIB14-01-GD).",
+     "Compression (Test 76): the 160/120 psi figures in 0H0983 are for the 2.4L. The 4.2L manual gives no compression figure; compare cylinders to each other (0G7223)."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "OVER CRANK (flashing red)",
+    "name": "Shutdown - ignition module fault",
+    "meaning": "The ignition control module (ICM) reported a fault and the board shut the engine down (0G9375 p.7).",
+    "causes": [
+     "No power to the ICM",
+     "Crank (CSS) or cam sensor signal missing",
+     "Ignition-side overspeed",
+     "Failed ICM"
+    ],
+    "steps": [
+     "Read the ICM red LED blink code (see the 'Ignition module LED' entries). Unit must be OFF 60 s before cranking; the code is only valid in the first crank cycle (not on a re-crank) and shows for about 60 s before the module powers down (0H0996 p.6-3).",
+     "ICM power (Test 66) on the 4.2L ICM plug: pin 16 Wire 15 = battery always; pin 12 Wire 14 = battery when cranking/running; pin 11 Wire 56 = battery while cranking. Under 10 V: trace Wire 15 to the 15 A fuse F1, Wire 14 to run relay RL2, Wire 56 to crank relay RL1 (0G9257; 0H0983 p.112-113).",
+     "Power good and still faulting with no blink code: replace the ICM (0H0983 p.95 flowchart)."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "OVER SPEED (solid red)",
+    "name": "Shutdown - overspeed",
+    "meaning": "Engine speed stayed above the overspeed limit for 3 s - the R-200B manual gives 2160 rpm and 2250 rpm for an 1800 rpm engine (both figures are printed). Latched (0G9375 p.7).",
+    "causes": [
+     "Governor driver board",
+     "Bosch actuator sticking open",
+     "Magnetic pickup (speed sensor) giving a bad signal",
+     "R-200B board"
+    ],
+    "steps": [
+     "Governor driver (Test 73): about 10 VDC on pins 4 and 1 of its plug while cranking (0H0983 p.100, 117).",
+     "Actuator: butterfly must not bind; Bosch pin-outs and resistance checks in the Bosch governor testing sheet and TIB14-01-GD (0H0983 Test 74 p.118-119: 12-6 about 1.4 k / 12-5 about 700 ohms at rest; 600 / 1.4 k fully open).",
+     "Speed sensor: see the OVER SPEED flashing entry for the magnetic pickup checks.",
+     "Replace what failed; if every test is good, call Generac Technical Support (0H0983 p.100 Problem 25)."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "OVER SPEED (flashing red)",
+    "name": "Shutdown - speed signal lost (RPM sensor)",
+    "meaning": "The R-200B saw no valid engine-speed signal. While cranking: none in the first 4 s of a crank cycle - it stops and locks out. While running: it closes the throttle, shuts the fuel, waits 15 s and re-cranks, and locks out on the third loss (0G9375 p.6-7). On the 4.2L the R-200B reads speed from the magnetic pickup MP1 on Wires 79 and 0 (J1 pins 9 and 10); the ignition module uses its own crank and cam sensors - they do not share the signal (0G9257; 0G9375 p.11).",
+    "causes": [
+     "Magnetic pickup MP1 (0D2244M) gap wrong, dirty tip or failed",
+     "Wire 79 / Wire 0 open or shorted",
+     "DIP switches wrong",
+     "Actuator",
+     "R-200B board"
+    ],
+    "steps": [
+     "DIP switches (Test 32): for a QT048 4.2L - 1 OFF (60 Hz), 6 OFF, 7 ON (4.2L); 4 ON for NG / OFF for LP (0H0983 p.103; SIB10-03-CALL).",
+     "Magnetic pickup: about 1,000 ohms between Wire 79 and Wire 0 unplugged (0H0983 says 700-1000; PIB08-15-S Rev L says about 1,000).",
+     "Signal: fuel OFF, breakout harness 0G41800SRV in line, crank and read AC volts on Wire 79 / Wire 0 - about 1.0 VAC (PIB08-15-S Rev L, Oct 2026; the older 0H0983 says about 1.5 VAC).",
+     "Setting the gap (PIB08-15-S Rev L): pull it and check a flywheel tooth is centered under the hole; clean filings off the tip; screw in by hand until it touches the tooth, back out ONE full turn, fine-tune for about 1.0 VAC cranking, Loctite 222MS on the threads, tighten the locknut. Debris on the tip causes speed-related shutdowns.",
+     "Wiring (Test 122): Wire 79 / Wire 0 continuity sensor to J1 pins 9/10; about 1,000 ohms at the board end (0H0983 p.126-127).",
+     "Then actuator (Test 74), then the R-200B board (0H0983 p.100 Problem 24)."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "HI COOLANT TEMP (solid red)",
+    "name": "Shutdown - high coolant temperature",
+    "meaning": "The high-temperature switch on the engine closed (Wire 85, J1 pin 4). Checked after a 10 s hold-off; latched (0G9375 p.6; 0G9257). The owner's manual says it trips at about 284 F (140 C); the engine parts list calls the switch 068407 'HI-TEMP 245D' - go by the switch (0H0996 p.4-1; 0H0169).",
+    "causes": [
+     "Low coolant / leak",
+     "Blocked radiator or louvers, fan V-belt (A58, 0E3256) or serpentine belt (0D3488E) loose or broken",
+     "Thermostat stuck (192 F)",
+     "Water pump",
+     "Switch or Wire 85 shorted to ground"
+    ],
+    "steps": [
+     "Test 95: IR gun on the lower radiator hose. Above 232 F = real overheat; check coolant level (Test 96), hoses (Test 97), then the thermostat (0H0983 p.98, 121-122).",
+     "Coolant: 3.0 gal (11.4 L) 50/50 low-silicate ethylene glycol and distilled water; radiator cap 13 psi (090283) (0H0996 p.6-1; 0G5854).",
+     "Reading normal but the LED comes on: the switch or Wire 85 is grounding - unplug Wire 85 at the switch; if the fault stops, replace the switch, if not, look for 85 rubbed to ground. (The 0H0983 flowchart does not spell out this branch - this is the circuit on 0G9257.)"
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "HI COOLANT TEMP (flashing red)",
+    "name": "Shutdown - low coolant level",
+    "meaning": "The coolant level probe stopped seeing coolant. Checked after the 10 s hold-off; latched (0G9375 p.6). On the 4.2L the probe (WLS, Wires 573A and 0) is switched onto Wire 573 (J1 pin 8) by a coolant level relay (WLR) that is powered by Wire 14 while running (0G9257).",
+    "causes": [
+     "Coolant actually low / leak",
+     "Dirty or coated probe tip - false shutdowns",
+     "Original 0E2507 probe (known for false alarms)",
+     "Coolant level relay / interface module not getting Wire 14",
+     "Wire 573 open"
+    ],
+    "steps": [
+     "Test 96: cold, cap off - coolant must be visible at the bottom of the filler neck. Low: fill, find the leak, check the oil for a milky look (0H0983 p.122).",
+     "Test 98: unplug the probe and jumper its harness plug (probe wire to Wire 0), run in MANUAL. Stays running = probe. Never leave it jumpered (0H0983 p.122-123).",
+     "False low-coolant shutdowns or a dirty tip: Generac's fix (PIB09-09-CALL) is to replace the old 0E2507 probe with probe 0H1827 plus interface module 0H1851 (kit 0H50540SRV). The module's orange wire piggybacks on Wire 14 at the fuel solenoid.",
+     "Still shuts down: check the coolant level relay gets Wire 14 while running, then Wire 573 continuity to J1 pin 8 (Test 99) and Wire 0 (Test 100), then the board (0H0983 p.98, 123; 0G9257).",
+     "Inspect the probe for corrosion at every coolant change (PIB09-09-CALL)."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "LOW OIL PRESSURE (red)",
+    "name": "Shutdown - low oil pressure",
+    "meaning": "The oil pressure switch (normally closed, held open by oil pressure) closed after the 10 s hold-off - Wire 86 to J1 pin 20. Latched. Owner's manual: about 8 psi; parts list: switch 0A8584 '10 PSI' (0G9375 p.6; 0H0996 p.4-1; 0H0169; 0G9257). Do not restart until the oil is right.",
+    "causes": [
+     "Low oil",
+     "Real low pressure (worn engine, pump, wrong oil)",
+     "Bad switch",
+     "Wire 86 rubbed to ground"
+    ],
+    "steps": [
+     "Test 104: oil level - 5.0 qt total (0H0996 p.6-1; 0G7223 p.17).",
+     "Test 105: mechanical gauge in place of the switch, start in MANUAL. No pressure in 10 s = shut down. 4.2L spec: 40-125 psi hot at 2,500 rpm (0G7223 p.17); the 58-90 psi in 0H0983 is for the 2.4L.",
+     "Test 106/107: Wire 86 continuity switch to J1 pin 20, and no short to ground - a grounded 86 shuts the unit down about 10 s after every start (0H0983 p.123-124).",
+     "Test 108: Wire 86 to ground reads 0 VDC cranking and rises to about 5 VDC at speed once pressure passes 10 psi. Stays at 0 = switch. Rises to 5 V yet still faults = board (0H0983 p.124)."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "LOW BATTERY (red, stays on after a shutdown)",
+    "name": "Shutdown - dead battery",
+    "meaning": "Battery fell below 6 V while cranking or below 8 V running - the crank cycle stops, the LED stays on and the fault latches (0G9375 p.6).",
+    "causes": [
+     "Weak or sulfated battery",
+     "Charger not working (no 120 VAC at TB-BC)",
+     "Loose or corroded cables"
+    ],
+    "steps": [
+     "Test 110: below 11 V - take the battery out and charge it with a charger that can start from dead (0H0983 p.99).",
+     "Load test it. Group 24F, 525 CCA; Generac battery 058208S (0H0996 p.6-1; LC gaseous kit sheet).",
+     "Then the charger checks in the LOW BATTERY warning entry."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "ALL 5 RED LEDs ON (steady)",
+    "name": "Configuration fault - invalid DIP switches",
+    "meaning": "DIP switches 6 and 7 are both ON on an 1800 rpm board - an invalid combination (0G9375 p.7). Wrong DIP settings can also make it run rough, not start, or lack power (0G9375 p.2).",
+    "causes": [
+     "DIP switches set wrong (often after a board replacement)"
+    ],
+    "steps": [
+     "QT048 4.2L board 0G8455 settings: 1 OFF = 60 Hz; 2 OFF = RTS/HTS transfer switch (ATS mode) or ON = W-type 2-wire start (GTS mode); 3 OFF = low-speed exercise (1400 rpm) or ON = normal speed; 4 ON = natural gas / OFF = LP; 5 not used; 6 OFF; 7 ON = 4.2L; 8 not used (SIB10-03-CALL; 0G9375 p.2).",
+     "To load the new settings: switch to OFF, change the DIP switches, then hold Set Exercise for 5 s (SIB10-03-CALL). 0H0983 also allows pulling the 15 A fuse F1 for 10 s."
+    ],
+    "clear": "Write down which LEDs are lit or flashing first, then set AUTO/OFF/MANUAL to OFF (the fault LED goes out), then back to AUTO. A latched fault comes back until the cause is fixed (0G9375 p.7)."
+   },
+   {
+    "code": "Ignition module LED ON solid while cranking",
+    "name": "Ignition cannot initialize (ICM priority 1)",
+    "meaning": "Red LED inside the ignition module stays on during cranking - the module cannot start up (0H0996 p.6-3). Normal is a steady blink 0.5 s on / 0.5 s off.",
+    "causes": [
+     "ICM power inputs",
+     "Failed ICM"
+    ],
+    "steps": [
+     "Check ICM power: pin 16 Wire 15, pin 12 Wire 14, pin 11 Wire 56 (0G9257; 0H0983 Test 66 p.112).",
+     "Power good: replace the ICM."
+    ],
+    "clear": ""
+   },
+   {
+    "code": "Ignition module LED 4 blinks",
+    "name": "Engine overspeed seen by the ICM (priority 2)",
+    "meaning": "4 blinks, 3 s off, repeat - the ignition module saw overspeed (0H0996 p.6-3).",
+    "causes": [
+     "Governor / actuator",
+     "Sensor signal"
+    ],
+    "steps": [
+     "Work it like OVER SPEED solid: governor driver, actuator, then speed sensors (0H0983 p.100)."
+    ],
+    "clear": ""
+   },
+   {
+    "code": "Ignition module LED 2 blinks",
+    "name": "No crank signal (priority 3)",
+    "meaning": "2 blinks, 3 s off, repeat - no signal from the 36-1 crankshaft sensor (CSS) (0H0996 p.6-2, 6-3). Only valid in the first crank cycle with the unit OFF 60 s first.",
+    "causes": [
+     "CSS unplugged, damaged or dirty",
+     "CSS wiring (Wire 79A to ICM pin 14, Wire 0A to pin 21, shielded)",
+     "Damaged trigger wheel"
+    ],
+    "steps": [
+     "Check the CSS plug and wiring: Wire 79A to ICM pin 14 and Wire 0A to ICM pin 21; shield to pin 20 (0G9257).",
+     "Pull the sensor and look for damage or debris. The 700-1000 ohm figure in 0H0983 is for the 2.4L magnetic pickup, not this Ford crank sensor - no 4.2L figure is published.",
+     "Sensor and wiring good: replace the ICM (0H0983 p.95 flowchart)."
+    ],
+    "clear": ""
+   },
+   {
+    "code": "Ignition module LED 3 blinks",
+    "name": "No cam signal (priority 4)",
+    "meaning": "3 blinks, 3 s off, repeat - no signal from the cam sensor (0H0996 p.6-3).",
+    "causes": [
+     "Cam sensor (synchronizer) moved off its stop",
+     "Cam sensor wiring (Wire 450 to ICM pin 23, Wire 0 to pin 22)",
+     "Failed sensor"
+    ],
+    "steps": [
+     "The cam sensor is factory set fully counterclockwise against its retaining washer; moving it can wreck the engine. Check its position (owner's manual: every year) (0H0996 p.6-2, 10-1).",
+     "Check Wire 450 to ICM pin 23 and Wire 0 to pin 22 (0G9257).",
+     "Sensor and wiring good: replace the ICM."
+    ],
+    "clear": ""
+   }
+  ],
+  "warnings": [
+   {
+    "code": "LOW BATTERY (red, not latched)",
+    "name": "Warning - low battery",
+    "meaning": "Battery below about 12.2 V for more than 1 minute; goes off above about 12.5 V. Does not stop the engine (0G9375 p.6). Normal float is about 13.4 V with the charger working (0H0983 p.124).",
+    "causes": [
+     "Battery",
+     "No 120 VAC to the charger",
+     "Charger 0G8023A (2.5 A float)",
+     "Wires 0 / 15E to the board"
+    ],
+    "steps": [
+     "Test 111: J2 pin 5 (Wire 15E) to ground - should be above 12.8 VDC (0H0983 p.124).",
+     "Test 112: steady voltage, switch OFF then AUTO, wait 1 minute. LED returns = board (the board's tolerance is +/- 0.5 V - don't replace it if it clears inside that window). LED stays off = it had latched during cranking (below 6 V) - load test the battery (0H0983 p.99, 124-125).",
+     "Charger (Tests 113-115): 120 VAC on charger plug pins 1-2 and at TB-BC L1-N in the customer box; about 13.4 VDC output measured battery + to the disconnected negative cable (0H0983 p.125)."
+    ]
+   },
+   {
+    "code": "LOW FUEL PRESSURE (yellow)",
+    "name": "Warning - low fuel pressure",
+    "meaning": "The fuel pressure switch on the regulator opened - supply below about 5 in. w.c. Warning only, not latched, no alarm output; works in OFF, MANUAL and AUTO (0G9375 p.6).",
+    "causes": [
+     "Low supply pressure / undersized pipe / regulator",
+     "Switch out of calibration",
+     "Wire 601 open"
+    ],
+    "steps": [
+     "Test 68: 5-14 in. w.c. at the regulator inlet, static and running, at every load (0H0983 p.114-115).",
+     "Test 116: switch with wires 601/0 off - fuel OFF = open, fuel ON = closed. In AUTO, Wire 601 to ground about 5 VDC; Wire 0 to ground continuity (0H0983 p.125-126).",
+     "No 5 V on 601: check 601 continuity to J1 pin 11 (0G9257 - 0H0983 prints 'J2' here, the schematic shows J1), then the board."
+    ]
+   },
+   {
+    "code": "SYSTEM READY (green) flashing",
+    "name": "Status - no utility sensed, or GTS mode",
+    "meaning": "Solid green = AUTO, no warnings, utility present. Flashing 0.5 s on / 0.5 s off = the board sees no utility voltage (ATS mode, DIP 2 OFF). 5 s on / 1 s off = GTS 2-wire start mode (DIP 2 ON) - the transfer switch does the utility sensing (0G9375 p.5-8).",
+    "causes": [
+     "Utility sense fuses in the RTS (two, for N1/N2)",
+     "N1/N2 not landed",
+     "Transformer TR1",
+     "Board"
+    ],
+    "steps": [
+     "Test 81: 240 VAC (or 208) between N1 and N2 at TBR in the customer box; 0 V = transfer switch side - check the RTS N1/N2 fuses (0H0983 p.120).",
+     "Test 82: TR1 primary 240/208 VAC, secondary 16-19 VAC (0H0983 p.120-121).",
+     "Test 83: 16-19 VAC between J2 pins 8 and 12 (Wires 224/225) - present = replace the board (0H0983 p.121).",
+     "With an RTS/HTS switch DIP 2 must be OFF; it is ON only for a W-type 2-wire start switch on 178/183 (SIB10-03-CALL)."
+    ]
+   },
+   {
+    "code": "ALL 5 RED LEDs flashing",
+    "name": "Status - exercise time not set",
+    "meaning": "Battery power to the board was lost so the weekly exercise time is gone. The unit still runs on an outage and in MANUAL, but will not exercise (0G9375 p.5).",
+    "causes": [
+     "Battery disconnected or dead",
+     "15 A fuse F1 pulled"
+    ],
+    "steps": [
+     "Switch to AUTO, hold Set Exercise for 5 s, release. All 5 red LEDs flash for 10 s, then it starts and runs its 12-minute exercise. It repeats every 7 days at that time (0G9375 p.5)."
+    ]
+   }
+  ],
+  "troubleshooting": [
+   {
+    "symptom": "Shuts off immediately when exercising / shuts down right after it starts, about 10 seconds into the weekly exercise",
+    "causes": [
+     "Low oil pressure, high coolant temp and low coolant level are all checked only after a 10 s hold-off - a shutdown at about 10 s points at those three",
+     "Low-speed exercise runs at 1400 rpm - a marginal speed signal or fuel supply shows up here first",
+     "Old 0E2507 coolant probe giving false low-coolant trips"
+    ],
+    "fixes": [
+     "Before switching to OFF, write down which LED is lit and whether it is solid or flashing - that is the only fault record this panel has.",
+     "Solid LOW OIL PRESSURE: oil level, then a mechanical gauge (40-125 psi hot), then Wire 86 to ground (see the code entry).",
+     "Flashing HI COOLANT TEMP: coolant level, then the probe - replace an old 0E2507 with kit 0H50540SRV (PIB09-09-CALL).",
+     "Flashing OVER SPEED: magnetic pickup gap and tip (PIB08-15-S: one full turn out, about 1.0 VAC cranking).",
+     "No LED at all: check the 15 A fuse F1 and the battery.",
+     "To test whether it is the low-speed exercise only: set DIP 3 ON (normal-speed exercise), switch OFF and hold Set Exercise 5 s, and watch an exercise (SIB10-03-CALL)."
+    ]
+   },
+   {
+    "symptom": "Cranks but will not start",
+    "causes": [
+     "Fuel",
+     "Wire 14 / run relay",
+     "Spark / ignition module",
+     "Governor / actuator"
+    ],
+    "fixes": [
+     "Work the OVER CRANK (solid) entry top to bottom; read the ignition module LED in the first crank first."
+    ]
+   },
+   {
+    "symptom": "Fuel conversion NG to LP",
+    "causes": [
+     "Jets in the demand regulator",
+     "DIP switch 4"
+    ],
+    "fixes": [
+     "Swap the jets in the regulator (the larger jet is NG) and set DIP 4 OFF for LP / ON for NG, then OFF + hold Set Exercise 5 s (0H0996 p.6-2; 0G5967; SIB10-03-CALL). SIB11-05-CALL is for the Nexus QT only - not this panel."
+    ]
+   }
+  ],
+  "installNotes": [
+   "Model decode: QT 048 = 48 kW, 42 = 4.2L, A/G/J/K = 120/240 1-ph, 120/208 3-ph, 120/240 3-ph Delta, 277/480 3-ph; N = natural gas; A = aluminum enclosure; last letter N = R-200B LED panel, X = Nexus, C = Nexus emissions.",
+   "Utility sense: N1/N2 fused 240 or 208 VAC from the transfer switch. Transfer relay: Wires 23 and 194. 2-wire start (W-type switch, DIP 2 ON): 178 and 183 - never put voltage on 178/183 (0G9375 p.7-8).",
+   "Battery charger needs 120 VAC at TB-BC (LINE, NEUTRAL, GND) in the customer box (0G9375 p.8).",
+   "Voltage regulator pots are factory set - do not adjust (0G9375 p.8).",
+   "RTSS200A3 load-shed switch on an R-panel: PIB09-07-HACG (in Manuals)."
+  ],
+  "tips": [
+   "This panel has NO screen and NO fault history - the LED you see before you switch to OFF is the only record. Ask the customer to photo the panel next time.",
+   "The 4.2L is a Ford engine (PIB08-11-S). Its green break-in oil looks like coolant in the oil - it is not, during the first 3 months / 30 hours.",
+   "Diagnostic manual: Generac has no 4.2L-specific R-200B manual. Use 0H0983 (R-200B, written for the 2.4L) for the board, LED, relay, fuel and governor tests; for engine-side items use the 4.2L wiring 0G9256 / schematic 0G9257 and the Ford 4.2L service manual 0G7223 (all in Manuals). Where they differ, the card says so.",
+   "Wire map on the 4.2L R-200B (0G9257): J1-4 = 85 high temp, J1-8 = 573 coolant level (through the coolant level relay), J1-9/10 = 79/0 magnetic pickup, J1-11 = 601 fuel pressure, J1-20 = 86 oil pressure. J2-5 = 15E, J2-7 = 15A, J2-4/6 = 183/178, J2-8/12 = 224/225 utility sense.",
+   "Board 0G8455E, governor driver 0E3161, voltage regulator 0G2885, battery charger 0G8023A, relays 0E6875A (0H0209D)."
+  ],
+  "manuals": [
+   {
+    "title": "QT048 4.2L 48 kW - Owner's Manual (0H0996)",
+    "docType": "owner",
+    "seedFile": "generac-protector-qt048-4p2l-48kw-owner.pdf"
+   },
+   {
+    "title": "R-200B Diagnostic Repair Manual (0H0983 - written for the 2.4L; board, LED, relay, fuel and governor tests apply)",
+    "docType": "diagnostic",
+    "seedFile": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf"
+   },
+   {
+    "title": "R-200A/R-200B Digital Controller - Technical Manual (0G9375 Rev D)",
+    "docType": "diagnostic",
+    "seedFile": "generac-r200b-control-panel-technical-manual.pdf"
+   },
+   {
+    "title": "4.2L G3 Gas Engine Service Manual (0G7223 Rev B, Ford reprint, searchable)",
+    "docType": "service",
+    "seedFile": "generac-g4p2l-g3-engine-service-manual-0g7223.pdf"
+   },
+   {
+    "title": "QT048 4.2L R-200B - Wiring Diagram (0G9256)",
+    "docType": "wiring",
+    "seedFile": "generac-protector-qt048-4p2l-r200b-wiring-diagram.pdf"
+   },
+   {
+    "title": "QT048 4.2L R-200B - Schematic (0G9257)",
+    "docType": "wiring",
+    "seedFile": "generac-protector-qt048-4p2l-r200b-schematic.pdf"
+   },
+   {
+    "title": "R-Series Alternator Wiring - 1-phase and 3-phase (0F6839)",
+    "docType": "wiring",
+    "seedFile": "generac-r-series-alternator-wiring-diagram-0f6839.pdf"
+   },
+   {
+    "title": "SIB10-03-CALL - R-200B board 0G8455 setup and DIP switches",
+    "docType": "service",
+    "seedFile": "generac-sib10-03-call-r200b-0g8455-board-setup.pdf"
+   },
+   {
+    "title": "PIB09-09-CALL - Coolant level probe 0E2507 replacement (kit 0H50540SRV)",
+    "docType": "service",
+    "seedFile": "generac-pib09-09-call-r-panel-coolant-level-probe.pdf"
+   },
+   {
+    "title": "PIB08-11-S - 4.2L green wear-in oil",
+    "docType": "service",
+    "seedFile": "generac-pib08-11-s-4p2l-wear-in-oil.pdf"
+   },
+   {
+    "title": "Bosch governor pin-outs and testing",
+    "docType": "service",
+    "seedFile": "generac-bosch-governor-pinouts-and-testing.pdf"
+   },
+   {
+    "title": "PIB09-07-HACG - RTSS200A3 load shed switch on an R-panel generator",
+    "docType": "install",
+    "seedFile": "generac-pib09-07-hacg-rtss-load-shed-r-panel.pdf"
+   },
+   {
+    "title": "Installation Manual - Stationary Emergency Generator (0F8751 Rev J)",
+    "docType": "install",
+    "seedFile": "generac-liquidcooled-stationary-emergency-install-manual-0f8751.pdf"
+   },
+   {
+    "title": "QT048 Spec Sheet (0177730SBY)",
+    "docType": "spec",
+    "seedFile": "generac-protector-qt048-4p2l-48kw-specsheet.pdf"
+   },
+   {
+    "title": "4.2L G3 Engine Parts Manual (0G4969PMNL)",
+    "docType": "parts",
+    "seedFile": "generac-g4p2l-g3-engine-parts-manual-0g4969.pdf"
+   },
+   {
+    "title": "Parts - 4.2L engine (0H0169)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt048-4p2l-engine-parts-0h0169.pdf"
+   },
+   {
+    "title": "Parts - R-200B control panel (0H0209D)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt048-4p2l-r200b-control-panel-parts-0h0209d.pdf"
+   },
+   {
+    "title": "Parts - cooling system (0G5854)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt048-4p2l-cooling-system-parts-0g5854.pdf"
+   },
+   {
+    "title": "Parts - fuel system, LP conversion (0G5967)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt048-4p2l-fuel-system-parts-0g5967.pdf"
+   },
+   {
+    "title": "Parts - air cleaner (0F9809)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt-air-cleaner-parts-0f9809.pdf"
+   },
+   {
+    "title": "Parts - connection box (0G9982)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt-c2-c4-r200a-connection-box-parts-0g9982.pdf"
+   },
+   {
+    "title": "Parts - muffler / exhaust (0G5866)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt048-4p2l-muffler-exhaust-parts-0g5866.pdf"
+   },
+   {
+    "title": "Parts - battery accessories (0G5972)",
+    "docType": "parts",
+    "seedFile": "generac-protector-qt048-4p2l-battery-accessories-parts-0g5972.pdf"
+   },
+   {
+    "title": "Industrial maintenance kits - with block heater",
+    "docType": "parts",
+    "seedFile": "generac-industrial-sm-kits-with-block-heater.pdf"
+   },
+   {
+    "title": "Industrial maintenance kits - without block heater",
+    "docType": "parts",
+    "seedFile": "generac-industrial-sm-kits-without-block-heater.pdf"
+   },
+   {
+    "title": "Basic Maintenance - Liquid-Cooled Units (0F5624 Rev B)",
+    "docType": "service",
+    "seedFile": "generac-liquidcooled-basic-maintenance-information.pdf"
+   },
+   {
+    "title": "Generac product support lookup - every document for this model number",
+    "docType": "other",
+    "url": "https://www.generac.com/service-support/product-support-lookup/"
+   }
+  ],
+  "sourceNotes": "Generac owner's manual 0H0996, R-200A/B technical manual 0G9375, R-200B diagnostic repair manual 0H0983 (2.4L), 4.2L R-200B wiring 0G9256 and schematic 0G9257, 4.2L G3 engine service manual 0G7223 (Ford reprint, OCR), parts manuals 0H0169 / 0H0209D / 0G5854 / 0G5967, GENservice SIB10-03-CALL, PIB09-09-CALL, PIB08-11-S, PIB08-15-S Rev L (dealer bulletin, paraphrased), TIB14-01-GD (dealer, paraphrased), Generac LC gaseous maintenance kit sheet and industrial SM kit lists. Model/serial checked on GENservice: QT04842ANAN serial 5597845 = OBS 48KW 4.2 120/240 1P NG AL."
+ },
+ {
   "id": "gen-generac-protector-qt-nexus",
   "series": "Generac (Protector - liquid-cooled industrial)",
   "family": "Generac Protector QT industrial liquid-cooled (Nexus, 22-150 kW)",
@@ -26675,7 +27271,7 @@ const GENERATORS = [
    { "g": "", "lc": "QT030", "digits": "QT030", "desc": "30 kW, Nexus (e.g. QT03015)" },
    { "g": "", "lc": "QT036", "digits": "QT036", "desc": "36 kW, 2.4L, Nexus" },
    { "g": "", "lc": "QT045", "digits": "QT045", "desc": "45 kW, 2.4L, Nexus (e.g. QT04524)" },
-   { "g": "", "lc": "QT048", "digits": "QT048", "desc": "48 kW, 4.2L V6 1800 rpm. Ends in X (QT04842ANAX) = Nexus; ends in N (QT04842ANAN/GNAN/JNAN/KNAN) = R-200B LED panel, see the tip" },
+   { "g": "", "lc": "QT048", "digits": "QT048", "desc": "48 kW, 4.2L V6 1800 rpm. Ends in X (QT04842ANAX) = Nexus; ends in N (QT04842ANAN/GNAN/JNAN/KNAN) = R-200B LED panel - it has its own card (Protector QT048 R-200B)" },
    { "g": "", "lc": "QT060", "digits": "QT060", "desc": "60 kW, 2.4L, Nexus" },
    { "g": "", "lc": "QT070", "digits": "QT070", "desc": "70 kW, 6.8L, Nexus (e.g. QT07068ANAX)" },
    { "g": "", "lc": "QT100", "digits": "QT100", "desc": "100 kW, 6.8L, Nexus (QT10068)" },
@@ -26762,7 +27358,7 @@ const GENERATORS = [
    "3-phase: Y (wye) for the G/K/L voltage codes, Delta for the J code."
   ],
   "tips": [
-   "QT048 ending in N (QT04842ANAN, GNAN, JNAN, KNAN) is NOT Nexus: it has the R-200B panel (LEDs, no screen) and the 4.2L V6. Write down which LEDs are lit before switching to OFF, and read them with the R-200B LED list on the Protector legacy liquid-cooled card. Its weekly exercise runs at 1400 rpm (low-speed mode), and oil pressure, high coolant temp and low coolant level are only checked after a 10 second hold-off - so a shutdown about 10 s after start points at those three first (R-200B technical manual 0G9375 p.7-8). Owner's manual 0H0996 and the 0G9256 wiring / 0G9257 schematic are in Manuals below.",
+   "QT048 ending in N (QT04842ANAN, GNAN, JNAN, KNAN) is NOT Nexus: it has the R-200B panel (LEDs, no screen) and the 4.2L V6 - open the Protector QT048 R-200B card for its LED codes, tests and manuals. Write down which LEDs are lit before switching to OFF. Its weekly exercise runs at 1400 rpm (low-speed mode), and oil pressure, high coolant temp and low coolant level are only checked after a 10 second hold-off - so a shutdown about 10 s after start points at those three first (R-200B technical manual 0G9375 p.7-8). Owner's manual 0H0996 and the 0G9256 wiring / 0G9257 schematic are in Manuals below.",
    "Identify the controller first (Nexus 2-line LCD vs H-100 dual LCD) - it decides which fault table and manual to use.",
    "The QT 60 kW owner's manual (Manuals below) carries the Nexus alarm list, fuel system, and wiring diagrams."
   ],
@@ -27128,6 +27724,48 @@ const GEN_STARTUP = {
 // v287 (2026-10-12): "battery keeps dying" (per controller platform) and "LP vapor withdrawal -
 // won't reach speed / backfires / bogs" (per card, with that card's own fuel figures), from the
 // Generac manuals and Fable-verified (scratch\heating-content). Merged into each card on load.
+// v371: QT048 4.2L R-200B startup (0G9375, SIB10-03-CALL).
+GEN_STARTUP.protector_qt048_r200b = {
+ "warn": "R-200B LED panel - no screen, no activation code. Set the DIP switches on the board BEFORE first start; wrong settings make it run rough, not start or lack power.",
+ "groups": [
+  {
+   "group": "Before you start",
+   "steps": [
+    "Generator OFF, main breaker OFF, 15 A fuse F1 out while wiring.",
+    "Oil to FULL (5.0 qt), coolant 50/50 checked cold, battery Group 24F charged.",
+    "Gas purged and leak tested; 5-14 in. w.c. at the regulator inlet."
+   ]
+  },
+  {
+   "group": "Set the DIP switches (board 0G8455)",
+   "steps": [
+    "1 OFF (60 Hz) - 2 OFF for an RTS/HTS switch, ON for a W-type 2-wire start - 3 OFF low-speed exercise (1400 rpm) or ON normal - 4 ON NG / OFF LP - 6 OFF - 7 ON (4.2L).",
+    "Load them: switch OFF, then hold Set Exercise for 5 s (SIB10-03-CALL)."
+   ]
+  },
+  {
+   "group": "Wiring",
+   "steps": [
+    "N1/N2: fused 240/208 VAC utility sense from the transfer switch. 23 and 194 to the transfer relay. 178/183 only for a 2-wire start switch - no voltage on them.",
+    "120 VAC to TB-BC for the battery charger."
+   ]
+  },
+  {
+   "group": "Verify",
+   "steps": [
+    "MANUAL: starts, runs, governor steady. Back to AUTO: green System Ready solid.",
+    "Kill utility: green flashes, 15 s later it starts, 10 s warm-up, then transfers. Restore utility: retransfer after 15 s above 80%, 1-minute cool-down, stop (0G9375 p.3-5)."
+   ]
+  },
+  {
+   "group": "Set the exercise",
+   "steps": [
+    "AUTO, hold Set Exercise 5 s - all 5 red LEDs flash 10 s, it runs 12 minutes and repeats every 7 days at that time (0G9375 p.5)."
+   ]
+  }
+ ]
+};
+
 const GEN_TS_ADDITIONS = [
  {
   "familyIds": [
