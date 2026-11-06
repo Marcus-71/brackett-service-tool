@@ -6909,267 +6909,6 @@ const DAIKIN_SENSOR_MAPS = [
   ]
  },
  {
-  "id": "daikin-dz17vsa-outdoor",
-  "title": "Daikin DZ17VSA heat pump outdoor (all sizes)",
-  "side": "outdoor",
-  "brand": "Daikin",
-  "models": "DZ17VSA181/241/301/361/421/481/601 (R-410A). Not covered by the Fit service manuals SiUS612209 / SiUS612412.",
-  "match": [
-   "DZ17VSA"
-  ],
-  "sizes": [
-   "all"
-  ],
-  "board": "A1P main PCB (+ A2P service PCB on 1.5-3 ton)",
-  "sensors": [
-   {
-    "plug": "X11A",
-    "code": "R1T",
-    "name": "Outdoor air (ambient) thermistor Ta",
-    "location": "Outdoor air (ambient), on the outdoor unit",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E25"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R2T",
-    "name": "Discharge pipe thermistor Td",
-    "location": "Compressor discharge pipe",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E23",
-     "E22"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R3T",
-    "name": "Liquid pipe thermistor Tl",
-    "location": "Outdoor liquid pipe",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E29"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R4T",
-    "name": "Defrost thermistor Tb (HP only)",
-    "location": "Outdoor coil defrost (Tb) - bottom flowrator leg at outdoor coil outlet",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E27"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R5T",
-    "name": "Outdoor coil (coil circuit) thermistor Tm",
-    "location": "Outdoor coil (Tm) - clamped to a return bend entering the outdoor coil",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E28"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X13A",
-    "code": "R6T",
-    "name": "Suction pipe thermistor Ts",
-    "location": "Suction pipe, under an insulation tube (tube slit faces away from the thermistor)",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E56"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X17A",
-    "code": "S1NPL",
-    "name": "Low pressure sensor (S1NPL)",
-    "location": "Outdoor unit refrigerant line",
-    "kind": "pressure",
-    "spec": "No pressure-sensor voltage spec or graph in this install manual.",
-    "errorCodes": [
-     "E26"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X32A",
-    "code": "S1PH",
-    "name": "High pressure switch",
-    "location": "Discharge line",
-    "kind": "other",
-    "errorCodes": [
-     "E24"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   },
-   {
-    "plug": "X33A",
-    "code": "Q1E",
-    "name": "Compressor overload protector (OL)",
-    "location": "On the compressor body",
-    "kind": "other",
-    "errorCodes": [
-     "E58"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A); 'OL sensor (X33A)' p.34"
-   },
-   {
-    "plug": "X21A",
-    "code": "Y1E",
-    "name": "Outdoor EEV coil",
-    "location": "Outdoor electronic expansion valve",
-    "kind": "eev",
-    "test": "No EEV coil ohm figure in this manual.",
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.26 (1.5-3.0 ton 3D130679A) and p.27 (3.5-5.0 ton 3D130714A)"
-   }
-  ],
-  "test": "Unplug the thermistor and read ohms across its two wires; this install manual has no resistance chart (it says refer to the service manual). Pressure sensor: no voltage spec in this manual.",
-  "notes": "Both size groups use the same plug map: X11A R1T outdoor air; X12A R2T discharge, R3T liquid, R4T defrost, R5T coil; X13A R6T suction; X17A low pressure sensor; X21A EEV. The diagram pages are labelled only by tonnage; p.26/p.27 are the heat-pump drawings (they show reversing valve Y1S, defrost R4T and EEV Y1E), p.28/p.29 the AC drawings.",
-  "gaps": [
-   "No thermistor resistance chart in this manual and the Fit service manuals do not list DZ17VSA - chart left blank",
-   "No EEV coil ohm figure (Y1E on X21A)",
-   "No pressure sensor voltage spec/graph (S1NPL on X17A)",
-   "Pins not printed"
-  ],
-  "sources": [
-   {
-    "file": "daikin-dz17vsa-dx17vss-install.pdf",
-    "pages": "26, 27, 32-37",
-    "what": "wiring diagrams, error codes"
-   }
-  ]
- },
- {
-  "id": "daikin-dx17vss-outdoor",
-  "title": "Daikin DX17VSS air conditioner outdoor (all sizes)",
-  "side": "outdoor",
-  "brand": "Daikin",
-  "models": "DX17VSS181/241/301/361/421/481/601 (R-410A). Not covered by the Fit service manuals.",
-  "match": [
-   "DX17VSS"
-  ],
-  "sizes": [
-   "all"
-  ],
-  "board": "A1P main PCB (+ A2P service PCB on 1.5-3 ton)",
-  "sensors": [
-   {
-    "plug": "X11A",
-    "code": "R1T",
-    "name": "Outdoor air (ambient) thermistor Ta",
-    "location": "Outdoor air (ambient), on the outdoor unit",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E25"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R2T",
-    "name": "Discharge pipe thermistor Td",
-    "location": "Compressor discharge pipe",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E23",
-     "E22"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R3T",
-    "name": "Liquid pipe thermistor Tl",
-    "location": "Outdoor liquid pipe",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E29"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X12A",
-    "code": "R5T",
-    "name": "Outdoor coil (coil circuit) thermistor Tm",
-    "location": "Outdoor coil (Tm) - clamped to a return bend entering the outdoor coil",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E28"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X13A",
-    "code": "R6T",
-    "name": "Suction pipe thermistor Ts",
-    "location": "Suction pipe, under an insulation tube (tube slit faces away from the thermistor)",
-    "kind": "thermistor",
-    "errorCodes": [
-     "E56"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X17A",
-    "code": "S1NPL",
-    "name": "Low pressure sensor (S1NPL)",
-    "location": "Outdoor unit refrigerant line",
-    "kind": "pressure",
-    "spec": "No pressure-sensor voltage spec or graph in this install manual.",
-    "errorCodes": [
-     "E26"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X32A",
-    "code": "S1PH",
-    "name": "High pressure switch",
-    "location": "Discharge line",
-    "kind": "other",
-    "errorCodes": [
-     "E24"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   },
-   {
-    "plug": "X33A",
-    "code": "Q1E",
-    "name": "Compressor overload protector (OL)",
-    "location": "On the compressor body",
-    "kind": "other",
-    "errorCodes": [
-     "E58"
-    ],
-    "source": "daikin-dz17vsa-dx17vss-install.pdf p.28 (1.5-3.0 ton 3D130720A) and p.29 (3.5-5.0 ton 3D130721A)"
-   }
-  ],
-  "test": "Unplug the thermistor and read ohms across its two wires; this install manual has no resistance chart (it says refer to the service manual). Pressure sensor: no voltage spec in this manual.",
-  "notes": "X11A R1T outdoor air; X12A R2T discharge, R3T liquid, (empty pair), R5T coil; X13A R6T suction; X17A low pressure sensor. AC: no EEV and no defrost thermistor on these diagrams.",
-  "gaps": [
-   "No thermistor resistance chart in this manual - chart left blank",
-   "No pressure sensor voltage spec/graph",
-   "Pins not printed"
-  ],
-  "sources": [
-   {
-    "file": "daikin-dz17vsa-dx17vss-install.pdf",
-    "pages": "28, 29, 32-37",
-    "what": "wiring diagrams, error codes"
-   }
-  ]
- },
- {
   "id": "daikin-fit-r410a-eev-indoor",
   "title": "Daikin Fit R-410A EEV air handler / cased coil control board",
   "side": "indoor",
@@ -7587,39 +7326,6 @@ const DAIKIN_SENSOR_MAPS = [
     "what": "DZ18TC wiring diagram"
    }
   ]
- },
- {
-  "id": "daikin-dz16tc-outdoor",
-  "title": "DZ16TC ComfortNet two-stage heat pump - UC control",
-  "side": "outdoor",
-  "brand": "Daikin",
-  "models": "DZ16TC (RSD6200007r22) - no DZ16TC wiring diagram is printed in the manual",
-  "match": [
-   "DZ16TC"
-  ],
-  "sizes": [
-   "024",
-   "036",
-   "048",
-   "060"
-  ],
-  "board": "Communicating Unitary (UC) control PCB",
-  "test": "Power off. Unplug the sensor from the UC control. Ohm the sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual temperature. Replace if open, shorted or out of range.",
-  "notes": "Manual states DZ16TC has OAT + OCT sensors on the UC control, same chart. On the DX16TC/DX18TC/DZ18TC diagrams OAT is plug E1 and OCT plug E7, and the Goodman A/GSZC16 diagram (same drawing 0140R00621-A as DX16TC) also shows E1/E7 - but no DZ16TC diagram is printed, so read the unit's own diagram. No EEV on this unit/board in the manual (no EEV coil ohm figure); no pressure transducers - HPS/LPS are on/off switches, not transducers.",
-  "gaps": [
-   "DZ16TC OAT plug not shown (no DZ16TC wiring diagram in RSD6200007)",
-   "DZ16TC OCT plug not shown (no DZ16TC wiring diagram in RSD6200007)",
-   "Outdoor air temperature sensor (OAT (OAS)): plug not stated in the manual",
-   "Outdoor coil temperature sensor (defrost) (OCT (OCS)): plug not stated in the manual"
-  ],
-  "sources": [
-   {
-    "file": "daikin-dx16tc-dz18tc-service.pdf",
-    "pages": "83, 29, 55",
-    "what": "sensor text, chart, faults"
-   }
-  ],
-  "sensors": []
  },
  {
   "id": "daikin-dx7tc-outdoor",
@@ -16425,6 +16131,1089 @@ const DAIKIN_SENSOR_MAPS = [
     "file": "daikin-4mxl-5mxs-t-multizone-service.pdf",
     "pages": "242 (printed 236)",
     "what": "Check No.12 EEV check"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dz17vsa-outdoor",
+  "title": "DZ17VSA ***B* inverter heat pump outdoor (B revision)",
+  "side": "outdoor",
+  "brand": "Daikin",
+  "models": "DZ17VSA181B*, 241B*, 301B*, 361B* (diagram 3D130679-1A) and 421B*, 481B*, 601B* (3D130714-1A) - SiUS612102E",
+  "match": [
+   "DZ17VSA181B",
+   "DZ17VSA241B",
+   "DZ17VSA301B",
+   "DZ17VSA361B",
+   "DZ17VSA421B",
+   "DZ17VSA481B",
+   "DZ17VSA601B"
+  ],
+  "sizes": [
+   "018",
+   "024",
+   "030",
+   "036",
+   "042",
+   "048",
+   "060"
+  ],
+  "board": "A1P main PCB (+ A2P service PCB with 7-segment display on 1.5-3.0 ton; 3.5-5.0 ton has the display on A1P)",
+  "sensors": [
+   {
+    "plug": "X11A",
+    "code": "R1T (Ta)",
+    "name": "Outdoor air (ambient) thermistor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-ta",
+    "errorCodes": [
+     "E25"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R2T (Td)",
+    "name": "Discharge pipe thermistor",
+    "location": "Compressor discharge pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-td",
+    "errorCodes": [
+     "E23",
+     "E22"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R3T (Tl)",
+    "name": "Outdoor liquid pipe thermistor",
+    "location": "Outdoor liquid pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E29"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R4T (Tb)",
+    "name": "Outdoor coil defrost thermistor (HP only)",
+    "location": "Bottom flowrator leg at the outdoor coil outlet",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E27"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes) + defrost cycle text"
+   },
+   {
+    "plug": "X12A",
+    "code": "R5T (Tm)",
+    "name": "Outdoor coil (coil circuit / heat exchanger middle) thermistor",
+    "location": "Clamped to a return bend entering the outdoor coil",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E28"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes) + defrost cycle text"
+   },
+   {
+    "plug": "X13A",
+    "code": "R6T (Ts)",
+    "name": "Suction pipe thermistor",
+    "location": "Outdoor suction pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E56"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X17A",
+    "code": "S1NPL",
+    "name": "Pressure sensor (labelled LOW on the diagram)",
+    "location": "Outdoor unit refrigerant piping",
+    "kind": "pressure",
+    "chart": "daikin-inv-hlpt-graph",
+    "spec": "S-13: 'Connect a voltmeter across the sensor terminals between black and white wirings' (power ON); replace if open, shorted or outside the valid voltage range. Graph: 0.5 VDC = 0 PSIG, 4.0 VDC = 700 PSIG (200 PSIG per volt). Supply voltage not stated.",
+    "errorCodes": [
+     "E26"
+    ],
+    "test": "Power ON. DC volts between the black and white wires at the X17A plug (back-probe). Compare with the chart at the pressure on your gauge.",
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes) + S-13 graph (daikin-dx17vss-dz17vsa-service.pdf p.21 / daikin-dx17vss-dz17vsa-b-service.pdf p.18)"
+   },
+   {
+    "plug": "X32A",
+    "code": "S1PH",
+    "name": "High pressure switch (manual reset - turn main power off to reset)",
+    "location": "Compressor discharge line",
+    "kind": "other",
+    "spec": "Switch, not a sensor: ohm across its terminals with the wire removed - not continuous = contacts open.",
+    "errorCodes": [
+     "E24"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X33A",
+    "code": "Q1E",
+    "name": "Compressor overload protector (OL)",
+    "location": "On the compressor body",
+    "kind": "other",
+    "spec": "Switch, not a sensor: E58 = OL open - check OL resistance (continuity) and its position on the compressor body.",
+    "errorCodes": [
+     "E58"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X21A",
+    "pins": "1-6, 2-6, 3-6, 4-6",
+    "code": "Y1E",
+    "name": "Outdoor EEV coil (electronic expansion valve)",
+    "location": "Outdoor electronic expansion valve",
+    "kind": "eev",
+    "spec": "S-26 'Testing EEV Coil Resistance': unplug the EEV cable from the control board and read pins 1-6, 2-6, 3-6, 4-6: 40~50 Ohm. Outdoor HP 1.5-3.0 ton: (White)1 (Yellow)2 (Orange)3 (Blue)4, 5 empty, COM[+] (Red)6. Outdoor HP 3.5-5.0 ton: (Orange)1 (Red)2 (Yellow)3 (Black)4, 5 empty, COM[+] (Gray)6.",
+    "errorCodes": [
+     "E20"
+    ],
+    "test": "Power off, unplug X21A, read each of pins 1-4 to pin 6 (COM): 40-50 Ohm each. Open or way off = bad coil or harness.",
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes) + daikin-dx17vss-dz17vsa-b-service.pdf p.25 (S-26)"
+   },
+   {
+    "plug": "X28A",
+    "code": "Y2S",
+    "name": "Outdoor solenoid valve coil",
+    "location": "Outdoor unit refrigerant piping (solenoid valve, next to the four-way valve coil)",
+    "kind": "other",
+    "spec": "'Read resistance between the connector pins ... the resistance falls in the range of 1,480 to 1,820 Ohm.'",
+    "test": "Power off, unplug X28A, ohm the two pins: 1,480-1,820 Ohm.",
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.64 (HP 1.5-3.0 ton, 3D130679-1A) / p.65 (HP 3.5-5.0 ton, 3D130714-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.25 (S-26 'Testing Solenoid Valve Coil Resistance')"
+   }
+  ],
+  "test": "Power off. Unplug the thermistor's plug (X11A / X12A / X13A) and ohm the two leads of that thermistor; compare with the chart at the measured pipe or air temperature. Replace if open, shorted or out of range. Pressure sensor: power ON, DC volts black-to-white, compare with the chart. EEV: unplug X21A, pins 1-4 to pin 6 = 40-50 Ohm. Solenoid valve Y2S: unplug X28A, 1,480-1,820 Ohm.",
+  "notes": "B revision = the letter after the voltage digit in the model (DZ17VSA361BA). Same plug map on all sizes: X11A R1T air; X12A R2T discharge, R3T liquid, R4T defrost, R5T coil; X13A R6T suction; X17A pressure sensor (S1NPL); X21A EEV; X32A HPS; X33A OL; X25A reversing valve Y1S; X28A solenoid valve Y2S (new on the B revision). EEV wire colours differ by size (see EEV spec). Thermistor plugs share connectors - X12A carries four thermistors, so ohm the correct pair. Defrost: Tm and Tb are read every 5 s in heat; defrost ends when coil is about 54F and Tb meets its criteria.",
+  "gaps": [
+   "Pin numbers inside X11A/X12A/X13A/X17A are not printed",
+   "Pressure sensor supply voltage not stated (only black-white output volts)"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "64, 65",
+    "what": "HP wiring diagrams"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "18",
+    "what": "S-13 pressure sensor graph"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "24-25",
+    "what": "S-26 thermistor / EEV / solenoid coil checks"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "59",
+    "what": "thermistor chart"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "8, 54-57",
+    "what": "defrost operation, error codes"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "4",
+    "what": "nomenclature (revision letter)"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dz17vsa-a-outdoor",
+  "title": "DZ17VSA ***A* inverter heat pump outdoor (A revision)",
+  "side": "outdoor",
+  "brand": "Daikin",
+  "models": "DZ17VSA181A*, 241A*, 301A*, 361A* (diagram 3D122352-1A) and 421A*, 481A*, 601A* (3D122353-1A) - SiUS611804EC",
+  "match": [
+   "DZ17VSA181A",
+   "DZ17VSA241A",
+   "DZ17VSA301A",
+   "DZ17VSA361A",
+   "DZ17VSA421A",
+   "DZ17VSA481A",
+   "DZ17VSA601A"
+  ],
+  "sizes": [
+   "018",
+   "024",
+   "030",
+   "036",
+   "042",
+   "048",
+   "060"
+  ],
+  "board": "A1P main PCB (+ A2P service PCB with 7-segment display on 1.5-3.0 ton; 3.5-5.0 ton has the display on A1P)",
+  "sensors": [
+   {
+    "plug": "X11A",
+    "code": "R1T (Ta)",
+    "name": "Outdoor air (ambient) thermistor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-ta",
+    "errorCodes": [
+     "E25"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R2T (Td)",
+    "name": "Discharge pipe thermistor",
+    "location": "Compressor discharge pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-td",
+    "errorCodes": [
+     "E23",
+     "E22"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R3T (Tl)",
+    "name": "Outdoor liquid pipe thermistor",
+    "location": "Outdoor liquid pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E29"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R4T (Tb)",
+    "name": "Outdoor coil defrost thermistor (HP only)",
+    "location": "Bottom flowrator leg at the outdoor coil outlet",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E27"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes) + defrost cycle text"
+   },
+   {
+    "plug": "X12A",
+    "code": "R5T (Tm)",
+    "name": "Outdoor coil (coil circuit / heat exchanger middle) thermistor",
+    "location": "Clamped to a return bend entering the outdoor coil",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E28"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes) + defrost cycle text"
+   },
+   {
+    "plug": "X13A",
+    "code": "R6T (Ts)",
+    "name": "Suction pipe thermistor",
+    "location": "Outdoor suction pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E56"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X17A",
+    "code": "S1NPH/L",
+    "name": "Pressure sensor (high/low) - reads low pressure in cooling, high pressure in heating",
+    "location": "Outdoor unit refrigerant piping",
+    "kind": "pressure",
+    "chart": "daikin-inv-hlpt-graph",
+    "spec": "S-13: 'Connect a voltmeter across the sensor terminals between black and white wirings' (power ON); replace if open, shorted or outside the valid voltage range. Graph: 0.5 VDC = 0 PSIG, 4.0 VDC = 700 PSIG (200 PSIG per volt). Supply voltage not stated.",
+    "errorCodes": [
+     "E26"
+    ],
+    "test": "Power ON. DC volts between the black and white wires at the X17A plug (back-probe). Compare with the chart at the pressure on your gauge.",
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes) + daikin-dx17vss-dz17vsa-service.pdf p.21 (S-13)"
+   },
+   {
+    "plug": "X32A",
+    "code": "S1PH",
+    "name": "High pressure switch (manual reset - turn main power off to reset)",
+    "location": "Compressor discharge line",
+    "kind": "other",
+    "spec": "Switch, not a sensor: ohm across its terminals with the wire removed - not continuous = contacts open.",
+    "errorCodes": [
+     "E24"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X33A",
+    "code": "Q1E",
+    "name": "Compressor overload protector (OL)",
+    "location": "On the compressor body",
+    "kind": "other",
+    "spec": "Switch, not a sensor: E58 = OL open - check OL resistance (continuity) and its position on the compressor body.",
+    "errorCodes": [
+     "E58"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X21A",
+    "pins": "1-6, 2-6, 3-6, 4-6",
+    "code": "Y1E",
+    "name": "Outdoor EEV coil (electronic expansion valve)",
+    "location": "Outdoor electronic expansion valve",
+    "kind": "eev",
+    "spec": "S-26 'Testing EEV Coil Resistance': unplug the EEV cable from the control board and read pins 1-6, 2-6, 3-6, 4-6: 40~50 Ohm. Outdoor HP 1.5-3.0 ton: (White)1 (Yellow)2 (Orange)3 (Blue)4, 5 empty, COM[+] (Red)6. Outdoor HP 3.5-5.0 ton: (Orange)1 (Red)2 (Yellow)3 (Black)4, 5 empty, COM[+] (Gray)6.",
+    "errorCodes": [
+     "E20"
+    ],
+    "test": "Power off, unplug X21A, read each of pins 1-4 to pin 6 (COM): 40-50 Ohm each. Open or way off = bad coil or harness.",
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (HP 1.5-3.0 ton, 3D122352-1A) / p.79 (HP 3.5-5.0 ton, 3D122353-1A) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes) + daikin-dx17vss-dz17vsa-service.pdf p.28 (S-26)"
+   }
+  ],
+  "test": "Power off. Unplug the thermistor's plug (X11A / X12A / X13A) and ohm the two leads of that thermistor; compare with the chart at the measured pipe or air temperature. Replace if open, shorted or out of range. Pressure sensor: power ON, DC volts black-to-white, compare with the chart. EEV: unplug X21A, pins 1-4 to pin 6 = 40-50 Ohm.",
+  "notes": "A revision = the letter after the voltage digit in the model (DZ17VSA361AA). Same plug map on all sizes: X11A R1T air; X12A R2T discharge, R3T liquid, R4T defrost, R5T coil; X13A R6T suction; X17A pressure sensor S1NPH/L (one sensor: low pressure in cooling, high pressure in heating); X21A EEV; X32A HPS; X33A OL; X25A reversing valve Y1S; X28A/X29A = optional crankcase / drain pan heater connectors (no solenoid valve on the A revision). EEV wire colours differ by size (see EEV spec). X12A carries four thermistors - ohm the correct pair. Defrost ends when coil is about 54F and Tb meets its criteria.",
+  "gaps": [
+   "Pin numbers inside X11A/X12A/X13A/X17A are not printed",
+   "Pressure sensor supply voltage not stated (only black-white output volts)"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "78, 79",
+    "what": "HP wiring diagrams"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "21",
+    "what": "S-13 pressure sensor graph"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "28",
+    "what": "S-26 thermistor / EEV coil check"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "73",
+    "what": "thermistor chart"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "9, 68-71",
+    "what": "defrost operation, error codes"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "4",
+    "what": "nomenclature"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dx17vss-outdoor",
+  "title": "DX17VSS ***B* inverter air conditioner outdoor (B revision)",
+  "side": "outdoor",
+  "brand": "Daikin",
+  "models": "DX17VSS181B*, 241B*, 301B*, 361B* (diagram 3D130720-1A) and 421B*, 481B*, 601B* (3D130721-1A) - SiUS612102E",
+  "match": [
+   "DX17VSS181B",
+   "DX17VSS241B",
+   "DX17VSS301B",
+   "DX17VSS361B",
+   "DX17VSS421B",
+   "DX17VSS481B",
+   "DX17VSS601B"
+  ],
+  "sizes": [
+   "018",
+   "024",
+   "030",
+   "036",
+   "042",
+   "048",
+   "060"
+  ],
+  "board": "A1P main PCB (+ A2P service PCB with 7-segment display on 1.5-3.0 ton)",
+  "sensors": [
+   {
+    "plug": "X11A",
+    "code": "R1T (Ta)",
+    "name": "Outdoor air (ambient) thermistor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-ta",
+    "errorCodes": [
+     "E25"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R2T (Td)",
+    "name": "Discharge pipe thermistor",
+    "location": "Compressor discharge pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-td",
+    "errorCodes": [
+     "E23",
+     "E22"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R3T (Tl)",
+    "name": "Outdoor liquid pipe thermistor",
+    "location": "Outdoor liquid pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E29"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R5T (Tm)",
+    "name": "Outdoor coil (coil circuit / heat exchanger middle) thermistor",
+    "location": "Clamped to a return bend entering the outdoor coil",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E28"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes) + defrost cycle text"
+   },
+   {
+    "plug": "X13A",
+    "code": "R6T (Ts)",
+    "name": "Suction pipe thermistor",
+    "location": "Outdoor suction pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E56"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X17A",
+    "code": "S1NPL",
+    "name": "Pressure sensor (labelled LOW on the diagram)",
+    "location": "Outdoor unit refrigerant piping",
+    "kind": "pressure",
+    "chart": "daikin-inv-hlpt-graph",
+    "spec": "S-13: 'Connect a voltmeter across the sensor terminals between black and white wirings' (power ON); replace if open, shorted or outside the valid voltage range. Graph: 0.5 VDC = 0 PSIG, 4.0 VDC = 700 PSIG (200 PSIG per volt). Supply voltage not stated.",
+    "errorCodes": [
+     "E26"
+    ],
+    "test": "Power ON. DC volts between the black and white wires at the X17A plug (back-probe). Compare with the chart at the pressure on your gauge.",
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes) + S-13 graph (daikin-dx17vss-dz17vsa-service.pdf p.21 / daikin-dx17vss-dz17vsa-b-service.pdf p.18)"
+   },
+   {
+    "plug": "X32A",
+    "code": "S1PH",
+    "name": "High pressure switch (manual reset - turn main power off to reset)",
+    "location": "Compressor discharge line",
+    "kind": "other",
+    "spec": "Switch, not a sensor: ohm across its terminals with the wire removed - not continuous = contacts open.",
+    "errorCodes": [
+     "E24"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   },
+   {
+    "plug": "X33A",
+    "code": "Q1E",
+    "name": "Compressor overload protector (OL)",
+    "location": "On the compressor body",
+    "kind": "other",
+    "spec": "Switch, not a sensor: E58 = OL open - check OL resistance (continuity) and its position on the compressor body.",
+    "errorCodes": [
+     "E58"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-b-service.pdf p.62 (AC 1.5-3.0 ton, 3D130720-1A) / p.63 (AC 3.5-5.0 ton, 3D130721-1A) + daikin-dx17vss-dz17vsa-b-service.pdf p.54-57 (error codes)"
+   }
+  ],
+  "test": "Power off. Unplug the thermistor's plug (X11A / X12A / X13A) and ohm the two leads of that thermistor; compare with the chart at the measured pipe or air temperature. Replace if open, shorted or out of range. Pressure sensor: power ON, DC volts black-to-white, compare with the chart.",
+  "notes": "AC: X11A R1T air; X12A R2T discharge, R3T liquid, (empty pair), R5T coil; X13A R6T suction; X17A low pressure sensor S1NPL; X32A HPS; X33A compressor OL Q1E (B revision). No outdoor EEV and no defrost thermistor on the AC - the EEV is in the indoor coil / air handler. No solenoid valve on the AC diagrams.",
+  "gaps": [
+   "Pin numbers inside X11A/X12A/X13A/X17A are not printed",
+   "Pressure sensor supply voltage not stated (only black-white output volts)"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "62, 63",
+    "what": "AC wiring diagrams"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "18",
+    "what": "S-13 pressure graph"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "24-25",
+    "what": "S-26 thermistor check"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "59",
+    "what": "thermistor chart"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "54-57",
+    "what": "error codes"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dx17vss-a-outdoor",
+  "title": "DX17VSS ***A* inverter air conditioner outdoor (A revision)",
+  "side": "outdoor",
+  "brand": "Daikin",
+  "models": "DX17VSS181A*, 241A*, 301A*, 361A* (diagram 3D111899-1F) and 421A*, 481A*, 601A* (3D115775-1) - SiUS611804EC",
+  "match": [
+   "DX17VSS181A",
+   "DX17VSS241A",
+   "DX17VSS301A",
+   "DX17VSS361A",
+   "DX17VSS421A",
+   "DX17VSS481A",
+   "DX17VSS601A"
+  ],
+  "sizes": [
+   "018",
+   "024",
+   "030",
+   "036",
+   "042",
+   "048",
+   "060"
+  ],
+  "board": "A1P main PCB (+ A2P service PCB with 7-segment display on 1.5-3.0 ton)",
+  "sensors": [
+   {
+    "plug": "X11A",
+    "code": "R1T (Ta)",
+    "name": "Outdoor air (ambient) thermistor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-ta",
+    "errorCodes": [
+     "E25"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R2T (Td)",
+    "name": "Discharge pipe thermistor",
+    "location": "Compressor discharge pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-td",
+    "errorCodes": [
+     "E23",
+     "E22"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R3T (Tl)",
+    "name": "Outdoor liquid pipe thermistor",
+    "location": "Outdoor liquid pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E29"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X12A",
+    "code": "R5T (Tm)",
+    "name": "Outdoor coil (coil circuit / heat exchanger middle) thermistor",
+    "location": "Clamped to a return bend entering the outdoor coil",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E28"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes) + defrost cycle text"
+   },
+   {
+    "plug": "X13A",
+    "code": "R6T (Ts)",
+    "name": "Suction pipe thermistor",
+    "location": "Outdoor suction pipe",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E56"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   },
+   {
+    "plug": "X17A",
+    "code": "S1NPL",
+    "name": "Pressure sensor (labelled LOW on the diagram)",
+    "location": "Outdoor unit refrigerant piping",
+    "kind": "pressure",
+    "chart": "daikin-inv-hlpt-graph",
+    "spec": "S-13: 'Connect a voltmeter across the sensor terminals between black and white wirings' (power ON); replace if open, shorted or outside the valid voltage range. Graph: 0.5 VDC = 0 PSIG, 4.0 VDC = 700 PSIG (200 PSIG per volt). Supply voltage not stated.",
+    "errorCodes": [
+     "E26"
+    ],
+    "test": "Power ON. DC volts between the black and white wires at the X17A plug (back-probe). Compare with the chart at the pressure on your gauge.",
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes) + S-13 graph (daikin-dx17vss-dz17vsa-service.pdf p.21 / daikin-dx17vss-dz17vsa-b-service.pdf p.18)"
+   },
+   {
+    "plug": "X32A",
+    "code": "S1PH",
+    "name": "High pressure switch (manual reset - turn main power off to reset)",
+    "location": "Compressor discharge line",
+    "kind": "other",
+    "spec": "Switch, not a sensor: ohm across its terminals with the wire removed - not continuous = contacts open.",
+    "errorCodes": [
+     "E24"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (AC 1.5-3.0 ton, 3D111899-1F) / p.77 (AC 3.5-5.0 ton, 3D115775-1) + daikin-dx17vss-dz17vsa-service.pdf p.68-71 (error codes)"
+   }
+  ],
+  "test": "Power off. Unplug the thermistor's plug (X11A / X12A / X13A) and ohm the two leads of that thermistor; compare with the chart at the measured pipe or air temperature. Replace if open, shorted or out of range. Pressure sensor: power ON, DC volts black-to-white, compare with the chart.",
+  "notes": "AC: X11A R1T air; X12A R2T discharge, R3T liquid, (empty pair), R5T coil; X13A R6T suction; X17A low pressure sensor S1NPL; X32A HPS. X33A has only a JUMPER on the A-revision AC diagrams (no OL wired) - E58 on an AC means check that the X33A jumper is in place. X28A = optional crankcase heater connector. No outdoor EEV and no defrost thermistor on the AC.",
+  "gaps": [
+   "Pin numbers inside X11A/X12A/X13A/X17A are not printed",
+   "Pressure sensor supply voltage not stated (only black-white output volts)"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "76, 77",
+    "what": "AC wiring diagrams"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "21",
+    "what": "S-13 pressure graph"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "28",
+    "what": "S-26 thermistor check"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "73",
+    "what": "thermistor chart"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "68-71",
+    "what": "error codes (E58 'check jumper wire position (X33A)')"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dvfec-indoor",
+  "title": "DV**FEC communicating EEV air handler - indoor unit control board",
+  "side": "indoor",
+  "brand": "Daikin",
+  "models": "DV24FECB14, DV36FECC14, DV42FECC14, DV48FECD14, DV60FECD14 (R-410A, for DX17VSS / DZ17VSA) - SiUS611804EC / SiUS612102E",
+  "match": [
+   "DV24FEC",
+   "DV36FEC",
+   "DV42FEC",
+   "DV48FEC",
+   "DV60FEC"
+  ],
+  "sizes": [
+   "024",
+   "036",
+   "042",
+   "048",
+   "060"
+  ],
+  "board": "Indoor unit control board (one DV*FEC diagram for all sizes)",
+  "sensors": [
+   {
+    "plug": "X5A",
+    "code": "Tli",
+    "name": "Indoor liquid thermistor (heat exchanger)",
+    "location": "Indoor coil, liquid side",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E_73",
+     "73"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.80 (DV*FEC diagram), p.45 (board layout), p.53 (E_73 'liquid thermistor (X5A)'); daikin-dx17vss-dz17vsa-b-service.pdf p.66, p.40"
+   },
+   {
+    "plug": "X5A",
+    "code": "Tgi",
+    "name": "Indoor gas thermistor (heat exchanger)",
+    "location": "Indoor coil, gas (suction) side",
+    "kind": "thermistor",
+    "chart": "daikin-inv-thermistor-std",
+    "errorCodes": [
+     "E_74",
+     "74"
+    ],
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.80, p.45, p.53 (E_74 'gas thermistor (X5A)'); daikin-dx17vss-dz17vsa-b-service.pdf p.66, p.40"
+   },
+   {
+    "plug": "X15A",
+    "code": "PS",
+    "name": "Indoor pressure sensor",
+    "location": "Indoor coil (refrigerant line)",
+    "kind": "pressure",
+    "chart": "daikin-inv-hlpt-graph",
+    "spec": "S-13: 'Connect a voltmeter across the sensor terminals between black and white wirings' (power ON); replace if open, shorted or outside the valid voltage range. Graph: 0.5 VDC = 0 PSIG, 4.0 VDC = 700 PSIG (200 PSIG per volt). Supply voltage not stated.",
+    "errorCodes": [
+     "E_75",
+     "75"
+    ],
+    "test": "Power ON. DC volts between the black and white wires of the sensor (back-probe X15A); compare with the chart at the pressure on your gauge.",
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.80, p.45, p.53 (E_75 'pressure sensor (X15A)'), p.21 (S-13); daikin-dx17vss-dz17vsa-b-service.pdf p.66, p.40, p.18"
+   },
+   {
+    "plug": "X3A",
+    "pins": "1-6, 2-6, 3-6, 4-6",
+    "code": "EEV",
+    "name": "Indoor EEV coil",
+    "location": "Indoor electronic expansion valve",
+    "kind": "eev",
+    "spec": "S-26 'Testing EEV Coil Resistance', Indoor unit: (Orange)1 (Red)2 (Yellow)3 (Black)4, 5 empty, COM[+] (Gray)6; measuring points 1-6, 2-6, 3-6, 4-6: 40~50 Ohm.",
+    "errorCodes": [
+     "E_70",
+     "70"
+    ],
+    "test": "Power off, unplug X3A, read each of pins 1-4 to pin 6: 40-50 Ohm. Check the junction connector too (E_70 = EEV disconnection).",
+    "source": "daikin-dx17vss-dz17vsa-service.pdf p.80, p.45, p.53 (E_70), p.28 (S-26 'Indoor unit' pinout); daikin-dx17vss-dz17vsa-b-service.pdf p.66, p.25"
+   }
+  ],
+  "test": "Power off. Unplug X5A and ohm the liquid thermistor pair and the gas thermistor pair; compare with the chart at the measured pipe temperature. Pressure sensor: power ON, DC volts black-to-white. EEV: unplug X3A, pins 1-4 to pin 6 = 40-50 Ohm.",
+  "notes": "Both indoor thermistors (liquid + gas, 'heat exchanger 1,2') share plug X5A; pressure sensor X15A; EEV X3A. The CAPE(A)*/CHPE* cased coils in the same manual use the same board and plugs (diagram p.81) - already covered by the Fit R-410A indoor map. Indoor and outdoor pressure sensors use the same printed graph.",
+  "gaps": [
+   "X5A pin pairs for liquid vs gas not printed in these manuals",
+   "Pressure sensor supply voltage and pin numbers not stated (only black-white output volts)"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "80",
+    "what": "DV*FEC wiring diagram"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "45",
+    "what": "indoor board layout (X3A EEV, X15A pressure sensor, X5A thermistor)"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "52-53",
+    "what": "indoor error codes E_70, E_73, E_74, E_75"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "21, 28, 73",
+    "what": "S-13 graph, S-26 checks, chart"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-b-service.pdf",
+    "pages": "66, 40, 18, 25, 59",
+    "what": "same content in the B manual"
+   },
+   {
+    "file": "daikin-dx17vss-dz17vsa-service.pdf",
+    "pages": "6, 22",
+    "what": "DV*FEC model list"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dz16tc-outdoor",
+  "title": "DZ16TC ComfortNet two-stage heat pump - UC control",
+  "side": "outdoor",
+  "brand": "Daikin",
+  "models": "DZ16TC0241, 0361, 0481, 0601 - diagram 0140R00621-A (IOD-4009N)",
+  "match": [
+   "DZ16TC"
+  ],
+  "sizes": [
+   "024",
+   "036",
+   "048",
+   "060"
+  ],
+  "board": "UC board (communicating unitary control)",
+  "sensors": [
+   {
+    "plug": "E1",
+    "code": "OAT (OAS)",
+    "name": "Outdoor air temperature sensor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A2"
+    ],
+    "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.11 (DZ16TC diagram 0140R00621-A) + p.19 (A2)"
+   },
+   {
+    "plug": "E7",
+    "code": "OCT (OCS)",
+    "name": "Outdoor coil temperature sensor (defrost)",
+    "location": "Clamped to a feeder tube entering the outdoor coil (heat pumps only)",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A3"
+    ],
+    "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.11 (DZ16TC diagram, OCS 'HEAT PUMP ONLY') + p.19 (A3); location daikin-dx16tc-dz18tc-service.pdf p.29"
+   }
+  ],
+  "test": "Power off. Unplug the sensor from the UC control (OAT plug E1 / OCT plug E7). Ohm the two sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual air or pipe temperature. Replace the sensor if open, shorted or out of range.",
+  "notes": "OAT on E1 (2-pin), OCT on E7 (3-pin header, 2 wires). Both use the same 10 kOhm-at-77F chart. A2 = outdoor air sensor fault (thermostat shows '---'), A3 = outdoor coil sensor fault. TEST + RECALL together force a defrost. No EEV on this unit/board (no EEV coil figure); no pressure transducers - HPS/LPS are on/off switches.",
+  "gaps": [
+   "E1/E7 pins not numbered",
+   "IOD-4009N has no resistance chart - chart from the DX16TC/DZ18TC service manual RSD6200007 p.83, which names DZ16TC in its sensor test"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf",
+    "pages": "11",
+    "what": "DZ16TC wiring diagram (E1 OAT, E7 OCT)"
+   },
+   {
+    "file": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf",
+    "pages": "17, 19",
+    "what": "model list, A2/A3 faults"
+   },
+   {
+    "file": "daikin-dx16tc-dz18tc-service.pdf",
+    "pages": "83, 29",
+    "what": "S-26 sensor test + ohm chart, OCT mounting"
+   }
+  ]
+ },
+ {
+  "id": "daikin-dz7tc-outdoor",
+  "title": "DZ7TC ComfortNet two-stage heat pump - UC control",
+  "side": "outdoor",
+  "brand": "Daikin",
+  "models": "DZ7TCA2410, 3610, 4810, 6010 - diagram titled 'DZ18TC & DZ7TC' 0140R00615-C (IOD-4009N)",
+  "match": [
+   "DZ7TC"
+  ],
+  "sizes": [
+   "024",
+   "036",
+   "048",
+   "060"
+  ],
+  "board": "UC board (communicating unitary control)",
+  "sensors": [
+   {
+    "plug": "E1",
+    "code": "OAT (OAS)",
+    "name": "Outdoor air temperature sensor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A2"
+    ],
+    "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.12 (DZ18TC & DZ7TC diagram 0140R00615-C) + p.19 (A2)"
+   },
+   {
+    "plug": "E7",
+    "code": "OCT (OCS)",
+    "name": "Outdoor coil temperature sensor (defrost)",
+    "location": "Outdoor coil (defrost sensor; heat pumps only)",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A3"
+    ],
+    "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.12 (OCT 'HP ONLY') + p.19 (A3)"
+   }
+  ],
+  "test": "Power off. Unplug the sensor from the UC control (OAT plug E1 / OCT plug E7). Ohm the two sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual air or pipe temperature. Replace the sensor if open, shorted or out of range.",
+  "notes": "OAT on E1, OCT on E7. Same diagram as DZ18TC (and Goodman/Amana GLZT7C/ALZT7C use drawing 0140R00615-C too). A2 = outdoor air sensor fault, A3 = outdoor coil sensor fault. No EEV on this unit/board (no EEV coil figure); no pressure transducers - HPS/LPS are on/off switches.",
+  "gaps": [
+   "E1/E7 pins not numbered",
+   "IOD-4009N has no resistance chart - chart from RSD6200007 p.83 (same UC board sensors; identical table in the T7C service manual RS6200007r28 p.32)",
+   "OCT mounting spot not described for DZ7TC (other UC heat pumps: clamped to a feeder tube entering the outdoor coil)"
+  ],
+  "sources": [
+   {
+    "file": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf",
+    "pages": "12",
+    "what": "DZ18TC & DZ7TC wiring diagram"
+   },
+   {
+    "file": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf",
+    "pages": "17, 19",
+    "what": "model list, A2/A3 faults"
+   },
+   {
+    "file": "daikin-dx16tc-dz18tc-service.pdf",
+    "pages": "83",
+    "what": "ohm chart"
+   }
+  ]
+ },
+ {
+  "id": "goodman-amana-glxt7c-outdoor",
+  "title": "Goodman GLXT7C / Amana ALXT7C two-stage R-32 AC - UC control",
+  "side": "outdoor",
+  "brand": "Goodman / Amana",
+  "models": "GLXT7CA, ALXT7CA 2-5 ton (R-32) - diagram 0140R20039-A (RS6200007r28)",
+  "match": [
+   "GLXT7C",
+   "ALXT7C"
+  ],
+  "sizes": [
+   "24",
+   "36",
+   "48",
+   "60"
+  ],
+  "board": "UC board (communicating unitary control)",
+  "sensors": [
+   {
+    "plug": "E1",
+    "code": "OAT (OAS)",
+    "name": "Outdoor air temperature sensor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A2"
+    ],
+    "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.73 (ALXT7CA & GLXT7CA diagram 0140R20039-A) + p.31-32 (sensor test) + p.49 (A2)"
+   }
+  ],
+  "test": "Power off. Unplug the sensor from the UC control (OAT plug E1 / OCT plug E7). Ohm the two sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual air or pipe temperature. Replace the sensor if open, shorted or out of range.",
+  "notes": "Air conditioners carry only the OAT sensor, on E1; the E7 'OCT' header on the board is empty. A2 = outdoor air sensor fault. No EEV on this unit/board (no EEV coil figure); no pressure transducers - HPS/LPS are on/off switches.",
+  "gaps": [
+   "E1 pins not numbered",
+   "Sizes from the nomenclature (24/36/48/60) - the manual has no per-size diagram list"
+  ],
+  "sources": [
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "73",
+    "what": "AC wiring diagram"
+   },
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "31-32",
+    "what": "temperature sensor test + ohm chart"
+   },
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "49",
+    "what": "A2/A3 faults"
+   },
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "8",
+    "what": "nomenclature"
+   }
+  ]
+ },
+ {
+  "id": "goodman-amana-glzt7c-outdoor",
+  "title": "Goodman GLZT7C / Amana ALZT7C two-stage R-32 heat pump - UC control",
+  "side": "outdoor",
+  "brand": "Goodman / Amana",
+  "models": "GLZT7CA, ALZT7CA 2-5 ton (R-32) - diagram 0140R00615-C (RS6200007r28)",
+  "match": [
+   "GLZT7C",
+   "ALZT7C"
+  ],
+  "sizes": [
+   "24",
+   "36",
+   "48",
+   "60"
+  ],
+  "board": "UC board (communicating unitary control)",
+  "sensors": [
+   {
+    "plug": "E1",
+    "code": "OAT (OAS)",
+    "name": "Outdoor air temperature sensor",
+    "location": "Outdoor unit, in the outdoor air",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A2"
+    ],
+    "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.74 (ALZT7CA/GLZT7CA diagram 0140R00615-C) + p.31-32 + p.49 (A2)"
+   },
+   {
+    "plug": "E7",
+    "code": "OCT (OCS)",
+    "name": "Outdoor coil temperature sensor (defrost)",
+    "location": "Clamped to a feeder tube entering the outdoor coil (heat pumps only)",
+    "kind": "thermistor",
+    "chart": "daikin-comfortnet-outdoor-oat-oct-10k",
+    "errorCodes": [
+     "A3"
+    ],
+    "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.74 (OCT 'HP ONLY') + p.13 (OCT clamped to a feeder tube) + p.49 (A3)"
+   }
+  ],
+  "test": "Power off. Unplug the sensor from the UC control (OAT plug E1 / OCT plug E7). Ohm the two sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual air or pipe temperature. Replace the sensor if open, shorted or out of range.",
+  "notes": "OAT on E1, OCT on E7 (same drawing 0140R00615-C as Daikin DZ18TC / DZ7TC). Defrost: board counts run time while the coil is below about 31F; 30/60/90/120 min by dipswitch; TEST + RECALL together force a defrost. A2 air sensor, A3 coil sensor. No EEV on this unit/board (no EEV coil figure); no pressure transducers - HPS/LPS are on/off switches.",
+  "gaps": [
+   "E1/E7 pins not numbered",
+   "Sizes from the nomenclature (24/36/48/60)"
+  ],
+  "sources": [
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "74",
+    "what": "HP wiring diagram"
+   },
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "13",
+    "what": "defrost / OCT mounting"
+   },
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "31-32",
+    "what": "temperature sensor test + ohm chart"
+   },
+   {
+    "file": "goodman-amana-glxt7c-glzt7c-service.pdf",
+    "pages": "49",
+    "what": "A2/A3 faults"
    }
   ]
  }
