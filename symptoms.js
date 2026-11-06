@@ -21024,5 +21024,41 @@ const SYMPTOMS = [
   ],
   "safety": "Gas: no flame or sparks near the unit while testing, and leak-check every fitting you open with soap solution or a detector. Shut the gas off before opening the fuel train. Set the generator to OFF and remove the 7.5 A control fuse or disconnect the battery before working inside it, so it can't start on its own.",
   "confidence": "common"
+ },
+ {
+  "id": "s-generator-distance-from-lp-tank",
+  "equipment": "Generator",
+  "title": "How far a whole house standby generator has to be from the LP (propane) tank",
+  "summary": "The generator is an ignition source, so the LP tank's fill connection, gauge and relief valve set the distance, not the generator manual. Rule of thumb from NFPA 58: a tank that is filled on site needs its fill connection and fixed liquid-level gauge at least 10 ft from the generator; an exchanged cylinder needs its relief valve at least 5 ft away. Local code and the propane supplier have the final say.",
+  "steps": [
+   "Find out what kind of LP supply it is: a bulk ASME tank the truck fills on site (most whole-house setups), or DOT cylinders that get swapped out. The distance rule is different for each.",
+   "Bulk tank filled on site: measure from the tank's FILL connection and its fixed maximum liquid-level gauge (the bleeder screw) to the closest point of the generator. NFPA 58 (2017 ed., 6.3.4.4, as reprinted in the Propane Education & Research Council's Propane Technical Pocket Guide) wants at least 10 ft from any external source of ignition - the generator, an AC condenser, a direct-vent intake. This applies whatever the tank size.",
+   "Exchanged cylinders (not filled at the house): the relief valve must be at least 5 ft in any direction from the generator, an AC unit, direct-vent appliance openings or ventilation intakes (NFPA 58-2017 Table 6.3.4.3). If a truck fills the cylinders in place, use the 10 ft rule above for the fill connection and vent valve.",
+   "Tank to the house is a separate rule: it depends on tank size (under 125 gal, 125-500 gal, over 500 gal) and on whether it is above or below ground - the propane supplier sets it. A buried tank still needs its relief valve, fill and gauge 10 ft from any ignition source.",
+   "Regulators: the second-stage regulator vent should be about 5 ft from the generator (PERC generator install diagram), and a regulator on the side of the house no closer than 5 ft to an ignition source and 3 ft from a lower building opening. Put the manual gas shutoff readily accessible and within 6 ft of the generator's fuel inlet (Generac install manual).",
+   "While you are there, check the generator's own clearances (Generac Next Gen install manual): 3 ft at the front and ends, 18 in at the rear (shrubs count), 5 ft clear overhead, and windows, doors and vents no closer than local code allows (NFPA 37). Point the exhaust end away from the tank.",
+   "Tank size matters too: Generac recommends at least a 250 gal LP tank and says the LP provider sizes the tank to the generator - a small tank can't vaporize enough gas at full load in cold weather.",
+   "If the spacing is short, or you are not sure which rule applies, stop and have the office call the propane supplier before setting the pad - they own the tank and the local fire marshal / inspector has the final say. Write the measured distances on the work order."
+  ],
+  "safety": "Gas: never move or re-pipe an LP tank yourself - that is the propane supplier's job. Leak-check every fitting you open with soap solution or a detector, and keep the running generator, its exhaust and any sparks away from a tank that is venting or being filled.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-generac-nextgen-20l-battery-bulletin",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac service bulletin on 20L batteries - Next Gen BTX20L battery replaced by the 30L",
+  "summary": "Generac changed the Next Generation (Power Zone 200) air-cooled generators from the AGM BTX20L battery (310 CCA) to the AGM 30L (400 CCA) for better starting in outages and cold weather. Rolling change: units built from early May 2026 come with the 30L tray. A 30L will not fit the old 20L tray without tray kit G00735230.",
+  "steps": [
+   "Check what tray and battery the unit has: older Next Gen units were built for the BTX20L (smaller tray); newer ones came with the 30L tray.",
+   "Replacing the battery: the current spec is the AGM PowerSports Group 30L, 400 CCA minimum (Generac P/N A0010137452 or A0010137451).",
+   "Unit built for the 20L: order tray kit G00735230 and install it with the 30L - the 30L won't sit right in the original tray. A unit that already has the 30L tray needs no kit.",
+   "Generac still allows a BTX20L in a 20L unit, but on a hard-starting unit, in cold climates, or with battery / CANBus codes, upgrade to the 30L with the tray kit.",
+   "Test before you condemn it: use a conductance tester - the battery must show at least 75 % of its rated CCA, otherwise replace it and retest.",
+   "If several codes are logged, work the battery, charging and CANBus (2670) codes first - a weak battery dipping while cranking can set them.",
+   "Full bulletin: open the unit's card in Generators and look under Bulletins (Next Gen battery change), or call the Generac tech line with the serial number if you are unsure which tray it was built with."
+  ],
+  "safety": "Set the generator to OFF and remove the control fuse before disconnecting the battery so it can't start while you work. Disconnect negative first, reconnect it last.",
+  "confidence": "manual"
  }
 ];
