@@ -6535,6 +6535,24 @@ const DAIKIN_SENSOR_MAPS = [
     ],
     "test": "Power off, unplug the EEV cable from the board, read ohms from each of the 4 phase pins to the gray common pin; each must be 40-50 Ohm. Open or way off = bad coil.",
     "source": "daikin-fit-r410a-system-service.pdf p.77 (HP 1.5-3 ton wiring diagram); same layout daikin-fit-r32-system-service.pdf p.76 and p.78 (Enhanced Capacity HP / HE AC 2.0 ton), daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (DZ6VSA241E 3D146717), daikin-fit-r32-outdoor-install.pdf p.35 (DH6VS 3D141596) and p.39 (DH7VSA2410/DC9VSA2410 3D146717); ohms daikin-fit-r410a-system-service.pdf p.21 / daikin-fit-r32-system-service.pdf p.19"
+   },
+   {
+    "plug": "X28A (A2P)",
+    "code": "Y2S",
+    "name": "Solenoid valve coil - 2 ton DZ6VSA241 / DH7VSA2410 / DC9VSA2410 only",
+    "location": "Solenoid valve on the outdoor piping; plug on the small A2P service/display board",
+    "kind": "other",
+    "spec": "1,480-1,820 Ohm across the plug pins",
+    "test": "Power off, unplug X28A from A2P, ohm across the two wires: 1,480-1,820 Ohm. Open or way off = bad coil. The 1.5-3 ton DZ6VS*/DH6VS* drawing (3D141596) has no X28A.",
+    "source": "daikin-dc6vs-dz6vs-dh6vs-install.pdf p.37 (DZ6VSA241E 3D146717: X28A on A2P to Y2S); daikin-fit-r32-system-service.pdf p.78 (DH7VSA2410/DC9VSA2410); ohms daikin-fit-r410a-system-service.pdf p.21 / daikin-fit-r32-system-service.pdf p.19 (S-26)"
+   },
+   {
+    "plug": "X29A (A2P)",
+    "name": "Drain pan heater connector (optional accessory) - 2 ton DZ6VSA241 / DH7VSA2410 / DC9VSA2410",
+    "location": "A2P service/display board, next to X28A",
+    "kind": "other",
+    "test": "Empty unless the optional drain pan heater kit is fitted (drawing note 6).",
+    "source": "daikin-dc6vs-dz6vs-dh6vs-install.pdf p.37 note 6 (3D146717); daikin-fit-r32-system-service.pdf p.78"
    }
   ],
   "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart.",

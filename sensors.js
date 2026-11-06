@@ -53,6 +53,16 @@ function snSensorHits(mp, q) {
   });
 }
 
+// Plugs the manual names only in the board notes (valve coils, switches, heaters): return those note lines.
+function snNoteHits(mp, q) {
+  const qn = snNorm(q).replace(/^CN/, "");
+  const m = qn.match(/^X?(\d{1,4})([A-Z]?)$/);
+  if (!m) return [];
+  const re = new RegExp("\\bX" + m[1] + (m[2] || "[A-Z]") + "\\b", "i");
+  const text = [mp.notes, mp.test].filter(Boolean).join(" ");
+  return [...new Set(text.split(/(?<=[.;])\s+(?=[A-Z(])/).filter(s => re.test(s)).map(s => s.trim()))];
+}
+
 function snFmt(n, d) { return n == null || isNaN(n) ? "" : Number(n).toFixed(d).replace(/\.0+$/, ""); }
 
 // Chart rows as {c, f, k, v}. A chart printed in °C only gets °F worked out (and the other way round).
@@ -168,7 +178,7 @@ function snSensorHtml(mp, s, i, open) {
     ${s.spec ? `<p class="sn-spec"><span class="k">${s.kind === "eev" ? (/\d\s*(Ω|ohm)/i.test(s.spec) ? "Coil Ω" : "Check") : "Spec"}</span> ${escapeHtml(s.spec)}</p>` : ""}
     ${s.kind === "pressure" && !ch ? `<p class="sn-note">Pressure sensor - the manual gives no volts-to-pressure figures for it. Check its DC volts per the test below.</p>` : ""}
     ${s.kind === "eev" && !s.spec ? `<p class="sn-note">EEV coil - the manual gives no ohm figure for it.</p>` : ""}
-    ${s.kind !== "pressure" && s.kind !== "eev" && !ch ? `<p class="sn-note">No resistance chart for this one in the manual.</p>` : ""}
+    ${s.kind !== "pressure" && s.kind !== "eev" && s.kind !== "other" && !ch ? `<p class="sn-note">No resistance chart for this one in the manual.</p>` : ""}
     ${s.test ? `<p><span class="k">Test</span> ${escapeHtml(s.test)}</p>` : ""}
     ${snChartHtml(ch, key)}
     <div class="sn-src">Plug: ${escapeHtml(s.source || "")}</div>`;
@@ -177,6 +187,7 @@ function snSensorHtml(mp, s, i, open) {
 
 function snMapHtml(mp, q) {
   const hits = snSensorHits(mp, q);
+  const noteHits = !hits.length && q ? snNoteHits(mp, q) : [];
   const sideIcon = mp.side === "indoor" ? "🏠 Indoor" : "🌳 Outdoor";
   const sizes = (mp.sizes || []).length && !(mp.sizes.length === 1 && /^all$/i.test(mp.sizes[0])) ? " · sizes " + mp.sizes.join(", ") : "";
   return `<div class="card sn-map">
@@ -184,7 +195,8 @@ function snMapHtml(mp, q) {
     <div class="sn-models">${escapeHtml(mp.models || "")}${escapeHtml(sizes)}${mp.board ? " · " + escapeHtml(mp.board) : ""}</div>
     ${mp.notes ? `<details class="sn-gaps"${q ? "" : " open"}><summary>📝 Board notes</summary><p class="sn-note">${escapeHtml(mp.notes)}</p></details>` : ""}
     ${hits.length ? hits.map(s => snSensorHtml(mp, s, (mp.sensors || []).indexOf(s), !!q || hits.length === 1)).join("")
-      : `<p class="sn-none">No plug <b>${escapeHtml(q)}</b> on this board in the manual.</p>`}
+      : noteHits.length ? `<div class="sn-sensor sn-notehit"><p><b>${escapeHtml(q.toUpperCase())}</b> is not a sensor plug, but the manual names it:</p><ul>${noteHits.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul></div>`
+      : `<p class="sn-none">Plug <b>${escapeHtml(q)}</b> is not in this board's sensor list. It may be a fan, valve, heater or power plug - check the wiring diagram on the unit's panel.</p>`}
     ${!q && mp.test ? `<p class="sn-test"><span class="k">How to test</span> ${escapeHtml(mp.test)}</p>` : ""}
     ${(mp.gaps || []).length ? `<details class="sn-gaps"><summary>Not in the manual (${mp.gaps.length})</summary><ul>${mp.gaps.map(g => `<li>${escapeHtml(g)}</li>`).join("")}</ul></details>` : ""}
     <div class="sn-src">Source: ${escapeHtml((mp.sources || []).map(s => s.file + " p." + s.pages + (s.what ? " (" + s.what + ")" : "")).join("; "))}</div>
