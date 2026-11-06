@@ -11903,11 +11903,15 @@ if ("serviceWorker" in navigator) {
   //  * the reload waits for the new version to be ACTIVE, not just downloaded.
   //    Vern 10/16 tapped "Update ready" on v304 and came back on v304: the pill
   //    showed at "installed", and a fast tap reloaded under the old worker.
+  // Office note shown in bold on the "Updating the app..." screen techs see when they open the app after a
+  // new version is pushed (Andy 2026-11-06). The screen is drawn by the version already on the phone, so a
+  // changed note first shows at the update AFTER the one that carries it. "" = no note.
+  const TEAM_NOTE = { id: "time-2026-11", text: "Log your time on every job accurately - clock in when you start and out when you finish." };
   const FORCE_UPDATE_BEHIND = 5;
   const WAKE_AFTER_MS = 30000, WAKE_SCREEN_MAX_MS = 30000, WAKE_SKIP_AFTER_MS = 5000;
   let updateReady = false, updateBehind = 0, latestVersion = 0, swReg = null;
   let wakeAt = Date.now(), touchedSinceWake = false, lastTouch = 0, hiddenAt = 0;
-  let wakeScreen = null, wakeScreenTimer = 0, wakeChecking = false;
+  let wakeScreen = null, wakeScreenTimer = 0, wakeChecking = false, wakeShownAt = 0;
   const hadControllerAtLoad = !!navigator.serviceWorker.controller;   // false on a first-ever install
   ["pointerdown", "keydown"].forEach(ev => window.addEventListener(ev, () => { touchedSinceWake = true; lastTouch = Date.now(); }, true));
   const versionNum = (v) => parseInt(String(v).replace(/\D/g, ""), 10) || 0;
@@ -11935,7 +11939,9 @@ if ("serviceWorker" in navigator) {
     if (reloading) return;
     reloading = true;
     trackEvent("forced update " + APP_VERSION + " -> " + (latestVersion ? "v" + latestVersion : "new") + " (" + how + ")");
-    location.reload();
+    // Leave the Updating screen up at least 4 s when it carries an office note, so it can be read.
+    const wait = wakeScreen && TEAM_NOTE.text ? Math.max(0, wakeShownAt + 4000 - Date.now()) : 0;
+    setTimeout(() => location.reload(), wait);
   }
   function tryForcedUpdate() {
     if (!updateReady || !safeToReload()) return false;
@@ -11961,12 +11967,13 @@ if ("serviceWorker" in navigator) {
     el.id = "updateScreen";
     el.setAttribute("role", "alertdialog");
     el.style.cssText = "position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:var(--bg);color:var(--text);font-size:18px";
-    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div><button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
+    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div>${TEAM_NOTE.text ? `<div style="margin-top:6px;max-width:420px;font-size:19px;font-weight:800;color:var(--brand-orange)">${TEAM_NOTE.text}</div>` : ""}<button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
     const skip = el.querySelector("button");
     skip.onclick = () => giveUpWakeScreen("skipped");
     setTimeout(() => { skip.style.visibility = "visible"; }, WAKE_SKIP_AFTER_MS);
     wakeScreenTimer = setTimeout(() => giveUpWakeScreen("timed out"), WAKE_SCREEN_MAX_MS);
     wakeScreen = el;
+    wakeShownAt = Date.now();
     document.body.appendChild(el);
   }
   // On open / back from the background: behind the server -> cover the app and update now.
@@ -12875,7 +12882,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v377";
+const APP_VERSION = "v378";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
