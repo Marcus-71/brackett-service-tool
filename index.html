@@ -105,8 +105,8 @@
     </button>
     <button class="tile tile-sensors" data-screen="sensors">
       <span class="tile-icon">🌡️</span>
-      <span class="tile-label">Daikin Sensors</span>
-      <span class="tile-sub">Type the plug (X12A…) — which sensor it is, its ohm chart, EEV coil ohms, how to test</span>
+      <span class="tile-label">Sensors &amp; Plugs</span>
+      <span class="tile-sub">Type the board plug — what's on it, its ohm/volt chart, EEV coil ohms, how to test</span>
     </button>
     <button class="tile tile-request" data-screen="request">
       <span class="tile-icon">💬</span>
@@ -404,15 +404,15 @@
   </main>
 </section>
 
-<!-- DAIKIN SENSORS -->
+<!-- SENSORS & PLUGS (all brands) -->
 <section id="sensorsScreen" class="screen hidden">
-  <div class="disclaimer">Which sensor sits on which board plug, its resistance chart and how to test it — taken from each unit's Daikin service manual (page cited on every card). Boards differ by model AND size, so enter the full model. A plug the manual doesn't name is left blank on purpose — check the wiring diagram on the unit's panel.</div>
+  <div class="disclaimer">Which sensor sits on which board plug, its resistance chart and how to test it — taken from each unit's own service manual (page cited on every card). Boards differ by model AND size, so enter the full model. A plug the manual doesn't name is left blank on purpose — check the wiring diagram on the unit's panel.</div>
   <div class="controls">
-    <input id="snModel" class="search-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Model off the tag — DZ20VC0361, RXS18LVJU…">
+    <input id="snModel" class="search-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Model off the tag — DZ20VC0361, XP25-036, 25HCB6…">
     <div class="filter-row">
       <select id="snMapSel" class="filter-select" aria-label="Pick the unit"></select>
     </div>
-    <input id="snPlug" class="search-input sn-plug-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Plug on the board — X12A, X19A… (or R3T, discharge)">
+    <input id="snPlug" class="search-input sn-plug-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Plug on the board — X12A, PL1, J2… (or R3T, discharge)">
     <div class="sn-side-row"><button type="button" class="sn-side-btn" data-side="outdoor">🌳 Outdoor</button><button type="button" class="sn-side-btn" data-side="indoor">🏠 Indoor</button></div>
   </div>
   <main id="snResults"></main>
@@ -683,6 +683,7 @@
 <script src="followups.js"></script>
 <script src="charging-charts.js"></script>
 <script src="daikin-sensors.js"></script>
+<script src="brand-sensors.js"></script>
 <script src="sensors.js"></script>
 <script src="toolbox.js"></script>
 <script src="thermostats.js"></script>

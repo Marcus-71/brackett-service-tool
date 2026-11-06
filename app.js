@@ -326,7 +326,7 @@ const SCREEN_TITLES = {
   request: "Request Info",
   inventory: "Inventory",
   checker: "Daikin Checker",
-  sensors: "Daikin Sensors",
+  sensors: "Sensors & Plugs",
   genchecklist: "Generator Checklist",
   education: "Education",
 };
@@ -993,8 +993,8 @@ function askBuildIndex() {
       });
     }
   }
-  if (typeof DAIKIN_SENSOR_MAPS !== "undefined") {
-    for (const m of DAIKIN_SENSOR_MAPS) {
+  if (typeof snMaps === "function") {
+    for (const m of snMaps()) {
       const ss = m.sensors || [];
       items.push({
         kind: "sensor", id: m.id, brand: m.brand || "Daikin", equip: "",
@@ -2228,8 +2228,8 @@ function askEntryText(it, units) {
     const c = CHARGING_CHARTS.find(x => x.id === it.id);
     if (c) return [c.models, c.refrigerant, c.meteringDevice, c.chartType, c.rowAxis, c.colAxis, c.units, c.notes, c.source].filter(x => typeof x === "string").join(" | ").slice(0, 3000);
   }
-  if (it.kind === "sensor" && typeof DAIKIN_SENSOR_MAPS !== "undefined") {
-    const m = DAIKIN_SENSOR_MAPS.find(x => x.id === it.id);
+  if (it.kind === "sensor" && typeof snMaps === "function") {
+    const m = snMaps().find(x => x.id === it.id);
     if (m) {
       // Plug list first, then each chart the board uses as compact "°F=kΩ" pairs so "what should the coil
       // sensor read at 70°F" can be answered from the manual's own table.
@@ -12912,7 +12912,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v381";
+const APP_VERSION = "v382";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -6,8 +6,16 @@
 
 const snState = { model: "", mapId: "", plug: "", side: "" };
 
-function snMaps() { return typeof DAIKIN_SENSOR_MAPS === "undefined" ? [] : DAIKIN_SENSOR_MAPS; }
-function snChart(id) { return id && typeof SENSOR_CHARTS !== "undefined" ? SENSOR_CHARTS.find(c => c.id === id) : null; }
+// Daikin maps (daikin-sensors.js) plus every other brand (brand-sensors.js, BRAND_SENSOR_MAPS / BRAND_SENSOR_CHARTS).
+let snAll = null;
+function snMaps() {
+  if (!snAll) snAll = [].concat(typeof DAIKIN_SENSOR_MAPS === "undefined" ? [] : DAIKIN_SENSOR_MAPS, typeof BRAND_SENSOR_MAPS === "undefined" ? [] : BRAND_SENSOR_MAPS);
+  return snAll;
+}
+function snChart(id) {
+  if (!id) return null;
+  return (typeof SENSOR_CHARTS !== "undefined" && SENSOR_CHARTS.find(c => c.id === id)) || (typeof BRAND_SENSOR_CHARTS !== "undefined" && BRAND_SENSOR_CHARTS.find(c => c.id === id)) || null;
+}
 function snNorm(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
 
 // Maps for a typed model. A full model (DZ20VC0361) picks the map(s) with the longest matching token, so a
@@ -45,8 +53,9 @@ function snSensorHits(mp, q) {
   if (!qn) return mp.sensors || [];
   const qw = String(q).toLowerCase().trim();
   return (mp.sensors || []).filter(s => {
-    const p = snNorm(s.plug);
-    if (p && (p === qn || p.startsWith(qn) || p === "X" + qn || p.startsWith("X" + qn) || p.replace(/^CN/, "") === qn)) return true;
+    // One entry can name several plugs ("E9 / E26", "X28A (A2P)"): check each name.
+    const parts = [snNorm(s.plug)].concat(String(s.plug || "").replace(/\(.*?\)/g, "").split(/[\/,&]|\band\b/i).map(snNorm)).filter(Boolean);
+    if (parts.some(p => p === qn || p.startsWith(qn) || p === "X" + qn || p.startsWith("X" + qn) || p.replace(/^CN/, "") === qn)) return true;
     if (s.code && snNorm(s.code) === qn) return true;
     if (s.kind === "eev" && /^(EEV|EV|EXV|EXPANSION)/.test(qn)) return true;
     return qw.length >= 3 && String(s.name || "").toLowerCase().includes(qw);
@@ -230,7 +239,7 @@ function renderSensors() {
       box.innerHTML = `<div class="empty-state">No sensor map for <b>${escapeHtml(snState.model)}</b> yet. Pick the unit from the list, or check the wiring diagram on the unit's panel - it names each plug.</div>`;
       return;
     }
-  } else if (q) { maps = snMaps(); head = `<p class="sn-hint">Plug <b>${escapeHtml(q)}</b> on every Daikin board we have - type the model above to narrow it to your unit. The same plug is a different sensor on different models.</p>`; }
+  } else if (q) { maps = snMaps(); head = `<p class="sn-hint">Plug <b>${escapeHtml(q)}</b> on every board we have - type the model above to narrow it to your unit. The same plug is a different sensor on different models.</p>`; }
   else {
     box.innerHTML = `<p class="sn-hint">Type the model off the tag (the size digits matter - boards differ by size), or pick the unit. Then type the plug printed on the board next to the connector (X12A, X19A…). Leave the plug blank to see every sensor on that board.</p>`;
     return;
