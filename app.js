@@ -326,6 +326,7 @@ const SCREEN_TITLES = {
   request: "Request Info",
   inventory: "Inventory",
   checker: "Daikin Checker",
+  sensors: "Daikin Sensors",
   genchecklist: "Generator Checklist",
   education: "Education",
 };
@@ -356,10 +357,10 @@ function showScreen(name, fromBack) {
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "checkerScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "checkerScreen", "sensorsScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", checker: "checkerScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", checker: "checkerScreen", sensors: "sensorsScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -384,6 +385,7 @@ function showScreen(name, fromBack) {
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
   if (name === "checker") renderChecker();
+  if (name === "sensors" && typeof sensorsOnShow === "function") sensorsOnShow();
   if (name === "education") renderEducation();
   if (name === "tstat") renderTstats();
   // Andy 2026-10-01: open Generators at the top so the Annual Maintenance
@@ -769,6 +771,7 @@ const ASK_KIND = {
   guide:   { label: "How-to",     rank: 3, open: (id) => askOpenGuide(id) },
   maint:   { label: "Specs",      rank: 2, open: (id) => askOpenMaint(id) },
   charge:  { label: "Charging",   rank: 2, open: (id) => openChargingChart(id) },
+  sensor:  { label: "Sensors",    rank: 2, open: (id) => openSensors({ mapId: id }) },
   series:  { label: "Model",      rank: 4, open: (id) => askOpenSeries(id) },
 };
 // Andy 2026-10-05: "ask anything needs to catch all - hvac and generators".
@@ -987,6 +990,18 @@ function askBuildIndex() {
         sub: [c.models, c.meteringDevice].filter(Boolean).join(" · "),
         titleHay: [c.brand, c.refrigerant, String(c.refrigerant || "").replace(/-/g, ""), "charging chart charge subcooling superheat"].filter(Boolean).join(" ").toLowerCase(),
         hay: [c.brand, c.refrigerant, String(c.refrigerant || "").replace(/-/g, ""), "charging chart", c.meteringDevice, c.models, c.chartType, c.rowAxis, c.colAxis, c.units, c.notes, c.source].filter(x => typeof x === "string").join(" ").toLowerCase(),
+      });
+    }
+  }
+  if (typeof DAIKIN_SENSOR_MAPS !== "undefined") {
+    for (const m of DAIKIN_SENSOR_MAPS) {
+      const ss = m.sensors || [];
+      items.push({
+        kind: "sensor", id: m.id, brand: m.brand || "Daikin", equip: "",
+        title: m.title + " - sensor plugs & charts",
+        sub: [m.side === "indoor" ? "Indoor" : "Outdoor", m.models].filter(Boolean).join(" · "),
+        titleHay: [m.brand, m.title, ...(m.match || []), "sensor thermistor plug connector chart"].filter(Boolean).join(" ").toLowerCase(),
+        hay: [m.brand, m.title, m.models, ...(m.match || []), "sensor sensors thermistor plug connector resistance ohm ohms kohm chart read reading reads should test check temperature temp degrees", ss.some(s => s.kind === "pressure") ? "pressure transducer volts voltage psi psig" : "", ss.some(s => s.kind === "eev") ? "eev expansion valve coil ohms" : "", ...ss.flatMap(s => [s.plug, s.code, s.name, s.location, s.spec])].filter(Boolean).join(" ").toLowerCase(),
       });
     }
   }
@@ -2212,6 +2227,17 @@ function askEntryText(it, units) {
   if (it.kind === "charge" && typeof CHARGING_CHARTS !== "undefined") {
     const c = CHARGING_CHARTS.find(x => x.id === it.id);
     if (c) return [c.models, c.refrigerant, c.meteringDevice, c.chartType, c.rowAxis, c.colAxis, c.units, c.notes, c.source].filter(x => typeof x === "string").join(" | ").slice(0, 3000);
+  }
+  if (it.kind === "sensor" && typeof DAIKIN_SENSOR_MAPS !== "undefined") {
+    const m = DAIKIN_SENSOR_MAPS.find(x => x.id === it.id);
+    if (m) {
+      // Plug list first, then each chart the board uses as compact "°F=kΩ" pairs so "what should the coil
+      // sensor read at 70°F" can be answered from the manual's own table.
+      const sens = (m.sensors || []).map(s => [s.plug, s.pins ? "pins " + s.pins : "", s.code, s.name, s.location, s.kind === "eev" ? "EEV coil" : "", s.spec ? "coil ohms: " + s.spec : "", s.chart ? "(chart " + s.chart + ")" : ""].filter(Boolean).join(" "));
+      const chIds = [...new Set((m.sensors || []).map(s => s.chart).filter(Boolean))];
+      const charts = typeof snChart === "function" ? chIds.map(id => { const ch = snChart(id); return ch ? "Chart " + id + " (" + (ch.name || "") + ", " + (ch.source || "") + "): " + (ch.kind === "pressure" ? snPressRows(ch).map(r => snFmt(r.v, 2) + "V=" + snFmt(r.p, 0) + "psig").join(", ") : snRows(ch).filter(r => r.f >= -5 && r.f <= 168).map(r => Math.round(r.f) + "F=" + Number(r.k.toPrecision(3)) + "k").join(", ")) : ""; }) : [];
+      return ["Daikin sensor plug map: " + m.title, m.models, (m.sizes || []).length ? "Sizes " + m.sizes.join(", ") : "", ...sens, m.test, m.notes, (m.gaps || []).length ? "Not in the manual: " + m.gaps.join("; ") : "", ...charts].filter(Boolean).join(" | ").slice(0, 7000);
+    }
   }
   if (it.kind === "series") {
     const p = MODEL_PATTERNS[Number(String(it.id).replace("series-", ""))];
@@ -11316,6 +11342,7 @@ function renderScanResult(info) {
   // a different kind of equipment (see maintLookup in maint.js).
   const hasMaint = typeof MAINT_SPECS !== "undefined" && typeof maintLookup === "function" && !!info.model &&
     (lk => lk.exact.length > 0 || lk.approx.length > 0)(maintLookup(info.model));
+  const hasSensors = !!info.model && typeof snMapsForModel === "function" && snMapsForModel(info.model).length > 0;
   const notes = (info.notes || []).map(n => `<li><span class="k">Note</span>${escapeHtml(n)}</li>`).join("");
   const factsHtml = facts.map(([k, v]) => `<li><span class="k">${escapeHtml(k)}</span>${escapeHtml(v)}</li>`).join("");
   // v168: a serial-shaped "model" gets a pointer back to the plate instead of
@@ -11355,6 +11382,7 @@ function renderScanResult(info) {
         <div class="scan-actions">
           ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " codes" : escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
           ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
+          ${hasSensors ? `<button class="primary-act" id="scanGoSensors">🌡️ Sensor plugs &amp; charts</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
           ${nModelManuals ? `<button class="primary-act" id="scanGoModelManuals">📄 Manuals for this model (${nModelManuals})</button>` : ""}
           ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
@@ -11379,6 +11407,8 @@ function renderScanResult(info) {
     const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = info.model;
     showScreen("maint");
   };
+  const goSensors = document.getElementById("scanGoSensors");
+  if (goSensors) goSensors.onclick = () => { trackEvent("scan -> sensor plugs: " + info.model); openSensors({ model: info.model }); };
   box.querySelectorAll(".scan-unit-scen-btn").forEach(b => b.onclick = () => {
     trackEvent("unit scenario from scan: " + b.dataset.id);
     openSymptomDetail(b.dataset.id);
@@ -12882,7 +12912,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v378";
+const APP_VERSION = "v379";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

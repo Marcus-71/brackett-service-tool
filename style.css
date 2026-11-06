@@ -2083,3 +2083,43 @@ body.inv-cam-open { overflow: hidden; }
 .pad-qr { background: #fff; border-radius: 12px; padding: 10px; width: min(78vw, 300px); margin: 0.6rem auto 0.3rem; }
 .pad-qr-svg { display: block; width: 100%; height: auto; }
 .pad-qr-url { text-align: center; font-weight: 700; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.4rem; overflow-wrap: anywhere; }
+
+/* Daikin Sensors (sensors.js) */
+.tile-sensors { border-left: 5px solid var(--brand-orange); }
+.sn-plug-input { margin-top: .6rem; font-weight: 700; }
+.sn-side-row { display: flex; gap: .5rem; margin-top: .6rem; }
+.sn-side-btn { flex: 1; padding: .55rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .95rem; }
+.sn-side-btn.active { background: var(--brand-navy); color: #fff; border-color: var(--brand-navy); }
+#snResults { padding: 0 1rem 2rem; }
+.sn-hint { color: var(--text-dim); font-size: .92rem; margin: .8rem 0; }
+.sn-map { margin: .8rem 0; padding: .9rem; }
+.sn-map-h { font-size: 1.05rem; }
+.sn-side { font-size: .8rem; color: var(--text-dim); }
+.sn-models { color: var(--text-dim); font-size: .85rem; margin: .25rem 0 .5rem; overflow-wrap: anywhere; }
+.sn-sensor { border-top: 1px solid var(--border); padding: .5rem 0; }
+.sn-sensor > summary { cursor: pointer; list-style: none; line-height: 1.5; }
+.sn-sensor > summary::-webkit-details-marker { display: none; }
+.sn-plug { display: inline-block; min-width: 3.4rem; text-align: center; font-weight: 800; background: var(--brand-yellow); color: var(--brand-black); border-radius: 6px; padding: 0 .35rem; margin-right: .35rem; }
+.sn-pins { font-size: .78rem; color: var(--text-dim); margin-right: .3rem; }
+.sn-code { font-size: .8rem; color: var(--accent); font-weight: 700; }
+.sn-sensor p, .sn-test { margin: .35rem 0; font-size: .92rem; }
+.sn-sensor .k, .sn-test .k { display: inline-block; min-width: 3.6rem; font-weight: 700; color: var(--text-dim); font-size: .8rem; text-transform: uppercase; }
+.sn-note { color: var(--accent); font-size: .88rem; }
+.sn-none { color: var(--text-dim); }
+.sn-chart { margin: .5rem 0; }
+.sn-chart > summary { cursor: pointer; font-weight: 700; }
+.sn-read { margin: .5rem 0; font-size: .9rem; }
+.sn-read input { width: 6.5rem; padding: .4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); font-size: 1rem; }
+.sn-read-out { display: block; margin-top: .3rem; color: var(--text-dim); }
+.sn-read-out b { color: var(--text); }
+.sn-table { width: 100%; border-collapse: collapse; font-size: .88rem; font-variant-numeric: tabular-nums; }
+.sn-table th, .sn-table td { padding: .22rem .4rem; text-align: right; border-bottom: 1px solid var(--border); }
+.sn-table th { color: var(--text-dim); font-weight: 600; }
+.sn-table tr.sn-hit td { background: var(--brand-yellow); color: var(--brand-black); font-weight: 700; }
+.sn-src { font-size: .75rem; color: var(--text-dim); margin-top: .35rem; overflow-wrap: anywhere; }
+.sn-gaps { margin-top: .5rem; font-size: .88rem; }
+.sn-gaps summary { cursor: pointer; color: var(--accent); }
+.sn-plug-eev { background: var(--brand-sage); }
+.sn-spec { font-weight: 600; }
+.sn-read label { display: inline-block; margin: 0 .6rem .3rem 0; }
+.sn-volt { width: 6.5rem; padding: .4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); font-size: 1rem; }
