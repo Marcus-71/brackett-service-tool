@@ -9154,6 +9154,22 @@ function ocrCarrierProdShape(s) {
 function ocrTraneSerialShape(s) {
   return /^(?:\d{2}|[2-9])(?:0[1-9]|[1-4]\d|5[0-3])[1-7](?=[A-Z0-9]{5}$)[0-9]*[A-Z]/.test(s || "");
 }
+// 1107 (bench: 13 wrong IDs on field photos): a serial NOT read beside a SERIAL label - a
+// serial-shaped token or a bare digit run - must fit the brand's own serial format when the
+// brand is known. Otherwise it is more likely a part, lot or date number on the plate, and a
+// blank beats a wrong serial. Formats as decodeSerialYear: Carrier / ICP week+year+letter+5
+// (ICP also letter+9 digits), Lennox / Allied plant+year+letter+5, Goodman / Daikin YYMM then
+// 6 digits or letter+5, Trane ocrTraneSerialShape, Rheem / Ruud start with a letter.
+function ocrBareSerialFitsBrand(brand, s) {
+  const fam = serialBrandFamily(brand), c4 = /^\d{4}[A-Z]\d{5}$/.test(s);
+  if (fam === "carrier") return c4 && serialWeekOk(s.slice(0, 2));
+  if (fam === "icp") return (c4 && serialWeekOk(s.slice(0, 2))) || /^[A-Z]\d{9}$/.test(s);
+  if (fam === "lennox") return c4;
+  if (fam === "goodman") return /^\d{2}(?:0[1-9]|1[0-2])(?:\d{6}|[A-Z]\d{5})$/.test(s);
+  if (fam === "trane") return ocrTraneSerialShape(s);
+  if (/^Rheem/.test(brand || "")) return /^[A-Z]/.test(s);
+  return true;
+}
 
 // photoId (optional): the failed-scan photo record this read came from, so the
 // "not in library" event can be paired with its picture in the Drive folder.
@@ -9337,7 +9353,11 @@ function extractTagFields(text) {
   // later serial passes (serial-shaped token, longest digit run) still get a go.
   const SERIAL_WORDY = /[A-Z]{4}/;
   for (const line of lines) {
-    if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1])) { model = m[1]; modelSource = "label"; } }
+    // 1107: not a MODEL label after "WITH" on its line - the plate naming an accessory to use
+    // with this unit (Thermo Pride: "MAY BE INSTALLED WITH A THERMO PRODUCTS, LLC. MODEL 70-BASE").
+    // A dash-separated part that is all letters, 4+ long ("70-BASE"), is a word: no model in the
+    // bench truth or the library has one. A sparse pass reads the MODEL label without its "WITH".
+    if (!model) { const m = line.match(modelLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1]) && !/\bWITH\b/.test(line.slice(0, m.index)) && !/(?:^|-)[A-Z]{4,}(?:-|$)/.test(m[1])) { model = m[1]; modelSource = "label"; } }
     // v185: every serial carries a digit. A misread label word ("NUMEER",
     // "ARCOAIRE" after SER...) is not a serial - keep looking on later lines.
     if (!serial) { const m = line.match(serialLabel); if (m && /[0-9]/.test(m[1]) && !TAG_NONVALUE.test(m[1]) && !SERIAL_WORDY.test(m[1])) { serial = m[1]; serialSource = "label"; } }
@@ -9431,15 +9451,18 @@ function extractTagFields(text) {
   // serial Lennox/Allied/ADP, Carrier and Goodman all print (5913M06184,
   // 7122F47534, 0621A50275): take it before a bare digit run, which is more
   // often a lot or part number. Never the model's own characters.
+  // 1107: the brand the serial must fit (ocrBareSerialFitsBrand) - the model's family, else the plate's name.
+  const libP = model ? ocrLibraryPattern(model) : null, sBrand = (libP && libP.brand) || detectBrandInText(up);
+  const fits = (t) => ocrBareSerialFitsBrand(sBrand, t);
   if (!serial) {
-    const shaped = upN.split(/[^A-Z0-9]+/).find(t => /^\d{4}[A-Z]\d{5}$/.test(t) && !model.includes(t));
+    const shaped = upN.split(/[^A-Z0-9]+/).find(t => /^\d{4}[A-Z]\d{5}$/.test(t) && !model.includes(t) && fits(t));
     if (shaped) { serial = shaped; serialSource = "shape"; }
   }
   // v309: the Trane serial shapes (ocrTraneSerialShape). Trane prints the values ABOVE the
   // "MODEL NO.  SERIAL NO." label row, so the label rules above miss them (Dustin's TAM9
   // plate read "TAMOAOCABVA1DAA [[17322H1Y1V" and kept no serial).
   if (!serial) {
-    const shaped = upN.split(/[^A-Z0-9]+/).find(t => ocrTraneSerialShape(t) && !model.includes(t) && !ocrLibraryPattern(t));
+    const shaped = upN.split(/[^A-Z0-9]+/).find(t => ocrTraneSerialShape(t) && !model.includes(t) && !ocrLibraryPattern(t) && fits(t));
     if (shaped) { serial = shaped; serialSource = "shape"; }
   }
   if (!serial) {
@@ -9454,8 +9477,10 @@ function extractTagFields(text) {
     // pair was expressing ("a digit run with no letter or digit glued to
     // either end"), and it says it more plainly.
     const best = up.split(/[^A-Z0-9]+/)
-      .filter(t => /^[0-9]{8,16}$/.test(t))
-      .filter(t => !model.includes(t))
+      // 1107: exactly 10 digits - every bare run read right on the bench was a 10-digit
+      // Goodman / Daikin / Generac serial; the 8-9 digit runs were all part or lot numbers.
+      .filter(t => /^[0-9]{10}$/.test(t))
+      .filter(t => !model.includes(t) && fits(t))
       .sort((a, b) => b.length - a.length);
     if (best.length) { serial = best[0]; serialSource = "digits"; }
   }
@@ -10389,6 +10414,10 @@ async function ocrTagTextPasses(file, onStatus) {
     // v275: also replaces this pass's bare digit run with another pass's labelled
     // or serial-shaped one (James's G61MP: "550917186" vs S/N 5909L17186).
     if (best && best.serial && rank(best) >= 2 && rank(best) > rank(fields)) { fields.serial = best.serial; fields.serialSource = best.serialSource; }
+    // 1107: a serial not read off its label must fit the brand of the model just accepted
+    // (the pass that found it may not have read the model, so did not know the brand).
+    const fitBrand = c.lib ? c.lib.brand : fields.brandHint;
+    if (fields.serial && fields.serialSource !== "label" && !ocrBareSerialFitsBrand(fitBrand, fields.serial)) { fields.serial = ""; fields.serialSource = ""; }
     // v314: no labelled or serial-shaped serial yet - read beside the SERIAL label word (Dave's
     // 24ANB6: big thin print read "E361 bEQET23" on the full photo). A stop here keeps the model.
     const nearAt = c.box ? c : c.zat;
@@ -10397,6 +10426,8 @@ async function ocrTagTextPasses(file, onStatus) {
         const sb = c.lib ? c.lib.brand : "";
         let sf = anchors.some(a => a.kind === "serial") ? await anchorSerial(sb) : null;
         if (!sf && nearAt) sf = await nearModelSerial(nearAt, sb);
+        // 1107: the same brand check on a serial-shaped zoom read (Daikin DR96TN: "0270F21043", month 70)
+        if (sf && sf.serialSource !== "label" && !ocrBareSerialFitsBrand(fitBrand, sf.serial)) sf = null;
         if (sf && !(fields.model && (fields.model.includes(sf.serial) || sf.serial.includes(fields.model))) && !(fields.serial && fields.serial.includes(sf.serial))) { fields.serial = sf.serial; fields.serialSource = sf.serialSource; trackEvent("tag serial read by label-anchor zoom"); }
       } catch (e) { if (e !== OCR_STOP) throw e; }
     }
