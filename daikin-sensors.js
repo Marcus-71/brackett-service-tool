@@ -64,7 +64,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "5-6",
     "code": "R4T",
     "name": "Outdoor heat exchanger thermistor (Tb)",
-    "location": "Outdoor heat exchanger liquid side (back view, blue)",
+    "location": "Outdoor heat exchanger, liquid side (back view; connector blue)",
     "kind": "thermistor",
     "chart": "daikin-mz-rmxs-pipe-a",
     "errorCodes": [
@@ -193,7 +193,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Solenoid valve coil - four way valve (blue connector, high voltage), relay K1R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34; layout p.54"
    },
    {
@@ -202,7 +201,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Solenoid valve coil - hot gas bypass (black connector, high voltage), relay K2R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34; layout p.54"
    },
    {
@@ -211,7 +209,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Solenoid valve coil - unloading circuit (pink connector, high voltage), relay K3R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34; layout p.54"
    },
    {
@@ -220,7 +217,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Crankcase heater (gray connector, high voltage), relay K4R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34; layout p.54"
    },
    {
@@ -229,7 +225,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (white connector)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "spec": "Opens at 4.0 MPa (1338 ftAq), resets at 3.0 MPa (E3 p.237)",
+    "test": "Power off, unplug X32A, check the switch has continuity (E3 flow chart p.238)",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34; layout p.54; E3 p.237"
    },
    {
@@ -284,7 +281,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reactor (WHT, through in-line plug X2A)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34"
    },
    {
@@ -317,7 +313,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor leads RED/WHT/BLU (through Z6C/Z2C)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across each pair of compressor leads: open = bad",
+    "test": "P4 flow chart (p.261): disconnect the compressor leads and check insulation resistance - 100 kOhm or less = replace compressor",
     "source": "daikin-rmxs-l-multizone-service.pdf p.288 (3D080424), PCB list p.32-34"
    },
    {
@@ -436,6 +432,7 @@ const DAIKIN_SENSOR_MAPS = [
   "sensors": [
    {
     "plug": "X90A",
+    "pins": "1-2",
     "code": "R1T (DLA)",
     "name": "Room A liquid pipe thermistor",
     "location": "Liquid pipe - room A line inside the BP unit (black leads)",
@@ -448,6 +445,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "3-4",
     "code": "R2T (DGA)",
     "name": "Room A gas pipe thermistor",
     "location": "Gas pipe - room A line inside the BP unit (black leads)",
@@ -460,6 +458,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "5-6",
     "code": "R3T (DLB)",
     "name": "Room B liquid pipe thermistor",
     "location": "Liquid pipe - room B line inside the BP unit (blue leads)",
@@ -472,6 +471,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "7-8",
     "code": "R4T (DGB)",
     "name": "Room B gas pipe thermistor",
     "location": "Gas pipe - room B line inside the BP unit (blue leads)",
@@ -561,11 +561,8 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rmxs-l-multizone-service.pdf p.289 (3D079641), PCB list p.35"
    }
   ],
-  "test": "Power off first. Unplug X90A (white, 12-pin) from the BP unit PCB and measure each thermistor's resistance; compare to the BP chart at the measured pipe temperature. Bad reading = replace the thermistor (assembly); good readings but J0 stays = replace the BP PCB.",
+  "test": "Power off first. Unplug X90A (white, 12-pin) from the BP unit PCB and measure each thermistor across its own pin pair (R1T DLA 1-2, R2T DGA 3-4, R3T DLB 5-6, R4T DGB 7-8); compare to the BP chart at the measured pipe temperature. Bad reading = replace the thermistor (assembly); good readings but J0 stays = replace the BP PCB.",
   "notes": "All BP pipe thermistors share one 12-pin white connector X90A. Leads are colour-coded by room: room A black, room B blue. BP thermistor codes R1T-R4T are NOT the same parts as the outdoor unit's R1T-R4T. Gas pipe = SH control in cooling; liquid pipe = SC control in heating.",
-  "gaps": [
-   "X90A pin numbers for each thermistor are not stated (wiring diagram lines are not readable pin-by-pin)"
-  ],
   "sources": [
    {
     "file": "daikin-rmxs-l-multizone-service.pdf",
@@ -605,6 +602,7 @@ const DAIKIN_SENSOR_MAPS = [
   "sensors": [
    {
     "plug": "X90A",
+    "pins": "1-2",
     "code": "R1T (DLA)",
     "name": "Room A liquid pipe thermistor",
     "location": "Liquid pipe - room A line inside the BP unit (black leads)",
@@ -617,6 +615,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "3-4",
     "code": "R2T (DGA)",
     "name": "Room A gas pipe thermistor",
     "location": "Gas pipe - room A line inside the BP unit (black leads)",
@@ -629,6 +628,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "5-6",
     "code": "R3T (DLB)",
     "name": "Room B liquid pipe thermistor",
     "location": "Liquid pipe - room B line inside the BP unit (blue leads)",
@@ -641,6 +641,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "7-8",
     "code": "R4T (DGB)",
     "name": "Room B gas pipe thermistor",
     "location": "Gas pipe - room B line inside the BP unit (blue leads)",
@@ -653,6 +654,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "9-10",
     "code": "R5T (DLC)",
     "name": "Room C liquid pipe thermistor",
     "location": "Liquid pipe - room C line inside the BP unit (yellow leads)",
@@ -665,6 +667,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X90A",
+    "pins": "11-12",
     "code": "R6T (DGC)",
     "name": "Room C gas pipe thermistor",
     "location": "Gas pipe - room C line inside the BP unit (yellow leads)",
@@ -776,9 +779,9 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off first. Unplug X90A (white, 12-pin) from the BP unit PCB and measure each thermistor's resistance; compare to the BP chart at the measured pipe temperature. Bad reading = replace the thermistor (assembly); good readings but J0 stays = replace the BP PCB.",
-  "notes": "All BP pipe thermistors share one 12-pin white connector X90A. Leads are colour-coded by room: room A black, room B blue, room C yellow. BP thermistor codes R1T-R6T are NOT the same parts as the outdoor unit's R-numbers. Gas pipe = SH control in cooling; liquid pipe = SC control in heating.",
+  "notes": "All BP pipe thermistors share one 12-pin white connector X90A (pin 1 at the bottom of the drawing): 1-2 R1T DLA, 3-4 R2T DGA, 5-6 R3T DLB, 7-8 R4T DGB, 9-10 R5T DLC, 11-12 R6T DGC. Leads are colour-coded by room: room A black, room B blue, room C yellow. BP thermistor codes R1T-R6T are NOT the same parts as the outdoor unit's R-numbers. Gas pipe = SH control in cooling; liquid pipe = SC control in heating.",
   "gaps": [
-   "X90A pin numbers for each thermistor are not stated (wiring diagram lines are not readable pin-by-pin)"
+   "EEV coils X20A-X23A: A9 gives 46 +/- 4 ohm at 20 C but not which pins to measure (6-pin plugs, leads RED/BLU/ORG/YLW/WHT)"
   ],
   "sources": [
    {
@@ -1361,7 +1364,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off first. Unplug S90 (outdoor air, coil, discharge), S92 (gas pipes) or S93 (liquid pipes) from main PCB1, measure resistance across the thermistor's pin pair and compare with the chart at the measured temperature (about 20 kOhm at 77 F). The board flags a fault when the voltage across a thermistor is above 4.96 V or below 0.04 V. Bad thermistor = replace the thermistor assembly; all good and error returns = replace main PCB. For J3 also check the coil thermistor (outdoor coil in cooling, indoor coil in heating) - J3 also shows when discharge temp reads lower than coil temp.",
-  "notes": "Pin pairs read from the wiring diagram: S90 1-2 R3T outdoor air, 3-4 R2T coil, 5-6 R1T discharge (S90 lead colours on this diagram: BLK/BLK/BLK). S92 = gas pipes (room A pins 1-2, B 3-4, C 5-6, D 7-8), S93 = liquid pipes (same order). Careful: on these units R1T is DISCHARGE and R3T is OUTDOOR AIR - opposite of many other Daikin outdoors. Thermistor letters follow the indoor-unit wiring ports A-D (S20-S23 EEVs). Radiation fin thermistor (P4) has no plug - the manual says replace the main PCB. S40 is the compressor overload protector Q1L (not a thermistor). The manual gives one 20 kOhm chart for all thermistors, no separate discharge curve.",
+  "notes": "Pin pairs read from the wiring diagram: S90 1-2 R3T outdoor air, 3-4 R2T coil, 5-6 R1T discharge (S90 lead colours on this diagram: BLK/BLK/BLK). S92 = gas pipes (room A pins 1-2 BLK, B 3-4 GRY, C 5-6 BRN), S93 = liquid pipes (room A 1-2 BLK, B 3-4 GRY, C 5-6 YLW). This 3-room unit has rooms A-C only (EEV ports S20 white A, S21 red B, S22 blue C; S23/room D is the 4MXS36 only). Careful: on these units R1T is DISCHARGE and R3T is OUTDOOR AIR - opposite of many other Daikin outdoors. Room terminal strips: X3M = room A, X2M = room B, X4M = room C. Radiation fin thermistor (P4) has no plug - the manual says replace the main PCB. S40 pins 3-4 is the compressor overload protector Q1L (not a thermistor). The manual gives one 20 kOhm chart for all thermistors, no separate discharge curve.",
   "gaps": [
    "No separate discharge-pipe resistance curve in this manual - the one Check No.01 table (-20 to 50 C) is used for all",
    "Radiation fin thermistor is on the PCB (no connector)",
@@ -1799,7 +1802,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing (louver) motors - 3 swing motors share this 16-pin plug",
     "location": "Control PCB1, RED/ORG/YLW/PNK/BLU wires to each swing motor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (check each motor winding)",
     "source": "daikin-ftxs-l-minisplit-service.pdf p.409 (3D058246F); connector list p.23"
    },
    {
@@ -1957,7 +1959,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing (louver) motors - 3 swing motors share this 16-pin plug",
     "location": "Control PCB1, RED/ORG/YLW/PNK/BLU wires to each swing motor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (check each motor winding)",
     "source": "daikin-ftxs-l-minisplit-service.pdf p.409 (3D060942H); connector list p.26"
    },
    {
@@ -2098,7 +2099,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "6, 3, 1",
     "code": "M1F",
     "name": "Indoor fan motor (AC, single phase) power",
-    "location": "Control PCB A1P, RED/BLK (pins 6, 3, 1) to fan motor; run capacitor C1 on YLW/WHT",
+    "location": "Control PCB A1P: pin 6 RED, pin 3 YLW, pin 1 BLK to the fan motor; run capacitor C1 between the YLW and WHT motor leads",
     "kind": "other",
     "source": "daikin-ftxs-l-minisplit-service.pdf p.410 (3D073998B); connector list p.29"
    },
@@ -2268,7 +2269,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1S, M2S, M3S Swing motors (3 x 5 wires)",
     "location": "Control PCB PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (motor windings)",
     "source": "daikin-ftxs-h-minisplit-service.pdf p.200 (printed 192, 3D060942C); connector list p.15-17 (printed 7-9)"
    },
    {
@@ -2415,7 +2415,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor overload protector",
     "location": "Main PCB2, BLK/GRY wires",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftxs-l-minisplit-service.pdf p.411 (3D074402A); connector list p.31"
    },
    {
@@ -2634,7 +2633,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor overload protector",
     "location": "Main PCB2, 2 BLK wires",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftxs-l-minisplit-service.pdf p.411 (3D072837); connector list p.33"
    },
    {
@@ -2809,10 +2807,10 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S70 (PCB1)",
-    "pins": "1, 3, 4, 5, 7",
+    "pins": "1 WHT, 2 ORG, 3 BRN, 4 BLU, 7 RED",
     "code": "M1F",
     "name": "Outdoor fan motor (DC)",
-    "location": "Main PCB1, wires RED/BLU/BRN/ORG/WHT",
+    "location": "Main PCB1, wires WHT/ORG/BRN/BLU/RED",
     "kind": "other",
     "spec": "S70 unplugged, power on: pins 4-7 = 320 VDC (+/-30), pins 3-4 = 15 VDC control, pins 2-4 = 0-15 VDC rotation command; plugged in, 2 pulses 0-15 VDC at pins 1-4 per hand turn - Check No.16, p.158",
     "test": "Manual Check No.16 (p.158)",
@@ -2836,7 +2834,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor overload protector",
     "location": "Main PCB1, 2 BLK wires",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftxs-l-minisplit-service.pdf p.412 (3D074292 RXS24, 3D074291A RK(X)S30/36); connector list p.35-36"
    },
    {
@@ -3039,7 +3036,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power in from terminal strip (BRN AC1, BLU AC2)",
     "location": "Main PCB PCB1",
     "kind": "other",
-    "test": "Live 208/230 V when powered",
     "source": "daikin-ftxs-h-minisplit-service.pdf p.200 (printed 192, 3D062017B); connector list p.18-19 (printed 10-11)"
    },
    {
@@ -3075,7 +3071,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Q1L Compressor overload protector (through in-line plug X12A)",
     "location": "Main PCB PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftxs-h-minisplit-service.pdf p.200 (printed 192, 3D062017B); connector list p.18-19 (printed 10-11)"
    },
    {
@@ -3084,7 +3079,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line plug in the Q1L overload protector lead (to S40)",
     "location": "Harness near compressor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftxs-h-minisplit-service.pdf p.200 (printed 192, 3D062017B); connector list p.18-19 (printed 10-11)"
    },
    {
@@ -3223,7 +3217,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (horizontal blade)",
     "location": "Control PCB (PCB1), 5-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (motor windings)",
     "source": "daikin-rx-nmvju-19series-service.pdf p.129 (3D086429B); connector list p.27-28"
    },
    {
@@ -3345,7 +3338,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (horizontal blade)",
     "location": "Control PCB (PCB2), 5-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (motor windings)",
     "source": "daikin-rx-nmvju-19series-service.pdf p.129 (3D090199); connector list p.29-30"
    },
    {
@@ -3446,7 +3438,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (coil intake side)",
+    "location": "Outdoor air (outdoor unit)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -3484,12 +3476,13 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S20",
+    "pins": "1-5, 2-5, 3-5, 4-5",
     "code": "Y1E",
     "name": "EEV coil (electronic expansion valve)",
     "location": "Coil on the electronic expansion valve in the outdoor unit",
     "kind": "eev",
-    "spec": "Check No.12: continuity between pins 1-6, 2-6, 3-6, 4-6 (6P connector); or 1-5, 2-5, 3-5, 4-5 for 5P connector models; no continuity = EV coil faulty. Manual does not say which sizes use 5P vs 6P. Manual gives a continuity check only - no ohm value.",
-    "test": "Power off. Check S20 is seated, then power back on and listen for the valve latching. No latch: unplug S20 and check continuity on the pin pairs listed. Open on any pair = bad EEV coil; all pairs have continuity = outdoor PCB.",
+    "spec": "Check No.12: continuity between pins 1-5, 2-5, 3-5, 4-5 for the 5P connector (1-6..4-6 only on 6P connector boards); no continuity = EV coil faulty. On these models S20 is drawn as a 5-pin plug (WHT, YLW, ORG, BLU, RED on pins 1-5). Manual gives a continuity check only - no ohm value.",
+    "test": "Power off. Check S20 is seated, then power back on and listen for the valve latching. No latch: unplug S20 and check continuity from pin 5 to pins 1, 2, 3 and 4. Open on any pair = bad EEV coil; all pairs have continuity = outdoor PCB.",
     "source": "daikin-rx-nmvju-19series-service.pdf p.104 (printed 93, Check No.12), p.31 (S20 = EEV coil), p.130 (Y1E on S20)"
    },
    {
@@ -3552,7 +3545,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "S30",
     "code": "M1C",
-    "name": "Compressor leads U/V/W (BLU/YLW/RED)",
+    "name": "Compressor leads: RED = U, YLW = V, BLU = W",
     "location": "Main PCB",
     "kind": "other",
     "source": "daikin-rx-nmvju-19series-service.pdf p.130 (3D089069 RK(X)(N)09/12, 3D091491 RKN18); connector list p.31"
@@ -3566,7 +3559,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rx-nmvju-19series-service.pdf p.130 (3D089069 RK(X)(N)09/12, 3D091491 RKN18); connector list p.31"
    }
   ],
-  "test": "Power off (wait 10 min for capacitors). Unplug S90 from the outdoor main PCB and read ohms across each thermistor's pin pair; compare to the chart at the measured air/pipe temperature. Out of range or open/short = replace the thermistor assembly; in range but error persists = outdoor PCB. For J3, also check the coil thermistor (outdoor coil in cooling, indoor coil in heating).",
+  "test": "Power off and make sure the board capacitor has discharged (manual: below 10 VDC) before handling plugs. Unplug S90 from the outdoor main PCB and read ohms across each thermistor's pin pair; compare to the chart at the measured air/pipe temperature. Out of range or open/short = replace the thermistor assembly; in range but error persists = outdoor PCB. For J3, also check the coil thermistor (outdoor coil in cooling, indoor coil in heating).",
   "notes": "Size 18 here means RKN18NMVJU ONLY. RKN18NMVJU uses this 09/12-type board (manual section 2.1); RXN18 and RK(X)18 do NOT. Radiation fin thermistor (P4) is built onto the outdoor PCB - no plug; manual says replace the outdoor PCB for P4. The separate removal manual Si001554EC also shows the S90 thermistor plug for RX09/12 QMVJU / RMVJU / RXL09QMVJU, but has no chart or pin map for them.",
   "gaps": [
    "EEV coil: manual gives continuity pin pairs only, no ohm reading."
@@ -3643,11 +3636,12 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S20",
+    "pins": "1-6, 2-6, 3-6, 4-6",
     "code": "Y1E",
     "name": "EEV coil (electronic expansion valve)",
     "location": "Coil on the electronic expansion valve in the outdoor unit",
     "kind": "eev",
-    "spec": "Check No.12: continuity between pins 1-6, 2-6, 3-6, 4-6 (6P connector); or 1-5, 2-5, 3-5, 4-5 for 5P connector models; no continuity = EV coil faulty. Manual does not say which sizes use 5P vs 6P. Manual gives a continuity check only - no ohm value.",
+    "spec": "S20 is drawn as a 6-pin plug on 3D089070 (WHT 1, YLW 2, ORG 3, BLU 4, RED 6). Check No.12 (6P connector): continuity between pins 1-6, 2-6, 3-6, 4-6; no continuity = EV coil faulty. Manual gives a continuity check only - no ohm value.",
     "test": "Power off. Check S20 is seated, then power back on and listen for the valve latching. No latch: unplug S20 and check continuity on the pin pairs listed. Open on any pair = bad EEV coil; all pairs have continuity = outdoor PCB.",
     "source": "daikin-rx-nmvju-19series-service.pdf p.104 (Check No.12), p.32 (S20 = EEV coil), p.131 (Y1E on S20)"
    },
@@ -3680,7 +3674,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor overload protector",
     "location": "Main PCB, 2 BLK wires",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "spec": "OL (Q1L) activates at 130 C (266 F), recovers at 95 C (203 F) (p.84)",
+    "test": "Power off, unplug S40 and check resistance between its 2 terminals, then across the 2 terminals of the OL: nearly 0 Ohm = normal, infinite = open (p.84)",
     "source": "daikin-rx-nmvju-19series-service.pdf p.131 (3D089070); connector list p.32"
    },
    {
@@ -4022,7 +4017,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "S90",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (coil intake side)",
+    "location": "Outdoor air",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -4244,7 +4239,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Air swing (louver) motor, 5-pin",
     "location": "Indoor main PCB",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.69 (FTKB/FTKN 09/12) + p.71 (FTXB/FTXN 09/12) wiring, PCB layout p.11-12"
    },
    {
@@ -4370,7 +4364,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Air swing (louver) motor",
     "location": "Indoor main PCB",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.70 (FTKB/FTKN 18/24) + p.72 (FTXB/FTXN 18/24) wiring, PCB layout p.13-14"
    },
    {
@@ -4378,7 +4371,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to the display board (LEDs, receiver, ON/OFF switch, room sensor TH1)",
     "location": "Indoor main PCB",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.70 (FTKB/FTKN 18/24) + p.72 (FTXB/FTXN 18/24) wiring, PCB layout p.13-14"
    },
    {
@@ -4426,7 +4418,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.70 (FTKB/FTKN 18/24) + p.72 (FTXB/FTXN 18/24) wiring, PCB layout p.13-14; daikin-ftxb-rxb-axvju-service.pdf p.67 (U4)"
    }
   ],
-  "test": "Power off. Coil: unplug CN_IDCOIL (CN_COIL) and read ohms across its 2 pins. Room: measure TH1 on the display board after unplugging the display cable from CN_DISPLAY. Compare to the 10k min/max table at the actual temperature.",
+  "test": "Power off. Remove the thermistor connector at the PCB and read ohms across it (Appendix A, p.75). Coil sensor: CN_IDCOIL (CN_COIL on the wiring diagram), 2-pin. Room sensor TH1 sits on the display board; the manual gives no pins for it. Compare with Table 2 (10 kOhm at 25 C, min/max) on p.76 at the actual temperature.",
   "notes": "Manual p.75: indoor wall-mounted thermistors = 10 kOhm (Table 2), outdoor = 20 kOhm (Table 1). The PCB item table for 18/24 labels callouts inconsistently; the board silkscreen name CN_IDCOIL / CN_COIL is the reliable identifier. No EEV on the indoor unit - the expansion valve is in the outdoor unit.",
   "gaps": [
    "Manual does not state whether TH1 is soldered or plugged on the display board, nor its board pins.",
@@ -4467,7 +4459,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "S90",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (coil intake side)",
+    "location": "Outdoor air",
     "kind": "thermistor",
     "chart": "daikin-mini-20k-rounded",
     "errorCodes": [
@@ -4696,7 +4688,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor (DC)",
     "location": "Outdoor main PCB",
     "kind": "other",
-    "test": "See the rotation pulse check p.79 (written for S71 on 09/12) and E7 flow p.51",
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.70 (RKB/RKN 18/24) + p.72 (RXB/RXN 18/24) wiring, PCB photos p.16-17"
    },
    {
@@ -4714,7 +4705,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to filter PCB plug S11",
     "location": "Outdoor main PCB",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.70 (RKB/RKN 18/24) + p.72 (RXB/RXN 18/24) wiring, PCB photos p.16-17"
    },
    {
@@ -4722,7 +4712,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to main PCB plug S10",
     "location": "Outdoor filter PCB",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-ftxb-rxb-axvju-service.pdf p.70 (RKB/RKN 18/24) + p.72 (RXB/RXN 18/24) wiring, PCB photos p.16-17"
    },
    {
@@ -4874,7 +4863,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X12A",
     "code": "Tm",
     "name": "Outdoor coil thermistor (diagram label 'COIL CIRCUIT', no ring colour shown)",
-    "location": "Outdoor coil - clamped to a return bend entering the outdoor coil (per *VZC20/AVZC18 service defrost text)",
+    "location": "Outdoor coil circuit (wiring diagram label 'COIL CIRCUIT')",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -4901,7 +4890,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Refrigerant line in the outdoor unit (suction in cooling, discharge in heating on heat pumps)",
     "kind": "pressure",
     "chart": "daikin-inv-hlpt-graph",
-    "spec": "Output: DC voltmeter between the black and white wires at X17A (DX20VC manual gives no pin numbers; Goodman *VZC20/AVZC18 manuals call these terminals 1 and 3), power ON; compare with the detected-pressure-vs-output-voltage graph (*VZC20 service p.15-16, AVZC18 service p.10; DX20VC service S-13 p.21 says 'between black and white wirings'). Supply voltage is not stated in the manuals.",
+    "spec": "Power ON: DC voltmeter across the sensor between the black and white wires; compare with the 'Voltage vs Pressure Characteristics' graph (S-13, p.21): about 0 psig at 0.5 V, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V. Open, shorted or outside the range = replace. Pin numbers and supply voltage are not stated in this manual.",
     "errorCodes": [
      "E26",
      "E15",
@@ -4924,7 +4913,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor (BK/WH/RD)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G)"
    },
    {
@@ -4933,15 +4921,13 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Communication/thermostat terminals to indoor unit (1, 2, R, C, W1, Y1, Y2, L, O)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G); daikin-dx20vc-dz20vc-service.pdf p.71"
    },
    {
     "plug": "X52A",
-    "name": "Share data (memory chip connector, 12-pin white)",
+    "name": "SHARE DATA connector",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G); daikin-dx20vc-dz20vc-service.pdf p.71"
    },
    {
@@ -4949,7 +4935,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power conditioner (choke) leads",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G)"
    },
    {
@@ -4958,7 +4943,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor terminals (BK/RD/YL)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G)"
    },
    {
@@ -4966,7 +4950,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Line power from terminal block",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G)"
    },
    {
@@ -4974,16 +4957,14 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Ground",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.77; goodman-gvxc20-condenser-install.pdf p.18 (0140R00352-G)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug - see notes; X11A ambient, X13A suction and X111A fin are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
-  "notes": "X12A is one 8-pin connector carrying three thermistors: discharge (red ring), liquid (yellow ring), coil circuit. The manual does not number which X12A pins belong to which thermistor - trace the ring-coloured lead. No fin thermistor on this 2-3 ton board (board is cooled by the liquid line through a heat-sink bracket). Not a sensor: X32A = high pressure switch. H/LPT pressure transducer: the manuals give only a straight-line graph (DX20VC service p.21 'Voltage vs Pressure Characteristics'; *VZC20 service p.16). Read off the graph: about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt). It reads suction pressure in cooling and discharge pressure in heating (heat pumps). Goodman *VZC20 service p.15 and AVZC18 service p.10 say measure X17A terminals 1 and 3 (black and white wires). Code 55 = HI DIS TEMP MIN (ClimateTalk only, no board LED). No outdoor EEV on this AC board (no EEV connector on the wiring diagram); metering is the indoor TXV or the indoor DV**PEC EEV.",
+  "test": "Power off. Unplug the thermistor's lead from the board (X12A is one shared 8-pin plug for discharge, liquid and coil; X11A is the 2-pin ambient plug). Measure ohms across that sensor's two wires and compare with the p.74 chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires, compare with the S-13 voltage-vs-pressure graph against a gauge reading.",
+  "notes": "X12A is one 8-pin connector carrying three thermistors: discharge (red ring), liquid (yellow ring), coil circuit. The manual does not number which X12A pins belong to which thermistor - trace the ring-coloured lead. No fin thermistor is drawn on this 2-3 ton board (the board is cooled by the liquid line through the heat sink, p.10). Not a sensor: X32A = high pressure switch. H/LPT pressure transducer: the manual gives only a straight-line graph (S-13, p.21): about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt). It reads suction pressure in cooling and discharge pressure in heating. Code 55 = HI DIS TEMP MIN (p.70). No outdoor EEV on this AC board (no EEV connector on the wiring diagram).",
   "gaps": [
    "X12A pin numbers for each thermistor not given",
-   "H/LPT pin numbers on X17A not stated in the Daikin DX20VC manual (Goodman *VZC20/AVZC18 manuals say terminals 1 and 3)",
-   "Pressure sensor supply voltage and which wire is supply are not stated in the manuals - only the black-white output reading"
+   "H/LPT pin numbers on X17A and which wire is the supply are not stated in the manual - only the black-white output reading"
   ],
   "sources": [
    {
@@ -5059,7 +5040,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X12A",
     "code": "Tm",
     "name": "Outdoor coil thermistor (diagram label 'COIL INLET', no ring colour shown)",
-    "location": "Outdoor coil - clamped to a return bend entering the outdoor coil (per *VZC20/AVZC18 service defrost text)",
+    "location": "Outdoor coil (wiring diagram label 'COIL INLET')",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -5086,7 +5067,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Refrigerant line in the outdoor unit (suction in cooling, discharge in heating on heat pumps)",
     "kind": "pressure",
     "chart": "daikin-inv-hlpt-graph",
-    "spec": "Output: DC voltmeter between the black and white wires at X17A (DX20VC manual gives no pin numbers; Goodman *VZC20/AVZC18 manuals call these terminals 1 and 3), power ON; compare with the detected-pressure-vs-output-voltage graph (*VZC20 service p.15-16, AVZC18 service p.10; DX20VC service S-13 p.21 says 'between black and white wirings'). Supply voltage is not stated in the manuals.",
+    "spec": "S-13 (p.21): with power ON, DC voltmeter between the black and white wires; graph: 0.5 V = 0 PSIG, about 200 PSIG per volt (4.0 V = 700 PSIG). Senses suction pressure in cooling, discharge pressure in heating. Pin numbers and supply voltage are not stated.",
     "errorCodes": [
      "E26",
      "E15",
@@ -5108,7 +5089,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    },
    {
@@ -5117,7 +5097,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor (BK/WH/RD)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    },
    {
@@ -5125,7 +5104,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "From noise filter board (X98A)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    },
    {
@@ -5133,7 +5111,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "To inverter board X99A",
     "location": "Noise filter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    },
    {
@@ -5142,7 +5119,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Communication/thermostat terminals to indoor unit (1, 2, R, C, W1, Y1, Y2, L, O)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    },
    {
@@ -5150,7 +5126,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Share data (memory chip connector)",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G); daikin-dx20vc-dz20vc-service.pdf p.71"
    },
    {
@@ -5158,7 +5133,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Line power from noise filter board",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    },
    {
@@ -5167,12 +5141,11 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor terminals",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.78; goodman-gvxc20-condenser-install.pdf p.19 (0140R00353-G)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug - see notes; X11A ambient, X13A suction and X111A fin are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
-  "notes": "X12A is one multi-pin connector: discharge (red ring), liquid (yellow ring), coil inlet. Pin numbers not given. X111A = fin thermistor on the inverter heat sink (no chart or error code given in the manual). Not sensors: X32A HPS, X99A noise-filter feed. H/LPT pressure transducer: the manuals give only a straight-line graph (DX20VC service p.21 'Voltage vs Pressure Characteristics'; *VZC20 service p.16). Read off the graph: about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt). It reads suction pressure in cooling and discharge pressure in heating (heat pumps). Goodman *VZC20 service p.15 and AVZC18 service p.10 say measure X17A terminals 1 and 3 (black and white wires). No outdoor EEV on this AC board (no EEV connector on the wiring diagram); metering is the indoor TXV or the indoor DV**PEC EEV.",
+  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug for discharge, liquid and coil inlet; X11A ambient and X111A fin are 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the S-13 voltage-vs-pressure graph against a gauge reading.",
+  "notes": "X12A is one multi-pin connector: discharge (red ring), liquid (yellow ring), coil inlet. Pin numbers not given. X111A = fin thermistor on the inverter heat sink (no chart or error code given in the manual). Not sensors: X32A HPS, X99A noise-filter feed. H/LPT pressure transducer: the manual gives only a straight-line graph (S-13 p.21): about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V. It reads suction pressure in cooling and discharge pressure in heating. No outdoor EEV on this AC board (no EEV connector on the wiring diagram).",
   "gaps": [
    "X12A pin numbers not given",
    "Fin thermistor X111A: no resistance chart and no error code in the manuals",
@@ -5247,7 +5220,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X12A",
     "code": "Tm",
     "name": "Outdoor coil thermistor (diagram label 'COIL CIRCUIT', no ring colour shown)",
-    "location": "Outdoor coil - clamped to a return bend entering the outdoor coil (per *VZC20/AVZC18 service defrost text)",
+    "location": "Outdoor coil (piping diagram shows Tm on the outdoor heat exchanger)",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -5271,10 +5244,10 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X17A",
     "code": "H/LPT",
     "name": "High/low pressure transducer (3-wire)",
-    "location": "Refrigerant line in the outdoor unit (suction in cooling, discharge in heating on heat pumps)",
+    "location": "Gas (suction) line in the outdoor unit, between the gas ball valve and the reversing valve (piping diagram); reads suction pressure in cooling",
     "kind": "pressure",
     "chart": "daikin-inv-hlpt-graph",
-    "spec": "Output: DC voltmeter between the black and white wires at X17A (DX20VC manual gives no pin numbers; Goodman *VZC20/AVZC18 manuals call these terminals 1 and 3), power ON; compare with the detected-pressure-vs-output-voltage graph (*VZC20 service p.15-16, AVZC18 service p.10; DX20VC service S-13 p.21 says 'between black and white wirings'). Supply voltage is not stated in the manuals.",
+    "spec": "Power ON: DC voltmeter between the black and white wires of the sensor (S-13, p.21); compare with the 'Voltage vs Pressure Characteristics' graph. The DX20VC manual gives no X17A pin numbers and no supply voltage.",
     "errorCodes": [
      "E26",
      "E15",
@@ -5305,7 +5278,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Crankcase heater",
     "location": "Inverter board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "spec": "PTC crankcase heater, 33 W 240 V; cool resistance approximately 1745 Ohm, rising as the compressor shell warms (S-18, 5 ton only)",
+    "test": "Power off, unplug X28A, ohm the heater: should be continuous, about 1745 Ohm cold; open = replace",
     "source": "daikin-dx20vc-dz20vc-service.pdf p.79; goodman-gvxc20-condenser-install.pdf p.20 (0140R00354-H)"
    },
    {
@@ -5400,7 +5374,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-dx20vc-dz20vc-service.pdf p.79; goodman-gvxc20-condenser-install.pdf p.20 (0140R00354-H)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug - see notes; X11A ambient, X13A suction and X111A fin are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
+  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug for coil, liquid and discharge - see notes; X11A ambient and X111A fin are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
   "notes": "5 ton board differs from 2-4 ton: separate fan control board (X202A/X301A/X302A), crankcase heater on X28A (heater, not a sensor - about 1745 ohms cold per service manual), current sensor on L1/L2. X12A carries discharge (red ring), liquid (yellow ring), coil circuit; pin numbers not given. X111A = fin thermistor (no chart). H/LPT pressure transducer: the manuals give only a straight-line graph (DX20VC service p.21 'Voltage vs Pressure Characteristics'; *VZC20 service p.16). Read off the graph: about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt). It reads suction pressure in cooling and discharge pressure in heating (heat pumps). Goodman *VZC20 service p.15 and AVZC18 service p.10 say measure X17A terminals 1 and 3 (black and white wires). No outdoor EEV on this AC board (no EEV connector on the wiring diagram); metering is the indoor TXV or the indoor DV**PEC EEV.",
   "gaps": [
    "X12A pin numbers not given",
@@ -5621,7 +5595,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-dz20vc-install.pdf p.13 (0140R00344-K); same drawing daikin-goodman-vzc20-service.pdf p.110"
    }
   ],
-  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug - see notes; X11A ambient, X13A suction and X111A fin are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
+  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared 8-pin plug for discharge, liquid, defrost and coil - see notes; X11A ambient is its own 2-pin plug). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
   "notes": "X12A is one 8-pin connector carrying four thermistors: discharge (red ring), liquid (yellow ring), defrost (blue ring), coil circuit (no ring colour shown). Pin numbers not given. X21A = outdoor EEV coil (6-pin). Not sensors: X25A = LINE VOLTAGE (208/240 V) to the reversing-valve transformer primary - only the transformer's 24 V side goes to the coil, X32A HPS. Outdoor-air fault 25 shows '-' on the DZ20VC board LED (ClimateTalk 25 only) per the DZ20VC install manual. DZ20VC 036 is NOT on this map - the DZ20VC manual puts it on the 3-5 ton diagram (with fin thermistor X111A), while the Goodman *VZC20 manual puts *VZC200361 on this 2-3 ton diagram. H/LPT pressure transducer: the manuals give only a straight-line graph (DX20VC service p.21 'Voltage vs Pressure Characteristics'; *VZC20 service p.16). Read off the graph: about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt). It reads suction pressure in cooling and discharge pressure in heating (heat pumps). Goodman *VZC20 service p.15 and AVZC18 service p.10 say measure X17A terminals 1 and 3 (black and white wires).",
   "gaps": [
    "X12A pin numbers not given",
@@ -6065,8 +6039,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "RVC Reversing valve coil (YL, YL)",
     "location": "Inverter board",
     "kind": "other",
-    "spec": "24 V at the coil terminals X25A in the mode that energizes it (goodman-avzc18-heatpump-service.pdf p.13)",
-    "test": "Manual: check 24 V at X25A, then coil continuity; Power off, unplug, ohm across it: open = bad",
+    "spec": "24 V at the valve coil terminals X25A with the system in COOLING (manual: 'test the voltage (24V) at the valve coil terminals (X25A) ... while the system is on the COOLING cycle')",
+    "test": "Run in cooling: check 24 V at X25A. No voltage = check control voltage / board. Voltage present but valve will not shift = coil/valve (manual: remove the coil and listen for the pilot plunger click).",
     "source": "goodman-avzc18-heatpump-service.pdf p.82 (0140R00426-E); test p.13"
    },
    {
@@ -6119,8 +6093,8 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "goodman-avzc18-heatpump-service.pdf p.82 (0140R00426-E)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's lead from the board connector (X12A is one shared multi-pin plug - see notes; X11A ambient, X13A suction and X111A fin are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts between the black and white wires; compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
-  "notes": "X12A is one 8-pin connector: discharge (red ring), liquid (yellow ring), defrost (blue ring), coil circuit. X13A = suction thermistor Ts (unique to this family). X21A = outdoor EEV coil - NOTE the EEV connector colours split 2-3 ton vs 4-5 ton here (the *VZC20 manual splits 2 ton vs 3-5 ton). Not sensors: X25A reversing valve coil, X32A HPS, X853A/X854A fan motor. AVZC18 service p.10: X17A pressure transducer - DC volts across terminals 1 and 3 (black and white). H/LPT pressure transducer: the manuals give only a straight-line graph (DX20VC service p.21 'Voltage vs Pressure Characteristics'; *VZC20 service p.16). Read off the graph: about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt). It reads suction pressure in cooling and discharge pressure in heating (heat pumps). Goodman *VZC20 service p.15 and AVZC18 service p.10 say measure X17A terminals 1 and 3 (black and white wires).",
+  "test": "Power off. Unplug the thermistor's lead from the board connector (discharge, liquid, defrost and coil share one 8-pin plug with no X-number printed on this drawing - see notes; X11A ambient and X13A suction are their own 2-pin plugs). Measure ohms across that sensor's two wires and compare with the chart at the pipe/air temperature you measure there; open, shorted or off-chart = replace the sensor. Pressure transducer H/LPT (X17A): power ON, DC volts across terminals 1 and 3 (black and white wires); compare with the manual's voltage-vs-pressure graph against a gauge reading (see notes).",
+  "notes": "The thermistor plug for discharge (red ring), liquid (yellow ring), defrost (blue ring) and coil circuit is one 8-pin connector with no X-number printed on the AVZC18/DZ18VC drawing (other boards call it X12A - do not rely on that label here). X13A = suction thermistor Ts (green ring). X21A = outdoor EEV coil - EEV connector colours split 2-3 ton vs 4-5 ton (AVZC18 service p.12). Not sensors: X25A reversing valve coil, X32A HPS, X853A/X854A fan motor. No fin thermistor plug is drawn on this board. AVZC18 service p.10: X17A pressure transducer - DC volts across terminals 1 and 3 (black and white), suction pressure in cool mode, discharge pressure in heat mode. The manual gives only a straight-line graph: about 0 psig at 0.5 V DC, 100 psig at 1.0 V, 300 psig at 2.0 V, 500 psig at 3.0 V, 700 psig at 4.0 V (about 200 psig per volt).",
   "gaps": [
    "X12A pin numbers not given",
    "Suction thermistor Ts (X13A): not in the manual's resistance chart",
@@ -6252,7 +6226,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Auxiliary alarm terminals - shipped with a short red jumper; replace with a condensate/aux alarm switch (note 9). Open = error EF (AUX ALARM FAULT)",
     "location": "Indoor unit PCB",
     "kind": "other",
-    "test": "Power off, ohm TB4-TB5: closed (near 0 Ohm) with jumper or alarm switch normal; open = EF (daikin-dx20vc-dz20vc-service.pdf p.52)",
+    "test": "EF (E_EF) = auxiliary contacts TB4-TB5 open: check the drain-pan water level and the connected alarm device; if no alarm switch is used, TB4 and TB5 must be closed (factory jumper).",
     "source": "daikin-dvpec-dvfec-airhandler-install.pdf p.24 (0140A00778-A); board layout daikin-dx20vc-dz20vc-service.pdf p.45, diagram daikin-dx20vc-dz20vc-service.pdf p.81; daikin-dx20vc-dz20vc-service.pdf p.52"
    },
    {
@@ -6410,7 +6384,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor DC fan motor",
     "location": "Control PCB1, 12-pin",
     "kind": "other",
-    "spec": "U-V and V-W 67.0-85.1 Ohm (FTX09/12NMVJU), 39.6-50.3 Ohm (FTX15NMVJU); pins 12=U, 9=V, 6=W, 3=GND, 2=15 VDC motor control, 1=5 VDC rotation pulse",
+    "spec": "U-V and V-W 67.0-85.1 Ohm (FTX09/12NMVJU); pins 12=U, 9=V, 6=W, 3=GND, 2=15 VDC motor control, 1=5 VDC rotation pulse",
     "test": "Check No.03: power off, unplug, ohm U-V and V-W. Power on: 15 VDC pins 2-3. Power on, unit stopped, turn fan by hand: 4 pulses per turn at pins 1-3",
     "source": "daikin-ftx-rxl-aurora-service.pdf p.234 (printed 229) drawing 3D086429D; PCB list p.30-31 (printed 25-26); spec p.190 (printed 185) Check No.03"
    },
@@ -6514,7 +6488,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (horizontal blade)",
     "location": "Control PCB2, 5-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftx-rxl-aurora-service.pdf p.235 (printed 230) drawing 3D090199B; PCB lists p.32-33 (printed 27-28)"
    },
    {
@@ -6979,7 +6952,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan level)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "A3 flow: unplug the float switch, short X15A and restart - if A3 clears, replace the float switch; if A3 stays, replace the control PCB. Switch should be closed (near 0 Ohm) at normal water level",
+    "test": "A3 flow: unplug the float switch, short X15A and restart - if A3 clears, replace the float switch; if A3 stays, replace the control PCB",
     "source": "daikin-fdmq-rvju-service.pdf p.141 (diagram 3D112629A; same drawing in daikin-ftx-rxl-aurora-service.pdf p.238), connector lists p.20-21; daikin-fdmq-rvju-service.pdf p.76 (A3)"
    },
    {
@@ -7051,7 +7024,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reactor",
     "location": "Indoor fan PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-fdmq-rvju-service.pdf p.141 (diagram 3D112629A; same drawing in daikin-ftx-rxl-aurora-service.pdf p.238), connector lists p.20-21"
    },
    {
@@ -7229,7 +7201,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motors on the decoration panel (option): BYFQ60C has 4 swing motors M1S-M4S, BYFQ60B has 1 (M1S)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (each motor winding)",
     "source": "daikin-ffq-cassette-service.pdf p.154 (3D106024); connector list p.25"
    },
    {
@@ -7399,7 +7370,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1S, M2S, M3S Swing motors",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (motor windings)",
     "source": "daikin-ftxr-rx-rmvju-service.pdf p.146 (printed 142, 3D103375A); connector list p.25-26 (printed 21-22)"
    },
    {
@@ -7518,7 +7488,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing flap motors M1S, M2S, M3S",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ftxm-atmosphera-service.pdf p.169 (3D129547A, 09/12), p.170 (3D129548A, 18/24); PCB list p.27-30"
    },
    {
@@ -7785,11 +7754,11 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "S36 (A5P)",
     "code": "A1P",
-    "name": "To control PCB A1P (S602)",
+    "name": "To control PCB A1P (S602). Plug label differs by size: 18/24 = S36 (3-pin, 3 wires); 09/12 = 'CN' (4-pin, 4 wires)",
     "location": "INTELLIGENT EYE PCB A5P",
     "kind": "other",
     "test": "Power off before unplugging; check plug seated and wires intact end to end",
-    "source": "daikin-ftxm-atmosphera-service.pdf p.171 (3D162362, 09/12), p.172 (3D162102, 18/24)"
+    "source": "daikin-ftxm-atmosphera-service.pdf p.171 (3D162362, 09/12: A5P plug 'CN', 4 wires) and p.172 (3D162102, 18/24: A5P plug S36, 3 wires)"
    },
    {
     "plug": "S90 (A6P)",
@@ -7940,7 +7909,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor (U, V, W leads)",
     "location": "Main PCB1, 3-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftx-rxl-aurora-service.pdf p.239 (printed 234) drawing 3D099947; PCB list p.42-43 (printed 37-38)"
    },
    {
@@ -8093,7 +8061,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor leads",
     "location": "Main PCB tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftx-rxl-aurora-service.pdf p.240 (printed 235) drawing 3D099948 (RXL12QMVJU) and p.241 (printed 236) drawing 3D122861 (RXL12QMVJU9) - same plugs on both; PCB list p.44-45 (printed 39-40)"
    },
    {
@@ -8246,7 +8213,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor leads",
     "location": "Main PCB tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftx-rxl-aurora-service.pdf p.242 (printed 237) drawing 3D099952; PCB list p.46 (printed 41)"
    },
    {
@@ -8305,7 +8271,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R3T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (behind the coil); S90 thermistor plug on main PCB",
+    "location": "Outdoor air (diagram label OUTDOOR); S90 thermistor plug on main PCB",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -8401,7 +8367,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor leads",
     "location": "Main PCB1 tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftx-rxl-aurora-service.pdf p.243 (printed 238) drawing 3D122866A; PCB list p.47-48 (printed 42-43)"
    },
    {
@@ -8709,7 +8674,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (behind the coil); S90 thermistor plug on main PCB",
+    "location": "Outdoor air; S90 thermistor plug on main PCB",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -8951,11 +8916,12 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S40 (A1P)",
+    "pins": "1-2 S1PH (GRY), 3-4 Q1M (WHT, via in-line X12A)",
     "code": "Q1M + S1PH",
-    "name": "Compressor overload protector Q1M and high pressure switch S1PH in series (via in-line X12A)",
+    "name": "High pressure switch S1PH (pins 1-2) and compressor overload protector Q1M (pins 3-4, via in-line X12A) - two separate pairs on one 4-pin plug",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Power off, unplug S40. H3/E3: pins 1-2 (S1PH) nearly 0 Ohm = OK; infinite = check S1PH at its own 2 terminals (open = replace S1PH, closed = replace harness). E5: pins 3-4 (OL Q1M) nearly 0 Ohm = OK; infinite = check the 2 OL terminals (open = replace OL, closed = replace OL harness).",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    },
    {
@@ -8984,7 +8950,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Terminal strip X1M 1, 2, 3 (power + transmission)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    },
    {
@@ -8992,7 +8957,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Earth/ground wires",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    },
    {
@@ -9001,7 +8965,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor (via in-line X11A)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    },
    {
@@ -9010,7 +8973,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line compressor lead connector (RED/YLW/BLU)",
     "location": "Compressor harness",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    },
    {
@@ -9019,7 +8981,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line connector on the overload protector leads (WHT/WHT)",
     "location": "S40 harness",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    },
    {
@@ -9028,7 +8989,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Jumper - cut to enable optional drain pan heater E1H (heater is wired from X1M through FU4/FU5 and thermostat S1T, not a board plug)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31; daikin-ftxm-atmosphera-service.pdf p.161"
    },
    {
@@ -9038,7 +8998,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Terminal strip",
     "location": "Outdoor unit",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.173 (3D129643B, WVJU9/VVJU), p.175 (3D161739, WVJU8); PCB p.31"
    }
   ],
@@ -9135,11 +9094,11 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S40 (A1P)",
+    "pins": "1-2 S1PH (GRY), 3-4 Q1M (WHT, through X12A)",
     "code": "Q1M + S1PH",
     "name": "Compressor overload protector Q1M and high pressure switch S1PH (via in-line X12A)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9168,7 +9127,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Terminal block X2M 1, 2, 3 (indoor-outdoor transmission)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9177,7 +9135,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "To service monitor PCB A2P (S501, S502)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9186,7 +9143,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "To main PCB A1P (S201, S202)",
     "location": "Service monitor PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9194,7 +9150,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Line voltage endurance test (factory)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9203,7 +9158,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power from terminal block X1M L1/L2",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9211,7 +9165,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Earth/ground wires",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9220,7 +9173,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor (via in-line X11A)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9229,7 +9181,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line compressor lead connector",
     "location": "Compressor harness",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9238,7 +9189,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line connector on the overload protector leads",
     "location": "S40 harness",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9247,7 +9197,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Switch on to enable optional drain pan heater E1H (heater wired from X1M through FU4/FU5 and S1T, not a board plug)",
     "location": "Service monitor PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33; daikin-ftxm-atmosphera-service.pdf p.161"
    },
    {
@@ -9257,7 +9206,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power terminal block",
     "location": "Outdoor unit",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    },
    {
@@ -9267,7 +9215,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Terminal block to indoor unit",
     "location": "Outdoor unit",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-ftxm-atmosphera-service.pdf p.174 (3D129644B); PCB p.32-33"
    }
   ],
@@ -9425,7 +9372,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Four way (reversing) valve solenoid coil - switched by relay K1R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA)"
    },
    {
@@ -9434,7 +9380,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Hot gas bypass solenoid valve coil - relay K2R (turns on with low pressure protection control)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.75, p.111"
    },
    {
@@ -9443,7 +9388,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Unloading circuit (U/L circuit) solenoid valve coil - relay K3R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.75"
    },
    {
@@ -9452,7 +9396,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor crankcase heater - relay K4R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA)"
    },
    {
@@ -9461,8 +9404,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (compressor) - opens at 4.0 MPa (580 psi) and stops the compressor; never jumper it (note 2)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "spec": "Opens at 4.0 MPa (580 psi) or more (TA manual p.75)",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "spec": "Opens at 4.0 MPa (580 psi), resets at 3.0 MPa (435 psi) (E3, TA p.259)",
+    "test": "Power off, unplug X32A, check the switch has continuity (E3 flow chart TA p.260)",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.75"
    },
    {
@@ -9472,17 +9415,18 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Electronic expansion valve coil (main EEV)",
     "location": "Main PCB A1P",
     "kind": "eev",
-    "spec": "35-55 Ohm pins 1-6, 2-6, 3-6, 4-6 (TA manual p.315)",
+    "spec": "35-55 Ohm pins 1-6, 2-6, 3-6, 4-6 (pin 6 red = common; 1 white, 2 yellow, 3 orange, 4 blue; pin 5 unused)",
     "test": "Power off, unplug, ohm pins 1-6, 2-6, 3-6, 4-6 (pin 6 = common): each 35-55 Ohm (CHECK 18)",
-    "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.315 (CHECK 18)"
+    "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.315 (printed 309, RZR/RZQ18/24TAVJU X21A table), p.267 (E9), wiring p.322-323; daikin-rzq-rzr-tb-skyair-service.pdf p.363 (printed 357, 'Outdoor Unit 18/24 class' X21A 35-55 Ohm), p.369-370"
    },
    {
     "plug": "X106A (A1P)",
+    "pins": "1 WHT FG, 2 ORG Vsp, 3 BRN Vcc, 4 BLU GND, 7 RED Vdc (5, 6 unused)",
     "code": "M1F",
     "name": "Outdoor fan motor (DC)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off and unplug; fan motor connector check per CHECK 16 (daikin-rzq-rzr-ta-skyair-service.pdf p.313)",
+    "test": "Power off, unplug X106A and measure resistance between the signal pins and GND (pin 4) as drawn in CHECK 16; manual's judgment: each within +/-20% (p.313)",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.322 (3D115455 TAVJU), p.323 (3D124495 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.369, p.370 (3D124495 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.313"
    },
    {
@@ -9616,11 +9560,9 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the connector from the outdoor main PCB (A1P), measure the thermistor you need across its own pair of wires, and compare with its chart at the measured pipe/air temperature. Several thermistors share X12A/X13A - follow the wire pair to the right sensor. Pressure sensors: power on, measure DC volts at the PCB - high-pressure sensor X17A between pin 1 (white, signal) and pin 3 (black, GND); low-pressure sensor X18A between pin 2 (white) and pin 3 (black); pin 4 (red) = +5 V. PH (MPa) = 4.15/3.0 x VH - 4.15/3.0 x 0.5 (~1.38 x VH - 0.69); PL (MPa) = 1.7/3.0 x VL - 1.7/3.0 x 0.5 (~0.57 x VL - 0.28); 1 MPa = 145 psi. Compare with gauge pressure.",
-  "notes": "TBVJUB models (newest SiUS281811EC, p.343-344, 402-405): a compressor overload protector Q1E is wired in series with the high-pressure switch S1PH (X505A to X32A), so code F3 can also mean Q1E tripped (125 +/- 3 C). Sensor plugs are the same as below; EEVs run through relay connectors X506A/X507A. 18/24 class has NO R6T (subcooling). R2T-R5T all on X12A; R7T alone on X13A. Pressure sensor harness plugs X504A (high, S1NPH) and X503A (low, S1NPL) land on X17A / X18A of A1P. TAVJU (3D115455), TAVJUA and TBVJUA (3D124495) diagrams show the same sensor plugs. Has an outdoor EEV (Y1E, X21A) - no ohm figure in these manuals (see gaps).",
+  "notes": "TBVJUB models (not in this map; SiUS281811EC p.343-344, wiring p.402 3D146850D): a compressor overload protector Q1E is wired in series with the high-pressure switch S1PH through relay connector X505A to X32A, so F3 can also mean Q1E tripped (125 +/- 3 C); the EEV Y1E reaches X21A through relay connector X506A and the fin thermistor is labelled FINTH. 18/24 class has NO R6T (subcooling). R2T-R5T all on X12A; R7T alone on X13A. Pressure sensor harness plugs X504A (high, S1NPH) and X503A (low, S1NPL) land on X17A / X18A of A1P. TAVJU (3D115455), TAVJUA and TBVJUA (3D124495) diagrams show the same sensor plugs. Outdoor EEV Y1E (X21A): 35-55 ohm pins 1-6..4-6 (TA p.315, TB p.363).",
   "gaps": [
    "Pins inside X12A / X13A for each thermistor are not stated in SiUS281811EA/EB (only the connector). Identify by wire pair/route.",
-   "Outdoor EEV coil Y1E (plug X21A on wiring EA p.322): SiUS281811EA/EB CHECK 18 gives ohm figures for indoor units only - no outdoor coil ohm figure (E9 page p.267/EB p.312 just refers to CHECK 18).",
-   "Outdoor EEV coils Y1E (main, X21A) and Y3E (subcooling, X22A) per wiring EA p.324: no outdoor coil ohm figure in SiUS281811EA/EB (CHECK 18 covers indoor units only).",
    "Pressure sensors: manual prints only a formula + graph, no table - chart rows computed from the formula."
   ],
   "sources": [
@@ -9682,6 +9624,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X12A",
+    "pins": "1-2",
     "code": "R2T",
     "name": "Discharge pipe thermistor (M1C discharge)",
     "location": "Compressor discharge pipe",
@@ -9694,6 +9637,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X12A",
+    "pins": "3-4",
     "code": "R3T",
     "name": "Suction pipe thermistor 1",
     "location": "Suction pipe",
@@ -9706,6 +9650,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X12A",
+    "pins": "5-6",
     "code": "R4T",
     "name": "Outdoor heat exchanger deicer (coil) thermistor",
     "location": "Outdoor heat exchanger",
@@ -9718,6 +9663,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X12A",
+    "pins": "7-8",
     "code": "R5T",
     "name": "Suction pipe thermistor 2",
     "location": "Suction pipe",
@@ -9730,6 +9676,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X13A",
+    "pins": "1-2",
     "code": "R6T",
     "name": "Subcooling heat exchanger gas pipe thermistor",
     "location": "Subcooling heat exchanger gas pipe",
@@ -9742,6 +9689,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X13A",
+    "pins": "3-4",
     "code": "R7T",
     "name": "Outdoor heat exchanger liquid pipe thermistor",
     "location": "Liquid pipe",
@@ -9799,7 +9747,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Four way (reversing) valve solenoid coil - relay K1R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9808,7 +9755,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor crankcase heater - relay K4R",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9849,7 +9795,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor - upper (DC)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off and unplug; fan motor connector check per CHECK 16 (daikin-rzq-rzr-ta-skyair-service.pdf p.313)",
+    "test": "CHECK 16 (outdoor unit): turn off the power, remove the connector (X106A, X107A) from the PCB and measure the resistance; judgment: resistance value between each phase within +/-20%. The CHECK 16 drawing shows the signal connector as 7 pins (1 WHT FG, 2 ORG Vsp, 3 BRN Vcc, 4 BLU GND, 7 RED Vdc) measured to GND.",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.203, p.313"
    },
    {
@@ -9858,7 +9804,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor - lower (DC)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off and unplug; fan motor connector check per CHECK 16 (daikin-rzq-rzr-ta-skyair-service.pdf p.313)",
+    "test": "CHECK 16 (outdoor unit): turn off the power, remove the connector (X106A, X107A) from the PCB and measure the resistance; judgment: resistance value between each phase within +/-20%. The CHECK 16 drawing shows the signal connector as 7 pins (1 WHT FG, 2 ORG Vsp, 3 BRN Vcc, 4 BLU GND, 7 RED Vdc) measured to GND.",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA); daikin-rzq-rzr-ta-skyair-service.pdf p.203, p.313"
    },
    {
@@ -9867,7 +9813,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power from noise filter PCB A2P (X98A)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9876,7 +9821,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power out to main PCB A1P (X99A)",
     "location": "Noise filter PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9884,7 +9828,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power supply for optional adaptor (note 4) - normally empty",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9893,7 +9836,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Transmission wiring to terminal strip X2M: F1/F2 to indoor, F1/F2 to outdoor (BRN/RED/ORG/YLW)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9902,7 +9844,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Cool/heat selector PCB A4P (X1A) - optional C/H selector",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9911,7 +9852,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "From main PCB X66A",
     "location": "C/H selector PCB A4P (optional)",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9921,7 +9861,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "C/H selector terminals A, B, C",
     "location": "C/H selector PCB A4P (optional)",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9930,7 +9869,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor plug on the U/V/W leads (RED/WHT/BLU)",
     "location": "In-line at compressor leads",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9939,7 +9877,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line connector on the low pressure sensor lead (goes to X18A)",
     "location": "In-line",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9948,7 +9885,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line connector on the high pressure sensor lead (goes to X17A)",
     "location": "In-line",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9957,7 +9893,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power in (LA/NA from X1M L1/L2) and out (LB/NB to A1P LC/NC)",
     "location": "Noise filter PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9966,7 +9901,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power in from noise filter PCB A2P (LB/NB)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9975,7 +9909,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor leads (via X502A)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9985,7 +9918,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power supply terminal strip",
     "location": "Control box",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    },
    {
@@ -9995,17 +9927,14 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Transmission terminal strip",
     "location": "Control box",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.324 (3D115456 TAVJU), p.325 (3D124500 TAVJUA); daikin-rzq-rzr-tb-skyair-service.pdf p.371, p.372 (3D124500 TAVJUA/TBVJUA)"
    }
   ],
   "test": "Power off. Unplug the connector from the outdoor main PCB (A1P), measure the thermistor you need across its own pair of wires, and compare with its chart at the measured pipe/air temperature. Several thermistors share X12A/X13A - follow the wire pair to the right sensor. Pressure sensors: power on, measure DC volts at the PCB - high-pressure sensor X17A between pin 1 (white, signal) and pin 3 (black, GND); low-pressure sensor X18A between pin 2 (white) and pin 3 (black); pin 4 (red) = +5 V. PH (MPa) = 4.15/3.0 x VH - 4.15/3.0 x 0.5 (~1.38 x VH - 0.69); PL (MPa) = 1.7/3.0 x VL - 1.7/3.0 x 0.5 (~0.57 x VL - 0.28); 1 MPa = 145 psi. Compare with gauge pressure.",
-  "notes": "TBVJUB models (newest SiUS281811EC, p.343-344, 402-405): a compressor overload protector Q1E is wired in series with the high-pressure switch S1PH (X505A to X32A), so code F3 can also mean Q1E tripped (125 +/- 3 C). Sensor plugs are the same as below; EEVs run through relay connectors X506A/X507A. 30-48 class adds R6T (subcooling HX gas pipe) - R6T and R7T share X13A. Fin thermistor is FINTH (X111A). Fin chart: SiUS281811EB says Type K, older SiUS281811EA says Type F - curves within ~1% (chart daikin-skyair-type-f). TAVJU (3D115456) and TAVJUA/TBVJUA (3D124500) diagrams show the same plugs. Two outdoor EEVs (Y1E main X21A, Y3E subcool X22A) - no ohm figure in these manuals.",
+  "notes": "TBVJUB models (newest SiUS281811EC, p.343-344, 402-405): a compressor overload protector Q1E is wired in series with the high-pressure switch S1PH (X505A to X32A), so code F3 can also mean Q1E tripped (125 +/- 3 C). Sensor plugs are the same as below; EEVs run through relay connectors X506A/X507A. 30-48 class adds R6T (subcooling HX gas pipe) - R6T and R7T share X13A. Fin thermistor is FINTH (X111A). Fin chart: SiUS281811EB p.354 says Type K, older SiUS281811EA p.307 says Type F - curves within ~1% (Type K chart used; no Type F chart loaded). TAVJU (3D115456) and TAVJUA/TBVJUA (3D124500) diagrams show the same plugs. Two outdoor EEVs (Y1E main X21A, Y3E subcool X22A): CHECK 18 gives 35-55 Ohm pins 1-6, 2-6, 3-6, 4-6 (pin 6 = gray COM) for RZR/RZQ30-48 (EA p.316, EB p.363).",
   "gaps": [
-   "Pins inside X12A / X13A for each thermistor are not stated in SiUS281811EA/EB (only the connector). Identify by wire pair/route.",
-   "Outdoor EEV coil Y1E (plug X21A on wiring EA p.322): SiUS281811EA/EB CHECK 18 gives ohm figures for indoor units only - no outdoor coil ohm figure (E9 page p.267/EB p.312 just refers to CHECK 18).",
-   "Outdoor EEV coils Y1E (main, X21A) and Y3E (subcooling, X22A) per wiring EA p.324: no outdoor coil ohm figure in SiUS281811EA/EB (CHECK 18 covers indoor units only).",
-   "Pressure sensors: manual prints only a formula + graph, no table - chart rows computed from the formula."
+   "Pressure sensors: manual prints only a formula + graph, no table - chart rows computed from the formula.",
+   "Outdoor fan motors: CHECK 16 draws a 7-pin signal connector for X106A/X107A, the wiring diagram draws 5 pins - no pin-by-pin ohm figure, only 'within +/-20%'."
   ],
   "sources": [
    {
@@ -10419,7 +10348,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-3 (measure); 4=+5V",
     "code": "S1NPH",
     "name": "High pressure sensor",
-    "location": "High-pressure line; lead via X504A",
+    "location": "High-pressure side; sensor lead plugs straight into A1P X17A",
     "kind": "pressure",
     "chart": "daikin-skyair-p-pressure-sensor",
     "spec": "'Measure the voltage (DC) between pins 1 and 3 of the connector.' X17A: pin 4 red = +5V, pin 3 black = GND, pin 1 white = micro-computer A/D input. PH = 1.38VH - 0.69 (MPa).",
@@ -10433,7 +10362,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "2-3 (measure); 4=+5V",
     "code": "S1NPL",
     "name": "Low pressure sensor",
-    "location": "Low-pressure line; lead via X503A",
+    "location": "Low-pressure side; sensor lead plugs straight into A1P X18A",
     "kind": "pressure",
     "chart": "daikin-skyair-p-pressure-sensor",
     "spec": "X18A: low pressure sensor voltage 'measured between X18A pins (2) and (3)'; red = +5V, black = GND, white = signal. Manual says the CHECK 6 graph (PH = 1.38VH - 0.69) is 'available for both high pressure sensor and low pressure sensor'.",
@@ -10646,7 +10575,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug the thermistor from the outdoor PCB, read resistance and temperature, compare with the manual's table (CHECK 5). Pressure sensors: DC volts on X17A pins 1-3 (high) or X18A pins 2-3 (low); manual formula PH (MPa) = 1.38 x VH - 0.69.",
-  "notes": "36/42 class adds R6T (subcooling) and R7T (liquid pipe) on X13A; fin thermistor is FINTH on X111A. Discharge chart caution as for the 18-30 map. EEV coil pin colours differ from the 18-30 class (see EEV entries).",
+  "notes": "36/42 class adds R6T (subcooling) and R7T (liquid pipe) on X13A; fin thermistor is FINTH on X111A. R2T-R5T share X12A (pins not stated). Discharge thermistor R2T uses this manual's Table 3 (635 kOhm at 32 F, 198 kOhm at 77 F); other Daikin manuals give about 806 kOhm at 32 F for the discharge thermistor - the curves agree only at high temperature, so judge an open/short rather than a small mismatch at low temperature. The manual says one pressure graph (PH MPa = 1.38 x VH - 0.69) serves both the high and low sensor. EEV coil pin colours differ from the 18-30 class (see EEV entries). The wiring legend on p.188 is printed one row out of step; the order of the descriptions (air, discharge, suction 1, coil, suction 2, subcooling, liquid, fin) matches the CHECK 5 table.",
   "gaps": [
    "Pins inside X12A / X13A not stated.",
    "SiUS281117 lists no error code for R6T / R7T (T-series manuals use J9 / J7 for the same sensors).",
@@ -10799,7 +10728,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Four way (reversing) valve solenoid coil (STF-01AQ555A1)",
     "location": "Outdoor PCB A1P, 2-pin (relay K1R)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.169 (printed 162) drawing 3D062307B; parts list p.16 (printed 9)"
    },
    {
@@ -10808,7 +10736,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Hot gas solenoid valve coil (TEV-MOAQ1684Y1)",
     "location": "Outdoor PCB A1P, 2-pin (relay K2R)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.169 (printed 162) drawing 3D062307B; parts list p.16 (printed 9)"
    },
    {
@@ -10817,7 +10744,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Injection solenoid valve coil (TEV-MOAQ1685Y1)",
     "location": "Outdoor PCB A1P, 2-pin (relay K3R)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.169 (printed 162) drawing 3D062307B; parts list p.16 (printed 9)"
    },
    {
@@ -10896,7 +10822,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor leads (RED U, WHT V, BLU W)",
     "location": "Outdoor PCB A1P tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
+    "test": "Compressor insulation: disconnect the cable from the compressor and check the compressor insulation resistance (P4/L-code flows, e.g. p.135); power transistor check CHECK 4 p.165",
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.169 (printed 162) drawing 3D062307B; parts list p.16 (printed 9)"
    },
    {
@@ -11023,7 +10949,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power in from terminal block X2M L1 (RED) / L2 (WHT)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11033,7 +10958,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor fan motor (DC)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug; fan motor connector check per CHECK 16 (daikin-rzq-rzr-ta-skyair-service.pdf p.312)",
+    "test": "CHECK 16: power off, unplug X20A and measure pins 1-4, 2-4, 3-4 and 7-4 (pin 4 BLU = GND): each must be 1 Ohm or more (no short).",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373; daikin-rzq-rzr-ta-skyair-service.pdf p.312 (CHECK 16)"
    },
    {
@@ -11042,7 +10967,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain level)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "A3: check the float switch S1L (or short-circuit connector) is plugged into X15A; a short-circuit connector must show continuity. With the drain level normal, remove the float switch, fit a jumper connector and restart - if the error clears, replace S1L.",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373; daikin-rzq-rzr-ta-skyair-service.pdf p.226"
    },
    {
@@ -11051,7 +10976,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Terminal block X1M: P1/P2 remote controller, F1/F2 transmission, T1/T2 input from outside",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11060,7 +10984,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power to sub PCB A2P (X1A)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11069,7 +10992,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Signal link to sub PCB A2P (X7A)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11077,7 +10999,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional adaptor for wiring (note 6)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11085,7 +11006,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power supply for optional adaptor (note 6)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11093,7 +11013,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional self-clean panel (note 6)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11102,7 +11021,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power from indoor PCB A1P (X65A)",
     "location": "Sub PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11111,7 +11029,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Signal link from indoor PCB A1P (X70A)",
     "location": "Sub PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11121,7 +11038,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Sub PCB A2P",
     "kind": "other",
     "spec": "13 VDC at the drain pump connector (TA manual p.226)",
-    "test": "Set emergency operation and check voltage at X10A: 13 VDC. Power off, unplug, ohm the pump: open = bad",
+    "test": "A3: set the unit to emergency operation and check the voltage at drain pump connector X10A: 13 VDC. Voltage OK but pump not running = replace drain pump; no voltage = replace indoor PCB.",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373; daikin-rzq-rzr-ta-skyair-service.pdf p.226"
    },
    {
@@ -11129,7 +11046,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional self-clean panel (note 6)",
     "location": "Sub PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11138,7 +11054,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing blade motors M1S, M2S, M3S, M4S",
     "location": "Sub PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11147,7 +11062,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Infrared floor sensor PCB A3P and infrared presence sensor PCB A4P",
     "location": "Sub PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11157,7 +11071,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Control terminal block",
     "location": "Control box",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    },
    {
@@ -11167,7 +11080,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power terminal block 208/230 V",
     "location": "Control box",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.326 (3D115647A); daikin-rzq-rzr-tb-skyair-service.pdf p.373"
    }
   ],
@@ -11291,7 +11203,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motors for the 4 horizontal blades (louvers)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (each motor winding)",
     "source": "daikin-rzq-rzr-tb-skyair-service.pdf p.375 (3D142358)"
    },
    {
@@ -11444,7 +11355,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "EEV coil (indoor)",
     "location": "Indoor unit liquid line",
     "kind": "eev",
-    "spec": "Pins: 1 White, 2 Yellow, 3 Orange, 4 Blue, 5 Red, 6 Brown. Continuity: White-Orange approx. 300 Ohm, White-Red approx. 150 Ohm, Yellow-Blue approx. 300 Ohm, Yellow-Brown approx. 150 Ohm; all other pairs no continuity.",
+    "spec": "Pins: 1 White, 2 Yellow, 3 Orange, 4 Blue, 5 Red, 6 Brown. Continuity (normal): White-Orange approx. 300 Ohm, White-Red approx. 150 Ohm, Orange-Red approx. 150 Ohm, Yellow-Blue approx. 300 Ohm, Yellow-Brown approx. 150 Ohm, Blue-Brown approx. 150 Ohm; all other pairs (White-Yellow, White-Blue, White-Brown, Yellow-Orange, Yellow-Red, Orange-Blue, Orange-Brown, Blue-Red, Red-Brown) no continuity.",
     "test": "Power off. Unplug the EEV coil connector from the indoor PCB and measure ohms between the listed pin pairs; replace the coil if any pair is open or far outside the figure. Code A9 = indoor EEV coil abnormal.",
     "source": "P p.126 (printed 119) coil check for A9 ('All indoor models'); X7A per P p.125 + wiring p.196"
    },
@@ -11454,7 +11365,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan high water)",
     "location": "Indoor PCB A1P, 2-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal (opens on high water = A3)",
+    "test": "A3 flow (p.118-119): check the float switch (or short circuit connector) is connected to X15A and the drain water level; if water is not high and the error repeats, follow the flow: float switch / short circuit connector continuity, then replace float switch or indoor PCB",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.196 (printed 189) drawing 3D070301F; A3 check p.118-119"
    },
    {
@@ -11473,7 +11384,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor fan motor (different motor for 09-30 class and 36-48 class; plug WHT/ORG/BRN/BLU/RED)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Manual: fan motor connector check is not available for FCQ18-42PAVJU (p.182). Check plug seated and fan turns freely by hand",
+    "test": "Manual: fan motor connector check is not available for FCQ18-42PAVJU (p.182).",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.196 (printed 189) drawing 3D070301F"
    },
    {
@@ -11549,7 +11460,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11 / CHECK 5). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P).",
-  "notes": "C9 table lists the suction air thermistor PCB as A2P (connector X16A). The wired remote controller has its own R1T (code CJ) - not a board plug. No pressure sensors on this indoor unit.",
+  "notes": "C9 table lists the suction air thermistor PCB as A2P (connector X16A). The wired remote controller has its own R1T (code CJ) - not a board plug. No pressure sensors on this indoor unit. Conflict: the A6 fan table (p.121) names the FCQ fan plug X4A, but wiring diagram 3D070301F (p.196) shows the fan motor on X20A - map follows the wiring diagram.",
   "gaps": [
    "A6 table p.121 (printed 114) lists the FCQ fan motor plug as X4A, but wiring diagram 3D070301F (p.196) shows the fan motor on X20A; X20A added from the drawing - a tech should confirm on the board"
   ],
@@ -11621,7 +11532,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "EEV coil (indoor)",
     "location": "Indoor unit liquid line",
     "kind": "eev",
-    "spec": "Pins: 1 White, 2 Yellow, 3 Orange, 4 Blue, 5 Red, 6 Brown. Continuity: White-Orange approx. 300 Ohm, White-Red approx. 150 Ohm, Yellow-Blue approx. 300 Ohm, Yellow-Brown approx. 150 Ohm; all other pairs no continuity.",
+    "spec": "Pins: 1 White, 2 Yellow, 3 Orange, 4 Blue, 5 Red, 6 Brown. Continuity (normal): White-Orange approx. 300 Ohm, White-Red approx. 150 Ohm, Yellow-Blue approx. 300 Ohm, Yellow-Brown approx. 150 Ohm, Orange-Red approx. 150 Ohm, Blue-Brown approx. 150 Ohm; no continuity White-Yellow, White-Blue, White-Brown, Yellow-Orange, Yellow-Red, Orange-Blue, Orange-Brown, Blue-Red, Red-Brown.",
     "test": "Power off. Unplug the EEV coil connector from the indoor PCB and measure ohms between the listed pin pairs; replace the coil if any pair is open or far outside the figure. Code A9 = indoor EEV coil abnormal.",
     "source": "PV p.100 (printed 93) coil check for A9 ('All indoor unit models'); X7A per PV p.99 + wiring p.170"
    },
@@ -11651,7 +11562,6 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Indoor PCB A1P, 3-pin",
     "kind": "other",
     "spec": "Run capacitor C1 5.0 uF 450 VAC; motor thermal protector opens 266 F, resets 176 F",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.170 (printed 163) drawing 3D042620C; parts list p.17 (printed 10)"
    },
    {
@@ -11660,7 +11570,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing flap motor with limit switch MSW (in-line plug, WHT)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.170 (printed 163) drawing 3D042620C; parts list p.17 (printed 10)"
    },
    {
@@ -11745,7 +11654,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rzq-pvju-skyair-inverter-service.pdf p.170 (printed 163) drawing 3D042620C; parts list p.17 (printed 10)"
    }
   ],
-  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11 / CHECK 5). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P). Manual's pass range for C4/C5/C9: 3.5 kOhm to 360 kOhm (open/short check), then compare with chart.",
+  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature. Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P). Manual's normal ranges in the error flowcharts: C4 liquid R2T (X12A) 3.5-360 kOhm, C5 gas R3T (X11A) 0.6-360 kOhm, C9 suction air R1T (X13A) 7.2-112 kOhm.",
   "notes": "This older FCQ-PVJU board uses X13A/X12A/X11A (same as FHQ) - NOT the X16A/X18A/X17A of FCQ-PA/FCQ-TA. No pressure sensors on this indoor unit.",
   "sources": [
    {
@@ -11834,9 +11743,9 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X4A (A1P)",
-    "pins": "1 RED, 2 WHT, 3 BLK",
+    "pins": "1, 2, 3 (CHECK 16 labels 1 Red, 2 White, 3 Black)",
     "code": "M1F",
-    "name": "Indoor fan motor (BLK/YLW/RED, run capacitor C1)",
+    "name": "Indoor fan motor (wiring diagram shows BLK/YLW/RED leads at X4A, WHT to run capacitor C1)",
     "location": "Indoor PCB A1P",
     "kind": "other",
     "spec": "1-3: 53.5 Ohm +/-10%; 2-3: 31.6 Ohm +/-10% (TA manual p.312)",
@@ -11849,7 +11758,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Transformer T1R primary (208-230 V side)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.327 (3D048116C); daikin-rzq-rzr-tb-skyair-service.pdf p.377; daikin-rzq-rzr-p-skyair-service.pdf p.197 and daikin-rzq-pvju-skyair-inverter-service.pdf p.171 (3D048116A, same connectors)"
    },
    {
@@ -11858,7 +11766,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Transformer T1R secondary (25 V side)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.327 (3D048116C); daikin-rzq-rzr-tb-skyair-service.pdf p.377; daikin-rzq-rzr-p-skyair-service.pdf p.197 and daikin-rzq-pvju-skyair-inverter-service.pdf p.171 (3D048116A, same connectors)"
    },
    {
@@ -11867,7 +11774,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing flap motor (via relay KAR)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.327 (3D048116C); daikin-rzq-rzr-tb-skyair-service.pdf p.377; daikin-rzq-rzr-p-skyair-service.pdf p.197 and daikin-rzq-pvju-skyair-inverter-service.pdf p.171 (3D048116A, same connectors)"
    },
    {
@@ -11962,7 +11868,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11 / CHECK 5). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P).",
-  "notes": "Same wiring diagram 3D048116 for FHQ18/24/30PVJU and FHQ36/42MVJU in all four manuals. Charts from SiUS281811EB: R1T Type B, R2T Type A, R3T Type J. Older manuals use one table for all three (SiUS281117 Table 2 = chart daikin-skyair-p-table2; SiUS28-902_a p.173) - all ~20 kOhm at 25 C, within ~2%. No pressure sensors on this indoor unit.",
+  "notes": "Same wiring diagram 3D048116 for FHQ18/24/30PVJU and FHQ36/42MVJU in all four manuals. Charts from SiUS281811EB: R1T Type B, R2T Type A, R3T Type J. Older manuals use one table for all three (SiUS281117 Table 2 = chart daikin-skyair-p-table2; SiUS28-902_a p.173) - all ~20 kOhm at 25 C, within ~2%. No pressure sensors on this indoor unit. CONFLICT: CHECK 16 (TA p.312) labels the X4A fan pins 1 Red, 2 White, 3 Black, but the wiring diagram (p.327) shows BLK/YLW/RED leads at X4A (WHT to C1) - go by pin number, not wire colour.",
   "gaps": [
    "X27A on A1P: 3-pin wired to the M1F fan motor harness (BLK plug); drawing does not say which motor lead (thermo switch Q1M or winding)",
    "X25A on A1P: switched by relay KPR, no load drawn on this model"
@@ -12014,7 +11920,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Suction (return) air thermistor",
     "location": "Return air inlet",
     "kind": "thermistor",
-    "chart": "daikin-skyair-t-type-b",
+    "chart": "daikin-skyair-p-table2",
     "errorCodes": [
      "C9"
     ],
@@ -12281,7 +12187,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Indoor PCB A1P",
     "kind": "other",
     "spec": "220-240 VAC at the drain pump connector (TA manual p.226)",
-    "test": "Set emergency operation and check voltage at X25A: 220-240 VAC. Power off, unplug, ohm the pump: open = bad",
+    "test": "A3: set the unit to 'emergency' and check the voltage at X25A: 220-240 VAC. Voltage OK but pump does not run = replace drain pump; no voltage = replace indoor PCB A1P (p.226)",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.329 (3D065984J); daikin-rzq-rzr-p-skyair-service.pdf p.199 (3D065984D); daikin-rzq-rzr-ta-skyair-service.pdf p.226"
    },
    {
@@ -12367,7 +12273,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reactor L1R",
     "location": "Fan PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.329 (3D065984J); daikin-rzq-rzr-p-skyair-service.pdf p.199 (3D065984D)"
    },
    {
@@ -12381,8 +12286,9 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X1A (A2P)",
+    "pins": "1 Black = W, 3 White = V, 5 Red = U (pins 2, 4 empty)",
     "code": "M1F",
-    "name": "Fan motor power (U/V/W: BLK, WHT, RED)",
+    "name": "Fan motor power (5-pin plug: 1 BLK W, 3 WHT V, 5 RED U)",
     "location": "Fan PCB A2P",
     "kind": "other",
     "spec": "Phase resistances balanced within +/-20% (TA manual p.313)",
@@ -12398,15 +12304,6 @@ const DAIKIN_SENSOR_MAPS = [
     "kind": "other",
     "test": "Power off, unplug X2A, measure GND to Vcc, Hw, Hv, Hu per CHECK 16 (daikin-rzq-rzr-ta-skyair-service.pdf p.313)",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.329 (3D065984J); daikin-rzq-rzr-p-skyair-service.pdf p.199 (3D065984D); daikin-rzq-rzr-ta-skyair-service.pdf p.313 (CHECK 16)"
-   },
-   {
-    "plug": "X8A (A2P)",
-    "code": "M1F",
-    "name": "Fan motor plug on the older 3D065984D drawing (RED/BLU/BRN/ORG/WHT) - older FBQ-P boards only",
-    "location": "Fan PCB A2P (older drawing)",
-    "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
-    "source": "daikin-rzq-rzr-p-skyair-service.pdf p.199"
    },
    {
     "plug": "X1M",
@@ -12433,8 +12330,7 @@ const DAIKIN_SENSOR_MAPS = [
   "notes": "R5T on the fan PCB is a current-limiting NTC in the fan board circuit - not a plug-in sensor. SiUS281117 (CHECK 5) assigns the discharge air thermistor R4T to its Table 3 (outdoor discharge-pipe curve, ~200 kOhm at 77 F); SiUS281811EA/EB say Type J (~20 kOhm at 25 C). Map uses Type J (newer manuals) - if R4T reads ~10x higher, compare with chart daikin-skyair-p-table3-discharge. No pressure sensors on this indoor unit.",
   "gaps": [
    "Conflict between manuals on the R4T chart (see notes).",
-   "SiUS281117 lists FBQ18-42PVJU only; FBQ48PVJU comes from SiUS281811EA/EB.",
-   "X2A/X1A pin numbers taken from CHECK 16 text order (p.313); confirm against the picture before relying on pin numbers"
+   "SiUS281117 lists FBQ18-42PVJU only; FBQ48PVJU comes from SiUS281811EA/EB."
   ],
   "sources": [
    {
@@ -12535,7 +12431,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain water level)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Manual A3 flow (daikin-rzq-rzr-tb-skyair-service.pdf p.259): float switch (or short-circuit plug if no pump kit) must have continuity at normal water level; open = high water or bad switch",
+    "test": "Manual A3 flow (daikin-rzq-rzr-tb-skyair-service.pdf p.259): if the pump does not work, check the drain water level; if not high, check S1L is plugged into X15A, then remove the float switch, fit a jumper connector and restart - error gone = replace the float switch S1L; error again = replace the indoor PCB A1P.",
     "source": "daikin-rzq-rzr-tb-skyair-service.pdf p.380 (3D130681B); p.259"
    },
    {
@@ -12654,7 +12550,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rzq-rzr-tb-skyair-service.pdf p.380 (3D130681B)"
    }
   ],
-  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11 / CHECK 5). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P).",
+  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11, p.354-355). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P).",
   "notes": "No discharge air thermistor (R4T) on FBQ-TB. Fan PCB differs 18/24 vs 30-48 but the sensor plugs on A1P are the same (one diagram 3D130681 for all sizes). Gas thermistor R3T is Type A here (Type J on FBQ-P). EEV coil uses the 35-55 Ohm 4-phase coil (FBQ-P uses the 300/150 Ohm coil). No pressure sensors on this indoor unit.",
   "sources": [
    {
@@ -12748,7 +12644,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Heater kit output (relays K1R/K2R) to optional heater kit",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12757,7 +12652,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low voltage terminals: 1, 2 (connection disabled), R, C, P1/P2 remote controller, F1/F2 transmission",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12765,7 +12659,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Option terminals: T1/T2 external contact, air cleaner, humidifier, economizer",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12773,7 +12666,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Option outputs: economizer 2, control ON/OFF",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12781,7 +12673,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Capacity setting adaptor",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12789,7 +12680,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional wiring adapter PCB",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12797,7 +12687,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional multi tenant adaptor",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12805,7 +12694,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Flash writer (factory programming) - not used in the field",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12813,7 +12701,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Aux alarm switch input (short red jumper wire; remove when installing aux alarm switch, note 6)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12822,7 +12709,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Relay in (ACC-IN) / relay out (ACC-OUT)",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12831,7 +12717,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "24 VAC from transformers TR1/TR2 and COM",
     "location": "Indoor PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12839,7 +12724,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power/heater kit/disconnect switch connector - discard PL1 when installing the optional heat kit (note 5)",
     "location": "Air handler harness",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    },
    {
@@ -12848,11 +12732,10 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Transformer connector",
     "location": "Air handler harness",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-rzq-rzr-ta-skyair-service.pdf p.330 (C: 0140A00500A); daikin-rzq-rzr-tb-skyair-service.pdf p.381"
    }
   ],
-  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11 / CHECK 5). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P). C9 on FTQ-TA = remote sensor: only applies if the optional sensor is fitted and field setting 10(20)-2 = 03.",
+  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11, p.307-308). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P). C9 on FTQ-TA = remote sensor: only applies if the optional sensor is fitted and field setting 10(20)-2 = 03.",
   "notes": "Both coil thermistors share the 4-pin connector X5A ('THERMISTOR (HEAT EXCHANGER 1,2)'). No return-air thermistor on the board. EEV coil: the A9 page says 'connected to X7A' for all indoor units, but on the FTQ-TA wiring diagram X7A is the ECM fan motor plug and the EEV coil is on X3A - the diagram is used here. No pressure sensors on this indoor unit.",
   "gaps": [
    "Which X5A pin pair is R2T (liquid) vs R3T (gas) is not stated.",
@@ -12924,10 +12807,10 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X15A (A1P)",
-    "name": "Short-circuit (jumper) plug, WHT loop - float switch input; A3 if open (p.118)",
+    "name": "Short-circuit (jumper) plug, WHT loop - float switch input; A3 if open (p.118-119)",
     "location": "Main PCB A1P, 2-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the jumper plug: continuity = OK, open = replace short-circuit plug",
+    "test": "A3 flow (p.119), no drain pump fitted: check the short-circuit connector is on X15A, power off and check its continuity - no continuity = replace the short-circuit connector; continuity = replace the indoor PCB.",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F; A3 p.118-119"
    },
    {
@@ -12952,7 +12835,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to sub PCB A2P (its plug X10A), WHT pair",
     "location": "Main PCB A1P, 2-pin",
     "kind": "other",
-    "test": "Power off, check the plug is fully seated and the harness between the two boards is not broken or pinched",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    },
    {
@@ -12961,7 +12843,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to sub PCB A2P (its plug X15A), WHT/BLK pair",
     "location": "Main PCB A1P, 2-pin",
     "kind": "other",
-    "test": "Power off, check the plug is fully seated and the harness between the two boards is not broken or pinched",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    },
    {
@@ -12978,7 +12859,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness from main PCB A1P (its plug X35A)",
     "location": "Sub PCB A2P, 2-pin",
     "kind": "other",
-    "test": "Power off, check the plug is fully seated and the harness between the two boards is not broken or pinched",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    },
    {
@@ -12987,7 +12867,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness from main PCB A1P (its plug X70A)",
     "location": "Sub PCB A2P, 2-pin",
     "kind": "other",
-    "test": "Power off, check the plug is fully seated and the harness between the two boards is not broken or pinched",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    },
    {
@@ -13004,7 +12883,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Fan speed relay K1M coil (pins 1-2, YLW/ORG) - K1M contacts feed the fan ORG tap",
     "location": "Sub PCB A2P, 2-pin (relay K2R)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    },
    {
@@ -13013,7 +12891,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Fan speed relay coils: pins 1-3 K2M (GRY/WHT, fan YLW tap), pins 2-4 K3M (BRN/BLK, fan GRY tap)",
     "location": "Sub PCB A2P, 4-pin (relays K3R, K4R)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    },
    {
@@ -13122,7 +12999,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rzq-rzr-p-skyair-service.pdf p.200 (printed 193) drawing 3D065036F"
    }
   ],
-  "test": "Power off. Unplug the thermistor connector from the indoor PCB, measure resistance across the thermistor's two wires, and compare with the chart at the actual air/pipe temperature (CHECK 11 / CHECK 5). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P).",
+  "test": "Power off. Unplug the thermistor connector from the indoor PCB, read the temperature at the sensor and measure resistance across the thermistor's two wires; compare with Table 2 (CHECK 5, p.184-185). Wrong reading = replace thermistor; correct reading but error stays = replace indoor PCB (A1P).",
   "notes": "Symbols are shifted on this model: R1T = LIQUID pipe, R2T = GAS pipe (other SkyAir indoor units use R2T liquid, R3T gas). Room temperature is sensed by the wired remote controller's R1T (code CJ), not a board plug. No pressure sensors on this indoor unit.",
   "gaps": [
    "SiUS281117 covers FTQ18/24PAVJU only; larger FTQ-PA sizes not in the manuals checked.",
@@ -13366,7 +13243,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart.",
-  "notes": "Three plugs carry the thermistors: X902A = R1T outdoor air alone; X901A = R5T coil alone; X900A is one long plug with three thermistors in this order on the drawing: R6T suction, R2T discharge, R3T liquid. Pin numbers are not printed, so test each thermistor on its own pair of wires. AC: no outdoor EEV on this diagram (no Y1E) and no defrost thermistor. R7T on the diagram is a PTC inrush part on the board, not a sensor. Pressure sensor uses the 1.5-3 ton (dashed) curve - different from the 3.5-5 ton units. Coil thermistor position differs 1.5-2.5 ton vs 3.0 ton (photos daikin-fit-r410a-system-service.pdf p.92).",
+  "notes": "Three plugs carry the thermistors: X902A = R1T outdoor air alone; X901A = R5T coil alone; X900A is one long plug with three thermistors in this order on the drawing: R6T suction, R2T discharge, R3T liquid. Pin numbers are not printed, so test each thermistor on its own pair of wires. AC: no outdoor EEV on this diagram (no Y1E) and no defrost thermistor. R7T on the diagram is a PTC inrush part on the board, not a sensor. Pressure sensor uses the 1.5-3 ton (dashed) curve - different from the 3.5-5 ton units. Coil thermistor position differs 1.5-2.5 ton vs 3.0 ton (photos daikin-fit-r410a-system-service.pdf p.92). CONFLICT: the E58 error table (p.48) says the OL sensor is on X33A, but this 1.5-3 ton wiring diagram (p.75, 3D141597) puts Q1E on X820A together with S1PH - go by the diagram.",
   "gaps": [
    "Pins inside X900A/X901A/X902A not printed - only wire pairs drawn",
    "Pressure sensor supply voltage / pin roles not stated; 1.5-3 ton curve read off the graph (approximate)",
@@ -13512,14 +13389,14 @@ const DAIKIN_SENSOR_MAPS = [
     "errorCodes": [
      "E26"
     ],
-    "test": "Power ON. Put the meter (DC volts) on the black and white wires at the sensor plug (back-probe). Compare volts with the chart at the pressure on your gauge.",
+    "test": "Power ON. Put the meter (DC volts) on the black and white wires at the sensor plug (back-probe) and compare with the dashed '1.5 - 3.0 ton' line on the manual's S-13 pressure graph (p.17). The manual prints no table of values - use the graph only as a rough check against your gauge.",
     "source": "daikin-fit-r410a-system-service.pdf p.77 (HP 1.5-3 ton wiring diagram); same layout daikin-fit-r32-system-service.pdf p.76 and p.78 (Enhanced Capacity HP / HE AC 2.0 ton), daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (DZ6VSA241E 3D146717), daikin-fit-r32-outdoor-install.pdf p.35 (DH6VS 3D141596) and p.39 (DH7VSA2410/DC9VSA2410 3D146717); 'PS connector (X840A)' daikin-fit-r410a-system-service.pdf p.88; graph p.17"
    },
    {
     "plug": "X820A",
     "code": "S1PH",
     "name": "High pressure switch",
-    "location": "Discharge line (inside the sound blanket)",
+    "location": "Inside the compressor sound blanket (outer body) - removal procedure",
     "kind": "other",
     "errorCodes": [
      "E24"
@@ -13611,7 +13488,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "X40A (A1P)",
     "code": "X40A",
-    "name": "RAM monitor - service/factory tool port, nothing connected in the field",
+    "name": "RAM monitor connector (legend); nothing connected on the drawing - the D-Checker goes on X41A of A2P",
     "location": "A1P main inverter PCB",
     "kind": "other",
     "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717)"
@@ -13622,7 +13499,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1F Outdoor fan motor (DC fan). Note 8: an in-line relay connector (also X200A) sits in the fan lead - not on DZ6VSA1810/2410AA (service manual) / not on 1.5 and 2 ton (3D141596 install drawing); no such note on 3D146717",
     "location": "A1P main inverter PCB; fan lead runs to the fan motor",
     "kind": "other",
-    "test": "Manual: check fan motor lead and connector X200A; replace outdoor fan motor if faulty (error table)",
+    "test": "Error table (E18/E19): check the wiring from the outdoor fan motor to the control board, check the fan motor and wiring; repair/replace as needed.",
     "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717); removal photo daikin-fit-r410a-system-service.pdf p.84"
    },
    {
@@ -13631,7 +13508,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Y1S Reversing (four-way) valve coil - switched by relay K4R through PTC R8T",
     "location": "A1P main inverter PCB; coil on the four-way valve",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717); removal photo daikin-fit-r410a-system-service.pdf p.88"
    },
    {
@@ -13641,7 +13517,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1C Compressor motor leads (RED to U, YLW to V, BLU to W)",
     "location": "A1P main inverter PCB compressor terminals",
     "kind": "other",
-    "test": "Manual S-17A: power off, remove leads, ohm each compressor terminal to unpainted pipe - must read infinity, else replace compressor",
+    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe: below 30 MOhm = replace the compressor. (S-17B ground test: reading should be infinity.)",
     "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717); test daikin-fit-r410a-system-service.pdf p.20"
    },
    {
@@ -13661,7 +13537,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "X41A (A2P)",
     "code": "X41A",
-    "name": "RAM monitor - service/factory tool port, nothing connected in the field",
+    "name": "RAM monitor - the D-Checker cable plugs in here (service laptop tool)",
     "location": "A2P service/display PCB",
     "kind": "other",
     "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717)"
@@ -13675,7 +13551,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the dashed '1.5 - 3.0 ton' line on the manual's S-13 graph (0.5 V = 0 PSIG, about 290 PSIG at 4.0 V).",
   "notes": "3-TON TRAP: a DZ6VSA361 with an E in the model (DZ6VSA361E...) uses the big 3.5-5 ton board - use that map instead. Plain DZ6VS/DH6VS 361 use this one. X902A = R1T outdoor air alone; X901A carries R4T defrost + R5T coil; X900A carries R6T suction, R2T discharge, R3T liquid (order on the drawing). EEV Y1E on X700A (5-pin, 40-50 Ohm each phase to gray common pin 5). DZ6VSA241E (2 ton) uses this small board, but DZ6VSA361/421/481E use the 3.5-5 ton style board (map daikin-fit-hp-4260-outdoor). DC9VSA2410 is called 'High Efficiency AC 2.0 ton' but shares this HP diagram (3D146717). Solenoid valve coil Y2S (X28A on A2P) reads 1,480-1,820 Ohm.",
   "gaps": [
    "Pins inside X900A/X901A/X902A not printed",
@@ -13797,7 +13673,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X17A",
     "code": "S1NPL",
     "name": "Low pressure sensor (S1NPL)",
-    "location": "Outdoor unit refrigerant line (lead clamped up to the PS connector)",
+    "location": "Outdoor unit refrigerant line; sensor lead plugs into the PS connector X17A on A1P",
     "kind": "pressure",
     "chart": "daikin-inv-hlpt-graph",
     "spec": "S-13: 'With power ON ... Connect a voltmeter across the sensor terminals between black and white wirings.' Replace the sensor if open, shorted or outside the valid voltage range. Output vs pressure given only as a graph (0-4 VDC axis). Supply voltage not stated.",
@@ -14052,14 +13928,13 @@ const DAIKIN_SENSOR_MAPS = [
     "errorCodes": [
      "E26"
     ],
-    "test": "Power ON. Put the meter (DC volts) on the black and white wires at the sensor plug (back-probe). Compare volts with the chart at the pressure on your gauge.",
+    "test": "Power ON. Put the meter (DC volts) on the black and white wires at the sensor plug (back-probe). Compare volts with the chart (solid line on the manual's S-13 graph: 0.5 V = 0 PSIG, about 200 PSIG per volt) at the pressure on your gauge.",
     "source": "daikin-fit-r410a-system-service.pdf p.78 (HP 3.5-5 ton wiring diagram); same layout daikin-fit-r32-system-service.pdf p.77 and p.79 (Enhanced Capacity HP / HE AC 3.0-4.0 ton), daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512) and p.38 (DZ6VSA361/421/481E 3D146718), daikin-fit-r32-outdoor-install.pdf p.36 (DH6VS 3D151775) and p.40 (DH7VSA361-4810, DC9VSA361-4810 3D151775); 'PS connector (X17A)' daikin-fit-r410a-system-service.pdf p.111; graph p.17"
    },
    {
     "plug": "X32A",
     "code": "S1PH",
     "name": "High pressure switch",
-    "location": "Discharge line",
     "kind": "other",
     "errorCodes": [
      "E24"
@@ -14142,7 +14017,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "X41A",
     "code": "X41A",
-    "name": "RAM monitor - service/factory tool port, nothing connected in the field",
+    "name": "RAM monitor - the D-Checker cable plugs in here (service laptop tool)",
     "location": "A1P main control/inverter PCB",
     "kind": "other",
     "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775)"
@@ -14153,7 +14028,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1F Outdoor fan motor",
     "location": "A1P; fan lead to fan motor",
     "kind": "other",
-    "test": "Manual: check fan motor lead and connector X108A; replace outdoor fan motor if faulty (error table)",
+    "test": "Error table (E18/E19): check the wiring from the outdoor fan motor to the control board, check the fan motor and wiring; repair/replace as needed.",
     "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775); removal photo daikin-fit-r410a-system-service.pdf p.109"
    },
    {
@@ -14162,7 +14037,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Y1S Reversing (four-way) valve coil",
     "location": "A1P; coil on the four-way valve",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775); daikin-fit-r410a-system-service.pdf p.117"
    },
    {
@@ -14180,7 +14054,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional drain pan heater connector (note 6, accessory)",
     "location": "A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (heater, when fitted)",
     "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775)"
    },
    {
@@ -14190,11 +14063,11 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1C Compressor motor leads (RED to U, YLW to V, BLU to W)",
     "location": "A1P compressor terminals",
     "kind": "other",
-    "test": "Manual S-17A: power off, remove leads, ohm each compressor terminal to unpainted pipe - must read infinity, else replace compressor",
+    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe: below 30 MOhm = replace the compressor. (S-17B ground test: reading should be infinity.)",
     "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775); test daikin-fit-r410a-system-service.pdf p.20"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart (solid line on the S-13 graph).",
   "notes": "3-ton: only DZ6VSA361E (with the E), DH7VSA361 and DC9VSA361 use this board; plain DZ6VS/DH6VS 361 use the 1.5-3 ton board. X11A = R1T outdoor air alone; X12A carries R2T discharge, R3T liquid, R4T defrost, R5T coil (order on the drawing); X13A = R6T suction alone. EEV Y1E on X21A (6-pin, pin 5 empty). The 3 ton DZ6VSA361E / DH7VSA361 / DC9VSA361 use THIS board, while 3 ton DZ6VS*361 / DH6VS*361 use the small 1.5-3 ton board - check the model letters. Other plugs (p.117): four-way valve coil X25A, solenoid valve coil X28A (1,480-1,820 Ohm). DC9VSA (AC) shares this HP diagram.",
   "gaps": [
    "Pins inside X11A/X12A not printed",
@@ -14314,7 +14187,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "X7A",
     "name": "Indoor ECM blower motor 4-wire control harness",
-    "location": "Indoor control board to blower motor",
+    "location": "Indoor control board to the ECM blower motor (EEV air handler). On the EEV cased coil drawing X7A is empty",
     "kind": "other",
     "spec": "Pins 1-4 3.3 VDC, 1-2 3.3 VDC, 3-4 15 VDC (daikin-fit-r410a-system-service.pdf p.19)",
     "test": "Manual S-16G: power on, check voltages on the 4-wire motor control harness",
@@ -14359,7 +14232,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "AUX alarm (alarm) switch input - factory short red jumper; remove it and wire an aux alarm/condensate switch here",
     "location": "Indoor control board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal (switch or jumper)",
     "source": "daikin-fit-r410a-system-service.pdf p.79 (air handler) and p.80 (cased coil); daikin-dfve-airhandler-install.pdf p.25"
    },
    {
@@ -14463,7 +14335,6 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "3 (black) - 1 (white) = output",
     "code": "PS",
     "name": "Indoor pressure sensor",
-    "location": "Inside the coil cabinet",
     "kind": "pressure",
     "chart": "daikin-inv-hlpt-graph",
     "spec": "Flowchart p.64: 'Check indoor pressure sensor voltage value (X15A, 3 and 1 pin)'; '*1: Voltage vs pressure characteristics between pins 3 (black) and 1 (white)'. Graph only (indoor = solid line). Board flags E75 when the sensor reads below -0.049 MPa (-7.11 PSIG) or above 4.41 MPa (640 PSIG) for 5 minutes, or when output voltage is about less than 0.13 VDC or more than 4.63 VDC.",
@@ -14493,7 +14364,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-6,2-6,3-6,4-6",
     "code": "EEV",
     "name": "Indoor EEV coil",
-    "location": "Indoor electronic expansion valve (in the coil cabinet)",
+    "location": "Indoor electronic expansion valve",
     "kind": "eev",
     "spec": "Orange(1), Red(2), Yellow(3), Black(4) each to COM[+] Gray(6), pin 5 empty: Judgment criteria 40~50 Ohm",
     "errorCodes": [
@@ -14566,7 +14437,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "AUX alarm (alarm) switch input - factory short red jumper; remove it and wire an aux alarm/condensate switch here",
     "location": "Indoor control board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal (switch or jumper)",
     "source": "daikin-fit-r32-system-service.pdf p.80 (208/230 V) and p.81 (115 V)"
    },
    {
@@ -14749,7 +14619,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "24 VAC from the coil transformer TR (YL to TB1, PU to TB2); transformer primary from furnace/blower supply (note 7)",
     "location": "Integrated control module",
     "kind": "other",
-    "test": "Power on: 24 VAC across TB1-TB2",
     "source": "daikin-fit-r32-system-service.pdf p.82; daikin-capea-coil-install.pdf p.28"
    },
    {
@@ -14904,7 +14773,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (LPCO)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-dx16tc-dz18tc-service.pdf p.100 (DX16TC 0140R00621-A) and p.101 (DX18TC 0140R00615-A)"
    },
    {
@@ -14913,7 +14781,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (HPCO) in series with discharge thermostat DT (if no DT, HPS wire goes to E29 - note 3)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-dx16tc-dz18tc-service.pdf p.100 (DX16TC 0140R00621-A) and p.101 (DX18TC 0140R00615-A)"
    },
    {
@@ -14923,7 +14790,6 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "UC board",
     "kind": "other",
     "spec": "Nominal 24 VDC coil; UC board rectifies the 18-28 VAC input (p.26)",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-dx16tc-dz18tc-service.pdf p.26"
    },
    {
@@ -15110,7 +14976,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (LPCO)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Manual S-13/S-14 (p.70): the low pressure control opens at about 21 PSIG and closes at about 50 PSIG on heat pumps; test continuity with a VOM, replace if not as above. HPC and LPC are in series: both closed = 6.5 VDC or 8.0 VAC at both switches.",
     "source": "daikin-dx16tc-dz18tc-service.pdf p.102 (DZ18TC 0140R00375-B)"
    },
    {
@@ -15119,7 +14985,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (HPCO) in series with discharge thermostat DT (if no DT, HPS wire goes to E29 - note 3)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Manual S-12/S-14 (p.70): high pressure control should cut out at 610 +/- 10 PSIG. The discharge thermostat DT is in series with the HPC: if DT is open you read input voltage on the HPC and none on the HPC/LPC output; both closed = 6.5 VDC or 8.0 VAC.",
     "source": "daikin-dx16tc-dz18tc-service.pdf p.102 (DZ18TC 0140R00375-B)"
    },
    {
@@ -15129,7 +14995,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "UC board",
     "kind": "other",
     "spec": "Nominal 24 VDC coil; UC board rectifies the 18-28 VAC input (p.26)",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "test": "Manual S-17C (p.81): compressor running with a Y2 call - unplug the solenoid plug at the compressor and read 4-18 VDC at the plug; if not, check the 'High' pins at the board. If the voltage is right, power off and measure the unloader coil: infinite, zero or grounded = replace the compressor.",
     "source": "daikin-dx16tc-dz18tc-service.pdf p.26"
    },
    {
@@ -15164,11 +15030,11 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the sensor from the UC control (OAT plug E1 / OCT plug E7). Ohm the two sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual air or pipe temperature. Replace the sensor if open, shorted or out of range.",
-  "notes": "OAT plugs into E1 (2-pin), OCT into E7 (3-pin header, 2 wires). Both sensors use the same 10 kOhm-at-77F chart. Defrost: the board counts run time while the coil is below about 31F and ends defrost at about 75F coil or 10 minutes. TEST + RECALL buttons together force a defrost. Faults: A2 outdoor air sensor, A3 outdoor coil sensor. No EEV on this unit/board in the manual (no EEV coil ohm figure); no pressure transducers - HPS/LPS are on/off switches, not transducers.",
+  "notes": "OAT plugs into E1 and OCT into E7 - both drawn as 3-pin headers with 2 wires. Both sensors use the same 10 kOhm chart (the S-26 text says 10 kOhm at 75F; the table shows 10,000 Ohm at 77F). Defrost: the board counts run time while the coil is below about 31F and ends defrost at about 75F coil or 10 minutes. TEST + RECALL buttons together force a defrost. Faults: A2 outdoor air sensor, A3 outdoor coil sensor (p.55). No EEV on this unit/board in the manual; no pressure transducers - HPS/LPS are on/off switches. Diagram conflict: the board drawing on p.102 shows the compressor solenoid on E24 'HIGH' and the crankcase heater on E21 'CH', but the low-voltage ladder on the same page draws CS across 'E21' - the entries follow the board drawing.",
   "gaps": [
    "E1/E7 pins not numbered in manual",
    "E16: PU wire to fan plug E51 - purpose not labeled",
-   "E25: 4-pin connector C-2-1-R beside E2 - purpose not labeled"
+   "E25: 4-pin connector C-R-1-2 beside E2 - purpose not labeled"
   ],
   "sources": [
    {
@@ -15251,7 +15117,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (wired across E9 and E26)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-condenser-install-service-reference.pdf p.12 (DX18TC & DX7TC wiring diagram 0140R00645-A, drawn sideways; UC board + low-voltage ladder)"
    },
    {
@@ -15260,7 +15125,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch HPS in series with the discharge thermostat DT (E28 to E29). Note 3: if no DT, the HPS blue/pink wire goes straight to E29",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-condenser-install-service-reference.pdf p.12 (DX18TC & DX7TC wiring diagram 0140R00645-A, drawn sideways; UC board + low-voltage ladder)"
    },
    {
@@ -15277,7 +15141,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor (2nd stage) solenoid CS",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-condenser-install-service-reference.pdf p.12 (DX18TC & DX7TC wiring diagram 0140R00645-A, drawn sideways; UC board + low-voltage ladder)"
    },
    {
@@ -15302,7 +15165,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Crankcase heater output (heater CH with crankcase heater switch CHS)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-condenser-install-service-reference.pdf p.12 (DX18TC & DX7TC wiring diagram 0140R00645-A, drawn sideways; UC board + low-voltage ladder)"
    },
    {
@@ -15353,7 +15215,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-condenser-install-service-reference.pdf p.12 (DX18TC & DX7TC wiring diagram 0140R00645-A, drawn sideways; UC board + low-voltage ladder)"
    }
   ],
-  "test": "Power off. Unplug the sensor from the UC control (OAT plug E1 / OCT plug E7). Ohm the two sensor leads: about 10 kOhm (+/-10%) at 75F; compare with the chart at the actual air or pipe temperature. Replace the sensor if open, shorted or out of range.",
+  "test": "A2 = outdoor air temp sensor fault (shorted, open, disconnected or out of range): power off, check the OAT sensor connection at E1 on the UC board, replace an open/shorted sensor (p.27). This DX7TC manual prints no ohm figure; the DX16TC/DX18TC service manual (RSD6200007 p.83, sensor drawn on the same DX18TC & DX7TC diagram) says 10 kOhm +/-10% at 75F - compare with the chart at the actual air temperature.",
   "notes": "OAT on plug E1; the E7 'OCT' header is present but unused on this AC. A2 = outdoor air temp sensor fault. The resistance chart is printed only in the DX16TC/DX18TC service manual (RSD6200007 p.83, 'communicating outdoor unit sensors') - this reference manual has no chart. No EEV on this unit/board in the manual (no EEV coil ohm figure); no pressure transducers - HPS/LPS are on/off switches, not transducers.",
   "gaps": [
    "DX7TC manual has no resistance chart - chart is from RSD6200007 (same UC board diagram)",
@@ -15428,7 +15290,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (LPCO)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Manual (p.34-35): with gauges on, the low pressure switch should open at 21 PSIG and auto-reset (close) at about 50 PSIG; replace if not. HPC and LPC are wired in series: with both closed, the reading should be 6.5 VDC or 8.0 VAC on both switches.",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15437,7 +15299,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (HPCO) in series with discharge thermostat DT (if no DT, HPS BL/PK goes straight to E29, note 3)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Manual (p.34-35): with gauges on, the high pressure switch should open at 610 +/- 10 PSIG and close at 420 +/- 25 PSIG; replace if not. The discharge thermostat DT is in series with the HPC: if DT is open you read input voltage on the HPC but no voltage on the HPC or LPC output. Switches closed = 6.5 VDC or 8.0 VAC.",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15446,7 +15308,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor solenoid (2nd stage / high capacity)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "test": "Manual (p.40): with the compressor running and Y2 called, unplug the solenoid plug at the compressor and read 4-18 VDC at the plug; if not, check the 'High' pins at the module. If the voltage is right, power off and measure the unloader solenoid coil: infinite, zero or grounded = replace the compressor.",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15455,7 +15317,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "ECM condenser fan motor (6-pin)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15473,7 +15334,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Run capacitor HERM terminal",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15482,7 +15342,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor start winding lead",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15491,7 +15350,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional hard start relay",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15500,7 +15358,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Run capacitor common",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15508,7 +15365,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "L2 out",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15516,7 +15372,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor C / R terminals and 230 VAC supply L1 / L2",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15525,7 +15380,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low voltage terminals to thermostat (O, L, Y2, Y1, W1, C, R, 2, 1)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    },
    {
@@ -15534,7 +15388,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "4-pin communication plug (C, R, 1, 2)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "goodman-gszc18-service.pdf p.88 (0140R00192-E)"
    }
   ],
@@ -15542,7 +15395,6 @@ const DAIKIN_SENSOR_MAPS = [
   "notes": "This board rev has OCT on plug E47 (DZ18TC uses E7). Same chart and 10 kOhm at 75F test. In the same manual A/GSXC16 & A/GSZC16 (p.86) and A/GSXC18, A/GSZC18, A/GSXC16060 (p.87) show E1 OAT / E7 OCT. Not a Daikin model - included because the plug differs. No EEV on this unit/board in the manual (no EEV coil ohm figure); no pressure transducers - HPS/LPS are on/off switches, not transducers.",
   "gaps": [
    "Sizes covered by drawing 0140R00192-E not stated",
-   "Fault codes for this board not checked in this manual",
    "E16 next to FAN RUN relay: wire shown but destination not labeled"
   ],
   "sources": [
@@ -15853,7 +15705,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (YL/PK pair)",
     "location": "Defrost control board tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "spec": "Low pressure switch opens at 21 PSIG, auto-resets (closes) at about 50 PSIG (p.18)",
+    "test": "Checking Low Pressure Control (p.18): gauges on, stop the evaporator fan (cooling test) or condenser fan (heating test) as the manual describes, call for cool - the switch should open at 21 PSIG and auto-reset at about 50 PSIG; if not, replace the switch.",
     "source": "daikin-r32-singlestage-service.pdf p.58 (0140R01120-A DH4SQA18-60), p.59 (0140R01121-A DH4SEA/DH5SEA), p.60 (0140R01380-A DH5SEA60) - same defrost control terminals on all three"
    },
    {
@@ -15962,7 +15815,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "DFT and R-DFT",
     "code": "DFT",
     "name": "Defrost thermostat (coil sensor, switch type)",
-    "location": "Clamped to a return bend (3/8in coils) or feeder tube (5 mm coils) entering the outdoor coil",
+    "location": "Clamped to a feeder tube entering the outdoor coil",
     "kind": "other",
     "spec": "Defrost thermostat (switch, no chart): should close at approximately 30F and open at approximately 60F.",
     "source": "daikin-dp3hm-install.pdf p.28-33 (diagrams) + p.15 (test)"
@@ -15982,7 +15835,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (YL wires via PLM/PLF pins 4-5); board ignores it 5 min around defrost",
     "location": "defrost control PCB (PCBDM133)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-dp3hm-install.pdf p.28-33 (traced on p.28-30, same layout on 31-33); p.15"
    },
    {
@@ -15991,7 +15843,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reversing valve coil (BK wires via PLM/PLF pins 7-8)",
     "location": "defrost control PCB (PCBDM133)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-dp3hm-install.pdf p.28-33 (traced on p.28-30, same layout on 31-33)"
    },
    {
@@ -16004,8 +15855,8 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "DF1, DF2",
-    "code": "CC",
-    "name": "Line-voltage leads (RD / PU) to the compressor contactor CC",
+    "code": "CM",
+    "name": "Outdoor fan relay terminals (DF1 RD, DF2 PU) - switch line voltage to the condenser (outdoor fan) motor CM; read line voltage (208-230 VAC) across them in defrost = relay open",
     "location": "defrost control PCB (PCBDM133)",
     "kind": "other",
     "source": "daikin-dp3hm-install.pdf p.28-33 (traced on p.28-30, same layout on 31-33)"
@@ -16055,7 +15906,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Strap a thermocouple next to the defrost thermostat; cooled it must close at about 30F, warmed it must open at about 60F - else replace. Board test: jumper DFT to R/R-DFT, jump the TEST pins with a heat call - defrost within 21 s. PCBDM133 has a 3-minute compressor off delay.",
-  "notes": "Same DFT / R-DFT on the single- and three-phase diagrams. No EEV on this unit/board in the manual (no EEV coil ohm figure); no pressure transducers - HPS/LPS are on/off switches, not transducers.",
+  "notes": "Same DFT / R-DFT on the single- and three-phase diagrams. No EEV on this unit/board in the manual (no EEV coil ohm figure); no pressure transducers - HPS/LPS are on/off switches, not transducers. These R-32 units also carry a refrigerant detection system board (RDS) with an R32 SENSOR on PORT1 (5V, 2, 1, C) - not part of the defrost board; its LED codes are printed on the wiring diagram (2 flashes internal fault, 3 flashes sensor communication fault, 4 flashes sensor fault).",
   "gaps": [
    "Board TEST and timer pins are described in the text (p.15) but not drawn"
   ],
@@ -16172,7 +16023,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-dp3hm-install.pdf p.28-33"
    }
   ],
-  "test": "A2L / R-32 leak sensor is a digital sensor - no ohm chart. If the board shows a sensor fault: unplug and re-plug the R-32 sensor at the board and cycle power. 3 flashes (sensor communication fault): unplug the sensor and cycle power - if the board then shows 2 flashes (internal fault) replace the board; if it shows 3 flashes replace the sensor; if 3 flashes remain with the sensor plugged back in, replace sensor and board. 4 flashes (sensor fault): replace the sensor. Test mode: press the board button 2 times within 5 s (5-minute simulated leak).",
+  "test": "A2L / R-32 leak sensor is a digital sensor - no ohm chart. Read the LED on the RDS board. 2 flashes (control board internal fault): unplug and re-plug the R-32 sensor and cycle power; if still faulted, unplug the sensor, leave it unplugged and cycle power - still 2 flashes = replace the RDS board; now 3 flashes = replace the sensor. 3 flashes (sensor communication fault): unplug and re-plug the sensor and cycle power; if 3 flashes remain, replace both the sensor and the board. 4 flashes (sensor fault): replace the sensor. Test mode: press the board button 2 times within 5 s (5-minute simulated leak; press once to end early).",
   "notes": "Replacement sensor: Sensata RGD-00ML12 (Daikin PN SER2A08012). Remove the A2L sensor before coil cleaning. RDS plug PLM1 pins 2/3 are labelled EEV/10V_IN and EEV/10V_OUT - these are board signal lines, not an EEV coil (unit has no EEV ohm figure). Field check used by the A2L zoning kit manual: unplugging the sensor makes the RDS board energize its ALARM (or CTL-NO) output within 30 s.",
   "gaps": [
    "Where the PLM1 wires (WH/GY/RD) go in the unit could not be traced reliably; only the board labels are given"
@@ -16224,11 +16075,13 @@ const DAIKIN_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Digital R-32 refrigerant sensor - the manual gives no resistance or voltage chart",
     "errorCodes": [
-     "LED fast flash = R-32 leak alarm",
-     "LED on steady = delay mode (5 min)",
-     "2 flashes = control board internal fault",
-     "3 flashes = R32 sensor communication fault",
-     "4 flashes = R32 sensor fault"
+     "Red LED off, green slow flash = normal operation",
+     "Green LED fast flash (red off) = system test mode (5 min)",
+     "Red LED fast flash = R-32 leak alarm",
+     "Red LED on steady = delay mode (5 min after alarm/fault clears)",
+     "Red LED 2 flashes = control board internal fault",
+     "Red LED 3 flashes = R32 sensor communication fault",
+     "Red LED 4 flashes = R32 sensor fault"
     ],
     "source": "goodman-amst-r32-air-handler-install.pdf p.26, 27 (diagrams) + p.21-23"
    },
@@ -16376,7 +16229,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-dmst-install.pdf p.5 (0140A01419-A, older IO-4011B AMST**U1300**)"
    }
   ],
-  "test": "A2L / R-32 leak sensor is a digital sensor - no ohm chart. If the board shows a sensor fault: unplug and re-plug the R-32 sensor at the board and cycle power. 3 flashes (sensor communication fault): unplug the sensor and cycle power - if the board then shows 2 flashes (internal fault) replace the board; if it shows 3 flashes replace the sensor; if 3 flashes remain with the sensor plugged back in, replace sensor and board. 4 flashes (sensor fault): replace the sensor. Test mode: press the board button 2 times within 5 s (5-minute simulated leak).",
+  "test": "A2L / R-32 leak sensor is a digital sensor - no ohm chart. Read the RED LED on the RDS PCB (Table 17). 2 red flashes (control board internal fault): replace the control board; if the board was already replaced and still shows 2 flashes, replace the sensor. 3 red flashes (sensor communication fault): unplug and re-plug the R-32 sensor, cycle power and wait 2 minutes; back to normal (green slow flash) or delay mode (red steady) = fixed; still 3 flashes = replace the sensor; if the sensor was already replaced and still 3 flashes, replace the control board. 4 red flashes (sensor fault): re-plug the sensor, cycle power, wait 2 minutes; still 4 flashes = replace the sensor. Red fast flash = real leak alarm (board and sensor working - find the leak). Test mode: press the board button 2 times within 5 s (simulated leak alarm for 5 minutes, green LED fast flash); press once to end early. Older IO-4011B units (0140A01419-A) word the 2/3-flash steps differently - follow the label on the unit.",
   "notes": "Unplug the sensor wire from the A2L PCB before sliding the coil out and re-plug it after. Remove the sensor before coil cleaning. No EEV in this air handler (start-up list only says 'check EEV wiring' for inverter AH/coils - no ohm figure). No pressure transducers.",
   "gaps": [
    "No DMST (Daikin-branded) manual in library - the 'dmst' file is the AMST manual"
@@ -16765,12 +16618,12 @@ const DAIKIN_SENSOR_MAPS = [
   "sensors": [
    {
     "plug": "R32 SENSOR CONNECTOR",
-    "pins": "4-pin (pins not labelled in manual)",
+    "pins": "4-pin - board J1, marked 5V, 2, 1, C",
     "code": "R32 SENSOR",
     "name": "R-32 leak sensor from the coil",
     "location": "Sensor stays on the coil in its bracket; wire runs to the kit board",
     "kind": "other",
-    "spec": "Digital sensor - no chart in manual",
+    "spec": "No chart or ohm figure in the manual - the board communicates with the sensor (status codes p.7)",
     "source": "daikin-fikr32-dragonfly-install.pdf p.4, 10"
    },
    {
@@ -16780,7 +16633,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "R32 SENSOR CONNECTOR - R-32 leak sensor (pins 5V, 2, 1, C)",
     "location": "Dragonfly A2L control",
     "kind": "other",
-    "test": "Manual status codes: 3 flashes = sensor communication fault, 4 flashes = sensor fault - reseat plug, cycle power (p.7)",
+    "test": "Manual status codes (p.7): 2 flashes = control board internal fault, 3 flashes = R-32 sensor communication fault, 4 flashes = R-32 sensor fault. First unplug and replug the sensor and cycle power. For 2 flashes, leave the sensor unplugged and cycle power: still 2 flashes = replace control, 3 flashes = replace sensor.",
     "source": "daikin-fikr32-dragonfly-install.pdf p.8 (board photo + block diagrams), p.9-11; codes p.7"
    },
    {
@@ -16794,7 +16647,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "J201",
     "pins": "Y2, Y1, G, W2, W1, O, DH, C, R, 2, 1",
-    "name": "Thermostat terminals Y2, Y1, G, W2, W1, O, DH, C, R, 2, 1 - from the thermostat (and outdoor unit / EEV control on communicating systems)",
+    "name": "Thermostat terminals Y2, Y1, G, W2, W1, O, DH, C, R, 2, 1 - wired from the thermostat (see the kit's block diagrams p.8-11 for the outdoor unit hook-up)",
     "location": "Dragonfly A2L control",
     "kind": "other",
     "source": "daikin-fikr32-dragonfly-install.pdf p.8 (board photo + block diagrams), p.9-11"
@@ -16817,8 +16670,8 @@ const DAIKIN_SENSOR_MAPS = [
   "test": "If the sensor is not plugged in before power-up the system goes into leak mitigation. Use the kit's A2L status code table (p.7) and its verification step.",
   "notes": "Kit 'Indoor Unit' terminals also pass the 4 EEV coil wires on ComfortNet EEV systems - no EEV ohm figure given.",
   "gaps": [
-   "Pin labels of the 4-pin sensor connector not printed",
-   "J400, the 6-pin header marked Re/COM/VDD/TX/RX/OE, and the TX/RX/GND header (J40x) on the board photo: purpose not given in the manual (likely factory programming)."
+   "No pin-by-pin wire colours for the sensor plug (board J1 is marked 5V, 2, 1, C)",
+   "J400, and the 6-pin header next to U401 marked Re/COM/VDD/TX/RX/OE, and the TX/RX/GND pads near J40x on the board photo: purpose not given in the manual."
   ],
   "sources": [
    {
@@ -16877,7 +16730,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S200 (A1P)",
-    "pins": "1 = phase V, 2 = phase W, 3 = phase U",
+    "pins": "1 = phase U, 2 = phase W, 3 = phase V",
     "code": "M1F",
     "name": "Indoor fan motor (DC, 3-phase, 3 wires)",
     "location": "Control PCB A1P",
@@ -17200,7 +17053,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (on the outdoor unit, air intake side)",
+    "location": "Outdoor air (diagram label OUTDOOR)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -17341,7 +17194,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug the thermistor connector from the PCB and measure ohms across the two wires of that thermistor. Compare to the chart at the actual pipe/air temperature; replace the thermistor (as an assembly) if it does not match. The board flags an error when the thermistor voltage is 4.96 V or more, or 0.04 V or less.",
-  "notes": "All three outdoor thermistors share one 6-pin connector (pins read from the wiring diagram). S1PH on the overload/HPS connector is a high pressure SWITCH, not a transducer - no pressure sensor on this unit. Radiation fin thermistor (P4) is on the PCB itself - P4 = replace the outdoor main PCB. PTC/inrush parts named R1T/R2T (RTH2/RTH1) or R11T/R12T on the main PCB in some diagrams are NOT sensors. RXT09 and RXTH09 diagrams (3D149646A / 3D163893) show the same plugs. EEV X700A lead colours WHT-YLW-ORG-BLU-RED on pins 1-5.",
+  "notes": "All three outdoor thermistors share one 6-pin connector X900A (pins read from the wiring diagram: 1-2 R1T outdoor, 3-4 R2T condenser, 5-6 R3T discharge). S1PH on X820A is a high pressure SWITCH, not a transducer - no pressure sensor on this unit. Radiation fin thermistor (P4) is on the PCB itself - P4 = replace the outdoor main PCB. RXT09 and RXTH09 diagrams (3D149646A / 3D163893) show the same plugs. EEV X700A lead colours WHT-YLW-ORG-BLU-RED on pins 1-5.",
   "gaps": [
    "EEV coil: manual gives a continuity check only (pin 5 to pins 1-4), no ohm value"
   ],
@@ -17373,7 +17226,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (on the outdoor unit, air intake side)",
+    "location": "Outdoor air (labelled R1T OUTDOOR on the wiring diagram)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -17664,7 +17517,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Drain pan heater faston tabs - optional on RXT, drawn as fitted on RXTH",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ftxv-a-rxt-rxth-aurora-r32-service.pdf p.159 (3D149181 RXT15/18/24) and p.162 (3D163895 RXTH15/18/24); connector list p.32"
    },
    {
@@ -17952,7 +17804,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (horizontal blade)",
     "location": "Control PCB A1P, 5-pin",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftxc-b-rxc-bvju9-service.pdf p.147-149 (printed 143-145) drawings 3D161942 (09/12), 3D161307 (18), 3D161308 (24) - same plugs on all three; PCB list p.23-24 (printed 19-20)"
    },
    {
@@ -18058,7 +17909,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (on the outdoor unit, air intake side)",
+    "location": "Outdoor air (outdoor unit)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -18299,7 +18150,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor motor leads (RED U, YLW V, BLU W) through in-line plug X11A",
     "location": "Main PCB A1P tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across the motor windings: open = bad",
     "source": "daikin-ftxc-b-rxc-bvju9-service.pdf p.151 (printed 147) drawing 3D149181; PCB list p.26 (printed 22)"
    },
    {
@@ -18339,7 +18189,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional drain pan heater - only when the heater kit is fitted and jumper J9 is cut",
     "location": "Main PCB A1P tab terminals",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ftxc-b-rxc-bvju9-service.pdf p.151 (printed 147) drawing 3D149181; PCB list p.26 (printed 22); J9 p.139 (printed 135)"
    },
    {
@@ -18352,7 +18201,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug the thermistor connector from the PCB and measure ohms across the two wires of that thermistor. Compare to the chart at the actual pipe/air temperature; replace the thermistor (as an assembly) if it does not match. The board flags an error when the thermistor voltage is 4.96 V or more, or 0.04 V or less.",
-  "notes": "All three outdoor thermistors share one 6-pin connector (pins read from the wiring diagram). S1PH on the overload/HPS connector is a high pressure SWITCH, not a transducer - no pressure sensor on this unit. Radiation fin thermistor (P4) is on the PCB itself - P4 = replace the outdoor main PCB. PTC/inrush parts named R1T/R2T (RTH2/RTH1) or R11T/R12T on the main PCB in some diagrams are NOT sensors. On this board the thermistor codes are R5T outdoor air (X900A pins 1-2), R4T condenser (3-4), R3T discharge (5-6); R1T(RTH2)/R2T(RTH1) on this diagram are PCB PTC parts, not sensors. EEV X700A lead colours ORG-RED-YLW-BLK-GRY on pins 1-5. Same wiring diagram number (3D149181) as RXT15-24 / RXV30-36.",
+  "notes": "All three outdoor thermistors share one 6-pin connector X900A (pins read from the wiring diagram): R5T outdoor air pins 1-2, R4T condenser 3-4, R3T discharge 5-6. S1PH on X820A is a high pressure SWITCH, not a transducer - no pressure sensor on this unit. Radiation fin thermistor (P4) is on the PCB itself - P4 = replace the outdoor main PCB. R1T (RTH2) and R2T (RTH1) on this diagram are PTC parts on the main PCB, not sensors. EEV X700A lead colours ORG-RED-YLW-BLK-GRY on pins 1-5.",
   "gaps": [
    "EEV coil: manual gives a continuity check only (pin 5 to pins 1-4), no ohm value"
   ],
@@ -18699,7 +18548,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor (DC, 3 wires)",
     "location": "main PCB",
     "kind": "other",
-    "test": "Manual Check No.16: power off, unplug, turn fan by hand once - sine voltage between pins 1-3 and 3-5",
+    "test": "Manual Check No.16 (class 18/24): operation off and power off, turn the fan by hand once - a sine voltage must appear between pins 1-3 and 3-5 (U/V/W). NG = replace the fan motor; OK = replace the outdoor PCB (p.102)",
     "source": "daikin-ftxc-rxc-axvju-entra-service.pdf p.117 (3P685295C); PCB list p.120; check p.102"
    },
    {
@@ -18755,7 +18604,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug S90 and measure ohms across each sensor's two wires; compare to the 20 kOhm chart at the actual temperature.",
-  "notes": "All three outdoor sensors (outdoor air, heat exchanger, discharge) plug into S90 (2 wires each). Outdoor thermistors are 20 kOhm at 25C, type A (+/-5%). HPS (high pressure switch) is in series with OLP on S40 - a switch, not a transducer; no pressure sensor. P4 radiation fin thermistor = replace outdoor PCB. The manual names the outdoor thermistors by function only - the codes Ta/Tc/Td here are app labels. EEV on this size is a 6-wire coil on S20.",
+  "notes": "All three outdoor sensors (outdoor air, heat exchanger, discharge) plug into S90 (2 wires each). Outdoor thermistors are 20 kOhm at 25C, type A (+/-5%). S40 carries the overload protector OLP and the high pressure switch HPS (drawn as two separate 2-wire leads on the 18/24 diagram; the 'connect in series' box is on the 09/12 diagram) - a switch, not a transducer; no pressure sensor. P4 radiation fin thermistor = replace outdoor PCB. The manual names the outdoor thermistors by function only (no R-codes). EEV on this size is a 6-wire coil on S20.",
   "gaps": [
    "S90 pin order per sensor is not printed (diagram only shows 3 two-wire sensors into S90)",
    "EEV coil: continuity check only, no ohm value",
@@ -18859,7 +18708,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S403 (A1P)",
-    "name": "Optional wireless LAN connection (per PCB list p.22)",
+    "name": "Optional connector - drawn empty on the wiring diagram. CONFLICT: the PCB list (p.22) calls S403 'optional wireless LAN connection', but the wiring diagram 3D152536 puts the wireless adapter A3P on S430",
     "location": "Control PCB A1P",
     "kind": "other",
     "test": "Power off before unplugging; check plug seated and wires intact end to end",
@@ -18903,7 +18752,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug the thermistor connector from the PCB and measure ohms across the two wires of that thermistor. Compare to the chart at the actual pipe/air temperature; replace the thermistor (as an assembly) if it does not match. The board flags an error when the thermistor voltage is 4.96 V or more, or 0.04 V or less.",
-  "notes": "115 V unit. Same board layout as FTXV09-24 / FTXC-B: R1T alone on 2-pin S501; A4P on S91. No EEV and no pressure sensor indoors.",
+  "notes": "115 V unit. Same board layout as FTXV09-24 / FTXC-B: R1T alone on 2-pin S501; A4P (humidity sensor PCB, also used for C9 room temperature) on S91 (A4P side CON1). No EEV and no pressure sensor indoors. Manual conflict: the PCB list (p.22) says S403 = optional wireless LAN and S430 = optional adaptor, but the wiring diagram (p.134) shows the optional wireless adapter A3P plugged into S430 - go by the wiring diagram.",
   "gaps": [
    "Room temperature sensor: no own plug or chart - C9 procedure is 'replace humidity sensor PCB (A4P)'",
    "S501 pin numbers not printed (2-pin)"
@@ -18937,7 +18786,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air temperature thermistor",
-    "location": "Outdoor air (on the outdoor unit, air intake side)",
+    "location": "Outdoor air (diagram label OUTDOOR)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -19000,7 +18849,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor DC fan motor",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
+    "test": "Check No.16 (p.115): unplug X70A and turn the fan by hand once - a sine-wave voltage should appear between pins 1-3 and 3-5 (pins 5/3/1 = phase U/V/W).",
     "source": "daikin-ftxq-a-rxq-service.pdf p.135 (3D153370); PCB p.24"
    },
    {
@@ -19009,7 +18858,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Four way valve coil",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "spec": "Coil 556-614 Ohm; heating: X80A 120-380 VDC for 3 s after compressor start, then about 10 VDC (Check No.13, p.112)",
+    "test": "Check No.13 (p.112): in heating, X80A should read 120-380 VDC for 3 s after compressor start, then about 10 VDC; power off, unplug, coil 556-614 Ohm",
     "source": "daikin-ftxq-a-rxq-service.pdf p.135 (3D153370); PCB p.24"
    },
    {
@@ -19068,7 +18918,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug the thermistor connector from the PCB and measure ohms across the two wires of that thermistor. Compare to the chart at the actual pipe/air temperature; replace the thermistor (as an assembly) if it does not match. The board flags an error when the thermistor voltage is 4.96 V or more, or 0.04 V or less.",
-  "notes": "All three outdoor thermistors share one 6-pin connector (pins read from the wiring diagram). S1PH on the overload/HPS connector is a high pressure SWITCH, not a transducer - no pressure sensor on this unit. Radiation fin thermistor (P4) is on the PCB itself - P4 = replace the outdoor main PCB. PTC/inrush parts named R1T/R2T (RTH2/RTH1) or R11T/R12T on the main PCB in some diagrams are NOT sensors. One diagram covers 09 and 12. EEV X20A lead colours WHT-YLW-ORG-BLU-RED on pins 1-5.",
+  "notes": "All three outdoor thermistors share one 6-pin connector X90A (pins read from the wiring diagram: 1-2 R1T outdoor, 3-4 R2T condenser, 5-6 R3T discharge). S1PH on X40A is a high pressure SWITCH (in series with OL Q1M through in-line X11A), not a transducer - no pressure sensor on this unit. Radiation fin thermistor (P4) is on the PCB itself - P4 = replace the outdoor main PCB. One diagram covers 09 and 12. EEV X20A lead colours WHT-YLW-ORG-BLU-RED on pins 1-5.",
   "gaps": [
    "EEV coil: manual gives a continuity check only (pin 5 to pins 1-4), no ohm value"
   ],
@@ -19156,7 +19006,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1 Swing motor (horizontal blade), 5 wires",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (motor windings)",
     "source": "daikin-ftkf-b-ftxf-b-service.pdf p.160-161 (printed 156-157, 3D147521A / 3D147460B); connector list p.26-27 (printed 22-23)"
    },
    {
@@ -19247,7 +19096,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air thermistor",
-    "location": "Outdoor air (on the coil face)",
+    "location": "Outdoor air (outdoor unit)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -19376,7 +19225,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three thermistors share one 6-pin plug - unplug it and measure each pair of pins.",
-  "notes": "X900A 6-pin: pins 1-2 R1T outdoor air, 3-4 R2T condenser, 5-6 R3T discharge (read from wiring diagram 3D149646A). No pressure transducer on this unit (S1PH is a high pressure switch on X820A/X40A, not a sensor). Radiation-fin thermistor (P4) is on the PCB - replace the PCB. RKF (cooling only) uses the same plug map; it just has no four-way valve.",
+  "notes": "X900A 6-pin: pins 1-2 R1T outdoor air, 3-4 R2T condenser, 5-6 R3T discharge (read from wiring diagram 3D149646A). No pressure transducer on this unit (S1PH is a high pressure switch on X820A pins 1-2, GRY wires, not a sensor; the E3 flowchart p.98 also names 'X40A', which is not on this board - the PCB list p.28 and the diagram show X820A only). Radiation-fin thermistor (P4) is on the PCB - replace the PCB. RKF (cooling only) uses the same plug map; it just has no four-way valve. Optional drain pan heater E1H (with thermostat S1T and fuses F3U/F4U) is wired from terminal strip X1M L1/L2, not to a PCB plug; cut jumper J9 when it is fitted (p.28).",
   "sources": [
    {
     "file": "daikin-ftkf-b-ftxf-b-service.pdf",
@@ -19405,7 +19254,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R1T",
     "name": "Outdoor air thermistor",
-    "location": "Outdoor air (on the coil face)",
+    "location": "Outdoor air (diagram label OUTDOOR)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -19530,12 +19379,11 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "In-line plug in the Q1M compressor overload protector lead (to board plug X40A)",
     "location": "Harness near compressor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-ftkf-b-ftxf-b-service.pdf p.166 (RXF12, printed 162, 3D149647A) and p.163 (RKF12, printed 159, 3D152683); connector list p.30 (printed 26)"
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three thermistors share one 6-pin plug - unplug it and measure each pair of pins.",
-  "notes": "Different board from the 09: thermistor plug is X90A and EEV plug is X21A. X90A 6-pin: pins 1-2 R1T outdoor air, 3-4 R2T condenser, 5-6 R3T discharge (wiring 3D149647A). No pressure transducer on this unit (S1PH is a high pressure switch on X820A/X40A, not a sensor). Radiation-fin thermistor (P4) is on the PCB - replace the PCB. RKF (cooling only) uses the same plug map; it just has no four-way valve.",
+  "notes": "Different board from the 09: thermistor plug is X90A and EEV plug is X21A. X90A 6-pin: pins 1-2 R1T outdoor air, 3-4 R2T condenser, 5-6 R3T discharge (wiring 3D149647A). No pressure transducer on this unit (S1PH is a high pressure switch on X40A pins 1-2, not a sensor; the troubleshooting text also names X820A, which belongs to other boards in the same manual). R11T (PTC21) and R12T (PTC601) on the main PCB are PTC parts, not sensors. Radiation-fin thermistor (P4) is on the PCB - replace the PCB. RKF (cooling only) uses the same plug map; it just has no four-way valve.",
   "sources": [
    {
     "file": "daikin-ftkf-b-ftxf-b-service.pdf",
@@ -19567,7 +19415,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R5T",
     "name": "Outdoor air thermistor",
-    "location": "Outdoor air (on the coil face)",
+    "location": "Outdoor air",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -19702,12 +19550,11 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional drain pan heater E1H (RXF18/24 drawing only); cut jumper J9 when fitting the heater",
     "location": "Main PCB A1P (faston tabs)",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (heater, when fitted)",
     "source": "daikin-ftkf-b-ftxf-b-service.pdf p.167 (RXF18/24, printed 163, 3D149181) and p.164 (RKF18/24, printed 160, 3D152684); connector list p.31 (printed 27); J9 p.149 (printed 145)"
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three thermistors share one 6-pin plug - unplug it and measure each pair of pins.",
-  "notes": "On 18/24 the codes change: X900A 6-pin: pins 1-2 R5T outdoor air, 3-4 R4T condenser, 5-6 R3T discharge (wiring 3D149181). R1T (RTH2) and R2T (RTH1) on this board are on-board PCB thermistors, not field sensors. No pressure transducer on this unit (S1PH is a high pressure switch on X820A/X40A, not a sensor). Radiation-fin thermistor (P4) is on the PCB - replace the PCB. RKF (cooling only) uses the same plug map; it just has no four-way valve.",
+  "notes": "On 18/24 the codes change: X900A 6-pin: pins 1-2 R5T outdoor air, 3-4 R4T condenser, 5-6 R3T discharge (wiring 3D149181). R1T (RTH2) and R2T (RTH1) on this board are on-board PCB thermistors, not field sensors. No pressure transducer on this unit (S1PH is a high pressure switch on X820A, not a sensor; the E3 page's 'X40A' is the 09/12 class board). Radiation-fin thermistor (P4) is on the PCB - replace the PCB. RKF (cooling only) uses the same plug map; it just has no four-way valve.",
   "sources": [
    {
     "file": "daikin-ftkf-b-ftxf-b-service.pdf",
@@ -19981,7 +19828,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-ftk-b-ftx-b-bxvju-service.pdf p.115 (3P599152D), PCB list p.117"
    }
   ],
-  "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. For a thermistor soldered on a small PCB: power off, unplug that PCB from the control board and measure across the two ends of the soldered thermistor. A bad room thermistor = replace the display PCB.",
+  "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart (type B, 10 kOhm at 77F, tolerance +/-2%); out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the control PCB. For a thermistor soldered on a small PCB: power off, unplug that PCB from the control board and measure across the two ends of the soldered thermistor. The room thermistor (RTH201) is soldered on the display/signal receiver PCB A2P - the manual does not give a separate part for it.",
   "notes": "Both indoor thermistors are the 10 kOhm Type B curve per the manual's type table (indoor heat exchanger thermistor = B, 10 kOhm) - NOT the 20 kOhm curve used outdoors. One wiring diagram (3P599152D) and one PCB layout for all sizes. 'CN_ROOM' (FTKF-A) / 'RTH201' are display-PCB markings, not plugs. No EEV indoors - it is in the outdoor unit.",
   "gaps": [
    "Room thermistor: this manual has no CN_ROOM test-point figure (the FTKF-A manual has one) - measure across the soldered thermistor RTH201 on the display PCB."
@@ -20052,11 +19899,8 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Electronic expansion valve on the outdoor unit liquid line",
     "kind": "eev",
     "spec": "Check No.12: 'Check the continuity between the pins 5 - 1, 5 - 2, 5 - 3, 5 - 4 (for 5P connectors) and 6 - 1, 6 - 3, 5 - 2, 5 - 4, (for 6P connectors). If there is no continuity between the pins, the EV coil is faulty.' Table under it: 09/12 class = harness 5P, 18/24 class = harness 6P. Manual gives continuity pins only - no ohm figure.",
-    "errorCodes": [
-     "E9"
-    ],
     "test": "Power off/on and listen for the valve latching. If silent: unplug the EEV plug and check continuity from pin 5 (common) to pins 1, 2, 3 and 4. No continuity on any = coil bad; all continuity = suspect the main PCB.",
-    "source": "daikin-ftkf-a-ftxf-a-axvju-service.pdf p.121 (S20 = connector for EEV coil), p.119 (EXV on S20, 5 wires), p.101 (Check No.12), p.62 (E9 EXV error)"
+    "source": "daikin-ftkf-a-ftxf-a-axvju-service.pdf p.121 (S20 = connector for EEV coil), p.119 (EXV on S20, 5 wires), p.101 (Check No.12)"
    },
    {
     "plug": "S30",
@@ -20287,7 +20131,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three outdoor thermistors share plug S90 (three 2-wire leads).",
-  "notes": "All three outdoor thermistors are 20 kOhm Type A (manual type table). The manual does not say which S90 pins belong to which thermistor and gives no R-codes - follow the wire to the sensor. No pressure transducer (HPS is a switch on S40, in series with the overload). 18/24 board: fan on S70, four-way valve on S80, EEV harness 6-pin (wiring 3P685295C).",
+  "notes": "All three outdoor thermistors are 20 kOhm Type A (manual type table p.100). The manual does not say which S90 pins belong to which thermistor and gives no R-codes - follow the wire to the sensor. No pressure transducer: the high pressure switch HPS (S1PH) and overload OLP (Q1L) each have a 2-wire lead into S40. 18/24 board: fan on S70, four-way valve on S80, EEV harness 6-pin (wiring 3P685295C).",
   "gaps": [
    "S90 pin-out per thermistor not shown in the manual (wiring diagram only shows 3 two-wire leads into S90)."
   ],
@@ -20466,7 +20310,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three outdoor thermistors share plug S90 (three 2-wire leads).",
-  "notes": "All three outdoor thermistors are 20 kOhm Type A (manual type table). The manual does not say which S90 pins belong to which thermistor and gives no R-codes - follow the wire to the sensor. No pressure transducer (HPS is a switch on S40, in series with the overload). 09/12 board: fan on S71, compressor on S30, EEV harness 5-pin (wiring 3P685297B).",
+  "notes": "All three outdoor thermistors are 20 kOhm Type A (manual type table p.95). Conflict in the manual: the p.95 resistance table labels BOTH columns 'Room temperature thermistor' - the 20 kOhm column (20.00 kOhm at 25 C) is the one that matches the outdoor Type A / 20 kOhm rating; the 10 kOhm column is for the indoor Type B thermistors. The manual does not say which S90 pins belong to which thermistor and gives no R-codes - follow the wire to the sensor. No pressure transducer (HPS is a switch on S40, in series with the overload). 09/12 board: fan on S71, compressor on S30, EEV harness 5-pin, four way valve (RX heat pump only) on S80 (wiring 3P685297B).",
   "gaps": [
    "S90 pin-out per thermistor not shown in the manual (wiring diagram only shows 3 two-wire leads into S90).",
    "S2 on main PCB: printed, nothing connected, not in PCB list (p.118)",
@@ -20580,7 +20424,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor leads RED/YELLOW/BLUE (through relay connector X11A and ferrite core Z1C)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across each pair of compressor leads: open = bad",
     "source": "daikin-ftk-b-ftx-b-bxvju-service.pdf p.116 (3P685295B), PCB list p.119"
    },
    {
@@ -20639,7 +20482,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three outdoor thermistors share plug S90 (three 2-wire leads).",
-  "notes": "All three outdoor thermistors are 20 kOhm Type A (manual type table). The manual does not say which S90 pins belong to which thermistor and gives no R-codes - follow the wire to the sensor. No pressure transducer (HPS is a switch on S40, in series with the overload). 18/24 board: fan on S70, four-way valve on S80, EEV harness 6-pin (wiring 3P685295B).",
+  "notes": "All three outdoor thermistors are 20 kOhm Type A (manual type table p.95). The manual does not say which S90 pins belong to which thermistor and gives no R-codes - follow the wire to the sensor. No pressure transducer: the high pressure switch HPS (S1PH) and overload OLP (Q1L) each have a 2-wire lead into S40. 18/24 board: fan on S70, four-way valve on S80, EEV harness 6-pin (wiring 3P685295B).",
   "gaps": [
    "S90 pin-out per thermistor not shown in the manual (wiring diagram only shows 3 two-wire leads into S90)."
   ],
@@ -20713,7 +20556,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan level)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "A3 flow: unplug the float switch, short X15A and restart - if A3 clears, replace the float switch; if A3 stays, replace the control PCB. Switch should be closed (near 0 Ohm) at normal water level",
+    "test": "A3 flow: unplug the float switch from X15A, short circuit X15A and restart - if A3 no longer appears, replace the float switch; if A3 appears again, replace the control PCB (p.78)",
     "source": "daikin-ffa-a-rxv-cassette-service.pdf p.153 (diagram 3D159395A), connector list p.24; daikin-ffa-a-rxv-cassette-service.pdf p.78 (A3)"
    },
    {
@@ -20773,7 +20616,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional decoration panel: swing motors M1S, M2S, M3S, M4S",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ffa-a-rxv-cassette-service.pdf p.153 (diagram 3D159395A), connector list p.24"
    },
    {
@@ -21103,7 +20945,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Faston tabs for the optional drain pan heater E1H",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-ffa-a-rxv-cassette-service.pdf p.155 (diagram 3D149181), connector list p.29"
    },
    {
@@ -21230,7 +21071,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motors (louvers)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (each motor winding)",
     "source": "daikin-rx-wmvju9-service.pdf p.240 (wiring 3D103375B), PCB list p.31-32"
    },
    {
@@ -21267,7 +21107,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S200 (A1P)",
-    "pins": "7 RED, 4 BLU, BRN, ORG, 1 WHT",
+    "pins": "1 WHT, 2 ORG, 3 BRN, 4 BLU, 7 RED",
     "code": "M1F",
     "name": "Indoor DC fan motor",
     "location": "Control PCB A1P",
@@ -21414,7 +21254,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Manual A3 chart (p.146): remove float switch from X15A, short X15A and restart - if A3 clears, float switch side is the fault. Else: Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "A3 chart (p.146): with drain level normal and the float switch connected, remove the float switch from X15A, short X15A and restart. A3 gone = replace the float switch; A3 still shows = replace the control PCB.",
     "source": "daikin-rx-wmvju9-service.pdf p.241 (3D112629B), PCB list p.33-34; same drawing daikin-rxl-wmvju9-aurora-service.pdf p.249; A3 chart daikin-rx-wmvju9-service.pdf p.146"
    },
    {
@@ -21486,7 +21326,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reactor",
     "location": "Indoor fan PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rx-wmvju9-service.pdf p.241 (3D112629B), PCB list p.33-34; same drawing daikin-rxl-wmvju9-aurora-service.pdf p.249"
    },
    {
@@ -21602,7 +21441,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Manual A3 chart (p.146): remove float switch from X15A, short X15A and restart - if A3 clears, float switch side is the fault. Else: Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Manual A3 chart (p.146): with the float switch connected to X15A and drain water level not high, remove the float switch from X15A, short-circuit X15A and restart - A3 gone = replace the float switch; A3 still shown = replace the indoor PCB",
     "source": "daikin-rx-wmvju9-service.pdf p.242 (3D143602A, W2VJU8) and p.243 (3D139759B, W2VJU9), PCB list p.35; A3 chart p.146"
    },
    {
@@ -21669,7 +21508,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Option: decoration panel swing motors (M1S-M4S on BYFQ60C; one M1S on BYFQ60B - W2VJU9 drawing)",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (each motor winding)",
     "source": "daikin-rx-wmvju9-service.pdf p.242 (3D143602A, W2VJU8) and p.243 (3D139759B, W2VJU9), PCB list p.35"
    },
    {
@@ -21813,7 +21651,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor U/V/W (RED/YLW/BLU through ferrite core Z3C)",
     "location": "Main PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across each pair of compressor leads: open = bad",
     "source": "daikin-rx-wmvju9-service.pdf p.244 (3D134904), PCB list p.40-41"
    },
    {
@@ -21891,7 +21728,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reactor (BRN)",
     "location": "Main PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rx-wmvju9-service.pdf p.244 (3D134904), PCB list p.40-41"
    },
    {
@@ -21900,7 +21736,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reactor (ORG)",
     "location": "Main PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rx-wmvju9-service.pdf p.244 (3D134904), PCB list p.40-41"
    },
    {
@@ -22030,7 +21865,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor leads (to relay connector X11A, then ferrite core Z1C)",
     "location": "Main PCB",
     "kind": "other",
-    "test": "Power off, unplug, ohm across each pair of compressor leads: open = bad",
     "source": "daikin-rx-wmvju9-service.pdf p.245 (3D140830), PCB list p.42-43"
    },
    {
@@ -22147,7 +21981,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (horizontal blade), 5 wires",
     "location": "Control PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.245 (diagram 3D142895), connector list p.26-27"
    },
    {
@@ -22155,7 +21988,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to display/signal receiver PCB2 (plug S27), 10 wires",
     "location": "Control PCB1",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.245 (diagram 3D142895), connector list p.26-27"
    },
    {
@@ -22163,7 +21995,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB1 (plug S26) - display LEDs, ON/OFF switch SW1, room thermistor RTH1, signal receiver",
     "location": "Display/signal receiver PCB2",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.245 (diagram 3D142895), connector list p.26-27"
    },
    {
@@ -22282,7 +22113,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (horizontal blade), 5 wires",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.246 (diagram 3D090199C), connector list p.28-29"
    },
    {
@@ -22290,7 +22120,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to display/signal receiver PCB3 (plug S27), 10 wires",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.246 (diagram 3D090199C), connector list p.28-29"
    },
    {
@@ -22298,7 +22127,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB2 (plug S26) - LEDs, ON/OFF switch S1W, room thermistor R1T, signal receiver",
     "location": "Display/signal receiver PCB3",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.246 (diagram 3D090199C), connector list p.28-29"
    },
    {
@@ -22323,7 +22151,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to filter PCB1 (plug S800) - power from the filter board",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.246 (diagram 3D090199C), connector list p.28-29"
    },
    {
@@ -22331,7 +22158,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB2 (plug S900) - power out to the control board",
     "location": "Filter PCB1",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.246 (diagram 3D090199C), connector list p.28-29"
    },
    {
@@ -22427,7 +22253,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "Control PCB1",
     "kind": "other",
     "spec": "Pins 4-7 = 310-340 VDC motor power; pins 4-3 = 15 VDC control; pins 4-2 = 1-6.5 VDC rotation command; pins 4-1 = rotation pulse input; pin 4 = GND (daikin-rxl-wmvju9-aurora-service.pdf p.192 (Check No.02))",
-    "test": "Check No.02: with the connector on, measure pins 4-7 (310-340 VDC), 4-3 (15 VDC), 4-2 (1-6.5 VDC while running), 4-1 pulses",
+    "test": "Check No.02: check the connector is seated, then measure pins 4-7 (310-340 VDC motor power), 4-3 (15 VDC control), 4-2 (rotation command 1-6.5 VDC), 4-1 (rotation pulse input). Pin 4 = GND.",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31; daikin-rxl-wmvju9-aurora-service.pdf p.192 (Check No.02)"
    },
    {
@@ -22443,7 +22269,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to INTELLIGENT EYE sensor PCB4 (plug S36)",
     "location": "Control PCB1",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22451,7 +22276,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB1 (plug S25)",
     "location": "INTELLIGENT EYE sensor PCB4",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22460,7 +22284,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motors M1S, M2S, M3S (one 16-pin connector)",
     "location": "Control PCB1",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22468,7 +22291,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to display PCB3 (plug S49), 9 wires",
     "location": "Control PCB1",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22476,7 +22298,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB1 (plug S46) - LEDs, ON/OFF switch SW1, buzzer, room thermistor RTH1 (R1T)",
     "location": "Display PCB3",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22484,7 +22305,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to signal receiver PCB2 (plug S48)",
     "location": "Control PCB1",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22492,7 +22312,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB1 (plug S47)",
     "location": "Signal receiver PCB2",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.247 (diagram 3D060942X), connector list p.30-31"
    },
    {
@@ -22614,7 +22433,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to service PCB3 (plug S27) - airflow limit switch S2W, outlet selection switch S4W",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -22622,7 +22440,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB2 (plug S26)",
     "location": "Service PCB3",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -22631,7 +22448,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Lower air outlet motor (5 wires)",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -22640,7 +22456,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Swing motor (6-pin connector)",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -22648,7 +22463,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to display/signal receiver PCB4 (plug S47)",
     "location": "Control PCB2",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -22656,7 +22470,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Harness to control PCB2 (plug S46) - LEDs, ON/OFF switch S1W, signal receiver",
     "location": "Display/signal receiver PCB4",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -22665,7 +22478,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Sensor PCB plug to control PCB2 (S48) - carries the room thermistor R1T",
     "location": "Sensor PCB1",
     "kind": "other",
-    "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
     "source": "daikin-rxl-wmvju9-aurora-service.pdf p.248 (diagram 3D090604C), connector list p.32-33"
    },
    {
@@ -23087,7 +22899,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's plug from the board and measure ohms across the two pins its wires land on. Measure the actual pipe/air temperature at the sensor and compare with the chart; out of range = replace the thermistor (as an assembly). If it reads right but the code stays, check the plug/harness, then replace the PCB. All three thermistors share plug S90 - unplug it and measure each pair of pins.",
-  "notes": "S90 6-pin: 1-2 R1T outdoor air, 3-4 R2T condenser, 5-6 R3T discharge. EEV plug S20 is 6-pin. No pressure transducer (S1PH high pressure switch on S40). Radiation-fin thermistor (P4) is on the PCB.",
+  "notes": "S90 6-pin: 1-2 R1T outdoor air, 3-4 R2T condenser, 5-6 R3T discharge. EEV plug S20 is 6-pin. No pressure transducer (S1PH high pressure switch on S40). Radiation-fin thermistor (P4) is on the PCB. Conflict in the manual: the E5 chart (p.163) talks about 'the 2 terminals on connector S40' as if OL and HPS were one series pair, but the wiring diagram 3D141455 (p.252) draws S40 as 4 pins - S1PH on pins 1-2 (GRY), Q1M on pins 3-4 (BLK). The wiring diagram is followed here.",
   "gaps": [
    "EEV error code: the RXL-W manual has no EEV coil error page - none listed."
   ],
@@ -23212,7 +23024,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S202 (PCB1)",
-    "name": "Harness to service monitor PCB2 (plug S502), 5 wires",
+    "name": "Harness to service monitor PCB2 (plug S502); 5-pin plug, 4 wires (pins 1 BLK, 2 BRN, 3 RED, 5 YLW)",
     "location": "Main PCB1",
     "kind": "other",
     "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
@@ -23617,10 +23429,9 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "DP3, DP4 (A2P)",
     "code": "E1H",
-    "name": "Drain pan heater - optional on 2MXM18/2MXT18, factory-fitted on 2MXTH18",
+    "name": "Drain pan heater (MXTH-A only per PCB list; drawn as OPTION on the 2MXM18/2MXT18 diagram)",
     "location": "sub PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.400 (2MXM18/2MXT18) and p.404 (2MXTH18); PCB list p.58"
    },
    {
@@ -23643,7 +23454,6 @@ const DAIKIN_SENSOR_MAPS = [
   "gaps": [
    "EEV coils: Check No.12 gives only a continuity check (pin 5 to pins 1-4), no ohm figure.",
    "Radiation fin thermistor (P4): soldered on main PCB, no plug and no resistance table given - replace main PCB.",
-   "Radiation fin thermistor (): plug not stated in the manual",
    "Field terminal blocks X1M-X4M (room and power terminals) not added"
   ],
   "sources": [
@@ -23693,7 +23503,7 @@ const DAIKIN_SENSOR_MAPS = [
     "pins": "1-2",
     "code": "R5T",
     "name": "Outdoor air thermistor",
-    "location": "Outdoor air intake (outdoor air thermistor)",
+    "location": "Outdoor air (outdoor temperature thermistor)",
     "kind": "thermistor",
     "chart": "daikin-mz-2mxs-thermistor",
     "errorCodes": [
@@ -23875,7 +23685,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "main PCB A1P",
     "kind": "other",
     "spec": "Opens 4.15 MPa, resets 3.2 MPa (p.294)",
-    "test": "Power off, unplug X820A, ohm pins 1-2: near 0 Ohm when normal (manual E3 chart)",
+    "test": "Manual E3 (p.294): power off, unplug X820A, ohm pins 1-2: nearly 0 Ohm = replace the outdoor PCB (switch circuit OK); infinite = disconnect the 2 switch terminals and ohm the switch: nearly 0 = replace the harness, infinite = replace S1PH.",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.401; E3 p.294"
    },
    {
@@ -23894,7 +23704,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Inline plug in the overload protector (OL) leads, between Q1M and X820A",
     "location": "harness near compressor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.401"
    },
    {
@@ -24001,10 +23810,9 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "DP3, DP4 (A2P)",
     "code": "E1H",
-    "name": "Drain pan heater - optional accessory on 3MXM24",
+    "name": "Drain pan heater harness - drawn as OPTION on the 3MXM24 diagram (PCB list p.58 says 'MXTH-A only')",
     "location": "sub PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.401; PCB list p.58"
    },
    {
@@ -24023,12 +23831,11 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor connector and measure ohms across the pin pair of the one thermistor (each thermistor uses its own two pins). Compare with the 20 kOhm chart at the pipe/air temperature measured there; off-chart, open or shorted = replace the thermistor assembly. Outdoor air/coil/discharge are on main PCB X900A; liquid- and gas-pipe thermistors are on SUB PCB A2P (X951A liquid, X931A gas). EEV coils: Power off and on: each EEV should latch (click). For one that does not, unplug its connector and check continuity from pin 5 (common) to pins 1, 2, 3 and 4 - no continuity on any = bad coil. If it has continuity, swap a good coil onto that valve: clicks = PCB fault, still silent = valve body fault.",
-  "notes": "This board numbers the outdoor thermistors R3T discharge / R4T condenser / R5T outdoor air - NOT the same codes as the 5MXM/3-5MXT 'S' board (R1T air, R2T coil, R3T discharge). Pins as drawn on the wiring diagram, pin 1 at the bottom of X951A/X931A; wire colours: room A BLK, B GRY, C YLW (liquid) / BRN (gas), D BLU (liquid) / RED (gas). EEV connectors X621A (A, WHT housing), X622A (B, RED), X623A (C, BLU), X624A (D, YLW); coil leads ORG/RED/YLW/BLK/GRY. No pressure sensor on this board - only high-pressure switch S1PH (on X820A with compressor overload Q1M). R1T (RTH2) and R2T (RTH1) drawn inside A1P are PCB parts, not field sensors (manual does not say which is the radiation fin thermistor; P4 = replace main PCB). J3 is also set if discharge temp reads below heat-exchanger temp (cooling: outdoor coil thermistor; heating: indoor coil thermistor).",
+  "notes": "This board numbers the outdoor thermistors R3T discharge / R4T condenser / R5T outdoor air - NOT the same codes as the 5MXM/3-5MXT 'S' board (R1T air, R2T coil, R3T discharge). X900A pin order as drawn: R5T 1-2, R4T 3-4, R3T 5-6 (all BLK). X951A/X931A pins as drawn, pin 1 at the bottom; wire colours on the 3MXM24 diagram: room A BLK, B GRY, C YLW (liquid) / BRN (gas). EEV connectors X621A (A, WHT housing), X622A (B, RED), X623A (C, BLU); coil leads ORG/RED/YLW/BLK/GRY. X624A (room D) is on the sub PCB but used on the 36 class only (p.58). No pressure sensor on this board - only high-pressure switch S1PH (on X820A with compressor overload Q1M). R1T (RTH2) and R2T (RTH1) drawn inside A1P are PCB parts, not field sensors (manual does not say which is the radiation fin thermistor; P4 = replace main PCB). J3 is also set if discharge temp reads below heat-exchanger temp (cooling: outdoor coil thermistor; heating: indoor coil thermistor).",
   "gaps": [
    "EEV coils: Check No.12 gives only a continuity check (pin 5 to pins 1-4), no ohm figure.",
    "Radiation fin thermistor (P4): soldered on main PCB, no plug and no resistance table given - replace main PCB.",
-   "Radiation fin thermistor (): plug not stated in the manual",
-   "Field terminal blocks X1M-X4M (room and power terminals) not added"
+   "Field terminal blocks X1M-X3M (room and power terminals) not added"
   ],
   "sources": [
    {
@@ -24318,7 +24125,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Inline plug in the overload protector (OL) leads, between Q1M and X820A",
     "location": "harness near compressor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.402"
    },
    {
@@ -24420,7 +24226,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Drain pan heater - optional accessory on 4MXM36",
     "location": "sub PCB A2P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.402; PCB list p.58"
    },
    {
@@ -24443,8 +24248,7 @@ const DAIKIN_SENSOR_MAPS = [
   "gaps": [
    "EEV coils: Check No.12 gives only a continuity check (pin 5 to pins 1-4), no ohm figure.",
    "Radiation fin thermistor (P4): soldered on main PCB, no plug and no resistance table given - replace main PCB.",
-   "Radiation fin thermistor (): plug not stated in the manual",
-   "Field terminal blocks X1M-X4M (room and power terminals) not added"
+   "Field terminal blocks X1M-X3M (room and power terminals) not added"
   ],
   "sources": [
    {
@@ -24667,7 +24471,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "S25",
     "code": "Y6E",
     "name": "EEV coil Y6E (extra motor-operated valve, not a room port)",
-    "location": "Outdoor unit - piping diagram p.391-393 shows one extra motor operated valve on the PCB-cooling refrigerant line; the manual does not name Y6E's job in words",
+    "location": "Outdoor unit - piping diagram 3D157510 (p.392) shows one extra motor operated valve on a branch beside the PCB-cooling pipe (filter - valve - capillary tube); the manual does not name Y6E's job in words",
     "kind": "eev",
     "spec": "Check No.12: no ohm figure given. 'disconnect that connector and check the continuity using a multimeter. Check the continuity between the pins 5 - 1, 5 - 2, 5 - 3, 5 - 4. If there is no continuity between the pins, the EV coil is faulty.' (first: power off/on and listen for each EV's latching sound)",
     "errorCodes": [
@@ -24824,14 +24628,13 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor connector and measure ohms across the pin pair of the one thermistor (each thermistor uses its own two pins). Compare with the 20 kOhm chart at the pipe/air temperature measured there; off-chart, open or shorted = replace the thermistor assembly. Pressure sensor: power on, DC volts at S60 between pin 1 (white) and pin 3 (black); pin 4 (red) should be 5 V. 0.5 V = 0 MPaG, 3.5 V = 4.15 MPaG (about 1.383 MPa per volt above 0.5 V; 1 MPa = 145 psi) - compare with a gauge. EEV coils: Power off and on: each EEV should latch (click). For one that does not, unplug its connector and check continuity from pin 5 (common) to pins 1, 2, 3 and 4 - no continuity on any = bad coil. If it has continuity, swap a good coil onto that valve: clicks = PCB fault, still silent = valve body fault.",
-  "notes": "This board numbers the outdoor thermistors R1T outdoor air / R2T condenser / R3T discharge (different from the 2/3/4MXM 'X' board). All on one main PCB: S90 = air/coil/discharge, S93 = liquid pipes (R4T room A ... in order), S92 = gas pipes (R9T room A ...). Pins as drawn, pin 1 on the left; wire colours room A BLK, B GRY, C YLW (liquid) / BRN (gas), D BLU (liquid) / RED (gas), E BLK. EEV ports S20 (A) S21 (B) S22 (C) S23 (D) S24 (E) - unused port connectors stay empty on smaller sizes - plus S25 for Y6E on every size. High pressure switch S1PH is on S40 with compressor OL Q1M. RTH1/RTH2 on this board are resistors per legend, not thermistors. MXTH = same board plus drain-pan heater on DP1/DP2.",
+  "notes": "This board numbers the outdoor thermistors R1T outdoor air / R2T condenser / R3T discharge (different from the 2/3/4MXM 'X' board). All on one main PCB: S90 = air/coil/discharge, S93 = liquid pipes (R4T room A, R5T B, R6T C), S92 = gas pipes (R9T room A, R10T B, R11T C). Pins as drawn, pin 1 on the left; wire colours on this model: liquid A BLK, B GRY, C YLW; gas A BLK, B GRY, C BRN. EEV ports S20 (A) S21 (B) S22 (C); S23 (D) and S24 (E) are printed on the board but empty on this 3-room model; S25 (6-pin, red) feeds Y6E. High pressure switch S1PH is on S40 pins 1-2 with compressor OL Q1M on pins 3-4 (through X12A). RTH1/RTH2 on this board are resistors per legend, not thermistors. 3MXTH24 = same board with drain-pan heater E1H on DP1/DP2 (shown as OPTION on the 3MXT24 diagram).",
   "gaps": [
    "EEV coils: Check No.12 gives only a continuity check (pin 5 to pins 1-4), no ohm figure.",
    "Y6E (S25): the manual shows it only on the wiring and piping diagrams - its control role is not described.",
    "High pressure sensor: manual gives only two points (0.5 V = 0 MPaG, 3.5 V = 4.15 MPaG), no formula or graph - chart is a straight line between them.",
    "Radiation fin thermistor (P4): on main PCB, no plug and no resistance table given - replace main PCB.",
-   "Radiation fin thermistor (): plug not stated in the manual",
-   "Field terminal blocks X1M-X4M (room and power terminals) not added"
+   "Field terminal blocks X1M-X3M (room and power terminals) not added"
   ],
   "sources": [
    {
@@ -25094,7 +24897,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "S25",
     "code": "Y6E",
     "name": "EEV coil Y6E (extra motor-operated valve, not a room port)",
-    "location": "Outdoor unit - piping diagram p.391-393 shows one extra motor operated valve on the PCB-cooling refrigerant line; the manual does not name Y6E's job in words",
+    "location": "Outdoor unit - piping diagram 3D157509 shows one extra motor operated valve (with filter and capillary tube) on a 1/4 in. line beside the PCB-cooling loop; the manual does not name Y6E's job in words",
     "kind": "eev",
     "spec": "Check No.12: no ohm figure given. 'disconnect that connector and check the continuity using a multimeter. Check the continuity between the pins 5 - 1, 5 - 2, 5 - 3, 5 - 4. If there is no continuity between the pins, the EV coil is faulty.' (first: power off/on and listen for each EV's latching sound)",
     "errorCodes": [
@@ -25224,7 +25027,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Drain pan heater - optional on 4MXT36, factory-fitted on 4MXTH36",
     "location": "main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.407 (4MXT36) and p.408 (4MXTH36); PCB list p.60"
    },
    {
@@ -25243,7 +25045,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor connector and measure ohms across the pin pair of the one thermistor (each thermistor uses its own two pins). Compare with the 20 kOhm chart at the pipe/air temperature measured there; off-chart, open or shorted = replace the thermistor assembly. Pressure sensor: power on, DC volts at S60 between pin 1 (white) and pin 3 (black); pin 4 (red) should be 5 V. 0.5 V = 0 MPaG, 3.5 V = 4.15 MPaG (about 1.383 MPa per volt above 0.5 V; 1 MPa = 145 psi) - compare with a gauge. EEV coils: Power off and on: each EEV should latch (click). For one that does not, unplug its connector and check continuity from pin 5 (common) to pins 1, 2, 3 and 4 - no continuity on any = bad coil. If it has continuity, swap a good coil onto that valve: clicks = PCB fault, still silent = valve body fault.",
-  "notes": "This board numbers the outdoor thermistors R1T outdoor air / R2T condenser / R3T discharge (different from the 2/3/4MXM 'X' board). All on one main PCB: S90 = air/coil/discharge, S93 = liquid pipes (R4T room A ... in order), S92 = gas pipes (R9T room A ...). Pins as drawn, pin 1 on the left; wire colours room A BLK, B GRY, C YLW (liquid) / BRN (gas), D BLU (liquid) / RED (gas), E BLK. EEV ports S20 (A) S21 (B) S22 (C) S23 (D) S24 (E) - unused port connectors stay empty on smaller sizes - plus S25 for Y6E on every size. High pressure switch S1PH is on S40 with compressor OL Q1M. RTH1/RTH2 on this board are resistors per legend, not thermistors. MXTH = same board plus drain-pan heater on DP1/DP2.",
+  "notes": "This board numbers the outdoor thermistors R1T outdoor air / R2T condenser / R3T discharge (different from the 2/3/4MXM 'X' board). All on one main PCB: S90 = air/coil/discharge, S93 = liquid pipes (R4T room A ... R7T room D), S92 = gas pipes (R9T room A ... R12T room D). Pins as drawn, pin 1 on the left; wire colours room A BLK, B GRY, C YLW (liquid) / BRN (gas), D BLU (liquid) / RED (gas). EEV ports S20 (A) S21 (B) S22 (C) S23 (D); S24 (room E port) stays empty on this 4-room model; plus S25 for Y6E. High pressure switch S1PH is on S40 with compressor OL Q1M. RTH1/RTH2 on this board are resistors per legend, not thermistors. 4MXTH36 = same board with drain-pan heater E1H on DP1/DP2 (drawn as OPTION on 4MXT36).",
   "gaps": [
    "EEV coils: Check No.12 gives only a continuity check (pin 5 to pins 1-4), no ohm figure.",
    "Y6E (S25): the manual shows it only on the wiring and piping diagrams - its control role is not described.",
@@ -25555,7 +25357,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "S25",
     "code": "Y6E",
     "name": "EEV coil Y6E (extra motor-operated valve, not a room port)",
-    "location": "Outdoor unit - piping diagram p.391-393 shows one extra motor operated valve on the PCB-cooling refrigerant line; the manual does not name Y6E's job in words",
+    "location": "Outdoor unit - piping diagram 3D157508 shows a 6th motor operated valve in a small branch (filter, motor operated valve, capillary tube, filter) running from the liquid line beside the PCB-cooling pipe to the gas line; the manual does not name Y6E's job in words",
     "kind": "eev",
     "spec": "Check No.12: no ohm figure given. 'disconnect that connector and check the continuity using a multimeter. Check the continuity between the pins 5 - 1, 5 - 2, 5 - 3, 5 - 4. If there is no continuity between the pins, the EV coil is faulty.' (first: power off/on and listen for each EV's latching sound)",
     "errorCodes": [
@@ -25702,7 +25504,6 @@ const DAIKIN_SENSOR_MAPS = [
    "Y6E (S25): the manual shows it only on the wiring and piping diagrams - its control role is not described.",
    "High pressure sensor: manual gives only two points (0.5 V = 0 MPaG, 3.5 V = 4.15 MPaG), no formula or graph - chart is a straight line between them.",
    "Radiation fin thermistor (P4): on main PCB, no plug and no resistance table given - replace main PCB.",
-   "Radiation fin thermistor (): plug not stated in the manual",
    "Field terminal blocks X1M-X4M (room and power terminals) not added"
   ],
   "sources": [
@@ -25928,7 +25729,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan)",
     "location": "control PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.396; PCB list p.48"
    },
    {
@@ -26040,7 +25840,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.396"
    }
   ],
-  "test": "Power off. Unplug the thermistor connector from the PCB and measure resistance across the thermistor's two wires; compare with the chart at the measured pipe/air temperature (Check No.01, p.324). Replace the thermistor if off the chart; if the thermistor is good and the error stays, replace the control PCB. The board flags an error when the thermistor voltage is 4.96 V or more / 0.04 V or less.",
+  "test": "Power off. Unplug the thermistor connector from the PCB and measure resistance across the thermistor's two wires; compare with the chart at the measured pipe/air temperature (Check No.01, p.324). Replace the thermistor if off the chart; if the thermistor is good and the error stays, replace the control PCB. The error is set when a thermistor is disconnected or shorted while the unit is running.",
   "notes": "Careful: R2T (liquid pipe, C4) is on X18A and R3T (C5) is on X17A per the wiring diagram - the PCB list only says 'X17A, X18A ... (R2T, R3T)'. One diagram (3D157107) covers every size. No EEV in the indoor unit: on these multi-zone systems the electronic expansion valves (EVA-EVE, one per room) are in the outdoor unit (p.141, printed 133) - see the outdoor map.",
   "gaps": [
    "Pins not stated (X16A is a 3-pin plug; which 2 pins R1T uses is not stated)."
@@ -26128,7 +25928,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X700A (S700) (A1P)",
-    "name": "Swing motor connector (4-pin) per PCB list - drawing does not show which motor",
+    "name": "Swing motor connector (4-pin) per PCB list; its 4 wires run into inline plug X2A (the M1S plug), but the drawing does not show which motor uses them",
     "location": "control PCB A1P",
     "kind": "other",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.397; PCB list p.50"
@@ -26303,7 +26103,7 @@ const DAIKIN_SENSOR_MAPS = [
   "gaps": [
    "Left-side room temperature thermistor (C922, p.244 printed 236): connector not shown in the PCB lists or wiring diagram.",
    "Pins not stated for X501A / X904A (X904A is a 6-pin plug shared with the refrigerant sensor).",
-   "X700A (S700): listed as swing motor connector but the drawing shows no motor on it"
+   "X700A (S700): listed as a swing motor connector; its wires run into inline plug X2A but the drawing does not show which motor they serve"
   ],
   "sources": [
    {
@@ -26432,7 +26232,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "TB7 (A1P)",
-    "name": "24 V common (COM)",
+    "name": "COM terminal (green wire) - PCB list calls it 'Earth connection (COM)'; drawing legend: COM = 24 V common",
     "location": "control PCB A1P",
     "kind": "other",
     "source": "daikin-mxm-mxt-mxth-multizone-service.pdf p.398; PCB list p.54"
@@ -26595,7 +26395,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X30A (A1P)",
     "code": "R7T",
     "name": "Deicer thermistor",
-    "location": "Outdoor heat exchanger (coil)",
+    "location": "Outdoor heat exchanger liquid pipe (at the distributor)",
     "kind": "thermistor",
     "chart": "daikin-mz-rmxs-pipe-a",
     "errorCodes": [
@@ -26710,7 +26510,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Solenoid valve coil - 4-way (reversing) valve, switched by relay K2R",
     "location": "Main PCB A1P; coil on the 4-way valve",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rza-aa-skyair-service.pdf p.311"
    },
    {
@@ -26719,7 +26518,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Crankcase heater, switched by relay K1R",
     "location": "Main PCB A1P; heater on compressor",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-rza-aa-skyair-service.pdf p.311"
    },
    {
@@ -26816,8 +26614,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (note 6: never short it)",
     "location": "Inverter PCB A3P; switch on discharge line",
     "kind": "other",
-    "spec": "Operates at 4.0 MPa (580 psi) (p.213)",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "spec": "Operates at 4.0 MPa (580 psi), resets at 3.0 MPa (435 psi) (p.213)",
+    "test": "E3: check the switch connector is seated on the inverter PCB and that there is continuity across the high pressure switch; check its operating pressure (4.0 MPa / 580 psi) with a gauge on the high pressure service port (p.213)",
     "source": "daikin-rza-aa-skyair-service.pdf p.311; spec p.213"
    },
    {
@@ -27141,7 +26939,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor fan motor (BLK/WHT/RED, through ferrite Z1C)",
     "location": "Fan PCB A3P",
     "kind": "other",
-    "test": "Power off, unplug, ohm U-V, V-W, W-U: balanced within 20% and not under 1 Ohm (CHECK 16 p.296)",
+    "test": "Power off, unplug the fan motor connector and measure U-V, V-W, W-U: resistances must be balanced within 20% with no short circuit (CHECK 16 p.296)",
     "source": "daikin-rza-aa-skyair-service.pdf p.306; A6 p.175; CHECK 16 p.296"
    },
    {
@@ -27461,7 +27259,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor fan motor (BLK/WHT/RED)",
     "location": "Fan PCB A3P",
     "kind": "other",
-    "test": "Power off, unplug, ohm U-V, V-W, W-U: balanced within 20% and not under 1 Ohm (CHECK 16 p.296)",
+    "test": "Power off, unplug the fan motor connector, ohm U-V, V-W, W-U: must be balanced within 20% with no short circuit (CHECK 16 p.296)",
     "source": "daikin-rza-aa-skyair-service.pdf p.308; A6 p.175; CHECK 16 p.296"
    },
    {
@@ -27572,11 +27370,11 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "EEV coil (indoor)",
     "location": "Indoor unit liquid line",
     "kind": "eev",
-    "spec": "FAA-AA: White (1), Yellow (2), Orange (3), Blue (4), Red (5), Brown (6). Measuring points 1-3: 270-330 Ohm; 1-5: 135-165 Ohm; 2-4: 270-330 Ohm; 2-6: 135-165 Ohm.",
+    "spec": "CHECK 18 FAA-AA coil (6-pin coil connector): White (1), Yellow (2), Orange (3), Blue (4), Red (5), Brown (6). 1-3: 270-330 Ohm; 1-5: 135-165 Ohm; 2-4: 270-330 Ohm; 2-6: 135-165 Ohm. These pin numbers are the coil connector's - X7A on A1P is drawn with 5 pins (through a WHT relay connector), so they do not map onto X7A.",
     "errorCodes": [
      "A9"
     ],
-    "test": "Power off, unplug X7A from the indoor PCB (A1P) and measure the coil pin pairs listed in the spec; outside the range = replace the coil (Y1E).",
+    "test": "Power off, unplug the coil and measure the pin pairs listed in the spec on the coil's own 6-pin connector; outside the range = replace the coil (Y1E).",
     "source": "daikin-rza-aa-skyair-service.pdf p.298 (printed 292) CHECK 18; X7A per daikin-rza-aa-skyair-service.pdf p.309 (printed 303) wiring 3D157652 and A9 page p.180 (printed 174)"
    },
    {
@@ -27734,8 +27532,8 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rza-aa-skyair-service.pdf p.309; CHECK 16 p.296"
    }
   ],
-  "test": "Power off. Unplug the thermistor from the indoor control PCB (A1P) and measure its resistance; compare with its chart at the measured air/pipe temperature (CHECK 11). Out of chart = replace thermistor; in chart but error stays = replace A1P. EEV: power off, unplug X7A and measure the coil per the spec.",
-  "notes": "One wiring diagram for both sizes. Gas pipe thermistor R3T is Type J on this model (not Type A). The EEV coil is a 6-wire coil with different ohm figures from the cassette/ducted units. Leak sensor PCB (A5P) on X41A.",
+  "test": "Power off. Unplug the thermistor from the indoor control PCB (A1P) and measure its resistance; compare with its chart at the measured air/pipe temperature (CHECK 11). Out of chart = replace thermistor; in chart but error stays = replace A1P. EEV: power off, unplug the coil and measure it on its own 6-pin connector per the spec.",
+  "notes": "One wiring diagram for both sizes. Gas pipe thermistor R3T is Type J on this model (not Type A). The EEV coil is a 6-wire coil with different ohm figures from the cassette/ducted units. CONFLICT: CHECK 18 (p.298) draws the FAA-AA coil connector with 6 pins, but the wiring diagram (p.309) draws X7A on A1P with 5 pins via a WHT relay connector - measure the coil on its own connector. Leak sensor PCB (A5P) on X41A.",
   "gaps": [
    "CHECK 18 FAA-AA coil figure does not print the PCB plug; X7A is taken from the FAA wiring diagram (Y1E on X7A) and the A9 page (all indoor units, X7A).",
    "X70A on fan PCB A3P: marked note 5 (optional accessory) and drawn with a jumper loop, but not named in this drawing's legend (daikin-rza-aa-skyair-service.pdf p.309)"
@@ -28115,7 +27913,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X30A (A1P)",
     "code": "R7T",
     "name": "Deicer thermistor",
-    "location": "Outdoor heat exchanger (deicer)",
+    "location": "Liquid pipe of the outdoor air heat exchanger, low on the coil next to R4T (back view)",
     "kind": "thermistor",
     "chart": "daikin-mz-rmxs-pipe-a",
     "errorCodes": [
@@ -28307,7 +28105,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X483A (A2P)",
-    "name": "Harness (3 wires) to inverter PCB A3P X20A",
+    "name": "Harness (3 wires) to inverter PCB A3P: 2 wires to X20A, 1 wire to X801A",
     "location": "ACS converter PCB A2P",
     "kind": "other",
     "source": "daikin-rxta-rxla-aa-service.pdf p.302; p.235"
@@ -28328,7 +28126,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X801A (A3P)",
-    "name": "Inverter PCB connector - no wire drawn on the diagram; troubleshooting page lists X483A (A2P) to X20A, X801A (A3P)",
+    "name": "Inverter PCB 5-pin connector - one wire from ACS converter PCB A2P X483A lands on its end pin (the other two X483A wires go to A3P X20A)",
     "location": "Inverter PCB A3P",
     "kind": "other",
     "source": "daikin-rxta-rxla-aa-service.pdf p.302; p.235"
@@ -28373,10 +28171,9 @@ const DAIKIN_SENSOR_MAPS = [
   "test": "Power off, unplug the thermistor connector from the outdoor main PCB (A1P) - or X111A on the inverter PCB (A3P) for R10T - and measure the thermistor across its own wire pair; compare to its chart (Type A/E/H/K) at the measured pipe/air temperature. Pressure sensors: power on, measure DC volts at A1P between the white (pin 2) and black (pin 3) wires of X32A (high) or X31A (low); pin 1 red = +5 V. PH (MPa) = 1.383 x V - 0.692; PL (MPa) = 0.567 x V - 0.283; 1 MPa = 145 psi. Compare with a gauge on the service port.",
   "notes": "Five thermistors share the 10-pin plug X30A on A1P (diagram order top to bottom: R3T, R5T, R6T, R4T, R7T) - follow the wire pair to the sensor. R1T (X18A) and R21T (X19A) have their own plugs. Four outdoor EEVs, all 5-wire, 35-55 Ohm per coil; E9 sub codes (p.216): E9-01/20 = Y1E, E9-03 = Y2E, E9-04/23 = Y3E, E9-29 = Y4E. The Y3E plug X23A has different wire colours (common = red pin 5). Error code -> thermistor (p.156): H9 R1T, J3 R21T, J5 R3T, J6 R7T, J7 R5T, J8 R4T, J9 R6T, JA high pressure sensor, JC low pressure sensor. L4 (fin temperature rise) uses the thermistor inside the power module, not R10T (p.227). The high pressure SWITCH S1PH lands on X32A of the inverter PCB (A3P) - do not confuse with the high pressure SENSOR plug X32A on the main PCB (A1P).",
   "gaps": [
-   "Pins inside X30A for each of R3T/R5T/R6T/R4T/R7T not stated in SiUS332501EA (only connector + drawing order).",
+   "Pins inside X30A for each of R3T/R5T/R6T/R4T/R7T not stated in SiUS332501EA (only connector + drawing order: each thermistor on its own adjacent pair of the 10 pins).",
    "Type A chart: manual leaves 75-95 C and 105 C+ blank (only 100 C = 1.339 kOhm printed above 70 C).",
-   "X2A, X3A, X4A on A1P: 2-pin connectors drawn with a shorting cap; purpose not labeled on the drawing (daikin-rxta-rxla-aa-service.pdf p.302)",
-   "X801A on A3P: no wire drawn on the diagram, but the LC flowchart lists X483A (A2P) to X20A, X801A (A3P) - which pins/wires go to X801A is not shown"
+   "X2A, X3A, X4A on A1P: 2-pin connectors drawn with a shorting cap; purpose not labeled on the drawing (daikin-rxta-rxla-aa-service.pdf p.302)"
   ],
   "sources": [
    {
@@ -28656,7 +28453,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor fan motor (BLK/WHT/RED, through ferrite Z1C)",
     "location": "Fan PCB A3P",
     "kind": "other",
-    "test": "Power off, unplug, ohm U-V, V-W, W-U: balanced within 20% and not under 1 Ohm (CHECK 16 p.292)",
+    "test": "Power off, unplug the fan motor connector, ohm U-V, V-W, W-U: must be balanced within 20% with no short circuit (CHECK 16 p.292)",
     "source": "daikin-rxta-rxla-aa-service.pdf p.303; A6 p.171; CHECK 16 p.292"
    },
    {
@@ -28888,7 +28685,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Float switch (drain pan) - or short-circuit connector",
     "location": "Control PCB A1P",
     "kind": "other",
-    "test": "A3: power off, unplug X15A, check float switch continuity (p.167)",
+    "test": "A3: power off, disconnect X15A and check the float switch contact for continuity (should be closed/short circuit with no water in the pan). If X15A has a short-circuit connector instead and the error stays, shorting X15A should clear it - if not, replace control PCB A1P.",
     "source": "daikin-rxta-rxla-aa-service.pdf p.305; A3 p.167"
    },
    {
@@ -28972,7 +28769,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor fan motor (BLK/WHT/RED) (standard board set; FXSA05-15 use the other set)",
     "location": "Fan PCB A3P",
     "kind": "other",
-    "test": "Power off, unplug, ohm U-V, V-W, W-U: balanced within 20% and not under 1 Ohm (CHECK 16 p.292)",
+    "test": "CHECK 16: power off, disconnect the fan motor connector and measure U-V, V-W, W-U (Red U, White V, Black W): resistances balanced within 20% and no short circuit.",
     "source": "daikin-rxta-rxla-aa-service.pdf p.305; A6 p.171; CHECK 16 p.292"
    },
    {
@@ -29039,7 +28836,8 @@ const DAIKIN_SENSOR_MAPS = [
   "gaps": [
    "X4A on fan PCB A3P (standard set): drawn with a jumper loop; purpose not labeled (daikin-rxta-rxla-aa-service.pdf p.305)",
    "X70A on fan PCB A3P (FXSA05-15 set): drawn with a jumper loop; not named in this drawing's legend (daikin-rxta-rxla-aa-service.pdf p.305)",
-   "Drawing marks only the lower board set 'ONLY FXSA05~15'; the other set is unlabeled and taken to be all other sizes"
+   "Drawing marks only the lower board set 'ONLY FXSA05~15'; the other set is unlabeled and taken to be all other sizes",
+   "NOT YET ADDED: refrigerant leak sensor PCB A4P (CN1) plugs into control PCB A1P X41A (4-pin) - p.305; CH-14 = sensor not connected at power-up, check 5 VDC between X41A pins 1 and 4 (p.205)."
   ],
   "sources": [
    {
@@ -29272,9 +29070,10 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off, unplug the thermistor plug from the indoor control PCB (A1P), measure across its two pins and compare to the chart type for that sensor at the measured air/pipe temperature (CHECK 11). EEV: unplug X7A and measure the coil per CHECK 18.",
-  "notes": "FXAA gas pipe R3T uses chart Type J (other indoor models use Type A). The FXAA EEV coil is a 6-wire type with different ohm figures (135-165 / 270-330 Ohm) from the other indoor units.",
+  "notes": "FXAA gas pipe R3T uses chart Type J (other indoor models use Type A). The FXAA EEV coil is a 6-wire type with different ohm figures (135-165 / 270-330 Ohm) from the other indoor units. The wiring diagram also shows A5P 'PRINTED CIRCUIT BOARD (REFRIGERANT SENSOR)' (its plug CN1) wired to X41A on A1P - this plug has no entry here and the manual pages checked give no test for it.",
   "gaps": [
-   "X70A on fan PCB A3P: marked note 5 (optional accessory) and drawn with a jumper loop, but not named in this drawing's legend (daikin-rxta-rxla-aa-service.pdf p.306)"
+   "X70A on fan PCB A3P: marked note 5 (optional accessory) and drawn with a jumper loop, but not named in this drawing's legend (daikin-rxta-rxla-aa-service.pdf p.306)",
+   "X41A on A1P to refrigerant sensor PCB A5P (CN1): no entry and no test in the pages checked"
   ],
   "sources": [
    {
@@ -29412,7 +29211,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X7A (A2P)",
-    "name": "ECM blower motor 4-wire control harness (RD/BK/GY/BL: +Vdc, common, receive, transmit)",
+    "name": "ECM blower motor 4-wire control harness (wires RD, BK, GY, BL). The four circuits are +Vdc, Common, Receive, Transmit - the manual does not say which colour is which",
     "location": "A2P PCB",
     "kind": "other",
     "test": "CHECK 19: Emerson UltraCheck-EZ tool on the 4-circuit control plug; power plug pins 4-5 = supply voltage, 4-3 and 5-3 about half (p.295-296)",
@@ -29507,7 +29306,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "daikin-rxta-rxla-aa-service.pdf p.307"
    }
   ],
-  "test": "Power off, unplug the thermistor plug from the indoor control PCB (A1P), measure across its two pins and compare to the chart type for that sensor at the measured air/pipe temperature (CHECK 11). EEV: unplug X7A and measure the coil per CHECK 18.",
+  "test": "Power off, unplug the thermistor plug from the indoor control PCB (A1P), measure across its two pins and compare to the Type A chart at the measured pipe temperature (CHECK 11). EEV (X7A): CHECK 18 gives no FXTA coil ohm figure - check the X7A connection per the A9 flowchart.",
   "notes": "FXTA has no built-in return air thermistor; R1T is only the optional remote sensor on X16A (C9 = remote sensor abnormality, p.197; set field setting 10(20)-2 to 03 when no sensor is fitted). The A2L refrigerant leak sensor plugs into X6A on A2P (not a thermistor).",
   "gaps": [
    "FXTA remote sensor R1T: CHECK 11 type table shows \"-\" (no chart given).",
@@ -29603,7 +29402,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "X7A",
     "code": "M1F",
-    "name": "ECM blower motor 4-wire control harness (RD/BK/GY/BL: +Vdc, common, receive, transmit)",
+    "name": "ECM blower motor 4-wire control harness (wires RD, BK, GY, BL; the motor's four control wires are +Vdc, Common, Receive and Transmit - the manual does not say which colour is which)",
     "location": "Indoor unit PCB",
     "kind": "other",
     "test": "Manual CHECK 19 (daikin-rzq-rzr-ta-tb-skyair-service-ec.pdf p.395): Emerson UltraCheck-EZ tool on the motor control plug with 24 VAC - motor should start within 5 s; otherwise check harnesses and motor",
@@ -29645,7 +29444,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Red jumper as shipped; replace with the heater kit aux alarm switch when installed (note 6). Open circuit here gives error A0-01",
     "location": "Indoor unit PCB",
     "kind": "other",
-    "test": "Power off, ohm TB4-TB5: closed (near 0 Ohm) with jumper/alarm switch normal",
+    "test": "A0-01 flow (p.286): if an external protection device is wired to TB4-TB5, check whether it is open (= device activated). Then check fuse F1U; then 24 VAC at TH2 and TR2 - present = replace the indoor PCB, absent = check the wiring.",
     "source": "daikin-rzq-rzr-ta-tb-skyair-service-ec.pdf p.415 (0140A01387-A); p.286"
    },
    {
@@ -29724,7 +29523,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug X5A from the indoor PCB, measure the liquid (R2T) and gas (R3T) thermistor across each wire pair and compare with the Type A chart at the measured pipe temperature. Wrong reading = replace thermistor; good reading but code stays = replace indoor PCB (A1P). C9 only applies when the optional remote sensor is fitted on X4A.",
-  "notes": "Same plug layout as FTQ-TA (X5A coil thermistors, X4A remote sensor, X3A EEV coil) per the FTQ-TB wiring diagram 0140A01387-A. C9 on FTQ-TA/TB = remote sensor only (C4/C5/C9 page says C9 'except FTQ-TA, FTQ-TB' for the suction thermistor). No return-air thermistor on the board, no pressure sensor. Type A chart = daikin-skyair-t-type-a rows (identical).",
+  "notes": "Same plug layout as FTQ-TA (X5A coil thermistors, X4A remote sensor, X3A EEV coil) per the FTQ-TB wiring diagram 0140A01387-A. C9 on FTQ-TA/TB = remote sensor only (the C4/C5/C9/CA page says C9 suction thermistor applies 'except FTQ-TA, FTQ-TB'). No return-air thermistor on the board, no pressure sensor. R2T/R3T are Type A (CHECK 11, p.385); the linked chart has the same Type A values.",
   "gaps": [
    "Which X5A pin pair is R2T (liquid) vs R3T (gas) is not stated.",
    "No resistance chart / type for the optional remote sensor R1T (CHECK 11 shows '-').",
@@ -29947,7 +29746,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Four way (reversing) valve coil (switched by K1R through PTC R9T)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-dc9vs-dh9vs-dh7vs-r32-service.pdf p.75 (same drawing Amana/Goodman twins p.75); removal p.89"
    },
    {
@@ -30003,7 +29801,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor leads RED/YLW/BLU (through ferrite core Z3C)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across each pair of compressor leads: open = bad",
+    "test": "Manual S-17B (p.20): power off, remove the three leads at the compressor and ohm each terminal to ground (unpainted tube) on the highest scale - must read infinity; any continuity to ground = compressor defective.",
     "source": "daikin-dc9vs-dh9vs-dh7vs-r32-service.pdf p.75 (same drawing Amana/Goodman twins p.75); removal p.86"
    },
    {
@@ -30198,7 +29996,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X901A",
     "code": "R5T",
     "name": "Outdoor coil (coil circuit) thermistor Tm",
-    "location": "Outdoor coil (Tm) - clamped to a return bend entering the outdoor coil",
+    "location": "Outdoor coil (Tm) - on a return bend at the coil end: low on the coil on 1.5/2.0/2.5 ton, near the top on 3.0 ton",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -30260,7 +30058,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X820A",
     "code": "S1PH",
     "name": "High pressure switch",
-    "location": "Discharge line",
+    "location": "Compressor discharge line (S-12 p.14); its leads come to an in-line HPS connector next to the compressor (removal p.94)",
     "kind": "other",
     "errorCodes": [
      "E24"
@@ -30383,7 +30181,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.74 (Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf p.74)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. This AC has no outdoor EEV coil on its wiring diagram.",
   "notes": "Three plugs carry the thermistors: X902A = R1T outdoor air alone; X901A = R5T coil alone; X900A = R6T suction, R2T discharge, R3T liquid (order on the drawing). AC: no outdoor EEV and no defrost thermistor on this diagram. R7T is a PTC inrush part on the board, not a sensor. Same board and plugs as the Daikin DC6VS 1.5-3 ton.",
   "gaps": [
    "Low pressure sensor (S1NPL) volts-to-psig: the manual gives only the dashed graph line, which does not sit on grid points (0.5 V = 0 PSIG, 4.0 V about 290 PSIG) - no exact figures; read the S-13 graph in the manual",
@@ -30479,7 +30277,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X12A",
     "code": "R5T",
     "name": "Outdoor coil (coil circuit) thermistor Tm",
-    "location": "Outdoor coil (Tm) - clamped to a return bend entering the outdoor coil",
+    "location": "Outdoor coil (Tm) - on a return bend low on the coil end (removal p.116, 5.0 ton shown)",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -30606,7 +30404,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.75 (Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf p.75)"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. This AC has no outdoor EEV coil on its wiring diagram.",
   "notes": "X11A = R1T outdoor air alone; X12A = R2T discharge, R3T liquid, (empty position), R5T coil; X13A = R6T suction alone. AC: no outdoor EEV. Low pressure sensor X17A uses the solid (3.5-5 ton) curve: 0.5 V = 0 PSIG, 200 PSIG per volt.",
   "gaps": [
    "Pins inside X11A/X12A not printed",
@@ -30669,7 +30467,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X901A",
     "code": "R4T",
     "name": "Defrost thermistor Tb (HP only)",
-    "location": "Outdoor coil defrost (Tb) - bottom flowrator leg at outdoor coil outlet",
+    "location": "On the outdoor coil, low on the coil (removal p.92 picture; the spot differs between 1.5/2.0/2.5 ton and 3.0 ton / 2.0 ton Enhanced-HE models)",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -30681,7 +30479,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X901A",
     "code": "R5T",
     "name": "Outdoor coil (coil circuit) thermistor Tm",
-    "location": "Outdoor coil (Tm) - clamped to a return bend entering the outdoor coil",
+    "location": "On the outdoor coil (removal p.92 picture; the spot differs between 1.5/2.0/2.5 ton and 3.0 ton / 2.0 ton Enhanced-HE models)",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -30736,14 +30534,14 @@ const DAIKIN_SENSOR_MAPS = [
     "errorCodes": [
      "E26"
     ],
-    "test": "Power ON. Put the meter (DC volts) on the black and white wires at the sensor plug (back-probe). Compare volts with the chart at the pressure on your gauge.",
+    "test": "Power ON. Put the meter (DC volts) on the black and white wires at the sensor plug (back-probe) and compare with the dashed line on the manual's S-13 pressure graph (p.15). The manual prints no table of values - use the graph only as a rough check against your gauge.",
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.76 (Outdoor HP 1.5 - 3.0 ton); p.78 (Outdoor Enhanced Capacity HP 2.0 ton & High Efficiency AC 2.0 ton); same pages in amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf (both pixel-identical to the Fit R-32 manual); 'PS connector (X840A)' p.90/93; S-13 graph p.15"
    },
    {
     "plug": "X820A",
     "code": "S1PH",
     "name": "High pressure switch",
-    "location": "Discharge line (inside the sound blanket)",
+    "location": "Inside the compressor sound blanket (outer body) - removal p.92",
     "kind": "other",
     "errorCodes": [
      "E24"
@@ -30835,7 +30633,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor leads RED/YLW/BLU (through ferrite core Z1C)",
     "location": "Main inverter PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across each pair of compressor leads: open = bad",
+    "test": "Manual S-17A (p.18): power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe: below 30 MOhm = replace the compressor.",
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.76 (HP 1.5-3 ton) and p.78 (Enhanced HP 2 ton / HE AC 2 ton); Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf same pages"
    },
    {
@@ -30883,7 +30681,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reversing valve coil (switched by K4R through PTC R8T)",
     "location": "Main inverter PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.76 (HP 1.5-3 ton) and p.78 (Enhanced HP 2 ton / HE AC 2 ton); Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf same pages"
    },
    {
@@ -30904,7 +30701,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.76 (HP 1.5-3 ton) and p.78 (Enhanced HP 2 ton / HE AC 2 ton); Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf same pages"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the dashed line on the manual's S-13 graph (0.5 V = 0 PSIG, about 290 PSIG at 4.0 V). EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
   "notes": "X902A = R1T outdoor air alone; X901A carries R4T defrost + R5T coil; X900A carries R6T suction, R2T discharge, R3T liquid (order on the drawing). EEV Y1E on X700A (5-pin, 40-50 Ohm each phase to gray common pin 5). 3-TON TRAP: GZV6SA361/AZV6SA361 use THIS small board, but GZV7SA361/AZV7SA361 and GXV9SA361/AXV9SA361 use the 3.5-5 ton style board (map goodman-amana-zv-hp-4260-outdoor). The High Efficiency AC 2 ton (GXV9SA241) shares this HP diagram. Solenoid valve coil Y2S (X28A on A2P) reads 1,480-1,820 Ohm (S-26).",
   "gaps": [
    "Low pressure sensor (S1NPL) volts-to-psig: the manual gives only the dashed graph line, which does not sit on grid points (0.5 V = 0 PSIG, 4.0 V about 290 PSIG) - no exact figures; read the S-13 graph in the manual",
@@ -30999,7 +30796,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X12A",
     "code": "R4T",
     "name": "Defrost thermistor Tb (HP only)",
-    "location": "Outdoor coil defrost (Tb) - bottom flowrator leg at outdoor coil outlet",
+    "location": "On the outdoor coil (defrost thermistor Tb)",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -31011,7 +30808,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X12A",
     "code": "R5T",
     "name": "Outdoor coil (coil circuit) thermistor Tm",
-    "location": "Outdoor coil (Tm) - clamped to a return bend entering the outdoor coil",
+    "location": "On the outdoor coil (outdoor heat exchanger thermistor Tm)",
     "kind": "thermistor",
     "chart": "daikin-inv-thermistor-std",
     "errorCodes": [
@@ -31035,7 +30832,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X17A",
     "code": "S1NPL",
     "name": "Low pressure sensor (S1NPL)",
-    "location": "Outdoor unit refrigerant line (lead clamped up to the PS connector)",
+    "location": "Outdoor unit refrigerant line; sensor lead plugs into the PS connector X17A on A1P",
     "kind": "pressure",
     "chart": "daikin-inv-hlpt-graph",
     "spec": "S-13 (p.15): 'With power ON ... Connect a voltmeter across the sensor terminals between black and white wirings.' Graph only: solid line = 'Outdoor unit (3.5 - 5.0 ton models and 3.0 - 4.0 ton Enhanced Capacity/High Efficiency models) and Indoor unit' - 0.5 V = 0 PSIG, 200 PSIG per volt. Supply voltage not stated.",
@@ -31417,7 +31214,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.75"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the S-13 graph (dashed line = outdoor 1.5-3.0 ton).",
   "notes": "X902A = R1T outdoor air alone; X901A = R5T coil alone; X900A = R6T suction, R2T discharge, R3T liquid (order on the drawing). AC: no outdoor EEV, no defrost thermistor. R7T is a PTC inrush part. Diagram note 7: no relay connector on ASXS6S1810/2410AA and ASXS601810/2410AA.",
   "gaps": [
    "Low pressure sensor (S1NPL) volts-to-psig: graph only, and the two manuals disagree - Amana SiUS612213E p.17 dashed line about 165 PSIG at 4.0 V, Daikin Fit R-410A SiUS612209EB p.17 about 290 PSIG at 4.0 V (both 0 PSIG at 0.5 V). No figures given; check against gauges",
@@ -31565,7 +31362,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Line power into the main board from terminal block X1M (BLK to L1, RED to L2)",
     "location": "A1P main control/inverter PCB",
     "kind": "other",
-    "test": "Live 208/230 V when powered - check supply here with care",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.76; amana-asxs6-aszs6-inverter-service.pdf p.117"
    },
    {
@@ -31612,7 +31408,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1F Outdoor fan motor",
     "location": "A1P; fan lead to fan motor",
     "kind": "other",
-    "test": "Manual: check fan motor lead and connector X108A; replace outdoor fan motor if faulty (error table)",
+    "test": "Error table (p.45-48): outdoor fan motor not connected properly / faulty - check the wiring from the outdoor fan motor to the control board and the motor; repair or replace as needed.",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.76; removal photo amana-asxs6-aszs6-inverter-service.pdf p.109"
    },
    {
@@ -31626,7 +31422,7 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.76; test amana-asxs6-aszs6-inverter-service.pdf p.20"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the S-13 graph (solid line for 3.5-5 ton).",
   "notes": "X11A = R1T outdoor air alone; X12A = R2T discharge, R3T liquid, (empty position), R5T coil; X13A = R6T suction alone. AC: no outdoor EEV. Low pressure sensor X17A uses the solid (3.5-5 ton) curve.",
   "gaps": [
    "Pins inside X11A/X12A not printed",
@@ -31743,7 +31539,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure sensor (S1NPL)",
     "location": "Outdoor unit refrigerant line (lead clamped up to the PS connector)",
     "kind": "pressure",
-    "spec": "S-13 (p.17): 'With power ON ... Connect a voltmeter across the sensor terminals between black and white wirings.' Graph only: dashed line = 'Outdoor unit (1.5 - 3.0 ton)'. CAUTION: this Amana graph's dashed line ends near 165 PSIG at 4.0 V, while the Daikin Fit R-410A manual's dashed line ends near 290 PSIG - no exact figures. Supply voltage not stated.",
+    "spec": "S-13 (p.17): 'With power ON ... Connect a voltmeter across the sensor terminals between black and white wirings.' Graph only: dashed line = 'Outdoor unit (1.5 - 3.0 ton)', about 0 PSIG at 0.5 V rising to about 165 PSIG at 4.0 V - no exact figures in the manual. Supply voltage not stated.",
     "errorCodes": [
      "E26"
     ],
@@ -31801,7 +31597,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Line power into the main board from terminal block X1M (BLK to HL1, WHT to HN1)",
     "location": "A1P main inverter PCB, power input terminals",
     "kind": "other",
-    "test": "Live 208/230 V when powered - check supply here with care",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.77"
    },
    {
@@ -31839,7 +31634,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1F Outdoor fan motor (DC fan). Note 8: an in-line relay connector (also X200A) sits in the fan lead - not on ASZS601810/2410AA",
     "location": "A1P main inverter PCB; fan lead runs to the fan motor",
     "kind": "other",
-    "test": "Manual: check fan motor lead and connector X200A; replace outdoor fan motor if faulty (error table)",
+    "test": "Error table (p.45-48): outdoor fan motor not connected properly / faulty - check the wiring from the outdoor fan motor to the control board and the motor; repair or replace as needed.",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.77; removal photo amana-asxs6-aszs6-inverter-service.pdf p.84"
    },
    {
@@ -31848,7 +31643,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Y1S Reversing (four-way) valve coil - switched by relay K4R through PTC R8T",
     "location": "A1P main inverter PCB; coil on the four-way valve",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.77; removal photo amana-asxs6-aszs6-inverter-service.pdf p.88"
    },
    {
@@ -31867,8 +31661,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Y2S Solenoid valve coil - switched by relay K1R on A2P",
     "location": "A2P service/display PCB; coil on the solenoid valve",
     "kind": "other",
-    "spec": "1,480-1,820 Ohm (AM p.21)",
-    "test": "Manual S-26: power off, unplug from board, ohm across connector pins: 1,480-1,820 Ohm",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.77; spec p.21; removal photo p.88"
    },
    {
@@ -31876,7 +31668,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional drain pan heater connector (note 6, accessory) - switched by relay K3R on A2P",
     "location": "A2P service/display PCB",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (heater, when fitted)",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.77"
    },
    {
@@ -31910,12 +31701,13 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.77"
    }
   ],
-  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
-  "notes": "X902A = R1T outdoor air alone; X901A carries R4T defrost + R5T coil; X900A carries R6T suction, R2T discharge, R3T liquid (order on the drawing). EEV Y1E on X700A (5-pin, 40-50 Ohm each phase to gray common pin 5). 3-ton ASZS6*361 uses this small board (diagram 'HP 1.5 - 3.0 ton'). Solenoid valve coil Y2S on X28A (A2P), reversing valve Y1S on X800A.",
+  "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the S-13 graph (dashed line for 1.5-3 ton). EEV coil (X700A): power off, unplug it, 40-50 Ohm from each of pins 1-4 to the gray common pin 5.",
+  "notes": "X902A = R1T outdoor air alone; X901A carries R4T defrost + R5T coil; X900A carries R6T suction, R2T discharge, R3T liquid (order on the drawing). EEV Y1E on X700A (5-pin, 40-50 Ohm each phase to gray common pin 5). 3-ton ASZS6*361 uses this small board (diagram 'HP 1.5 - 3.0 ton'). Solenoid valve coil Y2S on X28A (A2P), reversing valve Y1S on X800A. Manual conflict (p.21): a 1,480-1,820 Ohm coil figure is printed under the heading 'Testing Reversing Valve Solenoid Coil Resistance', but the text under it says 'solenoid valve coil' - it is not clear whether it is for Y1S or Y2S, so it is not given as either coil's spec.",
   "gaps": [
-   "Low pressure sensor (S1NPL) volts-to-psig: graph only, and the two manuals disagree - Amana SiUS612213E p.17 dashed line about 165 PSIG at 4.0 V, Daikin Fit R-410A SiUS612209EB p.17 about 290 PSIG at 4.0 V (both 0 PSIG at 0.5 V). No figures given; check against gauges",
+   "Low pressure sensor (S1NPL) volts-to-psig: graph only (p.17 dashed line, about 0 PSIG at 0.5 V to about 165 PSIG at 4.0 V) - check against gauges",
    "Pins inside X900A/X901A/X902A not printed",
-   "Pressure sensor supply voltage / pin roles not stated"
+   "Pressure sensor supply voltage / pin roles not stated",
+   "Which coil (reversing valve Y1S or solenoid valve Y2S) the p.21 1,480-1,820 Ohm figure belongs to"
   ],
   "sources": [
    {
@@ -32140,7 +31932,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Y1S Reversing (four-way) valve coil",
     "location": "A1P; coil on the four-way valve",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "spec": "1,480-1,820 Ohm (S-26 'Testing Reversing Valve Solenoid Coil Resistance', p.21)",
+    "test": "Power off, unplug the coil cable from the control board, ohm across the connector pins: 1,480-1,820 Ohm (S-26 p.21)",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.78; amana-asxs6-aszs6-inverter-service.pdf p.117"
    },
    {
@@ -32149,8 +31942,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Y2S Solenoid valve coil",
     "location": "A1P; coil on the solenoid valve",
     "kind": "other",
-    "spec": "1,480-1,820 Ohm (amana-asxs6-aszs6-inverter-service.pdf p.21)",
-    "test": "Manual S-26: power off, unplug from board, ohm across connector pins: 1,480-1,820 Ohm",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.78; amana-asxs6-aszs6-inverter-service.pdf p.117; spec amana-asxs6-aszs6-inverter-service.pdf p.21"
    },
    {
@@ -32158,7 +31949,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional drain pan heater connector (note 6, accessory)",
     "location": "A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad (heater, when fitted)",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.78"
    },
    {
@@ -32173,7 +31963,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart. EEV coil: power off, unplug it, 40-50 Ohm from each phase pin to the gray common.",
-  "notes": "X11A = R1T outdoor air alone; X12A carries R2T discharge, R3T liquid, R4T defrost, R5T coil (order on the drawing); X13A = R6T suction alone. EEV Y1E on X21A (6-pin, pin 5 empty). Other plugs: reversing valve Y1S X25A, solenoid valve Y2S X28A.",
+  "notes": "X11A = R1T outdoor air alone; X12A carries R2T discharge, R3T liquid, R4T defrost, R5T coil (order on the drawing); X13A = R6T suction alone. EEV Y1E on X21A (6-pin, pin 5 empty). Other plugs: reversing valve Y1S X25A, solenoid valve Y2S X28A. S-26 (p.21) prints 1,480-1,820 ohm under the heading 'Testing Reversing Valve Solenoid Coil Resistance' (its text says 'solenoid valve coil'); it is applied to Y1S only - no separate figure for the Y2S solenoid valve.",
   "gaps": [
    "Pins inside X11A/X12A not printed",
    "Pressure sensor supply voltage / pin roles not stated"
@@ -32289,9 +32079,9 @@ const DAIKIN_SENSOR_MAPS = [
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.80 (208/230 V) and p.81 (115 V); Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf same pages"
    },
    {
-    "plug": "X8A",
+    "plug": "X7A / X8A (ECM plug - label unclear)",
     "code": "ID blower",
-    "name": "Indoor blower ECM motor communication (BL/GY/BK/RD); ladder shows +VDC (1), RX (2), TX (3), GND (4)",
+    "name": "Indoor blower ECM motor communication plug (BL/GY/BK/RD); ladder shows +VDC (1), RX (2), TX (3), GND (4). Plug name not certain: this drawing prints X8A above the plug and X7A under DS7 beside it; the R-410A AHVE drawing (same board) labels this motor plug X7A, and the CMXV PCB list gives X7A = ECM motor, X8A = thermostat",
     "location": "Integrated control module",
     "kind": "other",
     "source": "goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf p.80 (208/230 V) and p.81 (115 V); Amana amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf same pages"
@@ -32382,12 +32172,12 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug X5A; liquid thermistor = pins 3-4, gas = pins 1-2; compare to the general chart at the measured pipe temperature. Pressure sensor: power ON, DC volts black-to-white (see chart). EEV: unplug X3A, 40-50 Ohm from each of pins 1-4 to pin 6.",
-  "notes": "X5A 4-pin: pins 3-4 liquid, 1-2 gas. X15A pressure sensor: measure pin 3 black to pin 1 white. A2L sensor on X9A (4-pin). EEV X3A (6-pin, pin 5 empty). AHVE was also built for R-410A (Amana ASXS6/ASZS6 systems) - if the nameplate says R-410A use the AHVE R-410A map (no A2L sensor).",
+  "notes": "X5A 4-pin: pins 3-4 liquid, 1-2 gas. X15A pressure sensor: measure pin 3 black to pin 1 white (flowchart p.64); the ladder diagram on p.80/81 draws only X15A (4) and (3), so pin 1 (the output) is not shown there. A2L sensor on X9A (4-pin). EEV X3A (6-pin, pin 5 empty). AHVE was also built for R-410A (Amana ASXS6/ASZS6 systems) - if the nameplate says R-410A use the AHVE R-410A map (no A2L sensor). Note numbers in the entries follow the 208/230 V drawing (p.80); the 115 V drawing (p.81) numbers them differently (aux alarm note 7, heater kit not compatible note 8, leak output note 9, thermostat note 10).",
   "gaps": [
    "A2L sensor: no resistance/voltage spec in the manual",
    "Pressure sensor supply voltage not stated; graph only",
    "AHVE model sizes not listed - one token 'AHVE' shared with the R-410A AHVE map; check refrigerant on the nameplate",
-   "X7A: label printed directly under DS7 on both drawings - cannot tell if it is a separate connector or the DS7 position; purpose not shown"
+   "ECM motor plug name: drawing prints X8A above the motor plug and X7A under DS7 beside it - the R-410A AHVE drawing calls the motor plug X7A; which label belongs to the motor plug and which to the 1/2/R/C strip is not certain"
   ],
   "sources": [
    {
@@ -32496,7 +32286,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X7A",
     "pins": "1 +VDC, 2 RX, 3 TX, 4 GND",
     "code": "ID BLOWER",
-    "name": "ECM blower motor 4-wire control: pin 1 +VDC, 2 RX, 3 TX, 4 GND (BL/RD/GY/BK)",
+    "name": "ECM blower motor 4-wire control: +VDC (1), RX (2), TX (3), GND (4) per the ladder diagram. Motor wires drawn on the plug top to bottom BL, GY, BK, RD - the drawing does not say which colour is on which pin number",
     "location": "Integrated control module",
     "kind": "other",
     "test": "Nidec UltraCheck-EZ tool on the motor control plug (p.16-17)",
@@ -32560,7 +32350,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Aux alarm input - short red wire fitted; replace with aux alarm / condensate switch (note 9)",
     "location": "Integrated control module",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "goodman-gxv9s-gzv9s-gzv7s-double-fan-r32-service.pdf p.78 (230 V), p.79 (115 V)"
    },
    {
@@ -32707,7 +32496,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Indoor ECM blower motor 4-wire control harness",
     "location": "Indoor control board to blower motor",
     "kind": "other",
-    "spec": "Pins 1-4 3.3 VDC, 1-2 3.3 VDC, 3-4 15 VDC (daikin-fit-r410a-system-service.pdf p.19)",
+    "spec": "Pins 1-4 3.3 VDC, 1-2 3.3 VDC, 3-4 15 VDC (amana-asxs6-aszs6-inverter-service.pdf p.19, S-16G)",
     "test": "Manual S-16G: power on, check voltages on the 4-wire motor control harness",
     "source": "amana-asxs6-aszs6-inverter-service.pdf p.79 (air handler) and p.80 (cased coil); spec amana-asxs6-aszs6-inverter-service.pdf p.19"
    },
@@ -33084,7 +32873,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S202 (PCB1)",
-    "name": "Harness to service monitor PCB2 (plug S502), 5 wires",
+    "name": "Harness to service monitor PCB2 (plug S502), 4 wires (BLK, BRN, RED on pins 1-3, YLW on pin 5)",
     "location": "Main PCB1",
     "kind": "other",
     "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
@@ -33508,7 +33297,7 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "S202 (PCB1)",
-    "name": "Harness to service monitor PCB2 (plug S502), 5 wires",
+    "name": "Harness to service monitor PCB2 (plug S502); 5-pin plug, 4 wires (pins 1 BLK, 2 BRN, 3 RED, 5 YLW)",
     "location": "Main PCB1",
     "kind": "other",
     "test": "Power off, check the harness is fully seated at both ends and not damaged; a bad link shows as a communication or display fault",
@@ -33577,7 +33366,7 @@ const DAIKIN_SENSOR_MAPS = [
    "Radiation fin thermistor (code P4): no connector shown - manual says replace the main PCB on P4 (p.230)",
    "Pin numbers for each thermistor inside S90/S92/S93 not printed",
    "EEV coil ohm value not given - Check No.12 is a continuity check only; its pin numbers (5-1..5-4) fit the 5-pin plugs, the 6-pin S24/S25 pinout is not stated",
-   "DP1, DP2 on main PCB1: legend p.296 calls them 'terminal' only; nothing connected in the drawing and purpose not shown",
+   "DP1, DP2 on main PCB1: legend p.296 calls them 'terminal' only; on the drawing they are switched on the board by relays MR306/MR307 with no external wiring shown; purpose not stated",
    "S2 on service monitor PCB2: printed on p.296, nothing connected, purpose not shown",
    "Which colour wire on plug S goes to which room is not readable with confidence on p.296"
   ],
@@ -33764,7 +33553,7 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X28A",
     "code": "Y2S",
     "name": "Outdoor solenoid valve coil",
-    "location": "Outdoor unit refrigerant piping (solenoid valve, next to the four-way valve coil)",
+    "location": "Outdoor unit refrigerant piping (solenoid valve)",
     "kind": "other",
     "spec": "'Read resistance between the connector pins ... the resistance falls in the range of 1,480 to 1,820 Ohm.'",
     "test": "Power off, unplug X28A, ohm the two pins: 1,480-1,820 Ohm.",
@@ -33877,7 +33666,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor's plug (X11A / X12A / X13A) and ohm the two leads of that thermistor; compare with the chart at the measured pipe or air temperature. Replace if open, shorted or out of range. Pressure sensor: power ON, DC volts black-to-white, compare with the chart. EEV: unplug X21A, pins 1-4 to pin 6 = 40-50 Ohm. Solenoid valve Y2S: unplug X28A, 1,480-1,820 Ohm.",
-  "notes": "B revision = the letter after the voltage digit in the model (DZ17VSA361BA). Same plug map on all sizes: X11A R1T air; X12A R2T discharge, R3T liquid, R4T defrost, R5T coil; X13A R6T suction; X17A pressure sensor (S1NPL); X21A EEV; X32A HPS; X33A OL; X25A reversing valve Y1S; X28A solenoid valve Y2S (new on the B revision). EEV wire colours differ by size (see EEV spec). Thermistor plugs share connectors - X12A carries four thermistors, so ohm the correct pair. Defrost: Tm and Tb are read every 5 s in heat; defrost ends when coil is about 54F and Tb meets its criteria.",
+  "notes": "B revision = the letter after the voltage digit in the model (DZ17VSA361BA). Same plug map on all sizes: X11A R1T air; X12A R2T discharge, R3T liquid, R4T defrost, R5T coil; X13A R6T suction; X17A pressure sensor (S1NPL); X21A EEV; X32A HPS; X33A OL; X25A reversing valve Y1S; X28A solenoid valve Y2S. EEV wire colours differ by size (see EEV spec). Thermistor plugs share connectors - X12A carries four thermistors, so ohm the correct pair. Defrost: Tm and Tb are read every 5 s in heat; defrost ends when coil is about 54F and Tb meets its criteria. High pressure switch does not reset by itself - turn main power off to reset (p.17).",
   "gaps": [
    "Pin numbers inside X11A/X12A/X13A/X17A are not printed",
    "Pressure sensor supply voltage not stated (only black-white output volts)",
@@ -34073,7 +33862,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Reversing valve coil (relay K2R)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    },
    {
@@ -34081,7 +33869,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional compressor crankcase heater (note 6, relay K4R)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    },
    {
@@ -34089,7 +33876,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional drain pan heater (note 7, relay K5R)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    },
    {
@@ -34098,7 +33884,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    },
    {
@@ -34107,7 +33892,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Communication to indoor unit or thermostat (1, 2, R, C)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    },
    {
@@ -34116,7 +33900,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Share data link to service PCB A2P X52A-S - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78"
    },
    {
@@ -34125,7 +33908,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "RAM monitor link to service PCB A2P X41A-S - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78"
    },
    {
@@ -34134,7 +33916,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "18-wire link to service PCB A2P X5A-A (display/buttons) - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78"
    },
    {
@@ -34143,7 +33924,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "LED links to service PCB A2P X71A, X72A, X73A - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78"
    },
    {
@@ -34151,7 +33931,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Share data / RAM monitor (factory) - 1.5-3 ton only",
     "location": "Service PCB A2P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78"
    },
    {
@@ -34159,7 +33938,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Share data connector - 3.5-5 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.79"
    },
    {
@@ -34167,7 +33945,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "RAM monitor (factory) - 3.5-5 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.79"
    },
    {
@@ -34176,7 +33953,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power conditioner L1R - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78"
    },
    {
@@ -34185,7 +33961,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor terminals",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    },
    {
@@ -34194,7 +33969,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power from terminal block X1M",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.78 (3D122352-1A, 1.5-3 ton), p.79 (3D122353-1A, 3.5-5 ton)"
    }
   ],
@@ -34602,10 +34376,10 @@ const DAIKIN_SENSOR_MAPS = [
    },
    {
     "plug": "X33A (A1P)",
-    "name": "Jumper plug (AC has no overload protector here) - must be in place; E23/E58 say check jumper wire position (X33A)",
+    "name": "Jumper plug (AC has no overload protector here) - must be in place; E22 and E58 say 'check jumper wire position (X33A)' <AC only>",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
+    "test": "Power off and check the jumper wire is in place and in the correct position on X33A (E22 / E58 corrective action).",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (1.5-3 ton DX17VSS181-361AA), p.77 (3.5-5 ton DX17VSS421-601AA); daikin-dx17vss-dz17vsa-service.pdf p.68, p.71"
    },
    {
@@ -34613,7 +34387,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Optional compressor crankcase heater (note 6, relay K4R)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (1.5-3 ton DX17VSS181-361AA), p.77 (3.5-5 ton DX17VSS421-601AA)"
    },
    {
@@ -34622,7 +34395,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Outdoor fan motor",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (1.5-3 ton DX17VSS181-361AA), p.77 (3.5-5 ton DX17VSS421-601AA)"
    },
    {
@@ -34631,7 +34403,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Communication to indoor unit or thermostat (1, 2, R, C)",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (1.5-3 ton DX17VSS181-361AA), p.77 (3.5-5 ton DX17VSS421-601AA)"
    },
    {
@@ -34640,7 +34411,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Share data link to service PCB A2P X52A-S - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76"
    },
    {
@@ -34649,7 +34419,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "RAM monitor link to service PCB A2P X41A-S - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76"
    },
    {
@@ -34658,7 +34427,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "18-wire link to service PCB A2P X5A-A (display/buttons) - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76"
    },
    {
@@ -34667,7 +34435,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "LED links to service PCB A2P - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76"
    },
    {
@@ -34675,7 +34442,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Share data connector - 3.5-5 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.77"
    },
    {
@@ -34683,7 +34449,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "RAM monitor (factory) - 3.5-5 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.77"
    },
    {
@@ -34692,7 +34457,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Power conditioner L1R - 1.5-3 ton only",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76"
    },
    {
@@ -34701,7 +34465,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor terminals",
     "location": "Main PCB A1P",
     "kind": "other",
-    "test": "Power off before unplugging; check plug seated and wires intact end to end",
     "source": "daikin-dx17vss-dz17vsa-service.pdf p.76 (1.5-3 ton DX17VSS181-361AA), p.77 (3.5-5 ton DX17VSS421-601AA)"
    }
   ],
@@ -35032,7 +34795,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "UC board",
     "kind": "other",
     "spec": "24 VAC between E22 and C when energized (daikin-dx16tc-dz18tc-service.pdf p.82)",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "test": "S-21: with the valve called (24 VAC between E22 and C), if it will not shift, power off and check the solenoid coil for continuity - no continuity = replace the coil (daikin-dx16tc-dz18tc-service.pdf p.82)",
     "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.11; daikin-dx16tc-dz18tc-service.pdf p.82"
    },
    {
@@ -35041,7 +34804,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor (high stage) solenoid - plug marked HIGH",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.11"
    },
    {
@@ -35208,7 +34970,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (LPCO)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.12"
    },
    {
@@ -35217,7 +34978,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (HPCO), in series with discharge thermostat DT; if no DT, HPS goes straight to E29 (note 3)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.12"
    },
    {
@@ -35227,7 +34987,7 @@ const DAIKIN_SENSOR_MAPS = [
     "location": "UC board",
     "kind": "other",
     "spec": "24 VAC between E22 and C when energized (daikin-dx16tc-dz18tc-service.pdf p.82)",
-    "test": "Power off, unplug, ohm across it: open = bad",
+    "test": "S-21: check 24 VAC between E22 (RVS) and C on the UC control with the system calling; if voltage is there but the valve does not shift, power off and check the coil for continuity.",
     "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.12; daikin-dx16tc-dz18tc-service.pdf p.82"
    },
    {
@@ -35236,7 +34996,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Compressor (high stage) solenoid - plug marked HIGH",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "daikin-dz16tc-dz18tc-dz7tc-install-iod4009n.pdf p.12"
    },
    {
@@ -35445,7 +35204,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "Low pressure switch (LPCO)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.73 (0140R20039-A)"
    },
    {
@@ -35454,7 +35212,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "High pressure switch (HPCO) in series with discharge thermostat DT (if no DT, HPS wire goes to E29 - note 3)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: closed (near 0 Ohm) when normal",
     "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.73 (0140R20039-A)"
    },
    {
@@ -35463,7 +35220,6 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "HIGH - compressor solenoid (2nd stage unloader)",
     "location": "UC board",
     "kind": "other",
-    "test": "Power off, unplug, ohm across it: open = bad",
     "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.73 (0140R20039-A)"
    },
    {
@@ -35497,7 +35253,7 @@ const DAIKIN_SENSOR_MAPS = [
    {
     "plug": "E7",
     "code": "OCS/OCT",
-    "name": "Outdoor coil temp sensor plug - drawing marks it HEAT PUMP ONLY, normally empty on this AC",
+    "name": "Outdoor coil temp sensor header (OCT) - nothing is wired to it on the ALXT7CA/GLXT7CA drawing (the AC carries only OAT)",
     "location": "UC board",
     "kind": "other",
     "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.73 (0140R20039-A)"
@@ -35679,7 +35435,7 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "CCH - crankcase heater output (optional crankcase heater, through CHS switch if fitted)",
     "location": "UC board",
     "kind": "other",
-    "spec": "Cold heater about 1800 Ohm (40 W 265 V PTC, p.31)",
+    "spec": "Cold heater about 1,800 Ohm; resistance rises as the compressor shell warms (40 W, 265 V heater, p.31)",
     "test": "Power off, unplug, ohm across it: open = bad (heater leads)",
     "source": "goodman-amana-glxt7c-glzt7c-service.pdf p.74 (0140R00615-C); heater p.31"
    },
