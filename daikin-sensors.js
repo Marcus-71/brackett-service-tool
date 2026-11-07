@@ -12917,10 +12917,9 @@ const DAIKIN_SENSOR_MAPS = [
     "plug": "X7A",
     "code": "Y1E",
     "name": "EEV coil (indoor)",
-    "location": "Air handler liquid line",
     "kind": "eev",
-    "spec": "Pins: 1 White, 2 Yellow, 3 Orange, 4 Blue, 5 Red, 6 Brown. Continuity: White-Orange approx. 300 Ohm, White-Red approx. 150 Ohm, Yellow-Blue approx. 300 Ohm, Yellow-Brown approx. 150 Ohm; all other pairs no continuity.",
-    "test": "Power off. Unplug the EEV coil connector from the indoor PCB and measure ohms between the listed pin pairs; replace the coil if any pair is open or far outside the figure. Code A9 = indoor EEV coil abnormal.",
+    "spec": "Pins: 1 White, 2 Yellow, 3 Orange, 4 Blue, 5 Red, 6 Brown. Continuity: White-Orange approx. 300 Ohm, White-Red approx. 150 Ohm, Yellow-Blue approx. 300 Ohm, Yellow-Brown approx. 150 Ohm, Orange-Red approx. 150 Ohm, Blue-Brown approx. 150 Ohm.",
+    "test": "Power off. Unplug the EEV coil connector from the indoor PCB and measure ohms between the six listed pin pairs; replace the coil if any listed pair is open or far outside the figure. Code A9 = indoor EEV coil abnormal.",
     "source": "P p.126 (printed 119) coil check for A9 ('All indoor models'); X7A per P p.125 (A9: 'connected to X7A of the indoor unit PCB') + wiring p.200"
    },
    {

@@ -169,7 +169,7 @@ function snChartHtml(ch, key) {
   const calcNote = rows.some(r => r.fCalc) ? " °F worked out from the manual's °C." : rows.some(r => r.cCalc) ? " °C worked out from the manual's °F." : "";
   return `<details class="sn-chart" open>
     <summary>📈 ${escapeHtml(ch.name || "Resistance chart")}</summary>
-    <div class="sn-read"><label>Your reading <input class="sn-ohm" data-chart="${escapeHtml(ch.id)}" data-key="${escapeHtml(key)}" type="number" inputmode="decimal" step="any" placeholder="kΩ"></label> <span class="sn-read-out" id="snOut-${escapeHtml(key)}">Unplug it, measure across the pins, type the kΩ.</span></div>
+    ${rows.length >= 5 ? `<div class="sn-read"><label>Your reading <input class="sn-ohm" data-chart="${escapeHtml(ch.id)}" data-key="${escapeHtml(key)}" type="number" inputmode="decimal" step="any" placeholder="kΩ"></label> <span class="sn-read-out" id="snOut-${escapeHtml(key)}">Unplug it, measure across the pins, type the kΩ.</span></div>` : `<p class="sn-note">Check points only - the manual prints just these few values, so no reading-to-temperature conversion.</p>`}
     <table class="sn-table"><thead><tr><th>°F</th><th>°C</th>${kHeads.map(h => `<th>${escapeHtml(h)}</th>`).join("")}${hasV ? "<th>Volts DC</th>" : ""}</tr></thead><tbody>
     ${rows.map(r => `<tr data-c="${r.c}"><td>${snFmt(r.f, 0)}</td><td>${snFmt(r.c, 1)}</td>${r.ks.map(k => `<td>${k == null ? "" : snFmt(k, k < 10 ? 2 : 1)}</td>`).join("")}${hasV ? `<td>${r.v == null ? "" : snFmt(r.v, 2)}</td>` : ""}</tr>`).join("")}
     </tbody></table>
