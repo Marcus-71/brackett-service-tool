@@ -5052,5 +5052,216 @@ const UNIT_SCENARIOS = [
   ],
   "source": "ML16XP1, p.11, p.13",
   "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-error-screen",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading, clearing and finding past error codes - Altherma 3 H HT W (UPRA)",
+  "summary": "On the Altherma user interface the error help text, the reset and the error history are all in the menus. Read the full description before you reset anything.",
+  "steps": [
+   "When there is an error, the home screen shows an error or malfunction symbol. Press the left dial to open the main menu and go to Error. It shows the error code and a short description.",
+   "Press again in the error screen to get the long description of the error.",
+   "To clear it: from that error help screen go to Reset and press the left dial.",
+   "To see past errors, the user permission level must be set to advanced end user. Then go to [8.2] Information > Error history for the most recent errors.",
+   "Running hours of each component are under [8.9] Information > Running hours.",
+   "If the fix needs a power reset and the indoor unit has its own power supply, reset the indoor unit's power too, not just the outdoor unit."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   22,
+   23,
+   24
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.22, p.23, p.24",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-7h-water-flow",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "7H water flow error, unit stops - Altherma 3 H HT W (UPRA)",
+  "summary": "7H means the unit saw too little water flow. Most causes are in the water piping (closed valve, air, low pressure, no bypass, dirty filter), so work the water side first.",
+  "steps": [
+   "7H-01 resets by itself. It trips when flow drops below 1.59 gal/min (6 l/min) in heating or hot water without the backup heater, 3.17 gal/min (12 l/min) with the backup heater, 3.96 gal/min (15 l/min) in cooling, 4.76 gal/min (18 l/min) in defrost above 14F (-10C) and 5.28 gal/min (20 l/min) in defrost below 14F.",
+   "After 11 automatic resets of 7H-01 it becomes 7H-04 (mostly during hot water) or 7H-05 (mostly during space heating). After 2 resets it becomes 7H-06 (cooling or defrost). These need a manual reset at the user interface.",
+   "First check that every stop valve in the water circuit is open. They are outside the unit; open means the handle is in line with the pipe.",
+   "Purge the air out of the water circuit. Air purge valves belong at every high point of the system and nowhere else.",
+   "Read the water pressure on the home screen of the user interface. It must be 14.5-29 PSI (1-2 bar). Add or drain water until it is.",
+   "Check the flow: open the heat emitters, start the air purge from the user interface with pump speed High. Minimum flow is 6 gal/min (22 l/min) for heating/cooling start-up, defrost or backup heater, and 7.5 gal/min (28 l/min) for hot water.",
+   "A bypass must be installed in the water circuit outside the unit so water still flows when every zone is shut. No bypass is a listed cause.",
+   "Still tripping: clean the built-in filter of the shutoff valve and the magnetic filter / dirt separator, then check the water flow sensor, the 3-way valve and the water pump (component checks in the manual)."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   24,
+   25,
+   26,
+   282,
+   283,
+   284
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.24, p.25, p.26, p.282, p.283, p.284",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-7h07-pump-blocked",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "7H-07 pump unblocking, or water pump stuck after a long shutdown - Altherma 3 H HT W (UPRA)",
+  "summary": "7H-07 means the unit thinks the water pump may be blocked and is running its own unblocking routine. A pump left without power for a long time can be stuck with lime.",
+  "steps": [
+   "7H-07: the unit keeps running and runs a pump unblocking routine for up to about 30 minutes. The code shows the whole time. There is nothing to repair; wait for it to finish and the code clears itself.",
+   "The pump has an anti-blockage routine that runs it briefly every 24 hours during long idle periods. It only works if the unit has power all year round.",
+   "If the unit was powered off for a long time, lime can lock the pump rotor. Remove the screw of the stator housing and turn the ceramic rotor shaft back and forth with a screwdriver until it frees up. Do not force it.",
+   "If the shaft will not free up that way, the pump has to be taken apart and the rotor turned by hand."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   26,
+   98
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.26, p.98",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-aa01-backup-heater",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "AA-01 backup heater overheated - Altherma 3 H HT W (UPRA)",
+  "summary": "AA-01 means the backup heater thermal protector opened because the water got too hot. Find out why the water overheated before you reset it.",
+  "steps": [
+   "The unit stops. To reset: power the unit OFF, manually reset the backup heater thermal protector, then power it back ON.",
+   "Check the water pressure on the user interface home screen: it must be 14.5-29 PSI (1-2 bar).",
+   "Check the water flow, then purge any air from the water circuit.",
+   "Look for an outside heat source tied into the water circuit that could be pushing the water temperature up.",
+   "If the water side is fine, check in this order: the backup heater thermal protector, the outlet water after backup heater thermistor, the backup heater itself, then the hydro PCB."
+  ],
+  "safety": "Power the unit off before resetting the thermal protector or touching the backup heater.",
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   34,
+   282,
+   283
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.34, p.282, p.283",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-u0-13-low-charge-heating",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "U0-13 refrigerant shortage in heating - Altherma 3 H HT W (UPRA)",
+  "summary": "U0-13 means the outdoor unit detected a refrigerant shortage while heating. The manual checks valves and sensors before charge, so do not add refrigerant first.",
+  "steps": [
+   "The unit stops. It needs a power reset at the outdoor unit to clear.",
+   "Check the expansion valves first.",
+   "Check the suction pipe thermistor, then the discharge pipe thermistor, including their connectors.",
+   "Check for non-condensables or moisture in the refrigerant circuit, then check that the charge is correct (this unit uses R-32).",
+   "Check the refrigerant pressure sensor, then the compressor and its power wiring for a miswire.",
+   "For a refrigerant shortage (U0-00) the manual's last step is a leak search: look for oil traces on the units, check the brazed joints on the field piping and do a pressure test."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   71
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.71",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-u4-u5-communication",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "U4-00 or U5-00 communication error - Altherma 3 H HT W (UPRA)",
+  "summary": "U4-00 is lost communication between the outdoor unit and the indoor side; U5-00 is lost communication with the user interface. Start with power quality and wiring.",
+  "steps": [
+   "U4-00: the unit stops and needs a power reset at the outdoor unit. If the indoor unit has its own power supply, reset it too.",
+   "Check the power supply is within +/-10% of the nominal voltage, with no power drops or shorts.",
+   "Check power, connections and wiring between the outdoor unit, the indoor unit and the separate hot water tank (if there is one).",
+   "Then check the outdoor unit fan motor, then the hydro PCB.",
+   "U5-00: resets by itself. Check the communication wiring between the user interface and the unit PCB, then that the user interface has power, then the user interface itself, then the hydro PCB, then the power supply."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   24,
+   74,
+   75
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.24, p.74, p.75",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-no-start",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "No heat, system does not start - Altherma 3 H HT W (UPRA)",
+  "summary": "With no error code, most no-start calls on this unit are settings: heating not turned on, the control method set wrong, or the clock and schedules wrong. Then check the PCB heartbeat LEDs.",
+  "steps": [
+   "Confirm space heating (and hot water) is turned on at the user interface.",
+   "Check the unit control method, setting [C07]: 1 = external room thermostat (the contact starts and stops it), 2 = room thermostat control (compares the setpoint with the room temperature; the switching band is setting [90C]), 3 = leaving water temperature control. It must match how the job is wired. An external room thermostat with [C07] at 2 is wrong.",
+   "Check the space heating OFF temperature, setting [402]: keep it at 95F (35C). The table lists outdoor temperature above 95F (35C) as out of the operating range.",
+   "Wrong date or time stops schedules from running. It happens when the clock was never set after start-up, after more than 48 hours without power, or with daylight saving set wrong.",
+   "If the job uses a reduced-tariff power supply, its settings must match the electrical connections.",
+   "Look at the HAP LED on the hydro PCB and on the outdoor unit PCB: it should blink at regular intervals. Power and transformer OK but the LED not blinking = replace that PCB. Also check the reactor coil for continuity.",
+   "Starts, then stops right away: the manual lists overcharge or air in the refrigerant. Recover, vacuum and weigh in the correct charge."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   92,
+   96,
+   97,
+   98
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.92, p.96, p.97, p.98",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-heating-short",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Not enough heat - Altherma 3 H HT W (UPRA)",
+  "summary": "Low heating output on this unit is often setpoints or settings that keep the backup heater off or keep the unit busy making hot water.",
+  "steps": [
+   "Check the leaving water setpoint and the room thermostat setpoint. If Outdoor Reset control is on, check the outdoor temperature to setpoint curve too.",
+   "Confirm space heating is turned on.",
+   "Check setting [C07] matches the control used (an external room thermostat with [C07] at 2 is wrong).",
+   "Check backup heater operation, setting [400]. 0 = backup heater off and 2 = hot water only; change it to 1.",
+   "Check hot water mode, setting [60D]. At 0 (reheat only) the unit spends too much time on hot water and too little on heating. The manual advises the factory setting (reheat + schedule) with the hot water schedule set for times when no space heating is needed.",
+   "Check the 3-way valve is mounted correctly and switches between the space heating side and the hot water side."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   92
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.92",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-altherma-upra-ice-buildup",
+  "unit": "^(UPRA0(36|43)D|UTBX040E)",
+  "brand": "Daikin",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Ice building up on the outdoor unit - Altherma 3 H HT W (UPRA)",
+  "summary": "The manual separates ice from blocked drains or weather from ice caused by a refrigerant problem. Where the ice sits tells you which.",
+  "steps": [
+   "Ice on the casing or snow on the unit: unclog the drain holes, remove scraps that ice can build on, and remove the ice.",
+   "General ice build-up or the unit cannot defrost in strong wind or snow: the outdoor unit must be protected from the weather as the installer reference guide shows.",
+   "Defrost not clearing the coil, or ice at the spot where refrigerant enters the coil: the manual points to a refrigerant shortage. Check the charge and look for leaks.",
+   "Only part of the coil icing: check for a partial blockage in the refrigerant circuit and for a dirty coil."
+  ],
+  "manual": "daikin-altherma-3-h-ht-w-upra-service",
+  "pages": [
+   87
+  ],
+  "source": "Altherma 3 H HT W air-to-water monobloc heat pump UPRA036DVK / UPRA043DVK with UTBX040E hot water tank (R-32) Service Manual - Daikin Altherma 3 H HT W, UPRA036+043D + UTBX040E (ESIE25-03, 2026.02) - error codes, symptom troubleshooting, component checks, water circuit, p.87",
+  "confidence": "manual"
  }
 ];
