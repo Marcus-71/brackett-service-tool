@@ -923,6 +923,8 @@ const ASK_EXAMPLES = [
 // Built once per screen visit (showScreen nulls the cache), reused on every
 // keystroke — so live typing never rebuilds ~10k haystacks.
 function askBuildIndex() {
+  // Sensor maps load on demand on low-memory devices (sensors.js snEnsure); start it so the next search includes them.
+  if (typeof snEnsure === "function" && typeof snLoaded !== "undefined" && !snLoaded) snEnsure().catch(() => {});
   const items = [];
   for (const c of getAllCodes()) {
     items.push({
@@ -11440,6 +11442,16 @@ function renderScanResult(info) {
   };
   const goSensors = document.getElementById("scanGoSensors");
   if (goSensors) goSensors.onclick = () => { trackEvent("scan -> sensor plugs: " + info.model); openSensors({ model: info.model }); };
+  // Sensor maps load a few seconds after start (sensors.js snEnsure); add the button once they are in.
+  if (!goSensors && info.model && typeof snEnsure === "function" && typeof snLoaded !== "undefined" && !snLoaded) {
+    snEnsure().then(() => {
+      const acts = box.querySelector(".scan-actions");
+      if (!acts || document.getElementById("scanGoSensors") || !snMapsForModel(info.model).length) return;
+      const b = document.createElement("button"); b.className = "primary-act"; b.id = "scanGoSensors"; b.innerHTML = "🌡️ Sensor plugs &amp; charts";
+      b.onclick = () => { trackEvent("scan -> sensor plugs: " + info.model); openSensors({ model: info.model }); };
+      const diag = document.getElementById("scanGoDiag"); acts.insertBefore(b, diag || null);
+    }).catch(() => {});
+  }
   box.querySelectorAll(".scan-unit-scen-btn").forEach(b => b.onclick = () => {
     trackEvent("unit scenario from scan: " + b.dataset.id);
     openSymptomDetail(b.dataset.id);
@@ -12943,7 +12955,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v390";
+const APP_VERSION = "v391";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

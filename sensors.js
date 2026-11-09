@@ -8,6 +8,26 @@ const snState = { model: "", mapId: "", plug: "", side: "" };
 
 // Daikin maps (daikin-sensors.js) plus every other brand (brand-sensors.js, BRAND_SENSOR_MAPS / BRAND_SENSOR_CHARTS).
 let snAll = null;
+// Andy 11-09: the two data files (~8 MB) are no longer loaded at app start. They load a few seconds after start, or
+// at once when Sensors & Plugs opens. Both stay precached in sw.js, so this works offline.
+let snLoaded = typeof DAIKIN_SENSOR_MAPS !== "undefined" && typeof BRAND_SENSOR_MAPS !== "undefined";
+let snLoadP = null;
+function snEnsure() {
+  if (snLoaded) return Promise.resolve();
+  if (!snLoadP) {
+    const add = (src) => new Promise((ok, bad) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
+    snLoadP = Promise.all(["daikin-sensors.js", "brand-sensors.js"].map(add)).then(() => {
+      snLoaded = true; snAll = null;
+      if (typeof askIndexCache !== "undefined") askIndexCache = null;   // rebuild Ask Anything with the sensor maps
+      document.dispatchEvent(new Event("sensors-loaded"));
+    }).catch(e => { snLoadP = null; throw e; });
+  }
+  return snLoadP;
+}
+// Background load a few seconds after start - except on low-memory devices (Chrome reports deviceMemory; Andy 11-09:
+// older Samsungs), where the maps load only when Sensors & Plugs or Ask Anything needs them.
+const snLowMem = typeof navigator !== "undefined" && navigator.deviceMemory && navigator.deviceMemory <= 4;
+if (!snLowMem) window.addEventListener("load", () => setTimeout(() => snEnsure().catch(() => {}), 4000));
 function snMaps() {
   if (!snAll) snAll = [].concat(typeof DAIKIN_SENSOR_MAPS === "undefined" ? [] : DAIKIN_SENSOR_MAPS, typeof BRAND_SENSOR_MAPS === "undefined" ? [] : BRAND_SENSOR_MAPS);
   return snAll;
@@ -225,9 +245,14 @@ function snFillPicker() {
 }
 
 function renderSensors() {
-  snFillPicker();
   const box = document.getElementById("snResults");
   if (!box) return;
+  if (!snLoaded) {
+    box.innerHTML = `<p class="sn-hint">Loading the sensor maps…</p>`;
+    snEnsure().then(renderSensors).catch(() => { box.innerHTML = `<div class="empty-state">Couldn't load the sensor maps. Check the connection, or close and reopen the app.</div>`; });
+    return;
+  }
+  snFillPicker();
   const mi = document.getElementById("snModel"), pi = document.getElementById("snPlug"), sel = document.getElementById("snMapSel");
   if (mi && mi.value !== snState.model) mi.value = snState.model;
   if (pi && pi.value !== snState.plug) pi.value = snState.plug;
