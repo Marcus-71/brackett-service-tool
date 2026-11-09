@@ -35211,6 +35211,16 @@ const THERMOSTATS = [
   ],
   "troubleshooting": [
    {
+    "symptom": "Stuck in Away mode - will not come out of Away (zoned system)",
+    "causes": [
+     "Loose data wires (Brackett field fix, James Nov 2026: data wires had come loose)"
+    ],
+    "fixes": [
+     "Power down, then check and re-land the data wires at every end (i+ / i- to the indoor and outdoor units, D+ / D- at zone sensors and the damper control module); tug-test each one",
+     "Power up, let communication come back, and confirm Away clears and each zone responds"
+    ]
+   },
+   {
     "symptom": "Smart Hub System Status LED flashing Magenta",
     "causes": [
      "COMMBUS A or B wire disconnected at the Smart Hub",
@@ -35431,6 +35441,16 @@ const THERMOSTATS = [
    }
   ],
   "troubleshooting": [
+   {
+    "symptom": "Stuck in Away mode - will not come out of Away (zoned system)",
+    "causes": [
+     "Loose data wires (Brackett field fix, James Nov 2026: data wires had come loose)"
+    ],
+    "fixes": [
+     "Power down, then check and re-land the data wires at every end (i+ / i- to the indoor and outdoor units, D+ / D- at zone sensors and the damper control module); tug-test each one",
+     "Power up, let communication come back, and confirm Away clears and each zone responds"
+    ]
+   },
    {
     "symptom": "Alert 105 keeps re-appearing after basic wiring checks",
     "causes": [

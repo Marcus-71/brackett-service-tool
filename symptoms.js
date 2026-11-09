@@ -208,6 +208,21 @@ const SYMPTOMS = [
   "confidence": "common"
  },
  {
+  "id": "s-lennox-zone-tstat-stuck-away",
+  "equipment": "Other",
+  "title": "Lennox zoning thermostat stuck in Away mode (won't come out of Away) - check for loose data wires",
+  "summary": "Brackett field fix (James, Nov 2026): a Lennox zone thermostat was stuck in Away and would not go back to normal. The cause was data wires that had come loose. Re-landing them fixed it. Check the data wiring before changing settings or replacing parts.",
+  "steps": [
+   "Kill power to the system before touching the low-voltage terminals",
+   "Check the data wires at every end: i+ / i- between the thermostat (or Smart Hub) and the indoor and outdoor units, and D+ / D- on each zone sensor and at the damper control module",
+   "Tug-test each conductor - a wire that pulls out or is only held by its insulation is the problem. Re-strip and re-land it tight, and check for broken strands inside the jacket",
+   "Look for splices, staples or a nicked jacket on the data runs and fix any you find",
+   "Restore power and give the thermostat a few minutes to re-establish communication, then confirm Away clears and each zone responds",
+   "If it still sticks in Away with tight wiring, check for communication alerts and work the S40 communication-error checks (no more than 0.7 VAC on any disconnected wire back to C), then the zone sensor addresses (each sensor its own zone 2/3/4)"
+  ],
+  "confidence": "common"
+ },
+ {
   "id": "s-lennox-s40-defrost-dualfuel",
   "equipment": "Condenser/Heat Pump",
   "title": "Lennox S40 — heat pump not defrosting properly, or dual-fuel not switching over correctly",
