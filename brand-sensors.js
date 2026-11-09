@@ -13833,7 +13833,7 @@ const BRAND_SENSOR_MAPS = [
      "DS2 green + DS1 red alternating FAST flash = coil sensor problem (no defrost at all; still heats/cools)"
     ],
     "test": "Unplug the P4 sensor plug from the board and ohm across pins 5-6 on the harness plug. Open (OL) or near 0 ohms = bad sensor/harness. This manual gives no resistance chart.",
-    "source": "CORP1912-L8-01-000.pdf p.22-24,27-28"
+    "source": "CORP1912-L8-01-000.pdf p.22-24,27-28; lennox-16hpx-install.pdf p.14; 538016-02-000.pdf p.1; 538017-01-000.pdf p.1"
    },
    {
     "plug": "P4 (6-pin sensor plug)",
@@ -13853,7 +13853,7 @@ const BRAND_SENSOR_MAPS = [
     "code": "RT28",
     "name": "Discharge line temperature sensor (yellow wires)",
     "kind": "thermistor",
-    "spec": "Board stops the compressor above 285F and keeps it off until below 225F; 5 faults per code = lockout. (Table 3 says no discharge sensor is used and a 10K resistor is fitted instead; see notes.)",
+    "spec": "Board stops the compressor above 285F and keeps it off until below 225F; 5 faults per code = lockout. (Install manual Table 3 says a 10K resistor replaces the discharge sensor, but both unit wiring diagrams - 538016-02 for -024/-036/-048 and 538017-01 for -060 - show RT28 on DIS 1-2.)",
     "errorCodes": [
      "DS2 SLOW flash / DS1 ON = discharge line temperature fault",
      "DS2 FAST flash / DS1 ON = discharge line temperature lockout",
@@ -13861,7 +13861,7 @@ const BRAND_SENSOR_MAPS = [
      "DS2 FAST flash / DS1 OFF = discharge sensor lockout"
     ],
     "test": "Unplug P4 and ohm pins 1-2 on the harness. Open or shorted = bad sensor/harness. If the unit has a resistor instead of a sensor it should read about 10K ohms. This manual gives no resistance chart.",
-    "source": "CORP1912-L8-01-000.pdf p.22,24,27-28"
+    "source": "CORP1912-L8-01-000.pdf p.22,24,27-28; 538016-02-000.pdf p.1; 538017-01-000.pdf p.1"
    },
    {
     "plug": "HI-PS",
@@ -14056,7 +14056,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Same as XP16: LEDs first, then ohm the sensors on the P4 harness plug, then the pressure switches.",
   "notes": "Table 3 in this manual says P4: coil P4-5/6, ambient P4-3/4 and \"no discharge sensor; replaced by 10K resistor\", but both 16HPX wiring diagrams show an RT28 discharge sensor on pins 1-2. Table 3's label column is also shifted (DIS-YEL sits on the coil row, COIL-BROWN on the discharge row). Check the unit: a sensor on the discharge line = RT28; a resistor in the plug should read about 10K ohms. Switch settings p.20: S87 opens 25+/-5 psig, closes 40+/-5 psig; S4 trips 590+/-15 psig. Table 3 says LO-PS is ignored below 0F average ambient (the XP16 manual says 15F).",
   "gaps": [
-   "Discharge sensor vs 10K resistor conflict between Table 3 and the diagrams",
+   "Discharge sensor vs 10K resistor: install Table 3 says resistor, but the separate unit wiring diagrams 538016-02 (-024/-036/-048) and 538017-01 (-060) also show RT28 on DIS 1-2. Not resolved by any Lennox document - check what is fitted (resistor reads a steady ~10K at any temperature). No RT28 chart in any 16HPX document.",
    "Valve/solenoid coil ohms not in source",
    "No sensor temperature/resistance chart, coil-sensor location figure or TEST-pin timing in this manual",
    "Compressor-mounted thermal switch S173 (some units: opens 239-257F, closes 151-187F, in series with Y) not mapped as an entry"
@@ -14066,6 +14066,16 @@ const BRAND_SENSOR_MAPS = [
     "file": "CORP1912-L8-01-000.pdf",
     "pages": "20-24,27-28",
     "what": "components, A108 table, LEDs, wiring"
+   },
+   {
+    "file": "538016-02-000.pdf",
+    "pages": "1",
+    "what": "unit wiring diagram 16HPX-024/-036/-048 (RT21 COIL 5-6, RT13 AMB 3-4, RT28 DIS 1-2)"
+   },
+   {
+    "file": "538017-01-000.pdf",
+    "pages": "1",
+    "what": "unit wiring diagram 16HPX-060 (RT21 COIL 5-6, RT13 AMB 3-4, RT28 DIS 1-2)"
    }
   ]
  },
@@ -15668,11 +15678,12 @@ const BRAND_SENSOR_MAPS = [
     "code": "S87",
     "name": "Low pressure switch",
     "kind": "pressure",
+    "spec": "Opens below 25 psig, closes (resets) above 40 psig (HFC-410A)",
     "errorCodes": [
      "E410 low suction pressure - cut-out 25 psig, cut-in 40 psig"
     ],
     "test": "Disconnect, ohm across the switch with pressure: closed.",
-    "source": "100026-01-000.pdf p.31-32"
+    "source": "100026-01-000.pdf p.31-32; 100026-01-000.pdf p.64"
    },
    {
     "plug": "O / REV",
@@ -18717,8 +18728,10 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR AIR SENSOR (103130 board)",
     "name": "Outdoor air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-sl280uhnv-ui-1116.pdf p.19; lennox-sl280uhnv-ui-1116.pdf p.23-28"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Lennox remote outdoor sensor catalog X2658 (SL280UHV(X) optional accessories). Nominal 10.0k ohms at 77F.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the X2658 chart at the outdoor temperature (nominal 10.0k ohms at 77F; resistance rises as it gets colder). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-sl280uhnv-ui-1116.pdf p.19; lennox-sl280uhnv-ui-1116.pdf p.23-28; CORP0705L2-04-000.pdf p.4 (Table 3); lennox-sl280uhv-ui-1001.pdf p.3"
    },
    {
     "plug": "DISCHARGE AIR SENSOR (103130 board)",
@@ -18749,7 +18762,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Use the diagnostic push button: hold to cycle E (error recall), F (flame signal), etc.; release on the wanted item. Error codes show on the 7-segment display as E + 3 digits (e.g. E250 = limit circuit open).",
   "notes": "Two control part numbers appear in this manual: 103130-XX (has TB83 outdoor RS-BUS, outdoor and discharge air sensor terminals, L terminal) and 107045-XX (TB1 has H for 24 V humidification, L not used, TB84 adds A2L). TABLES 1-3 (5-, 12- and 6-pin plugs) are given once for both controls; FIGURE 5 (107045) also shows ECM DRIVE-24VAC terminals that the tables do not describe. Older SL280UHV units built around 2010 have a non-communicating SureLight board with a red flash LED - see map lennox-sl280uhv-furnace-2010-redled. This map (Corp 1116) also lists SL280DF models in its spec tables.",
   "gaps": [
-   "Outdoor and discharge air sensor resistance chart not in this manual (it points to the installation instructions).",
+   "Discharge air sensor: no chart and no sensor catalog number in the SL280UHV(X) documents found (outdoor sensor is X2658, chart added).",
    "Primary and secondary limit open/close temperatures not stated (manual says set point varies by model).",
    "Which unit revisions got 103130 vs 107045 is not stated."
   ],
@@ -18758,6 +18771,16 @@ const BRAND_SENSOR_MAPS = [
     "file": "lennox-sl280uhnv-ui-1116.pdf",
     "pages": "17-28, 42-45",
     "what": "control description, pin tables 1-3, figures 4-6, diagnostic codes, heating components, pressure switch table"
+   },
+   {
+    "file": "lennox-sl280uhv-ui-1001.pdf",
+    "pages": "3",
+    "what": "optional accessories: remote outdoor sensor X2658"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
    }
   ]
  },
@@ -19403,15 +19426,19 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR AIR SENSOR (103130 board)",
     "name": "Outdoor air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-el296uhv-ui-1125.pdf p.29; lennox-el296uhv-ui-1125.pdf p.33-44"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Lennox remote outdoor air temperature sensor catalog X2658 (optional accessories table). Nominal 10.0k ohms at 77F.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the X2658 chart at the outdoor temperature (nominal 10.0k ohms at 77F; resistance rises as it gets colder). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-el296uhv-ui-1125.pdf p.29; lennox-el296uhv-ui-1125.pdf p.33-44; CORP0705L2-04-000.pdf p.4 (Table 3); lennox-el296uhv-ui-1125.pdf p.4"
    },
    {
     "plug": "DISCHARGE AIR SENSOR (103130 board)",
     "name": "Discharge air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-el296uhv-ui-1125.pdf p.29; lennox-el296uhv-ui-1125.pdf p.33-44"
+    "chart": "lennox-cba38mv-dat-88k38",
+    "spec": "Lennox discharge air temperature sensor catalog 88K38 (optional accessories table). Chart is the 88K38 table Lennox prints in the CBA38MV unit information.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the 88K38 chart at the supply-air temperature (about 11.9k ohms at 70F). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-el296uhv-ui-1125.pdf p.29; lennox-el296uhv-ui-1125.pdf p.33-44; lennox-cba38mv-ui-1702.pdf p.28; lennox-el296uhv-ui-1125.pdf p.4"
    },
    {
     "plug": "TB1 H (107045 board)",
@@ -19435,14 +19462,28 @@ const BRAND_SENSOR_MAPS = [
   "test": "Diagnostic push button: hold for E (error recall) or F (flame signal); 7-segment E-codes.",
   "notes": "High-fire set points printed as .090/.085/.081/.075 for -070 units in TABLE 18/19 look like misprints (other sizes are 0.81-0.90); confirm on the switch label.",
   "gaps": [
-   "Limit temperatures not stated.",
-   "Outdoor/discharge air sensor chart not in this manual."
+   "Limit temperatures not stated."
   ],
   "sources": [
    {
     "file": "lennox-el296uhv-ui-1125.pdf",
     "pages": "27-44, 53-56",
     "what": "pin tables, figures 4-6, codes, heating components, pressure switch tables 18-19"
+   },
+   {
+    "file": "lennox-el296uhv-ui-1125.pdf",
+    "pages": "4",
+    "what": "optional accessories: X2658 outdoor sensor, 88K38 discharge sensor"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
+   },
+   {
+    "file": "lennox-cba38mv-ui-1702.pdf",
+    "pages": "28",
+    "what": "88K38 discharge sensor resistance chart"
    }
   ]
  },
@@ -19757,15 +19798,19 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR AIR SENSOR (103130 board)",
     "name": "Outdoor air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-el296dfv-ui-1126.pdf p.11; lennox-el296dfv-ui-1126.pdf p.15-26"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Lennox remote outdoor air temperature sensor catalog X2658 (optional accessories table). Nominal 10.0k ohms at 77F.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the X2658 chart at the outdoor temperature (nominal 10.0k ohms at 77F; resistance rises as it gets colder). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-el296dfv-ui-1126.pdf p.11; lennox-el296dfv-ui-1126.pdf p.15-26; CORP0705L2-04-000.pdf p.4 (Table 3); lennox-el296dfv-ui-1126.pdf p.3"
    },
    {
     "plug": "DISCHARGE AIR SENSOR (103130 board)",
     "name": "Discharge air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-el296dfv-ui-1126.pdf p.11; lennox-el296dfv-ui-1126.pdf p.15-26"
+    "chart": "lennox-cba38mv-dat-88k38",
+    "spec": "Lennox discharge air temperature sensor catalog 88K38 (optional accessories table). Chart is the 88K38 table Lennox prints in the CBA38MV unit information.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the 88K38 chart at the supply-air temperature (about 11.9k ohms at 70F). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-el296dfv-ui-1126.pdf p.11; lennox-el296dfv-ui-1126.pdf p.15-26; lennox-cba38mv-ui-1702.pdf p.28; lennox-el296dfv-ui-1126.pdf p.3"
    },
    {
     "plug": "TB1 H (107045 board)",
@@ -19789,14 +19834,28 @@ const BRAND_SENSOR_MAPS = [
   "test": "Diagnostic push button: hold for E (error recall) or F (flame signal).",
   "notes": "-070 high-fire set point printed as .090 (likely 0.90); confirm on the switch.",
   "gaps": [
-   "Limit temperatures not stated.",
-   "Outdoor/discharge air sensor chart not in this manual."
+   "Limit temperatures not stated."
   ],
   "sources": [
    {
     "file": "lennox-el296dfv-ui-1126.pdf",
     "pages": "9-26, 33-36",
     "what": "pin tables, figures 4-6, codes, heating components, pressure switch table 17"
+   },
+   {
+    "file": "lennox-el296dfv-ui-1126.pdf",
+    "pages": "3",
+    "what": "optional accessories: X2658 outdoor sensor, 88K38 discharge sensor"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
+   },
+   {
+    "file": "lennox-cba38mv-ui-1702.pdf",
+    "pages": "28",
+    "what": "88K38 discharge sensor resistance chart"
    }
   ]
  },
@@ -20096,15 +20155,19 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR AIR SENSOR (SL297 board)",
     "name": "Outdoor air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-sl297uhnv-ui-1802.pdf p.13; lennox-sl297uhnv-ui-1802.pdf p.16-21"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Lennox remote outdoor air temperature sensor catalog X2658 (optional accessories table). Nominal 10.0k ohms at 77F.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the X2658 chart at the outdoor temperature (nominal 10.0k ohms at 77F; resistance rises as it gets colder). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-sl297uhnv-ui-1802.pdf p.13; lennox-sl297uhnv-ui-1802.pdf p.16-21; CORP0705L2-04-000.pdf p.4 (Table 3); lennox-sl297uhnv-ui-1802.pdf p.3"
    },
    {
     "plug": "DISCHARGE AIR SENSOR (SL297 board)",
     "name": "Discharge air temperature sensor terminals (optional sensor)",
     "kind": "thermistor",
-    "test": "Compare the sensor resistance with the temperature/resistance chart in the installation instructions (no chart in this manual).",
-    "source": "lennox-sl297uhnv-ui-1802.pdf p.13; lennox-sl297uhnv-ui-1802.pdf p.16-21"
+    "chart": "lennox-cba38mv-dat-88k38",
+    "spec": "Lennox discharge air temperature sensor catalog 88K38 (optional accessories table). Chart is the 88K38 table Lennox prints in the CBA38MV unit information.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the 88K38 chart at the supply-air temperature (about 11.9k ohms at 70F). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-sl297uhnv-ui-1802.pdf p.13; lennox-sl297uhnv-ui-1802.pdf p.16-21; lennox-cba38mv-ui-1702.pdf p.28; lennox-sl297uhnv-ui-1802.pdf p.3"
    }
   ],
   "test": "Diagnostic push button: E (error recall), F (flame signal); 7-segment E-codes (TABLE 5).",
@@ -20118,6 +20181,21 @@ const BRAND_SENSOR_MAPS = [
     "file": "lennox-sl297uhnv-ui-1802.pdf",
     "pages": "11-21, 29, 32",
     "what": "pin tables, FIGURE 4, codes, heating components, pressure switch table 17"
+   },
+   {
+    "file": "lennox-sl297uhnv-ui-1802.pdf",
+    "pages": "3",
+    "what": "optional accessories: X2658 outdoor sensor, 88K38 discharge sensor"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
+   },
+   {
+    "file": "lennox-cba38mv-ui-1702.pdf",
+    "pages": "28",
+    "what": "88K38 discharge sensor resistance chart"
    }
   ]
  },
@@ -23922,7 +24000,10 @@ const BRAND_SENSOR_MAPS = [
     "plug": "Outdoor & discharge air temperature sensor connector",
     "name": "Outdoor air / discharge air sensor input",
     "kind": "thermistor",
-    "source": "lennox-el297uhvk-ui-100172.pdf p.19 (FIGURE 4); lennox-el297uhvk-ui-100172.pdf p.23-25"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Outdoor sensor = Lennox X2658 (chart shown); discharge sensor = Lennox 88K38. 88K38 values printed by Lennox (lennox-cba38mv-ui-1702.pdf p.28): 30F 34,566; 40F 26,106; 50F 19,904; 60F 15,313; 70F 11,884; 80F 9,298; 90F 7,332; 100F 5,826 ohms.",
+    "test": "Unplug the sensor and measure ohms across each sensor pair: outdoor sensor against the X2658 chart (10.0k at 77F), discharge sensor against the 88K38 values in the spec. Which connector pin carries which sensor is not stated.",
+    "source": "lennox-el297uhvk-ui-100172.pdf p.19 (FIGURE 4); lennox-el297uhvk-ui-100172.pdf p.23-25; CORP0705L2-04-000.pdf p.4 (Table 3); lennox-el297uhvk-ui-100172.pdf p.4; lennox-cba38mv-ui-1702.pdf p.28"
    },
    {
     "plug": "RS-BUS connections",
@@ -23947,7 +24028,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Diagnostic push button: 'E' error recall, 'F' flame microamps.",
   "notes": "R-454B 'K' model (model number ends in K): factory enabled for A2L refrigerant detection; disabling it on an A2L system is prohibited. If the model number does not end in K, use the non-K map.",
   "gaps": [
-   "Outdoor/discharge/auxiliary sensor resistance charts not in this manual.",
+   "Auxiliary temperature sensor (AUX THERM connector): no sensor part number or chart in this manual. Pin order of the outdoor & discharge connector not stated.",
    "Primary limit temperatures not stated."
   ],
   "sources": [
@@ -23955,6 +24036,21 @@ const BRAND_SENSOR_MAPS = [
     "file": "lennox-el297uhvk-ui-100172.pdf",
     "pages": "17-38",
     "what": "tables 1-4 incl. 12-pin harness, figure 4 (107899), codes, heating components, flame table 17, pressure switch tables 19-21"
+   },
+   {
+    "file": "lennox-el297uhvk-ui-100172.pdf",
+    "pages": "4",
+    "what": "optional accessories: 88K38 discharge sensor, X2658 outdoor sensor"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
+   },
+   {
+    "file": "lennox-cba38mv-ui-1702.pdf",
+    "pages": "28",
+    "what": "88K38 discharge sensor resistance chart"
    }
   ]
  },
@@ -24107,13 +24203,17 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR AIR SENSOR terminals",
     "name": "Outdoor air temperature sensor (optional)",
     "kind": "thermistor",
-    "source": "lennox-slp99uhv-service-unit-info.pdf p.22 (FIGURE 4)"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Lennox remote outdoor air temperature sensor catalog X2658 (optional accessories). Nominal 10.0k ohms at 77F.",
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the X2658 chart at the outdoor temperature (nominal 10.0k ohms at 77F; resistance rises as it gets colder). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-slp99uhv-service-unit-info.pdf p.22 (FIGURE 4); CORP0705L2-04-000.pdf p.4 (Table 3); lennox-slp99uhv-service-unit-info.pdf p.3"
    },
    {
     "plug": "DISCHARGE AIR SENSOR terminals",
     "name": "Discharge air temperature sensor (optional)",
     "kind": "thermistor",
-    "source": "lennox-slp99uhv-service-unit-info.pdf p.22 (FIGURE 4); lennox-slp99uhv-service-unit-info.pdf p.31"
+    "spec": "The SLP99V ships with its own discharge air temperature sensor (bagged, taped inside the outer door). It is an AVERAGING sensor with four thermistors, so it is not the single-thermistor 88K38; Lennox publishes no resistance chart for it. The control display shows discharge air temperature after the letter \"U\".",
+    "source": "lennox-slp99uhv-service-unit-info.pdf p.22 (FIGURE 4); lennox-slp99uhv-service-unit-info.pdf p.31; 100022-01-000.pdf p.1-2"
    },
    {
     "plug": "E43 R / I+ / I- / C",
@@ -24234,7 +24334,7 @@ const BRAND_SENSOR_MAPS = [
   "notes": "Model numbers ending in K (SLP99UHVK) use control 107901 - see map lennox-slp99uhvk-furnace-107901. The pressure-differential check (p.43) says to compare with 'table 20', but TABLE 20 is the orifice table; the switch set points are in TABLE 21.",
   "gaps": [
    "Board part number not stated.",
-   "Outdoor/discharge sensor resistance chart not in manual.",
+   "Discharge air sensor: averaging 4-thermistor sensor (Lennox note 100022), no resistance chart published (outdoor sensor X2658 chart added).",
    "Primary limit temperature not stated."
   ],
   "sources": [
@@ -24242,6 +24342,21 @@ const BRAND_SENSOR_MAPS = [
     "file": "lennox-slp99uhv-service-unit-info.pdf",
     "pages": "20-23, 30-32, 37-38, 43",
     "what": "pin tables 1-2, figures 4-5, codes, heating components, flame table 19, pressure switch table 21"
+   },
+   {
+    "file": "lennox-slp99uhv-service-unit-info.pdf",
+    "pages": "3",
+    "what": "optional accessories: X2658 outdoor sensor"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
+   },
+   {
+    "file": "100022-01-000.pdf",
+    "pages": "1-2",
+    "what": "SLP99V discharge air temperature sensor is an averaging sensor (4 thermistors)"
    }
   ]
  },
@@ -24323,7 +24438,10 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR & DISCHARGE AIR TEMPERATURE SENSOR connector",
     "name": "Outdoor air / discharge air temperature sensor input",
     "kind": "thermistor",
-    "source": "lennox-slp99uhvk-service-unit-info.pdf p.16 (FIGURE 4)"
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Outdoor sensor = Lennox X2658 (chart shown; 10.0k nominal at 77F). Discharge sensor: no part number or chart in the SLP99UHVK documents (the earlier SLP99V used a 4-thermistor averaging sensor, Lennox note 100022).",
+    "test": "Unplug the sensor connector and measure the outdoor sensor pair against the X2658 chart. Which pin carries which sensor is not stated.",
+    "source": "lennox-slp99uhvk-service-unit-info.pdf p.16 (FIGURE 4); CORP0705L2-04-000.pdf p.4 (Table 3); lennox-slp99uhvk-service-unit-info.pdf p.3; 100022-01-000.pdf p.1"
    },
    {
     "plug": "LGWP1",
@@ -24408,7 +24526,7 @@ const BRAND_SENSOR_MAPS = [
   "notes": "R-454B 'K' model: A2L detection must stay enabled. Full model numbers end in K (e.g. SLP99UH090V48CK); the app should prefer this map over the SLP99UHV map when the model ends in K. Error code table for this control was not re-checked page by page, so codes are left out here. The pressure-differential check (p.38) says to compare with 'table 20'; in this manual the orifice table is TABLE 23 and the switch set points are TABLE 24.",
   "gaps": [
    "Main harness pin numbers not tabulated.",
-   "Sensor charts not in manual.",
+   "Discharge air sensor chart not published (outdoor sensor X2658 chart added); connector pin order not stated.",
    "Primary limit temperature not stated.",
    "Error codes for 107901 not transcribed."
   ],
@@ -24417,6 +24535,16 @@ const BRAND_SENSOR_MAPS = [
     "file": "lennox-slp99uhvk-service-unit-info.pdf",
     "pages": "15-16, 34, 38",
     "what": "figure 4 (107901), tables 1-4, heating components, flame table 22, pressure switch table 24"
+   },
+   {
+    "file": "lennox-slp99uhvk-service-unit-info.pdf",
+    "pages": "3",
+    "what": "optional accessories: X2658 outdoor sensor"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
    }
   ]
  },
@@ -24456,11 +24584,13 @@ const BRAND_SENSOR_MAPS = [
     "plug": "OUTDOOR AIR SENSOR",
     "name": "Outdoor air temperature sensor terminals (optional, X2658 for some applications)",
     "kind": "thermistor",
+    "chart": "lennox-x2658-outdoor-sensor",
+    "spec": "Lennox outdoor sensor X2658 (field wiring figure 16: required for outdoor temperature display, dew point control, heat pump and dual fuel balance points). Nominal 10.0k ohms at 77F.",
     "errorCodes": [
      "E180 thermostat found a problem with the air handler outdoor sensor"
     ],
-    "test": "Compare outdoor sensor resistance with the temperature/resistance chart in the unit installation instructions (not given in this manual).",
-    "source": "lennox-cba38mv-ui-1702.pdf p.28 (FIGURE 15); lennox-cba38mv-ui-1702.pdf p.29; lennox-cba38mv-ui-1702.pdf p.41"
+    "test": "Disconnect one sensor wire, measure ohms across the sensor and compare with the X2658 chart at the outdoor temperature (nominal 10.0k ohms at 77F; resistance rises as it gets colder). Open or near 0 ohms = bad sensor or wiring.",
+    "source": "lennox-cba38mv-ui-1702.pdf p.28 (FIGURE 15); lennox-cba38mv-ui-1702.pdf p.29; lennox-cba38mv-ui-1702.pdf p.41; CORP0705L2-04-000.pdf p.4 (Table 3)"
    },
    {
     "plug": "THERMOSTAT R / I+ / I- / C",
@@ -24631,7 +24761,6 @@ const BRAND_SENSOR_MAPS = [
   "notes": "The unit has a factory check / expansion valve (TXV) - no indoor EEV board.",
   "gaps": [
    "Electric heat limit open/close temperatures not in this manual.",
-   "Outdoor air sensor chart not in this manual.",
    "AHC 3-pin / 6-pin motor plug pin functions not listed."
   ],
   "sources": [
@@ -24639,6 +24768,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "lennox-cba38mv-ui-1702.pdf",
     "pages": "28-30, 38-42, 54-55",
     "what": "component connections figure 15 (AHC 50W28, DAT chart, 9-pin connector, heat relay), jumpers, status and alert code tables 6-9, blower test"
+   },
+   {
+    "file": "CORP0705L2-04-000.pdf",
+    "pages": "4",
+    "what": "X2658 outdoor sensor resistance table (Table 3)"
    }
   ]
  },
@@ -26015,7 +26149,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Read amber STATUS flash code (short flashes = first digit, long = second). Green COMM = Infinity talking.",
   "notes": "Brown-out: below 15.5 V control voltage for 4 s stops unit (code 46). Thermistor comparison: cooling OAT >=10F warmer or >=20F cooler than OCT = fault 56.",
   "gaps": [
-   "No resistance TABLE for this OAT/OCT in the source - only the curve and the 60F = 16,000 ohm point.",
+   "No resistance TABLE for this OAT/OCT in the source - only the curve and the 60F = 16,000 ohm point. HVACpartners dealer documents searched 11-09 (product literature, TICs, bulletins, fault-code pages, training): none prints it either. Do not use the TSTATXXSEN01-B outdoor-sensor table (60 F = 15,312 ohms) - it is a different sensor.",
    "Same as HK38EA: only curve A08054 is printed (carrier-24anb6-install p.10); no table found."
   ],
   "sources": [
@@ -26247,7 +26381,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Read amber STATUS code (short flashes = tens, long = units). Thermistor comparison fault 56: cooling OAT >=10F warmer or >=20F cooler than OCT; heating OAT >=35F warmer or >=10F cooler.",
   "notes": "Two board drawings exist: older (24ANB7-1W 2011, 24APA7, 25HPA6) feeds 24 V on PL5 T1/C; newer (25HNB6-2W, 25HNB9-2W, SM Fig.45) has SEC-1/SEC-2 spades and a 5-pin PL5. Tell them apart by the SEC spades and read the labels printed beside PL5. Model plugs: 25HPA6 uses HK70EZ041/043/045/047 like 25HNB6; 24APA7 uses 040/042/044/046 like 24ANB7. Brown-out: line below 187 V for 4 s (code 46). CONFLICT: brown-out status codes - SM p.59 text and Bryant 286B/289B II p.10 say 6 = disabled / 5 = active; SM Table 18 (p.61) and the 24ANB7 and 25HNB6 unit labels say 5 = Disabled / 6 = Active. The label value is used here.",
   "gaps": [
-   "No resistance TABLE for this OAT/OCT anywhere found (Carrier 24-25 service manuals 3SM-9SM, Bryant 286B II all print only curve A08054 plus the 60F = about 16,000 ohm point). HVACpartners was signed out on 11-06 17:31 so portal docs could not be searched.",
+   "No resistance TABLE for this OAT/OCT anywhere found (Carrier 24-25 service manuals 1SM-9SM, Bryant 286B II all print only curve A08054 plus the 60F = about 16,000 ohm point). HVACpartners dealer documents searched 11-09 (product literature, TICs, bulletins, fault-code pages, training): none prints it either. Do not use the TSTATXXSEN01-B outdoor-sensor table (60 F = 15,312 ohms) - it is a different sensor.",
    "Bryant 180B and 187B own wiring diagrams were checked for model plug numbers only (PL5 revision not read).",
    "Still no printed OAT/OCT resistance table: Carrier 24-25-1SM and -2SM (new-manuals/carrier-3) and Bryant SM01-7 (180BNA) print only curve A08054 and the 60F = about 16,000 ohm point. The VS 10k table (chart carrier-vs-10k-oat-oct-ost) sits beside a different figure (A91431) and no Carrier page ties it to HK38EA units - not linked."
   ],
@@ -26741,7 +26875,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Read the scrolling matrix code on the PCM. Codes are XX-YY (e.g. 51-01 OAT open). Thermistors: ohm at the PCM connector and compare with chart.",
   "notes": "Model plugs: 24VNA624/636/648/660 = HK70EZ009/021/033/045 (5.1k/91k, 11k/39k, 18k/11k, 18k/220k); 25VNA424/436/448/460 = HK70EZ003/015/027/039 (5.1k/24k, 5.1k/360k, 11k/150k, 18k/62k). Fan check Table 4: Vdc 1.36 megohm, Vcc '45.4 meg OHM' as printed (R-454B manual shows 43.7-62.1k for other motors), Vsp 115k, FG open. Compressor T1-T2-T3: 24 = 0.74, 36 = 0.453, 48/60 = 0.424 ohm. PCM fuses 1 & 2 = 2 A, fuse 3 = 4 A; VFD fan fuse 3.15 A. OST is heat pump only (24VNA6 AC has no OST/RVS/EXV-H). CONFLICTS: fan 4-pin numbering differs between Fig.11 (1 BLK GND ... 4 BLU FG) and wiring diagram 346116-101 (1 BLU ... 4 BLK) - identify fan wires by colour. Forced defrost header is called J3 in the SM text, J2 on the wiring diagram.",
   "gaps": [
-   "No volts-to-psig table or formula is printed for the 0-620 psig transducers (only the 0.5-4.5 V window and the 0-620 psig range) - no chart; compare with gauges instead.",
+   "No volts-to-psig table or formula is printed for the 0-620 psig transducers (only the 0.5-4.5 V window and the 0-620 psig range) - no chart; compare with gauges instead. HVACpartners dealer documents searched 11-09 (product literature, TICs, bulletins, fault-code pages, training): none prints it either.",
    "UNCONFIRMED: P1/P2 pin numbers are not printed; the wire nesting on diagram 346116-101 suggests pin 1 = +5V RED, 3 = SIG GRN, 4 = GND BLK, pin 2 unused - verify on the board before relying on it.",
    "Volts-to-psig still not printed in any edition (24VNA6-25VNA4-1SM..4SM checked; 4SM saved as carrier-24vna6-25vna4-4sm.pdf): the manual only says the ratio of signal to 5 V supply is converted to pressure, valid 0.5-4.5 VDC, range 0-620 psig."
   ],
@@ -27215,7 +27349,7 @@ const BRAND_SENSOR_MAPS = [
   "notes": "Fan motor checks (Table 6, ohms to 4-pin GND): HA38CM230 Vdc 1.04M, Vcc 62.1k, Vsp 216k, FG open; HA38CZ232 1.37M/43.7k/119k/open; HA42CM230 1.22M/54.3k/222k/open; HA42CZ236 and HA42CZ238 1.30M/45.9k/119k/open. Pin layout of headers per 27VNA diagram 351486-101 rev D; 27VPA9 diagram 352499-101 (p.7) shares OAT/OCT/OST/ODT/LLT/EXV-H/P1/P2 labels. HPS opens 670, closes 470 psig. CONFLICTS: fan 4-pin numbering - Fig.17 (1 BLK GND ... 4 BLU FG) vs Fig.3 diagram (1 BLU ... 4 BLK); identify fan wires by colour. Forced defrost header is J3 in the text, J2 on Fig.3.",
   "gaps": [
    "27VPA9 PCM header pin numbers not separately verified (text extraction only).",
-   "No volts-to-psig formula for the 0-620 psig transducers.",
+   "No volts-to-psig formula for the 0-620 psig transducers. HVACpartners dealer documents searched 11-09 (product literature, TICs, bulletins, fault-code pages, training): none prints it either.",
    "Volts-to-psig still not printed (ACHPVSR454-01SM and -02SM checked): only 0.5-4.5 VDC valid signal, 5 VDC supply, 0-620 psig, ratiometric."
   ],
   "sources": [
@@ -27458,7 +27592,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Amber LED solid = power; green LED solid = talking to the InteliSense thermostat. Troubleshoot per SM p.17.",
   "notes": "InteliSense heat pumps have no factory high pressure switch, only the loss-of-charge switch. Same SCM drawn on 26SPA6-2W, 26TPA8-1W, 27SPA6-1W, 27TPA8-1W.",
   "gaps": [
-   "No resistance table for LSVT/VSVT/OAT and no volts-to-psig data for LSVP/VSVP in any source found.",
+   "No resistance table for LSVT/VSVT/OAT and no volts-to-psig data for LSVP/VSVP in any source found. HVACpartners dealer documents searched 11-09 (product literature, TICs, bulletins, fault-code pages, training): none prints it either.",
    "VSVP/LSVP pin numbers not read (wire colours only)."
   ],
   "sources": [
@@ -31116,7 +31250,7 @@ const BRAND_SENSOR_MAPS = [
   "notes": "Library file name says 986TA/986TB but the document text only names 986TA (Series A). Same PL1 pin plan as Carrier 59TP6B. Legend lists PL11 as the IDM connector; the schematic labels it PL1 at the motor. Conflict on p89: legend calls IDM 'Induced Draft Motor, ECM', but both diagrams draw a two-speed (HI/LO/COM) inducer with a run capacitor; the diagram is kept.",
   "gaps": [
    "986TB not covered by this document",
-   "OAT thermistor resistance chart not in manual",
+   "OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit open/close temperatures not in manual",
    "Code 41 detail not on the service label"
   ],
@@ -33083,7 +33217,7 @@ const BRAND_SENSOR_MAPS = [
    "Limit open/close temperature not in manual",
    "Pressure switch set points not in manual",
    "Igniter ohms not in manual",
-   "PL9 OAT connector only in legend - use and sensor chart not given"
+   "PL9 OAT connector only in legend - use not given; the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted"
   ],
   "sources": [
    {
@@ -34555,8 +34689,10 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor air temperature sensor connector",
     "location": "Board, top right",
     "kind": "thermistor",
-    "spec": "Sensor chart not given.",
-    "source": "carrier-58cv-13si.pdf p23, p40"
+    "chart": "carrier-tstatxxsen01b-oat",
+    "spec": "Sensor is the Carrier TSTATXXSEN01-B outdoor air temperature sensor (10K thermistor) when used with the Infinity/Evolution system and a non-communicating outdoor unit; about 5 VDC across the terminals with the sensor disconnected. Chart = sensor Table 1.",
+    "test": "Disconnect the sensor and measure its resistance; compare with the chart (77 F = 10,000 ohms). About 5 VDC at the board terminals with the sensor off.",
+    "source": "carrier-58cv-13si.pdf p23, p40; AG-TSTAT-10.pdf p.4"
    },
    {
     "plug": "PL6",
@@ -34678,7 +34814,6 @@ const BRAND_SENSOR_MAPS = [
   "test": "Amber LED code = short then long flashes. Code recall: SW1-1. Component test: R lead off, SW1-6 ON. Codes: 11, 12, 13, 14, 15 blower lockout, 21, 22, 23, 24, 25 model/setup, 31, 32, 33, 34, 41 blower motor fault, 43, 45.",
   "notes": "Same board and wiring in 58CV-11SI/-12SI (diagram A08464, label 335296-101 rev A) and -13SI (A13333, rev B). Bryant 315A (315AAV/315JAV): Only p1, p4, p40, p59-60 (brand/nomenclature) differ.",
   "gaps": [
-   "OAT (PL9) sensor chart not given",
    "Limit open/close temperature not in manual",
    "Pressure switch set points not in manual",
    "Igniter ohms not in manual"
@@ -34693,6 +34828,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "carrier-58cv-11si.pdf",
     "pages": "40",
     "what": "older diagram A08464 (same layout)"
+   },
+   {
+    "file": "AG-TSTAT-10.pdf",
+    "pages": "3-4",
+    "what": "TSTATXXSEN01-B outdoor sensor: HK42FZ022 OAT hookup (Fig. 7), resistance Table 1"
    }
   ]
  },
@@ -35500,7 +35640,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Major code shows on the first 2 digits of the 3-digit display, minor code on the third; LED: short flashes = first digit, long flashes = second. Component test (Ct): PUr inducer, 5,9 gas valve communication check 15 s, HSI 15 s, Fn blower, End.",
   "notes": "All four 59MN7C revisions (01SI-04SI) carry the same wiring diagram A230349. 04SI board figure A230452, 01SI A230387 (same plug layout). Bryant 987MC: Only cover and back-page nomenclature differ. Conflict: troubleshooting guide (01SI p70) says check 115 V 'between pin 1 and NEUTRAL-L2' for the igniter, but the wiring diagram (04SI p55) shows HSI on PL2-3 (PL2-1 and PL2-2 unused); the map follows the diagram.",
   "gaps": [
-   "RAT/SAT/OAT thermistor resistance chart not in manual",
+   "RAT/SAT thermistor resistance chart not in manual (no Carrier source found); OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit open/close temperatures not in manual",
    "Pressure switch setpoints only on the switch labels",
    "Modulating gas valve PL8-1..3 signal names not given"
@@ -35852,7 +35992,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Two-digit status code on the STATUS LED: short flashes = first digit, long flashes = second. Status recall: R off, SW1-1 ON, reset power.",
   "notes": "Older 59MN7B board differs from 59MN7C (LEDs and dip switches, model plug PL4, PL3 blower plug, valve plug PL17, no SAT/RAT sensors). Bryant 987MB: Only cover, p69-70 (one wording line), p75 nomenclature differ.",
   "gaps": [
-   "OAT resistance chart not in manual",
+   "OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit temperatures not in manual",
    "Pressure switch setpoints only on switch labels",
    "PL1-7/9/11 inducer control signal names not printed"
@@ -36251,7 +36391,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Major code on first 2 digits of the display, minor on the third; LED: short flashes = first digit, long = second. FLt menu = last 7 faults. Component test (Ct), per service label: PUr inducer high (stays on), HSI after 10 s for 15 s, Fn blower 15 s, End inducer low 10 s.",
   "notes": "Same board and diagram as 59TN7A. Board figure (01SI and 04SI) shows a terminal labelled REFRIGERANT LEAK DETECT with callout 'A2L mitigation terminal (when used)'; the 04SI wiring diagram labels it DISSIPATION SYSTEM; code 10.2 = 'Dissipation System Active, operate blower'. Conflicts: (1) wiring diagram legend p59 calls PL11 a '3-Circuit SAT Connector' but the board drawing shows SAT/PL11 as a 2-screw terminal (map follows the drawing). (2) Troubleshooting guide (01SI p73) says check igniter 115 V 'between pin 1 and NEUTRAL-L2', but the wiring diagram shows HSI on PL2-3 (map follows the diagram). (3) Component test: service label p57 says blower ON 15 s; Table 26 p58 says blower ON at 50% torque for 10 s (map follows the label).",
   "gaps": [
-   "RAT/SAT/OAT thermistor resistance chart not in manual",
+   "RAT/SAT thermistor resistance chart not in manual (no Carrier source found); OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit open/close temperature not in manual",
    "Pressure switch setpoints only on each switch label"
   ],
@@ -36655,7 +36795,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Major code on first 2 digits of the display, minor on the third; LED: short flashes = first digit, long = second. FLt = last 7 faults. Component test (Ct): PUr inducer high, HSI after 10 s for 15 s, Fn blower 15 s, End inducer low 10 s.",
   "notes": "Service label lists 10.2 = 'Refrigerant leak detected, operate blower'. Wiring diagram top-left terminal labelled REFRIGERANT LEAK DETECT. Conflicts: (1) wiring diagram legend p57 calls PL11 a '3-Circuit SAT Connector' but the board drawings show SAT/PL11 as a 2-screw terminal (map follows the drawing). (2) Troubleshooting guide p75 says check igniter 115 V 'between pin 1 and NEUTRAL-L2', but the wiring diagram shows HSI on PL2-3 (map follows the diagram). (3) Component test: service label p55 says blower ON 15 s; Table 25 p56 says blower ON at 50% torque for 10 s (map follows the label).",
   "gaps": [
-   "RAT/SAT/OAT thermistor resistance chart not in manual",
+   "RAT/SAT thermistor resistance chart not in manual (no Carrier source found); OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit open/close temperature not in manual",
    "Pressure switch setpoints only on each switch label"
   ],
@@ -36933,7 +37073,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Two-digit status code on the amber LED (short flashes = first digit, long = second). Recall: R off, reset power, SW1-1 ON. Codes clear after 72 h.",
   "notes": "Older 59TN6B board (LEDs, dip switches, model plug) differs from 59TN6C (3-digit display). IDM plug: legend lists PL11 IDM connector (as '12-Circuit'); the scan shows it next to the inducer. Bryant 986TB: Service label: 986TB (p72, A170151) has no code 15 (blower motor lockout) and no code 41 (blower motor fault) and its component test has no code 41; 59TN6B label (p60, A190157) has both. Diagram legend SW1-3: 986TB 'Low Heat Rise Adj.', 59TN6B 'Not used'. Use the 59TN6B map for 986TB plugs/pins, but drop codes 15 and 41 and the SW1-3 meaning for 986TB. 986TB troubleshooting / microamps: p89. Conflicts in 59TN6B-01SI: (1) legend p74 calls PL14 a '4-Circuit Blower Power Connector' and PL13 '5-Circuit', but the schematic draws PL14 with pins 1-5 and PL13 with pins 1-4 (map follows the drawing). (2) Troubleshooting guide p70 checks motor-side PL13-7 RED / PL13-16 YEL, BLU / PL13-1 GRN, which do not match the diagram's PL13 (PL3-1 -> PL13-1, PL3-2 -> PL13-4, PL3-3 -> PL13-2, PL3-4 -> PL13-3); map follows the diagram and gives board-side PL3 checks.",
   "gaps": [
-   "OAT resistance chart not in manual",
+   "OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit temperatures not in manual"
   ],
   "sources": [
@@ -37359,7 +37499,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Major code on first 2 digits of the display, minor on the third (service label A230364A, same as 59TN6C). LED: short flashes = first digit, long = second. Component test (Ct): PUr inducer high, HSI 15 s, Fn blower, End inducer low 10 s.",
   "notes": "Same control and code table as 59TN6C, but the 24 V safety string adds draft safeguard switch DSS, blocked vent shutoff switch BVSS (when used) and a second limit LS2 (when used), and the inducer is a 2-speed shaded-pole motor on a 3-pin PL18. 58TN0B-01SI shows the same diagram layout. Conflicts: (1) troubleshooting guide p51 says check igniter 115 V 'between pin 1 and NEUTRAL-L2', but the wiring diagram p35 shows HSI on PL2-3 (map follows the diagram). (2) Component test: service label p33 says blower ON 15 s; Table p34 says blower ON at 50% torque for 10 s (map follows the label).",
   "gaps": [
-   "RAT/SAT/OAT thermistor resistance chart not in manual",
+   "RAT/SAT thermistor resistance chart not in manual (no Carrier source found); OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit open/close temperatures not in manual",
    "Pressure switch setpoints not in manual (switch label)",
    "Igniter ohms not stated in this manual",
@@ -37659,7 +37799,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Two-digit status code on the amber LED (short flashes = first digit, long = second). Recall: R off, reset power, SW1-1 ON. Codes clear after 72 h.",
   "notes": "Same LED/dip-switch board family as 59TN6B, with draft safeguard switch DSS, BVSS (when used) and LS2 (when used) in the 24 V safety string and a shaded-pole 3-pin inducer plug PL11. 58TN0A-01SI wiring diagram (344741-201 Rev A) matches 02SI.",
   "gaps": [
-   "OAT resistance chart not in manual",
+   "OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit temperatures not in manual",
    "Pressure switch setpoints not in manual",
    "Igniter ohms not in manual",
@@ -38086,7 +38226,7 @@ const BRAND_SENSOR_MAPS = [
   "notes": "No pressure switches: a pressure transducer PTD on PL8 / PL15 proves draft. Status label prints the start-up pressure fault as 23.3; the troubleshooting guide prints 23.1. W2 has no function (single stage, note 15). Other conflicts: (1) the schematic places a 'NOTE #7' callout at BVSS, but the note that says 'Factory connected when BVSS is not used' is note 10 (note 7 is blower off-delay). (2) Troubleshooting guide p44 says check igniter 115 V 'between pin 1 and NEUTRAL-L2', but the wiring diagram p29 shows HSI on PL2-3 (map follows the diagram). (3) Board figure p17 labels the A2L terminal REFRIGERANT LEAK DETECT while the service label p28 describes 10.2 as 'Dissipation System Active, operate blower'.",
   "gaps": [
    "Pressure transducer supply volts and volts-to-in. w.c. chart not in manual (only 0.15 in. w.c. = 0.65 VDC)",
-   "RAT/SAT/OAT resistance chart not in manual",
+   "RAT/SAT resistance chart not in manual (no Carrier source found); OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Limit and BTS temperatures not in manual"
   ],
   "sources": [
@@ -38401,7 +38541,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "Two-digit status code on the amber LED (short flashes = first digit, long = second). Recall: R off, reset power, SW1-1 ON. Codes clear after 72 h.",
   "notes": "Wiring diagram is a low-resolution raster in both library manuals; switch, TV and valve HI routing read from the connection diagram colours. Re-check PL15 against the unit label.",
   "gaps": [
-   "OAT resistance chart not in manual",
+   "OAT: the furnace manual does not name the OAT sensor part. The Infinity/Evolution UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "Pressure switch setpoints not in manual",
    "Limit temperatures not in manual",
    "PL1-7/9/11 inducer signal names not printed",
@@ -38512,12 +38652,13 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor air thermistor (optional, field installed)",
     "location": "Outdoors, wired back to the fan coil OAT terminals",
     "kind": "thermistor",
-    "spec": "Resistance chart not given in this manual.",
+    "chart": "carrier-tstatxxsen01b-oat",
+    "spec": "The fan coil manual says to use the outdoor air temperature sensor shipped with the User Interface; the Infinity UI product data lists that outdoor sensor as TSTATXXSEN01-B (10K thermistor). Chart = that sensor's Table 1. If a different sensor is fitted, the chart does not apply.",
     "errorCodes": [
      "53"
     ],
     "test": "53 = sensor open or shorted after it was detected at power-up. Ohm the thermistor (power off, leads off): open or short = replace. Note: cycling power clears 53 even if the sensor is still open.",
-    "source": "carrier-im-fe4a-06.pdf p10, p13"
+    "source": "carrier-im-fe4a-06.pdf p8, p10, p13; carrier-uid01-07pd.pdf p3; AG-TSTAT-10.pdf p.4"
    },
    {
     "plug": "HEATER (Plug 5)",
@@ -38592,7 +38733,7 @@ const BRAND_SENSOR_MAPS = [
   "test": "STATUS (amber) LED code = short flashes first digit, long flashes second digit, 2.5 s off between repeats. Solid amber = idle/standby; off = no low voltage or bad control/fuse. COMM (green) on = communicating. Codes (highest priority first, as listed): 45 control board test fault (replace board), 37 heater output sensed on when not energized, 44 motor communication fault, 25 invalid motor/model selection, 27 invalid outdoor unit size, 26 invalid heater size, 36 heater output not sensed when energized, 41 blower motor fault, 16 system communication fault, 46 brownout, 53 OAT sensor fault.",
   "notes": "Heater relay coils are in the heater kit (see the KFCEH heater kit maps). Heater kit Plug 2 pin use from WD-FANCOIL-10 heater diagrams: 3/2 = relay 1 coil, 6/4 = relay 2 coil, 5/8 = IDR, 9/11/7 = line power. The fan coil side receptacle jumpers RECP2 6-1 and 4-3.",
   "gaps": [
-   "OAT thermistor resistance chart not in the fan coil manual",
+   "OAT chart comes from the TSTATXXSEN01-B sensor sheet (the UI's outdoor sensor), not from the fan coil manual - check the sensor part if readings look wrong",
    "IDR resistor values per heater size not stated",
    "HPT header function not stated"
   ],
@@ -38606,6 +38747,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "carrier-wd-fancoil-10.pdf",
     "pages": "3-4, 12",
     "what": "unit wiring diagram 333107-101 Rev B, heater plug 2 pinout"
+   },
+   {
+    "file": "AG-TSTAT-10.pdf",
+    "pages": "4",
+    "what": "TSTATXXSEN01-B resistance Table 1"
    }
   ]
  },
@@ -38672,11 +38818,13 @@ const BRAND_SENSOR_MAPS = [
     "name": "Outdoor air thermistor (optional)",
     "location": "Outdoors",
     "kind": "thermistor",
+    "chart": "carrier-tstatxxsen01b-oat",
+    "spec": "Sensor is the Carrier TSTATXXSEN01-B outdoor air temperature sensor (10K thermistor); about 5 VDC across the terminals with the sensor disconnected.",
     "errorCodes": [
      "53"
     ],
-    "test": "Ohm the sensor for open/short.",
-    "source": "carrier-im-fe4a-01.pdf p11"
+    "test": "Ohm the sensor with it disconnected and compare with the chart (77 F = 10,000 ohms); open or short = code 53.",
+    "source": "carrier-im-fe4a-01.pdf p11; AG-TSTAT-10.pdf p.4"
    },
    {
     "plug": "HEATER (Plug 5)",
@@ -38737,6 +38885,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "carrier-wd-fa4c-02.pdf",
     "pages": "11",
     "what": "unit wiring diagram 328126-101"
+   },
+   {
+    "file": "AG-TSTAT-10.pdf",
+    "pages": "3-4",
+    "what": "TSTATXXSEN01-B outdoor sensor: HK38EA002 OAT hookup (Fig. 8), resistance Table 1"
    }
   ]
  },
@@ -38863,18 +39016,76 @@ const BRAND_SENSOR_MAPS = [
     ],
     "test": "44 motor comm fault: check harness and 12 VDC at pins 1/2; 41 motor did not reach speed in 30 s or < 250 rpm for 10 s; 25 motor size wrong for model.",
     "source": "carrier-im-fe4-02.pdf p13-15"
+   },
+   {
+    "plug": "PLUG 1",
+    "pins": "4-pin board header to motor RECP 4: PLUG 1 pin 1 RED -> motor pin 1, pin 2 GRN -> motor pin 4, pin 3 YEL -> motor pin 2, pin 4 BLU -> motor pin 3",
+    "code": "PL1",
+    "name": "ECM motor communication harness (board to motor control connector RECP 4)",
+    "location": "Fan coil control board (PCB) to ECM motor",
+    "kind": "other",
+    "errorCodes": [
+     "44",
+     "41",
+     "25"
+    ],
+    "test": "Motor LED off and motor not running = check status LED; motor LED on/flashing and motor not running = motor or harness. Check the 4 wires end to end with the unit powered off.",
+    "source": "WD-FC-01.pdf p.11 (Fig. 15, FE4B cooling-only unit label 350087-101 Rev A, read on page image)"
+   },
+   {
+    "plug": "PLUG 3",
+    "pins": "5-pin motor power plug (RECP 3 at motor): pin 4 YEL (from transformer COM / L1 side), pin 5 BLK (230 V, L2 side), pin 3 GRN/YEL to ground",
+    "code": "PL3",
+    "name": "ECM motor line-voltage power",
+    "location": "ECM blower motor",
+    "kind": "other",
+    "spec": "230 V nominal (see rating plate).",
+    "test": "With power on, line voltage between pins 4 and 5 of plug 3 (at the motor); pin 3 = ground.",
+    "source": "WD-FC-01.pdf p.11 (Fig. 15, FE4B cooling-only unit label 350087-101 Rev A, read on page image)"
+   },
+   {
+    "plug": "PLUG 5",
+    "pins": "5-pin board header: pin 1 BLU, pin 2 BLU, pin 3 VIO, pin 4 RED, pin 5 BRN; these run to PLUG 2 pins 8 BLU, 5 BLU, 2 VIO, 1 RED, 3 BRN",
+    "code": "PL5",
+    "name": "Heater harness at the board (heater stage outputs and heater ID resistor via PLUG 2 / RECP 2)",
+    "location": "Fan coil control board",
+    "kind": "other",
+    "spec": "IDR is read on heater harness pins 5 and 8 (the two BLU wires) per the installation manual; which BLU lands on PLUG 5 pin 1 vs 2 is not readable on the label.",
+    "errorCodes": [
+     "26",
+     "36",
+     "37"
+    ],
+    "test": "26: unplug at the board heater header and read the IDR between the two BLU wires (the installation manual says to check for a resistance greater than 5000 ohms). 36/37: check 24 VAC on the VIO/RED/BRN outputs during a heat call.",
+    "source": "WD-FC-01.pdf p.11 (Fig. 15, FE4B cooling-only unit label 350087-101 Rev A, read on page image); IDR pins from the installation manual"
+   },
+   {
+    "plug": "PLUG 2 / RECP 2",
+    "pins": "Heater / power plug, positions 1-9 and 11. Cooling-only label: L1 YEL -> pin 9, L2 BLK -> pin 7; jumper RED pin 6 to pin 1 and BRN pin 3 to pin 4 on the plug side; pins 8 and 5 BLU, 2 VIO, 1 RED, 3 BRN go to board PLUG 5",
+    "code": "PL2",
+    "name": "Heater kit / field power connection plug",
+    "location": "Fan coil, behind the cooling control (or heater) plate",
+    "kind": "other",
+    "spec": "With a heater installed, use the heater kit's own wiring label for RECP 2.",
+    "test": "Line voltage pin 9 (YEL) to pin 7 (BLK) with power on (cooling-only control).",
+    "source": "WD-FC-01.pdf p.11 (Fig. 15, FE4B cooling-only unit label 350087-101 Rev A, read on page image)"
    }
   ],
   "test": "STATUS LED: short flashes = first digit, long flashes = second digit. Codes 45, 37, 44, 25, 27, 26, 36, 41, 16, 46, 53 (same meanings as FE4A).",
-  "notes": "Unit wiring label not in our library; plug/receptacle numbers are taken from the FE4A diagram only where the FE4 manual states the same pins (IDR 5/8, motor 1/2).",
+  "notes": "Unit wiring label not in our library; plug/receptacle numbers are taken from the FE4A diagram only where the FE4 manual states the same pins (IDR 5/8, motor 1/2). Unit wiring label 350087-101 Rev A (FE4B cooling-only) found in WD-FC-01 (public, Carrier) p.11 and used for plugs 1, 2, 3 and 5.",
   "gaps": [
-   "FE4BN unit wiring diagram not found publicly - full Plug 1/3/5 pinout not confirmed for this model"
+   "Plug 1/2/3/5 pin-outs from the cooling-only label 350087-101 (WD-FC-01 p.11); with a heater installed use the heater's own label - which BLU wire is PLUG 5 pin 1 vs 2 is not readable"
   ],
   "sources": [
    {
     "file": "carrier-im-fe4-02.pdf",
     "pages": "8, 11-15",
     "what": "board, terminals, status codes"
+   },
+   {
+    "file": "WD-FC-01.pdf",
+    "pages": "11",
+    "what": "unit wiring label 350087-101 (cooling control only): plugs 1, 2, 3, 5, OAT, ABCD"
    }
   ]
  },
@@ -38908,9 +39119,10 @@ const BRAND_SENSOR_MAPS = [
      "Flashing 1",
      "Flashing 2",
      "Flashing 3",
-     "Flashing 5"
+     "Flashing 5",
+     "Flashing 12"
     ],
-    "test": "Flash 1: check for leaks with an independent R-454B detector; none = replace sensor. Flash 2 (sensor open): check both ends of the sensor harness, power cycle, still there = replace sensor. Flash 3 = normal mitigation after a leak - leak check. Flash 5 (fault with A2L digital sensor): power cycle; if it stays, replace the sensor. Keep the sensor clean of dust.",
+    "test": "Flash 1: check for leaks with an independent R-454B detector; none = replace sensor. Flash 2 (sensor open): check both ends of the sensor harness, power cycle, still there = replace sensor. Flash 3 = normal mitigation after a leak - leak check. Flash 5 (fault with A2L digital sensor): power cycle; if it stays, replace the sensor. Keep the sensor clean of dust. Flash 12 (unit label) = sensor power draw defect.",
     "source": "IM-FE5B-03.pdf p11-13; carrier-fe5b-install.pdf p10-12 (Table 5 read on page image)"
    },
    {
@@ -39013,12 +39225,65 @@ const BRAND_SENSOR_MAPS = [
     ],
     "test": "44: check harness and 12 VDC pins 1/2; 41 motor fault; 25 motor/model mismatch.",
     "source": "carrier-fe5b-install.pdf p15-16"
+   },
+   {
+    "plug": "PLUG 1",
+    "pins": "4-pin board header to motor RECP 4: PLUG 1 pin 1 RED -> motor pin 1, pin 2 GRN -> motor pin 4, pin 3 YEL -> motor pin 2, pin 4 BLU -> motor pin 3",
+    "code": "PL1",
+    "name": "ECM motor communication harness (board to motor control connector RECP 4)",
+    "location": "Fan coil control board (PCB) to ECM motor",
+    "kind": "other",
+    "errorCodes": [
+     "44",
+     "41",
+     "25"
+    ],
+    "test": "Motor LED off and motor not running = check status LED; motor LED on/flashing and motor not running = motor or harness. Check the 4 wires end to end with the unit powered off.",
+    "source": "WD-FCA2L-01.pdf p.13 (Fig. 17, FE5 2-5 ton cooling-only unit label 350496-201 Rev A, read on page image)"
+   },
+   {
+    "plug": "PLUG 3",
+    "pins": "5-pin motor power plug (RECP 3 at motor): pin 4 YEL (from transformer COM / L1 side), pin 5 BLK (230 V, L2 side), pin 3 GRN/YEL to ground",
+    "code": "PL3",
+    "name": "ECM motor line-voltage power",
+    "location": "ECM blower motor",
+    "kind": "other",
+    "spec": "230 V nominal (see rating plate).",
+    "test": "With power on, line voltage between pins 4 and 5 of plug 3 (at the motor); pin 3 = ground.",
+    "source": "WD-FCA2L-01.pdf p.13 (Fig. 17, FE5 2-5 ton cooling-only unit label 350496-201 Rev A, read on page image)"
+   },
+   {
+    "plug": "PLUG 5",
+    "pins": "5-pin board header: pin 1 BLU, pin 2 BLU, pin 3 VIO, pin 4 RED, pin 5 BRN; these run to PLUG 2 pins 8 BLU, 5 BLU, 2 VIO, 1 RED, 3 BRN",
+    "code": "PL5",
+    "name": "Heater harness at the board (heater stage outputs and heater ID resistor via PLUG 2 / RECP 2)",
+    "location": "Fan coil control board",
+    "kind": "other",
+    "spec": "IDR is read on heater harness pins 5 and 8 (the two BLU wires) per the installation manual; which BLU lands on PLUG 5 pin 1 vs 2 is not readable on the label.",
+    "errorCodes": [
+     "26",
+     "36",
+     "37"
+    ],
+    "test": "26: unplug at the board heater header and read the IDR between the two BLU wires (the installation manual says to check for a resistance greater than 5000 ohms). 36/37: check 24 VAC on the VIO/RED/BRN outputs during a heat call.",
+    "source": "WD-FCA2L-01.pdf p.13 (Fig. 17, FE5 2-5 ton cooling-only unit label 350496-201 Rev A, read on page image); IDR pins from the installation manual"
+   },
+   {
+    "plug": "PLUG 2 / RECP 2",
+    "pins": "Heater / power plug, positions 1-9 and 11. Cooling-only label: L1 YEL -> pin 9, L2 BLK -> pin 7; jumper RED pin 6 to pin 1 and BRN pin 3 to pin 4 on the plug side; pins 8 and 5 BLU, 2 VIO, 1 RED, 3 BRN go to board PLUG 5",
+    "code": "PL2",
+    "name": "Heater kit / field power connection plug",
+    "location": "Fan coil, behind the cooling control (or heater) plate",
+    "kind": "other",
+    "spec": "With a heater installed, use the heater kit's own wiring label for RECP 2.",
+    "test": "Line voltage pin 9 (YEL) to pin 7 (BLK) with power on (cooling-only control).",
+    "source": "WD-FCA2L-01.pdf p.13 (Fig. 17, FE5 2-5 ton cooling-only unit label 350496-201 Rev A, read on page image)"
    }
   ],
-  "test": "Fan coil STATUS LED codes as FE4A (16, 25, 26, 27, 36, 37, 41, 44, 45, 46, 53). Dissipation board yellow LED: solid = normal; flashing 1 sensor >= 20% LFL; 2 sensor open; 3 normal mitigation after leak; 4 no power to G output; 5 fault with A2L digital sensor; 6 test button stuck > 30 s; 7 Y or W wiring inverted; 8 Y or W shorted. Try a power cycle first for all flash codes.",
-  "notes": "No indoor EEV or coil thermistor on FE5B: metering is a hard shutoff TXV (product data). The A2L sensor is a digital sensor (manual gives no resistance/voltage figure).",
+  "test": "Fan coil STATUS LED codes as FE4A (16, 25, 26, 27, 36, 37, 41, 44, 45, 46, 53). Dissipation board yellow LED: solid = normal; flashing 1 sensor >= 20% LFL; 2 sensor open; 3 normal mitigation after leak; 4 no power to G output; 5 fault with A2L digital sensor; 6 test button stuck > 30 s; 7 Y or W wiring inverted; 8 Y or W shorted. Try a power cycle first for all flash codes.; 12 sensor power draw defect (unit label 350496-201). LED flashes are 300 ms on / 300 ms off with a 2 s gap between codes.",
+  "notes": "No indoor EEV or coil thermistor on FE5B: metering is a hard shutoff TXV (product data). The A2L sensor is a digital sensor (manual gives no resistance/voltage figure). Unit label 350496-201 Rev A (WD-FCA2L-01 p.13): the dissipation board takes RED/BLK 24 V from the transformer and ABCD from the fan coil board ABCD.",
   "gaps": [
-   "FE5B unit wiring label not published in the IM/PD - fan coil plug numbers not confirmed",
+   "Fan coil plug numbers from the cooling-only label 350496-201 (WD-FCA2L-01 p.13); with a heater use the heater's own label - which BLU wire is PLUG 5 pin 1 vs 2 is not readable",
    "A2L sensor harness pinout not given"
   ],
   "sources": [
@@ -39036,6 +39301,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "FE5B-03PD.pdf",
     "pages": "3",
     "what": "model numbers, TXV metering"
+   },
+   {
+    "file": "WD-FCA2L-01.pdf",
+    "pages": "13",
+    "what": "unit wiring label 350496-201 (cooling control only): plugs 1, 2, 3, 5, OAT, ABCD"
    }
   ]
  },
@@ -48883,9 +49153,11 @@ const BRAND_SENSOR_MAPS = [
    },
    {
     "plug": "Motor C / L / G / N",
+    "pins": "Motor power connector (fan coil side / motor pig-tail): C = BRN 24 V common, L = BLK 208/230 V, G = GRN/YEL ground, N = YEL 208/230 V",
     "name": "Motor 24 V common and line/ground connections",
     "kind": "other",
-    "source": "carrier-im-fj4d-02.pdf p.8 Fig. 15"
+    "test": "Line voltage between L (BLK) and N (YEL) with power on; 24 VAC between the BLUE-lead speed tap and C (BRN) on a fan call.",
+    "source": "carrier-im-fj4d-02.pdf p.8 Fig. 15; WD-FC-01.pdf p.8 (Fig. 12, FJ4D/PF4MNX 1-1/2 ton cooling-only label 348878-1, page image); WD-FC-01.pdf p.9 (Fig. 13, FJ4D/PF4MNX 2-5 ton cooling-only label 348879-101, page image)"
    },
    {
     "plug": "FUSE 3A",
@@ -48905,17 +49177,53 @@ const BRAND_SENSOR_MAPS = [
     "name": "208/230 V power: YEL and BLK stripped leads (no heater); with a heater, the heater plug replaces the fan coil power plug",
     "kind": "other",
     "source": "carrier-im-fj4d-02.pdf p.6"
+   },
+   {
+    "plug": "Speed tap block 1-5 (motor pig-tail)",
+    "pins": "Motor pig-tail colours: tap 1 BLK, 2 BLU, 3 ORG, 4 WHT, 5 GRY; spare RED pig-tail lead is capped (label note 8: factory wires may be present - do not use). Fan coil BLU lead lands on tap 2, WHT lead on tap 4.",
+    "code": "SPT",
+    "name": "Motor speed tap terminals",
+    "location": "Fan motor",
+    "kind": "other",
+    "spec": "Tap 1 low, 2 medium, 3 high, 4 elec heat, 5 see airflow tables.",
+    "test": "On a G call, 24 VAC from the tap holding the BLU lead to C; on a W call, 24 VAC from tap 4 (WHT) to C.",
+    "source": "WD-FC-01.pdf p.8 (Fig. 12, FJ4D/PF4MNX 1-1/2 ton cooling-only label 348878-1, page image); WD-FC-01.pdf p.9 (Fig. 13, FJ4D/PF4MNX 2-5 ton cooling-only label 348879-101, page image)"
+   },
+   {
+    "plug": "PLUG / RECP (power and heater plug)",
+    "pins": "1-1/2 ton (348878-1): pins 3 YEL (L1), 6 BLK (L2), 4 and 1 (E, WHT) to the low-voltage side. 2-5 ton (348879-101): pins 9 YEL (L1), 7 BLK (L2), 11 WHT (to speed tap 4), 4 and 3 (low-voltage), 2 W2 WHT, 6 W3 BLU, 1 E VIO.",
+    "code": "PLUG",
+    "name": "Fan coil power / heater plug (cooling-only labels)",
+    "location": "Fan coil control area",
+    "kind": "other",
+    "spec": "With a factory or field heater, the heater's own label applies (WD-FC-01 Fig. 16-20 for factory-heater FJ4D models).",
+    "test": "Line voltage between the YEL (L1) and BLK (L2) pins with power on.",
+    "source": "WD-FC-01.pdf p.8 (Fig. 12, FJ4D/PF4MNX 1-1/2 ton cooling-only label 348878-1, page image); WD-FC-01.pdf p.9 (Fig. 13, FJ4D/PF4MNX 2-5 ton cooling-only label 348879-101, page image)"
+   },
+   {
+    "plug": "Thermostat connection C / R / W / G",
+    "pins": "C BRN, R RED, W WHT, G GRY (dashed thermostat connection box on the label); a resistor sits in the low-voltage harness",
+    "code": "TSTAT",
+    "name": "Low-voltage thermostat leads (label view)",
+    "location": "Fan coil",
+    "kind": "other",
+    "spec": "Low-voltage fuse: replace with no greater than 5 A (label note 4).",
+    "test": "24 VAC R to C.",
+    "source": "WD-FC-01.pdf p.8 (Fig. 12, FJ4D/PF4MNX 1-1/2 ton cooling-only label 348878-1, page image); WD-FC-01.pdf p.9 (Fig. 13, FJ4D/PF4MNX 2-5 ton cooling-only label 348879-101, page image)"
    }
   ],
   "test": "G call: 24 VAC between the BLUE-lead tap and C. Fan delay is built into the motor.",
-  "gaps": [
-   "No unit wiring label in the installation manual"
-  ],
+  "notes": "Unit labels from WD-FC-01 (Carrier, public, R-410A fan coils after 2022): the plug numbering differs between the 1-1/2 ton and 2-5 ton labels.",
   "sources": [
    {
     "file": "carrier-im-fj4d-02.pdf",
     "pages": "6, 8",
     "what": "electrical connections, wiring layout, motor speed selection"
+   },
+   {
+    "file": "WD-FC-01.pdf",
+    "pages": "8-9",
+    "what": "FJ4D / PF4MNX cooling-only unit wiring labels 348878-1 (1-1/2 ton) and 348879-101 (2-5 ton)"
    }
   ]
  },
@@ -49653,7 +49961,7 @@ const BRAND_SENSOR_MAPS = [
   "notes": "Diagram legend calls the inducer 'ECM' but the drawing shows a two-speed motor with run capacitor CAP-1 on PL11; entries follow the drawing.",
   "gaps": [
    "Model plug (PL4) resistance values not printed - diagram says see rating plate",
-   "PL9 OAT sensor resistance chart not given",
+   "PL9 OAT: the furnace manual does not name the OAT sensor part. The Carrier communicating UI's outdoor sensor TSTATXXSEN01-B has a printed table (chart carrier-tstatxxsen01b-oat in carrier-indoor-b, AG-TSTAT-10 p.4; 77 F = 10,000 ohms) - use it only after confirming that sensor is fitted",
    "PL7 pinout not given",
    "PL13 pins 2-5 use not shown",
    "Limit open/close temperatures not stated",
@@ -96496,6 +96804,10063 @@ const BRAND_SENSOR_MAPS = [
     "what": "PCB photos + pin tables, sensor and fan error pages"
    }
   ]
+ },
+ {
+  "id": "generac-evolution2-aircooled-1ph",
+  "title": "Generac / Guardian air-cooled home standby with Evolution 2.0 controller (single phase, 9-26 kW)",
+  "side": "generator",
+  "brand": "Generac (Guardian, Honeywell, Siemens, Eaton, DR, Powermate, Response badges)",
+  "models": "Guardian 9-22 kW (Evolution 2.0): 7029, 7030, 7031, 7032, 7033, 7035, 7036, 7037, 7038, 7039, 7042, 7043, 7057, 7058, 7059, 7060, 7061, 7062, 7063, 7065, 7066, 7067, 7068, 7069, 7070, 7071, 7072, 7073, 7074, 7075, 7140; Guardian 10-22 kW compact re-rate, 13/16/20 kW (Evolution 2.0): 7038, 7173, 7174, 7175, 7176, 7177, 7178, 7180, 7181, 7182; Guardian 10-26 kW (Evolution 2.0): 7039, 7042, 7043, 7062, 7063, 7065, 7171, 7172, 7179, 7209, 7210, 7213, 7223, 7224, 7225, 7226, 7228, 7229, 7230, 7231, 7235, 7236, 7290, 7291, 7292, 7312; Response Series 16/22 kW (Evolution 2.0): 7141, 7142, 7217, 7218; DR badge 11/20 kW (Evolution 2.0): 7164, 7165; Powermate badge 11 kW (Evolution 2.0): 7166",
+  "match": [
+   "G007029",
+   "7029",
+   "G007030",
+   "7030",
+   "G007031",
+   "7031",
+   "G007032",
+   "7032",
+   "G007033",
+   "7033",
+   "G007035",
+   "7035",
+   "G007036",
+   "7036",
+   "G007037",
+   "7037",
+   "G007038",
+   "7038",
+   "G007039",
+   "7039",
+   "G007042",
+   "7042",
+   "G007043",
+   "7043",
+   "G007057",
+   "7057",
+   "G007058",
+   "7058",
+   "G007059",
+   "7059",
+   "G007060",
+   "7060",
+   "G007061",
+   "7061",
+   "G007062",
+   "7062",
+   "G007063",
+   "7063",
+   "G007065",
+   "7065",
+   "G007066",
+   "7066",
+   "G007067",
+   "7067",
+   "G007068",
+   "7068",
+   "G007069",
+   "7069",
+   "G007070",
+   "7070",
+   "G007071",
+   "7071",
+   "G007072",
+   "7072",
+   "G007073",
+   "7073",
+   "G007074",
+   "7074",
+   "G007075",
+   "7075",
+   "G007140",
+   "7140",
+   "G007173",
+   "7173",
+   "G007174",
+   "7174",
+   "G007175",
+   "7175",
+   "G007176",
+   "7176",
+   "G007177",
+   "7177",
+   "G007178",
+   "7178",
+   "G007180",
+   "7180",
+   "G007181",
+   "7181",
+   "G007182",
+   "7182",
+   "G007171",
+   "7171",
+   "G007172",
+   "7172",
+   "G007179",
+   "7179",
+   "G007209",
+   "7209",
+   "G007210",
+   "7210",
+   "G007213",
+   "7213",
+   "G007223",
+   "7223",
+   "G007224",
+   "7224",
+   "G007225",
+   "7225",
+   "G007226",
+   "7226",
+   "G007228",
+   "7228",
+   "G007229",
+   "7229",
+   "G007230",
+   "7230",
+   "G007231",
+   "7231",
+   "G007235",
+   "7235",
+   "G007236",
+   "7236",
+   "G007290",
+   "7290",
+   "G007291",
+   "7291",
+   "G007292",
+   "7292",
+   "G007312",
+   "7312",
+   "G007141",
+   "7141",
+   "G007142",
+   "7142",
+   "G007217",
+   "7217",
+   "G007218",
+   "7218",
+   "G007164",
+   "7164",
+   "G007165",
+   "7165",
+   "G007166",
+   "7166"
+  ],
+  "sizes": [
+   "9",
+   "10",
+   "11",
+   "13",
+   "14",
+   "16",
+   "17",
+   "18",
+   "20",
+   "22",
+   "24",
+   "26"
+  ],
+  "board": "Evolution 2.0 controller: Molex J1 (20-pin), J2 (16-pin), J3 (4-pin), stepper J5 (10-pin), J6 (8-pin accessory/RS485), battery charger J8-J9 (2-pin)",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "11S",
+    "name": "Wire 11S - 208/240 VAC Generator Voltage Sensing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 sensing winding 11s & 44s ohms: 8 kW 0.35-0.41; 9 kW 0.37-0.43; 10 kW (2019) 0.31-0.38; 11 kW 0.35-0.41; 13 kW (2019) 0.3-0.35; 13/14 kW 0.28-0.33; 15 kW 0.11-0.12; 16 kW (2019) and 16/17 kW 0.2-0.23; 20 kW 0.14-0.16; 22 kW 0.15-0.18; 24 kW 0.09-0.11.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "44S",
+    "name": "Wire 44S - 208/240 VAC Generator Voltage Sensing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 sensing winding 11s & 44s ohms: 8 kW 0.35-0.41; 9 kW 0.37-0.43; 10 kW (2019) 0.31-0.38; 11 kW 0.35-0.41; 13 kW (2019) 0.3-0.35; 13/14 kW 0.28-0.33; 15 kW 0.11-0.12; 16 kW (2019) and 16/17 kW 0.2-0.23; 20 kW 0.14-0.16; 22 kW 0.15-0.18; 24 kW 0.09-0.11.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-3",
+    "name": "Not Used - UL Required Spacing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC (60hz) 190 - 208 VAC (50Hz) Utility sensing voltage",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC (60hz) 190 - 208 VAC (50Hz) Utility sensing voltage",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-6",
+    "name": "Not Used - UL Required Spacing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "398A",
+    "name": "Wire 398A - Generator Current Sense A (+)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "399A",
+    "name": "Wire 399A - Generator Current Sense A (Gnd)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Battery + via the 7.5 A fuse circuit; 12 VDC",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-13",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5VDC) for status LEDs",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-18",
+    "code": "178",
+    "name": "Wire 178 - Not Used, Optional - 2-Wire Start (return)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-19",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is ungrounded by loss of oil pressure in the LOP switch",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "1300 Low Oil Pressure"
+    ],
+    "test": "See the LOP entry.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J1-20",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is ungrounded by contact opening in the oil temperature switch",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "See the HOT entry.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "395",
+    "name": "Wire 395 - Auxiliary Shutdown Ground",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Input",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Fuel solenoid supply voltage.",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Fuel solenoid 15-16 ohms (Table 3-15); Wire 14 to ground with controller unplugged about 16 ohms (Table 3-16, 20 kW).",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-5",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "SCR coil 155-158 ohms; SC 8 ohms (Table 3-15). Wire 56 to ground with controller unplugged about 155 ohms (Table 3-16, 20 kW).",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "4A",
+    "name": "Wire 4A - DC (+) Field Excitation (Before Field Boost Diode)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "396",
+    "name": "Wire 396 - Auxiliary Shutdown: When wire 396 is grounded",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "183",
+    "name": "Wire 183 - Not Used, Optional - 2-Wire Start (+5 VDC)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "R2",
+    "name": "Wire R2 - Model ID Resistor",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "399B",
+    "name": "Wire 399B - Generator Current Sense B1",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "398B",
+    "name": "Wire 398B - Generator Current Sense B2",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-14",
+    "code": "R3",
+    "name": "Wire R3 - Model ID Resistor (+)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-15",
+    "code": "R1",
+    "name": "Wire R1 - Model ID Resistor (-)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J2-16",
+    "code": "18",
+    "name": "Wire 18 - Reference signal - controller receives speed sensing during start and run; Ignition Shutdown - controller grounds it for shutdown",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Magneto signal: see the MAGNETO entry (Table 3-13).",
+    "errorCodes": [
+     "1501",
+     "1505",
+     "1511",
+     "1515 RPM Sensor Loss"
+    ],
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J3-1",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J3-2",
+    "code": "4",
+    "name": "Wire 4 - DC (+) Field Excitation",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J3-3",
+    "code": "2",
+    "name": "Wire 2 - DPE Winding (AC Excitation power)",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J3-4",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC Excitation power)",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-1",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-2",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-3",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-4",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-5",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-6",
+    "name": "Red wire - Stepper Power",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-7",
+    "name": "Orange wire - Stepper Motor B2 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-8",
+    "name": "Yellow wire - Stepper Motor B1 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-9",
+    "name": "Brown wire - Stepper Motor A2 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J5-10",
+    "name": "Black wire - Stepper Motor A1 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-1",
+    "name": "Accessory (5V)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-2",
+    "name": "Accessory (Gnd)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-3",
+    "name": "Accessory (+12V)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-4",
+    "name": "PORT 2 (Gnd)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-5",
+    "name": "RS485 Data (-)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-6",
+    "name": "RS485 Data (+)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-7",
+    "name": "PORT 2 Receive",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J6-8",
+    "name": "PORT 2 Transmit",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J8-J9 pin 1",
+    "code": "T1",
+    "name": "Wire T1 - 120 - 240 VAC Power for the Battery Charger",
+    "location": "J8-J9 connector on the controller (harness end)",
+    "kind": "other",
+    "test": "Battery charger feed from the transfer switch T1 fuse; 120 VAC (60 Hz) T1 to 00 with utility present.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "J8-J9 pin 2",
+    "code": "00 (60 Hz) / T2 (50 Hz)",
+    "name": "Wire 00 (60 Hz) / T2 (50 Hz) - 60 Hz - Neutral Connection for T1; 50 Hz - Line 2 for Battery Charger",
+    "location": "J8-J9 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch (LOP) - Wires 86 and 0",
+    "location": "Engine, near the oil filter (Figure 3-8 A)",
+    "kind": "switch",
+    "spec": "Evolution 2.0: normally OPEN with no oil pressure; held CLOSED by oil pressure; opens below about 10 psi and Wire 86 is ungrounded -> shutdown (p.63). Switch rating 10 psi V-twin, 5 psi single cylinder (p.123). Normal running oil pressure about 35-40 psi.",
+    "errorCodes": [
+     "1300 Low Oil Pressure"
+    ],
+    "test": "Disconnect Wires 86 and 0 from the switch. Engine off: INFINITY across the switch (continuity = replace). Start in MANUAL: CONTINUITY once pressure builds. Wire 86 to ground at the disconnected wire should read about 3.3 VDC. Digital Input 2 = Wire 86: it changes 0 -> 1 on Evolution 2.0 when pressure builds. Confirm real pressure with a gauge in the switch port.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.63, 122-123"
+   },
+   {
+    "plug": "HOT",
+    "code": "85",
+    "name": "High oil temperature switch (HOT) - Wires 85 and 0",
+    "location": "Engine (Figure 3-8 B)",
+    "kind": "switch",
+    "spec": "Evolution 2.0: normally CLOSED; opens at about 310 F (154 C), Wire 85 ungrounded -> shutdown, auto-restart when cool (p.63). Test 62 bench test prints continuity at about 299-321 F (148-160 C) and an open reading cold - that text is written for the Evolution 1.0 normally-open switch (p.123-124).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "Let the engine cool. Disconnect Wires 85 and 0 from the switch and measure across the terminals; with the harness unplugged from the controller Wire 85 to engine ground must read INFINITY. Bench: heat the tip in oil with a thermometer and watch the switch change state near its rating. Check for blocked airflow (3 ft clearance) first.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.63, 123-124"
+   },
+   {
+    "plug": "FS",
+    "code": "14",
+    "name": "Fuel solenoid (FS / FS1, FS2 if equipped) - Wire 14 (+12 V run) and Wire 0",
+    "location": "On the fuel regulator / gas inlet",
+    "kind": "other",
+    "spec": "Table 3-10 approximate: short solenoid 15 ohms, tall solenoid 30 ohms, FS1 15 ohms, FS2 30 ohms. Table 3-15: fuel solenoid(s) 15-16 ohms. Wire 14 = 12 VDC during crank and run (Digital Output 5).",
+    "test": "Test 51/52: disconnect Wire 14 at the solenoid, meter to ground, set MANUAL - battery voltage once the engine rotates. Then unplug Wires 14 and 0 and measure across the solenoid spades, compare with the table.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.113, 126"
+   },
+   {
+    "plug": "SC / SCR",
+    "code": "56",
+    "name": "Starter contactor (SC, single cylinder) or starter contactor relay (SCR, V-twin) - Wire 56 (+12 V crank only)",
+    "location": "SC: engine compartment against the firewall (single cylinder). SCR: V-twin units, relay with terminals 13, 16, 56, 0 (Figure 3-6)",
+    "kind": "other",
+    "spec": "Table 3-15: starter contactor 8 ohms; starter contactor relay 155-158 ohms (coil). Wire 56 to ground with controller unplugged (20 kW example) 155 ohms (Table 3-16).",
+    "test": "Test 68: unplug Wire 56 (and 0 on the SCR) and measure the coil. Less than 8 ohms at the SC (8-10 kW) = short; less than 155 ohms at the SCR (13-24 kW) = replace the relay.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.62, 126-127"
+   },
+   {
+    "plug": "STEPPER",
+    "name": "Throttle stepper motor (5 wires: Red, Orange, Yellow, Brown, Black)",
+    "location": "On the carburetor / mixer; plugs into J5 (10-pin, 6 wires used) on the controller",
+    "kind": "other",
+    "spec": "Table 3-11: Red to Orange, Red to Yellow, Red to Brown, Red to Black each approx. 10-11 ohms; Red to ground INFINITY.",
+    "test": "Unplug J5 and press meter leads onto the exposed connector terminals (do not probe into the connector). Also move the throttle by hand from closed to wide open - binding = replace the carburetor/mixer assembly.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.115"
+   },
+   {
+    "plug": "MAGNETO",
+    "code": "18",
+    "name": "Ignition magnetos - Wire 18 (ignition shutdown + speed signal)",
+    "location": "Next to the flywheel; V-twin has two (short and long plug wires)",
+    "kind": "other",
+    "spec": "Table 3-13 with Wire 18 disconnected, plug wire to magneto wire: V-twin OL, single cyl 10-11 k ohms; plug wire to ground: V-twin 7-14 k, single 9-16 k. Wire 18 back-probed AC: cranking V-twin 3-5 VAC / single 1.5-2 VAC; running 3600 rpm 14-20 VAC / 7-8.5 VAC; 3000 rpm 11.5-16.5 / 5.8-7 VAC. Frequency: cranking 35-45 Hz / 13-17 Hz; 3600 rpm 120 Hz / 60 Hz; 3000 rpm 100 Hz / 50 Hz. Diode test (V-twin) magneto wire + to ground 0.5-0.6 VDC, reversed OL. V-twin air gap 0.008-0.012 in.",
+    "errorCodes": [
+     "1501",
+     "1505",
+     "1511",
+     "1515 RPM Sensor Loss",
+     "1200 / 1205 Overspeed"
+    ],
+    "test": "No rpm signal in 3 s of cranking = RPM Sensor Loss. Disconnect Wire 18 and check each magneto with the table; spark tester set to 10 kV.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.64, 120"
+   },
+   {
+    "plug": "DPE 2 / 6",
+    "name": "DPE (excitation) winding - Wires 2 and 6",
+    "location": "Stator",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "test": "Unplug J3 and measure Wire 2 to Wire 6 at the harness; compare with the kW row.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.8 (Table 1-1)"
+   },
+   {
+    "plug": "ROTOR 4 / 0",
+    "name": "Rotor (field) - Wire 4 (+) and Wire 0 via brushes",
+    "location": "Alternator brush holder",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "test": "Measure across the slip rings / Wires 4 and 0 at the brushes; compare with the rotor column for the kW.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.8 (Table 1-1)"
+   }
+  ],
+  "test": "Generac diagnostic procedures name WIRE NUMBERS, not pins - use the pin table only to find the wire. Back-probe Molex connectors with tool 0J09460SRV; never front-probe. If a probe reads BAD, pull the pin and check it is not bent or loose before condemning the controller (Appendix A p.245).",
+  "notes": "Evolution 2.0 vs 1.0: the 2.0 controller has the J6 8-pin connector, and its LOP and HOT switches are the opposite polarity (2.0 switches open on fault; 1.0 switches close to ground). Model numbers 7029-7043, 7057-7075, 7140-7236, 7290-7312 are listed as Evolution 2.0 in the app's generator data (generators.js families). Addendum 10000041488 corrected an older print of this table (J1-1 11S, J1-2 44S, J1-19 86, J1-20 85); this revision already shows the corrected values. Models 7038, 7039, 7042, 7043 appear in both the 2018 and the 2019+ (Table 1-1 \"(2019)\" rows) families.",
+  "gaps": [
+   "Model ID resistor (R1/R2/R3) ohm values per kW are not tabulated in the manual.",
+   "Battery charger output spec is not given as a plug-level figure."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+    "pages": "8, 62-64, 113, 115, 120, 122-127, 245, 248-249",
+    "what": "Appendix A pin-out, component tests, stator table"
+   },
+   {
+    "file": "generac-10000041488-pinout-addendum-11s-44s-85-86.pdf",
+    "pages": "1",
+    "what": "pin-out addendum J1-1/2/19/20"
+   }
+  ]
+ },
+ {
+  "id": "generac-evolution1-aircooled",
+  "title": "Generac / Guardian air-cooled home standby with Evolution 1.0 controller (2013-2017, 8-22 kW)",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Honeywell, Siemens, Eaton badges)",
+  "models": "Guardian / Centurion 8 kW, GH-410 (Evolution 1.0): 6237, 6245, 6251, 6263, 6272, 6703; Guardian / Centurion 11 kW, GT/GTH-530 (Evolution 1.0): 6437, 6438, 6439, 6440, 6441, 6442, 6443, 6724; Guardian / Centurion 13-17 kW, GT-990 (Evolution 1.0): 6241, 6242, 6243, 6248, 6249, 6254, 6255, 6256, 6260, 6261, 6267, 6274, 6275, 6276, 6281, 6282, 6461, 6462, 6700, 6721, 6725; Guardian / Centurion 20-22 kW, GT-999 (Evolution 1.0): 6244, 6250, 6258, 6262, 6277, 6551, 6552, 6553, 6554, 6555, 6727, 6729, 6730, 6732, 6733",
+  "match": [
+   "G006237",
+   "6237",
+   "G006245",
+   "6245",
+   "G006251",
+   "6251",
+   "G006263",
+   "6263",
+   "G006272",
+   "6272",
+   "G006703",
+   "6703",
+   "G006437",
+   "6437",
+   "G006438",
+   "6438",
+   "G006439",
+   "6439",
+   "G006440",
+   "6440",
+   "G006441",
+   "6441",
+   "G006442",
+   "6442",
+   "G006443",
+   "6443",
+   "G006724",
+   "6724",
+   "G006241",
+   "6241",
+   "G006242",
+   "6242",
+   "G006243",
+   "6243",
+   "G006248",
+   "6248",
+   "G006249",
+   "6249",
+   "G006254",
+   "6254",
+   "G006255",
+   "6255",
+   "G006256",
+   "6256",
+   "G006260",
+   "6260",
+   "G006261",
+   "6261",
+   "G006267",
+   "6267",
+   "G006274",
+   "6274",
+   "G006275",
+   "6275",
+   "G006276",
+   "6276",
+   "G006281",
+   "6281",
+   "G006282",
+   "6282",
+   "G006461",
+   "6461",
+   "G006462",
+   "6462",
+   "G006700",
+   "6700",
+   "G006721",
+   "6721",
+   "G006725",
+   "6725",
+   "G006244",
+   "6244",
+   "G006250",
+   "6250",
+   "G006258",
+   "6258",
+   "G006262",
+   "6262",
+   "G006277",
+   "6277",
+   "G006551",
+   "6551",
+   "G006552",
+   "6552",
+   "G006553",
+   "6553",
+   "G006554",
+   "6554",
+   "G006555",
+   "6555",
+   "G006727",
+   "6727",
+   "G006729",
+   "6729",
+   "G006730",
+   "6730",
+   "G006732",
+   "6732",
+   "G006733",
+   "6733"
+  ],
+  "sizes": [
+   "8",
+   "11",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "20",
+   "22"
+  ],
+  "board": "Evolution 1.0 controller: Molex J1 (20-pin), J2 (16-pin), J3 (4-pin), stepper J5 (10-pin), battery charger J8-J9 (2-pin); no J6",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-2",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-3",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5VDC) for status LEDs",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-4",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-5",
+    "code": "178",
+    "name": "Wire 178 - Not Used, Optional - 2-Wire Start (return)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-6",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-7",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-8",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-9",
+    "code": "398A",
+    "name": "Wire 398A - Generator Current Sense A2",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-10",
+    "code": "399A",
+    "name": "Wire 399A - Generator Current Sense A1",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-11",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "See the HOT entry.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-12",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure in the LOP switch",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "1300 Low Oil Pressure"
+    ],
+    "test": "See the LOP entry.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-13",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-14",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay (TR1)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-15",
+    "name": "Not Used - UL Required Spacing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-16",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC Utility sensing voltage",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-17",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC Utility sensing voltage",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-18",
+    "name": "Not Used - UL Required Spacing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-19",
+    "code": "11S",
+    "name": "Wire 11S - 240 VAC Generator Voltage Sensing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 sensing winding 11s & 44s ohms: 8 kW 0.35-0.41; 9 kW 0.37-0.43; 10 kW (2019) 0.31-0.38; 11 kW 0.35-0.41; 13 kW (2019) 0.3-0.35; 13/14 kW 0.28-0.33; 15 kW 0.11-0.12; 16 kW (2019) and 16/17 kW 0.2-0.23; 20 kW 0.14-0.16; 22 kW 0.15-0.18; 24 kW 0.09-0.11.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J1-20",
+    "code": "44S",
+    "name": "Wire 44S - 240 VAC Generator Voltage Sensing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 sensing winding 11s & 44s ohms: 8 kW 0.35-0.41; 9 kW 0.37-0.43; 10 kW (2019) 0.31-0.38; 11 kW 0.35-0.41; 13 kW (2019) 0.3-0.35; 13/14 kW 0.28-0.33; 15 kW 0.11-0.12; 16 kW (2019) and 16/17 kW 0.2-0.23; 20 kW 0.14-0.16; 22 kW 0.15-0.18; 24 kW 0.09-0.11.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-1",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-2",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Output",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-3",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "SCR coil 155-158 ohms; SC 8 ohms (Table 3-15).",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-4",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Fuel solenoid supply voltage.",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Fuel solenoid 15-16 ohms (Table 3-15).",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-5",
+    "code": "4A",
+    "name": "Wire 4A - DC (+) Field Excitation (Before Field Boost Diode)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-6",
+    "code": "398A",
+    "name": "Wire 398A - Generator Current Sense B2",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-7",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: the controller grounds Wire 18 for ignition shutdown and receives a reference signal for speed control while cranking and running",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Magneto signal: see the MAGNETO entry (Table 3-13).",
+    "errorCodes": [
+     "1501",
+     "1505",
+     "1511",
+     "1515 RPM Sensor Loss"
+    ],
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-8",
+    "code": "R1",
+    "name": "Wire R1 - Model ID Resistor",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-9",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-10",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-11",
+    "code": "183",
+    "name": "Wire 183 - Not Used, Optional - 2-Wire Start",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-12",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-13",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-14",
+    "code": "399B",
+    "name": "Wire 399B - Generator Current Sense B1",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-15",
+    "code": "R3",
+    "name": "Wire R3 - Model ID Resistor",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J2-16",
+    "code": "R2",
+    "name": "Wire R2 - Model ID Resistor",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J3-1",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J3-2",
+    "code": "4",
+    "name": "Wire 4 - DC (+) Field Excitation",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J3-3",
+    "code": "2",
+    "name": "Wire 2 - DPE Winding (AC Excitation power)",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J3-4",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC Excitation power)",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-1",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-2",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-3",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-4",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-5",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-6",
+    "name": "Red wire - Stepper Power",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-7",
+    "name": "Orange wire - Stepper Motor B2 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-8",
+    "name": "Yellow wire - Stepper Motor B1 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-9",
+    "name": "Brown wire - Stepper Motor A2 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J5-10",
+    "name": "Black wire - Stepper Motor A1 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J8-J9 pin 1",
+    "code": "T1",
+    "name": "Wire T1 - 120 VAC Power for the Battery Charger",
+    "location": "J8-J9 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "J8-J9 pin 2",
+    "code": "00 / T2",
+    "name": "Wire 00 (60 Hz) - neutral for T1 (battery charger); Wire T2 on 50 Hz units (line 2)",
+    "location": "J8-J9 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch (LOP) - Wires 86 and 0",
+    "location": "Engine, near the oil filter (Figure 3-8 A)",
+    "kind": "switch",
+    "spec": "Normally CLOSED with no oil pressure; held open by oil pressure; closes below about 5 psi and grounds Wire 86 -> shutdown. Switch rating 10 psi V-twin, 5 psi single cylinder (generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.123); 0H9172 prints 8 psi for single cylinder (generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.192). Normal running oil pressure about 35-40 psi.",
+    "errorCodes": [
+     "1300 Low Oil Pressure"
+    ],
+    "test": "Disconnect Wires 86 and 0 from the switch. Engine off: CONTINUITY across the switch (INFINITY = replace). Start in MANUAL: INFINITY once pressure builds. Wire 86 to ground at the disconnected wire should read about 3.3 VDC with the controller powered. Digital Input 2 = Wire 86: it changes 1 -> 0 on Evolution 1.0 when pressure builds. Confirm real pressure with a gauge in the switch port (below about 4.5 psi stop the engine).",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.63, 122-123"
+   },
+   {
+    "plug": "HOT",
+    "code": "85",
+    "name": "High oil temperature switch (HOT) - Wires 85 and 0",
+    "location": "Engine (Figure 3-8 B)",
+    "kind": "switch",
+    "spec": "Normally OPEN; closes at about 293 F (144 C) and grounds Wire 85 -> shutdown, auto-restart when cool (p.63). Bench test: continuity at about 299-321 F (148-160 C) per Test 62 (p.124).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "Let the engine cool. Disconnect Wires 85 and 0 from the switch and measure across the terminals; with the harness unplugged from the controller Wire 85 to engine ground must read INFINITY. Bench: heat the tip in oil with a thermometer and watch the switch change state near its rating. Check for blocked airflow (3 ft clearance) first.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.63, 123-124"
+   },
+   {
+    "plug": "FS",
+    "code": "14",
+    "name": "Fuel solenoid (FS / FS1, FS2 if equipped) - Wire 14 (+12 V run) and Wire 0",
+    "location": "On the fuel regulator / gas inlet",
+    "kind": "other",
+    "spec": "Table 3-10 approximate: short solenoid 15 ohms, tall solenoid 30 ohms, FS1 15 ohms, FS2 30 ohms. Table 3-15: fuel solenoid(s) 15-16 ohms. Wire 14 = 12 VDC during crank and run (Digital Output 5).",
+    "test": "Test 51/52: disconnect Wire 14 at the solenoid, meter to ground, set MANUAL - battery voltage once the engine rotates. Then unplug Wires 14 and 0 and measure across the solenoid spades, compare with the table.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.113, 126"
+   },
+   {
+    "plug": "SC / SCR",
+    "code": "56",
+    "name": "Starter contactor (SC, single cylinder) or starter contactor relay (SCR, V-twin) - Wire 56 (+12 V crank only)",
+    "location": "SC: engine compartment against the firewall (single cylinder). SCR: V-twin units, relay with terminals 13, 16, 56, 0 (Figure 3-6)",
+    "kind": "other",
+    "spec": "Table 3-15: starter contactor 8 ohms; starter contactor relay 155-158 ohms (coil). Wire 56 to ground with controller unplugged (20 kW example) 155 ohms (Table 3-16).",
+    "test": "Test 68: unplug Wire 56 (and 0 on the SCR) and measure the coil. Less than 8 ohms at the SC (8-10 kW) = short; less than 155 ohms at the SCR (13-24 kW) = replace the relay.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.62, 126-127"
+   },
+   {
+    "plug": "STEPPER",
+    "name": "Throttle stepper motor (5 wires: Red, Orange, Yellow, Brown, Black)",
+    "location": "On the carburetor / mixer; plugs into J5 (10-pin, 6 wires used) on the controller",
+    "kind": "other",
+    "spec": "Table 3-11: Red to Orange, Red to Yellow, Red to Brown, Red to Black each approx. 10-11 ohms; Red to ground INFINITY.",
+    "test": "Unplug J5 and press meter leads onto the exposed connector terminals (do not probe into the connector). Also move the throttle by hand from closed to wide open - binding = replace the carburetor/mixer assembly.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.115"
+   },
+   {
+    "plug": "MAGNETO",
+    "code": "18",
+    "name": "Ignition magnetos - Wire 18 (ignition shutdown + speed signal)",
+    "location": "Next to the flywheel; V-twin has two (short and long plug wires)",
+    "kind": "other",
+    "spec": "Table 3-13 with Wire 18 disconnected, plug wire to magneto wire: V-twin OL, single cyl 10-11 k ohms; plug wire to ground: V-twin 7-14 k, single 9-16 k. Wire 18 back-probed AC: cranking V-twin 3-5 VAC / single 1.5-2 VAC; running 3600 rpm 14-20 VAC / 7-8.5 VAC; 3000 rpm 11.5-16.5 / 5.8-7 VAC. Frequency: cranking 35-45 Hz / 13-17 Hz; 3600 rpm 120 Hz / 60 Hz; 3000 rpm 100 Hz / 50 Hz. Diode test (V-twin) magneto wire + to ground 0.5-0.6 VDC, reversed OL. V-twin air gap 0.008-0.012 in.",
+    "errorCodes": [
+     "1501",
+     "1505",
+     "1511",
+     "1515 RPM Sensor Loss",
+     "1200 / 1205 Overspeed"
+    ],
+    "test": "No rpm signal in 3 s of cranking = RPM Sensor Loss. Disconnect Wire 18 and check each magneto with the table; spark tester set to 10 kV.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.64, 120"
+   },
+   {
+    "plug": "DPE 2 / 6",
+    "name": "DPE (excitation) winding - Wires 2 and 6",
+    "location": "Stator",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "test": "Unplug J3 and measure Wire 2 to Wire 6 at the harness; compare with the kW row.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.8 (Table 1-1)"
+   },
+   {
+    "plug": "ROTOR 4 / 0",
+    "name": "Rotor (field) - Wire 4 (+) and Wire 0 via brushes",
+    "location": "Alternator brush holder",
+    "kind": "other",
+    "spec": "Table 1-1 (new windings at 68 F, neutrals connected), excitation (DPE) winding across 2 & 6 / rotor ohms: 8 kW 0.55-0.64 / 4.96-5.76; 9 kW 1-1.16 / 6.30-7.32; 10 kW (2019) 0.9-1.05 / 6.82-7.93; 11 kW 0.55-0.64 / 4.97-5.76; 13 kW (2019) 0.84-0.98 / 7.09-8.23; 13/14 kW 0.85-0.99 / 7.22-8.39; 15 kW 0.71-0.82 / 8.39-9.72; 16 kW (2019) 0.71-0.82 / 8.37-9.72; 16/17 kW 0.71-0.82 / 8.37-9.72; 20 kW 0.61-0.71 / 9.54-11.10; 22 kW 0.64-0.74 / 10.25-11.92; 24 kW 0.71-0.82 / 9.99-11.61.",
+    "test": "Measure across the slip rings / Wires 4 and 0 at the brushes; compare with the rotor column for the kW.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.8 (Table 1-1)"
+   }
+  ],
+  "test": "Diagnostic procedures name wire numbers only; use this table to find the pin. Back-probe Molex connectors with tool 0J09460SRV; never front-probe. Evolution 1.0 LOP and HOT switches CLOSE to ground on a fault (Wire 86 / 85 grounded).",
+  "notes": "Pin map is printed identically in the Evolution/Nexus manual 0H9172 and in the Evolution 1.0/2.0 manual. Evolution 1.0 has no J6 connector. Model numbers 62xx/64xx/65xx/67xx are listed as Evolution 1.0 (Sync 1.0/2.0) in the app's generator data.",
+  "gaps": [
+   "Model ID resistor (R1/R2/R3) ohm values not tabulated."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+    "pages": "8, 62-64, 113, 115, 120, 122-127, 250-251",
+    "what": "Appendix A pin-out, component tests"
+   },
+   {
+    "file": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf",
+    "pages": "250-251",
+    "what": "same Evolution 1.0 pin-out"
+   }
+  ]
+ },
+ {
+  "id": "generac-evolution2-aircooled-3ph",
+  "title": "Generac / Guardian 20 kW 208 V 3-phase air-cooled with Evolution 2.0 controller",
+  "side": "generator",
+  "brand": "Generac (Guardian)",
+  "models": "Guardian 20 kW 208V 3-Phase (Evolution 2.0): 7077",
+  "match": [
+   "G007077",
+   "7077"
+  ],
+  "sizes": [
+   "20"
+  ],
+  "board": "Evolution 2.0 controller (3-phase): J1, J2, J3, J5, J6, J8-J9",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "S15A",
+    "name": "Wire S15A - 208/240 VAC Generator Voltage Sensing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "S16A",
+    "name": "Wire S16A - 208/240 VAC Generator Voltage Sensing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-3",
+    "name": "Not Used - UL Required Spacing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "N1",
+    "name": "Wire N1 - 208 VAC (60hz) 190 - 208 VAC (50Hz) Utility sensing voltage",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "N2",
+    "name": "Wire N2 - 208 VAC (60hz) 190 - 208 VAC (50Hz) Utility sensing voltage",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-6",
+    "name": "Not Used - UL Required Spacing",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "398A",
+    "name": "Wire 398A - Generator Current Sense A (+)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "399A",
+    "name": "Wire 399A - Generator Current Sense A (Gnd)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-13",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5VDC) for status LEDs",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-18",
+    "code": "178",
+    "name": "Wire 178 - Not Used, Optional - 2-Wire Start (return)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J1-19",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown (Wire 86 ungrounded by loss of oil pressure in the LOP switch)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "switch",
+    "spec": "This page prints wire 85 at J1-19 and 86 at J1-20, but the J1-19 function text is the low oil pressure (Wire 86) input and the J1-20 text is the high temperature (Wire 85) input. The single-phase Evolution 2.0 table prints J1-19 = 86 and J1-20 = 85, and Generac addendum 10000041488 made the same 85/86 correction to an earlier single-phase print. Confirm the wire number on the harness before testing.",
+    "errorCodes": [
+     "1300 Low Oil Pressure"
+    ],
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A); generac-10000041488-pinout-addendum-11s-44s-85-86.pdf p.1"
+   },
+   {
+    "plug": "J1-20",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown (Wire 85 ungrounded by contact opening in the oil temperature switch)",
+    "location": "J1 connector on the controller (harness end)",
+    "kind": "switch",
+    "spec": "Printed as 86 on this page; the function text is the Wire 85 high-temperature input (85 in the single-phase Evolution 2.0 table). Confirm the wire number on the harness.",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A); generac-10000041488-pinout-addendum-11s-44s-85-86.pdf p.1"
+   },
+   {
+    "plug": "J2-1",
+    "code": "395",
+    "name": "Wire 395 - Auxiliary Shutdown Ground",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Input",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Fuel solenoid supply voltage.",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Fuel solenoid 15-16 ohms (Table 3-15); Wire 14 to ground with controller unplugged about 16 ohms (Table 3-16, 20 kW).",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-5",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "SCR coil 155-158 ohms; SC 8 ohms (Table 3-15). Wire 56 to ground with controller unplugged about 155 ohms (Table 3-16, 20 kW).",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "Not Used",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "4A",
+    "name": "Wire 4A - DC (+) Field Excitation (Before Field Boost Diode)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "396",
+    "name": "Wire 396 - Auxiliary Shutdown: When wire 396 is grounded",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "183",
+    "name": "Wire 183 - Not Used, Optional - 2-Wire Start (+5 VDC)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "R2",
+    "name": "Wire R2 - Model ID Resistor",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Printed R3 on p.107; addendum 10000014636 (page 113) corrects J2-11 to R2.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A); generac-10000014636-pinout-addendum-r1-r2-r3.pdf p.1"
+   },
+   {
+    "plug": "J2-12",
+    "code": "399B",
+    "name": "Wire 399B - Generator Current Sense B1",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "398B",
+    "name": "Wire 398B - Generator Current Sense B2",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J2-14",
+    "code": "R3",
+    "name": "Wire R3 - Model ID Resistor (+)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Printed R1 on p.107; addendum 10000014636 (page 113) corrects J2-14 to R3.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A); generac-10000014636-pinout-addendum-r1-r2-r3.pdf p.1"
+   },
+   {
+    "plug": "J2-15",
+    "code": "R1",
+    "name": "Wire R1 - Model ID Resistor (-)",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Printed R2 on p.107; addendum 10000014636 (page 113) corrects J2-15 to R1.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A); generac-10000014636-pinout-addendum-r1-r2-r3.pdf p.1"
+   },
+   {
+    "plug": "J2-16",
+    "code": "18",
+    "name": "Wire 18 - Reference signal - controller receives speed sensing during start and run; Ignition Shutdown - controller grounds it for shutdown",
+    "location": "J2 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Magneto signal: see the MAGNETO entry (Table 3-13).",
+    "errorCodes": [
+     "1501",
+     "1505",
+     "1511",
+     "1515 RPM Sensor Loss"
+    ],
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J3-1",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J3-2",
+    "code": "4",
+    "name": "Wire 4 - DC (+) Field Excitation",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J3-3",
+    "code": "2A",
+    "name": "Wire 2A - DPE Winding (AC Excitation power)",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J3-4",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC Excitation power)",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-1",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-2",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-3",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-4",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-5",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-6",
+    "name": "Red wire - Stepper Power",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-7",
+    "name": "Orange wire - Stepper Motor B2 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-8",
+    "name": "Yellow wire - Stepper Motor B1 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-9",
+    "name": "Brown wire - Stepper Motor A2 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J5-10",
+    "name": "Black wire - Stepper Motor A1 Coil",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 3-11).",
+    "test": "Unplug and measure Red to this wire at the stepper connector terminals.",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-1",
+    "name": "Accessory (5V)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-2",
+    "name": "Accessory (Gnd)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-3",
+    "name": "Accessory (+12V)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-4",
+    "name": "PORT 2 (Gnd)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-5",
+    "name": "RS485 Data (-)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-6",
+    "name": "RS485 Data (+)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-7",
+    "name": "PORT 2 Receive",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J6-8",
+    "name": "PORT 2 Transmit",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J8-J9 pin 1",
+    "code": "T1",
+    "name": "Wire T1 - 120 - 240 VAC Power for the Battery Charger",
+    "location": "J8-J9 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "J8-J9 pin 2",
+    "code": "00",
+    "name": "Wire 00 - Neutral Connection for T1 (battery charger)",
+    "location": "J8-J9 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf p.106-107 (Appendix A)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch (LOP) - Wires 86 and 0",
+    "location": "Engine, near the oil filter (Figure 3-8 A)",
+    "kind": "switch",
+    "spec": "Evolution 2.0: normally OPEN with no oil pressure; held CLOSED by oil pressure; opens below about 10 psi and Wire 86 is ungrounded -> shutdown (p.63). Switch rating 10 psi V-twin, 5 psi single cylinder (p.123). Normal running oil pressure about 35-40 psi.",
+    "errorCodes": [
+     "1300 Low Oil Pressure"
+    ],
+    "test": "Disconnect Wires 86 and 0 from the switch. Engine off: INFINITY across the switch (continuity = replace). Start in MANUAL: CONTINUITY once pressure builds. Wire 86 to ground at the disconnected wire should read about 3.3 VDC. Digital Input 2 = Wire 86: it changes 0 -> 1 on Evolution 2.0 when pressure builds. Confirm real pressure with a gauge in the switch port.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf (single-phase manual, same engine parts) p.63, 122-123"
+   },
+   {
+    "plug": "HOT",
+    "code": "85",
+    "name": "High oil temperature switch (HOT) - Wires 85 and 0",
+    "location": "Engine (Figure 3-8 B)",
+    "kind": "switch",
+    "spec": "Evolution 2.0: normally CLOSED; opens at about 310 F (154 C), Wire 85 ungrounded -> shutdown, auto-restart when cool (p.63). Test 62 bench test prints continuity at about 299-321 F (148-160 C) and an open reading cold - that text is written for the Evolution 1.0 normally-open switch (p.123-124).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "Let the engine cool. Disconnect Wires 85 and 0 from the switch and measure across the terminals; with the harness unplugged from the controller Wire 85 to engine ground must read INFINITY. Bench: heat the tip in oil with a thermometer and watch the switch change state near its rating. Check for blocked airflow (3 ft clearance) first.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf (single-phase manual, same engine parts) p.63, 123-124"
+   },
+   {
+    "plug": "FS",
+    "code": "14",
+    "name": "Fuel solenoid (FS / FS1, FS2 if equipped) - Wire 14 (+12 V run) and Wire 0",
+    "location": "On the fuel regulator / gas inlet",
+    "kind": "other",
+    "spec": "Table 3-10 approximate: short solenoid 15 ohms, tall solenoid 30 ohms, FS1 15 ohms, FS2 30 ohms. Table 3-15: fuel solenoid(s) 15-16 ohms. Wire 14 = 12 VDC during crank and run (Digital Output 5).",
+    "test": "Test 51/52: disconnect Wire 14 at the solenoid, meter to ground, set MANUAL - battery voltage once the engine rotates. Then unplug Wires 14 and 0 and measure across the solenoid spades, compare with the table.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf (single-phase manual, same engine parts) p.113, 126"
+   },
+   {
+    "plug": "SC / SCR",
+    "code": "56",
+    "name": "Starter contactor (SC, single cylinder) or starter contactor relay (SCR, V-twin) - Wire 56 (+12 V crank only)",
+    "location": "SC: engine compartment against the firewall (single cylinder). SCR: V-twin units, relay with terminals 13, 16, 56, 0 (Figure 3-6)",
+    "kind": "other",
+    "spec": "Table 3-15: starter contactor 8 ohms; starter contactor relay 155-158 ohms (coil). Wire 56 to ground with controller unplugged (20 kW example) 155 ohms (Table 3-16).",
+    "test": "Test 68: unplug Wire 56 (and 0 on the SCR) and measure the coil. Less than 8 ohms at the SC (8-10 kW) = short; less than 155 ohms at the SCR (13-24 kW) = replace the relay.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf (single-phase manual, same engine parts) p.62, 126-127"
+   },
+   {
+    "plug": "STEPPER",
+    "name": "Throttle stepper motor (5 wires: Red, Orange, Yellow, Brown, Black)",
+    "location": "On the carburetor / mixer; plugs into J5 (10-pin, 6 wires used) on the controller",
+    "kind": "other",
+    "spec": "Table 3-11: Red to Orange, Red to Yellow, Red to Brown, Red to Black each approx. 10-11 ohms; Red to ground INFINITY.",
+    "test": "Unplug J5 and press meter leads onto the exposed connector terminals (do not probe into the connector). Also move the throttle by hand from closed to wide open - binding = replace the carburetor/mixer assembly.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf (single-phase manual, same engine parts) p.115"
+   },
+   {
+    "plug": "MAGNETO",
+    "code": "18",
+    "name": "Ignition magnetos - Wire 18 (ignition shutdown + speed signal)",
+    "location": "Next to the flywheel; V-twin has two (short and long plug wires)",
+    "kind": "other",
+    "spec": "Table 3-13 with Wire 18 disconnected, plug wire to magneto wire: V-twin OL, single cyl 10-11 k ohms; plug wire to ground: V-twin 7-14 k, single 9-16 k. Wire 18 back-probed AC: cranking V-twin 3-5 VAC / single 1.5-2 VAC; running 3600 rpm 14-20 VAC / 7-8.5 VAC; 3000 rpm 11.5-16.5 / 5.8-7 VAC. Frequency: cranking 35-45 Hz / 13-17 Hz; 3600 rpm 120 Hz / 60 Hz; 3000 rpm 100 Hz / 50 Hz. Diode test (V-twin) magneto wire + to ground 0.5-0.6 VDC, reversed OL. V-twin air gap 0.008-0.012 in.",
+    "errorCodes": [
+     "1501",
+     "1505",
+     "1511",
+     "1515 RPM Sensor Loss",
+     "1200 / 1205 Overspeed"
+    ],
+    "test": "No rpm signal in 3 s of cranking = RPM Sensor Loss. Disconnect Wire 18 and check each magneto with the table; spark tester set to 10 kV.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf (single-phase manual, same engine parts) p.64, 120"
+   }
+  ],
+  "test": "Use wire numbers; back-probe Molex connectors. Generator sensing on this model is S15A / S16A (3-phase).",
+  "notes": "Two pin-out addenda apply to this manual's pages 112-113 (85/86 and R1/R2/R3 swaps) - the corrected values are used here and the printed values are noted on each entry.",
+  "gaps": [
+   "3-phase stator/rotor resistance values not transcribed here (see the manual Section 2.3)."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-evo2-3phase-diagnostic-repair-manual.pdf",
+    "pages": "106-107",
+    "what": "Appendix A pin-out"
+   },
+   {
+    "file": "generac-10000014636-pinout-addendum-r1-r2-r3.pdf",
+    "pages": "1",
+    "what": "R1/R2/R3 correction"
+   },
+   {
+    "file": "generac-10000041488-pinout-addendum-11s-44s-85-86.pdf",
+    "pages": "1",
+    "what": "85/86 correction"
+   },
+   {
+    "file": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf",
+    "pages": "63, 113, 115, 120-127",
+    "what": "component tests"
+   }
+  ]
+ },
+ {
+  "id": "generac-nexus-aircooled-0h6680ab",
+  "title": "Generac / Guardian air-cooled Nexus controller, panel 0H6680 (A) or (B) - Amp-Seal J4 / J5",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Siemens, Honeywell, Eaton badges)",
+  "models": "Guardian / Centurion / Siemens 8 kW, GH-410 (Nexus): 5870, 5882, 5908; Centurion / Guardian 10 kW, GT-530 (Nexus): 5892; Guardian / Centurion / Honeywell 12-17 kW, GT-990 (Nexus): 5873, 5874, 5885, 5893, 5895, 6054; Guardian / Centurion / Eaton 20 kW, GT-999 (Nexus): 5875, 5887, 5896, 5924",
+  "match": [
+   "G005870",
+   "5870",
+   "G005882",
+   "5882",
+   "G005908",
+   "5908",
+   "G005892",
+   "5892",
+   "G005873",
+   "5873",
+   "G005874",
+   "5874",
+   "G005885",
+   "5885",
+   "G005893",
+   "5893",
+   "G005895",
+   "5895",
+   "G006054",
+   "6054",
+   "G005875",
+   "5875",
+   "G005887",
+   "5887",
+   "G005896",
+   "5896",
+   "G005924",
+   "5924",
+   "G0058700",
+   "G0058820",
+   "G0059080",
+   "G0058920",
+   "G0058730",
+   "G0058740",
+   "G0058850",
+   "G0058930",
+   "G0058950",
+   "G0060540",
+   "G0058750",
+   "G0058870",
+   "G0058960",
+   "G0059240"
+  ],
+  "sizes": [
+   "8",
+   "10",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "20"
+  ],
+  "board": "Nexus panel 0H6680 A/B: J4 23-pin Amp-Seal, J5 14-pin Amp-Seal, stepper J3 (6-pin), remote annunciator socket",
+  "sensors": [
+   {
+    "plug": "J3-1",
+    "name": "Black wire - Stepper Motor A1 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J3-2",
+    "name": "Brown wire - Stepper Motor A2 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J3-3",
+    "name": "Yellow wire - Stepper Motor B1 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J3-4",
+    "name": "Orange wire - Stepper Motor B2 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J3-5",
+    "name": "Red wire - Stepper Power",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J3-6",
+    "code": "Empty",
+    "name": "Wire Empty - function cell blank in the manual table",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-1",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Choke solenoid 3-4 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-2",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC)",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-3",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-4",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-5",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-6",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-7",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "High Temperature"
+    ],
+    "test": "See the HOT entry.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-8",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5VDC) for status LED's",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-9",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and choke solenoid operation on V-Twin Models",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Fuel solenoid 15-16 ohms; choke solenoid 3-4 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-10",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-11",
+    "name": "Not used",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-12",
+    "name": "Not used",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-13",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure in the LOP switch",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "Low Oil Pressure"
+    ],
+    "test": "See the LOP entry.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-14",
+    "name": "Not used",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-15",
+    "code": "JMP 1",
+    "name": "Wire JMP 1 - Installed in series with a resistor to identify the kW to the controller",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-16",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: The controller grounds Wire 18 for ignition shutdown and receives a reference signal for speed control while cranking and running",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-17",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "SC 8 ohms; SCR 155-158 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-18",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Output",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-19",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay (TR1)",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-20",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-21",
+    "name": "Not used",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-22",
+    "name": "Not used",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J4-23",
+    "code": "JMP 1",
+    "name": "Wire JMP 1 - Installed in series with a resistor to identify the kW to the controller",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-1",
+    "code": "N1",
+    "name": "Wire N1 - utility sensing (function cell blank in this table; N1/N2 = 240 VAC utility sensing)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-2",
+    "code": "T1",
+    "name": "Wire T1 - battery charger 120 VAC supply (function cell blank in this table; T1 = 120 VAC battery charger power on the other Nexus panels)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-3",
+    "code": "00",
+    "name": "Wire 00 - neutral for T1 battery charger (function cell blank in this table)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-4",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-5",
+    "code": "2",
+    "name": "Wire 2 - DPE Winding (AC excitation power)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-6",
+    "code": "N2",
+    "name": "Wire N2 - 240VAC Utility sensing voltage",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-7",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-8",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-9",
+    "name": "Not Used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-10",
+    "code": "44",
+    "name": "Wire 44 - 240VAC Generator voltage sensing",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 sensing winding 11 & 44 ohms: 8 kW 0.378-0.4392; 10 kW 0.425-0.4938; 13 kW 0.2484-0.2887; 14 kW 0.2484-0.2888; 15/16/17 kW 0.197-0.229; 20 kW 0.137-0.1594.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-11",
+    "code": "11",
+    "name": "Wire 11 - 240VAC Generator voltage sensing",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 sensing winding 11 & 44 ohms: 8 kW 0.378-0.4392; 10 kW 0.425-0.4938; 13 kW 0.2484-0.2887; 14 kW 0.2484-0.2888; 15/16/17 kW 0.197-0.229; 20 kW 0.137-0.1594.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-12",
+    "code": "0",
+    "name": "Wire 0 - DC Field excitation ground",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-13",
+    "code": "4",
+    "name": "Wire 4 - DC (+) Field excitation voltage",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "J5-14",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC excitation power)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.252-253 (Figure A-7, panel 0H6680 A or B)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch (LOP) - Wires 86 and 0",
+    "location": "Engine, near the oil filter (Figure 4-19 A)",
+    "kind": "switch",
+    "spec": "Normally CLOSED with no oil pressure; held open by oil pressure; Wire 86 grounded on loss of oil pressure -> shutdown. Rated 10 psi V-twin, 8 psi single cylinder (p.192). Normal running pressure about 35-40 psi.",
+    "test": "Disconnect Wires 86 and 0. Engine off: CONTINUITY across the switch (INFINITY = replace). In MANUAL: INFINITY once pressure builds. Wire 86 to ground (disconnected) about 3.3 VDC. Check real pressure with a gauge.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.133, 192"
+   },
+   {
+    "plug": "HOT",
+    "code": "85",
+    "name": "High oil temperature switch - Wires 85 and 0",
+    "location": "Engine (Figure 4-19 B)",
+    "kind": "switch",
+    "spec": "Normally OPEN; contacts close at 293 F and ground Wire 85 -> shutdown (p.192). Bench test: CONTINUITY at about 283-305 F (139-151 C) (p.193).",
+    "test": "Engine cool: Wires 85 and 0 off, switch reads INFINITY. With the controller unplugged Wire 85 to ground must be INFINITY. Bench: heat the tip in oil with a thermometer.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.192-193"
+   },
+   {
+    "plug": "CS",
+    "code": "90",
+    "name": "Choke solenoid (Nexus only) - Wire 90 (switched to ground by the controller) and Wire 14 (Wire 56 on 8 kW)",
+    "location": "Air box (990/999 cc), divider-panel air inlet hose (530 cc), behind the air box (410 cc); 2-pin connector C3 / CS",
+    "kind": "other",
+    "spec": "Choke solenoid 3-4 ohms (Table 4-14). Figure 4-102 C3 connector: pins 1/2 carry Wires 90 and 14; Figure 4-103 (8 kW) CS connector: Wires 90 and 56.",
+    "test": "Unplug the choke connector and measure pin 1 to pin 2 on the male (solenoid) side; less than 3 ohms = replace the solenoid.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.134, 196-197"
+   },
+   {
+    "plug": "FS",
+    "code": "14",
+    "name": "Fuel solenoid (FS, FS2 if equipped) - Wire 14 and Wire 0",
+    "location": "Fuel regulator inlet",
+    "kind": "other",
+    "spec": "Fuel solenoid(s) 15-16 ohms (Table 4-14). Test 67: FS less than 15 ohms = replace; FS2 less than 30 ohms = replace.",
+    "test": "Disconnect Wire 14 at the solenoid and measure the solenoid terminal to ground.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.196-197"
+   },
+   {
+    "plug": "SC / SCR",
+    "code": "56",
+    "name": "Starter contactor (8 kW single cylinder) / starter contactor relay (V-twin) - Wire 56",
+    "location": "SC on the firewall (single cylinder); SCR on V-twins",
+    "kind": "other",
+    "spec": "Starter contactor 8 ohms; starter contactor relay 155-158 ohms (Table 4-14).",
+    "test": "Test 68: less than 8 ohms at the SC = short; less than 155 ohms at the SCR coil (Wires 56 and 0) = replace the relay.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.122, 196-197"
+   },
+   {
+    "plug": "STEPPER",
+    "name": "Throttle stepper motor (Red, Orange, Yellow, Brown, Black) - plugs into J3",
+    "location": "Carburetor / throttle body",
+    "kind": "other",
+    "spec": "Table 2-14: Red to Orange, Yellow, Brown and Black each approx. 10-11 ohms; Red to ground INFINITY.",
+    "test": "Press meter leads onto the exposed connector terminals (do not probe into the connector).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.60"
+   },
+   {
+    "plug": "MAGNETO",
+    "code": "18",
+    "name": "Ignition magnetos - Wire 18",
+    "location": "Flywheel; Nexus V-twin Wire 18 is on a stud above the oil cooler",
+    "kind": "other",
+    "spec": "Table 4-13 with Wire 18 disconnected - plug wire to ground: V-twin 7-14 k, single 9-16 k. Second print of Table 4-13 (same page): magneto wire to ground V-twin 1.5-2.5 M / single 0.5-1.0; ground to magneto wire OL / 3.0; magneto wire to plug wire 1.5-2.5 M / 10-11 K; plug wire to magneto wire OL / 10-11 K. Diode test V-twin magneto wire to ground 0.5-0.6 VDC, reversed OL. Wire 18 AC back-probed: cranking 3-5 VAC V-twin / 1.5-2 VAC single; 3600 rpm 14-20 / 7-8.5 VAC. Frequency: cranking 35-45 / 13-17 Hz; 3600 rpm 120 / 60 Hz.",
+    "test": "Disconnect Wire 18 (bullet connector, or the stud on Nexus V-twins) and compare with the table. Replace V-twin magnetos in pairs.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.189"
+   },
+   {
+    "plug": "DPE 2 / 6",
+    "name": "DPE (excitation) winding - Wires 2 and 6",
+    "location": "Stator",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "test": "Measure Wire 2 to Wire 6 at the disconnected harness.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.15 (Table 1-9)"
+   },
+   {
+    "plug": "ROTOR 4 / 0",
+    "name": "Rotor - Wire 4 (+) and Wire 0 via brushes",
+    "location": "Brush holder",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "test": "Measure across the brushes / slip rings.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.15 (Table 1-9)"
+   }
+  ],
+  "test": "Generac tests name wire numbers only - Appendix A says use the wire numbers and disregard J references in the procedures. Back-probe; never front-probe Molex connectors. Nexus LOP and HOT switches ground Wire 86 / 85 on a fault.",
+  "notes": "Three Nexus panel styles share these model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Panel A vs B: rated no-load voltage 250-254 V (older 0H6680A) vs 240-244 V (newer 0H6680B) per Table 1-8 p.14. SIB11-26-NAC: 0H6680A/B/D panels are on models with a -0 revision (last digit of the item number, e.g. G0058740 = 5874-0).",
+  "gaps": [
+   "JMP 1 kW-ID resistor values not tabulated.",
+   "J5-1/2/3 function cells are blank in the manual table."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf",
+    "pages": "14-15, 60, 122, 133-134, 189, 192-193, 196-197, 252-253",
+    "what": "Appendix A pin-out, component tests"
+   },
+   {
+    "file": "generac-bulletin-sib11-26-nac-air-cooled-nexus-panel-replacement-assembly-number.pdf",
+    "pages": "1",
+    "what": "Nexus panel vs model revision"
+   }
+  ]
+ },
+ {
+  "id": "generac-nexus-aircooled-0h6680d",
+  "title": "Generac / Guardian air-cooled Nexus controller, panel 0H6680 (D) - Molex J5 / J8 / J9 / J10",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Siemens, Honeywell, Eaton badges)",
+  "models": "Guardian / Centurion / Siemens 8 kW, GH-410 (Nexus): 5870, 5882, 5908; Centurion / Guardian 10 kW, GT-530 (Nexus): 5892; Guardian / Centurion / Honeywell 12-17 kW, GT-990 (Nexus): 5873, 5874, 5885, 5893, 5895, 6054; Guardian / Centurion / Eaton 20 kW, GT-999 (Nexus): 5875, 5887, 5896, 5924",
+  "match": [
+   "G005870",
+   "5870",
+   "G005882",
+   "5882",
+   "G005908",
+   "5908",
+   "G005892",
+   "5892",
+   "G005873",
+   "5873",
+   "G005874",
+   "5874",
+   "G005885",
+   "5885",
+   "G005893",
+   "5893",
+   "G005895",
+   "5895",
+   "G006054",
+   "6054",
+   "G005875",
+   "5875",
+   "G005887",
+   "5887",
+   "G005896",
+   "5896",
+   "G005924",
+   "5924",
+   "G0058700",
+   "G0058820",
+   "G0059080",
+   "G0058920",
+   "G0058730",
+   "G0058740",
+   "G0058850",
+   "G0058930",
+   "G0058950",
+   "G0060540",
+   "G0058750",
+   "G0058870",
+   "G0058960",
+   "G0059240"
+  ],
+  "sizes": [
+   "8",
+   "10",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "20"
+  ],
+  "board": "Nexus panel 0H6680 D: J5 5-pin, J8 18-pin, J9 4-pin, J10 6-pin (2 used), stepper J3, battery charger J11-J12, remote annunciator socket",
+  "sensors": [
+   {
+    "plug": "J3-1",
+    "name": "Black wire - Stepper Motor A1 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J3-2",
+    "name": "Brown wire - Stepper Motor A2 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J3-3",
+    "name": "Yellow wire - Stepper Motor B1 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J3-4",
+    "name": "Orange wire - Stepper Motor B2 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J3-5",
+    "name": "Red wire - Stepper Power",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J3-6",
+    "code": "Empty",
+    "name": "Wire Empty - function cell blank in the manual table",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J5-1",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Output",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J5-2",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay (TR1)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J5-3",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J5-4",
+    "name": "Not used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J5-5",
+    "name": "Not used",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-1",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5VDC) for status LED's",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-2",
+    "code": "LMP 1",
+    "name": "Wire LMP 1 - Installed in series with a resistor to identify the kW to the controller",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-3",
+    "name": "Wire number misprinted (85) - Printed function: Low oil pressure shutdown (Wire 86 grounded by loss of oil pressure in the LOP switch)",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "switch",
+    "spec": "Manual error: the table prints wire 85 at J8-3 with the LOW OIL PRESSURE text, and wire 85 again at J8-10 with the high-temperature text. The LOP input is wire 86; J8-3 is most likely wire 86 but the manual does not say so. Read the wire number on the harness before testing.",
+    "test": "Identify the wire number printed on the harness at J8-3 before using it.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-4",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC)",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-5",
+    "code": "JMP 1",
+    "name": "Wire JMP 1 - Installed in series with a resistor to identify the kW to the controller",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-6",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "SC 8 ohms; SCR 155-158 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-7",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and choke solenoid operation on V-Twin Models",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Fuel solenoid 15-16 ohms; choke solenoid 3-4 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-8",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: The controller grounds Wire 18 for ignition shutdown and receives a reference signal for speed control while cranking and running",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-9",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Choke solenoid 3-4 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-10",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "switch",
+    "errorCodes": [
+     "High Temperature"
+    ],
+    "test": "See the HOT entry.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-11",
+    "name": "Not used",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-12",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-13",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-14",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-15",
+    "name": "Not used",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-16",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-17",
+    "name": "Not used",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J8-18",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J8 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J9-1",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC excitation power)",
+    "location": "J9 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J9-2",
+    "code": "11",
+    "name": "Wire 11 - 240 VAC Generator voltage sensing",
+    "location": "J9 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 sensing winding 11 & 44 ohms: 8 kW 0.378-0.4392; 10 kW 0.425-0.4938; 13 kW 0.2484-0.2887; 14 kW 0.2484-0.2888; 15/16/17 kW 0.197-0.229; 20 kW 0.137-0.1594.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J9-3",
+    "code": "2",
+    "name": "Wire 2 - DPE Winding (AC excitation power)",
+    "location": "J9 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J9-4",
+    "code": "44",
+    "name": "Wire 44 - 240 VAC Generator voltage sensing",
+    "location": "J9 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 sensing winding 11 & 44 ohms: 8 kW 0.378-0.4392; 10 kW 0.425-0.4938; 13 kW 0.2484-0.2887; 14 kW 0.2484-0.2888; 15/16/17 kW 0.197-0.229; 20 kW 0.137-0.1594.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J10-1",
+    "code": "T1",
+    "name": "Wire T1 - 120 VAC power for the battery charger",
+    "location": "J10 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "J10-2",
+    "code": "00",
+    "name": "Wire 00 - Neutral Connection for T1 (battery charger)",
+    "location": "J10 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.254-255 (Figure A-8, panel 0H6680 D)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch (LOP) - Wires 86 and 0",
+    "location": "Engine, near the oil filter (Figure 4-19 A)",
+    "kind": "switch",
+    "spec": "Normally CLOSED with no oil pressure; held open by oil pressure; Wire 86 grounded on loss of oil pressure -> shutdown. Rated 10 psi V-twin, 8 psi single cylinder (p.192). Normal running pressure about 35-40 psi.",
+    "test": "Disconnect Wires 86 and 0. Engine off: CONTINUITY across the switch (INFINITY = replace). In MANUAL: INFINITY once pressure builds. Wire 86 to ground (disconnected) about 3.3 VDC. Check real pressure with a gauge.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.133, 192"
+   },
+   {
+    "plug": "HOT",
+    "code": "85",
+    "name": "High oil temperature switch - Wires 85 and 0",
+    "location": "Engine (Figure 4-19 B)",
+    "kind": "switch",
+    "spec": "Normally OPEN; contacts close at 293 F and ground Wire 85 -> shutdown (p.192). Bench test: CONTINUITY at about 283-305 F (139-151 C) (p.193).",
+    "test": "Engine cool: Wires 85 and 0 off, switch reads INFINITY. With the controller unplugged Wire 85 to ground must be INFINITY. Bench: heat the tip in oil with a thermometer.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.192-193"
+   },
+   {
+    "plug": "CS",
+    "code": "90",
+    "name": "Choke solenoid (Nexus only) - Wire 90 (switched to ground by the controller) and Wire 14 (Wire 56 on 8 kW)",
+    "location": "Air box (990/999 cc), divider-panel air inlet hose (530 cc), behind the air box (410 cc); 2-pin connector C3 / CS",
+    "kind": "other",
+    "spec": "Choke solenoid 3-4 ohms (Table 4-14). Figure 4-102 C3 connector: pins 1/2 carry Wires 90 and 14; Figure 4-103 (8 kW) CS connector: Wires 90 and 56.",
+    "test": "Unplug the choke connector and measure pin 1 to pin 2 on the male (solenoid) side; less than 3 ohms = replace the solenoid.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.134, 196-197"
+   },
+   {
+    "plug": "FS",
+    "code": "14",
+    "name": "Fuel solenoid (FS, FS2 if equipped) - Wire 14 and Wire 0",
+    "location": "Fuel regulator inlet",
+    "kind": "other",
+    "spec": "Fuel solenoid(s) 15-16 ohms (Table 4-14). Test 67: FS less than 15 ohms = replace; FS2 less than 30 ohms = replace.",
+    "test": "Disconnect Wire 14 at the solenoid and measure the solenoid terminal to ground.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.196-197"
+   },
+   {
+    "plug": "SC / SCR",
+    "code": "56",
+    "name": "Starter contactor (8 kW single cylinder) / starter contactor relay (V-twin) - Wire 56",
+    "location": "SC on the firewall (single cylinder); SCR on V-twins",
+    "kind": "other",
+    "spec": "Starter contactor 8 ohms; starter contactor relay 155-158 ohms (Table 4-14).",
+    "test": "Test 68: less than 8 ohms at the SC = short; less than 155 ohms at the SCR coil (Wires 56 and 0) = replace the relay.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.122, 196-197"
+   },
+   {
+    "plug": "STEPPER",
+    "name": "Throttle stepper motor (Red, Orange, Yellow, Brown, Black) - plugs into J3",
+    "location": "Carburetor / throttle body",
+    "kind": "other",
+    "spec": "Table 2-14: Red to Orange, Yellow, Brown and Black each approx. 10-11 ohms; Red to ground INFINITY.",
+    "test": "Press meter leads onto the exposed connector terminals (do not probe into the connector).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.60"
+   },
+   {
+    "plug": "MAGNETO",
+    "code": "18",
+    "name": "Ignition magnetos - Wire 18",
+    "location": "Flywheel; Nexus V-twin Wire 18 is on a stud above the oil cooler",
+    "kind": "other",
+    "spec": "Table 4-13 with Wire 18 disconnected - plug wire to ground: V-twin 7-14 k, single 9-16 k. Second print of Table 4-13 (same page): magneto wire to ground V-twin 1.5-2.5 M / single 0.5-1.0; ground to magneto wire OL / 3.0; magneto wire to plug wire 1.5-2.5 M / 10-11 K; plug wire to magneto wire OL / 10-11 K. Diode test V-twin magneto wire to ground 0.5-0.6 VDC, reversed OL. Wire 18 AC back-probed: cranking 3-5 VAC V-twin / 1.5-2 VAC single; 3600 rpm 14-20 / 7-8.5 VAC. Frequency: cranking 35-45 / 13-17 Hz; 3600 rpm 120 / 60 Hz.",
+    "test": "Disconnect Wire 18 (bullet connector, or the stud on Nexus V-twins) and compare with the table. Replace V-twin magnetos in pairs.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.189"
+   },
+   {
+    "plug": "DPE 2 / 6",
+    "name": "DPE (excitation) winding - Wires 2 and 6",
+    "location": "Stator",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "test": "Measure Wire 2 to Wire 6 at the disconnected harness.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.15 (Table 1-9)"
+   },
+   {
+    "plug": "ROTOR 4 / 0",
+    "name": "Rotor - Wire 4 (+) and Wire 0 via brushes",
+    "location": "Brush holder",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "test": "Measure across the brushes / slip rings.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.15 (Table 1-9)"
+   }
+  ],
+  "test": "Generac tests name wire numbers only - Appendix A says use the wire numbers and disregard J references in the procedures. Back-probe; never front-probe Molex connectors. Nexus LOP and HOT switches ground Wire 86 / 85 on a fault.",
+  "notes": "Three Nexus panel styles share these model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Figure A-8 labels the battery-charger connector J11-J12, but the pin table for T1/00 is headed J10. SIB11-26-NAC: 0H6680A/B/D panels are on models with a -0 revision (last digit of the item number, e.g. G0058740 = 5874-0).",
+  "gaps": [
+   "J8-3 wire number printed as 85 with LOP text (manual error) - not confirmed.",
+   "J11-J12 battery charger connector pins not tabulated separately."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf",
+    "pages": "15, 60, 133-134, 189, 192-193, 196-197, 254-255",
+    "what": "Appendix A pin-out, component tests"
+   },
+   {
+    "file": "generac-bulletin-sib11-26-nac-air-cooled-nexus-panel-replacement-assembly-number.pdf",
+    "pages": "1",
+    "what": "Nexus panel vs model revision"
+   }
+  ]
+ },
+ {
+  "id": "generac-nexus-aircooled-0h6680t",
+  "title": "Generac / Guardian air-cooled Nexus controller, panel 0H6680 (T) - Amp/Tyco J4 / J5 / J6",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Siemens, Honeywell, Eaton badges)",
+  "models": "Guardian / Centurion / Siemens 8 kW, GH-410 (Nexus): 5870, 5882, 5908; Centurion / Guardian 10 kW, GT-530 (Nexus): 5892; Guardian / Centurion / Honeywell 12-17 kW, GT-990 (Nexus): 5873, 5874, 5885, 5893, 5895, 6054; Guardian / Centurion / Eaton 20 kW, GT-999 (Nexus): 5875, 5887, 5896, 5924",
+  "match": [
+   "G005870",
+   "5870",
+   "G005882",
+   "5882",
+   "G005908",
+   "5908",
+   "G005892",
+   "5892",
+   "G005873",
+   "5873",
+   "G005874",
+   "5874",
+   "G005885",
+   "5885",
+   "G005893",
+   "5893",
+   "G005895",
+   "5895",
+   "G006054",
+   "6054",
+   "G005875",
+   "5875",
+   "G005887",
+   "5887",
+   "G005896",
+   "5896",
+   "G005924",
+   "5924",
+   "G0058701",
+   "G0058821",
+   "G0059081",
+   "G0058921",
+   "G0058731",
+   "G0058851",
+   "G0058931",
+   "G0060541",
+   "G0058751",
+   "G0058871",
+   "G0058961",
+   "G0059241",
+   "G0058700",
+   "G0058820",
+   "G0059080"
+  ],
+  "sizes": [
+   "8",
+   "10",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "20"
+  ],
+  "board": "Nexus panel 0H6680 T: Amp/Tyco 15-pin, 9-pin and 12-pin (J6) connectors, stepper J3, remote annunciator socket",
+  "sensors": [
+   {
+    "plug": "J3-1",
+    "name": "Black wire - Stepper Motor A1 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J3-2",
+    "name": "Brown wire - Stepper Motor A2 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J3-3",
+    "name": "Yellow wire - Stepper Motor B1 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J3-4",
+    "name": "Orange wire - Stepper Motor B2 Coil",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J3-5",
+    "name": "Red wire - Stepper Power",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Red to each coil wire approx. 10-11 ohms; Red to ground INFINITY (Table 2-14).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J3-6",
+    "code": "Empty",
+    "name": "Wire Empty - function cell blank in the manual table",
+    "location": "J3 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-1 (15-pin; table printed as J5-1)",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 1 of the 15-pin connector. Choke solenoid 3-4 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-2 (15-pin; table printed as J5-2)",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC)",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 2 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-3 (15-pin; table printed as J5-3)",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 3 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-4 (15-pin; table printed as J5-4)",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 4 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-5 (15-pin; table printed as J5-5)",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 5 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-6 (15-pin; table printed as J5-6)",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 6 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-7 (15-pin; table printed as J5-7)",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "switch",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 7 of the 15-pin connector.",
+    "errorCodes": [
+     "High Temperature"
+    ],
+    "test": "See the HOT entry.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-8 (15-pin; table printed as J5-8)",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5VDC) for status LED's",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 8 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-9 (15-pin; table printed as J5-9)",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and choke solenoid operation on V-Twin Models",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 9 of the 15-pin connector. Fuel solenoid 15-16 ohms; choke solenoid 3-4 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-10 (15-pin; table printed as J5-10)",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 10 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-11 (15-pin; table printed as J5-11)",
+    "name": "function cell blank in the manual table",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 11 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-12 (15-pin; table printed as J5-12)",
+    "name": "function cell blank in the manual table",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 12 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-13 (15-pin; table printed as J5-13)",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure in the LOP switch",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "switch",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 13 of the 15-pin connector.",
+    "errorCodes": [
+     "Low Oil Pressure"
+    ],
+    "test": "See the LOP entry.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-14 (15-pin; table printed as J5-14)",
+    "name": "function cell blank in the manual table",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 14 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J4-15 (15-pin; table printed as J5-15)",
+    "name": "function cell blank in the manual table",
+    "location": "J4 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Figure A-9 labels this 15-pin connector J4, but its pin table is headed \"J5\". This is pin 15 of the 15-pin connector.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-1 (9-pin)",
+    "code": "JMP 1",
+    "name": "Wire JMP 1 - Installed in series with a resistor to identify the kW to the controller",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-2 (9-pin)",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: The controller grounds Wire 18 for ignition shutdown and receives a reference signal for speed control while cranking and running",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-3 (9-pin)",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "SC 8 ohms; SCR 155-158 ohms (Table 4-14, p.196).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-4 (9-pin)",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Output",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-5 (9-pin)",
+    "code": "194",
+    "name": "Wire 194 (printed \"19423\" in the table) - Provides 12 VDC to the transfer relay (TR1)",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-6 (9-pin)",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-7 (9-pin)",
+    "name": "function cell blank in the manual table",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-8 (9-pin)",
+    "name": "function cell blank in the manual table",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J5-9 (9-pin)",
+    "code": "JMP 1",
+    "name": "Wire JMP 1 - Installed in series with a resistor to identify the kW to the controller",
+    "location": "J5 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-1",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC Utility sensing voltage",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-2",
+    "code": "T1",
+    "name": "Wire T1 - 120 VAC power for the battery charger",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-3",
+    "code": "00",
+    "name": "Wire 00 - Neutral Connection for T1 (battery charger)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-4",
+    "code": "2",
+    "name": "Wire 2 - DPE Winding (AC excitation power)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-5",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC Utility sensing voltage",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-6",
+    "code": "44",
+    "name": "Wire 44 - 240 VAC Generator voltage sensing",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 sensing winding 11 & 44 ohms: 8 kW 0.378-0.4392; 10 kW 0.425-0.4938; 13 kW 0.2484-0.2887; 14 kW 0.2484-0.2888; 15/16/17 kW 0.197-0.229; 20 kW 0.137-0.1594.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-7",
+    "code": "11",
+    "name": "Wire 11 - 240 VAC Generator voltage sensing",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 sensing winding 11 & 44 ohms: 8 kW 0.378-0.4392; 10 kW 0.425-0.4938; 13 kW 0.2484-0.2887; 14 kW 0.2484-0.2888; 15/16/17 kW 0.197-0.229; 20 kW 0.137-0.1594.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-8",
+    "code": "0",
+    "name": "Wire 0 - DC (-) Field excitation voltage",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-9",
+    "code": "4",
+    "name": "Wire 4 - DC (+) Field excitation voltage",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-10",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC excitation power)",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-11",
+    "name": "function cell blank in the manual table",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "J6-12",
+    "name": "function cell blank in the manual table",
+    "location": "J6 connector on the controller (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.256-257 (Figure A-9, panel 0H6680 T)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch (LOP) - Wires 86 and 0",
+    "location": "Engine, near the oil filter (Figure 4-19 A)",
+    "kind": "switch",
+    "spec": "Normally CLOSED with no oil pressure; held open by oil pressure; Wire 86 grounded on loss of oil pressure -> shutdown. Rated 10 psi V-twin, 8 psi single cylinder (p.192). Normal running pressure about 35-40 psi.",
+    "test": "Disconnect Wires 86 and 0. Engine off: CONTINUITY across the switch (INFINITY = replace). In MANUAL: INFINITY once pressure builds. Wire 86 to ground (disconnected) about 3.3 VDC. Check real pressure with a gauge.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.133, 192"
+   },
+   {
+    "plug": "HOT",
+    "code": "85",
+    "name": "High oil temperature switch - Wires 85 and 0",
+    "location": "Engine (Figure 4-19 B)",
+    "kind": "switch",
+    "spec": "Normally OPEN; contacts close at 293 F and ground Wire 85 -> shutdown (p.192). Bench test: CONTINUITY at about 283-305 F (139-151 C) (p.193).",
+    "test": "Engine cool: Wires 85 and 0 off, switch reads INFINITY. With the controller unplugged Wire 85 to ground must be INFINITY. Bench: heat the tip in oil with a thermometer.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.192-193"
+   },
+   {
+    "plug": "CS",
+    "code": "90",
+    "name": "Choke solenoid (Nexus only) - Wire 90 (switched to ground by the controller) and Wire 14 (Wire 56 on 8 kW)",
+    "location": "Air box (990/999 cc), divider-panel air inlet hose (530 cc), behind the air box (410 cc); 2-pin connector C3 / CS",
+    "kind": "other",
+    "spec": "Choke solenoid 3-4 ohms (Table 4-14). Figure 4-102 C3 connector: pins 1/2 carry Wires 90 and 14; Figure 4-103 (8 kW) CS connector: Wires 90 and 56.",
+    "test": "Unplug the choke connector and measure pin 1 to pin 2 on the male (solenoid) side; less than 3 ohms = replace the solenoid.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.134, 196-197"
+   },
+   {
+    "plug": "FS",
+    "code": "14",
+    "name": "Fuel solenoid (FS, FS2 if equipped) - Wire 14 and Wire 0",
+    "location": "Fuel regulator inlet",
+    "kind": "other",
+    "spec": "Fuel solenoid(s) 15-16 ohms (Table 4-14). Test 67: FS less than 15 ohms = replace; FS2 less than 30 ohms = replace.",
+    "test": "Disconnect Wire 14 at the solenoid and measure the solenoid terminal to ground.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.196-197"
+   },
+   {
+    "plug": "SC / SCR",
+    "code": "56",
+    "name": "Starter contactor (8 kW single cylinder) / starter contactor relay (V-twin) - Wire 56",
+    "location": "SC on the firewall (single cylinder); SCR on V-twins",
+    "kind": "other",
+    "spec": "Starter contactor 8 ohms; starter contactor relay 155-158 ohms (Table 4-14).",
+    "test": "Test 68: less than 8 ohms at the SC = short; less than 155 ohms at the SCR coil (Wires 56 and 0) = replace the relay.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.122, 196-197"
+   },
+   {
+    "plug": "STEPPER",
+    "name": "Throttle stepper motor (Red, Orange, Yellow, Brown, Black) - plugs into J3",
+    "location": "Carburetor / throttle body",
+    "kind": "other",
+    "spec": "Table 2-14: Red to Orange, Yellow, Brown and Black each approx. 10-11 ohms; Red to ground INFINITY.",
+    "test": "Press meter leads onto the exposed connector terminals (do not probe into the connector).",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.60"
+   },
+   {
+    "plug": "MAGNETO",
+    "code": "18",
+    "name": "Ignition magnetos - Wire 18",
+    "location": "Flywheel; Nexus V-twin Wire 18 is on a stud above the oil cooler",
+    "kind": "other",
+    "spec": "Table 4-13 with Wire 18 disconnected - plug wire to ground: V-twin 7-14 k, single 9-16 k. Second print of Table 4-13 (same page): magneto wire to ground V-twin 1.5-2.5 M / single 0.5-1.0; ground to magneto wire OL / 3.0; magneto wire to plug wire 1.5-2.5 M / 10-11 K; plug wire to magneto wire OL / 10-11 K. Diode test V-twin magneto wire to ground 0.5-0.6 VDC, reversed OL. Wire 18 AC back-probed: cranking 3-5 VAC V-twin / 1.5-2 VAC single; 3600 rpm 14-20 / 7-8.5 VAC. Frequency: cranking 35-45 / 13-17 Hz; 3600 rpm 120 / 60 Hz.",
+    "test": "Disconnect Wire 18 (bullet connector, or the stud on Nexus V-twins) and compare with the table. Replace V-twin magnetos in pairs.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.189"
+   },
+   {
+    "plug": "DPE 2 / 6",
+    "name": "DPE (excitation) winding - Wires 2 and 6",
+    "location": "Stator",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "test": "Measure Wire 2 to Wire 6 at the disconnected harness.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.15 (Table 1-9)"
+   },
+   {
+    "plug": "ROTOR 4 / 0",
+    "name": "Rotor - Wire 4 (+) and Wire 0 via brushes",
+    "location": "Brush holder",
+    "kind": "other",
+    "spec": "Table 1-9 (60 Hz Nexus, new windings at 20 C), excitation 2 & 6 / rotor ohms: 8 kW 1.0318-0.1930 (as printed) / 6.30-7.32; 10 kW 1.0935-1.2708 / 6.30-7.32; 13 kW 0.876-1.017 / 7.58-8.80; 14 kW 0.876-1.018 / 7.58-8.81; 15, 16, 17 kW 0.780-0.906 / 8.37-9.72; 20 kW 0.7318-0.8504 / 9.54-11.10.",
+    "test": "Measure across the brushes / slip rings.",
+    "source": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.15 (Table 1-9)"
+   }
+  ],
+  "test": "Generac tests name wire numbers only - Appendix A says use the wire numbers and disregard J references in the procedures. Back-probe; never front-probe Molex connectors. Nexus LOP and HOT switches ground Wire 86 / 85 on a fault.",
+  "notes": "Three Nexus panel styles share these model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Figure A-9 labels the 15-pin connector J4 and the 9-pin connector J5, but the manual heads both pin tables \"J5\"; the 15-row table is shown here as J4 (with the printed J5 name). Wire numbers are what matter. SIB11-26-NAC: 0H6680T is on models with a -1 revision, 8 kW single-cylinder -0 models above serial 6510934, and 50 Hz -0 models; 0H6680T is replaced by 0H6680B plus harness adapter 0J7558.",
+  "gaps": [
+   "Connector naming J4/J5 inconsistent in the manual (see notes).",
+   "JMP 1 kW-ID resistor values not tabulated."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf",
+    "pages": "15, 60, 133-134, 189, 192-193, 196-197, 256-257",
+    "what": "Appendix A pin-out, component tests"
+   },
+   {
+    "file": "generac-bulletin-sib11-26-nac-air-cooled-nexus-panel-replacement-assembly-number.pdf",
+    "pages": "1",
+    "what": "Nexus panel vs model revision"
+   }
+  ]
+ },
+ {
+  "id": "generac-nextgen-pz200-aircooled",
+  "title": "Generac / Guardian Next Generation air-cooled 10-28 kW, Power Zone 200 controller + ECM",
+  "side": "generator",
+  "brand": "Generac (Generac and Guardian badges)",
+  "models": "Generac Next Generation 10-28 kW (Power Zone 200): 7257, 7258, 7259, 7260, 7261, 7282, 7321, 7323, 7324, 7325, 7326, 7327, 7328, 7329; Guardian by Generac 22-25 kW, Y32 revision (Power Zone 200): 7268, 7269; Generac Next Generation 20 kW 208V 3-Phase (Power Zone 200): 7271",
+  "match": [
+   "G007257",
+   "7257",
+   "G007258",
+   "7258",
+   "G007259",
+   "7259",
+   "G007260",
+   "7260",
+   "G007261",
+   "7261",
+   "G007282",
+   "7282",
+   "G007321",
+   "7321",
+   "G007323",
+   "7323",
+   "G007324",
+   "7324",
+   "G007325",
+   "7325",
+   "G007326",
+   "7326",
+   "G007327",
+   "7327",
+   "G007328",
+   "7328",
+   "G007329",
+   "7329",
+   "G007268",
+   "7268",
+   "G007269",
+   "7269",
+   "G007271",
+   "7271"
+  ],
+  "sizes": [
+   "10",
+   "14",
+   "18",
+   "20",
+   "22",
+   "24",
+   "25",
+   "26",
+   "28"
+  ],
+  "board": "Power Zone 200 controller J1 (not used), J2 radio, J3 CT/CAN, J4 18-pin, J5 sensing, J6 charger, J7 field; ECM 48-pin connector; ETMC 16-pin throttle/mixer connector",
+  "sensors": [
+   {
+    "plug": "J1",
+    "name": "J1 connector - \"Not Used\" (Figure 7-7)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "Blue",
+    "name": "Wire Blue - Radio 3.8V DC Power",
+    "location": "J2 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "Brown",
+    "name": "Wire Brown - Radio RS232RX Coms",
+    "location": "J2 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "White",
+    "name": "Wire White - Radio RS232TX Coms",
+    "location": "J2 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "Black",
+    "name": "Wire Black - Radio DC Ground",
+    "location": "J2 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Radio test: J2-1 (blue) to J2-4 (black) should read 3.5-4 V.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.74"
+   },
+   {
+    "plug": "J3-1",
+    "code": "399A",
+    "name": "Wire 399A - Generator Phase A+ Current Sense",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-2",
+    "code": "398A",
+    "name": "Wire 398A - Generator Phase A - Current Sense",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-3",
+    "code": "399B",
+    "name": "Wire 399B - Generator Phase B + Current Sense",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-4",
+    "code": "398B",
+    "name": "Wire 398B - Generator Phase B - Current Sense",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-5",
+    "code": "399C",
+    "name": "Wire 399C - Generator Phase C +Current Sense",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-6",
+    "code": "SHLD",
+    "name": "Wire SHLD - Shielding Wire for CAN bus Wiring",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-7",
+    "code": "743",
+    "name": "Wire 743 - CAN bus Coms +",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "CAN bus 2.0 J1939 link between controller and ECM (ECM pin 4A).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-8",
+    "code": "744",
+    "name": "Wire 744 - CAN bus Coms -",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "CAN bus - (ECM pin 4B).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J3-9",
+    "code": "877",
+    "name": "Wire 877 - ECM Enable",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Wire 877 powers the ECM (\"always on\"); with J3 and the ECM unplugged, troubleshooting reads resistance from Wire 877 to battery negative (Power Zone 200 Fuse Testing).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.82, 122"
+   },
+   {
+    "plug": "J3-10",
+    "code": "398C",
+    "name": "Wire 398C - Generator Phase C - Current Sense",
+    "location": "J3 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-1",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC Unfused for the Controller",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Fuse testing: J4-1 pin on the controller to battery negative should read 120-140 kohms; Wire 13 J4-1 to J4-2 under 5 ohms.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.122"
+   },
+   {
+    "plug": "J4-2",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC Unfused for the Controller",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-3",
+    "code": "194",
+    "name": "Wire 194 - 12 VDC for the Transfer Relay",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-4",
+    "code": "23",
+    "name": "Wire 23 - Switched to Ground (Internally) to Energize the Transfer Relay",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-5",
+    "code": "—",
+    "name": "Wire — - Optional 2-Wire Start Kit (Advance access menu only)",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-6",
+    "code": "—",
+    "name": "Wire — - Optional 2-Wire Start Kit (Advance access menu only)",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-7",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC for Fuel Shut Off Valves 1 & 2 (powered when Running)",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Wire 14 feeds SOV1 and SOV2 once the ECM sees over 75 RPM; each SOV solenoid 5-60 ohms (Wire 14 Test).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.121-122"
+   },
+   {
+    "plug": "J4-8",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Input",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-9",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-10",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC)",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-11",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC)",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-12",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC Output to Starter Control Relay",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Starter control relay (SCR) coil Wires 56 to 0: 130-165 ohms.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.116, 123"
+   },
+   {
+    "plug": "J4-13",
+    "code": "—",
+    "name": "Wire — - Unused Digital Output",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-14",
+    "code": "—",
+    "name": "Wire — - Unused Ground for Digital Output",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-15",
+    "code": "—",
+    "name": "Wire — - Unused Digital Input 1",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-16",
+    "code": "—",
+    "name": "Wire — - Unused Digital Input 2",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-17",
+    "code": "395A",
+    "name": "Wire 395A - Remote Stop A",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J4-18",
+    "code": "395B",
+    "name": "Wire 395B - Remote Stop B",
+    "location": "J4 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-1",
+    "code": "N1",
+    "name": "Wire N1 - Utility Phase A Sensing Voltage",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-2",
+    "code": "N2",
+    "name": "Wire N2 - Utility Phase B Sensing Voltage",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-3",
+    "code": "N3",
+    "name": "Wire N3 - Utility Phase C Sensing Voltage",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Used on 3-phase models.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-4",
+    "code": "00",
+    "name": "Wire 00 - Neutral Connection for Controller",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-5",
+    "code": "00",
+    "name": "Wire 00 - Neutral Connection for Controller",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-6",
+    "code": "S3S",
+    "name": "Wire S3S - Phase C",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "S3S used on 3-phase models.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-7",
+    "code": "44S/S2S",
+    "name": "Wire 44S/S2S - Phase B",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "44S on single-phase units, S2S on 3-phase.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J5-8",
+    "code": "11S/S1S",
+    "name": "Wire 11S/S1S - Phase A",
+    "location": "J5 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "11S on single-phase units, S1S on 3-phase.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J6-1",
+    "code": "T1",
+    "name": "Wire T1 - 120 VAC Power for Internal Battery Charger",
+    "location": "J6 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J6-2",
+    "code": "00",
+    "name": "Wire 00 - Neutral Connection for Internal Battery Charger",
+    "location": "J6 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables)"
+   },
+   {
+    "plug": "J7-1",
+    "code": "2",
+    "name": "Wire 2 - DPE Winding (AC Excitation Power)",
+    "location": "J7 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Table 3-3 (all models, new windings at 68 F): excitation 2-6 0.8-1.5 ohms; rotor 4-15 ohms; power 11-22 and 33-44 0.00-0.30; 11-44 at stator terminal block 0.00-1.0.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.18"
+   },
+   {
+    "plug": "J7-2",
+    "code": "0A",
+    "name": "Wire 0A - Field Return (-) (DC Field Excitation)",
+    "location": "J7 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Wire 4 to Wire 0A at J7: 4-15 ohms.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.122"
+   },
+   {
+    "plug": "J7-3",
+    "code": "6",
+    "name": "Wire 6 - DPE Winding (AC Excitation Power)",
+    "location": "J7 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Table 3-3 (all models, new windings at 68 F): excitation 2-6 0.8-1.5 ohms; rotor 4-15 ohms; power 11-22 and 33-44 0.00-0.30; 11-44 at stator terminal block 0.00-1.0.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.18"
+   },
+   {
+    "plug": "J7-4",
+    "code": "4",
+    "name": "Wire 4 - Field Flash/DC Excitation (+)",
+    "location": "J7 connector on the Power Zone 200 controller (harness end)",
+    "kind": "other",
+    "spec": "Table 3-3 (all models, new windings at 68 F): excitation 2-6 0.8-1.5 ohms; rotor 4-15 ohms; power 11-22 and 33-44 0.00-0.30; 11-44 at stator terminal block 0.00-1.0. Field test: Wire 4 to Wire 0A at J7 should read 4-15 ohms (rotor through brushes).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.57-59 (Figure 7-7 and connector tables); generac-next-gen-pz200-diagnostic-repair-manual.pdf p.18, 122"
+   },
+   {
+    "plug": "ECM-1A",
+    "code": "605A",
+    "name": "Wire 605A to ETMC-13 - Electronic mixer control valve (EMC) A",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1B",
+    "code": "605B",
+    "name": "Wire 605B to ETMC-14 - EMC B",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1C",
+    "code": "79A",
+    "name": "Wire 79A to CRKS-A - Crankshaft position sensor (CRKS) A",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1D",
+    "code": "79B",
+    "name": "Wire 79B to CRKS-B - CRKS B",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1E",
+    "code": "770A",
+    "name": "Wire 770A to ETMC-9 - Electronic throttle control valve (ETC) A",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1F",
+    "code": "771A",
+    "name": "Wire 771A to ETMC-11 - ETC C",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1G",
+    "code": "770B",
+    "name": "Wire 770B to ETMC-10 - ETC B",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1H",
+    "code": "771B",
+    "name": "Wire 771B to ETMC-12 - ETC D",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1J",
+    "code": "13A",
+    "name": "Wire 13A to SPLICE 2 - Battery + to ECM / MPR (via 15 A fuse)",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1K",
+    "code": "14C",
+    "name": "Wire 14C to SPLICE 6 - Switched 12 V from master power relay (coils, OS heater, OPS)",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1L",
+    "code": "0",
+    "name": "Wire 0 to GND - Ground",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-1M",
+    "code": "452",
+    "name": "Wire 452 to IC2-C - Ignition coil 2 (IC2) trigger",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2A",
+    "code": "605C",
+    "name": "Wire 605C to ETMC-15 - EMC C",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2B",
+    "code": "606",
+    "name": "Wire 606 to ETMC-7 - Mixer position sensor (MPS) signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2C",
+    "code": "766A",
+    "name": "Wire 766A to ETMC-6 - TTMAP manifold pressure signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2D",
+    "code": "608",
+    "name": "Wire 608 to MPR-B - Master power relay (MPR) coil - ECM grounds it",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2E",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2F",
+    "code": "607",
+    "name": "Wire 607 to OS-B - Oxygen sensor (OS) B",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2G",
+    "code": "754",
+    "name": "Wire 754 to ETMC-3 - TTMAP intake air temperature signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2H",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2J",
+    "code": "899",
+    "name": "Wire 899 to OLS-C - Oil level sensor (OLS) signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2K",
+    "code": "714",
+    "name": "Wire 714 to EHT-1 - Engine head temperature sensor (EHT) signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2L",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-2M",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3A",
+    "code": "605D",
+    "name": "Wire 605D to ETMC-16 - EMC D",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3B",
+    "code": "766B",
+    "name": "Wire 766B to ETMC-4 - TTMAP throttle position signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3C",
+    "code": "797",
+    "name": "Wire 797 to ETMC-1 - Fuel pressure sensor (FPS) signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3D",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3E",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3F",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3G",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3H",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3J",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3K",
+    "code": "820A",
+    "name": "Wire 820A to SPLICE 7 - 5 V sensor supply (Vcc)",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3L",
+    "code": "610",
+    "name": "Wire 610 to SOV2 - Fuel shut-off valve 2 (SOV2) control",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-3M",
+    "code": "0",
+    "name": "Wire 0 to GND - Ground",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4A",
+    "code": "743",
+    "name": "Wire 743 to J3-7 - CAN bus +",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4B",
+    "code": "744",
+    "name": "Wire 744 to J3-8 - CAN bus - (LO)",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4C",
+    "code": "566",
+    "name": "Wire 566 to OPS - Oil pressure switch (OPS) signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4D",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4E",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4F",
+    "code": "877",
+    "name": "Wire 877 to J3-9 - ECM enable / power from controller",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4G",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4H",
+    "name": "Not used (no wire in the table)",
+    "location": "ECM 48-pin harness connector",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4J",
+    "code": "804",
+    "name": "Wire 804 to OS-C - Oxygen sensor (OS) signal",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4K",
+    "code": "820G",
+    "name": "Wire 820G to SPLICE 8 - Sensor ground",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4L",
+    "code": "0",
+    "name": "Wire 0 to GND - Ground",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ECM-4M",
+    "code": "451",
+    "name": "Wire 451 to IC1-C - Ignition coil 1 (IC1) trigger",
+    "location": "ECM harness connector (ECM is behind the Power Zone 200 controller)",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84-85 (Figure 9-16 ECM connector table)"
+   },
+   {
+    "plug": "ETMC-1",
+    "code": "797",
+    "name": "Wire 797 - FPS pin B - fuel pressure signal",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-2",
+    "code": "820G",
+    "name": "Wire 820G - Sensor ground",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-3",
+    "code": "754",
+    "name": "Wire 754 - TTMAP pin 1 - temperature",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-4",
+    "code": "766B",
+    "name": "Wire 766B - TTMAP pin 2 - throttle position",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-5",
+    "code": "820A",
+    "name": "Wire 820A - Vcc 5 V",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-6",
+    "code": "766A",
+    "name": "Wire 766A - TTMAP pin 5 - manifold pressure",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-7",
+    "code": "606",
+    "name": "Wire 606 - MPS - mixer position",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-8",
+    "name": "no wire shown",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-9",
+    "code": "770A",
+    "name": "Wire 770A - ETC A",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-10",
+    "code": "770B",
+    "name": "Wire 770B - ETC B",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-11",
+    "code": "771A",
+    "name": "Wire 771A - ETC C",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-12",
+    "code": "771B",
+    "name": "Wire 771B - ETC D",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-13",
+    "code": "605A",
+    "name": "Wire 605A - EMC A",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-14",
+    "code": "605B",
+    "name": "Wire 605B - EMC B",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-15",
+    "code": "605C",
+    "name": "Wire 605C - EMC C",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "ETMC-16",
+    "code": "605D",
+    "name": "Wire 605D - EMC D",
+    "location": "Engine throttle/mixer connector (ETMC) on the throttle body / mixer assembly",
+    "kind": "other",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85 (Figure 9-17 ETMC connector harness)"
+   },
+   {
+    "plug": "OPS",
+    "code": "566",
+    "name": "Oil pressure switch (OPS) - Wires 566 and 14C",
+    "location": "Engine (Figures 9-3 to 9-5 item K)",
+    "kind": "switch",
+    "spec": "459 cc 10 kW: 5 PSI, normally closed (NC) - closes when oil pressure drops below the threshold. 817/997 cc 14-28 kW: 10 PSI, normally open (NO) - opens when pressure drops. Powered from Wire 14C (MPR), signal Wire 566 to ECM pin 4C.",
+    "errorCodes": [
+     "3301",
+     "3304"
+    ],
+    "test": "Fit a gauge in the OPS port first (below 10 PSI 817/997 cc or 5 PSI 459 cc = stop, engine problem). Continuity across the OPS while cranking: 459 cc loses continuity above 5 PSI; 817/997 cc shows continuity above 10 PSI. Wire 566 and 14C ECM-to-OPS under 5 ohms.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.83-84, 111"
+   },
+   {
+    "plug": "EHT",
+    "code": "714",
+    "name": "Engine head temperature sensor (EHT) - Wires 714 and 820G",
+    "location": "Cylinder #1, held by a bolt",
+    "kind": "thermistor",
+    "spec": "Cold check: with the cylinder head below 200 F the sensor reads 4 kohms - 36.8 kohms across its two pins. No temperature/resistance table is printed.",
+    "errorCodes": [
+     "5200",
+     "5201",
+     "5203",
+     "5204",
+     "5215",
+     "5217"
+    ],
+    "test": "Unplug the EHT; Wire 714 and 820G ECM-to-sensor under 5 ohms; let the head cool below 200 F and back-probe the sensor side - outside 4-36.8 kohms = replace the EHT.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.83, 93-94"
+   },
+   {
+    "plug": "CRKS",
+    "code": "79A",
+    "name": "Crankshaft position sensor (CRKS) - Wires 79A and 79B",
+    "location": "Next to the flywheel (24 minus 1 tooth wheel)",
+    "kind": "other",
+    "spec": "Sensor coil approx. 100-200 ohms across the two sensor pins.",
+    "errorCodes": [
+     "4101",
+     "4201"
+    ],
+    "test": "Unplug the ECM and CRKS; Wires 79A/79B ECM-to-sensor under 5 ohms; back-probe the sensor side - outside 100-200 ohms = replace the CRKS.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.83, 97-98"
+   },
+   {
+    "plug": "TTMAP",
+    "code": "766A",
+    "name": "Throttle position / intake air temperature / manifold pressure sensor (TTMAP) - pins 1 754 temp, 2 766B position, 3 820G gnd, 4 820A 5 V, 5 766A pressure",
+    "location": "On the throttle body / mixer assembly (part of the mixer assembly)",
+    "kind": "pressure",
+    "spec": "Pressure (766A) and throttle position (766B) signals 0.5-4.5 VDC with the ECM on; 820A = 5 V. Temperature (754 to 820G, ECM unplugged) printed limit \"570 36.8 kohms\" (range end-points not clear in the print).",
+    "errorCodes": [
+     "3400",
+     "3401",
+     "3403",
+     "3404",
+     "3415",
+     "3417",
+     "3500",
+     "3504",
+     "3515",
+     "3517"
+    ],
+    "test": "Back-probe each signal wire to battery ground with the ECM on: 0.5-4.5 VDC. 5 V on a signal = unplug the TTMAP and recheck; if it drops, replace the mixer assembly.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.82, 85, 104-107, 117"
+   },
+   {
+    "plug": "FPS",
+    "code": "797",
+    "name": "Fuel pressure sensor (FPS) - A 820G gnd, B 797 signal, C 820A 5 V",
+    "location": "On the throttle body / mixer assembly",
+    "kind": "pressure",
+    "spec": "Signal 0.5-4.5 VDC with the ECM on (Wire 797 to battery ground).",
+    "errorCodes": [
+     "3200",
+     "3201",
+     "3203",
+     "3204",
+     "3215",
+     "3217"
+    ],
+    "test": "Wires 797, 820A, 820G ECM-to-sensor under 5 ohms; then signal voltage check.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85, 99-100"
+   },
+   {
+    "plug": "MPS",
+    "code": "606",
+    "name": "Mixer position sensor (MPS) - 606 position, 820G gnd, 820A 5 V",
+    "location": "On the mixer assembly",
+    "kind": "other",
+    "spec": "Signal 0.5-4.5 VDC with the ECM on.",
+    "errorCodes": [
+     "4900",
+     "4901",
+     "4907",
+     "4915",
+     "4917"
+    ],
+    "test": "Back-probe Wire 606 on the mixer side of the ETMC to battery negative with the ECM on.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.85, 98-99, 107"
+   },
+   {
+    "plug": "ETC",
+    "code": "770A",
+    "name": "Electronic throttle control valve (ETC) - Wires 770A, 770B, 771A, 771B",
+    "location": "Throttle body / mixer assembly",
+    "kind": "other",
+    "spec": "770A to 771A 35-45 ohms; 770B to 771B 35-45 ohms (mixer side of the ETMC).",
+    "test": "Pull and refit the 15 A fuse in Wire 13 - the throttle linkage should sweep fully. Then measure the motor windings at the ETMC (mixer side).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.95-97"
+   },
+   {
+    "plug": "EMC",
+    "code": "605A",
+    "name": "Electronic mixer control valve (EMC) - Wires 605A, 605B, 605C, 605D",
+    "location": "Throttle body / mixer assembly",
+    "kind": "other",
+    "spec": "605A to 605B 35-45 ohms and 605C to 605D about 35-45 ohms (mixer side of the ETMC). Over 5 ohms or OL in a harness check = harness fault. (generac-next-gen-pz200-diagnostic-repair-manual.pdf p.109)",
+    "test": "Pull and refit the 15 A fuse in Wire 13 - the mixer linkage should sweep. Then measure 605A-605B at the ETMC (mixer side).",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.108-109"
+   },
+   {
+    "plug": "OS",
+    "code": "804",
+    "name": "Oxygen sensor (OS) - B 607, C 804 signal; heater fed by 14C",
+    "location": "Exhaust manifold",
+    "kind": "other",
+    "spec": "Signal 0-1 VDC range (higher = richer). After at least 2 minutes running, Wire 804 to ground outside 0.1-1.2 V = replace OS. Inaccurate below about 600 F (heated sensor).",
+    "errorCodes": [
+     "4300",
+     "4301",
+     "4303",
+     "4304",
+     "4307",
+     "4315",
+     "4317"
+    ],
+    "test": "Check 607, 804, 14C and 820G ECM-to-OS under 5 ohms; 14C must have battery voltage while running.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.83, 112-113"
+   },
+   {
+    "plug": "OLS",
+    "code": "899",
+    "name": "Oil level sensor (OLS) - float type; 899 signal, 820A 5 V, 820G gnd",
+    "location": "Engine block (float style)",
+    "kind": "other",
+    "spec": "Signal 0.5-4.5 VDC with the ECM on; 820A = 5 V.",
+    "errorCodes": [
+     "5417"
+    ],
+    "test": "Remove the sensor (rotate clockwise 90 deg, then left), check the float, then signal voltage; with Field Pro move the float from empty to full and watch Oil Level change.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.84, 109-111"
+   },
+   {
+    "plug": "IC1 / IC2",
+    "code": "451",
+    "name": "Ignition coils IC1 (cyl 1, starter side) / IC2 (cyl 2, oil filter side) - pin A 14C, pin C 451 (IC1) / 452 (IC2)",
+    "location": "On each cylinder",
+    "kind": "other",
+    "spec": "Table 9-2: primary pin A (14C) to pin C (451/452) 1.4 ohms +/- 20%; secondary pin C to spark plug wire 17-23 kohms +/- 20%. V-twin coil plugs look identical and can be swapped.",
+    "errorCodes": [
+     "4503",
+     "4504",
+     "4507",
+     "4603",
+     "4604",
+     "4607"
+    ],
+    "test": "Spark tester at 10 kV first; then unplug the coil and check Table 9-2.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.83, 103-104"
+   },
+   {
+    "plug": "MPR",
+    "code": "608",
+    "name": "Master power relay (MPR) - 13A (COM and pin A), 608 coil ground from ECM, 14C output",
+    "location": "Under the control panel",
+    "kind": "other",
+    "spec": "Coil 608 to 13A (pin A): 130-165 ohms. Energised: 13A (COM) to 14C under 5 ohms.",
+    "test": "Test per Master Power Relay Test; check the 15 A fuse in Wire 13 first.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.82, 107-108"
+   },
+   {
+    "plug": "SOV1 / SOV2",
+    "code": "14",
+    "name": "Fuel shut-off valves SOV1 and SOV2 - Wire 14 (+12 V run), Wire 0; SOV2 also Wire 610 to ECM pin 3L",
+    "location": "Fuel inlet assembly; Port 1 static, Port 2 running pressure",
+    "kind": "other",
+    "spec": "Each solenoid 5-60 ohms. Wire 14 is powered once the ECM sees over 75 RPM.",
+    "test": "Wire 14 Test: disconnect both SOVs and measure each solenoid; then Wire 610 SOV2 to ECM pin 3L.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.102-103, 120-122"
+   },
+   {
+    "plug": "SCR",
+    "code": "56",
+    "name": "Starter control relay (SCR) - coil Wires 56 and 0; contacts 13 to 16",
+    "location": "Control panel",
+    "kind": "other",
+    "spec": "Coil 56 to 0: 130-165 ohms. Energised with 12 VDC: 13 to 16 under 150 ohms passes per the manual.",
+    "test": "Starter Control Relay Test.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.116"
+   },
+   {
+    "plug": "VR",
+    "name": "Engine stator battery charger / voltage regulator (VR) - yellow stator wires, Wire 13 to SC ring terminal, Wire 0",
+    "location": "Engine (flywheel charging stator) with VR",
+    "kind": "other",
+    "spec": "Nominal 10 A at 13.5 V at 3600 rpm; E-code if battery outside 8.5-16.5 V. Yellow wires (stator) under 5 ohms; running, under 70 VAC across the yellow wires = replace stator, at least 70 VAC = replace VR.",
+    "test": "Stator Battery Charger (Voltage Regulator) Test.",
+    "source": "generac-next-gen-pz200-diagnostic-repair-manual.pdf p.114"
+   }
+  ],
+  "test": "All engine sensors are read by the ECM (talks to the controller over CAN, J3-7/J3-8). Use the Field Pro app for live values and codes. Back-probe; the manual checks each harness wire end to end (under 5 ohms) before condemning a sensor.",
+  "notes": "Same connector tables cover 10 kW 459 cc single cylinder and 14-28 kW 817/997 cc V-twins; 3-phase 20 kW uses N3, S3S, 399C/398C. OPS polarity differs by engine (NC on 459 cc, NO on 817/997 cc).",
+  "gaps": [
+   "No EHT or TTMAP temperature/resistance chart is printed; only the EHT cold range 4-36.8 kohms.",
+   "TTMAP temperature limit printed as \"570 36.8 kohms\" - end-points unclear.",
+   "E-code lists per sensor may be incomplete (taken from the manual E-code table where its action step names the test)."
+  ],
+  "sources": [
+   {
+    "file": "generac-next-gen-pz200-diagnostic-repair-manual.pdf",
+    "pages": "18, 57-59, 75-85, 93-123",
+    "what": "controller and ECM connector tables, sensor tests (A0004542981 Rev E)"
+   }
+  ]
+ },
+ {
+  "id": "generac-lc-evolution-gaseous-noecm",
+  "title": "Generac Protector / Protector QS liquid-cooled gaseous with Evolution controller, no ECM (2.4L RG022-RG060 etc.)",
+  "side": "generator",
+  "brand": "Generac (Protector, Protector QS)",
+  "models": "Protector QS / RG liquid-cooled gaseous with the Evolution controller and no ECM: 2.4L RG022, RG027, RG032, RG038, RG045, RG060 (model RGxxx24...). The same table covers other non-ECM gaseous Evolution units 150 kW and below.",
+  "match": [
+   "RG02224",
+   "RG02724",
+   "RG03224",
+   "RG03824",
+   "RG04524",
+   "RG06024"
+  ],
+  "sizes": [
+   "22",
+   "27",
+   "32",
+   "38",
+   "45",
+   "60"
+  ],
+  "board": "Liquid-cooled Evolution controller: J1 16-pin, J2 12-pin, J3 18-pin, J4 6-pin sensing, J5 4-pin field, J13 6-pin ignition, BCH battery charger",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC Fused for general use",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC Fused for general use",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "56",
+    "name": "Wire 56 - Starter output",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "0",
+    "name": "Wire 0 - Battery - input",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "183",
+    "name": "Wire 183 - 2-Wire start return",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "194",
+    "name": "Wire 194 - XFER + 12 VDC",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "23",
+    "name": "Wire 23 - XFER return",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "211",
+    "name": "Wire 211 - Common alarm relay",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "14",
+    "name": "Wire 14/14A - Run signal output",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "771",
+    "name": "Wire 771 - Governor Actuator",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "476",
+    "name": "Wire 476 - Thermistor (battery charger)",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Battery charger thermistor. Charger 13.5 / 14.1 / 14.6 VDC by temperature; 26 h charge period.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.82"
+   },
+   {
+    "plug": "J1-12",
+    "code": "477",
+    "name": "Wire 477 - Thermistor (battery charger)",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Battery charger thermistor (see Wire 476).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.82"
+   },
+   {
+    "plug": "J1-13",
+    "code": "402",
+    "name": "Wire 402 - Hall effect camshaft sensor signal",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "1.5L 3-wire hall-effect cam sensor: Wire 15H 12 VDC +/-15% supply; Wire 402 about 4.8 VDC +/-15% not cranking and 0-4.8 VDC switching while cranking. Diode test (Table 3-10): 0A(J3-3) to 15H(J2-2) 1.130 V; 402(J1-13) to 0A 0.42 V (other polarity O/L); 15H (red +) to 402 (black -) 1.459 V; reversed (402 + to 15H -) reads O/L. No resistance test (solid state).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.85, 155-156"
+   },
+   {
+    "plug": "J1-14",
+    "code": "178",
+    "name": "Wire 178 - 2-Wire start out",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "209",
+    "name": "Wire 209/210 - Common alarm relay",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "56B ",
+    "name": "Wire 56B / 172 - Cold start solenoid (if equipped) / ECM run signal (if equipped) - the table lists J1-16 twice",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "808",
+    "name": "Wire 808 - Air/fuel ratio solenoid control",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Air/fuel solenoid (AFS) about 27 ohms (Table 3-9; Test 113).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.86, 151, 159-160"
+   },
+   {
+    "plug": "J2-2",
+    "name": "Hall effect camshaft sensor +",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-3",
+    "name": "Spare (diesel column)",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "395",
+    "name": "Wire 395/396 - E-stop return",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-5",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "SHLD",
+    "name": "Wire SHLD - CAN ground",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "395",
+    "name": "Wire 395/396 - E-stop source",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "573",
+    "name": "Wire 573 - Coolant level + (WLS)",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Low coolant level sensor (WLS) - shutdown if the level drops below it for 5 consecutive seconds.",
+    "errorCodes": [
+     "Low Coolant Level"
+    ],
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87-88"
+   },
+   {
+    "plug": "J2-10",
+    "code": "573A",
+    "name": "Wire 573A - Coolant level - (WLS)",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Low coolant level sensor (WLS) return.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87-88"
+   },
+   {
+    "plug": "J2-11",
+    "code": "743",
+    "name": "Wire 743 - CAN bus HI",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "744",
+    "name": "Wire 744 - CAN bus LO",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J3-1",
+    "code": "SHLD",
+    "name": "Wire SHLD - Shield flywheel (MPU)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-2",
+    "code": "79A",
+    "name": "Wire 79A - Camshaft sensor + (MPU)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-3",
+    "code": "0A",
+    "name": "Wire 0A - Camshaft sensor - (MPU)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-4",
+    "code": "591",
+    "name": "Wire 591 - Fuel pressure ground",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-5",
+    "code": "575",
+    "name": "Wire 575 - Fuel pressure level",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-6",
+    "code": "68",
+    "name": "Wire 68 - Coolant temperature",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "thermistor",
+    "chart": "generac-lc-evolution-coolant-temp",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. About 2.6 kohm at 70 F (p.87).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "Back-probe Wire 68 to Wire 0 at the controller and watch voltage fall as the engine warms; unplugged the circuit should read 3.3 VDC (+/-0.2). With the controller connector off, measure Wire 68 to Wire 0 and compare with Table 3-12 at the sensor temperature.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87, 160-161"
+   },
+   {
+    "plug": "J3-7",
+    "code": "765",
+    "name": "Wire 765 - Governor actuator feedback +",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-8",
+    "code": "766",
+    "name": "Wire 766 - Governor actuator feedback signal",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-9",
+    "code": "770",
+    "name": "Wire 770 - Governor actuator +",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-10",
+    "code": "79",
+    "name": "Wire 79 - Flywheel + (MPU)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Flywheel MPU (crank) Wires 79 to 0 at J3-10/J3-11: 700-1100 ohms (all except D2.2L 1500 ohms) (Table 3-8). About 1.0 VAC while cranking.",
+    "errorCodes": [
+     "RPM Sensor Loss"
+    ],
+    "test": "Unplug J3 and measure J3-10 to J3-11; in range = replace controller, out of range = wiring or sensor.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.85, 150-151"
+   },
+   {
+    "plug": "J3-11",
+    "code": "0",
+    "name": "Wire 0 - Flywheel - (MPU)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-12",
+    "code": "SHLD",
+    "name": "Wire SHLD - Camshaft sensor shield (MPU)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-13",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-14",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-15",
+    "code": "86",
+    "name": "Wire 86 - Oil pressure + (LOS)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "switch",
+    "spec": "LOP switch normally closed, held open by oil pressure; closes below about 8-12 psi -> 10 s hold-off then shutdown. Normal oil pressure 35-90 psi.",
+    "errorCodes": [
+     "Low Oil Pressure"
+    ],
+    "test": "Test 85: gauge in the switch port (35-90 psi running). Test 86: Wire 86 switch-to-controller end to end 0.01-0.04 ohms; Wire 86 to frame ground must be open.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87, 147-148"
+   },
+   {
+    "plug": "J3-16",
+    "code": "804",
+    "name": "Wire 804 - Oxygen sensor + (OS)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "O2 sensor output 0.6-0.9 VDC rich / 0.1-0.4 VDC lean; under load should vary 0.3-0.9 VDC. Heater terminals C-D 15 ohms (Test 112); Table 3-9 oxygen sensor heater 5.4 ohms (+/-5%).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.86, 151, 158-159"
+   },
+   {
+    "plug": "J3-17",
+    "code": "805",
+    "name": "Wire 805 - Oxygen sensor - (OS)",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "O2 sensor - (see Wire 804).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.86, 158-159"
+   },
+   {
+    "plug": "J3-18",
+    "code": "767",
+    "name": "Wire 767 - Governor actuator feedback -",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J4-1",
+    "code": "SA",
+    "name": "Wire SA - Generator VSENSE",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-2",
+    "name": "Blank in this column of the manual table",
+    "location": "J4 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-3",
+    "code": "N1",
+    "name": "Wire N1 - Utility VSENSE",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-4",
+    "code": "SB",
+    "name": "Wire SB - Generator VSENSE",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-5",
+    "name": "Blank in this column of the manual table",
+    "location": "J4 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-6",
+    "code": "N2",
+    "name": "Wire N2 - Utility VSENSE",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J5-1",
+    "code": "2",
+    "name": "Wire 2 - Displaced phase excitation (DPE) AC",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "J5-2",
+    "code": "1",
+    "name": "Wire 1 - Field - DC excitation",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "J5-3",
+    "code": "6",
+    "name": "Wire 6 - Displaced phase excitation (DPE) AC",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "J5-4",
+    "code": "4",
+    "name": "Wire 4 - Field + DC excitation",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "BCH J11",
+    "code": "T1",
+    "name": "Wire T1 - Battery Charger Input",
+    "location": "BCH connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-6)"
+   },
+   {
+    "plug": "BCH J12",
+    "code": "NEU",
+    "name": "Wire NEU - Battery Charger Neutral",
+    "location": "BCH connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-6)"
+   },
+   {
+    "plug": "J13-1",
+    "code": "15A",
+    "name": "Wire 15A - 12 VDC for ignition Coils",
+    "location": "J13 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Ignition coils (1.5L and 2.4L individual coil): about 1.6 ohms across the coil terminals (Test 108).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.152-153"
+   },
+   {
+    "plug": "J13-2",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "J13-3",
+    "code": "451",
+    "name": "Wire 451 - Ignition Coil Drive 1",
+    "location": "J13 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Coil drive for one cylinder. 1.5L/2.4L individual coil about 1.6 ohms across the coil terminals (Test 108).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.152-153"
+   },
+   {
+    "plug": "J13-4",
+    "code": "452",
+    "name": "Wire 452 - Ignition Coil Drive 2",
+    "location": "J13 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Coil drive for one cylinder. 1.5L/2.4L individual coil about 1.6 ohms across the coil terminals (Test 108).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.152-153"
+   },
+   {
+    "plug": "J13-5",
+    "code": "453",
+    "name": "Wire 453 - Ignition Coil Drive 3",
+    "location": "J13 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Coil drive for one cylinder. 1.5L/2.4L individual coil about 1.6 ohms across the coil terminals (Test 108).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.152-153"
+   },
+   {
+    "plug": "J13-6",
+    "code": "454",
+    "name": "Wire 454 - Ignition Coil Drive 4",
+    "location": "J13 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Coil drive for one cylinder. 1.5L/2.4L individual coil about 1.6 ohms across the coil terminals (Test 108).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.152-153"
+   },
+   {
+    "plug": "LOS",
+    "code": "86",
+    "name": "Low oil pressure switch (LOS) - Wire 86 and 0",
+    "location": "Engine block",
+    "kind": "switch",
+    "spec": "LOP switch normally closed, held open by oil pressure; closes below about 8-12 psi -> 10 s hold-off then shutdown. Normal oil pressure 35-90 psi.",
+    "test": "Test 85: gauge in the switch port (35-90 psi running). Test 86: Wire 86 switch-to-controller end to end 0.01-0.04 ohms; Wire 86 to frame ground must be open.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87, 147-148"
+   },
+   {
+    "plug": "WTS",
+    "code": "68",
+    "name": "Coolant temperature sensor (WTS) - Wire 68 and 0",
+    "location": "Near the thermostat",
+    "kind": "thermistor",
+    "chart": "generac-lc-evolution-coolant-temp",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. About 2.6 kohm at 70 F (p.87).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "Back-probe Wire 68 to Wire 0 at the controller and watch voltage fall as the engine warms; unplugged the circuit should read 3.3 VDC (+/-0.2). With the controller connector off, measure Wire 68 to Wire 0 and compare with Table 3-12 at the sensor temperature.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87, 160-161"
+   },
+   {
+    "plug": "WLS",
+    "code": "573",
+    "name": "Low coolant level sensor (WLS) - Wires 573 / 573A",
+    "location": "In the cooling system (radiator)",
+    "kind": "switch",
+    "spec": "Low coolant level sensor (WLS) - shutdown if the level drops below it for 5 consecutive seconds.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87-88"
+   },
+   {
+    "plug": "MPU",
+    "code": "79",
+    "name": "Flywheel / crank magnetic pickup (MPU1) - Wires 79, 0, SHLD",
+    "location": "Flywheel housing",
+    "kind": "other",
+    "spec": "Flywheel MPU (crank) Wires 79 to 0 at J3-10/J3-11: 700-1100 ohms (all except D2.2L 1500 ohms) (Table 3-8). About 1.0 VAC while cranking.",
+    "test": "Unplug J3 and measure J3-10 to J3-11; in range = replace controller, out of range = wiring or sensor.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.85-86, 150-151"
+   },
+   {
+    "plug": "CAM (MPU2)",
+    "code": "79A",
+    "name": "Camshaft sensor - 2-wire MPU2 (79A / 0A / SHLDA) or 1.5L 3-wire hall sensor (15H / 402 / 0A)",
+    "location": "Front cover / over the camshaft",
+    "kind": "other",
+    "spec": "2-wire MPU2 gives an AC pulse at cylinder #1 TDC. 1.5L 3-wire hall-effect cam sensor: Wire 15H 12 VDC +/-15% supply; Wire 402 about 4.8 VDC +/-15% not cranking and 0-4.8 VDC switching while cranking. Diode test (Table 3-10): 0A(J3-3) to 15H(J2-2) 1.130 V; 402(J1-13) to 0A 0.42 V (other polarity O/L); 15H (red +) to 402 (black -) 1.459 V; reversed (402 + to 15H -) reads O/L. No resistance test (solid state).",
+    "test": "Test 110.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.85-86, 155-156"
+   },
+   {
+    "plug": "COILS",
+    "name": "Coil resistances Table 3-9 (+/-5%)",
+    "location": "Various",
+    "kind": "other",
+    "spec": "Starter contactor 4.6 ohms; main fuel solenoid 15 ohms; cold start fuel solenoid 6.7 ohms; oxygen sensor heater 5.4 ohms; air/fuel solenoid 27 ohms; transfer relay 110 ohms. Coil to ground must read INFINITY.",
+    "test": "Isolate the component completely before measuring.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.151"
+   },
+   {
+    "plug": "FS / PRIMER",
+    "code": "14",
+    "name": "Fuel solenoid (Wire 14, open when energised) and fuel primer solenoid (Wire 56 during cranking only)",
+    "location": "Fuel regulator",
+    "kind": "other",
+    "spec": "Main fuel solenoid 15 ohms; cold start fuel solenoid 6.7 ohms (Table 3-9).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.84-85, 151"
+   }
+  ],
+  "test": "Appendix A shows the \"Gaseous Units - Without ECM\" column here. Check fuses F1-F5 first; disconnect the battery before unplugging controller connectors.",
+  "notes": "Figures 3-18 to 3-20 in Section 3.1 label the LOS at J1-33, WTS at J1-21 and WLS at J1-31/J1-32 - those are not this controller's pins (Appendix A puts them at J3-15, J3-6 and J2-9/J2-10). Table A-2 is headed \"J1 Pinout Chart\" but lists J2. Diesel units use the diesel column of the same tables (not mapped).",
+  "gaps": [
+   "Diesel-column pin functions not mapped as a separate map.",
+   "Governor actuator coil resistance not given in the pin tables."
+  ],
+  "sources": [
+   {
+    "file": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf",
+    "pages": "71-88, 147-161, 303-307",
+    "what": "Appendix A pin-outs, sensor tests, Table 3-12 chart"
+   }
+  ]
+ },
+ {
+  "id": "generac-lc-evolution-ecm",
+  "title": "Generac Protector liquid-cooled with Evolution controller and engine ECM (4.5L RG048-RG080 etc.)",
+  "side": "generator",
+  "brand": "Generac (Protector)",
+  "models": "Liquid-cooled Evolution units with an ECM - 4.5L engines (RG048, RG060, RG080 4.5L: model RGxxx45...). ECM-specific sensors (TMAP, AFPS, FPS, ETC, EMC) have their own tests in the manual (Tests 120-128).",
+  "match": [
+   "RG04845",
+   "RG06045",
+   "RG08045"
+  ],
+  "sizes": [
+   "48",
+   "60",
+   "80"
+  ],
+  "board": "Liquid-cooled Evolution controller (ECM column of Appendix A) + engine ECM",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "15",
+    "name": "Wire 15 - Battery + Input",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "15",
+    "name": "Wire 15 - Battery + Input",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "56",
+    "name": "Wire 56/56A - Starter output",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "0",
+    "name": "Wire 0 - Battery - Input",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "183",
+    "name": "Wire 183 - 2-Wire start return",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "194",
+    "name": "Wire 194 - XFER +12 VDC",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "23",
+    "name": "Wire 23 - XFER return",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "209",
+    "name": "Wire 209/210 - Common Alarm",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "14",
+    "name": "Wire 14/14A - Fuel Output",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-10",
+    "name": "Blank in this column of the manual table",
+    "location": "J1 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "476",
+    "name": "Wire 476 - Thermistor (battery charger)",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Battery charger thermistor. Charger 13.5 / 14.1 / 14.6 VDC by temperature; 26 h charge period.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.82"
+   },
+   {
+    "plug": "J1-12",
+    "code": "477",
+    "name": "Wire 477 - Thermistor (battery charger)",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Battery charger thermistor (see Wire 476).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.82"
+   },
+   {
+    "plug": "J1-13",
+    "name": "Blank in this column of the manual table",
+    "location": "J1 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "178",
+    "name": "Wire 178 - 2-Wire start output",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "209",
+    "name": "Wire 209/210 - Common Alarm",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "172",
+    "name": "Wire 172 - ECM Run Signal",
+    "location": "J1 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.303 (Table A-1)"
+   },
+   {
+    "plug": "J2-1",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-2",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-3",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "395",
+    "name": "Wire 395/396 - E-stop return",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-5",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "SHLD",
+    "name": "Wire SHLD - Shield for 743 Can Hi and 744 Can Lo",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "Blank in this column of the manual table",
+    "location": "J2 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-8",
+    "name": "E-stop source",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "573",
+    "name": "Wire 573 - Coolant level + (WLS)",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Low coolant level sensor (WLS) - shutdown if the level drops below it for 5 consecutive seconds.",
+    "errorCodes": [
+     "Low Coolant Level"
+    ],
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87-88"
+   },
+   {
+    "plug": "J2-10",
+    "code": "573A",
+    "name": "Wire 573A - Coolant level - (WLS)",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Low coolant level sensor (WLS) return.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87-88"
+   },
+   {
+    "plug": "J2-11",
+    "code": "743A",
+    "name": "Wire 743A - CAN bus HI",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "744A",
+    "name": "Wire 744A - CAN bus LO",
+    "location": "J2 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.304 (Table A-2, headed \"J1 Pinout Chart\" but rows are J2)"
+   },
+   {
+    "plug": "J3-1",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-2",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-3",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-4",
+    "code": "0",
+    "name": "Wire 0 - Ground",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-5",
+    "code": "601",
+    "name": "Wire 601 - Low Fuel Pressure Switch",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "spec": "Low fuel pressure switch: warning if supply drops below about 5 in. w.c. (non-latched).",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87"
+   },
+   {
+    "plug": "J3-6",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-7",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-8",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-9",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-10",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-11",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-12",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-13",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-14",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-15",
+    "code": "86",
+    "name": "Wire 86 - Oil pressure",
+    "location": "J3 connector on the Evolution controller (harness end)",
+    "kind": "switch",
+    "spec": "LOP switch normally closed, held open by oil pressure; closes below about 8-12 psi -> 10 s hold-off then shutdown. Normal oil pressure 35-90 psi.",
+    "errorCodes": [
+     "Low Oil Pressure"
+    ],
+    "test": "Test 85: gauge in the switch port (35-90 psi running). Test 86: Wire 86 switch-to-controller end to end 0.01-0.04 ohms; Wire 86 to frame ground must be open.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3); generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87, 147-148"
+   },
+   {
+    "plug": "J3-16",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-17",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J3-18",
+    "name": "Blank in this column of the manual table",
+    "location": "J3 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.305 (Table A-3)"
+   },
+   {
+    "plug": "J4-1",
+    "code": "SA",
+    "name": "Wire SA - Generator voltage sensing",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-2",
+    "name": "Blank in this column of the manual table",
+    "location": "J4 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-3",
+    "code": "N1",
+    "name": "Wire N1 - Utility voltage sensing",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-4",
+    "code": "SB",
+    "name": "Wire SB - Generator voltage sensing",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-5",
+    "name": "Blank in this column of the manual table",
+    "location": "J4 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J4-6",
+    "code": "N2",
+    "name": "Wire N2 - Utility voltage sensing",
+    "location": "J4 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-4)"
+   },
+   {
+    "plug": "J5-1",
+    "code": "2",
+    "name": "Wire 2 - function cell blank",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "J5-2",
+    "code": "1",
+    "name": "Wire 1 - function cell blank",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "J5-3",
+    "code": "6",
+    "name": "Wire 6 - function cell blank",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "J5-4",
+    "code": "4",
+    "name": "Wire 4 - function cell blank",
+    "location": "J5 connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.306 (Table A-5)"
+   },
+   {
+    "plug": "BCH J11",
+    "code": "T1",
+    "name": "Wire T1 - Battery Charger Input",
+    "location": "BCH connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-6)"
+   },
+   {
+    "plug": "BCH J12",
+    "code": "NEU",
+    "name": "Wire NEU - Battery Charger Neutral",
+    "location": "BCH connector on the Evolution controller (harness end)",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-6)"
+   },
+   {
+    "plug": "J13-1",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "J13-2",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "J13-3",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "J13-4",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "J13-5",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "J13-6",
+    "name": "Blank in this column of the manual table",
+    "location": "J13 connector on the Evolution controller",
+    "kind": "other",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.307 (Table A-7)"
+   },
+   {
+    "plug": "WTS",
+    "code": "68",
+    "name": "Coolant temperature sensor (WTS) - Wire 68 to ECM-4F, 820G ground",
+    "location": "Engine (Figure 3-87)",
+    "kind": "thermistor",
+    "chart": "generac-lc-evolution-coolant-temp",
+    "spec": "Table 3-13: 0 C/32 F 9,399 ohms; 25 C/77 F 2,795; 50 C/122 F 980; 100 C/212 F 178 ohms, each +/-10%. Wire 68 to ground with the ECM active 4.5-5.0 VDC.",
+    "errorCodes": [
+     "3700-3704",
+     "3715",
+     "3717 (coolant temp)"
+    ],
+    "test": "Unplug the sensor and measure; then Wire 820G to ground near 0 ohms, Wire 68 4.5-5.0 VDC with the ECM active.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.86-87, 161; A0000657429 Rev C.pdf (TIB20-01-C45, private) p.4, 13"
+   },
+   {
+    "plug": "OTS",
+    "code": "523",
+    "name": "Oil temperature sensor (OTS) - Wire 523 to ECM-3G, 820G ground",
+    "location": "Engine (Figure 3-88)",
+    "kind": "thermistor",
+    "chart": "generac-lc-evolution-coolant-temp",
+    "spec": "Table 3-14: same four points as the WTS (9,399 / 2,795 / 980 / 178 ohms at 0 / 25 / 50 / 100 C, +/-10%). Wire 523 4.5-5.0 VDC with the ECM active.",
+    "errorCodes": [
+     "3900-3904",
+     "3915",
+     "3917 (oil temp)"
+    ],
+    "test": "Test 115.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.86-87, 161; A0000657429 Rev C.pdf (TIB20-01-C45, private) p.4, 13"
+   },
+   {
+    "plug": "CRKS",
+    "code": "753H",
+    "name": "Crankshaft sensor (ECM units) - Wires 753H (+Hz) / 753L (-Hz)",
+    "location": "Engine",
+    "kind": "other",
+    "spec": "Coil 330-390 ohms. Back-probed: cranking (210-270 RPM) about 270 Hz and 1.7 VAC; running 1800 RPM about 1.7 kHz and 6.5 VAC.",
+    "errorCodes": [
+     "4100-4104"
+    ],
+    "test": "Test 111.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.86, 157-158; A0000657429 Rev C.pdf (TIB20-01-C45, private) p.4"
+   },
+   {
+    "plug": "CAMS",
+    "code": "450",
+    "name": "Camshaft sensor (ECM units) - 3-wire: 820G ground, 820B 4.5-5.0 VDC supply, 450 signal",
+    "location": "Engine",
+    "kind": "other",
+    "spec": "Supply Wire 820B 4.5-5.0 VDC.",
+    "errorCodes": [
+     "4200-4204"
+    ],
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.85; A0000657429 Rev C.pdf (TIB20-01-C45, private) p.5"
+   },
+   {
+    "plug": "COILS",
+    "code": "451",
+    "name": "Ignition coils 4.5L - primary 14E to 451-454, secondary",
+    "location": "Engine",
+    "kind": "other",
+    "spec": "Primary (14E to 451-454) 1 ohm; secondary (451-454 to any coil terminal) 9k ohms. TIB20-01 notes earlier harnesses may have Wire 451 on ECM pin 4H and Wire 454 on pin 4K.",
+    "errorCodes": [
+     "4502-4507 cyl 1",
+     "4602-4607 cyl 2",
+     "4702-4707 cyl 3",
+     "4802-4807 cyl 4"
+    ],
+    "test": "Test 108 4.5L procedure.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.152-153; A0000657429 Rev C.pdf (TIB20-01-C45, private) p.7-8"
+   },
+   {
+    "plug": "LOS",
+    "code": "86",
+    "name": "Low oil pressure switch - Wire 86",
+    "location": "Engine block",
+    "kind": "switch",
+    "spec": "LOP switch normally closed, held open by oil pressure; closes below about 8-12 psi -> 10 s hold-off then shutdown. Normal oil pressure 35-90 psi.",
+    "test": "Test 85: gauge in the switch port (35-90 psi running). Test 86: Wire 86 switch-to-controller end to end 0.01-0.04 ohms; Wire 86 to frame ground must be open.",
+    "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.87, 147-148"
+   },
+   {
+    "plug": "EMC / TPS",
+    "code": "605A",
+    "name": "Electronic mixer control valve (EMC, 2-coil stepper: 605A-605B, 605C-605D) with mixer position sensor TPS (606 signal, 820A 5 V, 820G gnd)",
+    "location": "Inlet of the fuel mixer",
+    "kind": "other",
+    "spec": "Each stepper coil 3.6 ohms (605A-605B and 605C-605D). TPS feedback 0.5-4.5 VDC; supply 4.5-5 VDC. Fuel inlet pressure to the EMC 3.5-14 in. H2O. Fault codes 4900-4904, 4907, 4915-4917.",
+    "errorCodes": [
+     "4900-4904",
+     "4907",
+     "4915-4917"
+    ],
+    "test": "EMC and TPS are one assembly - replace the mixer assembly if either fails.",
+    "source": "A0000657429 Rev C.pdf (TIB20-01-C45, private) p.10"
+   },
+   {
+    "plug": "ETC",
+    "code": "770",
+    "name": "Electronic throttle control valve (ETC) - motor 770 (+) / 771 (-); position feedback 766, 820B 5 V, 820G gnd",
+    "location": "Throttle body",
+    "kind": "other",
+    "spec": "Motor 1.5 ohms at the motor terminals inside the cover (15-35 ohms if measured on the external cover). Position signal 766: 4.5 VDC wide open, 0.5 VDC closed. Fault codes 3100-3104, 3107, 3115-3117.",
+    "errorCodes": [
+     "3100-3104",
+     "3107",
+     "3115-3117"
+    ],
+    "test": "Needle probes not recommended on this connector; move the plate by hand with a non-metallic probe to check it is smooth.",
+    "source": "A0000657429 Rev C.pdf (TIB20-01-C45, private) p.10"
+   },
+   {
+    "plug": "LOP (4.5L)",
+    "code": "86",
+    "name": "4.5L low oil pressure switch - Wires 14G and 86",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally closed; opens above 10 psi.",
+    "test": "Generator OFF: continuity 14G to 86. Running at rated speed: OL. Still closed = check real pressure with a gauge (above 10 psi = call Technical Service).",
+    "source": "A0000657429 Rev C.pdf (TIB20-01-C45, private) p.11"
+   },
+   {
+    "plug": "IR / DPR",
+    "code": "608",
+    "name": "Ignition relay (IR) and driver power relay (DPR) - Wire 13 power, Wire 608 control ground from ECM pin 1H; outputs 14D/14E (coils, OS heater, CAC bypass) and 14F/14G (ECM, LOS)",
+    "location": "Behind the main control panel on the side bulkhead",
+    "kind": "other",
+    "spec": "ECM pulls Wire 608 low to energise both relays.",
+    "test": "With the ECM active (Dealer menu > DISPLAY > engine hours / ECM version) check Wire 14D at the IR.",
+    "source": "A0000657429 Rev C.pdf (TIB20-01-C45, private) p.9"
+   },
+   {
+    "plug": "OS (4.5L)",
+    "code": "804",
+    "name": "Oxygen sensor - signal 804/805, heater 607/14E",
+    "location": "Exhaust",
+    "kind": "other",
+    "spec": "Heater terminals C-D 15-21 ohms at ambient (may read higher hot). Running over 25% load: A-B varying 0.3-0.9 VDC. Fault codes 4300-4304, 4315-4317.",
+    "errorCodes": [
+     "4300-4304",
+     "4315-4317"
+    ],
+    "source": "A0000657429 Rev C.pdf (TIB20-01-C45, private) p.8-9"
+   }
+  ],
+  "test": "On ECM units most engine sensors go to the ECM, not the Evolution controller; the controller keeps oil pressure (J3-15), coolant level (J2-9/10), low fuel pressure (J3-5) and CAN (J2-11/12).",
+  "notes": "ECM connector pin-out is not tabulated in this manual (WTS at ECM-4F and OTS at ECM-3G are taken from Figures 3-87/3-88).",
+  "gaps": [
+   "Full ECM connector pin table not in the manual.",
+   "TMAP and AFPS test values not transcribed."
+  ],
+  "sources": [
+   {
+    "file": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf",
+    "pages": "82-88, 147-161, 303-307",
+    "what": "Appendix A ECM column, sensor tests"
+   },
+   {
+    "file": "A0000657429 Rev C.pdf",
+    "pages": "1-11",
+    "what": "TIB20-01-C45 4.5L gaseous engine diagnostics (confidential - private)"
+   }
+  ]
+ },
+ {
+  "id": "generac-lc-nexus-qt",
+  "title": "Generac Protector QT liquid-cooled with Nexus controller (22-150 kW, J1 35-pin / J2 23-pin)",
+  "side": "generator",
+  "brand": "Generac (Protector QT)",
+  "models": "Protector QT gaseous with the liquid-cooled Nexus controller, e.g. QT02224ANAX, QT03015, QT04524, QT04842ANAX (Nexus, ends in X), QT07068ANAX, QT10068, QT13068, QT15068.",
+  "match": [
+   "QT02224",
+   "QT02724",
+   "QT03015",
+   "QT03624",
+   "QT04524",
+   "QT04842",
+   "QT06024",
+   "QT07068",
+   "QT10068",
+   "QT13068",
+   "QT15068"
+  ],
+  "sizes": [
+   "22",
+   "27",
+   "30",
+   "36",
+   "45",
+   "48",
+   "60",
+   "70",
+   "100",
+   "130",
+   "150"
+  ],
+  "board": "Liquid-cooled Nexus controller J1 (35-pin) and J2 (23-pin); external ignition module (23-pin) on 6+ cylinder engines",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "178",
+    "name": "Wire 178 to CUST CON - Remote start return",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "817",
+    "name": "Wire 817 to BWR-2 - Remote display system ready",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "818",
+    "name": "Wire 818 to BWR-3 - Remote display alarm",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "15",
+    "name": "Wire 15 to F1 - Note 4",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "15",
+    "name": "Wire 15 to F1 - Note 4",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "0",
+    "name": "Wire 0 to GNO - Note 1",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "0",
+    "name": "Wire 0 to GNO - Note 1",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "0",
+    "name": "Wire 0 to MP1-2 - Flywheel sensor",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "OA",
+    "name": "Wire OA to MP2-2 - Cam sensor (internal ignition only)",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "820",
+    "name": "Wire 820 to BWR-1 - +5V power for basic remote",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-13",
+    "code": "SA",
+    "name": "Wire SA/11/S1/S15 to MLCB - Output voltage sensing A",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "183",
+    "name": "Wire 183 to CUST CON - Remote start",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "SHLD A",
+    "name": "Wire SHLD A to MP2-1 - Cam sensor drain (internal ignition only)",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "SHLD",
+    "name": "Wire SHLD to MP1-1 - Flywheel sensor drain",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "819",
+    "name": "Wire 819 to BWR 4 - Remote display maintenance",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-18",
+    "code": "767",
+    "name": "Wire 767 to GOV-2 - Throttle position feedback return",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-19",
+    "code": "765",
+    "name": "Wire 765 to GOV-3 - Throttle position feedback source",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-20",
+    "code": "766",
+    "name": "Wire 766 to GOV-6 - Throttle position feedback signal",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-21",
+    "code": "68",
+    "name": "Wire 68 to WTS-2 - Coolant temp signal",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "thermistor",
+    "chart": "generac-lc-evolution-coolant-temp",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%), about 2.1-2.17 VDC at the controller. Unplugged, Wire 68 should rise to 3.3 VDC (+/-0.2).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "With the J1 connector off, measure Wire 68 (J1-21) to Wire 0 and compare with Table 3-20 at the sensor temperature.",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.154-155"
+   },
+   {
+    "plug": "J1-22",
+    "code": "79A",
+    "name": "Wire 79A to MP2-3 - Cam sensor + (internal ignition only)",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "spec": "2.4L cam sensor (MPU2) 79A to 0A: 700-1100 ohms (Test 110 2.4L).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.151"
+   },
+   {
+    "plug": "J1-23",
+    "code": "79",
+    "name": "Wire 79 to MP1-3 - Flywheel sensor +",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "spec": "Flywheel sensor (MPU1) 700-1000 ohms at the sensor (Test 97); J1-23 to J1-10 at the harness 700-1100 ohms (Test 98). AC volts (Table 3-16): 2.4L 1800 rpm 3 VAC, 2.4L 3600 rpm 7 VAC, 4.2L 6 VAC, 4.6L / 6.8L 5 VAC (+/-0.3 VAC).",
+    "test": "Unplug J1 (35-pin) and measure J1-23 (Wire 79) to J1-10 (Wire 0).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.145"
+   },
+   {
+    "plug": "J1-24",
+    "code": "SB",
+    "name": "Wire SB to MLCB - Output voltage sensing B",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-25",
+    "code": "N1",
+    "name": "Wire N1 to CUST CON - Utility voltage sensing 1",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-26",
+    "code": "N2",
+    "name": "Wire N2 to CUST CON - Utility voltage sensing 2",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-31",
+    "code": "573A",
+    "name": "Wire 573A to WLS-A - Coolant level signal return",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-32",
+    "code": "573",
+    "name": "Wire 573 to WLS-B - Coolant level signal",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-33",
+    "code": "86",
+    "name": "Wire 86 to LOS-NC - Low oil pressure signal",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "switch",
+    "spec": "LOS normally closed (LOS-NC); closes on low oil pressure.",
+    "errorCodes": [
+     "Low Oil Pressure"
+    ],
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-34",
+    "code": "804",
+    "name": "Wire 804 to EC-6 - Oxygen sensor +",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "spec": "Oxygen sensor heater 5.4 ohms (Table 3-17).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J1-35",
+    "code": "805",
+    "name": "Wire 805 to EC-5 - Oxygen sensor return",
+    "location": "Nexus controller J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.72 (Table 3-9 Nexus J1)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "770",
+    "name": "Wire 770 to GOB-4 - Throttle drive HI",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "808",
+    "name": "Wire 808 to EC-4 - Air/fuel ratio solenoid driver",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "spec": "Air/fuel solenoid about 27 ohms (Table 3-17).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.146, 154"
+   },
+   {
+    "plug": "J2-3",
+    "code": "56B",
+    "name": "Wire 56B to FS2 - Starting fuel solenoid control",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "spec": "Cold start fuel solenoid (FS2) 6.7 ohms (Table 3-17); energised only while cranking.",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.134, 146"
+   },
+   {
+    "plug": "J2-4",
+    "code": "451",
+    "name": "Wire 451 to CYL1 - Ignition coil drive 1 (internal ignition)",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "452",
+    "name": "Wire 452 to CYL2 - Ignition coil drive 2 (internal ignition)",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "453",
+    "name": "Wire 453 to CYL3 - Ignition coil drive 3 (internal ignition)",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-7",
+    "code": "454",
+    "name": "Wire 454 to CYL4 - Ignition coil drive 4 (internal ignition)",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "14",
+    "name": "Wire 14 to DB1/FS/EC-2 - Run circuit output",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "spec": "Main fuel solenoid 15 ohms (Table 3-17). Wire 14 battery voltage while cranking/running (DEBUG > OUTPUTS output 5).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.134, 146"
+   },
+   {
+    "plug": "J2-9",
+    "code": "771",
+    "name": "Wire 771 to GOV-1 - Throttle drive LO",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "23",
+    "name": "Wire 23 to CUST CON - Transfer relay coil control",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "194",
+    "name": "Wire 194 to CUST CON - Transfer relay coil +",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-14",
+    "code": "601",
+    "name": "Wire 601 to LFP - Low fuel pressure",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "switch",
+    "spec": "Low fuel pressure switch normally OPEN, closes above 5 in. w.c.; 5 VDC on Wire 601 when open (warning only).",
+    "test": "Test 105: wires off, fuel off = INFINITY, fuel on = CONTINUITY.",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.146"
+   },
+   {
+    "plug": "J2-15",
+    "code": "210",
+    "name": "Wire 210 to CAR - Common alarm relay",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-16",
+    "code": "6",
+    "name": "Wire 6 to DPE - AC excitation voltage",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-17",
+    "code": "162",
+    "name": "Wire 162 to CB - AC excitation voltage (breaker protected)",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-18",
+    "code": "4",
+    "name": "Wire 4 to FIELD - Field (brush) +",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-19",
+    "code": "1",
+    "name": "Wire 1 to FIELD - Field (brush) -",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-20",
+    "code": "T1",
+    "name": "Wire T1 to CUST CON - 120 VAC source for battery charger",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-21",
+    "code": "NEU",
+    "name": "Wire NEU to CUST CON - 120 VAC return for battery charger",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "J2-22",
+    "code": "56",
+    "name": "Wire 56 to SC - Starter contactor driver",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "spec": "Starter contactor coil 4.6 ohms (Table 3-17, +/-5%).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2); generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.146"
+   },
+   {
+    "plug": "J2-23",
+    "code": "15A",
+    "name": "Wire 15A to EC-2/CYL1-CYL4 - Fuse 12 VDC for general use",
+    "location": "Nexus controller J2 (23-pin)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-10 Nexus J2)"
+   },
+   {
+    "plug": "IGN-1",
+    "code": "460",
+    "name": "Wire 460 - Ignition coil cylinder 10 (if equipped)",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-2",
+    "code": "454",
+    "name": "Wire 454 - Ignition coil cylinder 4",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-3",
+    "code": "456",
+    "name": "Wire 456 - Ignition coil cylinder 6",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-4",
+    "code": "451",
+    "name": "Wire 451 - Ignition coil cylinder 1",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-5",
+    "code": "452",
+    "name": "Wire 452 - Ignition coil cylinder 2",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-6",
+    "code": "455",
+    "name": "Wire 455 - Ignition coil cylinder 5",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-7",
+    "code": "457",
+    "name": "Wire 457 - Ignition coil cylinder 7 (if equipped)",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-8",
+    "code": "459",
+    "name": "Wire 459 - Ignition coil cylinder 9 (if equipped)",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-9",
+    "code": "453",
+    "name": "Wire 453 - Ignition coil cylinder 3",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-10",
+    "code": "SHLD",
+    "name": "Wire SHLD - Camshaft sensor shield",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-11",
+    "name": "–",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-12",
+    "name": "–",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-13",
+    "name": "–",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-14",
+    "code": "79A",
+    "name": "Wire 79A - Crankshaft sensor positive",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-15",
+    "code": "458",
+    "name": "Wire 458 - Ignition coil cylinder 8 (if equipped)",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-16",
+    "code": "15B",
+    "name": "Wire 15B - 12 VDC power supply",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-17",
+    "code": "0",
+    "name": "Wire 0 - Ground connection",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-18",
+    "code": "15D",
+    "name": "Wire 15D - 12 VDC used for ignition coils",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-19",
+    "name": "–",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-20",
+    "code": "SHLDA",
+    "name": "Wire SHLDA - Crankshaft sensor shield",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-21",
+    "code": "0A",
+    "name": "Wire 0A - Crankshaft sensor negative",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-22",
+    "code": "0A",
+    "name": "Wire 0A - Camshaft sensor negative",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "IGN-23",
+    "code": "450",
+    "name": "Wire 450 - Camshaft sensor positive",
+    "location": "External ignition module connector (engines with 6+ cylinders, e.g. 6.8L)",
+    "kind": "other",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.73 (Table 3-11 external ignition module)"
+   },
+   {
+    "plug": "WTS",
+    "code": "68",
+    "name": "Coolant temperature sensor (WTS) - Wire 68 (J1-21) and 0",
+    "location": "Near the thermostat",
+    "kind": "thermistor",
+    "chart": "generac-lc-evolution-coolant-temp",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%), about 2.1-2.17 VDC at the controller. Unplugged, Wire 68 should rise to 3.3 VDC (+/-0.2).",
+    "errorCodes": [
+     "1400 High Temperature"
+    ],
+    "test": "With the J1 connector off, measure Wire 68 (J1-21) to Wire 0 and compare with Table 3-20 at the sensor temperature.",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.154-155"
+   },
+   {
+    "plug": "MPU1",
+    "code": "79",
+    "name": "Flywheel sensor - Wires 79 (J1-23), 0 (J1-10), SHLD (J1-16)",
+    "location": "Flywheel housing",
+    "kind": "other",
+    "spec": "Flywheel sensor (MPU1) 700-1000 ohms at the sensor (Test 97); J1-23 to J1-10 at the harness 700-1100 ohms (Test 98). AC volts (Table 3-16): 2.4L 1800 rpm 3 VAC, 2.4L 3600 rpm 7 VAC, 4.2L 6 VAC, 4.6L / 6.8L 5 VAC (+/-0.3 VAC).",
+    "test": "Unplug J1 (35-pin) and measure J1-23 (Wire 79) to J1-10 (Wire 0).",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.145"
+   },
+   {
+    "plug": "COILS",
+    "name": "Coil resistances Table 3-17 (+/-5%)",
+    "location": "Various",
+    "kind": "other",
+    "spec": "Starter contactor 4.6 ohms; main fuel solenoid 15 ohms; cold start fuel solenoid 6.7 ohms; oxygen sensor heater 5.4 ohms; air/fuel solenoid 27 ohms; transfer relay 110 ohms.",
+    "test": "Isolate the part; coil to ground must read INFINITY.",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.146"
+   },
+   {
+    "plug": "LFP",
+    "code": "601",
+    "name": "Low fuel pressure switch - Wires 601 (J2-14) and 0",
+    "location": "Fuel regulator",
+    "kind": "switch",
+    "spec": "Low fuel pressure switch normally OPEN, closes above 5 in. w.c.; 5 VDC on Wire 601 when open (warning only).",
+    "test": "Test 105: wires off, fuel off = INFINITY, fuel on = CONTINUITY.",
+    "source": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.146"
+   }
+  ],
+  "test": "J1 / J2 viewed from the harness side (Figure 3-3). Use the DEBUG > OUTPUTS screen to see the controller command each output.",
+  "notes": "QT048 models ending in N (QT04842ANAN etc.) have the R-200B LED panel, not Nexus - they have their own map. J1 pins 2, 3, 27-30 and J2 pins 10, 11 are not listed in the tables. \"Note 1\" / \"Note 4\" in the J1 table are printed without the note text.",
+  "gaps": [
+   "J1 pins 2, 3, 27-30 and J2 pins 10-11 not in the manual tables.",
+   "Text of table Notes 1 and 4 not printed."
+  ],
+  "sources": [
+   {
+    "file": "generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf",
+    "pages": "72-73, 134, 145-146, 151, 154-155",
+    "what": "Nexus J1/J2 pin-out, external ignition pin-out, sensor tests"
+   }
+  ]
+ },
+ {
+  "id": "generac-r200b-lc",
+  "title": "Generac liquid-cooled R-200B LED control board (0G8455): 2.4L 22-60 kW and 4.2L QT048 ending in N",
+  "side": "generator",
+  "brand": "Generac (Protector QT)",
+  "models": "R-200B LED panel units: QT048 4.2L models ending in N (QT04842ANAN, GNAN, JNAN, KNAN) and 2.4L 22/27/36/45/60 kW R-200B units covered by the R-200B 2.4L manual.",
+  "match": [
+   "QT04842ANAN",
+   "QTO4842ANAN",
+   "QT04842GNAN",
+   "QT04842JNAN",
+   "QT04842KNAN"
+  ],
+  "sizes": [
+   "22",
+   "27",
+   "36",
+   "45",
+   "48",
+   "60"
+  ],
+  "board": "R-200B printed circuit board J1 (23-pin) and J2 (14-pin), Bosch driver board DEG (12-pin), ignition module (23-pin), terminal board TB1",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "14",
+    "name": "Wire 14 - During cranking and running the PCB will deliver 12 VDC to the governor driver board that will turn on the governor driver board",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "805",
+    "name": "Wire 805 - A variable signal from the oxygen sensor will be present on this wire, depending on the fuel/air ratio of the mixture. The PCB will use this signal to control the Air/Fuel Solenoid (Emissions Only)",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "0",
+    "name": "Wire 0 - Common ground for governor driver board",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "85",
+    "name": "Wire 85 - Coolant temp shutdown wire, the PCB will look for a ground on this wire when the fault has occurred",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "switch",
+    "spec": "High coolant temperature switch (HWT/HCT) normally OPEN; closes above about 245 F (118 C) and grounds Wire 85 -> shutdown after the 10 s hold-off.",
+    "errorCodes": [
+     "Hi Coolant Temp LED (solid red)"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "767",
+    "name": "Wire 767 - Common ground for governor output signal",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "765",
+    "name": "Wire 765 - PCB governor output, the board will send a varying 5 VDC signal to the Bosch governor for a reference voltage on the position of the throttle plate",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-7",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "573",
+    "name": "Wire 573 - Coolant level shutdown, the PCB is looking for a 1 VDC signal on wire to indicate that coolant is at correct level, when coolant drops below the sensor the voltage will change from 1 VDC to 5 VDC",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "switch",
+    "spec": "Probe tip (A) to frame (B): coolant gives continuity; 5 VDC applied with a 5 kohm resistor in parallel -> about 1 VDC when coolant is present, 5 VDC when low.",
+    "errorCodes": [
+     "Hi Coolant Temp LED flashing = low coolant level"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "79",
+    "name": "Wire 79 - PCB speed sensing signal, the PCB will look for a specific voltage on this wire to ensure the engine is spinning at rated speed",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "spec": "Crank sensor (MP1, 160-tooth flywheel) AC volts: 1800 rpm units 3 VAC +/-0.3; 3600 rpm units 5 VAC +/-0.3. Housing gap 1/2 - 3/4 of a turn (Figure 12).",
+    "errorCodes": [
+     "Overspeed LED flashing = RPM signal failure"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "0",
+    "name": "Wire 0 - Common ground for Magnetic Pickup Sensor",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "601",
+    "name": "Wire 601 - Low fuel pressure, if fuel pressure drops below 5 inches of water column a yellow LED will illuminate on the PCB. It will not shutdown the engine",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "switch",
+    "spec": "Low fuel pressure switch on the regulator opens below about 5 in. w.c. - warning only.",
+    "errorCodes": [
+     "Low Fuel Pressure LED (yellow)"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "766",
+    "name": "Wire 766 - Bosch governor will provide a feed back signal that is in relation to the position of the throttle plate",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-13",
+    "code": "804",
+    "name": "Wire 804 - PCB will apply a voltage to this wire that will be adjusted according to the air/fuel mixture by the oxygen sensor",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-14",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-15",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-16",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "806",
+    "name": "Wire 806 - The ignition module will send a signal to the board indicating a fault that needs to be addressed",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "spec": "Ignition module red LED codes (first crank only, after 60 s in OFF): 4 blinks overspeed, 5 missing flywheel teeth, 2 no flywheel signal, 3 no cam signal.",
+    "errorCodes": [
+     "Flashing Overcrank LED = ignition module fault"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-18",
+    "code": "769",
+    "name": "Wire 769 - PCB will send a pulse width modulate signal to the governor driver board that will adjust the position of the throttle plate",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-19",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-20",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure, the PCB will look for a ground on this wire when a low oil pressure condition occurs",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "switch",
+    "spec": "LOP switch normally closed, held open by oil pressure; closes below about 8-12 psi -> 10 s hold-off then shutdown.",
+    "errorCodes": [
+     "Low Oil Pressure LED"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-21",
+    "code": "SHLD",
+    "name": "Wire SHLD - Shield to protect the signal from the rpm sensor (MP1) from electromagnetic interference",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-22",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J1-23",
+    "name": "Empty",
+    "location": "R-200B control board J1 (23-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J1 pin-out chart)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "808",
+    "name": "Wire 808 - PCB will apply varying voltage to Wire 808 that will adjust the air/fuel mixture to the engine",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "56A",
+    "name": "Wire 56A - PCB will apply a ground to Wire 56A that will energize RL1 relay that will engage the crank circuit",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "14A",
+    "name": "Wire 14A - PCB will apply a ground to Wire 14A that will energize RL2 relay that will engage the run circuit",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "183",
+    "name": "Wire 183 - When PCB is in GTS mode it will look for an input from a external relay",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "15E",
+    "name": "Wire 15E - PCB will look for 15E to momentarily open to set the exercise clock at that specific time",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "178",
+    "name": "Wire 178 - When PCB is in GTS mode it will look for an input from a external relay",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-7",
+    "code": "15A",
+    "name": "Wire 15A - When AUTO-OFF-MANUAL switch is in AUTO or MANUAL battery voltage will be delivered to the PCB that will power it up.",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "224",
+    "name": "Wire 224 - When utility voltage is available TR1 will supply 16 VAC line-to-line for utility sensing",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-9",
+    "name": "Empty",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "23",
+    "name": "Wire 23 - PCB will ground 23 and energize the transfer relay in the transfer switch",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "239",
+    "name": "Wire 239 - When AUTO-OFF-MANUAL switch is in MANUAL battery voltage will be delivered to the PCB to indicate a manual start.",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "225",
+    "name": "Wire 225 - When utility voltage is available TR1 will supply 16 VAC line-to-line for utility sensing",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "0",
+    "name": "Wire 0 - A ground will be applied to this terminal when the generator is built with emission control.",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "J2-14",
+    "code": "0",
+    "name": "Wire 0 - Common ground to the PCB.",
+    "location": "R-200B control board J2 (14-pin)",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71 (R-200B J2 pin-out chart)"
+   },
+   {
+    "plug": "DEG-1",
+    "code": "0",
+    "name": "Wire 0 - Common ground between PCB and driver board",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-2",
+    "name": "Empty",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-3",
+    "name": "Empty",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-4",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC is delivered to the driver board to turn it on from the PCB",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-5",
+    "name": "Empty",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-6",
+    "name": "Empty",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-7",
+    "name": "Empty",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-8",
+    "code": "770",
+    "name": "Wire 770 - DC output current to the Bosch governor",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-9",
+    "code": "771",
+    "name": "Wire 771 - DC output current to the Bosch governor",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-10",
+    "code": "0",
+    "name": "Wire 0 - Common frame ground",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-11",
+    "name": "Empty",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "DEG-12",
+    "code": "769",
+    "name": "Wire 769 - Pulse width module signal from PCB that adjusts the position of the throttle plate",
+    "location": "Bosch governor driver board (DEG) 12-pin",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72 (Figure 5, Bosch driver board)"
+   },
+   {
+    "plug": "BC-1",
+    "code": "L1",
+    "name": "Battery charger pin 1 - L1 to TBBC-1X",
+    "location": "Battery charger connector",
+    "kind": "other",
+    "spec": "Charger float 13.4 VDC.",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.74"
+   },
+   {
+    "plug": "BC-2",
+    "code": "N",
+    "name": "Battery charger pin 2 - N to TBBC-2X",
+    "location": "Battery charger connector",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.74"
+   },
+   {
+    "plug": "BC-3",
+    "code": "13",
+    "name": "Battery charger pin 3 - Wire 13 to TB1-8X",
+    "location": "Battery charger connector",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.74"
+   },
+   {
+    "plug": "BC-4",
+    "code": "0",
+    "name": "Battery charger pin 4 - Wire 0 to TB1-1X",
+    "location": "Battery charger connector",
+    "kind": "other",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.74"
+   },
+   {
+    "plug": "HWT",
+    "code": "85",
+    "name": "High coolant temperature switch (HCT) - Wire 85",
+    "location": "Engine (Figure 13)",
+    "kind": "switch",
+    "spec": "High coolant temperature switch (HWT/HCT) normally OPEN; closes above about 245 F (118 C) and grounds Wire 85 -> shutdown after the 10 s hold-off.",
+    "errorCodes": [
+     "Hi Coolant Temp LED (solid red)"
+    ],
+    "test": "Switch must be open cold; Wire 85 to ground with the switch disconnected must read open.",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.75-76"
+   },
+   {
+    "plug": "LOS",
+    "code": "86",
+    "name": "Low oil pressure switch - Wire 86",
+    "location": "Engine (Figure 13)",
+    "kind": "switch",
+    "spec": "LOP switch normally closed, held open by oil pressure; closes below about 8-12 psi -> 10 s hold-off then shutdown.",
+    "errorCodes": [
+     "Low Oil Pressure LED"
+    ],
+    "test": "Gauge check of oil pressure; switch closed engine off, open with pressure.",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.75-76"
+   },
+   {
+    "plug": "WLS",
+    "code": "573",
+    "name": "Low coolant level probe - Wire 573 (+, B) and 0 (A)",
+    "location": "Radiator",
+    "kind": "switch",
+    "spec": "Probe tip (A) to frame (B): coolant gives continuity; 5 VDC applied with a 5 kohm resistor in parallel -> about 1 VDC when coolant is present, 5 VDC when low.",
+    "errorCodes": [
+     "Hi Coolant Temp LED flashing = low coolant level"
+    ],
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.76-78"
+   },
+   {
+    "plug": "MP1",
+    "code": "79",
+    "name": "Crank sensor (MP1) - Wire 79, 0, SHLD",
+    "location": "Flywheel housing",
+    "kind": "other",
+    "spec": "Crank sensor (MP1, 160-tooth flywheel) AC volts: 1800 rpm units 3 VAC +/-0.3; 3600 rpm units 5 VAC +/-0.3. Housing gap 1/2 - 3/4 of a turn (Figure 12).",
+    "errorCodes": [
+     "Overspeed LED flashing = RPM signal failure"
+    ],
+    "test": "Measure AC volts on Wire 79 to 0 while running.",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.71, 75, 78"
+   },
+   {
+    "plug": "MP2",
+    "code": "79A",
+    "name": "Cam sensor (MP2) - Wire 79A, 0A, SHLDA to the ignition module",
+    "location": "Below the timing belt cover",
+    "kind": "other",
+    "spec": "Read by the ignition module as top dead center.",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.73, 75"
+   },
+   {
+    "plug": "DIP",
+    "name": "R-200B 8-position DIP switch",
+    "location": "Control board",
+    "kind": "other",
+    "spec": "1 OFF 60 Hz / ON 50 Hz; 2 OFF ATS / ON GTS; 3 OFF low speed exercise / ON normal; 4 OFF LP / ON NG; 5 reserved; 6 OFF 22/27 kW (1800) or 45 kW (3600) / ON 36 kW turbo (1800) or 60 kW turbo (3600); 7 OFF 2.4L / ON 4.2L (1800 rpm only); 8 reserved.",
+    "test": "Set with the switch in OFF, then hold Set Exercise 5 s.",
+    "source": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf p.72"
+   }
+  ],
+  "test": "The panel has 7 LEDs, no screen; faults show as LEDs (flashing variants listed per entry). Reset by putting AUTO-OFF-MANUAL in OFF.",
+  "notes": "DIP switch 7 selects 4.2L (1800 rpm) - the same board serves QT048 4.2L units. 2.4L R-200B model numbers are not tied in this manual, so only the QT048 N models are in \"match\".",
+  "gaps": [
+   "No coolant temperature sender chart - this panel uses an on/off high temperature switch.",
+   "2.4L R-200B model numbers not listed in the manual.",
+   "Ignition module (IM) and TB1 pin tables are left out: the R-200B manual shows them for the 4-cylinder 2.4L engine (coil wires 451-454), not the 6-cylinder 4.2L QT048."
+  ],
+  "sources": [
+   {
+    "file": "generac-liquidcooled-2p4l-r200b-diagnostic-repair-manual.pdf",
+    "pages": "70-78",
+    "what": "R-200B J1/J2, DEG, ignition module, TB1 pin-outs and protective devices"
+   }
+  ]
+ },
+ {
+  "id": "generac-h100-panel",
+  "title": "Generac industrial gaseous (SG series) with H-100 digital control panel - J1 / J2 35-pin",
+  "side": "generator",
+  "brand": "Generac (Industrial)",
+  "models": "Generac SG industrial spark-ignited gaseous (H-100 Digital Control Panel, 35-150 kW): SG035, SG045, SG050, SG060, SG070, SG080, SG100, SG130, SG150. H-100 panel units only.",
+  "match": [
+   "SG035",
+   "SG045",
+   "SG050",
+   "SG060",
+   "SG070",
+   "SG080",
+   "SG100",
+   "SG130",
+   "SG150"
+  ],
+  "sizes": [
+   "35",
+   "45",
+   "50",
+   "60",
+   "70",
+   "80",
+   "100",
+   "130",
+   "150"
+  ],
+  "board": "H-100 control panel J1 and J2 (35-pin each)",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "name": "CAN Bus (CAN (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-2",
+    "name": "CAN Bus (+) (CAN (+))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "810",
+    "name": "Wire 810 - Modem Power (-) (Gnd)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "805",
+    "name": "Wire 805 - Emissions Sensor/Fluid Basin Level (AN8 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "804",
+    "name": "Wire 804 - Emissions Sensor/Fluid Basin Level (AN8 (+) 0-1V)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "575R",
+    "name": "Wire 575R - Fuel Level (AN5 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "575V",
+    "name": "Wire 575V - Fuel Level (AN5 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "523R",
+    "name": "Wire 523R - Oil Temperature (AN1 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "523V",
+    "name": "Wire 523V - Oil Temperature (AN1 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "R15B",
+    "name": "Wire R15B - Overspd Shutdown (OUT (OC) 10)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "256",
+    "name": "Wire 256 - Fuel Relay (OUT (OC) 2)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "0",
+    "name": "Wire 0 - Panel Power (-) (- Batt (12/24V))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-13",
+    "name": "CAN Bus (-) (CAN (-))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "811",
+    "name": "Wire 811 - Modem DCD (IN (DB) 9)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "68V",
+    "name": "Wire 68V - Coolant Temperature (AN2 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "803",
+    "name": "Wire 803 - Battery Charger Cur (AN9(+) 0-5V)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "766R",
+    "name": "Wire 766R - Throttle Position (AN7 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-18",
+    "code": "766V",
+    "name": "Wire 766V - Throttle Position (AN7 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-19",
+    "code": "69R",
+    "name": "Wire 69R - Oil Pressure (AN3 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "pressure",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-20",
+    "code": "69V",
+    "name": "Wire 69V - Oil Pressure (AN3 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "pressure",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-21",
+    "code": "221",
+    "name": "Wire 221/808 - Preheat/Air/Fuel Solenoid (OUT (OC)12 (PWM))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-22",
+    "code": "242",
+    "name": "Wire 242 - 13.3 Gas Relay (OUT (OC) 4)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-23",
+    "code": "56A",
+    "name": "Wire 56A - Starter Relay (OUT (OC) 1)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-24",
+    "code": "0",
+    "name": "Wire 0/shld - Engine RPM (RPM sensor (-))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-25",
+    "code": "79",
+    "name": "Wire 79 - Engine RPM (RPM sensor (+))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-26",
+    "code": "812",
+    "name": "Wire 812 - Modem Enable (IN (DB) 10)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-27",
+    "code": "AI1R",
+    "name": "Wire AI1R/806/754R - Fuel Press/Ign. Alarm/Inlet Temp (AN6 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-28",
+    "code": "AI1S",
+    "name": "Wire AI1S/754V - Fuel Press/Inlet Temp (AN6 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-29",
+    "code": "573R",
+    "name": "Wire 573R - Coolant Level (AN4 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-30",
+    "code": "573V",
+    "name": "Wire 573V - Coolant Level (AN4 (+) 4-20mA)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-31",
+    "code": "68R",
+    "name": "Wire 68R - Coolant Temp (AN2 (rtn))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "spec": "Analog inputs AN1-AN7 are general-purpose 4-20 mA inputs (AN #1-7 (+) = 12 V 50 mA source); AN8 0-1 V; AN9 0-5 V (key on p.48; analog list p.42).",
+    "test": "These are 4-20 mA transmitter loops: with the sender connected, read the live value on the H-100 display; measure loop current in series on the (+) wire. No mA-to-psi/F scaling is printed in this manual.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-32",
+    "code": "809",
+    "name": "Wire 809 - Modem Power (+) (+12V (300mA))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-33",
+    "code": "769",
+    "name": "Wire 769 - Throttle Driver (OUT (OC)11 (PWM))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-34",
+    "code": "445",
+    "name": "Wire 445 - Fault Relay (OUT (OC) 3)",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-35",
+    "code": "15B",
+    "name": "Wire 15B/220B - Panel Power ( + ) (+ Batt ( 12/24V ))",
+    "location": "H-100 control panel J1 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "391",
+    "name": "Wire 391 - Diagnostic/Rem-An/HTS (RS485 (-))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "388",
+    "name": "Wire 388 - GenLink (RS232 (tx))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "IN7",
+    "name": "Wire IN7 - DI-3/Line Power (IN (DB) 7)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "183",
+    "name": "Wire 183 - Remote Start (IN (DB) 4)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "174",
+    "name": "Wire 174 - Key Switch in AUTO (IN (DB) 1)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-6",
+    "code": "224",
+    "name": "Wire 224 - Phase AB Voltage (Vsense 1)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Voltage sensing input 0-28.8 VAC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-7",
+    "code": "227",
+    "name": "Wire 227 - Vsense PCB Ground (Gnd)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "403",
+    "name": "Wire 403 - AVR Gate trigger 'B' (OUT (OC) 14)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "399C",
+    "name": "Wire 399C - Phase C Current (CT3 (-))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Current transformer input 0-3 A AC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "398C",
+    "name": "Wire 398C - Phase C Current (CT3 (+))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Current transformer input 0-3 A AC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "399A",
+    "name": "Wire 399A - Phase A Current (CT1 (-))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Current transformer input 0-3 A AC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "398A",
+    "name": "Wire 398A - Phase A Current (CT1 (+))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Current transformer input 0-3 A AC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "390",
+    "name": "Wire 390 - Diagnostic/Rem-An/HTS (RS485 (+))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-14",
+    "code": "387",
+    "name": "Wire 387 - GenLink (RS232 (rx))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-15",
+    "code": "567",
+    "name": "Wire 567/601 - DI-2/Ruptured Basin/Low Fuel Pressure (IN (DB) 6)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-16",
+    "code": "R15",
+    "name": "Wire R15 - Emergency Stop (IN (DB) 3)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-17",
+    "code": "226",
+    "name": "Wire 226 - Phase CA Voltage (Vsense 3)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Voltage sensing input 0-28.8 VAC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-18",
+    "name": "Vsense PCB (+12V (500 mA))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-19",
+    "code": "405",
+    "name": "Wire 405 - AVR PCB Power (-) (Gnd)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-20",
+    "code": "404",
+    "name": "Wire 404 - AVR Gate trigger 'A' (OUT (OC) 13)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-21",
+    "code": "OC8",
+    "name": "Wire OC8 - Auxiliary 4 Output (OUT (OC) 8)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-22",
+    "code": "OC6",
+    "name": "Wire OC6 - Auxiliary 2 Output (OUT (OC) 6)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-23",
+    "code": "OC5",
+    "name": "Wire OC5 - Auxiliary 1 Output (OUT (OC) 5)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-24",
+    "code": "SHLD",
+    "name": "Wire SHLD - Diagnostic/Rem-An/HTS (RS485 (shield))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-25",
+    "code": "389",
+    "name": "Wire 389 - GenLink (RS232 (com))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-26",
+    "code": "IN8",
+    "name": "Wire IN8 - DI-4/Generator Power (IN (DB) 8)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-27",
+    "code": "505",
+    "name": "Wire 505 - DI-1/Battery Charger Fail (IN (DB) 5)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-28",
+    "code": "175",
+    "name": "Wire 175 - Key Switch in MANUAL (IN (DB) 2)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-29",
+    "code": "225",
+    "name": "Wire 225 - Phase BC Voltage (Vsense 2)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Voltage sensing input 0-28.8 VAC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-30",
+    "code": "406",
+    "name": "Wire 406 - AVR Zero Crossing Input (AVR Zero Crossing)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-31",
+    "code": "194",
+    "name": "Wire 194 - AVR PCB Power (+) (+12V (300 mA))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-32",
+    "code": "OC9",
+    "name": "Wire OC9/25 - 13.3 Ignition Power (OUT (OC) 9)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-33",
+    "code": "OC7",
+    "name": "Wire OC7 - Auxiliary 3 Output (OUT (OC) 7)",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-34",
+    "code": "399B",
+    "name": "Wire 399B - Phase B Current (CT2 ( - ))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Current transformer input 0-3 A AC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-35",
+    "code": "398B",
+    "name": "Wire 398B - Phase B Current (CT2 ( + ))",
+    "location": "H-100 control panel J2 (35-pin)",
+    "kind": "other",
+    "spec": "Current transformer input 0-3 A AC.",
+    "source": "generac-h100-digital-control-panel-technical-manual.pdf p.48 (Appendix B, H-100 connector pin descriptions)"
+   }
+  ],
+  "test": "Oil temp, coolant temp, oil pressure, coolant level and fuel level are 4-20 mA sender inputs (AN1-AN5); the panel shows each channel live and raises HI/LO alarms, warnings and a sensor FAULT when the signal is outside valid limits.",
+  "notes": "Key: OUT (O/C) = open-collector digital output; IN (DB) = buffered digital input pulled up; Vsense 0-28.8 VAC; CT 0-3 A AC.",
+  "gaps": [
+   "4-20 mA scaling for each sender (mA vs psi / F) is not printed in the H-100 manuals in the library.",
+   "Engine-side sensor resistance values for 4.5L / 9.0L not mapped."
+  ],
+  "sources": [
+   {
+    "file": "generac-h100-digital-control-panel-technical-manual.pdf",
+    "pages": "42-48",
+    "what": "Appendix B I/O and connector pin descriptions"
+   }
+  ]
+ },
+ {
+  "id": "generac-2008-aircooled-8kw",
+  "title": "Generac / Guardian 2008-series air-cooled 8 kW (GH-410) control board J1 / J2",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Carrier badges)",
+  "models": "2008-series pre-Nexus LCD units: 5501 (8KW GH410 GUARD+8C L/CTR)",
+  "match": [
+   "G005501",
+   "5501"
+  ],
+  "sizes": [
+   "8"
+  ],
+  "board": "Printed circuit board with J1 (4-pin) and J2 (18-pin)",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in HTO",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "switch",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "switch",
+    "spec": "Test 75 step 6b says J1 \"Pin Location 4 (Wire 86)\"; the pin table prints Wire 86 at J1-2 and Wire 18 at J1-4. Go by the wire number.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions); generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.144"
+   },
+   {
+    "plug": "J1-3",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC source voltage for the circuit board",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "0",
+    "name": "Wire 0 - INTERNAL USE",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "0",
+    "name": "Wire 0 - INTERNAL USE",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground for transfer relay operation",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-6",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "15B",
+    "name": "Wire 15B - Provides an electrical connection for charge current to reach the battery from the battery charger. Provides 12VDC to the Transfer Relay",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-9",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "0",
+    "name": "Wire 0 - Common Ground",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor for single cylinder engines.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-15",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-16",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-17",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-18",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug 1",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC sensing for control board.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug 2",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC sensing for control board.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.100 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch - Wires 86 and 0",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally closed with no pressure; Wire 86 grounded on low pressure. Rated 10 psi V-twin, 8 psi single cylinder. Normal running pressure about 35-40 psi.",
+    "test": "Wires off: engine stopped CONTINUITY, running INFINITY. DEBUG > INPUTS: Input 1 = Wire 86, changes 1 to 0 when pressure builds. Wire 86 to ground with J1 unplugged must be INFINITY.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.143-144"
+   },
+   {
+    "plug": "HTO",
+    "code": "85",
+    "name": "High oil temperature switch - Wires 85 and 0",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally open; contacts close at 293 F. Bench test: CONTINUITY at about 283-305 F (139-151 C).",
+    "test": "Cool engine: Wires 85 and 0 off, INFINITY across the switch; Wire 85 to ground with J1 unplugged INFINITY.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.144"
+   },
+   {
+    "plug": "J2-11 / J2-3 loads",
+    "name": "Load resistances from J2 (8 kW)",
+    "location": "J2 harness to ground",
+    "kind": "other",
+    "spec": "J2-11 Wire 56: starter contactor (SC) 4 ohms, choke solenoid (CS) 4 ohms (CS on Wire 56 and 90). J2-3 Wire 14: fuel solenoid (FS) 16 ohms.",
+    "test": "Unplug J2 and measure each pin to ground; then measure each component on its own.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.147"
+   }
+  ],
+  "test": "DEBUG > INPUTS on the display shows the switch inputs (Input 1 = Wire 86). Connector views: PCB end and harness end are both drawn on the page.",
+  "notes": "8 kW table lists no J2-4, J2-12, J2-13 or J2-14 rows.",
+  "gaps": [
+   "J2-4, J2-12, J2-13, J2-14 not listed for 8 kW."
+  ],
+  "sources": [
+   {
+    "file": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf",
+    "pages": "100, 143-147",
+    "what": "J1/J2 pin descriptions, LOP/HTO tests, load resistances"
+   }
+  ]
+ },
+ {
+  "id": "generac-2008-aircooled-10-14kw",
+  "title": "Generac / Guardian 2008-series air-cooled 10, 12 and 14 kW control board J1 / J2",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Carrier badges)",
+  "models": "2008-series pre-Nexus LCD units: 5502 (10KW GT530 GUARD+10C L/CTR); 5503 (14KW GT990 GUARD+14C L/CNTR); 5536 (12KW GT990 CENT+12C L/CTR); 5826 (10KW GT530 CENT W/100A NSE)",
+  "match": [
+   "G005502",
+   "5502",
+   "G005826",
+   "5826",
+   "G005503",
+   "5503",
+   "G005536",
+   "5536"
+  ],
+  "sizes": [
+   "10",
+   "12",
+   "14"
+  ],
+  "board": "Printed circuit board with J1 (4-pin) and J2 (18-pin), stepper motor J3, remote wireless connection",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in HTO",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "switch",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "switch",
+    "spec": "Test 75 step 6b says J1 \"Pin Location 4 (Wire 86)\"; the pin table prints Wire 86 at J1-2 and Wire 18 at J1-4. Go by the wire number.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions); generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.144"
+   },
+   {
+    "plug": "J1-3",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC source voltage for the circuit board",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-1",
+    "name": "INTERNAL USE ONLY",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-2",
+    "name": "INTERNAL USE ONLY",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and choke solenoid operation.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "817",
+    "name": "Wire 817 - Grounded by printed circuit board to turn on System Ready (Green) LED.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground for transfer relay operation",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-6",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "15B",
+    "name": "Wire 15B - Provides an electrical connection for charge current to reach the battery from the battery charger. Provides 12 VDC to the Transfer Relay",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (+5 VDC) for status LEDs.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "0",
+    "name": "Wire 0 - Common Ground",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay for V-Twin engines",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-12",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "818",
+    "name": "Wire 818 - Grounded by board to turn on the Alarm (Red) LED.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-14",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-15",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-16",
+    "name": "INTERNAL USE ONLY",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-17",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-18",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J3",
+    "name": "Control wires for Stepper Motor",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug-1",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC sensing for control board.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug-2",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC sensing for control board.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.101-102 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch - Wires 86 and 0",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally closed with no pressure; Wire 86 grounded on low pressure. Rated 10 psi V-twin, 8 psi single cylinder. Normal running pressure about 35-40 psi.",
+    "test": "Wires off: engine stopped CONTINUITY, running INFINITY. DEBUG > INPUTS: Input 1 = Wire 86, changes 1 to 0 when pressure builds. Wire 86 to ground with J1 unplugged must be INFINITY.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.143-144"
+   },
+   {
+    "plug": "HTO",
+    "code": "85",
+    "name": "High oil temperature switch - Wires 85 and 0",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally open; contacts close at 293 F. Bench test: CONTINUITY at about 283-305 F (139-151 C).",
+    "test": "Cool engine: Wires 85 and 0 off, INFINITY across the switch; Wire 85 to ground with J1 unplugged INFINITY.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.144"
+   },
+   {
+    "plug": "J2-11 / J2-3 loads",
+    "name": "Load resistances from J2 (10-20 kW)",
+    "location": "J2 harness to ground",
+    "kind": "other",
+    "spec": "J2-11 Wire 56: V-twin starter contactor relay (SCR) 150-160 ohms. J2-3 Wire 14: fuel solenoid (FS) 16 ohms, FS2 7 ohms (10 kW), choke solenoid (CS) 4 ohms (CS between Wire 14 and 90). J2-12 Wire 4: rotor (see front of manual).",
+    "test": "Unplug J2 and measure each pin to ground; then each component on its own.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.147"
+   }
+  ],
+  "test": "DEBUG > INPUTS on the display shows the switch inputs (Input 1 = Wire 86). Connector views: PCB end and harness end are both drawn on the page.",
+  "notes": "The 12/14 kW table (p.102) is the same as the 10 kW table (p.101).",
+  "gaps": [
+   "Stepper motor J3 pins not tabulated in this manual."
+  ],
+  "sources": [
+   {
+    "file": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf",
+    "pages": "101-102, 143-147",
+    "what": "J1/J2 pin descriptions, LOP/HTO tests, load resistances"
+   }
+  ]
+ },
+ {
+  "id": "generac-2008-aircooled-16-20kw",
+  "title": "Generac / Guardian 2008-series air-cooled 16, 17 and 20 kW control board J1 / J2",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion, Carrier badges)",
+  "models": "2008-series pre-Nexus LCD units: 5504 (17KW GT990 GUARD+16C L/CNTR); 5505 (17KW GT990 GUARDN+16C L/CT AL); 5506 (20KW GT999 GUARDN +200A LS AL); 5523 (17KW GT990 GUARD-NO SWITCH); 5523 (17KW GT990 GUARD/GEN-NO SWITCH); 5525 (20KW GT999 GUARDN-NO SWTCH AL); 5525 (20KW GT999 GUARD/GEN-NO SW AL); 5531 (17KW GT990 G26-NO SWITCH); 5533 (20KW GT999 G26-NO SW. AL); 5539 (20KW GT999 CENT+200A LS AL); 5547 (20KW GT999 CAR+200A L/SHED SW); 5744 (20KW GT999 GUARD + 200A SE SW); 5813 (20 KW GT999 CENT. W/ 200A NSE)",
+  "match": [
+   "G005504",
+   "5504",
+   "G005505",
+   "5505",
+   "G005506",
+   "5506",
+   "G005523",
+   "5523",
+   "G005525",
+   "5525",
+   "G005531",
+   "5531",
+   "G005533",
+   "5533",
+   "G005539",
+   "5539",
+   "G005547",
+   "5547",
+   "G005744",
+   "5744",
+   "G005813",
+   "5813"
+  ],
+  "sizes": [
+   "16",
+   "17",
+   "20"
+  ],
+  "board": "Printed circuit board with J1 (4-pin) and J2 (18-pin), stepper motor J3, remote wireless connection",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in HTO",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "switch",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "switch",
+    "spec": "Test 75 step 6b says J1 \"Pin Location 4 (Wire 86)\"; the pin table prints Wire 86 at J1-2 and Wire 18 at J1-4. Go by the wire number.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions); generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.144"
+   },
+   {
+    "plug": "J1-3",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC source voltage for the circuit board",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-1",
+    "name": "INTERNAL USE ONLY",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-2",
+    "name": "INTERNAL USE ONLY",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "14",
+    "name": "Wire 14 - 12VDC output for engine run condition. Used for fuel solenoid and choke solenoid operation.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "817",
+    "name": "Wire 817 - Grounded by printed circuit board to turn on System Ready (Green) LED.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground for transfer relay operation",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-6",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "15B",
+    "name": "Wire 15B - Provides an electrical connection for charge current to reach the battery from the battery charger. Provides 12 VDC to the Transfer Relay",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-9",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (+5 VDC) for status LEDs.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "0",
+    "name": "Wire 0 - Common Ground",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay for V-Twin engines",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "4",
+    "name": "Wire 4 - Field Boost output",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-13",
+    "code": "818",
+    "name": "Wire 818 - Grounded by board to turn on the Alarm (Red) LED.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-14",
+    "code": "819",
+    "name": "Wire 819 - Grounded by board to turn on the Maintenance Required (Yellow) LED.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-15",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-16",
+    "name": "INTERNAL USE ONLY",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-17",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J2-18",
+    "name": "NOT USED",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "J3",
+    "name": "Control wires for Stepper Motor",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug-1",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC sensing for control board.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug-2",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC sensing for control board.",
+    "location": "Printed circuit board J1 (4-pin) / J2 (18-pin)",
+    "kind": "other",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.103 (J1/J2 connector pin descriptions)"
+   },
+   {
+    "plug": "LOP",
+    "code": "86",
+    "name": "Low oil pressure switch - Wires 86 and 0",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally closed with no pressure; Wire 86 grounded on low pressure. Rated 10 psi V-twin, 8 psi single cylinder. Normal running pressure about 35-40 psi.",
+    "test": "Wires off: engine stopped CONTINUITY, running INFINITY. DEBUG > INPUTS: Input 1 = Wire 86, changes 1 to 0 when pressure builds. Wire 86 to ground with J1 unplugged must be INFINITY.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.143-144"
+   },
+   {
+    "plug": "HTO",
+    "code": "85",
+    "name": "High oil temperature switch - Wires 85 and 0",
+    "location": "Engine",
+    "kind": "switch",
+    "spec": "Normally open; contacts close at 293 F. Bench test: CONTINUITY at about 283-305 F (139-151 C).",
+    "test": "Cool engine: Wires 85 and 0 off, INFINITY across the switch; Wire 85 to ground with J1 unplugged INFINITY.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.144"
+   },
+   {
+    "plug": "J2-11 / J2-3 loads",
+    "name": "Load resistances from J2 (10-20 kW)",
+    "location": "J2 harness to ground",
+    "kind": "other",
+    "spec": "J2-11 Wire 56: V-twin starter contactor relay (SCR) 150-160 ohms. J2-3 Wire 14: fuel solenoid (FS) 16 ohms, FS2 7 ohms (10 kW), choke solenoid (CS) 4 ohms (CS between Wire 14 and 90). J2-12 Wire 4: rotor (see front of manual).",
+    "test": "Unplug J2 and measure each pin to ground; then each component on its own.",
+    "source": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf p.147"
+   }
+  ],
+  "test": "DEBUG > INPUTS on the display shows the switch inputs (Input 1 = Wire 86). Connector views: PCB end and harness end are both drawn on the page.",
+  "notes": "16-20 kW adds J2-12 field boost (Wire 4) and J2-14 maintenance LED (Wire 819).",
+  "gaps": [
+   "Stepper motor J3 pins not tabulated in this manual."
+  ],
+  "sources": [
+   {
+    "file": "generac-2008-aircooled-hsb-7-20kw-diagnostic-repair-manual.pdf",
+    "pages": "103, 143-147",
+    "what": "J1/J2 pin descriptions, LOP/HTO tests, load resistances"
+   }
+  ]
+ },
+ {
+  "id": "generac-synergy-vscf-20",
+  "title": "Generac Synergy 20 kW VSCF air-cooled - controller J1/J2/J4/J5 and AVR P1/P2",
+  "side": "generator",
+  "brand": "Generac (Synergy)",
+  "models": "Synergy 20 kW VSCF (Evolution 1.0 with VSCF Ecodes): 6055, 6098",
+  "match": [
+   "G006055",
+   "6055",
+   "G006098",
+   "6098"
+  ],
+  "sizes": [
+   "20"
+  ],
+  "board": "Synergy controller J1 (20), J2 (16), J4 (10, to AVR), J5 stepper, J8-J9 charger; Synergy AVR P1 (20) and P2 (4, fans)",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "820",
+    "name": "Wire 820 - Positive voltage (5 VDC) for status LEDs",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-4",
+    "name": "Not Used",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "178",
+    "name": "Wire 178 - Not Used, Optional - 2-Wire Start (return)",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "819",
+    "name": "Wire 819 - Grounded by the controller to turn on the Maintenance (Yellow) LED",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "818",
+    "name": "Wire 818 - Grounded by the controller to turn on Alarm (Red) LED",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "817",
+    "name": "Wire 817 - Grounded by the controller to turn on System Ready (Green) LED",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "398A",
+    "name": "Wire 398A - Generator Current Sense A2",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "399A",
+    "name": "Wire 399A - Generator Current Sense A1",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "switch",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure in the LOP switch",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "switch",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-13",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC) DC Field Excitation Ground",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay (TR1)",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-15",
+    "name": "Not Used - UL Required Spacing",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC Utility sensing voltage",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC Utility sensing voltage",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-18",
+    "name": "Not Used - UL Required Spacing",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-19",
+    "name": "Not Used",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J1-20",
+    "name": "Not Used",
+    "location": "Synergy controller J1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.264 (Appendix A, Synergy controller J1)"
+   },
+   {
+    "plug": "J2-1",
+    "name": "function cell blank",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "209",
+    "name": "Wire 209 - Common Alarm Relay Output",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-4",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Fuel solenoid supply voltage.",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-5",
+    "name": "Not Used",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-6",
+    "name": "Not Used",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-7",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: The controller grounds Wire 18 for ignition shutdown and receives a reference signal for speed control while cranking and running",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "R1",
+    "name": "Wire R1 - Model ID Resistor",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-9",
+    "name": "Not Used",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-10",
+    "name": "Not Used",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "183",
+    "name": "Wire 183 - Not Used, Optional - 2-Wire Start",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-12",
+    "code": "210",
+    "name": "Wire 210 - Common Alarm Relay Output",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-13",
+    "name": "Not Used",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-14",
+    "name": "Not Used",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-15",
+    "code": "R3",
+    "name": "Wire R3 - Model ID Resistor",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J2-16",
+    "code": "R2",
+    "name": "Wire R2 - Model ID Resistor",
+    "location": "Synergy controller J2 (16-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-1",
+    "code": "476",
+    "name": "Wire 476 - PWM DC Voltage Supply (Positive)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-2",
+    "code": "479",
+    "name": "Wire 479 - Comms DC Voltage (Signal -)*",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-3",
+    "code": "480",
+    "name": "Wire 480 - Comms DC Voltage (Signal +)*",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-4",
+    "code": "481",
+    "name": "Wire 481 - Comms DC Voltage (Ground)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-5",
+    "code": "482",
+    "name": "Wire 482 - AVR Ground",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-6",
+    "code": "477",
+    "name": "Wire 477 - PWM DC Voltage (Signal)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-7",
+    "code": "478",
+    "name": "Wire 478 - PWM DC Voltage (Ground)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-8",
+    "code": "484",
+    "name": "Wire 484 - AVR Enable (Positive)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-9",
+    "code": "485",
+    "name": "Wire 485 - AVR Enable (Ground)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J4-10",
+    "code": "483",
+    "name": "Wire 483 - AVR Power (Positive)",
+    "location": "Synergy controller J4 (10-pin) to AVR",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-1",
+    "name": "Not Used",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-2",
+    "name": "Not Used",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-3",
+    "name": "Not Used",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-4",
+    "name": "Not Used",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-5",
+    "name": "Not Used",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-6",
+    "code": "Red",
+    "name": "Wire Red - Stepper Power",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-7",
+    "code": "Orange",
+    "name": "Wire Orange - Stepper Motor B2 Coil",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-8",
+    "code": "Yellow",
+    "name": "Wire Yellow - Stepper Motor B1 Coil",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-9",
+    "code": "Brown",
+    "name": "Wire Brown - Stepper Motor A2 Coil",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J5-10",
+    "code": "Black",
+    "name": "Wire Black - Stepper Motor A1 Coil",
+    "location": "Stepper connector J5 (10-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J8-J9 pin 1",
+    "code": "T1",
+    "name": "Wire T1 - 120 VAC Power for the Battery Charger",
+    "location": "Battery charger connector J8-J9",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "J8-J9 pin 2",
+    "code": "0",
+    "name": "Wire 0 - Neutral Connection for T1 (battery charger)",
+    "location": "Battery charger connector J8-J9",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.265 (J2, J4, J5, J8-J9)"
+   },
+   {
+    "plug": "P1-1",
+    "code": "476",
+    "name": "Wire 476 - PWM DC Voltage Supply (Positive)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-2",
+    "code": "479",
+    "name": "Wire 479 - Comms DC Voltage (Signal -)*",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-3",
+    "code": "480",
+    "name": "Wire 480 - Comms DC Voltage (Signal +)*",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-4",
+    "code": "481",
+    "name": "Wire 481 - Comms DC Voltage (Ground)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-5",
+    "code": "482",
+    "name": "Wire 482 - AVR Ground",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-6",
+    "code": "398A",
+    "name": "Wire 398A - Current Transformer",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-7",
+    "code": "399A",
+    "name": "Wire 399A - Current Transformer",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-8",
+    "code": "23",
+    "name": "Wire 23 - Transfer control wire",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-9",
+    "code": "BLACK",
+    "name": "Wire BLACK - Aux Power Supply (GND)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-10",
+    "code": "11S",
+    "name": "Wire 11S - Generator Voltage Sense",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-11",
+    "code": "477",
+    "name": "Wire 477 - PWM DC Voltage (Signal)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-12",
+    "code": "478",
+    "name": "Wire 478 - PWM DC Voltage (Ground)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-13",
+    "code": "484",
+    "name": "Wire 484 - AVR Enable (Positive)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-14",
+    "code": "485",
+    "name": "Wire 485 - AVR Enable (Ground)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-15",
+    "code": "483",
+    "name": "Wire 483 - AVR Power (Positive)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-16",
+    "code": "398B",
+    "name": "Wire 398B - Current Transformer",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-17",
+    "code": "399B",
+    "name": "Wire 399B - Current Transformer",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-18",
+    "code": "SHLD",
+    "name": "Wire SHLD - Shield GND",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-19",
+    "code": "RED",
+    "name": "Wire RED - Aux Power Supply (Positive)",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P1-20",
+    "code": "44S",
+    "name": "Wire 44S - Generator Voltage Sense",
+    "location": "Synergy AVR P1 (20-pin)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P2-1",
+    "code": "BLACK",
+    "name": "Wire BLACK - Large Fan",
+    "location": "Synergy AVR P2 (4-pin, fans)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P2-2",
+    "code": "RED",
+    "name": "Wire RED - Large Fan",
+    "location": "Synergy AVR P2 (4-pin, fans)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P2-3",
+    "code": "WHITE",
+    "name": "Wire WHITE - Small Fan",
+    "location": "Synergy AVR P2 (4-pin, fans)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   },
+   {
+    "plug": "P2-4",
+    "code": "BLUE",
+    "name": "Wire BLUE - Small Fan",
+    "location": "Synergy AVR P2 (4-pin, fans)",
+    "kind": "other",
+    "source": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf p.266 (Synergy AVR P1 / P2)"
+   }
+  ],
+  "test": "Use wire numbers; back-probe Molex connectors from the harness side. J4 on the controller and P1 on the AVR carry the same 476-485 comms/PWM wires.",
+  "notes": "The manual prints the J8-J9 table twice (identical). \"*\" on Wires 479/480 is not explained on the page. EcoGen 15 kW is covered by the same manual but its controller pin-out is not in Appendix A, so it is not matched here.",
+  "gaps": [
+   "EcoGen 15 kW VSCF pin-out not in the manual appendix.",
+   "Model ID resistor values not tabulated."
+  ],
+  "sources": [
+   {
+    "file": "generac-synergy-ecogen-vscf-diagnostic-repair-manual.pdf",
+    "pages": "264-266",
+    "what": "Appendix A Synergy controller and AVR pin-outs"
+   }
+  ]
+ },
+ {
+  "id": "generac-corepower-7",
+  "title": "Generac CorePower 7 kW air-cooled controller J1 / J2",
+  "side": "generator",
+  "brand": "Generac (CorePower)",
+  "models": "CorePower 7 kW (LED control board): 5837",
+  "match": [
+   "G005837",
+   "5837"
+  ],
+  "sizes": [
+   "7"
+  ],
+  "board": "CorePower controller J1 (4-pin), J2 (18-pin), N1/N2 wired plug",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in HTO",
+    "location": "CorePower controller J1/J2",
+    "kind": "switch",
+    "spec": "High oil temperature switch: p.65 says shutdown above about 124 C (255 F); Test p.89 says contacts close at 293 F and bench test continuity at about 283-305 F. The manual disagrees with itself.",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions); generac-corepower-powerpact-diagnostic-repair-manual.pdf p.65, 89"
+   },
+   {
+    "plug": "J1-2",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
+    "location": "CorePower controller J1/J2",
+    "kind": "switch",
+    "spec": "Oil pressure switch rated 10 psi (single cylinder); normal oil pressure about 35-40 psi. Note: p.65 of the same manual says the contacts close below the 5 psi range - the manual disagrees with itself (p.65 vs p.87).",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions); generac-corepower-powerpact-diagnostic-repair-manual.pdf p.87-88"
+   },
+   {
+    "plug": "J1-3",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC source voltage for the controller",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown.",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-1",
+    "code": "0",
+    "name": "Wire 0 - Not Used",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-2",
+    "code": "0",
+    "name": "Wire 0 - Not Used",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-3",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid.",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-5",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground for transfer relay operation",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-6",
+    "name": "NOT USED",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-7",
+    "name": "NOT USED",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-8",
+    "code": "15B",
+    "name": "Wire 15B - Provides an electrical connection for charge current to reach the battery from the battery charger. Provides 12 VDC to the Transfer Relay",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-9",
+    "name": "NOT USED",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-10",
+    "code": "0",
+    "name": "Wire 0 - Common Ground",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-11",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor and the choke solenoid.",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-15",
+    "code": "90",
+    "name": "Wire 90 - Used to operate the choke solenoid and is active during cranking only.",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-16",
+    "name": "NOT USED",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-17",
+    "name": "NOT USED",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "J2-18",
+    "name": "NOT USED",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug 1",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC sensing for controller.",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   },
+   {
+    "plug": "Wired Plug 2",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC sensing for controller.",
+    "location": "CorePower controller J1/J2",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.63 (Figure 51, 6/7 kW CorePower connector pin descriptions)"
+   }
+  ],
+  "test": "Connector drawings show both controller end and harness end.",
+  "notes": "J2-4 and J2-12 to J2-14 are not listed in the table.",
+  "gaps": [
+   "J2-4, J2-12, J2-13, J2-14 not listed."
+  ],
+  "sources": [
+   {
+    "file": "generac-corepower-powerpact-diagnostic-repair-manual.pdf",
+    "pages": "63, 65, 87-89",
+    "what": "pin descriptions, protective switches"
+   }
+  ]
+ },
+ {
+  "id": "generac-powerpact-7",
+  "title": "Generac PowerPact 7 kW air-cooled controller J4 / J5",
+  "side": "generator",
+  "brand": "Generac (PowerPact)",
+  "models": "PowerPact 7 kW: 6518, 6519, 6561 (app generator data). The 7.5 kW 6998 is not matched - the manual tables are headed 6/7 kW.",
+  "match": [
+   "G006518",
+   "6518",
+   "G006519",
+   "6519",
+   "G006561",
+   "6561"
+  ],
+  "sizes": [
+   "7"
+  ],
+  "board": "PowerPact controller J4 (4-pin) and J5 (20-pin)",
+  "sensors": [
+   {
+    "plug": "J4-1",
+    "code": "T1",
+    "name": "Wire T1 - 120VAC Power for the Battery Charger",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J4-2",
+    "name": "Not Used",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J4-3",
+    "code": "0",
+    "name": "Wire 0 - Neutral Connection for T1 (battery charger)",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J4-4",
+    "name": "Not Used",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-1",
+    "code": "N1",
+    "name": "Wire N1 - 240 VAC Utility sensing voltage",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-2",
+    "name": "Not Used",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-3",
+    "name": "Not Used",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-4",
+    "code": "15A",
+    "name": "Wire 15A - B+ input to the choke solenoid",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-5",
+    "code": "R1",
+    "name": "Wire R1 - Model ID Resistor",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-6",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-7",
+    "name": "Not Used",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-8",
+    "code": "R3",
+    "name": "Wire R3 - Model ID Resistor",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-9",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-10",
+    "code": "13",
+    "name": "Wire 13 - 12 VDC un-fused for the controller",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-11",
+    "code": "N2",
+    "name": "Wire N2 - 240 VAC Utility sensing voltage",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-12",
+    "name": "Not Used",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-13",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Fuel solenoid supply voltage.",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-14",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay/ solenoid",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-15",
+    "code": "86",
+    "name": "Wire 86 - Low oil level shutdown: Shutdown occurs when Wire 86 is grounded by low oil level at the LOL switch",
+    "location": "PowerPact controller J4/J5",
+    "kind": "switch",
+    "spec": "PowerPact uses a LOW OIL LEVEL switch (LOL), not a pressure switch: closed contacts = low oil level.",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions); generac-corepower-powerpact-diagnostic-repair-manual.pdf p.65, 88"
+   },
+   {
+    "plug": "J5-16",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "location": "PowerPact controller J4/J5",
+    "kind": "switch",
+    "spec": "High oil temperature switch: p.65 says shutdown above about 124 C (255 F); Test p.89 says contacts close at 293 F and bench test continuity at about 283-305 F. The manual disagrees with itself.",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions); generac-corepower-powerpact-diagnostic-repair-manual.pdf p.65, 89"
+   },
+   {
+    "plug": "J5-17",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground (internally) to energize the Transfer Relay",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-18",
+    "code": "194",
+    "name": "Wire 194 - Provides 12 VDC to the transfer relay (TR1)",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-19",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: The controller grounds Wire 18 for ignition shutdown and receives a reference signal for speed control while cranking and running",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   },
+   {
+    "plug": "J5-20",
+    "code": "0",
+    "name": "Wire 0 - Common Ground (DC)",
+    "location": "PowerPact controller J4/J5",
+    "kind": "other",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions)"
+   }
+  ],
+  "test": "Connector drawings show both controller end and harness end.",
+  "gaps": [
+   "Model ID resistor values not tabulated."
+  ],
+  "sources": [
+   {
+    "file": "generac-corepower-powerpact-diagnostic-repair-manual.pdf",
+    "pages": "64-65, 88-89",
+    "what": "pin descriptions, protective switches"
+   }
+  ]
+ },
+ {
+  "id": "generac-5200-aircooled-10-18kw",
+  "title": "Generac / Guardian \"5200 series\" air-cooled 9-18 kW LED-board units - J1 23-pin",
+  "side": "generator",
+  "brand": "Generac (Guardian)",
+  "models": "5200-series air-cooled (manual 0G4338): 5243, 5244 16 kW GT-990 (app generator data). Manual covers 9/10, 13, 15/16, 16/18 kW (NG/LP ratings).",
+  "match": [
+   "G005243",
+   "5243",
+   "G005244",
+   "5244"
+  ],
+  "sizes": [
+   "9",
+   "10",
+   "13",
+   "15",
+   "16",
+   "18"
+  ],
+  "board": "Control board with J1 23-pin; DIP switches (16 kW: 2, 18 kW: 4)",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "15A",
+    "name": "Wire 15A - 12 VDC into the circuit board for source voltage when SW1 is in the AUTO or MANUAL position",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "4",
+    "name": "Wire 4 - Field boost current to rotor (about 9-10 volts DC)",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground for Transfer Relay (TR) operation",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "switch",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown. RPM Sense: Circuit board monitors ignition magneto voltage/frequency for engine speed when running",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-6",
+    "name": "BROWN wire - INTERNAL USE",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-7",
+    "name": "BROWN wire - INTERNAL USE",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "LC1",
+    "name": "Wire LC1 - Current sensing for governor control",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor relay for V-twin engine",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "224",
+    "name": "Wire 224 - Transformer reduced \"Utility\" source sensing voltage",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "239",
+    "name": "Wire 239 - 12 VDC input when SW1 is in the MANUAL position",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-12",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure of the HTO",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "switch",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-13",
+    "name": "NOT USED",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-14",
+    "name": "NOT USED",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-15",
+    "code": "LC2",
+    "name": "Wire LC2 - Current sensing for governor control",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-16",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and battery charge relay",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-17",
+    "code": "225",
+    "name": "Wire 225 - Transformer reduced \"Utility\" source sensing voltage",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-18",
+    "name": "NOT USED",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-19",
+    "code": "15B",
+    "name": "Wire 15B - 12 VDC source voltage for the circuit board. Also runs timer for exerciser",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-20",
+    "code": "0",
+    "name": "Wire 0 - Common ground.",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-21",
+    "name": "GREY wire - INTERNAL USE",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-22",
+    "name": "GREY wire - INTERNAL USE",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-23",
+    "code": "90",
+    "name": "Wire 90 - Switched to ground for choke solenoid operation",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+   }
+  ],
+  "test": "Board LEDs: Overcrank, Overspeed, Hi (oil) Temperature, Low Oil Pressure, Low Battery, System Ready. DIP switch 1 ON = normal exercise / OFF = low speed exercise.",
+  "notes": "16 kW board: DIP 1 exercise speed, DIP 2 spare. 18 kW board: DIP 1 exercise, DIP 2 ON = 50 Hz, DIP 3 spare, DIP 4 ON = 60 Hz operation / OFF = 58-62 Hz.",
+  "gaps": [
+   "Model numbers other than 5243 / 5244 are not tied to this manual in our data."
+  ],
+  "sources": [
+   {
+    "file": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf",
+    "pages": "80",
+    "what": "J1 pin descriptions, DIP switches"
+   }
+  ]
+ },
+ {
+  "id": "generac-5200-aircooled-6-7kw",
+  "title": "Generac / Guardian \"5200 series\" air-cooled 6/7 kW LED-board units - J1 14-pin",
+  "side": "generator",
+  "brand": "Generac (Guardian, Centurion)",
+  "models": "5200-series air-cooled 6/7 kW (manual 0G4338): 5247 7 kW GH-410 (app generator data).",
+  "match": [
+   "G005247",
+   "5247"
+  ],
+  "sizes": [
+   "6",
+   "7"
+  ],
+  "board": "Control board with J1 14-pin",
+  "sensors": [
+   {
+    "plug": "J1-1",
+    "code": "15A",
+    "name": "Wire 15A - 12 VDC into the circuit board for source voltage when SW1 is in the AUTO or MANUAL position",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-2",
+    "code": "4",
+    "name": "Wire 4 - Field boost current to rotor (about 9-10 volts DC).",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-3",
+    "code": "23",
+    "name": "Wire 23 - Switched to ground for Transfer Relay (TR) operation",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-4",
+    "code": "86",
+    "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "switch",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-5",
+    "code": "18",
+    "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown. RPM Sense: Circuit board monitors ignition magneto voltage/frequency for engine speed when running",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-6",
+    "code": "56",
+    "name": "Wire 56 - 12 VDC output to starter contactor for single cylinder engine",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-7",
+    "code": "224",
+    "name": "Wire 224 - Transformer reduced \"Utility\" source sensing voltage",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-8",
+    "code": "239",
+    "name": "Wire 239 - 12 VDC input when SW1 is in the MANUAL position",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-9",
+    "code": "85",
+    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure of the HTO",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "switch",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-10",
+    "code": "14",
+    "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and battery charge relay",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-11",
+    "code": "225",
+    "name": "Wire 225 - Transformer reduced \"Utility\" source sensing voltage",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-12",
+    "name": "NOT USED",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-13",
+    "code": "15B",
+    "name": "Wire 15B - 12 VDC source voltage for the circuit board. Also runs timer for exerciser",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   },
+   {
+    "plug": "J1-14",
+    "code": "0",
+    "name": "Wire 0 - Common ground",
+    "location": "Control board J1 connector (harness end)",
+    "kind": "other",
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.81 (6/7 kW J1 pin descriptions)"
+   }
+  ],
+  "test": "Board LEDs: Overcrank, Overspeed, Hi (oil) Temperature, Low Oil Pressure, Low Battery, System Ready.",
+  "sources": [
+   {
+    "file": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf",
+    "pages": "81",
+    "what": "J1 pin descriptions"
+   }
+  ]
  }
 ];
 const BRAND_SENSOR_CHARTS = [
@@ -106029,6 +116394,659 @@ const BRAND_SENSOR_CHARTS = [
   "notes": "Chart printed on the CBA38MV component connections figure. Resistance falls as temperature rises (NTC). Only 30-100°F given."
  },
  {
+  "id": "lennox-x2658-outdoor-sensor",
+  "name": "Lennox X2658 remote outdoor air temperature sensor (Rmin / Rnominal / Rmax)",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "C",
+   "kOhm_min",
+   "kOhm",
+   "kOhm_max"
+  ],
+  "rows": [
+   [
+    -40.0,
+    -40,
+    184.4,
+    191.8,
+    199.6
+   ],
+   [
+    -38.0,
+    -39,
+    174.7,
+    181.7,
+    188.9
+   ],
+   [
+    -36.0,
+    -38,
+    165.6,
+    172.1,
+    178.9
+   ],
+   [
+    -34.0,
+    -37,
+    157.0,
+    163.1,
+    169.4
+   ],
+   [
+    -32.0,
+    -36,
+    149.0,
+    154.6,
+    160.5
+   ],
+   [
+    -31.0,
+    -35,
+    141.3,
+    146.6,
+    152.1
+   ],
+   [
+    -29.0,
+    -34,
+    134.1,
+    139.1,
+    144.2
+   ],
+   [
+    -27.0,
+    -33,
+    127.3,
+    132.0,
+    136.8
+   ],
+   [
+    -25.0,
+    -32,
+    120.9,
+    125.3,
+    129.8
+   ],
+   [
+    -23.0,
+    -31,
+    114.9,
+    118.9,
+    123.1
+   ],
+   [
+    -22.0,
+    -30,
+    109.2,
+    113.0,
+    116.9
+   ],
+   [
+    -20.0,
+    -29,
+    103.7,
+    107.3,
+    111.0
+   ],
+   [
+    -18.0,
+    -28,
+    98.64,
+    102.0,
+    105.4
+   ],
+   [
+    -16.0,
+    -27,
+    93.81,
+    96.94,
+    100.2
+   ],
+   [
+    -14.0,
+    -26,
+    89.24,
+    92.17,
+    95.18
+   ],
+   [
+    -13.0,
+    -25,
+    84.92,
+    87.66,
+    90.48
+   ],
+   [
+    -11.0,
+    -24,
+    80.84,
+    83.4,
+    86.04
+   ],
+   [
+    -9.0,
+    -23,
+    76.97,
+    79.37,
+    81.84
+   ],
+   [
+    -7.0,
+    -22,
+    73.3,
+    75.56,
+    77.87
+   ],
+   [
+    -5.0,
+    -21,
+    69.83,
+    71.94,
+    74.11
+   ],
+   [
+    -4.0,
+    -20,
+    66.55,
+    68.52,
+    70.55
+   ],
+   [
+    -2.0,
+    -19,
+    63.43,
+    65.29,
+    67.19
+   ],
+   [
+    -0.4,
+    -18,
+    60.48,
+    62.22,
+    64.0
+   ],
+   [
+    1.0,
+    -17,
+    57.68,
+    59.31,
+    60.98
+   ],
+   [
+    3.0,
+    -16,
+    55.03,
+    56.55,
+    58.12
+   ],
+   [
+    5.0,
+    -15,
+    52.51,
+    53.94,
+    55.41
+   ],
+   [
+    6.0,
+    -14,
+    50.12,
+    51.46,
+    52.84
+   ],
+   [
+    8.0,
+    -13,
+    47.85,
+    49.11,
+    50.4
+   ],
+   [
+    10.0,
+    -12,
+    45.7,
+    46.88,
+    48.09
+   ],
+   [
+    12.0,
+    -11,
+    43.66,
+    44.76,
+    45.89
+   ],
+   [
+    14.0,
+    -10,
+    41.71,
+    42.75,
+    43.81
+   ],
+   [
+    16.0,
+    -9,
+    39.87,
+    40.84,
+    41.84
+   ],
+   [
+    17.0,
+    -8,
+    38.12,
+    39.03,
+    39.96
+   ],
+   [
+    19.0,
+    -7,
+    36.45,
+    37.31,
+    38.18
+   ],
+   [
+    21.0,
+    -6,
+    34.86,
+    35.67,
+    36.48
+   ],
+   [
+    23.0,
+    -5,
+    33.36,
+    34.11,
+    34.88
+   ],
+   [
+    24.0,
+    -4,
+    31.92,
+    32.63,
+    33.35
+   ],
+   [
+    26.0,
+    -3,
+    30.56,
+    31.22,
+    31.89
+   ],
+   [
+    28.0,
+    -2,
+    29.26,
+    29.88,
+    30.51
+   ],
+   [
+    30.0,
+    -1,
+    28.02,
+    28.6,
+    29.19
+   ],
+   [
+    32.0,
+    0,
+    26.84,
+    27.39,
+    27.94
+   ],
+   [
+    33.0,
+    1,
+    25.72,
+    26.23,
+    26.75
+   ],
+   [
+    35.0,
+    2,
+    24.65,
+    25.13,
+    25.62
+   ],
+   [
+    37.0,
+    3,
+    23.63,
+    24.08,
+    24.54
+   ],
+   [
+    39.0,
+    4,
+    22.66,
+    23.08,
+    23.51
+   ],
+   [
+    41.0,
+    5,
+    21.74,
+    22.13,
+    22.53
+   ],
+   [
+    42.0,
+    6,
+    20.85,
+    21.22,
+    21.6
+   ],
+   [
+    44.0,
+    7,
+    20.01,
+    20.36,
+    20.71
+   ],
+   [
+    46.0,
+    8,
+    19.21,
+    19.53,
+    19.86
+   ],
+   [
+    48.0,
+    9,
+    18.44,
+    18.74,
+    19.05
+   ],
+   [
+    50.0,
+    10,
+    17.71,
+    17.99,
+    18.28
+   ],
+   [
+    51.0,
+    11,
+    17.01,
+    17.27,
+    17.54
+   ],
+   [
+    53.0,
+    12,
+    16.34,
+    16.59,
+    16.84
+   ],
+   [
+    55.0,
+    13,
+    15.7,
+    15.93,
+    16.17
+   ],
+   [
+    57.0,
+    14,
+    15.09,
+    15.31,
+    15.53
+   ],
+   [
+    59.0,
+    15,
+    14.51,
+    14.71,
+    14.91
+   ],
+   [
+    60.0,
+    16,
+    13.95,
+    14.14,
+    14.33
+   ],
+   [
+    62.0,
+    17,
+    13.42,
+    13.59,
+    13.77
+   ],
+   [
+    64.0,
+    18,
+    12.91,
+    13.07,
+    13.24
+   ],
+   [
+    66.0,
+    19,
+    12.42,
+    12.57,
+    12.73
+   ],
+   [
+    68.0,
+    20,
+    11.95,
+    12.1,
+    12.24
+   ],
+   [
+    69.0,
+    21,
+    11.5,
+    11.64,
+    11.77
+   ],
+   [
+    71.0,
+    22,
+    11.08,
+    11.2,
+    11.33
+   ],
+   [
+    73.0,
+    23,
+    10.67,
+    10.78,
+    10.9
+   ],
+   [
+    75.0,
+    24,
+    10.28,
+    10.38,
+    10.49
+   ],
+   [
+    77.0,
+    25,
+    9.9,
+    10.0,
+    10.1
+   ],
+   [
+    78.0,
+    26,
+    9.533,
+    9.633,
+    9.733
+   ],
+   [
+    80.0,
+    27,
+    9.181,
+    9.281,
+    9.381
+   ],
+   [
+    82.0,
+    28,
+    8.845,
+    8.944,
+    9.043
+   ],
+   [
+    84.0,
+    29,
+    8.522,
+    8.621,
+    8.72
+   ],
+   [
+    86.0,
+    30,
+    8.213,
+    8.311,
+    8.41
+   ],
+   [
+    87.0,
+    31,
+    7.916,
+    8.014,
+    8.112
+   ],
+   [
+    89.0,
+    32,
+    7.632,
+    7.729,
+    7.827
+   ],
+   [
+    91.0,
+    33,
+    7.36,
+    7.456,
+    7.553
+   ],
+   [
+    93.0,
+    34,
+    7.099,
+    7.194,
+    7.29
+   ],
+   [
+    95.0,
+    35,
+    6.848,
+    6.942,
+    7.038
+   ],
+   [
+    96.0,
+    36,
+    6.607,
+    6.701,
+    6.795
+   ],
+   [
+    98.0,
+    37,
+    6.377,
+    6.469,
+    6.562
+   ],
+   [
+    100.0,
+    38,
+    6.155,
+    6.247,
+    6.339
+   ],
+   [
+    102.0,
+    39,
+    5.942,
+    6.033,
+    6.124
+   ],
+   [
+    104.0,
+    40,
+    5.738,
+    5.827,
+    5.918
+   ],
+   [
+    105.0,
+    41,
+    5.542,
+    5.63,
+    5.719
+   ],
+   [
+    107.0,
+    42,
+    5.353,
+    5.44,
+    5.528
+   ],
+   [
+    109.0,
+    43,
+    5.172,
+    5.258,
+    5.345
+   ],
+   [
+    111.0,
+    44,
+    4.998,
+    5.083,
+    5.168
+   ],
+   [
+    113.0,
+    45,
+    4.831,
+    4.914,
+    4.999
+   ],
+   [
+    114.0,
+    46,
+    4.67,
+    4.752,
+    4.835
+   ],
+   [
+    116.0,
+    47,
+    4.515,
+    4.596,
+    4.678
+   ],
+   [
+    118.0,
+    48,
+    4.366,
+    4.446,
+    4.527
+   ],
+   [
+    120.0,
+    49,
+    4.223,
+    4.302,
+    4.381
+   ],
+   [
+    122.0,
+    50,
+    4.085,
+    4.163,
+    4.241
+   ]
+  ],
+  "source": "CORP0705L2-04-000.pdf p.4 (Table 3)",
+  "notes": "Lennox Service and Application Note ACC-07-1 (Corp. 0705-L2), Table 3, values 'Reading x 1000' (kOhm). NTC: 10.00k nominal at 77F (25C). The X2658 is the remote outdoor sensor Lennox lists for the communicating furnaces (SL280UHV, EL296UHV/DFV, SL297UHNV, EL297UHVK, SLP99UHV(K)) and the CBA38MV air handler."
+ },
+ {
   "id": "carrier-vs-10k-oat-oct-ost",
   "name": "Carrier variable speed OAT / OCT / OST / LLT 10k thermistor",
   "kind": "thermistor",
@@ -106383,6 +117401,675 @@ const BRAND_SENSOR_CHARTS = [
   ],
   "source": "carrier-24vna0-25vna0-service.pdf p.11; carrier-25vna8-24vna9-4sm.pdf p.16 (formula psig = 50 x (Vout - 0.5))",
   "notes": "Rows computed from the manual's formula; 3.0 V = 125 psig is the manual's own example."
+ },
+ {
+  "id": "carrier-tstatxxsen01b-oat",
+  "name": "Carrier TSTATXXSEN01-B outdoor air temperature sensor (10K thermistor) - Table 1 Temperature/Ohm",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "C",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    0,
+    -17.8,
+    85.378
+   ],
+   [
+    1,
+    -17.2,
+    82.71
+   ],
+   [
+    2,
+    -16.7,
+    80.135
+   ],
+   [
+    3,
+    -16.1,
+    77.649
+   ],
+   [
+    4,
+    -15.6,
+    75.249
+   ],
+   [
+    5,
+    -15.0,
+    72.931
+   ],
+   [
+    6,
+    -14.4,
+    70.693
+   ],
+   [
+    7,
+    -13.9,
+    68.531
+   ],
+   [
+    8,
+    -13.3,
+    66.442
+   ],
+   [
+    9,
+    -12.8,
+    64.475
+   ],
+   [
+    10,
+    -12.2,
+    62.475
+   ],
+   [
+    11,
+    -11.7,
+    60.592
+   ],
+   [
+    12,
+    -11.1,
+    58.771
+   ],
+   [
+    13,
+    -10.6,
+    57.012
+   ],
+   [
+    14,
+    -10.0,
+    55.311
+   ],
+   [
+    15,
+    -9.4,
+    53.667
+   ],
+   [
+    16,
+    -8.9,
+    52.077
+   ],
+   [
+    17,
+    -8.3,
+    50.54
+   ],
+   [
+    18,
+    -7.8,
+    49.054
+   ],
+   [
+    19,
+    -7.2,
+    47.616
+   ],
+   [
+    20,
+    -6.7,
+    46.225
+   ],
+   [
+    21,
+    -6.1,
+    44.88
+   ],
+   [
+    22,
+    -5.6,
+    43.578
+   ],
+   [
+    23,
+    -5.0,
+    42.318
+   ],
+   [
+    24,
+    -4.4,
+    41.099
+   ],
+   [
+    25,
+    -3.9,
+    39.92
+   ],
+   [
+    26,
+    -3.3,
+    38.778
+   ],
+   [
+    27,
+    -2.8,
+    37.672
+   ],
+   [
+    28,
+    -2.2,
+    36.602
+   ],
+   [
+    29,
+    -1.7,
+    35.566
+   ],
+   [
+    30,
+    -1.1,
+    34.563
+   ],
+   [
+    31,
+    -0.6,
+    33.591
+   ],
+   [
+    32,
+    0.0,
+    32.65
+   ],
+   [
+    33,
+    0.6,
+    31.738
+   ],
+   [
+    34,
+    1.1,
+    30.855
+   ],
+   [
+    35,
+    1.7,
+    30.0
+   ],
+   [
+    36,
+    2.2,
+    29.171
+   ],
+   [
+    37,
+    2.8,
+    28.367
+   ],
+   [
+    38,
+    3.3,
+    27.589
+   ],
+   [
+    39,
+    3.9,
+    26.834
+   ],
+   [
+    40,
+    4.4,
+    26.103
+   ],
+   [
+    41,
+    5.0,
+    25.394
+   ],
+   [
+    42,
+    5.6,
+    24.706
+   ],
+   [
+    43,
+    6.1,
+    24.039
+   ],
+   [
+    44,
+    6.7,
+    23.393
+   ],
+   [
+    45,
+    7.2,
+    22.766
+   ],
+   [
+    46,
+    7.8,
+    22.158
+   ],
+   [
+    47,
+    8.3,
+    21.568
+   ],
+   [
+    48,
+    8.9,
+    20.996
+   ],
+   [
+    49,
+    9.4,
+    20.441
+   ],
+   [
+    50,
+    10.0,
+    19.902
+   ],
+   [
+    51,
+    10.6,
+    19.379
+   ],
+   [
+    52,
+    11.1,
+    18.872
+   ],
+   [
+    53,
+    11.7,
+    18.379
+   ],
+   [
+    54,
+    12.2,
+    17.902
+   ],
+   [
+    55,
+    12.8,
+    17.438
+   ],
+   [
+    56,
+    13.3,
+    16.987
+   ],
+   [
+    57,
+    13.9,
+    16.55
+   ],
+   [
+    58,
+    14.4,
+    16.125
+   ],
+   [
+    59,
+    15.0,
+    15.713
+   ],
+   [
+    60,
+    15.6,
+    15.312
+   ],
+   [
+    61,
+    16.1,
+    14.923
+   ],
+   [
+    62,
+    16.7,
+    14.545
+   ],
+   [
+    63,
+    17.2,
+    14.178
+   ],
+   [
+    64,
+    17.8,
+    13.822
+   ],
+   [
+    65,
+    18.3,
+    13.475
+   ],
+   [
+    66,
+    18.9,
+    13.138
+   ],
+   [
+    67,
+    19.4,
+    12.811
+   ],
+   [
+    68,
+    20.0,
+    12.493
+   ],
+   [
+    69,
+    20.6,
+    12.184
+   ],
+   [
+    70,
+    21.1,
+    11.883
+   ],
+   [
+    71,
+    21.7,
+    11.591
+   ],
+   [
+    72,
+    22.2,
+    11.307
+   ],
+   [
+    73,
+    22.8,
+    11.031
+   ],
+   [
+    74,
+    23.3,
+    10.762
+   ],
+   [
+    75,
+    23.9,
+    10.501
+   ],
+   [
+    76,
+    24.4,
+    10.247
+   ],
+   [
+    77,
+    25.0,
+    10.0
+   ],
+   [
+    78,
+    25.6,
+    9.76
+   ],
+   [
+    79,
+    26.1,
+    9.526
+   ],
+   [
+    80,
+    26.7,
+    9.298
+   ],
+   [
+    81,
+    27.2,
+    9.077
+   ],
+   [
+    82,
+    27.8,
+    8.862
+   ],
+   [
+    83,
+    28.3,
+    8.651
+   ],
+   [
+    84,
+    28.9,
+    8.448
+   ],
+   [
+    85,
+    29.4,
+    8.25
+   ],
+   [
+    86,
+    30.0,
+    8.056
+   ],
+   [
+    87,
+    30.6,
+    7.868
+   ],
+   [
+    88,
+    31.1,
+    7.685
+   ],
+   [
+    89,
+    31.7,
+    7.507
+   ],
+   [
+    90,
+    32.2,
+    7.333
+   ],
+   [
+    91,
+    32.8,
+    7.164
+   ],
+   [
+    92,
+    33.3,
+    7.0
+   ],
+   [
+    93,
+    33.9,
+    6.839
+   ],
+   [
+    94,
+    34.4,
+    6.683
+   ],
+   [
+    95,
+    35.0,
+    6.531
+   ],
+   [
+    96,
+    35.6,
+    6.383
+   ],
+   [
+    97,
+    36.1,
+    6.238
+   ],
+   [
+    98,
+    36.7,
+    6.098
+   ],
+   [
+    99,
+    37.2,
+    5.961
+   ],
+   [
+    100,
+    37.8,
+    5.827
+   ],
+   [
+    101,
+    38.3,
+    5.697
+   ],
+   [
+    102,
+    38.9,
+    5.57
+   ],
+   [
+    103,
+    39.4,
+    5.446
+   ],
+   [
+    104,
+    40.0,
+    5.326
+   ],
+   [
+    105,
+    40.6,
+    5.208
+   ],
+   [
+    106,
+    41.1,
+    5.094
+   ],
+   [
+    107,
+    41.7,
+    4.982
+   ],
+   [
+    108,
+    42.2,
+    4.873
+   ],
+   [
+    109,
+    42.8,
+    4.767
+   ],
+   [
+    110,
+    43.3,
+    4.663
+   ],
+   [
+    111,
+    43.9,
+    4.562
+   ],
+   [
+    112,
+    44.4,
+    4.464
+   ],
+   [
+    113,
+    45.0,
+    4.368
+   ],
+   [
+    114,
+    45.6,
+    4.274
+   ],
+   [
+    115,
+    46.1,
+    4.183
+   ],
+   [
+    116,
+    46.7,
+    4.094
+   ],
+   [
+    117,
+    47.2,
+    4.007
+   ],
+   [
+    118,
+    47.8,
+    3.922
+   ],
+   [
+    119,
+    48.3,
+    3.839
+   ],
+   [
+    120,
+    48.9,
+    3.758
+   ],
+   [
+    121,
+    49.4,
+    3.679
+   ],
+   [
+    122,
+    50.0,
+    3.602
+   ],
+   [
+    123,
+    50.6,
+    3.527
+   ],
+   [
+    124,
+    51.1,
+    3.453
+   ],
+   [
+    125,
+    51.7,
+    3.382
+   ],
+   [
+    126,
+    52.2,
+    3.312
+   ],
+   [
+    127,
+    52.8,
+    3.243
+   ],
+   [
+    128,
+    53.3,
+    3.177
+   ],
+   [
+    129,
+    53.9,
+    3.112
+   ],
+   [
+    130,
+    54.4,
+    3.048
+   ]
+  ],
+  "source": "AG-TSTAT-10.pdf p.4",
+  "notes": "All 131 rows (0-130 F, 1 F steps) transcribed from Table 1 and checked row by row against the page image. C column computed from F. The document says the sensor is a 10K thermistor, connects to the OAT terminals of the HK42FZ022 furnace board and HK38EA002 fan coil board (Fig. 7/8), and that the terminal voltage is about 5 VDC with the sensor disconnected."
  },
  {
   "id": "goodman-comfortnet-outdoor-oat-oct-10k",
@@ -112981,5 +124668,254 @@ const BRAND_SENSOR_CHARTS = [
   ],
   "source": "samsung-sm-fjm-aj0t.pdf p.68 (same points in samsung-windfree3-service.pdf p.73, samsung-sm-windfree2-quantum2.pdf p.79, samsung-sm-quantum-maxheat-rac.pdf p.113)",
   "notes": "Only these points are printed (plus a curve graph with no table). The WindFree/MaxHeat manuals misprint 30C and 35C as \"166ohm / 138ohm\"; FJM p.68 prints kohm. F converted from C."
+ },
+ {
+  "id": "generac-lc-evolution-coolant-temp",
+  "name": "Generac liquid-cooled Evolution coolant temperature sensor (WTS, Wire 68) - Table 3-12 unloaded resistance vs temperature",
+  "kind": "thermistor",
+  "columns": [
+   "F",
+   "C",
+   "kOhm",
+   "Tolerance %"
+  ],
+  "rows": [
+   [
+    -40,
+    -40,
+    100.865,
+    4.87
+   ],
+   [
+    -31,
+    -35,
+    72.437,
+    4.64
+   ],
+   [
+    -22,
+    -30,
+    52.594,
+    4.43
+   ],
+   [
+    -13,
+    -25,
+    38.583,
+    4.21
+   ],
+   [
+    -4,
+    -20,
+    28.582,
+    4
+   ],
+   [
+    5,
+    -15,
+    21.371,
+    3.8
+   ],
+   [
+    14,
+    -10,
+    16.12,
+    3.6
+   ],
+   [
+    23,
+    -5,
+    12.261,
+    3.4
+   ],
+   [
+    32,
+    0,
+    9.399,
+    3.21
+   ],
+   [
+    41,
+    5,
+    7.263,
+    3.06
+   ],
+   [
+    50,
+    10,
+    5.658,
+    2.92
+   ],
+   [
+    59,
+    15,
+    4.441,
+    2.78
+   ],
+   [
+    68,
+    20,
+    3.511,
+    2.64
+   ],
+   [
+    77,
+    25,
+    2.795,
+    2.5
+   ],
+   [
+    86,
+    30,
+    2.24,
+    2.45
+   ],
+   [
+    95,
+    35,
+    1.806,
+    2.4
+   ],
+   [
+    104,
+    40,
+    1.465,
+    2.36
+   ],
+   [
+    113,
+    45,
+    1.195,
+    2.31
+   ],
+   [
+    122,
+    50,
+    0.98,
+    2.27
+   ],
+   [
+    131,
+    55,
+    0.809,
+    2.23
+   ],
+   [
+    140,
+    60,
+    0.671,
+    2.19
+   ],
+   [
+    149,
+    65,
+    0.559,
+    2.15
+   ],
+   [
+    158,
+    70,
+    0.469,
+    2.11
+   ],
+   [
+    167,
+    75,
+    0.395,
+    2.07
+   ],
+   [
+    176,
+    80,
+    0.334,
+    2.04
+   ],
+   [
+    185,
+    85,
+    0.283,
+    2
+   ],
+   [
+    194,
+    90,
+    0.2418,
+    2.1
+   ],
+   [
+    203,
+    95,
+    0.2071,
+    2.21
+   ],
+   [
+    212,
+    100,
+    0.178,
+    2.31
+   ],
+   [
+    221,
+    105,
+    0.1536,
+    2.42
+   ],
+   [
+    230,
+    110,
+    0.1331,
+    2.52
+   ],
+   [
+    239,
+    115,
+    0.1157,
+    2.61
+   ],
+   [
+    248,
+    120,
+    0.1009,
+    2.68
+   ],
+   [
+    257,
+    125,
+    0.0883,
+    2.75
+   ],
+   [
+    266,
+    130,
+    0.0775,
+    2.8
+   ],
+   [
+    275,
+    135,
+    0.0683,
+    2.84
+   ],
+   [
+    284,
+    140,
+    0.0603,
+    2.87
+   ],
+   [
+    293,
+    145,
+    0.0534,
+    2.89
+   ],
+   [
+    302,
+    150,
+    0.0475,
+    2.9
+   ]
+  ],
+  "source": "generac-liquidcooled-evolution-diagnostic-repair-manual.pdf p.160 (Table 3-12)",
+  "notes": "The -31 F row prints \"(35)\" for Celsius; -35 C is used. The ECM-unit WTS and OTS tables (Table 3-13 / 3-14, p.161) print the same four points 0 C 9,399, 25 C 2,795, 50 C 980, 100 C 178 ohms, each +/-10%. The same table is printed as Table 3-20 in the Evolution/Nexus liquid-cooled manual 0J1195 (generac-lc-evolution-nexus-diagnostic-manual-0j1195.pdf p.155)."
  }
 ];

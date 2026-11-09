@@ -35,7 +35,7 @@ function snMapsForModel(model) {
   if (hits.length) {
     // Longest match per side (indoor and outdoor maps can share a family name).
     const out = [];
-    for (const side of ["outdoor", "indoor"]) {
+    for (const side of ["outdoor", "indoor", "generator"]) {
       const s = hits.filter(h => h.mp.side === side);
       if (!s.length) continue;
       best = Math.max(...s.map(h => h.sc));
@@ -197,7 +197,7 @@ function snSensorHtml(mp, s, i, open) {
 function snMapHtml(mp, q) {
   const hits = snSensorHits(mp, q);
   const noteHits = !hits.length && q ? snNoteHits(mp, q) : [];
-  const sideIcon = mp.side === "indoor" ? "🏠 Indoor" : "🌳 Outdoor";
+  const sideIcon = mp.side === "indoor" ? "🏠 Indoor" : mp.side === "generator" ? "⚡ Generator" : "🌳 Outdoor";
   const sizes = (mp.sizes || []).length && !(mp.sizes.length === 1 && /^all$/i.test(mp.sizes[0])) ? " · sizes " + mp.sizes.join(", ") : "";
   return `<div class="card sn-map">
     <div class="sn-map-h"><span class="sn-side">${sideIcon}</span> <b>${escapeHtml(mp.title)}</b></div>
@@ -205,7 +205,7 @@ function snMapHtml(mp, q) {
     ${mp.notes ? `<details class="sn-gaps"${q ? "" : " open"}><summary>📝 Board notes</summary><p class="sn-note">${escapeHtml(mp.notes)}</p></details>` : ""}
     ${hits.length ? hits.map(s => snSensorHtml(mp, s, (mp.sensors || []).indexOf(s), !!q || hits.length === 1)).join("")
       : noteHits.length ? `<div class="sn-sensor sn-notehit"><p><b>${escapeHtml(q.toUpperCase())}</b> is not a sensor plug, but the manual names it:</p><ul>${noteHits.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul></div>`
-      : `<p class="sn-none">Plug <b>${escapeHtml(q)}</b> is not in this board's sensor list. It may be a fan, valve, heater or power plug - check the wiring diagram on the unit's panel.</p>`}
+      : `<p class="sn-none">Plug <b>${escapeHtml(q)}</b> is not in this board's sensor list. ${mp.side === "generator" ? "Check the wiring diagram inside the generator's controller door - it names each plug and wire number." : "It may be a fan, valve, heater or power plug - check the wiring diagram on the unit's panel."}</p>`}
     ${!q && mp.test ? `<p class="sn-test"><span class="k">How to test</span> ${escapeHtml(mp.test)}</p>` : ""}
     ${(mp.gaps || []).length ? `<details class="sn-gaps"><summary>Not in the manual (${mp.gaps.length})</summary><ul>${mp.gaps.map(g => `<li>${escapeHtml(g)}</li>`).join("")}</ul></details>` : ""}
     <div class="sn-src">Source: ${escapeHtml((mp.sources || []).map(s => s.file + " p." + s.pages + (s.what ? " (" + s.what + ")" : "")).join("; "))}</div>
@@ -218,7 +218,7 @@ function snFillPicker() {
   sel.dataset.filled = "1";
   const opt = (mp) => `<option value="${escapeHtml(mp.id)}">${escapeHtml(mp.title)}</option>`;
   const by = (side) => snMaps().filter(m => m.side === side).sort((a, b) => a.title.localeCompare(b.title));
-  sel.innerHTML = `<option value="">- or pick the unit -</option><optgroup label="Outdoor units">${by("outdoor").map(opt).join("")}</optgroup><optgroup label="Indoor units">${by("indoor").map(opt).join("")}</optgroup>`;
+  sel.innerHTML = `<option value="">- or pick the unit -</option><optgroup label="Outdoor units">${by("outdoor").map(opt).join("")}</optgroup><optgroup label="Indoor units">${by("indoor").map(opt).join("")}</optgroup><optgroup label="Generators">${by("generator").map(opt).join("")}</optgroup>`;
 }
 
 function renderSensors() {
