@@ -3479,7 +3479,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Coil: unplug S32 and read ohms across its 2 pins, compare to the 20k chart. Room: unplug the display PCB (S26/S27) and measure across the soldered RTH1 legs, compare to the 10k chart.",
-  "notes": "TWO different charts: room thermistor is 10 kOhm (B=3435), coil thermistor is 20 kOhm (B=3950). No EEV on the indoor unit - the expansion valve is in the outdoor unit.",
+  "notes": "TWO different charts: room thermistor is 10 kOhm (B=3435), coil thermistor is 20 kOhm (B=3950). No EEV on the indoor unit - the expansion valve is in the outdoor unit. FTX09/12NMVJU fan motor: the two Daikin manuals disagree - Aurora SiUS091601EC p.190 gives U-V/V-W 67.0-85.1 Ohm, the 19-series SiUS041501E Check No.03 p.103 gives 90-100 Ohm for the same models. A reading between 67 and 100 Ohm is not a fault by either manual; open or near 0 Ohm is.",
   "gaps": [
    "S403 on control PCB1 (10-pin, p.129): nothing is wired to it on the drawing and Daikin does not say what it is for - nothing to test there; leave it as found."
   ],
@@ -6934,7 +6934,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug the thermistor connector from the board and measure resistance across the two pins the thermistor wires land on. Measure the pipe/air temperature at the sensor and compare with the chart; if it does not match, replace the thermistor assembly. If the sensor tests good but the code stays, check the plug/wiring, then replace the PCB. For a thermistor soldered on a small PCB: power off, unplug that small PCB from the control board and measure across the two ends of the soldered thermistor, compare with the chart.",
-  "notes": "Room thermistor here is the 10 kOhm (Type B) curve - the coil thermistor is the 20 kOhm (Type A) curve. RTH1 is a board marking, not a connector; PCB2 links to the control PCB through S27/S26. The p.189 table also shows an 'R3T liquid pipe' row marked A for FTX09/12/15, but the FTX09/12 wiring diagram has only R1T and R2T. No EEV in this indoor unit - the electronic expansion valve (Y1E) is in the outdoor unit; see the outdoor map.",
+  "notes": "Room thermistor here is the 10 kOhm (Type B) curve - the coil thermistor is the 20 kOhm (Type A) curve. RTH1 is a board marking, not a connector; PCB2 links to the control PCB through S27/S26. The p.189 table also shows an 'R3T liquid pipe' row marked A for FTX09/12/15, but the FTX09/12 wiring diagram has only R1T and R2T. No EEV in this indoor unit - the electronic expansion valve (Y1E) is in the outdoor unit; see the outdoor map. FTX09/12NMVJU fan motor: the two Daikin manuals disagree - Aurora SiUS091601EC p.190 gives U-V/V-W 67.0-85.1 Ohm, the 19-series SiUS041501E Check No.03 p.103 gives 90-100 Ohm for the same models. A reading between 67 and 100 Ohm is not a fault by either manual; open or near 0 Ohm is.",
   "gaps": [
    "The p.189 table lists an indoor R3T (liquid pipe) for FTX09/12/15NMVJU, but no R3T or plug is on this unit's wiring diagram - there is nothing to test for it on this model."
   ],
@@ -14166,8 +14166,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1C Compressor motor leads (RED to U, YLW to V, BLU to W)",
     "location": "A1P main inverter PCB compressor terminals",
     "kind": "other",
-    "test": "Manual S-17A: power off, remove leads, ohm each compressor terminal to unpainted pipe - must read infinity, else replace compressor",
-    "source": "daikin-fit-r410a-system-service.pdf p.75 (3D141597); same drawing daikin-fit-r32-system-service.pdf p.74, daikin-dc6vs-dz6vs-dh6vs-install.pdf p.35, daikin-fit-r32-outdoor-install.pdf p.37; test daikin-fit-r410a-system-service.pdf p.20"
+    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe. R-410A models (DX6VS): any reading different from infinity = replace the compressor (SiUS612209, p.20). R-32 models (DC6VS): below 30 MOhm = replace the compressor (SiUS612412E, p.18).",
+    "source": "daikin-fit-r410a-system-service.pdf p.75 (3D141597); same drawing daikin-fit-r32-system-service.pdf p.74, daikin-dc6vs-dz6vs-dh6vs-install.pdf p.35, daikin-fit-r32-outdoor-install.pdf p.37; test daikin-fit-r410a-system-service.pdf p.20 (S-17A step 4) and daikin-fit-r32-system-service.pdf p.18 (S-17A step 4)"
    },
    {
     "plug": "X1A (A2P)",
@@ -14491,8 +14491,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1C Compressor motor leads (RED to U, YLW to V, BLU to W)",
     "location": "A1P main inverter PCB compressor terminals",
     "kind": "other",
-    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe: below 30 MOhm = replace the compressor. (S-17B ground test: reading should be infinity.)",
-    "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717); test daikin-fit-r410a-system-service.pdf p.20"
+    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe. R-410A models (DZ6VS): any reading different from infinity = replace the compressor (SiUS612209, p.20). R-32 models (DH6VS/DH7VS/DC9VS): below 30 MOhm = replace the compressor (SiUS612412E, p.18).",
+    "source": "daikin-fit-r410a-system-service.pdf p.77; daikin-dc6vs-dz6vs-dh6vs-install.pdf p.33 (3D141596) and p.37 (3D146717); daikin-fit-r32-system-service.pdf p.76, p.78; daikin-fit-r32-outdoor-install.pdf p.35 (3D141596), p.39 (3D146717); test daikin-fit-r410a-system-service.pdf p.20 (S-17A step 4) and daikin-fit-r32-system-service.pdf p.18 (S-17A step 4)"
    },
    {
     "plug": "X1A (A2P)",
@@ -14767,8 +14767,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1C Compressor motor leads (RED to U, YLW to V, BLU to W)",
     "location": "A1P compressor terminals",
     "kind": "other",
-    "test": "Manual S-17A: power off, remove leads, ohm each compressor terminal to unpainted pipe - must read infinity, else replace compressor",
-    "source": "daikin-fit-r410a-system-service.pdf p.76 (3D142511); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.36; daikin-fit-r32-system-service.pdf p.75 and daikin-fit-r32-outdoor-install.pdf p.38 (3D151774); test daikin-fit-r410a-system-service.pdf p.20"
+    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe. R-410A models (DX6VS): any reading different from infinity = replace the compressor (SiUS612209, p.20). R-32 models (DC6VS): below 30 MOhm = replace the compressor (SiUS612412E, p.18).",
+    "source": "daikin-fit-r410a-system-service.pdf p.76 (3D142511); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.36; daikin-fit-r32-system-service.pdf p.75 and daikin-fit-r32-outdoor-install.pdf p.38 (3D151774); test daikin-fit-r410a-system-service.pdf p.20 (S-17A step 4) and daikin-fit-r32-system-service.pdf p.18 (S-17A step 4)"
    }
   ],
   "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart.",
@@ -14819,7 +14819,7 @@ const DAIKIN_SENSOR_MAPS = [
    "DH6VSA421",
    "DH6VSA481",
    "DH6VSA601",
-   "DZ6VSA361",
+   "DZ6VSA361E",
    "DH7VSA361",
    "DH7VSA421",
    "DH7VSA481",
@@ -15069,8 +15069,8 @@ const DAIKIN_SENSOR_MAPS = [
     "name": "M1C Compressor motor leads (RED to U, YLW to V, BLU to W)",
     "location": "A1P compressor terminals",
     "kind": "other",
-    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe: below 30 MOhm = replace the compressor. (S-17B ground test: reading should be infinity.)",
-    "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775); test daikin-fit-r410a-system-service.pdf p.20"
+    "test": "Manual S-17A: power off, remove the leads from the compressor terminals, measure insulation resistance from each terminal to unpainted refrigerant pipe. R-410A models (DZ6VS): any reading different from infinity = replace the compressor (SiUS612209, p.20). R-32 models (DH6VS/DH7VS/DC9VS): below 30 MOhm = replace the compressor (SiUS612412E, p.18).",
+    "source": "daikin-fit-r410a-system-service.pdf p.78 (3D142512); daikin-dc6vs-dz6vs-dh6vs-install.pdf p.34 (3D142512), p.38 (3D146718); daikin-fit-r32-system-service.pdf p.77, p.79 and daikin-fit-r32-outdoor-install.pdf p.36, p.40 (3D151775); test daikin-fit-r410a-system-service.pdf p.20 (S-17A step 4) and daikin-fit-r32-system-service.pdf p.18 (S-17A step 4)"
    }
   ],
   "test": "Power off. Unplug the thermistor's connector from the board and read ohms across that thermistor's two wires; compare with the chart at the pipe/air temperature (discharge uses the Td chart, outdoor air the Ta chart, all others the general chart). Replace if open, shorted or out of range. Low pressure sensor: with power ON read DC volts between its black and white wires and compare with the pressure chart (solid line on the S-13 graph).",
@@ -15113,7 +15113,19 @@ const DAIKIN_SENSOR_MAPS = [
    "DFVE",
    "DMVE",
    "CAPE",
-   "CHPE"
+   "CHPE",
+   "DFVE24BP14",
+   "DFVE24BP04",
+   "DFVE36CP14",
+   "DFVE36CP04",
+   "DFVE42CP14",
+   "DFVE42CP04",
+   "DFVE48CP14",
+   "DFVE48CP04",
+   "DFVE48DP14",
+   "DFVE48DP04",
+   "DFVE60DP14",
+   "DFVE60DP04"
   ],
   "sizes": [
    "all"
@@ -15290,7 +15302,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug X5A and read ohms across the liquid thermistor's pair and the gas thermistor's pair; compare to the general chart at the measured pipe temperature. Pressure sensor: power ON, DC volts black-to-white (see chart). EEV: unplug X3A, 40-50 Ohm from each of pins 1-4 to pin 6.",
-  "notes": "Both indoor thermistors (liquid + gas, 'heat exchanger 1,2') share the 4-pin plug X5A; the pressure sensor is X15A (4 wires); EEV is X3A (6-pin). E73 liquid: flagged below about -43.6C or above 90C for 20 s. E74 gas: below -43.6C or above 165C for 20 s. DFVE was also built as an R-32 model with an A2L sensor - if the nameplate says R-32, use the R-32 air handler map. Also confirmed by daikin-dfve-airhandler-install.pdf p.21 (DMVE/DFVE R-410A: liquid & gas X5A, pressure X15A).",
+  "notes": "CHECK THE NAMEPLATE REFRIGERANT FIRST: this is the R-410A map (10th character of the model is 4, e.g. DFVE24BP1400); an R-32 unit (10th character 3, e.g. DFVE24BP1300) uses the R-32 map - the boards differ (R-32 has the A2L sensor on X9A and the leak relay). Both indoor thermistors (liquid + gas, 'heat exchanger 1,2') share the 4-pin plug X5A; the pressure sensor is X15A (4 wires); EEV is X3A (6-pin). E73 liquid: flagged below about -43.6C or above 90C for 20 s. E74 gas: below -43.6C or above 165C for 20 s. DFVE was also built as an R-32 model with an A2L sensor - if the nameplate says R-32, use the R-32 air handler map. Also confirmed by daikin-dfve-airhandler-install.pdf p.21 (DMVE/DFVE R-410A: liquid & gas X5A, pressure X15A).",
   "gaps": [
    "X5A pin pairs for liquid vs gas: the R-410A flowcharts (p.65-67) print 'X15A 4 and 5 pin' (liquid), 'X15A 1 and 2 pin' (gas) and 'X16A 3 and 4 pin' (pressure) while the diagrams p.79/80 and error table say X5A / X15A (no X16A) - a manual misprint, pins left blank. Power off, unplug X5A, follow each lead to its pipe and measure that pair.",
    "Pressure sensor pins/wire colours conflict (flowchart: pins 3 black & 4 red on 'X16A'; S-13: black & white wires). Test as S-13 says: power ON, DC volts between black and white wires, compare with the chart. Supply volts not published.",
@@ -15317,7 +15329,19 @@ const DAIKIN_SENSOR_MAPS = [
   "brand": "Daikin",
   "models": "DFVE** EEV air handlers, R-32 (208/230 V and 115 V versions), SiUS612412E",
   "match": [
-   "DFVE"
+   "DFVE",
+   "DFVE24BP13",
+   "DFVE24BP03",
+   "DFVE36CP13",
+   "DFVE36CP03",
+   "DFVE42CP13",
+   "DFVE42CP03",
+   "DFVE48CP13",
+   "DFVE48CP03",
+   "DFVE48DP13",
+   "DFVE48DP03",
+   "DFVE60DP13",
+   "DFVE60DP03"
   ],
   "sizes": [
    "all"
@@ -15528,7 +15552,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug X5A; liquid thermistor = pins 3-4, gas = pins 1-2; compare to the general chart at the measured pipe temperature. Pressure sensor: power ON, DC volts black-to-white (see chart). EEV: unplug X3A, 40-50 Ohm from each of pins 1-4 to pin 6.",
-  "notes": "X5A 4-pin: pins 3-4 liquid, 1-2 gas. X15A pressure sensor: measure pin 3 black to pin 1 white (the ladder diagram labels X15A(4) and X15A(3)). A2L sensor plugs into X9A (4-pin, terminals 1-4, top edge of the board next to K4R leak-detect relay). On an A0 leak the blower runs and leak output K4R energizes - ventilate, no flame.",
+  "notes": "CHECK THE NAMEPLATE REFRIGERANT FIRST: this is the R-32 map (10th character of the model is 3, e.g. DFVE24BP1300); an R-410A unit (10th character 4, e.g. DFVE24BP1400) uses the R-410A map - the boards differ. X5A 4-pin: pins 3-4 liquid, 1-2 gas. X15A pressure sensor: measure pin 3 black to pin 1 white (the ladder diagram labels X15A(4) and X15A(3)). A2L sensor plugs into X9A (4-pin, terminals 1-4, top edge of the board next to K4R leak-detect relay). On an A0 leak the blower runs and leak output K4R energizes - ventilate, no flame.",
   "gaps": [
    "A2L sensor (X9A): digital sensor - Daikin publishes no ohm or volt figure. Go by the codes in the entry: AF = check X9A is seated and the wiring, then sensor, then board; A1 = sensor internal error.",
    "Pressure sensor supply volts are not published and the volts-to-pressure figure is a graph only - test at the black and white wires (power ON) as S-13 says."
@@ -34309,7 +34333,19 @@ const DAIKIN_SENSOR_MAPS = [
   "brand": "Goodman / Amana",
   "models": "AHVE** EEV air handlers, R-32 (208/230 V and 115 V) - goodman-gxv6s-gxv9sa-gzv6sa-gzv7sa-r32-service.pdf (SiUS612414E), amana-axv6s-axv9sa-azv6sa-azv7sa-r32-service.pdf (SiUS612413E), also listed in goodman-gxv9s-gzv9s-gzv7s-double-fan-r32-service.pdf and amana-axv9s-azv9s-azv7s-double-fan-r32-service.pdf. Same board as Daikin DFVE R-32.",
   "match": [
-   "AHVE"
+   "AHVE",
+   "AHVE24BP13",
+   "AHVE24BP03",
+   "AHVE36CP13",
+   "AHVE36CP03",
+   "AHVE42CP13",
+   "AHVE42CP03",
+   "AHVE48CP13",
+   "AHVE48CP03",
+   "AHVE48DP13",
+   "AHVE48DP03",
+   "AHVE60DP13",
+   "AHVE60DP03"
   ],
   "sizes": [
    "all"
@@ -34514,7 +34550,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug X5A; liquid thermistor = pins 3-4, gas = pins 1-2; compare to the general chart at the measured pipe temperature. Pressure sensor: power ON, DC volts black-to-white (see chart). EEV: unplug X3A, 40-50 Ohm from each of pins 1-4 to pin 6.",
-  "notes": "X5A 4-pin: pins 3-4 liquid, 1-2 gas. X15A pressure sensor: measure pin 3 black to pin 1 white (flowchart p.64); the ladder diagram on p.80/81 draws only X15A (4) and (3), so pin 1 (the output) is not shown there. A2L sensor on X9A (4-pin). EEV X3A (6-pin, pin 5 empty). AHVE was also built for R-410A (Amana ASXS6/ASZS6 systems) - if the nameplate says R-410A use the AHVE R-410A map (no A2L sensor). Note numbers in the entries follow the 208/230 V drawing (p.80); the 115 V drawing (p.81) numbers them differently (aux alarm note 7, heater kit not compatible note 8, leak output note 9, thermostat note 10).",
+  "notes": "CHECK THE NAMEPLATE REFRIGERANT FIRST: this is the R-32 map (10th character of the model is 3, e.g. AHVE24BP1300); an R-410A unit (10th character 4, e.g. AHVE24BP1400) uses the R-410A map - the boards differ. X5A 4-pin: pins 3-4 liquid, 1-2 gas. X15A pressure sensor: measure pin 3 black to pin 1 white (flowchart p.64); the ladder diagram on p.80/81 draws only X15A (4) and (3), so pin 1 (the output) is not shown there. A2L sensor on X9A (4-pin). EEV X3A (6-pin, pin 5 empty). AHVE was also built for R-410A (Amana ASXS6/ASZS6 systems) - if the nameplate says R-410A use the AHVE R-410A map (no A2L sensor). Note numbers in the entries follow the 208/230 V drawing (p.80); the 115 V drawing (p.81) numbers them differently (aux alarm note 7, heater kit not compatible note 8, leak output note 9, thermostat note 10).",
   "gaps": [
    "A2L sensor (X9A): digital sensor - Daikin publishes no ohm or volt figure. Go by the codes in the entry: AF = check X9A is seated and the wiring, then sensor, then board; A1 = sensor internal error.",
    "Pressure sensor supply volts are not published and the volts-to-pressure figure is a graph only - test at the black and white wires (power ON) as S-13 says.",
@@ -34772,7 +34808,19 @@ const DAIKIN_SENSOR_MAPS = [
   "brand": "Goodman / Amana",
   "models": "AHVE EEV air handlers for R-410A (Amana ASXS6/ASZS6 systems) - amana-asxs6-aszs6-inverter-service.pdf (SiUS612213E). Same board as Daikin DFVE/DMVE R-410A.",
   "match": [
-   "AHVE"
+   "AHVE",
+   "AHVE24BP14",
+   "AHVE24BP04",
+   "AHVE36CP14",
+   "AHVE36CP04",
+   "AHVE42CP14",
+   "AHVE42CP04",
+   "AHVE48CP14",
+   "AHVE48CP04",
+   "AHVE48DP14",
+   "AHVE48DP04",
+   "AHVE60DP14",
+   "AHVE60DP04"
   ],
   "sizes": [
    "all"
@@ -34949,7 +34997,7 @@ const DAIKIN_SENSOR_MAPS = [
    }
   ],
   "test": "Power off. Unplug X5A and read ohms across the liquid thermistor's pair and the gas thermistor's pair; compare to the general chart at the measured pipe temperature. Pressure sensor: power ON, DC volts black-to-white (see chart). EEV: unplug X3A, 40-50 Ohm from each of pins 1-4 to pin 6.",
-  "notes": "Both indoor thermistors (liquid + gas, 'heat exchanger 1,2') share the 4-pin plug X5A; pressure sensor X15A (4 wires); EEV X3A (6-pin, pin 5 empty). E73 liquid: below about -43.6C or above 90C for 20 s. E74 gas: below -43.6C or above 165C for 20 s. If the nameplate says R-32, use the AHVE R-32 map. The CAPE(A)/CHPE cased coils in this manual use the same board (existing map daikin-fit-r410a-eev-indoor).",
+  "notes": "CHECK THE NAMEPLATE REFRIGERANT FIRST: this is the R-410A map (10th character of the model is 4, e.g. AHVE24BP1400); an R-32 unit (10th character 3, e.g. AHVE24BP1300) uses the R-32 map - the boards differ (R-32 has the A2L sensor on X9A and the leak relay). Both indoor thermistors (liquid + gas, 'heat exchanger 1,2') share the 4-pin plug X5A; pressure sensor X15A (4 wires); EEV X3A (6-pin, pin 5 empty). E73 liquid: below about -43.6C or above 90C for 20 s. E74 gas: below -43.6C or above 165C for 20 s. If the nameplate says R-32, use the AHVE R-32 map. The CAPE(A)/CHPE cased coils in this manual use the same board (existing map daikin-fit-r410a-eev-indoor).",
   "gaps": [
    "X5A pin pairs for liquid vs gas: this manual's flowcharts (p.65-67) print 'X15A 4 and 5 pin' (liquid), 'X15A 1 and 2 pin' (gas) and 'X16A 3 and 4 pin' (pressure) while the diagram and error table say X5A / X15A (no X16A) - a manual misprint, pins left blank. Power off, unplug X5A, follow each lead to its pipe and measure that pair.",
    "Pressure sensor pins/wire colours conflict (flowchart: pins 3 black & 4 red on 'X16A'; S-13: black & white wires). Test as S-13 says: power ON, DC volts between black and white wires. Supply volts not published.",

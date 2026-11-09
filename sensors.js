@@ -43,7 +43,9 @@ function snMapsForModel(model) {
     }
     return out;
   }
-  if (m.length < 2) return [];
+  // Prefix list only for a partly typed model. A full nameplate that matches no token shows "no map" - the
+  // 11-09 audit found complete non-K Lennox/Allied models opening the K (A2L board) map this way.
+  if (m.length < 2 || m.length > 7) return [];
   return snMaps().filter(mp => (mp.match || []).some(t => snNorm(t).startsWith(m)));
 }
 

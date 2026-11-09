@@ -1171,7 +1171,7 @@ const BRAND_SENSOR_MAPS = [
     "spec": "5 kΩ at 77°F.",
     "errorCodes": [
      "E3 ODU coil sensor failure",
-     "P6 overheating in cooling (OPT 143.6°F or more)"
+     "P6 overheating in cooling (OPT 143°F or more)"
     ],
     "test": "As above.",
     "source": "ameristar-e4ah5-e4hl5-service.pdf p.8, p.23-24, p.32, p.56-57"
@@ -3689,10 +3689,34 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Trane / American Standard",
   "models": "*UH1B040A9241, *UH1B060A9361, *UH1B080A9421, *UH1C080A9601, *UH1C100A9481, *UH1D100A9601, *UH1D120A9601, *UC1B040A9241, *UC1B060A9361, *UC1B080A9421, *UC1C100A9481, *UC1D100A9601, *UC1D120A9601 (prefix A or T)",
   "match": [
-   "TUC1",
-   "AUC1",
-   "TUH1",
-   "AUH1"
+   "TUH1B040A9241",
+   "AUH1B040A9241",
+   "TUH1B060A9361",
+   "AUH1B060A9361",
+   "TUH1B080A9421",
+   "AUH1B080A9421",
+   "TUH1C080A9601",
+   "AUH1C080A9601",
+   "TUH1C100A9481",
+   "AUH1C100A9481",
+   "TUH1D100A9601",
+   "AUH1D100A9601",
+   "TUH1D120A9601",
+   "AUH1D120A9601",
+   "TUC1B040A9241",
+   "AUC1B040A9241",
+   "TUC1B060A9361",
+   "AUC1B060A9361",
+   "TUC1B080A9421",
+   "AUC1B080A9421",
+   "TUC1C100A9481",
+   "AUC1C100A9481",
+   "TUC1D100A9601",
+   "AUC1D100A9601",
+   "TUC1D120A9601",
+   "AUC1D120A9601",
+   "AUC1C080A9601A",
+   "TUC1C080A9601A"
   ],
   "sizes": [
    "all"
@@ -3927,7 +3951,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Diagnostic LED: slow flash = normal no call, fast flash = call for heat, on steady = replace IFC, off = check power; 2 ext. lockout, 3 pressure switch stuck open or closed, 4 open limit, 5 flame without call, 6 reversed polarity / poor ground, 7 gas valve circuit, 8 low flame signal, 9 igniter relay. Fault recall: hold 2-5 s; reset: hold 5-10 s.",
-  "notes": "Lockout reset: power off-on-off-on within 30 s. Blower heat-off delay by S-1 SW2/SW3 (60/100*/140/180 s), cool-off delay SW1 (0*/80 s). Heat blower starts 45 s after ignition.",
+  "notes": "Lockout reset: power off-on-off-on within 30 s. Blower heat-off delay by S-1 SW2/SW3 (60/100*/140/180 s), cool-off delay SW1 (0*/80 s). Heat blower starts 45 s after ignition. *UC1C080A9601A is listed in the installer's guide (p.19 Table 10) but not in the diagram's Table A - it is included here; confirm the CNT number on the board.",
   "gaps": [
    "Flame microamps, pressure switch setting and limit temperatures not given",
    "Burner-box temperature limit mentioned in the installer's guide is not shown separately on this diagram"
@@ -3952,10 +3976,18 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Trane / American Standard",
   "models": "*DC1B040A9241A, *DC1B060A9361A, *DC1B080A9421A, *DG1B080A9421A, *DC1C100A9481A, *DC1D120A9601A (prefix T or A)",
   "match": [
-   "TDC1",
-   "ADC1",
-   "TDG1",
-   "ADG1"
+   "TDC1B040A9241",
+   "ADC1B040A9241",
+   "TDC1B060A9361",
+   "ADC1B060A9361",
+   "TDC1B080A9421",
+   "ADC1B080A9421",
+   "TDG1B080A9421",
+   "ADG1B080A9421",
+   "TDC1C100A9481",
+   "ADC1C100A9481",
+   "TDC1D120A9601",
+   "ADC1D120A9601"
   ],
   "sizes": [
    "all"
@@ -7988,7 +8020,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "X/L terminal flashes the lockout type at the thermostat.",
-  "notes": "2-5 ton 13 SEER units use the time/temperature board (separate map).",
+  "notes": "TWO MAPS SHARE THESE MODEL NAMES: the THGD/THJD/YHJD/GHGD family uses a demand defrost board on 13 SEER 1.5 ton and 14.5 SEER 1.5-4 ton units, and a time/temperature defrost board on 13 SEER 2-5 ton units (york-thgd-yhjd-heatpump-install.pdf p.10-11). Pick the map by the board in the unit (demand = single board with X/L, TEST and defrost-curve jumper; time/temp = 30/60/90 tap at the board edge) or by SEER/tonnage. 2-5 ton 13 SEER units use the time/temperature board (separate map). How to tell the boards apart (p.10, Fig 11): both have X/L and TEST; the DEMAND board has the P/1-4 defrost-curve jumper, the TIME/TEMP board has the RUN TIME pins and a DFST T'STAT terminal.",
   "gaps": [
    "No sensor resistance table"
   ],
@@ -8085,7 +8117,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Jump TEST >9 s to force defrost.",
-  "notes": "Alternate board configuration shows COMP RLY terminal.",
+  "notes": "TWO MAPS SHARE THESE MODEL NAMES: the THGD/THJD/YHJD/GHGD family uses a demand defrost board on 13 SEER 1.5 ton and 14.5 SEER 1.5-4 ton units, and a time/temperature defrost board on 13 SEER 2-5 ton units (york-thgd-yhjd-heatpump-install.pdf p.10-11). Pick the map by the board in the unit (demand = single board with X/L, TEST and defrost-curve jumper; time/temp = 30/60/90 tap at the board edge) or by SEER/tonnage. Alternate board configuration shows COMP RLY terminal. How to tell the boards apart (p.10, Fig 11): both have X/L and TEST; the DEMAND board has the P/1-4 defrost-curve jumper, the TIME/TEMP board has the RUN TIME pins and a DFST T'STAT terminal.",
   "gaps": [
    "Exact model sizes on each board taken from the manual's text, not the nameplate"
   ],
@@ -12896,7 +12928,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Flame sensor FS (PUR wire 16)",
     "location": "Burner assembly",
     "kind": "other",
-    "spec": "Normal about 3.7 uA DC; low-flame warning starts at 0.28 uA; lockout point 0.16 uA DC (p.60)",
+    "spec": "Normal about 3.7 uA DC; low-flame warning starts at 0.28 uA; lockout point 0.16 uA DC (p.60). Source conflict: p.58 says continuous amber flash = flame sense below 0.35 uA - verify flame current is above 0.35 uA at the test pad.",
     "errorCodes": [
      "Rapid amber = low flame sense current",
      "1 red = flame present with GV off",
@@ -12947,8 +12979,8 @@ const BRAND_SENSOR_MAPS = [
    },
    {
     "plug": "12-pin plug pins 7 & 8",
-    "pins": "7 = WHT (15); 8 = YEL (14)",
-    "name": "Gas valve terminals 2 (WHT 15, pin 7) and 3 (YEL 14, pin 8)",
+    "pins": "7 = YEL (14); 8 = WHT (15)",
+    "name": "Gas valve terminals 3 (YEL 14, pin 7) and 2 (WHT 15, pin 8)",
     "location": "Gas valve",
     "kind": "other",
     "errorCodes": [
@@ -13128,8 +13160,8 @@ const BRAND_SENSOR_MAPS = [
    },
    {
     "plug": "12-pin plug pins 7 & 8",
-    "pins": "7 = WHT (15); 8 = YEL (14)",
-    "name": "Gas valve terminals 1 (YEL 14, pin 8) and 2 (WHT 15, pin 7)",
+    "pins": "7 = YEL (14); 8 = WHT (15)",
+    "name": "Gas valve terminals 1 (YEL 14, pin 7) and 2 (WHT 15, pin 8)",
     "location": "Gas valve",
     "kind": "other",
     "errorCodes": [
@@ -14757,7 +14789,7 @@ const BRAND_SENSOR_MAPS = [
      "DS2 green + DS1 red alternating FAST flash = coil sensor problem (no defrost at all; still heats/cools)"
     ],
     "test": "Unplug the 6-pin sensor plug from the board and ohm across that sensor's two pins on the harness plug. Compare with the chart at the sensor's actual temperature. Open (OL) or near 0 ohms = replace the sensor harness. A value outside the -35..120F range can be normal if the sensor really is that hot or cold.",
-    "source": "CORP0626L5-01-000.pdf p.19-20"
+    "source": "CORP0626L5-01-000.pdf p.11 (Table 2, Figures 5-6), p.14 (Tables 3-4), p.19 (wiring)"
    },
    {
     "plug": "P4 (6-pin sensor plug)",
@@ -14772,7 +14804,7 @@ const BRAND_SENSOR_MAPS = [
      "DS2 green + DS1 red simultaneous FAST flash = ambient sensor problem (board falls back to time/temperature defrost)"
     ],
     "test": "Unplug the 6-pin sensor plug from the board and ohm across that sensor's two pins on the harness plug. Compare with the chart at the sensor's actual temperature. Open (OL) or near 0 ohms = replace the sensor harness. A value outside the -35..120F range can be normal if the sensor really is that hot or cold.",
-    "source": "CORP0626L5-01-000.pdf p.19-20"
+    "source": "CORP0626L5-01-000.pdf p.11 (Table 2, Figures 5-6), p.14 (Tables 3-4), p.19 (wiring)"
    },
    {
     "plug": "P4 (6-pin sensor plug)",
@@ -14790,7 +14822,7 @@ const BRAND_SENSOR_MAPS = [
      "DS2 FAST flash / DS1 OFF = discharge sensor lockout"
     ],
     "test": "Unplug P4, ohm pins 1-2 on the harness (yellow) and compare with the discharge chart at the line temperature. Open or shorted = replace the sensor harness.",
-    "source": "CORP0626L5-01-000.pdf p.19-20"
+    "source": "CORP0626L5-01-000.pdf p.11 (Table 2, Figures 5-6), p.14 (Tables 3-4), p.19 (wiring)"
    },
    {
     "plug": "HI-PS",
@@ -15023,9 +15055,9 @@ const BRAND_SENSOR_MAPS = [
     "differences": "No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the replacement by the part number printed on the old board, or give Lennox the unit model and serial.",
-     "Turn off all power. Photograph the board and label every wire and plug before removing anything.",
-     "Copy the P1 defrost-termination pin, the P3 low-ambient (Y2 compressor lock-in 40 / 45 / 50 / 55 F) pin and the P5 jumper positions from the old board (see the P1 / P5 entries on this map).",
-     "Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
+     "GENERAL GUIDANCE: Turn off all power. Photograph the board and label every wire and plug before removing anything.",
+     "GENERAL GUIDANCE: Copy the P1 defrost-termination pin, the P3 low-ambient (Y2 compressor lock-in 40 / 45 / 50 / 55 F) pin and the P5 jumper positions from the old board (see the P1 / P5 entries on this map).",
+     "GENERAL GUIDANCE: Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
     ],
     "source": "GENERAL GUIDANCE; CORP1912-L8-01-000.pdf p.22 (P3), pages cited on the P1 / P5 entries; 16HPX is not in the 15D57 kit table (lennox-xp16-defrost-kit-15d57-install.pdf p.1)"
    }
@@ -15302,7 +15334,56 @@ const BRAND_SENSOR_MAPS = [
    "XP14042",
    "XP14048",
    "XP14060",
-   "14HPX"
+   "14HPX",
+   "XP1401823001",
+   "XP1401823002",
+   "XP1401823003",
+   "XP1401823004",
+   "XP1401823005",
+   "XP1401823006",
+   "XP1401823007",
+   "XP1402423001",
+   "XP1402423002",
+   "XP1402423003",
+   "XP1402423004",
+   "XP1402423005",
+   "XP1402423006",
+   "XP1402423007",
+   "XP1403023001",
+   "XP1403023002",
+   "XP1403023003",
+   "XP1403023004",
+   "XP1403023005",
+   "XP1403023006",
+   "XP1403023007",
+   "XP1403623001",
+   "XP1403623002",
+   "XP1403623003",
+   "XP1403623004",
+   "XP1403623005",
+   "XP1403623006",
+   "XP1403623007",
+   "XP1404223001",
+   "XP1404223002",
+   "XP1404223003",
+   "XP1404223004",
+   "XP1404223005",
+   "XP1404223006",
+   "XP1404223007",
+   "XP1404823001",
+   "XP1404823002",
+   "XP1404823003",
+   "XP1404823004",
+   "XP1404823005",
+   "XP1404823006",
+   "XP1404823007",
+   "XP1406023001",
+   "XP1406023002",
+   "XP1406023003",
+   "XP1406023004",
+   "XP1406023005",
+   "XP1406023006",
+   "XP1406023007"
   ],
   "sizes": [
    "all"
@@ -15532,7 +15613,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "LEDs first. Sensor codes: unplug P4, ohm coil (5-6 brown) and ambient (3-4 black) on the harness and compare with the RT13/RT21 chart. P4 1-2 carries a resistor (R7, no discharge sensor; value not stated); a missing or damaged resistor gives the discharge sensor fault code.",
-  "notes": "XP14 Table 10 (p.35) gives the P4 pinout: COIL P4-5/6, AMB P4-3/4, DIS P4-1/2 (resistor on single-stage). P3 lock-in pins and Y2 OUT are on the board but not used on XP14. XP14 build -08 and later and 14HPX -017 use the CMC1 time/temperature board - see lennox-cmc1-timetemp-outdoor.",
+  "notes": "XP14 Table 10 (p.35) gives the P4 pinout: COIL P4-5/6, AMB P4-3/4, DIS P4-1/2 (resistor on single-stage). P3 lock-in pins and Y2 OUT are on the board but not used on XP14. XP14 build -08 and later and 14HPX -017 use the CMC1 time/temperature board - see lennox-cmc1-timetemp-outdoor. A full XP14 nameplate with build -01 to -07 opens only this map; -08 and later open the CMC1 map (CORP0721L7 p.40-41). A nameplate without the build shows both.",
   "gaps": [
    "14HPX text says demand defrost for -01 through -016 but the diagram is labelled -01 through -012; builds -013..-016 not confirmed"
   ],
@@ -15566,7 +15647,71 @@ const BRAND_SENSOR_MAPS = [
    "XP13060",
    "ML14XP1",
    "EL15XP1",
-   "EL16XP1"
+   "EL16XP1",
+   "XP14018",
+   "XP14024",
+   "XP14030",
+   "XP14036",
+   "XP14042",
+   "XP14048",
+   "XP14060",
+   "14HPX",
+   "XP1401823008",
+   "XP1401823009",
+   "XP1402423008",
+   "XP1402423009",
+   "XP1403023008",
+   "XP1403023009",
+   "XP1403623008",
+   "XP1403623009",
+   "XP1404223008",
+   "XP1404223009",
+   "XP1404823008",
+   "XP1404823009",
+   "XP1406023008",
+   "XP1406023009",
+   "XP1401823010",
+   "XP1401823011",
+   "XP1401823012",
+   "XP1401823013",
+   "XP1401823014",
+   "XP1401823015",
+   "XP1402423010",
+   "XP1402423011",
+   "XP1402423012",
+   "XP1402423013",
+   "XP1402423014",
+   "XP1402423015",
+   "XP1403023010",
+   "XP1403023011",
+   "XP1403023012",
+   "XP1403023013",
+   "XP1403023014",
+   "XP1403023015",
+   "XP1403623010",
+   "XP1403623011",
+   "XP1403623012",
+   "XP1403623013",
+   "XP1403623014",
+   "XP1403623015",
+   "XP1404223010",
+   "XP1404223011",
+   "XP1404223012",
+   "XP1404223013",
+   "XP1404223014",
+   "XP1404223015",
+   "XP1404823010",
+   "XP1404823011",
+   "XP1404823012",
+   "XP1404823013",
+   "XP1404823014",
+   "XP1404823015",
+   "XP1406023010",
+   "XP1406023011",
+   "XP1406023012",
+   "XP1406023013",
+   "XP1406023014",
+   "XP1406023015"
   ],
   "sizes": [
    "all"
@@ -15699,7 +15844,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "No thermistors on this board. Check the LEDs, then the defrost thermostat S6 on DF (closed below 42F), the pressure switches on HI-PS/LO-PS (closed in normal running), and 24VAC on R-C and Y1. Force a defrost by jumping the TEST pins 2 s with Y1 on and DF closed or jumpered.",
-  "notes": "EL15XP1 and EL16XP1 Unit Information text pages also describe an A108 demand defrost board with P4 coil/ambient sensors, but their wiring diagrams show this CMC1 + S6 defrost thermostat. Look at the board: DF terminals with a defrost thermostat = this map; a 6-pin sensor plug with coil + ambient sensors = A108 (use the lennox-xp14-a108-outdoor pinout). 13HPX diagram note: LO-PS and HI-PS must be jumpered when that optional switch is not used. XP14 -08+ and 14HPX -017 text says S173 is wired in series with the 24V Y input, but the XP14 -08+ wiring diagram draws S173 in series with S4 on the HI-PS terminals; this map follows the diagram.",
+  "notes": "EL15XP1 and EL16XP1 Unit Information text pages also describe an A108 demand defrost board with P4 coil/ambient sensors, but their wiring diagrams show this CMC1 + S6 defrost thermostat. Look at the board: DF terminals with a defrost thermostat = this map; a 6-pin sensor plug with coil + ambient sensors = A108 (use the lennox-xp14-a108-outdoor pinout). 13HPX diagram note: LO-PS and HI-PS must be jumpered when that optional switch is not used. XP14 -08+ and 14HPX -017 text says S173 is wired in series with the 24V Y input, but the XP14 -08+ wiring diagram draws S173 in series with S4 on the HI-PS terminals; this map follows the diagram. XP14 -08 and later (and 14HPX -017) use this CMC1 board; full nameplates -08 to -15 open only this map. 14HPX nameplates open both this and the A108 map (14HPX -01 to -012 = A108) - check the board.",
   "gaps": [
    "Which EL15XP1/EL16XP1 builds have CMC1 vs A108 is not stated",
    "13HPX/XP13 switch settings not checked per build"
@@ -15770,9 +15915,9 @@ const BRAND_SENSOR_MAPS = [
     "differences": "No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the replacement by the part number printed on the old board, or give Lennox the unit model and serial.",
-     "Turn off all power. Photograph the board and label every wire and plug before removing anything.",
-     "Copy the P1 defrost-termination pin, the P3 nominal defrost time shunt (165 / 140 / 100 / 60 s; factory 140 s, also the default with no shunt) and the P5 jumper positions from the old board (see the P1 / P5 entries on this map).",
-     "Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
+     "GENERAL GUIDANCE: Turn off all power. Photograph the board and label every wire and plug before removing anything.",
+     "GENERAL GUIDANCE: Copy the P1 defrost-termination pin, the P3 nominal defrost time shunt (165 / 140 / 100 / 60 s; factory 140 s, also the default with no shunt) and the P5 jumper positions from the old board (see the P1 / P5 entries on this map).",
+     "GENERAL GUIDANCE: Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
     ],
     "source": "GENERAL GUIDANCE; 100195-02-000.pdf p.29 and p.31 (P3), pages cited on the P1 / P5 entries; 100108-02-000.pdf; not in the 15D57 or 16V38 kit tables"
    }
@@ -16543,10 +16688,10 @@ const BRAND_SENSOR_MAPS = [
     "differences": "The unit selection code sets unit type, capacity and outdoor fan profile. No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the board by the part number printed on it, or give Lennox the unit model and serial.",
-     "Turn off all power; label every wire and plug; fit the new control and reconnect to the same terminals; restore power.",
-     "If three bars show at power-up: thermostat OFF, control idle; hold the button until a dash shows, release; hold until the PU sequence shows, release; hold while the codes cycle; release on the right code, then hold until it stops flashing (manual: Configuring Unit).",
-     "Codes (SL28XCV manual p.39): 024 = 52, 036 = 54, 048 = 56, 060 = 57.",
-     "Communicating system: reconfigure from the S30 thermostat (manual: Reconfiguring Outdoor Control using S30)."
+     "GENERAL GUIDANCE: Turn off all power; label every wire and plug; fit the new control and reconnect to the same terminals; restore power.",
+     "GENERAL GUIDANCE: If three bars show at power-up: thermostat OFF, control idle; hold the button until a dash shows, release; hold until the PU sequence shows, release; hold while the codes cycle; release on the right code, then hold until it stops flashing (manual: Configuring Unit).",
+     "GENERAL GUIDANCE: Codes (SL28XCV manual p.39): 024 = 52, 036 = 54, 048 = 56, 060 = 57.",
+     "GENERAL GUIDANCE: Communicating system: reconfigure from the S30 thermostat (manual: Reconfiguring Outdoor Control using S30)."
     ],
     "source": "100012-01-000.pdf p.39 (Configuring Unit, codes - checked on the page image), p.40 (S30 reconfigure)"
    }
@@ -16796,10 +16941,10 @@ const BRAND_SENSOR_MAPS = [
     "differences": "The unit selection code sets unit type, capacity and outdoor fan profile. No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the board by the part number printed on it, or give Lennox the unit model and serial.",
-     "Turn off all power; label every wire and plug; fit the new control and reconnect to the same terminals; restore power.",
-     "If three bars show at power-up: thermostat OFF, control idle; hold the button until a dash shows, release; hold until the PU sequence shows, release; hold while the codes cycle; release on the right code, then hold until it stops flashing (manual: Configuring Unit).",
-     "Codes (SL25XPV manual p.46): 024 = 45, 036 = 47, 048 = 49, 060 = 50.",
-     "Communicating system: reconfigure from the S30 thermostat (manual: Reconfiguring Outdoor Control using S30)."
+     "GENERAL GUIDANCE: Turn off all power; label every wire and plug; fit the new control and reconnect to the same terminals; restore power.",
+     "GENERAL GUIDANCE: If three bars show at power-up: thermostat OFF, control idle; hold the button until a dash shows, release; hold until the PU sequence shows, release; hold while the codes cycle; release on the right code, then hold until it stops flashing (manual: Configuring Unit).",
+     "GENERAL GUIDANCE: Codes (SL25XPV manual p.46): 024 = 45, 036 = 47, 048 = 49, 060 = 50.",
+     "GENERAL GUIDANCE: Communicating system: reconfigure from the S30 thermostat (manual: Reconfiguring Outdoor Control using S30)."
     ],
     "source": "100026-01-000.pdf p.46 (unit selection code table - checked on the page image), p.49 (Configuring Unit), p.50 (S30 reconfigure)"
    }
@@ -18637,9 +18782,9 @@ const BRAND_SENSOR_MAPS = [
     "differences": "The parts lists name the board only as \"PCB (Main & Module Board)\" / \"Main Control Board\", with no part number. No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the replacement by the part number printed on the old board, or give Lennox the unit model and serial.",
-     "Turn off all power. Photograph the board and label every wire and plug before removing anything.",
-     "Copy every DIP switch position from the old board: SW1 on the separate display board (charge mode / defrost, incl. switch 4 manual defrost), and SW5 (incl. SW5-7 = O/B reversing valve energized in heat) and SW6 on the main board, as on the unit wiring diagram.",
-     "Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
+     "GENERAL GUIDANCE: Turn off all power. Photograph the board and label every wire and plug before removing anything.",
+     "GENERAL GUIDANCE: Copy every DIP switch position from the old board: SW1 on the separate display board (charge mode / defrost, incl. switch 4 manual defrost), and SW5 (incl. SW5-7 = O/B reversing valve energized in heat) and SW6 on the main board, as on the unit wiring diagram.",
+     "GENERAL GUIDANCE: Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
     ],
     "source": "GENERAL GUIDANCE; 100230-01-000pdf.pdf p.22-24 (component lists: PCB main & module board), p.31 (SW5-7 O/B), p.38 and p.46 (SW1 defrost), p.58 (SW1 charge mode), p.67 (wiring diagram SW1 / SW5 / SW6). LennoxPROs catalog search \"ML15KSPV board\" (fix/repl-work/lennox/look8.txt) returned only complete units."
    }
@@ -18899,9 +19044,9 @@ const BRAND_SENSOR_MAPS = [
     "differences": "The parts lists name the board only as \"PCB\" / \"Main control Board\", with no part number. No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the replacement by the part number printed on the old board, or give Lennox the unit model and serial.",
-     "Turn off all power. Photograph the board and label every wire and plug before removing anything.",
-     "Copy every DIP switch position: SW1 on the separate display board, SW5, SW6 and SW7 on the main control board, and check them against the \"Factory DIP Switches default setting\" printed for your size on the unit wiring diagram (024 p.50, 036 p.51, 060 p.52).",
-     "Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
+     "GENERAL GUIDANCE: Turn off all power. Photograph the board and label every wire and plug before removing anything.",
+     "GENERAL GUIDANCE: Copy every DIP switch position: SW1 on the separate display board, SW5, SW6 and SW7 on the main control board, and check them against the \"Factory DIP Switches default setting\" printed for your size on the unit wiring diagram (024 p.50, 036 p.51, 060 p.52).",
+     "GENERAL GUIDANCE: Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
     ],
     "source": "GENERAL GUIDANCE; 100203-01-000.pdf p.14-18 (parts lists: PCB / display board), p.43 (SW1 on the display board, charge mode), p.50-52 (wiring diagrams with factory DIP settings). LennoxPROs catalog search \"EL18KSLV board\" (fix/repl-work/lennox/look8.txt) returned only complete units and accessories."
    }
@@ -19244,7 +19389,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Low pressure switch",
     "location": "Suction line",
     "kind": "pressure",
-    "spec": "Trips 25 psig, resets 40 psig; ignored in defrost (+90 s), first 90 s of run, test mode and below 15F average ambient",
+    "spec": "Trips 25 psig, resets 40 psig; ignored in defrost (+90 s), first 90 s of run, test mode and below 15F average ambient Note: the component text (p.8) says the switch closes at 55 psig and opens at 25 psig, while the board-settings section (p.12) says reset at 40 psig - the manual contradicts itself.",
     "errorCodes": [
      "DS2 OFF / DS1 SLOW flash = low pressure fault",
      "DS2 OFF / DS1 ON = low pressure lockout"
@@ -19319,7 +19464,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "DS1/DS2 LEDs on A108 first, then the LSOM yellow alert code. Ohm sensors at the P4 harness plug (coil 5-6 brown, ambient 3-4 black, discharge 1-2 yellow).",
-  "notes": "Diagram form 535,325W (p.29). XP19-XXX-230-06 is listed in the 507727-01 iComfort control kit as using an A175 control - a -06 unit may have the A175 board instead (see lennox-a175-icomfort-outdoor).",
+  "notes": "Diagram form 535,325W (p.29). XP19-XXX-230-06 is listed in the 507727-01 iComfort control kit as using an A175 control - a -06 unit may have the A175 board instead (see lennox-a175-icomfort-outdoor). A full XP19-XXX-230-06 nameplate opens the A175 map instead.",
   "gaps": [
    "XP19 -06 board not confirmed",
    "LSOM code table partly transcribed (p.11)"
@@ -19536,7 +19681,11 @@ const BRAND_SENSOR_MAPS = [
    "XC17036",
    "XC17042",
    "XC17048",
-   "XC17060"
+   "XC17060",
+   "XP1902423006",
+   "XP1903623006",
+   "XP1904823006",
+   "XP1906023006"
   ],
   "sizes": [
    "all"
@@ -19570,7 +19719,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "Coil return bend (SL18XP1: 12 tubes up on -024/-030, 14 tubes up on -036 to -060)",
     "kind": "thermistor",
     "chart": "lennox-rt13-rt21-xp14",
-    "spec": "SL18XP1 Table 2 prints no range on the coil row (ambient row: -40F to 140F = 280,000 to 3,750 ohms); use the RT13/RT21 temperature table",
+    "spec": "-40F to 140F = 280,000 to 3,750 ohms (SL18XP1 Table 2: the range and resistance cells span both the Outdoor (Ambient) and Coil rows).",
     "errorCodes": [
      "416 outdoor coil sensor open/short/out of range (no defrost)"
     ],
@@ -19730,7 +19879,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Read the 7-segment code (or the iComfort thermostat). Ohm sensors at the E30 plug harness against the chart. Reset lockouts by cycling R or jumping E33 TEST 1-2 s.",
-  "notes": "Diagram form 537791-01 (SL18XP1 p.25) checked on the image; other models taken from their sensor tables (XP21 CORP1031 p.43-45, XC17 CORP1022, SL18XC1 CORP1405, XP17 CORP1023). The SL18XP1 low pressure alert text (411) says the R-410A switch opens at 40 psig, while p.8 says trip 25 / reset 40. Replacement control 105250-02 names terminals LPS, HPS, CNTCTR, REV, Y2 S, FPWM, C (kit p.3, 11) - the unit is auto-detected as HP when REV is connected and two-stage when Y2 S is connected; capacity and fan profile must be set by push button (kit p.4-6). Air conditioners have no coil sensor. CAUTION: XC21 (control 101798, CORP1007 p.12) prints the E30 pins the other way - DIS (yellow) on 5-6, AMB (black) 3-4, COIL (brown) 1-2 - and also says the coil 10K resistor is on 5-6; the same table labels LO-PS as S4 and HS-PS as S87. Go by wire colour: yellow = discharge, black = ambient, brown = coil. XP21 sensor table is on p.43 (chart p.44-45). SL18XP1 text (p.9) says S173 is wired in series with the 24V Y input, but the wiring diagram (p.25) draws S173 in series with S4 on HI-PS; this map follows the diagram.",
+  "notes": "Diagram form 537791-01 (SL18XP1 p.25) checked on the image; other models taken from their sensor tables (XP21 CORP1031 p.43-45, XC17 CORP1022, SL18XC1 CORP1405, XP17 CORP1023). The SL18XP1 low pressure alert text (411) says the R-410A switch opens at 40 psig, while p.8 says trip 25 / reset 40. Replacement control 105250-02 names terminals LPS, HPS, CNTCTR, REV, Y2 S, FPWM, C (kit p.3, 11) - the unit is auto-detected as HP when REV is connected and two-stage when Y2 S is connected; capacity and fan profile must be set by push button (kit p.4-6). Air conditioners have no coil sensor. CAUTION: XC21 (control 101798, CORP1007 p.12) prints the E30 pins the other way - DIS (yellow) on 5-6, AMB (black) 3-4, COIL (brown) 1-2 - and also says the coil 10K resistor is on 5-6; the same table labels LO-PS as S4 and HS-PS as S87. Go by wire colour: yellow = discharge, black = ambient, brown = coil. XP21 sensor table is on p.43 (chart p.44-45). SL18XP1 text (p.9) says S173 is wired in series with the 24V Y input, but the wiring diagram (p.25) draws S173 in series with S4 on HI-PS; this map follows the diagram. XC21 tokens also catch builds -01 to -03, but the kit (507727-01 p.1) covers XC21-XX-230-04 or higher only; earlier XC21 boards are not mapped - check the build.",
   "gaps": [
    "Diagram checked only for SL18XP1",
    "XC21 sensor pin table not found in text",
@@ -20051,7 +20200,7 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle. Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: the codes cycle, three seconds each. Release on this furnace's code (list below); it flashes for 10 seconds - during that time press and hold the button 5 seconds to store it. The control resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (22K51 / 15T94 FIGURE 3): A SL280UH070V36A, b SL280UH090V36B, C SL280UH090V48B, d SL280UH090V60C, E SL280UH110V60C, F SL280UH135V60D; H SL280DF070V36A, J SL280DF090V48B, L SL280DF090V60C, n SL280DF110V60C; A SL280UH060NV36A, C SL280UH080NV48B, d SL280UH080NV60C, E SL280UH100NV60C."
     ],
-    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
+    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
    }
   ],
   "sensors": [
@@ -20448,9 +20597,9 @@ const BRAND_SENSOR_MAPS = [
     "differences": "Kit 27P17 is printed for communicating-enabled SL280V; it is not confirmed for this earlier board with the 16-pin blower plug. No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the replacement by the part number printed on the old board, or give Lennox the unit model and serial.",
-     "Turn off all power. Photograph the board and label every wire and plug before removing anything.",
-     "Copy the on-board link state (W915 Y1-Y2, W951 R-O, W914 R-DS - cut or intact) and every DIP switch position from the old board.",
-     "Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
+     "GENERAL GUIDANCE: Turn off all power. Photograph the board and label every wire and plug before removing anything.",
+     "GENERAL GUIDANCE: Copy the on-board link state (W915 Y1-Y2, W951 R-O, W914 R-DS - cut or intact) and every DIP switch position from the old board.",
+     "GENERAL GUIDANCE: Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
     ],
     "source": "GENERAL GUIDANCE; lennox-sl280uhv-ui-1001.pdf (pages cited on the link entry); kit 27P17 (lennox-508533-02-000.pdf p.1) names communicating-enabled SL280V only"
    }
@@ -20813,7 +20962,7 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating system: set all DIP switches and on-board links exactly as on the control being replaced (link W915 Y1-Y2 is clipped for two-stage cooling).",
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle. Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: the codes cycle, three seconds each. Release on this furnace's code (list below); it flashes for 10 seconds - during that time press and hold the button 5 seconds to store it. The control resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (27P17 FIGURE 4, EL296 units): 0 EL296UH045V36B, 1 EL296UH070V36B, 2 EL296UH090V36C, 3 EL296UH090V48C, 4 EL296UH090V60C, 5 EL296UH110V48C, 6 EL296UH110V60C, 7 EL296UH135V60D.",
-     "GENERAL GUIDANCE, borrowed from a service note (not in this kit sheet): communicating (iComfort) system - Lennox note H-14-04 (SLP98UHV / EL296UHV controls): install the new control WITHOUT the i+ and i- wires, program the unit size code with the push button, remove power, reconnect i+ and i-, power up and answer \"No\" when the iComfort thermostat asks \"Copy Settings?\". (Note H-14-04 was issued for SLP98UHV / EL296UHV serials 5914B13342-5914D17455 (repair kits named in the note: SLP98 - 10G43, EL296 - 83W88); it is the only Lennox replacement step for communicating systems found.) Source: SLP98UHV-H-14-04-02-000.pdf p.1-2."
+     "GENERAL GUIDANCE, borrowed from a service note (not in this kit sheet): communicating (iComfort) system - Lennox note H-14-04 (SLP98UHV / EL296UHV controls): install the new control WITHOUT the i+ and i- wires, program the unit size code with the push button, remove power, reconnect i+ and i-, power up and answer \"No\" when the iComfort thermostat asks \"Copy Settings?\". (Note H-14-04 was issued for SLP98UHV / EL296UHV serials 5914B13342-5914D17455 (repair kits named in the note: SLP98 - 10G43, EL296 - 83W88); it is the only Lennox replacement step for communicating systems found.) Source: H-14-04-02-000.pdf p.1-2."
     ],
     "source": "lennox-508533-02-000.pdf p.1 (steps, TABLE 1, FIGURE 1), p.2 (FIGURE 2), p.4 (FIGURE 4), p.5 (FIGURE 5); LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (15T94, 22K51, 27P17, 31Z16)"
    },
@@ -20834,7 +20983,7 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle. Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: the codes cycle, three seconds each. Release on this furnace's code (list below); it flashes for 10 seconds - during that time press and hold the button 5 seconds to store it. The control resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (22K51 / 15T94 FIGURE 3): 0 EL296UH045V36B, 1 EL296UH070V36B, 2 EL296UH090V36B, 3 EL296UH09048C, 4 EL296UH090V60C, 5 EL296UH110V48C, 6 EL296UH110V60C, 7 EL296UH135V60D (as printed in 22K51; 15T94 prints 2 = 090V36C, 3 = 090V48C)."
     ],
-    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
+    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
    }
   ],
   "sensors": [
@@ -21274,7 +21423,7 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle. Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: the codes cycle, three seconds each. Release on this furnace's code (list below); it flashes for 10 seconds - during that time press and hold the button 5 seconds to store it. The control resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (22K51 / 15T94 FIGURE 3, as printed): 8 EL296DF0450V36A, 9 EL296DF070V48B, 11 EL296DF090V60C, U EL296DF110V60C."
     ],
-    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
+    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
    }
   ],
   "sensors": [
@@ -21705,7 +21854,7 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle. Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: the codes cycle, three seconds each. Release on this furnace's code (list below); it flashes for 10 seconds - during that time press and hold the button 5 seconds to store it. The control resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (22K51 / 15T94 FIGURE 3): 0 SL297UH040NV36B, 1 SL297UH060NV36B, 3 SL297UH080NV48C, 4 SL297UH080NV60C."
     ],
-    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
+    "source": "lennox-508281-01-000.pdf p.1, p.4 (FIGURE 3); lennox-506667-03-000.pdf p.1, p.4; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (27P17)"
    }
   ],
   "sensors": [
@@ -22071,7 +22220,11 @@ const BRAND_SENSOR_MAPS = [
    "ML180UH090E",
    "ML180UH110E",
    "ML180UH135E",
-   "ML180UHE"
+   "ML180UHE",
+   "ML180UH045XE",
+   "ML180UH070XE",
+   "ML180UH090XE",
+   "ML180UH110XE"
   ],
   "sizes": [
    "045",
@@ -23189,7 +23342,7 @@ const BRAND_SENSOR_MAPS = [
      "Replace the diagnostic sticker with the one in the kit (107343-XX).",
      "Restore electrical and gas supplies to the furnace."
     ],
-    "source": "lennox-508285-01-000.pdf p.1; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (22K54)"
+    "source": "lennox-508285-01-000.pdf p.1; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (22K54)"
    }
   ],
   "sensors": [
@@ -23535,7 +23688,7 @@ const BRAND_SENSOR_MAPS = [
      "Replace the diagnostic sticker with the one in the kit (107343-XX).",
      "Restore electrical and gas supplies to the furnace."
     ],
-    "source": "lennox-508285-01-000.pdf p.1; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (22K54)"
+    "source": "lennox-508285-01-000.pdf p.1; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (22K54)"
    }
   ],
   "sensors": [
@@ -24157,9 +24310,9 @@ const BRAND_SENSOR_MAPS = [
     "differences": "Kit 27P18 (107629) is printed for R454B-compliant two-stage non-communicating variable-speed furnaces; not confirmed for this R-410A-era ML296UHV. No refrigerant (R-410A / A2L) setting is documented for this board.",
     "steps": [
      "GENERAL GUIDANCE (no kit sheet found): order the replacement by the part number printed on the old board, or give Lennox the unit model and serial.",
-     "Turn off all power. Photograph the board and label every wire and plug before removing anything.",
-     "Copy the jumper positions from the old board: HEAT A-D, COOL A-D and ADJUST (see the jumper entry on this map), the Heat Stage jumper (5 / 10 min / NONE - single stage shown in Figure 3) and the Fan Off Delay jumper. This board has no clippable links.",
-     "Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
+     "GENERAL GUIDANCE: Turn off all power. Photograph the board and label every wire and plug before removing anything.",
+     "GENERAL GUIDANCE: Copy the jumper positions from the old board: HEAT A-D, COOL A-D and ADJUST (see the jumper entry on this map), the Heat Stage jumper (5 / 10 min / NONE - single stage shown in Figure 3) and the Fan Off Delay jumper. This board has no clippable links.",
+     "GENERAL GUIDANCE: Fit the new board, reconnect every wire and plug to the same terminal names, restore power and check operation."
     ],
     "source": "GENERAL GUIDANCE; lennox-ml296uhv-ui-1903.pdf p.10-11 (FIGURE 3 jumpers); kit 27P18 (lennox-508534-02-000.pdf p.1) is printed for R454B-compliant furnaces only"
    }
@@ -24393,7 +24546,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "ML180UHEK: ML180UH045E36AK, 070E36BK, 090E48BK, 090E60CK, 110E60CK, 135E60DK (and X variants)",
   "match": [
-   "ML180UHEK",
    "ML180UH045E36AK",
    "ML180UH045XE36AK",
    "ML180UH070E36AK",
@@ -24637,7 +24789,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "EL195UHNEK -01 and -02: EL195UH040NE36BK, 060NE36BK, 080NE48CK, 100NE60CK",
   "match": [
-   "EL195UHNEK",
    "EL195UH040NE36BK",
    "EL195UH060NE36BK",
    "EL195UH080NE48CK",
@@ -24873,7 +25024,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "EL196UHEK: EL196UH030XE36BK, 045XE36BK, 070XE36BK, 090XE48CK, 110XE60CK",
   "match": [
-   "EL196UHEK",
    "EL196UH030XE36BK",
    "EL196UH045XE36BK",
    "EL196UH070XE36BK",
@@ -25090,7 +25240,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Hold the diagnostic push button: 'E' = error recall (last 10; 'c' clears), 'F' = flame microamps on the 7-segment LED.",
-  "notes": "R-454B 'K' model (model number ends in K): factory enabled for A2L refrigerant detection; disabling it on an A2L system is prohibited. If the model number does not end in K, use the non-K map.",
+  "notes": "R-454B 'K' model (model number ends in K): factory enabled for A2L refrigerant detection; disabling it on an A2L system is prohibited. If the model number does not end in K, use the non-K map. Non-K EL196UHE (EL196UH...XE, no K) has no map: no source giving its plugs was found, so its nameplate opens nothing.",
   "gaps": [
    "Main harness plug pin numbers are not tabulated in the manual.",
    "Primary limit temperatures not stated.",
@@ -25111,7 +25261,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "ML196UHEK: ML196UH030XE36BK ... ML196UH135XE60DK",
   "match": [
-   "ML196UHEK",
    "ML196UH030XE36BK",
    "ML196UH045XE36BK",
    "ML196UH070XE36BK",
@@ -25354,7 +25503,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "EL280UHEK(X): EL280UH045E36AK, 070E36AK, 090E36BK, 090E48BK, 110E48CK, 110E60CK",
   "match": [
-   "EL280UHEK",
    "EL280UH045E36AK",
    "EL280UH070E36AK",
    "EL280UH070XE36AK",
@@ -25579,7 +25727,8 @@ const BRAND_SENSOR_MAPS = [
   "notes": "R-454B 'K' model (model number ends in K): factory enabled for A2L refrigerant detection; disabling it on an A2L system is prohibited. If the model number does not end in K, use the non-K map.",
   "gaps": [
    "Main harness plug pin numbers not tabulated.",
-   "Primary limit temperatures not stated."
+   "Primary limit temperatures not stated.",
+   "Non-K EL280UH (control 107048) has no map yet - the K map's board and plugs differ; whether this map's pressure switch, limit and rollout values apply to non-K units is not confirmed."
   ],
   "sources": [
    {
@@ -25596,7 +25745,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "EL297UHEK: EL297UH045XE36BK, 070XE36BK, 090XE48CK, 110XE60CK, 135XE60DK",
   "match": [
-   "EL297UHEK",
    "EL297UH045XE36BK",
    "EL297UH070XE36BK",
    "EL297UH090XE48CK",
@@ -25835,7 +25983,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "ML180UHVK: ML180UH030V36AK, 045V36AK, 070V36AK, 070V36BK, 070V48BK, 090V48BK, 110V60CK, 135V60DK",
   "match": [
-   "ML180UHVK",
    "ML180UH030V36AK",
    "ML180UH045V36AK",
    "ML180UH070V36AK",
@@ -26026,7 +26173,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "ML296UHVK(X): ML296UH045XV36BK, 070XV36BK, 090XV48CK, 110XV60CK",
   "match": [
-   "ML296UHVK",
    "ML296UH045XV36BK",
    "ML296UH070XV36BK",
    "ML296UH090XV48CK",
@@ -26208,7 +26354,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "EL297UHVK(X): EL297UH045XV36BK, 070XV36BK, 090XV36CK/48CK/60CK, 110XV48CK/60CK, 135XV60DK",
   "match": [
-   "EL297UHVK",
    "EL297UH045XV36BK",
    "EL297UH070XV36BK",
    "EL297UH090XV36CK",
@@ -26510,7 +26655,8 @@ const BRAND_SENSOR_MAPS = [
   "notes": "R-454B 'K' model (model number ends in K): factory enabled for A2L refrigerant detection; disabling it on an A2L system is prohibited. If the model number does not end in K, use the non-K map.",
   "gaps": [
    "Auxiliary temperature sensor (AUX THERM connector): no sensor part number or chart in this manual. Pin order of the outdoor & discharge connector not stated.",
-   "Primary limit temperatures not stated."
+   "Primary limit temperatures not stated.",
+   "Non-K EL297UH (control 103130) has no map yet - the K map's board and plugs differ; pressure switch and limit values in this map's manual tables do apply by size."
   ],
   "sources": [
    {
@@ -26917,7 +27063,6 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "SLP99UHVK: SLP99UH070V36BK, 090V36CK, 090V48CK, 090V60CK, 110V60CK, 135V60DK (and XV)",
   "match": [
-   "SLP99UHVK",
    "SLP99UH070V36BK",
    "SLP99UH070XV36BK",
    "SLP99UH090V36CK",
@@ -26929,7 +27074,12 @@ const BRAND_SENSOR_MAPS = [
    "SLP99UH110V60CK",
    "SLP99UH110XV60CK",
    "SLP99UH135V60DK",
-   "SLP99UH135XV60DK"
+   "SLP99UH135XV60DK",
+   "SLP99DF070V36BK",
+   "SLP99DF090V36CK",
+   "SLP99DF090V48CK",
+   "SLP99DF090V60CK",
+   "SLP99DF110V60CK"
   ],
   "sizes": [
    "070",
@@ -27095,7 +27245,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "7-segment LED and diagnostic recall push button.",
-  "notes": "R-454B 'K' model: A2L detection must stay enabled. Full model numbers end in K (e.g. SLP99UH090V48CK); the app should prefer this map over the SLP99UHV map when the model ends in K. Error code table for this control was not re-checked page by page, so codes are left out here. The pressure-differential check (p.38) says to compare with 'table 20'; in this manual the orifice table is TABLE 23 and the switch set points are TABLE 24.",
+  "notes": "R-454B 'K' model: A2L detection must stay enabled. Full model numbers end in K (e.g. SLP99UH090V48CK); the app should prefer this map over the SLP99UHV map when the model ends in K. Error code table for this control was not re-checked page by page, so codes are left out here. The pressure-differential check (p.38) says to compare with 'table 20'; in this manual the orifice table is TABLE 23 and the switch set points are TABLE 24. SLP99DF...K downflow nameplates open this map: same 107901 control (27P21 sheet p.1, p.4, p.7); plug data here are from the SLP99UHVK manual.",
   "gaps": [
    "Main harness pin numbers not tabulated.",
    "Discharge air sensor chart not published (outdoor sensor X2658 chart added); connector pin order not stated.",
@@ -27521,10 +27671,10 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Lennox",
   "models": "EL180UHNEK: EL180UH040NE36AK, 060NE36AK, 080NE48BK, 100NE60CK",
   "match": [
-   "EL180UHNEK",
    "EL180UH040NE36AK",
    "EL180UH060NE36AK",
-   "EL180UH100NE60CK"
+   "EL180UH100NE60CK",
+   "EL180UH080NE48BK"
   ],
   "sizes": [
    "040",
@@ -27797,7 +27947,7 @@ const BRAND_SENSOR_MAPS = [
      "Replace the diagnostic sticker with the one in the kit (107343-XX).",
      "Restore electrical and gas supplies to the furnace."
     ],
-    "source": "lennox-508285-01-000.pdf p.1; EL280-EL296-EL297-100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (22K54)"
+    "source": "lennox-508285-01-000.pdf p.1; 100052-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (22K54)"
    }
   ],
   "sensors": [
@@ -28459,9 +28609,9 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating system: set the DIP switches and on-board links exactly as on the original control.",
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle (decimal point blinking). Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: each code shows for five seconds. Release on this furnace's code (list below); it flashes for 10 seconds - during that time hold the button until the code stops blinking (disappears for 2 seconds). The control stores it and resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (SLP98UHV manual p.23 / 19J95 p.4): A 070-36B, b 090-36C, C (printed lower-case c in the manual) 090-48C, d 090-60C, E 110-60C, F 135-60D.",
-     "GENERAL GUIDANCE, borrowed from a service note (not in this kit sheet): communicating (iComfort) system - Lennox note H-14-04 (SLP98UHV / EL296UHV controls): install the new control WITHOUT the i+ and i- wires, program the unit size code with the push button, remove power, reconnect i+ and i-, power up and answer \"No\" when the iComfort thermostat asks \"Copy Settings?\". (Note H-14-04 was issued for SLP98UHV / EL296UHV serials 5914B13342-5914D17455 (repair kits named in the note: SLP98 - 10G43, EL296 - 83W88); it is the only Lennox replacement step for communicating systems found.) Source: SLP98UHV-H-14-04-02-000.pdf p.1-2."
+     "GENERAL GUIDANCE, borrowed from a service note (not in this kit sheet): communicating (iComfort) system - Lennox note H-14-04 (SLP98UHV / EL296UHV controls): install the new control WITHOUT the i+ and i- wires, program the unit size code with the push button, remove power, reconnect i+ and i-, power up and answer \"No\" when the iComfort thermostat asks \"Copy Settings?\". (Note H-14-04 was issued for SLP98UHV / EL296UHV serials 5914B13342-5914D17455 (repair kits named in the note: SLP98 - 10G43, EL296 - 83W88); it is the only Lennox replacement step for communicating systems found.) Source: H-14-04-02-000.pdf p.1-2."
     ],
-    "source": "lennox-507170-03-000.pdf p.1, p.4; lennox-506591-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (19J95); lennox-slp98uhv-corp1029l7-service.pdf p.23; SLP98UHV-H-14-04-02-000.pdf p.1-2"
+    "source": "lennox-507170-03-000.pdf p.1, p.4; lennox-506591-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (19J95); CORP1029L7-01-000.pdf p.23; H-14-04-02-000.pdf p.1-2"
    },
    {
     "board": "Lennox 107901-XX integrated control (kit 27P21, catalog 607308-32)",
@@ -28491,7 +28641,7 @@ const BRAND_SENSOR_MAPS = [
     "pins": "1 data input from motor; 2 common; 3 not used; 4 data output to motor; 5 +5 V bias supply; 6 not used",
     "name": "Variable-speed blower motor communication",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 1); lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 1); CORP1029L7-01-000.pdf p.16 (FIGURE 4)"
    },
    {
     "plug": "Ignitor connector",
@@ -28499,7 +28649,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Control supplies 120 V (a digital meter reads slightly lower; use a true RMS meter or ohm the ignitor). Ignitor 39 to 70 ohms.",
     "test": "Unplug the ignitor and measure ohms: 39 to 70.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4); lennox-slp98uhv-corp1029l7-service.pdf p.32"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4); CORP1029L7-01-000.pdf p.32"
    },
    {
     "plug": "Combustion air inducer connector",
@@ -28507,14 +28657,14 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "60 to 180 Hz, 33-110 VAC, 0.75-1.0 A, winding resistance 16.74 / 14.26, 1000-5400 RPM.",
     "test": "Check mounting, air/condensate leaks and that the wheel turns freely. Measure resistance between each pair of windings (16.74 / 14.26, within about 10% of each other) and each winding to ground (no continuity).",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4); lennox-slp98uhv-corp1029l7-service.pdf p.35, 37"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4); CORP1029L7-01-000.pdf p.35, 37"
    },
    {
     "plug": "12-pin plug",
     "pins": "1",
     "name": "Not used",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
@@ -28523,7 +28673,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Dual pressure switch S18 (high fire + low fire) on the cold end header box; measures the differential across the CAI orifice. 0-7500 ft set points: high fire 1.00 +/-0.05, low fire 0.25 +/-0.05 inches w.c. (all sizes). Over 7500 ft needs a conversion kit. CAI orifice: -070-1/-3 0.780, -070-4/-7 0.833, -070-8 and later 0.775; -090-1/-7 0.920, -090-8 and later 0.890; -110-1/-7 1.030, -110-8 and later 1.000; -135-1/-7 1.170, -135-8 and later 1.100 (TABLE 19).",
     "test": "Remove the heat demand; tee a gauge into the negative line (red/black or red tubing) and the positive line (black tubing) between the switch and the cold end header box. Run the unit; read once at start-up and again at steady state (about 5 min). The differential must be greater than the set point table. Replace the switch as a complete assembly. Do not jumper it except briefly for troubleshooting.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2); lennox-slp98uhv-corp1029l7-service.pdf p.35, 37"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2); CORP1029L7-01-000.pdf p.35, 37"
    },
    {
     "plug": "12-pin plug",
@@ -28531,21 +28681,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Rollout in",
     "kind": "other",
     "spec": "Two identical flame rollout switches S47 inside the burner box, N.C. SPST manual reset, wired in series with primary limit S10; trip (open) at 210F, not adjustable; reset button in the centre of the switch.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2); lennox-slp98uhv-corp1029l7-service.pdf p.32"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2); CORP1029L7-01-000.pdf p.32"
    },
    {
     "plug": "12-pin plug",
     "pins": "4",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "5",
     "name": "24 V hot",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
@@ -28553,35 +28703,35 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit in",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto-reset, factory set, not adjustable (temperature not printed). On restricted airflow the control cuts firing rate and blower airflow in 10% steps; if still inadequate at 35% firing rate it shuts down into 1-hour Watchguard.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2); lennox-slp98uhv-corp1029l7-service.pdf p.34"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2); CORP1029L7-01-000.pdf p.34"
    },
    {
     "plug": "12-pin plug",
     "pins": "7",
     "name": "Gas valve (variable-capacity valve GV1; 24 VAC 2-pin plug on the valve)",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2); lennox-slp98uhv-corp1029l7-service.pdf p.34"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2); CORP1029L7-01-000.pdf p.34"
    },
    {
     "plug": "12-pin plug",
     "pins": "8",
     "name": "Gas valve common",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "9",
     "name": "24 V neutral",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "10",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2)"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
@@ -28589,7 +28739,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit switch out",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto-reset, factory set, not adjustable (temperature not printed). On restricted airflow the control cuts firing rate and blower airflow in 10% steps; if still inadequate at 35% firing rate it shuts down into 1-hour Watchguard.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2); lennox-slp98uhv-corp1029l7-service.pdf p.34"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2); CORP1029L7-01-000.pdf p.34"
    },
    {
     "plug": "12-pin plug",
@@ -28598,7 +28748,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Dual pressure switch S18 (high fire + low fire) on the cold end header box; measures the differential across the CAI orifice. 0-7500 ft set points: high fire 1.00 +/-0.05, low fire 0.25 +/-0.05 inches w.c. (all sizes). Over 7500 ft needs a conversion kit. CAI orifice: -070-1/-3 0.780, -070-4/-7 0.833, -070-8 and later 0.775; -090-1/-7 0.920, -090-8 and later 0.890; -110-1/-7 1.030, -110-8 and later 1.000; -135-1/-7 1.170, -135-8 and later 1.100 (TABLE 19).",
     "test": "Remove the heat demand; tee a gauge into the negative line (red/black or red tubing) and the positive line (black tubing) between the switch and the cold end header box. Run the unit; read once at start-up and again at steady state (about 5 min). The differential must be greater than the set point table. Replace the switch as a complete assembly. Do not jumper it except briefly for troubleshooting.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.15 (TABLE 2); lennox-slp98uhv-corp1029l7-service.pdf p.35, 37"
+    "source": "CORP1029L7-01-000.pdf p.15 (TABLE 2); CORP1029L7-01-000.pdf p.35, 37"
    },
    {
     "plug": "FLAME SENSE",
@@ -28606,7 +28756,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Flame signal (microamps): normal 2.6 or greater; low 2.5 or less; drop out 1.1. A much higher reading (15 for example) may appear when checking.",
     "test": "Use the push button to enter Field Test Mode; the display shows the flame signal.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4); lennox-slp98uhv-corp1029l7-service.pdf p.32 (TABLE 18)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4); CORP1029L7-01-000.pdf p.32 (TABLE 18)"
    },
    {
     "plug": "OUTDOOR AIR SENSOR terminals",
@@ -28615,7 +28765,7 @@ const BRAND_SENSOR_MAPS = [
     "chart": "lennox-x2658-outdoor-sensor",
     "spec": "Optional accessory X2658 (for dual fuel and Humiditrol). The ComfortSense 7000 remote outdoor sensor must connect to the thermostat, not to the SureLight control.",
     "test": "Disconnect one sensor wire and measure ohms across the sensor; compare with the X2658 chart at the outdoor temperature.",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4); lennox-slp98uhv-corp1029l7-service.pdf p.3 (accessories, notes 1 and 3)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4); CORP1029L7-01-000.pdf p.3 (accessories, notes 1 and 3)"
    },
    {
     "plug": "DISCHARGE AIR SENSOR terminals",
@@ -28626,121 +28776,121 @@ const BRAND_SENSOR_MAPS = [
      "E252",
      "E310"
     ],
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4); lennox-slp98uhv-corp1029l7-service.pdf p.3 (accessories); lennox-slp98uhv-corp1029l7-service.pdf p.25-26 (E252, E310)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4); CORP1029L7-01-000.pdf p.3 (accessories); CORP1029L7-01-000.pdf p.25-26 (E252, E310)"
    },
    {
     "plug": "TB83 R / I+ / I- / C",
     "name": "RS-BUS outdoor: R 24 VAC, I+ data high, I- data low, C 24 VAC common",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4)"
    },
    {
     "plug": "TB84 R / I+ / I- / C",
     "name": "RS-BUS indoor (communicating thermostat): R 24 VAC, I+ data high, I- data low, C 24 VAC common",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4)"
    },
    {
     "plug": "TB82 I+ / I-",
     "name": "RS-BUS link (future use)",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4)"
    },
    {
     "plug": "TB1 W1 / W2",
     "name": "Heat demand from 1st / 2nd stage thermostat",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16 (FIGURE 4)"
+    "source": "CORP1029L7-01-000.pdf p.16 (FIGURE 4)"
    },
    {
     "plug": "TB1 G",
     "name": "Manual fan from thermostat",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "TB1 Y1 / Y2",
     "name": "Thermostat 1st / 2nd stage cool (link W915 joins Y1-Y2; cut it for two-stage cooling or the outdoor unit runs second stage only)",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16; lennox-slp98uhv-corp1029l7-service.pdf p.21"
+    "source": "CORP1029L7-01-000.pdf p.16; CORP1029L7-01-000.pdf p.21"
    },
    {
     "plug": "TB1 C",
     "name": "Thermostat signal ground, connected to transformer ground (TR) and chassis ground",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "TB1 R",
     "name": "Class 2 24 VAC to thermostat",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "TB1 O",
     "name": "Thermostat signal to heat pump reversing valve (link W951 joins R-O; cut it for heat pump + dual-fuel thermostat)",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16; lennox-slp98uhv-corp1029l7-service.pdf p.21"
+    "source": "CORP1029L7-01-000.pdf p.16; CORP1029L7-01-000.pdf p.21"
    },
    {
     "plug": "TB1 DS",
     "name": "Dehumidification signal (link W914 joins R-DS; cut it with Harmony III or a humidity-control thermostat)",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16; lennox-slp98uhv-corp1029l7-service.pdf p.21"
+    "source": "CORP1029L7-01-000.pdf p.16; CORP1029L7-01-000.pdf p.21"
    },
    {
     "plug": "TB1 DH",
     "name": "Dehumidification output - communicating thermostat only",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "TB1 H",
     "name": "24 V humidifier output (do not connect to a ComfortSense thermostat)",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "TB1 L",
     "name": "Use only with a communicating thermostat and a non-communicating outdoor unit",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "HUM",
     "name": "120 VAC output to humidifier",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "XMFR",
     "name": "120 VAC output to transformer",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "LI",
     "name": "120 VAC input to control",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "CIRC",
     "name": "120 VAC output to circulating blower",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "EAC",
     "name": "120 VAC output to electrical air cleaner",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "NEUTRALS",
     "name": "120 VAC neutral",
     "kind": "other",
-    "source": "lennox-slp98uhv-corp1029l7-service.pdf p.16"
+    "source": "CORP1029L7-01-000.pdf p.16"
    },
    {
     "plug": "LGWP1 (replacement board 107901)",
@@ -28781,7 +28931,7 @@ const BRAND_SENSOR_MAPS = [
   ],
   "sources": [
    {
-    "file": "lennox-slp98uhv-corp1029l7-service.pdf",
+    "file": "CORP1029L7-01-000.pdf",
     "pages": "3, 15-16, 18-24, 31-37",
     "what": "accessories, pin tables 1-2, control figure 4, DIP tables, unit size codes, error codes, ignitor / flame / rollout / limit / pressure switch tables 18-20"
    },
@@ -28796,7 +28946,7 @@ const BRAND_SENSOR_MAPS = [
     "what": "kit 27P21 (107901) steps, Low GWP DIP table"
    },
    {
-    "file": "SLP98UHV-H-14-04-02-000.pdf",
+    "file": "H-14-04-02-000.pdf",
     "pages": "1-2",
     "what": "unit size code check and communicating replacement procedure"
    }
@@ -28836,9 +28986,9 @@ const BRAND_SENSOR_MAPS = [
      "Non-communicating system: set the DIP switches and on-board links exactly as on the original control.",
      "Non-communicating: program the unit size code. Room thermostat OFF, control idle (decimal point blinking). Push and hold the button next to the 7-segment display until a solid dash appears, release (an active alarm shows its code; otherwise the dash blinks). Push and hold until a solid P appears, release; P blinks. Push and hold: each code shows for five seconds. Release on this furnace's code (list below); it flashes for 10 seconds - during that time hold the button until the code stops blinking (disappears for 2 seconds). The control stores it and resets. Cycle 24 V power: the code must show at power-up. Three bars (then E203) = not stored, repeat.",
      "Codes (SLP98DFV manual p.17 / 19J95 p.4): H 070-36B, J 090-36C, L 090-48C, n 090-60C, o 110-60C.",
-     "GENERAL GUIDANCE by analogy - H-14-04 names SLP98UHV only, not issued for SLP98DFV - borrowed from a service note (not in this kit sheet): communicating (iComfort) system - Lennox note H-14-04 (SLP98UHV / EL296UHV controls): install the new control WITHOUT the i+ and i- wires, program the unit size code with the push button, remove power, reconnect i+ and i-, power up and answer \"No\" when the iComfort thermostat asks \"Copy Settings?\". (Note H-14-04 was issued for SLP98UHV / EL296UHV serials 5914B13342-5914D17455 (repair kits named in the note: SLP98 - 10G43, EL296 - 83W88); it is the only Lennox replacement step for communicating systems found.) Source: SLP98UHV-H-14-04-02-000.pdf p.1-2."
+     "GENERAL GUIDANCE by analogy - H-14-04 names SLP98UHV only, not issued for SLP98DFV - borrowed from a service note (not in this kit sheet): communicating (iComfort) system - Lennox note H-14-04 (SLP98UHV / EL296UHV controls): install the new control WITHOUT the i+ and i- wires, program the unit size code with the push button, remove power, reconnect i+ and i-, power up and answer \"No\" when the iComfort thermostat asks \"Copy Settings?\". (Note H-14-04 was issued for SLP98UHV / EL296UHV serials 5914B13342-5914D17455 (repair kits named in the note: SLP98 - 10G43, EL296 - 83W88); it is the only Lennox replacement step for communicating systems found.) Source: H-14-04-02-000.pdf p.1-2."
     ],
-    "source": "lennox-507170-03-000.pdf p.1, p.4; lennox-506591-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (19J95); lennox-slp98dfv-corp1030l7-service.pdf p.17; SLP98UHV-H-14-04-02-000.pdf p.1-2"
+    "source": "lennox-507170-03-000.pdf p.1, p.4; lennox-506591-01-000.pdf p.1; LennoxPROs product catalog, Replacement History tab (read 2026-11-09; saved in fix/repl-work/lennox/prod1.txt, prod2.txt, prod3.txt, look4.txt) (19J95); CORP1030L7-01-000.pdf p.17; H-14-04-02-000.pdf p.1-2"
    },
    {
     "board": "Lennox 107901-XX integrated control (kit 27P21, catalog 607308-32)",
@@ -28868,7 +29018,7 @@ const BRAND_SENSOR_MAPS = [
     "pins": "1 data input from motor; 2 common; 3 not used; 4 data output to motor; 5 +5 V bias supply; 6 not used",
     "name": "Variable-speed blower motor communication",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 1); lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 1); CORP1030L7-01-000.pdf p.10 (FIGURE 4)"
    },
    {
     "plug": "Ignitor connector",
@@ -28876,7 +29026,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Control supplies 120 V (a digital meter reads slightly lower; use a true RMS meter or ohm the ignitor). Ignitor 39 to 70 ohms.",
     "test": "Unplug the ignitor and measure ohms: 39 to 70.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4); lennox-slp98dfv-corp1030l7-service.pdf p.27"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4); CORP1030L7-01-000.pdf p.27"
    },
    {
     "plug": "Combustion air inducer connector",
@@ -28884,14 +29034,14 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "60 to 180 Hz, 33-110 VAC, 0.75-1.0 A, winding resistance 16.74 / 14.26, 1000-5400 RPM.",
     "test": "Check mounting, air/condensate leaks and that the wheel turns freely. Measure resistance between each pair of windings (16.74 / 14.26, within about 10% of each other) and each winding to ground (no continuity).",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4); lennox-slp98dfv-corp1030l7-service.pdf p.30, 32"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4); CORP1030L7-01-000.pdf p.30, 32"
    },
    {
     "plug": "12-pin plug",
     "pins": "1",
     "name": "Not used",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
@@ -28900,7 +29050,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Dual pressure switch S18 (high fire + low fire) on the cold end header box; measures the differential across the CAI orifice. 0-7500 ft set points: high fire 1.00 +/-0.05, low fire 0.25 +/-0.05 inches w.c. (all sizes). Over 7500 ft needs a conversion kit. CAI orifice: -070-1/-5 0.780, -070-6/-9 0.833, -070-10 and later 0.775; -090-1/-9 0.920, -090-10 and later 0.890; -110-1/-9 1.030, -110-10 and later 1.000 (TABLE 19).",
     "test": "Remove the heat demand; tee a gauge into the negative line (red/black or red tubing) and the positive line (black tubing) between the switch and the cold end header box. Run the unit; read once at start-up and again at steady state (about 5 min). The differential must be greater than the set point table. Replace the switch as a complete assembly. Do not jumper it except briefly for troubleshooting.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2); lennox-slp98dfv-corp1030l7-service.pdf p.30, 32"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2); CORP1030L7-01-000.pdf p.30, 32"
    },
    {
     "plug": "12-pin plug",
@@ -28908,21 +29058,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Rollout in",
     "kind": "other",
     "spec": "Two identical flame rollout switches S47 inside the burner box, N.C. SPST manual reset, wired in series with primary limit S10; trip (open) at 210F, not adjustable; reset button in the centre of the switch.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2); lennox-slp98dfv-corp1030l7-service.pdf p.27"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2); CORP1030L7-01-000.pdf p.27"
    },
    {
     "plug": "12-pin plug",
     "pins": "4",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "5",
     "name": "24 V hot",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
@@ -28930,35 +29080,35 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit in",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto-reset, factory set, not adjustable (temperature not printed). On restricted airflow the control cuts firing rate and blower airflow in 10% steps; if still inadequate at 35% firing rate it shuts down into 1-hour Watchguard.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2); lennox-slp98dfv-corp1030l7-service.pdf p.29"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2); CORP1030L7-01-000.pdf p.29"
    },
    {
     "plug": "12-pin plug",
     "pins": "7",
     "name": "Gas valve (variable-capacity valve GV1; 24 VAC 2-pin plug on the valve)",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2); lennox-slp98dfv-corp1030l7-service.pdf p.29"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2); CORP1030L7-01-000.pdf p.29"
    },
    {
     "plug": "12-pin plug",
     "pins": "8",
     "name": "Gas valve common",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "9",
     "name": "24 V neutral",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "10",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2)"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
@@ -28966,7 +29116,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit switch out",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto-reset, factory set, not adjustable (temperature not printed). On restricted airflow the control cuts firing rate and blower airflow in 10% steps; if still inadequate at 35% firing rate it shuts down into 1-hour Watchguard.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2); lennox-slp98dfv-corp1030l7-service.pdf p.29"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2); CORP1030L7-01-000.pdf p.29"
    },
    {
     "plug": "12-pin plug",
@@ -28975,7 +29125,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Dual pressure switch S18 (high fire + low fire) on the cold end header box; measures the differential across the CAI orifice. 0-7500 ft set points: high fire 1.00 +/-0.05, low fire 0.25 +/-0.05 inches w.c. (all sizes). Over 7500 ft needs a conversion kit. CAI orifice: -070-1/-5 0.780, -070-6/-9 0.833, -070-10 and later 0.775; -090-1/-9 0.920, -090-10 and later 0.890; -110-1/-9 1.030, -110-10 and later 1.000 (TABLE 19).",
     "test": "Remove the heat demand; tee a gauge into the negative line (red/black or red tubing) and the positive line (black tubing) between the switch and the cold end header box. Run the unit; read once at start-up and again at steady state (about 5 min). The differential must be greater than the set point table. Replace the switch as a complete assembly. Do not jumper it except briefly for troubleshooting.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.9 (TABLE 2); lennox-slp98dfv-corp1030l7-service.pdf p.30, 32"
+    "source": "CORP1030L7-01-000.pdf p.9 (TABLE 2); CORP1030L7-01-000.pdf p.30, 32"
    },
    {
     "plug": "FLAME SENSE",
@@ -28983,7 +29133,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Flame signal (microamps): normal 2.6 or greater; low 2.5 or less; drop out 1.1. A much higher reading (15 for example) may appear when checking.",
     "test": "Use the push button to enter Field Test Mode; the display shows the flame signal.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4); lennox-slp98dfv-corp1030l7-service.pdf p.27 (TABLE 18)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4); CORP1030L7-01-000.pdf p.27 (TABLE 18)"
    },
    {
     "plug": "OUTDOOR AIR SENSOR terminals",
@@ -28992,7 +29142,7 @@ const BRAND_SENSOR_MAPS = [
     "chart": "lennox-x2658-outdoor-sensor",
     "spec": "Optional accessory X2658 (for dual fuel and Humiditrol). The ComfortSense 7000 remote outdoor sensor must connect to the thermostat, not to the SureLight control.",
     "test": "Disconnect one sensor wire and measure ohms across the sensor; compare with the X2658 chart at the outdoor temperature.",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4); lennox-slp98dfv-corp1030l7-service.pdf p.3 (accessories, notes 1 and 3)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4); CORP1030L7-01-000.pdf p.3 (accessories, notes 1 and 3)"
    },
    {
     "plug": "DISCHARGE AIR SENSOR terminals",
@@ -29003,121 +29153,121 @@ const BRAND_SENSOR_MAPS = [
      "E252",
      "E310"
     ],
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4); lennox-slp98dfv-corp1030l7-service.pdf p.3 (accessories); lennox-slp98dfv-corp1030l7-service.pdf p.19-20 (E252, E310)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4); CORP1030L7-01-000.pdf p.3 (accessories); CORP1030L7-01-000.pdf p.19-20 (E252, E310)"
    },
    {
     "plug": "TB83 R / I+ / I- / C",
     "name": "RS-BUS outdoor: R 24 VAC, I+ data high, I- data low, C 24 VAC common",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4)"
    },
    {
     "plug": "TB84 R / I+ / I- / C",
     "name": "RS-BUS indoor (communicating thermostat): R 24 VAC, I+ data high, I- data low, C 24 VAC common",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4)"
    },
    {
     "plug": "TB82 I+ / I-",
     "name": "RS-BUS link (future use)",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4)"
    },
    {
     "plug": "TB1 W1 / W2",
     "name": "Heat demand from 1st / 2nd stage thermostat",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10 (FIGURE 4)"
+    "source": "CORP1030L7-01-000.pdf p.10 (FIGURE 4)"
    },
    {
     "plug": "TB1 G",
     "name": "Manual fan from thermostat",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "TB1 Y1 / Y2",
     "name": "Thermostat 1st / 2nd stage cool (link W915 joins Y1-Y2; cut it for two-stage cooling or the outdoor unit runs second stage only)",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10; lennox-slp98dfv-corp1030l7-service.pdf p.15"
+    "source": "CORP1030L7-01-000.pdf p.10; CORP1030L7-01-000.pdf p.15"
    },
    {
     "plug": "TB1 C",
     "name": "Thermostat signal ground, connected to transformer ground (TR) and chassis ground",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "TB1 R",
     "name": "Class 2 24 VAC to thermostat",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "TB1 O",
     "name": "Thermostat signal to heat pump reversing valve (link W951 joins R-O; cut it for heat pump + dual-fuel thermostat)",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10; lennox-slp98dfv-corp1030l7-service.pdf p.15"
+    "source": "CORP1030L7-01-000.pdf p.10; CORP1030L7-01-000.pdf p.15"
    },
    {
     "plug": "TB1 DS",
     "name": "Dehumidification signal (link W914 joins R-DS; cut it with Harmony III or a humidity-control thermostat)",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10; lennox-slp98dfv-corp1030l7-service.pdf p.15"
+    "source": "CORP1030L7-01-000.pdf p.10; CORP1030L7-01-000.pdf p.15"
    },
    {
     "plug": "TB1 DH",
     "name": "Dehumidification output - communicating thermostat only",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "TB1 H",
     "name": "24 V humidifier output (do not connect to a ComfortSense thermostat)",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "TB1 L",
     "name": "Use only with a communicating thermostat and a non-communicating outdoor unit",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "HUM",
     "name": "120 VAC output to humidifier",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "XMFR",
     "name": "120 VAC output to transformer",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "LI",
     "name": "120 VAC input to control",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "CIRC",
     "name": "120 VAC output to circulating blower",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "EAC",
     "name": "120 VAC output to electrical air cleaner",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "NEUTRALS",
     "name": "120 VAC neutral",
     "kind": "other",
-    "source": "lennox-slp98dfv-corp1030l7-service.pdf p.10"
+    "source": "CORP1030L7-01-000.pdf p.10"
    },
    {
     "plug": "LGWP1 (replacement board 107901)",
@@ -29158,7 +29308,7 @@ const BRAND_SENSOR_MAPS = [
   ],
   "sources": [
    {
-    "file": "lennox-slp98dfv-corp1030l7-service.pdf",
+    "file": "CORP1030L7-01-000.pdf",
     "pages": "3, 9-10, 12-20, 27-32",
     "what": "accessories, pin tables 1-2, control figure 4, DIP tables, unit size codes, error codes, ignitor / flame / rollout / limit / pressure switch tables 18-20"
    },
@@ -29173,7 +29323,7 @@ const BRAND_SENSOR_MAPS = [
     "what": "kit 27P21 (107901) steps, Low GWP DIP table"
    },
    {
-    "file": "SLP98UHV-H-14-04-02-000.pdf",
+    "file": "H-14-04-02-000.pdf",
     "pages": "1-2",
     "what": "unit size code check and communicating replacement procedure"
    }
@@ -29225,70 +29375,70 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Board 49M59 ramps ignitor power down (voltage cannot be measured - ohm the ignitor): 10.9 to 19.7 ohms. Ignitors are not interchangeable between boards 49M59 and 100870.",
     "test": "Unplug and ohm the ignitor; compare with the range for this board.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 2); lennox-g61mpv-corp0310l7-service.pdf p.45"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 2); CORP0310-L7-01-000.pdf p.45"
    },
    {
     "plug": "5-pin plug",
     "pins": "2",
     "name": "Combustion air inducer high speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 2)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 2)"
    },
    {
     "plug": "5-pin plug",
     "pins": "3",
     "name": "Combustion air inducer low speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 2)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 2)"
    },
    {
     "plug": "5-pin plug",
     "pins": "4",
     "name": "Combustion air inducer neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 2)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 2)"
    },
    {
     "plug": "5-pin plug",
     "pins": "5",
     "name": "Ignitor neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 2)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 2)"
    },
    {
     "plug": "12-pin plug",
     "pins": "1",
     "name": "Gas valve high fire",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "2",
     "name": "Second stage pressure switch",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "3",
     "name": "Not used",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "4",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "5",
     "name": "24 V hot",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
@@ -29296,35 +29446,35 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit in",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto reset, factory set, not adjustable (temperature not printed). Some models have a shield on S10 - do not remove it; note shield and limit orientation if replacing.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3); lennox-g61mpv-corp0310l7-service.pdf p.46"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3); CORP0310-L7-01-000.pdf p.46"
    },
    {
     "plug": "12-pin plug",
     "pins": "7",
     "name": "Gas valve low stage",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "8",
     "name": "Gas valve common",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "9",
     "name": "24 V neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
     "pins": "10",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "12-pin plug",
@@ -29332,188 +29482,188 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit out",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto reset, factory set, not adjustable (temperature not printed). Some models have a shield on S10 - do not remove it; note shield and limit orientation if replacing.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3); lennox-g61mpv-corp0310l7-service.pdf p.46"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3); CORP0310-L7-01-000.pdf p.46"
    },
    {
     "plug": "12-pin plug",
     "pins": "12",
     "name": "1st stage pressure switch",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "1",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "2",
     "name": "Low heat speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "3",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "4",
     "name": "DELAY DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "5",
     "name": "COOL DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "6",
     "name": "Y1 signal",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "7",
     "name": "ADJUST DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "8",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "9",
     "name": "O from thermostat",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "10",
     "name": "DS output signal",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "11",
     "name": "HEAT DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "12",
     "name": "24 VAC",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "13",
     "name": "HIGH HEAT speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "14",
     "name": "Y2 signal",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "15",
     "name": "G",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "16",
     "name": "CFM LED",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 4)"
    },
    {
     "plug": "Flame sensor",
     "name": "Flame sensor (left side of burner support, tip in the left-most burner flame)",
     "kind": "other",
     "spec": "Board 49M59: normal >= 0.23 microamps, low <= 0.22, drop out = 0.16.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.45-46 (FIGURE 16)"
+    "source": "CORP0310-L7-01-000.pdf p.45-46 (FIGURE 16)"
    },
    {
     "plug": "LINE / XFMR / EAC / CIRC / HUM (neutral)",
     "name": "120 VAC neutral terminals: line, transformer, electronic air cleaner, indoor blower, humidifier",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 1)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 1)"
    },
    {
     "plug": "HUM / XMFR / LINE / CIRC / EAC (hot)",
     "name": "120 VAC hot terminals: humidifier, transformer, line, indoor blower, electronic air cleaner",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 1)"
+    "source": "CORP0310-L7-01-000.pdf p.26 (TABLE 1)"
    },
    {
     "plug": "Jumper E20 (SINGLE / TWO)",
     "name": "Thermostat selection jumper, below DIP switches 1-3: factory TWO (two-stage thermostat); SINGLE = single-stage thermostat (second stage after 10 min with DIP 3 ON, 15 min OFF)",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.25; lennox-g61mpv-corp0310l7-service.pdf p.28"
+    "source": "CORP0310-L7-01-000.pdf p.25; CORP0310-L7-01-000.pdf p.28"
    },
    {
     "plug": "Flame rollout switches S47",
     "name": "Two S47 rollout switches, wired in series with primary limit S10 (12-pin pins 6 / 11 on this board)",
     "kind": "other",
     "spec": "Two identical flame rollout switches S47, one on each side of the burner box: N.C. SPST manual reset, in series with primary limit S10; trip (open) at 250F, not adjustable.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.46; lennox-g61mpv-corp0310l7-service.pdf p.26 (TABLE 3)"
+    "source": "CORP0310-L7-01-000.pdf p.46; CORP0310-L7-01-000.pdf p.26 (TABLE 3)"
    },
    {
     "plug": "DIP switches 1-3",
     "name": "Heating DIP: 1-2 blower-off delay (60 s Off-Off, 90 s Off-On factory, 120 s On-Off, 180 s On-On); 3 second-stage delay with single-stage thermostat (ON = 10 min factory, OFF = 15 min; only with jumper E20 on SINGLE); 4 not used",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.28 (TABLE 7 and switch 3-4 text)"
+    "source": "CORP0310-L7-01-000.pdf p.28 (TABLE 7 and switch 3-4 text)"
    },
    {
     "plug": "Link W951",
     "name": "R to O - cut when a heat pump is used with FM21",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.25 (FIGURE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.25 (FIGURE 4)"
    },
    {
     "plug": "Link W914",
     "name": "DS to R - cut when SignatureStat, CCB1 or Harmony II are used",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.25 (FIGURE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.25 (FIGURE 4)"
    },
    {
     "plug": "Link W915",
     "name": "Y1 to Y2 - cut when two-stage cooling is used",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.25 (FIGURE 4)"
+    "source": "CORP0310-L7-01-000.pdf p.25 (FIGURE 4)"
    },
    {
     "plug": "DS1 / DS2 LEDs",
     "name": "Diagnostic LEDs (DS1 / DS2): simultaneous slow = power on, normal; simultaneous fast = normal, heat demand; DS1 slow / DS2 ON = primary, secondary, backup secondary or rollout limit open; DS1 OFF / DS2 slow = low prove switch open or vent blocked; DS1 OFF / DS2 fast = high prove switch open or vent blocked; alternating slow = Watchguard; DS1 slow / DS2 OFF = flame sensed without gas valve energized; DS1 FAST / DS2 SLOW = main power polarity reversed (swap line and neutral); DS1 SLOW / DS2 FAST = low flame signal below 0.23 microamps (replace flame sense rod; low flame current = 0.17-0.22 microamps); alternating fast = improper ground, broken / open ignitor, or line voltage below 75 V. Slow = 1 Hz, fast = 3 Hz.",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.27 (TABLE 6 - checked on the page image)"
+    "source": "CORP0310-L7-01-000.pdf p.27 (TABLE 6 - checked on the page image)"
    }
   ],
   "test": "DS1 / DS2 LED table (p.27).",
@@ -29524,7 +29674,7 @@ const BRAND_SENSOR_MAPS = [
   ],
   "sources": [
    {
-    "file": "lennox-g61mpv-corp0310l7-service.pdf",
+    "file": "CORP0310-L7-01-000.pdf",
     "pages": "24-29, 45-46",
     "what": "pin tables, board figure, DIP / jumper, LEDs, ignitor, flame, rollout, limit"
    },
@@ -29581,49 +29731,49 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Board 100870 supplies a regulated 95 V to the ignitor: 25 to 47 ohms. Ignitors are not interchangeable between boards 49M59 and 100870.",
     "test": "Unplug and ohm the ignitor; compare with the range for this board.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 12); lennox-g61mpv-corp0310l7-service.pdf p.45"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 12); CORP0310-L7-01-000.pdf p.45"
    },
    {
     "plug": "5-pin plug",
     "pins": "2",
     "name": "Combustion air inducer high speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 12)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 12)"
    },
    {
     "plug": "5-pin plug",
     "pins": "3",
     "name": "Combustion air inducer low speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 12)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 12)"
    },
    {
     "plug": "5-pin plug",
     "pins": "4",
     "name": "Combustion air inducer neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 12)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 12)"
    },
    {
     "plug": "5-pin plug",
     "pins": "5",
     "name": "Ignitor neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 12)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 12)"
    },
    {
     "plug": "12-pin plug",
     "pins": "1",
     "name": "Gas valve high fire",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
     "pins": "2",
     "name": "Second stage prove switch",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
@@ -29631,21 +29781,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Rollout in",
     "kind": "other",
     "spec": "Two identical flame rollout switches S47, one on each side of the burner box: N.C. SPST manual reset, in series with primary limit S10; trip (open) at 250F, not adjustable.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13); lennox-g61mpv-corp0310l7-service.pdf p.46"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13); CORP0310-L7-01-000.pdf p.46"
    },
    {
     "plug": "12-pin plug",
     "pins": "4",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
     "pins": "5",
     "name": "24 V hot",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
@@ -29653,35 +29803,35 @@ const BRAND_SENSOR_MAPS = [
     "name": "Primary limit in",
     "kind": "other",
     "spec": "Primary limit S10 in the heating vestibule panel, auto reset, factory set, not adjustable (temperature not printed). Some models have a shield on S10 - do not remove it; note shield and limit orientation if replacing.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13); lennox-g61mpv-corp0310l7-service.pdf p.46"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13); CORP0310-L7-01-000.pdf p.46"
    },
    {
     "plug": "12-pin plug",
     "pins": "7",
     "name": "Gas valve low stage",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
     "pins": "8",
     "name": "Gas valve common",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
     "pins": "9",
     "name": "24 V neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
     "pins": "10",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "12-pin plug",
@@ -29689,169 +29839,169 @@ const BRAND_SENSOR_MAPS = [
     "name": "Rollout switch out",
     "kind": "other",
     "spec": "Two identical flame rollout switches S47, one on each side of the burner box: N.C. SPST manual reset, in series with primary limit S10; trip (open) at 250F, not adjustable.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13); lennox-g61mpv-corp0310l7-service.pdf p.46"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13); CORP0310-L7-01-000.pdf p.46"
    },
    {
     "plug": "12-pin plug",
     "pins": "12",
     "name": "1st stage prove switch",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 13)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 13)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "1",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "2",
     "name": "Low heat speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "3",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "4",
     "name": "DELAY DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "5",
     "name": "COOL DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "6",
     "name": "Y1 signal",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "7",
     "name": "ADJUST DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "8",
     "name": "Ground",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "9",
     "name": "O from thermostat",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "10",
     "name": "DS output signal",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "11",
     "name": "HEAT DIP switch selection",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "12",
     "name": "24 VAC",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "13",
     "name": "HIGH HEAT speed",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "14",
     "name": "Y2 signal",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "15",
     "name": "G",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "16-pin blower control plug",
     "pins": "16",
     "name": "CFM LED",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (TABLE 14)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (TABLE 14)"
    },
    {
     "plug": "Flame sensor",
     "name": "Flame sensor (left side of burner support, tip in the left-most burner flame)",
     "kind": "other",
     "spec": "Board 100870: normal >= 1.50 microamps, low <= 1.40, drop out = 0.20.",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.45-46 (FIGURE 17)"
+    "source": "CORP0310-L7-01-000.pdf p.45-46 (FIGURE 17)"
    },
    {
     "plug": "TB1 H",
     "name": "24 V humidifier output",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (FIGURE 5)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (FIGURE 5)"
    },
    {
     "plug": "TB1 L",
     "name": "Lennox system operation monitor",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (FIGURE 5)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (FIGURE 5)"
    },
    {
     "plug": "TB1 1",
     "name": "Do not use (error code review: short R to 1 per p.33)",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (FIGURE 5); lennox-g61mpv-corp0310l7-service.pdf p.33"
+    "source": "CORP0310-L7-01-000.pdf p.31 (FIGURE 5); CORP0310-L7-01-000.pdf p.33"
    },
    {
     "plug": "NEUTRALS",
     "name": "120 VAC neutral",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (FIGURE 5)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (FIGURE 5)"
    },
    {
     "plug": "Links W914 / W951 / W915",
     "name": "On-board links (DS-R, R-O, Y1-Y2)",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.31 (FIGURE 5)"
+    "source": "CORP0310-L7-01-000.pdf p.31 (FIGURE 5)"
    },
    {
     "plug": "Red status LED",
     "name": "X + Y flash codes (e.g. 1+2 low flame current, 2+3 low pressure switch failed open, 3+1 limit open, 5+1 rollout hard lockout)",
     "kind": "other",
-    "source": "lennox-g61mpv-corp0310l7-service.pdf p.33 (TABLE 15)"
+    "source": "CORP0310-L7-01-000.pdf p.33 (TABLE 15)"
    }
   ],
   "test": "Red LED X+Y codes; error review by shorting R to 1 (p.33).",
@@ -29862,7 +30012,7 @@ const BRAND_SENSOR_MAPS = [
   ],
   "sources": [
    {
-    "file": "lennox-g61mpv-corp0310l7-service.pdf",
+    "file": "CORP0310-L7-01-000.pdf",
     "pages": "30-33, 45-46",
     "what": "pin tables, board figure, DIP / jumper, LEDs, ignitor, flame, rollout, limit"
    },
@@ -30117,32 +30267,32 @@ const BRAND_SENSOR_MAPS = [
     "what": "DFT defrost board"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-25hcb3-1w.pdf",
+    "file": "carrier-25hcb3-1w.pdf",
     "pages": "1",
     "what": "25HCB3 wiring 331526-101 rev C: board HK32EA003, DFT, SPEED UP, DIP switches"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-25hpb6-1w.pdf",
+    "file": "carrier-25hpb6-1w.pdf",
     "pages": "1",
     "what": "25HPB6 wiring 339202-101 rev A (sizes 18-48)"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd213b-01.pdf",
+    "file": "bryant-wd213b-01.pdf",
     "pages": "1",
     "what": "Bryant 213B wiring 336749-101: board HK32EA001, DFT, OF1/OF2, speed-up"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd213a-02.pdf",
+    "file": "bryant-wd213a-02.pdf",
     "pages": "1",
     "what": "Bryant 213A wiring 332036-101: DFT board, speed-up"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd215b-02.pdf",
+    "file": "bryant-wd215b-02.pdf",
     "pages": "1",
     "what": "Bryant 215B wiring = drawing 339697-101 rev B (identical number to Carrier 25HCE-2W)"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd225b-02.pdf",
+    "file": "bryant-wd225b-02.pdf",
     "pages": "1",
     "what": "Bryant 225B wiring = drawing 339202-101 rev A (identical number to Carrier 25HPB6-1W)"
    }
@@ -30234,9 +30384,9 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor high-capacity (unloader) solenoid",
     "location": "Plug on compressor, harness with built-in rectifier",
     "kind": "other",
-    "spec": "High stage: 24 VAC at leads in control box, 24 VDC at compressor plug. Coil about 330 or 1640 ohms depending on supplier. Never fit a plug without the internal rectifier.",
-    "test": "Call high stage: amps rise 20-45%, suction drops 3-10%. No change: check 24 VDC at plug, then ohm coil (330 or 1640 ohms; open or grounded = replace compressor).",
-    "source": "carrier-25hcb6-5si.pdf p.8; carrier-24-25-9sm.pdf p.59"
+    "spec": "High stage: 24 VAC at leads in control box, 24 VDC at compressor plug. Coil ohms are not given in the 25HCB6 manual; the Carrier service manual's Infinity unloader test (24ANB1/24ANB7/25HNB6/25HNB9, a different family) gives about 330 or 1640 ohms depending on coil supplier. Never fit a plug without the internal rectifier.",
+    "test": "Call high stage: amps rise 20-45%, suction drops 3-10%. No change: check 24 VDC at plug, then ohm the coil (Infinity-procedure figure 330 or 1640 ohms; open or grounded = replace compressor).",
+    "source": "carrier-25hcb6-5si.pdf p.8; carrier-24-25-9sm.pdf p.59 (Unloader Test Procedure 24ANB1/24ANB7/25HNB6/25HNB9)"
    }
   ],
   "test": "Charge in high stage only. Check staging by amps (+20-45%) and suction pressure (-3-10%) when Y2 is added.",
@@ -30272,7 +30422,7 @@ const BRAND_SENSOR_MAPS = [
     "what": "unloader test, coil 330/1640 ohms"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd226a-02.pdf",
+    "file": "bryant-wd226a-02.pdf",
     "pages": "1",
     "what": "Bryant 226A wiring 339130-101 rev A"
    }
@@ -30710,47 +30860,47 @@ const BRAND_SENSOR_MAPS = [
     "what": "Bryant 286B/289B board Fig.6, model plugs, PL5-2 HI / PL5-5 C"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-25hnb6-2w.pdf",
+    "file": "carrier-25hnb6-2w.pdf",
     "pages": "1",
     "what": "25HNB6 wiring 338941-101 rev A (newer board, PL5 5-pin)"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-25hnb9-1w.pdf",
+    "file": "carrier-25hnb9-1w.pdf",
     "pages": "1",
     "what": "25HNB9 wiring 338865-101"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-25hnb9-2w.pdf",
+    "file": "carrier-25hnb9-2w.pdf",
     "pages": "1",
     "what": "25HNB9 wiring 339163-101 rev A (newer board)"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-25hpa6-1w.pdf",
+    "file": "carrier-25hpa6-1w.pdf",
     "pages": "1",
     "what": "25HPA6 wiring 336190-101 rev A (older board, DTS+HPS on PL3)"
    },
    {
-    "file": "new-manuals/carrier-outdoor/carrier-24apa7-1w.pdf",
+    "file": "carrier-24apa7-1w.pdf",
     "pages": "1",
     "what": "24APA7 wiring 336322-101 rev A (older board)"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd286b-03.pdf",
+    "file": "bryant-wd286b-03.pdf",
     "pages": "1",
     "what": "Bryant 286B wiring = drawing 338941-101 rev A"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd289b-03.pdf",
+    "file": "bryant-wd289b-03.pdf",
     "pages": "1",
     "what": "Bryant 289B wiring = drawing 338865-101"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd187b-02.pdf",
+    "file": "bryant-wd187b-02.pdf",
     "pages": "1",
     "what": "Bryant 187B wiring 339305-101 rev A, model plug chart 040-046"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd180b-02.pdf",
+    "file": "bryant-wd180b-02.pdf",
     "pages": "1",
     "what": "Bryant 180B wiring 339620-101 rev A, model plug chart 009-015"
    }
@@ -30944,14 +31094,25 @@ const BRAND_SENSOR_MAPS = [
     "source": "carrier-24vna0-25vna0-service.pdf p.5-6, 8"
    },
    {
-    "plug": "Compressor sensor terminals (scroll / motor thermistor)",
-    "name": "Compressor scroll thermistor 10k @77F and motor thermistor 5k @77F (on compressor fusite, read by drive)",
+    "plug": "Compressor sensor terminals (scroll thermistor)",
+    "name": "Compressor scroll thermistor 10k @77F (on compressor fusite, read by drive)",
     "location": "Compressor sensor terminals",
     "kind": "thermistor",
     "chart": "carrier-vna0-comp-scroll-therm",
-    "spec": "Scroll 10k at 77F (scroll-common); motor 5k at 77F (motor-common). Motor chart: carrier-vna0-comp-motor-therm.",
+    "spec": "Scroll 10k at 77F, measured scroll-common.",
     "errorCodes": [
-     "59 scroll temp out of range",
+     "59 scroll temp out of range"
+    ],
+    "source": "carrier-24vna0-25vna0-service.pdf p.11, 16, 37"
+   },
+   {
+    "plug": "Compressor sensor terminals (motor thermistor)",
+    "name": "Compressor motor thermistor 5k @77F (on compressor fusite, read by drive)",
+    "location": "Compressor sensor terminals",
+    "kind": "thermistor",
+    "chart": "carrier-vna0-comp-motor-therm",
+    "spec": "Motor 5k at 77F, measured motor-common.",
+    "errorCodes": [
      "71 motor temp out of range"
     ],
     "source": "carrier-24vna0-25vna0-service.pdf p.11, 16, 37"
@@ -31462,12 +31623,12 @@ const BRAND_SENSOR_MAPS = [
     "what": "components, model plugs, SPT formula, Table 5 thermistors, codes"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd288bnv-01.pdf",
+    "file": "bryant-wd288bnv-01.pdf",
     "pages": "1",
     "what": "Bryant 288BNV = drawing 339885-101 rev D"
    },
    {
-    "file": "new-manuals/carrier-outdoor/bryant-wd189bnv-01.pdf",
+    "file": "bryant-wd189bnv-01.pdf",
     "pages": "1",
     "what": "Bryant 189BNV = drawing 340613-101 rev B"
    },
@@ -31893,7 +32054,8 @@ const BRAND_SENSOR_MAPS = [
   "test": "Same codes and checks as the 2.5-5 ton AOC board (SM Table 6).",
   "notes": "24VNA9 13/24B diagram (SM Fig.44 p.37) uses the same header names without RVS/EXV.",
   "gaps": [
-   "24VNA9 1-2 ton pin positions read from text only (Fig.44), not from the image."
+   "24VNA9 1-2 ton pin positions read from text only (Fig.44), not from the image.",
+   "Size 24 plates (25VNA824 / 24VNA924) are not auto-matched: the 4SM lists the 1-2 ton size as '24B' (model plug 25VNA8 HK70EZ009 / 24VNA9 HK70EZ010, p.14 Table 3) while the early 25VNA8-1W chart shows a '24' on plug 001 (2-5 ton board) - check which board is fitted and use this map for the small board."
   ],
   "sources": [
    {
@@ -32105,7 +32267,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "Gas supply / gas valve (accessory)",
     "kind": "other",
     "errorCodes": [
-     "31.6"
+     "32.2"
     ],
     "test": "When fitted it is in series with LPS (note 8): an open LGPS looks like an open LPS. Check inlet gas pressure (4.5-14 in. w.c. natural gas per start-up section).",
     "source": "carrier-59tp6c-03si.pdf p58, p56, p76"
@@ -32554,7 +32716,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "Gas supply / gas valve (accessory)",
     "kind": "other",
     "errorCodes": [
-     "31.6"
+     "32.2"
     ],
     "test": "When fitted it is in series with LPS (note 8): an open LGPS looks like an open LPS. Check inlet gas pressure (4.5-14 in. w.c. natural gas per start-up section).",
     "source": "carrier-59tp7a-03si.pdf p57, p55, p74"
@@ -45934,7 +46096,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "24 VAC when O is on (cooling) or in defrost. Wires BK.",
     "test": "With O called (cooling) read 24 VAC across O-RV and C-RV. Power off: unplug and ohm the coil - open = replace coil.",
-    "source": "SS-GLZS4B-R32.pdf p.23 (0140R01120-A) + goodman-gsx-gsz-r410a-service-r103.pdf p.92"
+    "source": "SS-GLZS4B-R32.pdf p.23 (0140R01120-A) + goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
     "plug": "Y",
@@ -45983,7 +46145,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Board's LVDR relay sends 24 VAC to W2 (indoor heat strips) and O during defrost. Wire WH.",
     "test": "Force defrost (TEST pins): read 24 VAC from W to C.",
-    "source": "SS-GLZS4B-R32.pdf p.23 (0140R01120-A) + goodman-gsx-gsz-r410a-service-r103.pdf p.63"
+    "source": "SS-GLZS4B-R32.pdf p.23 (0140R01120-A) + goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
     "plug": "R / C",
@@ -46004,15 +46166,16 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Line voltage. The HVDR contact opens to stop the fan during defrost. Wires BK.",
     "test": "In defrost you read line voltage (208-230 VAC) across DF1-DF2 = relay open (correct). Out of defrost the contact is closed.",
-    "source": "SS-GLZS4B-R32.pdf p.23 (0140R01120-A) + goodman-gsx-gsz-r410a-service-r103.pdf p.92"
+    "source": "SS-GLZS4B-R32.pdf p.23 (0140R01120-A) + goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
-    "plug": "TEST pins / 30-60-90 / DLY-NORM",
+    "plug": "TEST pins / timer pins",
     "name": "Board jumpers (not plugs)",
     "location": "Defrost board",
     "kind": "other",
-    "spec": "Defrost interval jumper 30/60/90 min. DLY (factory) = compressor off 30 s at defrost start/end (SmartShift); NORM = no delay. TEST pins force defrost.",
-    "source": "goodman-gsx-gsz-r410a-service-r103.pdf p.63, 92"
+    "spec": "Timer pins = defrost time (set the timer jumper to the desired defrost time). TEST pins force defrost: with the defrost thermostat jumpered (DFT to R / R-DFT) and a heat call, jump the test pins with the jumper from the timer pins - unit goes into defrost within 21 seconds; remove it immediately. No DLY/NORM (SmartShift) jumper is shown in the R-32 documents (SS-GLZS4B-R32 p.23 board drawing, R-32 service manual p.32), so it is not listed for this board.",
+    "test": "In forced defrost: 24 V C-O, line voltage across DF1-DF2 (fan relay open), 24 V W/W2-C. If not, replace the control. Afterwards remove the DFT jumper and put the timer jumper back on the desired defrost time.",
+    "source": "goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    }
   ],
   "test": "Testing the defrost control (manual): power on, unit not running. Jumper DFT to R-DFT. Move the timer jumper to the TEST pins, call for heat: unit must go into defrost within 21 s; then remove the jumper from TEST. Check 24 V C-O, line voltage across DF1-DF2 (fan relay open), 24 V W-C. If not, replace the board. Remove the DFT jumper and put the timer jumper back afterwards.",
@@ -46216,7 +46379,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "24 VAC when O is on (cooling) or in defrost. Wires BK.",
     "test": "With O called (cooling) read 24 VAC across O-RV and C-RV. Power off: unplug and ohm the coil - open = replace coil.",
-    "source": "goodman-r32-glxs-glzs-service.pdf p.57 + goodman-gsx-gsz-r410a-service-r103.pdf p.92"
+    "source": "goodman-r32-glxs-glzs-service.pdf p.57 + goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
     "plug": "Y",
@@ -46264,7 +46427,7 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Board's LVDR relay sends 24 VAC to W2 (indoor heat strips) and O during defrost. Wire WH.",
     "test": "Force defrost (TEST pins): read 24 VAC from W to C.",
-    "source": "goodman-r32-glxs-glzs-service.pdf p.57 + goodman-gsx-gsz-r410a-service-r103.pdf p.63"
+    "source": "goodman-r32-glxs-glzs-service.pdf p.57 + goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
     "plug": "R / C",
@@ -46285,15 +46448,16 @@ const BRAND_SENSOR_MAPS = [
     "kind": "other",
     "spec": "Line voltage. The HVDR contact opens to stop the fan during defrost. Wires BK.",
     "test": "In defrost you read line voltage (208-230 VAC) across DF1-DF2 = relay open (correct). Out of defrost the contact is closed.",
-    "source": "goodman-r32-glxs-glzs-service.pdf p.57 + goodman-gsx-gsz-r410a-service-r103.pdf p.92"
+    "source": "goodman-r32-glxs-glzs-service.pdf p.57 + goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
-    "plug": "TEST pins / 30-60-90 / DLY-NORM",
+    "plug": "TEST pins / timer pins",
     "name": "Board jumpers (not plugs)",
     "location": "Defrost board",
     "kind": "other",
-    "spec": "Defrost interval jumper 30/60/90 min. DLY (factory) = compressor off 30 s at defrost start/end (SmartShift); NORM = no delay. TEST pins force defrost.",
-    "source": "goodman-gsx-gsz-r410a-service-r103.pdf p.63, 92"
+    "spec": "Timer pins = defrost time (set the timer jumper to the desired defrost time). TEST pins force defrost: with the defrost thermostat jumpered (DFT to R / R-DFT) and a heat call, jump the test pins with the jumper from the timer pins - unit goes into defrost within 21 seconds; remove it immediately. No DLY/NORM (SmartShift) jumper is shown in the R-32 documents (SS-GLZS4B-R32 p.23 board drawing, R-32 service manual p.32), so it is not listed for this board.",
+    "test": "In forced defrost: 24 V C-O, line voltage across DF1-DF2 (fan relay open), 24 V W/W2-C. If not, replace the control. Afterwards remove the DFT jumper and put the timer jumper back on the desired defrost time.",
+    "source": "goodman-r32-glxs-glzs-service.pdf p.32 (Testing Defrost Control / reversing valve)"
    },
    {
     "plug": "CADM (R Y C P)",
@@ -53801,7 +53965,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Count the OK LED flashes (table on the diagram).",
-  "notes": "Troubleshooting chart p.56 (for UT 1012-925 HSI boards) uses a green STATUS LED with codes 1 soft lockout, 2 PS open, 3 limit open, 4 PS closed, 5 twin fault.",
+  "notes": "CHECK THE BOARD FIRST: this map is ONLY for units with the UT Electronic Controls 1028-928 / 1028-928A board and spark ignition. The same RGRA/RGRB/RGTA/RGRS/RGTS/RGRT model names were also built with UT 1012-925 (hot surface ignition) or UT 1097-200 boards, which use different wiring diagrams (p.56, p.59-60) and are not mapped here. The manual gives no model-number digit that separates the builds - read the part number on the board. Troubleshooting chart p.56 (for UT 1012-925 HSI boards) uses a green STATUS LED with codes 1 soft lockout, 2 PS open, 3 limit open, 4 PS closed, 5 twin fault.",
   "gaps": [
    "UT 1012-925 and 1097-200 builds not mapped.",
    "No flame microamps, switch settings or limit temperatures."
@@ -53937,6 +54101,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Use the troubleshooting flowchart p.37 and the flame LED.",
+  "notes": "CHECK THE BOARD FIRST: this map is ONLY for units with the UT Electronic Controls 1028-928 board and direct spark ignition (Figure 29, p.38). The same (-)GPH/GPJ/GLH/GLJ models were also built with UT 1012-925 or Invensys ICC-H1MC7-01 boards and hot surface ignition (Figure 30, p.39), which are not mapped here. The manual gives no model-number digit that separates the builds - read the part number on the board. ",
   "gaps": [
    "HSI board versions (UT 1012-925, ICC-H1MC7-01) not mapped.",
    "OK-LED code table for this manual not read.",
@@ -54110,7 +54275,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "LED10 (centre of board) flashes the diagnostic code; highest priority shown first. Use the EcoNet Control Center service menu for details.",
-  "notes": "Board plug P-numbers are not legible in the manual photo; entries use the manual's item numbers (Figure 13).",
+  "notes": "Non-communicating (-)H2T air handlers (sizes 2421MT, 3621MT, 4824MT, 6024ST in manual 92-20521-66-09) are on the standalone EXV control map, not this one. Board plug P-numbers are not legible in the manual photo; entries use the manual's item numbers (Figure 13).",
   "gaps": [
    "Connector P-numbers and pin order not given.",
    "Indoor transducer volts/pressure range not stated.",
@@ -54134,7 +54299,15 @@ const BRAND_SENSOR_MAPS = [
   "match": [
    "RH1T",
    "UH1T",
-   "WH1T"
+   "WH1T",
+   "RH2T2421MT",
+   "UH2T2421MT",
+   "RH2T3621MT",
+   "UH2T3621MT",
+   "RH2T4824MT",
+   "UH2T4824MT",
+   "RH2T6024ST",
+   "UH2T6024ST"
   ],
   "sizes": [
    "EXV-equipped units only"
@@ -54220,6 +54393,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Red status LED blink count gives the fault (1-4); green/yellow LEDs show EXV movement.",
+  "notes": "(-)H2T: the non-communicating (-)H2T sizes in this manual (2421MT, 3621MT, 4824MT, 6024ST) open this map; EcoNet (-)H2T models (e.g. RH2T2417SE, RH2T3621ME) open the EcoNet air handler map. ",
   "gaps": [
    "Thermistor type/table, transducer range and EXV coil ohms not stated.",
    "Standalone EXV board part number not given."
@@ -57284,7 +57458,7 @@ const BRAND_SENSOR_MAPS = [
      "3 flashes: High Pressure Switch Lockout",
      "7 flashes: High Pressure Switch Open"
     ],
-    "source": "nortek-split-heat-pump-709714d-install.pdf p.8, p.16"
+    "source": "nortek-split-heat-pump-709714d-install.pdf p.8-9, p.16"
    },
    {
     "plug": "LPS",
@@ -57296,7 +57470,7 @@ const BRAND_SENSOR_MAPS = [
      "2 flashes: Low Pressure Switch Lockout",
      "6 flashes: Low Pressure Switch Open"
     ],
-    "source": "nortek-split-heat-pump-709714d-install.pdf p.8, p.16"
+    "source": "nortek-split-heat-pump-709714d-install.pdf p.8-9, p.16"
    },
    {
     "plug": "RV",
@@ -57538,7 +57712,8 @@ const BRAND_SENSOR_MAPS = [
   "notes": "Flash codes verified against the D3116400 Table 1 page image. The addendum names no unit models, so no model match is set; the earlier Q5RF / PPH2RF match had no source.",
   "gaps": [
    "Board terminal names not drawn in D3116400.",
-   "The 10k thermistor chart it refers to is not printed there."
+   "The 10k thermistor chart it refers to is not printed there.",
+   "No model tokens: D3116400 names only board part 624733 'wherever applicable' and no unit models, so no model number opens this map (find it by board part 624733)."
   ],
   "sources": [
    {
@@ -57578,18 +57753,20 @@ const BRAND_SENSOR_MAPS = [
   "board": "Nordyne/UTEC single-stage integrated furnace control (G7 board, part 624690 per 10435300)",
   "replacement": [
    {
-    "board": "Same-type service replacement board (no factory replacement-kit instructions found)",
-    "kit": "No replacement-kit sheet or control-replacement section found in this unit's manuals or on HVACpartners (searched 2026-11-09).",
-    "replaces": "The original board / control of this unit (part number printed on it).",
-    "differences": "No manufacturer source states plug, harness or setting changes for a replacement on this unit. Refrigerant: no refrigerant / A2L setting is mentioned for this board.",
-    "general": true,
+    "board": "*G7 single-stage control board PN 624690",
+    "kit": "Nortek instructions 10435300 (06/22, replaces 7090020) - written for fitting the 624690 in place of a G6/L1 board; it shows the 624690 terminal layout, wire chart and flash codes.",
+    "replaces": "The sheet covers G6/L1 board 624631 -> G7 624690. For a failed 624690 on a G7 furnace the same board and terminal layout apply.",
+    "differences": "P1 6-pin and P2 9-pin plugs fit the 624690 directly. Motor-speed terminals HIGH / MH / ML / LOW plus HEAT / COOL selection; blower-off delay 60 / 90 / 120 / 180. Some G7 single-stage furnaces use an Emerson board instead (separate map) - check which board is fitted. Refrigerant: the sheet does not mention any refrigerant setting.",
     "steps": [
-     "GENERAL GUIDANCE (not from a manufacturer procedure): read the part number printed on the old board and get the matching service part for this furnace model (distributor / parts catalog).",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): before removing it, photograph every wire and plug, and note the settings on the board: HIGH / MH / ML / LOW + HEAT / COOL, BLOWER OFF DELAY.",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): fit the new board, reconnect every plug and wire to the same-named terminals, and set the jumpers / switches / speed taps as the old board had (or per this furnace's installation manual).",
-     "GENERAL GUIDANCE (not from a manufacturer procedure): restore power and check the status LED shows normal standby, then run heat and cool and check temperature rise per the furnace manual."
+     "Label every wire before disconnecting (caution on the sheet).",
+     "Door switch and transformer wires to the same-named terminals: L1, XFMR, 24V (black/white stripe), COM (white/black stripe), Neutrals; EAC and HUM to EAC / HUM.",
+     "Thermostat / outdoor / air handler wires to the same R C Y G W terminals.",
+     "Plug P1 (6-pin) and P2 (9-pin) straight onto the 624690.",
+     "Blower motor leads: black HIGH, blue MH, orange ML, red LOW (no orange wire = leave ML empty); set HEAT and COOL to the speeds used before (Table 1).",
+     "GENERAL GUIDANCE (not from a manufacturer procedure): set the blower-off delay to the value the old board had.",
+     "Stick the flash-code label near the wiring diagram on the furnace door."
     ],
-    "source": "No manufacturer replacement procedure; the board terminals and settings named are from this map's own sources."
+    "source": "nortek-gas-furnace-10435300-install.pdf p.1 (Table 1, Fig.2 board 624690), p.2 (G7 wiring diagram, LED codes)"
    }
   ],
   "sensors": [
@@ -60933,64 +61110,36 @@ const BRAND_SENSOR_MAPS = [
     "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
    },
    {
-    "plug": "CN4",
-    "name": "EXV-A electronic expansion valve (zone A)",
+    "plug": "CN4 (SA)",
+    "name": "S-A zone-A indoor unit communication (YELLOW (WHITE) lead to XT2 A)",
+    "kind": "other",
+    "spec": "Pin1-pin2 24 VDC pulse wave; pin2-pin3 208-230 VAC (p.41 values for the S plugs). HIGH VOLTAGE - this is NOT the EEV plug.",
+    "test": "HIGH VOLTAGE communication plug to the indoor unit - do NOT ohm-test it as a valve. With power on, compare with the p.41 values (pin1-pin2 24 VDC pulse wave, pin2-pin3 208-230 VAC) using meter leads rated for line voltage.",
+    "source": "bosch-climate5000-g3-multizone-service.pdf p.14 (wiring diagram); p.41 table has EXV/S columns swapped"
+   },
+   {
+    "plug": "CN2 (SB)",
+    "name": "S-B zone-B indoor unit communication (YELLOW (WHITE) lead to XT2 B)",
+    "kind": "other",
+    "spec": "Pin1-pin2 24 VDC pulse wave; pin2-pin3 208-230 VAC (p.41 values for the S plugs). HIGH VOLTAGE - this is NOT the EEV plug.",
+    "test": "HIGH VOLTAGE communication plug to the indoor unit - do NOT ohm-test it as a valve. With power on, compare with the p.41 values (pin1-pin2 24 VDC pulse wave, pin2-pin3 208-230 VAC) using meter leads rated for line voltage.",
+    "source": "bosch-climate5000-g3-multizone-service.pdf p.14 (wiring diagram); p.41 table has EXV/S columns swapped"
+   },
+   {
+    "plug": "CN16 (VALVE-A)",
+    "name": "EXV-A electronic expansion valve, zone A (6-wire, marked OPTIONAL on the diagram)",
     "kind": "eev",
     "spec": "About 50 ohm (multizone EXV check).",
     "test": "Disconnect the EXV plug and measure the coil: red-blue, red-yellow, brown-orange, brown-white each about 50 ohm.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
+    "source": "bosch-climate5000-g3-multizone-service.pdf p.14 (wiring diagram); p.41 table has EXV/S columns swapped"
    },
    {
-    "plug": "CN2",
-    "name": "EXV-B electronic expansion valve (zone B)",
+    "plug": "CN13 (VALVE-B)",
+    "name": "EXV-B electronic expansion valve, zone B (6-wire, marked OPTIONAL on the diagram)",
     "kind": "eev",
     "spec": "About 50 ohm (multizone EXV check).",
     "test": "Disconnect the EXV plug and measure the coil: red-blue, red-yellow, brown-orange, brown-white each about 50 ohm.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
-   },
-   {
-    "plug": "CN34",
-    "name": "EXV-C electronic expansion valve (zone C)",
-    "kind": "eev",
-    "spec": "About 50 ohm (multizone EXV check).",
-    "test": "Disconnect the EXV plug and measure the coil: red-blue, red-yellow, brown-orange, brown-white each about 50 ohm.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
-   },
-   {
-    "plug": "CN5",
-    "name": "EXV-D electronic expansion valve (zone D)",
-    "kind": "eev",
-    "spec": "About 50 ohm (multizone EXV check).",
-    "test": "Disconnect the EXV plug and measure the coil: red-blue, red-yellow, brown-orange, brown-white each about 50 ohm.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
-   },
-   {
-    "plug": "CN10",
-    "name": "S-A indoor unit communication (zone A)",
-    "kind": "other",
-    "spec": "Pin1-pin2 24 VDC pulse wave; pin2-pin3 208-230 VAC.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
-   },
-   {
-    "plug": "CN13",
-    "name": "S-B indoor unit communication (zone B)",
-    "kind": "other",
-    "spec": "Pin1-pin2 24 VDC pulse wave; pin2-pin3 208-230 VAC.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
-   },
-   {
-    "plug": "CN3",
-    "name": "S-C indoor unit communication (zone C)",
-    "kind": "other",
-    "spec": "Pin1-pin2 24 VDC pulse wave; pin2-pin3 208-230 VAC.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
-   },
-   {
-    "plug": "CN15",
-    "name": "S-D indoor unit communication (zone D)",
-    "kind": "other",
-    "spec": "Pin1-pin2 24 VDC pulse wave; pin2-pin3 208-230 VAC.",
-    "source": "bosch-climate5000-g3-multizone-service.pdf p.41"
+    "source": "bosch-climate5000-g3-multizone-service.pdf p.14 (wiring diagram); p.41 table has EXV/S columns swapped"
    },
    {
     "plug": "CN21 / CN36",
@@ -61093,10 +61242,16 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Fault code on the indoor display (EH/EC/PC codes). Sensors: unplug and compare ohms with the chart. Compressor and 4-way valve resistance per the Main Parts Check pages.",
+  "notes": "WARNING: the p.41 PCB table prints the EXV and S columns swapped against the p.14 wiring diagram (it shows EXV A/B on CN4/CN2 and S-A/S-B on CN10/CN13). Follow the wiring diagram: EXV-A = CN16, EXV-B = CN13, S-A = CN4, S-B = CN2 (CN4/CN2 carry 208-230 VAC). EXV-C/D and S-C/D (CN34/CN5/CN3/CN15 in the table) are not on this 2-zone unit's diagram and were removed.",
   "gaps": [
    "Pin order of T3/T4/TP in CN26 not given"
   ],
   "sources": [
+   {
+    "file": "bosch-climate5000-g3-multizone-service.pdf",
+    "pages": "14",
+    "what": "wiring diagram Figure 9 (18K) - governs plug assignments"
+   },
    {
     "file": "bosch-climate5000-g3-multizone-service.pdf",
     "pages": "41, 82-88",
@@ -62654,7 +62809,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor leads W / V / U (GR/W, BR/V, BK/U on this diagram)",
     "location": "compressor terminals",
     "kind": "other",
-    "spec": "Windings U-V, V-W, W-U <1.5 ohm (2-3 ton) or <1 ohm (4-5 ton); each to ground >10 Mohm (IDS 2.0 service p.71).",
+    "spec": "Windings U-V, V-W, W-U: <1.5 ohm for the 3-ton (3T column), <1 ohm for the 5-ton (5T column); each to ground >10 Mohm. The table prints only 3T and 5T - no value for 2- or 4-ton. 'Resistance values can change +/-0.5 ohms depending on equipment & temperature' (IDS 2.0 service p.71 Figure 45).",
     "errorCodes": [
      "P3",
      "L0-L9"
@@ -62873,7 +63028,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor leads W / V / U (GRAY/W, BROWN/V, BLACK/U on this diagram)",
     "location": "compressor terminals",
     "kind": "other",
-    "spec": "Windings U-V, V-W, W-U <1.5 ohm (2-3 ton) or <1 ohm (4-5 ton); each to ground >10 Mohm (IDS 2.0 service p.71).",
+    "spec": "Windings U-V, V-W, W-U: <1.5 ohm for the 3-ton (3T column), <1 ohm for the 5-ton (5T column); each to ground >10 Mohm. The table prints only 3T and 5T - no value for 2- or 4-ton. 'Resistance values can change +/-0.5 ohms depending on equipment & temperature' (IDS 2.0 service p.71 Figure 45).",
     "errorCodes": [
      "P3",
      "L0-L9"
@@ -63097,7 +63252,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor leads W / V / U (GRAY/W, BROWN/V, BLACK/U on this diagram)",
     "location": "compressor terminals",
     "kind": "other",
-    "spec": "Windings U-V, V-W, W-U <1.5 ohm (2-3 ton) or <1 ohm (4-5 ton); each to ground >10 Mohm (IDS 2.0 service p.71).",
+    "spec": "Windings U-V, V-W, W-U: <1.5 ohm for the 3-ton (3T column), <1 ohm for the 5-ton (5T column); each to ground >10 Mohm. The table prints only 3T and 5T - no value for 2- or 4-ton. 'Resistance values can change +/-0.5 ohms depending on equipment & temperature' (IDS 2.0 service p.71 Figure 45).",
     "errorCodes": [
      "P3",
      "L0-L9"
@@ -63362,7 +63517,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor leads W / V / U (GR/W, BR/V, BK/U in the service manual; GR/W, BK/V, BR/U in the BOVA20/BOVC20 IOM - follow the unit label on this diagram)",
     "location": "compressor terminals",
     "kind": "other",
-    "spec": "Windings U-V, V-W, W-U <1.5 ohm (2-3 ton) or <1 ohm (4-5 ton); each to ground >10 Mohm (IDS 2.0 service p.71).",
+    "spec": "Windings U-V, V-W, W-U: <1.5 ohm for the 3-ton (3T column), <1 ohm for the 5-ton (5T column); each to ground >10 Mohm. The table prints only 3T and 5T - no value for 2- or 4-ton. 'Resistance values can change +/-0.5 ohms depending on equipment & temperature' (IDS 2.0 service p.71 Figure 45).",
     "errorCodes": [
      "P3",
      "L0-L9"
@@ -63639,7 +63794,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor leads W / V / U (GR/W, BR/V, BK/U on this diagram)",
     "location": "compressor terminals",
     "kind": "other",
-    "spec": "Windings U-V, V-W, W-U <1.5 ohm (2-3 ton) or <1 ohm (4-5 ton); each to ground >10 Mohm (IDS 2.0 service p.71).",
+    "spec": "Windings U-V, V-W, W-U: <1.5 ohm for the 3-ton (3T column), <1 ohm for the 5-ton (5T column); each to ground >10 Mohm. The table prints only 3T and 5T - no value for 2- or 4-ton. 'Resistance values can change +/-0.5 ohms depending on equipment & temperature' (IDS 2.0 service p.71 Figure 45).",
     "errorCodes": [
      "P3",
      "L0-L9"
@@ -65730,7 +65885,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Heater kit plug C / W2 / W1",
     "location": "to electric heat kit",
     "kind": "other",
-    "spec": "18-30 VAC W1-C / W2-C on an electric heat call.",
+    "spec": "Source conflict: the IDS 2.0 service check table (p.78 Table 52) prints 'Electric heat CN6 (W1-C, W2-C) 172-270V(AC) - when there is a call for electric heat'. W1/W2/C are thermostat-level signals, so a 24 V class reading (18-30 VAC, like CN33 on the same table) is the likely real value - treat the printed 172-270 V with caution and measure carefully.",
     "source": "bosch-bva-airhandler-iom.pdf p.26; bosch-ids2-bova-bva-service.pdf p.77-78"
    },
    {
@@ -68066,7 +68221,7 @@ const BRAND_SENSOR_MAPS = [
  },
  {
   "id": "icp-f9mve-furnace",
-  "title": "ICP (F/G)9MVE two-stage variable-speed condensing furnace (original series, diagram 338317-2 Rev H)",
+  "title": "ICP (F/G)9MVE two-stage variable-speed condensing furnace (original series, diagram 338317-2 Rev H) - original series (nomenclature example ends A1); if the model ends A3 use the A3 map",
   "side": "indoor",
   "brand": "ICP (Heil / Tempstar / Comfortmaker / Arcoaire / KeepRite)",
   "models": "(F/G)9MVE original series (nomenclature example G9MVE0601714A1): 040-10, 060-14, 080-16, 080-20, 100-20, 120-22",
@@ -68449,7 +68604,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Start with the amber LED (heartbeat = OK). Recall codes with SW1-1; run component test with SW1-6 (R lead off). Most 24 V checks are PLx-pin to COM.",
-  "notes": "Two (F/G)9MVE diagrams exist; they differ in board layout (A3: SW1 + combined SW2, PL2 order LO-HI-HSI, inducer plug listed as PL11). Pin functions are the same on both. Check the revision digits at the end of the model number (A1 vs A3) or the board layout. PL1 pin 1 is at the end of the connector where the WHT flame lead lands (the \"1\" mark on this diagram is drawn at the opposite end; pin numbers here follow the schematic).",
+  "notes": "Both 9MVE maps match F9MVE/G9MVE; pick by the last characters of the model number (A1 example = original, diagram 338317-2; A3 = diagram 340688-2). The boards differ (original: SW1-SW4 with SW4 twinning; A3: SW1/SW2, PL7/PL9 headers). Two (F/G)9MVE diagrams exist; they differ in board layout (A3: SW1 + combined SW2, PL2 order LO-HI-HSI, inducer plug listed as PL11). Pin functions are the same on both. Check the revision digits at the end of the model number (A1 vs A3) or the board layout. PL1 pin 1 is at the end of the connector where the WHT flame lead lands (the \"1\" mark on this diagram is drawn at the opposite end; pin numbers here follow the schematic).",
   "gaps": [
    "Pressure switch make/break in. w.c. (not in this manual; read the switch label)",
    "Limit switch open/close temperature",
@@ -68478,7 +68633,7 @@ const BRAND_SENSOR_MAPS = [
  },
  {
   "id": "icp-f9mve-a3-furnace",
-  "title": "ICP (F/G)9MVE two-stage variable-speed condensing furnace (A3 series, diagram 340688-2 Rev C)",
+  "title": "ICP (F/G)9MVE two-stage variable-speed condensing furnace (A3 series, diagram 340688-2 Rev C) - A3 series only (model ends A3); other endings: use the original-series map",
   "side": "indoor",
   "brand": "ICP (Heil / Tempstar / Comfortmaker / Arcoaire / KeepRite)",
   "models": "(F/G)9MVE \"A3\" series (nomenclature example G9MVE0601714A3), sizes 040-120",
@@ -68852,7 +69007,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Start with the amber LED (heartbeat = OK). Recall codes with SW1-1; run component test with SW1-6 (R lead off). Most 24 V checks are PLx-pin to COM.",
-  "notes": "Two (F/G)9MVE diagrams exist; they differ in board layout (A3: SW1 + combined SW2, PL2 order LO-HI-HSI, inducer plug listed as PL11). Pin functions are the same on both. Check the revision digits at the end of the model number (A1 vs A3) or the board layout. PL1 pin 1 is at the end of the connector where the WHT flame lead lands.",
+  "notes": "Both 9MVE maps match F9MVE/G9MVE; pick by the last characters of the model number (A1 example = original, diagram 338317-2; A3 = diagram 340688-2). The boards differ (original: SW1-SW4 with SW4 twinning; A3: SW1/SW2, PL7/PL9 headers). Two (F/G)9MVE diagrams exist; they differ in board layout (A3: SW1 + combined SW2, PL2 order LO-HI-HSI, inducer plug listed as PL11). Pin functions are the same on both. Check the revision digits at the end of the model number (A1 vs A3) or the board layout. PL1 pin 1 is at the end of the connector where the WHT flame lead lands.",
   "gaps": [
    "Pressure switch make/break in. w.c. (not in this manual; read the switch label)",
    "Limit switch open/close temperature",
@@ -73757,9 +73912,9 @@ const BRAND_SENSOR_MAPS = [
     "name": "Two-stage scroll unloader DC solenoid",
     "location": "Compressor",
     "kind": "other",
-    "spec": "24 VDC at the plug on a high-stage call (internal rectifier in the plug harness). Coil resistance printed as approximately 1640 milliohms (p.9). Energized = 100%, off = about 67% capacity.",
+    "spec": "24 VDC at the plug on a high-stage call (internal rectifier in the plug harness). Coil about 1640 ohms - the N4H7T manual prints '1640 milliohms' (p.9), a misprint: the identical N5H8T paragraph says 1640 ohms (icp-n5h8t-01si.pdf p.11). Energized = 100%, off = about 67% capacity.",
     "test": "Stage low-high-low (30 s+): amps change at least 20% (p.8 says 20-45% rise). If not: unplug solenoid, call high stage, 24 VDC at plug; then ohm coil; open or grounded = replace compressor.",
-    "source": "icp-n4h7t-01si.pdf p.7-9"
+    "source": "icp-n4h7t-01si.pdf p.7-9; icp-n5h8t-01si.pdf p.11 (1640 ohms)"
    },
    {
     "plug": "Compressor windings",
@@ -75764,7 +75919,7 @@ const BRAND_SENSOR_MAPS = [
      "E180"
     ],
     "test": "Enter A test mode to read the ambient the board sees. Power off, unplug the sensor plug and measure the ambient sensor ohms; open or short = replace sensor pack. Manual gives no resistance table.",
-    "source": "allied-4shp16ls-install.pdf p.26 (wiring diagram), Table 5 (E180)"
+    "source": "allied-4shp16ls-install.pdf p.26 (wiring diagram), Table 5 p.17-19 (E180)"
    },
    {
     "plug": "COIL / AMB / DIS sensor plug",
@@ -75792,7 +75947,7 @@ const BRAND_SENSOR_MAPS = [
      "E417"
     ],
     "test": "Read discharge temp in A test mode. Power off, unplug and measure discharge sensor ohms; open/short = replace. Board checks it 90 s after start; 5 faults = lockout.",
-    "source": "allied-4shp16ls-install.pdf Table 5 (E414/E415/E417), p.26"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19 (E414/E415/E417), p.26"
    },
    {
     "plug": "LO PS (LPS)",
@@ -75804,7 +75959,7 @@ const BRAND_SENSOR_MAPS = [
      "E411"
     ],
     "test": "Power off, remove the two LO PS leads and check continuity across the switch (closed = 0 ohm with normal pressure).",
-    "source": "allied-4shp16ls-install.pdf Table 5 (E410/E411), p.26"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19 (E410/E411), p.26"
    },
    {
     "plug": "HI PS (HPS)",
@@ -75816,7 +75971,7 @@ const BRAND_SENSOR_MAPS = [
      "E413"
     ],
     "test": "Power off, remove the HI PS leads and check continuity (closed = 0 ohm).",
-    "source": "allied-4shp16ls-install.pdf Table 5 (E412/E413), p.26"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19 (E412/E413), p.26"
    },
    {
     "plug": "Y1 OUT (CNTCTR)",
@@ -75872,7 +76027,7 @@ const BRAND_SENSOR_MAPS = [
      "E124"
     ],
     "test": "Check I+ to I+ and I- to I- wiring; keep away from high voltage.",
-    "source": "allied-4shp16ls-install.pdf Table 5"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19"
    },
    {
     "plug": "Y1 / Y2 / O / W / L / DS",
@@ -75959,7 +76114,7 @@ const BRAND_SENSOR_MAPS = [
      "E180"
     ],
     "test": "Enter A test mode to read the ambient the board sees. Power off, unplug the sensor plug and measure the ambient sensor ohms; open or short = replace sensor pack. Manual gives no resistance table.",
-    "source": "allied-4shp16ls-install.pdf p.27 (wiring diagram), Table 5 (E180)"
+    "source": "allied-4shp16ls-install.pdf p.27 (wiring diagram), Table 5 p.17-19 (E180)"
    },
    {
     "plug": "COIL / AMB / DIS sensor plug",
@@ -75987,7 +76142,7 @@ const BRAND_SENSOR_MAPS = [
      "E417"
     ],
     "test": "Read discharge temp in A test mode. Power off, unplug and measure discharge sensor ohms; open/short = replace. Board checks it 90 s after start; 5 faults = lockout.",
-    "source": "allied-4shp16ls-install.pdf Table 5 (E414/E415/E417), p.27"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19 (E414/E415/E417), p.27"
    },
    {
     "plug": "LO PS (LPS)",
@@ -75999,7 +76154,7 @@ const BRAND_SENSOR_MAPS = [
      "E411"
     ],
     "test": "Power off, remove the two LO PS leads and check continuity across the switch (closed = 0 ohm with normal pressure).",
-    "source": "allied-4shp16ls-install.pdf Table 5 (E410/E411), p.27"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19 (E410/E411), p.27"
    },
    {
     "plug": "HI PS (HPS)",
@@ -76011,7 +76166,7 @@ const BRAND_SENSOR_MAPS = [
      "E413"
     ],
     "test": "Power off, remove the HI PS leads and check continuity (closed = 0 ohm).",
-    "source": "allied-4shp16ls-install.pdf Table 5 (E412/E413), p.27"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19 (E412/E413), p.27"
    },
    {
     "plug": "Y1 OUT (CNTCTR)",
@@ -76074,7 +76229,7 @@ const BRAND_SENSOR_MAPS = [
      "E124"
     ],
     "test": "Check I+ to I+ and I- to I- wiring; keep away from high voltage.",
-    "source": "allied-4shp16ls-install.pdf Table 5"
+    "source": "allied-4shp16ls-install.pdf Table 5 p.17-19"
    },
    {
     "plug": "Y1 / Y2 / O / W / L / DS",
@@ -76164,7 +76319,7 @@ const BRAND_SENSOR_MAPS = [
      "E180"
     ],
     "test": "Enter A test mode to read the ambient the board sees. Power off, unplug the sensor plug and measure the ambient sensor ohms; open or short = replace sensor pack. Manual gives no resistance table.",
-    "source": "allied-4scu16ls-install.pdf p.24 (wiring diagram), Table 5 (E180)"
+    "source": "allied-4scu16ls-install.pdf p.24 (wiring diagram), Table 5 p.17-18 (E180)"
    },
    {
     "plug": "COIL / AMB / DIS sensor plug",
@@ -76179,7 +76334,7 @@ const BRAND_SENSOR_MAPS = [
      "E417"
     ],
     "test": "Read discharge temp in A test mode. Power off, unplug and measure discharge sensor ohms; open/short = replace. Board checks it 90 s after start; 5 faults = lockout.",
-    "source": "allied-4scu16ls-install.pdf Table 5 (E414/E415/E417), p.24"
+    "source": "allied-4scu16ls-install.pdf Table 5 p.17-18 (E414/E415/E417), p.24"
    },
    {
     "plug": "LO PS (LPS)",
@@ -76191,7 +76346,7 @@ const BRAND_SENSOR_MAPS = [
      "E411"
     ],
     "test": "Power off, remove the two LO PS leads and check continuity across the switch (closed = 0 ohm with normal pressure).",
-    "source": "allied-4scu16ls-install.pdf Table 5 (E410/E411), p.24"
+    "source": "allied-4scu16ls-install.pdf Table 5 p.17-18 (E410/E411), p.24"
    },
    {
     "plug": "HI PS (HPS)",
@@ -76203,7 +76358,7 @@ const BRAND_SENSOR_MAPS = [
      "E413"
     ],
     "test": "Power off, remove the HI PS leads and check continuity (closed = 0 ohm).",
-    "source": "allied-4scu16ls-install.pdf Table 5 (E412/E413), p.24"
+    "source": "allied-4scu16ls-install.pdf Table 5 p.17-18 (E412/E413), p.24"
    },
    {
     "plug": "Y1 OUT (CNTCTR)",
@@ -76251,7 +76406,7 @@ const BRAND_SENSOR_MAPS = [
      "E124"
     ],
     "test": "Check I+ to I+ and I- to I- wiring; keep away from high voltage.",
-    "source": "allied-4scu16ls-install.pdf Table 5"
+    "source": "allied-4scu16ls-install.pdf Table 5 p.17-18"
    },
    {
     "plug": "Y1 / Y2 / O / W / L / DS",
@@ -76263,7 +76418,7 @@ const BRAND_SENSOR_MAPS = [
      "E420",
      "E421"
     ],
-    "source": "allied-4scu16ls-install.pdf p.13, p.16, p.18 (Table 5), p.21"
+    "source": "allied-4scu16ls-install.pdf p.13, p.16, p.18 (Table 5 p.17-18), p.21"
    }
   ],
   "test": "Use the push button: A test mode strings active errors (E), ambient (A), coil (c) and discharge (d) temperatures in F. d test = forced defrost (HP). Codes in Table 5.",
@@ -77465,9 +77620,12 @@ const BRAND_SENSOR_MAPS = [
   "title": "Allied / Armstrong Air A97US2VX 97% two-stage variable-speed communicating furnace - integrated control 103131-XX or 107046-XX",
   "side": "indoor",
   "brand": "Allied Air (Armstrong Air / Ducane / AirEase / Concord)",
-  "models": "A97US2VX040B12X, A97US2VX060B12X, A97US2VX080C16X, A97US2VX080C20X (upflow / horizontal, Comfort Sync enabled)",
+  "models": "A97US2V040B12X, A97US2V060B12X, A97US2V080C16X, A97US2V080C20X (upflow / horizontal, Comfort Sync enabled)",
   "match": [
-   "A97US2VX"
+   "A97US2V040B12X",
+   "A97US2V060B12X",
+   "A97US2V080C16X",
+   "A97US2V080C20X"
   ],
   "sizes": [
    "040",
@@ -77920,8 +78078,18 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Allied Air (Armstrong Air / Ducane / AirEase / Concord)",
   "models": "A80UH2E045A12, A80UH2E070A12, A80UH2E090B12, A80UH2E090B16, A80UH2E110C16, A80UH2E110C20 and 80G2UHE(L) equivalents (045-12, 070-12, 090-12, 090-16, 110-16, 110-20)",
   "match": [
-   "A80UH2E",
-   "80G2UHE"
+   "A80UH2E045A12",
+   "A80UH2E070A12",
+   "A80UH2E090B12",
+   "A80UH2E090B16",
+   "A80UH2E110C16",
+   "A80UH2E110C20",
+   "80G2UH045AE12",
+   "80G2UH070AE12",
+   "80G2UH090BE12",
+   "80G2UH090BE16",
+   "80G2UH110CE16",
+   "80G2UH110CE20"
   ],
   "sizes": [
    "045",
@@ -79602,8 +79770,20 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Allied Air (Armstrong Air / Ducane / AirEase / Concord)",
   "models": "A93UH1EK / 92G1UHEK upflow: 030B12K, 045B12K, 070B12K, 090C12K, 090C16K, 110C16K, 110C20K",
   "match": [
-   "A93UH1E",
-   "92G1UH"
+   "A93UH1E030B12AK",
+   "A93UH1E045B12AK",
+   "A93UH1E070B12AK",
+   "A93UH1E090C12AK",
+   "A93UH1E090C16AK",
+   "A93UH1E110C16AK",
+   "A93UH1E110C20AK",
+   "92G1UH030BE12K",
+   "92G1UH045BE12K",
+   "92G1UH070BE12K",
+   "92G1UH090CE12K",
+   "92G1UH090CE16K",
+   "92G1UH110CE16K",
+   "92G1UH110CE20K"
   ],
   "sizes": [
    "030",
@@ -80201,8 +80381,24 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Allied Air (Armstrong Air / Ducane / AirEase / Concord)",
   "models": "A80UH2E070A12K, A80UH2E090B12K, A80UH2E090B16K and other K sizes; 80G2UHE(L)K",
   "match": [
-   "A80UH2E",
-   "80G2UH"
+   "A80UH2E045A12K",
+   "A80UH2E070A12K",
+   "A80UH2E090B12K",
+   "A80UH2E090B16K",
+   "A80UH2E110C16K",
+   "A80UH2E110C20K",
+   "80G2UH045AE12K",
+   "80G2UH070AE12K",
+   "80G2UH090BE12K",
+   "80G2UH090BE16K",
+   "80G2UH110CE16K",
+   "80G2UH110CE20K",
+   "80G2UH045AE12LK",
+   "80G2UH070AE12LK",
+   "80G2UH090BE12LK",
+   "80G2UH090BE16LK",
+   "80G2UH110CE16LK",
+   "80G2UH110CE20LK"
   ],
   "sizes": [
    "045",
@@ -80821,7 +81017,14 @@ const BRAND_SENSOR_MAPS = [
   "brand": "Allied Air (Armstrong Air / Ducane / AirEase / Concord)",
   "models": "A97US2V045B12SK, A97US2V070B12SK, A97US2V090C12SK, A97US2V090C16SK, A97US2V090C20SK, A97US2V110C16SK, A97US2V110C20SK",
   "match": [
-   "A97US2V"
+   "A97US2V045B12S",
+   "A97US2V070B12S",
+   "A97US2V090C12S",
+   "A97US2V090C16S",
+   "A97US2V090C20S",
+   "A97US2V110C16S",
+   "A97US2V110C20S",
+   "A97US2V135D20S"
   ],
   "sizes": [
    "045",
@@ -89377,7 +89580,7 @@ const BRAND_SENSOR_MAPS = [
     "code": "MV1 / ML1",
     "name": "Horizontal vane motor MV1 and damper lock motor (right) ML1",
     "kind": "other",
-    "spec": "Vane / lock motors 235-255 Ω BRN to each other lead (p.21).",
+    "spec": "Horizontal vane motor MV1, BRN to each other lead: 235-255 Ω (250 Ω motor) or 282-306 Ω (300 Ω motor) - both printed; damper lock motors 235-255 Ω. Part temperature 10-30°C (p.21).",
     "test": "Measure BRN to each other lead.",
     "source": "mitsubishi-mfz-ka-service-obh568a.pdf p.6, p.21, p.29"
    },
@@ -90677,7 +90880,7 @@ const BRAND_SENSOR_MAPS = [
     "code": "MF",
     "name": "DC indoor fan motor",
     "kind": "other",
-    "spec": "1-4: 310-340 V DC (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC (speed command). 7-4: 0 or 15 V DC stopped, 7.5 V DC running (0-15 V pulse feedback).",
+    "spec": "1-4: 310-340 V DC on the test-point list (p.44) but 294-325 V DC in the DC fan-motor check (p.47 TEST POINT VDC) - source conflict; either range is normal (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC (speed command). 7-4: 0 or 15 V DC stopped, 7.5 V DC running (0-15 V pulse feedback).",
     "test": "See 12-8 DC fan motor check (p.47).",
     "source": "mitsubishi-pead-aa8-service-hwe2109a.pdf p.27, p.44, p.47"
    },
@@ -91197,7 +91400,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "DC outdoor fan motor",
     "location": "Fan",
     "kind": "other",
-    "spec": "1-4: 280 V DC (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC. 7-4: 15 V DC stopped / 7.5 V DC running (0-15 V pulse).",
+    "spec": "1-4: 280 V DC on the test-point page (p.64); the DC fan-motor check (p.56) gives DC 250-330 V as normal (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC. 7-4: 15 V DC stopped / 7.5 V DC running (0-15 V pulse).",
     "errorCodes": [
      "U8 (4400)"
     ],
@@ -91468,7 +91671,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "DC outdoor fan motor",
     "location": "Fan",
     "kind": "other",
-    "spec": "1-4: 280 V DC (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC. 7-4: 15 V DC stopped / 7.5 V DC running (0-15 V pulse).",
+    "spec": "1-4: 280 V DC on the test-point page (p.64); the DC fan-motor check (p.56) gives DC 250-330 V as normal (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC. 7-4: 15 V DC stopped / 7.5 V DC running (0-15 V pulse).",
     "errorCodes": [
      "U8 (4400)"
     ],
@@ -91736,7 +91939,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "DC outdoor fan motor",
     "location": "Fan",
     "kind": "other",
-    "spec": "1-4: 280 V DC (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC. 7-4: 15 V DC stopped / 7.5 V DC running (0-15 V pulse).",
+    "spec": "1-4: 280 V DC on the test-point page (p.64); the DC fan-motor check (p.56) gives DC 250-330 V as normal (HIGH VOLTAGE). 5-4: 15 V DC. 6-4: 0-6.5 V DC. 7-4: 15 V DC stopped / 7.5 V DC running (0-15 V pulse).",
     "errorCodes": [
      "U8 (4400)"
     ],
@@ -94641,7 +94844,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Compressor (BLK U, WHT V, RED W)",
     "location": "Compressor",
     "kind": "other",
-    "spec": "Each phase 0.63-0.78 (printed \"kΩ\") at 14-104°F.",
+    "spec": "Each phase 0.63-0.78 OHM at 14-104°F. The manual prints '0.63 kΩ - 0.78 kΩ', almost certainly a misprint for ohms: the neighbouring MXZ columns on the same table read 0.83-1.03 Ω and 0.77-0.95 Ω (p.121).",
     "errorCodes": [
      "LED1 twice + LED2 off = IPM / lock protection"
     ],
@@ -96815,7 +97018,7 @@ const BRAND_SENSOR_MAPS = [
      "Left lamp 0.5 s on / 0.5 s off = miswiring or serial signal"
     ],
     "test": "See p.31 serial check.",
-    "source": "mitsubishi-mfz-kj-indoor-service.pdf p.8, p.26, p.35"
+    "source": "mitsubishi-mfz-kj-indoor-service.pdf p.8, p.26, p.35; p.5 (control voltage 12-24 VDC)"
    },
    {
     "plug": "CN1J1",
@@ -106227,7 +106430,7 @@ const BRAND_SENSOR_MAPS = [
    },
    {
     "plug": "CN401 (A-D in)",
-    "pins": "#1 IN-A, #3 IN-B, #5 IN-C, #7 IN-D; GND #2,4,6,8",
+    "pins": "#1 IN-A, #3 IN-B, #5 IN-C, #7 IN-D; GND #2,4,6,8,10,12",
     "name": "Pipe IN temperature sensors, rooms A-D",
     "kind": "thermistor",
     "spec": "No resistance table is printed for these pipe sensors.",
@@ -107653,8 +107856,8 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 13 - 12 VDC un-fused for the controller",
     "location": "J1 connector on the controller (harness end)",
     "kind": "other",
-    "spec": "Battery + via the 7.5 A fuse circuit; 12 VDC",
-    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0)"
+    "spec": "12 VDC un-fused battery feed to the controller (Wire 13); the 7.5 A fuse F1 is inside the controller (Problem 19 \"7.5 Amp Fuse (F1 in Controller)\").",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0); generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.103, 248"
    },
    {
     "plug": "J1-12",
@@ -108289,8 +108492,8 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 13 - 12 VDC un-fused for the controller",
     "location": "J1 connector on the controller (harness end)",
     "kind": "other",
-    "spec": "Battery + via the 7.5 A fuse circuit; 12 VDC",
-    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0); generac-ecogen-15kw-evo2-wiring.pdf (drawing A0003423405 Rev B) p.2 (controller)"
+    "spec": "12 VDC un-fused battery feed to the controller (Wire 13); the 7.5 A fuse F1 is inside the controller (Problem 19 \"7.5 Amp Fuse (F1 in Controller)\").",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.248-249 (Appendix A, Evolution 2.0); generac-ecogen-15kw-evo2-wiring.pdf (drawing A0003423405 Rev B) p.2 (controller); generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.103, 248"
    },
    {
     "plug": "J1-12",
@@ -109152,7 +109355,8 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 398A - Generator Current Sense B2",
     "location": "J2 connector on the controller (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251"
+    "spec": "Printed as 398A (Sense B2) - but 398A is also printed at J1-9 (Sense A2), and every other Evolution table pairs 398B with 399B on the B current transformer. Likely a misprint for 398B - read the wire number on the wire.",
+    "source": "generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.250-251 (Appendix A, Evolution 1.0); same table in generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf p.250-251; generac-aircooled-evo-1-2-diagnostic-repair-manual.pdf p.251"
    },
    {
     "plug": "J2-7",
@@ -110633,7 +110837,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Generac tests name wire numbers only - Appendix A says use the wire numbers and disregard J references in the procedures. Back-probe; never front-probe Molex connectors. Nexus LOP and HOT switches ground Wire 86 / 85 on a fault.",
-  "notes": "Three Nexus panel styles share these model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Panel A vs B: rated no-load voltage 250-254 V (older 0H6680A) vs 240-244 V (newer 0H6680B) per Table 1-8 p.14. SIB11-26-NAC: 0H6680A/B/D panels are on models with a -0 revision (last digit of the item number, e.g. G0058740 = 5874-0).",
+  "notes": "Three Nexus panel styles share these base model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Panel A vs B: rated no-load voltage 250-254 V (older 0H6680A) vs 240-244 V (newer 0H6680B) per Table 1-8 p.14. SIB11-26-NAC (p.1), by the last digit of the model number on the data tag: 0H6680A = all -0 models (not 50 Hz / EcoGen); 0H6680B = all -0 models (not EcoGen); 0H6680D = all -1 models (not EcoGen); 0H6680T = 8 kW single-cylinder -0 models above serial 6510934 and 50 Hz -0 models; EcoGen uses 0H6680C (-0) / 0H6680E (-1). Replacement: A -> B (8 kW below serial 6239507 also needs airbox 0H6669), D -> D (8 kW needs software 0J3401 rev B or higher), T -> B with harness adapter 0J7558. Revision -2 items (e.g. G0058702, G0058822 in the app data) are not covered by SIB11-26 - check the panel label or the connectors on the back.",
   "gaps": [
    "JMP 1 kW-ID resistor ohm value not printed in any Generac document found - no published test."
   ],
@@ -110685,20 +110889,18 @@ const BRAND_SENSOR_MAPS = [
    "5896",
    "G005924",
    "5924",
-   "G0058700",
-   "G0058820",
-   "G0059080",
-   "G0058920",
-   "G0058730",
-   "G0058740",
-   "G0058850",
-   "G0058930",
-   "G0058950",
-   "G0060540",
-   "G0058750",
-   "G0058870",
-   "G0058960",
-   "G0059240"
+   "G0058701",
+   "G0058821",
+   "G0059081",
+   "G0058921",
+   "G0058731",
+   "G0058851",
+   "G0058931",
+   "G0060541",
+   "G0058751",
+   "G0058871",
+   "G0058961",
+   "G0059241"
   ],
   "sizes": [
    "8",
@@ -111100,7 +111302,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Generac tests name wire numbers only - Appendix A says use the wire numbers and disregard J references in the procedures. Back-probe; never front-probe Molex connectors. Nexus LOP and HOT switches ground Wire 86 / 85 on a fault.",
-  "notes": "Three Nexus panel styles share these model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Figure A-8 labels the battery-charger connector J11-J12, but the pin table for T1/00 is headed J10. SIB11-26-NAC: 0H6680A/B/D panels are on models with a -0 revision (last digit of the item number, e.g. G0058740 = 5874-0).",
+  "notes": "Three Nexus panel styles share these base model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Figure A-8 labels the battery-charger connector J11-J12, but the pin table for T1/00 is headed J10. SIB11-26-NAC (p.1), by the last digit of the model number on the data tag: 0H6680A = all -0 models (not 50 Hz / EcoGen); 0H6680B = all -0 models (not EcoGen); 0H6680D = all -1 models (not EcoGen); 0H6680T = 8 kW single-cylinder -0 models above serial 6510934 and 50 Hz -0 models; EcoGen uses 0H6680C (-0) / 0H6680E (-1). Replacement: A -> B (8 kW below serial 6239507 also needs airbox 0H6669), D -> D (8 kW needs software 0J3401 rev B or higher), T -> B with harness adapter 0J7558. Revision -2 items (e.g. G0058702, G0058822 in the app data) are not covered by SIB11-26 - check the panel label or the connectors on the back.",
   "gaps": [
    "J8-3 printed as 85 (manual error); the 0H6680E sibling drawing shows 86 - no 0H6680D drawing found to confirm.",
    "No 0H6680D-specific wiring drawing found to confirm which J11/J12 pin carries T1 vs 00 (sibling 0H6680E drawing used as guide)."
@@ -111153,18 +111355,6 @@ const BRAND_SENSOR_MAPS = [
    "5896",
    "G005924",
    "5924",
-   "G0058701",
-   "G0058821",
-   "G0059081",
-   "G0058921",
-   "G0058731",
-   "G0058851",
-   "G0058931",
-   "G0060541",
-   "G0058751",
-   "G0058871",
-   "G0058961",
-   "G0059241",
    "G0058700",
    "G0058820",
    "G0059080"
@@ -111630,7 +111820,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Generac tests name wire numbers only - Appendix A says use the wire numbers and disregard J references in the procedures. Back-probe; never front-probe Molex connectors. Nexus LOP and HOT switches ground Wire 86 / 85 on a fault.",
-  "notes": "Three Nexus panel styles share these model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Figure A-9 labels the 15-pin connector J4 and the 9-pin connector J5, but the manual heads both pin tables \"J5\"; the 15-row table is shown here as J4 (with the printed J5 name). Wire numbers are what matter. SIB11-26-NAC: 0H6680T is on models with a -1 revision, 8 kW single-cylinder -0 models above serial 6510934, and 50 Hz -0 models; 0H6680T is replaced by 0H6680B plus harness adapter 0J7558.",
+  "notes": "Three Nexus panel styles share these base model numbers - check the controller part number label (0H6680 A/B, D or T) or the connectors on the back to pick the right map. Figure A-9 labels the 15-pin connector J4 and the 9-pin connector J5, but the manual heads both pin tables \"J5\"; the 15-row table is shown here as J4 (with the printed J5 name). Wire numbers are what matter. SIB11-26-NAC (p.1), by the last digit of the model number on the data tag: 0H6680A = all -0 models (not 50 Hz / EcoGen); 0H6680B = all -0 models (not EcoGen); 0H6680D = all -1 models (not EcoGen); 0H6680T = 8 kW single-cylinder -0 models above serial 6510934 and 50 Hz -0 models; EcoGen uses 0H6680C (-0) / 0H6680E (-1). Replacement: A -> B (8 kW below serial 6239507 also needs airbox 0H6669), D -> D (8 kW needs software 0J3401 rev B or higher), T -> B with harness adapter 0J7558. Revision -2 items (e.g. G0058702, G0058822 in the app data) are not covered by SIB11-26 - check the panel label or the connectors on the back.",
   "gaps": [
    "Connector naming J4/J5 inconsistent in the manual (see notes).",
    "JMP 1 kW-ID resistor ohm value not printed in any Generac document found - no published test."
@@ -112169,7 +112359,7 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "Look at the back of the controller: two big Amp-Seal connectors J4/J5 = use the \"0H5813 panel\" rows; Molex J8/J5/J9/J10 = use the \"0H6680E panel\" rows. Generac tests name wire numbers - find the wire, then back-probe.",
-  "notes": "Pins and wires read off the two EcoGen drawings; functions taken from the 0H9172 Nexus Appendix A by wire number. EcoGen 6 kW is 120 V: sensing is on Wires 11 and 22 (0H5813 J5-10 = 22, J5-11 = 11). Wire J1 on these drawings is the kW-ID loop the 0H9172 tables call JMP 1. 2-wire start Wires 178 / 183 come out to the customer terminal. No status-LED wires (817-820) or alarm relay (209/210) shown on either drawing. Oil make-up system: see 0H9172 Appendix B (p.259-261) and SIB13-09-EcoGen.",
+  "notes": "Pins and wires read off the two EcoGen drawings; functions taken from the 0H9172 Nexus Appendix A by wire number. EcoGen 6 kW is 120 V: sensing is on Wires 11 and 22 (0H5813 J5-10 = 22, J5-11 = 11). Wire J1 on these drawings is the kW-ID loop the 0H9172 tables call JMP 1. 2-wire start Wires 178 / 183 come out to the customer terminal. No status-LED wires (817-820) or alarm relay (209/210) shown on either drawing. Oil make-up system: see 0H9172 Appendix B (p.259-261) and SIB13-09-EcoGen. SIB11-26-NAC: EcoGen -0 models use panel 0H6680C and -1 models 0H6680E (the 0J2998 drawing shows 0H6680E). Use the connector style on the back to pick the rows.",
   "gaps": [
    "No resistance value for the kW-ID loop (Wire J1 / JMP 1) in any Generac document found - no published test."
   ],
@@ -112188,6 +112378,11 @@ const BRAND_SENSOR_MAPS = [
     "file": "generac-aircooled-evolution-nexus-diagnostic-repair-manual-0h9172.pdf",
     "pages": "16, 182-184, 192-197, 252-255, 259-261",
     "what": "EcoGen specs, choke, Appendix A wire functions"
+   },
+   {
+    "file": "generac-bulletin-sib11-26-nac-air-cooled-nexus-panel-replacement-assembly-number.pdf",
+    "pages": "1",
+    "what": "EcoGen 0H6680C (-0) / 0H6680E (-1)"
    }
   ]
  },
@@ -113677,7 +113872,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "J3 connector on the Evolution controller (harness end)",
     "kind": "thermistor",
     "chart": "generac-lc-evolution-coolant-temp",
-    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. About 2.6 kohm at 70 F (p.87).",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. Text p.87 says about 2.6 kohm at 70 F, but Table 3-12 (p.160) gives 3,511 ohms at 68 F and 2,795 ohms at 77 F - use the table.",
     "errorCodes": [
      "1400 High Temperature"
     ],
@@ -113953,7 +114148,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "Near the thermostat",
     "kind": "thermistor",
     "chart": "generac-lc-evolution-coolant-temp",
-    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. About 2.6 kohm at 70 F (p.87).",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. Text p.87 says about 2.6 kohm at 70 F, but Table 3-12 (p.160) gives 3,511 ohms at 68 F and 2,795 ohms at 77 F - use the table.",
     "errorCodes": [
      "1400 High Temperature"
     ],
@@ -114335,7 +114530,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "J3 connector on the Evolution controller (harness end)",
     "kind": "thermistor",
     "chart": "generac-lc-evolution-coolant-temp",
-    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. About 2.6 kohm at 70 F (p.87). Drawing: COP1-8.",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. Drawing: COP1-8. Text p.87 says about 2.6 kohm at 70 F, but Table 3-12 (p.160) gives 3,511 ohms at 68 F and 2,795 ohms at 77 F - use the table.",
     "errorCodes": [
      "1400 High Temperature"
     ],
@@ -114551,7 +114746,7 @@ const BRAND_SENSOR_MAPS = [
     "location": "Near the thermostat",
     "kind": "thermistor",
     "chart": "generac-lc-evolution-coolant-temp",
-    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. About 2.6 kohm at 70 F (p.87).",
+    "spec": "Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%) and about 2.1-2.17 VDC at the controller. Text p.87 says about 2.6 kohm at 70 F, but Table 3-12 (p.160) gives 3,511 ohms at 68 F and 2,795 ohms at 77 F - use the table.",
     "errorCodes": [
      "1400 High Temperature"
     ],
@@ -116607,10 +116802,11 @@ const BRAND_SENSOR_MAPS = [
    }
   ],
   "test": "J1 / J2 viewed from the harness side (Figure 3-3). Use the DEBUG > OUTPUTS screen to see the controller command each output.",
-  "notes": "QT048 models ending in N (QT04842ANAN etc.) have the R-200B LED panel, not Nexus - they have their own map. J1 pins 2, 3, 27-30 and J2 pins 10, 11 are not in the tables; the 2.4L drawing 0H6341-D shows them empty except J2-11 = Wire 209 (common alarm relay). \"Note 1\" / \"Note 4\" in the J1 table are printed without the note text.",
+  "notes": "QT048 models ending in N (QT04842ANAN etc.) have the R-200B LED panel, not Nexus - they have their own map. J1 pins 2, 3, 27-30 and J2 pins 10, 11 are not in the tables; the 2.4L drawing 0H6341-D shows them empty except J2-11 = Wire 209 (common alarm relay). \"Note 1\" / \"Note 4\" in the J1 table are printed without the note text. CHECK THE PANEL: QT 2.4L models ending in N are NOT Nexus - generac.com lookup lists for QT02224ANAN / QT02724ANAN / QT03624ANAN / QT06024ANAN \"MANUAL R200C CTRL PNL\" 0H1374 and \"WD 2.4L R-200C\" 0H1273, and for QT04524ANAN \"MNL R200A CTRL PNL\" 0G1369 and WD 0G0983; models ending in X (e.g. QT02224ANAX, QT06024ANAX) list WD/SD G2.4L G2 NEXUS 0H6341 / 0H6340. If the unit has an LED R-panel instead of the Nexus LCD, this map does not apply.",
   "gaps": [
    "J1 2, 3, 27-30 and J2 10-11 filled from the 2.4L drawing 0H6341-D only; other engine sizes (1.5L, 1.6L, 4.2L-6.8L drawings in the same manual) not checked pin by pin.",
-   "Text of table Notes 1 and 4 is not printed anywhere in 0J1195 - cannot be recovered."
+   "Text of table Notes 1 and 4 is not printed anywhere in 0J1195 - cannot be recovered.",
+   "2.4L N-suffix QT units (R-200A / R-200C panels) have no map yet - R-200C manual 0H1374 / WD 0H1273 not mapped."
   ],
   "sources": [
    {
@@ -117157,8 +117353,8 @@ const BRAND_SENSOR_MAPS = [
   "notes": "DIP switch 7 selects 4.2L (1800 rpm) - the same board serves QT048 4.2L units. 2.4L R-200B model numbers are not tied in this manual, so only the QT048 N models are in \"match\".",
   "gaps": [
    "No coolant temperature sender chart - this panel uses an on/off high temperature switch.",
-   "2.4L R-200B model numbers not listed in the manual.",
-   "Ignition module (IM) and TB1 pin tables are left out: the R-200B manual shows them for the 4-cylinder 2.4L engine (coil wires 451-454), not the 6-cylinder 4.2L QT048."
+   "Ignition module (IM) and TB1 pin tables are left out: the R-200B manual shows them for the 4-cylinder 2.4L engine (coil wires 451-454), not the 6-cylinder 4.2L QT048.",
+   "2.4L R-200B model numbers are not tied by any Generac document found: the generac.com lookup lists R-200C (22/27/36/60 kW) and R-200A (45 kW) panels for the N-suffix 2.4L QT models, not R-200B - so no 2.4L tokens are added to this map."
   ],
   "sources": [
    {
@@ -120399,11 +120595,12 @@ const BRAND_SENSOR_MAPS = [
    {
     "plug": "J5-16",
     "code": "85",
-    "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure in the oil temperature switch",
+    "name": "Wire 85 - High oil temperature shutdown: PowerPact switch is normally CLOSED and OPENS on overtemperature (Wire 85 ungrounded -> shutdown)",
     "location": "PowerPact controller J4/J5",
     "kind": "switch",
-    "spec": "High oil temperature switch: p.65 says shutdown above about 124 C (255 F); Test p.89 says contacts close at 293 F and bench test continuity at about 283-305 F. The manual disagrees with itself. Wire colour on the 7.5 kW drawing 10000021282: blue.",
-    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52, 6/7 kW PowerPact connector pin descriptions); generac-corepower-powerpact-diagnostic-repair-manual.pdf p.65, 89; generac-powerpact-7.5kw-wiring.pdf p.1"
+    "spec": "PowerPact: normally closed contacts open above about 124 C (255 F) (p.65). Bench test (Test 69): cold = CONTINUITY; heated oil at about 283-305 F (139-151 C) = INFINITY. The manual table text \"shutdown when Wire 85 is grounded by contact closure\" and \"close at 293 F\" are the CorePower polarity. Wire colour on the 7.5 kW drawing 10000021282: blue.",
+    "test": "Test 69: engine cool; check clear airflow around the unit; disconnect Wires 85 and 0 at the switch. Switch terminal to body cold = CONTINUITY on PowerPact. Wire 85 to frame ground with J5 unplugged = INFINITY; an open in Wire 85 also gives OVERTEMP on PowerPact. Bench: heat in oil to about 283-305 F -> INFINITY. Fails = replace switch.",
+    "source": "generac-corepower-powerpact-diagnostic-repair-manual.pdf p.64 (Figure 52), p.65, p.88-89 (Test 69); generac-powerpact-7.5kw-wiring.pdf p.1"
    },
    {
     "plug": "J5-17",
@@ -120464,12 +120661,15 @@ const BRAND_SENSOR_MAPS = [
   "title": "Generac / Guardian \"5200 series\" air-cooled 9-18 kW LED-board units - J1 23-pin",
   "side": "generator",
   "brand": "Generac (Guardian)",
-  "models": "5200-series air-cooled (manual 0G4338): 5243, 5244 16 kW GT-990 (app generator data). Manual covers 9/10, 13, 15/16, 16/18 kW (NG/LP ratings).",
+  "models": "5200-series air-cooled (manual 0G4338): 5243, 5244 16 kW GT-990 (app generator data). Manual covers 9/10, 13, 15/16, 16/18 kW (NG/LP ratings). Also 5416 (G0054160 \"18KW GT990 GUARD ALUM+200A SW\"): generac.com lookup lists V-twin HSB drawing 0F7822, whose control board J1 (23-pin) matches this table pin by pin (all 23 positions).",
   "match": [
    "G005243",
    "5243",
    "G005244",
-   "5244"
+   "5244",
+   "G005416",
+   "G0054160",
+   "5416"
   ],
   "sizes": [
    "9",
@@ -120487,7 +120687,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 15A - 12 VDC into the circuit board for source voltage when SW1 is in the AUTO or MANUAL position",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-2",
@@ -120495,7 +120695,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 4 - Field boost current to rotor (about 9-10 volts DC)",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-3",
@@ -120503,7 +120703,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 23 - Switched to ground for Transfer Relay (TR) operation",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-4",
@@ -120511,7 +120711,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 86 - Low oil pressure shutdown: Shutdown occurs when Wire 86 is grounded by loss of oil pressure to the LOP",
     "location": "Control board J1 connector (harness end)",
     "kind": "switch",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-5",
@@ -120519,21 +120719,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 18 - Ignition Shutdown: Circuit board action grounds Wire 18 for ignition shutdown. RPM Sense: Circuit board monitors ignition magneto voltage/frequency for engine speed when running",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-6",
     "name": "BROWN wire - INTERNAL USE",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-7",
     "name": "BROWN wire - INTERNAL USE",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-8",
@@ -120541,7 +120741,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire LC1 - Current sensing for governor control",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-9",
@@ -120549,7 +120749,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 56 - 12 VDC output to starter contactor relay for V-twin engine",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-10",
@@ -120557,7 +120757,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 224 - Transformer reduced \"Utility\" source sensing voltage",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-11",
@@ -120565,7 +120765,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 239 - 12 VDC input when SW1 is in the MANUAL position",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-12",
@@ -120573,21 +120773,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 85 - High temperature shutdown: Shutdown occurs when Wire 85 is grounded by contact closure of the HTO",
     "location": "Control board J1 connector (harness end)",
     "kind": "switch",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-13",
     "name": "NOT USED",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-14",
     "name": "NOT USED",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-15",
@@ -120595,7 +120795,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire LC2 - Current sensing for governor control",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-16",
@@ -120603,7 +120803,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 14 - 12 VDC output for engine run condition. Used for fuel solenoid and battery charge relay",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-17",
@@ -120611,14 +120811,14 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 225 - Transformer reduced \"Utility\" source sensing voltage",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-18",
     "name": "NOT USED",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-19",
@@ -120626,7 +120826,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 15B - 12 VDC source voltage for the circuit board. Also runs timer for exerciser",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-20",
@@ -120634,21 +120834,21 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 0 - Common ground.",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-21",
     "name": "GREY wire - INTERNAL USE",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-22",
     "name": "GREY wire - INTERNAL USE",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    },
    {
     "plug": "J1-23",
@@ -120656,19 +120856,24 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 90 - Switched to ground for choke solenoid operation",
     "location": "Control board J1 connector (harness end)",
     "kind": "other",
-    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions)"
+    "source": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf p.80 (10/13/16/18 kW J1 pin descriptions); generac-vtwin-hsb-wiring-0f7822.pdf p.1"
    }
   ],
   "test": "Board LEDs: Overcrank, Overspeed, Hi (oil) Temperature, Low Oil Pressure, Low Battery, System Ready. DIP switch 1 ON = normal exercise / OFF = low speed exercise.",
-  "notes": "16 kW board: DIP 1 exercise speed, DIP 2 spare. 18 kW board: DIP 1 exercise, DIP 2 ON = 50 Hz, DIP 3 spare, DIP 4 ON = 60 Hz operation / OFF = 58-62 Hz.",
+  "notes": "16 kW board: DIP 1 exercise speed, DIP 2 spare. 18 kW board: DIP 1 exercise, DIP 2 ON = 50 Hz, DIP 3 spare, DIP 4 ON = 60 Hz operation / OFF = 58-62 Hz. 5416 (G0054160, 18 kW): its drawing 0F7822 shows the 2-position DIP switch, not the 4-position '18 kW units only' board of 0G4338 p.80 - check which board is fitted. The C2 alternator harness plug order is not drawn on 0F7822, so 5416 is not tied to the C2 harness map.",
   "gaps": [
-   "Model numbers other than 5243 / 5244 are not tied to this manual in our data."
+   "Only 5243, 5244 and 5416 are tied; other 5200-series model numbers not confirmed."
   ],
   "sources": [
    {
     "file": "generac-aircooled-hsb-6-18kw-diagnostic-repair-manual-0g4338.pdf",
     "pages": "80",
     "what": "J1 pin descriptions, DIP switches"
+   },
+   {
+    "file": "generac-vtwin-hsb-wiring-0f7822.pdf",
+    "pages": "1",
+    "what": "0F7822 V-twin HSB wiring diagram (generac.com lookup for G0054160) - J1 checked"
    }
   ]
  },
@@ -121014,7 +121219,7 @@ const BRAND_SENSOR_MAPS = [
     "name": "Wire 68V - Coolant Temp (analog) (Max input 3.3 V)",
     "location": "PZ3 18-pin CAN/CURRENT/ANALOGS connector on the Power Zone 410 controller (harness side view)",
     "kind": "thermistor",
-    "spec": "Coolant temperature sensor (WTS): about 2.6 kohm at 70 F (21 C); resistance falls as it heats. Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%), 2.17 VDC at the controller -> High Temperature alarm E-code 1400. The manual prints the curve only as a graph (Figure 3-147), no table.",
+    "spec": "Coolant temperature sensor (WTS): PZ410 manual text: about 2.6 kohm at 70 F (21 C), resistance falls as it heats (the LC Evolution Table 3-12 for the Wire 68 sensor gives 3,511 ohms at 68 F / 2,795 at 77 F - the PZ410 manual prints only a graph). Controller supplies 3.3 VDC; overheating starts about 246 F (119 C) = 102 ohms (+/-2.6%), 2.17 VDC at the controller -> High Temperature alarm E-code 1400. The manual prints the curve only as a graph (Figure 3-147), no table.",
     "errorCodes": [
      "1400 High Temperature"
     ],
@@ -134863,6 +135068,105 @@ const BRAND_SENSOR_CHARTS = [
   "notes": "HW trip -43C/150C, SW trip -40C/135C; calibration 25C. -43C printed as -45.4F."
  },
  {
+  "id": "carrier-vna0-comp-motor-therm",
+  "name": "24VNA0/25VNA0 compressor motor thermistor",
+  "kind": "thermistor",
+  "columns": [
+   "C",
+   "F",
+   "kOhm"
+  ],
+  "rows": [
+   [
+    -43,
+    -45.4,
+    206.108
+   ],
+   [
+    -40,
+    -40,
+    168.433
+   ],
+   [
+    -30,
+    -22,
+    88.526
+   ],
+   [
+    -20,
+    -4,
+    48.538
+   ],
+   [
+    -10,
+    14,
+    27.663
+   ],
+   [
+    0,
+    32,
+    16.327
+   ],
+   [
+    10,
+    50,
+    9.951
+   ],
+   [
+    20,
+    68,
+    6.246
+   ],
+   [
+    25,
+    77,
+    5.0
+   ],
+   [
+    35,
+    95,
+    3.266
+   ],
+   [
+    45,
+    113,
+    2.184
+   ],
+   [
+    55,
+    131,
+    1.494
+   ],
+   [
+    65,
+    149,
+    1.042
+   ],
+   [
+    75,
+    167,
+    0.741
+   ],
+   [
+    85,
+    185,
+    0.536
+   ],
+   [
+    90,
+    194,
+    0.459
+   ],
+   [
+    95,
+    203,
+    0.394
+   ]
+  ],
+  "source": "carrier-24vna0-25vna0-service.pdf p.37 Table 8",
+  "notes": "SW trip 90C, HW trip 95C; calibration 25C."
+ },
+ {
   "id": "carrier-spt-0-200-psig",
   "name": "Carrier suction pressure transducer 0-200 psig (5 V)",
   "kind": "pressure",
@@ -135691,7 +135995,7 @@ const BRAND_SENSOR_CHARTS = [
    ]
   ],
   "source": "goodman-gszc18-service.pdf p.42",
-  "notes": "Table 'Ohm Reading of Communicating Outdoor Unit Sensors'. Text test: 10 kOhm +/-10% at 75F. One row printed 134F (not 131F) - kept as printed. Same table as the Daikin data chart daikin-comfortnet-outdoor-oat-oct-10k."
+  "notes": "Table 'Ohm Reading of Communicating Outdoor Unit Sensors'. Text test: 10 kOhm +/-10% at 75F. One row printed 134F - kept as printed, but likely a misprint for 131F: the table steps 9F and 2,986 ohm is the 131F (55C) value of the standard 10k curve. Same table as the Daikin data chart daikin-comfortnet-outdoor-oat-oct-10k."
  },
  {
   "id": "rheem-10k-defrost-sensor-8pt",
@@ -140853,7 +141157,7 @@ const BRAND_SENSOR_CHARTS = [
    [
     160,
     71,
-    5.9676,
+    null,
     1.806
    ],
    [
@@ -141332,7 +141636,7 @@ const BRAND_SENSOR_CHARTS = [
    ]
   ],
   "source": "gree-flexx-ultra-r32-service-manual-a.pdf p.154-156 (Appendix 1.3)",
-  "notes": "Source prints 71C as 5.9676 kOhm (typo between 8.5551 and 7.9913, kept). F converted from C."
+  "notes": "Source prints 71C as 5.9676 kOhm (typo between 8.5551 and 7.9913, kept). F converted from C. AUDIT: 71C kOhm blanked - source misprint 5.9676 (between 8.5551 at 70C and 7.9913 at 72C; gree-flexx-ultra-r32-service-manual-a.pdf p.155)."
  },
  {
   "id": "gree-zeno-50k-discharge",
