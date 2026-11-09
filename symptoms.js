@@ -210,15 +210,16 @@ const SYMPTOMS = [
  {
   "id": "s-lennox-zone-tstat-stuck-away",
   "equipment": "Other",
-  "title": "Lennox zoning thermostat stuck in Away mode (won't come out of Away) - check for loose data wires",
-  "summary": "Brackett field fix (James, Nov 2026): a Lennox zone thermostat was stuck in Away and would not go back to normal. The cause was data wires that had come loose. Re-landing them fixed it. Check the data wiring before changing settings or replacing parts.",
+  "title": "Lennox 17A30 zone sensor (zone stat) stuck in Away mode - check for loose D+ / D- data wires",
+  "summary": "Brackett field fix (James, Nov 2026): a Lennox 17A30 zone sensor (Smart Zoning / iHarmony zone stat, used with the S40 or S30) was stuck in Away and would not come out. The data wires had come loose. Re-landing them fixed it. Check the data wiring before changing settings or replacing the sensor.",
   "steps": [
    "Kill power to the system before touching the low-voltage terminals",
-   "Check the data wires at every end: i+ / i- between the thermostat (or Smart Hub) and the indoor and outdoor units, and D+ / D- on each zone sensor and at the damper control module",
+   "Pull the 17A30 off its backplate and check all 4 terminals: PWR, D+, D- and C. The D+ / D- pair is the data wiring",
    "Tug-test each conductor - a wire that pulls out or is only held by its insulation is the problem. Re-strip and re-land it tight, and check for broken strands inside the jacket",
-   "Look for splices, staples or a nicked jacket on the data runs and fix any you find",
-   "Restore power and give the thermostat a few minutes to re-establish communication, then confirm Away clears and each zone responds",
-   "If it still sticks in Away with tight wiring, check for communication alerts and work the S40 communication-error checks (no more than 0.7 VAC on any disconnected wire back to C), then the zone sensor addresses (each sensor its own zone 2/3/4)"
+   "Check the same zone's D+ / D- (and PWR / C) at the damper control module end too",
+   "Look for splices, staples or a nicked jacket on the run (max 197 ft of 18AWG from the damper control module; 22AWG shielded is recommended for D+ / D-)",
+   "Restore power, give the system a few minutes to re-establish communication, then confirm Away clears and the zone responds",
+   "If it still sticks with tight wiring, confirm the sensor's zone address is unique (2, 3 or 4 - zone 1 is the S40/S30 itself) and re-run the zone Re-Configure System procedure"
   ],
   "confidence": "common"
  },

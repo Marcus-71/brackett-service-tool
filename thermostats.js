@@ -35211,13 +35211,13 @@ const THERMOSTATS = [
   ],
   "troubleshooting": [
    {
-    "symptom": "Stuck in Away mode - will not come out of Away (zoned system)",
+    "symptom": "17A30 zone sensor (zone stat) stuck in Away mode - will not come out of Away",
     "causes": [
-     "Loose data wires (Brackett field fix, James Nov 2026: data wires had come loose)"
+     "Loose D+ / D- data wires at the 17A30 (Brackett field fix, James Nov 2026: data wires had come loose)"
     ],
     "fixes": [
-     "Power down, then check and re-land the data wires at every end (i+ / i- to the indoor and outdoor units, D+ / D- at zone sensors and the damper control module); tug-test each one",
-     "Power up, let communication come back, and confirm Away clears and each zone responds"
+     "Power down, pull the 17A30 off its backplate and tug-test PWR, D+, D- and C; re-land anything loose. Check the same zone's wires at the damper control module end too",
+     "Power up, let communication come back, and confirm Away clears and the zone responds"
     ]
    },
    {
@@ -35442,13 +35442,13 @@ const THERMOSTATS = [
   ],
   "troubleshooting": [
    {
-    "symptom": "Stuck in Away mode - will not come out of Away (zoned system)",
+    "symptom": "17A30 zone sensor (zone stat) stuck in Away mode - will not come out of Away",
     "causes": [
-     "Loose data wires (Brackett field fix, James Nov 2026: data wires had come loose)"
+     "Loose D+ / D- data wires at the 17A30 (Brackett field fix, James Nov 2026: data wires had come loose)"
     ],
     "fixes": [
-     "Power down, then check and re-land the data wires at every end (i+ / i- to the indoor and outdoor units, D+ / D- at zone sensors and the damper control module); tug-test each one",
-     "Power up, let communication come back, and confirm Away clears and each zone responds"
+     "Power down, pull the 17A30 off its backplate and tug-test PWR, D+, D- and C; re-land anything loose. Check the same zone's wires at the damper control module end too",
+     "Power up, let communication come back, and confirm Away clears and the zone responds"
     ]
    },
    {
