@@ -35213,7 +35213,7 @@ const THERMOSTATS = [
    {
     "symptom": "17A30 zone sensor (zone stat) stuck in Away mode - will not come out of Away",
     "causes": [
-     "Loose D+ / D- data wires at the 17A30 (Brackett field fix, James Nov 2026: data wires had come loose)"
+     "Loose D+ / D- data wires at the 17A30 (Brackett field fix, James Nov 2026: a new 17A30 did not fix it - the data wires had come loose)"
     ],
     "fixes": [
      "Power down, pull the 17A30 off its backplate and tug-test PWR, D+, D- and C; re-land anything loose. Check the same zone's wires at the damper control module end too",
@@ -35444,7 +35444,7 @@ const THERMOSTATS = [
    {
     "symptom": "17A30 zone sensor (zone stat) stuck in Away mode - will not come out of Away",
     "causes": [
-     "Loose D+ / D- data wires at the 17A30 (Brackett field fix, James Nov 2026: data wires had come loose)"
+     "Loose D+ / D- data wires at the 17A30 (Brackett field fix, James Nov 2026: a new 17A30 did not fix it - the data wires had come loose)"
     ],
     "fixes": [
      "Power down, pull the 17A30 off its backplate and tug-test PWR, D+, D- and C; re-land anything loose. Check the same zone's wires at the damper control module end too",

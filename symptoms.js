@@ -211,8 +211,9 @@ const SYMPTOMS = [
   "id": "s-lennox-zone-tstat-stuck-away",
   "equipment": "Other",
   "title": "Lennox 17A30 zone sensor (zone stat) stuck in Away mode - check for loose D+ / D- data wires",
-  "summary": "Brackett field fix (James, Nov 2026): a Lennox 17A30 zone sensor (Smart Zoning / iHarmony zone stat, used with the S40 or S30) was stuck in Away and would not come out. The data wires had come loose. Re-landing them fixed it. Check the data wiring before changing settings or replacing the sensor.",
+  "summary": "Brackett field fix (James, Nov 2026): a Lennox 17A30 zone sensor (Smart Zoning / iHarmony zone stat, used with the S40 or S30) was stuck in Away and would not come out. Putting on a new 17A30 did NOT fix it - the data wires had come loose. Re-landing them fixed it. Check the data wiring before changing settings or replacing the sensor.",
   "steps": [
+   "A new 17A30 will show the same thing if the wiring is the problem - check the wires before swapping the sensor",
    "Kill power to the system before touching the low-voltage terminals",
    "Pull the 17A30 off its backplate and check all 4 terminals: PWR, D+, D- and C. The D+ / D- pair is the data wiring",
    "Tug-test each conductor - a wire that pulls out or is only held by its insulation is the problem. Re-strip and re-land it tight, and check for broken strands inside the jacket",
