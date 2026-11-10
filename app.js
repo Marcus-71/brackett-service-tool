@@ -1400,7 +1400,7 @@ function renderAsk() {
   // "blower runs all the time" led with a Lennox rooftop (Gus 2026-08-17, four tries).
   const qBranded = ASK_BRAND_RE.test(normalizeQuery(rq));
   const branded = (it) => (it.brand || ASK_BRAND_RE.test(String(it.title).toLowerCase())) ? 1 : 0;
-  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askKindRank(units, a) - askKindRank(units, b) || (qBranded ? 0 : branded(a.it) - branded(b.it)) || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
+  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askGeneralTie(units, a, b) || (qBranded ? 0 : branded(a.it) - branded(b.it)) || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
 
   // ----- Narrowing question -----
   // After a broad first search, ask ONE follow-up (brand, then equipment type)
@@ -2102,6 +2102,32 @@ async function askRemotePassages(q, units, threshold, limit, skipIds) {
 // or a short display code ("goodman 5 flashes", "daikin ed") is a code question: code rows keep the
 // lead (Fable review 11-10). x = { it, sc, tsc }.
 const ASK_FLASH_RE = /^(\d{1,4}(\.\d{1,2})?|flash|flashes|flashing|blink|blinks|blinking)$/;
+// Plain two-letter words that are no display code in the app's data ("no cooling" led with code E45, 11-10).
+const ASK_SHORT_PLAIN = new Set(["no", "on", "in", "is", "it", "up", "to", "at", "my", "or", "if", "so", "do", "go", "an", "by", "me", "we"]);
+// Among general fix cards that all name what was asked, the one whose title holds the longest run of the
+// question's own words in order goes first ("heat pump stuck in heat" -> "Heat pump stuck in heat mode",
+// not the defrost card). Only breaks ties inside the general-card tiers.
+function askPhraseRun(units, x) {
+  const q = normalizeQuery(units.rq || "").split(/\s+/).filter(Boolean);
+  const t = " " + String(x.it.title).toLowerCase().replace(/[^a-z0-9]+/g, " ") + " ";
+  // Longest run first; on an equal run, the title where it sits nearer the start ("Stuck on / won't shut
+  // off" beats "Two-stage furnace stuck on low fire" for "stuck on").
+  let best = 0, pos = 999;
+  for (let i = 0; i < q.length; i++) for (let j = i + 1; j <= q.length; j++) {
+    const at = t.indexOf(" " + q.slice(i, j).join(" ") + " ");
+    if (at < 0) break;
+    if (j - i > best || (j - i === best && at < pos)) { best = j - i; pos = at; }
+  }
+  // On an equal run, only a title that STARTS with the whole question (2+ words) gets ahead; anything else
+  // falls through to the old order ("capacitor" keeps the how-to-test card, "stuck in defrost" the
+  // general defrost card).
+  return best * 10 + (best >= 2 && best === q.length && pos === 0 ? 1 : 0);
+}
+function askGeneralTie(units, a, b) {
+  const ra = askKindRank(units, a), rb = askKindRank(units, b);
+  if (ra !== rb || ra >= 0) return ra - rb;
+  return askPhraseRun(units, b) - askPhraseRun(units, a);
+}
 function askKindRank(units, x) {
   const it = x.it, r = ASK_KIND[it.kind].rank;
   if (it.kind !== "symptom" || units.kModel) return r;
@@ -2109,7 +2135,7 @@ function askKindRank(units, x) {
   if (units.codeToks.length) return r;
   const live = askLiveUnits(units);
   if (units.flashQ === undefined) units.flashQ = live.some(u => u.alts.some(a => ASK_FLASH_RE.test(a) ||
-    (/^[a-z]{1,2}\d?$/.test(a) && !ASK_BRAND_WORDS.has(a))));
+    (/^[a-z]{1,2}\d?$/.test(a) && !ASK_BRAND_WORDS.has(a) && !ASK_SHORT_PLAIN.has(a))));
   if (units.flashQ) return r;
   // A brand's card does not jump ahead of a question that names no brand ("rollout switch open").
   if (units.brandQ === undefined) units.brandQ = live.some(u => u.alts.some(a => ASK_BRAND_WORDS.has(a)));
@@ -2129,7 +2155,7 @@ function askTopItems(units, limit) {
   for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
   // beats a card that only mentions Evolution in a footnote), then answers before references.
-  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askKindRank(units, a) - askKindRank(units, b));
+  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askGeneralTie(units, a, b));
   const seen = new Set(), out = [];
   for (const x of scored) {
     const k = x.it.kind + "|" + x.it.title.replace(/\s+/g, " ").toLowerCase();
@@ -13020,7 +13046,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v401";
+const APP_VERSION = "v402";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
