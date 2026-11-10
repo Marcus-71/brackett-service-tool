@@ -798,7 +798,7 @@ const UNIT_SCENARIOS = [
   "brand": "Carrier",
   "equipment": "Condenser/Heat Pump",
   "title": "No heat pump heat, backup heat only — 25VNA4 Greenspeed",
-  "summary": "Conditions on the 25VNA4 that stop compressor heating while cooling or backup heat still work.",
+  "summary": "Conditions on the 25VNA4 that stop compressor heating and leave the house on backup heat only.",
   "steps": [
    "Check outdoor temperature first. The 25VNA4 heats up to 75°F outdoor and will START heating down to 0°F. Below 0°F it keeps running only if it was already running, until it hits a limit.",
    "53-41 / 53-42 'OST Open/Shorted - Backup Heat Only': the suction thermistor is needed for the heating EXV, so heat pump heating is locked out (cooling still allowed). The OST reads 47 on the status/checkout screen. Open = over 465 kohm, shorted = under 1 kohm, measured at the PCM connector.",

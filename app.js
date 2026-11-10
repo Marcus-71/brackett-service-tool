@@ -13046,7 +13046,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v402";
+const APP_VERSION = "v403";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
