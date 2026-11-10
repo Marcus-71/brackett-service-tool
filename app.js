@@ -2440,7 +2440,9 @@ function renderAskInstant(q, it, units, partial) {
   try { buls = askBulletins(units, q).slice(0, 2); } catch (e) { buls = []; }
   const bulLines = buls.map(b => `<div class="ask-instant-line bul-ask-line"><span class="ask-instant-label">Bulletin</span> <button type="button" class="ask-ai-cite bul-open${b.priority === "high" ? " bul-open-high" : ""}" data-bul="${escapeHtml(b.id)}">${escapeHtml(b.number)} - ${escapeHtml(b.title)}</button></div>`).join("");
   const wireBul = () => box.querySelectorAll(".bul-open").forEach(btn => { btn.onclick = () => openBulletinDetail(btn.dataset.bul, "ask instant"); });
-  const lines = it ? askInstantLines(it, units).filter(l => l.text && l.text.trim()) : [];
+  // A bulletin named by its own number is the answer - don't lead with a "closest match" card above it.
+  const byNumber = buls.length && buls.every(b => b._why === undefined);
+  const lines = it && !byNumber ? askInstantLines(it, units).filter(l => l.text && l.text.trim()) : [];
   if (!lines.length) {
     if (!buls.length) { box.innerHTML = ""; return; }
     bulTrackShown(buls, "ask instant", units && units.kModel);
@@ -4141,6 +4143,13 @@ function bulSerialStatus(b, serial) {
   const a = b.applies || {};
   const s = String(serial || "").toUpperCase().replace(/[\s-]+/g, "");
   if (!s) return null;
+  // A bulletin that lists separate serial blocks (gaps between them are NOT covered): [[from, to], ...], numeric.
+  if (Array.isArray(a.serialRanges) && a.serialRanges.length) {
+    if (!/^\d+$/.test(s)) return null;
+    const n = Number(s);
+    const hit = a.serialRanges.some(([f, t]) => n >= Number(f) && n <= Number(t || f));
+    return hit ? { ok: true, label: "Applies to this serial" } : { ok: false, label: "Check serial - not in the listed serials" };
+  }
   if (a.serialFrom || a.serialTo) {
     const carrier = /^(carrier|icp)$/.test(bulBrandKey(b.brand));
     const wwyy = (x) => carrier && /^\d{4}[A-Z]/.test(x) ? x.slice(2, 4) + x.slice(0, 2) + x.slice(4) : x;
@@ -4256,6 +4265,14 @@ function openBulletinDetail(id, where) {
 // question, or from the generator family the words picked ("next gen 3400 code" is Generac).
 function askBulletins(units, rq) {
   if (!units || typeof bulletinsFor !== "function") return [];
+  // Typed the bulletin's own number or doc number ("SIB A0013147290", "SIB25-12-AC"): show that bulletin
+  // (Vern 11/9 searched a SIB number and got nothing).
+  if (typeof BULLETINS !== "undefined" && Array.isArray(BULLETINS)) {
+    const flat = String(rq || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const key = (x) => String(x || "").toUpperCase().replace(/^SIB\s*|[^A-Z0-9]/g, "");
+    const byNo = flat ? BULLETINS.filter(b => [b.docNo, b.number].some(x => { const k = key(x); return k.length >= 6 && flat.includes(k); })) : [];
+    if (byNo.length) return byNo;
+  }
   const codes = units.codeToks === undefined ? (units.codeToks = askCodeToks(units)) : units.codeToks;
   const fams = units.kFams || (units.kFam ? [units.kFam] : []);
   let brand = (normalizeQuery(rq || "").match(ASK_BRAND_RE) || [])[1] || "";
@@ -12955,7 +12972,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v394";
+const APP_VERSION = "v395";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

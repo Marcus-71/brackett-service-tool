@@ -604,6 +604,47 @@ const BULLETINS = [
     source: "Generac SIB16-01-I90N (10000002093) Rev A, Jun 2016"
   },
   {
+    id: "gen-sib-a0013147290", brand: "Generac", number: "SIB A0013147290", docNo: "A0013147290", rev: "B", date: "2026-11", type: "Service",
+    title: "Rework pushrod guide plates and pushrods on the 817 cc engine (14 / 18 kW Next Gen)",
+    applies: { genFamilies: ["gen-generac-next-gen-10-28"], modelRe: ["^G?00(7258|7259|7323|7324)0?$"],
+      serialRanges: [
+      ["3019604370", "3019604871"], ["3019677986", "3019677989"], ["3019677991", "3019678235"], ["3019949237", "3019949486"],
+      ["3019949495", "3019949744"], ["3019653181", "3019653344"], ["3019653346", "3019653360"], ["3019653606", "3019653785"],
+      ["3019653825", "3019654004"], ["3019655865", "3019655944"], ["3019655961", "3019655983"], ["3019655985", "3019656140"],
+      ["3019678889", "3019679018"], ["3019679020", "3019679053"], ["3019679055", "3019679068"], ["3019679070", "3019679071"],
+      ["3019679073", "3019679148"], ["3019679151", "3019679238"], ["3019679240", "3019679410"], ["3019600186", "3019600242"],
+      ["3019600244", "3019600244"], ["3019600247", "3019600435"], ["3019609410", "3019609518"], ["3019609522", "3019609631"],
+      ["3019609633", "3019609634"], ["3019609636", "3019609660"], ["3019953833", "3019953835"], ["3019953837", "3019953837"],
+      ["3019953844", "3019953844"], ["3019953846", "3019953849"], ["3019953851", "3019953851"], ["3019953853", "3019953853"],
+      ["3019953855", "3019953860"], ["3019953864", "3019953864"], ["3019953866", "3019953869"], ["3019953871", "3019953884"],
+      ["3019953887", "3019953887"], ["3019953895", "3019953913"], ["3019953915", "3019953916"], ["3019953919", "3019953919"],
+      ["3019953921", "3019954062"], ["3019954064", "3019954082"], ["3019954087", "3019954135"], ["3019954137", "3019954149"],
+      ["3019954151", "3019954166"], ["3019954168", "3019954210"], ["3019954212", "3019954212"], ["3019954216", "3019954216"],
+      ["3019954220", "3019954250"], ["3019954252", "3019954336"], ["3019653378", "3019653577"], ["3019682226", "3019682525"],
+      ["3019682530", "3019682770"], ["3019682772", "3019682829"], ["3019682831", "3019682937"], ["3019682939", "3019682960"],
+      ["3019682962", "3019683130"], ["3019683135", "3019683434"]
+      ] },
+    appliesText: "Only these Next Gen 817 cc units: G0072580 (14 kW), G0072590 (18 kW), G0073230 (14 kW with switch) and G0073240 (18 kW with switch), and only the serial numbers listed in the bulletin's Appendix A (the serial check here uses that list). Other 10-28 kW Next Gen units and serials outside the list are not covered.",
+    summary: "Pushrods on some 817 cc engines can sit out of line and wear the valve train, causing abnormal engine noise and lost performance. Generac wants affected units fixed before they fail: replace both pushrod guide plates and all 4 pushrods with kit A0013156384.",
+    steps: [
+      "Parts / tools: kit A0013156384 (guide plate replacement, includes lubricant A0013178429), new rocker cover gaskets, an inch-pound torque wrench.",
+      "Make safe: generator OFF at the controller, pull the fuse, disconnect the battery.",
+      "Remove the air box: cover off, filter out, the 2 bolts inside the base that hold it to the mixer (the mixer is then loose - don't damage it), the base bolts at the head, and ease the breather hose off.",
+      "Rocker covers off both sides (throw the gaskets away), plug boots and both spark plugs out.",
+      "Remove all 4 rocker studs and rocker arms; set the old guide plates and pushrods aside. Mark each rocker arm and stud so it goes back in the same spot. Tag the old parts with the generator serial for return.",
+      "Front cylinder to TDC on the intake stroke. Check all 4 valve stem tips and the rocker contact areas - they must be flat with no wear. Any wear: STOP and call Generac tech support from the site, 800-883-7535.",
+      "Front cylinder: lube the pushrod bottoms, fit 2 new pushrods seated in their lifter cups, fit the new guide plate, apply the kit lubricant where pushrods meet the plate and at the rocker contact, fit the rocker arms, torque studs 70-80 in-lb (7.5-9.1 Nm).",
+      "Back cylinder to TDC on the intake stroke and repeat the same way, studs 70-80 in-lb (7.5-9.1 Nm). (The bulletin's back-cylinder note says 'valve stems' seated in the lifter cup - it means the pushrods.)",
+      "Flashlight check: all 4 pushrods seated in the lifters.",
+      "Rocker covers back on with NEW gaskets. The bulletin prints the torque as '57.5 in-lb (6.5-7.5 Nm)' - those two numbers don't match (6.5-7.5 Nm is about 58-66 in-lb); call tech support if in doubt.",
+      "Spark plugs 15-22 ft-lb (20-30 Nm), boots on. Air box back in reverse order: air box to mixer bolts 7.4-8.5 ft-lb (10-11.5 Nm), air box mounting bolts 4.8-5.5 ft-lb (6.5-7.5 Nm).",
+      "Reconnect, start it and confirm it runs right.",
+      "Warranty: new claim in GENService with A0013147290 as the primary failed part, comment 'SIB Guide Plate Replacement'. Pays 1 hr labor + 1 trip charge; list A0013156384 under purchased parts if bought. Return the old guide plates and pushrods bagged and tagged with the serial and a copy of the claim to Generac Warranty Parts Return, Waukesha WI."
+    ],
+    priority: "high", confidential: true,
+    source: "Generac SIB A0013147290 Rev B, Nov 2026 (GENservice)"
+  },
+  {
     id: "gen-fieldpro-offline", brand: "Generac", number: "Field Pro Offline Mode Preparation", docNo: "", rev: "", date: "", type: "Technical",
     title: "Field Pro: prepare offline access before a no-signal site visit",
     applies: { genFamilies: BUL_GEN_NEXTGEN, controllers: ["Power Zone 200"] },
