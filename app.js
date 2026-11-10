@@ -4347,6 +4347,7 @@ function bulletinsHtml(list, opts) {
         <p class="bul-sum">${escapeHtml(b.summary || "")}</p>
         ${steps}
         <div class="bul-applies"><b>Applies to:</b> ${escapeHtml(b.appliesText || "")}</div>
+        ${bulSerialListHtml(b)}
         ${src}
       </div>
     </details>`;
@@ -4357,6 +4358,30 @@ function bulletinsHtml(list, opts) {
     : "";
   return `<section class="bul-card" aria-label="Service bulletins for this unit"><div class="bul-head">📌 Bulletins for this unit (${list.length})</div>${items}${more}</section>`;
 }
+// v405 (Andy 11-10: "not listing serial range on bulletin a0013147290"): a bulletin that covers separate
+// serial blocks lists every block (lowest first, a fold so the card stays short), and any bulletin with a
+// serial limit gets a box to type the plate serial and see in / out - from Ask there is no scanned serial.
+function bulSerialListHtml(b) {
+  const a = b.applies || {};
+  const blocks = Array.isArray(a.serialRanges) ? a.serialRanges.slice().sort((x, y) => Number(x[0]) - Number(y[0])) : [];
+  if (!blocks.length && !a.serialFrom && !a.serialTo) return "";
+  const check = `<label class="bul-sn-check">Check a serial: <input type="text" inputmode="numeric" autocomplete="off" class="bul-sn-input" data-bul="${escapeHtml(b.id)}" placeholder="Serial from the plate"></label><span class="bul-sn-result" aria-live="polite"></span>`;
+  if (!blocks.length) return `<div class="bul-sn">${check}</div>`;
+  const rows = blocks.map(([f, t]) => `<li>${escapeHtml(String(f))}${t && String(t) !== String(f) ? " - " + escapeHtml(String(t)) : ""}</li>`).join("");
+  return `<div class="bul-sn">${check}
+    <details class="bul-sn-list"><summary>Serial numbers covered - ${blocks.length} blocks (${escapeHtml(String(blocks[0][0]))} to ${escapeHtml(String(blocks[blocks.length - 1][1] || blocks[blocks.length - 1][0]))}, gaps NOT covered)</summary><ol>${rows}</ol></details></div>`;
+}
+document.addEventListener("input", (e) => {
+  const el = e.target;
+  if (!el || !el.classList || !el.classList.contains("bul-sn-input")) return;
+  const b = (typeof BULLETINS !== "undefined" ? BULLETINS : []).find(x => x.id === el.dataset.bul);
+  const out = el.parentNode && el.parentNode.nextElementSibling;
+  if (!b || !out) return;
+  const v = el.value.trim();
+  const st = v.replace(/[\s-]/g, "").length >= 6 ? bulSerialStatus(b, v) : null;
+  out.className = "bul-sn-result" + (st ? (st.ok === true ? " ok" : st.ok === false ? " out" : "") : "");
+  out.textContent = !v ? "" : st ? st.label : (v.replace(/[\s-]/g, "").length < 6 ? "" : "Can't tell from this serial - check the list");
+});
 // A tap that opens a collapsed bulletin is worth a line too (toggle does not bubble - capture it).
 // Opening the "N more" fold logs those bulletins as shown.
 document.addEventListener("toggle", (e) => {
@@ -13096,7 +13121,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v404";
+const APP_VERSION = "v405";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -2136,3 +2136,13 @@ body.inv-cam-open { overflow: hidden; }
   .home-tiles .tile-sub { font-size: 0.74rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .home-tiles .tile-ask .tile-sub, .home-tiles .tile-scanner .tile-sub { font-size: 0.82rem; }
 }
+/* v405: bulletin serial list + check box */
+.bul-sn { margin-top: 0.4rem; font-size: 0.85rem; }
+.bul-sn-check { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; color: var(--text-dim); }
+.bul-sn-input { flex: 1 1 10rem; min-width: 0; padding: 0.35rem 0.5rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
+.bul-sn-result { display: block; font-weight: 700; margin-top: 0.2rem; color: var(--text-dim); }
+.bul-sn-result.ok { color: var(--ok); }
+.bul-sn-result.out { color: var(--danger); }
+.bul-sn-list { margin-top: 0.3rem; }
+.bul-sn-list summary { cursor: pointer; color: var(--text); overflow-wrap: anywhere; }
+.bul-sn-list ol { margin: 0.3rem 0 0 1.2rem; padding: 0; columns: 2 9rem; font-variant-numeric: tabular-nums; }
