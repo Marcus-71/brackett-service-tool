@@ -105,6 +105,20 @@ const BULLETINS = [
     source: "Generac support articles 'Do I need a different battery tray when using the AGM 30L battery' (Jul 2026) and 'What battery do I need'; Next Gen dealer manual A0004542981 Rev E (Aug 2026) p.17, p.25"
   },
   {
+    id: "gen-air-filter-a0012860622", brand: "Generac", number: "New product announcement (air filter)", docNo: "A0012860622", rev: "", date: "2026-11", type: "Product",
+    title: "New Guardian home standby air filter A0012860622 - 0J8478S still fits Next Gen",
+    applies: { genFamilies: BUL_GEN_NEXTGEN },
+    appliesText: "Generac says the new filter is for Guardian home standby generators in general, without listing models. The one fitment it confirms is that the current filter 0J8478S still works on Next Generation units.",
+    summary: "Generac released a new home standby air filter, A0012860622, built for a wider range of climates. It is in service parts now and goes into Guardian service kits starting the week of Feb 15, 2027. The current 0J8478S filter is still OK on Next Gen units, because the Next Gen fuel and ignition control adjusts for conditions on its own.",
+    steps: [
+      "Either filter is fine on a Next Gen: 0J8478S (the current one in the parts lists) or the new A0012860622.",
+      "Tune-up kits ordered from mid-Feb 2027 on will come with the new filter.",
+      "Use genuine Generac filters."
+    ],
+    priority: "info",
+    source: "Generac dealer email, New Product Announcement: New Guardian Home Standby Air Filter, Nov 2026"
+  },
+  {
     id: "gen-fw-v14901-2670", brand: "Generac", number: "Fleet alert: firmware v14901", docNo: "", rev: "", date: "2026-07", type: "Service",
     title: "Next Gen firmware v14901 (from 7/15/26) can set a 2670 CANBus alarm",
     applies: { genFamilies: BUL_GEN_NEXTGEN, controllers: ["Power Zone 200"], codes: ["2670"] },
@@ -639,10 +653,13 @@ const BULLETINS = [
       "Rocker covers back on with NEW gaskets. The bulletin prints the torque as '57.5 in-lb (6.5-7.5 Nm)' - those two numbers don't match (6.5-7.5 Nm is about 58-66 in-lb); call tech support if in doubt.",
       "Spark plugs 15-22 ft-lb (20-30 Nm), boots on. Air box back in reverse order: air box to mixer bolts 7.4-8.5 ft-lb (10-11.5 Nm), air box mounting bolts 4.8-5.5 ft-lb (6.5-7.5 Nm).",
       "Reconnect, start it and confirm it runs right.",
-      "Warranty: new claim in GENService with A0013147290 as the primary failed part, comment 'SIB Guide Plate Replacement'. Pays 1 hr labor + 1 trip charge; list A0013156384 under purchased parts if bought. Return the old guide plates and pushrods bagged and tagged with the serial and a copy of the claim to Generac Warranty Parts Return, Waukesha WI."
+      "Warranty: new claim in GENService with A0013147290 as the primary failed part, comment 'SIB Guide Plate Replacement'. Pays 1 hr labor + 1 trip charge; list A0013156384 under purchased parts if bought. Return the old guide plates and pushrods bagged and tagged with the serial and a copy of the claim to Generac Warranty Parts Return, Waukesha WI.",
+      "Do NOT charge the customer - it is a warranty field campaign. Order the kit (A0013156384) through Generac 360.",
+      "Not installed yet? Check the serial against the list first. If it is listed, do this repair BEFORE installing the unit.",
+      "Generac notifies affected owners on Mon Nov 16, 2026. Owners with a Fleet dealer are told to call that dealer; others are sent to a Generac.com service request or the dealer locator, so expect calls from owners we didn't sell. If we monitor an affected unit in Fleet, call that customer now to book it."
     ],
     priority: "high", confidential: true,
-    source: "Generac SIB A0013147290 Rev B, Nov 2026 (GENservice)"
+    source: "Generac SIB A0013147290 Rev B, Nov 2026 (GENservice); Generac dealer email on the field campaign, Nov 2026"
   },
   {
     id: "gen-fieldpro-offline", brand: "Generac", number: "Field Pro Offline Mode Preparation", docNo: "", rev: "", date: "", type: "Technical",
