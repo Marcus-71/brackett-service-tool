@@ -13825,6 +13825,7 @@ const SYMPTOMS = [
    "Time it: from the moment the burners light, count the seconds until the blower starts. Compare that against the fan-on delay in the installation manual for that model.",
    "Check whether the blower is starting on a fan-on delay from the control board at all, or whether the thermostat has G energized during the heat call and is running the blower straight through.",
    "On a communicating or smart thermostat, check whether fan circulation or a fan-with-heat setting is turning the blower on independently of the furnace's own delay.",
+   "Check the thermostat's heat type setting. A thermostat set up for electric heat turns the fan (G) on with the heat call, so the blower starts cold. On a gas furnace set it to gas (fan controlled by the furnace) and let the board run the blower-on delay. This is common right after a thermostat change.",
    "Look at the control board DIP switches or configuration for the heat blower-on delay and compare against the factory setting in the manual. Many boards have adjustable off delay but a fixed on delay - if the on delay is fixed and it is starting early, something is energizing the blower externally.",
    "Verify the blower is not running on the cooling speed tap during heat, which moves too much air over a heat exchanger that has just started.",
    "Measure the temperature rise across the furnace once it stabilizes. If the rise is at the low end or below the rating plate range, the airflow is too high for the input and the complaint will not go away by delay alone.",
@@ -21168,5 +21169,111 @@ const SYMPTOMS = [
   ],
   "safety": "Turn the power off at the equipment before you pull the thermostat off its base or touch the board fuse.",
   "confidence": "common"
+ },
+ {
+  "id": "s-furnace-name-the-step",
+  "equipment": "Gas Furnace",
+  "title": "Gas furnace sequence of operation - furnace won't heat: watch one cycle and name the step it stopped on",
+  "summary": "Every gas furnace with an inducer and a hot surface igniter runs the same steps in the same order. Count the board's LED flashes first, then start a heat call and watch. The step it stops on tells you which part to check. Timings differ by model - the exact seconds are in that furnace's manual.",
+  "steps": [
+   "Before you cut power, count the LED flashes and read the code label on the blower door. Turning the power off clears the stored code on most boards. Look the code up in Error Codes.",
+   "Start a heat call and watch. Step 1: the thermostat closes R to W - prove 24 V between W and C at the board. No 24 V there is a thermostat or wiring problem, not a furnace problem.",
+   "Step 2: the board checks its safeties before anything moves - limit and rollout closed, pressure switch OPEN. If nothing starts at all, see 'Furnace does nothing on a heat call, inducer never starts - pressure switch stuck closed' and 'Inducer motor won't start / furnace does nothing on a heat call'.",
+   "Step 3 and 4: the inducer starts and the pressure switch closes to prove draft. Inducer runs but nothing else happens = the switch is not closing. On a 90%+ furnace check the condensate drain, trap and hoses first.",
+   "Step 5 and 6: a short pre-purge, then the igniter glows. No glow = check for voltage at the igniter plug during warm-up, then ohm the igniter cold with the power off.",
+   "Step 7: the gas valve opens and the burners light across to the last burner. Igniter glows but no flame = check for 24 V at the gas valve, that the gas is on, and the inlet pressure.",
+   "Step 8: the flame sensor proves the flame and the igniter shuts off. Burners light, run a few seconds and drop out = a flame sensing problem, not a gas problem. Read the flame signal in microamps, clean the rod, check the ground.",
+   "Step 9: the blower starts after a short delay so the heat exchanger warms up first (about 30 seconds after flame on many boards). Burners stay lit but the blower never starts = blower motor, capacitor, or the board's heat blower output.",
+   "Step 10: steady heat. Measure the temperature rise - it has to land inside the range on the rating plate. Gas shuts off while the blower keeps running, then it relights = it is cycling on the high limit, which is nearly always low airflow.",
+   "When the call ends: gas off first, the inducer runs on briefly to clear the flue gas, and the blower runs on to cool the heat exchanger. Both are normal."
+  ],
+  "safety": "If you smell gas, stop and follow the gas leak procedure. Never jumper a safety switch to make the burners run.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-furnace-pressure-switch-stuck-closed",
+  "equipment": "Gas Furnace",
+  "title": "Furnace does nothing on a heat call, inducer never starts - pressure switch stuck closed",
+  "summary": "Before it starts the inducer, the board checks that the pressure switch is OPEN. A switch that is already closed with the inducer off can't be trusted to prove draft, so the board refuses to start. It looks like a dead board or a dead inducer, but it is neither. Many boards flash a 'pressure switch closed with inducer off' code for it.",
+  "steps": [
+   "Count the LED flashes before you cut power and read the door label - look for a code that means the pressure switch is closed (or stuck closed) with the inducer off.",
+   "Prove the heat call: 24 V between W and C at the board.",
+   "With the inducer NOT running, power off, pull one wire off the pressure switch and ohm across the switch. It should read open. Continuity with no draft on it = the switch is stuck closed.",
+   "If the switch reads open off the furnace but the board still sees it closed, look for the two switch wires shorted together or a jumper somebody left across the switch.",
+   "Pull the hose and check it and the switch port for water. Water trapped in the hose or the switch body can hold the diaphragm over. Clear it and find out why water got there - drain, trap, hose routed with a low spot.",
+   "A two-stage furnace has two pressure switches. Check both.",
+   "Replace a switch that stays closed with no draft. Use the exact part for that furnace - the setpoint is printed on the switch.",
+   "Then run a full cycle: the inducer should start, the switch should close, and the furnace should go on to ignition."
+  ],
+  "safety": "Do not leave a jumper on a pressure switch. It is the only thing proving the flue gas is going out the vent.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-furnace-pressure-switch-measure-at-switch",
+  "equipment": "Gas Furnace",
+  "title": "Pressure switch won't close - measure the draft at the switch with a manometer before you replace anything",
+  "summary": "The inducer runs but the pressure switch stays open, or it opens mid-cycle. A manometer teed in right at the switch tells you which it is: not enough draft (drain, vent, inducer), a bad hose, or a bad switch. Measuring only at the inducer port can fool you, because a cracked or wet hose reads fine at the port and short at the switch.",
+  "steps": [
+   "Read the setpoint printed on the pressure switch (inches of water column). That is the draft the switch needs to close.",
+   "Tee a manometer into the hose right at the switch, so the switch and the manometer see the same pressure. Start a heat call and read it with the inducer running.",
+   "Reading is well past the setpoint and the switch still stays open = the switch itself is bad. You have proven it - replace it with the exact part.",
+   "Reading at the switch is short of the setpoint = now tee in at the inducer or collector box port and compare.",
+   "Good at the port but low at the switch = the hose. Look for a crack, a loose fit, water in a low spot, or a plugged port fitting.",
+   "Low at the port too = the draft really is low. On a 90%+ furnace check the condensate drain, trap and collector box for water first, then the vent and intake for a blockage, a sag holding water, or ice at the termination.",
+   "Drain, vent and intake all clear and the draft is still low = check the inducer: wheel loose or dirty, motor slow, gasket leaking.",
+   "Gurgling in the vent, or it only fails in very cold weather, points to water lying in the vent or a frozen drain or termination.",
+   "After the repair, write down the reading at the switch and compare it to the setpoint so the next tech has a number."
+  ],
+  "safety": "Never jumper the pressure switch and run the burners to test it. With it jumped, a blocked vent or a full drain puts flue gas into the house. See 'Found a limit, rollout, or pressure switch jumpered out'.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-furnace-runs-on-after-heat-normal",
+  "equipment": "Gas Furnace",
+  "title": "Furnace keeps running a minute or two after the heat shuts off - is something stuck?",
+  "summary": "Usually nothing is wrong. When the heat call ends the gas shuts off first. The inducer runs on for a short post-purge to clear the flue gas, and the blower runs on for the blower-off delay to pull the last heat out of the heat exchanger. Both are on purpose.",
+  "steps": [
+   "Watch the end of a cycle. The burners should go out as soon as the thermostat is satisfied.",
+   "The inducer then runs a short post-purge and stops. On a Daikin DM96SN, for example, that is 15 seconds.",
+   "The blower runs on for the blower-off delay and stops. On that same Daikin it is 90 seconds from the factory, adjustable from 30 to 180. Other brands differ - the setting is a jumper or DIP switch on the board, listed in the furnace's manual.",
+   "If the customer feels cool air at the end of the cycle, shorten the blower-off delay. If the furnace is leaving heat behind, lengthen it.",
+   "It IS a fault if the blower never shuts off. Check that the thermostat fan is on Auto and not On, look for a circulate setting, then check for an open limit or rollout - most boards run the blower non-stop with the gas off when a limit is open. See 'Blower runs continuously with no heat - flame rollout control open'.",
+   "It IS a fault if the burners stay lit after the thermostat is satisfied. Check for 24 V still on W (thermostat or wiring), and if W is dead and the gas valve is still open, shut the gas off and replace the valve."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-furnace-lp-not-converted",
+  "equipment": "Gas Furnace",
+  "title": "Propane (LP) house - big lazy yellow flames and soot: furnace still set up for natural gas",
+  "summary": "A furnace shipped for natural gas and connected to propane without the conversion kit is badly over-fired: large, lazy yellow flames, soot around the burners, and carbon monoxide. Turning the manifold pressure down does not fix it. It needs the LP conversion kit for that furnace.",
+  "steps": [
+   "Shut the furnace off. Do not leave it running in this condition.",
+   "Confirm the fuel: a propane tank outside and no gas meter. Then look for the LP conversion label on the furnace and check the size stamped on the burner orifices against the conversion kit instructions.",
+   "Get the LP conversion kit listed for that exact furnace model. A kit is normally the burner orifices plus a regulator spring or a different gas valve setup - follow the kit instructions, not memory. Two-stage and modulating furnaces often have their own kit.",
+   "Install the kit and put the conversion label on the furnace.",
+   "Check inlet pressure with the furnace running, then set the manifold pressure to the LP value on the rating plate or in the kit instructions. LP manifold pressure is commonly about 10 in. w.c. - go by the plate.",
+   "Clean the soot off the burners and look into the heat exchanger. Heavy soot inside means the heat exchanger and the vent need cleaning before it goes back in service.",
+   "Run a combustion test and write down the O2, CO and stack temperature. Check ambient CO in the house.",
+   "At elevation, check the manual for a high-altitude LP orifice size."
+  ],
+  "safety": "A sooting furnace makes carbon monoxide. Shut it down, air the house out if a CO alarm has sounded, and do not relight it until it has been converted and tested.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-furnace-vent-foam-core-pvc",
+  "equipment": "Gas Furnace",
+  "title": "Can I vent a 90%+ furnace with foam-core (cellular core) PVC?",
+  "summary": "Only if that furnace's installation manual lists it. Some manuals allow cellular-core (foam-core) PVC for the vent and some do not, and local code can be stricter than the manual. PVC is not just PVC - check the approved vent material list for the furnace you are installing before you glue anything.",
+  "steps": [
+   "Open the installation manual for that exact furnace (Manuals, or the furnace's card) and find the vent and combustion air pipe section. It has a table of approved pipe and fitting materials by standard number.",
+   "Read the standard printed on the pipe. Solid-wall Schedule 40 PVC is usually marked ASTM D1785. Cellular-core (foam-core) pipe is marked ASTM F891. Use it only if that standard is in the manual's table for the vent.",
+   "Check what the manual says about each pipe separately. Some allow a material on the combustion air intake that they do not allow on the exhaust.",
+   "Use the primer and cement the manual calls for, matched to the pipe material.",
+   "Check the local code and the inspector's rules. If they are stricter than the manual, they win.",
+   "If you can't confirm it in the manual, don't use it. Get solid-wall pipe that is on the list.",
+   "Whatever the material: slope the vent back toward the furnace (commonly 1/4 inch per foot) so condensate drains back to the trap, support it so it can't sag, and stay inside the maximum length and elbow count in the manual."
+  ],
+  "confidence": "verify"
  }
 ];
