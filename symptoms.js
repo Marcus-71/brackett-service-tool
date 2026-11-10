@@ -55,7 +55,7 @@ const SYMPTOMS = [
  {
   "id": "s-blank-thermostat",
   "equipment": "Other",
-  "title": "Thermostat blank / unresponsive",
+  "title": "Thermostat blank / no power / unresponsive",
   "summary": "Thermostat display is off or not responding to input.",
   "steps": [
    "Check/replace batteries if battery powered",
@@ -517,7 +517,7 @@ const SYMPTOMS = [
  {
   "id": "s-hp-defrost-issues",
   "equipment": "Condenser/Heat Pump",
-  "title": "Heat pump won't defrost / stuck in defrost / ices up repeatedly",
+  "title": "Heat pump not defrosting / won't defrost / stuck in defrost / ices up repeatedly",
   "summary": "Outdoor coil ices over and doesn't clear on its own, or the unit gets stuck running a defrost cycle.",
   "steps": [
    "Check the defrost sensor/thermistor on the outdoor coil for correct resistance and secure mounting",
@@ -21115,5 +21115,58 @@ const SYMPTOMS = [
   ],
   "safety": "Never jumper or bypass a rollout switch, and do not just reset it and leave. A trip means flame left the burner box - that is a fire and CO hazard. Test for CO before you put the furnace back in service.",
   "confidence": "manual"
+ },
+ {
+  "id": "s-what-size-capacitor",
+  "equipment": "Electrical",
+  "title": "What size capacitor do I need - picking the right MFD (µF) and voltage",
+  "summary": "The capacitor has to match what the motor calls for: the same MFD (µF) as rated, and a voltage rating the same or higher. Get the rated value from the equipment, not only from the old can - a previous repair may have put the wrong one in.",
+  "steps": [
+   "Power off at the disconnect, lock it out, and discharge the capacitor through a resistor before you touch the terminals.",
+   "Read the MFD (µF) and voltage printed on the installed capacitor. A dual run capacitor has two values: HERM (compressor) and FAN, for example 45+5 µF, plus one voltage.",
+   "Check that against what the equipment calls for: the wiring diagram on the unit, the compressor or motor data tag, and for the fan the motor rating plate. If the can and the equipment disagree, go by the equipment - the can may be from a wrong earlier repair. If you can't confirm the value, get it from the manufacturer.",
+   "MFD: match the rated value. Never go lower. Trade guidance allows only a small tolerance above rated, not a bigger value because it is what is on the truck. The tolerance printed on the can is commonly ±6% - read the label.",
+   "Voltage: the same or HIGHER is fine (440 V where a 370 V was), never lower. A can marked 370/440 V suits either.",
+   "Don't have the exact value? Run capacitors in parallel add: a 60+5 with a 10 µF run cap across HERM and C gives the compressor 70 µF. Use run capacitors only, never a start capacitor. Wiring in series does not add up.",
+   "Strap the new can down so it can't vibrate. Then start the unit and check motor amps against the nameplate FLA, and the capacitor under load with an amp clamp if you have no cap meter."
+  ],
+  "safety": "A run capacitor can hold a charge with the power off. Discharge it through a resistor before handling, and on inverter units prove the DC bus is at zero first (see the unit's card).",
+  "confidence": "common"
+ },
+ {
+  "id": "s-r410a-superheat-check",
+  "equipment": "Condenser/Heat Pump",
+  "title": "R-410A superheat - how to check charge by superheat and what target to use",
+  "summary": "Superheat is the charging method for a fixed orifice (piston) system, read against the manufacturer's superheat chart for the outdoor temperature and the indoor wet bulb. On a TXV system you charge by subcooling, and superheat only confirms the valve is working. On an EEV or inverter system follow the unit's own charging procedure. There is no one superheat number for every R-410A system - the target comes from the chart.",
+  "steps": [
+   "Know the metering device first. Piston / fixed orifice: charge by superheat. TXV: charge by subcooling to the data plate or manual, then use superheat to check the valve. EEV / inverter: use the procedure in the unit's manual.",
+   "Set airflow first - the charts assume correct airflow (the Ameristar chart: 400 CFM per ton, 375-425 acceptable). Fix filters, coil and blower speed before you move any charge.",
+   "Run in cooling until pressures settle - Goodman says at least 10 minutes, the Ameristar manual 20; the unit's own manual wins. Some charts also set limits (Ameristar: outdoor above 60 F, indoor 70-100 F).",
+   "Measure suction pressure at the service valve, and suction line temperature on clean bare copper near it - probe tight, insulated, out of sun and fan discharge. A number that jumps around or goes negative is usually the probe.",
+   "Superheat = suction line temperature minus the saturation temperature for the suction pressure. For blends read the dew point column.",
+   "Get the target from the unit's superheat chart: outdoor dry bulb near the coil, and indoor wet bulb (and dry bulb) at the return. Example from one maker's chart (Ameristar M4AC3): 95 F outdoor with 80/67 F indoor = 9 F target; the same outdoor with a hot 95/79 F indoor = 29 F. Look up the model in Charging in this app for its own chart.",
+   "Superheat too high on a piston system: add charge in small amounts. Too low: remove charge. Let it settle between adjustments, then confirm with subcooling at the liquid line.",
+   "On a TXV system, read superheat and subcooling together to find the fault - see the superheat / subcooling combination cards (high-high, low-low, high-low, low-high)."
+  ],
+  "safety": "Wear gloves and eye protection on gauge hoses - liquid R-410A causes frostbite. Keep hands clear of the condenser fan while the unit runs.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-smart-thermostat-no-power",
+  "brand": "ecobee",
+  "equipment": "Thermostat",
+  "title": "ecobee / Nest / smart thermostat no power or blank screen - prove 24 V at R and C",
+  "summary": "A smart thermostat runs on the 24 VAC from the furnace or air handler. A blank screen, a no-power error (Nest E73 / E74 / E195) or an ecobee that keeps rebooting and calibrating means that 24 V is missing or dropping out. Find what is cutting it.",
+  "steps": [
+   "Check the furnace or air handler breaker and service switch, and that the blower door is on - an open door switch kills the 24 V.",
+   "At the thermostat base, measure 24 VAC between R (Rc / Rh) and C. A steady 24 V and still blank: reseat the stat on its base. Nothing: go to the equipment. 24 V now but it keeps rebooting: the power is dropping out at times - see the ecobee step.",
+   "At the equipment board, check for 24 V at R and C and check the low-voltage fuse on the board (often a small automotive-style fuse). A blown fuse means a short - look for a nail through the thermostat wire, bare wires touching, or a shorted accessory. Find it before you replace the fuse.",
+   "No C wire? Without a true C the stat steals power and can go dead, chatter relays or drain its battery. Use a spare conductor in the cable, or the maker's adapter (ecobee PEK, Nest Power Connector).",
+   "ecobee rebooting or 'Calibrating' after a reboot: something keeps cutting the 24 V - a float switch or condensate pump in cooling, the furnace high limit in heating, or an undersized transformer.",
+   "Nest no-power codes: E73 = no power to Rc, E74 = no power to Rh (check the R wiring at the stat and the equipment). Nest and ecobee will not run on a millivolt system (no 24 V transformer) - that needs a millivolt-rated thermostat.",
+   "Power is back but it still won't call: open the stat's own card in Thermostats for its wiring and settings."
+  ],
+  "safety": "Turn the power off at the equipment before you pull the thermostat off its base or touch the board fuse.",
+  "confidence": "common"
  }
 ];

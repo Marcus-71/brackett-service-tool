@@ -950,6 +950,10 @@ function askBuildIndex() {
       title: [t.brand, t.family].filter(Boolean).join(" "),
       sub: (t.models || []).slice(0, 4).join(", "),
       hay: tstatSearchFields(t).filter(Boolean).join(" ").toLowerCase(),
+      // The thermostat's own error codes count as typed codes, like a generator's alarms ("nest e74" was
+      // every brand's code 74 row ahead of the Nest card that lists E4 / E24 / E74; Andy 11-10).
+      codes: [...new Set((t.diagnostics || []).flatMap(d => askCodeTokens(d.code)))],
+      codesLit: [...new Set((t.diagnostics || []).flatMap(d => String(d.code || "").toLowerCase().split(/\s*[\/,]\s*/).map(x => x.trim().replace(/\s+/g, ""))))].filter(Boolean),
     });
   }
   for (const g of genEntries()) {
@@ -1224,7 +1228,10 @@ function askDomain(units) {
 function askCodeToks(units) {
   const out = [];
   // A bare two-digit number is a code only when the tech said "code"/"error" ("300 over 50" is pressures).
-  const cue = units.some(u => u.zero && u.alts.some(a => ASK_ZERO_WORDS.has(a)));
+  // askPassageUnits drops those words before scoring, so read them from the question itself too
+  // ("carrier furnace code 33" was scoring 33 as a plain word: code 126 led, Andy 11-10).
+  const cue = units.some(u => u.zero && u.alts.some(a => ASK_ZERO_WORDS.has(a))) ||
+    normalizeQuery(units.rq || "").split(/\s+/).some(w => ASK_ZERO_WORDS.has(w));
   // Only words the tech typed (not alias-group spellings like "pz200" for Power Zone 200).
   for (const u of askLiveUnits(units).filter(u => u.word)) for (const a of u.alts) {
     if (/^r-?\d{2,3}[a-z]?$/.test(a)) continue;                                  // refrigerant, not a code
@@ -1277,7 +1284,18 @@ function askScoreItem(units, it) {
   // "carrier mini split pc03" is the PC 03 row, not five spec cards whose LED tables list it. The
   // row printed exactly as typed ("0180") beats a spelling match ("180" <-> "0180").
   if (units.codeToks === undefined) units.codeToks = askCodeToks(units);
-  if (units.codeToks.length && it.codes && units.codeToks.some(t => it.codes.includes(t))) {
+  // A thermostat's own codes count only when the question names that thermostat's brand ("nest e74"),
+  // not for another brand's code ("daikin e30" must not pull in a Honeywell stat that lists E30).
+  const hitToks = units.codeToks.length && it.codes ? units.codeToks.filter(t => it.codes.includes(t)) : [];
+  // A bare two-digit code ("code 12") is every brand's code: when the question names a brand, only that
+  // brand's rows get the typed-code lift, and never an HVAC row on a generator question (Fable review 11-10:
+  // "goodman code 12", "kohler code 31" were leading with other brands' rows).
+  const brandUnits = askLiveUnits(units).filter(u => u.alts.some(a => ASK_BRAND_WORDS.has(a)));
+  const offBrand = it.kind === "code" && hitToks.length && hitToks.every(t => /^\d{2}$/.test(t)) &&
+    ((brandUnits.length && !brandUnits.some(u => u.alts.some(a => askTermHit(it.hay, a)))) ||
+     (units.dom === "gen" && it.equip !== "Generator"));
+  if (hitToks.length && !offBrand &&
+      (it.kind !== "tstat" || askUnitHits(units, String(it.brand || "").toLowerCase()) > 0)) {
     const literal = units.codeToks.some(t => (it.codesLit || []).includes(t));
     sc += 1; tsc += (it.kind === "code" ? 3 : 2) + (literal ? 3 : 0);
   }
@@ -1590,6 +1608,7 @@ function askIsContentUnit(u) {
 function askQueryUnits(rq) {
   const units = askAddModelAlts(askPassageUnits(rq), rq);
   if (rq) askQueryUnits._q = rq;
+  units.rq = rq || "";   // askCodeToks reads "code" / "error" from here - the units have dropped those words
   return units;
 }
 async function askManualPassages(q, limit, rqGiven) {
@@ -2096,7 +2115,13 @@ function askKindRank(units, x) {
   if (units.brandQ === undefined) units.brandQ = live.some(u => u.alts.some(a => ASK_BRAND_WORDS.has(a)));
   const title = String(it.title).toLowerCase();
   if (!units.brandQ && (it.brand || ASK_BRAND_RE.test(title))) return r;
-  return askUnitHits(units, title) >= live.length ? -0.5 : r;
+  // A general fix whose title names no brand counts the question's brand word ("goodman heat pump not
+  // defrosting" -> the general defrost card); a card titled for one brand must name the asked brand
+  // itself (the Lennox S40 card does not jump a Trane question).
+  // A card whose title names the asked brand still goes first ("goodman inducer not running" -> the
+  // Goodman inducer card, then the general one).
+  if (askUnitHits(units, title) >= live.length) return -0.5;
+  return !ASK_BRAND_RE.test(title) && askUnitHits(units, title, it) >= live.length ? -0.25 : r;
 }
 function askTopItems(units, limit) {
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
@@ -3832,7 +3857,7 @@ function genSyncBrandTabs() {
     ? "Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen - code lists shift between controller generations."
     : "Kohler (Rehlko) home standby generators and transfer switches: fault messages, troubleshooting, specs, maintenance and manuals from Kohler's own operation, installation and service manuals (Partner HQ technical library). Confirm on the unit's nameplate and controller - fault lists differ by controller.";
   const inp = document.getElementById("genSearchInput");
-  if (inp) inp.placeholder = generac ? "Search model, kW, or code (7043, 22kW, 1100, overcrank…)" : "Search model, kW, or fault (20RCA, 14RESA, RXT, overcrank…)";
+  if (inp) inp.placeholder = generac ? "Model, kW or code — 22kW, 1100" : "Model, kW or fault — 20RCA";
 }
 function renderGens() {
   const all = genEntries().filter(g => genBrandOf(g) === genState.brand);
@@ -12995,7 +13020,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v398";
+const APP_VERSION = "v399";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
