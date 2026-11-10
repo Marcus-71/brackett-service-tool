@@ -773,7 +773,17 @@ const ASK_KIND = {
   charge:  { label: "Charging",   rank: 2, open: (id) => openChargingChart(id) },
   sensor:  { label: "Sensors",    rank: 2, open: (id) => openSensors({ mapId: id }) },
   series:  { label: "Model",      rank: 4, open: (id) => askOpenSeries(id) },
+  bulletin:{ label: "Bulletin",   rank: 2, open: (id) => openBulletinDetail(id, "ask") },
 };
+// v404 (Andy 11-10): "the generac bulletins are not coming up on ask anything". Bulletins were never in
+// the Ask list - only the instant card showed them, and only once a model or code was known. Now every
+// bulletin is a result; a question that says bulletin / SIB / TIB / PIB / TSB lifts them, most of all the
+// ones for the asked unit. A question that does not say it keeps them to what their headline matches.
+const ASK_BUL_WORD = /^(bulletins?|sibs?|tibs?|pibs?|tsbs?)$/;
+function askBulWordQ(units) {
+  if (units.bulQ === undefined) units.bulQ = askLiveUnits(units).some(u => u.alts.some(a => ASK_BUL_WORD.test(a)));
+  return units.bulQ;
+}
 // Andy 2026-10-05: "ask anything needs to catch all - hvac and generators".
 // Maintenance figures, charging charts and the tag-scanner model/series notes
 // are searched too, not just codes, fixes and manuals.
@@ -1033,6 +1043,20 @@ function askBuildIndex() {
       titleHay: ["Generac", t && t.textContent, sub && sub.textContent, "how to hook up install wire connect multiple transfer switches ats"].filter(Boolean).join(" ").toLowerCase(),
       hay: askGuideText(el).toLowerCase(),
     });
+  }
+  if (typeof BULLETINS !== "undefined" && Array.isArray(BULLETINS)) {
+    for (const b of BULLETINS) {
+      const a = b.applies || {};
+      const head = [b.brand, b.number, b.docNo && b.docNo !== b.number ? b.docNo : "", (b.type || "Service") + " bulletin bulletins", b.title];
+      items.push({
+        kind: "bulletin", id: b.id, brand: b.brand || "", equip: (a.genFamilies || []).length ? "Generator" : "",
+        title: b.number + " - " + b.title,
+        sub: [b.brand, (b.type || "Service") + " bulletin", b.date].filter(Boolean).join(" · "),
+        titleHay: head.filter(Boolean).join(" ").toLowerCase(),
+        hay: [...head, b.summary, ...(b.steps || []), b.appliesText].filter(Boolean).join(" ").toLowerCase(),
+        bul: b,
+      });
+    }
   }
   // Manuals: the seed index IS the shared library. openManualDetail() takes the
   // same seed id and handles download-or-open, so a cloud manual works too.
@@ -1310,6 +1334,25 @@ function askScoreItem(units, it) {
   // other families that merely mention the word (F6: "generac nexus 1800" is the Nexus cards'
   // OVERVOLTAGE row, not the Evolution cards whose clear-steps say "Nexus").
   const fams = units.kFams || (units.kFam ? [units.kFam] : []);
+  if (it.kind === "bulletin") {
+    const a = it.bul.applies || {};
+    const forUnit = (fams.length && (a.genFamilies || []).some(f => fams.includes(f))) ||
+      (!!units.kModel && (a.modelRe || []).some(src => { const re = bulRe(src); return !!re && bulModelForms(units.kModel).some(f => re.test(f)); }));
+    // Not asked for by name: only what the headline carries counts, so a bulletin never jumps a code row
+    // or fix card on a plain question just because its long text holds the words.
+    // One notch down besides (replay 11-10: "carrier no cooling" led with a geothermal DSB, "generac code 31"
+    // with a transfer-switch firmware 1.31 PIB). The unit's bulletins still show on the instant card.
+    if (!askBulWordQ(units)) return { sc: Math.min(sc, tsc) - 1, tsc };
+    // Asked for: the asked unit's bulletins count the model / series word as met, high priority first.
+    // Equal matches: high priority, then normal, then FYI; newer first within those (tsc fractions only break ties).
+    // A question that names a bulletin by number is about that bulletin only (Fable 11-10: "SIB A0013147290" had a Protector XG one under it).
+    if (units.bulNo === undefined) { try { const n = askBulletins(units, units.rq || ""); units.bulNo = n.length && n.every(b => b._why === undefined) ? new Set(n.map(b => b.id)) : null; } catch (e) { units.bulNo = null; } }
+    if (units.bulNo) return units.bulNo.has(it.id) ? { sc: sc + 2, tsc: tsc + 6 } : { sc: 0, tsc: 0 };
+    const yr = Number(String(it.bul.date || "").slice(0, 4)) || 2000;
+    // Bulletins for whole families (home standby lines) before ones for a serial list only (Fable: PZ410 diesel led "generac service bulletin").
+    const lift = (it.bul.priority === "high" ? 0.5 : it.bul.priority === "info" ? 0 : 0.25) + ((a.genFamilies || []).length || (a.modelRe || []).length ? 0.3 : 0) + Math.max(0, Math.min(yr - 2000, 40)) / 200;
+    return forUnit ? { sc: sc + 2, tsc: tsc + 5 + lift } : { sc, tsc: tsc + lift };
+  }
   if (fams.length && it.kind === "gen" && fams.includes(it.id)) return { sc: sc + 1, tsc: tsc + (units.kFam ? 5 : 4) };
   // ...and the other families' cards step back one notch (the Evolution cards say "Nexus" in their
   // clear-steps; the quick-lookup card is every controller's and stays).
@@ -2252,6 +2295,7 @@ function askGenRowText(a) {
 }
 function askEntryText(it, units) {
   if (it.kind === "code") { const c = getAllCodes().find(x => x.id === it.id); return c ? [c.meaning, (c.causes || []).join("; "), (c.steps || []).slice(0, 8).join("; "), ...(c.techTips || []).slice(0, 2).map(t => "Tip: " + t.text)].filter(Boolean).join(" | ").slice(0, 3000) : ""; }
+  if (it.kind === "bulletin" && it.bul) return askBulletinEntry(it.bul).text;
   if (it.kind === "symptom") { const s = getAllSymptoms().find(x => x.id === it.id); return s ? [s.summary, (s.steps || []).slice(0, 8).join("; ")].filter(Boolean).join(" | ").slice(0, 3000) : ""; }
   // Generators: what the question is about comes FIRST, then the rest of the card, capped at 3,000
   // chars. Before, every spec and maintenance line came first and the alarm table started past the
@@ -2500,6 +2544,10 @@ function askInstantLines(it, units) {
   } else if (it.kind === "series") {
     const p = MODEL_PATTERNS[Number(String(it.id).replace("series-", ""))];
     if (p) push("", (p.notes || []).slice(0, 2).join("\n"));
+  } else if (it.kind === "bulletin" && it.bul) {
+    push("", it.bul.summary);
+    push("Steps", steps(it.bul.steps, 3));
+    push("Applies to", it.bul.appliesText);
   } else push("", it.sub);
   return lines;
 }
@@ -4354,6 +4402,8 @@ function askBulletins(units, rq) {
   if (!units.kFam && !units.kModel && !codes.length) return [];
   const all = bulletinsFor({ genFamily: units.kFam, model: units.kModel, codes, brand });
   if (!all.length) return [];
+  // "G0073240 bulletins": the tech asked for the unit's bulletins - all of them, not only the ones whose text shares a word.
+  if (askBulWordQ(units)) return all;
   // Ask is a question, not a plate scan: a bulletin for the unit qualifies only when it is ABOUT the
   // question - its codes meet the question's code tokens, or its title / summary carries one of the
   // question's content words ("oil", "voltage", "mixer", "valve"...). Brand, family, model, kW and
@@ -13046,7 +13096,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v403";
+const APP_VERSION = "v404";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
