@@ -30,6 +30,7 @@ const SYMPTOMS = [
    "Confirm thermostat calling for cool and set below room temp",
    "Check outdoor disconnect and breaker",
    "Listen/look for contactor pulling in at the condenser — if not, check 24V control signal at contactor coil",
+   "24 V between Y and C at the outdoor unit but 0 V across the contactor coil means something in series with the coil is open, usually a pressure switch. If the low-pressure switch is open and the standing pressure is far below what the PT chart gives for the outdoor temperature, the system has lost its charge. Find the leak; never jumper the switch.",
    "If contactor pulls in but compressor doesn't run, check capacitor and compressor windings (ohm out common/run/start)",
    "If compressor hums but doesn't start, suspect a bad run capacitor or locked rotor",
    "Check for tripped high/low pressure switch — see Condenser/Heat Pump lockout codes in Error Codes"
@@ -171,6 +172,7 @@ const SYMPTOMS = [
   "summary": "Equipment disconnect breaker/fuse fails shortly after reset.",
   "steps": [
    "Do not just keep resetting — repeated trips indicate a real fault, not a nuisance trip",
+   "Never put in a bigger breaker than the nameplate MOCP to stop the tripping. A breaker sized correctly to the nameplate that trips is telling you the unit or its wiring is drawing too much. Find out why.",
    "Inspect for an obvious short: burnt wiring, chewed wire insulation, water intrusion",
    "Megger or ohm out the compressor/motor windings to ground for a ground fault",
    "Check capacitor for a shorted condition",
@@ -304,6 +306,7 @@ const SYMPTOMS = [
    "Check the sensing bulb: it must be clamped tightly (not loose or swinging free) directly to a clean, bare section of the suction line, insulated from ambient air, and mounted per the manufacturer's clock-position spec (commonly 4 or 8 o'clock on horizontal lines, not on the bottom)",
    "Bulb response test: with the system running steady, warm the bulb by hand or with a heat gun (careful, gentle heat) — the valve should open further, suction pressure should rise and superheat should drop within a minute or two",
    "Then cool the bulb — pack it in ice or chill it with refrigerant-safe canned air upside down — the valve should throttle down, suction pressure should drop and superheat should rise. No response in either direction points to a lost charge in the valve's power element (replace the valve) or a bulb that isn't making good thermal contact (reclamp/reinsulate and retest before condemning the valve)",
+   "Adjustable valve: a small stem turn should move superheat once it settles (stem clockwise raises superheat, counterclockwise lowers it, as in 'Goodman GSX/GSZ - subcooling and superheat decision table for TXV systems'). If superheat doesn't move at all and the bulb tested good, the valve is stuck, often debris under the seat. Charge won't fix it - recover, replace the valve and the drier.",
    "Check the external equalizer line (if equipped) isn't kinked, plugged, or miswired — a plugged equalizer causes exactly the same erratic/overfeeding symptoms as a bad valve",
    "Check for a restriction ahead of the valve: a partially clogged filter drier or moisture/wax buildup at the valve inlet mimics a stuck-closed TXV — if you have gauge access on both sides of the valve, a pressure drop far beyond normal across the valve at a given load points to a physical restriction rather than a valve response issue",
    "If bulb response is confirmed working (pressure/superheat clearly react to heating and cooling the bulb) but superheat still won't settle in range, suspect an undersized/oversized valve for the application, a non-adjustable valve with the wrong factory superheat setting, or a mismatched orifice size for the tonnage — not a \"bad\" valve"
@@ -425,6 +428,7 @@ const SYMPTOMS = [
   "summary": "Refrigerant is flooding through the system on both ends — usually an overfeeding metering device or non-condensables, not a simple overcharge.",
   "steps": [
    "Check the metering device for a stuck-open or overfeeding condition (see the TXV testing entry) before assuming overcharge",
+   "When you close the valve down a little (or fix a loose bulb), expect subcool to come up by itself as liquid moves back out of the coil into the condenser. Let it settle and read both again before you add or remove anything - adding first leaves it overcharged once the feed is right.",
    "Check for non-condensables (air/moisture) in the system, especially after recent service work where a proper deep vacuum wasn't pulled",
    "If the metering device checks out fine, then suspect true overcharge — recover down to the correct charge per the manufacturer's chart",
    "Low superheat with a compressor that sounds or runs rough can mean liquid refrigerant is migrating back to the compressor (flooding) — check crankcase heater operation on systems equipped with one"
@@ -1226,6 +1230,7 @@ const SYMPTOMS = [
   "summary": "Distinct from an active water leak — the float switch is doing its job and shutting the system down before it overflows.",
   "steps": [
    "Confirm this is actually a float switch shutdown (thermostat calls but nothing runs, often with no fault code) rather than a different no-run issue",
+   "Quick proof: 24 V between Y and C at the indoor unit but 0 V at the outdoor unit, with water standing in the pan, means a float switch in the Y wire has opened. A blown board fuse would kill the 24 V at the indoor unit too.",
    "Trace to whichever float switch tripped — primary pan, secondary/emergency pan, or an inline switch in the drain line — units can have more than one",
    "Clear the actual clog or condensate issue causing the water level to rise before resetting/bypassing anything",
    "Test the switch itself (float moves freely, contacts open/close correctly) once the water issue is resolved, to confirm it will properly protect the system going forward",
@@ -2261,6 +2266,7 @@ const SYMPTOMS = [
   "steps": [
    "Recognize that an EEV has no sensing bulb and no mechanical superheat spring — heating/cooling a bulb by hand (the standard TXV test) does nothing on an EEV; diagnosis has to go through the board and its thermistor inputs instead",
    "Check the two thermistors the board uses to calculate superheat/subcooling for the EEV algorithm (typically at the coil and at the suction or liquid line) — a thermistor that's failed, reading incorrectly, or making poor thermal contact throws the valve's control off even though the valve itself is fine",
+   "On communicating and inverter systems the board's superheat target is not one fixed number - it can change with conditions. Look up what that board is aiming for in the service manual before you call a reading wrong. Your own superheat at the outdoor unit also includes heat the line set picked up, so it can read higher than the board's number at the coil.",
    "Check for an EEV fault code on the board first — most EEV-equipped systems log a specific valve or driver fault (stepper motor open/shorted coil, position sensor fault, driver IC fault) rather than leaving you to infer a mechanical problem from pressures alone",
    "If no fault code is present but the valve seems stuck at one position, check for actual stepper motor movement — you may be able to hear or feel a faint clicking/stepping motion as the board commands the valve open or closed during a call; no movement at all points to the valve coil, connector, or driver circuit rather than a mechanical jam",
    "EEVs fail open, closed, or partially stuck in a fixed position — unlike a mechanical TXV, they don't respond to bulb temperature changes at all when the stepper motor or its driver has failed, which is the key test that distinguishes an EEV failure from a control/thermistor input problem",
@@ -2574,6 +2580,7 @@ const SYMPTOMS = [
   "summary": "Most inverter compressor 'failures' reported by the system are actually drive/control faults (overcurrent, DC bus, communication) rather than a mechanically failed compressor — confirming which one you're dealing with avoids an unnecessary compressor replacement.",
   "steps": [
    "Pull the specific fault code from the outdoor unit board or thermostat rather than assuming 'compressor fault' means the compressor itself is bad — inverter systems typically log much more specific codes (overcurrent, phase loss, DC bus over/under-voltage, IPM/drive module fault, communication loss) that point at the drive electronics",
+   "An inverter compressor is run by the drive board. It has no contactor and no run capacitor to replace. If a quote or diagnosis on an inverter unit calls for a 'compressor capacitor', go back to the fault code, the board label and the manual.",
    "Check compressor winding resistance and insulation-to-ground the same way you would on any compressor — this is still valid on an inverter compressor and rules out (or confirms) an actual electrical winding failure independent of the drive board",
    "If windings test normal but the drive consistently faults on start attempts, suspect the drive/inverter board, the DC bus capacitors, or wiring between the board and compressor rather than the compressor itself",
    "Check for a locked rotor or mechanically seized condition by attempting to verify free rotation if the compressor design and access allow it, or by checking for a dramatically higher-than-normal current draw on a start attempt before the drive faults out",
@@ -3960,6 +3967,7 @@ const SYMPTOMS = [
   "steps": [
    "Understand the difference from a standard ohm-out: a normal meter checks winding-to-winding resistance and continuity; a megohmmeter applies a higher DC test voltage between a winding/conductor and ground to measure insulation resistance in megohms, revealing insulation that's degraded but not yet fully shorted",
    "Disconnect the component being tested from the rest of the circuit (motor leads, compressor terminals, or a length of wiring) — a megger test must isolate the item under test or it will give a false/misleading reading through parallel paths",
+   "On an inverter (variable-speed) unit, never megger the compressor through the drive board. That can destroy the board. Power down, wait out and prove the DC bus discharge as that unit's card describes, lift the compressor leads off the drive, and test only if that unit's manual allows a megger. Some don't (see 'Inverter compressor insulation resistance - Goodman says 100k ohms, Daikin says 30 megohms').",
    "Select an appropriate test voltage for the equipment being tested per the megger's and equipment manufacturer's guidance — using too high a test voltage on delicate electronics or low-voltage-rated wiring can damage it",
    "Test each winding/conductor to ground and record the reading — insulation resistance in the very low megohm range (or near zero) indicates degraded/failing insulation even if a standard ohmmeter still shows the winding itself as intact and not fully grounded",
    "On a motor or compressor, a reading that's dropped significantly compared to a known baseline (if available from a prior test) indicates progressive insulation breakdown, often from moisture intrusion or overheating, even before it causes an outright ground fault trip",
@@ -4304,6 +4312,7 @@ const SYMPTOMS = [
    "Check the actual installed line set length and elevation change against the length the factory charge accounts for (commonly a fixed length printed on the unit or in the install manual)",
    "If the line set is longer or shorter than the factory-charged length, or has a significant elevation change, the charge needs to be adjusted accordingly per the manufacturer's charging chart — this is a standard step that's easy to skip when the crew is moving fast",
    "Verify actual subcooling/superheat against target rather than assuming the factory charge is correct just because the system runs and cools somewhat",
+   "If you weighed the charge in yourself and it still reads short or long, something is wrong with the install, not the scale. Recheck the line set length and the adder you used, look for a leak (oil spots, flares, braze joints) and confirm airflow before you top off or recover.",
    "Check for signs of a rushed startup: no gauges ever connected, no vacuum documentation, charge added or removed without weighing — all suggest the charge was never actually verified",
    "Correct the charge properly (recover, evacuate, weigh in per the chart) rather than just topping off toward better-looking gauge numbers"
   ],
@@ -6029,6 +6038,7 @@ const SYMPTOMS = [
   "steps": [
    "Confirm it's a real short: replace the fuse once with power off, disconnect the thermostat wires at the board (leave R/C only) and power up — fuse holds = the short is out in the field wiring or a connected device, not the board",
    "Divide and conquer: reconnect one conductor at a time (Y, then W, then G, then O/B, then accessories) powering between each — the wire that pops the fuse names the circuit",
+   "Once you know which wire pops the fuse, lift that run at both ends and ohm the cable by itself, from that conductor to C. Near zero ohms means the short is in the cable, not the equipment. Walk the run: where it enters the outdoor unit's sheet metal, trimmer damage in the yard, and staples.",
    "Follow that circuit to the usual suspects: staples cutting stat wire, wire rubbed bare at the condenser entry hole or under the air handler panel, a shorted damper/zone actuator, a failed contactor coil, or a pinched wire under the thermostat baseplate",
    "If the fuse blows with ALL field wiring off the board, the short is on the equipment side: unplug on-board loads/connectors one at a time (inducer, gas valve, transformer secondary legs) to isolate",
    "Intermittent blowing that only happens in cooling or in wind points at the outdoor wire run moving against metal — wiggle-test the run at the condenser while watching a meter across the fuse"
@@ -7058,6 +7068,7 @@ const SYMPTOMS = [
    "Locate the outdoor liquid thermistor (Tl) and the outdoor discharge thermistor (Td).",
    "Locate the outdoor coil defrost thermistor (Tb) and the outdoor suction thermistor (Ts).",
    "On EEV indoor units, also identify the indoor gas (Tgi) and indoor liquid (Tli) thermistors.",
+   "The wiring diagram may use different names for the sensors than the display and the piping drawing do. Match them with the legend on the unit's own diagram, then read the plug name for this unit size - the same sensor can land on a different plug on another size.",
    "Disconnect only the thermistor connector named by the fault and ohm it across its terminals.",
    "Compare the reading to the thermistor resistance and temperature characteristics table and replace it if open, shorted, or out of range."
   ],
@@ -7122,6 +7133,7 @@ const SYMPTOMS = [
   "steps": [
    "Confirm two wires run between the indoor unit and the outdoor unit - data lines 1 and 2.",
    "Confirm four wires run between the indoor unit and the communicating thermostat - data 1, data 2, R (24 VAC hot), and C (24 VAC common).",
+   "Don't add a conventional O, Y or W wire 'just in case'. On a communicating setup the units share the valve, staging and heat-kit information over 1 and 2. Add a conventional wire only where that unit's manual tells you to.",
    "Identify which indoor arrangement you have (EEV air handler, EEV cased coil, or gas furnace) since the wiring figure differs.",
    "Compare each segment against the allowable maximum length marked in the wiring figure for that arrangement.",
    "Inspect the wiring visually for signs of overheating, damaged insulation, and loose connections.",
@@ -7254,6 +7266,7 @@ const SYMPTOMS = [
    "Compare each thermistor to the thermistor resistance and temperature characteristics table and replace any that read open, shorted, or out of range.",
    "Disconnect the EEV cable from the control board.",
    "Read resistance between the EEV connector pins as shown in the manual's measuring point diagram.",
+   "Measure from each coil wire to the common wire, one at a time. The common's pin position can change between unit sizes, and some plugs have an empty pin - an open reading on an empty pin is not a bad coil. Find the common on that unit's wiring diagram first.",
    "Confirm the reading falls in the 40 to 50 ohm range.",
    "Replace the EEV coil if the resistance is outside that range; if it is in range, move on to the control board and wiring."
   ],
@@ -9232,6 +9245,7 @@ const SYMPTOMS = [
    "Confirm the unit is actually in defrost by reading 24 volts across C and O.",
    "Read across W (or W2) and C on the board - you should measure 24 volts, which is the board calling auxiliary heat during defrost.",
    "If 24 volts is present at the board but no auxiliary heat runs, follow the W2 wire to the indoor unit and check the sequencer or heat relay there.",
+   "On a new install, check first that the outdoor unit's defrost heat wire (W2) was actually run and landed at the air handler. If a forced defrost shifts the valve and stops the fan, and the strips work on EM heat, but nothing heats during defrost, a missing or unlanded conductor in the outdoor cable is the usual cause.",
    "If no voltage is present at W (or W2) during defrost, replace the defrost control board.",
    "Set the thermostat to off, disconnect power, and remove all test jumpers before leaving."
   ],
@@ -11028,6 +11042,7 @@ const SYMPTOMS = [
    "Check any alarm device wired into the auxiliary circuit and confirm it has reset.",
    "Disconnect power, then check continuity across auxiliary alarm terminals TB4 and TB5.",
    "If no auxiliary device is used on this installation, close TB4 and TB5 as the manual directs.",
+   "Opposite problem - a float or condensate switch was added but never shuts the system down: check whether a jumper is still closing TB4 and TB5 alongside the switch. Read the notes on the unit's wiring diagram for what has to come off when a switch is wired in. A jumper left across the terminals bypasses the switch.",
    "Restore power. EF stays on the PCB display about 30 seconds and the thermostat message up to 45 seconds after recovery, then clears automatically.",
    "If EF persists with TB4 and TB5 proven closed, trace that wiring back to the board before condemning the board."
   ],
@@ -14078,6 +14093,7 @@ const SYMPTOMS = [
    "Give it a couple of minutes to settle - clamp probes do not read instantly.",
    "Sanity check the sensor against a second thermometer, or against another probe on the same pipe.",
    "Verify the pressure side too: a partially open Schrader depressor or a long hose with a plugged core can read low.",
+   "Check the gauge is set to the refrigerant on the nameplate (and any retrofit sticker). Superheat can never really be below zero - a flooded coil reads about zero, not minus - so a negative number with a good probe almost always means the wrong refrigerant chart.",
    "Only after the reading is stable and trusted should you interpret the superheat and act on it."
   ],
   "confidence": "common"
@@ -14754,6 +14770,7 @@ const SYMPTOMS = [
    "Before every dead check: test the meter on a known live source of similar voltage, then test the circuit, then test the known live source again. If the meter fails the last step, your dead reading was worthless.",
    "Inspect the leads before use - cracked insulation, exposed metal at the boot, bent or loose probe tips, and intermittent continuity in the lead itself all produce false readings.",
    "Confirm the meter's CAT rating and voltage rating are appropriate for where you are working. Panel and service-entrance work demands a higher category than a low-voltage board.",
+   "Check the lead jacks before every voltage reading. A red lead left in the amps (A) jack is a near-dead short through the meter's fuse, whatever the dial says, and it will arc across a 240 V circuit in your hands. Volts go in the V jack; take amps with the clamp around one wire.",
    "If your amp readings are impossible (zero on a running motor, or the meter is dead only in current mode), check the meter's internal current-input fuse. A blown one is silent - the meter otherwise works normally.",
    "For a clamp-style current reading, make sure only one conductor is in the jaws and it is centered; two conductors of the same circuit cancel and read near zero.",
    "Verify meter battery condition. A weak battery can produce drifting, low, or unstable readings that look like a real fault.",
@@ -15722,7 +15739,8 @@ const SYMPTOMS = [
    "Subtract outdoor ambient from condensing saturation to get the CTOA.",
    "Compare against the equipment class: HVAC School lists roughly 30 F for 6-10 SEER (pre-1991), 25 F for 10-12 SEER, 20 F for 13-15 SEER, and 15 F for 16 SEER and up.",
    "As a cross-check, condenser leaving air temperature is usually about half the target CTOA above ambient.",
-   "If CTOA is wide, pull the top and look at the coil from the entering-air face, check fan RPM and blade position, and check for recirculation from a fence, wall, or shrubs."
+   "If CTOA is wide, pull the top and look at the coil from the entering-air face, check fan RPM and blade position, and check for recirculation from a fence, wall, or shrubs.",
+   "Split is wide but the coil is clean, the fan is right and subcool is normal: suspect air in the system. Ask who last opened it and how it was evacuated. See 'Suspected non-condensables in the system — confirming and correcting'."
   ],
   "confidence": "common"
  },
@@ -15908,6 +15926,7 @@ const SYMPTOMS = [
    "Identify the refrigerant from the nameplate before you connect anything.",
    "Measure the temperature of the equipment and its surroundings, not just the weather app.",
    "Connect and read standing pressure, then compare against the PT chart for that refrigerant at that temperature.",
+   "Reading over the chart means something besides that refrigerant is in there: air (see 'Suspected non-condensables in the system — confirming and correcting') or a different or mixed refrigerant (look for retrofit stickers - see 'Older R22 system topped off or retrofitted with a replacement blend refrigerant'). Reading on the chart only proves some liquid is left. It does not tell you how much charge is in it - a half-empty system reads the same. Charge is proven with the system running.",
    "Note that a blend has a bubble point and a dew point column - pick the right one and be consistent.",
    "Record the result before starting the system so you can compare against running readings."
   ],
@@ -21275,5 +21294,190 @@ const SYMPTOMS = [
    "Whatever the material: slope the vent back toward the furnace (commonly 1/4 inch per foot) so condensate drains back to the trap, support it so it can't sag, and stay inside the maximum length and elbow count in the manual."
   ],
   "confidence": "verify"
+ },
+ {
+  "id": "s-hp-stuck-in-heat-on-cooling-call",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Heat pump stuck in heat mode - heats or blows warm air on a cooling call (reversing valve, O/B setting, 24 V at the valve coil)",
+  "summary": "A heat pump that heats when the thermostat calls for cooling is rarely a bad reversing valve. Work in this order: the thermostat setting, then 24 V at the valve coil, then the coil itself, then the valve. On units that power the valve in cooling (O), a valve that gets no 24 V sits in heat - so a broken wire or a wrong setting looks exactly like a failed valve.",
+  "steps": [
+   "Confirm what you have: the thermostat is calling for cooling, the outdoor unit is running, and the big (vapor) line at the outdoor unit is hot instead of cool. Hot gas is going to the indoor coil, so the unit is heating.",
+   "Check the thermostat's installer setting for the reversing valve: O (valve powered in cooling) or B (valve powered in heating). It must match the outdoor unit - read the unit's wiring diagram, not just the brand name. A wrong setting after a thermostat swap, or after changing to a different brand of outdoor unit, is the most common cause. See 'Heat and cool are backwards, or system won't switch modes'.",
+   "On an O-type unit, with the cooling call on, measure across the two valve coil leads. No 24 V = the coil is not being told to shift. Work back toward the thermostat: O to C at the outdoor unit's terminals, then at the air handler or furnace, then at the thermostat. The point where 24 V appears is where the break is. See 'Reversing valve will not shift and there is no 24V at the coil'.",
+   "On a communicating system there is no O wire. Read the alert on the thermostat in plain words, then check the outdoor board's valve output the way that unit's manual describes.",
+   "24 V is at the coil but the valve does not shift: turn the power off, pull one coil lead and ohm the coil. Open = bad coil. The coil slides off the valve body and is replaced on its own without opening the refrigerant circuit. Then make sure the valve shifts. See 'Voltage at the reversing valve coil but the valve still will not shift'.",
+   "Coil good, 24 V there, and it still won't shift: the valve is sticking. Both coils lukewarm with high suction and low head pressure points to a valve stuck part-way. Try to free it before you quote a valve - see 'Trying to free a stuck reversing valve by raising head pressure' and 'Reversing valve stuck mid-position - high suction pressure on a Goodman or Daikin heat pump'.",
+   "Valve shifts but the system is weak in both heat and cool: compare the suction line temperature before and after the valve. Hot gas leaking across inside the valve warms the suction going to the compressor. See 'Internally leaking reversing valve mimicking a bad compressor - the 4 degree check'.",
+   "B-type units are the opposite: a dead valve coil leaves the valve in cooling, so the complaint is no heat rather than no cooling. The same order of checks applies, done on a heating call."
+  ],
+  "safety": "The outdoor unit has line voltage and a charged run capacitor inside. Keep clear of the contactor and capacitor terminals while you measure the 24 V, and turn the power off and lock it out before you ohm the coil or pull it off the valve.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-hp-heat-mode-normal-readings",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Heat pump in heat mode: big line is hot, outdoor fan blows cold air, gauge on the big line reads high - is it running backward?",
+  "summary": "No. In heating, the reversing valve sends the compressor's hot gas to the indoor coil, so the two coils swap jobs: the indoor coil becomes the condenser and the outdoor coil becomes the evaporator. The compressor itself always pumps the same way. Several things that would be faults in cooling are normal in heating.",
+  "steps": [
+   "The big vapor line to the house is hot: normal in heat. It is carrying hot discharge gas to the indoor coil.",
+   "Air leaving the outdoor fan is colder than the outdoor air: normal in heat. The outdoor coil is the cold coil now, pulling heat out of the outside air. If instead the outdoor unit blows warm air out the top while the house gets colder, the valve is in cooling - see 'Heat pump runs but blows cold/cool air in heating mode'.",
+   "Your gauge on the big-line service port reads a high pressure in heat: normal. In heating that port is on the high side of the system, not the suction side, so the low-side gauge is reading condensing pressure. Expect it to sit high on its scale.",
+   "The suction line right at the compressor should be cold in both modes. If it is warm in either mode, check the valve for leak-through - see 'Internally leaking reversing valve mimicking a bad compressor - the 4 degree check'.",
+   "Air at the vents feels warm but not hot like a gas furnace: usually normal. Measure supply and return before you call it a fault - see \"Heat pump 'blowing cold air' complaint — what supply temps are actually normal\".",
+   "The outdoor fan stops, there is a whoosh, and steam rolls off the coil for a few minutes: that is a defrost, not a failure. See 'Steam pouring off the outdoor unit in winter - customer thinks it is on fire'.",
+   "Don't judge or adjust the charge from cooling-mode targets while it is heating. See 'Checking charge on a heat pump in the middle of winter'."
+  ],
+  "safety": "In heat mode the vapor line and compressor discharge are hot enough to burn, and the big-line service port is at high-side pressure. Connect and remove hoses with gloves and eye protection. On R-32 or R-454B units follow the A2L procedure.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-hp-aux-heat-high-bill-setback",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Heat pump high electric bill - AUX heat comes on every morning or when it's mild outside (setback, recovery, aux lockout)",
+  "summary": "Strip heat costs much more to run than the heat pump. The thermostat brings it on as AUX when the heat pump looks like it can't keep up: a big jump in setpoint, very cold weather, or a defrost. If AUX shows when it's mild out and the house is already at setpoint, or every morning after a deep night setback, the cause is usually the thermostat setup or how it is being used, not a broken part.",
+  "steps": [
+   "Ask when AUX shows: all the time, every morning, only on the coldest days, or with EM HEAT on the display. Write down the outdoor temperature and the setpoint.",
+   "Make sure the thermostat isn't left on emergency heat. EM heat shuts the heat pump off and heats on strips alone - it is only for when the outdoor unit is down. See 'Verifying emergency heat on a heat pump - what should and should not run'.",
+   "Prove the heat pump is really heating during the call: outdoor unit running, big line hot, warm air at the vents. If it isn't, the strips are doing all the work and that is the real fault. See 'Aux/backup heat runs constantly, heat pump seems locked out'.",
+   "AUX every morning after a night setback: a big jump in setpoint makes the thermostat call AUX to catch up, and the strips do the work. Use a smaller setback, or turn on the thermostat's heat pump recovery feature (often called smart or adaptive recovery) so it starts earlier on the heat pump alone. Show the customer.",
+   "AUX when it's mild out and the house is at setpoint: open the thermostat's installer settings. Check the aux heat lockout (outdoor temperature above which strips are not allowed), the aux differential or droop (how far below setpoint before aux comes on), and any setting that lets aux help with recovery. Set them for this house and this equipment. See 'Heat pump thermostat compressor lockout and balance point settings (generic reference)'.",
+   "An outdoor lockout only works if the thermostat knows the outdoor temperature. Confirm it has an outdoor sensor or weather feed and that the reading is right.",
+   "Strips also come on during every defrost, so short bursts of AUX on a damp, cold day can be normal. See 'Cold air from the registers during defrost - board not calling W2 auxiliary heat'.",
+   "On very cold days, below the house's balance point, the heat pump alone can't keep up. It runs non-stop and AUX cycles in to help. That is normal, not a weak compressor, as long as the heat pump is still running and heating.",
+   "Before you leave, explain AUX versus EM heat to the customer and write down any settings you changed."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-elec-rh-rc-jumper-two-transformers",
+  "equipment": "Other",
+  "title": "Thermostat swap on a boiler (or separate heat) with a separate AC - Rh and Rc jumper: leave it in or pull it?",
+  "summary": "Rh powers the heating side of a thermostat and Rc the cooling side. When one transformer runs both heat and cooling, the Rh-Rc jumper (or the thermostat's internal link) ties them together and that is correct. When the heat and the cooling each have their own transformer - a boiler plus an air handler, for example - the jumper connects two transformers together and can burn one out or damage the thermostat. Pull it and land each R on its own terminal.",
+  "steps": [
+   "Before you take the old thermostat off, photograph the wiring. Count the R wires: one R, or two (one from the heating equipment and one from the cooling equipment).",
+   "Find where each R comes from. Trace the cables to the equipment, and with the power on measure 24 V from each R to the C at each piece of equipment. Two R wires that come from two different transformers = a two-transformer system.",
+   "Two transformers: remove the Rh-Rc jumper, or set the thermostat to separate R circuits per its manual. Land the heating equipment's R on Rh and the cooling equipment's R on Rc.",
+   "One transformer: leave the jumper in, or land the single R where the thermostat manual says.",
+   "The C wire on a two-transformer system: follow the thermostat manual for which transformer's C to use. Don't tie the two C wires together unless the equipment manuals allow it.",
+   "Check what the boiler's thermostat terminals actually carry before you land anything. Some boilers use a millivolt or line-voltage thermostat circuit, not 24 V, and need a thermostat rated for it or an isolation relay. See 'ecobee / Nest / smart thermostat no power or blank screen - prove 24 V at R and C'.",
+   "If the jumper was left in and something quit: check each transformer's 24 V output, the board fuses and the thermostat, and correct the wiring before you replace parts. See 'Two 24V transformers paralleled/backfeeding — creating an unintended ~48V condition'.",
+   "Test heat and cooling separately, then label which R is which at the thermostat."
+  ],
+  "safety": "Line voltage is present at both transformers and at the boiler control. Turn the power off at both pieces of equipment before you rewire the thermostat.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-elec-thermostat-compressor-delay-normal",
+  "equipment": "Other",
+  "title": "Switched the thermostat to cool or heat and nothing happens for a few minutes - compressor delay, not a fault",
+  "summary": "Most thermostats, and many outdoor boards, keep the compressor off for a few minutes after it last stopped, after a power cut, or after a mode change. The wait lets the pressures even out so the compressor doesn't try to start against high pressure. Before you chase a dead outdoor unit, wait out the delay. How long it lasts depends on the thermostat or board - its manual gives the time.",
+  "steps": [
+   "Look at the thermostat. Many show 'wait', a flashing snowflake or flame, or 'cool on' with nothing running yet while the delay counts down.",
+   "Wait out the full delay before you test anything. Note when the unit last stopped, or when the power came back.",
+   "Check the outdoor unit too. Some outdoor boards have their own delay after a call starts or after power returns - it is listed in the unit's manual. Example: 'Heat pump will not restart right away after a cycle - PCBDM133 three minute off delay'.",
+   "If the compressor starts when the delay ends, it is working as designed. Explain it to the customer and move on.",
+   "If nothing happens after the delay, start the no-cool checks: 24 V between Y and C at the outdoor unit, then the contactor. See 'No cooling — AC not running'.",
+   "Don't jumper around a thermostat or board delay to speed up testing - it is there to protect the compressor. If the thermostat has a setting to shorten the delay for testing, use it only as its manual describes and set it back before you leave.",
+   "A delay that never ends, or a compressor that keeps cycling on and off on its own, is a different problem - check the thermostat's cycle settings and look for a lockout on the outdoor board."
+  ],
+  "safety": "If you open the outdoor unit while it is waiting, treat it as live: the compressor and fan can start the moment the delay ends.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-ref-superheat-subcool-patterns-together",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Superheat and subcool together - what each pattern means (high superheat low subcool, both high, both low, low superheat high subcool, both normal but still not right)",
+  "summary": "One number by itself fools you. Read superheat and subcool at the same time and ask where the refrigerant is sitting: missing, stuck behind something, piled up in the indoor coil, or too much of it. If both are on target and the system still isn't right, the problem is in the air or the pressures, not the charge.",
+  "steps": [
+   "Let the system run at least 10 minutes before you judge anything. Set your gauge to the refrigerant on the nameplate. Take subcool on the liquid line at the liquid service valve and superheat on the suction line near the compressor, probes tight on clean copper and insulated. Get the targets from the unit's charging chart or data plate (or the Charging Calculator), not from memory.",
+   "Superheat HIGH + subcool LOW = refrigerant is missing. Both ends of the system are short, and both pressures usually read low. Refrigerant doesn't get used up, so it leaked. Find the leak before you add anything. See 'High superheat + low subcooling'.",
+   "Superheat HIGH + subcool HIGH = refrigerant is stuck behind something. Liquid piles up in the condenser while the indoor coil starves. This is never an add. Walk the liquid line with a clamp to find the cold spot. See 'High superheat + high subcooling' and 'Walking the liquid line with a temperature clamp to find where the restriction actually is'. A TXV that lost its bulb charge looks the same - see 'Suspected TXV problem — how to test it'.",
+   "Superheat LOW + subcool HIGH = most likely too much charge. Head pressure and amps run high. Recover to the subcool target. See 'Low superheat + high subcooling'.",
+   "Superheat LOW + subcool LOW = the liquid has moved into the indoor coil. The metering device is overfeeding (loose or bare TXV bulb, valve stuck open). Do not add charge - fix the feed first, then read both again. See 'Low superheat + low subcooling'.",
+   "Low suction and a cold or icing coil with subcool still normal = usually not a charge problem. Not enough air is reaching the coil. Low charge would pull subcool down too. Fix the air first. See 'Do not touch the charge until airflow is verified'.",
+   "Both on target but head pressure is high = heat can't get out of the condenser: dirty coil, weak fan, recirculating air, or air in the system. Work out the condenser split. See 'Condenser split (CTOA) - separating a heat rejection problem from a charge problem'.",
+   "Both on target but the house is sticky or won't cool = look at the air side: temperature split, too much airflow, air bypassing the coil. See 'Low temperature split across the coil but the gauges look normal' and 'Superheat and subcooling look right but the house will not cool - measure what the coil is actually delivering'.",
+   "The metering device changes how a problem shows. Piston: superheat moves with the load, so charge it to the unit's superheat chart - see 'Charging a fixed-orifice (piston) system by pressure/temperature chart'. TXV: it holds superheat steady, so extra charge and low indoor air can hide from superheat - subcool and suction pressure show them. EEV / inverter: the board picks its own superheat target - use the maker's charge mode, not your own number.",
+   "Change one thing at a time. After each change, wait for it to settle and read both numbers again before you do anything else."
+  ],
+  "safety": "Wear gloves and glasses when connecting hoses - liquid refrigerant causes frostbite. Never vent refrigerant; recover it. On R-32 / R-454B (A2L) units use A2L-rated recovery and leak-detection tools.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-ref-low-suction-normal-superheat-low-airflow",
+  "equipment": "Air Handler",
+  "title": "Low suction pressure and coil icing but the charge readings look normal - low indoor airflow hidden by the metering valve",
+  "summary": "A TXV or EEV holds superheat steady, so when the indoor air drops off, superheat can still look fine. The giveaway is the suction pressure: the coil is boiling colder than it should for the air going across it. Subcool is normal because the charge is fine. Fix the air - do not add charge.",
+  "steps": [
+   "Turn suction pressure into the coil's boiling temperature (saturated suction) using the PT chart for the refrigerant on the nameplate. On a blend use the dew column - see 'Reading a PT chart for a blend - bubble point or dew point column'.",
+   "Subtract that coil temperature from the return air temperature. This gap is the evaporator split. If the coil is much colder than the manufacturer's performance data expects for this return air and outdoor temperature, the coil is too cold for the air it is getting: low airflow or a dirty coil. If the gap is unusually small, think too much air or a coil running warm.",
+   "A coil boiling below 32°F (freezing) will ice up sooner or later, whatever the cause. If it is already iced, look at the ice before you thaw it - see 'Read the ice pattern on a frozen evaporator before you thaw it'.",
+   "Take the temperature split across the coil (return minus supply). A big split with normal superheat on a TXV or EEV system points to low air. See 'Using the cooling temperature split as a quick airflow and charge screen'.",
+   "Check the air: filter (a new high-MERV 1-inch filter can choke it), coil face, blower wheel, blower speed setting against the tonnage, static pressure, closed registers or dampers. See 'Do not touch the charge until airflow is verified'.",
+   "Normal subcool with low suction is not low charge - a real undercharge pulls subcool down too. Do not add refrigerant to bring the suction up. If someone already did, you will see high subcool and high head once the air is fixed; recover back to the target.",
+   "On a piston system the same low air shows differently: superheat falls toward zero and liquid can reach the compressor. The fix is the same - air first.",
+   "After the air is fixed, let it run and read suction, superheat, subcool and the temperature split again."
+  ],
+  "safety": "Don't leave it running with a frozen coil - liquid can come back to the compressor. Do not chip or pry ice off the coil; thaw it with the blower running.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-ref-compressor-failed-find-why",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Compressor failed or replaced - find out what killed it before you put in a new one (superheat, restriction, acid, repeat compressor failure)",
+  "summary": "A compressor rarely dies on its own. If you swap it without finding why it failed, the new one goes the same way. Before you order parts, use the readings, the oil and the old parts to find the cause, and fix that too.",
+  "steps": [
+   "If it still runs, take superheat, subcool and both pressures before you recover anything. Ask the customer about trips, noises and past repairs. These readings are your best evidence.",
+   "Low superheat (or a cold, sweating compressor shell) points to liquid getting back to the compressor: an overfeeding metering device, low indoor airflow, overcharge, or a crankcase heater not working. See 'Scroll compressor damage from repeated flooded starts' and 'Compressor housing cold to the touch after a long off-cycle'.",
+   "High superheat points to a compressor that ran hot. Suction gas is what cools it, so a starved coil from low charge or a restriction cooks it and trips its internal overload over and over. See 'High superheat + low subcooling' and 'High superheat + high subcooling'.",
+   "Check the electrical side as well: contactor, capacitor, supply voltage and wire connections. See 'Telling an electrical burnout from a mechanical failure before opening the system' and 'Contactor is pulled in but the compressor is dead or laboring - read across each pole, not line to line'.",
+   "Prove the compressor is really bad before you condemn it. See 'Compressor reads open on a winding - let the internal overload reset before condemning it' and 'Run a compression ratio before you condemn the compressor'.",
+   "Dark oil or a burnt smell means a burnout. Run an acid test and plan the cleanup. See 'Running an acid test on refrigerant oil after a suspected burnout' and 'Compressor burnout cleanup procedure overview'.",
+   "Found a plugged drier? Find out what plugged it - usually scale from brazing without nitrogen, or debris from an earlier burnout.",
+   "When you put it back together: nitrogen flowing while you braze, a new drier, a deep vacuum checked with a micron gauge, a decay test, then weigh in the charge. See 'Opening a sealed system - recovery, brazing, and drier requirements' and 'Proper evacuation procedure and reading a micron gauge'.",
+   "At startup, superheat, subcool, pressures and airflow should all make sense for that unit. Write down what failed, why it failed, and what you fixed, so the next tech doesn't start from zero."
+  ],
+  "safety": "Turn off and lock out power before working on the compressor. A compressor with an electrical fault can blow its terminals - see 'Compressor with an electrical fault - terminal venting hazard and how to handle it'. Burnout oil can be acidic: wear gloves and glasses. Recover refrigerant; never vent.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-wiring-read-wiring-diagram",
+  "equipment": "Other",
+  "title": "How to read a wiring diagram - legend, thick and thin lines, dashed field wiring, ladder vs connection view",
+  "summary": "Every unit carries its own wiring diagram, usually on the back of a panel. Once you can read it you don't need to memorize units: find the part on the diagram, find its plug on the board, then check it with a meter. Use the diagram on the unit you are standing at.",
+  "steps": [
+   "Use the diagram stuck on the unit. If it doesn't match the one in the manual, the unit's sticker wins - wiring changes between production runs. Check the model number on the diagram matches the unit. The service manual copy is handy for reading it bigger.",
+   "Find the main areas before you read any wire: where line voltage comes in (the terminal block), the boards (big boxes - anything drawn inside a box is on that board), parts out in the unit (drawn outside the boxes, with lines to the plug they land on), the legend, and the notes.",
+   "Look up every part code in the legend instead of guessing. Letters often follow a pattern (on many diagrams a code like R1T is a thermistor, M a motor, Y a coil, X a plug), but it is only a pattern - the legend tells you for sure.",
+   "Check the line key on that diagram: thick lines are usually line voltage, thin lines low voltage. Solid lines are factory wiring; dashed lines are field wiring that an installer ran. On a new install problem, check the dashed wiring first.",
+   "Colors are abbreviated, and the list is on the page. Spellings can differ between the indoor and outdoor diagram. Watch look-alikes: GR green vs GY gray, BK black vs BL blue. A wire with a stripe is its own color. On field wires like the thermostat cable, go by the terminal, not the color.",
+   "Many diagrams show two views. The connection view shows where the wires physically run - use it to find the wire. The ladder (schematic) shows each circuit as one line from one side of the power to the other - use it to work out what has to happen. The ladder is drawn with no call, so a switch drawn open may close when the thermostat calls.",
+   "Read a ladder line like a sentence: start where the call comes in (for example Y), go through each switch to the load (for example the contactor coil), then back to C. Switches in a row are in series - if any one is open, the load gets nothing.",
+   "Check it live with the call on: across a closed switch you read about 0 V, across an open one you read the full 24 V. Full 24 V across a coil that won't pull in = bad coil. 0 V across the coil = the break is upstream. See 'Safety string open - HPC/LPC series voltage and the discharge thermostat' and '24V is good but the furnace still won't fire — walking the limit, rollout and pressure switch string'.",
+   "Read the notes. They tell you about factory jumpers that must come off when you add a device (like a float switch), and safeties that must never be jumpered. See 'Found a limit, rollout, or pressure switch jumpered out'.",
+   "Plug names can change between unit sizes in the same family, and the same plug name can carry a different part on another model. Look it up on this unit's diagram every time."
+  ],
+  "safety": "Thick lines on the diagram mean line voltage - keep your hands clear and turn the power off before pulling plugs. Inverter boards stay charged after the power is off; follow the maker's discharge check (for Daikin FIT see 'Daikin FIT and FIT-Q inverter - capacitor discharge check before touching the control box').",
+  "confidence": "common"
+ },
+ {
+  "id": "s-wiring-sensor-diagram-to-plug-ohms",
+  "equipment": "Other",
+  "title": "Sensor or thermistor fault - find it on the wiring diagram, pull its plug at the board, check thermistor ohms and mounting",
+  "summary": "A sensor code, or a temperature reading on the display that doesn't make sense: trace the sensor from the wiring diagram to its plug on the board, ohm it against the resistance table for that unit, and check how it is mounted. A thermistor can ohm perfectly and still read wrong if it's loose or uninsulated.",
+  "steps": [
+   "Get the sensor's name. The fault code or display may call it something different from the wiring diagram. Match them using the legend. For Daikin FIT see 'Daikin FIT - identifying which outdoor thermistor is which before testing'.",
+   "Follow the sensor's lines on the diagram to the plug name, then find that name printed on the board beside the plug. The same sensor can land on a different plug on another size of the same unit, and one plug can carry two sensors - use the diagram to pick the right pair of pins.",
+   "On some indoor coils and air handlers the sensor wires pass through a second connector outside the control panel. Check that one is fully seated too - a loose connector looks just like a bad sensor.",
+   "Turn the power off. On an inverter unit, wait and prove the board is discharged before you reach in (see 'Daikin FIT and FIT-Q inverter - capacitor discharge check before touching the control box'). Unplug at the board and ohm the sensor's two pins on the sensor side of the plug.",
+   "Measure the actual temperature where the sensor sits (clamp on the same pipe, or the air). Compare your ohms to the resistance table for that unit at that temperature - the Sensors & Plugs screen in this app has the brand tables. Open, shorted, or far off the table = replace the sensor.",
+   "Read the right column. A discharge sensor usually has its own, much higher, curve than the pipe and air sensors at the same temperature. Reading it against the wrong column condemns a good part.",
+   "Warm the sensor in your hand while watching the meter. On the usual (NTC) type the resistance should fall smoothly as it warms. A reading that jumps or drops out points to a broken lead or bad pin.",
+   "Ohms good but the board's reading still looks wrong: check the mounting. Pipe sensors must be clamped tight on clean copper and insulated; the outdoor air sensor must not touch the coil; coil sensors must be seated in their holders. A loose sensor reads the air, not the pipe. On an EEV system a loose gas sensor makes the board overfeed: real superheat drops and the house stays clammy. See 'Daikin mini-split thermistor detection error - check the mounting first, then the resistance'.",
+   "Sensor tests well and is mounted right but the code stays: check the plug pins and the board input. On a mini-split see 'Mini-split sensor fault code - swap two identical thermistors and see whether the code follows'.",
+   "Not every sensor is an ohm check. Pressure sensors are checked by voltage with the power on - see 'Checking a pressure sensor (not a switch) by its output voltage'. For EEV coils see 'EEV not controlling - measuring EEV coil and thermistor resistance'."
+  ],
+  "safety": "Power off before unplugging or ohming anything. Inverter boards hold a charge after the power is off - prove it is discharged first. Pressure-sensor checks are done live: keep your hands clear of line voltage.",
+  "confidence": "common"
  }
 ];
