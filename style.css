@@ -2123,3 +2123,16 @@ body.inv-cam-open { overflow: hidden; }
 .sn-spec { font-weight: 600; }
 .sn-read label { display: inline-block; margin: 0 .6rem .3rem 0; }
 .sn-volt { width: 6.5rem; padding: .4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); font-size: 1rem; }
+/* v398 (Andy 2026-11-10 "Yes, both"): phones get a two-column home screen - 18 full-width tiles
+   were about 4.5 screens of scrolling. Ask Anything and Tag Scanner stay full width on top.
+   Very narrow screens (under 330 px) keep the single column. */
+@media (min-width: 330px) and (max-width: 699px) {
+  .home-logo { width: min(40%, 180px); margin: 0.7rem auto 0.2rem; }
+  .home-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding: 0.8rem; }
+  .home-tiles .tile { min-height: 96px; padding: 0.75rem 0.8rem; border-radius: 16px; justify-content: flex-start; }
+  .home-tiles .tile-ask, .home-tiles .tile-scanner { grid-column: 1 / -1; min-height: 0; }
+  .home-tiles .tile-icon { font-size: 1.4rem; margin-bottom: 0.1rem; }
+  .home-tiles .tile-label { font-size: 1rem; line-height: 1.15; }
+  .home-tiles .tile-sub { font-size: 0.74rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .home-tiles .tile-ask .tile-sub, .home-tiles .tile-scanner .tile-sub { font-size: 0.82rem; }
+}

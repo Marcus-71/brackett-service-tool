@@ -135,7 +135,7 @@
   <div class="disclaimer">Ask the way you'd say it out loud — "goodman 3 flashes", "what size capacitor", "sequence of operation on a heat call", "does O or B energize in cooling". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once — the result cards only ever show what's actually stored in here. The 🤖 AI answer is different: it is written from the manual pages and entries it finds plus general HVAC practice, so a number in it that you can't open in a cited page is general practice, not this unit's spec — check it against the unit's own literature before acting on it. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you).</div>
   <div class="controls">
     <div class="ask-input-row">
-      <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Ask anything — code, symptom, unit, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Code, symptom, model, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
       <button id="askMicBtn" class="ask-mic-btn hidden" type="button" aria-label="Ask by voice" title="Ask by voice">🎤</button>
     </div>
     <div id="askVoiceHint" class="ask-note hidden"></div>
@@ -168,7 +168,7 @@
 <section id="maintScreen" class="screen hidden">
   <div class="disclaimer">Pulled from manufacturer service literature. The rating plate on the unit wins over anything on this screen. Scanning in sun? Shade the whole label first.</div>
   <div class="controls">
-    <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model — G61, DM96VC, 59TP6, 58SC0…" autocomplete="off">
+    <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model — G61, DM96VC, 59TP6…" autocomplete="off">
     <label class="scan-btn" for="maintPhotoInput" style="margin-top:.7rem">📷 Scan the data plate</label>
     <input type="file" id="maintPhotoInput" accept="image/*" capture="environment" class="hidden">
     <div id="maintScanStatus" class="scan-status hidden"></div>
@@ -197,7 +197,7 @@
 <section id="manualsScreen" class="screen hidden">
   <div class="disclaimer">☁️ = on the server, tap once with signal to download. 📄 = stored on this phone, works with zero signal. Search by brand or any part of the model number. Remove downloads anytime to free space — they stay listed.</div>
   <div class="controls">
-    <input id="manualSearchInput" class="search-input" type="search" inputmode="search" placeholder="Brand, model (even part of it), or title…" autocapitalize="characters" autocomplete="off">
+    <input id="manualSearchInput" class="search-input" type="search" inputmode="search" placeholder="Brand, part of a model, or title" autocapitalize="characters" autocomplete="off">
     <div class="breadcrumb" id="manualBreadcrumb"></div>
   </div>
   <div id="bulletinBanner" class="bulletin-banner hidden"></div>
@@ -209,7 +209,7 @@
 <section id="tstatScreen" class="screen hidden">
   <div class="disclaimer">Terminal tables, installer settings and codes pulled from each maker's own install guides. Read the wiring label on the equipment too — jumpers and terminal names shift between board revisions.</div>
   <div class="controls">
-    <input id="tstatSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search model, brand, terminal, or code (TH6220, N260, E43…)" autocomplete="off">
+    <input id="tstatSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model, brand or code — TH6220" autocomplete="off">
     <div class="filter-row">
       <select id="tstatBrandChips" class="filter-select" aria-label="Filter by brand"></select>
       <select id="tstatTypeChips" class="filter-select" aria-label="Filter by type"></select>
@@ -408,11 +408,11 @@
 <section id="sensorsScreen" class="screen hidden">
   <div class="disclaimer">Which sensor sits on which board plug, its resistance chart and how to test it — taken from each unit's own service manual (page cited on every card). Boards differ by model AND size, so enter the full model. A plug the manual doesn't name is left blank on purpose — check the wiring diagram on the unit's panel.</div>
   <div class="controls">
-    <input id="snModel" class="search-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Model off the tag — DZ20VC0361, XP25-036, 25HCB6…">
+    <input id="snModel" class="search-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Model off the tag — DZ20VC0361">
     <div class="filter-row">
       <select id="snMapSel" class="filter-select" aria-label="Pick the unit"></select>
     </div>
-    <input id="snPlug" class="search-input sn-plug-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Plug on the board — X12A, PL1, J2… (or R3T, discharge)">
+    <input id="snPlug" class="search-input sn-plug-input" type="search" autocapitalize="characters" autocomplete="off" placeholder="Board plug — X12A, PL1, or R3T">
     <div class="sn-side-row"><button type="button" class="sn-side-btn" data-side="outdoor">🌳 Outdoor</button><button type="button" class="sn-side-btn" data-side="indoor">🏠 Indoor</button><button type="button" class="sn-side-btn" data-side="generator">⚡ Generator</button></div>
   </div>
   <main id="snResults"></main>
@@ -464,8 +464,8 @@
         <input id="ccScanInInput" type="file" accept="image/*" capture="environment" class="hidden">
       </div>
       <div class="cc-scan-row">
-        <div class="form-field"><label>Outdoor model</label><input id="ccOutModel" type="text" autocapitalize="characters" placeholder="scan or type, e.g. ML15KSPV-036"></div>
-        <div class="form-field"><label>Indoor model / coil</label><input id="ccInModel" type="text" autocapitalize="characters" placeholder="scan or type, e.g. CBK43UHE-036"></div>
+        <div class="form-field"><label>Outdoor model</label><input id="ccOutModel" type="text" autocapitalize="characters" placeholder="e.g. ML15KSPV-036"></div>
+        <div class="form-field"><label>Indoor model / coil</label><input id="ccInModel" type="text" autocapitalize="characters" placeholder="e.g. CBK43UHE-036"></div>
       </div>
       <div id="ccScanStatus" class="hidden"></div>
       <div id="ccScanResult"></div>
@@ -477,17 +477,17 @@
         <div class="form-field"><label>Metering</label>
           <select id="cc-meter"><option value="txv">TXV / EEV</option><option value="orifice">Fixed orifice / piston (rare on newer systems)</option></select></div>
         <div class="form-field"><label>Condenser type</label>
-          <select id="cc-eff"><option value="std">Standard (up to ~14 SEER)</option><option value="high">High-efficiency (15+ SEER)</option></select></div>
-        <div class="form-field"><label>Nameplate subcool target °F</label><input id="cc-sctarget" type="number" inputmode="decimal" placeholder="from data plate (10 if unknown)"></div>
+          <select id="cc-eff"><option value="std">Up to 14 SEER</option><option value="high">15+ SEER (high-eff)</option></select></div>
+        <div class="form-field"><label>Nameplate subcool target °F</label><input id="cc-sctarget" type="number" inputmode="decimal" placeholder="10 if unknown"></div>
       </div>
 
       <div class="cc-section-label">Temperatures</div>
       <div class="charge-grid">
         <div class="form-field"><label>Outdoor temp °F</label><input id="cc-od" type="number" inputmode="decimal" placeholder="e.g. 95"></div>
         <div class="form-field"><label>Indoor return (dry bulb) °F</label><input id="cc-id" type="number" inputmode="decimal" placeholder="e.g. 75"></div>
-        <div class="form-field"><label>Indoor wet bulb °F <span class="cc-optional">(fixed-orifice only)</span></label><input id="cc-wb" type="number" inputmode="decimal" placeholder="only needed for orifice target SH"></div>
-        <div class="form-field"><label>Suction line temp °F</label><input id="cc-slt" type="number" inputmode="decimal" placeholder="computes superheat"></div>
-        <div class="form-field"><label>Liquid line temp °F</label><input id="cc-llt" type="number" inputmode="decimal" placeholder="computes subcooling"></div>
+        <div class="form-field"><label>Indoor wet bulb °F <span class="cc-optional">(fixed-orifice only)</span></label><input id="cc-wb" type="number" inputmode="decimal" placeholder="orifice only"></div>
+        <div class="form-field"><label>Suction line temp °F</label><input id="cc-slt" type="number" inputmode="decimal" placeholder="for superheat"></div>
+        <div class="form-field"><label>Liquid line temp °F</label><input id="cc-llt" type="number" inputmode="decimal" placeholder="for subcooling"></div>
       </div>
 
       <div class="cc-section-label">Gauge readings</div>
@@ -500,8 +500,8 @@
       <div class="charge-grid">
         <div class="form-field"><label>Suction (low side) psig</label><input id="cc-suct" type="number" inputmode="decimal" placeholder="e.g. 120"></div>
         <div class="form-field"><label>Head (high side) psig</label><input id="cc-head" type="number" inputmode="decimal" placeholder="e.g. 410"></div>
-        <div class="form-field"><label>Superheat °F <span class="cc-optional">(or use line temp above)</span></label><input id="cc-sh" type="number" inputmode="decimal" placeholder="auto-computes from suction + line temp"></div>
-        <div class="form-field"><label>Subcooling °F <span class="cc-optional">(or use line temp above)</span></label><input id="cc-sc" type="number" inputmode="decimal" placeholder="auto-computes from head + line temp"></div>
+        <div class="form-field"><label>Superheat °F <span class="cc-optional">(or use line temp above)</span></label><input id="cc-sh" type="number" inputmode="decimal" placeholder="auto from line temp"></div>
+        <div class="form-field"><label>Subcooling °F <span class="cc-optional">(or use line temp above)</span></label><input id="cc-sc" type="number" inputmode="decimal" placeholder="auto from line temp"></div>
       </div>
 
     </div>
@@ -517,7 +517,7 @@
         <div class="form-field"><label>Nameplate charge — lb</label><input id="fc-wi-lb" type="number" inputmode="decimal" placeholder="e.g. 7"></div>
         <div class="form-field"><label>Nameplate charge — oz</label><input id="fc-wi-oz" type="number" inputmode="decimal" placeholder="e.g. 6"></div>
         <div class="form-field"><label>Charge covers line length (ft)</label><input id="fc-wi-base" type="number" inputmode="decimal" value="15"></div>
-        <div class="form-field"><label>Actual line length (ft)</label><input id="fc-wi-len" type="number" inputmode="decimal" placeholder="measured, not guessed"></div>
+        <div class="form-field"><label>Actual line length (ft)</label><input id="fc-wi-len" type="number" inputmode="decimal" placeholder="measured"></div>
         <div class="form-field"><label>Liquid line size</label>
           <select id="fc-wi-size">
             <option value="0.40">5/16" — 0.40 oz/ft</option>
@@ -536,7 +536,7 @@
       <div class="charge-grid">
         <div class="form-field"><label>Test dial size (cu ft)</label>
           <select id="fc-gm-dial"><option value="0.5">1/2 cu ft</option><option value="1" selected>1 cu ft</option><option value="2">2 cu ft</option><option value="5">5 cu ft</option></select></div>
-        <div class="form-field"><label>Seconds for ONE revolution</label><input id="fc-gm-sec" type="number" inputmode="decimal" placeholder="time it with all other gas off"></div>
+        <div class="form-field"><label>Seconds for ONE revolution</label><input id="fc-gm-sec" type="number" inputmode="decimal" placeholder="other gas off"></div>
         <div class="form-field"><label>Gas heating value (BTU/cu ft)</label><input id="fc-gm-hv" type="number" inputmode="decimal" value="1000"></div>
         <div class="form-field"><label>Furnace nameplate input (BTU/h)</label><input id="fc-gm-plate" type="number" inputmode="decimal" placeholder="e.g. 80000"></div>
       </div>
@@ -549,7 +549,7 @@
       <div class="charge-grid">
         <div class="form-field"><label>Refrigerant</label>
           <select id="fc-cyl-ref"><option>R-410A</option><option>R-32</option><option>R-454B</option></select></div>
-        <div class="form-field"><label>Cylinder temperature °F</label><input id="fc-cyl-temp" type="number" inputmode="decimal" placeholder="= air temp if it's been sitting out"></div>
+        <div class="form-field"><label>Cylinder temperature °F</label><input id="fc-cyl-temp" type="number" inputmode="decimal" placeholder="air temp if sat out"></div>
       </div>
       <div id="fc-cyl-out" class="fc-out"></div>
       <p class="warranty-needs">Valid only with LIQUID in the tank, settled to air temperature (not fresh out of a hot truck or sun). Reading well ABOVE the expected static pressure = air/non-condensables in the tank or it's hotter than you think. Well below = the tank is down to vapor. Recovery cylinders: never past 80% of rated capacity, BY WEIGHT, on a scale — never by pressure or by ear.</p>

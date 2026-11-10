@@ -1382,7 +1382,7 @@ function renderAsk() {
   // "blower runs all the time" led with a Lennox rooftop (Gus 2026-08-17, four tries).
   const qBranded = ASK_BRAND_RE.test(normalizeQuery(rq));
   const branded = (it) => (it.brand || ASK_BRAND_RE.test(String(it.title).toLowerCase())) ? 1 : 0;
-  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank || (qBranded ? 0 : branded(a.it) - branded(b.it)) || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
+  hits.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askKindRank(units, a) - askKindRank(units, b) || (qBranded ? 0 : branded(a.it) - branded(b.it)) || a.it.title.length - b.it.title.length || a.it.title.localeCompare(b.it.title));
 
   // ----- Narrowing question -----
   // After a broad first search, ask ONE follow-up (brand, then equipment type)
@@ -2075,13 +2075,36 @@ async function askRemotePassages(q, units, threshold, limit, skipIds) {
 // The best-scoring index items for a set of units, one per distinct answer: the same code title
 // on five board families fills the five AI slots with one answer (F9), so a repeat title (or a
 // repeat body) is skipped - the result list below still shows every family.
+// Kind order for ties. A question that names no model and no code ("generac overspeed", "rollout switch
+// open daikin") wants the general fix first, not one model's code row - so then a Fix card goes ahead of
+// Code rows (Vern / Mark 2026-11-09: both got a list of one-model code rows and no how-to; Andy 11-10).
+// Only a Fix whose TITLE alone names everything asked jumps ahead - one that ties on summary or body
+// text does not ("oh4653 not getting fuel" must not lead with a CO-alarm card). A flash / blink count
+// or a short display code ("goodman 5 flashes", "daikin ed") is a code question: code rows keep the
+// lead (Fable review 11-10). x = { it, sc, tsc }.
+const ASK_FLASH_RE = /^(\d{1,4}(\.\d{1,2})?|flash|flashes|flashing|blink|blinks|blinking)$/;
+function askKindRank(units, x) {
+  const it = x.it, r = ASK_KIND[it.kind].rank;
+  if (it.kind !== "symptom" || units.kModel) return r;
+  if (units.codeToks === undefined) units.codeToks = askCodeToks(units);
+  if (units.codeToks.length) return r;
+  const live = askLiveUnits(units);
+  if (units.flashQ === undefined) units.flashQ = live.some(u => u.alts.some(a => ASK_FLASH_RE.test(a) ||
+    (/^[a-z]{1,2}\d?$/.test(a) && !ASK_BRAND_WORDS.has(a))));
+  if (units.flashQ) return r;
+  // A brand's card does not jump ahead of a question that names no brand ("rollout switch open").
+  if (units.brandQ === undefined) units.brandQ = live.some(u => u.alts.some(a => ASK_BRAND_WORDS.has(a)));
+  const title = String(it.title).toLowerCase();
+  if (!units.brandQ && (it.brand || ASK_BRAND_RE.test(title))) return r;
+  return askUnitHits(units, title) >= live.length ? -0.5 : r;
+}
 function askTopItems(units, limit) {
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
   for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
   // beats a card that only mentions Evolution in a footnote), then answers before references.
-  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || ASK_KIND[a.it.kind].rank - ASK_KIND[b.it.kind].rank);
+  scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askKindRank(units, a) - askKindRank(units, b));
   const seen = new Set(), out = [];
   for (const x of scored) {
     const k = x.it.kind + "|" + x.it.title.replace(/\s+/g, " ").toLowerCase();
@@ -12972,7 +12995,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v397";
+const APP_VERSION = "v398";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

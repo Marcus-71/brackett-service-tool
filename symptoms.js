@@ -21077,5 +21077,43 @@ const SYMPTOMS = [
   ],
   "safety": "Set the generator to OFF and remove the control fuse before disconnecting the battery so it can't start while you work. Disconnect negative first, reconnect it last.",
   "confidence": "manual"
+ },
+ {
+  "id": "s-generac-overspeed-shutdown",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac overspeed shutdown - generator shut down on Overspeed, what to check (Next Gen, Evolution, Nexus, QT liquid-cooled)",
+  "summary": "Overspeed means the controller saw the engine run too fast and shut it down to protect the alternator and the house loads. On air-cooled Generacs the dealer manuals send you to the throttle side first - mixer, stepper or throttle control. They give no field governor adjustment. Find which controller you are on, read the exact code, then work the checks for that controller.",
+  "steps": [
+   "Read the code before you clear it. Power Zone 200 (Next Gen): 1200 = over 72 Hz for 3 s, 1205 = over 75 Hz for 0.1 s (ECM speed), 1208 = over 75 Hz for 0.5 s (DPE sensing wires). Evolution: 1200 / 1205 = stepper / mixer, 1207 = AVR zero-cross speed check. Nexus: OVERSPEED text (4320 rpm for 3 s or 4500 rpm at once). QT liquid-cooled with the R-200B panel: OVER SPEED solid red = overspeed shutdown (speed over the limit for 3 s); OVER SPEED flashing = it lost the speed signal (see the QT step).",
+   "All controllers first: check GenService for bulletins on the unit, then clear the alarm and run it to see whether it comes back.",
+   "Next Gen (Power Zone 200) 1200 / 1205: record every code in Field Pro and fix any throttle/mixer or fuel supply/pressure codes first. Check for an overload and remove it. Check the throttle and mixer for an obstruction or damage - clear it, or replace the mixer assembly if it is damaged. Make sure the ETMC connector is fully seated. Then clear faults and watch the throttle linkage while you pull and reinstall the 15 A fuse in Wire 13 - it should sweep fully and then set for starting. Start it in MANUAL. Sweeps and runs clean: done. Linkage does not move: Electronic Throttle Control Power Test. Moves right but the fault returns: call Generac Technical Support. If the alarm does not come back after clearing: Intermittent Alarm Test - torque every harness ground (control box, each engine foot, rear of block), Battery and Cables Test, confirm every device has current firmware, run at full load and wiggle the sensor, ECM and ground connectors; cannot recreate it: call Technical Support.",
+   "Next Gen 1208: work any other E-codes first. Check firmware - Power Zone 200 V1.4.1 or higher and ECM 14304 or higher. Power cycle; if 1208 comes back, call Technical Support.",
+   "Evolution 1200 / 1205 (Test 12, Check Stepper Motor Control): take the air cleaner cover off and move the throttle by hand - stepper, linkage and throttle must not bind. Pull the stepper arm to the idle stop, set MANUAL and watch: the stepper should drive the mixer fully open, back closed, then to the start position. Repeat with the arm pulled open. No movement either time: check the six-pin stepper plug at the controller is seated, re-seat it and retest. Still nothing: ohm the plug terminals - red to orange, yellow, brown and black about 10-11 ohms each, red to ground open. Bad reading or no movement: replace the stepper.",
+   "Evolution 1207: check the Wire 18 magneto signal while cranking (about 3-6 VAC on a V-twin, 2-3 VAC on a single) and the magnetos (Tests 64 and 60).",
+   "Nexus OVERSPEED: the dealer manual sends it to Test 12 as well (0H9172 Rev M, Nexus does steps 1-3 and 7-10 only): air cleaner cover off, move the throttle by hand - stepper, linkage and throttle must not bind; then watch the stepper move the throttle when you set MANUAL. The 10-11 ohm table is not given for Nexus. No field adjustment is given - if it does not bind and the stepper moves, call Technical Support.",
+   "QT liquid-cooled (R-200B) OVER SPEED solid: governor driver about 10 VDC on pins 4 and 1 of its plug while cranking (Test 73); the Bosch actuator butterfly must not bind (Test 74); then the magnetic pickup. OVER SPEED flashing: if the engine never cranked, fix the no-crank first. Check the DIP switches (Test 32). Magnetic pickup unplugged: about 1,000 ohms between Wire 79 and Wire 0. Fuel OFF, breakout harness 0G41800SRV in line: about 1.0 VAC while cranking. To set the gap: unit OFF, battery negative off, fuel OFF, check a flywheel tooth is centered under the hole, screw in by hand until it just touches the tooth, back out one full turn - do not overtighten, contact with the flywheel destroys the pickup. Clean the tip (PIB08-15-S Rev L). Open the unit's own card in Generators for the full test list.",
+   "The manuals give no field governor adjustment for the air-cooled units. If every test passes and the overspeed returns, call Generac Technical Support rather than swapping parts."
+  ],
+  "safety": "Set the generator to OFF and pull the control fuse or disconnect the battery before putting your hands near the throttle, stepper or linkage - in AUTO it can start on its own at any time. Setting MANUAL cranks and may start the engine - take your hands off the linkage and wiring first, and keep clear of the fan and belts while you watch the throttle.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-daikin-goodman-rollout-open",
+  "equipment": "Gas Furnace",
+  "title": "Daikin / Goodman / Amana furnace - rollout switch open",
+  "summary": "The rollout switch circuit is open - normally because flame came out of the burner box instead of going into the heat exchanger. The furnace will not fire. Find what made the flame roll out before you reset it.",
+  "steps": [
+   "Match the code to the board. DM97MC / DC97MC display: Ed (ROLLOUT OPEN). DM80SN / DC80SN / DM92SN / DM96SN / DC96SN / GMVC / DR96TN: E11. DM80VC / DC80VC: E3 - on that board the rollout is part of the limit circuit. Single-stage flash-code boards (DM80SE / DM92SE / DM96SE and Goodman GMES80 with the BF145): 6 flashes. Goodman GMEC80 two-stage (BF139, three LEDs): red 5 flashes. On the GMES80 (BF145) and DM80VC the circulator blower runs continuously with this fault.",
+   "Red 5 flashes on the BF139 means rollout OR a blown control board fuse - check the 3 A fuse first. If the fuse is open, find the low-voltage short before you replace it. 6 flashes: Daikin's updated code list for DM80SE / DM92SE / DM96SE (DTB-RES-1907) makes 6 flashes rollout only and 10 flashes the fuse - the older list said rollout or control fuse. On the GMES80 (BF145), 6 flashes can also be the board fuse on some models, so check the fuse there too.",
+   "Power off. Check burner alignment and that the orifice / manifold plate is seated in the right position.",
+   "Check the flue and combustion-air inlet pipes for blockage, too many elbows or too much length, and the termination.",
+   "Check the inducer runs and pulls a normal draft - a failed inducer lets the flame roll out.",
+   "Check for a restricted or blocked heat exchanger, and check the gas pressure is correct.",
+   "After the checks above, reset the switch once, stay at the furnace and watch the burners when the blower comes on. If the flame is disturbed or moves toward the rollout switch when the blower starts, shut it down - suspect a defective heat exchanger and do not leave it running.",
+   "Do not leave the furnace running on a reset until the cause is found and fixed (the switch is manual reset on the Ed and E11 furnaces). If the switch still reads open after it cools and is reset, replace it with the correct part. Check the wiring to it while you are there."
+  ],
+  "safety": "Never jumper or bypass a rollout switch, and do not just reset it and leave. A trip means flame left the burner box - that is a fire and CO hazard. Test for CO before you put the furnace back in service.",
+  "confidence": "manual"
  }
 ];
