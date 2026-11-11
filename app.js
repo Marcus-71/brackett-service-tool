@@ -965,6 +965,7 @@ function askBuildIndex() {
       idHay: [t.brand, t.family, t.aka, (t.models || []).join(" ")].filter(Boolean).join(" ").toLowerCase(),
       nameHay: [t.brand, t.family].filter(Boolean).join(" ").toLowerCase(),   // not aka: "works with ecobee" is not an ecobee
       acc: t.type === "accessory" || t.type === "zone-control",
+      how: (t.howTo || []).some(g => g.topics.some(x => x.steps && x.steps.length > 1)),
       // The thermostat's own error codes count as typed codes, like a generator's alarms ("nest e74" was
       // every brand's code 74 row ahead of the Nest card that lists E4 / E24 / E74; Andy 11-10).
       codes: [...new Set((t.diagnostics || []).flatMap(d => askCodeTokens(d.code)))],
@@ -1375,8 +1376,7 @@ function askScoreItem(units, it) {
     if (it.kind === "tstat" && idOk && named(it.nameHay) && th.others.every(u => u.alts.some(a => askTermHit(it.idHay, a)))) {
       // Cards that really hold the asked words (the how-to steps) go before the brand's other cards,
       // and a sensor, adapter or other accessory goes after the thermostats themselves.
-      const has = th.howU.every(u => u.alts.some(a => askTermHit(it.hay, a)));
-      const order = it.acc ? 0.1 : has ? 0.5 : 0.25;
+      const order = it.acc ? 0.1 : it.how ? 0.5 : th.howU.every(u => u.alts.some(a => askTermHit(it.hay, a))) ? 0.3 : 0.25;
       return { sc: Math.max(sc, need), tsc: th.soft ? need - 0.9 + order : need + order };
     }
     if (th.pure && sc >= need && (it.kind === "symptom" || it.kind === "tool") && (it.brandOnly || named(head))) {
@@ -1384,7 +1384,7 @@ function askScoreItem(units, it) {
       // card / tool whose title holds the asked words ("honeywell menu" -> Installer Setup Menu).
       if (it.brandOnly || th.howU.every(u => u.alts.some(a => askTermHit(head, a)))) return { sc, tsc: need + 1 };
       // The brand's other tools that hold every word (its app, its portal) sit among its thermostats.
-      if (it.kind === "tool" && !th.soft) return { sc, tsc: need + 0.4 };
+      if (it.kind === "tool" && !th.soft) return { sc, tsc: need + 0.2 };
     }
     // Only a thermostat brand was named ("honeywell schedule"): nothing that is not that brand's own entry -
     // general cards, equipment cards, maintenance figures that mention it in passing - stays in the list.
@@ -3809,7 +3809,8 @@ function tstatSearchFields(t) {
     ...(t.troubleshooting || []).map(x => x.symptom),
     ...(t.wiringNotes || []),
     ...(t.manuals || []).map(x => x.title),
-    ...(t.howTo || []).flatMap(g => g.topics.flatMap(x => [x.title, ...(x.steps || [])])),
+    // Not the "How to use it" steps: their everyday words ("touch", "three lines", "display") pulled
+    // thermostat cards into unrelated questions. A how-to question finds the card by its name (askTstatHow).
   ];
 }
 
@@ -13282,7 +13283,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v410";
+const APP_VERSION = "v411";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

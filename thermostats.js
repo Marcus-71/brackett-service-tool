@@ -54669,3 +54669,1845 @@ const TSTAT_HOWTO = {
     e.howTo = u.map(g => ({ label: g.label || "", note: g.note || "", topics: TSTAT_HOWTO.sets[g.set] || [] }));
   }
 })();
+
+// ---- "How to use it" steps for more brands (Andy 2026-11-11: "yes do it for all of them"). Each block adds
+// shared step sets and says which cards use them; a card with no source carries a one-line note instead.
+function tstatHowtoAdd(add) {
+  Object.assign(TSTAT_HOWTO.sets, add.sets); Object.assign(TSTAT_HOWTO.use, add.use);
+  for (const e of THERMOSTATS) {
+    const u = add.use[e.id];
+    if (u) e.howTo = u.map(g => ({ label: g.label || "", note: g.note || "", topics: TSTAT_HOWTO.sets[g.set] || [] }));
+  }
+}
+// add-honeywell-1.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-tseries": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch the screen to wake it.",
+     "Touch the menu icon (three lines) at the bottom of the home screen.",
+     "The main menu lists System mode, Fan, Priority (room sensors), Schedule and Devices & Sensors. Scroll down for Wi-Fi, Preferences and the installer options.",
+     "Use the up and down arrows on the home screen to change the set temperature."
+    ],
+    "source": "T10 & T10+ Pro Smart Thermostat User Guide (Resideo 33-00428); T9 Smart Thermostat User Guide (Resideo 33-00478)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch the menu icon, then Schedule.",
+     "Pick grouped days (all days the same) or single days, then touch the period to change: Wake, Away, Home or Sleep.",
+     "Touch Time to change when it starts, Temperature for the heat and cool set points, Fan for On / Auto / Circulate, and Priority for which room sensors count.",
+     "Or touch Create new schedule and the thermostat walks you through it."
+    ],
+    "notes": [
+     "Geofencing (schedule by the phone's location) is set up in the Resideo app, not on the thermostat."
+    ],
+    "source": "T10 & T10+ Pro Smart Thermostat User Guide (Resideo 33-00428); T9 Smart Thermostat User Guide (Resideo 33-00478)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "To stop using the schedule: menu icon > Schedule > Disable schedule. The thermostat then holds what you set by hand.",
+     "To hold a temperature with the schedule still on: press the up or down arrow to the temperature you want (in Auto, touch Heat to or Cool to first).",
+     "Touch Hold until at the bottom of the screen.",
+     "Pick Next Period, A Specific Time or Permanently, then touch Done."
+    ],
+    "source": "T10 & T10+ Pro Smart Thermostat User Guide (Resideo 33-00428); T9 Smart Thermostat User Guide (Resideo 33-00478)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch the Hold until text at the bottom of the home screen.",
+     "Pick Remove hold, then touch Done."
+    ],
+    "source": "T10 & T10+ Pro Smart Thermostat User Guide (Resideo 33-00428); T9 Smart Thermostat User Guide (Resideo 33-00478)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the screen to wake it, then touch the menu icon.",
+     "Touch System mode (Select Mode) and pick Off, then Done.",
+     "To turn it back on, pick Heat, Cool, Auto or Em Heat the same way."
+    ],
+    "notes": [
+     "Auto and Em Heat only show when the installer set the system up for them."
+    ],
+    "source": "T10 & T10+ Pro Smart Thermostat User Guide (Resideo 33-00428); T9 Smart Thermostat User Guide (Resideo 33-00478)"
+   }
+  ],
+  "hw-lyric": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The home screen has Mode, Fan and Menu along the bottom and the up / down arrows for the temperature.",
+     "Touch Menu, then use the arrows to page through the options: Schedule, Clock, Date, Temp Scale, Reset, Screen Lock, Wi-Fi, Equipment Status, Device Info, Alerts and more.",
+     "Touch Select to open an option and Back to go back one screen."
+    ],
+    "source": "Lyric T5 Wi-Fi Programmable Thermostat User Guide (33-00231EFS); T6 Pro Smart Programmable Thermostat User Guide (33-00410EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch Menu, use the arrows to reach SCHEDULE, touch Select.",
+     "Use the arrows to the period you want (Wake, Away, Home, Sleep for a day or group of days) and touch Select.",
+     "Touch the time and use the arrows to set when the period starts, then Select.",
+     "Touch the temperature and set it for the mode that is running, then Select; then set the other mode, Select.",
+     "Do the next period, or arrow to DONE and touch Select to save."
+    ],
+    "notes": [
+     "The schedule type (every day the same, weekdays / weekend, each day different) can only be changed in the Lyric / Resideo app.",
+     "Menu > RESET > SCHEDULE puts back the default Monday-Friday / Saturday-Sunday schedule."
+    ],
+    "source": "Lyric T5 Wi-Fi Programmable Thermostat User Guide (33-00231EFS); T6 Pro Smart Programmable Thermostat User Guide (33-00410EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Turn the schedule off: touch Menu, arrow to SCHEDULE, touch Select, then touch Sched. On/Off until it reads Schedule Off. Touch Back twice.",
+     "Or keep the schedule and hold: touch the up or down arrow to the temperature you want. Hold Until appears with an end time (up to 12 hours).",
+     "To hold with no end time, touch Hold Until, then touch Permanent Hold."
+    ],
+    "notes": [
+     "Vacation hold can only be set in the app."
+    ],
+    "source": "Lyric T5 Wi-Fi Programmable Thermostat User Guide (33-00231EFS); T6 Pro Smart Programmable Thermostat User Guide (33-00410EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch Hold Until (or Permanent Hold) on the home screen.",
+     "Touch Run Schedule."
+    ],
+    "source": "Lyric T5 Wi-Fi Programmable Thermostat User Guide (33-00231EFS); T6 Pro Smart Programmable Thermostat User Guide (33-00410EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch Mode on the home screen.",
+     "Keep touching it until Off shows. Off turns the heating and cooling off.",
+     "To turn it back on, touch Mode until Heat, Cool, Auto or Em Heat shows."
+    ],
+    "notes": [
+     "Auto is off by default on the T5: Menu > CHANGEOVER > AUTO turns it on."
+    ],
+    "source": "Lyric T5 Wi-Fi Programmable Thermostat User Guide (33-00231EFS); T6 Pro Smart Programmable Thermostat User Guide (33-00410EFS)"
+   }
+  ],
+  "hw-t6zwave": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The home screen has Mode, Fan and Menu along the bottom and the up / down arrows for the temperature.",
+     "Touch Menu, then use the arrows to page through the options (Schedule, Clock, Date, Reset, Screen Lock and more). Touch Select to open one, Back to go back."
+    ],
+    "source": "T6 Pro Z-Wave Programmable Thermostat User Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch Menu, arrow to SCHEDULE, touch Select.",
+     "Arrow to the period you want to change and touch Select.",
+     "Touch the time and set when it starts, then Select.",
+     "Touch the temperature, set the running mode's temperature, Select, then the other mode's, Select.",
+     "Do the next period, or arrow to DONE and Select to save."
+    ],
+    "notes": [
+     "When the thermostat is joined to a Z-Wave network it usually follows the Z-Wave controller's settings instead of its own schedule."
+    ],
+    "source": "T6 Pro Z-Wave Programmable Thermostat User Guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch the up or down arrow to the temperature you want. Hold Until appears.",
+     "Touch Hold Until, then Permanent Hold to keep that temperature until someone changes it."
+    ],
+    "notes": [
+     "If the thermostat is joined to a Z-Wave network, Hold Until and Permanent Hold are not offered on the screen - a change lasts until the controller sends a new setting."
+    ],
+    "source": "T6 Pro Z-Wave Programmable Thermostat User Guide"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch Hold Until or Permanent Hold on the home screen.",
+     "Touch Run Schedule."
+    ],
+    "source": "T6 Pro Z-Wave Programmable Thermostat User Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch Mode on the home screen until Off shows.",
+     "To turn it back on, touch Mode until Heat, Cool, Auto or Em Heat shows."
+    ],
+    "source": "T6 Pro Z-Wave Programmable Thermostat User Guide"
+   }
+  ],
+  "hw-rth6580": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "This model uses the buttons around the screen: System, Fan, Set Clock/Day/Schedule, Hold and Cancel, plus the up / down arrows.",
+     "Press System to change the mode, Fan for On / Auto, and Set Clock/Day/Schedule for the clock, day and schedule."
+    ],
+    "source": "RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide (69-2715EF)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the thermostat to the mode you are programming (Heat or Cool) first.",
+     "Press Set Clock/Day/Schedule, then Set Schedule.",
+     "Use the arrows to set Monday's Wake time, press Next; set the temperature, press Next.",
+     "Do the same for the next periods (Leave, Return, Sleep), then press Next for the next day.",
+     "Press Done to save."
+    ],
+    "source": "RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide (69-2715EF)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD. This turns the program schedule off.",
+     "Use the arrows to set the temperature. It stays there 24 hours a day until someone changes it or presses Cancel."
+    ],
+    "notes": [
+     "Pressing only the arrows changes the temperature until the next program period starts."
+    ],
+    "source": "RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide (69-2715EF)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Cancel. The program schedule takes over again."
+    ],
+    "source": "RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide (69-2715EF)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press System until Off is selected. Heating and cooling are off.",
+     "Press System again to pick Heat, Cool, Auto or Em Heat (heat pumps)."
+    ],
+    "source": "RTH6500WF / RTH6580WF Smart Series Programmable Thermostat User Guide (69-2715EF)"
+   }
+  ],
+  "hw-rth9585": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The touch keys on the home screen: MODE (system mode), FAN, SETTINGS (options and the schedule) and HOME (back to the home screen).",
+     "Touch the up / down arrows by the set temperature to change it."
+    ],
+    "source": "RTH9585WF Smart Series Color Touchscreen User Guide; RTH9580WF User Guide (33-00167)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch SETTINGS, then Create/Edit Schedule.",
+     "Pick View/Edit to change one part of the schedule, Guide Me to build it by answering questions, or I'll do it myself.",
+     "For I'll do it myself: pick the days, touch Next, then touch each period (Wake, Leave, Return, Sleep) and set its time and temperatures.",
+     "Touch Done to save."
+    ],
+    "source": "RTH9585WF Smart Series Color Touchscreen User Guide; RTH9580WF User Guide (33-00167)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch the up / down arrows to set the temperature. A Hold Until time shows - the schedule comes back when it runs out.",
+     "Touch Switch to Permanent Hold to keep that temperature until someone changes it."
+    ],
+    "source": "RTH9585WF Smart Series Color Touchscreen User Guide; RTH9580WF User Guide (33-00167)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch Cancel Hold. The program schedule takes over again."
+    ],
+    "source": "RTH9585WF Smart Series Color Touchscreen User Guide; RTH9580WF User Guide (33-00167)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch MODE.",
+     "Touch Off. Heating and cooling are off.",
+     "To turn it back on, touch MODE and pick Heat, Cool, Automatic or Em Heat."
+    ],
+    "source": "RTH9585WF Smart Series Color Touchscreen User Guide; RTH9580WF User Guide (33-00167)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-t10-pro": [
+   {
+    "set": "hw-tseries"
+   }
+  ],
+  "tst-honeywell-t9-smart": [
+   {
+    "set": "hw-tseries"
+   }
+  ],
+  "tst-honeywell-t5-t5plus": [
+   {
+    "set": "hw-lyric"
+   }
+  ],
+  "tst-honeywell-t6-pro-wifi": [
+   {
+    "set": "hw-lyric"
+   }
+  ],
+  "tst-honeywell-t6-pro-zwave": [
+   {
+    "set": "hw-t6zwave"
+   }
+  ],
+  "tst-honeywell-rth6580wf": [
+   {
+    "set": "hw-rth6580"
+   }
+  ],
+  "tst-honeywell-rth9585wf": [
+   {
+    "set": "hw-rth9585"
+   }
+  ]
+ }
+});
+// add-honeywell-2.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-tpro": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Mode (also Hold), Fan, Menu, Select and the up / down arrows.",
+     "Press Menu to reach PROG (schedule), TIME and the other settings. Use the arrows to move and Select to open or save."
+    ],
+    "source": "T4 Pro Programmable Thermostat User Guide; T6 Pro Programmable Thermostat User Manual (33-00182EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press Menu. PROG shows - press Select. ON shows - press Select.",
+     "Use the arrows to pick the day or set of days, press Select.",
+     "Use the arrows to pick the period (Wake, Away, Home, Sleep), press Select.",
+     "ON shows - press Select to keep the period on (or arrow to OFF and Select to turn that one period off).",
+     "The time blinks - set the start time with the arrows and press Select, then set the temperatures the same way."
+    ],
+    "source": "T4 Pro Programmable Thermostat User Guide; T6 Pro Programmable Thermostat User Manual (33-00182EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Turn the schedule off: press Menu, PROG shows, press Select, arrow to OFF and press Select.",
+     "Or hold: press the up or down arrow to the temperature you want. TEMPORARY HOLD shows and the temperature flashes - it lasts until the next period.",
+     "While it is flashing, press the Hold (Mode) button to make it a Permanent Hold."
+    ],
+    "source": "T4 Pro Programmable Thermostat User Guide; T6 Pro Programmable Thermostat User Manual (33-00182EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the up or down arrow, then press Cancel."
+    ],
+    "source": "T4 Pro Programmable Thermostat User Guide; T6 Pro Programmable Thermostat User Manual (33-00182EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the Mode button to step through the modes (Auto, Heat, Cool, Off, Em Heat on heat pump models).",
+     "Stop on Off and leave it - it takes effect by itself."
+    ],
+    "source": "T4 Pro Programmable Thermostat User Guide; T6 Pro Programmable Thermostat User Manual (33-00182EFS)"
+   }
+  ],
+  "hw-visionpro8000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys along the bottom of the screen: SYSTEM, FAN, SCHED, HOLD, CLOCK, SCREEN, MORE and CANCEL, with up / down arrows for the temperature.",
+     "Press a key to open it, DONE to save and leave, CANCEL to leave without saving."
+    ],
+    "source": "VisionPRO TH8000 Series Operating Manual (69-1894EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT.",
+     "Press the day buttons (MON to SUN) to pick the days.",
+     "Use the arrows to set the Wake time, then the heat and cool temperatures.",
+     "Press LEAVE, RETURN and SLEEP to set their times and temperatures.",
+     "Press DONE to save (CANCEL leaves without saving)."
+    ],
+    "source": "VisionPRO TH8000 Series Operating Manual (69-1894EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD, then set the temperature with the arrows.",
+     "This turns the program schedule off: the temperature stays 24 hours a day until someone changes it or cancels the hold."
+    ],
+    "notes": [
+     "Vacation hold: set the temperature and the time to resume, press HOLD twice, then pick the number of days."
+    ],
+    "source": "VisionPRO TH8000 Series Operating Manual (69-1894EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL (or SCHED). The program schedule takes over again."
+    ],
+    "source": "VisionPRO TH8000 Series Operating Manual (69-1894EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM, pick Off, then press DONE.",
+     "To turn it back on, press SYSTEM and pick Heat, Cool, Auto or Em Heat, then DONE."
+    ],
+    "source": "VisionPRO TH8000 Series Operating Manual (69-1894EFS)"
+   }
+  ],
+  "hw-focuspro5000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the function button under each word on the screen (System, Fan) to view or change it. The words change with the task.",
+     "Use the up / down temperature buttons to set the temperature."
+    ],
+    "source": "FocusPRO 5000 Series User Guide (69-1923EFS)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "The user guide has no schedule section - this is a non-programmable thermostat. It keeps the temperature set with the arrows until someone changes it."
+    ],
+    "source": "FocusPRO 5000 Series User Guide (69-1923EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the SYSTEM button until Off shows. All systems are off.",
+     "Press SYSTEM again to pick Heat, Cool, Auto or Em Heat (select models)."
+    ],
+    "source": "FocusPRO 5000 Series User Guide (69-1923EFS)"
+   }
+  ],
+  "hw-focuspro6000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the button under each word on the screen: SYSTEM, FAN, SET CLOCK/DAY/SCHEDULE, and HOLD / RUN SCHEDULE.",
+     "Use the up / down temperature buttons to set the temperature."
+    ],
+    "source": "FocusPRO 6000 Series User Guide (69-1921EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the mode you are programming (Heat or Cool) first.",
+     "Press SET CLOCK/DAY/SCHEDULE, then SET SCHEDULE.",
+     "Use the arrows to set the weekday (Mon-Fri) Wake time, press NEXT; set its temperature, press NEXT.",
+     "Do the same for Leave, Return and Sleep, then press NEXT for the weekend (Sat-Sun) periods.",
+     "Press DONE to save."
+    ],
+    "source": "FocusPRO 6000 Series User Guide (69-1921EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD, then set the temperature with the arrows.",
+     "Hold turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses RUN SCHEDULE."
+    ],
+    "notes": [
+     "Pressing only the arrows changes the temperature until the next program period starts."
+    ],
+    "source": "FocusPRO 6000 Series User Guide (69-1921EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN SCHEDULE."
+    ],
+    "source": "FocusPRO 6000 Series User Guide (69-1921EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the SYSTEM button until Off shows.",
+     "Press SYSTEM again to pick Heat, Cool, Auto or Em Heat (select models)."
+    ],
+    "source": "FocusPRO 6000 Series User Guide (69-1921EFS)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-t4-pro": [
+   {
+    "set": "hw-tpro"
+   }
+  ],
+  "tst-honeywell-t6-pro": [
+   {
+    "set": "hw-tpro"
+   }
+  ],
+  "tst-honeywell-visionpro-8000": [
+   {
+    "set": "hw-visionpro8000"
+   }
+  ],
+  "tst-honeywell-focuspro-5000": [
+   {
+    "set": "hw-focuspro5000"
+   }
+  ],
+  "tst-honeywell-focuspro-6000": [
+   {
+    "set": "hw-focuspro6000"
+   }
+  ]
+ }
+});
+// add-honeywell-3.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-focuspro-wl": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the button under each word on the screen: SYSTEM, FAN, SET CLOCK/DAY/SCHEDULE, MORE, and HOLD / CANCEL.",
+     "Use the up / down temperature buttons to set the temperature."
+    ],
+    "source": "FocusPRO TH6320R Wireless Thermostat Operating Manual (69-2093EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the mode you are programming (Heat or Cool) first.",
+     "Press SET CLOCK/DAY/SCHEDULE, then SET SCHEDULE.",
+     "Set the weekday (Mon-Fri) Wake time with the arrows, press NEXT; set its temperature, press NEXT.",
+     "Do the same for the other weekday periods, press NEXT for the weekend (Sat-Sun), then DONE to save."
+    ],
+    "source": "FocusPRO TH6320R Wireless Thermostat Operating Manual (69-2093EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD, then set the temperature with the arrows.",
+     "Hold turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses CANCEL."
+    ],
+    "notes": [
+     "Pressing only the arrows changes the temperature until the next program period starts."
+    ],
+    "source": "FocusPRO TH6320R Wireless Thermostat Operating Manual (69-2093EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL."
+    ],
+    "source": "FocusPRO TH6320R Wireless Thermostat Operating Manual (69-2093EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM and pick Off. All systems are off.",
+     "Press SYSTEM again to pick Heat, Cool, Auto or Em Heat (heat pumps with auxiliary heat)."
+    ],
+    "source": "FocusPRO TH6320R Wireless Thermostat Operating Manual (69-2093EFS)"
+   }
+  ],
+  "hw-focuspro-wl5": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the button under each word on the screen to pick that function (the words change with the task).",
+     "Use the up / down temperature buttons to set the temperature."
+    ],
+    "source": "FocusPRO TH5320R Wireless Thermostat Operating Manual (69-2094EFS)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "The TH5320R manual has no schedule section - this model keeps the temperature set with the arrows."
+    ],
+    "source": "FocusPRO TH5320R Wireless Thermostat Operating Manual (69-2094EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM and pick Off. All systems are off.",
+     "Press SYSTEM again to pick Heat, Cool, Auto or Em Heat (heat pumps with auxiliary heat)."
+    ],
+    "source": "FocusPRO TH5320R Wireless Thermostat Operating Manual (69-2094EFS)"
+   }
+  ],
+  "hw-roundsmart": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "For the thermostat's own Main Menu (language, device details, setup): press and hold the weather button for 5 seconds, then use the arrows and OK."
+    ],
+    "source": "Round Smart Thermostat User Guide / System Types & Troubleshooting"
+   },
+   {
+    "title": "Schedule, hold and system mode",
+    "steps": [
+     "The guide shows the schedule, the system mode (Auto / Heat / Cool / Off / Em Heat) and the fan set from the Honeywell Home app's thermostat screen: SCHEDULE, MODE and FAN.",
+     "No thermostat-screen steps for the schedule, a hold or Off were found in the guide on this card - use the app, or confirm on the unit."
+    ],
+    "source": "Round Smart Thermostat User Guide / System Types & Troubleshooting"
+   }
+  ],
+  "hw-prestige": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the screen: SYSTEM, FAN, MENU, HELP and the up / down arrows for the temperature.",
+     "Press MENU for the schedule, ventilation, settings and the other options. DONE saves, CANCEL leaves without saving."
+    ],
+    "source": "Prestige THX9321 / THX9421 Operating Manual (69-2703EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press MENU, then CREATE/EDIT SCHEDULE.",
+     "Pick Guide me (it builds a schedule by asking questions), I'll do it myself (enter it by hand) or View/Edit (see the whole schedule and change parts of it).",
+     "Press DONE to save."
+    ],
+    "source": "Prestige THX9321 / THX9421 Operating Manual (69-2703EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the up or down arrow to change the temperature - it holds until the hold time you set.",
+     "Press PERMANENT HOLD to keep it until someone changes it or resumes the schedule."
+    ],
+    "source": "Prestige THX9321 / THX9421 Operating Manual (69-2703EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL HOLD."
+    ],
+    "source": "Prestige THX9321 / THX9421 Operating Manual (69-2703EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM, then Off (use the arrows to scroll the list).",
+     "To turn it back on, press SYSTEM and pick Heat, Cool, Automatic or Emergency Heat."
+    ],
+    "notes": [
+     "With the system Off the fan still runs if it is set to On or Circulate."
+    ],
+    "source": "Prestige THX9321 / THX9421 Operating Manual (69-2703EFS)"
+   }
+  ],
+  "hw-pro1000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "A SYSTEM switch (Em Heat / Heat / Off / Cool) and a FAN switch (Auto / On) on the thermostat, plus up / down buttons for the temperature."
+    ],
+    "source": "PRO 1000 Series Operating Manual (69-2607EFS)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "The PRO 1000 manual has no schedule section - set the temperature with the up / down buttons and it stays there."
+    ],
+    "source": "PRO 1000 Series Operating Manual (69-2607EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to Off. All systems are off."
+    ],
+    "source": "PRO 1000 Series Operating Manual (69-2607EFS)"
+   }
+  ],
+  "hw-pro2000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Set (clock, day, schedule), Hold, Run and the up / down arrows. A SYSTEM switch and a FAN switch on the thermostat."
+    ],
+    "source": "PRO 2000 Series Operating Manual (69-1969EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press Set 3 times until Set Schedule shows - the weekday Wake start time flashes.",
+     "Set the time with the arrows, press Set; the temperature flashes.",
+     "Put the SYSTEM switch in Cool to program the cooling temperatures, or in Heat for the heating ones, and set it with the arrows. Press Set.",
+     "Repeat for each period, then press Run to save and leave."
+    ],
+    "notes": [
+     "To skip a period (except Wake), hold the Hold button 4 seconds while that period shows."
+    ],
+    "source": "PRO 2000 Series Operating Manual (69-1969EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the arrows to the temperature you want, then press Hold. Hold shows and the temperature stays until cancelled."
+    ],
+    "source": "PRO 2000 Series Operating Manual (69-1969EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Run. Hold disappears and the schedule takes over."
+    ],
+    "source": "PRO 2000 Series Operating Manual (69-1969EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to Off."
+    ],
+    "source": "PRO 2000 Series Operating Manual (69-1969EFS)"
+   }
+  ],
+  "hw-rth2x": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: SET, HOLD, RUN and the up / down arrows. A SYSTEM switch (Heat / Off / Cool) and a FAN switch (Auto / On) on the thermostat."
+    ],
+    "source": "RTH2300 / RTH221 Owner's Manual (33-00100EF); RTH2510 / RTH2410 Owner's Manual (33-00110ES)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the SYSTEM switch to the mode you are programming (Heat or Cool) first.",
+     "Press SET until Set Schedule shows.",
+     "Set the weekday (Mo-Fr) Wake time with the arrows, press SET; set its temperature, press SET.",
+     "Do the same for the next periods, then press SET for the weekend (Sa-Su) periods.",
+     "Press RUN to save and leave."
+    ],
+    "source": "RTH2300 / RTH221 Owner's Manual (33-00100EF); RTH2510 / RTH2410 Owner's Manual (33-00110ES)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD, then set the temperature with the arrows.",
+     "Hold turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses RUN."
+    ],
+    "notes": [
+     "Pressing only the arrows shows Temporary and lasts until the next program period."
+    ],
+    "source": "RTH2300 / RTH221 Owner's Manual (33-00100EF); RTH2510 / RTH2410 Owner's Manual (33-00110ES)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN."
+    ],
+    "source": "RTH2300 / RTH221 Owner's Manual (33-00100EF); RTH2510 / RTH2410 Owner's Manual (33-00110ES)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to Off. All systems are off."
+    ],
+    "source": "RTH2300 / RTH221 Owner's Manual (33-00100EF); RTH2510 / RTH2410 Owner's Manual (33-00110ES)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-focuspro-wireless": [
+   {
+    "set": "hw-focuspro-wl",
+    "label": "TH6320R (programmable)"
+   },
+   {
+    "set": "hw-focuspro-wl5",
+    "label": "TH5320R"
+   }
+  ],
+  "tst-honeywell-lyric-round": [
+   {
+    "set": "hw-roundsmart",
+    "note": "Only the Round Smart setup / system-types guide is on this card; no full user guide was found for the thermostat screen."
+   }
+  ],
+  "tst-honeywell-prestige-iaq": [
+   {
+    "set": "hw-prestige"
+   }
+  ],
+  "tst-honeywell-pro-1000-2000dv": [
+   {
+    "set": "hw-pro1000",
+    "label": "PRO 1000 (TH1100DH / TH1110DH / TH1110E / TH1210DH)"
+   },
+   {
+    "set": "hw-pro2000",
+    "label": "PRO 2000 DV"
+   }
+  ],
+  "tst-honeywell-rth2300": [
+   {
+    "set": "hw-rth2x"
+   }
+  ],
+  "tst-honeywell-rth2410-2510": [
+   {
+    "set": "hw-rth2x"
+   }
+  ]
+ }
+});
+// add-honeywell-4.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-rth6360": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Mode (also Hold), Fan, Menu, Select and + / -.",
+     "Press Menu for PROG (schedule) and the other settings; + / - move, Select opens or saves."
+    ],
+    "source": "RTH6360 Series Quick Installation Guide (33-00201ES)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press Menu. If PROG shows, press Select (if Hold shows, press + then Select). ON shows - press Select.",
+     "Press + or - to pick the day or set of days, press Select.",
+     "Pick the period (Wake, Away, Home, Sleep), press Select. ON shows - press Select to keep it (or + then Select to turn that period off).",
+     "The time blinks - set it with + / -, press Select. Then set the Heat and the Cool temperatures, pressing Select after each."
+    ],
+    "source": "RTH6360 Series Quick Installation Guide (33-00201ES)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Turn the schedule off: in Menu > PROG, set it to OFF.",
+     "Or hold: press + or - to the temperature. TEMPORARY HOLD shows and the temperature flashes - it lasts until the next period.",
+     "While it flashes, press the Hold (Mode) button to make it a Permanent Hold."
+    ],
+    "source": "RTH6360 Series Quick Installation Guide (33-00201ES)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press + or -, then press Cancel."
+    ],
+    "source": "RTH6360 Series Quick Installation Guide (33-00201ES)"
+   }
+  ],
+  "hw-rth7600": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the screen: SYSTEM & FAN, SCHEDULE, CLOCK & MORE, and the up / down arrows for the temperature and menu choices."
+    ],
+    "source": "RTH7600 Operating Manual (69-2207ES)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHEDULE, then EDIT to see the weekdays.",
+     "Press SELECT DAY (several days can share the same settings).",
+     "Press NEXT STEP twice, then set the Wake time with the arrows.",
+     "Press NEXT STEP and set the Heat temperature; NEXT STEP again and set the Cool temperature.",
+     "Do the same for LEAVE, RETURN and SLEEP, then press DONE. Repeat for Saturday / Sunday."
+    ],
+    "source": "RTH7600 Operating Manual (69-2207ES)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Set the temperature with the arrows, then press HOLD.",
+     "This turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses USE SCHEDULE."
+    ],
+    "source": "RTH7600 Operating Manual (69-2207ES)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press USE SCHEDULE."
+    ],
+    "source": "RTH7600 Operating Manual (69-2207ES)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM & FAN, then SYSTEM, pick Off and press DONE.",
+     "Pick Heat, Cool, Auto or Em Heat the same way to turn it back on."
+    ],
+    "source": "RTH7600 Operating Manual (69-2207ES)"
+   }
+  ],
+  "hw-rth8500": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the screen: SYSTEM, FAN, SCHED, HOLD and the up / down arrows. DONE saves and leaves, CANCEL leaves without saving."
+    ],
+    "source": "RTH8500 Owner's Manual (33-00179EF)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT.",
+     "Press the day buttons (MON to SUN) to pick the days.",
+     "Set the Wake time with the arrows, then the Heat and Cool temperatures.",
+     "Press LEAVE, RETURN and SLEEP to set their times and temperatures.",
+     "Press DONE to save. CANCEL PERIOD removes a period you do not want."
+    ],
+    "source": "RTH8500 Owner's Manual (33-00179EF)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD and set the temperature with the arrows.",
+     "This turns the program schedule off: the temperature stays 24 hours a day until someone changes it or cancels the hold."
+    ],
+    "source": "RTH8500 Owner's Manual (33-00179EF)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL (or SCHED)."
+    ],
+    "source": "RTH8500 Owner's Manual (33-00179EF)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM, pick Off, then press DONE.",
+     "Pick Heat, Cool, Auto or Em Heat (select models) the same way to turn it back on."
+    ],
+    "source": "RTH8500 Owner's Manual (33-00179EF)"
+   }
+  ],
+  "hw-t87": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "The owner's manual has no schedule - The Round is a manual (non-programmable) thermostat."
+    ],
+    "source": "T87N / T87K The Round Owner's Manual (69-1958EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "T87N: set the System switch to Off (the switch has Heat, Off and Cool).",
+     "The T87K is heat-only - the manual lists no system switch for it."
+    ],
+    "source": "T87N / T87K The Round Owner's Manual (69-1958EFS)"
+   }
+  ],
+  "hw-ct87": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "The instructions have no schedule - this is a manual (non-programmable) dial thermostat."
+    ],
+    "source": "CT87A / B / J Round Thermostat Installation Instructions (69-0274)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "CT87B and CT87J: set the System switch to Off. Both heating and cooling are off.",
+     "Set it to Heat or Cool to turn it back on. Turn the dial until the pointer lines up with the temperature you want."
+    ],
+    "source": "CT87A / B / J Round Thermostat Installation Instructions (69-0274)"
+   }
+  ],
+  "hw-visionpro-touch": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the home screen: HOME, FAN, SYSTEM and MENU (start here for the schedule and the other options).",
+     "Touch the arrows next to the set temperature to change it."
+    ],
+    "source": "VisionPRO Series with RedLINK User Guide (69-2761EFS); VisionPRO 8000 Smart User Guide (33-00066EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch MENU, then Edit Schedule.",
+     "Use Scheduling Assistant? Touch Yes to build a schedule by answering questions, or No to enter it yourself.",
+     "For No: pick the days, touch Next, then set the Wake time and its Heat and Cool temperatures with the arrows.",
+     "Do the same for the other periods and touch Done to save."
+    ],
+    "source": "VisionPRO Series with RedLINK User Guide (69-2761EFS); VisionPRO 8000 Smart User Guide (33-00066EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch the arrows to set the temperature (right side) and the Hold Until time (left side). The schedule comes back when that time runs out.",
+     "Touch Permanent Hold to keep that temperature until someone changes it or resumes the schedule."
+    ],
+    "source": "VisionPRO Series with RedLINK User Guide (69-2761EFS); VisionPRO 8000 Smart User Guide (33-00066EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch Cancel Hold."
+    ],
+    "source": "VisionPRO Series with RedLINK User Guide (69-2761EFS); VisionPRO 8000 Smart User Guide (33-00066EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch SYSTEM, touch Off, then touch Done.",
+     "Pick Heat, Cool, Auto or Em Heat (heat pumps with aux heat) the same way to turn it back on."
+    ],
+    "source": "VisionPRO Series with RedLINK User Guide (69-2761EFS); VisionPRO 8000 Smart User Guide (33-00066EFS)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-rth6360": [
+   {
+    "set": "hw-rth6360",
+    "note": "Only the quick installation guide is on this card; it has the schedule and hold steps but no system-mode steps."
+   }
+  ],
+  "tst-honeywell-rth7600": [
+   {
+    "set": "hw-rth7600"
+   }
+  ],
+  "tst-honeywell-rth8500": [
+   {
+    "set": "hw-rth8500"
+   }
+  ],
+  "tst-honeywell-t87-round": [
+   {
+    "set": "hw-t87"
+   }
+  ],
+  "tst-honeywell-ct87-round": [
+   {
+    "set": "hw-ct87"
+   }
+  ],
+  "tst-honeywell-visionpro-8000-redlink": [
+   {
+    "set": "hw-visionpro-touch"
+   }
+  ],
+  "tst-honeywell-visionpro-wifi": [
+   {
+    "set": "hw-visionpro-touch",
+    "note": "Steps from the VisionPRO 8000 Smart (TH8321WF) and VisionPRO with RedLINK guides; the older TH8320WF guide is also on this card."
+   }
+  ]
+ }
+});
+// add-honeywell-5.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-focuspro-wifi": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons around the screen: System, Fan, Set Clock/Day/Schedule, Hold and Cancel, plus the up / down arrows."
+    ],
+    "source": "FocusPRO TH6320WF1005 Wi-Fi Series User Guide (69-2736EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press Set Clock/Day/Schedule, then Set Schedule.",
+     "Set Monday's Wake time with the arrows, press Next; set its temperature, press Next.",
+     "Do the same for the next periods (Leave and on), then press Next for the next day.",
+     "Press Done to save."
+    ],
+    "notes": [
+     "Set the thermostat to the mode you are programming (Heat or Cool) first."
+    ],
+    "source": "FocusPRO TH6320WF1005 Wi-Fi Series User Guide (69-2736EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD. This turns the program schedule off.",
+     "Set the temperature with the arrows. It stays there until someone changes it or presses Cancel."
+    ],
+    "notes": [
+     "Pressing only the arrows changes the temperature until the next program period starts."
+    ],
+    "source": "FocusPRO TH6320WF1005 Wi-Fi Series User Guide (69-2736EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Cancel. The program schedule takes over again."
+    ],
+    "source": "FocusPRO TH6320WF1005 Wi-Fi Series User Guide (69-2736EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press System until Off is selected. Heating and cooling are off.",
+     "Press System again for Heat, Cool, Auto or Em Heat (heat pumps with aux heat)."
+    ],
+    "source": "FocusPRO TH6320WF1005 Wi-Fi Series User Guide (69-2736EFS)"
+   }
+  ],
+  "hw-pro2000h": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: SET, HOLD, RUN and the up / down arrows. A SYSTEM switch and a FAN switch on the thermostat."
+    ],
+    "source": "PRO 2000 Series Programmable Thermostat Operating Manual (69-2608EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the SYSTEM switch to the mode you are programming (Heat or Cool) first.",
+     "Press SET until Set Schedule shows (3 presses).",
+     "Set the weekday (Mo-Fr) Wake time with the arrows, press SET; set its temperature, press SET.",
+     "Do the same for each weekday period, then press SET for the weekend (Sa-Su) periods.",
+     "Press RUN to save and leave."
+    ],
+    "source": "PRO 2000 Series Programmable Thermostat Operating Manual (69-2608EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD, then set the temperature with the arrows.",
+     "Hold turns the program schedule off: the temperature stays until someone changes it or presses RUN."
+    ],
+    "source": "PRO 2000 Series Programmable Thermostat Operating Manual (69-2608EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN."
+    ],
+    "source": "PRO 2000 Series Programmable Thermostat Operating Manual (69-2608EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to Off. All systems are off."
+    ],
+    "source": "PRO 2000 Series Programmable Thermostat Operating Manual (69-2608EFS)"
+   }
+  ],
+  "hw-rth111": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. Set the temperature with the up / down buttons and it stays there."
+    ],
+    "source": "RTH111 Series Non-Programmable Thermostat Owner's Manual (33-00137EF)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to Off. All systems are off.",
+     "Slide it to Heat or Cool to turn it back on."
+    ],
+    "source": "RTH111 Series Non-Programmable Thermostat Owner's Manual (33-00137EF)"
+   }
+  ],
+  "hw-rth3100c": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. Set the temperature with the up / down buttons and it stays there."
+    ],
+    "source": "RTH3100C Non-Programmable Digital Thermostat Operating Manual (69-1892ES)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to Off. All systems are off.",
+     "Heat, Cool and Em Heat (emergency and auxiliary heat, compressor locked out) are the other settings."
+    ],
+    "source": "RTH3100C Non-Programmable Digital Thermostat Operating Manual (69-1892ES)"
+   }
+  ],
+  "hw-rth5160": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Menu, Mode (+), Fan (-) and Done.",
+     "Press Menu, then Mode (+) to step through the system modes, or Fan (-) for the fan modes; press Done to keep the one shown."
+    ],
+    "source": "RTH5160 Series Non-Programmable Thermostat Quick Installation Guide (33-00200ES)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. Set the temperature with the up / down buttons and it stays there."
+    ],
+    "source": "RTH5160 Series Non-Programmable Thermostat Quick Installation Guide (33-00200ES)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press Menu, then press Mode (+) until Off shows.",
+     "Press Done."
+    ],
+    "source": "RTH5160 Series Non-Programmable Thermostat Quick Installation Guide (33-00200ES)"
+   }
+  ],
+  "hw-rth6350": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons around the screen: SYSTEM, FAN, SET CLOCK/DAY/SCHEDULE, HOLD and RUN SCHEDULE, plus the up / down arrows."
+    ],
+    "source": "RTH6350 / RTH6450 / RET93E / RET95E Owner's Manual (33-00116ES)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SET CLOCK/DAY/SCHEDULE, then SET SCHEDULE.",
+     "Set the weekday (Mo-Fr) Wake time with the arrows, press NEXT; set its temperature, press NEXT.",
+     "Do the same for the other periods and days. CANCEL PERIOD drops a period you do not want.",
+     "Press DONE to save."
+    ],
+    "notes": [
+     "The manual gives these steps for the RTH6350 and RET93E; the RTH6450 has its own schedule section in the same manual."
+    ],
+    "source": "RTH6350 / RTH6450 / RET93E / RET95E Owner's Manual (33-00116ES)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD, then set the temperature with the arrows.",
+     "Hold turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses RUN SCHEDULE."
+    ],
+    "notes": [
+     "Pressing only the arrows shows Temporary and lasts until the next program period."
+    ],
+    "source": "RTH6350 / RTH6450 / RET93E / RET95E Owner's Manual (33-00116ES)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN SCHEDULE."
+    ],
+    "source": "RTH6350 / RTH6450 / RET93E / RET95E Owner's Manual (33-00116ES)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the SYSTEM button until Off is selected.",
+     "Press SYSTEM again for Heat or Cool."
+    ],
+    "source": "RTH6350 / RTH6450 / RET93E / RET95E Owner's Manual (33-00116ES)"
+   }
+  ],
+  "hw-none-scan": [
+   {
+    "title": "Steps not added",
+    "steps": [
+     "The owner's manual on this card is an old scan whose text cannot be read reliably, so no steps were added. Use the manual's pages directly."
+    ],
+    "source": "Chronotherm III 7 Day Programmable Thermostat Owner's Manual (69-0341)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-focuspro-wifi": [
+   {
+    "set": "hw-focuspro-wifi"
+   }
+  ],
+  "tst-honeywell-pro-1000-2000": [
+   {
+    "set": "hw-pro2000h",
+    "note": "Steps from the PRO 2000 manual. No PRO 1000 (horizontal) user manual is on this card."
+   }
+  ],
+  "tst-honeywell-rth111": [
+   {
+    "set": "hw-rth111"
+   }
+  ],
+  "tst-honeywell-rth3100c": [
+   {
+    "set": "hw-rth3100c"
+   }
+  ],
+  "tst-honeywell-rth5160": [
+   {
+    "set": "hw-rth5160"
+   }
+  ],
+  "tst-honeywell-rth6350-6450": [
+   {
+    "set": "hw-rth6350"
+   }
+  ],
+  "tst-honeywell-chronotherm-iii": [
+   {
+    "set": "hw-none-scan"
+   }
+  ]
+ }
+});
+// add-honeywell-6.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-rth7400": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the screen: SYSTEM & FAN, SCHEDULE, CLOCK & MORE, and the up / down arrows for the temperature and menu choices."
+    ],
+    "source": "RTH7400 / RTH7500 / RET97D Owner's Manual (33-00090EF)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHEDULE, then EDIT to see the weekdays.",
+     "Press SELECT DAY (several days can share the same settings).",
+     "Press NEXT STEP twice, then set the Wake time with the arrows.",
+     "Press NEXT STEP and set the Heat temperature; NEXT STEP again for the Cool temperature.",
+     "Do the same for LEAVE, RETURN and SLEEP, then press DONE."
+    ],
+    "notes": [
+     "The manual gives these steps for the RTH7400; the RTH7500 has its own schedule section in the same manual."
+    ],
+    "source": "RTH7400 / RTH7500 / RET97D Owner's Manual (33-00090EF)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Set the temperature with the arrows, then press HOLD.",
+     "This turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses USE SCHEDULE."
+    ],
+    "notes": [
+     "Pressing only the arrows changes the temperature until the next program period."
+    ],
+    "source": "RTH7400 / RTH7500 / RET97D Owner's Manual (33-00090EF)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press USE SCHEDULE."
+    ],
+    "source": "RTH7400 / RTH7500 / RET97D Owner's Manual (33-00090EF)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM & FAN, then SYSTEM, pick Off and press DONE.",
+     "Pick Heat, Cool, Auto or Em Heat the same way to turn it back on."
+    ],
+    "source": "RTH7400 / RTH7500 / RET97D Owner's Manual (33-00090EF)"
+   }
+  ],
+  "hw-th7000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the screen: SYSTEM & FAN, SCHEDULE, CLOCK & MORE, and the up / down arrows for the temperature and menu choices."
+    ],
+    "source": "TH7000 Series Touchscreen Programmable Thermostat Operating Manual (69-2667ES)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHEDULE, then EDIT to see the weekdays.",
+     "Press SELECT DAY (several days can share the same settings).",
+     "Press NEXT STEP twice, then set the Wake time with the arrows.",
+     "Press NEXT STEP and set the Heat temperature; NEXT STEP again for the Cool temperature.",
+     "Do the same for LEAVE, RETURN and SLEEP, then press DONE."
+    ],
+    "notes": [
+     "Installer function 0160 turns the program schedule on (7-day) or off (non-programmable)."
+    ],
+    "source": "TH7000 Series Touchscreen Programmable Thermostat Operating Manual (69-2667ES)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Set the temperature with the arrows, then press HOLD.",
+     "This turns the program schedule off: the temperature stays 24 hours a day until someone changes it or presses USE SCHEDULE."
+    ],
+    "notes": [
+     "Pressing only the arrows changes the temperature until the next program period."
+    ],
+    "source": "TH7000 Series Touchscreen Programmable Thermostat Operating Manual (69-2667ES)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press USE SCHEDULE."
+    ],
+    "source": "TH7000 Series Touchscreen Programmable Thermostat Operating Manual (69-2667ES)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM & FAN, then SYSTEM, pick Off and press DONE.",
+     "Pick Heat, Cool, Auto or Em Heat the same way to turn it back on."
+    ],
+    "source": "TH7000 Series Touchscreen Programmable Thermostat Operating Manual (69-2667ES)"
+   }
+  ],
+  "hw-rth8580": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the screen: SYSTEM, FAN, SCHED, HOLD, MORE and the up / down arrows. DONE saves, CANCEL leaves without saving."
+    ],
+    "source": "RTH8580WF Wi-Fi Touchscreen User Guide (33-00133EF)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT. Day buttons show at the top.",
+     "Press the day buttons (MON to SUN) to pick the days.",
+     "Set the Wake time with the arrows, then its Heat and Cool temperatures.",
+     "Press the next period (LEAVE, RETURN, SLEEP) and set it the same way.",
+     "Press DONE to save. CANCEL PERIOD removes a period you do not want."
+    ],
+    "source": "RTH8580WF Wi-Fi Touchscreen User Guide (33-00133EF)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD. This turns the program schedule off.",
+     "Set the temperature - it stays 24 hours a day until someone changes it or cancels the hold."
+    ],
+    "notes": [
+     "Pressing only the arrows on the home screen makes a temporary hold that ends at the Hold Until time."
+    ],
+    "source": "RTH8580WF Wi-Fi Touchscreen User Guide (33-00133EF)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL (or SCHED)."
+    ],
+    "source": "RTH8580WF Wi-Fi Touchscreen User Guide (33-00133EF)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM to show the options, then press SYSTEM again (two or three times if needed) until OFF blinks.",
+     "Press DONE to save."
+    ],
+    "source": "RTH8580WF Wi-Fi Touchscreen User Guide (33-00133EF)"
+   }
+  ],
+  "hw-t1pro": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press Menu (center button) to bring up the Mode and Fan menus.",
+     "Press and hold Menu about 3 seconds for the advanced (installer) menu."
+    ],
+    "source": "T1 Pro Non-Programmable Thermostat User Guide (33-00190EFS)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. Set the temperature with the + / - buttons and it stays there."
+    ],
+    "source": "T1 Pro Non-Programmable Thermostat User Guide (33-00190EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press Menu, then press Mode to step through Heat, Cool and Off.",
+     "Stop on Off."
+    ],
+    "source": "T1 Pro Non-Programmable Thermostat User Guide (33-00190EFS)"
+   }
+  ],
+  "hw-t3pro": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Menu, the up / down (+ / -) buttons and Done.",
+     "Press Menu to change the system mode (Heat, Off, Cool) or the fan settings."
+    ],
+    "source": "T3 Pro Thermostat User Guide (33-00521EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press Menu, then press Mode (+) until Off shows.",
+     "Press Done. With the system Off the fan still runs if it is set to On."
+    ],
+    "source": "T3 Pro Thermostat User Guide (33-00521EFS)"
+   }
+  ],
+  "hw-t6hydronic": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Mode (also Hold), Menu, Select and the up / down arrows.",
+     "Press Menu for PROG (schedule), TIME, VACA (vacation), ECO and the other settings. Arrows move, Select opens or saves."
+    ],
+    "notes": [
+     "On floor-sensing setups the temperature shown with FLR is the floor temperature."
+    ],
+    "source": "T6 Pro Hydronic Programmable Thermostat User Guide (33-00343EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press Menu. PROG shows - press Select. ON shows - press Select.",
+     "Use the arrows to pick the day or set of days, press Select.",
+     "Pick the period (Wake, Away, Home, Sleep), press Select, then set its start time and temperature, pressing Select after each."
+    ],
+    "source": "T6 Pro Hydronic Programmable Thermostat User Guide (33-00343EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Turn the schedule off: press Menu, PROG shows, press Select, arrow to OFF and press Select.",
+     "Or hold: press the arrows to the temperature. TEMPORARY HOLD shows and the temperature flashes - it lasts until the next period.",
+     "While it flashes, press the Hold (Mode) button for a Permanent Hold."
+    ],
+    "notes": [
+     "Vacation: Menu > VACA > Select, then set the number of days."
+    ],
+    "source": "T6 Pro Hydronic Programmable Thermostat User Guide (33-00343EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the up or down arrow, then press Cancel."
+    ],
+    "source": "T6 Pro Hydronic Programmable Thermostat User Guide (33-00343EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the Mode button to switch between Heat and Off. Leave it on Off - it takes effect by itself."
+    ],
+    "source": "T6 Pro Hydronic Programmable Thermostat User Guide (33-00343EFS)"
+   }
+  ],
+  "hw-t834": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "The owner's manual has no schedule - this is a mechanical (non-programmable) thermostat."
+    ],
+    "source": "T834 Series Thermostat Owner's Manual (69-1944EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set the system switch to Off. The T834N has Heat, Off and Cool; the T834L has Off and Cool."
+    ],
+    "source": "T834 Series Thermostat Owner's Manual (69-1944EFS)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-rth7400-7500": [
+   {
+    "set": "hw-rth7400"
+   }
+  ],
+  "tst-honeywell-th7000": [
+   {
+    "set": "hw-th7000"
+   }
+  ],
+  "tst-honeywell-rth8580wf": [
+   {
+    "set": "hw-rth8580"
+   }
+  ],
+  "tst-honeywell-t1-pro": [
+   {
+    "set": "hw-t1pro"
+   }
+  ],
+  "tst-honeywell-t3-pro": [
+   {
+    "set": "hw-t3pro",
+    "note": "The T3 Pro user guide on this card gives the menu and system-mode steps but no schedule or hold steps."
+   }
+  ],
+  "tst-honeywell-t6-pro-hydronic": [
+   {
+    "set": "hw-t6hydronic"
+   }
+  ],
+  "tst-honeywell-t834": [
+   {
+    "set": "hw-t834"
+   }
+  ]
+ }
+});
+// add-honeywell-7.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-t84": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule to set or turn off."
+    ],
+    "source": "T8400C / T8401C Installation Instructions (69-1480); T8411R Installation Instructions (69-1481)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch (bottom right corner) to Off. Both heating and cooling are off.",
+     "Slide it to Heat or Cool to turn it back on."
+    ],
+    "source": "T8400C / T8401C Installation Instructions (69-1480); T8411R Installation Instructions (69-1481)"
+   }
+  ],
+  "hw-t8775": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Turn the dial or press the backlight button to light the display; turn the dial to change the temperature setting."
+    ],
+    "source": "T8775A,C The Digital Round Owner's Guide (69-1679EF)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule to set or turn off."
+    ],
+    "source": "T8775A,C The Digital Round Owner's Guide (69-1679EF)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set the SYSTEM switch to Off. Both heating and cooling are off.",
+     "Slide it to Heat or Cool to turn it back on."
+    ],
+    "source": "T8775A,C The Digital Round Owner's Guide (69-1679EF)"
+   }
+  ],
+  "hw-t87f": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable mercury dial thermostat: there is no schedule to set or turn off."
+    ],
+    "source": "T87F Easy-to-See Thermostats Installation Instructions (69-0200)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "With a Q539 subbase, move the subbase system switch to OFF."
+    ],
+    "source": "T87F Easy-to-See Thermostats Installation Instructions (69-0200)"
+   }
+  ],
+  "hw-tb8220": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Keys on the main screen: SYSTEM (Heat / Off / Cool / Auto), FAN (On / Auto), SCHEDULE (enters scheduling), HOLIDAY, CLOCK, SCREEN, OVERRIDE and the up / down arrows."
+    ],
+    "source": "TB8220U Commercial Programmable Thermostat Owner's Guide (63-2643); TB7220U Owner's Guide (63-2626)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHEDULE to enter scheduling - the screens walk you through the periods (OCC 1, UNOCC 1, OCC 2, UNOCC 2) one at a time.",
+     "Press FAN while in the schedule screen to set the fan for each period (Auto or On)."
+    ],
+    "source": "TB8220U Commercial Programmable Thermostat Owner's Guide (63-2643); TB7220U Owner's Guide (63-2626)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the up or down arrow to change the temperature.",
+     "Use the arrows next to the hold time to set when the schedule resumes (the installer can limit an override to 1-4 hours)."
+    ],
+    "source": "TB8220U Commercial Programmable Thermostat Owner's Guide (63-2643); TB7220U Owner's Guide (63-2626)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL or SCHEDULE."
+    ],
+    "source": "TB8220U Commercial Programmable Thermostat Owner's Guide (63-2643); TB7220U Owner's Guide (63-2626)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM until OFF shows. Both heating and cooling are off."
+    ],
+    "source": "TB8220U Commercial Programmable Thermostat Owner's Guide (63-2643); TB7220U Owner's Guide (63-2626)"
+   }
+  ],
+  "hw-th8320zw": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys: SYSTEM, FAN, SCHED, HOLD, CLOCK, SCREEN, MORE and the up / down arrows. DONE saves."
+    ],
+    "source": "TH8320ZW Touchscreen Thermostat Operating Manual (69-2485EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM, pick Off, then press DONE."
+    ],
+    "source": "TH8320ZW Touchscreen Thermostat Operating Manual (69-2485EFS)"
+   }
+  ],
+  "hw-th9000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys: SYSTEM, FAN, SCHED, HOLD, CLOCK, SCREEN, MORE, CANCEL and the up / down arrows. DONE saves."
+    ],
+    "source": "TH9000 Series Total Home Comfort System Operating Manual (69-2404EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT.",
+     "Press the day buttons (MON to SUN) to pick the days.",
+     "Set the Wake time with the arrows, then its Heat and Cool temperatures.",
+     "Press LEAVE, RETURN and SLEEP to set those, then DONE to save."
+    ],
+    "source": "TH9000 Series Total Home Comfort System Operating Manual (69-2404EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD and set the temperature. This turns the program schedule off: it stays 24 hours a day until someone changes it or cancels the hold."
+    ],
+    "notes": [
+     "Vacation hold: set the temperature and the time to resume, press HOLD twice, then pick the number of days."
+    ],
+    "source": "TH9000 Series Total Home Comfort System Operating Manual (69-2404EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL (or SCHED)."
+    ],
+    "source": "TH9000 Series Total Home Comfort System Operating Manual (69-2404EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM, pick Off, then press DONE."
+    ],
+    "source": "TH9000 Series Total Home Comfort System Operating Manual (69-2404EFS)"
+   }
+  ],
+  "hw-pro34": [
+   {
+    "title": "Steps not found",
+    "steps": [
+     "Only the installation instructions are on this card. They have no owner steps for the schedule or a hold.",
+     "The installer system test uses a SYSTEM switch on the thermostat (Heat, Cool, and Em Heat on the TH3210D / TH4210D); the instructions do not describe an Off setting."
+    ],
+    "source": "PRO 3000 Installation Instructions (69-1929EF); PRO 4000 Installation Instructions (69-1928EF)"
+   }
+  ],
+  "hw-wifi9000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys on the home screen: HOME, FAN, SYSTEM and MENU (start here for the schedule, Wi-Fi setup and other options)."
+    ],
+    "source": "TH9320WF5003 Smart Thermostat 9000 Color Touchscreen User Guide (69-2814EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch MENU, then Create/Edit Schedule.",
+     "Pick View/Edit, Guide Me, or I'll do it myself.",
+     "For I'll do it myself: pick the days, touch Next, touch Wake and set its time and Heat / Cool temperatures, then the other periods.",
+     "Touch Done to save."
+    ],
+    "source": "TH9320WF5003 Smart Thermostat 9000 Color Touchscreen User Guide (69-2814EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch the arrows to set the temperature (right side) and the Hold Until time (left side).",
+     "Touch Switch to Permanent Hold to keep it until someone changes it or resumes the schedule."
+    ],
+    "source": "TH9320WF5003 Smart Thermostat 9000 Color Touchscreen User Guide (69-2814EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch Cancel Hold."
+    ],
+    "source": "TH9320WF5003 Smart Thermostat 9000 Color Touchscreen User Guide (69-2814EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch SYSTEM, then Off."
+    ],
+    "source": "TH9320WF5003 Smart Thermostat 9000 Color Touchscreen User Guide (69-2814EFS)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-t8400-t8401-t8411": [
+   {
+    "set": "hw-t84",
+    "note": "Only installation instructions are on this card; they give the system switch but no screen steps."
+   }
+  ],
+  "tst-honeywell-t8775-digital-round": [
+   {
+    "set": "hw-t8775"
+   }
+  ],
+  "tst-honeywell-t87f-round": [
+   {
+    "set": "hw-t87f",
+    "note": "Only installation instructions are on this card."
+   }
+  ],
+  "tst-honeywell-tb7220-tb8220": [
+   {
+    "set": "hw-tb8220"
+   }
+  ],
+  "tst-honeywell-th8320zw": [
+   {
+    "set": "hw-th8320zw",
+    "note": "No step-by-step schedule or hold instructions were found in the TH8320ZW operating manual text."
+   }
+  ],
+  "tst-honeywell-visionpro-iaq": [
+   {
+    "set": "hw-th9000"
+   }
+  ],
+  "tst-honeywell-wifi-9000": [
+   {
+    "set": "hw-wifi9000"
+   }
+  ],
+  "tst-honeywell-pro-3000": [
+   {
+    "set": "hw-pro34"
+   }
+  ],
+  "tst-honeywell-pro-4000": [
+   {
+    "set": "hw-pro34"
+   }
+  ]
+ }
+});
