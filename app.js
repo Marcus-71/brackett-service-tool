@@ -1354,6 +1354,35 @@ function askTstatNameWords() {
   if (idx.length) askTstatNameCache = set;
   return set;
 }
+// Thermostat / wall-control line names that equipment, code or symptom titles also carry, so the list above
+// drops them (v416: "icomfort schedule" and "ion system control hold" missed their cards without the brand).
+// ALWAYS: the name is the wall control itself. KEYED: the name is an equipment line too ("ion system off",
+// "infinity furnace"), so it counts only with a word that only a thermostat has (schedule, hold, program,
+// wifi), the word thermostat, or the word control.
+const ASK_TSTAT_LINE_ALWAYS = new Set(["icomfort", "intelisense", "connex", "thermidistat", "acculink", "comfortnet", "observer", "prestige", "echelon", "nexia"]);
+const ASK_TSTAT_LINE_KEYED = new Set(["ion", "infinity", "econet", "edge", "kumo", "cor", "merit"]);
+const ASK_CTRL_WORD = /^(controls?|controller)$/;
+// Cards a line name covers although their own name does not print it (techs call every Lennox smart stat an iComfort).
+const ASK_TSTAT_LINE_ALSO = { icomfort: ["lennox s40", "lennox e40"] };
+// "system control", "wall control", "infinity touch" arrive as one unit (the wall-control alias group).
+const ASK_CTRL_PHRASE = /^(wall control|system control|infinity control|infinity touch|touch control)$/;
+function askTstatLineNamed(th, units) {
+  const has = (set) => th.others.some(u => u.alts.some(a => set.has(a)));
+  if (has(askTstatNameWords()) || has(ASK_TSTAT_LINE_ALWAYS)) return true;
+  const live = askLiveUnits(units);
+  const strong = live.some(u => u.alts.some(a => ASK_HOWTO_KEY.test(a) || ASK_STAT_WORD.test(a)));
+  const phrase = th.others.some(u => u.alts.some(a => ASK_CTRL_PHRASE.test(a)));
+  if (has(ASK_TSTAT_LINE_KEYED)) return strong || phrase || live.some(u => u.alts.some(a => ASK_CTRL_WORD.test(a)));
+  return phrase && strong;
+}
+// A model word is in the card's own name. "infinity touch" / "infinity control" typed out count as typed
+// ("infinity touch schedule" is the Infinity Touch card, not every card named System Control); plain
+// "wall control" / "system control" keep the whole group.
+function askTstatIdHit(u, idHay, rq) {
+  let alts = u.alts;
+  if (rq && alts.some(a => ASK_CTRL_PHRASE.test(a))) { const typed = alts.filter(a => a.startsWith("infinity") && rq.includes(a)); if (typed.length) alts = typed; }
+  return alts.some(a => askTermHit(idHay, a) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => idHay.startsWith(x)));
+}
 // null, or { brandU, others, pure, only }: brandU = units naming a thermostat brand, others = model words
 // ("t6", "infinity touch"), pure = nothing but brand + how-to words, only = a thermostat-only brand is named.
 function askTstatHow(units) {
@@ -1376,7 +1405,8 @@ function askTstatHow(units) {
 function askScoreItem(units, it) {
   let sc = askUnitHits(units, it.hay, it);
   let tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
-  if (!sc) return { sc, tsc };
+  // (A card a line name covers without printing it - "icomfort" on the Lennox S40 - stays in for the how-to check below.)
+  if (!sc && !(it.kind === "tstat" && askLiveUnits(units).some(u => u.alts.some(a => (ASK_TSTAT_LINE_ALSO[a] || []).some(x => it.idHay.startsWith(x)))))) return { sc, tsc };
   // A how-to card kept for one thermostat brand only answers a question that names that brand
   // (Andy 11-11: the ecobee menu / schedule steps show "only when they search that thermostat").
   if (it.brandOnly && !askUnitHits(units, String(it.brand).toLowerCase())) return { sc: 0, tsc: 0 };
@@ -1392,8 +1422,9 @@ function askScoreItem(units, it) {
     // With no brand in the question, a model word has to carry a digit ("t6 schedule", "th6220 hold").
     // or be a name only a thermostat line carries ("chronotherm hold", "madoka turn off").
     const digitU = th.others.some(u => u.alts.some(a => [...a].some(ch => ch >= "0" && ch <= "9")));
-    const idOk = th.brandU.length > 0 || digitU || th.others.some(u => u.alts.some(a => askTstatNameWords().has(a)));
-    if (it.kind === "tstat" && idOk && named(it.nameHay) && th.others.every(u => u.alts.some(a => askTermHit(it.idHay, a)))) {
+    if (th.lineOk === undefined) th.lineOk = askTstatLineNamed(th, units);
+    const idOk = th.brandU.length > 0 || digitU || th.lineOk;
+    if (it.kind === "tstat" && idOk && named(it.nameHay) && th.others.every(u => askTstatIdHit(u, it.idHay, String(units.rq || "").toLowerCase()))) {
       // Cards that really hold the asked words (the how-to steps) go before the brand's other cards,
       // and a sensor, adapter or other accessory goes after the thermostats themselves.
       // Cards whose steps cover the asked topic come first (fuller cards first), then cards whose own text
@@ -1404,8 +1435,11 @@ function askScoreItem(units, it) {
         : it.how ? 0.34 + it.howN * 0.01 : 0.25) - (it.nameHay.includes("non-programmable") ? 0.005 : 0);
       // A model named by number with its brand ("lennox e40 turn off") is the answer itself: its card goes
       // ahead of a code row that only shares the number ("40 - HP Heating Lockout").
-      const exact = th.brandU.length > 0 && digitU && !th.soft && !it.acc ? 0.6 : 0;
-      return { sc: Math.max(sc, need), tsc: th.soft ? need - 0.9 + order : need + order + exact };
+      const exact = (th.brandU.length > 0 || th.lineOk) && digitU && !th.soft && !it.acc ? 0.6 : 0;
+      // "Evolution" is also a Generac controller: a thermostat named by its brand or line ("bryant evolution
+      // schedule", "evolution connex hold") stays ahead of the generator cards that word lifts.
+      const overGen = (units.kFam || (units.kFams || []).length) && !th.soft ? 2 : 0;
+      return { sc: Math.max(sc, need) + overGen, tsc: th.soft ? need - 0.9 + order : need + order + exact };
     }
     if (th.pure && sc >= need && (it.kind === "symptom" || it.kind === "tool") && (it.brandOnly || named(head))) {
       // An answer written for exactly this leads the thermostats: the brand's own how-to card, or a brand
@@ -3006,8 +3040,10 @@ function renderSymptoms() {
   if (filtered.length === 0) { renderDiagEmptyState(); return; }
   // A thermostat how-to question ("honeywell schedule") belongs on the Thermostats screen: this list only
   // holds diagnostic cards, so point there instead of leaving the tech with unrelated ones.
-  const tHow = query ? askTstatHow(askLiveUnits(buildSearchUnits(query))) : null;
-  if (tHow && !tHow.soft && (tHow.brandU.length || tHow.others.some(u => u.alts.some(x => askTstatNameWords().has(x))))) {
+  const tUnits = query ? askLiveUnits(buildSearchUnits(query)) : null;
+  if (tUnits) tUnits.rq = String(query).toLowerCase();
+  const tHow = tUnits ? askTstatHow(tUnits) : null;
+  if (tHow && !tHow.soft && (tHow.brandU.length || askTstatLineNamed(tHow, tUnits))) {
     const note = document.createElement("div");
     note.className = "diag-fallback-note";
     note.innerHTML = `Thermostat question? <a href="#" id="diagToTstat">Open the thermostats for "${escapeHtml(query)}"</a>`;
@@ -3877,7 +3913,7 @@ function renderTstats() {
   if (lessUnits) {
     const have = new Set(filtered.map(t => t.id));
     const idHit = (t) => { const hay = [t.brand, t.family, t.aka, (t.models || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
-      return lessUnits.every(u => u.alts.some(a => hayHasTerm(hay, a) || (a.length >= 3 && hay.includes(a) && [...a].some(ch => ch >= "0" && ch <= "9")))); };
+      return lessUnits.every(u => u.alts.some(a => hayHasTerm(hay, a) || (a.length >= 3 && hay.includes(a) && [...a].some(ch => ch >= "0" && ch <= "9")) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => hay.startsWith(x)))); };
     for (const t of all) if (!have.has(t.id) && (tstatState.brand === "All" || t.brand === tstatState.brand) && (tstatState.type === "All" || t.type === tstatState.type) && idHit(t)) filtered.push(t);
   }
 
@@ -13315,7 +13351,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v415";
+const APP_VERSION = "v416";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
