@@ -1320,7 +1320,11 @@ function askUnitHits(units, hay, it) {
 // ---- "How do I work this thermostat" questions (Andy 11-11: "fix it for all the other brands too") ----
 // Brand or model + how-to words ("honeywell schedule", "nest wifi", "turn ecobee off", "carrier infinity touch
 // menu") list that brand's own thermostat cards first, steps or not, and never equipment cards ahead of them.
-const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|setup|program|programming|programmed|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode|wifi|wi-fi|timers?|thermostats?|tstat|stat|connect|connects|connected|connecting|connection|reconnect|resume)$/;
+const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|setup|program|programming|programmed|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode|wifi|wi-fi|timers?|thermostats?|tstat|stat|connect|connects|connected|connecting|connection|reconnect|resume|vacation|lock|locked|unlock)$/;
+// v419: away / vacation / lock are KEY words only next to the word thermostat, a thermostat-only brand or a
+// thermostat line name ("rheem thermostat away", "ecobee vacation", "econet screen lock") - never on their own,
+// since equipment locks out too ("carrier furnace locked").
+const ASK_HOWTO_KEY_STAT = /^(away|vacation|lock|locked|unlock)$/;
 // v418: "connect" / "resume" count as how-to words, never as a model word the card's own name has to hold
 // ("econet thermostat connect to wifi", "connect ecobee to wifi" lost their cards to Total Connect Comfort).
 // They are not KEY words: a question still needs schedule / hold / wifi ... to be read as a thermostat how-to.
@@ -1373,7 +1377,7 @@ function askTstatLineNamed(th, units) {
   const has = (set) => th.others.some(u => u.alts.some(a => set.has(a)));
   if (has(askTstatNameWords()) || has(ASK_TSTAT_LINE_ALWAYS)) return true;
   const live = askLiveUnits(units);
-  const strong = live.some(u => u.alts.some(a => ASK_HOWTO_KEY.test(a) || ASK_STAT_WORD.test(a)));
+  const strong = live.some(u => u.alts.some(a => ASK_HOWTO_KEY.test(a) || ASK_STAT_WORD.test(a) || ASK_HOWTO_KEY_STAT.test(a)));
   const phrase = th.others.some(u => u.alts.some(a => ASK_CTRL_PHRASE.test(a)));
   if (has(ASK_TSTAT_LINE_KEYED)) return strong || phrase || live.some(u => u.alts.some(a => ASK_CTRL_WORD.test(a)));
   return phrase && strong;
@@ -1400,7 +1404,9 @@ function askTstatHow(units) {
   const key = (re) => howU.some(u => u.alts.some(a => re.test(a)));
   const wide = only || others.length > 0 || live.some(u => u.alts.some(a => ASK_STAT_WORD.test(a)));
   let soft = false;
-  if (key(ASK_HOWTO_KEY) || (wide && (key(ASK_HOWTO_KEY_SOFT) || key(ASK_HOWTO_KEY_OFF)))) soft = false;
+  const statKey = key(ASK_HOWTO_KEY_STAT) && (only || live.some(u => u.alts.some(a => ASK_STAT_WORD.test(a))) ||
+    others.some(u => u.alts.some(a => ASK_TSTAT_LINE_ALWAYS.has(a) || ASK_TSTAT_LINE_KEYED.has(a) || askTstatNameWords().has(a))));
+  if (key(ASK_HOWTO_KEY) || statKey || (wide && (key(ASK_HOWTO_KEY_SOFT) || key(ASK_HOWTO_KEY_OFF)))) soft = false;
   else if (brandU.length && key(ASK_HOWTO_KEY_SOFT)) soft = true;
   else return null;
   return { brandU, howU, others, pure: !others.length, only, soft };
@@ -13359,7 +13365,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v418";
+const APP_VERSION = "v419";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

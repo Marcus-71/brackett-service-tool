@@ -63558,9 +63558,10 @@ tstatHowtoAdd({
     "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
    },
    {
-    "title": "Other steps",
+    "title": "Lock or unlock the screen",
     "steps": [
-     "Screen will not take changes: Screen Lock may be on. Menu > Settings > Basic > Screen Lock, set to No. Changes inside Basic settings still work while it is locked."
+     "Screen will not take changes: Screen Lock may be on. To unlock: Menu > Settings > Basic > Screen Lock, set to No. Changes inside Basic settings still work while it is locked.",
+     "To lock the home screen against changes: Menu > Settings > Basic > Screen Lock, turn it on."
     ],
     "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
    }
