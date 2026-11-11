@@ -46059,7 +46059,15 @@ const THERMOSTATS = [
    "UHC-TST85U-22NP",
    "UHC-TST85U-22PR",
    "UHC-TST85U-42NP",
-   "UHC-TST85U-42PR"
+   "UHC-TST85U-42PR",
+   "RHC-TST83C-11NP",
+   "RHC-TST83C-11PR",
+   "RHC-TST83H-21NP",
+   "RHC-TST83H-21PR",
+   "RHC-TST85U-22NP",
+   "RHC-TST85U-22PR",
+   "RHC-TST85U-42NP",
+   "RHC-TST85U-42PR"
   ],
   "type": "programmable",
   "stages": "83C-11: 1 heat / 1 cool conventional or heat pump. 83H-21: heat pump 2 heat / 1 cool. 85U-22: up to 2H/2C conventional or 2H/1C heat pump. 85U-42: up to 2H/2C conventional or 4H/2C heat pump. NP = non-programmable, PR = 7-day or 5+1+1 programmable",
@@ -46075,10 +46083,10 @@ const THERMOSTATS = [
    "Terminal designations per the Ruud sheet (the sheet does not describe what each terminal does): Universal 85U-22/42 = RC RH C W/E W2 Y Y2 O/B/6 G L; Heat pump 83H-21 = R C W2 E Y O/B G L; Conventional/heat pump single stage 83C-11 = RC RH C W Y O/B G.",
    "Terminal load: staging models 1.5 A per terminal / 2.5 A total; single-stage models 1.0 A per terminal / 1.5 A total.",
    "Accessories: wallplate F61-2663 (6-3/4 x 4-1/2 in), thermostat guard F29-0198.",
-   "Rheem/Ruud did not publish an installation manual for this series online (searched Rheem/Ruud sites and parts S3 store) - only this brochure."
+   "Rheem / Ruud published only this brochure under their own name. Rheem's parts site (parts.rheem.com) lists the White-Rodgers 1F83C / 1F83H / 1F85U with the same ending (for example 1F85U-42PR for RHC- / UHC-TST85U-42PR) as the replacement for each model and gives the White-Rodgers instruction sheet for it - linked below."
   ],
   "setup": {
-   "access": "Not published in the brochure.",
+   "access": "Not in the Rheem / Ruud brochure. The White-Rodgers instruction sheets that Rheem's parts site gives for the replacement 1F83 / 1F85U thermostats: press and hold Menu for 8 seconds for the installer menu; a short press of Menu opens the user menu.",
    "keySettings": [
     {
      "setting": "Dual fuel control (85U / 83H)",
@@ -46110,9 +46118,33 @@ const THERMOSTATS = [
     "docType": "spec",
     "seedFile": "ruud-pro-series-83-85-spec-sheet.pdf",
     "url": "http://cdn.globalimageserver.com/FetchDocument.aspx?ID=f55b07f8-3c9d-4f4e-8847-901d5fd3dde7"
+   },
+   {
+    "title": "White-Rodgers 1F83C-11PR Installation and Operating Instructions (replacement for TST83C-11PR per Rheem parts site)",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f83c-11pr-instructions.pdf",
+    "url": "https://media.copeland.com/28fe3fbd-b4f9-4aec-ac95-b16b00f98bb5/0037-7758002%20-%201F83C-11PR%20Instructions%20%28E%29.pdf"
+   },
+   {
+    "title": "White-Rodgers 1F83C-11NP Installation and Operating Instructions (replacement for TST83C-11NP per Rheem parts site)",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f83c-11np-instructions.pdf",
+    "url": "https://media.copeland.com/1bc1f95c-a039-4c47-9a4e-b16b00f8be0a/0037-7479002%20-%201F83C-11NP%20Instructions%20%28E%29.pdf"
+   },
+   {
+    "title": "White-Rodgers 1F83H-21PR Installation and Operating Instructions (replacement for TST83H-21PR per Rheem parts site)",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f83h-21pr-instructions.pdf",
+    "url": "https://media.copeland.com/231b00a8-f19a-4971-a9fe-b16b00f8c113/0037-7511003%20-%201F83H-21PR%20Instruction%20%28E%29.pdf"
+   },
+   {
+    "title": "White-Rodgers 1F85U-42PR Installation and Operating Instructions (replacement for TST85U-42PR per Rheem parts site)",
+    "docType": "install",
+    "seedFile": "white-rodgers-1f85u-42pr-instructions.pdf",
+    "url": "https://media.copeland.com/17072d87-5f61-4480-a27b-b16b00f89c41/0037-7554001%20-%201F85U-42PR%20Instructions%20(E).pdf"
    }
   ],
-  "sourceNotes": "PRO-5116 Ruud Professional Thermostats sheet (12-17), linked from ruud.com RHC-TST-83 / RHC-TST-85 product pages",
+  "sourceNotes": "PRO-5116 Ruud Professional Thermostats sheet (12-17), linked from ruud.com RHC-TST-83 / RHC-TST-85 product pages; parts.rheem.com product pages RPD-1F83C-11NP / -11PR, RPD-1F83H-21NP / -21PR, RPD-1F85U-22NP / -22PR / -42NP / -42PR (read 2026-11-11): each 'replaces' the matching RHC-TST / UHC-TST number and lists the White-Rodgers instruction sheet",
   "img": ""
  },
  {
@@ -63425,6 +63457,24 @@ tstatHowtoAdd({
    {
     "set": "md-nest-1",
     "note": "From Google Nest Help steps written for the Nest Learning Thermostat (3rd gen or earlier)."
+   }
+  ]
+ }
+});
+// add-rheem-83-85-v417.js
+tstatHowtoAdd({
+ "sets": {},
+ "use": {
+  "tst-rheem-pro-series-83-85": [
+   {
+    "set": "wr-sw",
+    "label": "83 Series - TST83C / TST83H (slide switches)",
+    "note": "Rheem's parts site lists the White-Rodgers 1F83C / 1F83H as the replacement for these and gives its instruction sheet; the steps are from that sheet. The -NP models are non-programmable: no schedule, the rest applies."
+   },
+   {
+    "set": "wr-btn",
+    "label": "85 Series - TST85U (System and Fan buttons)",
+    "note": "Rheem's parts site lists the White-Rodgers 1F85U as the replacement for these and gives its instruction sheet; the steps are from the 1F85U-42PR sheet. The -NP models are non-programmable: no schedule, the rest applies."
    }
   ]
  }
