@@ -776,6 +776,36 @@ const BULLETINS = [
     source: "Carrier TIC2026-0012, Variable Speed Outdoor Version 3.0 Software Update, Apr 2026"
   },
   {
+    id: "carrier-tic2026-0024", brand: "Carrier", number: "TIC2026-0024 (catalogued as PTC2026-0024)", docNo: "", rev: "", date: "2026-11-04", type: "Technical",
+    title: "Variable speed outdoor v3.01 software - new thermistor partial-short codes (R-454B 27VNA0 / 26VNA1)",
+    applies: { modelRe: ["^27VNA0", "^26VNA1", "^290VAN", "^191VAN"], codes: ["51-12", "52-12", "53-12", "55-12"] },
+    appliesText: "454B communicating variable speed outdoor units: Carrier 27VNA0, 26VNA1; Bryant 290VAN, 191VAN. Sent over the air the week of November 9, 2026.",
+    summary: "v3.01 clears heat pump diagnostics when the unit is set up as an AC, and adds four codes that catch a thermistor that is partly shorted: 51-12 (OAT) and 55-12 (LLT), 52-12 (OCT) and 53-12 (OST/ALT).",
+    steps: [
+      "51-12, 52-12, 53-12 or 55-12 on these units means that sensor reads like it is partly shorted. Check the named thermistor and its wiring and plug for damage, rubbed insulation or water before replacing the control.",
+      "51-12 / 55-12 = outdoor air temp (OAT) or liquid line temp (LLT) sensor. 52-12 / 53-12 = outdoor coil temp (OCT) or suction temp (OST/ALT) sensor.",
+      "Heat pump codes showing on a unit configured as an AC: update to v3.01; they no longer show after the update.",
+      "Same release for 27VNA3 / 293VAN is v4.01 (TIC2026-0025). Earlier v3.0 changes are in TIC2026-0012."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2026-0024, Variable Speed Outdoor V3.01 Software Update, Nov 2026"
+  },
+  {
+    id: "carrier-tic2026-0025", brand: "Carrier", number: "TIC2026-0025 (catalogued as PTC2026-0025)", docNo: "", rev: "", date: "2026-11-04", type: "Technical",
+    title: "Variable speed outdoor v4.01 software - new thermistor partial-short codes (R-454B 27VNA3)",
+    applies: { modelRe: ["^27VNA3", "^293VAN"], codes: ["51-12", "52-12", "53-12", "55-12"] },
+    appliesText: "454B communicating variable speed outdoor units: Carrier 27VNA3; Bryant 293VAN. Sent over the air the week of November 9, 2026.",
+    summary: "v4.01 clears heat pump diagnostics when the unit is set up as an AC, and adds four codes that catch a thermistor that is partly shorted: 51-12 (OAT) and 55-12 (LLT), 52-12 (OCT) and 53-12 (OST/ALT).",
+    steps: [
+      "51-12, 52-12, 53-12 or 55-12 on these units means that sensor reads like it is partly shorted. Check the named thermistor and its wiring and plug for damage, rubbed insulation or water before replacing the control.",
+      "51-12 / 55-12 = outdoor air temp (OAT) or liquid line temp (LLT) sensor. 52-12 / 53-12 = outdoor coil temp (OCT) or suction temp (OST/ALT) sensor.",
+      "Heat pump codes showing on a unit configured as an AC: update to v4.01; they no longer show after the update.",
+      "Same release for 27VNA0 / 26VNA1 / 290VAN / 191VAN is v3.01 (TIC2026-0024)."
+    ],
+    priority: "normal", confidential: true,
+    source: "HVACpartners TIC2026-0025, Variable Speed Outdoor V4.01 Software Update, Nov 2026"
+  },
+  {
     id: "carrier-tic2026-0016", brand: "Carrier", number: "TIC2026-0016 (catalogued as PTC2026-0016)", docNo: "", rev: "", date: "2026-07-14", type: "Technical",
     title: "27VPA9 / 249VAN IntelliSense software v4.00 - false fault codes eliminated",
     applies: { modelRe: ["^27VPA9", "^249VAN"] },
@@ -1081,6 +1111,22 @@ const BULLETINS = [
     ],
     priority: "info", confidential: true,
     source: "HVACpartners TIC2026-0011 / TIC2025-0038 (history: TIC2025-0025, -0017, -0002, TIC2024-0028, -0019, -0012, TIC2023-0017, -0001, TIC2022-0024, -0012)"
+  },
+  {
+    id: "carrier-tic2026-0023", brand: "Carrier", number: "TIC2026-0023 (catalogued as PTC2026-0023)", docNo: "", rev: "", date: "2026-11-09", type: "Technical",
+    title: "-C wall control software 2.14 - fault 25 now a malfunction, blower checkout no longer forced",
+    applies: { modelRe: ["^SYSTXCCITC01-?C", "^SYSTXCCWIC01-?C", "^SYSTXBBECC01-?C", "^SYSTXBBWEC01-?C"], codes: ["25"] },
+    appliesText: "Carrier SYSTXCCITC01-C, SYSTXCCWIC01-C; Bryant SYSTXBBECC01-C, SYSTXBBWEC01-C (-C touch controls only). 2.14 is pushed over the air in stages starting the week of November 9, 2026.",
+    summary: "2.14: fault code 25 is now listed as a malfunction; the forced 15 minutes a week of blower run is gone, so AC-only systems can be shut down for the season; charging, checkout and equipment status screens now show units with every value, and the cooling charge mode screens show live indoor airflow CFM; fixes for high humidity readings, duct assessment not finishing, schedule copy, and a crash when uploading a dealer logo; better variable speed staging and setpoint response.",
+    steps: [
+      "Check the control's software version first. Below 2.14 and the customer has a humidity reading that is too high, a duct assessment that will not finish, or a schedule copy problem: update the control before replacing parts.",
+      "On 2.14 the blower no longer runs a weekly 15-minute checkout by itself. A blower that stays off all week on an AC-only system in the off season is normal.",
+      "Use the indoor airflow CFM on the cooling charge mode screen to confirm airflow while charging.",
+      "The control shows a QR code on screen that opens the release notes for the installed software.",
+      "Earlier versions (2.10, 2.05 and older) are in TIC2026-0011."
+    ],
+    priority: "info", confidential: true,
+    source: "HVACpartners TIC2026-0023, Software 2.14 Release (-C Wall Control), Nov 2026"
   },
   {
     id: "carrier-tic2025-0034", brand: "Carrier", number: "TIC2025-0034", docNo: "", rev: "", date: "2025-11-11", type: "Technical",
