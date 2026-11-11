@@ -952,6 +952,7 @@ function askBuildIndex() {
       title: s.title,
       sub: [s.brand, s.equipment, s.summary].filter(Boolean).join(" · "),
       hay: [s.brand, s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
+      brandOnly: !!s.askBrandOnly,
     });
   }
   for (const t of tstatEntries()) {
@@ -960,6 +961,9 @@ function askBuildIndex() {
       title: [t.brand, t.family].filter(Boolean).join(" "),
       sub: (t.models || []).slice(0, 4).join(", "),
       hay: tstatSearchFields(t).filter(Boolean).join(" ").toLowerCase(),
+      // "How to use it" steps (menu, schedule, hold, off): a question that names the brand and asks about
+      // those gets this brand's thermostats ahead of other equipment that shares a word (askScoreItem).
+      howHay: (t.howTo || []).flatMap(g => g.topics.flatMap(x => [x.title, ...(x.steps || [])])).join(" ").toLowerCase(),
       // The thermostat's own error codes count as typed codes, like a generator's alarms ("nest e74" was
       // every brand's code 74 row ahead of the Nest card that lists E4 / E24 / E74; Andy 11-10).
       codes: [...new Set((t.diagnostics || []).flatMap(d => askCodeTokens(d.code)))],
@@ -1289,17 +1293,49 @@ function askUnitHits(units, hay, it) {
   for (const u of units) {
     if (u.zero) continue;
     if (u.alts.some(a => askTermHit(hay, a))) score++;
-    else if (it && it.kind === "symptom" && !it.brand && u.alts.some(a => ASK_BRAND_WORDS.has(a))) score++;
+    // The free brand point is for general cards. ecobee only makes thermostats, so a card titled for
+    // an equipment brand never earns it for "ecobee" (Andy 11-11: "ecobee menu system" was a pile of
+    // Lennox / Daikin / Goodman cards that say "menu"). Kept to ecobee: the same rule for every brand
+    // moved 51 of the 367 saved questions, not all for the better.
+    else if (it && it.kind === "symptom" && !it.brand && u.alts.some(a => ASK_BRAND_WORDS.has(a)) &&
+      !(u.alts.includes("ecobee") && (it.tb === undefined ? (it.tb = ASK_BRAND_RE.test(String(it.title).toLowerCase())) : it.tb))) score++;
   }
   return score;
 }
 // Full score, plus a secondary count of concepts that land in the item's
 // HEADLINE (code + name) — so for "3 flashes" the row titled "3 flashes" beats
 // a "9 flashes" row that only matched the number somewhere in its steps.
+// Words of a "how do I use this thermostat" question; at least one KEY word has to be there.
+const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|program|programming|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode)$/;
+const ASK_HOWTO_KEY = /^(menus?|schedules?|scheduling|holds?|comfort|off|program|programming)$/;
+// "ecobee menu", "turn ecobee off", "how to set ecobee schedule": the brand, only how-to words besides it,
+// at least one key word, and no model number.
+function askEcobeeHowTo(units) {
+  if (units.kModel) return false;
+  const live = askLiveUnits(units);
+  if (!live.some(u => u.alts.includes("ecobee"))) return false;
+  // "carrier ecobee schedule", "bryant ecobee menu": another brand word beside ecobee is the Carrier / Bryant card.
+  const rest = live.filter(u => !u.alts.some(a => ASK_BRAND_WORDS.has(a)));
+  return rest.length > 0 && rest.every(u => u.alts.some(a => ASK_HOWTO_WORD.test(a))) &&
+    rest.some(u => u.alts.some(a => ASK_HOWTO_KEY.test(a)));
+}
 function askScoreItem(units, it) {
   let sc = askUnitHits(units, it.hay, it);
   let tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
   if (!sc) return { sc, tsc };
+  // A how-to card kept for one thermostat brand only answers a question that names that brand
+  // (Andy 11-11: the ecobee menu / schedule steps show "only when they search that thermostat").
+  if (it.brandOnly && !askUnitHits(units, String(it.brand).toLowerCase())) return { sc: 0, tsc: 0 };
+  // Brand + how-to words ("ecobee menu", "turn ecobee off"): that brand's thermostats, whose cards carry
+  // the steps, go ahead of other cards that only share a word.
+  if (units.ecoHow === undefined) units.ecoHow = askEcobeeHowTo(units);
+  if (units.ecoHow) {
+    // Only ecobee's own entries answer "how do I work this ecobee" (Andy 11-11: "hvac units" came up).
+    // Anything not titled or branded ecobee - general cards, equipment cards, maintenance figures that
+    // mention an ecobee in passing - is left out of the list instead of trailing it.
+    if (String(it.brand).toLowerCase() !== "ecobee" && !it.title.toLowerCase().includes("ecobee")) return { sc: 0, tsc: 0 };
+    if (it.kind === "tstat" && it.howHay) tsc = Math.max(tsc, askLiveUnits(units).length);
+  }
   // A generator question is not answered by an HVAC card and the other way round: an item from the
   // other world keeps only what its headline says ("rooftop ... 300 over 50" was five generator
   // cards whose long text happened to hold every word; 2026-10-06 audit, F4).
@@ -2824,7 +2860,8 @@ function getAllSymptoms() {
 }
 
 function renderSymptoms() {
-  const all = getAllSymptoms();
+  // A how-to card kept for one thermostat brand (askBrandOnly) only lists when the search names that brand.
+  const all = getAllSymptoms().filter(s => !s.askBrandOnly || hayHasTerm(String(diagState.search || "").toLowerCase(), String(s.brand).toLowerCase()));
   const equips = ["All", ...uniqueSorted(all.map(s => s.equipment))];
   renderChips("diagEquipChips", equips, diagState.equipment, (v) => { diagState.equipment = v; renderSymptoms(); }, "All Equipment");
 
@@ -13158,7 +13195,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v408";
+const APP_VERSION = "v409";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

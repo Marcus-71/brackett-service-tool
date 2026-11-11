@@ -21531,5 +21531,23 @@ const SYMPTOMS = [
    "Not in the app? Generac: GENservice, Service Documents (bulletins and firmware). HVAC brands: the brand's dealer portal. Ask the office to pull it, and send Request Info so it gets added."
   ],
   "confidence": "common"
+ },
+ {
+  "id": "s-ecobee-menu-schedule-hold-off",
+  "brand": "ecobee",
+  "equipment": "Thermostat",
+  "askBrandOnly": true,
+  "title": "ecobee - how to use the menu and system settings, set the schedule or comfort settings (Home / Away / Sleep), hold a temperature, cancel a hold, turn the schedule off or turn the system off",
+  "summary": "Which ecobee? Open its card in Thermostats and tap a topic under 'How to use it' for the full numbered steps for that model. The short version is below. From ecobee's user guides and support.ecobee.com articles.",
+  "steps": [
+   "Menu: tap the three bars for the Main Menu (top right on Smart Thermostat Premium / Enhanced, bottom left on ecobee4 and SmartThermostat with voice control). On Premium / Enhanced the Gear icon opens General, which holds Schedule, Comfort Settings and Settings. On Smart Thermostat Lite / Essential those items sit right on the Main Menu.",
+   "Set the schedule (program the times): Main Menu > General > Schedule (Main Menu > Schedule on Lite / Essential, ecobee3 and older screens). Tap a day, tap an activity (Home, Away, Sleep) to change its start time, + to add one, the trash can to remove one, Copy to put that day on other days. The temperatures themselves are set in Comfort Settings.",
+   "Turn the schedule off: ecobee has no schedule on/off switch - its support article says the schedule cannot be removed. Set Hold Action to Until You Change It (under Preferences), then set the temperature on the Home screen. It holds there until someone cancels it.",
+   "Go back to the schedule: tap the x on the hold bubble (the Hold message box on older models) on the Home screen.",
+   "Turn the heating and cooling off: tap the mode icon above the temperature and choose Off (ecobee3: Main Menu > System > HVAC System > Off). A fan set to On, a fan timer or a fan minimum runtime still runs the fan.",
+   "Smart Si (buttons, not a touch screen): MENU > Weekly Schedule to edit, MENU > System Mode > Off to shut it off, and OK on the Home screen cancels a hold.",
+   "Exact screens differ by model: open the thermostat's own card in Thermostats (brand ecobee) and tap a topic under 'How to use it'."
+  ],
+  "confidence": "common"
  }
 ];
