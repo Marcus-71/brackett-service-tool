@@ -54227,3 +54227,445 @@ const THERMOSTAT_ADDITIONS = {
   }
   for (const n of THERMOSTAT_ADDITIONS.newEntries) if (!THERMOSTATS.some(e => e.id === n.id)) THERMOSTATS.push(n);
 })();
+// ============================================================
+// HOW TO USE IT - plain numbered steps for getting around a
+// thermostat's own screens (menu, schedule, hold, system off).
+// Andy 2026-11-11: "put on the ecobees a tab to how to use the menu
+// and steps and how to set schedule or turn it off". Every step is
+// paraphrased from ecobee's own user guides and support.ecobee.com
+// articles (named in each topic's source line); where ecobee's
+// documents disagree or say nothing, the step says so.
+// sets = shared step lists; use = which sets each card shows.
+// ============================================================
+const TSTAT_HOWTO = {
+ "sets": {
+  "premium": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: the big number is the room temperature. Tap it to open the temperature picker and change the set point.",
+     "The mode icon above the temperature shows the system mode. Tap it to change the mode.",
+     "Tap the three bars in the top right corner to open the Main Menu.",
+     "The first Main Menu screen holds the quick controls: the Comfort Setting drop-down (Home / Away) and the Fan icon (fan On or Auto, fan timer).",
+     "Tap the Gear icon for General. That is where Comfort Settings, Schedule, Vacation, Sensors, Registration and Settings are. Settings holds Preferences, Access Control and Installation Settings.",
+     "System (HVAC Mode, Fan Speed): ecobee's guide writes this path two ways - Main Menu > System, and Main Menu > Gear icon > System. Look on the first menu screen, then under the Gear."
+    ],
+    "notes": [
+     "If a menu asks for a 4-digit code, Access Control is on (General > Settings > Access Control). The owner sets that code."
+    ],
+    "source": "ecobee Smart Thermostat Premium - Installation, Setup and User Guide; ecobee Smart Thermostat Enhanced - Setup and User Guide; Get to know your Smart Thermostat (support.ecobee.com article)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Tap the three bars (Main Menu), then the Gear icon (General), then Schedule.",
+     "Today's schedule shows. Tap a day at the top to see that day.",
+     "To change when an activity starts: tap it (Home, Away or Sleep), change the time, tap Save.",
+     "To add an activity: tap +, pick the Comfort Setting, set the start time, tap Save.",
+     "To remove an activity: tap it, then tap the trash can icon in the top right.",
+     "To use that day on other days: tap the Copy button at the bottom (the guide shows it as Copy plus the weekday, the support article as Copy Schedule), tick the days, tap Save."
+    ],
+    "notes": [
+     "Each activity runs until the next one starts. The same Comfort Setting cannot be scheduled twice in a row.",
+     "The schedule always keeps at least one activity. Removing one stretches the activity before it.",
+     "The schedule only sets the times. The temperatures come from the Comfort Settings (next topic).",
+     "A new, custom Comfort Setting can only be made in the ecobee app or web portal, not on the thermostat."
+    ],
+    "source": "How do I program a schedule for the ecobee thermostat (support.ecobee.com article); ecobee Smart Thermostat Premium - Installation, Setup and User Guide; ecobee Smart Thermostat Enhanced - Setup and User Guide"
+   },
+   {
+    "title": "Change the Home / Away / Sleep temperatures",
+    "steps": [
+     "Tap the three bars (Main Menu), then the Gear icon (General), then Comfort Settings.",
+     "Tap the Comfort Setting to change: Home, Away or Sleep.",
+     "Set the heat and cool set points, and the fan mode if needed.",
+     "Tap Save."
+    ],
+    "source": "What are Activities and Comfort Settings? (support.ecobee.com article); ecobee Smart Thermostat Premium - Installation, Setup and User Guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "ecobee has no schedule on/off switch. Its support article says the schedule cannot be removed - to stop following it, set the Hold Action to Until You Change It.",
+     "Tap the three bars (Main Menu), then the Gear icon (General) > Settings > Preferences > Hold Action. (The support article lists it as Main Menu > General > Preferences > Hold action.)",
+     "Pick Until you change it.",
+     "Go back to the Home screen and tap the temperature.",
+     "Use + and - (or swipe up and down) to pick the temperature, then tap the selected temperature to place the hold.",
+     "A bubble on the Home screen shows the hold temperature and how long it lasts. The schedule is ignored until someone cancels the hold."
+    ],
+    "notes": [
+     "Other Hold Action choices: 2 hours, 4 hours, Until the next scheduled activity, Decide at time of change.",
+     "Factory default per ecobee's guides: Premium = Until you change it, Enhanced = Until the next scheduled activity. 'It keeps going back to the old temperature' is usually this setting.",
+     "Picking Home or Away from the Main Menu drop-down also places a hold. ecobee's support article says that hold stays until cancelled; the user guide says it lasts until the next scheduled activity - check the bubble on the Home screen.",
+     "Changes to settings and preferences made during a hold do not apply until the hold is cancelled."
+    ],
+    "source": "What is a Hold? (support.ecobee.com article); How do I program a schedule for the ecobee thermostat (support.ecobee.com article); ecobee Smart Thermostat Premium - Installation, Setup and User Guide; ecobee Smart Thermostat Enhanced - Setup and User Guide"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "On the Home screen find the hold bubble.",
+     "Tap the small x on the bubble. The hold ends and the schedule takes over again."
+    ],
+    "notes": [
+     "In the ecobee app, tap Cancel on the hold."
+    ],
+    "source": "What is a Hold? (support.ecobee.com article); ecobee Smart Thermostat Premium - Installation, Setup and User Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "On the Home screen tap the mode icon above the temperature.",
+     "Choose Off. To turn it back on, tap the icon again and choose Heat, Cool or Auto.",
+     "Other way in: Main Menu > System > HVAC Mode."
+    ],
+    "notes": [
+     "Off stops heating and cooling only. The fan still runs if a fan minimum runtime or a fan timer is set (Main Menu > Fan).",
+     "A hold stays active while the system is Off, but you cannot see it. Switch to any mode other than Off to check for or cancel a hold.",
+     "Auto only shows when Auto Heat/Cool is enabled: General > Settings > Installation Settings > Thresholds > Auto Heat/Cool.",
+     "If the mode will not change, Access Control may be locking System Mode (General > Settings > Access Control)."
+    ],
+    "source": "ecobee Smart Thermostat Premium - Installation, Setup and User Guide; ecobee Smart Thermostat Enhanced - Setup and User Guide; What is a Hold? (support.ecobee.com article); Fan settings on the ecobee Thermostat (support.ecobee.com article)"
+   }
+  ],
+  "legacy": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: shows the room temperature and humidity. Slide the temperature slider to change the set point.",
+     "The system mode icon above the temperature shows the mode. Tap it to change the mode.",
+     "Tap the three bars in the bottom left corner to open the Main Menu.",
+     "Main Menu holds Schedule, Comfort Settings, Vacation, System (HVAC, Fan), Settings and Registration. Settings holds Preferences, Access Control and Installation Settings.",
+     "Tap the Quick Changes icon on the Home screen for Home for now / Away for now, a fan hold, and a list of the equipment running now."
+    ],
+    "notes": [
+     "These paths are from ecobee's installation, setup and user guide for this generation. ecobee's current support articles write them with a General step (Main Menu > General > Schedule). If the Main Menu shows a General or Gear tile, Schedule, Comfort Settings and Settings are inside it.",
+     "If a menu asks for a 4-digit code, Access Control is on (Settings > Access Control). The owner sets that code."
+    ],
+    "source": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era); How do I program a schedule for the ecobee thermostat (support.ecobee.com article)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Tap the three bars (Main Menu), then Schedule. (Main Menu > General > Schedule if the menu has a General tile.)",
+     "Today's schedule shows. Tap a day at the top to see that day.",
+     "To change when an activity starts: tap it (Home, Away or Sleep), change the time, tap Save.",
+     "To add an activity: tap + in the top right, pick the Comfort Setting, tap Next, set the start time, tap Save.",
+     "To remove an activity: tap it, then tap the trash can icon in the top right.",
+     "To use that day on other days: tap the Copy button at the bottom (the guide shows it as Copy plus the weekday), tick the days, tap Save."
+    ],
+    "notes": [
+     "Each activity runs until the next one starts. The same Comfort Setting cannot be scheduled twice in a row.",
+     "The schedule always keeps at least one activity. Removing one stretches the activity before it.",
+     "The schedule only sets the times. The temperatures come from the Comfort Settings (next topic).",
+     "A new, custom Comfort Setting can only be made in the ecobee app or web portal, not on the thermostat."
+    ],
+    "source": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era); How do I program a schedule for the ecobee thermostat (support.ecobee.com article)"
+   },
+   {
+    "title": "Change the Home / Away / Sleep temperatures",
+    "steps": [
+     "Tap the three bars (Main Menu), then Comfort Settings. (Main Menu > General > Comfort Settings if the menu has a General tile.)",
+     "Tap the Comfort Setting to change: Home, Away or Sleep.",
+     "Set the heat and cool set points, and the fan mode if needed.",
+     "Tap Save."
+    ],
+    "source": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era); What are Activities and Comfort Settings? (support.ecobee.com article)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "ecobee has no schedule on/off switch. Its support article says the schedule cannot be removed - to stop following it, set the Hold Action to Until You Change It.",
+     "Tap the three bars (Main Menu) > Settings > Preferences > Hold Action. (Main Menu > General > Preferences > Hold action in the current support article.)",
+     "Pick Until you change it. The guide lists this as the factory default.",
+     "Go back to the Home screen and move the temperature slider to the temperature you want. That places the hold.",
+     "A message box on the Home screen shows the hold. The schedule is ignored until someone cancels it."
+    ],
+    "notes": [
+     "Other Hold Action choices: 2 hours, 4 hours, Until the next scheduled activity, Decide at time of change.",
+     "Quick Changes > Home for now or Away for now also holds, with no end time - it has to be cancelled by hand.",
+     "Changes to settings and preferences made during a hold do not apply until the hold is cancelled."
+    ],
+    "source": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era); What is a Hold? (support.ecobee.com article); How do I program a schedule for the ecobee thermostat (support.ecobee.com article)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "On the Home screen find the hold message box.",
+     "Tap the X on the box (top left of the box in the guide). The hold ends and the schedule takes over again."
+    ],
+    "notes": [
+     "In the ecobee app, tap Cancel on the hold."
+    ],
+    "source": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "On the Home screen tap the system mode icon above the temperature.",
+     "Choose Off. To turn it back on, tap the icon again and choose Heat, Cool or Auto.",
+     "Other way in: Main Menu > System > HVAC."
+    ],
+    "notes": [
+     "Off stops heating and cooling only. The fan still runs if a fan minimum runtime (Main Menu > System > Fan) or a fan hold is set.",
+     "A hold stays active while the system is Off, but you cannot see it. Switch to any mode other than Off to check for or cancel a hold.",
+     "Auto only shows when Auto Heat/Cool is enabled: Main Menu > Settings > Installation Settings > Thresholds > Auto Heat/Cool.",
+     "If the mode will not change, Access Control may be locking System Mode (Settings > Access Control)."
+    ],
+    "source": "ecobee Installation, Setup and User Guide (ecobee4 / SmartThermostat with voice control / ecobee3 lite era); What is a Hold? (support.ecobee.com article); Fan settings on the ecobee Thermostat (support.ecobee.com article)"
+   }
+  ],
+  "ecobee3": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The Home screen shows when you walk up to the thermostat: room temperature, humidity, the system mode with any running equipment, and a temperature slider with the set point bubble.",
+     "Move the bubble on the slider up or down to change the temperature. Blue number = cool set point, orange number = heat set point.",
+     "Touch the screen, then the Main Menu icon. A dot on the icon means there is a message to read.",
+     "Main Menu holds: System, Sensors, Schedule, Comfort Settings, Vacation, Reminders & Alerts, Settings and About (plus Registration until the thermostat is registered).",
+     "System = heat / cool / auto / off, fan and accessories. Settings = display preferences, Wi-Fi and installation settings.",
+     "The Quick Changes icon on the Home screen opens Home and Away buttons, fan Auto / On, and icons for what is running."
+    ],
+    "source": "ecobee3 User Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Main Menu > Schedule.",
+     "Touch the day of the week to change.",
+     "Touch an activity to edit it, or touch + to add a new one.",
+     "Select Start time and swipe to the new time.",
+     "Touch Save.",
+     "For a new activity, select the Comfort Setting to use, then touch Save.",
+     "Touch the Back arrow to return to the Schedule screen.",
+     "To use that day on other days: show the day, touch the copy button, select the days, touch Save."
+    ],
+    "notes": [
+     "A start time has to be at least 30 minutes after the activity before it and 30 minutes before the next one.",
+     "The schedule only sets the times. The temperatures come from the Comfort Settings (next topic)."
+    ],
+    "source": "ecobee3 User Guide"
+   },
+   {
+    "title": "Change the Home / Away / Sleep temperatures",
+    "steps": [
+     "Main Menu > Comfort Settings.",
+     "Select Away, Home or Sleep.",
+     "Adjust the heat and cool set points, and the fan mode if needed.",
+     "Touch Save."
+    ],
+    "notes": [
+     "New Comfort Settings are made (or removed) from the web portal."
+    ],
+    "source": "ecobee3 User Guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "The ecobee3 has no schedule on/off switch. A hold set to Until I change it keeps one temperature and ignores the schedule.",
+     "Main Menu > Settings > Preferences > Hold action.",
+     "Pick Until I change it. The guide lists this as the factory default.",
+     "On the Home screen move the bubble on the temperature slider to the temperature you want. That places the hold.",
+     "A Hold message box shows on the Home screen. The temperature stays there until someone cancels it."
+    ],
+    "notes": [
+     "Other Hold action choices in the guide include 2 hours, 4 hours and Until the next scheduled activity.",
+     "The Home and Away buttons in Quick Changes also override the schedule until the message box is touched."
+    ],
+    "source": "ecobee3 User Guide"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "On the Home screen find the Hold message box.",
+     "Touch the box - anywhere on it, not just the X. The hold ends and the schedule takes over again."
+    ],
+    "source": "ecobee3 User Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Main Menu > System > HVAC System.",
+     "Select Off. With the system off, the Home screen shows only the current temperature.",
+     "To turn it back on, go to the same menu and select Heat, Cool or Auto (Aux also shows when auxiliary heat is configured)."
+    ],
+    "notes": [
+     "Fan set to On keeps running even with the System Mode Off. Set the fan to Auto in Quick Changes to stop it."
+    ],
+    "source": "ecobee3 User Guide"
+   }
+  ],
+  "essential": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: the room temperature is in large type in the middle. Press it and scroll up or down to change the set point.",
+     "Current Mode on the Home screen changes between heating, cooling, auto and other modes.",
+     "Main Menu on the Home screen opens the settings.",
+     "On this model the items sit right on the Main Menu, with no General step: Schedule, Comfort Settings, Preferences, Fan Mode, Reminders and Alerts, and Settings (Installation Settings)."
+    ],
+    "notes": [
+     "If Installation Settings asks for a code and the installer code is enabled, it is 3262 (ecobee's wiring guide)."
+    ],
+    "source": "Get to know your Smart Thermostat (support.ecobee.com article); How do I program a schedule for the ecobee thermostat (support.ecobee.com article); What is a Hold? (support.ecobee.com article); Fan settings on the ecobee Thermostat (support.ecobee.com article); Smart Thermostat Essential Wiring Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Main Menu > Schedule.",
+     "Tap a day at the top to see that day.",
+     "To change when an activity starts: tap it, change the time, tap Save.",
+     "To add an activity: tap +, pick the Comfort Setting, choose the start time, tap Save.",
+     "To remove an activity: tap it, then tap the trash can icon in the top right.",
+     "To use that day on other days: tap Copy Schedule, select the days, tap Save in the bottom right."
+    ],
+    "notes": [
+     "The schedule always keeps at least one activity. Removing one stretches the activity before it.",
+     "The schedule only sets the times. The temperatures come from the Comfort Settings (next topic)."
+    ],
+    "source": "How do I program a schedule for the ecobee thermostat (support.ecobee.com article)"
+   },
+   {
+    "title": "Change the Home / Away / Sleep temperatures",
+    "steps": [
+     "Main Menu > Comfort Settings.",
+     "Tap the Comfort Setting to change: Home, Away or Sleep.",
+     "Set the heat and cool set points, and the fan mode if needed.",
+     "Tap Save."
+    ],
+    "source": "What are Activities and Comfort Settings? (support.ecobee.com article)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "ecobee has no schedule on/off switch. Its support article says the schedule cannot be removed - to stop following it, set the Hold Action to Until You Change It.",
+     "Main Menu > Preferences > Hold action.",
+     "Pick Until You Change It.",
+     "Go back to the Home screen and tap the temperature.",
+     "Use + and - (or swipe up and down) to pick the temperature, then tap the selected temperature to place the hold.",
+     "A bubble on the Home screen shows the hold temperature and how long it lasts. The schedule is ignored until someone cancels the hold."
+    ],
+    "notes": [
+     "Other Hold action choices: 2 hours, 4 hours, Until the Next Scheduled Activity, Decide at the Time of Change.",
+     "On this model a Comfort Setting hold (holding Home, Away or Sleep) can only be set from the ecobee app.",
+     "Changes to settings and preferences made during a hold do not apply until the hold is cancelled."
+    ],
+    "source": "What is a Hold? (support.ecobee.com article); How do I program a schedule for the ecobee thermostat (support.ecobee.com article)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "On the Home screen find the hold bubble.",
+     "Tap the small x on the bubble. The hold ends and the schedule takes over again."
+    ],
+    "source": "What is a Hold? (support.ecobee.com article)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "On the Home screen tap Current Mode.",
+     "Choose Off. To turn it back on, tap Current Mode again and choose Heat, Cool or Auto."
+    ],
+    "notes": [
+     "ecobee's articles name the Off system mode but do not print a step-by-step for this model - confirm the mode list on the unit.",
+     "Off stops heating and cooling only. The fan still runs if a fan minimum runtime or fan hold is set (Main Menu > Fan Mode).",
+     "A hold stays active while the system is Off, but you cannot see it. Switch to any mode other than Off to check for or cancel a hold."
+    ],
+    "source": "Get to know your Smart Thermostat (support.ecobee.com article); What is a Hold? (support.ecobee.com article); Fan settings on the ecobee Thermostat (support.ecobee.com article)"
+   }
+  ],
+  "smartsi": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The Smart Si is not a touch screen. Use the buttons on the right side.",
+     "Press any button to show the Home screen: current temperature and humidity, system mode, set point, time and date.",
+     "On the Home screen, up and down change the set point 1 degree F at a time. In Auto, left and right switch between the heat and cool set points.",
+     "Press MENU for the list of options: System Mode, Fan, Weekly Schedule, Vacation and Settings (Preferences, Installation Settings).",
+     "In a menu: up / down move, right or OK selects, left or BACK goes back one screen.",
+     "MENU pressed while a menu is open cancels unsaved changes and returns to the Home screen."
+    ],
+    "notes": [
+     "If it asks for a 4-digit access code, Access Control is on (MENU > Settings > Preferences). The owner sets that code."
+    ],
+    "source": "Smart Si Thermostat User Manual"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "From the Home screen press MENU and select Weekly Schedule.",
+     "Press OK to open the Schedule Editor.",
+     "Select the Day.",
+     "Select the Time, Heat or Cool setting to change.",
+     "Press up or down to change the value. Left and right move between columns.",
+     "Press OK.",
+     "Select Save and Continue.",
+     "Select any other days that should use the same settings (arrow to a day, OK to select it).",
+     "Select Continue. The new schedule shows on the screen."
+    ],
+    "notes": [
+     "Default periods are Awake, Work, Home and Sleep.",
+     "To add a period: show the day's schedule and select Add New.",
+     "To switch one period off: select the period's Time, then select Disable."
+    ],
+    "source": "Smart Si Thermostat User Manual"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "The manual shows no schedule on/off switch. An Indefinite hold keeps one temperature and ignores the schedule.",
+     "From the Home screen press MENU, then Settings > Preferences > Hold Action.",
+     "Select Indefinite (holds until you press OK).",
+     "Back on the Home screen press up or down to the temperature you want. The screen shows it is holding instead of running the program."
+    ],
+    "notes": [
+     "Other Hold Action choices: Hold 2 hours, Hold 4 hours, Until next transition, Update Schedule, Ask Me.",
+     "Update Schedule rewrites the weekly schedule's temperature for the current period - do not pick it by mistake."
+    ],
+    "source": "Smart Si Thermostat User Manual"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Go to the Home screen.",
+     "Press OK. The thermostat returns to the programmed temperature."
+    ],
+    "source": "Smart Si Thermostat User Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "From the Home screen press MENU.",
+     "Select System Mode.",
+     "Select Off. The thermostat then only displays the current temperature.",
+     "To turn it back on, go to the same menu and select Heat, Cool or Auto."
+    ],
+    "notes": [
+     "Fan set to On keeps running even with the System Mode Off (MENU > Fan)."
+    ],
+    "source": "Smart Si Thermostat User Manual"
+   }
+  ]
+ },
+ "use": {
+  "tst-ecobee-premium": [{ "set": "premium" }],
+  "tst-ecobee-enhanced": [{ "set": "premium" }],
+  "tst-ecobee-smart-voice": [{ "set": "legacy" }],
+  "tst-ecobee-4": [{ "set": "legacy" }],
+  "tst-ecobee-3-lite": [{ "set": "legacy", "note": "ecobee publishes no separate user guide for the ecobee3 lite. These steps are from ecobee's combined installation, setup and user guide of that generation plus its current support articles, which do not name the ecobee3 lite one by one - confirm each screen on the unit." }],
+  "tst-ecobee-3": [{ "set": "ecobee3" }],
+  "tst-ecobee-essential": [{ "set": "essential", "note": "No full user guide for the Smart Thermostat Essential was found on ecobee's site. These steps are from the ecobee support articles that name the Essential - confirm each screen on the unit." }],
+  "tst-ecobee-smart-si": [{ "set": "smartsi" }],
+  "tst-carrier-ecobee-for-carrier": [
+   { "set": "premium", "label": "Premium - EB-STATE6ICR-01 / EB-STATE6IBR-01", "note": "Carrier and Bryant publish no menu guide of their own for these thermostats (the Quick Start Guide only labels the home screen: Current Mode, Main Menu, temperature). These are ecobee's steps for the Smart Thermostat Premium, the same hardware - confirm each screen on the unit." },
+   { "set": "essential", "label": "Lite - EB-STATE7ICR-01 / EB-STATE7IBR-01", "note": "ecobee's support articles give these paths for the Smart Thermostat Lite and the Smart Thermostat Essential together. No Carrier or Bryant menu guide for the Lite was found - confirm each screen on the unit. The 3262 installer code comes from the Essential wiring guide and is not confirmed for the Lite." }
+  ]
+ }
+};
+(function () {
+  for (const e of THERMOSTATS) {
+    const u = TSTAT_HOWTO.use[e.id];
+    if (!u) continue;
+    e.howTo = u.map(g => ({ label: g.label || "", note: g.note || "", topics: TSTAT_HOWTO.sets[g.set] || [] }));
+  }
+})();

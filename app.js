@@ -3699,6 +3699,7 @@ function tstatSearchFields(t) {
     ...(t.troubleshooting || []).map(x => x.symptom),
     ...(t.wiringNotes || []),
     ...(t.manuals || []).map(x => x.title),
+    ...(t.howTo || []).flatMap(g => g.topics.flatMap(x => [x.title, ...(x.steps || [])])),
   ];
 }
 
@@ -3763,6 +3764,7 @@ function buildTstatCard(t) {
       ${(t.terminals || []).length ? `<span class="tstat-badge">${(t.terminals || []).length} terminals</span>` : ""}
       ${nCodes ? `<span class="tstat-badge">${nCodes} codes</span>` : ""}
       ${nDocs ? `<span class="tstat-badge">${nDocs} manual${nDocs === 1 ? "" : "s"}</span>` : ""}
+      ${(t.howTo || []).length ? `<span class="tstat-badge">How-to steps</span>` : ""}
     </div>
   `;
   return card;
@@ -3815,6 +3817,16 @@ function openTstatDetail(id) {
     return "";
   }).join("");
   const models = (t.models || []).join(", ");
+  // "How to use it" (Andy 2026-11-11): the thermostat's own menus as numbered steps - getting around,
+  // schedule, hold, system off. One tap-open block per topic so the card stays short on a phone.
+  const howToHtml = (t.howTo || []).map(g => `
+      ${g.label ? `<div class="tstat-howto-label">${escapeHtml(g.label)}</div>` : ""}
+      ${g.note ? `<p class="tstat-note">${escapeHtml(g.note)}</p>` : ""}
+      ${g.topics.map(x => `<details class="tstat-howto${tstatHit(x.title, q) ? " hit" : ""}"><summary>${escapeHtml(x.title)}</summary>
+        <ol>${(x.steps || []).map(st => `<li>${escapeHtml(st)}</li>`).join("")}</ol>
+        ${(x.notes || []).length ? `<ul class="tstat-howto-notes">${x.notes.map(n => `<li>${escapeHtml(n)}</li>`).join("")}</ul>` : ""}
+        ${x.source ? `<div class="tech-tip-src">Source: ${escapeHtml(x.source)}</div>` : ""}
+      </details>`).join("")}`).join("");
 
   modal.innerHTML = `
     ${t.img ? `<img class="tstat-hero" src="${escapeHtml(t.img)}" alt="" onerror="this.remove()">` : ""}
@@ -3822,6 +3834,7 @@ function openTstatDetail(id) {
     <div class="sub">${escapeHtml(t.brand)}${t.aka ? " · " + escapeHtml(t.aka) : ""} · ${escapeHtml(TSTAT_TYPE_LABELS[t.type] || t.type || "")}${t.stages ? " · " + escapeHtml(t.stages) : ""}</div>
     ${models ? `<div class="detail-section"><h3>Models</h3><p class="tstat-models">${escapeHtml(models)}</p></div>` : ""}
     ${powerBits.length ? `<div class="detail-section"><h3>Power</h3><p>${powerBits.map(escapeHtml).join("<br>")}</p></div>` : ""}
+    ${howToHtml ? `<div class="detail-section"><h3>How to use it - tap a topic</h3>${howToHtml}</div>` : ""}
     ${termRows ? `<div class="detail-section"><h3>Terminals</h3><table class="tstat-table">${termRows}</table></div>` : ""}
     ${wiringNotes ? `<div class="detail-section"><h3>Wiring notes</h3><ul>${wiringNotes}</ul></div>` : ""}
     ${(s.access || settingRows || s.factoryReset || s.installerTest) ? `<div class="detail-section"><h3>Installer setup</h3>
@@ -3843,6 +3856,9 @@ function openTstatDetail(id) {
   document.getElementById("closeModalBtn").onclick = closeModal;
   modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
     btn.onclick = () => { trackEvent("opened thermostat manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
+  });
+  modal.querySelectorAll("details.tstat-howto").forEach(d => {
+    d.addEventListener("toggle", () => { if (d.open) trackEvent("thermostat how-to: " + t.family + " - " + d.querySelector("summary").textContent.trim().slice(0, 50)); });
   });
   const firstHit = modal.querySelector(".hit");
   document.getElementById("modalBackdrop").classList.remove("hidden");
@@ -13142,7 +13158,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v407";
+const APP_VERSION = "v408";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

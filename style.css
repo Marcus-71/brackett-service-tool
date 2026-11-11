@@ -1420,6 +1420,19 @@ main {
 .tstat-ts { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border); }
 .tstat-ts:last-child { border-bottom: 0; }
 .tstat-ts ul { margin: 0.25rem 0 0; padding-left: 1.2rem; }
+.tstat-howto { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.4rem; padding: 0 0.7rem; }
+.tstat-howto.hit { background: rgba(253, 210, 110, 0.16); }
+.tstat-howto > summary { cursor: pointer; list-style: none; font-weight: 700; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.tstat-howto > summary::-webkit-details-marker { display: none; }
+.tstat-howto > summary::after { content: "▸"; color: var(--text-dim); flex: 0 0 auto; }
+.tstat-howto[open] > summary::after { content: "▾"; }
+.tstat-howto[open] { padding-bottom: 0.6rem; }
+.tstat-howto ol { margin: 0; padding-left: 1.4rem; }
+.tstat-howto ol li { margin-bottom: 0.5rem; line-height: 1.4; overflow-wrap: anywhere; }
+.tstat-howto-notes { margin: 0.5rem 0 0; padding-left: 1.2rem; color: var(--text-dim); font-size: 0.88rem; }
+.tstat-howto .tech-tip-src { margin-top: 0.5rem; overflow-wrap: anywhere; }
+.tstat-howto-label { font-weight: 700; margin: 0.7rem 0 0.3rem; }
+.tstat-howto-label:first-child { margin-top: 0; }
 .tstat-manuals { display: flex; flex-direction: column; gap: 0.4rem; }
 .tstat-manual-btn {
   display: block; width: 100%; text-align: left; padding: 0.55rem 0.7rem; border-radius: 10px;
