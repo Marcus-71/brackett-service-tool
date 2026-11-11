@@ -965,7 +965,13 @@ function askBuildIndex() {
       idHay: [t.brand, t.family, t.aka, (t.models || []).join(" ")].filter(Boolean).join(" ").toLowerCase(),
       nameHay: [t.brand, t.family].filter(Boolean).join(" ").toLowerCase(),   // not aka: "works with ecobee" is not an ecobee
       acc: t.type === "accessory" || t.type === "zone-control",
-      how: (t.howTo || []).some(g => g.topics.some(x => x.steps && x.steps.length > 1)),
+      // Real how-to topics: not the one-line "Schedule: non-programmable" or "Steps not found / not added" ones.
+      how: tstatHowReal(t).length > 0,
+      // How-to topic titles and steps: only used to order a brand's thermostats for a how-to question (the
+      // card whose steps cover "schedule" before one that only has an Off step), never to find cards.
+      // A schedule topic also answers "program" / "programming" questions.
+      howT: tstatHowReal(t).flatMap(x => [x.title, /schedule/i.test(x.title) ? "program programming" : "", ...(x.steps || []), ...(x.notes || [])]).join(" ").toLowerCase(),
+      howN: Math.min(5, (t.howTo || []).reduce((n, g) => Math.max(n, g.topics.filter(tstatHowTopicReal).length), 0)),
       // The thermostat's own error codes count as typed codes, like a generator's alarms ("nest e74" was
       // every brand's code 74 row ahead of the Nest card that lists E4 / E24 / E74; Andy 11-10).
       codes: [...new Set((t.diagnostics || []).flatMap(d => askCodeTokens(d.code)))],
@@ -1376,7 +1382,12 @@ function askScoreItem(units, it) {
     if (it.kind === "tstat" && idOk && named(it.nameHay) && th.others.every(u => u.alts.some(a => askTermHit(it.idHay, a)))) {
       // Cards that really hold the asked words (the how-to steps) go before the brand's other cards,
       // and a sensor, adapter or other accessory goes after the thermostats themselves.
-      const order = it.acc ? 0.1 : it.how ? 0.5 : th.howU.every(u => u.alts.some(a => askTermHit(it.hay, a))) ? 0.3 : 0.25;
+      // Cards whose steps cover the asked topic come first (fuller cards first), then cards whose own text
+      // holds the asked words ("wifi" on a smart thermostat), then other cards with steps, then the rest.
+      const hit = (hay) => th.howU.every(u => u.alts.some(a => askTermHit(hay, a) || (a === "wifi" && hay.includes("wi-fi"))));
+      // On a tie, a card named "non-programmable" goes after the programmable ones.
+      const order = (it.acc ? 0.1 : it.how && hit(it.howT) ? 0.5 + it.howN * 0.01 : hit(it.hay) ? 0.4 + it.howN * 0.01
+        : it.how ? 0.34 + it.howN * 0.01 : 0.25) - (it.nameHay.includes("non-programmable") ? 0.005 : 0);
       return { sc: Math.max(sc, need), tsc: th.soft ? need - 0.9 + order : need + order };
     }
     if (th.pure && sc >= need && (it.kind === "symptom" || it.kind === "tool") && (it.brandOnly || named(head))) {
@@ -3813,6 +3824,10 @@ function tstatSearchFields(t) {
     // thermostat cards into unrelated questions. A how-to question finds the card by its name (askTstatHow).
   ];
 }
+
+// A how-to topic that holds steps, not a one-line "Schedule: non-programmable" or "Steps not found / not added".
+function tstatHowTopicReal(x) { return !/^(schedule|steps not (found|added)|other steps)$/i.test(x.title || ""); }
+function tstatHowReal(t) { return (t.howTo || []).flatMap(g => g.topics.filter(tstatHowTopicReal)); }
 
 // "honeywell schedule" on a card with no schedule text: the how-to words are dropped so the search still
 // lands on that brand's or model's thermostats (cards that do hold the words list first).
@@ -13283,7 +13298,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v411";
+const APP_VERSION = "v412";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -56511,3 +56511,1519 @@ tstatHowtoAdd({
   ]
  }
 });
+// add-carrier.js
+tstatHowtoAdd({
+ "sets": {
+  "ca-smart": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons on the thermostat: Mode, Fan and Up / Down. In the setup menus, Up / Down move through the options, Fan selects and Mode goes back."
+    ],
+    "source": "TSTATCCEWF-01 Carrier Smart Thermostat Installation Instructions"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "The schedule is set up in the mobile app only (each day separately, up to 5 changes a day). The thermostat keeps no backup schedule of its own."
+    ],
+    "source": "TSTATCCEWF-01 Carrier Smart Thermostat Installation Instructions"
+   },
+   {
+    "title": "Hold a temperature",
+    "steps": [
+     "Change the temperature on the thermostat to override the schedule. A change made at the thermostat lasts 4 hours, then the schedule resumes.",
+     "How long an override lasts (1-23 hours, until the next schedule change, or permanent) can only be set in the app."
+    ],
+    "source": "TSTATCCEWF-01 Carrier Smart Thermostat Installation Instructions"
+   }
+  ],
+  "ca-infinity": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch anywhere on the control to open the Main Screen.",
+     "Touch MENU (bottom right) for Comfort Profiles, Schedules, Vacation, Wireless and the other settings.",
+     "Touch the MODE label (top right) for the system mode."
+    ],
+    "notes": [
+     "Carrier says the SmartHome mobile app is the easiest way to program the control."
+    ],
+    "source": "Infinity System Control Owner's Manual (OM-SYSTXCCITC-VC-03); Infinity Touch Control (-A) Owner's Manual"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch MENU, then SCHEDULES. Pick Guided Scheduling (it asks simple questions), View or Edit Schedule, or Upload My Schedule (from a USB-C device).",
+     "In View or Edit: use the left / right buttons by the day names to pick a day (touch COPY to copy it to other days).",
+     "Touch a TIME icon and use Up / Down to set when the activity starts (DELETE removes that period).",
+     "Touch an ACTIVITY icon and pick WAKE, HOME, AWAY or SLEEP. Touch SAVE."
+    ],
+    "notes": [
+     "Set the Comfort Profiles (MENU > COMFORT PROFILES) before programming - the schedule uses them."
+    ],
+    "source": "Infinity System Control Owner's Manual (OM-SYSTXCCITC-VC-03); Infinity Touch Control (-A) Owner's Manual"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "On the Main Screen use Up / Down to set the temperature (the profile on the left switches to MANUAL).",
+     "To hold for a while: touch HOLD UNTIL, set the time with Up / Down (15-minute steps) and touch DONE.",
+     "To hold with no end time: touch HOLD UNTIL, then touch HOLD.",
+     "Or touch the activity on the left (Touch 'N' Go) and pick HOME, AWAY, SLEEP or WAKE, then HOLD UNTIL > HOLD."
+    ],
+    "source": "Infinity System Control Owner's Manual (OM-SYSTXCCITC-VC-03); Infinity Touch Control (-A) Owner's Manual"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch HOLD UNTIL (or HOLD), then PER SCHEDULE."
+    ],
+    "source": "Infinity System Control Owner's Manual (OM-SYSTXCCITC-VC-03); Infinity Touch Control (-A) Owner's Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the MODE label at the top right and pick OFF.",
+     "With OFF the system does not control temperature, humidity or fan. Pick AUTO, HEAT, COOL or FAN ONLY to turn it back on (the blower may run a minute or two first)."
+    ],
+    "source": "Infinity System Control Owner's Manual (OM-SYSTXCCITC-VC-03); Infinity Touch Control (-A) Owner's Manual"
+   }
+  ],
+  "ca-uid": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons on the front: OFF, HEAT (red), COOL (blue), FAN, HOLD, TEMP +/- and TIME +/-.",
+     "Behind the door at the bottom: SCHEDULE, VACATION, ADVANCED setup, LEFT / RIGHT and SCROLL."
+    ],
+    "source": "Infinity Control Homeowner's Guide (OMUID-3CA)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Flip down the door and press SCHEDULE.",
+     "Press LEFT or RIGHT until ALLDAYS (or weekdays, weekends or a single day) shows.",
+     "WAKE is highlighted: set its start time with TIME +/-.",
+     "Press HEAT and set the heating temperature with TEMP +/-; press COOL and set the cooling temperature.",
+     "Use SCROLL for DAY, EVENING and SLEEP and set them the same way. Close the door or press SCHEDULE to leave."
+    ],
+    "source": "Infinity Control Homeowner's Guide (OMUID-3CA)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Use TEMP +/- to set the temperature. An override time shows on the lower left - change it with TIME +/- (15-minute steps).",
+     "Or press HOLD to keep that temperature indefinitely."
+    ],
+    "notes": [
+     "The guide on this card does not say how to end a hold."
+    ],
+    "source": "Infinity Control Homeowner's Guide (OMUID-3CA)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the OFF button. The same button turns the system back on."
+    ],
+    "source": "Infinity Control Homeowner's Guide (OMUID-3CA)"
+   }
+  ],
+  "ca-perfedge": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Open the door: buttons along the top (mode, schedule) and side (set), buttons under the screen words, and Up / Down on the right."
+    ],
+    "source": "Performance Series / Edge Thermostat Owner's Manual (OM-TPPACA-02)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Open the door and press the set button on the left until the screen shows daily schedule and the days of the week.",
+     "For one schedule for all days, leave the arrows by every day; otherwise press the button under the days to pick one day.",
+     "With the arrow on wake, press the button under the hour or minute and set the time with Up / Down.",
+     "Press the button under the heat and cool set temperatures and set them with Up / Down.",
+     "Do the same for day, evening and sleep (press the button under the periods to move the arrow)."
+    ],
+    "notes": [
+     "Non-programmable Edge models (TP-N...) have no schedule."
+    ],
+    "source": "Performance Series / Edge Thermostat Owner's Manual (OM-TPPACA-02)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Open the door and press the schedule button at the top - the arrow moves to hold.",
+     "Set the temperature with Up / Down. It stays there until the hold is released."
+    ],
+    "source": "Performance Series / Edge Thermostat Owner's Manual (OM-TPPACA-02)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Move the arrow back to follow schedule. The Thermidistat manual says the schedule button cycles the arrow through follow schedule, hold and vacation; the AC / HP owner's manual names the mode button for this step - use whichever moves the arrow."
+    ],
+    "source": "Performance Series / Edge Thermostat Owner's Manual (OM-TPPACA-02); Performance Series Edge Thermidistat Installation Instructions (TP-PRHB-02SI)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Open the door.",
+     "Press the mode button (top left) until off shows in the upper left. Close the door."
+    ],
+    "source": "Performance Series / Edge Thermostat Owner's Manual (OM-TPPACA-02)"
+   }
+  ],
+  "ca-thermidistat-edge": [
+   {
+    "title": "Hold or follow the schedule",
+    "steps": [
+     "Press the Schedule button to move the triangle between FOLLOW SCHEDULE, HOLD and VACATION.",
+     "FOLLOW SCHEDULE uses the program; HOLD keeps fixed set temperatures."
+    ],
+    "source": "Performance Series Edge Thermidistat Installation Instructions (TP-PRHB-02SI)"
+   },
+   {
+    "title": "Other steps",
+    "steps": [
+     "Only the installation instructions are on this card; they give the follow-schedule / hold button but no schedule-programming or system-mode steps."
+    ],
+    "source": "Performance Series Edge Thermidistat Installation Instructions (TP-PRHB-02SI)"
+   }
+  ],
+  "ca-tstatcc": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: MODE (Off / Heat / Cool / Auto, plus Emergency Heat on heat pumps), FAN (On / Auto), PROGRAM, HOLD, END, SET TIME/TEMP and Up / Down."
+    ],
+    "source": "TSTATCC Programmable Thermostat Homeowner's Guide (OM-TSTAT-7)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press PROGRAM. PROGRAMMING shows and TIME flashes for the current period (WAKE, DAY, EVE or SLEEP) of the day shown.",
+     "Set the time and temperatures with the arrows, then press PROGRAM for the next period.",
+     "Do the same for DAY, EVE and SLEEP, and for the other days (or copy the day).",
+     "Press END when finished."
+    ],
+    "source": "TSTATCC Programmable Thermostat Homeowner's Guide (OM-TSTAT-7)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD. HOLD shows and the thermostat keeps the current settings indefinitely, ignoring the schedule.",
+     "Pressing only Up / Down changes the temperature until the next program period."
+    ],
+    "source": "TSTATCC Programmable Thermostat Homeowner's Guide (OM-TSTAT-7)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press HOLD a second time. The schedule takes over again."
+    ],
+    "source": "TSTATCC Programmable Thermostat Homeowner's Guide (OM-TSTAT-7)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press MODE until OFF shows."
+    ],
+    "source": "TSTATCC Programmable Thermostat Homeowner's Guide (OM-TSTAT-7)"
+   }
+  ],
+  "ca-thermidistat-legacy": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: MODE (Off / Heat / Cool / Auto, plus EHEAT with a heat pump), FAN (On / Auto), PROGRAM, HOLD/END and the arrows."
+    ],
+    "source": "Programmable Thermidistat Control Homeowner's Guide (OM-TSTAT-10); Thermidistat Control Non-Programmable Mode Homeowner's Guide (OM-TSTAT-11)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press PROGRAM, then set the time and temperatures for the period shown.",
+     "Press PROGRAM to move to the next period (DAY, EVE, SLEEP) and the next day.",
+     "Press HOLD/END to finish."
+    ],
+    "source": "Programmable Thermidistat Control Homeowner's Guide (OM-TSTAT-10); Thermidistat Control Non-Programmable Mode Homeowner's Guide (OM-TSTAT-11)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press MODE until OFF shows."
+    ],
+    "source": "Programmable Thermidistat Control Homeowner's Guide (OM-TSTAT-10); Thermidistat Control Non-Programmable Mode Homeowner's Guide (OM-TSTAT-11)"
+   }
+  ],
+  "ca-tb": [
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press PROGRAM. PROGRAMMING shows and SET TIME flashes for the morning period.",
+     "Use DAY to switch between weekdays and the weekend, PROGRAM to step through the periods, and Up / Down to set each time and temperature.",
+     "Press END/HOLD to leave programming."
+    ],
+    "source": "TB-PAC / TB-PHP Base Series Programmable Thermostat Installation Instructions (TB-PAC-09SI)"
+   },
+   {
+    "title": "Other steps",
+    "steps": [
+     "The installation instructions on this card do not give hold or system-mode steps."
+    ],
+    "source": "TB-PAC / TB-PHP Base Series Programmable Thermostat Installation Instructions (TB-PAC-09SI)"
+   }
+  ],
+  "ca-comfort-tc": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Open the door: mode, fan and hold/run buttons, days, period and start time buttons along the bottom, Up / Down on the right, and the Touch 'N' Go buttons (home, away, sleep)."
+    ],
+    "source": "Comfort Series TC-PAC / TC-PHP Programmable Thermostat Owner's Manual; TC-NAC / TC-NHP Non-Programmable Owner's Manual"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Open the door and press the days button at the bottom. All days, weekdays and weekends flash.",
+     "Pick one with Up / Down.",
+     "Press the period button to pick the period, then the start time button and set the time with Up / Down; set its heat and cool temperatures the same way."
+    ],
+    "notes": [
+     "Non-programmable TC-N models have no schedule."
+    ],
+    "source": "Comfort Series TC-PAC / TC-PHP Programmable Thermostat Owner's Manual; TC-NAC / TC-NHP Non-Programmable Owner's Manual"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Open the door and press Up / Down to the temperature - this is a temporary hold until the next period.",
+     "Press hold/run to keep it: hold shows and it stays until released.",
+     "Touch 'N' Go: press home, away or sleep, then hold/run to stay there indefinitely."
+    ],
+    "source": "Comfort Series TC-PAC / TC-PHP Programmable Thermostat Owner's Manual; TC-NAC / TC-NHP Non-Programmable Owner's Manual"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press hold/run again. The temperature goes back to the programmed level."
+    ],
+    "source": "Comfort Series TC-PAC / TC-PHP Programmable Thermostat Owner's Manual; TC-NAC / TC-NHP Non-Programmable Owner's Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the mode button on the left until off shows in the upper left."
+    ],
+    "source": "Comfort Series TC-PAC / TC-PHP Programmable Thermostat Owner's Manual; TC-NAC / TC-NHP Non-Programmable Owner's Manual"
+   }
+  ],
+  "ca-comfort-c": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. Up / Down set the temperature."
+    ],
+    "source": "Comfort Series -C Thermostat Homeowner's Guide (OM-TSTAT-38)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the MODE button until OFF shows (it steps through Off, Heat, Cool, Auto and Emergency Heat on heat pumps)."
+    ],
+    "source": "Comfort Series -C Thermostat Homeowner's Guide (OM-TSTAT-38)"
+   }
+  ],
+  "ca-cor5": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch MENU on the home screen, use the Up / Dn arrows to pick an item and touch NEXT. DONE goes back to the home screen.",
+     "Cor 7: if the MENU or HEAT/COOL button is not showing, the screen is idle - touch START."
+    ],
+    "source": "Cor 5 / Cor 5C Thermostats Owner's Guide (TSTPHA01, TSTWHA01); Cor 7 / Cor 7C Owner's Manual (TSTPRH01, TSTWRH01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch MENU - SCHEDULE blinks. Touch NEXT.",
+     "Press the Up arrow until PROGRAM blinks, touch NEXT.",
+     "Use the arrows to pick the days (all days or a group), then set each period's start time, heat and cool temperatures and fan, touching NEXT between them.",
+     "Touch DONE at any time to go back to the home screen."
+    ],
+    "source": "Cor 5 / Cor 5C Thermostats Owner's Guide (TSTPHA01, TSTWHA01); Cor 7 / Cor 7C Owner's Manual (TSTPRH01, TSTWRH01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch the Up / Dn arrows to set the temperature. The hold type shows near the bottom of the screen.",
+     "Touch NEXT - the hold type flashes. Use the arrows to pick Permanent (until someone changes it), a timed hold (until a time you set) or until the next period.",
+     "Touch HOLD to accept."
+    ],
+    "source": "Cor 5 / Cor 5C Thermostats Owner's Guide (TSTPHA01, TSTWHA01); Cor 7 / Cor 7C Owner's Manual (TSTPRH01, TSTWRH01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Set the temperature, touch NEXT, and use the arrows to pick cancel hold."
+    ],
+    "source": "Cor 5 / Cor 5C Thermostats Owner's Guide (TSTPHA01, TSTWHA01); Cor 7 / Cor 7C Owner's Manual (TSTPRH01, TSTWRH01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the HEAT/COOL button (top right) until Off has the icon over it."
+    ],
+    "source": "Cor 5 / Cor 5C Thermostats Owner's Guide (TSTPHA01, TSTWHA01); Cor 7 / Cor 7C Owner's Manual (TSTPRH01, TSTWRH01)"
+   }
+  ],
+  "ca-corwifi": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch Menu on the home screen: System (modes, fan, accessories), Schedule, Comfort Profiles, Vacation, Settings and more.",
+     "Back returns one screen, Done goes home, Cancel leaves without saving, Save saves."
+    ],
+    "source": "Carrier Cor Thermostat Owner's Manual (TP-WEM01-A); Bryant Housewise T6-WEM01 Owner's Manual"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch Menu > Schedules > Guided schedule: pick the days, Next, then answer the wake / heat / cool / fan questions, Next, Save.",
+     "Or Menu > Schedules > View or Edit Schedule: touch a time and set it with the arrows, then Done."
+    ],
+    "source": "Carrier Cor Thermostat Owner's Manual (TP-WEM01-A); Bryant Housewise T6-WEM01 Owner's Manual"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch the up / down arrows on the home screen - this overrides the schedule.",
+     "How long a manual change lasts: Menu > Settings > Preferences > Default Touch-N-Go hold time action. Pick Hold until you change it to keep it until someone changes it (other choices: until the next schedule event, until a specific time, always ask)."
+    ],
+    "source": "Carrier Cor Thermostat Owner's Manual (TP-WEM01-A); Bryant Housewise T6-WEM01 Owner's Manual"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch the lower Touch-N-Go button on the home screen, then Resume Schedule."
+    ],
+    "source": "Carrier Cor Thermostat Owner's Manual (TP-WEM01-A); Bryant Housewise T6-WEM01 Owner's Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the Mode drop-down at the top of the home screen and pick Off. Only the temperature and humidity show while it is off."
+    ],
+    "source": "Carrier Cor Thermostat Owner's Manual (TP-WEM01-A); Bryant Housewise T6-WEM01 Owner's Manual"
+   }
+  ],
+  "ca-none-intelisense": [
+   {
+    "title": "Steps not found",
+    "steps": [
+     "Only the service-technician setup sheet is on this card; no owner steps for the menu, schedule, hold or system mode were found."
+    ],
+    "source": "TSTATCCIEWF-01 Thermostat Set-up with Service Technician App"
+   }
+  ]
+ },
+ "use": {
+  "tst-carrier-smart-thermostat-ewf": [
+   {
+    "set": "ca-smart",
+    "note": "No system-mode (Off) steps were found in the installation instructions on this card."
+   }
+  ],
+  "tst-carrier-smart-thermostat-intelisense": [
+   {
+    "set": "ca-none-intelisense"
+   }
+  ],
+  "tst-carrier-infinity-vc": [
+   {
+    "set": "ca-infinity"
+   }
+  ],
+  "tst-carrier-infinity-system-control": [
+   {
+    "set": "ca-infinity"
+   }
+  ],
+  "tst-carrier-infinity-touch-a": [
+   {
+    "set": "ca-infinity"
+   }
+  ],
+  "tst-carrier-infinity-control-uid": [
+   {
+    "set": "ca-uid"
+   }
+  ],
+  "tst-carrier-performance-edge-achp": [
+   {
+    "set": "ca-perfedge"
+   }
+  ],
+  "tst-carrier-performance-edge-thermidistat": [
+   {
+    "set": "ca-thermidistat-edge"
+   }
+  ],
+  "tst-carrier-tstatccpac01": [
+   {
+    "set": "ca-tstatcc"
+   }
+  ],
+  "tst-carrier-thermidistat-legacy": [
+   {
+    "set": "ca-thermidistat-legacy"
+   }
+  ],
+  "tst-carrier-base-series-tb": [
+   {
+    "set": "ca-tb"
+   }
+  ],
+  "tst-carrier-comfort-tc-a": [
+   {
+    "set": "ca-comfort-tc"
+   }
+  ],
+  "tst-carrier-comfort-series-nonprog": [
+   {
+    "set": "ca-comfort-c"
+   }
+  ],
+  "tst-carrier-cor-5": [
+   {
+    "set": "ca-cor5"
+   }
+  ],
+  "tst-carrier-cor-7": [
+   {
+    "set": "ca-cor5"
+   }
+  ],
+  "tst-carrier-cor-wifi-tp-wem01": [
+   {
+    "set": "ca-corwifi"
+   }
+  ],
+  "tst-carrier-housewise": [
+   {
+    "set": "ca-corwifi"
+   }
+  ]
+ }
+});
+// add-trane.js
+tstatHowtoAdd({
+ "sets": {
+  "tr-xl1050": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: System Mode (Auto / Heating / Cooling / Off / Emergency Heat), Fan Mode, the up / down arrows for the temperature, and Menu.",
+     "Touch Menu for Schedules (or 1-Touch Presets when scheduling is off), Settings, Weather, Wi-Fi and system information."
+    ],
+    "source": "ComfortLink II XL1050 User Guide (32-5093)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch Menu > Schedules. The weekly schedule shows Wake, Away, Home and Sleep for each day.",
+     "Touch a period to make it active, then TIME START or TIME END and set the time with the arrows (periods are at least 30 minutes).",
+     "Touch the period's cooling or heating set point and change it with the arrows.",
+     "Add Period / Delete Period change how many periods the day has; Grouping applies a change to several days."
+    ],
+    "source": "ComfortLink II XL1050 User Guide (32-5093)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "To stop the schedule altogether: MENU > SCHEDULES > DISABLE. The set points are then kept until someone changes them.",
+     "Or hold with the schedule on: set the temperature, then touch the Permanent Hold button - it shows ON and keeps that temperature until someone changes it."
+    ],
+    "notes": [
+     "1-Touch Presets (Home, Away, Sleep) only work with scheduling disabled."
+    ],
+    "source": "ComfortLink II XL1050 User Guide (32-5093)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch the Permanent Hold button again so it shows OFF. The control follows the schedule again."
+    ],
+    "source": "ComfortLink II XL1050 User Guide (32-5093)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch System Mode on the home screen and pick Off."
+    ],
+    "source": "ComfortLink II XL1050 User Guide (32-5093)"
+   }
+  ],
+  "tr-xl824": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: Menu, System Mode (Auto / Heating / Cooling / Off / Emergency Heat), Fan Mode, 1-Touch Presets and the set points.",
+     "Press in the INDOOR TEMPERATURE area to open the Temperature Control Panel (set points, holds, Show Schedules)."
+    ],
+    "source": "Trane XL824 Smart Control User Guide (32-5090); XL850 Smart Control User Guide (32-5091)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Scheduling has to be on: MENU > SCHEDULES & PRESETS > USE SCHEDULES ON.",
+     "Go to MENU > SCHEDULES & PRESETS > CUSTOM SCHEDULE (or Show Schedules on the Temperature Control Panel).",
+     "Touch a period, set its start time and its heat and cool set points with the arrows. Each day has 1 to 4 periods.",
+     "DELETE PERIOD > trash can icon removes a period (each day keeps at least one); APPLY saves."
+    ],
+    "source": "Trane XL824 Smart Control User Guide (32-5090); XL850 Smart Control User Guide (32-5091)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "To stop the schedule altogether: MENU > SCHEDULES & PRESETS > USE SCHEDULES OFF. Set points are then kept until someone changes them.",
+     "Hold until a time: press the INDOOR TEMPERATURE area, set the blue (cool) or red (heat) set point with the arrows, press the STATUS AREA and set the day and time the hold ends, then press INDOOR TEMPERATURE again. Holding Until shows.",
+     "Hold permanently: set the temperature and touch the Permanent Hold button (Hold Permanently shows)."
+    ],
+    "source": "Trane XL824 Smart Control User Guide (32-5090); XL850 Smart Control User Guide (32-5091)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the INDOOR TEMPERATURE area.",
+     "Touch HOLD UNTIL (or HOLD PERM) so the words dim, then press INDOOR TEMPERATURE to go back."
+    ],
+    "source": "Trane XL824 Smart Control User Guide (32-5090); XL850 Smart Control User Guide (32-5091)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch System Mode on the home screen and pick Off."
+    ],
+    "source": "Trane XL824 Smart Control User Guide (32-5090); XL850 Smart Control User Guide (32-5091)"
+   }
+  ],
+  "tr-ux360": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: System Mode, Fan Mode, Schedule Mode, the heating and cooling set points and Menu.",
+     "Menu holds Scheduling, One Touch Presets, Humidity, Weather, Screen settings, System Info and Smart Home (Z-Wave)."
+    ],
+    "source": "Trane Link UX360 Thermostat User Guide (32-5102-1C-EN)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Go to Home Screen > Menu > Schedules. If no weekly schedule shows, press ENABLE SCHEDULE.",
+     "Press a period to make it active, then TIME START or TIME END and set the time (periods are at least 30 minutes).",
+     "Press the red or blue area to change that period's set points. Each day has up to four periods; Grouping applies changes to several days."
+    ],
+    "source": "Trane Link UX360 Thermostat User Guide (32-5102-1C-EN)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Use the System Mode button on the home screen."
+    ],
+    "source": "Trane Link UX360 Thermostat User Guide (32-5102-1C-EN)"
+   }
+  ],
+  "tr-xr724": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The buttons around the screen change with the labels shown on them. Home screen: Menu, Mode (system mode), Fan, Sched (schedule mode) and the set point up / down buttons.",
+     "Press Menu, then Select to enter User Settings; Next / Back move, Done saves."
+    ],
+    "source": "XR724 User Guide and Installer's Guide (18-HD82D1); TCONT624 Installation and User Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press Menu (USER SETTINGS shows), press Next to SCHEDULE, press Select, then Select on EDIT SCHEDULE.",
+     "Press Next until the day to edit shows, then Select.",
+     "Set the start time of the period (Wake first) with Up / Down, Next; set the heat set point, Next; set the cool set point, Next.",
+     "Repeat for Day, Evening and Night. Copy Schedule copies one day to others. Press Done to save."
+    ],
+    "source": "XR724 User Guide and Installer's Guide (18-HD82D1); TCONT624 Installation and User Guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the Schedule Mode (Sched) button until Hold shows: the control keeps the current set points and ignores the schedule.",
+     "Run follows the schedule; ESM (Energy Saving Mode) keeps the ESM set points."
+    ],
+    "notes": [
+     "On the XR724 the default schedule mode is Hold, which means scheduling is off until someone picks Run."
+    ],
+    "source": "XR724 User Guide and Installer's Guide (18-HD82D1); TCONT624 Installation and User Guide"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the Schedule Mode (Sched) button until Run shows."
+    ],
+    "source": "XR724 User Guide and Installer's Guide (18-HD82D1); TCONT624 Installation and User Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the System Mode button until Off shows. Off / Heating / Cooling / Auto / EM Heat are the choices."
+    ],
+    "source": "XR724 User Guide and Installer's Guide (18-HD82D1); TCONT624 Installation and User Guide"
+   }
+  ],
+  "tr-302": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys: SYSTEM, FAN, Menu, HOLD / Run Schedule and the up / down keys."
+    ],
+    "source": "TCONT302 / TCONT303 Installation and User Guide (18-HD48D1)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press up or down to set the temperature. The HOLD key appears.",
+     "Press HOLD. Hold At shows and the temperature is kept until Run Schedule is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down overrides the program until the next period."
+    ],
+    "source": "TCONT302 / TCONT303 Installation and User Guide (18-HD48D1)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Run Schedule."
+    ],
+    "source": "TCONT302 / TCONT303 Installation and User Guide (18-HD48D1)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the SYSTEM key until Off shows (it steps through Cool, Off, Heat, Em and Auto)."
+    ],
+    "source": "TCONT302 / TCONT303 Installation and User Guide (18-HD48D1)"
+   }
+  ],
+  "tr-xr202": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: System, Fan (also Back), Menu, Hold/Run (also Exit), Next and the up / down arrows.",
+     "Press Menu, use up / down to highlight an item (Schedule, Settings), and Next to open it."
+    ],
+    "source": "Trane XR202 / XR203 Programmable Thermostat Installation and User Guides (18-HD51D1, 18-HD50D1)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Use the System button to pick Heat (or Cool) - each schedule is set in its own mode.",
+     "Press Menu, select Schedule and press Next.",
+     "The time flashes: set the period start time with up / down, press Next, then set the temperature.",
+     "Continue through the periods and days, then press Exit."
+    ],
+    "source": "Trane XR202 / XR203 Programmable Thermostat Installation and User Guides (18-HD51D1, 18-HD50D1)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "With the system in Heat or Cool, press Hold/Run. Hold shows.",
+     "Set the temperature with up / down - it is kept until Hold/Run is pressed again."
+    ],
+    "notes": [
+     "Pressing only up / down overrides until the next period (at least 2 hours)."
+    ],
+    "source": "Trane XR202 / XR203 Programmable Thermostat Installation and User Guides (18-HD51D1, 18-HD50D1)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Hold/Run again."
+    ],
+    "source": "Trane XR202 / XR203 Programmable Thermostat Installation and User Guides (18-HD51D1, 18-HD50D1)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the System button until Off shows."
+    ],
+    "source": "Trane XR202 / XR203 Programmable Thermostat Installation and User Guides (18-HD51D1, 18-HD50D1)"
+   }
+  ],
+  "tr-xr102": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. Up / down set the temperature."
+    ],
+    "source": "Trane XR102 / XR103 Non-Programmable Thermostat Installation Instructions"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to OFF (it has COOL, OFF, HEAT)."
+    ],
+    "source": "Trane XR102 / XR103 Non-Programmable Thermostat Installation Instructions"
+   }
+  ],
+  "tr-xbxr4": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule."
+    ],
+    "source": "Installer's Guides: XB200 (TCONT200AN), XR401 (TCONT401AN, 18-HD29D2), XR402 (TCONT402AN, 18-HD29D3)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Use the MODE key to set the system mode to OFF."
+    ],
+    "source": "Installer's Guides: XB200 (TCONT200AN), XR401 (TCONT401AN, 18-HD29D2), XR402 (TCONT402AN, 18-HD29D3)"
+   }
+  ],
+  "tr-installer-only": [
+   {
+    "title": "Steps not found",
+    "steps": [
+     "Only the installer's guide is on this card; no owner steps for the menu, schedule, hold or system mode were found in it."
+    ],
+    "source": "Trane installer's guides (TCONT600 / 602, TCONT800, TCONT802 / 803, TCONT900, TZONE950)"
+   }
+  ]
+ },
+ "use": {
+  "tst-trane-xl1050": [
+   {
+    "set": "tr-xl1050"
+   }
+  ],
+  "tst-trane-xl824": [
+   {
+    "set": "tr-xl824"
+   }
+  ],
+  "tst-trane-xl850": [
+   {
+    "set": "tr-xl824"
+   }
+  ],
+  "tst-trane-link-ux360": [
+   {
+    "set": "tr-ux360",
+    "note": "No hold steps were found in the UX360 user guide text."
+   }
+  ],
+  "tst-trane-xr724": [
+   {
+    "set": "tr-xr724"
+   }
+  ],
+  "tst-trane-xl624": [
+   {
+    "set": "tr-xr724"
+   }
+  ],
+  "tst-trane-tcont302-303": [
+   {
+    "set": "tr-302",
+    "note": "The guide's schedule-programming section did not come through as text; no schedule steps added."
+   }
+  ],
+  "tst-trane-xr202-xr203": [
+   {
+    "set": "tr-xr202"
+   }
+  ],
+  "tst-trane-xr102-xr103": [
+   {
+    "set": "tr-xr102"
+   }
+  ],
+  "tst-trane-xb200": [
+   {
+    "set": "tr-xbxr4"
+   }
+  ],
+  "tst-trane-xr401": [
+   {
+    "set": "tr-xbxr4"
+   }
+  ],
+  "tst-trane-xr402": [
+   {
+    "set": "tr-xbxr4"
+   }
+  ],
+  "tst-trane-tcont600-602": [
+   {
+    "set": "tr-installer-only"
+   }
+  ],
+  "tst-trane-tcont800": [
+   {
+    "set": "tr-installer-only"
+   }
+  ],
+  "tst-trane-tcont802-803": [
+   {
+    "set": "tr-installer-only"
+   }
+  ],
+  "tst-trane-xl900": [
+   {
+    "set": "tr-installer-only"
+   }
+  ],
+  "tst-trane-xl950": [
+   {
+    "set": "tr-installer-only"
+   }
+  ]
+ }
+});
+// add-lennox.js
+tstatHowtoAdd({
+ "sets": {
+  "lx-a3": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: the heat-to and cool-to areas (press to change the temperature), Away, the modes/schedules button and menu.",
+     "Menu > settings holds Wi-Fi, away, fan, heat & cool, humidity, display and notifications. Press the home icon to go back."
+    ],
+    "source": "Comfort Sync A3 Ultra Smart Thermostat User Guide (508027-01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch modes/schedules. Under Schedules pick Schedule Sync, summer, winter, spring/fall or save energy to run it.",
+     "Select edit schedules to change a schedule's times, set points and fan (on, auto, circulate), rename it or restore defaults. Changes save automatically."
+    ],
+    "source": "Comfort Sync A3 Ultra Smart Thermostat User Guide (508027-01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the heat-to or cool-to area and change the temperature. The status shows the schedule hold until the next period."
+    ],
+    "source": "Comfort Sync A3 Ultra Smart Thermostat User Guide (508027-01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the cancel icon shown with the schedule hold on the home screen."
+    ],
+    "source": "Comfort Sync A3 Ultra Smart Thermostat User Guide (508027-01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch modes/schedules and select off. Press the home icon to leave."
+    ],
+    "source": "Comfort Sync A3 Ultra Smart Thermostat User Guide (508027-01)"
+   }
+  ],
+  "lx-cs5000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys: SYSTEM, FAN, SCHED, HOLD, CLOCK, SCREEN, MORE and the up / down arrows. CANCEL leaves without saving."
+    ],
+    "source": "ComfortSense 5000 Series L5711U / L5732U Owner's Guide (506067-01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT. The days show across the top.",
+     "Press the days to program (several can be picked).",
+     "Set the WAKE time and its heat / cool temperatures with the arrows, then press LEAVE, RETURN and SLEEP and do the same.",
+     "Press DONE to save (CANCEL leaves without saving). CANCEL PERIOD drops a period."
+    ],
+    "source": "ComfortSense 5000 Series L5711U / L5732U Owner's Guide (506067-01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD. Permanent Hold shows under the time.",
+     "Set the temperature with the arrows - it is kept until the hold is cancelled."
+    ],
+    "source": "ComfortSense 5000 Series L5711U / L5732U Owner's Guide (506067-01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL. The schedule resumes."
+    ],
+    "source": "ComfortSense 5000 Series L5711U / L5732U Owner's Guide (506067-01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM and pick OFF (Heat, Cool and Em Heat on heat pumps are the others)."
+    ],
+    "source": "ComfortSense 5000 Series L5711U / L5732U Owner's Guide (506067-01)"
+   }
+  ],
+  "lx-cs5500": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the screen to turn on the backlight. Operating mode, Away and the heat-to / cool-to areas are on the home screen; the menu holds edit schedules, performance report and settings."
+    ],
+    "source": "ComfortSense 5500 (13H13) User Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Pick the schedule to run under the operating mode (schedule 1, 2 or 3). Change a schedule from the menu: edit schedules."
+    ],
+    "source": "ComfortSense 5500 (13H13) User Guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the heat-to or cool-to area (change the temperature if needed).",
+     "After about three seconds the override options show: 1 hour, 2 hour or Permanent. Pick one."
+    ],
+    "notes": [
+     "Choosing heat/cool, heat only or cool only (instead of a schedule) under the operating mode also runs without a schedule."
+    ],
+    "source": "ComfortSense 5500 (13H13) User Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the operating mode and select off."
+    ],
+    "source": "ComfortSense 5500 (13H13) User Guide"
+   }
+  ],
+  "lx-cs7000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the screen to turn on the backlight. Tabs and buttons: SCHED, SCHEDULE, OPTIONS (fan mode) and the arrows."
+    ],
+    "source": "ComfortSense 7000 Series L7742U Homeowner's Manual"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press the SCHEDULE tab, then EDIT.",
+     "Press NEXT to highlight the group of days, then press an event (WAKE, LEAVE, RETURN, SLEEP) and set it with the arrows."
+    ],
+    "source": "ComfortSense 7000 Series L7742U Homeowner's Manual"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "From the home screen press SCHED - each press toggles the schedule ON and OFF.",
+     "With the schedule OFF it works like a non-programmable thermostat: set the temperature and it stays."
+    ],
+    "notes": [
+     "With the schedule ON, a temperature change is only temporary; the screen says to press SCHED to resume the program."
+    ],
+    "source": "ComfortSense 7000 Series L7742U Homeowner's Manual"
+   }
+  ],
+  "lx-cs3000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Heat, Cool, Fan, Prog, Hold, Settings, Day/Time, Enter and the up / down arrows."
+    ],
+    "source": "ComfortSense 3000 Series L3532H 5/2-Day Programmable Manual; L3011C Non-Programmable Manual"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "With HOLD showing on the home screen the program is ignored and it works like a non-programmable thermostat.",
+     "Set the temperature with the up / down arrows (default hold set point is 70 F)."
+    ],
+    "notes": [
+     "Non-programmable L3011C: no schedule."
+    ],
+    "source": "ComfortSense 3000 Series L3532H 5/2-Day Programmable Manual; L3011C Non-Programmable Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "The display has a SYSTEM box (COOL / OFF / HEAT). The manual text on this card did not give the button steps for Off."
+    ],
+    "source": "ComfortSense 3000 Series L3532H 5/2-Day Programmable Manual; L3011C Non-Programmable Manual"
+   }
+  ],
+  "lx-merit34": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: Heat, Cool, Fan, Prog, Hold, Settings and the up / down arrows."
+    ],
+    "source": "Lennox Merit Series Programmable Thermostats Operation Manual (51M34 / 51M35)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "From the home screen press HOLD for a permanent hold - it then works like a non-programmable thermostat. Set the temperature with the arrows.",
+     "Pressing only the arrows makes a temporary 2-hour hold (HOLD flashes)."
+    ],
+    "source": "Lennox Merit Series Programmable Thermostats Operation Manual (51M34 / 51M35)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "In heat mode, pressing the Heat button turns heat off (OFF shows in the SYSTEM box). Press Heat again to turn heat back on.",
+     "The Cool button does the same for cooling."
+    ],
+    "source": "Lennox Merit Series Programmable Thermostats Operation Manual (51M34 / 51M35)"
+   }
+  ],
+  "lx-merit32": [
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: no schedule."
+    ],
+    "source": "Lennox Merit Series Non-Programmable Thermostats Manual (51M32 / 51M33)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Use the HEAT and COOL buttons; the manual's Heat Mode Disabled figure shows OFF in the SYSTEM box."
+    ],
+    "source": "Lennox Merit Series Non-Programmable Thermostats Manual (51M32 / 51M33)"
+   }
+  ],
+  "lx-installer-only": [
+   {
+    "title": "Steps not found",
+    "steps": [
+     "Only installation / setup guides are on this card; no owner steps for the menu, schedule, hold or system mode were found in them."
+    ],
+    "source": "Lennox installation and setup guides on this card"
+   }
+  ]
+ },
+ "use": {
+  "tst-lennox-allied-comfortsync-a3": [
+   {
+    "set": "lx-a3"
+   }
+  ],
+  "tst-lennox-comfortsense-5000": [
+   {
+    "set": "lx-cs5000"
+   }
+  ],
+  "tst-lennox-comfortsense-5500": [
+   {
+    "set": "lx-cs5500"
+   }
+  ],
+  "tst-lennox-comfortsense-7000": [
+   {
+    "set": "lx-cs7000"
+   }
+  ],
+  "tst-lennox-comfortsense-3000": [
+   {
+    "set": "lx-cs3000"
+   }
+  ],
+  "tst-lennox-merit-51m34-51m35": [
+   {
+    "set": "lx-merit34"
+   }
+  ],
+  "tst-lennox-merit-51m32-51m33": [
+   {
+    "set": "lx-merit32"
+   }
+  ],
+  "tst-lennox-e40-m40": [
+   {
+    "set": "lx-installer-only"
+   }
+  ],
+  "tst-lennox-m30": [
+   {
+    "set": "lx-installer-only"
+   }
+  ],
+  "tst-lennox-s30-e30": [
+   {
+    "set": "lx-installer-only"
+   }
+  ],
+  "tst-lennox-s40": [
+   {
+    "set": "lx-installer-only"
+   }
+  ],
+  "tst-lennox-icomfort-touch": [
+   {
+    "set": "lx-installer-only"
+   }
+  ],
+  "tst-lennox-icomfort-wifi-10f81": [
+   {
+    "set": "lx-installer-only"
+   }
+  ],
+  "tst-lennox-comfortsense-7500": [
+   {
+    "set": "lx-installer-only"
+   }
+  ]
+ }
+});
+// add-daikin-goodman.js
+tstatHowtoAdd({
+ "sets": {
+  "dk-one": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Top-level screens: Home (temperature, system mode, adjustment slider), Away, Air Quality and Schedule.",
+     "Tap the menu icon at the top left of the home screen for the settings menu."
+    ],
+    "source": "Daikin One Touch Homeowner Guide; Daikin One+ and Touch Homeowner Menu Outline (v3.9)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Each mode (Heat, Cool, Auto) has its own schedule.",
+     "Tap the schedule icon, then the menu icon (upper left), then Edit schedule.",
+     "Tap the header (upper left) to pick the day.",
+     "Tap Add new event or Edit event at the bottom: set the start time, the event name and the event action, then save.",
+     "To copy a day: pick the day, tap Copy day (bottom right), choose the days to copy to."
+    ],
+    "notes": [
+     "The One+ menu outline lists an override duration setting with the schedule and an Away screen with its own set points; the guides give no step-by-step hold."
+    ],
+    "source": "Daikin One Touch Homeowner Guide; Daikin One+ and Touch Homeowner Menu Outline (v3.9)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "On the home screen tap the mode icons on the left side and pick off (or auto, cool, heat)."
+    ],
+    "source": "Daikin One Touch Homeowner Guide; Daikin One+ and Touch Homeowner Menu Outline (v3.9)"
+   }
+  ],
+  "dk-touchscreen": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: MODE icon, FAN icon, Warmer / Cooler buttons and the Menu button. Menu opens the main menu; Back and Home return."
+    ],
+    "source": "Daikin DT4272 / DT4273 TouchScreen Owner's Manual; Goodman GT4272 / GT4273 Owner's Manual; ProStat+ PSP4272RT / PSP4273RT Manual"
+   },
+   {
+    "title": "Turn the schedule on or off",
+    "steps": [
+     "Press the MODE icon.",
+     "Select RUN to turn the time-period schedule on, or STOP to turn it off (the set temperature then stays where it is set)."
+    ],
+    "notes": [
+     "Each day has up to four periods (Morning, Day, Evening, Night); the ProStat+ manual sets them from the main menu's Schedule screen."
+    ],
+    "source": "Daikin DT4272 / DT4273 TouchScreen Owner's Manual; Goodman GT4272 / GT4273 Owner's Manual; ProStat+ PSP4272RT / PSP4273RT Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the MODE icon and pick OFF (HEAT, COOL and AUTO are the others)."
+    ],
+    "notes": [
+     "Fan ON still runs the fan in OFF mode."
+    ],
+    "source": "Daikin DT4272 / DT4273 TouchScreen Owner's Manual; Goodman GT4272 / GT4273 Owner's Manual; ProStat+ PSP4272RT / PSP4273RT Manual"
+   }
+  ],
+  "dk-button": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Front: WARMER / COOLER buttons, MODE and FAN. Behind the door: SET CLOCK, PROGRAM and SETUP.",
+     "In setup and programming, WARMER / COOLER change the value and MODE moves to the next step."
+    ],
+    "source": "Daikin D2111 / D4272 / D4273 Owner's Manuals; Goodman G2111 / G4272 / G4273 Owner's Manuals"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press and hold PROGRAM until the scrolling prompt shows (OFF, RUN, HOLD TO SET).",
+     "Keep holding PROGRAM to make changes. Pick the day with WARMER / COOLER, press MODE.",
+     "For each period (Morning, Day, Evening, Night) set the mode, start time and set points with WARMER / COOLER, pressing MODE after each."
+    ],
+    "notes": [
+     "The manual says programming at the thermostat is not available when a Wi-Fi module is fitted."
+    ],
+    "source": "Daikin D2111 / D4272 / D4273 Owner's Manuals; Goodman G2111 / G4272 / G4273 Owner's Manuals"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press and hold PROGRAM and pick OFF: the time-period program is off and the thermostat keeps the set temperature. Pick RUN to turn it back on."
+    ],
+    "source": "Daikin D2111 / D4272 / D4273 Owner's Manuals; Goodman G2111 / G4272 / G4273 Owner's Manuals"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press MODE until OFF shows."
+    ],
+    "source": "Daikin D2111 / D4272 / D4273 Owner's Manuals; Goodman G2111 / G4272 / G4273 Owner's Manuals"
+   }
+  ],
+  "dk-mini": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Front: Up / Warmer, Down / Cooler, Mode and Fan. Hold MODE and FAN together 5 seconds for the Setup screens (WARMER / COOLER change, MODE advances)."
+    ],
+    "source": "Daikin D2270 / D2270C Premium Mini Owner's Manuals; Goodman G2270 Premium Mini Owner's Manual"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "The daily schedule is set in the Setup steps: for each period pick its mode (including OFF), start time and cool / heat set points with WARMER / COOLER, pressing MODE after each."
+    ],
+    "source": "Daikin D2270 / D2270C Premium Mini Owner's Manuals; Goodman G2270 Premium Mini Owner's Manual"
+   },
+   {
+    "title": "Turn the schedule on or off",
+    "steps": [
+     "Press MODE to step through OFF, the available modes and Program ON.",
+     "Program ON runs the schedule; any other mode leaves it off."
+    ],
+    "notes": [
+     "The installer (or the Skyport website) can hide Program ON or force the program to always run."
+    ],
+    "source": "Daikin D2270 / D2270C Premium Mini Owner's Manuals; Goodman G2270 Premium Mini Owner's Manual"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press MODE until OFF shows."
+    ],
+    "source": "Daikin D2270 / D2270C Premium Mini Owner's Manuals; Goodman G2270 Premium Mini Owner's Manual"
+   }
+  ],
+  "dk-value": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Slide switches: Mode (Cool / Off / Heat), Fan (Auto / On) and, on programmable models, Program (RUN / OFF / SET). COOLER / WARMER buttons and NEXT."
+    ],
+    "source": "Daikin TSTATD1152-2 5+2 Day Programmable Owner's Manual; TSTATD1100-2 / TSTATD2100-2 Non-Programmable Owner's Manuals"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Programmable models: slide the Program switch to SET.",
+     "Change the blinking item with COOLER / WARMER, then press NEXT for the next item.",
+     "Slide the Program switch back to RUN when done."
+    ],
+    "notes": [
+     "Non-programmable models (TSTATD1100-2, TSTATD2100-2) have no schedule."
+    ],
+    "source": "Daikin TSTATD1152-2 5+2 Day Programmable Owner's Manual; TSTATD1100-2 / TSTATD2100-2 Non-Programmable Owner's Manuals"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Slide the Program switch to OFF (Program OFF). RUN turns the schedule back on."
+    ],
+    "source": "Daikin TSTATD1152-2 5+2 Day Programmable Owner's Manual; TSTATD1100-2 / TSTATD2100-2 Non-Programmable Owner's Manuals"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the Mode switch to OFF."
+    ],
+    "source": "Daikin TSTATD1152-2 5+2 Day Programmable Owner's Manual; TSTATD1100-2 / TSTATD2100-2 Non-Programmable Owner's Manuals"
+   }
+  ],
+  "gm-gtst": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: mode, fan, warmer (up) and cooler (down). Menus open with button combinations: MODE + FAN 5 s = setup, FAN + WARMER 2 s = schedule, FAN + COOLER 2 s = away."
+    ],
+    "source": "Goodman GTST Connected Thermostat Operational Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press and hold fan and warmer (up) to enter schedule mode.",
+     "Set the events for each day (up to four: morning, day, evening, night) with warmer / cooler; mode moves through the steps.",
+     "Hold MODE 2 seconds to go back to the main screen."
+    ],
+    "source": "Goodman GTST Connected Thermostat Operational Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the mode button to step through the modes until OFF shows (its name shows in the upper left)."
+    ],
+    "source": "Goodman GTST Connected Thermostat Operational Guide"
+   }
+  ],
+  "gm-ctk04": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch keys: SYSTEM, FAN, MENU and the up / down arrows. DONE saves, CANCEL leaves."
+    ],
+    "source": "ComfortNet CTK04 Communicating Thermostat Operating Manual (69-2687EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press MENU, then CREATE/EDIT SCHEDULE.",
+     "Pick Guide me, I'll do it myself, or View/Edit, then DONE to save."
+    ],
+    "source": "ComfortNet CTK04 Communicating Thermostat Operating Manual (69-2687EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the up / down arrows to set the temperature (kept until the hold time you set).",
+     "Press PERMANENT HOLD to keep it until someone changes it or resumes the schedule."
+    ],
+    "source": "ComfortNet CTK04 Communicating Thermostat Operating Manual (69-2687EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press CANCEL HOLD."
+    ],
+    "source": "ComfortNet CTK04 Communicating Thermostat Operating Manual (69-2687EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM, then Off (scroll with the arrows). The fan still runs if set to On or Circulate."
+    ],
+    "source": "ComfortNet CTK04 Communicating Thermostat Operating Manual (69-2687EFS)"
+   }
+  ],
+  "dk-nav": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press Menu/OK on the basic screen for the main menu (Airflow Direction, Ventilation, Schedule, Off Timer and more). Cancel goes back."
+    ],
+    "source": "BRC1E73 Navigation Wired Remote Controller Installation Manual"
+   },
+   {
+    "title": "Turn the unit off",
+    "steps": [
+     "Press the On/Off button."
+    ],
+    "source": "BRC1E73 Navigation Wired Remote Controller Installation Manual"
+   }
+  ],
+  "dk-none": [
+   {
+    "title": "Steps not found",
+    "steps": [
+     "No owner steps for the menu, schedule, hold or system mode were found in the guide on this card."
+    ],
+    "source": "Daikin One Lite Connected Thermostat Installation Guide; BRC1H71W Wired Remote Controller Operation Handbook"
+   }
+  ]
+ },
+ "use": {
+  "tst-daikin-one-touch": [
+   {
+    "set": "dk-one"
+   }
+  ],
+  "tst-daikin-one-plus": [
+   {
+    "set": "dk-one"
+   }
+  ],
+  "tst-daikin-one-lite": [
+   {
+    "set": "dk-none",
+    "note": "Only the installation and commissioning guide is on this card; it says the buttons and the Daikin One Home app reach the menus."
+   }
+  ],
+  "tst-daikin-dt4272-dt4273": [
+   {
+    "set": "dk-touchscreen"
+   }
+  ],
+  "tst-goodman-touchscreen-gt4272-gt4273": [
+   {
+    "set": "dk-touchscreen"
+   }
+  ],
+  "tst-goodman-prostat-plus": [
+   {
+    "set": "dk-touchscreen"
+   }
+  ],
+  "tst-daikin-premium-series": [
+   {
+    "set": "dk-button"
+   }
+  ],
+  "tst-goodman-premium-g4272-g4273": [
+   {
+    "set": "dk-button"
+   }
+  ],
+  "tst-daikin-premium-mini-d2270": [
+   {
+    "set": "dk-mini"
+   }
+  ],
+  "tst-goodman-premium-mini-g2270": [
+   {
+    "set": "dk-mini"
+   }
+  ],
+  "tst-daikin-value-series": [
+   {
+    "set": "dk-value"
+   }
+  ],
+  "tst-goodman-gtst": [
+   {
+    "set": "gm-gtst"
+   }
+  ],
+  "tst-goodman-comfortnet-ctk04": [
+   {
+    "set": "gm-ctk04"
+   }
+  ],
+  "tst-daikin-brc1e73-navigation": [
+   {
+    "set": "dk-nav",
+    "note": "Only the installation manual is on this card."
+   }
+  ],
+  "tst-daikin-brc1h71w-madoka": [
+   {
+    "set": "dk-none"
+   }
+  ]
+ }
+});
