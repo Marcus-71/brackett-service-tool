@@ -60901,3 +60901,2068 @@ tstatHowtoAdd({
   ]
  }
 });
+// add-deep-honeywell.js
+tstatHowtoAdd({
+ "sets": {
+  "hw-pro3000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Controls: up / down buttons for the temperature, a System switch (Cool, Off, Heat, and Em Heat on select heat pump models) and a Fan switch (Auto / On).",
+     "The screen shows the inside temperature, the setting, and Cool On / Heat On (plus Em / Aux on heat pump models) while the system runs.",
+     "Heat On or Cool On flashing means the 5-minute compressor protection delay is running - wait it out."
+    ],
+    "source": "Honeywell PRO 3000 Series Non-Programmable Digital Thermostat User Guide (69-1776EFS)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Set the System switch to Heat or Cool.",
+     "Press up or down until the temperature you want shows."
+    ],
+    "notes": [
+     "Ranges: heat 40-90 F, cool 50-99 F.",
+     "Fan Auto runs the fan only with heating or cooling; Fan On runs it all the time."
+    ],
+    "source": "Honeywell PRO 3000 Series Non-Programmable Digital Thermostat User Guide (69-1776EFS)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. The thermostat holds whatever temperature is set."
+    ],
+    "source": "Honeywell PRO 3000 Series Non-Programmable Digital Thermostat User Guide (69-1776EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set the System switch to Off."
+    ],
+    "source": "Honeywell PRO 3000 Series Non-Programmable Digital Thermostat User Guide (69-1776EFS)"
+   }
+  ],
+  "hw-pro4000": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: up / down (temperature), SET (time, day and schedule), HOLD (hold a temperature) and RUN (back to the schedule, also saves and exits).",
+     "Switches: System (Cool, Off, Heat, and Em Heat on select heat pump models) and Fan (Auto / On).",
+     "The screen shows the current period (Wake, Leave, Return, Sleep), day and time, inside temperature and setting."
+    ],
+    "source": "Honeywell PRO 4000 Series Programmable Digital Thermostat User Guide (69-1760EFS)"
+   },
+   {
+    "title": "Set the time and day",
+    "steps": [
+     "Press SET, then up / down to set the clock.",
+     "Press SET again, then up / down to pick the day.",
+     "Press RUN to save and exit."
+    ],
+    "notes": [
+     "Set Clock flashing means the time was lost - the thermostat runs the weekday Wake setting until it is reset."
+    ],
+    "source": "Honeywell PRO 4000 Series Programmable Digital Thermostat User Guide (69-1760EFS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the System switch to the mode you are programming (Heat or Cool).",
+     "Press SET until Set Schedule shows.",
+     "Set the weekday (Mon-Fri) Wake start time with up / down, then press SET.",
+     "Set the Wake temperature with up / down, then press SET.",
+     "Repeat time then temperature for Leave, Return and Sleep.",
+     "Press SET to move on to the weekend (Sat-Sun) periods and set them the same way.",
+     "Press RUN to save and exit."
+    ],
+    "notes": [
+     "Four periods a day: Wake, Leave, Return, Sleep; one weekday schedule and one weekend schedule.",
+     "To drop a period (not Wake), hold up + HOLD for 4 seconds while in Set Schedule."
+    ],
+    "source": "Honeywell PRO 4000 Series Programmable Digital Thermostat User Guide (69-1760EFS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD.",
+     "Set the temperature with up / down - it is kept around the clock until changed or RUN is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down is temporary: it lasts until the next program period starts."
+    ],
+    "source": "Honeywell PRO 4000 Series Programmable Digital Thermostat User Guide (69-1760EFS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN."
+    ],
+    "source": "Honeywell PRO 4000 Series Programmable Digital Thermostat User Guide (69-1760EFS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set the System switch to Off."
+    ],
+    "source": "Honeywell PRO 4000 Series Programmable Digital Thermostat User Guide (69-1760EFS)"
+   }
+  ],
+  "hw-chronotherm3": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Keys: SET PRESENT DAY/TIME, DAY, PERIOD, CANCEL PERIOD, SET HEAT/COOL, AHEAD / BACK (time), WARMER / COOLER (temperature), COPY FROM, COPY TO, HOLD TEMP, CHANGE TO LAST PERIOD, SKIP NEXT PERIOD, RUN PROGRAM and PRESENT SETTING.",
+     "The System switch (Heat, Auto, Cool, Off, or Em.Ht on heat pump models) and the Fan switch (On / Auto) are on the subbase; positions vary by model.",
+     "Four periods a day: MORNING, MIDDAY, EVENING, NIGHT. Every day needs a MORNING setting; the others are optional.",
+     "Press PRESENT SETTING to see the setting for a few seconds."
+    ],
+    "notes": [
+     "Press the keys with a fingertip, not a pen or pencil point."
+    ],
+    "source": "Honeywell Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+   },
+   {
+    "title": "Set the day and time",
+    "steps": [
+     "Press SET PRESENT DAY/TIME.",
+     "Hold DAY until today shows.",
+     "Hold AHEAD or BACK until the time is right - check AM / PM."
+    ],
+    "source": "Honeywell Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press PERIOD - MORNING shows. If COOL shows, press SET HEAT/COOL to switch to HEAT.",
+     "Hold DAY until the day to program shows.",
+     "Set the start time with AHEAD / BACK and the heating temperature with WARMER / COOLER.",
+     "Press PERIOD for MIDDAY, EVENING and NIGHT and set each the same way (skip any you do not want).",
+     "Press SET HEAT/COOL so COOL shows, then press PERIOD through the periods and set each cooling temperature with WARMER / COOLER.",
+     "To copy the day: press COPY FROM, then press COPY TO for each flashing day to copy into, or DAY to skip it.",
+     "Press RUN PROGRAM to finish (and to complete a copy)."
+    ],
+    "notes": [
+     "Each day is programmed separately; copying replaces that day's whole program.",
+     "Auto-changeover models keep heat at least 3 degrees below cool; the display flashes at a setting limit.",
+     "To remove a period (not MORNING): select it with PERIOD and DAY, press CANCEL PERIOD, then RUN PROGRAM."
+    ],
+    "source": "Honeywell Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD TEMP - Hold shows.",
+     "Hold WARMER or COOLER to set the temperature."
+    ],
+    "notes": [
+     "Meant for vacations; it does not erase the program.",
+     "For one period only: hold WARMER / COOLER (temporary), press SKIP NEXT PERIOD to keep the current temperature through the next period, or CHANGE TO LAST PERIOD to go back to the previous period's setting."
+    ],
+    "source": "Honeywell Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN PROGRAM - it cancels Hold Temp and any temporary change."
+    ],
+    "source": "Honeywell Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set the System switch on the subbase to OFF."
+    ],
+    "source": "Honeywell Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+   }
+  ],
+  "amazon-smart-tstat": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The touch screen shows a mode button in the center, temperature down / up, the mode, current temperature, an info icon and an energy-saver icon - they only appear when in use.",
+     "The display dims when idle; touch the center mode button to bring it back to full brightness.",
+     "The touch buttons may not respond through gloves."
+    ],
+    "notes": [
+     "The maker's manual does not give button-by-button steps for changing mode or holding a temperature."
+    ],
+    "source": "Smart Thermostat User Manual, model S6ED3R (Resideo / Ademco user-manual exhibit, FCC ID HS9-S6ED3R)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "The schedule is set in the app (the thermostat is set up and controlled from it); the app can also adjust the temperature with Routines and Hunches."
+    ],
+    "notes": [
+     "The manual gives no in-app menu steps; Amazon's own help pages could not be read (see notes)."
+    ],
+    "source": "Smart Thermostat User Manual, model S6ED3R (Resideo / Ademco user-manual exhibit, FCC ID HS9-S6ED3R)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-pro-3000": [
+   {
+    "set": "hw-pro3000"
+   }
+  ],
+  "tst-honeywell-pro-4000": [
+   {
+    "set": "hw-pro4000"
+   }
+  ],
+  "tst-honeywell-chronotherm-iii": [
+   {
+    "set": "hw-chronotherm3",
+    "note": "Key names read from the manual's pictures; the scan's text layer does not carry them."
+   }
+  ],
+  "tst-amazon-smart-thermostat": [
+   {
+    "set": "amazon-smart-tstat",
+    "note": "Screen basics only - the published manual is mostly installation and safety."
+   }
+  ]
+ }
+});
+// add-deep-lennox.js
+tstatHowtoAdd({
+ "sets": {
+  "lxd-s30e30": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: menu, away, the heat-to and cool-to areas, and modes/schedules.",
+     "Menu opens settings and notifications. Press the home icon to go back to the home screen (the schedules screen also returns there after 25 seconds with no touch)."
+    ],
+    "source": "iComfort E30 / S30 Smart Thermostat User Guide (507920-02)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Touch modes/schedules. Under schedules pick Schedule IQ, summer, winter, spring/fall or save energy to run it.",
+     "Select edit schedules to change a schedule's times, temperatures and fan (on, auto or circulate), rename it or restore defaults. Changes save automatically."
+    ],
+    "source": "iComfort E30 / S30 Smart Thermostat User Guide (507920-02)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "While a schedule runs, press the heat-to or cool-to area and change the temperature.",
+     "The screen offers schedule hold until next period or a hold duration - touch hold or duration to choose."
+    ],
+    "notes": [
+     "The modes/schedules screen also lists heat/cool, heat only and cool only - modes that run without one of the schedules."
+    ],
+    "source": "iComfort E30 / S30 Smart Thermostat User Guide (507920-02)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the cancel icon shown with the schedule hold on the right side of the home screen."
+    ],
+    "source": "iComfort E30 / S30 Smart Thermostat User Guide (507920-02)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Press away on the home screen for the energy-saving away settings (default heat-to 62, cool-to 85).",
+     "Press the cancel icon to leave away. Away temperatures are changed under menu > settings > away."
+    ],
+    "source": "iComfort E30 / S30 Smart Thermostat User Guide (507920-02)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch modes/schedules and select off. Press the home icon to leave."
+    ],
+    "source": "iComfort E30 / S30 Smart Thermostat User Guide (507920-02)"
+   }
+  ],
+  "lxd-m30": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch the screen to wake it. Home screen: heat-to and cool-to, away, and the current mode (touch it for modes/schedules).",
+     "The menu icon opens notifications, performance report, edit schedules and settings."
+    ],
+    "source": "iComfort M30 Smart Thermostat User Guide (507740-02)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "To run a schedule: touch modes/schedules and pick Schedule IQ, summer, winter, spring/fall or save energy (a check mark shows the active one).",
+     "To change one: menu > edit schedules, then touch the schedule name.",
+     "Pick the days (individual, week/weekend or all days) and the mode (heat/cool, heat only or cool only).",
+     "Set each period's time (up to 4 a day), the heat and cool sliders and the fan. Delete period removes one; restore defaults resets the schedules."
+    ],
+    "source": "iComfort M30 Smart Thermostat User Guide (507740-02)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "While a schedule runs, touch heat-to or cool-to (or the set point on the dial) and change it with + / -. This starts a schedule hold.",
+     "Choose how long: 1, 2, 4, 8 or 24 hours, custom, or until the next period."
+    ],
+    "notes": [
+     "The modes/schedules screen also lists heat/cool, heat only and cool only - modes that run without one of the schedules."
+    ],
+    "source": "iComfort M30 Smart Thermostat User Guide (507740-02)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch cancel schedule hold on the home screen."
+    ],
+    "source": "iComfort M30 Smart Thermostat User Guide (507740-02)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Touch away for the energy-saving away temperatures. Touch cancel away to end it and go back to normal operation."
+    ],
+    "source": "iComfort M30 Smart Thermostat User Guide (507740-02)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch modes/schedules on the home screen and select Off."
+    ],
+    "source": "iComfort M30 Smart Thermostat User Guide (507740-02)"
+   }
+  ],
+  "lxd-s40": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: Menu, Away, the Heat-To and Cool-To buttons (or the set points on the round band), and Temp / Status / My Home.",
+     "Menu holds notifications, user account, display settings, dealer access, and the system's Mode, Schedule and Fan, then Settings."
+    ],
+    "source": "Lennox S40 Smart Thermostat User Guide (508223-03)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Menu > Schedule. Pick Schedule IQ, Summer, Spring/Fall, Winter or Save Energy to run it.",
+     "Each profile's period start times and heat / cool temperatures can be changed. Use the option in the top right corner of a schedule screen to rename it, set day grouping, system mode, fan mode or restore defaults."
+    ],
+    "source": "Lennox S40 Smart Thermostat User Guide (508223-03)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Menu > Schedule and pick No Schedule - the system no longer follows a schedule and changes are made by hand.",
+     "For a short hold while a schedule runs: select the Schedule hold until next period icon and choose Hold, Duration or Cancel."
+    ],
+    "source": "Lennox S40 Smart Thermostat User Guide (508223-03)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Select the schedule hold icon on the home screen and answer Yes to cancel it (or pick Cancel in its pop-up)."
+    ],
+    "source": "Lennox S40 Smart Thermostat User Guide (508223-03)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Press Away at the bottom left of the home screen. To leave it, select Cancel in the same spot. Away temperatures: Menu > Settings > Away."
+    ],
+    "source": "Lennox S40 Smart Thermostat User Guide (508223-03)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Menu > Mode and select Off (the others are Emerg Heat, Heat Only, Heat / Cool and Cool Only)."
+    ],
+    "source": "Lennox S40 Smart Thermostat User Guide (508223-03)"
+   }
+  ],
+  "lxd-e40": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: Menu, Away, the Heat-To and Cool-To buttons (or the set points on the round band), and the Temperature / Status / My Home bars.",
+     "Menu holds Mode, Schedule, Fan, notifications and Settings."
+    ],
+    "source": "Lennox E40 Smart Thermostat User Guide (508807-01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Menu > Schedule. Pick Schedule IQ, Save Energy, Spring/Fall, Winter or Summer to run it.",
+     "Profiles can be changed (start time and heat / cool temperatures per period). The option in the top right corner of a schedule screen renames it and sets day grouping, system mode, fan mode or restore defaults."
+    ],
+    "source": "Lennox E40 Smart Thermostat User Guide (508807-01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Menu > Schedule and pick No Schedule - the system no longer follows a schedule and changes are made by hand.",
+     "For a short hold while a schedule runs: select the Schedule hold until next period icon and choose Hold, Duration or Cancel."
+    ],
+    "source": "Lennox E40 Smart Thermostat User Guide (508807-01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Select the schedule hold icon on the home screen and answer Yes to cancel it (or pick Cancel in its pop-up)."
+    ],
+    "source": "Lennox E40 Smart Thermostat User Guide (508807-01)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Press Away at the bottom left of the home screen. To leave it, select Cancel in the same spot. Away temperatures: Menu > Settings > Away."
+    ],
+    "source": "Lennox E40 Smart Thermostat User Guide (508807-01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Menu > Mode and select Off (Emergency Heat shows only on heat pumps)."
+    ],
+    "source": "Lennox E40 Smart Thermostat User Guide (508807-01)"
+   }
+  ],
+  "lxd-m40": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: Menu, Away (green leaf), Heat-To / Cool-To and Status. Temp returns to the home screen.",
+     "Mode, Schedule and Fan are under System Status, which sits beneath Menu."
+    ],
+    "source": "Lennox M40 Smart Thermostat User Guide (508803)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Under Schedule pick Schedule IQ, Save Energy, Spring/Fall, Winter or Summer.",
+     "Press Edit to change a profile: day grouping, system mode, fan mode, temperatures. Add Period makes up to four periods; select a period and tap Delete Period to remove it."
+    ],
+    "source": "Lennox M40 Smart Thermostat User Guide (508803)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Under Schedule pick No Schedule - the system no longer follows a schedule and changes are made by hand.",
+     "For a short hold while a schedule runs: select the Schedule hold until next period icon and choose Hold, Duration or Cancel."
+    ],
+    "source": "Lennox M40 Smart Thermostat User Guide (508803)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Select the schedule hold icon and answer Yes to cancel it (or pick Cancel in its pop-up)."
+    ],
+    "source": "Lennox M40 Smart Thermostat User Guide (508803)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Tap the Away icon (green leaf) to turn Away on or off; Cancel at the bottom of the home screen also ends it."
+    ],
+    "source": "Lennox M40 Smart Thermostat User Guide (508803)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Open Mode and select Off (others: Emerg Heat, Heat Only, Heat / Cool, Cool Only)."
+    ],
+    "source": "Lennox M40 Smart Thermostat User Guide (508803)"
+   }
+  ],
+  "lxd-cs7500": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch the screen to turn on the backlight. Home screen: operating mode, away, heat-to and cool-to, and menu.",
+     "Menu (three lines, top right) opens notifications, performance report, edit schedules and settings."
+    ],
+    "source": "ComfortSense 7500 Thermostat User Guide (507503-02)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "To run a schedule: touch the operating mode and pick schedule 1, 2 or 3.",
+     "To change one: menu > edit schedules, then touch the arrow next to the schedule.",
+     "Select the days (individual days, week/weekend or all 7 days) and the mode (heat/cool, heat only or cool only).",
+     "Set each period's time, heat-to / cool-to and fan (up to four periods; a period can be deleted)."
+    ],
+    "source": "ComfortSense 7500 Thermostat User Guide (507503-02)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Touch heat-to or cool-to and adjust the temperature if needed.",
+     "After about three seconds the override choices show: 1 hour, 2 hour or next scheduled period. Pick one and touch set."
+    ],
+    "notes": [
+     "The operating mode list has heat/cool, heat only, cool only, off and emergency heat as well as schedule 1, 2 and 3."
+    ],
+    "source": "ComfortSense 7500 Thermostat User Guide (507503-02)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch the X next to schedule hold on the home screen."
+    ],
+    "source": "ComfortSense 7500 Thermostat User Guide (507503-02)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Touch away to set the away heating / cooling temperatures. Touch cancel to leave it and return to normal operation."
+    ],
+    "source": "ComfortSense 7500 Thermostat User Guide (507503-02)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the operating mode and select off."
+    ],
+    "source": "ComfortSense 7500 Thermostat User Guide (507503-02)"
+   }
+  ],
+  "lxd-ictouch": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: up / down arrows change the temperature. Press the press for more area to open the user dashboard.",
+     "Dashboard tabs: indoor settings, indoor humidity, programs, alerts, HOME and HELP. HELP also holds clean screen and user preferences."
+    ],
+    "source": "icomfort Touch Thermostat Homeowner's Manual (506053-01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press for more > programs tab. Use select to turn the program ON or OFF.",
+     "Press view/edit, then new. Pick the days (all 7 days, mon - fri, sat, sun or single days) and press next.",
+     "Press a box (time, heat, cool, fan) and change it with the arrows. Press and hold a time button to switch that event off or back on.",
+     "Press save."
+    ],
+    "notes": [
+     "restore (with confirm) brings back the original energy saving program and erases custom schedules."
+    ],
+    "source": "icomfort Touch Thermostat Homeowner's Manual (506053-01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Permanent: press for more > programs tab and use select to set program OFF. Then set the temperature with the arrows - it stays until changed.",
+     "Temporary: with the program ON, change the temperature with the arrows, pick a set hold period and press set."
+    ],
+    "source": "icomfort Touch Thermostat Homeowner's Manual (506053-01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press cancel on the hold message on the home screen."
+    ],
+    "source": "icomfort Touch Thermostat Homeowner's Manual (506053-01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press for more to open indoor settings. Under system settings use select to pick off."
+    ],
+    "source": "icomfort Touch Thermostat Homeowner's Manual (506053-01)"
+   }
+  ],
+  "lxd-icwifi": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: the cool-to / heat-to set temperatures, the system mode button, fan, enter away, ? for help and Wi-Fi.",
+     "The features button opens edit programs, system settings, display settings, alerts, reminders and service."
+    ],
+    "source": "iComfort Wi-Fi Thermostat Homeowner's Manual (507342-01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Features > edit programs. Select a program (summer, winter, spring fall, save energy or custom).",
+     "Select days (week/weekend, individual days or all 7 days). Set time, cool-to, heat-to with the arrows and the fan mode.",
+     "Touch save, then X to exit. Touch and hold a time button to turn that period off (add setting turns it back on).",
+     "To run a program: touch the system mode button > programs and pick one. The button then shows the program is ON."
+    ],
+    "source": "iComfort Wi-Fi Thermostat Homeowner's Manual (507342-01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Permanent: touch the system mode button, select manual, then pick a manual setting (e.g. heat only). Set temperatures now stay until changed.",
+     "Temporary: with a program on, touch a set temp button and use the arrows. Pick 1, 2, 8 or 24 hr or custom; doing nothing holds until the next period."
+    ],
+    "source": "iComfort Wi-Fi Thermostat Homeowner's Manual (507342-01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Touch cancel on the hold message to go back to the program."
+    ],
+    "source": "iComfort Wi-Fi Thermostat Homeowner's Manual (507342-01)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Touch enter away (upper right of the home screen). Touch cancel away mode to leave it."
+    ],
+    "source": "iComfort Wi-Fi Thermostat Homeowner's Manual (507342-01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the system mode button and select off from the manual settings (cool only, heat only, heat or cool, off, emerg. heat)."
+    ],
+    "source": "iComfort Wi-Fi Thermostat Homeowner's Manual (507342-01)"
+   }
+  ]
+ },
+ "use": {
+  "tst-lennox-s30-e30": [
+   {
+    "set": "lxd-s30e30"
+   }
+  ],
+  "tst-lennox-m30": [
+   {
+    "set": "lxd-m30"
+   }
+  ],
+  "tst-lennox-s40": [
+   {
+    "set": "lxd-s40"
+   }
+  ],
+  "tst-lennox-e40-m40": [
+   {
+    "set": "lxd-e40",
+    "label": "E40"
+   },
+   {
+    "set": "lxd-m40",
+    "label": "M40"
+   }
+  ],
+  "tst-lennox-comfortsense-7500": [
+   {
+    "set": "lxd-cs7500"
+   }
+  ],
+  "tst-lennox-icomfort-touch": [
+   {
+    "set": "lxd-ictouch"
+   }
+  ],
+  "tst-lennox-icomfort-wifi-10f81": [
+   {
+    "set": "lxd-icwifi"
+   }
+  ]
+ }
+});
+// add-deep-mitsu-daikin.js
+tstatHowtoAdd({
+ "sets": {
+  "mdd-par30": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "On the Main display: F1 changes the operation mode, F2 lowers and F3 raises the set temperature, F4 changes the fan speed.",
+     "Press MENU for the Main menu. F1 moves the cursor down, F2 up, F3 / F4 change page; press SELECT to open an item.",
+     "Press RETURN to leave the Main menu and go back to the Main display."
+    ],
+    "source": "Mitsubishi Electric PAR-30MAAU MA Remote Controller Instruction Book (WT06009X01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press MENU, pick Weekly timer and press SELECT. Set it to Yes with F3 / F4 and press SELECT.",
+     "On the current-settings screen press SELECT. Move to the day with F1 / F2, press F3 to pick it (more than one day can be picked), then press SELECT.",
+     "F1 picks the pattern number (up to 8 a day), F2 moves between time, On/Off and temperature, F3 / F4 change the value. Press SELECT to save."
+    ],
+    "notes": [
+     "The clock must be set first. The weekly timer does not run while the On/Off timer or HOLD is on."
+    ],
+    "source": "Mitsubishi Electric PAR-30MAAU MA Remote Controller Instruction Book (WT06009X01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "On the Main display press HOLD. With HOLD on, the weekly timer, On/Off timer, Auto-Off timer and auto-return are blocked.",
+     "To switch the weekly timer off for good: Main menu > Weekly timer, choose No and press SELECT."
+    ],
+    "source": "Mitsubishi Electric PAR-30MAAU MA Remote Controller Instruction Book (WT06009X01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press HOLD again on the Main display to turn HOLD off (or set Weekly timer back to Yes)."
+    ],
+    "source": "Mitsubishi Electric PAR-30MAAU MA Remote Controller Instruction Book (WT06009X01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press ON/OFF. The green ON/OFF lamp goes out and the unit stops. Press it again to start."
+    ],
+    "source": "Mitsubishi Electric PAR-30MAAU MA Remote Controller Instruction Book (WT06009X01)"
+   }
+  ],
+  "mdd-par21": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: ON/OFF, MODE (back), fan speed, TEMP up / down, TIMER MENU (monitor / set), TIMER ON/OFF (set day), the CLOCK (set time) buttons, the operation-number buttons, FILTER (enter), CHECK (clear) and TEST.",
+     "Settings menu: hold MODE and press TIMER ON/OFF for 2 seconds. Do the same to go back to the normal screen."
+    ],
+    "source": "Mitsubishi Electric PAR-21MAA Deluxe MA Remote Controller Technical Manual (USA/Canada), posted on Mitsubishi's PAR-21MAAU product page"
+   },
+   {
+    "title": "Turn the unit on and change the mode",
+    "steps": [
+     "Press ON/OFF - the ON lamp lights and the unit runs.",
+     "Press MODE to step through the modes (Cool, Dry, Fan, Heat, and Auto if it is turned on)."
+    ],
+    "notes": [
+     "The book only spells out the start press; it does not describe a stop press in words."
+    ],
+    "source": "Mitsubishi Electric PAR-21MAA Deluxe MA Remote Controller Technical Manual (USA/Canada), posted on Mitsubishi's PAR-21MAAU product page"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Check that WEEKLY shows on the screen (weekly timer is the factory choice).",
+     "Press TIMER MENU until TIMER SET shows. Press TIMER ON/OFF (set day) to pick the day, or Sun-Sat for every day.",
+     "Use the operation-number buttons to pick a pattern (1 to 8). Set the time with the CLOCK buttons, choose ON (start) or OFF (stop), and set the temperature with TEMP.",
+     "Press FILTER (enter) to save that pattern. Repeat for others, then press MODE (back) to finish.",
+     "Press TIMER ON/OFF so the timer-off mark goes away - the weekly timer is now running."
+    ],
+    "notes": [
+     "The clock must be on and set. The weekly timer runs the unit in whatever mode is already selected; it cannot change the mode."
+    ],
+    "source": "Mitsubishi Electric PAR-21MAA Deluxe MA Remote Controller Technical Manual (USA/Canada), posted on Mitsubishi's PAR-21MAAU product page; Mitsubishi Electric USA 'How to Guide for PAR-21MAA' quick reference, posted on Mitsubishi's PAR-21MAAU product page"
+   },
+   {
+    "title": "Turn the schedule off",
+    "steps": [
+     "Press TIMER ON/OFF so the timer-off mark shows on the screen."
+    ],
+    "source": "Mitsubishi Electric PAR-21MAA Deluxe MA Remote Controller Technical Manual (USA/Canada), posted on Mitsubishi's PAR-21MAAU product page"
+   },
+   {
+    "title": "Go back to the schedule",
+    "steps": [
+     "Press TIMER ON/OFF again so the timer-off mark disappears."
+    ],
+    "source": "Mitsubishi Electric PAR-21MAA Deluxe MA Remote Controller Technical Manual (USA/Canada), posted on Mitsubishi's PAR-21MAAU product page"
+   },
+   {
+    "title": "Choose the timer type (weekly, simple, auto-off or none)",
+    "steps": [
+     "Hold MODE and press TIMER ON/OFF for 2 seconds. Press MODE until MODE SELECTION shows.",
+     "Press TIMER MENU until TIMER shows, then TIMER ON/OFF to pick WEEKLY TIMER, AUTO OFF TIMER, SIMPLE TIMER or TIMER MODE OFF.",
+     "Hold MODE and press TIMER ON/OFF for 2 seconds to save and go back."
+    ],
+    "notes": [
+     "Only one timer type can be used at a time."
+    ],
+    "source": "Mitsubishi Electric PAR-21MAA Deluxe MA Remote Controller Technical Manual (USA/Canada), posted on Mitsubishi's PAR-21MAAU product page; Mitsubishi Electric USA 'How to Guide for PAR-21MAA' quick reference, posted on Mitsubishi's PAR-21MAAU product page"
+   }
+  ],
+  "mdd-yt53": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: ON/OFF, MODE, TEMP up / down, FAN and VANE. There is no menu."
+    ],
+    "source": "Mitsubishi Electric PAC-YT53CRAU Simple MA Remote Controller Instruction Book (WT06428X01)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Press TEMP up or down to raise or lower the set temperature.",
+     "In Auto (dual set point) or Setback: press TEMP to make the set points blink, MODE to pick cooling then heating, TEMP to change each, MODE again to finish."
+    ],
+    "source": "Mitsubishi Electric PAC-YT53CRAU Simple MA Remote Controller Instruction Book (WT06428X01)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "No schedule: this simple controller has no timer or weekly schedule in its Instruction Book (on / off, mode, temperature, fan and vane only)."
+    ],
+    "notes": [
+     "The book says functions this controller cannot set must be set from another MA remote controller or the centralized controller."
+    ],
+    "source": "Mitsubishi Electric PAC-YT53CRAU Simple MA Remote Controller Instruction Book (WT06428X01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press ON/OFF - it starts and stops the unit. The lamp is green while running."
+    ],
+    "notes": [
+     "MODE steps through Cool, Heat, Auto, Fan, Drying, Setback and Venti. (what shows depends on the indoor unit)."
+    ],
+    "source": "Mitsubishi Electric PAC-YT53CRAU Simple MA Remote Controller Instruction Book (WT06428X01)"
+   }
+  ],
+  "mdd-par4x": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "On the Main display: F1 changes the operation mode, F2 lowers and F3 raises the set temperature, F4 changes the fan speed.",
+     "Press MENU for the Main menu; F2 / F3 move the cursor left / right. Pick an item and press SELECT (SELECT/HOLD on PAR-41 / 42).",
+     "MENU goes back to the Main menu; RETURN goes back one screen."
+    ],
+    "source": "Mitsubishi Electric MA Remote Controller Instruction Books: PAR-40MAAU (WT09033X01), PAR-41MAAU (WT10443X02), PAR-42MAAUB (WT10682X01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Main menu > Timer menu > Weekly timer, press SELECT. F1 / F2 show each day; press SELECT to go to the settings.",
+     "Under Action pick 1 or 2 (two weekly schedules can be stored) with F3 / F4 and press SELECT.",
+     "Move to the day with F1 / F2, press F3 to pick it (more than one day can be picked), press SELECT.",
+     "F1 picks the pattern (up to 8 a day), F2 moves between time, On/Off and temperature, F3 / F4 change it. Press SELECT to save."
+    ],
+    "notes": [
+     "The clock must be set. The weekly timer does not run while the On/Off timer or HOLD is on, or under central control."
+    ],
+    "source": "Mitsubishi Electric MA Remote Controller Instruction Books: PAR-40MAAU (WT09033X01), PAR-41MAAU (WT10443X02), PAR-42MAAUB (WT10682X01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "On the Main display press SELECT/HOLD to turn HOLD on - it blocks the weekly timer, On/Off timer, Auto-Off timer and auto-return."
+    ],
+    "source": "Mitsubishi Electric MA Remote Controller Instruction Books: PAR-40MAAU (WT09033X01), PAR-41MAAU (WT10443X02), PAR-42MAAUB (WT10682X01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press SELECT/HOLD again to turn HOLD off."
+    ],
+    "source": "Mitsubishi Electric MA Remote Controller Instruction Books: PAR-40MAAU (WT09033X01), PAR-41MAAU (WT10443X02), PAR-42MAAUB (WT10682X01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press ON/OFF. The green lamp goes out and the unit stops. Press it again to start."
+    ],
+    "source": "Mitsubishi Electric MA Remote Controller Instruction Books: PAR-40MAAU (WT09033X01), PAR-41MAAU (WT10443X02), PAR-42MAAUB (WT10682X01)"
+   }
+  ],
+  "mdd-ct01": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch the screen to wake it (Status display, then Main display).",
+     "Main display: the left / right arrow buttons pick the item (set temperature, mode, fan, vane, ventilation, louver); the up / down arrows change it. There is a fan-speed shortcut and a HOLD button.",
+     "Press the Setting button for the Main menu (may ask for the administrator password if the menu is locked). F2 / F3 move the cursor, SELECT saves, RETURN goes back, MENU returns to the Main menu."
+    ],
+    "source": "Mitsubishi Electric PAR-CT01MAU-SB MA Touch Remote Controller Instruction Book (WT08631X01)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Main menu > Timer menu > Weekly timer, press SELECT. F1 / F2 show each day; press SELECT for the settings.",
+     "Under Action pick 1 or 2 with F3 / F4 and press SELECT. Move to the day with F1 / F2, press F3 to pick it, press SELECT.",
+     "F1 picks the pattern (up to 8 a day), F2 moves between time, On/Off and temperature, F3 / F4 change it. Press SELECT to save."
+    ],
+    "notes": [
+     "The clock must be set. The weekly timer does not run while the On/Off timer or HOLD is on."
+    ],
+    "source": "Mitsubishi Electric PAR-CT01MAU-SB MA Touch Remote Controller Instruction Book (WT08631X01)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press the HOLD button to turn HOLD on - it blocks the weekly timer, On/Off timer, Auto-Off timer and auto-return."
+    ],
+    "source": "Mitsubishi Electric PAR-CT01MAU-SB MA Touch Remote Controller Instruction Book (WT08631X01)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press HOLD again to turn it off."
+    ],
+    "source": "Mitsubishi Electric PAR-CT01MAU-SB MA Touch Remote Controller Instruction Book (WT08631X01)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the ON/OFF button. The green lamp goes out and the unit stops. Press it again to start."
+    ],
+    "source": "Mitsubishi Electric PAR-CT01MAU-SB MA Touch Remote Controller Instruction Book (WT08631X01)"
+   }
+  ],
+  "mdd-madoka": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: ON/OFF, the centre SELECT/ACTIVATE/SET button, and the two NAVIGATE/ADJUST buttons (left / minus and right / plus) around the ring.",
+     "From the home screen press SELECT for the user menu (operation mode, fan speed, airflow, LED brightness, F/C). Use the NAVIGATE buttons to move and SELECT to open or apply.",
+     "Pick Return to leave, or wait about 5 seconds and it goes back to the home screen."
+    ],
+    "source": "Daikin BRC1H71W Wired Remote Controller Operation Manual (3P, EM19A027) and Operation Handbook (3P607381-1)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "With the unit running in Cool, Heat or Auto, press either NAVIGATE/ADJUST button - Set shows - then adjust the set point. It cannot be changed while the unit is off."
+    ],
+    "source": "Daikin BRC1H71W Wired Remote Controller Operation Manual (3P, EM19A027) and Operation Handbook (3P607381-1)"
+   },
+   {
+    "title": "Change the operation mode",
+    "steps": [
+     "Press SELECT, open Operation Mode, pick Auto, Cool, Heat, Fan or Dry (depends on the unit) and press SELECT."
+    ],
+    "source": "Daikin BRC1H71W Wired Remote Controller Operation Manual (3P, EM19A027) and Operation Handbook (3P607381-1)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "The controller only does basic operation. The manual sends advanced settings (setback and the like) to the mobile app; it gives no schedule steps on the controller."
+    ],
+    "source": "Daikin BRC1H71W Wired Remote Controller Operation Manual (3P, EM19A027) and Operation Handbook (3P607381-1)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press ON/OFF to turn the system off; press it again to turn it on. The ring lights blue while running."
+    ],
+    "source": "Daikin BRC1H71W Wired Remote Controller Operation Manual (3P, EM19A027) and Operation Handbook (3P607381-1)"
+   }
+  ],
+  "mdd-onelite": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Four buttons: mode, fan, warmer (up) and cooler (down).",
+     "Menus are reached by holding button pairs for 2 seconds: fan + warmer = schedule, fan + cooler = Away settings, hold fan alone = fan settings. In a menu, mode steps to the next setting.",
+     "Hold mode for 2 seconds to go back to the home screen (it also goes back on its own after 2 minutes)."
+    ],
+    "notes": [
+     "The guide says the SkyportHome app is the easier way to do all of this."
+    ],
+    "source": "Daikin ONE lite Connected Thermostat Homeowner Guide (HG-ONELITE 09-25)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Hold fan + warmer for 2 seconds. Press mode to move on; warmer / cooler turns the schedule on or off; press mode.",
+     "Pick the day with warmer / cooler, press mode.",
+     "For each event (morning, day, evening, night): turn it on with warmer / cooler, then set the start time (15-minute steps), the cool set point and the heat set point, pressing mode after each.",
+     "After the night event press mode, then either pick another day or press warmer to copy this day to other days.",
+     "Hold mode 2 seconds to leave."
+    ],
+    "notes": [
+     "Up to 4 events a day, repeating weekly."
+    ],
+    "source": "Daikin ONE lite Connected Thermostat Homeowner Guide (HG-ONELITE 09-25)"
+   },
+   {
+    "title": "Turn the schedule off",
+    "steps": [
+     "Hold fan + warmer for 2 seconds, press mode, then use warmer / cooler to turn the schedule off. Hold mode 2 seconds to leave."
+    ],
+    "source": "Daikin ONE lite Connected Thermostat Homeowner Guide (HG-ONELITE 09-25)"
+   },
+   {
+    "title": "Temporary change (until the next schedule event)",
+    "steps": [
+     "With the schedule on, press warmer or cooler - the new set point stays until the next schedule event, then the schedule takes over again."
+    ],
+    "notes": [
+     "The guide describes no permanent hold on the thermostat."
+    ],
+    "source": "Daikin ONE lite Connected Thermostat Homeowner Guide (HG-ONELITE 09-25)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press mode to step through the modes until Off shows. In Off the warmer / cooler buttons do nothing."
+    ],
+    "source": "Daikin ONE lite Connected Thermostat Homeowner Guide (HG-ONELITE 09-25)"
+   }
+  ],
+  "mdd-nav": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Basic screen: Mode button changes the mode, Fan Speed button the fan, up / down arrows the set point.",
+     "Press Menu/OK for the Main menu (Airflow Direction, Ventilation, Schedule, Off Timer, and more). Arrows pick an item, Menu/OK opens it, Cancel goes back to the basic screen."
+    ],
+    "source": "Daikin BRC1E73 Wired Remote Controller Operation Manual (3P243520, EM14A016)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Main menu > Schedule > Menu/OK (set the clock first if it asks).",
+     "Daily Patterns: pick 7 Days, Weekday/Weekend, Weekday/Sat/Sun or Everyday, Menu/OK, Yes.",
+     "Settings: pick the day with the arrows. For each line set the time, then ON (start, with cool and heat set points) or OFF (stop, with setback set points) or --. Up to 5 actions a day.",
+     "Press Menu/OK when the day is done and choose Yes to save."
+    ],
+    "source": "Daikin BRC1E73 Wired Remote Controller Operation Manual (3P243520, EM14A016)"
+   },
+   {
+    "title": "Turn the schedule off",
+    "steps": [
+     "Main menu > Schedule > Enable/Disable, pick Disable, Menu/OK, then Yes."
+    ],
+    "source": "Daikin BRC1E73 Wired Remote Controller Operation Manual (3P243520, EM14A016)"
+   },
+   {
+    "title": "Go back to the schedule",
+    "steps": [
+     "Main menu > Schedule > Enable/Disable, pick Enable, Menu/OK, then Yes."
+    ],
+    "source": "Daikin BRC1E73 Wired Remote Controller Operation Manual (3P243520, EM14A016)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press On/Off. The green lamp goes out and the unit stops (in heat the fan runs about a minute more). Press again to start."
+    ],
+    "source": "Daikin BRC1E73 Wired Remote Controller Operation Manual (3P243520, EM14A016)"
+   }
+  ]
+ },
+ "use": {
+  "tst-mitsubishi-par-30maau": [
+   {
+    "set": "mdd-par30"
+   }
+  ],
+  "tst-mitsubishi-par-21maau": [
+   {
+    "set": "mdd-par21",
+    "note": "From Mitsubishi USA's PAR-21MAA technical manual and how-to guide, both listed on the PAR-21MAAU product page."
+   }
+  ],
+  "tst-mitsubishi-pac-yt53crau": [
+   {
+    "set": "mdd-yt53"
+   }
+  ],
+  "tst-mitsubishi-par-40maau": [
+   {
+    "set": "mdd-par4x"
+   }
+  ],
+  "tst-mitsubishi-par-41maau-42maaub": [
+   {
+    "set": "mdd-par4x"
+   }
+  ],
+  "tst-mitsubishi-par-ct01mau-sb": [
+   {
+    "set": "mdd-ct01"
+   }
+  ],
+  "tst-daikin-brc1h71w-madoka": [
+   {
+    "set": "mdd-madoka"
+   }
+  ],
+  "tst-daikin-one-lite": [
+   {
+    "set": "mdd-onelite"
+   }
+  ],
+  "tst-daikin-brc1e73-navigation": [
+   {
+    "set": "mdd-nav"
+   }
+  ]
+ }
+});
+// add-deep-whiterodgers.js
+tstatHowtoAdd({
+ "sets": {
+  "wrd-1f95-0671": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons named in the guide: SYSTEM, FAN, Menu, Schedule, Time, HOLD, Run Schedule (RunSched), Copy, Advance Day, Auto Sched and the up / down arrows.",
+     "Press Menu to reach Schedule, Time and Fan programming; press Run Schedule to go back to normal operation."
+    ],
+    "notes": [
+     "Holding Menu 5 seconds or more opens the installer / configuration menu - not an owner menu."
+    ],
+    "source": "White-Rodgers 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions (0037-6979)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SYSTEM to pick Heat - the heating and cooling programs are entered separately.",
+     "Press Menu, then Schedule. The day(s) and first period show with the time flashing.",
+     "Set the period start time with up / down (15-minute steps), press the time button (the guide calls it System Time) so the temperature flashes, then set the temperature with up / down.",
+     "Press Schedule for the next period; after the last period Schedule moves to the next day.",
+     "When all days are done press Run Schedule.",
+     "Press SYSTEM until Cool shows and repeat for the cooling program."
+    ],
+    "notes": [
+     "Copy key: in Set Schedule, press Copy, use Advance Day to pick the day(s), press Copy again, then RunSched.",
+     "Set the clock first: Menu, then Time; up / down for hour, minutes, year, month and date; RunSched to finish."
+    ],
+    "source": "White-Rodgers 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions (0037-6979)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Set the temperature you want, then press HOLD.",
+     "The held temperature stays day and night until it is changed by hand or Run Schedule is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down is a temporary override for a two-hour period, then the program takes over again."
+    ],
+    "source": "White-Rodgers 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions (0037-6979)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Run Schedule. This ends a HOLD or a temporary override and resumes the program."
+    ],
+    "source": "White-Rodgers 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions (0037-6979)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM until Off is selected - heating and cooling are off. (Other choices: Heat, Cool, Auto, and Em on heat pump setups.)"
+    ],
+    "source": "White-Rodgers 1F95-0671 Blue Universal Thermostat Installation and Operating Instructions (0037-6979)"
+   }
+  ],
+  "wrd-1e78": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Up arrow raises and down arrow lowers the set temperature.",
+     "SYSTEM switch: COOL, OFF, HEAT. FAN switch: ON, AUTO. (Heat-only 1E78 version: SYSTEM switch OFF, HEAT and no fan switch.)"
+    ],
+    "source": "White-Rodgers 1E78 Installation Instructions (37-6599 heat/cool 1E78-144; 37-6620 heat-only 1E78)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Move the SYSTEM switch to HEAT or COOL.",
+     "Press up or down until the display shows the temperature wanted - the thermostat keeps the room there."
+    ],
+    "notes": [
+     "Heating and cooling set points are both stored, so nothing needs re-entering each season."
+    ],
+    "source": "White-Rodgers 1E78 Installation Instructions (37-6599 heat/cool 1E78-144; 37-6620 heat-only 1E78)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. The thermostat holds whatever temperature is set."
+    ],
+    "source": "White-Rodgers 1E78 Installation Instructions (37-6599 heat/cool 1E78-144; 37-6620 heat-only 1E78)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the SYSTEM switch to OFF. The set temperature display goes blank."
+    ],
+    "source": "White-Rodgers 1E78 Installation Instructions (37-6599 heat/cool 1E78-144; 37-6620 heat-only 1E78)"
+   }
+  ],
+  "wrd-1f86": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Up / down buttons change the set temperature.",
+     "SYSTEM switch: COOL, OFF, HEAT. FAN switch: ON, AUTO (Auto cycles the fan with the system, On runs it all the time)."
+    ],
+    "source": "White-Rodgers 1F86-344 Installation and Operation Instructions (37-6585) / 1F86-0244 Installation and Operating Instructions (37-7010)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Set the SYSTEM switch to HEAT or COOL.",
+     "Press up or down until the wanted temperature shows."
+    ],
+    "source": "White-Rodgers 1F86-344 Installation and Operation Instructions (37-6585) / 1F86-0244 Installation and Operating Instructions (37-7010)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. The thermostat holds the temperature that is set."
+    ],
+    "source": "White-Rodgers 1F86-344 Installation and Operation Instructions (37-6585) / 1F86-0244 Installation and Operating Instructions (37-7010)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the SYSTEM switch to OFF (the set temperature goes blank)."
+    ],
+    "notes": [
+     "With the FAN switch on ON the fan keeps running even with the system off."
+    ],
+    "source": "White-Rodgers 1F86-344 Installation and Operation Instructions (37-6585) / 1F86-0244 Installation and Operating Instructions (37-7010)"
+   }
+  ],
+  "wrd-80-runhold": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: up / down, TIME, PRGM (program) and RUN/HOLD. Switches: SYSTEM (COOL, OFF, HEAT, EMER) and FAN (ON, AUTO)."
+    ],
+    "source": "White-Rodgers Blue 2 inch 1F80-0224 (37-7014) and 1F80-0261 (37-7009) Installation and Operating Instructions"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Move the SYSTEM switch to HEAT.",
+     "Press PRGM. The first heating period shows with its start time and the temperature flashing.",
+     "Set the temperature with up / down. Press TIME (time flashes), set the start time with up / down (15-minute steps), press TIME again.",
+     "Press PRGM for the next period and repeat for all four periods (on the 1F80-0261, PRGM then steps on to Saturday and Sunday).",
+     "Press RUN/HOLD when done.",
+     "Move the SYSTEM switch to COOL and enter the cooling program the same way."
+    ],
+    "notes": [
+     "Set the clock first: TIME, then up / down for hour, minutes and day; RUN/HOLD to finish."
+    ],
+    "source": "White-Rodgers Blue 2 inch 1F80-0224 (37-7014) and 1F80-0261 (37-7009) Installation and Operating Instructions"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "With the SYSTEM switch on HEAT or COOL, press RUN/HOLD briefly. HOLD shows.",
+     "Set the temperature with up / down - it is held until RUN/HOLD is pressed again."
+    ],
+    "notes": [
+     "Pressing only up / down is a temporary hold for 2 hours or until the next program period."
+    ],
+    "source": "White-Rodgers Blue 2 inch 1F80-0224 (37-7014) and 1F80-0261 (37-7009) Installation and Operating Instructions"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN/HOLD to start program operation again."
+    ],
+    "source": "White-Rodgers Blue 2 inch 1F80-0224 (37-7014) and 1F80-0261 (37-7009) Installation and Operating Instructions"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the SYSTEM switch to OFF (the set temperature goes blank)."
+    ],
+    "source": "White-Rodgers Blue 2 inch 1F80-0224 (37-7014) and 1F80-0261 (37-7009) Installation and Operating Instructions"
+   }
+  ],
+  "wrd-80-run-hold": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: up / down, TIME, PRGM (program), RUN (run program) and HOLD. Switches: SYSTEM (COOL, OFF, HEAT; heat-only 1F80-240: OFF, HEAT) and FAN (ON, AUTO)."
+    ],
+    "source": "White-Rodgers 1F80-361 (37-6621), 1F87-361 (37-6763), 1F80-224 (37-6350C), 1F80-240 (37-6325B) Installation and Operation Instructions"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Move the SYSTEM switch to HEAT.",
+     "Press PRGM. The first heating period shows with its start time and the temperature flashing.",
+     "Set the temperature with up / down. Press TIME (time flashes), set the start time with up / down (15-minute steps), press TIME again.",
+     "Press PRGM for the 2nd, 3rd and 4th periods and repeat.",
+     "1F80-361 / 1F80-240: PRGM then moves on to SA and SU. 1F87-361: press HOLD to move to the next day.",
+     "Press RUN when done. Move the SYSTEM switch to COOL and enter the cooling program the same way."
+    ],
+    "notes": [
+     "1F80-224 has one 24-hour program used every day.",
+     "Set the clock first: TIME, then up / down for hour, minutes and day; RUN to finish."
+    ],
+    "source": "White-Rodgers 1F80-361 (37-6621), 1F87-361 (37-6763), 1F80-224 (37-6350C), 1F80-240 (37-6325B) Installation and Operation Instructions"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD briefly. HOLD shows.",
+     "Set the temperature with up / down - it is held until RUN is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down overrides until the next program period.",
+     "1F80-361 / 1F87-361 / 1F80-240: if a temporary hold time is set in the configuration menu, holding HOLD about five seconds starts a timed hold (HOLD blinks) that ends by itself."
+    ],
+    "source": "White-Rodgers 1F80-361 (37-6621), 1F87-361 (37-6763), 1F80-224 (37-6350C), 1F80-240 (37-6325B) Installation and Operation Instructions"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN to start program operation again."
+    ],
+    "source": "White-Rodgers 1F80-361 (37-6621), 1F87-361 (37-6763), 1F80-224 (37-6350C), 1F80-240 (37-6325B) Installation and Operation Instructions"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the SYSTEM switch to OFF (the set temperature goes blank)."
+    ],
+    "source": "White-Rodgers 1F80-361 (37-6621), 1F87-361 (37-6763), 1F80-224 (37-6350C), 1F80-240 (37-6325B) Installation and Operation Instructions"
+   }
+  ],
+  "wrd-80-71": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Up / down arrows on the front; behind the door at the bottom: SET TIME, VIEW PRGM, RUN PRGM, HOLD TEMP, the SYSTEM button (COOL, OFF, HEAT, AUTO) and the FAN switch (ON, AUTO)."
+    ],
+    "source": "White-Rodgers 1F80-71 Installation and Operation Instructions (37-6120A)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SYSTEM until HEAT shows.",
+     "Press VIEW PRGM. MO TU WE TH FR shows with the first period's start time and flashing temperature.",
+     "Set the temperature with up / down. Press SET TIME (time flashes), set the start time with up / down (15-minute steps), press SET TIME again.",
+     "Press VIEW PRGM for the next period; after four weekday periods it moves to SA SU for the weekend.",
+     "Press RUN PRGM when done. Press SYSTEM until COOL shows and enter the cooling program the same way."
+    ],
+    "source": "White-Rodgers 1F80-71 Installation and Operation Instructions (37-6120A)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press HOLD TEMP. HOLD shows.",
+     "Set the temperature with up / down - it is held until RUN PRGM is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down overrides until the next program period."
+    ],
+    "source": "White-Rodgers 1F80-71 Installation and Operation Instructions (37-6120A)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN PRGM."
+    ],
+    "source": "White-Rodgers 1F80-71 Installation and Operation Instructions (37-6120A)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the SYSTEM button until the system is OFF (the set temperature goes blank)."
+    ],
+    "source": "White-Rodgers 1F80-71 Installation and Operation Instructions (37-6120A)"
+   }
+  ],
+  "wrd-0471-pr": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Buttons: SYSTEM, FAN, HOLD, the MENU / SCHEDULE / RUN button and up / down.",
+     "Press Menu to get Time and Schedule; press Run (Run Schedule) to leave and go back to normal operation."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SYSTEM to select Heat.",
+     "Press Menu, then Schedule. The day(s), period 1, time and flashing temperature show.",
+     "Set the temperature with up / down. Press Time (time flashes) and set the start time with up / down (15-minute steps).",
+     "Press Schedule for the next period; after the last period Schedule moves on to the next day.",
+     "Press Run Schedule when finished.",
+     "Press SYSTEM to select Cool and enter the cooling program the same way."
+    ],
+    "notes": [
+     "Set the clock: Menu, then Time; up / down for hour, minutes and day; Run to exit."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Press up or down and the HOLD button, then set the temperature.",
+     "That temperature is kept around the clock until it is changed by hand or Run Schedule is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down overrides until the next program time."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Run Schedule."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM until Off is selected - heating and cooling are off."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   }
+  ],
+  "wrd-0471-np": [
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Press SYSTEM to select Heat or Cool, then set the temperature with up / down.",
+     "Auto (if offered) lets the thermostat change between heat and cool by itself."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable (1F86-0471, or a 1F80-0471 set to non-programmable): there is no schedule."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM until Off is selected."
+    ],
+    "source": "White-Rodgers Blue Selecto 1F80-0471 / 1F86-0471 Installation and Operating Instructions (37-7248A; earlier 37-6749D)"
+   }
+  ],
+  "wrd-1f56n": [
+   {
+    "title": "Get around the controls",
+    "steps": [
+     "Mechanical thermostat: a system switch (COOL, OFF, HEAT), a fan switch (AUTO, ON) and a temperature setting lever."
+    ],
+    "source": "White-Rodgers 1F56N-444 / 1E56N-444 Snap-Action Installation Instructions (37-6881)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Use the system switch to pick heating or cooling.",
+     "Move the temperature lever above room temperature for heat, below it for cooling."
+    ],
+    "notes": [
+     "Fan AUTO runs the fan with heating / cooling; ON runs it all the time, even with the system switch on OFF."
+    ],
+    "source": "White-Rodgers 1F56N-444 / 1E56N-444 Snap-Action Installation Instructions (37-6881)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Mechanical, non-programmable: there is no schedule and no hold - it keeps the lever setting."
+    ],
+    "source": "White-Rodgers 1F56N-444 / 1E56N-444 Snap-Action Installation Instructions (37-6881)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the system switch to OFF (put the fan switch on AUTO so the fan stops too)."
+    ],
+    "source": "White-Rodgers 1F56N-444 / 1E56N-444 Snap-Action Installation Instructions (37-6881)"
+   }
+  ],
+  "wrd-1f75-pr": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Fan switch and System switch on the thermostat; buttons for Set Time, Hold / Run, programming (PRGM), menu options and up / down."
+    ],
+    "source": "White-Rodgers 1F75C-11PR (37-7841) / 1F75H-21PR (37-7843) Installation and Operating Instructions"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Move the SYSTEM switch to HEAT.",
+     "Press PRGM once: weekday program (Mo-Fr) shows with the first period's start time and flashing temperature.",
+     "Set the temperature with up / down. Press PROGRAM (time flashes), set the time with up / down (15-minute steps), press PROGRAM again.",
+     "Press PROGRAM for the next period; after four periods it moves to SA, then SU.",
+     "Press RUN/HOLD when done. Move the SYSTEM switch to COOL and enter the cooling program the same way."
+    ],
+    "notes": [
+     "Factory default is 5-1-1 day; can be set to 7-day or non-programmable in the installer menu."
+    ],
+    "source": "White-Rodgers 1F75C-11PR (37-7841) / 1F75H-21PR (37-7843) Installation and Operating Instructions"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "With the System switch on Heat or Cool, press Hold briefly. Hold shows.",
+     "Set the temperature with up / down - it is held until Run is pressed."
+    ],
+    "notes": [
+     "Pressing only up / down overrides until the next program period, at least 2 hours."
+    ],
+    "source": "White-Rodgers 1F75C-11PR (37-7841) / 1F75H-21PR (37-7843) Installation and Operating Instructions"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press Run."
+    ],
+    "source": "White-Rodgers 1F75C-11PR (37-7841) / 1F75H-21PR (37-7843) Installation and Operating Instructions"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the System switch to OFF."
+    ],
+    "source": "White-Rodgers 1F75C-11PR (37-7841) / 1F75H-21PR (37-7843) Installation and Operating Instructions"
+   }
+  ],
+  "wrd-1f75-np": [
+   {
+    "title": "Get around the controls",
+    "steps": [
+     "Fan switch (On, Auto), System switch (Off, Heat, Cool; 1F75H-21NP also Aux) and up / down buttons for the set temperature."
+    ],
+    "source": "White-Rodgers 1F75C-11NP (37-7840) / 1F75H-21NP (37-7842) Installation and Operating Instructions"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Move the System switch to Heat or Cool and press up / down to the wanted temperature."
+    ],
+    "source": "White-Rodgers 1F75C-11NP (37-7840) / 1F75H-21NP (37-7842) Installation and Operating Instructions"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule."
+    ],
+    "source": "White-Rodgers 1F75C-11NP (37-7840) / 1F75H-21NP (37-7842) Installation and Operating Instructions"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the System switch to OFF."
+    ],
+    "source": "White-Rodgers 1F75C-11NP (37-7840) / 1F75H-21NP (37-7842) Installation and Operating Instructions"
+   }
+  ],
+  "wrd-easy-set": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Up / down buttons, preset buttons Home, Sleep and Away, a SYSTEM switch (COOL, OFF, HEAT; 1F89EZ-0251 also EMER) and a FAN switch (ON, AUTO)."
+    ],
+    "source": "White-Rodgers / Copeland Blue Easy Set 1F86EZ-0251 (37-7201) / 1F89EZ-0251 (37-7208) Installation and Operation Instructions"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Set the SYSTEM switch to HEAT or COOL and use up / down for the temperature, or",
+     "press Home, Sleep or Away - the thermostat keeps that preset until up / down or another preset is pressed."
+    ],
+    "source": "White-Rodgers / Copeland Blue Easy Set 1F86EZ-0251 (37-7201) / 1F89EZ-0251 (37-7208) Installation and Operation Instructions"
+   },
+   {
+    "title": "Change the Home / Sleep / Away presets",
+    "steps": [
+     "Move the SYSTEM switch to HEAT.",
+     "Set the temperature with up / down.",
+     "Press and hold Home, Sleep or Away for 3 seconds - the display blanks and comes back when the preset is saved.",
+     "Repeat for the other presets, then move the SYSTEM switch to COOL and do the cooling presets."
+    ],
+    "notes": [
+     "If the Sleep Timer is turned on, Sleep goes back to Home after the set number of hours (default 8)."
+    ],
+    "source": "White-Rodgers / Copeland Blue Easy Set 1F86EZ-0251 (37-7201) / 1F89EZ-0251 (37-7208) Installation and Operation Instructions"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no time schedule - only the Home, Sleep and Away presets."
+    ],
+    "source": "White-Rodgers / Copeland Blue Easy Set 1F86EZ-0251 (37-7201) / 1F89EZ-0251 (37-7208) Installation and Operation Instructions"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the SYSTEM switch to OFF (the set temperature goes blank)."
+    ],
+    "source": "White-Rodgers / Copeland Blue Easy Set 1F86EZ-0251 (37-7201) / 1F89EZ-0251 (37-7208) Installation and Operation Instructions"
+   }
+  ],
+  "wrd-sensi-lite": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "No touchscreen: up arrow, down arrow and a menu button shown as three dots.",
+     "Tap the three dots to step through the modes (Heat, Cool, Aux, Off). Auto mode is only turned on in the Sensi app."
+    ],
+    "notes": [
+     "A padlock when the three dots are pressed means Keypad Lockout is on - unlock it in the app."
+    ],
+    "source": "Sensi support articles (sensi.copeland.com: Hold one temperature; Auto Mode; Reset; Buttons not responding) and Sensi Lite Pro Install Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "The Sensi Lite schedule is set only in the Sensi app - not at the wall."
+    ],
+    "source": "Sensi support articles (sensi.copeland.com: Hold one temperature; Auto Mode; Reset; Buttons not responding) and Sensi Lite Pro Install Guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "In the Sensi app: tap the thermostat name, tap Scheduling, and under Schedule Type pick No Schedule.",
+     "Then set the temperature with the up / down arrows."
+    ],
+    "source": "Sensi support articles (sensi.copeland.com: Hold one temperature; Auto Mode; Reset; Buttons not responding) and Sensi Lite Pro Install Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Tap the three dots until Off is selected."
+    ],
+    "notes": [
+     "Changing the mode at the thermostat turns Auto Mode off; set Auto again in the app if wanted."
+    ],
+    "source": "Sensi support articles (sensi.copeland.com: Hold one temperature; Auto Mode; Reset; Buttons not responding) and Sensi Lite Pro Install Guide"
+   }
+  ]
+ },
+ "use": {
+  "tst-wr-1f95-0671": [
+   {
+    "set": "wrd-1f95-0671"
+   }
+  ],
+  "tst-wr-1e78": [
+   {
+    "set": "wrd-1e78"
+   }
+  ],
+  "tst-wr-1f86": [
+   {
+    "set": "wrd-1f86"
+   }
+  ],
+  "tst-wr-80-series-1f80": [
+   {
+    "set": "wrd-80-runhold",
+    "label": "Blue 2 inch 1F80-0224 / 1F80-0261 (one RUN/HOLD button)"
+   },
+   {
+    "set": "wrd-80-run-hold",
+    "label": "1F80-361 / 1F87-361 / 1F80-224 / 1F80-240 (separate RUN and HOLD buttons)"
+   },
+   {
+    "set": "wrd-80-71",
+    "label": "1F80-71 (SYSTEM button, VIEW PRGM / RUN PRGM / HOLD TEMP behind the door)"
+   }
+  ],
+  "tst-wr-1f80-1f86-0471-selecto": [
+   {
+    "set": "wrd-0471-pr",
+    "label": "1F80-0471 / 1F80ST-0471 (programmable)"
+   },
+   {
+    "set": "wrd-0471-np",
+    "label": "1F86-0471 / 1F86ST-0471 (non-programmable)"
+   }
+  ],
+  "tst-wr-1f56n-444": [
+   {
+    "set": "wrd-1f56n"
+   }
+  ],
+  "tst-wr-1f75": [
+   {
+    "set": "wrd-1f75-pr",
+    "label": "1F75C-11PR / 1F75H-21PR (programmable)"
+   },
+   {
+    "set": "wrd-1f75-np",
+    "label": "1F75C-11NP / 1F75H-21NP (non-programmable)"
+   }
+  ],
+  "tst-wr-blue-easy-set": [
+   {
+    "set": "wrd-easy-set"
+   }
+  ],
+  "tst-sensi-lite": [
+   {
+    "set": "wrd-sensi-lite",
+    "note": "Sensi publishes no Lite operation guide; steps are from Sensi's own support articles and the Lite pro install guide."
+   }
+  ]
+ }
+});
+// add-deep-trane.js
+tstatHowtoAdd({
+ "sets": {
+  "trd-tcont600": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The up / down buttons change the temperature setting; HOLD overrides the schedule; the buttons under the display do whatever is shown just above each one (it changes with the task).",
+     "SYSTEM picks Heat, Cool, Off, Auto or Em Heat (Auto and Em Heat only show if the control was set up for them). FAN picks Auto or On.",
+     "Set the clock: press SET CLOCK/DAY/SCHEDULE and set the time with the arrows, press SET DAY and pick the day, then press DONE."
+    ],
+    "source": "Trane TCONT600AF11MA / TCONT602AF22MA Programmable Comfort Control Owner's Guide (Pub. 22-5208; copy printed 05/05)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set SYSTEM to the mode you are programming (Heat or Cool).",
+     "Press SET CLOCK/DAY/SCHEDULE, then SET SCHEDULE.",
+     "Set the weekday (Mon-Fri) Wake time with the arrows and press NEXT; set the Wake temperature and press NEXT.",
+     "Repeat for Leave, Return and Sleep. Press NEXT to set the weekend (Sat-Sun) periods the same way, then press DONE to save.",
+     "CANCEL PERIOD removes a period you do not want (every period except Wake)."
+    ],
+    "notes": [
+     "Four periods a day, with one schedule for weekdays and one for the weekend.",
+     "Back to the factory Energy Star schedule: SET CLOCK/DAY/SCHEDULE > SET SCHEDULE, then hold DONE and NEXT together for 4 seconds."
+    ],
+    "source": "Trane TCONT600AF11MA / TCONT602AF22MA Programmable Comfort Control Owner's Guide (Pub. 22-5208; copy printed 05/05)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Until the next period: press the up / down buttons. The new temperature is kept only until the next scheduled period starts.",
+     "Permanently: press HOLD and set the temperature. It is kept day and night until someone changes it or presses RUN SCHEDULE."
+    ],
+    "source": "Trane TCONT600AF11MA / TCONT602AF22MA Programmable Comfort Control Owner's Guide (Pub. 22-5208; copy printed 05/05)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press RUN SCHEDULE. This cancels a temporary change or a Hold."
+    ],
+    "source": "Trane TCONT600AF11MA / TCONT602AF22MA Programmable Comfort Control Owner's Guide (Pub. 22-5208; copy printed 05/05)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM until Off shows - heating and cooling are both off."
+    ],
+    "source": "Trane TCONT600AF11MA / TCONT602AF22MA Programmable Comfort Control Owner's Guide (Pub. 22-5208; copy printed 05/05)"
+   }
+  ],
+  "trd-tcont800": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen keys: FAN (On / Auto / Circ), SYSTEM (Em Heat / Heat / Off / Cool / Auto), SCHED (scheduling), HOLD (permanent and vacation hold), CLOCK (set the time), SCREEN (locks the touch keys for cleaning), MORE on some models (extra system information), and the up / down arrows for the set temperature.",
+     "Set the time: press CLOCK, set it with the arrows, press DONE."
+    ],
+    "notes": [
+     "Press the keys with a fingertip only - a pen or other sharp point can damage the screen."
+    ],
+    "source": "Trane TCONT800 Series Touch Screen Programmable Comfort Control Owner's Guide (22-5207-01 / 69-1791)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT.",
+     "Touch the day(s) to program - several days can be picked at once and get the same times and temperatures (check marks show the picked days).",
+     "Press WAKE, then use the up / down arrows to set its start time and its heat and cool temperatures. The fan (On / Auto / Circ) can also be set for each period with the FAN key.",
+     "Do the same for LEAVE, RETURN and SLEEP, then press DONE - Saving Changes shows. Repeat for the days not yet programmed.",
+     "CANCEL leaves without saving. To drop a period: SCHED > EDIT, pick the day(s), touch the period, press CANCEL PERIOD, then DONE."
+    ],
+    "notes": [
+     "Up to 4 periods a day (Wake, Leave, Return, Sleep); times move in 15-minute steps."
+    ],
+    "source": "Trane TCONT800 Series Touch Screen Programmable Comfort Control Owner's Guide (22-5207-01 / 69-1791)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Until a set time: press the up / down arrow beside the temperature - Hold Temperature Until shows, ending at the next period by default. Use the arrows beside the time to change when the schedule resumes.",
+     "Permanently: press HOLD (Permanent Hold shows), then set the temperature with the arrows.",
+     "Vacation: set the temperature with the arrows, press HOLD twice, then set the number of days with the arrows.",
+     "To run with no schedule at all: from the home screen press SYSTEM, then press and hold the middle blank key about 5 seconds until User Setup shows; step to setup number 0160 with the arrow beside the setup number, set it to 0 (non-programmable) and press DONE."
+    ],
+    "source": "Trane TCONT800 Series Touch Screen Programmable Comfort Control Owner's Guide (22-5207-01 / 69-1791)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Hold Temperature Until: press CANCEL or SCHED. It also ends by itself at the set time (Following Schedule shows).",
+     "Permanent Hold or Vacation Hold: press CANCEL."
+    ],
+    "source": "Trane TCONT800 Series Touch Screen Programmable Comfort Control Owner's Guide (22-5207-01 / 69-1791)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM and choose Off - heating and cooling are both off."
+    ],
+    "source": "Trane TCONT800 Series Touch Screen Programmable Comfort Control Owner's Guide (22-5207-01 / 69-1791)"
+   }
+  ],
+  "trd-tcont900": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen keys: FAN (On / Auto / Circ), SYSTEM (Em Heat / Heat / Off / Cool / Auto), SCHED (scheduling), HOLD (permanent and vacation hold), CLOCK (set the time), SCREEN (locks the touch keys for cleaning), MORE on some models (extra system information), and the up / down arrows for the set temperature.",
+     "Set the time: press CLOCK, set it with the arrows, press DONE."
+    ],
+    "notes": [
+     "Press the keys with a fingertip only - a pen or other sharp point can damage the screen."
+    ],
+    "source": "Trane TCONT900AC43UA Communicating Programmable Comfort Control Owner's Guide (22-5211-02 / 69-1817-04)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Press SCHED, then EDIT.",
+     "Touch the day(s) to program - several days can be picked at once and get the same times and temperatures (check marks show the picked days).",
+     "Press WAKE, then use the up / down arrows to set its start time and its heat and cool temperatures. The fan (On / Auto / Circ) can also be set for each period with the FAN key.",
+     "Do the same for LEAVE, RETURN and SLEEP, then press DONE - Saving Changes shows. Repeat for the days not yet programmed.",
+     "CANCEL leaves without saving. To drop a period: SCHED > EDIT, pick the day(s), touch the period, press CANCEL PERIOD, then DONE."
+    ],
+    "notes": [
+     "Up to 4 periods a day (Wake, Leave, Return, Sleep); times move in 15-minute steps."
+    ],
+    "source": "Trane TCONT900AC43UA Communicating Programmable Comfort Control Owner's Guide (22-5211-02 / 69-1817-04)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Until a set time: press the up / down arrow beside the temperature - Hold Temperature Until shows, ending at the next period by default. Use the arrows beside the time to change when the schedule resumes.",
+     "Permanently: press HOLD (Permanent Hold shows), then set the temperature with the arrows.",
+     "Vacation: set the temperature with the arrows, press HOLD twice, then set the number of days with the arrows.",
+     "To run with no schedule at all: from the home screen press SYSTEM, then press and hold the middle blank key about 5 seconds until User Setup shows; step to setup number 0160 with the arrow beside the setup number, set it to 0 (non-programmable) and press DONE (the key the screen marks for leaving User Setup)."
+    ],
+    "source": "Trane TCONT900AC43UA Communicating Programmable Comfort Control Owner's Guide (22-5211-02 / 69-1817-04)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Hold Temperature Until: press CANCEL or SCHED. It also ends by itself at the set time (Following Schedule shows).",
+     "Permanent Hold or Vacation Hold: press CANCEL."
+    ],
+    "source": "Trane TCONT900AC43UA Communicating Programmable Comfort Control Owner's Guide (22-5211-02 / 69-1817-04)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press SYSTEM and choose Off - heating and cooling are both off."
+    ],
+    "source": "Trane TCONT900AC43UA Communicating Programmable Comfort Control Owner's Guide (22-5211-02 / 69-1817-04)"
+   }
+  ],
+  "trd-xl950": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Touch a button to open its information or menu. Menu (bottom left of the home screen) opens the menus; the settings (gears) icon in Menu holds time & date, security (PIN lock), 1-Touch Presets and scheduling on / off.",
+     "The three buttons right of Menu are System Mode (Auto / Cooling / Heating / Off), Fan Mode (Auto / On / Circulate) and Air Cleaner Mode.",
+     "Set a temperature: on the setpoint panel touch Heating or Cooling, then raise or lower it.",
+     "1-Touch Presets (Home, Away, Sleep) on the home screen change the set temperatures with one touch; set them up under Menu > settings (gears) > presets icon."
+    ],
+    "notes": [
+     "Most steps in this guide are shown as icon pictures without names; icons are described here by what they show."
+    ],
+    "source": "Trane User's Guide - ComfortLink II XL950 Control (32-5070-05, 04/13)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Turn scheduling on: Menu > settings (gears) icon > the scheduling On/Off icon, and pick Manual Scheduling (or Guided Scheduling, which builds the schedule from a few questions).",
+     "Open the schedule: Menu > the schedule icon (thermometer and clock). Each day shows its periods - Wake, Away, Home and Sleep by default.",
+     "Pick the day(s) to schedule - several days picked together get the same schedule.",
+     "Touch a period, press Time to set when it starts and Temperature to set its heat and cool setpoints. Periods can be added or deleted (up to 6 a day).",
+     "Press Apply when done."
+    ],
+    "source": "Trane User's Guide - ComfortLink II XL950 Control (32-5070-05, 04/13)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Menu > settings (gears) icon > the scheduling On/Off icon, set to Off. Then set the temperature on the setpoint panel or use a 1-Touch Preset (Home / Away / Sleep)."
+    ],
+    "source": "Trane User's Guide - ComfortLink II XL950 Control (32-5070-05, 04/13)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Menu > settings (gears) icon > the scheduling On/Off icon, set to On."
+    ],
+    "source": "Trane User's Guide - ComfortLink II XL950 Control (32-5070-05, 04/13)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch System Mode (first button right of Menu) and choose Off, then Apply."
+    ],
+    "source": "Trane User's Guide - ComfortLink II XL950 Control (32-5070-05, 04/13)"
+   }
+  ],
+  "cad-intelisense": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Four touch buttons: setpoint up and setpoint down (top and bottom of the display), the modes of operation button (lower left) and the fan mode button (lower right).",
+     "The display stays dark until the proximity sensor wakes it or a button is touched; if it was dark, the first touch only wakes it.",
+     "Border colour shows what is running: orange heating, blue cooling, green fan, purple off, yellow utility energy event."
+    ],
+    "notes": [
+     "Schedules, comfort profiles and hold lengths are set in the Carrier SmartHome app (or the my.carrier.com portal), not at the wall."
+    ],
+    "source": "Carrier Smart Thermostat featuring InteliSense TSTATCCIEWF-01 Installation Instructions (TSTATCCIEWF-04SI) - Get to Know and Operational Information pages"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "In the Carrier SmartHome app tap the thermostat, then Schedule (bottom right).",
+     "Pick the day, tap Add Schedule, choose the time and the Comfort Profile (Home, Away, Sleep or Wake), then tap Save. Repeat to build the week.",
+     "To copy a day: pick the day, tap Copy Schedule to Other Days, pick the days, tap Copy Schedule.",
+     "To change a profile's temperatures: Schedule > Manage Comfort Profiles (top right), pick the profile, set heating and cooling, tap Update."
+    ],
+    "notes": [
+     "Each day can have up to 5 changes. The thermostat keeps no backup copy of the schedule: after a power loss it needs the internet again to follow it."
+    ],
+    "source": "Carrier Smart Thermostat featuring InteliSense TSTATCCIEWF-01 Installation Instructions (TSTATCCIEWF-04SI) - Get to Know and Operational Information pages; Carrier SmartHome app help center (help.smarthome.carrier.com): Set Schedule, Copy Schedule, Change Comfort Profile, Setting a Hold"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "At the thermostat: change the temperature with the setpoint up / down buttons. This overrides the schedule for 4 hours, then the schedule resumes.",
+     "In the app: change the temperature and choose Hold Until Next Schedule, Hold Indefinitely or Hold Until Time. Holding shows on the temperature screen."
+    ],
+    "notes": [
+     "How long a hold lasts (1-23 hours, until the next schedule change, or permanent) can only be set from the app."
+    ],
+    "source": "Carrier Smart Thermostat featuring InteliSense TSTATCCIEWF-01 Installation Instructions (TSTATCCIEWF-04SI) - Get to Know and Operational Information pages; Carrier SmartHome app help center (help.smarthome.carrier.com): Set Schedule, Copy Schedule, Change Comfort Profile, Setting a Hold"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "A change made at the thermostat ends by itself after 4 hours; Hold Until Next Schedule ends at the next schedule change."
+    ],
+    "notes": [
+     "The maker documents found do not describe a cancel-hold button."
+    ],
+    "source": "Carrier Smart Thermostat featuring InteliSense TSTATCCIEWF-01 Installation Instructions (TSTATCCIEWF-04SI) - Get to Know and Operational Information pages; Carrier SmartHome app help center (help.smarthome.carrier.com): Set Schedule, Copy Schedule, Change Comfort Profile, Setting a Hold"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch the modes of operation button (lower left) to change the mode; Off shows as the Mode Off icon, and the border shows purple for off."
+    ],
+    "notes": [
+     "Vacation mode in the SmartHome app is for Infinity controls only, per Carrier's help page."
+    ],
+    "source": "Carrier Smart Thermostat featuring InteliSense TSTATCCIEWF-01 Installation Instructions (TSTATCCIEWF-04SI) - Get to Know and Operational Information pages"
+   }
+  ],
+  "icd-ion": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "After two minutes untouched the Home Screen shows (time, room temperature, outdoor temperature if available, weather, Wi-Fi status). Touch anywhere to get the Main Screen.",
+     "Main Screen: MODE (upper right), DAY and TIME (top middle), FEATURES (top left - fan speed, humidity), MENU (bottom right - Comfort Profiles, Schedules, Vacation and the rest), up / down arrows for the temperature.",
+     "An information icon at the bottom of some screens explains what can be done there; touch the text box to close it."
+    ],
+    "notes": [
+     "The maker says the Ion Home mobile app is the easiest way to program it."
+    ],
+    "source": "Ion System Control SYST0101CW Owner's Manual (A180024, Catalog No. 61602160002, 11/20)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Set the comfort profiles first: MENU > COMFORT PROFILES > TEMPERATURE AND FAN PROFILES, touch HOME (then WAKE, SLEEP, AWAY), set fan, heat and cool with the arrows, touch DONE.",
+     "MENU > SCHEDULES, then view / edit the schedule. Pick the day with the left / right arrows beside the day names.",
+     "Touch a TIME icon and set the start time with the arrows (DELETE removes that period). Touch the ACTIVITY icon and pick WAKE, HOME, AWAY or SLEEP. Touch SAVE.",
+     "To use the same schedule on other days: touch COPY above the day, pick the days, touch COPY.",
+     "Or use Guided Scheduling under SCHEDULES - it asks for the days, the wake time, whether someone is home all day (if not, the leave and return times) and the sleep time, then builds the schedule."
+    ],
+    "notes": [
+     "Zoned systems: pick the zone with the arrows beside the zone name; COPY above the zone name copies a schedule to other zones."
+    ],
+    "source": "Ion System Control SYST0101CW Owner's Manual (A180024, Catalog No. 61602160002, 11/20)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Until a set time: on the Main Screen set the temperature with the arrows (the profile changes to manual), set how long to hold in 15-minute steps, touch DONE.",
+     "Permanently: set the temperature with the arrows, then touch HOLD UNTIL, then HOLD.",
+     "An activity can be held too: touch the activity on the left, pick HOME, AWAY, SLEEP or WAKE, then set a time and DONE (temporary) or HOLD UNTIL > HOLD (permanent).",
+     "Away for days: MENU > VACATION > PLAN VACATION, set the start, the fan and temperature range, and the return date and time, then SAVE."
+    ],
+    "notes": [
+     "The installer's service menu also has a Scheduling On / Off setting (Ion System Control Installation Manual 616 01 1600 00)."
+    ],
+    "source": "Ion System Control SYST0101CW Owner's Manual (A180024, Catalog No. 61602160002, 11/20)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Temporary hold: touch HOLD UNTIL, then PER SCHEDULE.",
+     "Permanent hold: touch HOLD, then PER SCHEDULE.",
+     "Zoned system held for ALL ZONES: it stays held until CANCEL ALL ZONES."
+    ],
+    "source": "Ion System Control SYST0101CW Owner's Manual (A180024, Catalog No. 61602160002, 11/20)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Touch MODE (upper right of the Main Screen) and pick OFF. In OFF the system does not control temperature, humidity or fan."
+    ],
+    "source": "Ion System Control SYST0101CW Owner's Manual (A180024, Catalog No. 61602160002, 11/20)"
+   }
+  ]
+ },
+ "use": {
+  "tst-trane-tcont600-602": [
+   {
+    "set": "trd-tcont600"
+   }
+  ],
+  "tst-trane-tcont800": [
+   {
+    "set": "trd-tcont800"
+   }
+  ],
+  "tst-trane-tcont802-803": [
+   {
+    "set": "trd-tcont800",
+    "note": "From Trane's owner's guide for the whole TCONT800 Series; it does not list model numbers, and its dehumidification pages apply to models that have that feature."
+   }
+  ],
+  "tst-trane-xl900": [
+   {
+    "set": "trd-tcont900"
+   }
+  ],
+  "tst-trane-xl950": [
+   {
+    "set": "trd-xl950"
+   }
+  ],
+  "tst-carrier-smart-thermostat-intelisense": [
+   {
+    "set": "cad-intelisense"
+   }
+  ],
+  "tst-icp-ion-system-control": [
+   {
+    "set": "icd-ion"
+   }
+  ]
+ }
+});
+// add-deep-rheem.js
+tstatHowtoAdd({
+ "sets": {
+  "rhd-83-85": [
+   {
+    "title": "Steps not found",
+    "steps": [
+     "Rheem and Ruud publish only a spec sheet for these thermostats (PRO-5115 / PRO-5116); no Rheem or Ruud operating instructions were found.",
+     "The model numbers (TST83C-11NP / -11PR, TST83H-21NP / -21PR, TST85U) follow the White-Rodgers 1F83C / 1F83H / 1F85U numbering and the spec sheet lists White-Rodgers accessory numbers, but no Rheem document confirms they are the same controls - if the buttons match, see the White-Rodgers 1F83 and 1F85U cards."
+    ],
+    "source": "Ruud Professional Thermostats spec sheet (PRO-5116)"
+   }
+  ]
+ },
+ "use": {
+  "tst-rheem-pro-series-83-85": [
+   {
+    "set": "rhd-83-85"
+   }
+  ]
+ }
+});
