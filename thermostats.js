@@ -62966,3 +62966,466 @@ tstatHowtoAdd({
   ]
  }
 });
+// add-deep-misc.js
+tstatHowtoAdd({
+ "sets": {
+  "md-pro1-601": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Controls: SYSTEM switch, FAN switch and the + / - temperature buttons. The display shows the room temperature and the set temperature."
+    ],
+    "notes": [
+     "Short operating instructions are also printed on the back of the battery door."
+    ],
+    "source": "Pro1 T601-2 Operation Manual (PM-601-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Press + or - to pick the room temperature you want."
+    ],
+    "source": "Pro1 T601-2 Operation Manual (PM-601-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. The + / - buttons set the temperature."
+    ],
+    "source": "Pro1 T601-2 Operation Manual (PM-601-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Fan",
+    "steps": [
+     "FAN switch ON runs the fan all the time; AUTO runs it only while heating or cooling is on."
+    ],
+    "source": "Pro1 T601-2 Operation Manual (PM-601-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to OFF - heating and cooling are both off."
+    ],
+    "source": "Pro1 T601-2 Operation Manual (PM-601-2-OM, Rev. 1814)"
+   }
+  ],
+  "md-pro1-621": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Controls: SYSTEM switch (EmH, COOL, OFF, HEAT), FAN switch and the + / - temperature buttons."
+    ],
+    "notes": [
+     "ON in the display means heat, cool or emergency heat is running; flashing ON is the 5-minute compressor delay."
+    ],
+    "source": "Pro1 T621-2 Operation Manual (PM-621-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Press + or - to pick the room temperature you want."
+    ],
+    "source": "Pro1 T621-2 Operation Manual (PM-621-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Non-programmable: there is no schedule. The + / - buttons set the temperature."
+    ],
+    "source": "Pro1 T621-2 Operation Manual (PM-621-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Emergency heat (heat pump)",
+    "steps": [
+     "Slide the SYSTEM switch to EmH - the compressor is locked out and the secondary heat runs."
+    ],
+    "source": "Pro1 T621-2 Operation Manual (PM-621-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Fan",
+    "steps": [
+     "FAN switch ON runs the fan all the time; AUTO runs it only while heating or cooling is on."
+    ],
+    "source": "Pro1 T621-2 Operation Manual (PM-621-2-OM, Rev. 1814)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Slide the SYSTEM switch to OFF - heating and cooling are both off."
+    ],
+    "source": "Pro1 T621-2 Operation Manual (PM-621-2-OM, Rev. 1814)"
+   }
+  ],
+  "md-pro1-751i": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "At the thermostat: System button, Fan button, the + / - temperature buttons and the glow-in-the-dark light button. The display shows the system mode, fan setting and a Wi-Fi icon when connected.",
+     "In the PRO1 Connect app, open the thermostat: Scheduling, Thermostat Settings, System Mode and Fan Mode are on its control screen."
+    ],
+    "source": "Pro1 T751i Installation Manual (PM-T751i-IM-2403) and T751i Spec Sheet (rev. 2505); PRO1 Connect App Guide (pro1iaq.com Wi-Fi Help)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Programming is only done in the PRO1 Connect app - not at the thermostat.",
+     "Open the thermostat in the app and tap Scheduling.",
+     "Pick the day or group of days, then Edit.",
+     "Tap Edit on a time period, set its time, cool temperature, heat temperature and fan mode, then tap Set to save it."
+    ],
+    "source": "Pro1 T751i Installation Manual (PM-T751i-IM-2403) and T751i Spec Sheet (rev. 2505); PRO1 Connect App Guide (pro1iaq.com Wi-Fi Help)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "In the app's Scheduling screen, switch Scheduling off."
+    ],
+    "source": "Pro1 T751i Installation Manual (PM-T751i-IM-2403) and T751i Spec Sheet (rev. 2505); PRO1 Connect App Guide (pro1iaq.com Wi-Fi Help)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "In the app's Scheduling screen, switch Scheduling back on."
+    ],
+    "source": "Pro1 T751i Installation Manual (PM-T751i-IM-2403) and T751i Spec Sheet (rev. 2505); PRO1 Connect App Guide (pro1iaq.com Wi-Fi Help)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Change the mode with the System button, or with System Mode in the app. The installation manual lists Off in every system setting (Heat - Off - Cool, Heat - Off, Cool - Off) but does not spell out the button presses."
+    ],
+    "source": "Pro1 T751i Installation Manual (PM-T751i-IM-2403) and T751i Spec Sheet (rev. 2505); PRO1 Connect App Guide (pro1iaq.com Wi-Fi Help)"
+   }
+  ],
+  "md-pro1-501m": [
+   {
+    "title": "Get around the controls",
+    "steps": [
+     "Mechanical thermostat: a system switch (HEAT - OFF - COOL faceplate on heat/cool installs) and a fan switch (AUTO in the down position)."
+    ],
+    "notes": [
+     "Heat-only installs can use a faceplate that hides the fan switch; the cover pulls off the front to reach the faceplate and heat anticipator."
+    ],
+    "source": "Pro1 T501M Installation Manual (Rev. 1810)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Mechanical, non-programmable: there is no schedule."
+    ],
+    "source": "Pro1 T501M Installation Manual (Rev. 1810)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set the system switch to OFF."
+    ],
+    "source": "Pro1 T501M Installation Manual (Rev. 1810)"
+   }
+  ],
+  "md-pro1-501ml": [
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Line-voltage electric-heat thermostat: turn the knob to the setting you want."
+    ],
+    "source": "Pro1 T501ML2 / T501ML4 Installation Manual (Rev. 1810)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Mechanical, non-programmable: there is no schedule."
+    ],
+    "source": "Pro1 T501ML2 / T501ML4 Installation Manual (Rev. 1810)"
+   },
+   {
+    "title": "Turn the heat off",
+    "steps": [
+     "T501ML4: set it to the OFF position - its second (red-red) switch opens in OFF, breaking both lines."
+    ],
+    "notes": [
+     "The manual lists the OFF-position line break only for the T501ML4; the T501ML2 is a single-pole switch that opens on temperature rise."
+    ],
+    "source": "Pro1 T501ML2 / T501ML4 Installation Manual (Rev. 1810)"
+   }
+  ],
+  "md-lux-geo": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the dial in the direction of the blue arrow to open the menu: Mode, Fan, Schedule, Runtime and Settings.",
+     "Rotate the control wheel to move through options and values, and press to select."
+    ],
+    "notes": [
+     "The quick-start shows the select and back keys as symbols only."
+    ],
+    "source": "LUX support article \"Navigating the LUX GEO menu\" (luxproducts.com, Jan 2019); LUX/GEO quick-start guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Open the menu, choose Schedule and set the heat and cool schedules for each day or for the whole week."
+    ],
+    "source": "LUX support article \"Navigating the LUX GEO menu\" (luxproducts.com, Jan 2019); LUX/GEO quick-start guide"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "Open the menu, choose Schedule and pick holding a constant temperature instead of running the schedule."
+    ],
+    "source": "LUX support article \"Navigating the LUX GEO menu\" (luxproducts.com, Jan 2019); LUX/GEO quick-start guide"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Open the menu, choose Schedule and pick running the schedule."
+    ],
+    "source": "LUX support article \"Navigating the LUX GEO menu\" (luxproducts.com, Jan 2019); LUX/GEO quick-start guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Open the menu, choose Mode and pick Off (the choices are Heat, Cool, Off and Auto)."
+    ],
+    "source": "LUX support article \"Navigating the LUX GEO menu\" (luxproducts.com, Jan 2019); LUX/GEO quick-start guide"
+   },
+   {
+    "title": "Fan",
+    "steps": [
+     "Menu > Fan: Auto, On, or Clean Cycle (runs 15 minutes each hour). The filter reminder is here too."
+    ],
+    "source": "LUX support article \"Navigating the LUX GEO menu\" (luxproducts.com, Jan 2019); LUX/GEO quick-start guide"
+   }
+  ],
+  "md-lux-konozw": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the knob when the thermostat is idle to open the menu: System Mode, Fan Mode, Run Schedule, Installation Settings, Network Connection.",
+     "Turn the knob to move through options and press it to select. Press and hold the knob to leave a menu and go back to the home screen."
+    ],
+    "notes": [
+     "Home screen: large number = room temperature, small number = set temperature; HEAT, COOL or OFF shows beside the room temperature, ON below it when running."
+    ],
+    "source": "LUX KONOzw Installation Manual (Operations Guide chapter); KONOzw Operation Guideline Rev 1.7"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "The schedule is not set on the thermostat - it runs from the Z-Wave Smart Hub. Run Schedule in the knob menu only works if the schedule is enabled on the hub."
+    ],
+    "source": "LUX KONOzw Installation Manual (Operations Guide chapter); KONOzw Operation Guideline Rev 1.7"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Press the knob and choose Run Schedule (only works if scheduling is enabled on the Smart Hub)."
+    ],
+    "source": "LUX KONOzw Installation Manual (Operations Guide chapter); KONOzw Operation Guideline Rev 1.7"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the knob, choose the System Mode menu and set OFF (only the modes your system has are shown)."
+    ],
+    "source": "LUX KONOzw Installation Manual (Operations Guide chapter); KONOzw Operation Guideline Rev 1.7"
+   },
+   {
+    "title": "Fan",
+    "steps": [
+     "Press the knob, choose Fan Mode: AUTO runs the fan only while heating or cooling, ON runs it all the time."
+    ],
+    "source": "LUX KONOzw Installation Manual (Operations Guide chapter); KONOzw Operation Guideline Rev 1.7"
+   },
+   {
+    "title": "Away (energy-saving) mode",
+    "steps": [
+     "If the hub has put it in Away (AWAY shows, 62 heat / 83 cool), turning or pressing the knob takes it out of Away."
+    ],
+    "source": "LUX KONOzw Installation Manual (Operations Guide chapter); KONOzw Operation Guideline Rev 1.7"
+   }
+  ],
+  "md-braeburn-500": [
+   {
+    "title": "Set the temperature",
+    "steps": [
+     "Set the system lever to HEAT or COOL, then move the temperature lever to the temperature you want."
+    ],
+    "notes": [
+     "Model 505 is heat only."
+    ],
+    "source": "Braeburn 500/505 Builder Series Mechanical Thermostat User Manual (500-100-04)"
+   },
+   {
+    "title": "Schedule",
+    "steps": [
+     "Mechanical, non-programmable: there is no schedule."
+    ],
+    "source": "Braeburn 500/505 Builder Series Mechanical Thermostat User Manual (500-100-04)"
+   },
+   {
+    "title": "Fan",
+    "steps": [
+     "Fan lever AUTO runs the blower only with heating or cooling; ON runs it all the time."
+    ],
+    "source": "Braeburn 500/505 Builder Series Mechanical Thermostat User Manual (500-100-04)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Move the system lever to OFF."
+    ],
+    "notes": [
+     "Heat pumps / AC: wait a few minutes before moving the lever back to HEAT or COOL so the compressor is not short-cycled."
+    ],
+    "source": "Braeburn 500/505 Builder Series Mechanical Thermostat User Manual (500-100-04)"
+   }
+  ],
+  "md-wyze": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The thermostat has a control wheel: turn it to pick, press it to select.",
+     "Its on-screen menus (Quick Start Guide symbols): State (Home, Away, Sleep), HVAC Mode (Auto, Heat, Cool, Off), Fan Control (Auto, Circulate, On) and Setting (Test, Reset All, Device Info, Emergency Heat)."
+    ],
+    "notes": [
+     "Pressing and holding the wheel for 10 seconds starts a factory reset - do not hold it down to navigate.",
+     "The screen stays dark until it senses motion."
+    ],
+    "source": "Wyze support articles (Scheduling with Wyze Thermostat; factory reset / display articles) and Wyze Thermostat Quick Start Guide"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "In the Wyze app, tap the thermostat, then the Settings gear (top right).",
+     "Tap Schedule > Create schedule.",
+     "Under Repeats, tap the day(s) it applies to.",
+     "Under Blocks > Add block, add Home, Away and Sleep blocks; tap Save for each block, then Save for the schedule."
+    ],
+    "notes": [
+     "Home, Away and Sleep temperatures are set in Settings > Temperature Preference.",
+     "Auto Switch (on by default) also flips Home / Away by phone location and the thermostat's motion sensor."
+    ],
+    "source": "Wyze support articles (Scheduling with Wyze Thermostat; factory reset / display articles) and Wyze Thermostat Quick Start Guide"
+   },
+   {
+    "title": "Remove a schedule",
+    "steps": [
+     "In the thermostat's Settings, tap Schedule, swipe left on the schedule and tap the trash can."
+    ],
+    "source": "Wyze support articles (Scheduling with Wyze Thermostat; factory reset / display articles) and Wyze Thermostat Quick Start Guide"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Set HVAC Mode to Off - on the thermostat's HVAC Mode menu, or in the app's Controls panel (Mode)."
+    ],
+    "notes": [
+     "Safety Temps still work when it is set to Off."
+    ],
+    "source": "Wyze support articles (Scheduling with Wyze Thermostat; factory reset / display articles) and Wyze Thermostat Quick Start Guide"
+   }
+  ],
+  "md-nest-1": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Press the ring to open the Quick View menu, turn the ring to move, press to select."
+    ],
+    "source": "Google Nest Help: Nest thermostat temperature modes (9247301) and Temperature schedules for the Nest Learning Thermostat (10184481)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "Auto-Schedule is on by default: it learns a schedule from the temperature changes made at the thermostat or in the app.",
+     "To edit it at the thermostat: Quick View menu > Settings > Schedule (it shows the schedule for the current mode). Turn the ring to move through the days and times.",
+     "Add: press, choose New, turn to the time and press, turn to the temperature and press.",
+     "Change: highlight the setpoint, press, choose Change, then turn to adjust the time and temperature, pressing after each.",
+     "Remove: highlight the setpoint, press, choose Remove and press to confirm.",
+     "Turn the ring all the way left or right to Done to leave."
+    ],
+    "notes": [
+     "Heat, Cool and Heat • Cool each have their own schedule."
+    ],
+    "source": "Google Nest Help: Nest thermostat temperature modes (9247301) and Temperature schedules for the Nest Learning Thermostat (10184481)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Press the ring, turn to Mode and press, turn to Off and press, then press again to confirm."
+    ],
+    "notes": [
+     "In Off it still heats or cools only to hold the Safety Temperatures."
+    ],
+    "source": "Google Nest Help: Nest thermostat temperature modes (9247301) and Temperature schedules for the Nest Learning Thermostat (10184481)"
+   }
+  ]
+ },
+ "use": {
+  "tst-pro1-t601-2": [
+   {
+    "set": "md-pro1-601"
+   }
+  ],
+  "tst-pro1-t621-2": [
+   {
+    "set": "md-pro1-621"
+   }
+  ],
+  "tst-pro1-t751i": [
+   {
+    "set": "md-pro1-751i",
+    "note": "Pro1 publishes no separate T751i operation manual; steps come from its installation manual, spec sheet and Pro1's app guide."
+   }
+  ],
+  "tst-pro1-t501m": [
+   {
+    "set": "md-pro1-501m"
+   }
+  ],
+  "tst-pro1-t501ml2-t501ml4": [
+   {
+    "set": "md-pro1-501ml"
+   }
+  ],
+  "tst-lux-geo": [
+   {
+    "set": "md-lux-geo"
+   }
+  ],
+  "tst-lux-kono-zwave": [
+   {
+    "set": "md-lux-konozw"
+   }
+  ],
+  "tst-braeburn-500-505": [
+   {
+    "set": "md-braeburn-500"
+   }
+  ],
+  "tst-wyze-thermostat": [
+   {
+    "set": "md-wyze",
+    "note": "Wyze publishes no hold steps for this thermostat."
+   }
+  ],
+  "tst-nest-learning-1st-gen": [
+   {
+    "set": "md-nest-1",
+    "note": "From Google Nest Help steps written for the Nest Learning Thermostat (3rd gen or earlier); no 1st-gen user guide was found."
+   }
+  ]
+ }
+});
+// add-deep-nest3.js
+tstatHowtoAdd({
+ "sets": {},
+ "use": {
+  "tst-nest-learning-3rd-2nd-gen": [
+   {
+    "set": "md-nest-1",
+    "note": "From Google Nest Help steps written for the Nest Learning Thermostat (3rd gen or earlier)."
+   }
+  ]
+ }
+});

@@ -1320,14 +1320,14 @@ function askUnitHits(units, hay, it) {
 // ---- "How do I work this thermostat" questions (Andy 11-11: "fix it for all the other brands too") ----
 // Brand or model + how-to words ("honeywell schedule", "nest wifi", "turn ecobee off", "carrier infinity touch
 // menu") list that brand's own thermostat cards first, steps or not, and never equipment cards ahead of them.
-const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|setup|program|programming|programmed|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode|wifi|wi-fi|thermostats?|tstat|stat)$/;
+const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|setup|program|programming|programmed|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode|wifi|wi-fi|timers?|thermostats?|tstat|stat)$/;
 // Key words: one has to be in the question. STRONG ones only a thermostat has. Menu, settings and off are also
 // equipment talk ("carrier menu codes", "lennox system off"): they lead with the thermostats only when the brand
 // makes nothing but thermostats, the question says thermostat, or it names a model. On an equipment brand
 // alone, menu / settings put that brand's thermostats right after its own cards titled for the question
 // ("goodman menu" keeps the gPt menu card first) and ahead of everything else; "off" alone changes nothing.
 const ASK_HOWTO_KEY = /^(schedules?|scheduling|holds?|comfort|program|programming|wifi|wi-fi)$/;
-const ASK_HOWTO_KEY_SOFT = /^(menus?|settings?|setup)$/;
+const ASK_HOWTO_KEY_SOFT = /^(menus?|settings?|setup|timers?)$/;
 const ASK_HOWTO_KEY_OFF = /^off$/;
 const ASK_STAT_WORD = /^(thermostats?|tstat|stat)$/;
 // Names a tech uses for a brand whose cards are filed under another name.
@@ -1341,6 +1341,18 @@ function askTstatBrandTokens() {
   for (const t of tstatEntries()) for (const w of String(t.brand).toLowerCase().split(/[^a-z0-9]+/)) if (w.length >= 3 && w !== "home" && w !== "standard") set.add(w);
   for (const w of ["bryant", "payne"]) set.add(w);
   return (askTstatBrandCache = set);
+}
+// Words that name a thermostat line and nothing else in the app ("chronotherm", "madoka", "icomfort", "sensi"):
+// in a family name, at least 5 letters, not a brand, and in no equipment / code / symptom title.
+let askTstatNameCache = null;
+function askTstatNameWords() {
+  if (askTstatNameCache) return askTstatNameCache;
+  const idx = askIndexCache || (askIndexCache = askBuildIndex()), brands = askTstatBrandTokens(), set = new Set();
+  const split = (x) => String(x || "").toLowerCase().split(/[^a-z0-9]+/);
+  for (const t of tstatEntries()) for (const w of split(t.family)) if (w.length >= 5 && ![...w].some(ch => ch >= "0" && ch <= "9") && !brands.has(w) && !ASK_HOWTO_WORD.test(w)) set.add(w);
+  for (const it of idx) if (it.kind !== "tstat" && it.kind !== "manual" && it.kind !== "tool") for (const w of split(it.title)) set.delete(w);
+  if (idx.length) askTstatNameCache = set;
+  return set;
 }
 // null, or { brandU, others, pure, only }: brandU = units naming a thermostat brand, others = model words
 // ("t6", "infinity touch"), pure = nothing but brand + how-to words, only = a thermostat-only brand is named.
@@ -1378,7 +1390,9 @@ function askScoreItem(units, it) {
     const head = (String(it.brand) + " " + it.title).toLowerCase();
     // This thermostat is the one asked about: its brand and every model word are in its own name.
     // With no brand in the question, a model word has to carry a digit ("t6 schedule", "th6220 hold").
-    const idOk = th.brandU.length > 0 || th.others.some(u => u.alts.some(a => [...a].some(ch => ch >= "0" && ch <= "9")));
+    // or be a name only a thermostat line carries ("chronotherm hold", "madoka turn off").
+    const digitU = th.others.some(u => u.alts.some(a => [...a].some(ch => ch >= "0" && ch <= "9")));
+    const idOk = th.brandU.length > 0 || digitU || th.others.some(u => u.alts.some(a => askTstatNameWords().has(a)));
     if (it.kind === "tstat" && idOk && named(it.nameHay) && th.others.every(u => u.alts.some(a => askTermHit(it.idHay, a)))) {
       // Cards that really hold the asked words (the how-to steps) go before the brand's other cards,
       // and a sensor, adapter or other accessory goes after the thermostats themselves.
@@ -1388,7 +1402,10 @@ function askScoreItem(units, it) {
       // On a tie, a card named "non-programmable" goes after the programmable ones.
       const order = (it.acc ? 0.1 : it.how && hit(it.howT) ? 0.5 + it.howN * 0.01 : hit(it.hay) ? 0.4 + it.howN * 0.01
         : it.how ? 0.34 + it.howN * 0.01 : 0.25) - (it.nameHay.includes("non-programmable") ? 0.005 : 0);
-      return { sc: Math.max(sc, need), tsc: th.soft ? need - 0.9 + order : need + order };
+      // A model named by number with its brand ("lennox e40 turn off") is the answer itself: its card goes
+      // ahead of a code row that only shares the number ("40 - HP Heating Lockout").
+      const exact = th.brandU.length > 0 && digitU && !th.soft && !it.acc ? 0.6 : 0;
+      return { sc: Math.max(sc, need), tsc: th.soft ? need - 0.9 + order : need + order + exact };
     }
     if (th.pure && sc >= need && (it.kind === "symptom" || it.kind === "tool") && (it.brandOnly || named(head))) {
       // An answer written for exactly this leads the thermostats: the brand's own how-to card, or a brand
@@ -2990,7 +3007,7 @@ function renderSymptoms() {
   // A thermostat how-to question ("honeywell schedule") belongs on the Thermostats screen: this list only
   // holds diagnostic cards, so point there instead of leaving the tech with unrelated ones.
   const tHow = query ? askTstatHow(askLiveUnits(buildSearchUnits(query))) : null;
-  if (tHow && tHow.brandU.length && !tHow.soft) {
+  if (tHow && !tHow.soft && (tHow.brandU.length || tHow.others.some(u => u.alts.some(x => askTstatNameWords().has(x))))) {
     const note = document.createElement("div");
     note.className = "diag-fallback-note";
     note.innerHTML = `Thermostat question? <a href="#" id="diagToTstat">Open the thermostats for "${escapeHtml(query)}"</a>`;
@@ -13298,7 +13315,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v414";
+const APP_VERSION = "v415";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
