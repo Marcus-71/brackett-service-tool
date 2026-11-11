@@ -21447,6 +21447,7 @@ const SYMPTOMS = [
   "title": "How to read a wiring diagram - legend, thick and thin lines, dashed field wiring, ladder vs connection view",
   "summary": "Every unit carries its own wiring diagram, usually on the back of a panel. Once you can read it you don't need to memorize units: find the part on the diagram, find its plug on the board, then check it with a meter. Use the diagram on the unit you are standing at.",
   "steps": [
+   "Need the diagram for the unit you just scanned? Open Manuals and search its model - most installer's guides and service facts carry the wiring diagram near the back. If Manuals has nothing for it, the diagram is still on the unit (usually inside the blower or control access panel); take a photo of it, and send Request Info - Missing manual so the office adds it.",
    "Use the diagram stuck on the unit. If it doesn't match the one in the manual, the unit's sticker wins - wiring changes between production runs. Check the model number on the diagram matches the unit. The service manual copy is handy for reading it bigger.",
    "Find the main areas before you read any wire: where line voltage comes in (the terminal block), the boards (big boxes - anything drawn inside a box is on that board), parts out in the unit (drawn outside the boxes, with lines to the plug they land on), the legend, and the notes.",
    "Look up every part code in the legend instead of guessing. Letters often follow a pattern (on many diagrams a code like R1T is a thermistor, M a motor, Y a coil, X a plug), but it is only a pattern - the legend tells you for sure.",
@@ -21495,6 +21496,39 @@ const SYMPTOMS = [
    "No code showing now? Many boards store the last faults - see the unit's card for its recall steps before you power cycle, which can clear them.",
    "Mini-splits: the code is often on the indoor display or lamps, or has to be pulled with the remote's check mode - see the brand's card.",
    "A steady light or a slow, even flash is often normal standby or normal operation, not a fault. On some boards steady on or steady off means a failed control or no power, so check the label before you decide either way."
+  ],
+  "confidence": "common"
+ },
+{
+  "id": "s-generac-evolution-controller-replaced-flash-firmware",
+  "equipment": "Generator",
+  "title": "Replaced a Generac Evolution / Evolution 2.0 controller - do I need to flash it with the latest software (firmware)?",
+  "summary": "Yes. Generac's own controller-replacement steps for Evolution 2.0 include loading the latest firmware from GENservice off a flash drive and then running the Install Wizard, and Generac calls checking and updating firmware best practice at install, before diagnosing and at every service visit. The update is not paid as warranty labor.",
+  "steps": [
+   "Before you swap it (Evolution 2.0, controller PN 10000003275 Rev R and up - generators with a serial above 3015006875): work the diagnostic manual's flow charts first and fill in Generac's troubleshooting form A0000138510. A controller warranty claim without that form is denied (Generac WIB19-01-HAC, in Bulletins).",
+   "Pull each controller plug and look before you condemn the board: the 16-pin, 4-pin and 20-pin harness plugs and the stepper motor plug must be fully locked, with no loose or pushed-back pins. Replace the harness if a pin is damaged (WIB19-01-HAC).",
+   "Make it safe to swap: controller to OFF, pull the N1/N2/T1 fuses (or unplug the SACM feed), open the generator breaker (MLCB), pull the 7.5 A fuse. Plug the new controller in 16-pin first, then 4-pin, then 20-pin until each one clicks, then the stepper plug (ridges lined up) and the T1/neutral plug. Check the 7.5 A fuse for continuity and put it back.",
+   "Flash it: download the latest firmware release from GENservice (the firmware folders in Service Documents) onto a flash drive, plug it into the controller's USB port and run Firmware Update with the controller in OFF. During the update the blue Manual light flashes, then the green Auto light - once for a firmware-only file, twice when there are firmware and hardware files. The first screen at power-up shows the version for a few seconds; when it is done, pull the drive and finish the Install Wizard (date/time, exercise, fuel) (WIB19-01-HAC; Evolution diagnostic manual 0H9172 Rev M, Firmware Menu Map).",
+   "If the menu says Corrupted File, Invalid File, File Not Found or Unsupported Device, the problem is the flash drive or the file - re-download it to a different plain USB drive. Other way in: with the drive in at the main screen, power the controller down completely (battery and AC), power it back up and let it update on its own (0H9172 Rev M).",
+   "Put it back in service: N1/N2/T1 fuses back in, controller to AUTO, MLCB closed. Test it and make sure it is left in Auto. If the screen asks for activation, the unit will not run in Auto until it is activated.",
+   "Check output voltage after the swap (line to line at the MLCB, about 240-244 VAC is good). A replacement controller usually does not need voltage calibration unless output is out of spec - if it is, use Test 3 Calibrate Voltage in the diagnostic manual (0H9172 Rev M).",
+   "Billing and returns: the firmware update itself is not a warranty item (Generac SIB17-19-AAC). Return the old controller marked with the failure and a copy of the claim and form, using the return label on the form (WIB19-01-HAC). Stuck after a good flash? Call Generac Technical Support."
+  ],
+  "safety": "Controller OFF, N1/N2/T1 fuses out (or SACM feed unplugged), MLCB open and the 7.5 A fuse out before you unplug the controller - that is the order in Generac WIB19-01-HAC, so nothing feeds the generator while you work.",
+  "confidence": "manual"
+ },
+{
+  "id": "s-service-bulletins-find-for-unit",
+  "equipment": "Other",
+  "title": "Service bulletins (SIB, PIB, TIB, WIB, TSB) - how to find the bulletins for the unit you are on",
+  "summary": "Bulletins belong to a model, a serial range or an alarm code, so the fastest way to the right one is from the unit itself: scan its plate or look up its model or code, and the app puts that unit's bulletins at the top. A bare 'bulletin' search lists every brand's bulletins, newest and most urgent first.",
+  "steps": [
+   "Scan the data plate in the Tag Scanner, or scan it in the Generator checklist: a 'Bulletins for this unit' box shows above the results with every bulletin for that model. High-priority ones are flagged red.",
+   "Already know the model? Type it with the word bulletin in Ask Anything (for example 'G0072910 bulletins' or 'nexus bulletin') - it lists that unit's bulletins first. Maintenance Figures and an Error Codes lookup for that unit show the same bulletin box.",
+   "Have the bulletin number from the office or a parts note? Type just the number (for example 'A0013147290' or 'SIB25-12-AC') in Ask - it opens that bulletin.",
+   "A bulletin that only covers a serial range has a 'Check a serial' box - type the serial from the plate to see if this unit is in it before you do the rework.",
+   "Chasing an alarm or fault code? Search the code - a bulletin written for that code shows with the code's card.",
+   "Not in the app? Generac: GENservice, Service Documents (bulletins and firmware). HVAC brands: the brand's dealer portal. Ask the office to pull it, and send Request Info so it gets added."
   ],
   "confidence": "common"
  }

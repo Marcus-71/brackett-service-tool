@@ -1151,7 +1151,9 @@ function askFixTypos(q) {
 function askModelTokens(q) {
   return String(q || "").toUpperCase().split(/\s+/).map(t => t.replace(/[^A-Z0-9.\-\/]/g, "")).filter(t =>
     /^G0\d{5,8}$/.test(t) || /^(\d{1,2}(\.5)?[A-Z]{3}|(RXT|RDT|RRT|RSB)(?![0-9]{2}[A-Z]{1,2}VJU)|RGEN|6VSG)[A-Z0-9-]*$/.test(t) ||
-    (t.length >= 4 && /[A-Z]/.test(t) && /\d/.test(t) && typeof identifyModel === "function" && !!(identifyModel(t) || {}).brand));
+    // v406: an engine size ("817cc", Vern 11/10) is not a model - the Bryant 3-digit rule claimed it, and the
+    // next question ("bulletin") inherited "817CC" and showed nothing.
+    (t.length >= 4 && /[A-Z]/.test(t) && /\d/.test(t) && !/^\d{2,4}CC$/.test(t) && typeof identifyModel === "function" && !!(identifyModel(t) || {}).brand));
 }
 const ASK_BRAND_RE = /\b(generac|kohler|rehlko|carrier|bryant|lennox|trane|goodman|daikin|amana|rheem|ruud|york|payne|heil|tempstar|comfortmaker|arcoaire|bosch|honeywell|ecobee|nest|mitsubishi|fujitsu|samsung|gree|midea|nortek|armstrong|allied|ducane|coleman|luxaire|weatherking|american standard|aire-flo|airease|concord|icp|day & night|keeprite|frigidaire|maytag|westinghouse|intertherm|nordyne|lux|venstar|emerson|white-rodgers|braeburn|pro1|sensi|aprilaire|ameristar)\b/;
 let askCtx = null;   // { models, codes, brand, fam, ts } from the last question that named a unit, brand or family
@@ -1334,6 +1336,9 @@ function askScoreItem(units, it) {
   // other families that merely mention the word (F6: "generac nexus 1800" is the Nexus cards'
   // OVERVOLTAGE row, not the Evolution cards whose clear-steps say "Nexus").
   const fams = units.kFams || (units.kFam ? [units.kFam] : []);
+  // v406 (Vern 11/10 typed just "bulletin"; Fable: one arbitrary bulletin led): with no unit, model or code in the
+  // question, the general "how to find the bulletins for your unit" card leads; the bulletins follow in their own order.
+  if (it.id === "s-service-bulletins-find-for-unit" && askBulWordQ(units) && !fams.length && !units.kModel && askLiveUnits(units).every(u => u.alts.some(a => ASK_BUL_WORD.test(a)))) return { sc, tsc: tsc + 2 };
   if (it.kind === "bulletin") {
     const a = it.bul.applies || {};
     const forUnit = (fams.length && (a.genFamilies || []).some(f => fams.includes(f))) ||
@@ -1342,12 +1347,14 @@ function askScoreItem(units, it) {
     // or fix card on a plain question just because its long text holds the words.
     // One notch down besides (replay 11-10: "carrier no cooling" led with a geothermal DSB, "generac code 31"
     // with a transfer-switch firmware 1.31 PIB). The unit's bulletins still show on the instant card.
+    // v406 (Vern 11/10 typed the bare number "A0013147290": the bulletin showed on the instant card but the list
+    // was empty and logged NO ANSWER). A question that names a bulletin by number is about that bulletin, with or
+    // without the word "bulletin" (Fable 11-10: "SIB A0013147290" had a Protector XG one under it).
+    if (units.bulNo === undefined) { try { const n = askBulletins(units, units.rq || ""); units.bulNo = n.length && n.every(b => b._why === undefined) ? new Set(n.map(b => b.id)) : null; } catch (e) { units.bulNo = null; } }
+    if (units.bulNo) return units.bulNo.has(it.id) ? { sc: sc + 2, tsc: tsc + 6 } : { sc: 0, tsc: 0 };
     if (!askBulWordQ(units)) return { sc: Math.min(sc, tsc) - 1, tsc };
     // Asked for: the asked unit's bulletins count the model / series word as met, high priority first.
     // Equal matches: high priority, then normal, then FYI; newer first within those (tsc fractions only break ties).
-    // A question that names a bulletin by number is about that bulletin only (Fable 11-10: "SIB A0013147290" had a Protector XG one under it).
-    if (units.bulNo === undefined) { try { const n = askBulletins(units, units.rq || ""); units.bulNo = n.length && n.every(b => b._why === undefined) ? new Set(n.map(b => b.id)) : null; } catch (e) { units.bulNo = null; } }
-    if (units.bulNo) return units.bulNo.has(it.id) ? { sc: sc + 2, tsc: tsc + 6 } : { sc: 0, tsc: 0 };
     const yr = Number(String(it.bul.date || "").slice(0, 4)) || 2000;
     // Bulletins for whole families (home standby lines) before ones for a serial list only (Fable: PZ410 diesel led "generac service bulletin").
     const lift = (it.bul.priority === "high" ? 0.5 : it.bul.priority === "info" ? 0 : 0.25) + ((a.genFamilies || []).length || (a.modelRe || []).length ? 0.3 : 0) + Math.max(0, Math.min(yr - 2000, 40)) / 200;
@@ -10265,7 +10272,21 @@ function tagParseBarcodes(codes) {
     // carries "S5909L17186\r\n1Y25-1359K9" (James 2026-10-09, G61MP), the
     // barcode label under it "S5909L17186" alone, a carton "[)>..S5823H01796".
     if (raw.startsWith("[)>") || /^S\d{4}[A-Z]\d{5}(?:[\s\x1d\x1e\x04␝␞␄]|$)/.test(raw)) {
-      for (const f of raw.split(/[\s\x1d\x1e\x04␝␞␄]+/)) if (!serial && /^S\d{4}[A-Z]\d{5}$/.test(f)) serial = f.slice(1);   // no brand: Allied/ADP print it too
+      const fs = raw.split(/[\s\x1d\x1e\x04␝␞␄]+/);
+      // v406 (Dave's Rheem R95PA1001521MSA control-system label, 11/10): Rheem / Ruud print
+      // "[)>06 I<model> S<serial>" in the label's DataMatrix. The I / P / 1P field is taken as
+      // the model only when it is a specific library family (ocrMatchTier 2); then that code's
+      // S field is its serial.
+      let codeModel = "";
+      if (raw.startsWith("[)>")) for (const f of fs) {
+        const mm = f.match(/^(?:1P|P|I)([A-Z][A-Z0-9\/\-]{5,22})$/);
+        if (!codeModel && mm && /\d/.test(mm[1])) { const p = ocrLibraryPattern(mm[1].replace(/[\/-]/g, "")); if (p && ocrMatchTier(p) === 2) codeModel = mm[1]; }
+      }
+      if (codeModel && !model) model = codeModel;
+      for (const f of fs) {
+        if (!serial && /^S\d{4}[A-Z]\d{5}$/.test(f)) serial = f.slice(1);   // no brand: Allied/ADP print it too
+        else if (!serial && codeModel && /^S[A-Z0-9]{6,14}$/.test(f) && /\d{4}/.test(f)) serial = f.slice(1);
+      }
       continue;
     }
     // York / Coleman / Luxaire (JCI) plate QR: their serial-lookup link.
@@ -13121,7 +13142,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v405";
+const APP_VERSION = "v406";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
