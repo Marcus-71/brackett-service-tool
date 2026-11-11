@@ -44999,7 +44999,8 @@ const THERMOSTATS = [
    "RETST601SYS",
    "RETST700SYS",
    "RETST800SYS",
-   "ETST700SYS"
+   "ETST700SYS",
+   "UETST800SYS"
   ],
   "type": "communicating",
   "stages": "Determined by connected EcoNet-enabled equipment - up to 2-stage furnace, 2-stage AC/HP, dual fuel; not usable with generic non-communicating 24V W/Y/G equipment directly",
@@ -45125,9 +45126,16 @@ const THERMOSTATS = [
   ],
   "troubleshooting": [],
   "tips": [
-   "EcoNet thermostats are R, C, E1, E2, S1, S2 only - no W/Y/G, and they need EcoNet-enabled indoor equipment."
+   "EcoNet thermostats are R, C, E1, E2, S1, S2 only - no W/Y/G, and they need EcoNet-enabled indoor equipment.",
+   "Wi-Fi is 2.4 GHz only (802.11 b/g/n). It is set up from the WiFi icon at the top right of the home screen together with the EcoNet app on the owner's phone - steps under How to use it."
   ],
   "manuals": [
+   {
+    "title": "EcoNet Smart Thermostat User Guide (RETST800SYS)",
+    "docType": "user",
+    "seedFile": "rheem-econet-userguide.pdf",
+    "url": "https://files.rheem.com/blobazrheem/wp-content/uploads/sites/2/RHM5429.1_Rheem_UserGuide_NA-r3-Combined.pdf"
+   },
    {
     "title": "EcoNet Zoning Panel (REPNL700ZON) Installation Instructions",
     "docType": "install",
@@ -45147,7 +45155,7 @@ const THERMOSTATS = [
     "url": "https://files.rheem.com/blobazrheem/wp-content/uploads/sites/2/RHM5801_EcoNet_SpecSheet_R13-LoRes.pdf"
    }
   ],
-  "sourceNotes": "RHM5429.1 EcoNet Smart Thermostat User Guide (model RETST800SYS); RHM5429.1 EcoNet Quick Start Guide; RHM4959c / Form No. 92-106930-06 EcoNet Zoning Panel (REPNL700ZON) Installation Instructions; RHM5801 EcoNet Smart Thermostat Specification Sheet",
+  "sourceNotes": "RHM5429.1 EcoNet Smart Thermostat User Guide (model RETST800SYS; Ruud copy titled UETST800SYS); RHM5429.1 EcoNet Quick Start Guide; RHM4959c / Form No. 92-106930-06 EcoNet Zoning Panel (REPNL700ZON) Installation Instructions; RHM5801 EcoNet Smart Thermostat Specification Sheet",
   "img": "tstat-img/tst-rheem-econet.jpg"
  },
  {
@@ -63475,6 +63483,94 @@ tstatHowtoAdd({
     "set": "wr-btn",
     "label": "85 Series - TST85U (System and Fan buttons)",
     "note": "Rheem's parts site lists the White-Rodgers 1F85U as the replacement for these and gives its instruction sheet; the steps are from the 1F85U-42PR sheet. The -NP models are non-programmable: no schedule, the rest applies."
+   }
+  ]
+ }
+});
+// add-rheem-econet-v418.js
+tstatHowtoAdd({
+ "sets": {
+  "rh-econet-ug": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "Home screen: the mode icon is at the bottom right, the Menu icon at the bottom left, the WiFi icon at the top right. The door icon is Home / Away and the alert icon opens the alerts.",
+     "Menu > Settings > Basic holds Follow Schedule, Screen Lock, Temperature Display (F / C) and Schedule Override Time.",
+     "Menu > Schedule is the program. Menu > Settings > Away and Menu > Settings > Vacation are the away temperatures."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Connect to Wi-Fi",
+    "steps": [
+     "Before starting: the thermostat only joins 2.4 GHz Wi-Fi (802.11 b/g/n). Have the home Wi-Fi password ready and the owner's phone next to the thermostat, already on the home Wi-Fi.",
+     "On the phone, download the EcoNet app, select Create Account and follow its instructions.",
+     "On the thermostat, tap the WiFi icon at the top right of the home screen, then select Get Started.",
+     "When the thermostat shows Ready to Connect, finish the setup in the EcoNet app: follow the in-app instructions and enter the network password if asked.",
+     "When the thermostat shows it has connected, tap Done.",
+     "The WiFi icon shows the signal strength, or Not Connected. Wi-Fi is normally set up at install; run these steps again if the home network changes (new router, name or password)."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "First check the date and time under Menu > Settings.",
+     "Menu > Schedule shows the current schedule. Tap the day to edit.",
+     "Tap a day part (morning, day, evening or night) time and use the up and down arrows to set its start time.",
+     "Tap the heat set point, cool set point or fan speed for each day part and use the arrows to change it.",
+     "To copy a day: tap Copy Day, select the day(s) to copy to, then tap Paste Day.",
+     "The schedule only runs when Menu > Settings > Basic > Follow Schedule is set to Yes."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "A temperature change on the home screen while a schedule runs holds only for the Schedule Override Time: 2 hours from the factory, adjustable from 1 to 8 hours under Menu > Settings > Basic.",
+     "Menu > Settings > Basic > Follow Schedule is the setting that runs the program (Yes). The guide only describes Yes; the other choice is the way to run without the program."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Go back to the schedule (cancel a hold)",
+    "steps": [
+     "Tap Resume Schedule above the current temperature on the home screen. It also resumes by itself when the override time runs out."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Turn the heating and cooling off",
+    "steps": [
+     "Tap the mode icon at the bottom right of the home screen and select Off (the others are Auto, Heat, Cool, E-Heat and Fan).",
+     "After a mode change the equipment can wait up to 5 minutes before it runs; the Status screen shows Hold-Off Timer while it waits."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Use Away",
+    "steps": [
+     "Tap the Home icon (closed door) on the home screen: the system goes to the Away settings and stays there until cancelled.",
+     "To leave Away, tap the Away icon (open door) or change the temperature. It goes back to the schedule, or to the earlier settings if no schedule is followed.",
+     "The Away temperatures and fan are set under Menu > Settings > Away.",
+     "Vacation (Menu > Settings > Vacation): set the end time and date first, then the start, then the set points and fan speed."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   },
+   {
+    "title": "Other steps",
+    "steps": [
+     "Screen will not take changes: Screen Lock may be on. Menu > Settings > Basic > Screen Lock, set to No. Changes inside Basic settings still work while it is locked."
+    ],
+    "source": "Rheem EcoNet Smart Thermostat User Guide (RETST800SYS)"
+   }
+  ]
+ },
+ "use": {
+  "tst-rheem-econet": [
+   {
+    "set": "rh-econet-ug",
+    "note": "Steps are from Rheem's user guide for the RETST800SYS (Ruud's copy of the guide is titled UETST800SYS). Screens on the older RETST700SYS / RETST601SYS may look different."
    }
   ]
  }

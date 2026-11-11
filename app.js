@@ -1320,7 +1320,10 @@ function askUnitHits(units, hay, it) {
 // ---- "How do I work this thermostat" questions (Andy 11-11: "fix it for all the other brands too") ----
 // Brand or model + how-to words ("honeywell schedule", "nest wifi", "turn ecobee off", "carrier infinity touch
 // menu") list that brand's own thermostat cards first, steps or not, and never equipment cards ahead of them.
-const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|setup|program|programming|programmed|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode|wifi|wi-fi|timers?|thermostats?|tstat|stat)$/;
+const ASK_HOWTO_WORD = /^(menus?|schedules?|scheduling|holds?|comfort|settings?|setup|program|programming|programmed|turn|off|cancel|screen|use|using|set|setting|change|home|away|sleep|temperature|temp|system|mode|wifi|wi-fi|timers?|thermostats?|tstat|stat|connect|connects|connected|connecting|connection|reconnect|resume)$/;
+// v418: "connect" / "resume" count as how-to words, never as a model word the card's own name has to hold
+// ("econet thermostat connect to wifi", "connect ecobee to wifi" lost their cards to Total Connect Comfort).
+// They are not KEY words: a question still needs schedule / hold / wifi ... to be read as a thermostat how-to.
 // Key words: one has to be in the question. STRONG ones only a thermostat has. Menu, settings and off are also
 // equipment talk ("carrier menu codes", "lennox system off"): they lead with the thermostats only when the brand
 // makes nothing but thermostats, the question says thermostat, or it names a model. On an equipment brand
@@ -1441,10 +1444,15 @@ function askScoreItem(units, it) {
       const overGen = (units.kFam || (units.kFams || []).length) && !th.soft ? 2 : 0;
       return { sc: Math.max(sc, need) + overGen, tsc: th.soft ? need - 0.9 + order : need + order + exact };
     }
-    if (th.pure && sc >= need && (it.kind === "symptom" || it.kind === "tool") && (it.brandOnly || named(head))) {
+    // v418: the word "thermostat" itself need not be in the card, and "wifi" reads "Wi-Fi":
+    // "lennox thermostat wont connect to wifi" -> "Lennox S40 - won't connect to Wi-Fi" stays first.
+    const statN = th.howU.some(u => u.alts.some(a => ASK_STAT_WORD.test(a))) ? 1 : 0;
+    const headHow = () => th.howU.every(u => u.alts.some(a => ASK_STAT_WORD.test(a) || askTermHit(head, a) || (a === "wifi" && head.includes("wi-fi"))));
+    if (th.pure && sc >= need - statN && (it.kind === "symptom" || it.kind === "tool") && (it.brandOnly || named(head))) {
+      if (sc < need && !headHow()) return { sc, tsc };
       // An answer written for exactly this leads the thermostats: the brand's own how-to card, or a brand
       // card / tool whose title holds the asked words ("honeywell menu" -> Installer Setup Menu).
-      if (it.brandOnly || th.howU.every(u => u.alts.some(a => askTermHit(head, a)))) return { sc, tsc: need + 1 };
+      if (it.brandOnly || headHow()) return { sc: Math.max(sc, need), tsc: need + 1 };
       // The brand's other tools that hold every word (its app, its portal) sit among its thermostats.
       if (it.kind === "tool" && !th.soft) return { sc, tsc: need + 0.2 };
     }
@@ -13351,7 +13359,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v417";
+const APP_VERSION = "v418";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
