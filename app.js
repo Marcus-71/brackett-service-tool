@@ -286,10 +286,19 @@ function hayHasNumber(hay, a) {
 }
 // The one test every Ask search uses: word-boundary match, or a digit-bounded match for a number.
 function askTermHit(hay, a) { return hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hayHasNumber(hay, a)); }
+// 11-12 speed audit #3: one search asks the same question of every card (2,777 manuals, 5,000 codes),
+// and the question was parsed again for each one - 695 of 914 ms of an Error Codes keystroke, 658 of
+// 777 ms of the unit card after a scan. The parsed question is kept for the last question asked; the
+// same text always parses the same way, and nothing here changes the parsed units.
+let searchUnitsQ = null, searchUnitsLive = null;
+function searchLiveUnits(q) {
+  if (q !== searchUnitsQ || !searchUnitsLive) { searchUnitsLive = askLiveUnits(buildSearchUnits(q)); searchUnitsQ = q; }
+  return searchUnitsLive;
+}
 function textIncludes(fields, q) {
   if (!q) return true;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return askLiveUnits(buildSearchUnits(q)).every(u => u.alts.some(a => hayHasTerm(hay, a)));
+  return searchLiveUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a)));
 }
 // Count of query concepts a card actually contains — used to surface the
 // closest matches when a strict all-units search comes up empty, so a
@@ -297,7 +306,7 @@ function textIncludes(fields, q) {
 function searchScore(fields, q) {
   if (!q) return 0;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return askLiveUnits(buildSearchUnits(q)).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
+  return searchLiveUnits(q).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
 }
 
 function closeModal() {
