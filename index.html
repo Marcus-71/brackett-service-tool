@@ -136,7 +136,7 @@
   <details class="disclaimer"><summary><span>Type or tap the mic. Works with no signal. Tap for how it works.</span></summary><div class="disclaimer-more">Ask the way you'd say it out loud — "goodman 3 flashes", "what size capacitor", "sequence of operation on a heat call", "does O or B energize in cooling". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once — the result cards only ever show what's actually stored in here. The 🤖 AI answer is different: it is written from the manual pages and entries it finds plus general HVAC practice, so a number in it that you can't open in a cited page is general practice, not this unit's spec — check it against the unit's own literature before acting on it. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you).</div></details>
   <div class="controls">
     <div class="ask-input-row">
-      <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Code, symptom, model, manual…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Code, symptom, model, manual" autocomplete="off" autocapitalize="off" spellcheck="false">
       <button id="askMicBtn" class="ask-mic-btn hidden" type="button" aria-label="Ask by voice" title="Ask by voice">🎤</button>
     </div>
     <div id="askVoiceHint" class="ask-note hidden"></div>
@@ -154,23 +154,23 @@
 
 <!-- ERROR CODES -->
 <section id="codesScreen" class="screen hidden">
-  <details class="disclaimer"><summary><span>Check the code against the unit's own chart. <span class="tag verify">verify</span> = model-specific.</span></summary><div class="disclaimer-more">Starter data — verify against manufacturer docs. Entries marked <span class="tag verify">verify</span> are model-specific; confirm before field use.</div></details>
+  <details class="disclaimer"><summary><span>Check the code against the unit's own chart. <span class="tag verify">verify</span> = model-specific.</span></summary><div class="disclaimer-more">Check against the unit's own chart. Entries marked <span class="tag verify">verify</span> are model-specific; confirm before field use.</div></details>
   <div class="controls">
-    <input id="codesSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search code, symptom, or brand…" autocomplete="off">
+    <input id="codesSearchInput" class="search-input" type="search" inputmode="search" placeholder="Code, symptom or brand" autocomplete="off">
     <div class="filter-row">
       <select id="brandChips" class="filter-select" aria-label="Filter by brand"></select>
       <select id="equipChips" class="filter-select" aria-label="Filter by equipment"></select>
     </div>
   </div>
   <main id="codesResults"></main>
-  <div id="codesEmptyState" class="empty-state hidden">No matching codes. Try a different search, or add this one.</div>
+  <div id="codesEmptyState" class="empty-state hidden">No code matches. Try just the number, pick the brand, or use Ask Anything.</div>
 </section>
 
 <section id="maintScreen" class="screen hidden">
-  <details class="disclaimer"><summary><span>The tag on the unit wins over anything on this screen.</span></summary><div class="disclaimer-more">Pulled from manufacturer service literature. The rating plate on the unit wins over anything on this screen. Scanning in sun? Shade the whole label first.</div></details>
+  <details class="disclaimer"><summary><span>The tag on the unit wins over anything on this screen.</span></summary><div class="disclaimer-more">Pulled from manufacturer service literature. The tag on the unit wins over anything on this screen. Scanning in sun? Shade the whole label first.</div></details>
   <div class="controls">
-    <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model — G61, DM96VC, 59TP6…" autocomplete="off">
-    <label class="scan-btn" for="maintPhotoInput" style="margin-top:.7rem">📷 Scan the data plate</label>
+    <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Full model - G61MPV-36B-070" autocomplete="off">
+    <label class="scan-btn" for="maintPhotoInput" style="margin-top:.7rem">📷 Scan the tag</label>
     <input type="file" id="maintPhotoInput" accept="image/*" capture="environment" class="hidden">
     <div id="maintScanStatus" class="scan-status hidden"></div>
     <div class="filter-row">
@@ -183,7 +183,7 @@
 
 <!-- DIAGNOSTIC HELP -->
 <section id="diagScreen" class="screen hidden">
-  <div class="disclaimer">Starter troubleshooting flows — use judgment, confirm safety-critical steps in the field.</div>
+  <div class="disclaimer">Step-by-step checks. Use your judgment on safety steps.</div>
   <div class="controls">
     <input id="diagSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search a symptom…" autocomplete="off">
     <div class="filter-row">
@@ -203,7 +203,7 @@
   </div>
   <div id="bulletinBanner" class="bulletin-banner hidden"></div>
   <main id="manualResults"></main>
-  <div id="manualEmptyState" class="empty-state hidden">Nothing here yet. Search above by brand or model, or tap + to pick from the library.</div>
+  <div id="manualEmptyState" class="empty-state hidden">Nothing here yet. Search above by brand or model, or tap + Add to pick from the library.</div>
 </section>
 
 <!-- THERMOSTATS -->
@@ -241,7 +241,7 @@
     <form id="genProblemTypeForm" class="gen-type-model" autocomplete="off">
       <input type="text" id="genProblemModel" placeholder="Or type the model # - G0072580, 20RCAL" aria-label="Generator model number" autocapitalize="characters" spellcheck="false">
       <input type="text" id="genProblemSerial" placeholder="Serial (optional)" aria-label="Generator serial number" autocapitalize="characters" spellcheck="false">
-      <button type="submit">Open</button>
+      <button type="submit">Open this generator</button>
     </form>
     <div id="genProblemScanStatus" class="scan-status hidden"></div>
   </div>
@@ -356,7 +356,7 @@
     </details>
   </div>
   <main id="genResults"></main>
-  <div id="genEmptyState" class="empty-state hidden">No matching generator. Try the 4-digit model (7043), the full number off the data label (G0070430 / 007043-0), the kW, or a code.</div>
+  <div id="genEmptyState" class="empty-state hidden">No matching generator. Try the 4-digit model (7043), the full number off the tag (G0070430 / 007043-0), the kW, or a code.</div>
   <!-- app.js (genSyncBrandTabs) writes the Generac / Kohler text into #genBrandNote, so the id stays on the inner block -->
   <details class="disclaimer"><summary><span>From the maker's own manuals. Confirm on the unit's tag and controller.</span></summary><div class="disclaimer-more" id="genBrandNote">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div></details>
 </section>
@@ -370,7 +370,7 @@
 <section id="toolboxScreen" class="screen hidden">
   <details class="disclaimer"><summary><span>Which maker app or board tool to use, and when. Check the menus still match.</span></summary><div class="disclaimer-more">Board programming tools and the manufacturers' phone / Bluetooth service apps — current ones and the legacy ones still on installed equipment — with when to use each. Confirm exact app/menu steps still match — vendor apps update their UI over time.</div></details>
   <div class="controls">
-    <input id="toolboxSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search tool, app, brand, or board…" autocomplete="off">
+    <input id="toolboxSearchInput" class="search-input" type="search" inputmode="search" placeholder="Tool, app, brand or board" autocomplete="off">
     <div class="filter-row">
       <select id="toolboxBrandChips" class="filter-select" aria-label="Filter by brand"></select>
       <select id="toolboxEraChips" class="filter-select" aria-label="Filter by current or legacy"></select>
@@ -385,7 +385,7 @@
   <details class="disclaimer"><summary><span>See what the system was doing from a D-Checker recording. Confirm with gauges.</span></summary><div class="disclaimer-more">Daikin's service checkers log what the system is actually doing — pressures, temps, compressor speed, valves, error codes. Open a D-Checker log in the Cycle Viewer to watch it play back on the refrigerant circuit; VRV jobs use the Service Checker TYPE4 on a laptop. Signatures are pointers — confirm with gauges and the service manual.</div></details>
   <main>
     <button id="checkerLiveBtn" class="checker-launch" type="button">
-      <span class="checker-launch-title">● Live from the unit: connect to the adapter</span>
+      <span class="checker-launch-title">● Connect to the unit (Daikin Bluetooth adapter)</span>
       <span class="checker-launch-sub">Android phone with Chrome and Daikin's Bluetooth adapter (BTSC) on the outdoor board. Opens straight on Connect; readings save to My logs when you tap Stop and save.</span>
     </button>
     <label id="checkerDrop" class="checker-drop" for="checkerFile">
@@ -533,7 +533,7 @@
         <div class="form-field"><label>Custom oz/ft</label><input id="fc-wi-custom" type="number" inputmode="decimal" step="0.01" placeholder="from the unit's install manual"></div>
       </div>
       <div id="fc-wi-out" class="fc-out"></div>
-      <p class="warranty-needs">Adders per Lennox install literature (5/16" 0.40 / 3/8" 0.60 / 1/2" 1.00 oz per ft); Goodman, Daikin and Trane publish the same 0.60 oz/ft for 3/8" liquid line. Nameplate charge and factory-covered length come off the unit's own data plate. Mini-splits state their own adder in g/m — use Custom.</p>
+      <p class="warranty-needs">Adders per Lennox install literature (5/16" 0.40 / 3/8" 0.60 / 1/2" 1.00 oz per ft); Goodman, Daikin and Trane publish the same 0.60 oz/ft for 3/8" liquid line. Nameplate charge and factory-covered length come off the unit's own tag. Mini-splits state their own adder in g/m — use Custom.</p>
     </details>
 
     <details class="fc-tool">
@@ -564,9 +564,9 @@
 
 <!-- TAG SCANNER -->
 <section id="scannerScreen" class="screen hidden">
-  <details class="disclaimer"><summary><span>Straight on, good light, shade the whole label. Check what it read.</span></summary><div class="disclaimer-more">Photograph the unit's data plate straight-on in good light. In sun, shade the whole label, so no shadow line cuts across it. Reading happens on this phone — no signal needed. Always double-check the model/serial it reads before trusting it.</div></details>
+  <details class="disclaimer"><summary><span>Straight on, good light, shade the whole label. Check what it read.</span></summary><div class="disclaimer-more">Photograph the unit's tag straight-on in good light. In sun, shade the whole label, so no shadow line cuts across it. Reading happens on this phone — no signal needed. Always double-check the model/serial it reads before trusting it.</div></details>
   <main>
-    <label class="scan-btn" for="tagPhotoInput">📷 Take photo of the model tag</label>
+    <label class="scan-btn" for="tagPhotoInput">📷 Take photo of the tag</label>
     <input type="file" id="tagPhotoInput" accept="image/*" capture="environment" class="hidden">
     <label class="scan-btn-alt" for="tagPhotoPick">🖼 Use a photo you already took</label>
     <input type="file" id="tagPhotoPick" accept="image/*" class="hidden">
@@ -585,7 +585,7 @@
 <section id="warrantyScreen" class="screen hidden">
   <details class="disclaimer"><summary><span>Scan the tag for the maker's lookup. Registration decides real coverage.</span></summary><div class="disclaimer-more">Scan the tag and this screen runs the maker's official lookup for you — in the app where the maker allows it, or with the serial copied and ready where their site demands a human. Registration status decides real coverage; the serial-decoded age is only an estimate.</div></details>
   <main>
-    <label class="scan-btn" for="warrantyPhotoInput">📷 Take photo of the model tag</label>
+    <label class="scan-btn" for="warrantyPhotoInput">📷 Take photo of the tag</label>
     <input type="file" id="warrantyPhotoInput" accept="image/*" capture="environment" class="hidden">
     <div id="warrantyStatus" class="scan-status hidden"></div>
     <img id="warrantyPreview" class="scan-preview hidden" alt="Tag photo preview">
@@ -677,7 +677,7 @@
 
 <!-- INVENTORY (Andy / Kenny only) -->
 <section id="inventoryScreen" class="screen hidden">
-  <details class="disclaimer"><summary><span>Scan the tag on every unit - totals by model. Stays on this phone until emailed.</span></summary><div class="disclaimer-more">Scan the data plate on every unit - the count totals by model number. A serial already counted is skipped. The count stays on this phone (works with zero signal) until you email it and start a new one.</div></details>
+  <details class="disclaimer"><summary><span>Scan the tag on every unit - totals by model. Stays on this phone until emailed.</span></summary><div class="disclaimer-more">Scan the tag on every unit - the count totals by model number. A serial already counted is skipped. The count stays on this phone (works with zero signal) until you email it and start a new one.</div></details>
   <main id="inventoryBody"></main>
 </section>
 
