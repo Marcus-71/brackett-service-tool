@@ -2654,10 +2654,10 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmst-strips-limit-mbs",
-  "unit": "^DMST",
+  "unit": "^[AD]MST[0-9]{2}[A-Z]U13",
   "brand": "Daikin",
   "equipment": "Air Handler",
-  "title": "Strips cycling on limit or running too hot — speed tap below the M.B.S. — DMST",
+  "title": "Strips cycling on limit or running too hot — speed tap below the M.B.S. — AMST / DMST",
   "summary": "On a DMST (same unit as the Goodman AMST) the blower speed tap has to meet or beat the Minimum Blower Setting (M.B.S.) on the serial plate for that air handler and heat kit, and a tap left too low starves the strips of air.",
   "steps": [
    "Read the serial plate. Find the heat kit box marked with an X and the Minimum Blower Setting (M.B.S.) for that air handler and heat kit. No X means nobody recorded a kit.",
@@ -2680,10 +2680,10 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmst-temp-rise-airflow-check",
-  "unit": "^DMST",
+  "unit": "^[AD]MST[0-9]{2}[A-Z]U13",
   "brand": "Daikin",
   "equipment": "Air Handler",
-  "title": "Strip heat feels weak or too hot — check airflow with a temperature rise — DMST",
+  "title": "Strip heat feels weak or too hot — check airflow with a temperature rise — AMST / DMST",
   "summary": "The DMST/AMST IO gives a temperature-rise formula with voltage correction factors, so you can back-calculate real airflow on electric heat and tell a low-airflow problem from a strip that isn't energized.",
   "steps": [
    "Set the thermostat to maximum heat so the strips run, and let the system reach steady state.",
@@ -2706,10 +2706,10 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmst-strip-staging-w1-w2",
-  "unit": "^DMST",
+  "unit": "^[AD]MST[0-9]{2}[A-Z]U13",
   "brand": "Daikin",
   "equipment": "Air Handler",
-  "title": "All strips come on together, or the second bank never does — W1/W2 jumper and outdoor thermostats — DMST",
+  "title": "All strips come on together, or the second bank never does — W1/W2 jumper and outdoor thermostats — AMST / DMST",
   "summary": "On the DMST, kits of 15 kW and above are wired for two heat stages, and the IO's wiring notes say to jumper W1 and W2 together when OT-2 isn't used; whether that jumper or the outdoor thermostats are in place decides how the strips stage.",
   "steps": [
    "Identify the kit size from the serial plate. The IO has separate low-voltage diagrams for kits of 10 kW and below and for 15 kW and above, for both cooling-only and heat pump systems.",
@@ -2731,10 +2731,10 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmst-hp-heat-weak-airflow",
-  "unit": "^DMST",
+  "unit": "^[AD]MST[0-9]{2}[A-Z]U13",
   "brand": "Daikin",
   "equipment": "Air Handler",
-  "title": "Weak airflow in heat pump heat with a single-stage heat pump — Y not on Y2 — DMST",
+  "title": "Weak airflow in heat pump heat with a single-stage heat pump — Y not on Y2 — AMST / DMST",
   "summary": "With a single-speed heat pump on a DMST, thermostat Y must land on Y2 at the air handler, and the heat pump tap must give the AHRI airflow or at least 350 CFM per ton; on the 5-ton cabinet, airflow is set by how the motor leads are wired.",
   "steps": [
    "Look at the low-voltage terminal board. With a single-speed cooling or heat pump unit, thermostat Y must connect to Y2 on the air handler, not Y1.",
@@ -2755,10 +2755,10 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmst-new-heat-kit-no-heat",
-  "unit": "^DMST",
+  "unit": "^[AD]MST[0-9]{2}[A-Z]U13",
   "brand": "Daikin",
   "equipment": "Air Handler",
-  "title": "Heat kit just installed and no strip heat — HKTS kit, EHK plug, transformer — DMST",
+  "title": "Heat kit just installed and no strip heat — HKTS kit, EHK plug, transformer — AMST / DMST",
   "summary": "The DMST only accepts HKTS-series kits; the install takes the transformer off and calls for discarding the factory EHK PLF connector, so an incomplete kit install shows up as no strip heat.",
   "steps": [
    "Confirm the kit is HKTS series. It is the only heat kit permitted in this air handler. Check compatibility on the serial/rating plate or the HKTS spec sheet.",
@@ -2783,11 +2783,11 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmvt-heat-kit-not-selected",
-  "unit": "^DMVT",
-  "brand": "Daikin",
+  "unit": "^AMVT[0-9]{2}[A-Z]P13",
+  "brand": "Goodman",
   "equipment": "Air Handler",
-  "title": "Heat kit installed but strips never come on — EHt menu still at 0 — DMVT",
-  "summary": "The DMVT (same unit as the AMVT) control has to be told which heater kit is installed; the Electric Heating Wattage menu ships at 0 (no heat kit), and the app has a strip test for each stage.",
+  "title": "Heat kit installed but strips never come on — EHt menu still at 0 — AMVT",
+  "summary": "The AMVT control has to be told which heater kit is installed; the Electric Heating Wattage menu ships at 0 (no heat kit), and the app has a strip test for each stage.",
   "steps": [
    "On the board's push buttons or in the CoolCloud HVAC app, open the Electric Heating Wattage menu (EHt). Default is 0 (No Heat Kit). Select the kit actually installed.",
    "Confirm connector EHK PLM was discarded when the kit was installed (wiring diagram note).",
@@ -2810,11 +2810,11 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmvt-strips-primary-hp-lockout",
-  "unit": "^DMVT",
-  "brand": "Daikin",
+  "unit": "^AMVT[0-9]{2}[A-Z]P13",
+  "brand": "Goodman",
   "equipment": "Air Handler",
-  "title": "Strips running all the time and the heat pump seems locked out — Comfort Setting logic — DMVT",
-  "summary": "With a communicating heat pump, the DMVT decides when to add or stay on electric heat from a target runtime and strike counts; several long cycles in a row make the strips the temporary primary heat source.",
+  "title": "Strips running all the time and the heat pump seems locked out — Comfort Setting logic — AMVT",
+  "summary": "With a communicating heat pump, the AMVT decides when to add or stay on electric heat from a target runtime and strike counts; several long cycles in a row make the strips the temporary primary heat source.",
   "steps": [
    "Confirm a communicating heat pump is installed. The electric heat adjustments only apply in that case.",
    "Read the Comfort Setting menu (CFS). Options 1-5 set target runtimes of 10, 15, 20, 25 and 30 minutes. Option 6 unlocks the individual menus (t9t, SUP, SdP, Ott, Utt).",
@@ -2835,11 +2835,11 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmvt-thermostat-single-w-dft",
-  "unit": "^DMVT",
-  "brand": "Daikin",
+  "unit": "^AMVT[0-9]{2}[A-Z]P13",
+  "brand": "Goodman",
   "equipment": "Air Handler",
-  "title": "DFT on the display during an aux heat call, or strips/heat pump acting wrong — thermostat setup — DMVT",
-  "summary": "The DMVT board has no O input and takes a single W for all heat, so the thermostat setup is different from a normal heat pump; on a legacy heat pump the display reads DFT any time Y and W are on together.",
+  "title": "DFT on the display during an aux heat call, or strips/heat pump acting wrong — thermostat setup — AMVT",
+  "summary": "The AMVT board has no O input and takes a single W for all heat, so the thermostat setup is different from a normal heat pump; on a legacy heat pump the display reads DFT any time Y and W are on together.",
   "steps": [
    "Communicating outdoor unit: the air handler needs one Y for cooling and one W for all heat, backup strips included. Set the thermostat up as single-stage AC with single-stage electric heat.",
    "The board has no O wire input. Setting the thermostat up for heat pump or multistage control may cause incorrect operation.",
@@ -2859,11 +2859,11 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmvt-hp-heat-airflow-setup",
-  "unit": "^DMVT",
-  "brand": "Daikin",
+  "unit": "^AMVT[0-9]{2}[A-Z]P13",
+  "brand": "Goodman",
   "equipment": "Air Handler",
-  "title": "Low or wrong airflow in heat pump heat with a non-communicating heat pump — ton, HtF and delay menus — DMVT",
-  "summary": "With a non-communicating heat pump, DMVT heat pump airflow comes from the ton menu (tonnage x 400) plus the heating trim, with its own low-stage percentage and on/off delays.",
+  "title": "Low or wrong airflow in heat pump heat with a non-communicating heat pump — ton, HtF and delay menus — AMVT",
+  "summary": "With a non-communicating heat pump, AMVT heat pump airflow comes from the ton menu (tonnage x 400) plus the heating trim, with its own low-stage percentage and on/off delays.",
   "steps": [
    "Set OdS to the outdoor unit type: 1HP for a single-stage heat pump, 2HP for a two-stage one.",
    "Set the ton menu. Airflow = tonnage selection x 400, so 3.0 gives 1200 CFM. Use the AHRI airflow, or at least 350 CFM per outdoor ton. External static must not exceed 0.5 in. WC.",
@@ -2884,11 +2884,11 @@ const UNIT_SCENARIOS = [
  },
  {
   "id": "u-daikin-dmvt-strip-airflow-defrost-heat",
-  "unit": "^DMVT",
-  "brand": "Daikin",
+  "unit": "^AMVT[0-9]{2}[A-Z]P13",
+  "brand": "Goodman",
   "equipment": "Air Handler",
-  "title": "Cool air during defrost or strips running on low airflow — electric heat menus and temp rise — DMVT",
-  "summary": "The DMVT has separate menus for electric heat on/off delay, airflow trim, low-stage percentage, combined HP-plus-strip trim and which strip stage runs in defrost; the display tells you which stage the board is calling.",
+  "title": "Cool air during defrost or strips running on low airflow — electric heat menus and temp rise — AMVT",
+  "summary": "The AMVT has separate menus for electric heat on/off delay, airflow trim, low-stage percentage, combined HP-plus-strip trim and which strip stage runs in defrost; the display tells you which stage the board is calling.",
   "steps": [
    "Check the electric heat during defrost menu: 1 = low stage, 2 (default) = high stage. A unit set to 1 puts out less heat during defrost.",
    "Watch the status display during the complaint. It has separate states for Electric Heat low and high stage and for Defrost with low or high stage electric heat.",

@@ -256,6 +256,10 @@ function codeSearchAliases(code) {
   if (m) return m[1][0] === "0" ? ["E" + m[1], m[1].replace(/^0+/, "")] : ["E" + m[1], "0" + m[1]];
   // Bosch Climate 5000 G3 prints its long-scheme codes with a space ("EC 52").
   // Techs type them both ways; feed the other spelling into the haystack.
+  // Goodman / Amana 3-character furnace displays show EE0 / EEb where the flow charts and older boards
+  // print E0 / Eb (v425): the short form finds the row too.
+  m = c.match(/^EE([0-9A-Za-z])$/);
+  if (m) return ["E" + m[1]];
   m = c.match(/^([A-Za-z]{2})\s([0-9A-Za-z]{2})$/);
   if (m) return [m[1] + m[2]];
   m = c.match(/^([A-Za-z]{2})([0-9A-Za-z]{2})$/);
@@ -545,11 +549,21 @@ function renderChips(containerId, values, active, onPick, allLabel) {
 // Longest front part (5+ characters) of a model number that a code family's
 // text names - "59SP5A080E171216" -> "59SP5A". "" when the query isn't
 // model-shaped or no family matches.
+// v425: model fronts whose first 5 characters are shared with a sibling that has a different code table
+// (GMVC95 against GMVC96, an R-410A AMVT..P1400 against the R-32 AMVT..P1300). For these the family text
+// must name the model up to the character that tells them apart (min), or the unit gets no family at all
+// rather than the sibling's rows. Lists: scratch\audit-1112\equip\patch (guardHeads, proven by simulate.js).
+const CODE_FAMILY_GUARDS = [
+  { re: new RegExp("^(?:" + ["AC9C8[^0]","AC9C9[^6]","AC9S9[^6]","ACSS9[^26]","ACVC9[^6]","ACVM9[^7]","AM9C8[^0]","AM9C9[^6]","AM9S9[^26]","AMSS9[^26]","AMVC9[^6]","AMVM9[^7]","DC96V[^C]","DD96S[^N]","DD96T[^N]","DM96V[^C]","DR92S[^N]","DR96S[^N]","GC9C8[^0]","GC9C9[^6]","GC9S9[^6]","GCEC9[^6]","GCES9[^6]","GCSS9[^26]","GCVC9[^6]","GCVM9[^7]","GD9T9[^6]","GM9C8[^0]","GM9C9[^6]","GM9S9[^26]","GMEC9[^6]","GMES9[^26]","GMSS9[^26]","GMVC9[^6]","GMVM9[^7]","GR9T9[^6]","VC9S9[^6]","VCSS9[^6]","VM9S9[^6]","VMSS9[^6]"].join("|") + ")"), min: 6 },
+  { re: /^(?:AMVT|DMVT|AHVE|DFVE)[0-9]{2}[A-Z]P14/, min: 10 },
+  { re: /^[AD]MST[0-9]{2}[A-Z]U14/, min: 10 },
+];
 function codeFamilyPrefix(q, codes) {
   const m = String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   if (m.length < 6 || !/[A-Z]/.test(m) || !/\d/.test(m)) return "";
   const fams = [...new Set((codes || []).map(c => String(c.family || "").toUpperCase()))];
-  for (let n = m.length - 1; n >= 5; n--) {
+  const guard = CODE_FAMILY_GUARDS.find(g => g.re.test(m));
+  for (let n = m.length - 1; n >= (guard ? guard.min : 5); n--) {
     const p = m.slice(0, n);
     if (fams.some(f => f.includes(p))) return p;
   }
@@ -5318,9 +5332,12 @@ const GEN_MAINT_KITS = {
   "gen-guardian-evo2-dr-11-20": [{ kw: [11, 11], pn: "G006483-0" }, { kw: [20, 20], pn: "0J93230ESV" }],
   "gen-guardian-evo2-20-3ph": [{ pn: "0J93230ESV" }],
   "gen-synergy-evo2-20": [{ pn: "G006829-0" }],
+  "gen-synergy-vscf-20": [{ pn: "G006829-0" }],   // kit sheet 0198110SBY Rev H p.2: 20 kW Synergy, units 6055 / 6098 (sheet: kits are for units built 2013 and later)
   "gen-ecogen-evo2-15": [{ pn: "G006829-0" }],
   "gen-ecogen-evo1-15": [{ pn: "G006829-0" }],
-  "gen-powerpact-7-75": [{ kw: [7.5, 7.5], pn: "G006806-0" }],
+  "gen-ecogen-nexus-6": [{ pn: "G006004-0" }],    // kit sheet 0198110SBY Rev H p.2: 6 kW, unit 5818 (sheet: kits are for units built 2013 and later)
+  "gen-corepower-7": [{ pn: "G006003-0" }],       // kit sheet 0198110SBY Rev H p.2: 7 kW CorePower, units 5837 / 5888 (sheet: kits are for units built 2013 and later)
+  "gen-powerpact-7-75": [{ pn: "G006806-0" }],    // kit sheet 0198110SBY Rev H p.2: 7 kW PowerPact 6561 / 6518 / 6519, 7.5 kW 6998
   "gen-guardian-evo1-8": [{ pn: "0J93200ESV" }],      // SM KIT 8KW EVOLUTION
   "gen-guardian-evo1-11": [{ pn: "0J93210ESV" }],     // SM KIT 11KW EVOLUTION (store: unavailable)
   "gen-guardian-evo1-13-17": [{ pn: "0J93220ESV" }],  // SM KIT 14-17 KW EVOLUTION
@@ -11932,9 +11949,21 @@ function renderScanResult(info) {
     const sy = decodeSerialYear(info.brand || info.brandGuess, info.serial, info.equipment);
     if (sy && sy.year !== info.plateDate.year) facts.push(["Serial says", serialYearText(sy) + " - the printed date is the one to trust"]);
   } else if (info.age) facts.push(["Year made", info.age]);
-  const brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
+  let brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
   const twinModel = info.brand === "Carrier" ? carrierTwinModel(info.model) : "";
-  const famPre = codeFamilyPrefix(info.model, brandCodes) || (twinModel ? codeFamilyPrefix(twinModel, brandCodes) : "");
+  let famPre = codeFamilyPrefix(info.model, brandCodes) || (twinModel ? codeFamilyPrefix(twinModel, brandCodes) : "");
+  // v425: Daikin / Goodman / Amana share furnaces and air handlers, and a code family is filed under one
+  // badge only (a Daikin DR96SN tag has its rows under Goodman). When the scanned badge has no family
+  // naming this model, use the family under the sister badge that names it.
+  let codeBrand = info.brand;
+  if (!famPre && ["Daikin", "Goodman", "Amana"].includes(info.brand)) {
+    for (const b of ["Daikin", "Goodman", "Amana"]) {
+      if (b === info.brand) continue;
+      const bc = getAllCodes().filter(c => c.brand === b && c.equipment === info.equipment);
+      const p = codeFamilyPrefix(info.model, bc);
+      if (p) { famPre = p; brandCodes = bc; codeBrand = b; break; }
+    }
+  }
   if (twinModel && !(info.notes || []).some(n => /Carrier twin/.test(n))) info.notes = [...(info.notes || []), "Carrier twin: " + carrierTwinSeries(info.model) + " - same platform, so that model's codes, manuals and scenarios apply."];
   const codeCount = famPre ? brandCodes.filter(c => String(c.family || "").toUpperCase().includes(famPre)).length : brandCodes.length;
   // Share across with Maintenance Figures: show the link only when this exact
@@ -11994,7 +12023,7 @@ function renderScanResult(info) {
     </div>`;
   const goCodes = document.getElementById("scanGoCodes");
   if (goCodes) goCodes.onclick = () => {
-    codesState.brand = info.brand; codesState.equipment = info.equipment;
+    codesState.brand = codeBrand; codesState.equipment = info.equipment;
     // Straight to this unit's own family when one is named by the model's
     // front part (59SP5A080E171216 -> 59SP5A), not every Carrier furnace code.
     const pre = famPre;
@@ -13523,7 +13552,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v424";
+const APP_VERSION = "v425";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

@@ -28601,6 +28601,28 @@ const GEN_TIP_ADDITIONS = {
   "Cold Smart Start: with it enabled the warm-up before transfer stretches from the normal 5 s (install manual says 6 s) to 30 s when the start-up ambient is below the set point; the PZ200 dealer manual also allows up to 4 min 'Warming Up' before an undervoltage shutdown. The manuals disagree on the rest - owner's manuals (A0004332577 p.24, Y32 p.22, 3-ph p.21): factory-DISABLED, set point 50 F (10 C) for every model; install manuals (A0004332575 p.35, Y32 p.35, 3-ph p.35): factory-ENABLED, 50 F for 10-18 kW and 20 F (-7 C) for 20 (3-ph) and 22-28 kW, a table copied from the Evolution 2.0 owner's manual. The dealer manual gives no default. Read the actual state in Field Pro > Configuration > Cold smart start before judging a 30 s transfer delay."
  ]
 };
+// v425 (audit 2026-11-12): how an alarm is cleared, per card, as that family's own owner's / install manual prints it
+// (scratch\audit-1112\generac\VERIFY-generac-B.md).
+const GEN_TIP_ADDITIONS_1112 = {
+ "gen-guardian-evo2-9-22": ["Clear an alarm: press OFF, then ENTER, then AUTO. (Owner's manual 0L6629 and install manual 0L6630, Quick Reference Guide)"],
+ "gen-guardian-evo2-10-22-compact": ["Clear an alarm: press OFF, then ENTER, then AUTO (owner's manual 10000024942, Quick Reference Guide). Install manual 10000024925 prints it as ENTER twice, then AUTO."],
+ "gen-guardian-evo2-10-26": ["Clear an alarm: press OFF, then ENTER, then AUTO (owner's manual A0001846499, Quick Reference Guide). Install manual A0001846478 prints it as ENTER twice, then AUTO."],
+ "gen-guardian-evo2-response-16-22": ["Clear an alarm: press OFF, then ENTER, then AUTO. (Owner's manual 10000018942 and install manual 10000018917, Quick Reference Guide)"],
+ "gen-guardian-evo2-dr-11-20": ["Clear an alarm: press OFF, then ENTER, then AUTO. (Owner's manual 10000027504 and install manual 10000027522, Quick Reference Guide)"],
+ "gen-guardian-evo2-powermate-11": ["Clear an alarm: press OFF, then ENTER, then AUTO. (Owner's manual 10000027540 and install manual 10000027550, Quick Reference Guide)"],
+ "gen-synergy-evo2-20": ["Clear an alarm: press OFF, then ENTER, then AUTO. (Owner's manual 0L6631 and install manual 0L6632, Quick Reference Guide)"],
+ "gen-ecogen-evo2-15": ["Clear an alarm: press OFF, then ENTER, then AUTO. (Owner's manual 10000032217, Quick Reference Guide)"],
+ "gen-guardian-evo2-20-3ph": ["Clear an alarm: press OFF, then ENTER, then AUTO (owner's manual 10000014077, Quick Reference Guide). Install manual 10000014113 prints it as ENTER twice, then AUTO."],
+ "gen-guardian-evo1-8": ["Clear an alarm or warning: press OFF, then ENTER (owner's manuals 0K5801 and 0J9943). The Quick Reference Guide in 0K5801 and 0K5804 prints it as ENTER twice, then AUTO."],
+ "gen-guardian-evo1-11": ["Clear an alarm or warning: press OFF, then ENTER (owner's manuals 0K5801 and 0J9943). The Quick Reference Guide in 0K5801 and 0K5804 prints it as ENTER twice, then AUTO."],
+ "gen-guardian-evo1-13-17": ["Clear an alarm or warning: press OFF, then ENTER (owner's manuals 0K5801 and 0J9943). The Quick Reference Guide in 0K5801 and 0K5804 prints it as ENTER twice, then AUTO."],
+ "gen-guardian-evo1-20-22": ["Clear an alarm or warning: press OFF, then ENTER (owner's manuals 0K5801 and 0J9943). The Quick Reference Guide in 0K5801 and 0K5804 prints it as ENTER twice, then AUTO."],
+ "gen-ecogen-evo1-15": ["Clear an alarm or warning message: press OFF, then ENTER. (Owner's manual 0K6046 and install manual 0K6047)"],
+ "gen-synergy-vscf-20": ["Clear an alarm or warning: press OFF, then ENTER (owner's manual 0K2502). The Quick Reference Guide in 0K2502 and install manual 0K2503 prints it as ENTER twice, then AUTO."],
+ "gen-generac-protector-rg-evolution": ["Clear an alarm or warning message: press OFF, then ENTER. With more than one alarm up, the next message then shows. (Owner's manuals 0K8185 and 48/60/80 kW 4.5L.) The 48 kW Installation Guidelines print it as ENTER twice, then AUTO."],
+ "gen-generac-protector-rg-legacy-3600": ["Units with the Evolution screen: clear an alarm or warning message by pressing OFF, then ENTER. With more than one alarm up, the next message then shows. (Owner's manual 0K8185)"]
+};
+for (const id of Object.keys(GEN_TIP_ADDITIONS_1112)) GEN_TIP_ADDITIONS[id] = [...(GEN_TIP_ADDITIONS[id] || []), ...GEN_TIP_ADDITIONS_1112[id]];
 (function () {
   for (const g of GENERATORS) {
     for (const a of GEN_TS_ADDITIONS) if (a.familyIds.includes(g.id)) g.troubleshooting = [...(g.troubleshooting || []), a.item];
