@@ -36,7 +36,7 @@
     <button class="tile tile-scanner" data-screen="scanner">
       <span class="tile-icon">📷</span>
       <span class="tile-label">Tag Scanner with Maintenance Figures</span>
-      <span class="tile-sub">Snap the tag - unit, figures, codes</span>
+      <span class="tile-sub">Snap the tag - unit, figures, codes, warranty</span>
     </button>
     <button class="tile tile-codes" data-screen="codes">
       <span class="tile-icon">⚡</span>
@@ -47,6 +47,12 @@
       <span class="tile-icon">🔌</span>
       <span class="tile-label">Generators</span>
       <span class="tile-sub">Codes, specs, checklist</span>
+    </button>
+    <!-- Andy 11-12: Sensors & Plugs sits directly under Error Codes -->
+    <button class="tile tile-sensors" data-screen="sensors">
+      <span class="tile-icon">🌡️</span>
+      <span class="tile-label">Sensors &amp; Plugs</span>
+      <span class="tile-sub">Board plugs and ohm charts</span>
     </button>
     <button class="tile tile-manuals" data-screen="manuals">
       <span class="tile-icon">📄</span>
@@ -77,16 +83,6 @@
       <span class="tile-icon">🧰</span>
       <span class="tile-label">Toolbox</span>
       <span class="tile-sub">Maker apps and board tools</span>
-    </button>
-    <button class="tile tile-sensors" data-screen="sensors">
-      <span class="tile-icon">🌡️</span>
-      <span class="tile-label">Sensors &amp; Plugs</span>
-      <span class="tile-sub">Board plugs and ohm charts</span>
-    </button>
-    <button class="tile tile-warranty" data-screen="warranty">
-      <span class="tile-icon">🛡️</span>
-      <span class="tile-label">Warranty Check</span>
-      <span class="tile-sub">Scan the tag, check warranty</span>
     </button>
     <button class="tile tile-weather" data-screen="weather">
       <span class="tile-icon">💧</span>
@@ -547,6 +543,8 @@
       <label>Model #<input id="scanModelInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="or type it here"></label>
       <label>Serial #<input id="scanSerialInput" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="optional"></label>
       <button id="scanIdentifyBtn" class="scan-identify">Identify unit</button>
+      <!-- Warranty Check is reached from here since v432 (Andy 11-12: its Home tile is gone) -->
+      <button id="scanWarrantyBtn" class="scan-warranty-btn" type="button">🛡️ Check warranty</button>
     </div>
     <div id="scanResult"></div>
     <!-- Maintenance Figures lives here since the 11-12 merge: under the Identify button while browsing,

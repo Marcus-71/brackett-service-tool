@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v431";
+const CACHE_NAME = "bfc-cache-v432";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -83,14 +83,14 @@ const APP_SHELL = [
 // (and passes a matching or a merely left-over list); run it as a publish gate / pre-commit hook.
 // SHELL_HASHES:BEGIN
 const SHELL_HASHES = {
-  "./index.html": "54a507c35f50011a6926",
-  "./style.css": "d911643a8847295e3e61",
-  "./app.js": "94382dbd07e032646e76",
+  "./index.html": "18adf7ceccf085c2a359",
+  "./style.css": "4a8df98d0bc30fd31525",
+  "./app.js": "77d07af6f524474dd79b",
   "./pt-data.js": "683d0d877945d72a0b2a",
-  "./data.js": "594beacf3327240e2bcb",
-  "./symptoms.js": "3bb3d682db577da6b48e",
+  "./data.js": "79265633df2d543f654a",
+  "./symptoms.js": "e1d6544b55b97eab7126",
   "./unit-scenarios.js": "daeb283e183406a1d4cb",
-  "./followups.js": "b1ce8efd013925eff19b",
+  "./followups.js": "00cb8c95c37206b41583",
   "./charging-charts.js": "daec2cb65dd460da0f69",
   "./daikin-sensors.js": "9e76c4d5d59b3b9bc604",
   "./brand-sensors.js": "4f42d941cfd6f71d07dc",

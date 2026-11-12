@@ -936,6 +936,19 @@ main {
   border-radius: 10px;
   cursor: pointer;
 }
+/* v432: Warranty Check is opened from the Tag Scanner (model and serial carried over) */
+.scan-warranty-btn {
+  background: var(--card);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+/* one warranty button at a time: a unit page carries its own, in its button list */
+#scannerScreen:has(#scanGoWarranty) #scanWarrantyBtn { display: none; }
 
 .scan-id-card { margin-top: 1rem; }
 .scan-id-card .card { cursor: default; }
@@ -2339,7 +2352,9 @@ body.inv-cam-open { overflow: hidden; }
 .ask-chip-slide .ask-chip { flex: 0 0 auto; white-space: nowrap; }
 .ask-browse { padding: 0.2rem 1rem 1rem; }
 .ask-browse .ask-chip-label { font-size: 1rem; color: var(--text); margin: 0.3rem 0 0.55rem; }
-.diag-equip-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.9rem; }
+.diag-equip-btns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.55rem; margin-bottom: 0.9rem; }
+.diag-equip-btn { min-width: 0; }
+.diag-equip-btn .ask-chip-n { flex: 0 0 auto; white-space: nowrap; }
 .diag-equip-btn {
   font: inherit; font-size: 1rem; font-weight: 700; text-align: left; cursor: pointer;
   min-height: 56px; padding: 0.6rem 0.8rem; border-radius: 12px;
@@ -2356,7 +2371,7 @@ body.inv-cam-open { overflow: hidden; }
 .ask-browse .ask-lead { margin: 0.2rem 0 0; }
 @media (min-width: 700px) and (min-height: 500px) {
   .ask-browse { padding-left: max(1.2rem, calc((100% - var(--pad-col)) / 2)); padding-right: max(1.2rem, calc((100% - var(--pad-col)) / 2)); }
-  .diag-equip-btns { grid-template-columns: 1fr 1fr 1fr; }
+  .diag-equip-btns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); }
 }
 
 /* ---- 11-12 merge: Maintenance figures inside the Tag Scanner ---- */
