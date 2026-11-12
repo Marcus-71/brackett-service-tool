@@ -243,6 +243,17 @@
       <button type="submit">Open</button>
     </form>
     <div id="genProblemScanStatus" class="scan-status hidden"></div>
+  </div>
+  <!-- 2026-11-12 audit #8: brand tabs and the code search sit above the two guide boxes (the search was at y=853 on a phone) -->
+  <div class="gen-brand-tabs" id="genBrandTabs" role="tablist"><button type="button" data-brand="Generac" class="active">Generac</button><button type="button" data-brand="Kohler">Kohler</button></div>
+  <div class="controls">
+    <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model, kW or code — 22kW, 1100" autocomplete="off">
+    <div class="filter-row">
+      <select id="genSeriesChips" class="filter-select" aria-label="Filter by series"></select>
+      <select id="genCtrlChips" class="filter-select" aria-label="Filter by controller"></select>
+    </div>
+  </div>
+  <div class="gwz-entry-wrap gen-guides">
     <!-- Andy 2026-10-05: one generator, several transfer switches (Generac support drawing) -->
     <details class="gen-guide" id="genMultiAts">
       <summary><span class="gwz-entry-icon" aria-hidden="true">🔀</span><span class="gwz-entry-text"><b>Multiple Transfer Switches</b><span>One generator to 2-10 ATS - how to do it + wiring diagram</span></span></summary>
@@ -343,17 +354,9 @@
       </div>
     </details>
   </div>
-  <div class="gen-brand-tabs" id="genBrandTabs" role="tablist"><button type="button" data-brand="Generac" class="active">Generac</button><button type="button" data-brand="Kohler">Kohler</button></div>
-  <div class="disclaimer" id="genBrandNote">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
-  <div class="controls">
-    <input id="genSearchInput" class="search-input" type="search" inputmode="search" placeholder="Model, kW or code — 22kW, 1100" autocomplete="off">
-    <div class="filter-row">
-      <select id="genSeriesChips" class="filter-select" aria-label="Filter by series"></select>
-      <select id="genCtrlChips" class="filter-select" aria-label="Filter by controller"></select>
-    </div>
-  </div>
   <main id="genResults"></main>
   <div id="genEmptyState" class="empty-state hidden">No matching generator. Try the 4-digit model (7043), the full number off the data label (G0070430 / 007043-0), the kW, or a code.</div>
+  <div class="disclaimer" id="genBrandNote">Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen — code lists shift between controller generations.</div>
 </section>
 
 <!-- GENERATOR ANNUAL MAINTENANCE CHECKLIST (v227) -->

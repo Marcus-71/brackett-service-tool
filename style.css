@@ -2044,6 +2044,15 @@ body.inv-cam-open { overflow: hidden; }
 .gen-guide { margin-top: 0.35rem; border: 2px solid var(--border); border-radius: var(--radius); background: var(--card); }
 .gen-guide > summary { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 0.85rem; cursor: pointer; list-style: none; }
 .gen-guide > summary::-webkit-details-marker { display: none; }
+/* 2026-11-12 audit #6: the yellow sub-line is for the navy buttons; on these white boxes it was 1.44:1. */
+.gen-guide .gwz-entry-text span { color: var(--text-dim); }
+/* 2026-11-12 audit #8: the code search now sits above these two boxes and sticks under the top bar.
+   A guide opened from Ask Anything scrolls to its title, clear of the bar and the search block. */
+.gen-guide { scroll-margin-top: calc(var(--topbar-h, 3.6rem) + 8.5rem); }
+.gen-guides { padding-top: 0.2rem; }
+/* While a search is typed the closed guide boxes step aside, so the first result is right under the
+   search box. An open guide stays. (Browsers without :has() just keep the boxes.) */
+#genScreen:has(#genSearchInput:not(:placeholder-shown)) .gen-guide:not([open]) { display: none; }
 .gen-guide-body { padding: 0 0.9rem 0.9rem; font-size: 0.95rem; }
 .gen-guide-body ul { margin: 0.3rem 0 0.5rem 1.1rem; padding: 0; }
 .gen-guide-body li { margin: 0.25rem 0; }
