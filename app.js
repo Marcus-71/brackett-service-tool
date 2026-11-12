@@ -411,6 +411,7 @@ function showScreen(name, fromBack) {
   // child differs per screen), which should retrigger ResizeObserver — but that
   // firing isn't reliable on every device/browser, so resync explicitly here too.
   syncTopbarHeight();
+  backGuardSync();
 }
 
 document.querySelectorAll(".tile").forEach(tile => {
@@ -465,6 +466,41 @@ function goBackOneStep() {
   if (screenHistory.length) { showScreen(screenHistory.pop(), true); return; }
   if (currentScreen !== "home") showScreen("home", true);
 }
+
+// ---- Android Back button / edge swipe = the same ONE step (11-12 audit, screens #1) ----
+// The app never touched history, so Back closed the installed app from any screen or card. While a
+// screen other than Home, or a card, is showing there is one extra "guard" history entry: Back lands
+// under it, the popstate listener (next to closePdfReader) runs goBackOneStep() and steps forward onto
+// the guard again. On Home with nothing open the guard is taken away, so Back leaves the app as before.
+// The PDF reader, the in-app camera and the warranty portal still push their own entry above the guard.
+const backGuard = { busy: false, timer: null };
+function backGuardWanted() {
+  return currentScreen !== "home" || !document.getElementById("modalBackdrop").classList.contains("hidden");
+}
+function backGuardHold() {
+  backGuard.busy = true;
+  clearTimeout(backGuard.timer);
+  backGuard.timer = setTimeout(backGuardDone, 800);   // the landing never came: carry on
+}
+function backGuardDone() {
+  clearTimeout(backGuard.timer);
+  backGuard.busy = false;
+  backGuardSync();
+}
+function backGuardSync() {
+  if (backGuard.busy) return;
+  try {
+    const st = history.state || {};
+    if (backGuardWanted()) {
+      if (!st.bfcGuard && !st.bfcPdf && !st.bfcCam && !st.bfcPortal) history.pushState({ bfcGuard: 1 }, "");
+    } else if (st.bfcGuard) {
+      backGuardHold();
+      history.back();
+    }
+  } catch (e) {}
+}
+// A card opening or closing changes whether the guard is wanted (a card can sit over Home).
+new MutationObserver(backGuardSync).observe(document.getElementById("modalBackdrop"), { attributes: true, attributeFilter: ["class"] });
 
 // The gesture works from anywhere on the screen, not just the edge — but a
 // touch that starts inside a form field or a sideways-scrollable strip (filter
@@ -7902,13 +7938,23 @@ function closePdfReader(fromPop) {
   pdfView.historyArmed = false;
 }
 
-window.addEventListener("popstate", () => {
-  if (!document.getElementById("pdfViewer").classList.contains("hidden")) {
-    closePdfReader(true);
-  }
-  if (!document.getElementById("portalViewer").classList.contains("hidden")) {
-    closePortalEmbed(true);
-  }
+window.addEventListener("popstate", (e) => {
+  const st = e.state || {};
+  // Our own history.back() / history.forward() from the Back guard landing: nothing for the tech to see.
+  if (backGuard.busy) { backGuardDone(); return; }
+  if (!document.getElementById("pdfViewer").classList.contains("hidden")) { closePdfReader(true); backGuardSync(); return; }
+  if (!document.getElementById("portalViewer").classList.contains("hidden")) { closePortalEmbed(true); backGuardSync(); return; }
+  if (cam.overlay) return;                                   // the camera's own listener closes it
+  // Landed on the guard or a layer's entry: a layer above closed itself (its X button calls history.back()).
+  if (st.bfcGuard || st.bfcPdf || st.bfcCam || st.bfcPortal) { backGuardSync(); return; }
+  // Landed UNDER the guard: the tech pressed Back with a screen or a card showing. Go back one step in
+  // the app and step forward onto the guard again (no new history entry - Chrome skips entries a page
+  // adds without a tap, which would make the next Back leave the app).
+  if (!backGuardWanted()) return;                            // Home with nothing open: the next Back leaves
+  backGuard.busy = true;                                     // hold backGuardSync() while we step
+  try { goBackOneStep(); } catch (x) {}
+  backGuard.busy = false;
+  if (backGuardWanted()) { backGuardHold(); try { history.forward(); } catch (x) { backGuardDone(); } }
 });
 document.getElementById("pdfCloseBtn").onclick = () => closePdfReader(false);
 document.getElementById("pdfZoomInBtn").onclick = () => pdfSetZoom(pdfView.zoom * 1.3);
