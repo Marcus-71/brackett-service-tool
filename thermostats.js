@@ -63576,3 +63576,33 @@ tstatHowtoAdd({
   ]
  }
 });
+// triage 2026-11-11 (Jon: "how to change the temp swing honeywell home pro th6210u2001"): T6 Pro cycle rate how-to
+tstatHowtoAdd({
+ "sets": {
+  "hw-t6pro-cph": [
+   {
+    "title": "Change the temperature swing (cycle rate / CPH)",
+    "steps": [
+     "The T6 Pro has no swing or differential setting. It uses cycle rate - CPH, cycles per hour. A lower number gives fewer, longer cycles (a wider swing); a higher number gives shorter, more frequent cycles.",
+     "Enter the installer menu: hold Menu and Down together for 3 seconds, ISU shows, press Select.",
+     "Step with Select to ISU 365 (compressor cycle rate, stage 1, 1-6) and 366 (stage 2), ISU 370 (heating cycle rate, stage 1, 1-12) and 371 (stage 2), ISU 375 (aux heat) and 378 (emergency heat, TH6320U only). Change the number with Up / Down.",
+     "Resideo recommended heating rates: standard gas furnace 5, high-efficiency gas 3, oil 5, electric 9. Cooling default is 3.",
+     "Short cycling a compressor? ISU 387 compressor protection (minimum off time) is Off or 1-5 minutes.",
+     "Press Home to save and leave the menu."
+    ],
+    "source": "T6 Pro Programmable Installation Guide (docs.honeywellhome.com) p.9 ISU table and 5.1 Accessing ISU; recommended CPH by equipment from the T6 Pro Smart Professional Install Guide 33-00392EFS p.15 (same ISU numbers)"
+   }
+  ]
+ },
+ "use": {
+  "tst-honeywell-t6-pro": [
+   {
+    "set": "hw-tpro"
+   },
+   {
+    "set": "hw-t6pro-cph",
+    "label": "Installer settings"
+   }
+  ]
+ }
+});

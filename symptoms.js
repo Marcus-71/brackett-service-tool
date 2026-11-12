@@ -21549,5 +21549,39 @@ const SYMPTOMS = [
    "Exact screens differ by model: open the thermostat's own card in Thermostats (brand ecobee) and tap a topic under 'How to use it'."
   ],
   "confidence": "common"
+ },
+ {
+  "id": "s-hp-runs-nonstop-heat-no-strips",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Heat pump runs constantly (all the time) in heat mode, won't turn off (air handler, no heat strips)",
+  "summary": "Below the house's balance point a heat pump with no backup heat is supposed to run nonstop, so first prove whether it is really short on heat or just cold outside.",
+  "steps": [
+   "Note outdoor temp and how far the room is below setpoint. Below the balance point (heat loss equals heat pump output) the unit is built to run continuously; with no strips nothing makes up the gap. Nonstop running near setpoint in cold weather can be normal.",
+   "Prove it is heating: vapor (big) line at the fan coil should be hot. Run 10-15 min, compressor only, then read return and supply. Compare the rise to the unit's expanded heating data at today's outdoor temp (see the temperature-rise card). Cold big line = go to reversing valve step.",
+   "Airflow: clean filter, clean indoor coil and blower wheel. On a variable-speed fan coil with a selectable board, confirm system type is set to HP, not the factory AC setting. Measure total external static and read airflow off the fan table.",
+   "Reversing valve: these systems energize O in COOLING; in heat the solenoid should be dead. With a remote thermometer compare the valve's inlet/outlet line temps (manual shows test points); they should be close. Hot suction side in heat = valve bypassing or stuck mid-way.",
+   "Defrost: frost forms below about 45F outside. A coil that stays iced = defrost fault. Older time/temp boards: coil sensor closes about 30F (+/-3) and opens about 65F (+/-5); defrost ends on that opening or after 10 min. Force a defrost with the speed-up pins per the manual.",
+   "Charge in heat mode: compare pressures to the Heating Check Chart on the outdoor unit. The chart is a check only, never used to add or remove charge. If charge is wrong in heating season, recover and weigh in the nameplate charge, plus or minus 0.6 oz per foot of 3/8 liquid line over or under 15 ft.",
+   "Thermostat (mixed outdoor/indoor brands): stat set up as heat pump, changeover on O (energized in cool), not B. Check Y drops out at the fan coil and contactor when the stat is satisfied; a stuck Y or welded contactor keeps it running. Nothing on W when there are no strips.",
+   "Stop and call the office or the manufacturer tech line if the rise is far below the table with good airflow and a good chart reading, or the valve tests bad. Confirm in the outdoor unit's manual: its heating check chart, defrost board type and settings, and the expanded heating table for that indoor match."
+  ],
+  "safety": "Use a remote/probe thermometer on reversing valve and discharge lines - do not touch them (manufacturer warning). Kill power before working on the defrost board except for the live speed-up test.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-hp-heat-temp-rise-no-strips",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Heat pump delta T (temperature rise) in heat with no heat strips - is 20 degrees good?",
+  "summary": "There is no single good number: heat pump rise falls as it gets colder outside. On a typical 3-ton example (ICP table, 1200 CFM) about 20F is normal at 17-27F outdoors but low on a 45-50F day (about 33F there) - compare your reading to the unit's own heating table at today's outdoor temp and airflow.",
+  "steps": [
+   "Run heat pump only (no strips, not in defrost) 10-15 min. Read return and supply with a fast digital thermometer; supply probe out of line-of-sight of the coil. Write down outdoor temp too - the rise means nothing without it.",
+   "Rough range: one manufacturer's homeowner manual says heat pump supply air is only about 15-30F warmer than room air. Heat pump air feels cool on your hand; that alone is not a fault.",
+   "Real target: look up the outdoor model's expanded heating table (T/R column) for the indoor match, airflow and return temp. Example, ICP 3-ton N4H436 + 42 fan coil, 1200 CFM, 70F return: rise about 19F at 17F outdoor, 23F at 27F, 27F at 37F, 33F at 47F.",
+   "So 20F is normal near 17-27F outdoors on that example, but low on a 45-50F day (table about 33F). Low rise in mild weather = check airflow, charge, reversing valve.",
+   "Airflow: rise goes up as airflow goes down. Same example at 47F: about 37F rise at 1050 CFM vs 29F at 1350 CFM. Measure static, read the fan table; one trade method uses 400 CFM/ton +/-10%. Check fan coil is set to HP, not AC.",
+   "Capacity check: BTUH = CFM x 1.08 x rise. Compare to the heating table capacity at today's outdoor temp; a properly charged unit with right airflow should land within about 10% of rated.",
+   "Stop and call the office or manufacturer tech line if the rise is well under the table with good airflow, a good heating check chart and a good reversing valve test. Confirm in the outdoor unit's manual: the expanded heating table for this exact indoor match."
+  ],
+  "confidence": "common"
  }
 ];

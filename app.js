@@ -2372,7 +2372,16 @@ function askKindRank(units, x) {
 function askTopItems(units, limit) {
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
-  for (const it of idx) { const { sc, tsc } = askScoreItem(units, it); if (sc > 0) scored.push({ it, sc, tsc }); }
+  // 1111 (Bryce "59tp6c060v141112"): a question that is one whole model number puts the unit card whose
+  // own model / match list holds that exact number first. Every 59TP6C code row and card also hit through
+  // the family prefix, so the unit's own figures card tied with them and fell out of the top 5.
+  const live1 = askLiveUnits(units), whole = live1.length === 1 ? live1[0].alts[0] : "";
+  const wholeModel = whole && whole.length >= 8 && /[a-z]/.test(whole) && /\d/.test(whole) && /^[a-z0-9-]+$/.test(whole) ? whole : "";
+  for (const it of idx) {
+    let { sc, tsc } = askScoreItem(units, it);
+    if (sc > 0 && wholeModel && it.kind === "maint" && hayHasTerm(it.titleHay || "", wholeModel)) tsc += 1;
+    if (sc > 0) scored.push({ it, sc, tsc });
+  }
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
   // beats a card that only mentions Evolution in a footnote), then answers before references.
   scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askGeneralTie(units, a, b));
@@ -9225,6 +9234,7 @@ const MODEL_PATTERNS = [
   { re: /^213B[NPE][AW](?:018|024|030|036|042|048|060)/, brand: "Bryant", equipment: "Condenser/Heat Pump", series: "Bryant 213B Legacy Line 13 SEER split heat pump, Puron (R-410A), 1-1/2 to 5 ton", notes: ["Read 213BNA024 as 2 (heat pump) 1 (Legacy) 3 (13 SEER) B (Puron) N (208/230-1; P = 208/230-3, E = 460-3) A (dense grille; W = wide) 024 (24,000 Btuh); last letter = minor series.", "Time/temperature defrost board HK32EA001.", "Source: Bryant Product Data PDS213B-04 (09/12), model number nomenclature p.2."] },
   { re: /^RCB(?:18|24|30|36|42|48|60)B2[AD]/, brand: "Amana", equipment: "Condenser/Heat Pump", series: "Amana RCB series remote cooling unit (split AC condensing unit, around 2001)", notes: ["Amana's parts manual lists RCB18B2A, RCB24B2A, RCB30B2A, RCB36B2A, RCB42B2A, RCB48B2A and RCB60B2A, plus the same sizes ending B2D (the D models were added in Rev. 1).", "Parts are listed by manufacturing number (P1223301C ... P1223314C) - give the P number off the plate when ordering.", "Source: Amana Heating and Air Conditioning, RCB Series Remote Cooling parts manual RP6110014 Rev. 1 (October 2001), page 1 model list."] },
   { re: /^(?:MGH[AB]|MMH[AB]|MGBB|MMBB)-?0(?:56|70|77|90)/, brand: "Nortek", equipment: "Gas Furnace", series: "Nortek (Nordyne / Intertherm / Miller) MG / MM series manufactured-home downflow gas furnace, direct vent, 56,000-90,000 BTU/h input (MGHA/MGHB/MGBB standing pilot, MMHA/MMHB/MMBB direct ignition)", notes: ["Read MGHB-056ABFC as M = mobile home, G = gas direct-vent atmospheric burner, HB = A/C ready (3 ton) with relay, 056 = 56,000 BTU/h input, A = 120 V 1 ph, B = cabinet with built-in coil cavity, FC = field convertible; a -01/-02 type number may follow","MGH*/MGBB light a standing pilot (match, or the optional piezo ignitor kit); MMH*/MMBB use a hot-surface igniter","Old family: Nortek's replacement chart lists MGHA(B)/MMHA(B) as replaced by the MG1E, MG2R or MG2S series","Source: Nordyne Series MG, MM, MS and MB Installation Instructions/Owners Manual 7067092 (03/91), Tables 2-3 p.2-4; Nortek MH furnace replacement chart 846D-1019"] },
+  { re: /^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]/, brand: "FHP (Bosch)", equipment: "Other", series: "FHP (Florida Heat Pump, Bosch) EC Series water-to-air geothermal / water-loop heat pump, EC007-EC070, R-410A (discontinued)", notes: ["Read EC041-1VTC-FLT as EC series, 041 size (about 3.5 ton), 1 = 208/230-1-60, VT = vertical (HZ = horizontal), C = copper water coil, F = front water connections, L = left return, T = top supply.", "Water-source unit: no defrost, no air-source charging charts; weigh in the plate charge.", "UPM board red LED: 1 high pressure, 2 low pressure, 3 freeze, 4 condensate, 5 brownout.", "Source: FHP EC Series Catalog 6720220353 (rev 5/13) p.3 and IOM 970-289 (rev 05-12) p.1, p.4-7."] },
   // --- end triage additions ---
   // ---- v312: library gap audit (Andy 2026-10-16, "push the gaps when tests pass") - each family checked against its manual's model list or nomenclature ----
   { re: /^28[69]BNA0(24|36|48|60)/, brand: "Carrier", equipment: "Condenser/Heat Pump", series: "Bryant Evolution Series 286B / 289B 2-stage heat pump with Puron (R-410A), 2 to 5 tons - 286BNA / 289BNA 024-060", notes: ["Table 5 lists one model plug per size: 286BNA024 HK70EZ041 through 289BNA060 HK70EZ016. Source: Bryant II286-289B-07 p10.","On 286B the outdoor fan is a PSC motor. On 289B it is an ECM motor run by PWM outputs from the control board. Source: II286-289B-07 p7.","Can be wired to an Evolution control or a standard 2-stage thermostat. Source: II286-289B-07 p1."] },
@@ -10201,6 +10211,11 @@ const OCR_TAIL_FORMATS = [
   // input 026/040/060/080/100/120, cabinet A-D, airflow 08/10/12/16/20 (2023 TM9E install
   // manual size table: TM9E026A08 ... TM9E120D20). The MP12A letters after it are left as read.
   { fam: /^TM9E[0-9A-Z]{6}/, pos: ["T", "M", "9", "E", "01", "02468", "06", "ABCD", "012", "0268"], open: true },
+  // 1111 (Nick's Trane S9V2B080U4PSAAB door label, 11/11, read "SOV2BOBDUAPSAAE"): Trane / American
+  // Standard S8 / S9 furnaces are S 8|9 B|V|X 1|2, cabinet A-D, input 026-120, M|U|D, a width
+  // digit 2-5, then P|V and S|C|D|T (every S8B1 / S8V2 / S8X1 / S8X2 / S9B1 / S9V2 model in the
+  // 2026 Trane catalog and the S9V2 IOM FNR-SVX001B-EN). A 4 read as A or L in the width spot is the 4.
+  { fam: /^S[89][BVX][12][A-D][0-9A-Z]{3}/, pos: ["S", "89", "BVX", "12", "ABCD", "01", "02468", "06", "MUD", "2345", "PV", "SCDT"], open: true, swap: { 9: { A: "4", L: "4" } } },
 ];
 function ocrCheckTail(model) {
   const f = OCR_TAIL_FORMATS.find(x => x.fam.test(model));
@@ -10237,6 +10252,14 @@ function ocrCleanModelPrefix(raw) {
   const tail = (str, n) => str.slice(0, n) + str.slice(n).replace(/O/g, "0").replace(/I/g, "1");
   let p = ocrLibraryPattern(s);
   if (p) return { model: tail(s, s.match(p.re)[0].length), lib: p, exact: true, tier: ocrMatchTier(p) };
+  // 1111 (Nick's Trane S9V2B080U4PSAAB, read "SOV2B..."): a far-off Trane S9 furnace label
+  // reads its 9 as a round O / 0 / Q. Only the S9 B|V|X 1|2 + cabinet shape is re-read, and
+  // only when the 9 lands on a library family; ocrCheckTail then checks the size digits.
+  if (/^S[O0Q][BVX][12][A-D]/.test(s)) {
+    const c9 = "S9" + s.slice(2);
+    p = ocrLibraryPattern(c9);
+    if (p) return { model: tail(c9, c9.match(p.re)[0].length), lib: p, exact: false, tier: 1, fixedFrom: s };
+  }
   if (s.length >= 6 && /[0-9]/.test(s)) {
     for (const cand of ocrModelCandidates(s)) {
       p = ocrLibraryPattern(cand);
@@ -13365,7 +13388,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v419";
+const APP_VERSION = "v420";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
