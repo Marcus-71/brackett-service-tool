@@ -13455,7 +13455,19 @@ if ("serviceWorker" in navigator) {
   // Anything typed on the open screen (Charging Calc readings, Request Info, Warranty owner fields) and an
   // AI answer still on screen are work in progress too - a reload would wipe them.
   if ([...document.querySelectorAll('.screen:not(.hidden) input:not([type="file"]):not([type="search"]), .screen:not(.hidden) textarea')].some(x => String(x.value || "").trim())) return false;
-  return !document.querySelector("#askAi .ask-ai-body");
+    if (document.querySelector("#askAi .ask-ai-body")) return false;
+    // 11-12 speed audit #6: an open card, an open manual or portal page, or a search with something
+    // typed is the tech's place in the app. The phone went in his pocket for 35 s with a generator
+    // card open and he came back to Home (Dustin 10-22, Vern 10-19 and 11-11, Bryce 10-22). It holds
+    // the update off until he has not touched the app for 15 minutes - by then the app has been put
+    // away and it updates as before; until then the "Update ready" pill is his to tap.
+    if (readingSomething() && Date.now() - lastTouch < READING_HOLD_MS) return false;
+    return true;
+  }
+  const READING_HOLD_MS = 15 * 60 * 1000;
+  function readingSomething() {
+    if (["modalBackdrop", "pdfViewer", "portalViewer"].some(id => { const el = document.getElementById(id); return el && !el.classList.contains("hidden"); })) return true;
+    return [...document.querySelectorAll('.screen:not(.hidden) input[type="search"]')].some(x => String(x.value || "").trim());
   }
   let reloading = false;
   function reloadForUpdate(how) {
@@ -13490,7 +13502,7 @@ if ("serviceWorker" in navigator) {
     el.id = "updateScreen";
     el.setAttribute("role", "alertdialog");
     el.style.cssText = "position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:var(--bg);color:var(--text);font-size:18px";
-    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div>${TEAM_NOTE.text ? `<div style="margin-top:6px;max-width:420px;font-size:19px;font-weight:800;color:var(--brand-orange)">${TEAM_NOTE.text}</div>` : ""}<button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
+    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div><div data-up-progress style="font-size:14px;opacity:.75;min-height:1.3em"></div>${TEAM_NOTE.text ? `<div style="margin-top:6px;max-width:420px;font-size:19px;font-weight:800;color:var(--brand-orange)">${TEAM_NOTE.text}</div>` : ""}<button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
     const skip = el.querySelector("button");
     skip.onclick = () => giveUpWakeScreen("skipped");
     setTimeout(() => { skip.style.visibility = "visible"; }, WAKE_SKIP_AFTER_MS);
@@ -13499,6 +13511,19 @@ if ("serviceWorker" in navigator) {
     wakeShownAt = Date.now();
     document.body.appendChild(el);
   }
+  // 11-12 speed audit #2: the new version's service worker reports its download ("bfc-update-progress").
+  // Until the first report the screen keeps its fixed 30 s; from then on it gives up only when NOTHING
+  // has arrived for 12 s - on slow 4G it used to give up 3 s before the download ended. Two minutes at most.
+  const WAKE_PROGRESS_MS = 12000, WAKE_SCREEN_HARD_MS = 120000;
+  navigator.serviceWorker.addEventListener("message", (e) => {
+    const d = e.data;
+    if (!d || d.type !== "bfc-update-progress" || !wakeScreen || updateReady) return;
+    const line = wakeScreen.querySelector("[data-up-progress]");
+    if (line && d.total) line.textContent = "Downloading - " + Math.min(d.files || 0, d.total) + " of " + d.total + " files";
+    if (Date.now() - wakeShownAt > WAKE_SCREEN_HARD_MS) return;   // the timer already set is the last one
+    clearTimeout(wakeScreenTimer);
+    wakeScreenTimer = setTimeout(() => giveUpWakeScreen("timed out (no progress, " + (d.files || 0) + " of " + (d.total || "?") + " files)"), WAKE_PROGRESS_MS);
+  });
   // On open / back from the background: behind the server -> cover the app and update now.
   async function wakeUpdateCheck() {
     if (wakeChecking || wakeScreen || !navigator.onLine) return;
@@ -13513,7 +13538,7 @@ if ("serviceWorker" in navigator) {
       // untouched on a phone far behind (tryForcedUpdate), or at the next open.
       if (touchedSinceWake) { trackEvent("update waits, tech already working " + APP_VERSION + " -> v" + latestVersion); return; }
       if (updateReady) { if (safeToReload()) reloadForUpdate("on open"); return; }
-      if (!safeToReload()) return;
+      if (!safeToReload()) return;   // the new version still downloads (the foreground check at register()) and shows the pill
       showWakeScreen();
       // v336 (audit CODE-03): right after a publish the web host can still hand out the previous
       // sw.js for a few minutes, while the check above already sees the new one. Then no new
