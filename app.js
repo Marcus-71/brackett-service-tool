@@ -11891,6 +11891,25 @@ document.getElementById("scanStopBtn").addEventListener("click", (e) => {
   e.currentTarget.disabled = true;
 });
 
+// After a read that found no model: bring the status line and the photo to the top of the screen and
+// put the cursor in the Model box right under the photo, so the tag can be read off the picture.
+const SCAN_TIME_LIMIT_MS = 40000;
+function scanFocusModelBox() {
+  try {
+    const st = document.getElementById("scanStatus"), box = document.getElementById("scanModelInput");
+    if (!box || document.getElementById("scannerScreen").classList.contains("hidden")) return;
+    // Focus first (the phone brings the box above its keyboard), then line the status line and the
+    // photo up under the top bar; the box sits directly below the photo.
+    if (!box.value.trim()) box.focus();
+    const bar = document.querySelector(".topbar");
+    const place = () => {
+      const top = (st.classList.contains("hidden") ? document.getElementById("scanPreview") : st).getBoundingClientRect().top + window.scrollY - ((bar ? bar.offsetHeight : 66) + 10);
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    };
+    place(); setTimeout(place, 400);   // again once the keyboard has opened
+  } catch (e) { /* cosmetic only */ }
+}
+
 async function scanTagPhoto(file) {
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
@@ -11913,8 +11932,13 @@ async function scanTagPhoto(file) {
     const stopBtn = document.getElementById("scanStopBtn");
     stopBtn.textContent = "Stop — I'll type it in"; stopBtn.disabled = false; stopBtn.classList.remove("hidden");
     let fields;
+    // 11-12 audit (field-use #2): a reading that runs past the limit ends the same way as the Stop
+    // button - through the reader's own stop flag, so nothing about what is read changes.
+    let timedOut = false;
+    const scanTimer = setTimeout(() => { timedOut = true; ocrStopRequested = true; }, SCAN_TIME_LIMIT_MS);
     try { fields = await ocrTagFields(file, scanStatus); }
-    finally { stopBtn.classList.add("hidden"); ocrStopRequested = false; }
+    finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; }
+    if (!fields.ocrStopped) timedOut = false;   // it finished by itself just as the limit hit
     scanStatus(null);
     const typedModel = modelEl.value !== typedBefore[0] && modelEl.value.trim();
     const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value.trim();
@@ -11922,10 +11946,12 @@ async function scanTagPhoto(file) {
     if (!typedSerial) serialEl.value = fields.serial;
     if (!fields.model) {
       const photoId = newScanPhotoId();
-      trackEvent("SCAN - NO MODEL READ" + (fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
-      scanStatus(fields.ocrStopped
-        ? "Stopped. Type the model number below and tap Identify unit." + (typedModel ? "" : tagNoModelHint(fields))
-        : "I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + SCAN_SHADE_TIP + tagNoModelHint(fields));
+      trackEvent("SCAN - NO MODEL READ" + (timedOut ? " (time limit " + Math.round(SCAN_TIME_LIMIT_MS / 1000) + " s)" : fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
+      // One plain line above the photo; the retake tips moved into the card under the boxes.
+      scanStatus((timedOut ? "This is taking too long. " : fields.ocrStopped ? "Stopped. " : "I can't read this tag. ")
+        + (typedModel ? "Tap Identify unit for the model you typed." : "Read the model off the photo and type it in the box under it."));
+      const retakeTip = "Or take the photo again - straighter, closer, better lit." + (timedOut || fields.ocrStopped ? "" : SCAN_SHADE_TIP) + (typedModel ? "" : tagNoModelHint(fields));
+      scanFocusModelBox();
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       scanRetakeRemember(file, photoId, fields, null, true);   // already uploaded: never again as "retaken"
       const box = document.getElementById("scanResult");
@@ -11938,7 +11964,7 @@ async function scanTagPhoto(file) {
           ? "📷 Photo sent to Andy automatically so he can add the unit. If you can't get a clean scan, enter the model number below."
           : "📷 Photo saved — it will send to Andy automatically when you're back in signal. If you can't get a clean scan, enter the model number below.")
         : "📷 Photo saved on this phone. If you can't get a clean scan, send it to Andy and he'll add the unit.";
-      box.innerHTML = `<div class="scan-id-card"><div class="card">${noModelYear ? `<p>📅 <strong>${escapeHtml(noModelYear)}</strong></p>` : ""}<p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
+      box.innerHTML = `<div class="scan-id-card"><div class="card">${noModelYear ? `<p>📅 <strong>${escapeHtml(noModelYear)}</strong></p>` : ""}<p>${escapeHtml(retakeTip)}</p><p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
       const btn = document.getElementById("scanSendFail");
       if (btn) btn.onclick = () => sendFailedScan(file, rec);
     } else {
