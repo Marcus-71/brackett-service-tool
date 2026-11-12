@@ -286,10 +286,19 @@ function hayHasNumber(hay, a) {
 }
 // The one test every Ask search uses: word-boundary match, or a digit-bounded match for a number.
 function askTermHit(hay, a) { return hayHasTerm(hay, a) || (/\d/.test(a) && a.length >= 3 && hayHasNumber(hay, a)); }
+// 11-12 speed audit #3: one search asks the same question of every card (2,777 manuals, 5,000 codes),
+// and the question was parsed again for each one - 695 of 914 ms of an Error Codes keystroke, 658 of
+// 777 ms of the unit card after a scan. The parsed question is kept for the last question asked; the
+// same text always parses the same way, and nothing here changes the parsed units.
+let searchUnitsQ = null, searchUnitsLive = null;
+function searchLiveUnits(q) {
+  if (q !== searchUnitsQ || !searchUnitsLive) { searchUnitsLive = askLiveUnits(buildSearchUnits(q)); searchUnitsQ = q; }
+  return searchUnitsLive;
+}
 function textIncludes(fields, q) {
   if (!q) return true;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return askLiveUnits(buildSearchUnits(q)).every(u => u.alts.some(a => hayHasTerm(hay, a)));
+  return searchLiveUnits(q).every(u => u.alts.some(a => hayHasTerm(hay, a)));
 }
 // Count of query concepts a card actually contains — used to surface the
 // closest matches when a strict all-units search comes up empty, so a
@@ -297,7 +306,7 @@ function textIncludes(fields, q) {
 function searchScore(fields, q) {
   if (!q) return 0;
   const hay = fields.filter(Boolean).join(" ").toLowerCase();
-  return askLiveUnits(buildSearchUnits(q)).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
+  return searchLiveUnits(q).reduce((n, u) => n + (u.alts.some(a => hayHasTerm(hay, a)) ? 1 : 0), 0);
 }
 
 function closeModal() {
@@ -569,9 +578,9 @@ function safeSet(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); return true; }
   catch (e) { return false; }
 }
-function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); askIndexCache = null; }
+function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); askIndexDrop(); }
 function loadDeletedCodeIds() { try { return JSON.parse(localStorage.getItem(CODES_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); askIndexCache = null; }
+function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); askIndexDrop(); }
 
 function getAllCodes() {
   const userCodes = loadUserCodes();
@@ -1235,10 +1244,89 @@ function askShortEE(code) {
 // Built once per screen visit (showScreen nulls the cache), reused on every
 // keystroke — so live typing never rebuilds ~10k haystacks.
 function askBuildIndex() {
-  // Sensor maps load on demand on low-memory devices (sensors.js snEnsure); start it so the next search includes them.
+  askWantSensors();
+  // 11-12 speed audit #4: the index is normally built in idle slices before the first question
+  // (askIdleKick). Here it is needed NOW: finish the build in hand, or do the whole of it, in one go.
+  const job = askIndexJob || askIndexStart();
+  askIndexJob = null; askSliceEnd = Infinity;
+  while (!job.gen.next().done) { /* run to the end */ }
+  return job.items;
+}
+// Sensor maps load on demand on low-memory devices (sensors.js snEnsure); start it so the next search includes them.
+function askWantSensors() {
   if (typeof snEnsure === "function" && typeof snLoaded !== "undefined" && !snLoaded) snEnsure().catch(() => {});
-  const items = [];
+}
+// ----- Ask index and word list built while the app is idle (11-12 speed audit #4) -----
+// The first question of a session used to freeze the phone 2-3 s while 13,700 entries and the word
+// list were built. Same entries, same order, same word list - built in short slices when nothing
+// else is going on, and finished on the spot if a question arrives first.
+let askIndexJob = null;        // { items, gen } - an index build in hand
+let askVocabJob = null;        // { idx, i, freq } - a word-list build in hand
+let askSliceEnd = Infinity;    // performance.now() at which an idle slice hands back; Infinity = run to the end
+let askIdleOn = false, askIdleQueued = false, askIdleAfterSensors = false;
+function askSliceDue() { return performance.now() >= askSliceEnd; }
+// A tech's own entry changed (saved, deleted, restored): the index is built again, a build in hand too.
+function askIndexDrop() { askIndexCache = null; askIndexJob = null; askIdleKick(); }
+function askIndexStart() { const items = []; return { items, gen: askIndexSteps(items) }; }
+function askIdleKick() {
+  if (!askIdleOn || askIdleQueued || (askIndexCache && askVocabCache)) return;
+  askIdleQueued = true;
+  const run = (dl) => {
+    askIdleQueued = false;
+    const left = dl && typeof dl.timeRemaining === "function" && !dl.didTimeout ? dl.timeRemaining() : 12;
+    if (left >= 3) {
+      // The whole idle period the browser offers (50 ms at most), less a margin for the entry in hand:
+      // a callback asked for from inside one only runs in the NEXT idle period, so a short slice
+      // wastes the rest of this one (16 ms slices took 11 s at 4x CPU for 2 s of work).
+      askSliceEnd = performance.now() + Math.max(2, left - 6);
+      try {
+        if (!askIndexCache) {
+          const job = askIndexJob || (askIndexJob = askIndexStart());
+          if (job.gen.next().done) { askIndexCache = job.items; askIndexJob = null; }
+        } else if (typeof snLoaded !== "undefined" && !snLoaded && typeof snLoadP !== "undefined" && snLoadP) {
+          askSliceEnd = Infinity;
+          return;   // the sensor files are on their way in: the word list starts when they land (askSensorsLanded), not twice
+        } else askVocabStep();
+      } catch (e) { askIndexJob = null; askVocabJob = null; askIdleOn = false; }   // the next question builds it in one go, as before
+      askSliceEnd = Infinity;
+    }
+    askIdleKick();
+  };
+  if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 3000 });
+  else setTimeout(run, 60);
+}
+// The sensor files have landed (sensors.js snEnsure): put their entries where a full build puts them
+// (after the charging charts) instead of throwing the whole index away, and build the word list again
+// so it holds the sensor words.
+const ASK_KINDS_AFTER_SENSORS = { series: 1, guide: 1, bulletin: 1, manual: 1 };
+function askSensorsLanded() {
+  askIndexJob = null;   // a half-built index may hold part of the sensor maps: start that again
+  const had = !!askIndexCache;
+  if (had) {
+    const keep = askIndexCache.filter(it => it.kind !== "sensor");
+    let at = keep.findIndex(it => ASK_KINDS_AFTER_SENSORS[it.kind]);
+    if (at < 0) at = keep.length;
+    const add = snMaps().map(askSensorItem);
+    askIndexCache = keep.slice(0, at).concat(add, keep.slice(at));
+  }
+  askVocabCache = null; askVocabJob = null;
+  if (had || askIdleAfterSensors) { askIdleOn = true; askIdleKick(); }
+}
+function askSensorItem(m) {
+  const ss = m.sensors || [];
+  return {
+    kind: "sensor", id: m.id, brand: m.brand || "Daikin", equip: "",
+    title: m.title + " - sensor plugs & charts",
+    sub: [m.side === "indoor" ? "Indoor" : "Outdoor", m.models].filter(Boolean).join(" · "),
+    titleHay: [m.brand, m.title, ...(m.match || []), "sensor thermistor plug connector chart"].filter(Boolean).join(" ").toLowerCase(),
+    hay: [m.brand, m.title, m.models, ...(m.match || []), "sensor sensors thermistor plug connector resistance ohm ohms kohm chart read reading reads should test check temperature temp degrees", ss.some(s => s.kind === "pressure") ? "pressure transducer volts voltage psi psig" : "", ss.some(s => s.kind === "eev") ? "eev expansion valve coil ohms" : "", ...ss.flatMap(s => [s.plug, s.code, s.name, s.location, s.spec])].filter(Boolean).join(" ").toLowerCase(),
+  };
+}
+// The index itself. A generator only so an idle slice can stop between entries ("yield" hands back when
+// the slice is used up); the entries and their order are exactly what one straight run makes.
+function* askIndexSteps(items) {
   for (const c of getAllCodes()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
       unverified: c.confidence === "verify", edited: !!c._edited,   // shown on the Ask instant card, never scored
@@ -1251,6 +1339,7 @@ function askBuildIndex() {
     });
   }
   for (const s of getAllSymptoms()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "symptom", id: s.id, brand: s.brand || "", equip: s.equipment || "",
       unverified: s.confidence === "verify", edited: !!s._edited,
@@ -1261,6 +1350,7 @@ function askBuildIndex() {
     });
   }
   for (const t of tstatEntries()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "tstat", id: t.id, brand: t.brand || "", equip: "Thermostat",
       title: [t.brand, t.family].filter(Boolean).join(" "),
@@ -1284,6 +1374,7 @@ function askBuildIndex() {
     });
   }
   for (const g of genEntries()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "gen", id: g.id, brand: genBrandOf(g), equip: "Generator",
       title: [g.series, g.family].filter(Boolean).join(" · "),
@@ -1296,6 +1387,7 @@ function askBuildIndex() {
     });
   }
   for (const t of getAllToolboxEntries()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "tool", id: t.id, brand: t.brand || "", equip: "",
       title: t.toolName + (t.title ? " — " + t.title : ""),
@@ -1305,6 +1397,7 @@ function askBuildIndex() {
   }
   if (typeof MAINT_SPECS !== "undefined") {
     for (const m of MAINT_SPECS) {
+      if (askSliceDue()) yield;
       const rows = (m.groups || []).flatMap(g => [g.title, ...(g.rows || []).flatMap(r => [r.label, r.value])]);
       items.push({
         kind: "maint", id: m.brand + "|" + m.model, brand: m.brand || "", equip: m.equip || "", spec: m,
@@ -1328,16 +1421,11 @@ function askBuildIndex() {
   }
   if (typeof snMaps === "function") {
     for (const m of snMaps()) {
-      const ss = m.sensors || [];
-      items.push({
-        kind: "sensor", id: m.id, brand: m.brand || "Daikin", equip: "",
-        title: m.title + " - sensor plugs & charts",
-        sub: [m.side === "indoor" ? "Indoor" : "Outdoor", m.models].filter(Boolean).join(" · "),
-        titleHay: [m.brand, m.title, ...(m.match || []), "sensor thermistor plug connector chart"].filter(Boolean).join(" ").toLowerCase(),
-        hay: [m.brand, m.title, m.models, ...(m.match || []), "sensor sensors thermistor plug connector resistance ohm ohms kohm chart read reading reads should test check temperature temp degrees", ss.some(s => s.kind === "pressure") ? "pressure transducer volts voltage psi psig" : "", ss.some(s => s.kind === "eev") ? "eev expansion valve coil ohms" : "", ...ss.flatMap(s => [s.plug, s.code, s.name, s.location, s.spec])].filter(Boolean).join(" ").toLowerCase(),
-      });
+      if (askSliceDue()) yield;
+      items.push(askSensorItem(m));
     }
   }
+  if (askSliceDue()) yield;
   if (typeof MODEL_PATTERNS !== "undefined") {
     MODEL_PATTERNS.forEach((p, i) => {
       if (!p.series) return;
@@ -1351,6 +1439,7 @@ function askBuildIndex() {
       });
     });
   }
+  if (askSliceDue()) yield;
   for (const el of askGuideCards()) {
     const t = el.querySelector("summary b"), sub = el.querySelector("summary .gwz-entry-text span");
     items.push({
@@ -1363,6 +1452,7 @@ function askBuildIndex() {
   }
   if (typeof BULLETINS !== "undefined" && Array.isArray(BULLETINS)) {
     for (const b of BULLETINS) {
+      if (askSliceDue()) yield;
       const a = b.applies || {};
       const head = [b.brand, b.number, b.docNo && b.docNo !== b.number ? b.docNo : "", (b.type || "Service") + " bulletin bulletins", b.title];
       items.push({
@@ -1379,6 +1469,7 @@ function askBuildIndex() {
   // same seed id and handles download-or-open, so a cloud manual works too.
   if (typeof MANUAL_SEEDS !== "undefined") {
     for (const seed of MANUAL_SEEDS) {
+      if (askSliceDue()) yield;
       items.push({
         kind: "manual", id: seedIdOf(seed), brand: seed.brand || "", equip: "",
         title: seed.title || (seed.file || "").split("/").pop(),
@@ -1387,7 +1478,6 @@ function askBuildIndex() {
       });
     }
   }
-  return items;
 }
 
 // How many query concepts a haystack contains — same semantics the codes/
@@ -1405,19 +1495,33 @@ function askBuildIndex() {
 let askVocabCache = null;
 function askVocab() {
   if (askVocabCache) return askVocabCache;
-  const freq = new Map();
+  if (!askIndexCache) askIndexCache = askBuildIndex();
+  askSliceEnd = Infinity;
+  while (!askVocabStep()) { /* finish it now */ }
+  return askVocabCache;
+}
+// One stretch of the word-list build over the finished index (askIndexCache); true when the list is
+// done. An idle slice stops between entries (askSliceDue); the words are counted in the same order as
+// one straight run, so the list is the same either way. A list begun on an index that has since been
+// replaced starts again.
+function askVocabStep() {
+  const idx = askIndexCache;
+  let job = askVocabJob;
+  if (!job || job.idx !== idx) job = askVocabJob = { idx, i: 0, freq: new Map() };
+  const freq = job.freq;
   // Apostrophes come out before tokenising, so "doesn't"/"won't" in the cards are the vocab words
   // "doesnt"/"wont" - before, the fragments "doesn"/"won" were vocab and a typed "doesnt" was
   // "corrected" to the required word "doesn" (James 2026-09-09; 2026-10-06 audit, F2).
   const add = (s) => { for (const w of String(s || "").toLowerCase().replace(/['’]/g, "").match(/[a-z]{3,}/g) || []) freq.set(w, (freq.get(w) || 0) + 1); };
-  for (const it of (askIndexCache || (askIndexCache = askBuildIndex()))) add(it.hay);
+  while (job.i < idx.length) { add(idx[job.i++].hay); if (askSliceDue()) return false; }   // the rest below gets a slice of its own
   if (typeof MANUAL_SEEDS !== "undefined") for (const s of MANUAL_SEEDS) { add(s.brand); add(s.model); add(s.title); }
   const byFirst = new Map(), words = [];
   // Never offer a stopword or a 3-letter word as a correction target (3-letter words are only in
   // the vocab so "txv", "ecm", "ats", "hsi" are recognised as real).
   for (const [w, n] of freq) { if (n < 3 || w.length < 4 || SEARCH_STOPWORDS.has(w)) continue; const k = w[0]; if (!byFirst.has(k)) byFirst.set(k, []); byFirst.get(k).push([w, n]); words.push([w, n]); }
   askVocabCache = { freq, byFirst, words };
-  return askVocabCache;
+  askVocabJob = null;
+  return true;
 }
 // A short unknown word one letter off a stopword IS that stopword mistyped ("doe", "fir", "thee",
 // "unir"): drop it rather than find it a real word ("doe" matched "does"-with-plural-s into E214/Eb
@@ -1975,7 +2079,10 @@ function renderAsk() {
     askAiToken++;   // v342 (audit CODE-09): an answer still in flight is for the old question - drop it, don't paint it under the new one
   }
 
+  askWantSensors();   // the index may have been built ahead of time (askIdleKick), so ask here too
   if (!askIndexCache) askIndexCache = askBuildIndex();
+  // The word list for the first question is built while the tech types it (every phone, low memory too).
+  if (!askVocabCache) { askIdleOn = true; askIdleKick(); }
 
   // Kind filter: only offer kinds that exist, each with a live count.
   const counts = {};
@@ -3565,9 +3672,9 @@ function unitScenariosFor(model) {
 }
 
 function loadUserSymptoms() { try { return JSON.parse(localStorage.getItem(DIAG_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); askIndexCache = null; }
+function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); askIndexDrop(); }
 function loadDeletedSymptomIds() { try { return JSON.parse(localStorage.getItem(DIAG_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); askIndexCache = null; }
+function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); askIndexDrop(); }
 
 function getAllSymptoms() {
   const userSymptoms = loadUserSymptoms();
@@ -4156,9 +4263,9 @@ let toolboxState = { search: "", brand: "All", era: "All" };
 const TOOLBOX_ERA_LABEL = { current: "Current", legacy: "Legacy" };
 
 function loadUserToolbox() { try { return JSON.parse(localStorage.getItem(TOOLBOX_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); askIndexCache = null; }
+function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); askIndexDrop(); }
 function loadDeletedToolboxIds() { try { return JSON.parse(localStorage.getItem(TOOLBOX_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); askIndexCache = null; }
+function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); askIndexDrop(); }
 
 function getAllToolboxEntries() {
   const userEntries = loadUserToolbox();
@@ -10802,15 +10909,26 @@ function extractTagFields(text) {
 let tessWorkerPromise = null;
 function loadTesseract() {
   if (window.Tesseract) return Promise.resolve();
-  return new Promise((resolve, reject) => {
+  // One load at a time: the engine can now be started by the photo button while a scan asks for it too.
+  if (tessScriptPromise) return tessScriptPromise;
+  return tessScriptPromise = new Promise((resolve, reject) => {
     const s = document.createElement("script");
     s.src = "vendor/tesseract.min.js";
     s.onload = resolve;
-    s.onerror = () => reject(new Error("Could not load the OCR engine files."));
+    s.onerror = () => { tessScriptPromise = null; reject(new Error("Could not load the OCR engine files.")); };
     document.head.appendChild(s);
   });
 }
+let tessScriptPromise = null;
+// 11-12 speed audit #1: the engine's own progress lines go to the scan that is running NOW. They used to
+// stay tied to whichever scan started the engine, so from the second scan on every line carried the
+// "still reading" hint from second 3; and the engine can now be started before any scan (ocrWarmEngine).
+let tessStatusSink = null;
+function ocrWarmEngine() {
+  try { getTessWorker().catch(() => {}); } catch (e) {}
+}
 async function getTessWorker(onStatus) {
+  if (onStatus) tessStatusSink = onStatus;
   await loadTesseract();
   if (!tessWorkerPromise) {
     const base = new URL(".", location.href).href;
@@ -10823,7 +10941,7 @@ async function getTessWorker(onStatus) {
       // memory once per session, instead of keeping a second, unpacked 23.5 MB
       // copy in IndexedDB ("keyval-store") - cleared in startApp().
       cacheMethod: "none",
-      logger: (m) => { if (m.status && onStatus) onStatus(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
+      logger: (m) => { const sink = tessStatusSink; if (m.status && sink) sink(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
     });
   }
   return tessWorkerPromise;
@@ -11521,6 +11639,15 @@ let ocrStopRequested = false;
 // v302: a tag photo is being read. The update pill waits for it (Cameron
 // 2026-10-14 tapped "Tap to reload" mid-scan at 2:06 and lost the read).
 let tagScanRunning = 0;
+// 11-12 speed audit #1 (b): the Tag Scanner screen sets this while its scan runs, to SHOW the serial
+// as soon as a pass has one. Called with the best-so-far fields (read only, never changed) or with a
+// serial read from a barcode (fromCode = true, which wins at the end). It is told, nothing more: what
+// the scan reads and returns is the same with or without it. null everywhere else.
+let ocrPartialHook = null;
+function ocrTellPartial(f, fromCode) {
+  if (!ocrPartialHook || !f || !f.serial) return;
+  try { ocrPartialHook(f, !!fromCode); } catch (e) {}
+}
 const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
   // Every screen's scan (Maintenance, generator checklist/problem, Charging Calc, Warranty) holds off the
@@ -11534,6 +11661,7 @@ async function ocrTagFieldsInner(file, onStatus) {
   if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
   // The enlarged barcode read runs on this thread while Tesseract reads in its worker.
   const enlargedP = tagBarcodeFieldsEnlarged(file);
+  if (ocrPartialHook) { ocrTellPartial(viaBarcode, true); enlargedP.then(e => ocrTellPartial(e, true), () => {}); }   // display only
   const fields = await ocrTagText(file, onStatus);
   const enlarged = await enlargedP;
   if (enlarged && enlarged.model && !(fields && fields.model)) {
@@ -11590,7 +11718,7 @@ async function ocrTagTextPasses(file, onStatus) {
   // Prefer a failed pass that read the serial off its LABEL over one that only
   // found a bare digit run.
   const rank = (f) => (f.serial ? (f.serialSource === "label" ? 3 : f.serialSource === "shape" ? 2 : 1) : 0);
-  const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; };
+  const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; ocrTellPartial(best); };
   // Longer reads of the same family win: "EL297" off a sideways Lennox sticker
   // is the start of EL297UH070XE36B, not the model.
   const score = (c) => (c.tier === 2 ? (c.exact ? 200 : 150) : c.tier === 1 ? 100 : c.lib ? 50 : 0) + c.conf + 2 * Math.min(16, c.model.length);
@@ -12264,6 +12392,13 @@ function inAppCameraSupported() {
   const me = getTechName().trim().toLowerCase();
   return !CAMERA_PILOT || CAMERA_PILOT.some(n => n.toLowerCase() === me);
 }
+// 11-12 speed audit #1 (a): every photo button here ends in a tag / gauge read, so the reading engine
+// starts loading at the tap (camera or photo picker) instead of when the photo comes back - it loads
+// while the tech frames the shot. Nothing is loaded for a tech who only types a model.
+document.addEventListener("click", (e) => {
+  const inp = e.target;
+  if (inp && inp.tagName === "INPUT" && inp.type === "file" && /image/.test(inp.getAttribute("accept") || "")) ocrWarmEngine();
+}, true);
 document.addEventListener("click", (e) => {
   const inp = e.target;
   if (!inp || inp.tagName !== "INPUT" || inp.type !== "file" || !inp.hasAttribute("capture")) return;
@@ -12575,7 +12710,25 @@ function scanFocusModelBox() {
   } catch (e) { /* cosmetic only */ }
 }
 
+// While the reading goes on: bring the Model box on screen (status line and photo under the top bar)
+// without touching the cursor - the keyboard only opens when the tech taps the box.
+function scanShowModelBox() {
+  try {
+    const st = document.getElementById("scanStatus"), box = document.getElementById("scanModelInput");
+    if (!box || document.getElementById("scannerScreen").classList.contains("hidden")) return;
+    const r = box.getBoundingClientRect();
+    if (r.top >= 0 && r.bottom <= window.innerHeight) return;   // already in view
+    const bar = document.querySelector(".topbar");
+    const top = (st.classList.contains("hidden") ? document.getElementById("scanPreview") : st).getBoundingClientRect().top + window.scrollY - ((bar ? bar.offsetHeight : 66) + 10);
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  } catch (e) { /* cosmetic only */ }
+}
+// The Tag Scanner scan that is running now (null when none): Identify unit tapped during it ends the
+// reading through the reader's own stop flag, and the typed model's result is not replaced afterwards.
+let scanLive = null;
+
 async function scanTagPhoto(file) {
+  const live = scanLive = { identified: false, stop: null };
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
   const scanT0 = Date.now();
@@ -12594,6 +12747,10 @@ async function scanTagPhoto(file) {
     // v280: what the tech types while the scan runs is theirs - a scan that
     // reads nothing (or is stopped) no longer wipes it.
     const modelEl = document.getElementById("scanModelInput"), serialEl = document.getElementById("scanSerialInput");
+    // 11-12 speed audit #1 (b): the last unit's model and serial leave the boxes when the new photo
+    // arrives (they were replaced by this scan's read at the end anyway), so what shows during the
+    // scan belongs to THIS tag and the Model box is empty for the tech to type in.
+    modelEl.value = ""; serialEl.value = "";
     const typedBefore = [modelEl.value, serialEl.value];
     ocrStopRequested = false;
     const stopBtn = document.getElementById("scanStopBtn");
@@ -12603,17 +12760,47 @@ async function scanTagPhoto(file) {
     // button - through the reader's own stop flag, so nothing about what is read changes.
     let timedOut = false;
     const scanTimer = setTimeout(() => { timedOut = true; ocrStopRequested = true; }, SCAN_TIME_LIMIT_MS);
-    try { fields = await ocrTagFields(file, scanStatus); }
-    finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; }
+    // 11-12 speed audit #1 (b): show what is known while the reading goes on. The serial goes into
+    // its box as soon as a pass has one (a barcode serial stays; a box the tech has touched is left
+    // alone). Once the four full-photo passes have found no model ("Taking a closer look" is the
+    // reader's next step) one steady line says the model can be typed now, with the Model box in view.
+    let shownSerial = null, serialFromCode = false, typeNow = false, phase = "";
+    live.stop = () => { ocrStopRequested = true; };
+    ocrPartialHook = (f, fromCode) => {
+      if (serialFromCode && !fromCode) return;
+      if (serialEl.value !== (shownSerial === null ? typedBefore[1] : shownSerial) || document.activeElement === serialEl) return;   // the tech's own
+      if (fromCode) serialFromCode = true;
+      shownSerial = f.serial; serialEl.value = f.serial;
+    };
+    const onStatus = (m) => {
+      if (live.identified) return;   // the tech typed the model and tapped Identify unit: his result stays up
+      if (!m) { scanStatus(m); return; }
+      const engine = /^recognizing text/.test(m);
+      if (!typeNow && /^Taking a closer look/.test(m)) { typeNow = true; scanShowModelBox(); }
+      if (!typeNow) { scanStatus(m); return; }
+      if (!engine) phase = m.replace(OCR_SLOW_HINT, "");
+      scanStatus((modelEl.value.trim() ? "Tap Identify unit for the model you typed. Still reading" : "No model found yet — you can type it in the box under the photo now. Still reading")
+        + (phase ? ": " + phase.charAt(0).toLowerCase() + phase.slice(1) : "…")
+        + (m.includes(OCR_SLOW_HINT) ? " A closer photo of just the tag reads faster." : ""));
+    };
+    try { fields = await ocrTagFields(file, onStatus); }
+    finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; ocrPartialHook = null; live.stop = null; }
     if (!fields.ocrStopped) timedOut = false;   // it finished by itself just as the limit hit
-    scanStatus(null);
+    if (!live.identified) scanStatus(null);
     const typedModel = modelEl.value !== typedBefore[0] && modelEl.value.trim();
-    const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value.trim();
+    const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value !== shownSerial && serialEl.value.trim();
     if (fields.model || !typedModel) modelEl.value = fields.model;
     if (!typedSerial) serialEl.value = fields.serial;
     if (!fields.model) {
       const photoId = newScanPhotoId();
       trackEvent("SCAN - NO MODEL READ" + (timedOut ? " (time limit " + Math.round(SCAN_TIME_LIMIT_MS / 1000) + " s)" : fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
+      if (live.identified) {
+        // He typed the model and tapped Identify unit while the reading ran: that result card stays.
+        // The photo is still kept and sent like any other tag the scanner could not read.
+        await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
+        scanRetakeRemember(file, photoId, fields, null, true);
+        return;
+      }
       // One plain line above the photo; the retake tips moved into the card under the boxes.
       scanStatus((timedOut ? "This is taking too long. " : fields.ocrStopped ? "Stopped. " : "I can't read this tag. ")
         + (typedModel ? "Tap Identify unit for the model you typed." : "Read the model off the photo and type it in the box under it."));
@@ -12671,6 +12858,7 @@ async function scanTagPhoto(file) {
     if (!lastTagScan || lastTagScan.file !== file) scanRetakeRemember(file, photoId, null, null, true);
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
   } finally {
+    if (scanLive === live) scanLive = null;
     tagScanRunning--;
     scanRetakeSettle(prevScan, thisInfo);
     held.then(() => releaseScanPhoto(heldId));
@@ -12774,10 +12962,14 @@ function renderScanResult(info) {
   const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
   const nModelManuals = modelManuals.closestTo ? 0 : modelManuals.list.length;
   // Bulletins for the identified unit (family for a generator plate, model prefix for HVAC).
-  let bulHtml = "";
+  let bulHtml = "", bulCount = 0;
   try {
     const bulFam = info.brand && (info.brand === "Generac" || info.brand === "Kohler") && typeof genFamilyForModel === "function" ? genFamilyForModel(info.model) : null;
-    if (info.brand) bulHtml = bulletinsHtml(bulletinsFor({ genFamily: bulFam ? bulFam.id : "", model: info.model, brand: info.brand }), { where: "tag scanner", serial: info.serial, model: info.model });
+    if (info.brand) {
+      const bulList = bulletinsFor({ genFamily: bulFam ? bulFam.id : "", model: info.model, brand: info.brand });
+      bulCount = bulList.length;
+      bulHtml = bulletinsHtml(bulList, { where: "tag scanner", serial: info.serial, model: info.model });
+    }
   } catch (e) { bulHtml = ""; }
   // v285: this unit's own heating problems, from its service manual.
   const ownScen = info.brand ? unitScenariosFor(info.model) : [];
@@ -12803,6 +12995,21 @@ function renderScanResult(info) {
         </div>
       </div>
     </div>`;
+  // 11-12 audit (implementer A's note): a unit with many bulletins (59SP5A has 21) pushed the buttons
+  // about 1,300 px down. The first three rows stay (bulletinsFor lists high priority first, then the
+  // newest); the rest sit under one "Show all N" row - nothing is left out.
+  const bulCard = box.querySelector(".bul-card");
+  const bulRows = bulCard ? [...bulCard.children].filter(el => el.classList.contains("bul-item") || el.classList.contains("bul-more")) : [];
+  if (bulRows.length > 4) {
+    const fold = document.createElement("details");
+    fold.className = "bul-more";
+    const sum = document.createElement("summary");
+    sum.textContent = "Show all " + bulCount + " bulletins";
+    sum.style.cssText = "padding:0.8rem 0;color:var(--text)";
+    fold.appendChild(sum);
+    bulRows.slice(3).forEach(el => fold.appendChild(el));
+    bulCard.appendChild(fold);
+  }
   const goCodes = document.getElementById("scanGoCodes");
   if (goCodes) goCodes.onclick = () => {
     codesState.brand = codeBrand; codesState.equipment = info.equipment;
@@ -13027,6 +13234,9 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   const model = document.getElementById("scanModelInput").value.trim();
   const serial = document.getElementById("scanSerialInput").value.trim();
   if (!model) { scanStatus("Type or scan a model number first."); return; }
+  // 11-12 speed audit #1 (b): typed while the photo was still being read - stop the reading (same as
+  // the Stop button) and keep this result on screen when it ends.
+  if (scanLive && scanLive.stop) { scanLive.identified = true; scanLive.stop(); document.getElementById("scanStopBtn").classList.add("hidden"); }
   scanStatus(null);
   trackEvent("identified unit: " + model);
   const info = identifyModel(model, serial, null, null, { log: true });
@@ -13420,7 +13630,19 @@ if ("serviceWorker" in navigator) {
   // Anything typed on the open screen (Charging Calc readings, Request Info, Warranty owner fields) and an
   // AI answer still on screen are work in progress too - a reload would wipe them.
   if ([...document.querySelectorAll('.screen:not(.hidden) input:not([type="file"]):not([type="search"]), .screen:not(.hidden) textarea')].some(x => String(x.value || "").trim())) return false;
-  return !document.querySelector("#askAi .ask-ai-body");
+    if (document.querySelector("#askAi .ask-ai-body")) return false;
+    // 11-12 speed audit #6: an open card, an open manual or portal page, or a search with something
+    // typed is the tech's place in the app. The phone went in his pocket for 35 s with a generator
+    // card open and he came back to Home (Dustin 10-22, Vern 10-19 and 11-11, Bryce 10-22). It holds
+    // the update off until he has not touched the app for 15 minutes - by then the app has been put
+    // away and it updates as before; until then the "Update ready" pill is his to tap.
+    if (readingSomething() && Date.now() - lastTouch < READING_HOLD_MS) return false;
+    return true;
+  }
+  const READING_HOLD_MS = 15 * 60 * 1000;
+  function readingSomething() {
+    if (["modalBackdrop", "pdfViewer", "portalViewer"].some(id => { const el = document.getElementById(id); return el && !el.classList.contains("hidden"); })) return true;
+    return [...document.querySelectorAll('.screen:not(.hidden) input[type="search"]')].some(x => String(x.value || "").trim());
   }
   let reloading = false;
   function reloadForUpdate(how) {
@@ -13455,7 +13677,7 @@ if ("serviceWorker" in navigator) {
     el.id = "updateScreen";
     el.setAttribute("role", "alertdialog");
     el.style.cssText = "position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:var(--bg);color:var(--text);font-size:18px";
-    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div>${TEAM_NOTE.text ? `<div style="margin-top:6px;max-width:420px;font-size:19px;font-weight:800;color:var(--brand-orange)">${TEAM_NOTE.text}</div>` : ""}<button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
+    el.innerHTML = `<img src="icons/brackett-logo.png" alt="" style="width:120px;height:auto"><div><b>Updating the app${latestVersion ? " to v" + latestVersion : ""}...</b></div><div style="font-size:15px;opacity:.8">This takes a few seconds. It reopens by itself.</div><div data-up-progress style="font-size:14px;opacity:.75;min-height:1.3em"></div>${TEAM_NOTE.text ? `<div style="margin-top:6px;max-width:420px;font-size:19px;font-weight:800;color:var(--brand-orange)">${TEAM_NOTE.text}</div>` : ""}<button type="button" style="visibility:hidden;margin-top:10px;padding:10px 18px;font-size:15px;border-radius:8px;border:1px solid var(--brand-orange);background:transparent;color:var(--text)">Use this version for now</button>`;
     const skip = el.querySelector("button");
     skip.onclick = () => giveUpWakeScreen("skipped");
     setTimeout(() => { skip.style.visibility = "visible"; }, WAKE_SKIP_AFTER_MS);
@@ -13464,6 +13686,20 @@ if ("serviceWorker" in navigator) {
     wakeShownAt = Date.now();
     document.body.appendChild(el);
   }
+  // 11-12 speed audit #2: the new version's service worker reports its download ("bfc-update-progress").
+  // Until the first report the screen keeps its fixed 30 s; from then on it gives up only when NOTHING
+  // has arrived for 12 s - on slow 4G it used to give up 3 s before the download ended. Two minutes at most.
+  const WAKE_PROGRESS_MS = 12000, WAKE_SCREEN_HARD_MS = 120000;
+  navigator.serviceWorker.addEventListener("message", (e) => {
+    const d = e.data;
+    if (!d || d.type !== "bfc-update-progress" || !wakeScreen || updateReady) return;
+    const line = wakeScreen.querySelector("[data-up-progress]");
+    // files finished and megabytes so far: on a slow link the megabytes are what is seen to move
+    if (line && d.total) line.textContent = "Downloading - " + Math.min(d.files || 0, d.total) + " of " + d.total + " files" + (d.bytes ? ", " + (d.bytes / 1048576).toFixed(1) + " MB" : "");
+    if (Date.now() - wakeShownAt > WAKE_SCREEN_HARD_MS) return;   // the timer already set is the last one
+    clearTimeout(wakeScreenTimer);
+    wakeScreenTimer = setTimeout(() => giveUpWakeScreen("timed out (no progress, " + (d.files || 0) + " of " + (d.total || "?") + " files)"), WAKE_PROGRESS_MS);
+  });
   // On open / back from the background: behind the server -> cover the app and update now.
   async function wakeUpdateCheck() {
     if (wakeChecking || wakeScreen || !navigator.onLine) return;
@@ -13478,7 +13714,7 @@ if ("serviceWorker" in navigator) {
       // untouched on a phone far behind (tryForcedUpdate), or at the next open.
       if (touchedSinceWake) { trackEvent("update waits, tech already working " + APP_VERSION + " -> v" + latestVersion); return; }
       if (updateReady) { if (safeToReload()) reloadForUpdate("on open"); return; }
-      if (!safeToReload()) return;
+      if (!safeToReload()) return;   // the new version still downloads (the foreground check at register()) and shows the pill
       showWakeScreen();
       // v336 (audit CODE-03): right after a publish the web host can still hand out the previous
       // sw.js for a few minutes, while the check above already sees the new one. Then no new
@@ -14502,7 +14738,36 @@ function logSearches(inputId, label) {
     }, 2000);
   });
 }
-logSearches("askInput", "asked");
+// Ask Anything logs the question ONCE, when it is finished (11-12 audit: with the 2-second rule 64%
+// of the "asked:" rows were half-typed fragments - "generac ov", then the real question). Finished =
+// Enter, leaving the box, opening a result, or putting the app away; and so that no real question is
+// lost (results show while typing, and a tech can read them and walk off without any of those), 15 s
+// with no more typing. Same row text as before: "asked: <what was typed>". Skips repeats.
+function logAsked() {
+  const el = document.getElementById("askInput");
+  if (!el) return;
+  let timer, last = "", pending = "";
+  const log = () => {
+    clearTimeout(timer);
+    const v = pending; pending = "";
+    if (v.length >= 2 && v !== last) { last = v; trackEvent("asked: " + v); }
+  };
+  el.addEventListener("input", () => {
+    const v = el.value.trim();
+    if (!v && pending.length >= 2) log();   // the box was wiped in one go (the clear X): that question was asked
+    pending = v;
+    clearTimeout(timer);
+    timer = setTimeout(log, 15000);
+  });
+  el.addEventListener("keydown", (e) => { if (e.key === "Enter") log(); }, true);
+  el.addEventListener("blur", log);
+  ["askInstant", "askResults", "askAi", "askManualHits", "askNarrow"].forEach(id => {
+    const box = document.getElementById(id);
+    if (box) box.addEventListener("click", log, true);   // before the opened card writes its own row
+  });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) log(); });
+}
+logAsked();
 logSearches("codesSearchInput", "searched codes");
 logSearches("diagSearchInput", "searched diagnostics");
 logSearches("manualSearchInput", "searched manuals");
@@ -14831,6 +15096,15 @@ function startApp() {
     if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 8000 });
     else setTimeout(run, 4000);
   })();
+
+  // 11-12 speed audit #4: build Ask Anything's index and word list in idle slices so the first
+  // question does not freeze the phone. Starts once the sensor files have landed (about 4 s after
+  // start; 9 s at the latest), never before first paint, and gives way to any tap. Phones that report
+  // 4 GB or less keep building on demand, as they keep the sensor files on demand (Andy 11-09).
+  if (!(typeof snLowMem !== "undefined" && snLowMem)) {
+    if (typeof snLoaded !== "undefined" && !snLoaded) askIdleAfterSensors = true;
+    setTimeout(() => { askIdleOn = true; askIdleKick(); }, typeof snLoaded !== "undefined" && !snLoaded ? 9000 : 1500);
+  }
 }
 
 updateNetStatus();
