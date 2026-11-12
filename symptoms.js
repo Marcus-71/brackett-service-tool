@@ -19830,7 +19830,7 @@ const SYMPTOMS = [
  {
   "id": "s-fh-dc6vs-cooling-analysis-thresholds",
   "equipment": "Condenser/Heat Pump",
-  "title": "Daikin DC6VS / DZ6VS / DH6VS (R-410A) - working the Cooling Analysis Chart by measured value",
+  "title": "Daikin DX6VS / DZ6VS / DZ6VSA (R-410A) - working the Cooling Analysis Chart by measured value",
   "summary": "This R-410A inverter platform ships a symptom matrix keyed to specific measured values rather than fault codes. Taking those five or six readings first narrows the cause list far faster than guessing, but the readings are only meaningful inside the chart's stated operating window.",
   "steps": [
    "Confirm you are inside the operating window before trusting anything. Outdoor normal temperature operating range for cooling analysis is 67 to 115 F and indoor normal range is 65 to 85 F. Outside that, the chart's own cause list includes 'outdoor ambient too high or too low' as the answer.",
@@ -19847,7 +19847,7 @@ const SYMPTOMS = [
  {
   "id": "s-fh-dc6vs-heating-analysis-thresholds",
   "equipment": "Condenser/Heat Pump",
-  "title": "Daikin DC6VS / DZ6VS / DH6VS (R-410A) - Heating Analysis Chart values differ from cooling",
+  "title": "Daikin DX6VS / DZ6VS / DZ6VSA (R-410A) - Heating Analysis Chart values differ from cooling",
   "summary": "The heating side of this chart uses a different set of thresholds and a different operating window than the cooling side, and it adds symptoms that only exist in heat: incomplete defrost and a sweating liquid line.",
   "steps": [
    "Confirm the window. Outdoor normal temperature operating range for heating analysis is 17 to 62 F, indoor normal range is 65 to 85 F. Note this is a completely different outdoor band than the cooling chart's 67 to 115 F.",

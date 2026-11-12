@@ -6095,7 +6095,7 @@ function genClCsz(d) {
   const c = d.customer || {};
   if (String(c.state || "").trim() || String(c.zip || "").trim()) return { city: c.city || "", state: c.state || "", zip: c.zip || "" };
   const raw = String(c.city || "").trim();
-  const m = raw.match(/^(.*?)[,s]+([A-Za-z]{2}).?[,s]+(d{5}(?:-d{4})?)$/) || raw.match(/^(.*?),s*([^,]+?),s*([^,]+)$/);
+  const m = raw.match(/^(.*?)[,\s]+([A-Za-z]{2})\.?[,\s]+(\d{5}(?:-\d{4})?)$/) || raw.match(/^(.*?),\s*([^,]+?),\s*([^,]+)$/);
   return m ? { city: m[1].trim(), state: m[2].trim(), zip: m[3].trim() } : { city: raw, state: "", zip: "" };
 }
 function genClCszLine(d) {
@@ -14148,7 +14148,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v426";
+const APP_VERSION = "v427";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
