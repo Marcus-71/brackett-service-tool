@@ -14562,7 +14562,36 @@ function logSearches(inputId, label) {
     }, 2000);
   });
 }
-logSearches("askInput", "asked");
+// Ask Anything logs the question ONCE, when it is finished (11-12 audit: with the 2-second rule 64%
+// of the "asked:" rows were half-typed fragments - "generac ov", then the real question). Finished =
+// Enter, leaving the box, opening a result, or putting the app away; and so that no real question is
+// lost (results show while typing, and a tech can read them and walk off without any of those), 15 s
+// with no more typing. Same row text as before: "asked: <what was typed>". Skips repeats.
+function logAsked() {
+  const el = document.getElementById("askInput");
+  if (!el) return;
+  let timer, last = "", pending = "";
+  const log = () => {
+    clearTimeout(timer);
+    const v = pending; pending = "";
+    if (v.length >= 2 && v !== last) { last = v; trackEvent("asked: " + v); }
+  };
+  el.addEventListener("input", () => {
+    const v = el.value.trim();
+    if (!v && pending.length >= 2) log();   // the box was wiped in one go (the clear X): that question was asked
+    pending = v;
+    clearTimeout(timer);
+    timer = setTimeout(log, 15000);
+  });
+  el.addEventListener("keydown", (e) => { if (e.key === "Enter") log(); }, true);
+  el.addEventListener("blur", log);
+  ["askInstant", "askResults", "askAi", "askManualHits", "askNarrow"].forEach(id => {
+    const box = document.getElementById(id);
+    if (box) box.addEventListener("click", log, true);   // before the opened card writes its own row
+  });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) log(); });
+}
+logAsked();
 logSearches("codesSearchInput", "searched codes");
 logSearches("diagSearchInput", "searched diagnostics");
 logSearches("manualSearchInput", "searched manuals");
