@@ -12907,6 +12907,13 @@ if ("serviceWorker" in navigator) {
     wakeChecking = true;
     try {
       if (await checkLatestVersion() <= 0) return;
+      // 11-12 audit (field-use #6): the answer to the version check can arrive seconds after the app
+      // opened, and by then the tech may be in the Tag Scanner (Vern 11-06: the Updating screen came up
+      // 13 s into a scan). Once he has tapped or typed since opening, "on open" is over: no Updating
+      // screen and no reload on top of his work. The new version still downloads (the register() check
+      // below), shows the "Update ready" pill, and goes in when the app is put away, after a minute
+      // untouched on a phone far behind (tryForcedUpdate), or at the next open.
+      if (touchedSinceWake) { trackEvent("update waits, tech already working " + APP_VERSION + " -> v" + latestVersion); return; }
       if (updateReady) { if (safeToReload()) reloadForUpdate("on open"); return; }
       if (!safeToReload()) return;
       showWakeScreen();
