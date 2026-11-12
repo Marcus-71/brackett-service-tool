@@ -573,7 +573,14 @@ function getAllCodes() {
   const deleted = new Set(loadDeletedCodeIds());
   const userIds = new Set(userCodes.map(c => c.id));
   const base = ERROR_CODES.filter(c => !deleted.has(c.id) && !userIds.has(c.id));
-  return [...base, ...userCodes.filter(c => !deleted.has(c.id))];
+  // 11-12 audit (accuracy #12): a library row rewritten on this phone is marked (_edited) so the list
+  // and the opened card can say so; rows the tech added himself have a "user-" id and are not marked.
+  return [...base, ...userCodes.filter(c => !deleted.has(c.id)).map(c => String(c.id).startsWith("user-") ? c : { ...c, _edited: true })];
+}
+// One plain line for a row whose confidence is "verify" (530 codes, 475 fixes on 11-12).
+const UNVERIFIED_LINE = "Not yet checked against the manufacturer's manual - confirm on the unit's own chart before acting.";
+function editedLineHtml(btnId) {
+  return `<div class="maint-flag"><div class="maint-flag-title">Edited on this phone</div>This is not the library's wording - someone changed it on this phone, and office corrections do not reach it. <button type="button" id="${btnId}" class="maint-manuals-btn">Restore the original</button></div>`;
 }
 
 // Filters render as dropdowns (not chip buttons) so long brand/equipment lists
@@ -606,17 +613,46 @@ const CODE_FAMILY_GUARDS = [
   { re: /^(?:ALXS3[^B]|ALXS4[^BN]|ALXS5[^B]|ALZS4[^BN]|ALZS5[^B]|DC3SE[^N]|DC4SE[^A]|DC5SE[^A]|DH4SE[^A]|DH5SE[^A]|GLXS3[^B]|GLXS4[^BM]|GLXS5[^B]|GLZS4[^BM]|GLZS5[^B])/, min: 6 },
   { re: /^(?:ALXS3B[^N]|ALXS4B[^A]|ALXS4N[^A]|ALXS5B[^A]|ALZS4B[^A]|ALZS4N[^A]|ALZS5B[^A]|GLXS3B[^N]|GLXS4B[^A]|GLXS4M[^A]|GLXS5B[^A]|GLZS4B[^A]|GLZS4M[^A]|GLZS5B[^A])/, min: 7 },
   { re: /^[GA]L[XZ]T7[^C]/, min: 6 },   // v426: only GLXT7C / GLZT7C / ALXT7C / ALZT7C have the unitary-control rows
+  // 11-12 audit (accuracy #5): every family that names a 24ANB names the two-stage 24ANB7 / 24ANB1. A
+  // single-stage 24ANB6 fell back to the five characters "24ANB" and got the two-stage tables.
+  { re: /^24ANB[^17]/, min: 6 },
 ];
+// Families a model cannot belong to, proven from the family text itself. Lennox: one family is titled
+// "... EL195 / EL196 gas furnace (non-K models)" and the other lists only names that end in K
+// (EL195UHNEK, EL196UHEK ...). A full model with no K anywhere in it (EL195UH070XE36B) is not one of
+// the K names, so the K family is dropped for it and "EL195" finds the non-K flash-code family.
+const CODE_FAMILY_EXCLUDE = [
+  { model: /^(?:ML180|ML193|ML196|EL180|EL195|EL196)(?:UH|DF)[0-9]{3}(?!.*K)/, fam: /EL195UHNEK/ },
+];
+// The part of a family text a model may match: the text without its "NOT ..." clauses (each from the
+// word NOT / not to the end of that sentence). Those clauses list the boards the table is NOT for
+// ("NOT the Infinity 98 (59MN7C) communicating board, which uses ..."); a model named only there does
+// not belong to the family.
+function codeFamilyOwnText(f) {
+  return String(f || "").toUpperCase().replace(/\bNOT\b(?:[^.]|\.(?=\S))*/g, " ");
+}
+function codeFamilyNorm(q) { return String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+function codeFamilyPool(m, codes) {
+  const ex = CODE_FAMILY_EXCLUDE.filter(x => x.model.test(m));
+  return ex.length ? (codes || []).filter(c => !ex.some(x => x.fam.test(String(c.family || "").toUpperCase()))) : (codes || []);
+}
 function codeFamilyPrefix(q, codes) {
-  const m = String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m = codeFamilyNorm(q);
   if (m.length < 6 || !/[A-Z]/.test(m) || !/\d/.test(m)) return "";
-  const fams = [...new Set((codes || []).map(c => String(c.family || "").toUpperCase()))];
+  const fams = [...new Set(codeFamilyPool(m, codes).map(c => codeFamilyOwnText(c.family)))];
   const guard = CODE_FAMILY_GUARDS.find(g => g.re.test(m));
   for (let n = m.length - 1; n >= (guard ? guard.min : 5); n--) {
     const p = m.slice(0, n);
     if (fams.some(f => f.includes(p))) return p;
   }
   return "";
+}
+// The code rows a model's family covers - ONE function for the Error Codes list and for the Tag
+// Scanner's codes button, so the number on the button is the list it opens.
+function codeFamilyRows(q, codes) {
+  const pre = codeFamilyPrefix(q, codes);
+  if (!pre) return { pre: "", rows: [] };
+  return { pre, rows: codeFamilyPool(codeFamilyNorm(q), codes).filter(c => codeFamilyOwnText(c.family).includes(pre)) };
 }
 
 // 11-12 audit (screens #2): Error Codes drew all 5,000+ cards before anything was typed (2 s frozen on a
@@ -758,8 +794,8 @@ function renderCodes() {
   // part of the model that a family names (Andy 2026-10-05).
   let viaPrefix = "";
   if (!filtered.length) {
-    const pre = codeFamilyPrefix(codesState.search, all.filter(inFilters));
-    if (pre) { viaPrefix = pre; filtered = all.filter(c => inFilters(c) && String(c.family || "").toUpperCase().includes(pre)); }
+    const fr = codeFamilyRows(codesState.search, all.filter(inFilters));   // same function as the Tag Scanner's codes button
+    if (fr.pre) { viaPrefix = fr.pre; filtered = fr.rows; }
   }
   // 11-12 audit (field-use #1, screens #3): a code typed off the board lists the cards that ARE that code
   // first, then codes that start with it, then cards that only mention it. Brand A-Z breaks ties.
@@ -813,7 +849,11 @@ function buildCodeCard(code) {
   const card = document.createElement("div");
   card.className = "card";
   card.onclick = () => openCodeDetail(code.id);
-  const confTag = code.confidence === "verify" ? `<span class="tag verify">verify</span>` : `<span class="tag common">common</span>`;
+  // "occasional" (39 rows) used to be drawn as "common"; it now shows its own word.
+  const confTag = (code._edited ? `<span class="tag verify">edited here</span> ` : "")
+    + (code.confidence === "verify" ? `<span class="tag verify">verify</span>`
+      : code.confidence && code.confidence !== "common" ? `<span class="tag">${escapeHtml(code.confidence)}</span>`
+      : `<span class="tag common">common</span>`);
   card.innerHTML = `
     <div class="card-top">
       <div>
@@ -839,19 +879,38 @@ function openCodeDetail(id) {
   const causes = (code.causes || []).map(c => `<li>${escapeHtml(c)}</li>`).join("");
   const steps = (code.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
   const tips = (code.techTips || []).map(t => `<li>${escapeHtml(t.text)}${t.source ? `<div class="tech-tip-src">${escapeHtml(t.source)}</div>` : ""}</li>`).join("");
+  // accuracy #10: "Manuals for this unit", through the Manuals screen's own search, fed with the first
+  // model name the row's family text gives. Shown only when that search really finds manuals.
+  let famModel = "", famManuals = 0;
+  try {
+    famModel = (codeFamilyOwnText(code.family).match(/[A-Z0-9]+(?:-[A-Z0-9]+)?/g) || []).find(t => t.replace(/-/g, "").length >= 4 && /[A-Z]/.test(t) && /\d/.test(t) && !/^R-?\d{2,3}[A-Z]?$/.test(t) && !/^\d+-[A-Z]+$/.test(t) && !/^(?:SEER|HSPF|EER|AFUE|LED|TABLE|FIG|REV|SERIES|CODE|STAGE|PHASE|TYPE)-?\d*$|^\d+(?:V|VAC|VDC|HZ|KW|K|TON|PIN|ST|ND|RD|TH|SI|SM|PD)$|A2L/.test(t)) || "";
+    if (famModel && typeof manualSearch === "function") { const ms = manualSearch(manualSeedRows(), famModel); famManuals = ms.closestTo ? 0 : ms.list.length; }
+  } catch (e) { famManuals = 0; }
   modal.innerHTML = `
     <h2>${escapeHtml(code.code)} — ${escapeHtml(code.title)}</h2>
     <div class="sub">${escapeHtml(code.brand)}${code.family ? " · " + escapeHtml(code.family) : ""} · ${escapeHtml(code.equipment)}</div>
+    ${code.safety ? `<div class="safety-box">⚠ ${escapeHtml(code.safety)}</div>` : ""}
+    ${code._edited ? editedLineHtml("restoreCodeBtn") : ""}
+    ${code.confidence === "verify" ? `<div class="maint-flag"><div class="maint-flag-title">${UNVERIFIED_LINE}</div></div>` : ""}
     <div class="detail-section"><h3>What it means</h3><p>${escapeHtml(code.meaning || "—")}</p></div>
     ${tips ? `<div class="detail-section tech-tip"><h3>💡 Manufacturer tech tip</h3><ul>${tips}</ul></div>` : ""}
     ${causes ? `<div class="detail-section"><h3>Likely causes</h3><ul>${causes}</ul></div>` : ""}
     ${steps ? `<div class="detail-section"><h3>Diagnostic steps</h3><ol>${steps}</ol></div>` : ""}
-    ${code.safety ? `<div class="safety-box">⚠ ${escapeHtml(code.safety)}</div>` : ""}
+    ${famManuals ? `<button type="button" class="maint-manuals-btn" id="codeManualsBtn">📄 Manuals for ${escapeHtml(famModel)} (${famManuals})</button>` : ""}
     <div class="modal-actions">
       <button class="primary" id="closeModalBtn">Close</button>
       <button id="editCodeBtn">Fix this entry</button>
     </div>
   `;
+  const restoreBtn = document.getElementById("restoreCodeBtn");
+  if (restoreBtn) restoreBtn.onclick = () => {
+    if (!confirm("Put the library's original wording back for this code?")) return;
+    saveUserCodes(loadUserCodes().filter(u => u.id !== code.id));
+    trackEvent("restored original code: " + code.brand + " " + code.code + " (" + code.id + ")");
+    renderCodes(); openCodeDetail(code.id);
+  };
+  const manBtn = document.getElementById("codeManualsBtn");
+  if (manBtn) manBtn.onclick = () => { trackEvent("code -> manuals: " + famModel); closeModal(); openManualsForModel(famModel); };
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editCodeBtn").onclick = () => openCodeEditForm(code);
   document.getElementById("modalBackdrop").classList.remove("hidden");
@@ -918,6 +977,8 @@ function openCodeEditForm(existing) {
     const userCodes = loadUserCodes().filter(u => u.id !== entry.id);
     userCodes.push(entry);
     saveUserCodes(userCodes);
+    // accuracy #12: the office hears about every edit / addition made on a phone (it never did).
+    trackEvent((existing ? (String(entry.id).startsWith("user-") ? "edited own code on this phone: " : "EDITED LIBRARY CODE on this phone: ") : "added a code on this phone: ") + entry.brand + " " + entry.code + " - " + entry.title.slice(0, 60) + " (" + entry.id + ")");
     if (existing) saveDeletedCodeIds(loadDeletedCodeIds().filter(id => id !== entry.id));
     closeModal(); renderCodes();
   };
@@ -1157,6 +1218,7 @@ function askBuildIndex() {
   for (const c of getAllCodes()) {
     items.push({
       kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
+      unverified: c.confidence === "verify", edited: !!c._edited,   // shown on the Ask instant card, never scored
       title: c.code + " — " + c.title,
       sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
       // v425: a Goodman three-character display code (EE0) is also the code itself in its short flow-chart form (E0).
@@ -1168,6 +1230,7 @@ function askBuildIndex() {
   for (const s of getAllSymptoms()) {
     items.push({
       kind: "symptom", id: s.id, brand: s.brand || "", equip: s.equipment || "",
+      unverified: s.confidence === "verify", edited: !!s._edited,
       title: s.title,
       sub: [s.brand, s.equipment, s.summary].filter(Boolean).join(" · "),
       hay: [s.brand, s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
@@ -1410,7 +1473,11 @@ const ASK_KNOWN_TYPOS = [
   [/\b([a-z]{1,3}\d{2,3})(pump|defrost|reset|codes?|errors?)\b/gi, "$1 $2"],
 ];
 function askKnownTypos(q) { let r = String(q || ""); for (const [re, to] of ASK_KNOWN_TYPOS) r = r.replace(re, to); return r; }
+// What the last askRetrievalQ call borrowed from the question before ({ words, codes }), or null. renderAsk
+// shows it as a chip the tech can remove (11-12 audit, accuracy #6) - a borrowed model is never silent.
+let askBorrowed = null;
 function askRetrievalQ(q) {
+  askBorrowed = null;
   let r = askFixTypos(askFixModelLookalikes(askKnownTypos(q)));
   const models = askModelTokens(r);
   const brandOf = (s) => { const m = String(s).toLowerCase().match(ASK_BRAND_RE); return m ? m[1] : ""; };
@@ -1433,7 +1500,9 @@ function askRetrievalQ(q) {
   const ownSize = /\b\d+(\.\d+)?\s*(kw|k|tons?)\b/i.test(r);
   if (askCtx && Date.now() - askCtx.ts < 15 * 60 * 1000 && !ownSize) {
     const live = askLiveUnits(askPassageUnits(r));   // filler ("need") does not count as a word of its own
-    const referent = /\b(this|it|its|that|same|unit|still|also|too|now|then|again|here|one|where|part|parts|replace|replacement)\b/.test(nq) || ASK_WIRING_RE.test(r);
+    // 11-12 audit: everyday words (unit, one, where, now, then, here, part, parts, replace, replacement, also,
+    // too) no longer count as pointing back - "rooftop unit pressure are 300 over 50" borrowed an XP21.
+    const referent = /\b(this|it|its|that|same|still|again)\b/.test(nq) || ASK_WIRING_RE.test(r);
     const ctxDom = /^(generac|kohler|rehlko)$/.test(askCtx.brand) ? "gen" : askCtx.brand ? "hvac"
       : /nexgen|next|power|pz|nexus|evo|guardian|protector|powerpact|corepower|synergy|ecogen/.test(askCtx.fam) ? "gen" : askCtx.fam ? "hvac" : "";
     const qDom = askDomain(live);
@@ -1446,8 +1515,10 @@ function askRetrievalQ(q) {
       const codeCue = referent || /\b(code|codes|error|fault|alarm|alert)\b/.test(nq);
       if (codes.length) askCtx.codes = codes;
       const carry = [...new Set([...askCtx.models, askCtx.brand, ...String(askCtx.fam || "").split(" ")].filter(Boolean))];
-      r += " " + carry.join(" ") + (codes.length || !codeCue ? "" : (askCtx.codes || []).map(c => " " + c).join(""));
-      askCtx.ts = Date.now();
+      const carryCodes = codes.length || !codeCue ? [] : (askCtx.codes || []);
+      r += " " + carry.join(" ") + carryCodes.map(c => " " + c).join("");
+      askBorrowed = { words: carry, codes: carryCodes };
+      // the 15 minutes run from the question that NAMED the unit - a borrow no longer renews them
     }
   }
   return r.replace(/\s{2,}/g, " ").trim();
@@ -1922,23 +1993,38 @@ function renderAsk() {
   }
   examples.classList.add("hidden");
 
-  const rq = askRetrievalQ(q);
-  const units = askQueryUnits(rq);
-  const need = askLiveUnits(units).length;
   const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
-
-  const scored = [];
-  for (const it of pool) {
-    const { sc, tsc } = askScoreItem(units, it);
-    if (sc > 0) scored.push({ it, sc, tsc });
+  let rq, units, hits, partial;
+  const scoreQ = (text) => {
+    rq = askRetrievalQ(text);
+    units = askQueryUnits(rq);
+    const need = askLiveUnits(units).length;
+    const scored = [];
+    for (const it of pool) {
+      const { sc, tsc } = askScoreItem(units, it);
+      if (sc > 0) scored.push({ it, sc, tsc });
+    }
+    // Prefer items that contain EVERY concept; if none do, fall back to the
+    // closest partial matches so a well-typed sentence never dead-ends.
+    // >= not ===: the typed-code bonus (above) lifts the right row ONE past need,
+    // and === was throwing exactly that row away ("DM97MC E0 lockout" -> DM80VC).
+    hits = scored.filter(x => x.sc >= need);
+    partial = false;
+    if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
+  };
+  scoreQ(q);
+  // 11-12 audit (field-use #3): while the cursor is still in the box the last word is unfinished
+  // ("what is vap", "wiring dia"). When the question as typed finds nothing, search without that word
+  // instead of flashing a dead end; Enter or leaving the box searches exactly what was typed.
+  const typing = document.activeElement === document.getElementById("askInput") && !/\s$/.test(askState.search);
+  let searchedAs = q;
+  if (!hits.length && typing && /\S\s+\S+$/.test(q)) {
+    const shorter = q.replace(/\s+\S+$/, "");
+    scoreQ(shorter);
+    if (hits.length) searchedAs = shorter; else scoreQ(q);
   }
-  // Prefer items that contain EVERY concept; if none do, fall back to the
-  // closest partial matches so a well-typed sentence never dead-ends.
-  // >= not ===: the typed-code bonus (above) lifts the right row ONE past need,
-  // and === was throwing exactly that row away ("DM97MC E0 lockout" -> DM80VC).
-  let hits = scored.filter(x => x.sc >= need);
-  let partial = false;
-  if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
+  const borrowed = askBorrowed;
+  askState._heldBack = searchedAs !== q;   // the blur listener redraws the final result when this is set
   // A question that names no brand gets the general answer before brand-specific ones on a tie:
   // "blower runs all the time" led with a Lennox rooftop (Gus 2026-08-17, four tries).
   const qBranded = ASK_BRAND_RE.test(normalizeQuery(rq));
@@ -1956,8 +2042,19 @@ function renderAsk() {
     (askState.equip === "All" || it.equip === askState.equip || !it.equip));
 
   const narrow = document.getElementById("askNarrow");
-  narrow.innerHTML = askWiringHtml(askRetrievalQ(q), units);
+  narrow.innerHTML = askWiringHtml(rq, units);
   wireAskWiring(narrow);
+  // accuracy #6: a model / brand borrowed from the question before is shown, and one tap removes it.
+  {
+    const ai0 = document.getElementById("askAi");
+    let bw = document.getElementById("askBorrow");
+    if (!bw && ai0) { bw = document.createElement("div"); bw.id = "askBorrow"; bw.className = "ask-narrow-tags"; ai0.parentNode.insertBefore(bw, ai0); }
+    if (bw) {
+      bw.innerHTML = borrowed ? `<button type="button" class="ask-narrow-tag" id="askBorrowDrop">Using ${escapeHtml([...borrowed.words, ...borrowed.codes.map(c => "code " + c)].join(" "))} from your last question <span class="x">✕</span></button>` : "";
+      const drop = document.getElementById("askBorrowDrop");
+      if (drop) drop.onclick = () => { trackEvent("Ask dropped borrowed unit: " + borrowed.words.join(" ")); askCtx = null; renderAsk(); };
+    }
+  }
   if (isPressureQuestion(q)) {   // v342 (FIELD-08): point pressure questions at the tool that answers them
     narrow.insertAdjacentHTML("afterbegin", `<div class="ask-chip-row"><button type="button" class="ask-chip" id="askGoCharge">${CHARGE_CHIP_TEXT}</button></div>`);
     narrow.querySelector("#askGoCharge").onclick = () => { trackEvent("ask -> charging calc"); showScreen("charge"); };
@@ -2002,7 +2099,12 @@ function renderAsk() {
   // A miss is a content ticket, not a dead end: log it like Diagnostic Help does and offer the same
   // one-tap web search (streamline review 2026-10-06, rec 10).
   if (!empty.dataset.base) empty.dataset.base = empty.innerHTML;
-  if (!shown.length && q.length >= 4) {
+  if (!shown.length && typing) {
+    // Still typing: no dead-end text and no NO ANSWER row for a half-typed question.
+    askState._heldBack = true;
+    empty.innerHTML = q.length >= 4 ? "Nothing yet - keep typing, or press Enter to search as typed." : "";
+    empty.classList.toggle("hidden", q.length < 4);
+  } else if (!shown.length && q.length >= 4) {
     reportUnanswered(q);
     const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent(q + " hvac generator troubleshooting");
     empty.innerHTML = empty.dataset.base + (navigator.onLine ? `<div style="margin-top:0.7rem;"><a href="${searchUrl}" target="_blank" rel="noopener" class="chip" style="display:inline-block; text-decoration:none;">🔍 Search the web for this</a></div>` : "");
@@ -2010,9 +2112,17 @@ function renderAsk() {
 
   // Instant answer: the top hit's own meaning / causes / first steps, shown at once so the tech can
   // start testing during the 10-20 s the AI answer takes (streamline review 2026-10-06, rec 2).
-  renderAskInstant(q, shown.length ? shown[0].it : null, units, partial);
+  // accuracy #7: a top card for another brand than the question names is not laid out as the answer.
+  const offBrand = shown.length ? askOffBrand(rq, shown[0].it) : null;
+  renderAskInstant(q, shown.length ? shown[0].it : null, units, partial, offBrand);
 
   const MAX = 60;
+  if (searchedAs !== q && shown.length) {
+    const note = document.createElement("div");
+    note.className = "ask-note";
+    note.textContent = "Showing results for \"" + searchedAs + "\" while you type - press Enter to search all of it.";
+    results.appendChild(note);
+  }
   if (partial && shown.length) {
     const note = document.createElement("div");
     note.className = "ask-note";
@@ -2032,6 +2142,42 @@ function renderAsk() {
 
   // Also search INSIDE the manuals the tech has downloaded (async, debounced).
   askScheduleManualSearch(q);
+}
+
+// Leaving the box (or Enter, which blurs it) = the question is finished: redraw once so the last word
+// counts and a real miss shows its dead-end text and is logged. Delayed so a tap on a result card or on
+// the AI button lands on the element that was under the finger before the list is redrawn.
+document.getElementById("askInput").addEventListener("blur", () => {
+  setTimeout(() => {
+    if (!askState._heldBack || document.activeElement === document.getElementById("askInput")) return;
+    if (document.getElementById("askScreen").classList.contains("hidden") || !document.getElementById("modalBackdrop").classList.contains("hidden")) return;
+    renderAsk();
+  }, 250);
+});
+
+// The top card's brand when the question names a brand or a model of ANOTHER maker (accuracy #7):
+// "wiring diagram to contactor for lennox xp21" led with a Daikin FIT fix. Null when the card has no
+// brand (general fixes answer many branded questions), when a brand in the question is the card's own
+// or a sister badge of it, or when the card's brand word is said anywhere in the question.
+function askOffBrand(rq, it) {
+  if (!it) return null;
+  const brandRe = new RegExp(ASK_BRAND_RE.source, "g");
+  // the card's brands: its own brand field, plus every brand its title names (fix cards carry it there)
+  const titleBrands = String(it.title || "").toLowerCase().match(brandRe) || [];
+  const cb = (String(it.brand || "") + " " + titleBrands.join(" ")).toLowerCase().trim();
+  if (!cb) return null;
+  const nq = normalizeQuery(rq);
+  const qBrands = nq.match(brandRe) || [];
+  const models = askModelTokens(rq);
+  const mBrands = models.map(m => { try { const i = identifyModel(m); return i && i.brand ? i.brand : ""; } catch (e) { return ""; } }).filter(Boolean);
+  const asked = [...qBrands, ...mBrands].map(a => String(a).toLowerCase());
+  if (!asked.length) return null;
+  const groups = typeof maintMakerGroups === "function" ? maintMakerGroups : () => [];
+  const cg = groups(cb);
+  if (asked.some(a => cb.includes(a) || (cg.length && groups(a).some(x => cg.includes(x))))) return null;
+  if (cb.split(/[^a-z0-9]+/).some(w => w.length >= 3 && nq.includes(w))) return null;
+  const cap = (w) => w.replace(/\b[a-z]/g, c => c.toUpperCase());
+  return { asked: [...new Set([...qBrands.map(cap), ...models])].join(" "), brand: it.brand || cap(titleBrands[0]) };
 }
 
 // Debounced so we don't scan IndexedDB on every keystroke; a token guards
@@ -2909,9 +3055,20 @@ async function askAiAnswer(question) {
   const wq = rq0;
   const wiring = askWiringHtml(wq, askQueryUnits(wq));
   const cites = passages.map(p => `<button class="ask-ai-cite" data-id="${escapeHtml(p.id)}" data-page="${p.page}">${escapeHtml(p.title)} · p.${p.page}</button>`).join("");
+  // 11-12 audit (accuracy #4): say on screen what the answer was built from - the same three cases the
+  // telemetry label below already tells the office (grounded / entries-only / no-manual-match).
+  const cardNames = entries.map(e => String(e.title || "").slice(0, 70)).filter(Boolean);
+  const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+  const builtFrom = passages.length
+    ? `<div class="card-meta"><span><strong>Built from:</strong> ${plural(passages.length, "manual page")} (open them under the answer)${cardNames.length ? " and " + plural(cardNames.length, "library card") + " found by search: " + escapeHtml(cardNames.join("; ")) : ""}.</span></div>`
+    : cardNames.length
+      ? `<div class="maint-flag"><div class="maint-flag-title">No manual page matched this question.</div>Built from ${plural(cardNames.length, "library card")} found by search only: ${escapeHtml(cardNames.join("; "))}. Check those cards are for your unit.</div>`
+      : `<div class="maint-flag"><div class="maint-flag-title">Nothing in the library matched this question.</div>This answer is general practice only - no figure in it is this unit's own spec.</div>`;
+  const askedAs = rq0.trim().toLowerCase() !== String(question).trim().toLowerCase() ? `<div class="card-meta"><span>Asked as: ${escapeHtml(rq0)}</span></div>` : "";
   box.innerHTML = `
     <div class="ask-ai-card">
       <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
+      ${builtFrom}${askedAs}
       <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>").replace(/(^|[\s(])\*(?=\S)([^*\n]+?)(?<=\S)\*(?=[\s).,:;]|$)/gm, "$1<em>$2</em>").replace(/^#{1,4} +/gm, "").replace(/\n/g, "<br>")}</div>
       ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
       ${wiring}
@@ -3060,11 +3217,12 @@ function askInstantLines(it, units) {
   } else push("", it.sub);
   return lines;
 }
-function renderAskInstant(q, it, units, partial) {
+function renderAskInstant(q, it, units, partial, offBrand) {
   const ai = document.getElementById("askAi");
   if (!ai) return;
   let box = document.getElementById("askInstant");
-  if (!box) { box = document.createElement("div"); box.id = "askInstant"; box.className = "ask-instant"; ai.parentNode.insertBefore(box, ai); }
+  // field-use #3: the library card goes UNDER the "Get a direct answer" button, so the button stays in view.
+  if (!box) { box = document.createElement("div"); box.id = "askInstant"; box.className = "ask-instant"; ai.parentNode.insertBefore(box, ai.nextSibling); }
   if (q.trim().length < 3) { box.innerHTML = ""; return; }
   // Bulletins for the question's codes + unit: one line each, tap opens the bulletin (Andy 2026-10-06).
   let buls = [];
@@ -3081,13 +3239,21 @@ function renderAskInstant(q, it, units, partial) {
     wireBul();
     return;
   }
-  const body = lines.map(l => `<div class="ask-instant-line">${l.label ? `<span class="ask-instant-label">${escapeHtml(l.label)}</span> ` : ""}${escapeHtml(l.text).replace(/\n/g, "<br>")}</div>`).join("");
+  // accuracy #7: another maker's card is named as such and shown by title only - no steps or figures
+  // laid out as if they answered the question. A closest (partial) match says so in words, in colour.
+  const body = offBrand ? "" : lines.map(l => `<div class="ask-instant-line">${l.label ? `<span class="ask-instant-label">${escapeHtml(l.label)}</span> ` : ""}${escapeHtml(l.text).replace(/\n/g, "<br>")}</div>`).join("");
+  const warn = offBrand
+    ? `<div class="maint-flag"><div class="maint-flag-title">${partial ? "Nothing in the library has all of this for " + escapeHtml(offBrand.asked) + "." : "This card is not for " + escapeHtml(offBrand.asked) + "."}</div>The closest card is for ${escapeHtml(String(offBrand.brand).toUpperCase())}. Open it only if that is the unit in front of you.</div>`
+    : partial ? `<div class="maint-flag"><div class="maint-flag-title">Closest match - not every word of your question is on this card.</div></div>` : "";
   if (buls.length) bulTrackShown(buls, "ask instant", units && units.kModel);
   box.innerHTML = `
     <div class="ask-ai-card ask-instant-card">
       <div class="ask-ai-head">⚡ From the library <span class="ask-ai-tag">${escapeHtml(ASK_KIND[it.kind].label)}${partial ? " · closest match" : ""}</span></div>
+      ${warn}
       <div class="ask-instant-title">${escapeHtml(it.title)}</div>
       ${it.sub ? `<div class="card-meta"><span>${escapeHtml(it.sub)}</span></div>` : ""}
+      ${it.edited ? `<div class="maint-flag-title">Edited on this phone - not the library's wording.</div>` : ""}
+      ${it.unverified && !offBrand ? `<div class="maint-flag-title">${UNVERIFIED_LINE}</div>` : ""}
       <div class="ask-instant-body">${body}${bulLines}</div>
       <button type="button" class="ask-ai-cite ask-instant-open">Open the full entry</button>
     </div>`;
@@ -3374,7 +3540,8 @@ function getAllSymptoms() {
   const deleted = new Set(loadDeletedSymptomIds());
   const userIds = new Set(userSymptoms.map(s => s.id));
   const base = [...SYMPTOMS, ...unitScenarioList()].filter(s => !deleted.has(s.id) && !userIds.has(s.id));
-  return [...base, ...userSymptoms.filter(s => !deleted.has(s.id))];
+  // accuracy #12: a library fix rewritten on this phone is marked, same as an edited code row.
+  return [...base, ...userSymptoms.filter(s => !deleted.has(s.id)).map(s => String(s.id).startsWith("user-") ? s : { ...s, _edited: true })];
 }
 
 function renderSymptoms() {
@@ -3583,6 +3750,7 @@ function buildSymptomCard(s) {
       <span>${escapeHtml([s.brand, s.equipment].filter(Boolean).join(" · "))}</span>
       ${getFollowups(s.id) ? `<span class="fu-badge">Guided</span>` : ""}
       ${s.confidence === "manual" ? `<span class="fu-badge">From the manual</span>` : ""}
+      ${s._edited ? `<span class="fu-badge">Edited on this phone</span>` : ""}
     </div>
     ${s.summary ? `<div class="card-meta">${escapeHtml(s.summary)}</div>` : ""}
   `;
@@ -3597,10 +3765,12 @@ function openSymptomDetail(id) {
   modal.innerHTML = `
     <h2>${escapeHtml(s.title)}</h2>
     <div class="sub">${escapeHtml([s.brand, s.equipment].filter(Boolean).join(" · "))}</div>
+    ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
+    ${s._edited ? editedLineHtml("restoreSymptomBtn") : ""}
+    ${s.confidence === "verify" ? `<div class="maint-flag"><div class="maint-flag-title">${UNVERIFIED_LINE}</div></div>` : ""}
     ${s.summary ? `<div class="detail-section"><p>${escapeHtml(s.summary)}</p></div>` : ""}
     <div id="followupBox"></div>
     ${steps ? `<div class="detail-section"><h3>Checklist</h3><ol>${steps}</ol></div>` : ""}
-    ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
     ${s.confidence === "manual" && s.source ? `<div class="detail-section"><h3>Source</h3><p>${escapeHtml(s.source)}</p>${s.manual ? (s.pages && s.pages.length ? s.pages.slice(0, 3) : [0]).map(pg => `<button class="unit-src-btn" data-page="${pg}">📄 Open the manual${pg ? " at p." + pg : ""}</button>`).join(" ") : ""}</div>` : ""}
     <div class="modal-actions">
       <button class="primary" id="closeModalBtn">Close</button>
@@ -3613,6 +3783,13 @@ function openSymptomDetail(id) {
     trackEvent("unit scenario manual opened: " + s.id);
     if (pg) openManualAtPage("manual-seed-" + s.manual, pg); else openManualDetail("manual-seed-" + s.manual);
   });
+  const restoreSym = document.getElementById("restoreSymptomBtn");
+  if (restoreSym) restoreSym.onclick = () => {
+    if (!confirm("Put the library's original wording back for this fix?")) return;
+    saveUserSymptoms(loadUserSymptoms().filter(u => u.id !== s.id));
+    trackEvent("restored original fix: " + s.id);
+    renderSymptoms(); openSymptomDetail(s.id);
+  };
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editSymptomBtn").onclick = () => openSymptomEditForm(s);
   document.getElementById("modalBackdrop").classList.remove("hidden");
@@ -3926,6 +4103,7 @@ function openSymptomEditForm(existing) {
     const userSymptoms = loadUserSymptoms().filter(u => u.id !== entry.id);
     userSymptoms.push(entry);
     saveUserSymptoms(userSymptoms);
+    trackEvent((existing ? (String(entry.id).startsWith("user-") ? "edited own fix on this phone: " : "EDITED LIBRARY FIX on this phone: ") : "added a fix on this phone: ") + entry.title.slice(0, 70) + " (" + entry.id + ")");
     if (existing) saveDeletedSymptomIds(loadDeletedSymptomIds().filter(id => id !== entry.id));
     closeModal(); renderSymptoms();
   };
@@ -5099,7 +5277,12 @@ function bulMaintInject() {
   const list = bulletinsFor({ genFamily: hit ? hit.family.id : "", model });
   if (!list.length) return;
   const serial = hit && hit.model && typeof genLastScan !== "undefined" && genLastScan && genLastScan.modelG === hit.model.g ? genLastScan.serial : "";
-  results.insertAdjacentHTML("afterbegin", bulletinsHtml(list, { where: "maint lookup", serial, model }));
+  // 11-12 audit: the "not an exact match" / "guessed model" notices stay the first thing on the screen;
+  // the bulletins go right under them (a 12-bulletin box used to push the warning off the first screen).
+  let anchor = null;
+  for (const ch of results.children) { if (ch.classList.contains("maint-flag")) anchor = ch; else break; }
+  const bulHtmlStr = bulletinsHtml(list, { where: "maint lookup", serial, model });
+  if (anchor) anchor.insertAdjacentHTML("afterend", bulHtmlStr); else results.insertAdjacentHTML("afterbegin", bulHtmlStr);
 }
 if (typeof renderMaint === "function") {
   const bulRenderMaint0 = renderMaint;
@@ -5538,7 +5721,12 @@ function genMaintResolve(q) {
     if (fams.length > 1) return { family: fam, model: null, ambiguous: fams.map(g => ({ family: g, model: g.models.find(m => m.digits === digits) })) };
   }
   const model = exact || (fam.models || []).find(m => m.digits === digits) || null;
-  return { family: fam, model };
+  // 11-12 audit (accuracy #13): a full G-number that is not in the list used to open a sibling with no
+  // remark (G0072601 -> the G0072600 card; a 9-character plate number -> the ...9 or ...0 model).
+  // notListed = what was typed, when it is a full number and not the model shown.
+  const typedFull = u.startsWith("G") ? u : (u.length === 7 ? "G" + u : "");
+  const notListed = typedFull && (!model || model.g !== typedFull) ? typedFull : "";
+  return { family: fam, model, notListed };
 }
 
 // One line for the checklist box that replaces "Technician ID".
@@ -8259,7 +8447,7 @@ function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, s
   boxes.push(ccTargetBox("Target subcooling", `${scTarget}°F`, scTargetIsDefault ? "10°F default — check the nameplate" : "from nameplate"));
 
   document.getElementById("cc-targets").innerHTML =
-    `<div class="cc-section-label">🎯 Targets for this call</div><div class="cc-target-grid">${boxes.join("")}</div>`
+    `<div class="cc-section-label">🎯 Targets for this call - ${escapeHtml(refrig)}</div><div class="cc-target-grid">${boxes.join("")}</div>`
     + renderChartLinks(refrig);
 }
 
@@ -8319,6 +8507,14 @@ function renderChargeCalc() {
   const scTarget = scTargetRaw ?? 10;
   const wb = ccNum("cc-wb");
 
+  // No silent R-410A: until a refrigerant is picked (or set from the tag)
+  // there is no table to read, so no targets and no verdict.
+  if (!chart) {
+    document.getElementById("cc-targets").innerHTML = `<div class="cc-section-label">🎯 Targets for this call</div>`;
+    document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${ccVerdict("warn", "<strong>Pick the refrigerant first.</strong> Read it off the outdoor unit's nameplate and set the Refrigerant box above - the targets and the verdict wait for it.", "Covered: R-410A, R-32, R-454B. R-22 is not covered - use an R-22 P/T chart.")}</div>`;
+    return;
+  }
+
   renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, scTargetRaw == null);
   document.querySelectorAll("#cc-targets .cc-chart-link").forEach(b => {
     b.onclick = () => openChargingChart(b.dataset.chart);
@@ -8331,6 +8527,21 @@ function renderChargeCalc() {
   const condSat = head != null ? ptInterp(chart.bubble, head) : null;
   if (sh == null && slt != null && evapSat != null) sh = slt - evapSat;
   if (sc == null && llt != null && condSat != null) sc = condSat - llt;
+
+  // Readings that cannot happen on this refrigerant: superheat or subcooling
+  // below zero, or condensing colder than the outdoor air. That is the wrong
+  // refrigerant table (an R-22 unit read as R-410A does exactly this) or a
+  // wrong reading - never a charge verdict.
+  {
+    const noFit = [];
+    if (sh != null && sh < -0.5) noFit.push(`superheat works out to ${sh.toFixed(0)}°F`);
+    if (sc != null && sc < -0.5) noFit.push(`subcooling works out to ${sc.toFixed(0)}°F`);
+    if (condSat != null && od != null && condSat < od - 0.5) noFit.push(`head ${head} psig condenses at ${condSat.toFixed(0)}°F, colder than the ${od}°F outdoor air`);
+    if (noFit.length) {
+      document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${ccVerdict("bad", `<strong>These readings do not fit ${escapeHtml(refrig)}</strong> - ${escapeHtml(noFit.join("; "))}. That cannot happen on a running system.`, `Check the refrigerant choice against the nameplate (R-22 is not covered here) and check the gauges and probes. No charge verdict until the readings fit.`)}</div>`;
+      return;
+    }
+  }
 
   // --- Suction / evaporator ---
   if (suct == null) {
@@ -8415,6 +8626,20 @@ function renderChargeCalc() {
   if (patterns.length) out.push(`<div class="cc-pattern">🧭 ${patterns.map(escapeHtml).join("<br>")}</div>`);
 
   document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${out.join("")}</div>`;
+}
+
+// The Refrigerant box starts blank ("Pick refrigerant") instead of on R-410A.
+// A pick made by hand is remembered as the tech's own (ccApplyScan only
+// clears a value it set itself).
+{
+  const sel = document.getElementById("cc-refrig");
+  if (sel && ![...sel.options].some(o => o.value === "")) {
+    const o = document.createElement("option");
+    o.value = ""; o.textContent = "Pick refrigerant";
+    sel.insertBefore(o, sel.firstChild);
+    sel.value = "";
+  }
+  if (sel) sel.addEventListener("change", () => { delete sel.dataset.auto; });
 }
 
 for (const fid of ["cc-refrig","cc-meter","cc-eff","cc-od","cc-id","cc-suct","cc-head","cc-sh","cc-slt","cc-sc","cc-llt","cc-sctarget","cc-wb"]) {
@@ -8539,10 +8764,30 @@ function ccInferRefrig(model) {
   if (/^(DX1[3-8]|DZ1[3-8]|DX20VC|DZ20VC|DZ17VS)/.test(m)) return "R-410A";
   if (/^4T[TW][RXBZV]/.test(m)) return "R-410A";
   if (/^(X[CP]1[3-9]|X[CP]2[0-9]|1[346]ACX|14HPX|ML1[467]X|EL1[678]X|SL2[58]X)/.test(m)) return "R-410A";
+  // Rheem / Ruud Endeavor: the letters after the SEER digits decide. The Tag
+  // Scanner's own notes state RA14AY / RA15AY / RP14AY / RP15AY / RD16AY /
+  // RD18AY are R-454B. Any other ...AY model is not stated anywhere in the
+  // app, so it stays unset rather than falling into the R-410A rule below.
+  if (/^(RA1[45]|RP1[45]|RD1[68])AY/.test(m)) return "R-454B";
+  if (/^(R[APD]|W[AP])\d{2}AY/.test(m)) return null;
   if (/^(RA1[3-9]|RA20|RP1[4-9]|RP20|WA1[3-5]|WP1[4-5]|1[34]AJ[MN])/.test(m)) return "R-410A";
   if (/^(24VNA|25VNA|24A[BC]|25H[BC])/.test(m)) return "R-410A";
   if (/^Y[CH][JG]/.test(m)) return "R-410A";
   return null;
+}
+
+// Refrigerant the Tag Scanner's own series text names for this model. Only
+// outdoor / packaged units, and only when the text names exactly ONE
+// refrigerant - "A4AC (R-410A) and A5AC (R-454B)" or "R-22 and early R-410A"
+// stays unset. Returns "R-410A" / "R-32" / "R-454B" / "R-22" or null.
+function ccRefrigFromSeries(model) {
+  if (!model || typeof identifyModel !== "function") return null;
+  let id = null;
+  try { id = identifyModel(model, "", null); } catch (e) { return null; }
+  if (!id || !id.series || !/Condenser|Heat Pump|Other/i.test(id.equipment || "")) return null;
+  const found = new Set();
+  for (const x of String(id.series).matchAll(/\bR-?(410A|454B|32|22)\b/gi)) found.add("R-" + x[1].toUpperCase());
+  return found.size === 1 ? [...found][0] : null;
 }
 
 // Metering from a matched chart's own meteringDevice line - only when the
@@ -8608,14 +8853,27 @@ function ccApplyScan() {
     if (effSel.value !== eff) { effSel.value = eff; }
     autoSet.push("condenser type: " + (eff === "high" ? "high-efficiency (15+ SEER)" : "standard (up to ~14 SEER)") + " from the model number");
   }
-  const refrigGuess = ccInferRefrig(outModel);
+  // Refrigerant: the scanner's own series text first (it names R-454B / R-32
+  // for families the short rule list below does not know), the family rule
+  // as the fallback. Never a guess: when neither speaks the box is left for
+  // the tech, and a value this function set for an EARLIER model is cleared.
+  const refSel = document.getElementById("cc-refrig");
+  const seriesRefrig = outModel ? ccRefrigFromSeries(outModel) : null;
+  const refrigGuess = seriesRefrig || ccInferRefrig(outModel);
+  let refrigSet = false, refrigNote = "";
+  if (outModel && refSel.dataset.auto && refSel.dataset.auto !== ccNormModel(outModel)) { refSel.value = ""; delete refSel.dataset.auto; }
   if (refrigGuess) {
-    const sel = document.getElementById("cc-refrig");
-    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(refrigGuess));
-    if (want && sel.value !== want.value) {
-      sel.value = want.value;
-      autoSet.push("refrigerant: " + refrigGuess + " from the model family");
+    const want = [...refSel.options].find(o => o.value && ccNormModel(o.value) === ccNormModel(refrigGuess));
+    if (want) {
+      refSel.value = want.value; refSel.dataset.auto = ccNormModel(outModel); refrigSet = true;
+      autoSet.push("refrigerant: " + refrigGuess + (seriesRefrig ? " from the app's notes on this series" : " from the model family"));
+    } else {
+      // R-22: the calc has no R-22 table. Say so, and do not leave the box on another refrigerant.
+      refSel.value = ""; delete refSel.dataset.auto;
+      refrigNote = `<div class="cc-scan-miss">⚠️ The app's notes on <strong>${escapeHtml(outModel)}</strong> name <strong>${escapeHtml(refrigGuess)}</strong>. This calculator has no ${escapeHtml(refrigGuess)} table - do not judge this unit's charge here. Check the nameplate and use an ${escapeHtml(refrigGuess)} P/T chart.</div>`;
     }
+  } else if (outModel) {
+    refrigNote = `<div class="cc-scan-miss">⚠️ <strong>Refrigerant NOT set from the model.</strong> Read it off the nameplate and set the Refrigerant box${refSel.value ? ` (it is on ${escapeHtml(refSel.value)} now - your own pick)` : ""}.</div>`;
   }
 
   let hits = ccMatchCharts(outModel);
@@ -8627,8 +8885,9 @@ function ccApplyScan() {
   }
   if (!hits.length) {
     box.innerHTML = `<div class="cc-scan-miss">No factory chart for <strong>${escapeHtml(outModel || inModel)}</strong> in the offline library — the rule-of-thumb targets below still apply. Check the unit's own charging sticker or nameplate subcool value and enter it above.</div>`
-      + (autoSet.length ? `<div class="cc-scan-applied">✅ Auto-set ${escapeHtml(autoSet.join("; "))}.</div>` : "");
-    trackEvent("charge scan no chart: " + (outModel || inModel));
+      + (autoSet.length ? `<div class="cc-scan-applied">✅ Auto-set ${escapeHtml(autoSet.join("; "))}.</div>` : "")
+      + refrigNote;
+    trackEvent("charge scan no chart: " + (outModel || inModel) + (outModel && !refrigSet ? " (refrigerant not set)" : ""));
     renderChargeCalc();
     return;
   }
@@ -8645,11 +8904,14 @@ function ccApplyScan() {
   let refrigWarn = "";
   {
     const sel = document.getElementById("cc-refrig");
-    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(hits[0].chart.refrigerant));
-    if (!want) refrigWarn = hits[0].chart.refrigerant;
-    else if (sel.value !== want.value) {
-      sel.value = want.value;
-      autoSet.push("refrigerant: " + hits[0].chart.refrigerant + " from the factory chart");
+    const want = [...sel.options].find(o => o.value && ccNormModel(o.value) === ccNormModel(hits[0].chart.refrigerant));
+    if (!want) { refrigWarn = hits[0].chart.refrigerant; sel.value = ""; delete sel.dataset.auto; refrigNote = ""; }
+    else {
+      if (sel.value !== want.value || !refrigSet) {
+        for (let i = autoSet.length - 1; i >= 0; i--) if (/^refrigerant: /.test(autoSet[i])) autoSet.splice(i, 1);
+        autoSet.push("refrigerant: " + hits[0].chart.refrigerant + " from the factory chart");
+      }
+      sel.value = want.value; sel.dataset.auto = ccNormModel(outModel || inModel); refrigNote = "";
     }
   }
 
@@ -9194,7 +9456,10 @@ const MODEL_PATTERNS = [
   { re: /^(FT4B[GI]|FS4B[GI]|FSH1BG|PSH1BG|PSH4B[GI]|FSA1BG|PSA1BG|PSA4B[GI])/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (Frigidaire / Maytag / Tappan / Westinghouse / Broan / NuTone / Philco / Nordyne / Intertherm) iQ Drive inverter split system, 19-25.5 SEER - FT4BG/FT4BI (HP) and FS4BG/FS4BI (AC), badge variants FSH1BG/PSH1BG/PSH4BG/PSH4BI/FSA1BG/PSA1BG/PSA4BG/PSA4BI", notes: ["There is NO numbered flash-code table on iQ Drive - see Error Codes under 'Nortek ... iQ Drive inverter split system'","Diagnosis is the touchscreen controller's FAULT STATUS / FAULT HISTORY screens plus per-board LEDs on five boards","Trap: after power is removed the inverter red LED keeps blinking about a minute - wait 60 seconds before touching inverter parts","G suffix = 17-19.9 SEER design series, I suffix = 20-25 SEER design series"] },
   { re: /^[CDEFJMP]S?[HT]4BF/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (Frigidaire / Maytag / Tappan / Westinghouse / Broan / NuTone / Nordyne) FT4BF / DT4BF / ET4BF / JT4BF / CSH4BF / MSH4BF / PSH4BF 16 SEER two-stage R-410A split heat pump - Emerson CoreSense 10-code module", notes: ["Codes are in Error Codes under 'Nortek ... CoreSense module 10-code'","Trap: there are TWO LEDs in the outdoor box - the CoreSense module and the defrost control board, each with its own table","Trap: earlier revisions of this same platform shipped with a Comfort Alert module instead (wiring diagrams 710964A / 710965A) - look at the module before counting flashes","Nomenclature: FT 4 B F - 048 K A = heat pump, R-410A, braze 15-17 SEER series, 48,000 BTU/h, 208/230-1-60, revision A","Adaptive demand defrost: sacrificial defrost after 34 min accumulated run time in heat below 35 F coil, default 70 F termination"] },
   { re: /^[BCEFGHJMPVW]SH[1-4][BMQ][DEFI]5?/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (Maytag / Frigidaire / Gibson / Westinghouse / Broan / Nordyne) *SH-prefix split heat pump (CSH/MSH/PSH/FSH/BSH/GSH/HSH/VSH/WSH/ESH 1BE-4BF), 13-16 SEER R-410A", notes: ["Codes are in Error Codes: CoreSense 6-code (13-15 SEER) or CoreSense 10-code (15-16 SEER) plus the defrost board 2-character display","Trap: the CoreSense normal state is SOLID YELLOW on the 13-15 SEER table and SOLID GREEN on the 15-16 SEER table","The CoreSense module is 'select models' on this platform - confirm it is physically present","No Maytag-badge (CSH/MSH/PSH) doc in the archive prints a model nomenclature chart; the M=Maytag brand letter IS confirmed on MSH4BE/MSH4BF QRDs"] },
-  { re: /^[CDEFJMNPTVW]T[3-7][BQ][DEFNPQU]/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (Frigidaire / Gibson / Kelvinator / Tappan / Westinghouse / Broan / NuTone / Nordyne / Intertherm / Miller) *T-prefix split heat pump (FT/DT/ET/JT/NT/MT/T 4B_-6B_ and the older 5-series flat-top), 13-16 SEER", notes: ["Codes are in Error Codes: CoreSense 6-code, Comfort Alert, or the defrost board 2-character display depending on the era","The 5-series (DT5BD/FT5BD/JT5BD/T5(B,Q)D) is the 13 SEER flat-top platform with the Comfort Alert module","FT5BU / JT5BU are the manufactured-housing variants"] },
+  // 11-12 audit: FT4BN + a letter + the size digits (FT4BNF036) is Carrier's fan-coil grammar (FB4CNF036,
+  // FV4CNF003 ...), matched by the Carrier FT4 rule further down; Nortek sizes follow the family letters
+  // directly (FT4BF-048KA).
+  { re: /^(?!FT4BN[A-Z][0-9])[CDEFJMNPTVW]T[3-7][BQ][DEFNPQU]/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (Frigidaire / Gibson / Kelvinator / Tappan / Westinghouse / Broan / NuTone / Nordyne / Intertherm / Miller) *T-prefix split heat pump (FT/DT/ET/JT/NT/MT/T 4B_-6B_ and the older 5-series flat-top), 13-16 SEER", notes: ["Codes are in Error Codes: CoreSense 6-code, Comfort Alert, or the defrost board 2-character display depending on the era","The 5-series (DT5BD/FT5BD/JT5BD/T5(B,Q)D) is the 13 SEER flat-top platform with the Comfort Alert module","FT5BU / JT5BU are the manufactured-housing variants"] },
   { re: /^[BCEFGHJMPRSVW]SA[1-6][BMQ][DEFGI]5?/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (all badges) *SA-series split system - SA = split AC on this platform, 13-16 SEER R-410A (BSA2 / CSA1 / CSA4 / ESA1 / FSA1 / GSA2 / GSA3 / HSA1 / HSA4 / MSA4 / MSA6 / PSA1 / PSA2 / PSA4 / RSA3 / VSA1 / VSA4 / WSA2 / WSA3 / WSA4)", notes: ["Codes are in Error Codes: Comfort Alert (13 SEER, D suffix) or CoreSense 10-code (14-16 SEER, E/F suffix)","The newest R-32 SEER2 platform (*SA3B*/*SA3M*/*SA3Q*/RSA3*) and the R-454B '5'-suffix platform (*SA4B*5, HSA4M*5) have NO diagnostics module at all - stop looking for an LED","Nomenclature (Product Identifier sheet): [badge] SA [stage 1/2/V] [fitting B=braze Q=quick-connect] [efficiency D=13 E=14 F=15-16 G=17-20] [4=R-410A] [coil C/M] [compressor E/R/S] [metering E/N/P/X] [2-digit MBTU] [K=208/230-1-60]","Trap: quick-connect (Q) variants such as GSA2QD / GSA2QE are cost-reduced and do NOT carry the module even though their brazed siblings do"] },
   { re: /^[CDEFGHJMNPRVW]S[3-6][BQ][ADEFGX]/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (all badges) older *S4B* / *S5B* / *S6B* split system air conditioner (DS/ES/FS/JS/MS/NS/RS/WS/CS 4B_-6B_), 13-16 SEER R-410A", notes: ["Codes are in Error Codes: Comfort Alert (D suffix) or CoreSense 10-code (E/F suffix)","No per-character nomenclature legend was found for this older 4-character naming scheme in any Nortek doc - the fitting letter (B braze / Q quick-connect) and efficiency letter (D/E/F/G) are readable from the family name but are not a sourced decode","Several of these families' own manuals say the diagnostics module is on 'Select Models' only"] },
   { re: /^SA[1-6][BQ][DEF]/, brand: "Nortek", equipment: "Condenser/Heat Pump", series: "Nortek (Nordyne unbranded) SA2BD / SA4BD / SA4BE split system air conditioner", notes: ["Codes are in Error Codes: Comfort Alert (SA2BD/SA4BD) or CoreSense 10-code (SA4BE)"] },
@@ -12073,10 +12338,30 @@ document.getElementById("scanStopBtn").addEventListener("click", (e) => {
   e.currentTarget.disabled = true;
 });
 
+// After a read that found no model: bring the status line and the photo to the top of the screen and
+// put the cursor in the Model box right under the photo, so the tag can be read off the picture.
+const SCAN_TIME_LIMIT_MS = 40000;
+function scanFocusModelBox() {
+  try {
+    const st = document.getElementById("scanStatus"), box = document.getElementById("scanModelInput");
+    if (!box || document.getElementById("scannerScreen").classList.contains("hidden")) return;
+    // Focus first (the phone brings the box above its keyboard), then line the status line and the
+    // photo up under the top bar; the box sits directly below the photo.
+    if (!box.value.trim()) box.focus();
+    const bar = document.querySelector(".topbar");
+    const place = () => {
+      const top = (st.classList.contains("hidden") ? document.getElementById("scanPreview") : st).getBoundingClientRect().top + window.scrollY - ((bar ? bar.offsetHeight : 66) + 10);
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    };
+    place(); setTimeout(place, 400);   // again once the keyboard has opened
+  } catch (e) { /* cosmetic only */ }
+}
+
 async function scanTagPhoto(file) {
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
   const scanT0 = Date.now();
+  askCtx = null;   // a new tag = a new unit: Ask must not borrow the last question's model for it
   trackEvent("scanned a tag photo");
   const heldId = newScanPhotoId();
   const held = holdScanPhoto(file, heldId);   // uploads at the next start only if this scan never finishes
@@ -12096,8 +12381,13 @@ async function scanTagPhoto(file) {
     const stopBtn = document.getElementById("scanStopBtn");
     stopBtn.textContent = "Stop — I'll type it in"; stopBtn.disabled = false; stopBtn.classList.remove("hidden");
     let fields;
+    // 11-12 audit (field-use #2): a reading that runs past the limit ends the same way as the Stop
+    // button - through the reader's own stop flag, so nothing about what is read changes.
+    let timedOut = false;
+    const scanTimer = setTimeout(() => { timedOut = true; ocrStopRequested = true; }, SCAN_TIME_LIMIT_MS);
     try { fields = await ocrTagFields(file, scanStatus); }
-    finally { stopBtn.classList.add("hidden"); ocrStopRequested = false; }
+    finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; }
+    if (!fields.ocrStopped) timedOut = false;   // it finished by itself just as the limit hit
     scanStatus(null);
     const typedModel = modelEl.value !== typedBefore[0] && modelEl.value.trim();
     const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value.trim();
@@ -12105,10 +12395,12 @@ async function scanTagPhoto(file) {
     if (!typedSerial) serialEl.value = fields.serial;
     if (!fields.model) {
       const photoId = newScanPhotoId();
-      trackEvent("SCAN - NO MODEL READ" + (fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
-      scanStatus(fields.ocrStopped
-        ? "Stopped. Type the model number below and tap Identify unit." + (typedModel ? "" : tagNoModelHint(fields))
-        : "I can't read the tag — please try again (straighter, closer, better lit), or enter the model number manually below." + SCAN_SHADE_TIP + tagNoModelHint(fields));
+      trackEvent("SCAN - NO MODEL READ" + (timedOut ? " (time limit " + Math.round(SCAN_TIME_LIMIT_MS / 1000) + " s)" : fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
+      // One plain line above the photo; the retake tips moved into the card under the boxes.
+      scanStatus((timedOut ? "This is taking too long. " : fields.ocrStopped ? "Stopped. " : "I can't read this tag. ")
+        + (typedModel ? "Tap Identify unit for the model you typed." : "Read the model off the photo and type it in the box under it."));
+      const retakeTip = "Or take the photo again - straighter, closer, better lit." + (timedOut || fields.ocrStopped ? "" : SCAN_SHADE_TIP) + (typedModel ? "" : tagNoModelHint(fields));
+      scanFocusModelBox();
       const rec = await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
       scanRetakeRemember(file, photoId, fields, null, true);   // already uploaded: never again as "retaken"
       const box = document.getElementById("scanResult");
@@ -12121,7 +12413,7 @@ async function scanTagPhoto(file) {
           ? "📷 Photo sent to Andy automatically so he can add the unit. If you can't get a clean scan, enter the model number below."
           : "📷 Photo saved — it will send to Andy automatically when you're back in signal. If you can't get a clean scan, enter the model number below.")
         : "📷 Photo saved on this phone. If you can't get a clean scan, send it to Andy and he'll add the unit.";
-      box.innerHTML = `<div class="scan-id-card"><div class="card">${noModelYear ? `<p>📅 <strong>${escapeHtml(noModelYear)}</strong></p>` : ""}<p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
+      box.innerHTML = `<div class="scan-id-card"><div class="card">${noModelYear ? `<p>📅 <strong>${escapeHtml(noModelYear)}</strong></p>` : ""}<p>${escapeHtml(retakeTip)}</p><p>${autoNote}</p><div class="scan-actions"><button class="${SCAN_PHOTO_RELAY ? "" : "primary-act"}" id="scanSendFail">📤 ${SCAN_PHOTO_RELAY ? "Also send this photo by text/email" : "Send this photo to Andy"}</button></div></div></div>`;
       const btn = document.getElementById("scanSendFail");
       if (btn) btn.onclick = () => sendFailedScan(file, rec);
     } else {
@@ -12214,7 +12506,13 @@ function renderScanResult(info) {
   } else if (info.age) facts.push(["Year made", info.age]);
   let brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
   const twinModel = info.brand === "Carrier" ? carrierTwinModel(info.model) : "";
-  let famPre = codeFamilyPrefix(info.model, brandCodes) || (twinModel ? codeFamilyPrefix(twinModel, brandCodes) : "");
+  // accuracy #5: the count on the codes button and the list it opens come from one function
+  // (codeFamilyRows, also used by the Error Codes screen), and the button passes the MODEL on, so the
+  // list always carries its "showing the X family" note.
+  let codeModel = info.model;
+  let famRows = codeFamilyRows(info.model, brandCodes);
+  if (!famRows.pre && twinModel) { famRows = codeFamilyRows(twinModel, brandCodes); if (famRows.pre) codeModel = twinModel; }
+  let famPre = famRows.pre;
   // v425: Daikin / Goodman / Amana share furnaces and air handlers, and a code family is filed under one
   // badge only (a Daikin DR96SN tag has its rows under Goodman). When the scanned badge has no family
   // naming this model, use the family under the sister badge that names it.
@@ -12223,12 +12521,15 @@ function renderScanResult(info) {
     for (const b of ["Daikin", "Goodman", "Amana"]) {
       if (b === info.brand) continue;
       const bc = getAllCodes().filter(c => c.brand === b && c.equipment === info.equipment);
-      const p = codeFamilyPrefix(info.model, bc);
-      if (p) { famPre = p; brandCodes = bc; codeBrand = b; break; }
+      const r = codeFamilyRows(info.model, bc);
+      if (r.pre) { famRows = r; famPre = r.pre; brandCodes = bc; codeBrand = b; break; }
     }
   }
   if (twinModel && !(info.notes || []).some(n => /Carrier twin/.test(n))) info.notes = [...(info.notes || []), "Carrier twin: " + carrierTwinSeries(info.model) + " - same platform, so that model's codes, manuals and scenarios apply."];
-  const codeCount = famPre ? brandCodes.filter(c => String(c.family || "").toUpperCase().includes(famPre)).length : brandCodes.length;
+  const codeCount = famPre ? famRows.rows.length : brandCodes.length;
+  // accuracy #8: which characters the app changed, so the tech checks THOSE on the tag.
+  const guessDiff = info.ocrGuess && !info.tailBad && typeof maintCharDiff === "function" ? maintCharDiff(info.rawModel, info.model) : "";
+  const guessWatch = guessDiff ? "the app changed " + guessDiff + " - check " + (guessDiff.includes(",") ? "those characters" : "that character") + " on the tag" : "watch 0/O and 1/I";
   // Share across with Maintenance Figures: show the link only when this exact
   // model actually resolves to a maintenance entry (uses the same forgiving match).
   // v185: exact entries, or same-kind look-alikes (the list labels those); never
@@ -12248,8 +12549,8 @@ function renderScanResult(info) {
       : `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>`)
     : "";
   const ocrBanner = info.tailBad ? `<p class="scan-ocr-note">📷 Part of <strong>${escapeHtml(info.model)}</strong> doesn't fit this model family's format, so the scan may have misread a character — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O, 1/I, 8/B and 6/G).</p>`
-    : info.ocrGuess && info.typed ? `<p class="scan-ocr-note">⌨️ You entered <strong>${escapeHtml(info.rawModel)}</strong>, which isn't a known model. Closest known model is <strong>${escapeHtml(info.model)}</strong> (a letter swapped for a lookalike digit) — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>`
-    : info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
+    : info.ocrGuess && info.typed ? `<p class="scan-ocr-note">⌨️ You entered <strong>${escapeHtml(info.rawModel)}</strong>, which isn't a known model. Closest known model is <strong>${escapeHtml(info.model)}</strong> (a letter swapped for a lookalike digit) — <strong>check the tag</strong> to confirm before trusting the details below (${escapeHtml(guessWatch)}).</p>`
+    : info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (${escapeHtml(guessWatch)}).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
   // How many library manuals answer to this exact model (or its family).
   const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
@@ -12273,7 +12574,7 @@ function renderScanResult(info) {
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
         ${ownScenHtml}
         <div class="scan-actions">
-          ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " codes" : escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
+          ${info.brand && codeCount ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " family codes" : "All " + escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
           ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
           ${hasSensors ? `<button class="primary-act" id="scanGoSensors">🌡️ Sensor plugs &amp; charts</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
@@ -12289,14 +12590,26 @@ function renderScanResult(info) {
     codesState.brand = codeBrand; codesState.equipment = info.equipment;
     // Straight to this unit's own family when one is named by the model's
     // front part (59SP5A080E171216 -> 59SP5A), not every Carrier furnace code.
-    const pre = famPre;
+    // The model goes in the box (not the bare family letters, which were a plain text search with
+    // another count): Error Codes then resolves the family with the same function and shows its note.
+    const pre = famPre ? codeModel : "";
     codesState.search = pre;
     document.getElementById("codesSearchInput").value = pre;
     showScreen("codes");
+    // One-time lines above the list for this visit (gone at the next search, which is a new question).
+    const res = document.getElementById("codesResults");
+    const addNote = (txt) => { const n = document.createElement("div"); n.className = "disclaimer"; n.textContent = txt; res.insertBefore(n, res.firstChild); };
+    if (!famPre && codeCount) addNote("All " + codeBrand + " " + info.equipment + " boards - the app does not know which board " + info.model + " has. Pick by the board and display type on the unit.");
+    if (info.ocrGuess) addNote("Guessed model - the scan was corrected to " + info.model + ". Confirm it on the tag before you trust this list.");
   };
   const goMaint = document.getElementById("scanGoMaint");
   if (goMaint) goMaint.onclick = () => {
-    if (typeof maintState !== "undefined") { maintState.query = info.model; maintState.equip = ""; maintState.open = null; }
+    if (typeof maintState !== "undefined") {
+      maintState.query = info.model; maintState.equip = ""; maintState.open = null;
+      // accuracy #8: a guessed model stays marked as guessed on Maintenance Figures (renderMaint shows it
+      // while the box still holds this model).
+      maintState.guess = info.ocrGuess ? { model: info.model, raw: info.rawModel || "", diff: guessDiff } : null;
+    }
     const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = info.model;
     showScreen("maint");
   };
@@ -12359,10 +12672,14 @@ function maintScanStatus(msg) {
   if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
   else el.classList.add("hidden");
 }
-function maintApplyScannedModel(model) {
+function maintApplyScannedModel(model, fixedFrom) {
   const input = document.getElementById("maintSearchInput");
   if (input) input.value = model;
-  if (typeof maintState !== "undefined") { maintState.query = model; maintState.open = null; }
+  if (typeof maintState !== "undefined") {
+    maintState.query = model; maintState.open = null;
+    // accuracy #8: the reader swapped look-alike characters to reach this model - renderMaint says so.
+    maintState.guess = fixedFrom && fixedFrom !== model ? { model, raw: fixedFrom, diff: typeof maintCharDiff === "function" ? maintCharDiff(fixedFrom, model) : "" } : null;
+  }
   if (typeof renderMaint === "function") renderMaint();
   // v185: only an EXACT model match counts as "has figures". Look-alikes of the
   // same kind still show (labelled in the list), but the scan is logged and its
@@ -12468,7 +12785,7 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
     if (scanned && maintModelPlausible(scanned) && !serialLike) {
       // v227: a serial read off its own S/N label goes into the generator checklist.
       if (typeof genNoteScan === "function") genNoteScan(scanned, fields && fields.serialSource === "label" ? fields.serial : "");
-      const matched = maintApplyScannedModel(scanned);
+      const matched = maintApplyScannedModel(scanned, fields && fields.ocrFixedFrom);
       // Read fine but no figures for it: that photo is a coverage gap for
       // Andy, same as an unreadable one. Only appends to the existing line.
       const photoId = matched ? "" : newScanPhotoId();
