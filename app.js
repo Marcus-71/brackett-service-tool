@@ -5462,7 +5462,12 @@ function genMaintResolve(q) {
     if (fams.length > 1) return { family: fam, model: null, ambiguous: fams.map(g => ({ family: g, model: g.models.find(m => m.digits === digits) })) };
   }
   const model = exact || (fam.models || []).find(m => m.digits === digits) || null;
-  return { family: fam, model };
+  // 11-12 audit (accuracy #13): a full G-number that is not in the list used to open a sibling with no
+  // remark (G0072601 -> the G0072600 card; a 9-character plate number -> the ...9 or ...0 model).
+  // notListed = what was typed, when it is a full number and not the model shown.
+  const typedFull = u.startsWith("G") ? u : (u.length === 7 ? "G" + u : "");
+  const notListed = typedFull && (!model || model.g !== typedFull) ? typedFull : "";
+  return { family: fam, model, notListed };
 }
 
 // One line for the checklist box that replaces "Technician ID".

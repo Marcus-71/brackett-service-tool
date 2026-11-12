@@ -1353,7 +1353,9 @@ function renderMaint() {
     // v337: 4 digits that two families share - show each one; the plate's full G-number decides.
     results.innerHTML = genHit.ambiguous
       ? `<p class="maint-note">${escapeHtml(maintState.query.trim())} matches ${genHit.ambiguous.length} Generac models: ${genHit.ambiguous.map(a => escapeHtml(a.model.g)).join(" / ")}. Check the full G-number on the MODEL line (its last digit) - the figures can differ.</p>` + genHit.ambiguous.map(a => genMaintCardHtml(a)).join("")
-      : genMaintCardHtml(genHit);
+      : (genHit.notListed
+          ? `<div class="maint-flag"><div class="maint-flag-title">${maintEsc(genHit.notListed)} is not listed - showing ${genHit.model ? maintEsc(genHit.model.g) : "its family"}, same family</div>The figures can differ between models of one family. Check the kW and the engine on the plate against this card.</div>`
+          : "") + genMaintCardHtml(genHit);
     genMaintCardWire(results);
     return;
   }
