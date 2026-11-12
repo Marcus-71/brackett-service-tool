@@ -13547,7 +13547,8 @@ if ("serviceWorker" in navigator) {
     const d = e.data;
     if (!d || d.type !== "bfc-update-progress" || !wakeScreen || updateReady) return;
     const line = wakeScreen.querySelector("[data-up-progress]");
-    if (line && d.total) line.textContent = "Downloading - " + Math.min(d.files || 0, d.total) + " of " + d.total + " files";
+    // files finished and megabytes so far: on a slow link the megabytes are what is seen to move
+    if (line && d.total) line.textContent = "Downloading - " + Math.min(d.files || 0, d.total) + " of " + d.total + " files" + (d.bytes ? ", " + (d.bytes / 1048576).toFixed(1) + " MB" : "");
     if (Date.now() - wakeShownAt > WAKE_SCREEN_HARD_MS) return;   // the timer already set is the last one
     clearTimeout(wakeScreenTimer);
     wakeScreenTimer = setTimeout(() => giveUpWakeScreen("timed out (no progress, " + (d.files || 0) + " of " + (d.total || "?") + " files)"), WAKE_PROGRESS_MS);
