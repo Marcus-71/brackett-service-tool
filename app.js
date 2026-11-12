@@ -632,6 +632,54 @@ function drawPagedList(results, items, build, page, key, tail) {
   };
   draw();
 }
+// 11-12 audit (field-use #5): a model, a symptom or a thermostat typed into the wrong search box got
+// "No matching ..." and no way across. One button, the same on every search screen, carries the text
+// to Ask Anything (which searches codes, fixes, thermostats, generators, manuals and figures at once).
+function askEverythingBtn(q, from) {
+  q = String(q || "").trim();
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "ask-ai-btn ask-everything-btn";
+  b.style.marginTop = "0.7rem";
+  b.textContent = "🔎 Search everything for \"" + q + "\"";
+  b.onclick = () => {
+    trackEvent(from + " -> ask: " + q.slice(0, 90));
+    askState.search = q;
+    const ai = document.getElementById("askInput");
+    if (ai) ai.value = q;
+    showScreen("ask");
+  };
+  return b;
+}
+// Keeps one such button at the end of a screen's "nothing found" box (none when the search is empty).
+function setAskEverything(holder, q, from) {
+  if (!holder) return;
+  holder.querySelectorAll(".ask-everything-btn").forEach(x => x.remove());
+  if (String(q || "").trim()) holder.appendChild(askEverythingBtn(q, from));
+}
+// Maintenance Figures draws its own list (maint.js); this watches its "nothing found" box and the
+// red "No figures for ... yet" notice and adds the same button under either.
+(function maintAskEverything() {
+  const empty = document.getElementById("maintEmptyState"), results = document.getElementById("maintResults");
+  if (!empty || !results) return;
+  const sync = () => {
+    const q = typeof maintState === "undefined" ? "" : String(maintState.query || "").trim();
+    const hasCards = !!results.querySelector(".maint-card, .card");
+    const emptyShown = !empty.classList.contains("hidden");
+    const want = emptyShown && !hasCards ? q : "";
+    const have = empty.querySelector(".ask-everything-btn");
+    if ((have ? have.dataset.q : "") !== want) { setAskEverything(empty, want, "maintenance"); const b = empty.querySelector(".ask-everything-btn"); if (b) b.dataset.q = want; }
+    // notice shown instead of the empty box (only look-alikes of another kind of equipment)
+    const noticeOnly = !emptyShown && !hasCards && !!results.querySelector(".maint-flag") && q;
+    const inRes = results.querySelector(".ask-everything-btn");
+    if (noticeOnly && !inRes) results.appendChild(askEverythingBtn(q, "maintenance"));
+  };
+  new MutationObserver(sync).observe(empty, { attributes: true, attributeFilter: ["class"] });
+  new MutationObserver(sync).observe(results, { childList: true });
+  // still nothing after another letter: neither box changes, so the button's text is brought up to date here
+  const inp = document.getElementById("maintSearchInput");
+  if (inp) inp.addEventListener("input", () => setTimeout(sync, 0));
+})();
 const codesPage = { key: null, shown: LIST_PAGE };
 // The text a Codes search looks through, built once per card. A tech's own / edited code is a new object
 // every time it is read from storage, so it never gets a stale copy.
@@ -712,6 +760,11 @@ function renderCodes() {
   const empty = document.getElementById("codesEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
+  setAskEverything(empty, filtered.length ? "" : codesState.search, "codes");
+  // A problem typed in words ("blower runs all the time") still lists the code cards that hold those
+  // words; the way to the fix cards sits above them.
+  const codeWords = String(codesState.search || "").trim();
+  if (filtered.length && !viaPrefix && codeWords.split(/\s+/).length >= 3 && !/\d/.test(codeWords)) results.appendChild(askEverythingBtn(codeWords, "codes"));
   if (nReal && filtered.length > 1) {
     const note = document.createElement("div");
     note.className = "diag-fallback-note";
@@ -737,6 +790,9 @@ function renderCodes() {
       if (list.length) results.insertAdjacentHTML("beforeend", bulletinsHtml(list, { where: "codes lookup", model: bulQ }));
     }
   } catch (e) {}
+  // No code cards but bulletins listed: the "nothing found" box and its button are pushed off the screen,
+  // so the button also goes above the bulletins.
+  if (!filtered.length && results.children.length && codeWords) results.insertBefore(askEverythingBtn(codeWords, "codes"), results.firstChild);
   drawPagedList(results, filtered, buildCodeCard, codesPage, [codesState.search, codesState.brand, codesState.equipment].join("|"), "or type a code above");
 }
 
@@ -3306,7 +3362,7 @@ function renderSymptoms() {
   const empty = document.getElementById("diagEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
-  if (filtered.length === 0) { renderDiagEmptyState(); return; }
+  if (filtered.length === 0) { renderDiagEmptyState(); setAskEverything(empty, query, "diagnostics"); return; }
   // A thermostat how-to question ("honeywell schedule") belongs on the Thermostats screen: this list only
   // holds diagnostic cards, so point there instead of leaving the tech with unrelated ones.
   const tUnits = query ? askLiveUnits(buildSearchUnits(query)) : null;
@@ -3329,6 +3385,7 @@ function renderSymptoms() {
     note.className = "diag-fallback-note";
     note.textContent = `No exact match for "${diagState.search.trim()}" — closest topics below.`;
     results.appendChild(note);
+    results.appendChild(askEverythingBtn(query, "diagnostics"));
   }
   const nOwn = query ? 0 : filtered.filter(s => ownIds.has(s.id)).length;
   if (nOwn) {
@@ -3843,6 +3900,7 @@ function renderToolbox() {
   const empty = document.getElementById("toolboxEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
+  setAskEverything(empty, filtered.length ? "" : toolboxState.search, "toolbox");
   for (const t of filtered) results.appendChild(buildToolboxCard(t));
 }
 
@@ -4213,6 +4271,7 @@ function renderTstats() {
   const empty = document.getElementById("tstatEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
+  setAskEverything(empty, filtered.length ? "" : tstatState.search, "thermostats");
   for (const t of filtered) results.appendChild(buildTstatCard(t));
 }
 
@@ -4470,11 +4529,7 @@ function renderGens() {
   empty.classList.toggle("hidden", filtered.length + guides.length !== 0);
   // Nothing here: hand the question to Ask Anything (all HVAC + generator content).
   if (!filtered.length && !guides.length && q && typeof showScreen === "function") {
-    const ask = document.createElement("button");
-    ask.type = "button"; ask.className = "primary-act"; ask.style.width = "100%"; ask.style.marginTop = "0.5rem";
-    ask.textContent = "🔎 Ask Anything: \"" + q + "\"";
-    ask.onclick = () => { askState.search = q; const ai = document.getElementById("askInput"); if (ai) ai.value = q; showScreen("ask"); };
-    results.appendChild(ask);
+    results.appendChild(askEverythingBtn(q, "generators"));
   }
   for (const g of filtered) results.appendChild(buildGenCard(g));
 }
@@ -7599,6 +7654,7 @@ function buildManualNotFound(q) {
       ${folder ? `<button type="button" class="primary" data-act="brand">Browse all ${escapeHtml(folder)} manuals</button>` : ""}
       <button type="button" data-act="request">Ask the office for it</button>
     </div>`;
+  box.appendChild(askEverythingBtn(q, "manuals"));
   const b = box.querySelector('[data-act="brand"]');
   if (b) b.onclick = () => {
     manualsState.search = ""; manualsState.brand = folder; manualsState.model = null;
