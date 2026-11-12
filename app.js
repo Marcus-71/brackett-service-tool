@@ -2858,9 +2858,20 @@ async function askAiAnswer(question) {
   const wq = rq0;
   const wiring = askWiringHtml(wq, askQueryUnits(wq));
   const cites = passages.map(p => `<button class="ask-ai-cite" data-id="${escapeHtml(p.id)}" data-page="${p.page}">${escapeHtml(p.title)} · p.${p.page}</button>`).join("");
+  // 11-12 audit (accuracy #4): say on screen what the answer was built from - the same three cases the
+  // telemetry label below already tells the office (grounded / entries-only / no-manual-match).
+  const cardNames = entries.map(e => String(e.title || "").slice(0, 70)).filter(Boolean);
+  const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+  const builtFrom = passages.length
+    ? `<div class="card-meta"><span><strong>Built from:</strong> ${plural(passages.length, "manual page")} (open them under the answer)${cardNames.length ? " and " + plural(cardNames.length, "library card") + " found by search: " + escapeHtml(cardNames.join("; ")) : ""}.</span></div>`
+    : cardNames.length
+      ? `<div class="maint-flag"><div class="maint-flag-title">No manual page matched this question.</div>Built from ${plural(cardNames.length, "library card")} found by search only: ${escapeHtml(cardNames.join("; "))}. Check those cards are for your unit.</div>`
+      : `<div class="maint-flag"><div class="maint-flag-title">Nothing in the library matched this question.</div>This answer is general practice only - no figure in it is this unit's own spec.</div>`;
+  const askedAs = rq0.trim().toLowerCase() !== String(question).trim().toLowerCase() ? `<div class="card-meta"><span>Asked as: ${escapeHtml(rq0)}</span></div>` : "";
   box.innerHTML = `
     <div class="ask-ai-card">
       <div class="ask-ai-head">🤖 AI answer <span class="ask-ai-tag">verify before field use</span></div>
+      ${builtFrom}${askedAs}
       <div class="ask-ai-body">${escapeHtml(data.answer).replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>").replace(/(^|[\s(])\*(?=\S)([^*\n]+?)(?<=\S)\*(?=[\s).,:;]|$)/gm, "$1<em>$2</em>").replace(/^#{1,4} +/gm, "").replace(/\n/g, "<br>")}</div>
       ${cites ? `<div class="ask-ai-cites"><span class="ask-ai-cites-label">Sources you can open:</span>${cites}</div>` : ""}
       ${wiring}
