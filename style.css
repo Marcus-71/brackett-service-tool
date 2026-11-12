@@ -1649,7 +1649,7 @@ main {
   border-bottom: 1px solid var(--border); font-size: .92rem;
 }
 .maint-label { width: 42%; color: var(--text-dim); }
-.maint-value { font-weight: 500; }
+.maint-value { font-weight: 500; white-space: pre-line; }   /* v434: table rows put one reading per line */
 .maint-key .maint-value { font-weight: 700; }
 
 .maint-flag {

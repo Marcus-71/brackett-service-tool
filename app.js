@@ -3030,6 +3030,13 @@ function askTopItems(units, limit) {
   for (const it of idx) {
     let { sc, tsc } = askScoreItem(units, it);
     if (sc > 0 && wholeModel && it.kind === "maint" && hayHasTerm(it.titleHay || "", wholeModel)) tsc += 1;   // exact card ahead of its family card
+    // v434: a unit card is long (some now carry whole pressure tables), so it can hold every word of a
+    // question that is not about that unit at all ("can a daikin one touch display outdoor temperature all the
+    // time" led with an Amana heat pump card). A unit card whose own name - brand, model, tokens, kind of
+    // equipment - holds none of the asked words gives up one point, so the card that names the subject leads.
+    // Not when the question carries a model number that this card answers to ("AZV7SA4210 defrost interval").
+    if (it.kind === "maint" && sc > 1 && tsc === 0 &&
+        !units.some(u => !u.zero && (u.model || u.pre) && u.alts.some(a => askTermHit(it.hay, a)))) sc -= 1;
     if (sc > 0) scored.push({ it, sc, tsc });
   }
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
@@ -14872,7 +14879,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v433";
+const APP_VERSION = "v434";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
