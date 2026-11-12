@@ -1252,11 +1252,17 @@ function askIdleKick() {
     askIdleQueued = false;
     const left = dl && typeof dl.timeRemaining === "function" && !dl.didTimeout ? dl.timeRemaining() : 12;
     if (left >= 3) {
-      askSliceEnd = performance.now() + Math.min(left - 1, 30);
+      // The whole idle period the browser offers (50 ms at most), less a margin for the entry in hand:
+      // a callback asked for from inside one only runs in the NEXT idle period, so a short slice
+      // wastes the rest of this one (16 ms slices took 11 s at 4x CPU for 2 s of work).
+      askSliceEnd = performance.now() + Math.max(2, left - 6);
       try {
         if (!askIndexCache) {
           const job = askIndexJob || (askIndexJob = askIndexStart());
           if (job.gen.next().done) { askIndexCache = job.items; askIndexJob = null; }
+        } else if (typeof snLoaded !== "undefined" && !snLoaded && typeof snLoadP !== "undefined" && snLoadP) {
+          askSliceEnd = Infinity;
+          return;   // the sensor files are on their way in: the word list starts when they land (askSensorsLanded), not twice
         } else askVocabStep();
       } catch (e) { askIndexJob = null; askVocabJob = null; askIdleOn = false; }   // the next question builds it in one go, as before
       askSliceEnd = Infinity;
@@ -1484,7 +1490,7 @@ function askVocabStep() {
   // "doesnt"/"wont" - before, the fragments "doesn"/"won" were vocab and a typed "doesnt" was
   // "corrected" to the required word "doesn" (James 2026-09-09; 2026-10-06 audit, F2).
   const add = (s) => { for (const w of String(s || "").toLowerCase().replace(/['’]/g, "").match(/[a-z]{3,}/g) || []) freq.set(w, (freq.get(w) || 0) + 1); };
-  while (job.i < idx.length) { add(idx[job.i++].hay); if (job.i < idx.length && askSliceDue()) return false; }
+  while (job.i < idx.length) { add(idx[job.i++].hay); if (askSliceDue()) return false; }   // the rest below gets a slice of its own
   if (typeof MANUAL_SEEDS !== "undefined") for (const s of MANUAL_SEEDS) { add(s.brand); add(s.model); add(s.title); }
   const byFirst = new Map(), words = [];
   // Never offer a stopword or a 3-letter word as a correction target (3-letter words are only in
