@@ -12817,10 +12817,14 @@ function renderScanResult(info) {
   const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
   const nModelManuals = modelManuals.closestTo ? 0 : modelManuals.list.length;
   // Bulletins for the identified unit (family for a generator plate, model prefix for HVAC).
-  let bulHtml = "";
+  let bulHtml = "", bulCount = 0;
   try {
     const bulFam = info.brand && (info.brand === "Generac" || info.brand === "Kohler") && typeof genFamilyForModel === "function" ? genFamilyForModel(info.model) : null;
-    if (info.brand) bulHtml = bulletinsHtml(bulletinsFor({ genFamily: bulFam ? bulFam.id : "", model: info.model, brand: info.brand }), { where: "tag scanner", serial: info.serial, model: info.model });
+    if (info.brand) {
+      const bulList = bulletinsFor({ genFamily: bulFam ? bulFam.id : "", model: info.model, brand: info.brand });
+      bulCount = bulList.length;
+      bulHtml = bulletinsHtml(bulList, { where: "tag scanner", serial: info.serial, model: info.model });
+    }
   } catch (e) { bulHtml = ""; }
   // v285: this unit's own heating problems, from its service manual.
   const ownScen = info.brand ? unitScenariosFor(info.model) : [];
@@ -12846,6 +12850,21 @@ function renderScanResult(info) {
         </div>
       </div>
     </div>`;
+  // 11-12 audit (implementer A's note): a unit with many bulletins (59SP5A has 21) pushed the buttons
+  // about 1,300 px down. The first three rows stay (bulletinsFor lists high priority first, then the
+  // newest); the rest sit under one "Show all N" row - nothing is left out.
+  const bulCard = box.querySelector(".bul-card");
+  const bulRows = bulCard ? [...bulCard.children].filter(el => el.classList.contains("bul-item") || el.classList.contains("bul-more")) : [];
+  if (bulRows.length > 4) {
+    const fold = document.createElement("details");
+    fold.className = "bul-more";
+    const sum = document.createElement("summary");
+    sum.textContent = "Show all " + bulCount + " bulletins";
+    sum.style.cssText = "padding:0.8rem 0;color:var(--text)";
+    fold.appendChild(sum);
+    bulRows.slice(3).forEach(el => fold.appendChild(el));
+    bulCard.appendChild(fold);
+  }
   const goCodes = document.getElementById("scanGoCodes");
   if (goCodes) goCodes.onclick = () => {
     codesState.brand = codeBrand; codesState.equipment = info.equipment;
