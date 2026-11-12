@@ -2331,3 +2331,59 @@ body.inv-cam-open { overflow: hidden; }
 .warranty-badge { min-height: 44px; }
 /* Tag Scanner result scrolled into view: stays clear of the fixed top bar */
 #scanResult { scroll-margin-top: 80px; }
+
+/* ---- 11-12 merge: Troubleshoot (Ask Anything + Diagnostic Help) ---- */
+/* The example questions are one row that slides sideways, so "Or pick the problem" is on the first screen. */
+.ask-chip-slide { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.2rem; }
+.ask-chip-slide::-webkit-scrollbar { display: none; }
+.ask-chip-slide .ask-chip { flex: 0 0 auto; white-space: nowrap; }
+.ask-browse { padding: 0.2rem 1rem 1rem; }
+.ask-browse .ask-chip-label { font-size: 1rem; color: var(--text); margin: 0.3rem 0 0.55rem; }
+.diag-equip-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.9rem; }
+.diag-equip-btn {
+  font: inherit; font-size: 1rem; font-weight: 700; text-align: left; cursor: pointer;
+  min-height: 56px; padding: 0.6rem 0.8rem; border-radius: 12px;
+  background: var(--card); color: var(--text); border: 1px solid var(--border); border-left: 5px solid var(--brand-yellow);
+  display: flex; align-items: center; justify-content: space-between; gap: 0.4rem;
+}
+.diag-equip-btn:active { transform: scale(0.98); border-color: var(--accent); }
+.diag-equip-btn .ask-chip-n { font-size: 0.85rem; }
+.ask-browse .ask-narrow-tags { align-items: center; margin-bottom: 0.7rem; }
+.ask-browse .ask-narrow-tag { min-height: 44px; font-size: 1rem; }
+.diag-equip-change { font-size: 0.85rem; color: var(--text-dim); }
+.diag-results { display: flex; flex-direction: column; gap: 0.7rem; }
+.ask-browse .empty-state { padding-left: 0; padding-right: 0; }
+.ask-browse .ask-lead { margin: 0.2rem 0 0; }
+@media (min-width: 700px) and (min-height: 500px) {
+  .ask-browse { padding-left: max(1.2rem, calc((100% - var(--pad-col)) / 2)); padding-right: max(1.2rem, calc((100% - var(--pad-col)) / 2)); }
+  .diag-equip-btns { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* ---- 11-12 merge: Maintenance figures inside the Tag Scanner ---- */
+.home-tiles .tile-scanner .tile-label { overflow-wrap: anywhere; }
+.maint-panel { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.maint-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; min-height: 44px; }
+.maint-panel-title { font-weight: 800; font-size: 1.05rem; }
+.maint-panel-head .ask-mic-btn { position: static; transform: none; flex: 0 0 auto; }
+.maint-panel-hint { font-size: 0.9rem; color: var(--text-dim); line-height: 1.4; }
+.maint-panel-hint strong { color: var(--text); overflow-wrap: anywhere; }
+.maint-panel-link {
+  font: inherit; font-weight: 700; color: var(--text); background: var(--card); cursor: pointer;
+  border: 1px solid var(--border); border-radius: 999px; min-height: 44px; padding: 0.4rem 0.9rem; margin: 0.35rem 0 0;
+}
+.maint-results { display: flex; flex-direction: column; gap: 0.7rem; }
+.maint-results:empty { display: none; }
+.maint-panel .empty-state { padding: 0.6rem 0; }
+/* inside the identified unit's page: one section of that card, no search parts */
+.maint-panel.in-unit { margin-top: 0.8rem; padding-top: 0.7rem; border-top: 3px solid var(--brand-orange); }
+.maint-panel.in-unit .ask-mic-btn, .maint-panel.in-unit .filter-row, .maint-panel.in-unit .voice-hint { display: none; }
+.maint-panel.in-unit .maint-panel-head { min-height: 0; }
+.maint-panel.in-unit .maint-card { cursor: default; border-color: var(--brand-navy); }
+.maint-panel.in-unit .maint-none { margin: 0; font-size: 0.95rem; }
+/* a closed card on the unit page is two short lines, so the buttons under it stay close */
+.maint-panel.in-unit .maint-head:not(:has(+ *)) .maint-sub { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.maint-panel.in-unit .maint-panel-title { font-size: 1rem; }
+.scan-unit-scen-more { display: flex; flex-direction: column; gap: 0.4rem; }
+.scan-unit-scen-more > summary { cursor: pointer; font-weight: 700; padding: 0.7rem 0.2rem; min-height: 44px; }
+.scan-unit-scen-more[open] > summary { margin-bottom: 0.4rem; }
+.scan-unit-scen-more > .scan-unit-scen-btn { display: block; width: 100%; margin-bottom: 0.4rem; }
