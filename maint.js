@@ -1220,7 +1220,76 @@ function maintIsExact(entry, q) {
   // AMVT..P1400 against the R-32 AMVT..P1300 card): a look-alike with the notice, never an exact match.
   const not = (entry.notExact || []).map(s => new RegExp(s, "i"));
   if (not.length && needles.some(n => not.some(r => r.test(n)))) return false;
-  return needles.some(n => tokens.some(t => n.startsWith(t)));
+  if (!needles.some(n => tokens.some(t => n.startsWith(t)))) return false;
+  // 11-12 audit (accuracy #2): a short token (FT4B, BIVA15) can start another maker's or another kind
+  // of unit's model. When the Tag Scanner's own pattern table knows the model and this card is for a
+  // different maker group, the card is a look-alike, never exact. Typing a card's own name in full
+  // ("FT4B", "S2BD") is never a contradiction - the scanner's patterns are not sure of such a short string.
+  if (needles.some(n => tokens.includes(n))) return true;
+  return !maintContradicts(entry, q);
+}
+// Maker groups: brands built by one manufacturer on shared platforms. Only used to DEMOTE an exact
+// match, and only when both the scanner's brand and the card's brand are in this list and no group is
+// shared - an unknown brand on either side never contradicts.
+const MAINT_MAKER_GROUPS = [
+  ["carrier", "bryant", "payne", "icp", "heil", "tempstar", "comfortmaker", "arcoaire", "keeprite", "day & night"],
+  ["goodman", "amana", "daikin", "janitrol"],
+  ["trane", "american standard", "ameristar"],
+  ["york", "coleman", "luxaire", "guardian", "evcon", "johnson controls", "jci", "fraser-johnston", "champion"],
+  ["rheem", "ruud", "weatherking"],
+  ["nortek", "nordyne", "frigidaire", "intertherm", "miller"],
+  ["lennox"],
+  ["allied air", "armstrong", "airease", "ducane", "concord"],
+  ["bosch", "fhp"],
+  ["generac"], ["kohler"], ["mitsubishi"], ["samsung"]
+];
+function maintMakerGroups(brand) {
+  const b = String(brand || "").toLowerCase();
+  const out = [];
+  MAINT_MAKER_GROUPS.forEach((g, i) => { if (g.some(w => b.includes(w))) out.push(i); });
+  return out;
+}
+let _maintIdentCache = { q: null, id: null };
+function maintQueryIdent(q) {
+  if (_maintIdentCache.q === q) return _maintIdentCache.id;
+  let id = null;
+  if (typeof MODEL_PATTERNS !== "undefined") {
+    const raw = (q || "").toUpperCase().replace(/\s+/g, "");
+    if (raw) {
+      let cands = [raw];
+      try { if (typeof ocrModelCandidates === "function") cands = cands.concat(ocrModelCandidates(raw)); } catch (e) { /* keep raw */ }
+      for (const c of cands) {
+        const p = MODEL_PATTERNS.find(x => x.re.test(c));
+        if (p) { id = { brand: p.brand || "", equipment: p.equipment || "" }; break; }
+      }
+    }
+  }
+  _maintIdentCache = { q, id };
+  return id;
+}
+// True when the scanner's maker group for this model and the card's maker group are both known and differ.
+// (A general "kind of equipment must agree" rule was tried and NOT adopted: it demoted cards for their own
+// named models - Lennox MMD air handler, Carrier 45MU, Allied RGE13 packaged - because the scanner and the
+// card file those under different kinds. See maintKindNote for the indoor / outdoor case.)
+function maintContradicts(entry, q) {
+  const id = maintQueryIdent(q);
+  if (!id) return false;
+  const a = maintMakerGroups(id.brand), b = maintMakerGroups(entry.brand);
+  return !!(a.length && b.length && !a.some(x => b.includes(x)));
+}
+// An exact card that is the OTHER half of a split system: the scanner says the model is an indoor unit
+// and the card is filed as an outdoor unit, or the reverse (Ameristar E4AH air handler on the E4HL heat
+// pump card, Bosch BIVA15 on the BOVA15 card). The card names the model on purpose, so it stays the
+// match - but the tech is told which half the card is for. Returns a plain sentence or "".
+function maintKindNote(entry, q) {
+  const id = maintQueryIdent(q);
+  if (!id || !entry) return "";
+  const indoor = ["Air Handler", "Gas Furnace", "Electric Furnace"], outdoor = ["Condenser", "Heat Pump", "Condenser/Heat Pump"];
+  const qIn = indoor.includes(id.equipment), qOut = id.equipment === "Condenser/Heat Pump";
+  if ((qIn && outdoor.includes(entry.equip)) || (qOut && indoor.includes(entry.equip))) {
+    return "The Tag Scanner reads this model as " + (/^[AEIOU]/.test(id.equipment) ? "an " : "a ") + id.equipment.toLowerCase() + ". This card is filed as " + entry.equip.toLowerCase() + " - it is the matched system's card, so check which unit each figure is for.";
+  }
+  return "";
 }
 function maintQueryEquip(q) {
   if (typeof MODEL_PATTERNS === "undefined") return null;
@@ -1300,6 +1369,9 @@ function renderMaint() {
   // "heat pump", "Nordyne", "GMVC") skip ranking and list everything as before.
   const qn = maintNormalize(maintState.query);
   let notice = "";
+  // 11-12 audit (accuracy #3): every look-alike card is marked in the list and inside the opened card,
+  // and its figures wait behind a second tap. lookFor = the typed model when the list is look-alikes.
+  let lookFor = "", seriesOf = () => false, kindNote = "", approxNotice = null;
   if (/[0-9]/.test(qn) && list.length) {
     // v185: exact model matches only; otherwise same-kind look-alikes, clearly
     // labelled, and never a different kind of equipment (see maintLookup).
@@ -1307,12 +1379,22 @@ function renderMaint() {
     const q = maintEsc(maintState.query.trim());
     if (lk.exact.length) {
       list = lk.exact;
+      kindNote = maintKindNote(list[0], maintState.query);
+      if (kindNote) notice = `<div class="maint-flag"><div class="maint-flag-title">Check which unit this card is for</div>${maintEsc(kindNote)}</div>`;
     } else {
       list = lk.approx;
       const kind = lk.equip ? maintEsc(lk.equip.toLowerCase()) + " " : "";
-      notice = list.length
-        ? `<div class="maint-flag"><div class="maint-flag-title">Not an exact match for ${q}</div>No figures for this model yet. These are the closest ${kind}entries by model prefix, and they may be a different series with different numbers. Check the series on the rating plate before you use any figure.</div>`
-        : `<div class="maint-flag"><div class="maint-flag-title">No figures for ${q} yet</div>The only look-alike entries are a different kind of equipment, so they're hidden. Check Manuals, or use Request Info.</div>`;
+      // A series name typed short ("G61", "59SC"): cards whose own model starts with it are that series,
+      // not look-alikes - the tech picks his by the full model.
+      lookFor = maintState.query.trim();
+      // built after the best-score filter below, so the count matches the cards drawn
+      approxNotice = () => { const series = list.filter(e => maintIsSeriesOf(e, maintState.query));
+      if (series.length) seriesOf = (e) => series.includes(e);
+      return !list.length
+        ? `<div class="maint-flag"><div class="maint-flag-title">No figures for ${q} yet</div>The only look-alike entries are a different kind of equipment, so they're hidden. Check Manuals, or use Request Info.</div>`
+        : series.length
+          ? `<div class="maint-flag"><div class="maint-flag-title">${q} is the start of a model, not a full model</div>${series.length === 1 ? "1 card here starts" : series.length + " cards here start"} with ${q}. Pick yours by the full model number on the rating plate - sizes and versions of one series can have different figures.${series.length < list.length ? " Cards marked LOOK-ALIKE only share some letters with " + q + "." : ""}</div>`
+          : `<div class="maint-flag"><div class="maint-flag-title">No exact match for ${q}</div>No figures for this model yet. These are the closest ${kind}cards by the front of the model number - look-alikes. They may be a different series with different numbers. If yours is listed, tap it. If not, check the rating plate before you use any figure.</div>`; };
     }
   }
   if (/[0-9]/.test(qn) && list.length) {
@@ -1325,6 +1407,8 @@ function renderMaint() {
     }
   }
 
+  if (approxNotice) notice = approxNotice();
+
   if (!list.length) {
     results.innerHTML = notice;
     empty.classList.toggle("hidden", !!notice);
@@ -1335,23 +1419,38 @@ function renderMaint() {
   results.innerHTML = notice + list.map((entry, i) => {
     const id = entry.brand + "|" + entry.model;
     const isOpen = maintState.open === id;
+    const look = lookFor && !seriesOf(entry) ? lookFor : "";
+    const body = !isOpen ? ""
+      : look && maintState.reveal !== id
+        ? `<div class="maint-body"><div class="maint-flag"><div class="maint-flag-title">LOOK-ALIKE - not ${maintEsc(look)}</div>This card is for ${entry.brand} ${entry.model}. It only shares the front of the model number with ${maintEsc(look)}, so its figures may be wrong for your unit. Check the series on the rating plate first.</div><button type="button" class="maint-manuals-btn" data-maint-reveal="${maintEsc(id)}">Show look-alike figures</button></div>`
+        : maintBody(entry, look);
     return `
       <article class="card maint-card">
         <button class="maint-head" data-maint-toggle="${id}">
           <div>
+            ${look ? `<div class="maint-flag-title">LOOK-ALIKE - not ${maintEsc(look)}</div>` : ""}
             <div class="maint-title">${entry.brand} ${entry.model}</div>
             <div class="maint-sub">${entry.summary}</div>
           </div>
           <span class="maint-caret">${isOpen ? "▾" : "▸"}</span>
         </button>
-        ${isOpen ? maintBody(entry) : ""}
+        ${body}
       </article>`;
   }).join("");
+
+  results.querySelectorAll("[data-maint-reveal]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      maintState.reveal = btn.dataset.maintReveal;
+      renderMaint();
+      if (typeof trackEvent === "function") trackEvent("maint look-alike figures shown: " + btn.dataset.maintReveal + " for " + lookFor);
+    });
+  });
 
   results.querySelectorAll("[data-maint-toggle]").forEach(btn => {
     btn.addEventListener("click", () => {
       const id = btn.dataset.maintToggle;
       maintState.open = maintState.open === id ? null : id;
+      maintState.reveal = null;
       maintState.tab = "figures";
       renderMaint();
       if (typeof trackEvent === "function" && maintState.open) {
@@ -1381,8 +1480,20 @@ function maintManualQuery(entry) {
   return tok || entry.model;
 }
 
-function maintBody(entry) {
-  const tabs = `
+// A short series name against a card: the card's own model token STARTS with what was typed.
+function maintIsSeriesOf(entry, q) {
+  const n = maintNormalize(q);
+  if (n.length < 3) return false;
+  const parts = (s) => (s || "").split(" (")[0].split("/");
+  const models = (entry.match || []).concat(parts(entry.model)).map(maintNormalize).filter(t => t.length >= 4);
+  return models.some(t => t.length > n.length && t.startsWith(n)) && !maintContradicts(entry, q);
+}
+
+// lookFor: set when this card is shown as a look-alike for that typed model - the warning is repeated
+// at the top of the figures and beside the source line, where a scrolled phone screen still shows it.
+function maintBody(entry, lookFor) {
+  const lookFlag = lookFor ? `<div class="maint-flag"><div class="maint-flag-title">LOOK-ALIKE - not ${maintEsc(lookFor)}</div>These figures are for ${entry.brand} ${entry.model}, not for ${maintEsc(lookFor)}. Confirm every number on the rating plate.</div>` : "";
+  const tabs = lookFlag + `
     <div class="maint-tabs">
       <button class="maint-tab ${maintState.tab === "figures" ? "on" : ""}" data-maint-tab="figures">Figures</button>
       <button class="maint-tab ${maintState.tab === "checklist" ? "on" : ""}" data-maint-tab="checklist">Recommended list</button>
@@ -1423,6 +1534,7 @@ function maintBody(entry) {
               </tr>`).join("")}
           </table>
         </div>`).join("")}
+      ${lookFor ? `<div class="maint-flag-title">LOOK-ALIKE figures above - this card is not for ${maintEsc(lookFor)}.</div>` : ""}
       <div class="maint-source">${entry.source} · Always confirm against the rating plate on the unit in front of you.</div>
       ${typeof openManualsForModel === "function" ? `<button type="button" class="maint-manuals-btn" data-maint-manuals="${maintEsc(maintManualQuery(entry))}">📄 Manuals for this unit</button>` : ""}
     </div>`;
