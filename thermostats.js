@@ -53642,9 +53642,9 @@ const THERMOSTAT_ADDITIONS = {
   "tst-ecobee-pek": {
    "troubleshooting": [
     {
-     "symptom": "PEK on a Rheem/Ruud air handler - no terminal board, just pigtails and wire nuts",
+     "symptom": "PEK on a Rheem/Ruud air handler wired with pigtails and wire nuts instead of screw terminals (no Y terminal, no Y wire)",
      "causes": [
-      "Rheem/Ruud air handlers (e.g. RHAL/RHBL, HLL/HSL) bring low voltage out on pigtails joined to the field wiring with wire nuts, so the thermostat wires meet the equipment at splices, not on a board",
+      "Rheem's RHLL / RHSL air handler install manual brings low voltage out on pigtails joined to the field wiring with wire nuts, so the thermostat wires meet the equipment at splices, not on a board",
       "The outdoor unit's wires share the C and Y splices (ecobee: the C and Y splices 'may have an extra wire in them - do not remove')"
      ],
      "fixes": [
@@ -63736,3 +63736,119 @@ tstatHowtoAdd({
   ]
  }
 });
+// add-audit-1112.js (v423): how-to topics for questions techs asked - outdoor temperature on a Daikin One, emergency
+// heat only on Carrier Infinity controls, humidity setpoints on the Lennox S30. Added after each card's own set.
+(function () {
+  const sets = {
+ "audit1112-daikin-one-touch": [
+  {
+   "title": "Outdoor temperature on the screen - where it shows",
+   "steps": [
+    "The four main screens are picked with the icons along the bottom: Home, Schedule, Away, Air Quality.",
+    "Home screen = room (indoor) temperature, system mode, the set-point slider and the icons. The guide lists no outdoor temperature on the home screen.",
+    "Outdoor temp, outdoor humidity and the weather forecast are on the Air Quality screen: tap the Air Quality icon at the bottom.",
+    "If the Air Quality screen shows no outdoor readings: tap the menu icon (top left of the home screen) > settings > Wi-Fi, check the 'use Wi-Fi' box, tap networks and join the home network.",
+    "Then pair it to the app: menu icon > settings > account, and type the code shown into the SkyportHome app. The pair code expires in 15 minutes; a new one can be shown.",
+    "In the SkyportHome app the thermostat must be added under a home location. The guide says outdoor air quality and weather only show when it is connected to the internet AND added under home location.",
+    "Display choices (menu icon > settings > display) are: language, degree units, brightness, night mode, use large font, use light bar, screen saver, screen cleaning. Screen saver choices are: off, blank screen, analog clock, digital clock."
+   ],
+   "notes": [
+    "Daikin's homeowner guide and the v3.9 menu outline list no setting that puts outdoor temperature on the home screen. Tell the customer it is one tap away on the Air Quality icon.",
+    "The guides do not say how long the Air Quality screen stays up before the thermostat goes back to the home screen or screen saver.",
+    "Night mode turns the display and light bar off during its scheduled hours - if the screen goes dark, check night mode first."
+   ],
+   "source": "Daikin One Touch Homeowner Guide HG-ONETOUCH_09-25; Daikin ONE+ and Touch Homeowner Menu Outline (v3.9 software)"
+  }
+ ],
+ "audit1112-daikin-one-plus": [
+  {
+   "title": "Outdoor temperature on the screen - where it shows",
+   "steps": [
+    "Home screen = room (indoor) temperature, room humidity, mode icon, set points, thermostat name and any error / status messages. The menu outline lists no outdoor temperature on the home screen.",
+    "Outdoor temp, outdoor humidity and the weather forecast are listed under the Air Quality screen.",
+    "Daikin's One+ training module says outdoor air quality and weather show there when the thermostat is connected to the internet and paired with the app. Check settings > wifi (use wifi checked, a network joined, 'internet connected' and 'Daikin One Cloud connected' checked) and settings > account (it shows a 6-digit account code if the app is not connected).",
+    "Display choices (settings > display) are: language, degree units, brightness, night mode, use large font, use light bar, screen saver, screen cleaning, lock (4-digit PIN). Screen saver choices are: off, blank screen, analog clock, digital clock."
+   ],
+   "notes": [
+    "The v3.9 homeowner and installer menu outlines list no setting that makes outdoor temperature the main number.",
+    "The guides do not say how long the Air Quality screen stays up before it returns to the home screen."
+   ],
+   "source": "Daikin ONE+ and Touch Homeowner Menu Outline (v3.9 software, unitary); Daikin One+ Installation & Commissioning training module TRC-3"
+  }
+ ],
+ "audit1112-carrier-infinity-system-control": [
+  {
+   "title": "Emergency heat only (Heat Source)",
+   "steps": [
+    "From the main screen touch MENU (bottom right), then the HEAT SOURCE icon.",
+    "The default is the system in control of the heat source. The options shown correspond to the equipment attached; the manual heads this section \"If Applicable\" and describes it for Hybrid Heat systems.",
+    "If the screen offers ELECTRIC ONLY, select it, then SAVE - electric heat only.",
+    "Hybrid Heat (heat pump + furnace): select FURNACE ONLY, then SAVE. HEAT PUMP ONLY runs only the heat pump.",
+    "To go back to normal, open HEAT SOURCE again, pick the choice that leaves the system in control (the default) and SAVE."
+   ],
+   "notes": [
+    "No ELECTRIC ONLY choice on a heat pump with electric heat: the screen only shows options for the equipment attached.",
+    "Lockouts by outdoor temperature are a separate installer setting, SETUP > HEAT SOURCE LOCKOUTS: HP Lockout -20 to 55 F or None (default None); Furnace, Electric Heat or Hydronic Lockout 15 to 55 F or None (default None)."
+   ],
+   "source": "Carrier Infinity System Control Owner's Manual OM-SYSTXCCITC-08, section 15 Heat Source (p.56), MENU button p.18; Installation Instructions SYSTXCCITC-12SI, 6.3.5 Heat Source Lockout (p.47-48)"
+  }
+ ],
+ "audit1112-carrier-infinity-touch-a": [
+  {
+   "title": "Emergency heat only (Heatsource)",
+   "steps": [
+    "From the main screen touch the menu button (bottom right), then the HEATSOURCE icon.",
+    "The default is the system in control of the heat source. The options shown correspond to the equipment attached and may differ from the manual.",
+    "Hybrid Heat: select FURNACE ONLY for furnace-only (emergency) heat, or HEAT PUMP ONLY. Touch SAVE.",
+    "Heat pump with electric heat: the -A owner's manual names no electric-only choice. If the screen offers one, select it and SAVE (the later System Control manual calls it ELECTRIC ONLY).",
+    "Set it back to the default (system in control) when done."
+   ],
+   "notes": [
+    "Lockouts by outdoor temperature are a separate installer setting, SETUP > HEAT SOURCE LOCKOUTS: HP Lockout -20 to 55 F or None; Furnace, Electric Heat or Hydronic Lockout 15 to 55 F or None; both default None."
+   ],
+   "source": "Carrier Infinity Touch Control Owner's Manual (SYSTXCCITW01-A / ITN01-A / ITC01-A, Version 13 software), HEATSOURCE (If Applicable) section (PDF p.48), menu button p.17; Infinity Touch -A Installation Instructions, 6.3.5 Heat Source Lockout (p.54-55)"
+  }
+ ],
+ "audit1112-carrier-infinity-control-uid": [
+  {
+   "title": "Emergency heat only (hold the HEAT button)",
+   "steps": [
+    "Press and hold the red HEAT button (homeowner's guide: four seconds; installation instructions: 3 seconds).",
+    "Heat pump with electric heat - the display shows three choices: SYSTEM IN CONTROL, HEAT PUMP ONLY, ELECTRIC HEAT ONLY. Pick ELECTRIC HEAT ONLY for emergency heat.",
+    "Hybrid Heat - the choices are HYBRID HEAT, FURNACE ONLY, HEAT PUMP ONLY. Pick FURNACE ONLY.",
+    "Scroll the highlight with the scroll button under the door, then press the left side button to save and exit.",
+    "To turn it off: hold the red HEAT button again for four seconds and choose SYSTEM IN CONTROL (or HYBRID HEAT)."
+   ],
+   "notes": [
+    "An earlier edition of the homeowner's guide: hold HEAT four seconds, the red LED pulses and EMERGENCY HEAT shows below the room temperature; press the red HEAT or blue COOL button to cancel.",
+    "Bryant Evolution Control: the Bryant install guide gives the same step (hold HEAT 3 seconds, repeat to deactivate). Bryant owner's manuals were not read."
+   ],
+   "source": "Carrier Infinity Control Homeowner's Guide (library files carrier-omuid-3ca p.11 and carrier-omuid01-2 p.11); Carrier Installation Instructions UID01-06SI p.15; Bryant Evolution Control installation instructions p.14 (Emergency Heat)"
+  }
+ ],
+ "audit1112-lennox-s30-e30": [
+  {
+   "title": "Set humidity (humidify / dehumidify setpoints and limits)",
+   "steps": [
+    "On the thermostat go to menu > settings > humidity. Under Humidity Control pick Off, Humidify, Dehumidify, or Humidify + Dehumidify. Dehumidify is off by default (firmware 3.15 and later lists all dehumidification controls here).",
+    "Humidify: choose Normal or Max, then slide the humidification setpoint. Range 15 to 45% RH (default 40%). Normal runs the humidifier only with a heat call; Max runs it on a humidity call alone. Dewpoint is a third choice; Lennox's FAQ says Dew Point must be turned off to set the Humidification Setpoint.",
+    "Dehumidify: choose Normal, Max or Climate IQ (Auto), then slide the dehumidification setpoint. Range 40 to 60% RH (default 50%). Max and Climate IQ also show an overcooling slider, 0 to 4 F (default 2 F).",
+    "Humidify + Dehumidify: one bar with two sliders - humidification on the left, dehumidification on the right, 15% to 60% overall (defaults 15% and 40%).",
+    "Customer cannot slide it as far as they want: the installer limits cap the sliders. They are in the smart hub parameter list (S30 guide, Table 6 Smart Hub Parameters): Max Humidification Setpoint 15 to 45% (default 45%), Min Dehumidification Setpoint 40 to 60% (default 40%), and Auto Changeover - Humidif. Deadband 5 to 10% (default 5%), which keeps the two setpoints apart.",
+    "Something missing: the Max Humidification Setpoint parameter only appears when a humidifier accessory is installed. Dewpoint is only available with a remote outdoor temperature sensor."
+   ],
+   "notes": [
+    "Climate IQ is only offered with the Lennox communicating outdoor units the spec sheet lists (SL28XCV / SL25XPV, XC21, XC20 / XP20) and no add-on humidification or dehumidification equipment.",
+    "Per the S30 guide, the dehumidification settings described apply to non-zoned systems on firmware 3.15 or later - it states there is no dehumidification capability in zoning systems.",
+    "E30: same menu > settings > humidity path; dehumidify options are Normal and Max (no Climate IQ), setpoint 40 to 60%, overcooling 0 to 4 F with Max; same installer limits (15 to 45% and 40 to 60%).",
+    "S40: same Humidity screen and the same ranges (15 to 45% humidify, 40 to 60% dehumidify, 0 to 4 F overcooling, 15 to 60% combined).",
+    "M30 (non-communicating): also menu > settings > humidity, dehumidify 40 to 60% RH, humidify 15 to 45% RH, but the modes differ (Normal, Max, Humiditrol, Aux Dehumidifier) and the accessory must be enabled under Advanced Settings > System Setup / Terminal Settings. The M30 guide says humidification is provided only with a humidification accessory installed and the thermostat in heat mode."
+   ],
+   "source": "Lennox iComfort S30 Installation and Setup Guide 507536-08 (6/2021); S30 Product Specifications Bulletin 210746 (November 2022); iComfort E30 Installation and Setup Guide 507686-06 (6/2021); S40 Product Specifications 210953 (June 2026); M30 guide 507739-02 (3/2025); Lennox support FAQ 'How do I adjust the humidity setpoint?'"
+  }
+ ]
+};
+  const use = {};
+  for (const [id, set] of [["tst-daikin-one-touch","audit1112-daikin-one-touch"],["tst-daikin-one-plus","audit1112-daikin-one-plus"],["tst-carrier-infinity-system-control","audit1112-carrier-infinity-system-control"],["tst-carrier-infinity-touch-a","audit1112-carrier-infinity-touch-a"],["tst-carrier-infinity-control-uid","audit1112-carrier-infinity-control-uid"],["tst-lennox-s30-e30","audit1112-lennox-s30-e30"]]) use[id] = (TSTAT_HOWTO.use[id] || []).concat([{ set }]);
+  tstatHowtoAdd({ sets, use });
+})();

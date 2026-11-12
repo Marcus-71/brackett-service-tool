@@ -1487,6 +1487,7 @@ function askModelHit(u, it) {
   }
   return false;
 }
+const ASK_GEN_FAMILY_WORD = /^(generac|kohler|rehlko|generators?|gens?|nexgen|next|generation|power|zone|powerzone|pz|pz200|nexus|pre-?nexus|evolution|evo|guardian|centurion|protector|powerpact|corepower|synergy|ecogen|controllers?|air-?cooled|liquid-?cooled|standby|[0-9.]+|[0-9.]+ ?kw)$/;
 function askScoreItem(units, it) {
   let sc = askUnitHits(units, it.hay, it);
   let byModel = 0;
@@ -1630,6 +1631,16 @@ function askScoreItem(units, it) {
     // Bulletins for whole families (home standby lines) before ones for a serial list only (Fable: PZ410 diesel led "generac service bulletin").
     const lift = (it.bul.priority === "high" ? 0.5 : it.bul.priority === "info" ? 0 : 0.25) + ((a.genFamilies || []).length || (a.modelRe || []).length ? 0.3 : 0) + Math.max(0, Math.min(yr - 2000, 40)) / 200;
     return forUnit ? { sc: sc + 2, tsc: tsc + 5 + lift } : { sc, tsc: tsc + lift };
+  }
+  // v423: a generator FIX card that holds every asked word is the answer to a how-to question and keeps pace with
+  // the family cards ("how do you reset error codes on Evolution generator" listed six Evolution family cards and
+  // never the card on clearing an alarm - Vern 10-02, audit 11-12).
+  // Only when the words that are not the brand, family or model ("reset", "run hours", "crank sensor") are all in the
+  // card's own title - "G0070422" or "generac nexus" alone still lead with the family card.
+  if (fams.length && it.kind === "symptom" && it.equip === "Generator" && sc >= askLiveUnits(units).length) {
+    const topic = askLiveUnits(units).filter(u => !u.model && !u.pre && !u.alts.some(x => ASK_GEN_FAMILY_WORD.test(x)));
+    const title = String(it.title).toLowerCase();
+    if (topic.length && topic.every(u => u.alts.some(x => askTermHit(title, x)))) return { sc: sc + 1, tsc: tsc + 5 };
   }
   if (fams.length && it.kind === "gen" && fams.includes(it.id)) return { sc: sc + 1, tsc: tsc + (units.kFam ? 5 : 4) };
   // ...and the other families' cards step back one notch (the Evolution cards say "Nexus" in their
@@ -9356,7 +9367,7 @@ const MODEL_PATTERNS = [
   { re: /^CMA3-?(?:50|75)D36/, brand: "Thermo Pride (Thermo Products)", equipment: "Gas Furnace", series: "Thermo Pride CMA3 95% condensing downflow direct-vent gas furnace for manufactured homes (CMA3-50D36N / CMA3-75D36N)", notes: ["CMA3-75D36N = 75,000 BTUH input, downflow; shipped for natural gas (#42 orifices), LP kit AOPS7743.", "Category IV, 2-in. PVC vent and intake; installs on the No. 70 floor base.", "Source: Thermo Products Installation and Service Manual MG-517 (ECN 5396-MA, 2014)."] },
   { re: /^13GCSXA?V?-?(?:24|30|36|42|48|60)/, brand: "Lennox", equipment: "Other", series: "Lennox 13GCSX 13 SEER R-410A single-phase packaged gas/electric unit, 2-5 ton (13GCS = R-22 version)", notes: ["Short form 13GCSXA-36-02 = 3 ton, -02 version; heat options -68X/-83X/-90X/-110X/-138X (90X = 90,000 Btuh in).", "The -01 and -02 versions differ in charge and electrical - check the plate.", "Source: Lennox Service Literature Corp. 0519-L8, 13GCS/13GCSX Series Units (Sept 2011)."] },
   { re: /^213B[NPE][AW](?:018|024|030|036|042|048|060)/, brand: "Bryant", equipment: "Condenser/Heat Pump", series: "Bryant 213B Legacy Line 13 SEER split heat pump, Puron (R-410A), 1-1/2 to 5 ton", notes: ["Read 213BNA024 as 2 (heat pump) 1 (Legacy) 3 (13 SEER) B (Puron) N (208/230-1; P = 208/230-3, E = 460-3) A (dense grille; W = wide) 024 (24,000 Btuh); last letter = minor series.", "Time/temperature defrost board HK32EA001.", "Source: Bryant Product Data PDS213B-04 (09/12), model number nomenclature p.2."] },
-  { re: /^RCB(?:18|24|30|36|42|48|60)B2[AD]/, brand: "Amana", equipment: "Condenser/Heat Pump", series: "Amana RCB series remote cooling unit (split AC condensing unit, around 2001)", notes: ["Amana's parts manual lists RCB18B2A, RCB24B2A, RCB30B2A, RCB36B2A, RCB42B2A, RCB48B2A and RCB60B2A, plus the same sizes ending B2D (the D models were added in Rev. 1).", "Parts are listed by manufacturing number (P1223301C ... P1223314C) - give the P number off the plate when ordering.", "Source: Amana Heating and Air Conditioning, RCB Series Remote Cooling parts manual RP6110014 Rev. 1 (October 2001), page 1 model list."] },
+  { re: /^RCB(?:18|24|30|36|42|48|60)B2[AD]/, brand: "Amana", equipment: "Condenser/Heat Pump", series: "Amana RCB series remote cooling unit (split AC condensing unit, around 2001)", notes: ["Size is the two digits after RCB - Amana's 1998 key (Service Instructions RS6100002 Rev. 3, page 7) lists 18 to 60 as 18,000 to 60,000 BTUH nominal capacity, so RCB42 = 42,000 BTUH nominal, which at 12,000 BTUH per ton is 3-1/2 tons; R = remote, C = cooling, B = 10 SEER family, 2 = 230 V single phase (the B2D models appear only in the 2001 parts manual, which prints no key).", "Amana's parts manual lists RCB18B2A, RCB24B2A, RCB30B2A, RCB36B2A, RCB42B2A, RCB48B2A and RCB60B2A, plus the same sizes ending B2D (the D models were added in Rev. 1).", "Parts are listed by manufacturing number (P1223301C ... P1223314C) - give the P number off the plate when ordering.", "Source: Amana Heating and Air Conditioning, RCB Series Remote Cooling parts manual RP6110014 Rev. 1 (October 2001), page 1 model list."] },
   { re: /^(?:MGH[AB]|MMH[AB]|MGBB|MMBB)-?0(?:56|70|77|90)/, brand: "Nortek", equipment: "Gas Furnace", series: "Nortek (Nordyne / Intertherm / Miller) MG / MM series manufactured-home downflow gas furnace, direct vent, 56,000-90,000 BTU/h input (MGHA/MGHB/MGBB standing pilot, MMHA/MMHB/MMBB direct ignition)", notes: ["Read MGHB-056ABFC as M = mobile home, G = gas direct-vent atmospheric burner, HB = A/C ready (3 ton) with relay, 056 = 56,000 BTU/h input, A = 120 V 1 ph, B = cabinet with built-in coil cavity, FC = field convertible; a -01/-02 type number may follow","MGH*/MGBB light a standing pilot (match, or the optional piezo ignitor kit); MMH*/MMBB use a hot-surface igniter","Old family: Nortek's replacement chart lists MGHA(B)/MMHA(B) as replaced by the MG1E, MG2R or MG2S series","Source: Nordyne Series MG, MM, MS and MB Installation Instructions/Owners Manual 7067092 (03/91), Tables 2-3 p.2-4; Nortek MH furnace replacement chart 846D-1019"] },
   { re: /^EC0(?:07|09|12|15|19|24|30|36|41|42|48|60|70)-?[0-9][VH]/, brand: "FHP (Bosch)", equipment: "Other", series: "FHP (Florida Heat Pump, Bosch) EC Series water-to-air geothermal / water-loop heat pump, EC007-EC070, R-410A (discontinued)", notes: ["Read EC041-1VTC-FLT as EC series, 041 size (about 3.5 ton), 1 = 208/230-1-60, VT = vertical (HZ = horizontal), C = copper water coil, F = front water connections, L = left return, T = top supply.", "Water-source unit: no defrost, no air-source charging charts; weigh in the plate charge.", "UPM board red LED: 1 high pressure, 2 low pressure, 3 freeze, 4 condensate, 5 brownout.", "Source: FHP EC Series Catalog 6720220353 (rev 5/13) p.3 and IOM 970-289 (rev 05-12) p.1, p.4-7."] },
   // --- end triage additions ---
@@ -13512,7 +13523,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v422";
+const APP_VERSION = "v423";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

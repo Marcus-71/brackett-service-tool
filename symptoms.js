@@ -21583,5 +21583,289 @@ const SYMPTOMS = [
    "Stop and call the office or manufacturer tech line if the rise is well under the table with good airflow, a good heating check chart and a good reversing valve test. Confirm in the outdoor unit's manual: the expanded heating table for this exact indoor match."
   ],
   "confidence": "common"
+ },
+ {
+  "id": "s-gen-starter-test-evolution",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac air-cooled Evolution 1.0 / 2.0 - engine will not crank: testing the starter, starter contactor and starter contactor relay",
+  "summary": "Generac's no-crank order for Evolution 1.0 / 2.0 air-cooled units is fuse, battery and cables, Wire 56 from the controller, starter contactor relay (V-twins), starter contactor, then the starter motor. Each step is a 12 VDC check made while pressing MANUAL. Generator will not turn over, clicks, no crank, starter test.",
+  "steps": [
+   "Source: Generac Diagnostic Repair Manual, air-cooled Evolution 1.0 / 2.0, Problem 16 and Tests 44-49. G0070422 is a 22 kW V-twin, so it has a starter contactor relay (SCR) in the control panel plus the starter contactor (SC) at the starter. Clear any alarm first (OFF, then ENTER) - in an alarm state the controller will not switch its crank output.",
+   "Test 44 / 45 - fuse and battery first: check the 7.5 A fuse. Clean and tighten both battery cables (red from the starter contactor to +, black from the frame ground stud to -). Pull the T1 fuse in the transfer switch so the charger is off, then read the battery: 12.2 VDC or more is OK to go on. With a conductance tester (7.5 A fuse out of the controller first) it should not show less than 60% of rated CCA.",
+   "Test 45 voltage drop (fuel shut off and Wire 14 pulled off the fuel solenoid so it cannot start): press MANUAL and read during the crank attempt. Maximums: 0.10 V battery post to terminal, 0.20 V any ground, 0.30 V across a wire or cable, 0.30 V across a switch or the starter contactor, 0.50 V across a whole circuit. Anything higher = clean, repair or replace that part.",
+   "Test 46 - Wire 56 (controller crank output): pull Wire 56 off the SCR (off the starter contactor on single-cylinder units), meter it to battery negative, press MANUAL. Battery voltage = controller is doing its job, go on. None: watch Digital Output 6 on the controller's output screen while pressing MANUAL. Never changes from 0 to 1 with no alarm active = controller. Changes to 1: back-probe Wire 56 at the controller plug - no voltage = controller. Voltage there: pull the 7.5 A fuse, unplug the controller and ohm Wire 56 end to end - no continuity = repair Wire 56; continuity = controller.",
+   "Test 47 - starter contactor relay (V-twin only): Wire 13 at the SCR to ground must show battery voltage (none = repair Wire 13 between the SCR and the starter contactor). Put Wire 13 back, pull Wire 16, meter the SCR terminal Wire 16 came off (the terminal, not the wire) to ground and press MANUAL. Battery voltage = SCR is good. None: ohm the SCR coil across the Wire 56 and Wire 0 terminals (open = replace SCR), then Wire 0 to ground (no continuity = repair Wire 0). Coil and Wire 0 good but still no output = replace the SCR.",
+   "Test 48 - starter contactor: battery-to-starter cable ends clean and tight. Test Point A to engine ground = battery voltage at rest. Test Point B to engine ground = battery voltage when MANUAL is pressed, and the contactor should pull in (points A and B are in the manual's Figures 3-47 / 3-48). Nothing at B - V-twin: ohm Wire 16 between the SCR and the contactor, OL = repair Wire 16. 410cc single with voltage at A: replace the starter contactor. 426cc / 460cc single with voltage at A: ohm from Test Point B to the controller's Wire 56 pin, OL = repair Wire 56.",
+   "Test 49 - starter motor: meter + on the contactor stud that has the small jumper wire or plate to the starter, meter - on the starter frame, press MANUAL. Battery voltage and the starter does not turn = pull it and bench test / replace. Pinion kicks out but the engine does not turn = look for a mechanical bind in the engine or rotor. Engine turns only slightly = check valve clearance (Test 63).",
+   "Also check the pinion moves out and meshes with the flywheel ring gear. If the unit does not crank, the Alarm Log shows 'Stopped-Alarm RPM Sense Loss' - so that alarm on a unit that never turned over points back to this starter circuit."
+  ],
+  "safety": "Do not spin the engine with the electric starter with the spark plugs out. For the voltage-drop test shut the fuel off and pull Wire 14 off the fuel solenoid first.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-gen-clear-alarm-evolution",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac - how to clear (reset) an alarm or error code: Evolution 1.0 / 2.0, Nexus, 2008 series, Next Gen (Power Zone 200)",
+  "summary": "Evolution 1.0 / 2.0: press OFF, then ENTER, then AUTO (some Evolution manuals print ENTER twice, then AUTO). Next Gen (Power Zone 200): hold OFF at least 3 seconds until the red OFF LED goes solid, then AUTO. Clearing only unlatches the alarm - if it returns, diagnose that code. Generator reset, reset error codes, clear code, red light.",
+  "steps": [
+   "Read and write down the alarm and its E-code before you clear it (Evolution: SUB MENUS > HISTORY > Alarm Log keeps the last 50 with date and time). Fix the cause first.",
+   "Evolution 1.0 / 2.0 (and Sync): press OFF, then ENTER - that unlatches the fault and clears the message - then AUTO. That is the order in Generac's diagnostic manuals, most owner's manuals and its help article. Some Evolution manuals (the Evolution 1.0 owner's / install manual and several Evolution 2.0 install manuals) instead print 'press ENTER twice, then AUTO' - so if the alarm is still up, press ENTER again.",
+   "Evolution - Auxiliary Shutdown alarm: first make sure the shutdown switch on the outside back of the unit is in the I (closed) position, and on 13 kW and larger the inside-panel switch too. Then OFF, ENTER, AUTO.",
+   "Nexus: rocker switch to OFF, press ENTER (Generac's help article says press ENTER twice), rocker back to AUTO. Nexus panel without a rocker: press OFF, then ENTER twice.",
+   "2008 series (pre-Nexus): 10-20 kW - switch to OFF, press ENTER to unlatch, back to AUTO. 8 kW - switch to OFF and back to AUTO. An 'Internal Fault' alarm on this series cannot be cleared - the owner's manual says call the service dealer.",
+   "Next Gen with Power Zone 200 (no screen): hold the OFF button at least 3 seconds; the red OFF LED goes solid when it has cleared. Then press AUTO. Warnings on this controller clear themselves. Alarms that touch safety must be reset at the unit - they cannot be reset remotely from Fleet.",
+   "7.5 kW PowerPact: press OFF twice, then AUTO, to clear an alarm or warning. Generac's help article says press OFF three times if an alarm and a maintenance or warning message are both up.",
+   "Maintenance reminders after the work is done: Evolution - Service Schedule A / B and Inspect Battery clear with ENTER. Nexus - press ENTER, then confirm at the prompt. If an alarm returns after clearing, diagnose that code - do not keep resetting it."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-gen-read-run-hours",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac - where to read run hours (engine hours) on each controller: 2008 series, Nexus, Evolution 1.0 / 2.0, Next Gen (Power Zone 200)",
+  "summary": "Screen controllers keep total engine hours in a menu: STATUS > DISPLAY on the 2008 series and Nexus, SUB MENUS > MAINT > Run Hrs on Evolution. Next Gen (Power Zone 200) has no screen - read hours in Field Pro or Mobile Link. Generator hour meter, engine hours, how many hours.",
+  "steps": [
+   "2008 series (pre-Nexus, with the display): press ESC until the MAIN MENU shows, use +/- to pick STATUS, ENTER, then DISPLAY, ENTER - ENGINE HOURS is on that list.",
+   "Nexus: press ESC to the Main Menu (History, Status, Edit, Debug). Pick STATUS > DISPLAY - Run Hours shows total hours in 0.0 format. The same Display list also has RPM, Hz, Battery and Hours Under Load (if enabled).",
+   "Evolution 1.0: press ESCAPE to the main menu, pick SUB MENUS > MAINT > Run Hrs, ENTER - shows Run Hours (H).",
+   "Evolution 2.0: from Ready to Run press ESCAPE to the main menu, arrow to SUB MENUS, ENTER, pick MAINT, ENTER, pick Run Hrs, ENTER. Generac's diagnostic manual text calls this same menu BATTERY on Evolution 2.0. To leave, press ESCAPE until SYSTEM shows and press ENTER - the screen should read Ready to Run again.",
+   "Evolution dealer menu also shows it: DEALER > DISPLAY > Run Hours. Password from the main display: UP, UP, ESC, DOWN, UP, ESC, UP, ENTER - the unit must be activated to get into the Dealer Menu.",
+   "Next Gen (Power Zone 200): no screen on the unit, only AUTO / OFF / MANUAL / SERVICE buttons. Press SERVICE and connect with the Field Pro app - it only connects with SERVICE selected and the unit's cellular accessory (GGCAC radio) connected and powered. Run hours is on the Generator Details page (engine run hours is read-only). The owner can also see run hours in the Mobile Link app or website.",
+   "On Evolution the home screen line 'Hours of Protection' is not the MAINT > Run Hrs figure - read Run Hrs. MAINT > Scheduled shows when the next service is due, by run hours or date."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-gen-lp-vapor-withdrawal",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac on LP (propane) - what a vapor withdrawal system is, why tank size and cold matter, what to check",
+  "summary": "Vapor withdrawal means the generator burns the propane vapor that forms above the liquid in the tank - never liquid. Generac air-cooled units on LP must be fed this way. The tank has to make vapor as fast as the engine uses it, so a small or cold tank can starve the unit under load. Generator propane tank, cylinder.",
+  "steps": [
+   "What it is: LP sits in the tank as a liquid. The space above it holds vapor, and the supply line takes only that vapor. Generac's liquid-cooled install manual says roughly 10 to 20 percent of the tank capacity is needed for the fuel to expand from liquid to vapor.",
+   "Why tank size matters: Generac's minimum LP tank for air-cooled home standby is 250 gallons, larger if the load calls for it - have the LP supplier size it. Vertical (pound-rated) tanks are allowed only if sized for the generator. The Next Gen install manual says do not connect to a 20 or 30 lb tank.",
+   "Why cold matters: Generac's manuals say supply pressure can fall to zero in cold weather and run very high in warm weather. Pull vapor too fast and the liquid drops below its boiling point, pressure goes to zero and no vapor comes off; the boiling itself chills the tank more. Generac's liquid-cooled install manual 0F8751, p.12, Table 3 'Vapor Capacity of Propane Storage Tanks' lists the most kW a tank can feed on vapor by tank size (120 to 1000 gallons) at 40, 20 and 0 F.",
+   "What it needs: a primary regulator at the tank (not supplied with the generator) and the second-stage regulator, sized and piped per the install manual table. The generator must be converted / set to LP - it ships set for natural gas.",
+   "What to check on a hard-start, rough-run or lacks-power call on LP: manometer at the unit's fuel regulator. Air-cooled Evolution and Next Gen want 10-12 in. w.c. LP at the generator inlet. Read it static, then cranking and running, then again under load. Pressure that holds static but drops under load is a supply problem (tank, regulator, pipe size), not the generator - the Evolution manual names undersized pipe or a regulator too close to the generator for a big drop or unsteady reading.",
+   "Also check: tank gauge level, both regulators, pipe size and length against the install manual, and the fuel setting. Evolution: the orange fuel knob at the mixer turned to LP and Fuel Selection in the controller EDIT menu set to LP. Next Gen: the fuel type (LP / NG) is set in the Field Pro app.",
+   "Regulator adjustment and tank sizing belong to the LP supplier - call them if pressure sags under load. Leak-test after any fuel work, per code."
+  ],
+  "safety": "LP is heavier than air and settles in low spots. No leakage is allowed - keep flame and sparks away and never use flame or heat to leak-test.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-gen-pz200-bad-ground",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac Next Gen (Power Zone 200) - loose or bad ground: symptoms, what it causes and which grounds to check",
+  "summary": "Yes. Generac's Power Zone 200 diagnostic manual has you check the grounds first for an alarm that comes and goes and for a 7.5 A fuse that keeps failing, and again in its battery charger, starter relay, fuel valve and Field Pro tests. Check the harness grounds on both engine feet, on the back of the block near the rear foot, and in the control box. Generator bad ground symptoms, where the grounds are, Next Gen, nexgen.",
+  "steps": [
+   "Source: Generac Power Zone 200 air-cooled diagnostic manual. If several codes are showing, battery, charging and CAN bus codes come first.",
+   "Which grounds (manual p.121-122): one harness ground on each engine foot, one on the back of the engine block near the rear engine foot, and all harness grounds in the control box. Check each for tightness and torque to the manual's torque table. This is step 1 when the 7.5 A fuse fails right away or after a crank attempt.",
+   "Battery end: the black cable from the frame ground stud must be tight on the battery negative post and the red cable from the starter contactor tight on positive - clean off any corrosion.",
+   "Alarm that comes and goes (Intermittent Alarm Test): check GenService for bulletins, check every ground above, do the Battery and Cables Test, make sure everything is updated, then run at full load if possible and gently wiggle each sensor plug, the ECM plug and the ground points. Cannot make it fault = the manual says contact Technical Support. For codes 3000 (ECM Faulted), 34xx (intake manifold pressure) or 35xx (intake manifold temperature) a dealer service bulletin exists - see the bulletin \"Next Gen air-cooled mixer E-codes 3000, 3400s, 3500s\" in Bulletins.",
+   "Charging complaints (AC Battery Charger Test): J4 left plugged into the controller, back-probe a Wire 13 pin to a Wire 0 pin. 12.8 VDC or less = check the J4 pins, all harness grounds and the main battery ground; pins good = the manual's end is the controller. Then Wire 13 at the starter contactor to battery negative: 12.8 VDC or less = check all harness grounds and the main battery ground; the manual's end there is the wiring harness.",
+   "Ohm checks the manual gives: Wire 0 at the voltage regulator plug to battery negative (battery disconnected) over 5 ohms = clean and tighten the Wire 0 ground at the back side of the engine. Wire 0 at the starter control relay to battery negative (battery disconnected) over 5 ohms = loose or corroded connection at the ground block. Wire 0 at fuel shutoff valve 1 to the ground bar over 5 ohms or OL = replace the harness.",
+   "Field Pro will not connect or drops: Generac's Field Pro test lists 'check grounds and fuses' before unplugging J2 or power cycling.",
+   "Grounds all clean and tight and the code still returns: clear it (hold OFF 3 seconds) and go to that code's own test in the manual."
+  ],
+  "safety": "Disconnect the battery (negative first) before working on battery cables or doing resistance checks.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-gen-crank-position-sensor",
+  "brand": "Generac",
+  "equipment": "Generator",
+  "title": "Generac crankshaft position sensor (CRKS) - what it does, what alarms when its signal is lost, how to test it (Next Gen / Power Zone 200)",
+  "summary": "On Next Gen air-cooled units (Power Zone 200 controller with an engine control module) the CRKS reads the teeth on the flywheel so the ECM knows crank position and RPM - it sets spark timing from it. A low or lost signal gives E-codes 4101 / 4201; 1522 RPM Sensor means CRKS RPM and frequency both read 0 after a crank command. The sensor should ohm about 100-200. Generator crank sensor, crank position sensor, engine position sensor, secondary sync, where it is, how to test.",
+  "steps": [
+   "Which units have one: Next Gen air-cooled with Power Zone 200 (459cc, 817cc, 997cc engines). The flywheel has 24 teeth with one missing; the CRKS uses that gap to report engine position to the ECM, which uses it for spark timing and engine speed. Older air-cooled Evolution, Nexus and 2008 units are different: their manuals show RPM taken from the ignition magneto on Wire 18 (on Evolution the RPM Sensor Failure E-codes are 1501 / 1505 / 1511 / 1515).",
+   "What the alarms mean: 4101 Engine Position Sensor = crank sensor signal low. 4201 Secondary Sync = engine timing signal low - above 300 RPM cranking the ECM must match the CRKS signal with the TTMAP sensor; no match = fault. 1522 RPM Sensor = CRKS RPM and generator frequency both read 0 after a crank command - the manual's first step for 1522 is the Battery and Cables Test.",
+   "Where it is: by the flywheel - the engine service manual takes the blower housing and fan off before the sensor bolts. Its two wires, 79A and 79B, run to the ECM (pins 1C and 1D).",
+   "Test (Engine Timing Sensor Test), step 1: hold OFF 3 seconds to clear, run the unit. Alarm does not return = go to the manual's Intermittent Alarm Test. Returns = check the plugs at the CRKS, the ETMC and the TTMAP sensor are fully seated.",
+   "Step 2: unplug the ECM and the CRKS, look for bent or damaged pins. Ohm Wire 79A from the ECM plug to the CRKS harness plug, then 79B the same way - more than 5 ohms or OL on either = replace the harness.",
+   "Step 3: plug the ECM back in and back-probe the two pins on the sensor side of the CRKS plug: about 100-200 ohms is good. Outside that = replace the CRKS.",
+   "Sensor, wires and plugs all good and the code returns: run the manual's engine checks. Engine health passes = the manual's last step is replace the ECM and retest.",
+   "If you replace the sensor: the gap to the flywheel is not adjustable (spec 0.007-0.06 in). Bolt torque differs by engine - use the engine service manual for that engine."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-daikin-one-outdoor-temp-display",
+  "equipment": "Thermostat",
+  "title": "Daikin One Touch / One+ - customer wants the outside temp to stay on the screen instead of the indoor temp",
+  "summary": "Daikin's One Touch homeowner guide and the v3.9 ONE+ / Touch menu outline list no setting that puts outdoor temperature on the home screen. Outdoor temperature, outdoor humidity and the forecast are on the Air Quality screen, and only when the thermostat is on the internet and added to a home location in the app.",
+  "steps": [
+   "Go to the Air Quality screen. One Touch: tap the Air Quality icon in the bottom row (Home, Schedule, Away, Air Quality). Outdoor temp, outdoor humidity and the weather forecast are listed there.",
+   "No outdoor readings on that screen: menu icon (top left of home screen) > settings > Wi-Fi. 'use Wi-Fi' must be checked and a network joined - look for 'internet connected' and the Daikin One Cloud line both checked.",
+   "Still none: menu icon > settings > account. If it shows a pairing code, the thermostat is not in the app yet. One Touch guide: enter the code in the SkyportHome app (code expires in 15 minutes) and add the thermostat under a home location.",
+   "Show the customer the display menu: menu icon > settings > display = language, degree units, brightness, night mode, large font, light bar, screen saver, screen cleaning (plus lock on One+). Screen saver choices are off, blank screen, analog clock or digital clock.",
+   "Tell the customer: Daikin's guide and the v3.9 menu outline list no setting that puts outdoor temperature on the home screen. Outside temp is on the Air Quality screen.",
+   "If the customer insists it used to stay on, call Daikin thermostat support at 1-855-DAIKIN1 before changing anything else."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-daikin-one-dashes-no-temp",
+  "equipment": "Thermostat",
+  "title": "Daikin One Touch / One+ - two dashes (lines) where the room temperature should be, no temp displayed",
+  "summary": "Daikin's guides do not say what dashes mean, so treat it as the thermostat having no valid temperature reading and work the three things that feed that number: the thermostat's own temperature sensor (codes 0B / 0C / 0D), the remote sensor selection, and power / data to the thermostat. If a restart does not bring the number back, call Daikin thermostat support before replacing it.",
+  "steps": [
+   "Look at the home screen for an error or status message under the dashes, and note whether humidity is also missing. Write down any code shown.",
+   "Pull the error history: menu icon > settings > dealer edit > continue > tap the info icon (top right) for the installer code > close > enter the code > unlock thermostat > 4 System Optimization > Error History. Each entry shows date / time, code, equipment and description.",
+   "Codes 0B, 0C or 0D on the thermostat = its temperature / humidity sensor hardware (0B sensor driver could not start, 0C temperature sensor failed during operation, 0D humidity sensor failed). Daikin's code table says: warm start the thermostat, call Daikin support, replace the thermostat if needed.",
+   "Restart it: menu icon > settings > thermostat > restart thermostat, and see whether the room temperature comes back after it boots. A code 10 in the history afterwards is just the reboot - no action.",
+   "Check the sensor selection: menu icon > settings > equipment > remote sensors (installer side: 4 System Optimization > Remote Sensors). The list shows 'include thermostat' and each sensor with its temp / humidity values. See whether 'include thermostat' is checked and which lines show a value.",
+   "A listed sensor with no value: open it and read signal strength (acceptable, marginal or low). Remote RHT sensors are One+ only, up to 8.",
+   "Check power and data at the thermostat: proper 24 VAC to it, and Data 1 and Data 2 not reversed. Codes 1E / 1F / 20 / 21 / 22 (communication loss) or 51 (no equipment found) are communication codes, not the sensor.",
+   "Dashes still there after a restart with no remote sensor in use: call Daikin thermostat support, 1-855-DAIKIN1 option 1, with the codes from the error history; replace the thermostat if they confirm."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-daikin-fit-after-board-replacement",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Daikin FIT - what to do at the thermostat after replacing the outdoor (inverter) board",
+  "summary": "After a new outdoor control board on a Daikin FIT (DX / DZ 6VS, DC / DH 6VS, 7VS, 9VS) the job at the thermostat is the System Test: mode OFF, heat off, dealer edit > System Optimization > System Test. When the outdoor unit is wired communicating, shared data will likely copy itself back from the indoor unit; the loader is for when a shared-data code shows.",
+  "steps": [
+   "Before power: confirm the board is the right one for the model, every thermistor, fan and compressor plug is back on, and on 3.5 - 5 ton units (R-32: also 3.0 - 4.0 ton Enhanced Capacity) the cooling bracket screws are tight with thermal grease between the cooling plumbing and the bracket. Missed, these come back as E32 / 33 (board over temperature), E37 (fan wiring), E38 (compressor wiring / voltage) or E39 (thermistor).",
+   "Power up and read the outdoor board display and the thermostat. E11 on the unit (11 on the thermostat) means the system test has not been run - a required start-up message. Shared data: Daikin's Shared Data Loader manual says it is also kept on the indoor control board and indoor blower motor, so with the outdoor unit wired communicating (1-2-R-C) and only one part changed it will likely load itself. It is only lost when every copy is replaced at once - change one part at a time and power up between.",
+   "Shared-data codes - Daikin's two documents differ, so here are both. FIT service manual: Ed0 / D0 (board does not have the necessary data) and Ed1 / D1 (not the appropriate data) = 'Replace control board if necessary'; Ed3 / D3 (shared data does not match the board hardware) and Ed4 / D4 (memory card data rejected) = 'Verify shared data is correct for your specific model; repopulate data if required'. Shared Data Loader manual: a d0, d1 or d2 code means shared data must be loaded from the card (on the FIT table Ed2 is an airflow code). E40 = compressor requirement differs from compressor capability; listed causes are memory card not correct or control board mismatch.",
+   "To load shared data (BTSDL01-D loader, see its toolbox card): power OFF, plug the loader into the Shared Data connector on the control board, loader powered on (blue light flashing), power ON and wait 30 seconds, power OFF, remove the loader, power ON and confirm the system runs normally.",
+   "At the thermostat set the mode to OFF and turn off the electric heater or gas furnace (heat on = the test will not start, E47). Then menu icon > settings > dealer edit > continue > tap the info icon (top right) for the installer code > close > enter the code > unlock thermostat > 4 System Optimization > System Test.",
+   "It asks for line set length, liquid and suction line sizes and the charge weighed in; check the service valves are open and tap Run Test. Time per the install manuals: DX6VS / DZ6VS about 10 - 15 minutes, longer if there is an error; DC6VS / DH6VS / DC9VSA / DH7VSA manual about 5 - 7 minutes; DH9VS / DC9VS / DH7VS manual about 10 minutes, and the test stops on an error. You can leave the screen and come back. Done = E11 gone from the outdoor display and test status 'Initial test successful'. A code instead = work that code.",
+   "Only if the charge is in question, after the System Test, heater off (E49 if indoor heat is on): R-410A DX6VS / DZ6VS use Charge Mode - runs at full capacity and ends after two hours. R-32 units use Charge Verification Test - about two hours, at approximately 50% capacity per the DC6VS / DH6VS / DC9VSA / DH7VSA manual or at a 'specific compressor speed' per the DH9VS / DC9VS / DH7VS manual; the thermostat will not allow it outside 65 - 105 F outdoor. The outdoor display shows 'cha' and the subcooling value in turn when the unit is ready.",
+   "Before leaving: check line voltage at the outdoor unit is 197 - 253 V (E42 = low supply voltage, E43 = high), check the outdoor board's setting mode 2 items are set the way the job needs (a new board starts at its own settings - compare with the install manual's setting mode 2 table), and read Error History at the thermostat."
+  ],
+  "safety": "Disconnect all power before touching the board - multiple power sources may be present. Follow the app's Daikin FIT capacitor discharge check card before putting hands in the control box.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-goodman-inducer-starts-then-stops",
+  "equipment": "Gas Furnace",
+  "title": "Goodman / Amana 80% single-stage furnace - inducer motor kicks on then immediately kicks off",
+  "summary": "Goodman's service manuals do not list this exact pattern as its own fault, so work it from what the board checks: before it starts the inducer it wants the limit closed and the pressure switch OPEN, and after it starts the inducer it wants the pressure switch to CLOSE. Read the board's diagnostic LED (or the 7-segment display on GM9S80 / AM9S80) first, then prove the heat call, the 120 volts to the inducer, and the pressure switch circuit. Inducer starts then stops, draft inducer short cycles, GMS8 AMS8 GDS8 ADSS8 GM9S80 AM9S80.",
+  "steps": [
+   "Read the diagnostic LED through the sight window in the blower door BEFORE you open the door or kill power - the flash code is lost when power to the board is interrupted at the disconnect or door switch. Count the flashes between pauses. GM9S80 / AM9S80 have a 7-segment display instead of a flashing LED (Goodman RS6621008): E1 = pressure switch circuit closed at the start of the heating cycle, E2 = pressure switch circuit not closed (p.37). Stored faults: press Left or Right until L6F shows, then the centre switch (p.32).",
+   "Know the order (Goodman GMS8 / GM9S80 manuals): heat call on W, board runs its safety circuit checks, then energizes the inducer, the pressure switch must close, pre-purge, ignitor warm-up, gas valve. On the GM9S80 board the manual gives the test points: limit closed = 24 VAC on pin 8 of the 12-pin connector, pressure switch open = 0 VAC on pin 5 before the inducer starts, then 24 VAC on pin 5 once it closes.",
+   "Match the flash code to the board. Flash codes below are for GMS8 / AMS8 / GDS8 / ADSS8 (PCBBF123 and PCBBF134 boards, Goodman RS6612006). 2 flashes = pressure switch circuit closed with the inducer off (contacts sticking or a short in the switch circuit) - the board waits and will not go on. 3 flashes = pressure switch did not close with the inducer running - the inducer keeps running; the PCBBF123 section says after 5 minutes the board goes into a 1-hour lockout. 4 flashes = primary limit open, circulator blower runs continuously. 6 flashes = rollout open - PCBBF123: circulator blower runs continuously; PCBBF134: furnace fails to operate, and 6 flashes can also mean the board fuse is blown. Continuous rapid flash = 115 V or 24 V polarity reversed.",
+   "Prove the heat call, in Goodman's order. Power OFF. Take the thermostat wires off the board and jumper R to W. Then power on with the door switch closed - line voltage is now present. The inducer must run and pull in the pressure switch. If the furnace then runs through ignition, Goodman says the trouble is in the thermostat or its wiring - check that for continuity with power off.",
+   "Check voltage at the board. Goodman notes these live checks have to be finished within the ignition control's timing, so have the meter ready. 120 V Line 1 to neutral (none = door switch connections or harness). 24 V from W to C (about 13 V between C and R with 24 V at the transformer = blown fuse). 120 V to the inducer between pin 1 of the 2-pin connector and line neutral - none on a call points to the ignition control, but Goodman says replace the board only after every other check in the troubleshooting chart has been done.",
+   "Check the inducer motor (Goodman's order). Power off, motor leads disconnected: ohm lead to lead and each lead to the motor frame - open windings or any reading to ground = replace the motor. If the windings are good, reconnect, power on, call for heat: 115 V at the motor terminals during the trial for ignition and it does not run = replace the motor.",
+   "Check the pressure switch circuit. Wires off the switch, check from the common terminal to NC - should read open (Goodman's wording); if not, replace the switch. Then tee a manometer into the switch hose (to the inducer tap) and watch the negative pressure with the inducer running. Look for a hose that is blocked, pinched or connected wrong, a blocked flue (length, elbows, termination), a weak inducer, and - if a Masonry Vent Kit is fitted - its manual-reset limit open.",
+   "If the code is 4 or 6, find the cause before going further: 4 = dirty filter, duct restriction, blower fault or blower speed too low, or a bad limit. 6 = restricted flue or wrong combustion air, misaligned burners, failed inducer. Goodman says reset the auxiliary limit only once - if it opens a second time, find out why before resetting again. If nothing fits and the checks above pass, write down the code and what the inducer does and call the office. Source: Goodman RS6612006r7 (GMS8 / AMS8 / GDS8 / ADSS8) and RS6621008r2 (GM9S80 / AM9S80)."
+  ],
+  "safety": "Line voltage is live on the board and inducer during these checks. Never bypass or jumper out a pressure switch, limit or rollout to make the furnace run - Goodman's manuals say do not bypass safety devices.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-amana-rcb-model-number-size",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Amana RCB condenser (RCB42B2A) - unit size and what the model number means",
+  "summary": "The two digits are the size. Amana's key lists 42 = 42,000 BTUH nominal capacity. At 12,000 BTUH per ton that is 3-1/2 tons (42,000 / 12,000). RCB42B2A reads Remote, Cooling, 10 SEER family, 42,000 BTUH nominal, second marketing series, 230 V single phase, first design series. Unit size, tonnage, RCB18 RCB24 RCB30 RCB36 RCB42 RCB48 RCB60.",
+  "steps": [
+   "Size is the two digits after RCB. Amana's key, under Nominal Capacity: 18 = 18,000 BTUH, 24 = 24,000, 30 = 30,000, 36 = 36,000, 42 = 42,000, 48 = 48,000, 60 = 60,000 BTUH. The key does not print tons - at 12,000 BTUH per ton, 42,000 works out to 3-1/2 tons.",
+   "R = product type Remote. C = system type Cooling (H in this spot would be a heat pump).",
+   "B = product family. Amana's key: A = 10 SEER, B = 10 SEER, C = 12 SEER, D = 13 SEER, E = 14 SEER. So an RCB is a 10 SEER cooling-only remote condensing unit.",
+   "The letter after the size (the first B in B2A) is the marketing designator: A = first series, B = second series.",
+   "The 2 is the voltage: 2 = 230 V / 60 Hz / single phase, 3 = 230 V three phase, 4 = 460 V three phase.",
+   "The last letter is the design series: A = first, B = second, C = third, D = fourth. This comes from Amana's 1998 key. The B2D models (RCB42B2D and the like) appear only in the later 2001 parts manual, which prints no key - so treat D on those as read from the older key.",
+   "Order parts by the P manufacturing number on the plate (RCB42B2A = P1223305C, RCB42B2D = P1223312C).",
+   "Source: Amana Service Instructions RS6100002 Rev. 3 (August 1998), Product Identification page 7, and Amana RCB parts manual RP6110014 Rev. 1 (October 2001)."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-pump-down-general",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Pump down - how to pump a split system down into the outdoor unit (and when not to)",
+  "summary": "Check the maker before you pump down. Goodman / Amana / Daikin manuals say a scroll compressor should never be used to pump down or evacuate a system - recover the charge instead. Carrier (stop at 5 psig) and ICP (stop at 20 psig) publish a pump down for low-side repairs. Never let a compressor pull into a vacuum. Pumpdown, pump-down, store charge in condenser.",
+  "steps": [
+   "Goodman / Amana / Daikin scroll units: do not pump down - recover. Their service and install manuals (Goodman GSX / GSZ R-410A service manuals, GSZ install IO-259U, Daikin DZ16TC and DZ20VC installs) say scroll compressors should never be used to evacuate or pump down a system, and that running at suction pressures under 20 psig for more than 5 seconds overheats the scrolls and permanently damages the scroll tips, drive bearings and internal seal. (Two Daikin DX service manuals print a different note - do not let suction at the service valve drop below 20 PSIG when pumping down for repair. Go by the never-pump-down warning and recover.)",
+   "Variable-speed (inverter) units: some models have their own pump-down mode - use the brand card in the last step, not this procedure. Daikin's FIT R-32 service manual says that system has no pump-down function: recover all the refrigerant through both stop-valve service ports. Goodman AVZC18 (service manual): do not let suction at the service valve drop below 5 PSIG when pumping down for repair, and do not front seat the service valves with the suction line of the compressor closed or severely restricted.",
+   "Carrier (Puron service manual 38-12SM and R-454B service manual ACHPR454-01SM), for a low-side repair without losing the whole charge: put a gauge on the suction service valve port, front-seat the liquid line valve, start the unit in cooling and run until suction reaches 5 psig. Do not let the compressor pump into a vacuum. Shut the unit off, then front-seat the suction valve.",
+   "ICP (NH4H4 / NH4A4 R-410A install instructions): same idea, but run until suction reaches 20 psig, shut the unit off and front-seat the suction valve, then de-pressurize the low side and recover that refrigerant. ICP: never open a system that is in a vacuum - break the vacuum with dry nitrogen first.",
+   "Suction suddenly RISES before you reach the number (Carrier and ICP): the outdoor coil holds only the factory charge, and extra refrigerant - a long line set, for example - makes the compressor's internal relief open. Shut the unit off at once, front-seat the suction valve and recover the rest.",
+   "It stops pumping early: Lennox's XP16 install manual (its section on pumping an existing system into the outdoor unit) notes a tripped pressure switch can cycle the compressor off, and a scroll's internal vacuum protection can stop it pumping at a suction as high as 20 psig. Close the vapor valve there, shut the power off and recover the rest with a recovery machine. After shutdown watch the gauges - a low side that climbs back means a valve is not holding.",
+   "Microchannel outdoor coil: this is from a trade source, not a manufacturer - HVACR School (Bryan Orr) says you cannot and must not pump down into a microchannel condenser. Recover the charge and weigh it back in.",
+   "Brand cards with their own pump-down steps: Lennox XC25 / XP25 / SL25XPV - how to pump down (Pd mode on the outdoor control); Lennox SL25XPV - high pressure switch setpoints and holding the unit at 100 percent to charge; Lennox EL18XPV - Charge Mode jumper, and its 60 minute timeout; Carrier 24VNA9 / 25VNA8 - pump down and evacuation on an inverter unit with an EXV; Pump down on Daikin inverter units - the R-32 FIT has no pump down, the R-410A DX20VC does; Goodman AVZC18 - entering PUMP DOWN from the CTK04 thermostat; Rheem RP17H - pump down procedure using SET1-2 and SW1; Daikin One+ / One Touch - running system tests."
+  ],
+  "safety": "Never let the compressor run into a vacuum with the service valves closed (ICP / Carrier warning). Never open the system to atmosphere while it is in a vacuum. Recover the remaining refrigerant - do not vent.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-r410a-expected-pressures",
+  "equipment": "Condenser/Heat Pump",
+  "title": "R-410A - what should my pressures be? (152 over 325, 85 outside - is this correct)",
+  "summary": "There is no one right pair of pressures for R-410A - they move with outdoor temperature, indoor load, airflow and the model. Makers publish a pressure table per model only as a maintenance check, and say to judge charge by subcooling (TXV) or superheat (piston), not by suction pressure. What should pressures be at 92 outside, normal operating pressures, head and suction, 410a.",
+  "steps": [
+   "First get the conditions the charts need: outdoor temperature of the air entering the coil, indoor return dry bulb and wet bulb, and confirm airflow. Let it run and stabilize - Goodman says at least 10 minutes, with total static 0.5 in. w.c. or less and correct airflow before you judge charge.",
+   "Turn the pressures into temperatures (PT chart in the Charging Calc). Example from the question: 152 psig suction is about 53 F saturation and 325 psig is about 102 F on the Daikin R-410A PT chart the app uses. The pressures alone say nothing until you add line temperatures.",
+   "TXV system: measure liquid line temperature at the liquid service valve. Subcooling = saturated liquid temperature minus liquid line temperature. Compare to THIS unit's target (data plate, charging label or install manual). Targets differ, even inside one manual: Goodman's GSX / GSZ R-410A service manual gives 5 to 7 F subcooling and 7 to 9 F superheat in its final charge steps for adjustable expansion valves (charged on low stage), and 8 F plus or minus 1 F subcooling in its subcooling check for TXV systems. Lennox XC16 lists 5 F (-024), 6 F (-036, -048) and 9 F (-060).",
+   "Piston / fixed orifice: charge by superheat from the maker's grid of outdoor dry bulb against indoor wet bulb - the target changes with both. Carrier's CH14NB / CH16NA table, for example, prints 4 F at 85 outdoor / 67 wet bulb but 11 F at 85 / 70, and dashes where superheat charging is not allowed (weigh the charge in).",
+   "If the maker prints a normal operating pressure table, use it as a cross-check only. Worked example, Lennox XC16-036-230-01 in second stage: 85 F entering the outdoor coil = 321 liquid / 142 suction, 95 F = 368 / 144. Lennox prints the tolerance as Liquid +10 and Suction +5 psig - plus only - and its procedure calls for 70 to 80 F indoor. Lennox also prints that the table is for maintenance checks and is not a charging procedure: small differences come from the installation, big ones mean a charge or component problem.",
+   "So for 152 over 325 at 85 outside and 77 inside, on that Lennox example only: the printed bands are 321 to 331 liquid and 142 to 147 suction. 325 is inside the liquid band; 152 is 5 psi above the top of the suction band (10 above the table value). That is not a verdict on another model - finish the job with subcooling or superheat. Goodman's manual says do not adjust charge based on suction pressure unless there is a gross undercharge.",
+   "In the app: open Charging Calc, pick the refrigerant, enter pressures and line temperatures, and use the unit's own chart when it is listed. Charging charts on file for R-410A: Goodman / Amana GSX-GSZ family (required liquid line temperature), Trane 4TTX8, Lennox XC16 (pressures and subcooling), Lennox LRP14 / LRP16 packaged, Daikin FIT DX6VS / DZ6VS, DX20VC, DZ20VC, Goodman AVZC18, Carrier CH14NB / CH16NA (subcooling table and piston superheat grid).",
+   "If the readings do not fit together, use the superheat / subcooling pattern cards: \"High superheat + high subcooling\", \"Low superheat + low subcooling\", \"High superheat + low subcooling\" and \"Low superheat + high subcooling\"."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-ecobee-pek-no-y-terminal",
+  "brand": "ecobee",
+  "equipment": "Thermostat",
+  "title": "ecobee Power Extender Kit - no Y wire / no Y terminal at a Ruud or Rheem air handler",
+  "summary": "Some Rheem / Ruud air handlers (RHLL / RHSL per Rheem's install manual) bring low voltage out on pigtails joined with wire nuts instead of screw terminals, and Rheem's diagram has the thermostat Y spliced to the outdoor unit's yellow wire. ecobee covers this: install the PEK at the splices and leave the outdoor unit's wire in the Y and C splices. If the air handler does have a control board with R G Y W terminals, use ecobee's normal steps for your thermostat model. No Y wire, no Y terminal, Ruud, Rheem, 14J11SFD.",
+  "steps": [
+   "Power off. Photograph the wires at the old thermostat, at the air handler and at every wire nut before touching anything - ecobee asks for these photos if you call them.",
+   "Check it can take a PEK: ecobee needs at least four wires at the thermostat, and the PEK is not for dual-transformer or heat-only systems.",
+   "Find Y. On Rheem RHLL / RHSL air handlers the thermostat wires join the unit's pigtails with wire nuts, and Rheem's typical electric heat diagram shows the thermostat Y joined to the condensing unit's yellow wire (and common to its brown wire) at that low-voltage junction - so look for a yellow splice, not a Y screw. If this air handler has a control board with R G Y W terminals instead, use ecobee's normal steps for your thermostat model.",
+   "If Y is spliced there, use ecobee's 'Installing the PEK if there is a splice' steps: label the wires on both sides of each splice, find the C splice by following common from the unit, then take the thermostat-cable wires out of the splices one at a time and put them in the PEK's R, G, Y and W connectors.",
+   "Connect the five labelled wires from the back of the PEK to the matching splice points. The C and Y splices may have an extra wire in them - ecobee says do not remove it, it is needed for the AC to run.",
+   "At the thermostat (ecobee's steps): R wire to R (Rc on Lite / ecobee3 lite / ecobee4), the old G wire to C, the old Y wire to PEK (PEK+ on Enhanced; on Smart Thermostat Lite it goes to G), W to W1. Restore power and let it configure.",
+   "If Y never enters the air handler: ecobee says an unused wire at the thermostat may be usable as C instead of the PEK. Otherwise call the office.",
+   "More detail and the heat pump / B wire notes are on the ecobee Power Extender Kit card (thermostats: tst-ecobee-pek, Troubleshooting)."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-carrier-infinity-emergency-heat-only",
+  "brand": "Carrier",
+  "equipment": "Thermostat",
+  "title": "Carrier Infinity - how to turn on emergency heat only (electric heat only, or furnace only on Hybrid Heat)",
+  "summary": "On Carrier Infinity controls emergency heat is picked as a heat source. Carrier's owner's manual describes the HEAT SOURCE screen for Hybrid Heat systems (FURNACE ONLY / HEAT PUMP ONLY) and lists ELECTRIC ONLY as a choice; the choices shown follow the equipment attached, so a heat pump with electric heat may or may not show it. Older button control: hold the red HEAT button.",
+  "steps": [
+   "Find which wall control it is. Touch screen = Infinity System Control or Infinity Touch. Buttons with a flip-down door = the older Infinity Control.",
+   "Touch-screen control (Carrier owner's manuals): from the main screen touch MENU (bottom right), then the HEAT SOURCE icon (HEATSOURCE on the Infinity Touch -A). The manual heads this section \"If Applicable\" and says the options shown correspond to the equipment attached.",
+   "If the HEAT SOURCE screen offers ELECTRIC ONLY, select it, then touch SAVE - that is electric heat only. (ELECTRIC ONLY is named in the Infinity System Control owner's manual. The Infinity Touch -A owner's manual names only FURNACE ONLY and HEAT PUMP ONLY.)",
+   "Hybrid Heat (heat pump + furnace): select FURNACE ONLY, then SAVE. HEAT PUMP ONLY runs only the heat pump.",
+   "Older button control: press and hold the red HEAT button (owner's guide says four seconds, installation guide says 3 seconds). Heat pump with electric heat shows SYSTEM IN CONTROL / HEAT PUMP ONLY / ELECTRIC HEAT ONLY. Hybrid Heat shows HYBRID HEAT / FURNACE ONLY / HEAT PUMP ONLY. Scroll to the choice with the scroll button under the door, then press the left side button to save. Bryant Evolution Control: same hold-HEAT step (3 seconds) per the Bryant install guide; Bryant owner's manuals were not read.",
+   "Put it back when the repair is done. Touch screen: MENU > HEAT SOURCE, pick the choice that leaves the system in control (the default), SAVE. Button control: hold HEAT again and choose SYSTEM IN CONTROL (or HYBRID HEAT). Tell the customer if you leave it in emergency heat.",
+   "No HEAT SOURCE icon, or no electric choice: the control only shows choices for the equipment attached. Call the office or Carrier tech support before changing parts.",
+   "A permanent lockout by outdoor temperature is a separate installer setting: SETUP > HEAT SOURCE LOCKOUTS (HP Lockout -20 to 55 F or None; Furnace, Electric Heat or Hydronic Lockout 15 to 55 F or None; both default None)."
+  ],
+  "confidence": "manual"
+ },
+ {
+  "id": "s-carrier-infinity-zone-sensor-wrong-day",
+  "brand": "Carrier",
+  "equipment": "Thermostat",
+  "title": "Carrier Infinity / Bryant Evolution zoning - zone Smart Sensor (slave stat) shows the wrong day or time",
+  "summary": "The zone Smart Sensor has no day or clock setting in its own setup menu. Day and time are set at the main wall control (zone 1). Fix the clock there, then check the sensor for COM ERROR. Carrier publishes no procedure for this symptom; this is the order the manuals support.",
+  "steps": [
+   "Look at the main wall control first (the one master control, normally zone 1). If its day or time is wrong, fix it there - the Smart Sensor guides describe zone address, backlighting, fan mode and keypad lock at the sensor, and no clock setting.",
+   "Touch-screen main control (steps from Carrier's Infinity owner's manuals): touch the day and time at the top middle of the main screen, or MENU > TIME/DATE. Pick manual adjust and set HOUR, MINUTE, MONTH, DAY and YEAR.",
+   "Wi-Fi connected control: also check the time zone and daylight saving settings under TIME/DATE. Time sync with the web server only works when the time zone is set and time synchronization is enabled. Check both.",
+   "Older button control (Infinity Control, Carrier homeowner's guide): flip down the door, press BASIC, set the hour, minutes and day with the buttons, press BASIC to exit.",
+   "Go back to the zone sensor. The touch-screen Smart Sensor (SYSTXZNSMS01) scrolls the date and time in its top banner every 3 seconds along with fan status and mode. Check whether it now agrees with the main control (Carrier does not state where the sensor gets its date and time; it has no clock setting of its own).",
+   "Sensor showing COM ERROR: it cannot send or receive data with the main control. Check the four ABCD wires (A green, B yellow, C white, D red is the recommended code - every ABCD connection in the system must be wired the same way) and the sensor's zone address.",
+   "At the damper control module the yellow and green LEDs should both be on solid. Green off = the module is not receiving communication from the wall control. Yellow blinking = a two-digit status code; 16 = communication failure.",
+   "If you change a zone address, run Full Installation from the Installation & Service menu of the main control so it picks the change up. Sensor still shows the wrong day with no COM ERROR: Carrier's manuals do not cover it - call the office or Carrier tech support before replacing the sensor."
+  ],
+  "safety": "Turn off all power to the unit before taking a Smart Sensor off the wall or working on its wiring (there may be more than one disconnect).",
+  "confidence": "manual"
  }
 ];
