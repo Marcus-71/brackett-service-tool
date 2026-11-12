@@ -2321,5 +2321,13 @@ body.inv-cam-open { overflow: hidden; }
 .ask-input-row.has-mic .search-clear-btn { right: calc(0.45rem + 50px); }
 .ask-input-row.has-clear .search-input { padding-right: calc(0.9rem + 44px); }
 .ask-input-row.has-clear.has-mic .search-input { padding-right: calc(0.9rem + 94px); }
+/* Top bar with no signal: "No signal" over "saved info works" (was "offline (cached)") */
+.status-pill.offline { white-space: pre-line; text-align: right; line-height: 1.15; }
+/* "+ My code" is wider than "+ Add" was: on a phone it gives the room back to the screen title */
+@media (max-width: 420px) { #addBtn { padding-left: 0.7rem; padding-right: 0.7rem; } .topbar-right { gap: 0.4rem; } }
+/* Maintenance Figures "nothing found": the Open Manuals button sits above "Search everything" */
+.empty-state .maint-open-manuals { margin-top: 0.7rem; padding: 0.5rem 0.8rem; cursor: pointer; overflow-wrap: anywhere; }
+/* Warranty "Pick the brand" buttons were 35 px high */
+.warranty-badge { min-height: 44px; }
 /* Tag Scanner result scrolled into view: stays clear of the fixed top bar */
 #scanResult { scroll-margin-top: 80px; }

@@ -349,6 +349,8 @@ const ADD_HANDLERS = {
   }),
   toolbox: () => openToolboxEditForm(null),
 };
+// screens #18: "+ Add" meant "write my own code" on one screen and "pick a manual" on another.
+const ADD_LABELS = { codes: "+ My code", diagnostics: "+ My fix", manuals: "+ Manual", toolbox: "+ My tool" };
 
 let currentScreen = "home";
 // Where the tech came FROM, so the swipe-back gesture can retrace one step at
@@ -380,6 +382,7 @@ function showScreen(name, fromBack) {
     addBtn.classList.add("hidden");
   } else {
     addBtn.classList.remove("hidden");
+    addBtn.textContent = ADD_LABELS[name] || "+ Add";
     addBtn.onclick = ADD_HANDLERS[name];
   }
 
@@ -718,7 +721,19 @@ function setAskEverything(holder, q, from) {
     const emptyShown = !empty.classList.contains("hidden");
     const want = emptyShown && !hasCards ? q : "";
     const have = empty.querySelector(".ask-everything-btn");
-    if ((have ? have.dataset.q : "") !== want) { setAskEverything(empty, want, "maintenance"); const b = empty.querySelector(".ask-everything-btn"); if (b) b.dataset.q = want; }
+    if ((have ? have.dataset.q : "") !== want) {
+      setAskEverything(empty, want, "maintenance"); const b = empty.querySelector(".ask-everything-btn"); if (b) b.dataset.q = want;
+      // screens #18: the text says "Check Manuals for the PDF" - this is the button that goes there, search carried over
+      empty.querySelectorAll(".maint-open-manuals").forEach(x => x.remove());
+      if (want && b) {
+        const m = document.createElement("button");
+        m.type = "button";
+        m.className = "maint-manuals-btn maint-open-manuals";
+        m.textContent = "📄 Open Manuals for \"" + want + "\"";
+        m.onclick = () => { trackEvent("maintenance -> manuals: " + want.slice(0, 90)); openManualsForModel(want); };
+        empty.insertBefore(m, b);
+      }
+    }
     // notice shown instead of the empty box (only look-alikes of another kind of equipment)
     const noticeOnly = !emptyShown && !hasCards && !!results.querySelector(".maint-flag") && q;
     const inRes = results.querySelector(".ask-everything-btn");
@@ -4819,8 +4834,8 @@ function genSyncBrandTabs() {
   for (const id of ["genClEntry", "genClEntryRecent", "genMultiAts"]) { const el = document.getElementById(id); if (el) el.classList.toggle("hidden", !generac); }
   const d = document.getElementById("genBrandNote");
   if (d) d.textContent = generac
-    ? "Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals from Generac's own owner's/install manuals and support articles. Confirm on the unit's own data label and controller screen - code lists shift between controller generations."
-    : "Kohler (Rehlko) home standby generators and transfer switches: fault messages, troubleshooting, specs, maintenance and manuals from Kohler's own operation, installation and service manuals (Partner HQ technical library). Confirm on the unit's nameplate and controller - fault lists differ by controller.";
+    ? "Generac air-cooled home standby: alarm and warning codes, specs, maintenance and manuals, from Generac's own manuals and support articles. Check the unit's tag and controller screen - code lists change from one controller to the next."
+    : "Kohler (Rehlko) home standby generators and transfer switches: faults, troubleshooting, specs, maintenance and manuals, from Kohler's own manuals. Check the unit's tag and controller - fault lists change from one controller to the next.";
   const inp = document.getElementById("genSearchInput");
   if (inp) inp.placeholder = generac ? "Model, kW or code — 22kW, 1100" : "Model, kW or fault — 20RCA";
 }
@@ -5982,7 +5997,7 @@ function genMaintCardHtml(hit) {
         </div>
         ${sched ? `<div class="maint-group"><div class="maint-group-title">Maintenance schedule (Schedule A / B)</div><table class="maint-table">${sched}</table></div>` : ""}
         ${(() => { const r = genMaintResetHtml(g); return r ? `<details class="gen-maint-more"><summary>How to reset the maintenance light</summary>${r}</details>` : ""; })()}
-        <div class="maint-source">From the Generators library - ${escapeHtml(g.family)}. ${escapeHtml(g.years || "")} · Always confirm against the data label on the unit in front of you.</div>
+        <div class="maint-source">From the Generators library - ${escapeHtml(g.family)}. ${escapeHtml(g.years || "")} · Always confirm against the tag on the unit in front of you.</div>
         <button type="button" class="maint-manuals-btn" data-gen-open="${escapeHtml(g.id)}" data-gen-focus="${escapeHtml(m ? m.g : "")}">🔌 Open in Generators (codes, manuals)</button>
       </div>
     </article>`;
@@ -6383,9 +6398,9 @@ function genWizScanHtml(d) {
   const msg = genCl.scanMsg;
   return `
     <div class="gwz-card">
-      <button type="button" class="gwz-scan-btn" id="gwzScanBtn">📷 Scan the data plate</button>
+      <button type="button" class="gwz-scan-btn" id="gwzScanBtn">📷 Scan the tag</button>
       <input type="file" id="gwzPhoto" accept="image/*" capture="environment" class="hidden">
-      <div class="gwz-hint">Photograph the generator's data label - the MODEL and SERIAL lines. Straight on, close, good light. In sun, shade the whole label.</div>
+      <div class="gwz-hint">Photograph the generator's tag - the MODEL and SERIAL lines. Straight on, close, good light. In sun, shade the whole tag.</div>
       <div id="gwzScanStatus" class="gwz-status ${msg ? msg.kind : "hidden"}">${msg ? msg.html : ""}</div>
       ${d.familyId && d.modelG ? bulletinsHtml(bulletinsFor({ genFamily: d.familyId, model: d.modelG }), { where: "gen checklist scan", serial: d.serial, model: d.modelG }) : ""}
     </div>
@@ -6434,7 +6449,7 @@ function genWizFiguresHtml(d) {
         ${row("Valve clearance", f.valve, ["valve"])}
         ${row("Battery", f.battery, ["battery"])}
       </div>
-      <div class="maint-source gwz-fl-src">From the Generators library - ${escapeHtml(g.family)}. Always confirm against the data label on the unit in front of you.</div>
+      <div class="maint-source gwz-fl-src">From the Generators library - ${escapeHtml(g.family)}. Always confirm against the tag on the unit in front of you.</div>
     </article>
     <details class="gwz-full"><summary>Maintenance schedule &amp; reset steps</summary><div id="gwzFullCard">${genMaintCardHtml({ family: g, model: m })}</div></details>`;
 }
@@ -6740,7 +6755,7 @@ async function genClEntryCount() {
     e.preventDefault();
     const model = String(document.getElementById("genProblemModel").value || "").trim().toUpperCase();
     const serial = String(document.getElementById("genProblemSerial").value || "").trim().toUpperCase();
-    if (!model) { genProblemScanStatus("Type the MODEL number from the data tag.", true); return; }
+    if (!model) { genProblemScanStatus("Type the MODEL number off the tag.", true); return; }
     const fam = genFamilyForModel(model);
     if (fam) {
       genNoteScan(model, serial);
@@ -6882,7 +6897,7 @@ async function genClLikelyMisread(d) {
     if (sameSerial || (model && rm && oneOff(model, rm))) {
       return "You already sent a checklist today for " + (rm || "a generator") + (rs ? " (serial " + rs + ")" : "") +
         (r.customerName ? " - " + r.customerName : "") + ".\n\nThis one says " + (model || "no model") + (serial ? " (serial " + serial + ")" : "") +
-        ". That's usually the scanner misreading the plate.\n\nCheck the MODEL on the data plate. Send this one anyway?";
+        ". That's usually the scanner misreading the tag.\n\nCheck the MODEL on the tag. Send this one anyway?";
     }
   }
   return null;
@@ -7620,7 +7635,7 @@ async function renderManuals() {
     if (r.list.length && r.closestTo) {
       const n = document.createElement("div");
       n.className = "maint-flag";
-      n.innerHTML = `<div class="maint-flag-title">No manual listed for ${escapeHtml(manualsState.search.trim())} exactly</div>These are the library manuals for models starting ${escapeHtml(r.closestTo)}. Check the series on the rating plate matches.`;
+      n.innerHTML = `<div class="maint-flag-title">No manual listed for ${escapeHtml(manualsState.search.trim())} exactly</div>These are the library manuals for models starting ${escapeHtml(r.closestTo)}. Check the series on the tag matches.`;
       results.appendChild(n);
     }
     drawPagedList(results, r.list, buildManualCard, manualsPage.search, manualsState.search, "or type more of the model above");
@@ -7853,7 +7868,7 @@ function renderBulletinBanner() {
   el.classList.remove("hidden");
   el.innerHTML = `
     <div class="bulletin-banner-title">${escapeHtml(bulletinCountPrefix())}${escapeHtml(BULLETIN_PACK.label)} to add</div>
-    <div class="bulletin-banner-body">These can't be stored on the app's server, so they come from the shop folder. Open it, download them to this phone, then tap + Add and pick them all at once. ${escapeHtml(BULLETIN_PACK.note)}</div>
+    <div class="bulletin-banner-body">These can't be stored on the app's server, so they come from the shop folder. Open it, download them to this phone, then tap + Manual and pick them all at once. ${escapeHtml(BULLETIN_PACK.note)}</div>
     <div class="bulletin-banner-actions">
       <a class="bulletin-open" href="${escapeHtml(BULLETIN_PACK.url)}" target="_blank" rel="noopener">Open the shop folder</a>
       <button class="bulletin-done" id="bulletinDoneBtn">Done, I added them</button>
@@ -8543,7 +8558,8 @@ document.getElementById("rq-send").addEventListener("click", () => {
     `—\nSent from Brackett Service Tool ${APP_VERSION}`;
   window.location.href = `mailto:${REQUEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   trackEvent("sent info request: " + type);
-  note.textContent = "Your email app should be opening with everything filled in — hit Send there and it goes to the office.";
+  note.textContent = "Your email app should be opening with everything filled in — hit Send there and it goes to the office." +
+    (navigator.onLine ? "" : " No signal - it will send from your email app when you have signal.");
   note.classList.remove("hidden");
 });
 
@@ -9037,7 +9053,7 @@ function ccApplyScan() {
     return !!(id && /Furnace/i.test(id.equipment || ""));
   };
   if (isFurnace(outModel)) {
-    box.innerHTML = `<div class="cc-scan-miss"><strong>${escapeHtml(outModel)}</strong> is a furnace — the charging scan needs the OUTDOOR unit's tag. Scan the condenser or heat pump data plate instead (and the indoor coil/air handler for matchup tables).</div>`;
+    box.innerHTML = `<div class="cc-scan-miss"><strong>${escapeHtml(outModel)}</strong> is a furnace — the charging scan needs the OUTDOOR unit's tag. Scan the condenser or heat pump tag instead (and the indoor coil/air handler for matchup tables).</div>`;
     trackEvent("charge scan rejected furnace: " + outModel);
     return;
   }
@@ -13187,6 +13203,8 @@ function warrantyOwnerFields() {
   };
 }
 
+// Brand names on the Warranty "Pick the brand" buttons that plain capitalising gets wrong.
+const WARRANTY_BADGE_NAMES = { LGELECTRONICS: "LG", ICP: "ICP", AIREASE: "AirEase", WEATHERKING: "WeatherKing", AMERICANSTANDARD: "American Standard" };
 function renderWarrantyResult(model, serial, badgeFromTag) {
   const box = document.getElementById("warrantyResult");
   const info = model ? identifyModel(model, serial, null, null, { log: true }) : null;
@@ -13235,9 +13253,19 @@ function renderWarrantyResult(model, serial, badgeFromTag) {
       ${offline ? `<p class="warranty-needs">📵 No signal right now — the button will work once you're back in coverage.</p>` : ""}
       ${links.join("")}`;
   } else {
-    portalHtml = `<p class="warranty-needs">Couldn't tell which badge is on the tag — pick the maker:</p>
-      <div class="warranty-badge-grid">${Object.entries(WARRANTY_PORTALS).map(([b, p]) =>
-        `<button class="warranty-badge" data-badge="${escapeHtml(b)}">${escapeHtml(b.charAt(0) + b.slice(1).toLowerCase())}</button>`).join("")}</div>`;
+    // screens #18: one button per brand, proper capitals, A-Z ("Lg electronics", "lennox", "americanstandard",
+    // "Icp" and Lennox / Trane / American Standard twice before - the lower-case keys are second entries
+    // for the same brand; the picker keeps the upper-case one).
+    const nameOf = (b) => WARRANTY_BADGE_NAMES[b.toUpperCase().replace(/\s+/g, "")] || b.toLowerCase().replace(/(^|\s)[a-z]/g, c => c.toUpperCase());
+    const seen = new Map();
+    for (const b of Object.keys(WARRANTY_PORTALS)) {
+      const k = b.toUpperCase().replace(/\s+/g, "");
+      if (!seen.has(k) || b === b.toUpperCase()) seen.set(k, b);
+    }
+    const picks = [...seen.values()].map(b => [b, nameOf(b)]).sort((x, y) => x[1].localeCompare(y[1]));
+    portalHtml = `<p class="warranty-needs">Pick the brand:</p>
+      <div class="warranty-badge-grid">${picks.map(([b, name]) =>
+        `<button class="warranty-badge" data-badge="${escapeHtml(b)}">${escapeHtml(name)}</button>`).join("")}</div>`;
   }
 
   box.innerHTML = `
@@ -13326,7 +13354,7 @@ document.getElementById("sqftResult").addEventListener("click", (e) => {
 function updateNetStatus() {
   const pill = document.getElementById("netStatus");
   if (navigator.onLine) { pill.textContent = "● online"; pill.className = "status-pill online"; }
-  else { pill.textContent = "● offline (cached)"; pill.className = "status-pill offline"; }
+  else { pill.textContent = "● No signal\nsaved info works"; pill.className = "status-pill offline"; }   // two lines (style.css) so the screen title keeps its room
 }
 window.addEventListener("online", updateNetStatus);
 window.addEventListener("offline", updateNetStatus);
