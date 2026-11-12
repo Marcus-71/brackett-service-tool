@@ -672,7 +672,7 @@ main {
 .ask-input-row { position: relative; }
 .ask-input-row .search-input { padding-right: 3.2rem; }   /* the 44 px mic + its 0.45rem inset */
 .ask-input-row .search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
-.ask-mic-btn {
+.ask-mic-btn, .search-clear-btn {   /* the clear X (every search box) is the same round button */
   position: absolute;
   right: 0.45rem;
   top: 50%;
@@ -691,7 +691,7 @@ main {
   align-items: center;
   justify-content: center;
 }
-.ask-mic-btn:active { transform: translateY(-50%) scale(0.93); }
+.ask-mic-btn:active, .search-clear-btn:active { transform: translateY(-50%) scale(0.93); }
 .ask-mic-btn.listening {
   background: var(--accent);
   color: #fff;
@@ -747,7 +747,7 @@ main {
 
 /* AI answer layer */
 .ask-ai { margin: 0.2rem 0; }
-.ask-ai-btn {
+.ask-ai-btn, .list-more-btn, .ask-everything-btn {   /* "Show 60 more" and "Search everything for ..." share the look */
   font: inherit;
   font-size: 0.95rem;
   font-weight: 700;
@@ -759,7 +759,7 @@ main {
   background: var(--accent);
   color: #fff;
 }
-.ask-ai-btn:active { transform: scale(0.99); }
+.ask-ai-btn:active, .list-more-btn:active, .ask-everything-btn:active { transform: scale(0.99); }
 .ask-ai-offline { font-size: 0.85rem; color: var(--text-dim); padding: 0.5rem 0.2rem; }
 .ask-ai-card {
   border: 1px solid var(--accent);
@@ -2273,3 +2273,61 @@ body.inv-cam-open { overflow: hidden; }
 .bul-sn-list { margin-top: 0.3rem; }
 .bul-sn-list summary { cursor: pointer; color: var(--text); overflow-wrap: anywhere; }
 .bul-sn-list ol { margin: 0.3rem 0 0 1.2rem; padding: 0; columns: 2 9rem; font-variant-numeric: tabular-nums; }
+
+/* ---------------- 2026-11-12 audit, second wave ---------------- */
+/* Long cards (screens #5, speed #7): a row of jump buttons under the card's name, one per section. The
+   Close bar is stuck to the bottom of the card, so a heading brought to the top is never under it. */
+.card-jump { display: grid; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); gap: 0.4rem; margin: 0.1rem 0 0.3rem; clear: both; }   /* 3 across on a phone; under the thermostat photo, not beside it */
+.card-jump-btn {
+  font: inherit; font-size: 0.85rem; font-weight: 700; line-height: 1.15;
+  min-height: 44px; padding: 0.3rem 0.35rem; overflow-wrap: anywhere;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); cursor: pointer;
+}
+.card-jump-btn:active { transform: scale(0.97); }
+.detail-section[data-sec] { scroll-margin-top: 0.6rem; }
+.modal-actions .modal-top-btn { flex: 0 0 auto; padding: 0.7rem 1.1rem; }
+/* Generator alarm / warning rows: code and name show, the rest opens on a tap (a row ran up to 4 screens). */
+.gen-code > summary { cursor: pointer; list-style: none; min-height: 44px; box-sizing: border-box; padding: 0.65rem 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; }
+.gen-code > summary::-webkit-details-marker { display: none; }
+.gen-code > summary::after { content: "▸"; color: var(--text-dim); flex: 0 0 auto; }
+.gen-code[open] > summary::after { content: "▾"; }
+.gen-code[open] { padding-bottom: 0.4rem; }
+.tstat-table tr.gen-code-row td { padding-top: 0; padding-bottom: 0; }
+/* A long part number, web address or slash-joined name made 13 thermostat cards (and the longest
+   generator card) scroll sideways on a 360 px phone: text in a card section may break inside a word
+   when it would otherwise run off the edge (the first table column keeps its own rule). */
+.modal .detail-section { overflow-wrap: anywhere; }
+.tstat-table tr.gen-code-row td.tstat-term { padding-top: 0.65rem; padding-bottom: 0.65rem; cursor: pointer; }
+/* a "code" that is a screen message, not a number: its own line above the text instead of a wide column */
+.gen-code-long { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; padding-top: 0.65rem; cursor: pointer; overflow-wrap: anywhere; }
+.gen-code-long + .gen-code > summary { padding-top: 0.2rem; min-height: 0; }
+
+/* Ask: the "Using ... from your last question" chip and the library card line up with their neighbours. */
+#askBorrow, #askInstant { padding-left: 1rem; padding-right: 1rem; }
+@media (min-width: 700px) and (min-height: 500px) {
+  #askBorrow, #askInstant { padding-left: max(1.2rem, calc((100% - var(--pad-col)) / 2)); padding-right: max(1.2rem, calc((100% - var(--pad-col)) / 2)); }
+}
+/* "Try again" on an AI answer that timed out */
+.ask-ai-retry-row { margin-top: 0.5rem; }
+.ask-ai-retry {
+  font: inherit; font-size: 1rem; cursor: pointer;
+  min-height: 44px; padding: 0 1.1rem; border-radius: 999px;
+  background: var(--card); color: var(--text); border: 1px solid var(--border);
+}
+/* "Search everything for ..." under a screen's "nothing found" text */
+.ask-everything-btn { margin-top: 0.7rem; }
+/* The clear X inside a search box: left of the mic when the box has one; the box leaves room for both. */
+.ask-input-row.has-mic .search-clear-btn { right: calc(0.45rem + 50px); }
+.ask-input-row.has-clear .search-input { padding-right: calc(0.9rem + 44px); }
+.ask-input-row.has-clear.has-mic .search-input { padding-right: calc(0.9rem + 94px); }
+/* Top bar with no signal: "No signal" over "saved info works" (was "offline (cached)") */
+.status-pill.offline { white-space: pre-line; text-align: right; line-height: 1.15; }
+/* "+ My code" is wider than "+ Add" was: on a phone it gives the room back to the screen title */
+@media (max-width: 420px) { #addBtn { padding-left: 0.7rem; padding-right: 0.7rem; } .topbar-right { gap: 0.4rem; } }
+/* Maintenance Figures "nothing found": the Open Manuals button sits above "Search everything" */
+.empty-state .maint-open-manuals { margin-top: 0.7rem; padding: 0.5rem 0.8rem; cursor: pointer; overflow-wrap: anywhere; }
+/* Warranty "Pick the brand" buttons were 35 px high */
+.warranty-badge { min-height: 44px; }
+/* Tag Scanner result scrolled into view: stays clear of the fixed top bar */
+#scanResult { scroll-margin-top: 80px; }
