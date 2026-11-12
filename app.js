@@ -2685,6 +2685,7 @@ function askEntryText(it, units) {
   return it.sub || "";
 }
 
+const ASK_AI_TIMEOUT_MS = 45000;
 async function askAiAnswer(question) {
   const box = document.getElementById("askAi");
   if (!box || !ASK_AI_RELAY) return;
@@ -2700,18 +2701,29 @@ async function askAiAnswer(question) {
   if (token !== askAiToken) return;
   const st = box.querySelector(".ask-ai-status");
   if (st) st.innerHTML = `<span class="ask-ai-spin"></span>Writing a full answer (20-40 seconds)…`;
-  let data = null;
+  let data = null, timedOut = false;
   try {
     const sent = passages.map(p => ({ id: p.id, title: p.title, page: p.page, text: p.text }));   // same shape as before remote passages
-    const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question: rq0, passages: sent, entries, token: ASK_AI_APP_TOKEN }) });
-    data = await resp.json();
-  } catch (e) { data = { error: "network" }; }
+    // Weak signal: the phone says online, the request goes out and nothing comes back - the spinner
+    // used to turn forever. Real answers take 16 s (median), 39 s at the slowest of 61; stop at 45 s.
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const timer = ctl ? setTimeout(() => { timedOut = true; ctl.abort(); }, ASK_AI_TIMEOUT_MS) : 0;
+    try {
+      const resp = await fetch(ASK_AI_RELAY, { method: "POST", body: JSON.stringify({ question: rq0, passages: sent, entries, token: ASK_AI_APP_TOKEN }), signal: ctl ? ctl.signal : undefined });
+      data = await resp.json();
+    } finally { clearTimeout(timer); }
+  } catch (e) { data = { error: timedOut ? "timeout" : "network" }; }
   if (token !== askAiToken) return;
   if (!data || data.error) {
-    const msg = (data && data.error === "network")
+    const msg = (data && data.error === "timeout")
+      ? "No answer — weak signal. The cards here are from this phone."
+      : (data && data.error === "network")
       ? "Couldn't reach the answer service — check signal and try again."
       : "AI couldn't answer" + (data && data.error ? " (" + escapeHtml(String(data.error)) + ")" : "") + ".";
-    box.innerHTML = `<div class="ask-ai-card ask-ai-err">${msg}</div>`;
+    const again = (data && (data.error === "timeout" || data.error === "network")) ? `<div style="margin-top:0.5rem"><button type="button" class="ask-ai-cite" id="askAiRetry" style="min-height:44px;padding:0 1.1rem;font-size:1rem">Try again</button></div>` : "";
+    box.innerHTML = `<div class="ask-ai-card ask-ai-err">${msg}${again}</div>`;
+    const rb = document.getElementById("askAiRetry");
+    if (rb) rb.onclick = () => askAiAnswer(question);
     return;
   }
   const wq = rq0;
@@ -6847,8 +6859,27 @@ async function manualsPut(record) {
     const tx = db.transaction(MANUALS_STORE, "readwrite");
     tx.objectStore(MANUALS_STORE).put(record);
     tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
+    // While a request's error bubbles up here tx.error is still empty; the request carries it.
+    tx.onerror = (ev) => reject(tx.error || (ev && ev.target && ev.target.error) || new Error("could not save it on this phone"));
+    // A full phone ends the transaction with "abort" (QuotaExceededError), not always "error":
+    // without this the promise never settled and "Downloading..." stayed up for good.
+    tx.onabort = () => reject(tx.error || new Error("could not save it on this phone"));
   });
+}
+// Ask the browser to keep this app's storage (app files, downloaded manuals, queued checklists
+// and scan photos) when the phone runs short of space; by default it is "best effort" and may
+// be cleared. Chrome on Android shows no prompt for this: it grants or refuses by itself (an
+// installed app or one used often is granted), so it is safe to ask quietly. Called only for a
+// phone that already has its name (never on the very first open) and after a manual is saved;
+// asked at most once per app session, and not at all once granted.
+let storagePersistAsked = false;
+function keepStorage() {
+  if (storagePersistAsked) return;
+  storagePersistAsked = true;
+  try {
+    if (!navigator.storage || !navigator.storage.persist || !navigator.storage.persisted) return;
+    navigator.storage.persisted().then((kept) => kept || navigator.storage.persist()).catch(() => {});
+  } catch (e) {}
 }
 async function manualsDelete(id) {
   const db = await openManualsDb();
@@ -7144,17 +7175,41 @@ async function openManualDetail(id, opts) {
     }
     modal.innerHTML = `${header}
       <div class="detail-section"><p id="manualDlStatus">Downloading… stay online, this can take a minute on big manuals.</p></div>
-      <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+      <div class="modal-actions"><button id="closeModalBtn">Cancel download</button></div>`;
     document.getElementById("closeModalBtn").onclick = closeModal;
-    document.getElementById("modalBackdrop").classList.remove("hidden");
+    const backdrop = document.getElementById("modalBackdrop");
+    backdrop.classList.remove("hidden");
+    // Closing the box (Cancel, a tap outside it, the Back button, another card opening in it)
+    // stops the download. Before, it went on unseen and the reader popped open over whatever
+    // the tech was doing when it landed.
+    const st = document.getElementById("manualDlStatus");
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+    let closed = false;
+    const boxOpen = () => !backdrop.classList.contains("hidden") && document.getElementById("manualDlStatus") === st;
+    const watch = typeof MutationObserver !== "undefined" ? new MutationObserver(() => {
+      if (closed || boxOpen()) return;
+      closed = true;
+      if (ctl) ctl.abort();
+    }) : null;
+    if (watch) { watch.observe(backdrop, { attributes: true, attributeFilter: ["class"] }); watch.observe(modal, { childList: true }); }
     try {
-      m = await downloadSeedManual(m);
+      m = await downloadSeedManual(m, (text) => { if (boxOpen()) st.textContent = text; }, ctl);
     } catch (err) {
-      const st = document.getElementById("manualDlStatus");
-      if (st) st.textContent = "Download failed (" + (err && err.message ? err.message : err) + ") — check signal and tap the manual again.";
+      if (watch) watch.disconnect();
+      if (closed || !boxOpen()) return;   // the tech cancelled: nothing to say, nothing to open
+      const full = err && err.name === "QuotaExceededError";
+      st.textContent = full
+        ? "Could not save this manual — this phone's storage is full. Free some space (remove downloaded manuals you no longer need), then tap the manual again."
+        : "Download failed (" + (err && err.message ? err.message : err) + ") — check signal and tap the manual again.";
+      const btn = document.getElementById("closeModalBtn");
+      if (btn) btn.textContent = "Close";
       return;
     }
+    if (watch) watch.disconnect();
     renderManuals();
+    // Landed in the instant the box was being closed: it is stored, but do not open the reader
+    // over what the tech moved on to.
+    if (closed || !boxOpen()) return;
   }
 
   closeModal();
@@ -7585,11 +7640,43 @@ async function manualCatalog() {
   return out;
 }
 
-async function downloadSeedManual(m, onStatus) {
+// ctl (optional AbortController): the box that started the download aborts it when it is closed.
+// The download also stops itself when no data has arrived for MANUAL_DL_STALL_MS (weak signal:
+// "Downloading..." used to stay up for good). A download that keeps moving is never cut off.
+const MANUAL_DL_STALL_MS = 20000;
+async function downloadSeedManual(m, onStatus, ctl) {
   if (onStatus) onStatus("Downloading… stay online, this can take a minute on big manuals.");
-  const resp = await fetch(m.seedFile);
-  if (!resp.ok) throw new Error("Server returned " + resp.status);
-  const blob = await resp.blob();
+  if (!ctl && typeof AbortController !== "undefined") ctl = new AbortController();
+  let stalled = false, stallTimer = 0;
+  const alive = () => { clearTimeout(stallTimer); if (ctl) stallTimer = setTimeout(() => { stalled = true; ctl.abort(); }, MANUAL_DL_STALL_MS); };
+  let blob;
+  try {
+    alive();
+    const resp = await fetch(m.seedFile, ctl ? { signal: ctl.signal } : undefined);
+    if (!resp.ok) throw new Error("Server returned " + resp.status);
+    if (resp.body && resp.body.getReader) {
+      // Read it piece by piece so the box can say how far along it is.
+      const total = Number(resp.headers.get("content-length")) || 0;
+      const reader = resp.body.getReader();
+      const parts = [];
+      let got = 0, shown = 0;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        parts.push(value); got += value.length; alive();
+        if (onStatus && Date.now() - shown > 300) {
+          shown = Date.now();
+          onStatus("Downloading… " + (total >= got ? formatBytes(got) + " of " + formatBytes(total) : formatBytes(got) + " so far") + ". Stay online.");
+        }
+      }
+      blob = new Blob(parts, { type: resp.headers.get("content-type") || "application/pdf" });
+    } else {
+      blob = await resp.blob();
+    }
+  } catch (err) {
+    if (stalled) throw new Error("no data for " + Math.round(MANUAL_DL_STALL_MS / 1000) + " seconds");
+    throw err;
+  } finally { clearTimeout(stallTimer); }
   // Captive Wi-Fi portals answer 200 text/html for every URL (see sw.js): never store that as a manual.
   if (!/^%PDF/.test(await blob.slice(0, 5).text())) throw new Error("that wasn't a PDF - sign in to the Wi-Fi or switch to mobile data, then tap it again");
   const record = {
@@ -7597,6 +7684,7 @@ async function downloadSeedManual(m, onStatus) {
     filename: m.filename, mimeType: "application/pdf", size: blob.size, blob, addedAt: Date.now(),
   };
   await manualsPut(record);
+  storagePersistAsked = false; keepStorage();   // a manual is worth keeping: ask again if it was refused at start
   trackEvent("downloaded manual: " + m.title);
   // Index its text in the background so Ask can search inside it — don't block
   // the tech opening the manual they just downloaded.
@@ -13985,7 +14073,7 @@ function startApp() {
   if (typeof syncInventoryTile === "function") syncInventoryTile();
   renderVersionFooter();
 
-  if (getTechName()) { trackEvent("app opened"); flushPendingClaim(); }
+  if (getTechName()) { trackEvent("app opened"); flushPendingClaim(); keepStorage(); }
   else showTechPicker();
 
   // v288: a scan photo the app was still reading when it closed, and a camera
