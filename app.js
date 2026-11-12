@@ -570,6 +570,74 @@ function codeFamilyPrefix(q, codes) {
   return "";
 }
 
+// 11-12 audit (screens #2): Error Codes drew all 5,000+ cards before anything was typed (2 s frozen on a
+// mid-range phone). The search and the filters still run over every card; only the DRAWING stops at 60,
+// with a button for the next 60. `page` remembers how far the tech went for the same search, so coming
+// back from a card or another screen lands on the same place.
+const LIST_PAGE = 60;
+function drawPagedList(results, items, build, page, key, tail) {
+  if (page.key !== key) { page.key = key; page.shown = LIST_PAGE; }
+  let drawn = 0, more = null;
+  const draw = () => {
+    if (more) more.remove();
+    const to = Math.min(items.length, page.shown);
+    const frag = document.createDocumentFragment();
+    for (let i = drawn; i < to; i++) frag.appendChild(build(items[i]));
+    results.appendChild(frag);
+    drawn = to;
+    const left = items.length - to;
+    if (left <= 0) return;
+    more = document.createElement("button");
+    more.type = "button";
+    more.className = "ask-ai-btn list-more-btn";
+    more.textContent = "Show " + Math.min(LIST_PAGE, left) + " more (" + left.toLocaleString("en-US") + " left)" + (tail ? " - " + tail : "");
+    more.onclick = () => { page.shown += LIST_PAGE; draw(); };
+    results.appendChild(more);
+  };
+  draw();
+}
+const codesPage = { key: null, shown: LIST_PAGE };
+// The text a Codes search looks through, built once per card. A tech's own / edited code is a new object
+// every time it is read from storage, so it never gets a stale copy.
+const codeHayCache = new WeakMap();
+function codeHay(c) {
+  let hay = codeHayCache.get(c);
+  if (hay === undefined) {
+    hay = [c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[]), ...(c.techTips || []).map(t => t.text)].filter(Boolean).join(" ").toLowerCase();
+    codeHayCache.set(c, hay);
+  }
+  return hay;
+}
+const diagPage = { key: null, shown: LIST_PAGE };
+
+// The code in a Codes search: the whole search when it is code-shaped ("13", "E13", "code 33"), or the one
+// code-shaped word beside a brand or other words ("carrier 33", "amana error 242"). "" when there is none.
+function codeSearchToken(q) {
+  const whole = diagCodeToken(q);
+  if (whole) return whole;
+  const words = String(q || "").trim().split(/\s+/).filter(w => /\d/.test(w) && diagCodeToken(w));
+  return words.length === 1 ? diagCodeToken(words[0]) : "";
+}
+// 0 = the card's own code is the typed one; 1 = same code written another way (E13 / 13, 0180 / 180,
+// "EC 52" / EC52, one of "E101/C101", a number inside a range like 1100-1101); 2 = starts with it and then
+// a break ("13-82", "13.1", "2 flashes"); 3 = starts with it ("130"); 4 = only mentions it.
+function codeMatchRank(code, tok, whole) {
+  const norm = (s) => String(s || "").toUpperCase().replace(/\s+/g, "");
+  const noE = (s) => s.replace(/^E(?=\d)/, "");
+  const t = norm(tok), k = norm(code);
+  if (!t) return 4;
+  if (k === t || k === norm(whole)) return 0;   // "3 flashes" typed in full is the "3 flashes" card
+  for (const part of String(code || "").split(/\s*[\/,]\s*/)) {
+    const p = norm(part);
+    if (!p) continue;
+    if (p === t || noE(p) === noE(t) || codeSearchAliases(part.trim()).some(a => norm(a) === t)) return 1;
+    const m = p.match(/^(\d{3,4})[-–](\d{3,4})$/);
+    if (m && /^\d+$/.test(t) && +m[2] > +m[1] && +m[2] - +m[1] <= 12 && +t >= +m[1] && +t <= +m[2] && t.length === m[1].length) return 1;
+  }
+  if (k.startsWith(t)) return /^[A-Z0-9]/.test(k.slice(t.length)) ? 3 : 2;
+  return 4;
+}
+
 function renderCodes() {
   const all = getAllCodes();
   // Chip options reflect the OTHER active filter, so a brand/equipment with zero
@@ -584,9 +652,10 @@ function renderCodes() {
 
   const inFilters = (c) => (codesState.brand === "All" || c.brand === codesState.brand) &&
     (codesState.equipment === "All" || c.equipment === codesState.equipment);
-  let filtered = all.filter(c => inFilters(c) &&
-    textIncludes([c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes||[]), ...(c.steps||[]), ...(c.techTips || []).map(t => t.text)], codesState.search)
-  );
+  // Same test as textIncludes(), with the search read once and each card's text built once (it was
+  // rebuilt for all 5,000+ cards on every key - 0.8 s a key on a slowed-down phone).
+  const searchUnits = codesState.search ? askLiveUnits(buildSearchUnits(codesState.search)) : null;
+  let filtered = all.filter(c => inFilters(c) && (!searchUnits || searchUnits.every(u => u.alts.some(a => hayHasTerm(codeHay(c), a)))));
   // A full model typed or pasted (59SP5A080E171216) finds nothing, because the
   // families are written by series (59SP5A). Fall back to the longest front
   // part of the model that a family names (Andy 2026-10-05).
@@ -595,12 +664,27 @@ function renderCodes() {
     const pre = codeFamilyPrefix(codesState.search, all.filter(inFilters));
     if (pre) { viaPrefix = pre; filtered = all.filter(c => inFilters(c) && String(c.family || "").toUpperCase().includes(pre)); }
   }
-  filtered.sort((a, b) => a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
+  // 11-12 audit (field-use #1, screens #3): a code typed off the board lists the cards that ARE that code
+  // first, then codes that start with it, then cards that only mention it. Brand A-Z breaks ties.
+  const codeTok = viaPrefix ? "" : codeSearchToken(codesState.search);
+  const rankOf = new Map();
+  if (codeTok) for (const c of filtered) rankOf.set(c, codeMatchRank(c.code, codeTok, codesState.search));
+  filtered.sort((a, b) => (codeTok ? rankOf.get(a) - rankOf.get(b) : 0) || a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
+  const nReal = codeTok ? filtered.filter(c => rankOf.get(c) <= 1).length : 0;
 
   const results = document.getElementById("codesResults");
   const empty = document.getElementById("codesEmptyState");
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
+  if (nReal && filtered.length > 1) {
+    const note = document.createElement("div");
+    note.className = "diag-fallback-note";
+    const nBrands = new Set(filtered.filter(c => rankOf.get(c) <= 1).map(c => c.brand)).size;
+    note.textContent = (nReal === 1 ? "1 card is code " + codeTok : nReal + " cards are code " + codeTok) + " - listed first." +
+      (nBrands > 1 && codesState.brand === "All" ? " Pick the brand above to see only yours." : "") +
+      (filtered.length > nReal ? " The other " + (filtered.length - nReal) + " only mention it." : "");
+    results.appendChild(note);
+  }
   if (viaPrefix) {
     const note = document.createElement("div");
     note.className = "disclaimer";
@@ -617,7 +701,7 @@ function renderCodes() {
       if (list.length) results.insertAdjacentHTML("beforeend", bulletinsHtml(list, { where: "codes lookup", model: bulQ }));
     }
   } catch (e) {}
-  for (const code of filtered) results.appendChild(buildCodeCard(code));
+  drawPagedList(results, filtered, buildCodeCard, codesPage, [codesState.search, codesState.brand, codesState.equipment].join("|"), "or type a code above");
 }
 
 function buildCodeCard(code) {
@@ -3218,7 +3302,7 @@ function renderSymptoms() {
     results.appendChild(note);
     note.querySelector("#diagUnitClear").onclick = (e) => { e.preventDefault(); diagState.unitModel = ""; renderSymptoms(); };
   }
-  for (const s of filtered) results.appendChild(buildSymptomCard(s));
+  drawPagedList(results, filtered, buildSymptomCard, diagPage, [query, diagState.equipment, diagState.unitModel].join("|"), "or type the problem above");
 }
 
 // Nothing local matched. If there's an actual search term and the device is

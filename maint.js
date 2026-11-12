@@ -1247,6 +1247,8 @@ function maintLookup(q, list) {
   return { exact: [], approx, equip, hidden: pool.length - approx.length };
 }
 
+const MAINT_PAGE = 60;
+const maintPage = { key: null, shown: MAINT_PAGE };
 function renderMaint() {
   const results = document.getElementById("maintResults");
   const empty = document.getElementById("maintEmptyState");
@@ -1332,7 +1334,14 @@ function renderMaint() {
   }
   empty.classList.add("hidden");
 
-  results.innerHTML = notice + list.map((entry, i) => {
+  // 11-12 audit (screens #2): draw the first 60 cards, then a button for the next 60. The search above
+  // still ran over every entry. An open card is always inside the drawn part.
+  const pageKey = maintState.query + "|" + maintState.equip;
+  if (maintPage.key !== pageKey) { maintPage.key = pageKey; maintPage.shown = MAINT_PAGE; }
+  const openAt = maintState.open ? list.findIndex(e => e.brand + "|" + e.model === maintState.open) : -1;
+  if (openAt >= maintPage.shown) maintPage.shown = (Math.floor(openAt / MAINT_PAGE) + 1) * MAINT_PAGE;
+  const maintLeft = list.length - maintPage.shown;
+  results.innerHTML = notice + list.slice(0, maintPage.shown).map((entry, i) => {
     const id = entry.brand + "|" + entry.model;
     const isOpen = maintState.open === id;
     return `
@@ -1346,7 +1355,9 @@ function renderMaint() {
         </button>
         ${isOpen ? maintBody(entry) : ""}
       </article>`;
-  }).join("");
+  }).join("") + (maintLeft > 0 ? `<button type="button" class="ask-ai-btn list-more-btn" id="maintMoreBtn">Show ${Math.min(MAINT_PAGE, maintLeft)} more (${maintLeft} left) - or type the model above</button>` : "");
+  const maintMore = document.getElementById("maintMoreBtn");
+  if (maintMore) maintMore.addEventListener("click", () => { maintPage.shown += MAINT_PAGE; renderMaint(); });
 
   results.querySelectorAll("[data-maint-toggle]").forEach(btn => {
     btn.addEventListener("click", () => {
