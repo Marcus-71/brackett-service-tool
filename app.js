@@ -301,6 +301,8 @@ function searchScore(fields, q) {
 }
 
 function closeModal() {
+  // The card box kept its scroll while hidden, so the next card opened as far down as the last one was left.
+  document.getElementById("modal").scrollTop = 0;
   document.getElementById("modalBackdrop").classList.add("hidden");
   if (currentPdfObjectUrl) {
     URL.revokeObjectURL(currentPdfObjectUrl);
@@ -387,6 +389,8 @@ function showScreen(name, fromBack) {
     if (name === "codes") codesPage.key = null;
     if (name === "diagnostics") diagPage.key = null;
     if (name === "maint" && typeof maintPage !== "undefined") maintPage.key = null;
+    if (name === "tstat") tstatPage.key = null;
+    if (name === "manuals") { manualsPage.search.key = manualsPage.models.key = manualsPage.files.key = null; }
   }
 
   // v342 (audit CODE-07): the ~12,000-item Ask index is rebuilt only when a tech's own code / scenario /
@@ -467,9 +471,7 @@ function goBackOneStep() {
   // Generator checklist wizard: a swipe goes back one step, not off the checklist.
   if (currentScreen === "genchecklist" && genCl.view === "wizard" && genCl.step > 0 && genCl.draft && !genCl.draft.finished) { genWizGo(genCl.step - 1); return; }
   if (currentScreen === "manuals" && (manualsState.model || manualsState.brand)) {
-    if (manualsState.model) manualsState.model = null;
-    else manualsState.brand = null;
-    renderManuals();
+    manualsUpOne();   // one folder up, back at the place that list was left
     return;
   }
   if (screenHistory.length) { showScreen(screenHistory.pop(), true); return; }
@@ -674,7 +676,7 @@ function drawPagedList(results, items, build, page, key, tail) {
     if (left <= 0) return;
     more = document.createElement("button");
     more.type = "button";
-    more.className = "ask-ai-btn list-more-btn";
+    more.className = "list-more-btn";
     more.textContent = "Show " + Math.min(LIST_PAGE, left) + " more (" + left.toLocaleString("en-US") + " left)" + (tail ? " - " + tail : "");
     more.onclick = () => { page.shown += LIST_PAGE; draw(); };
     results.appendChild(more);
@@ -688,8 +690,7 @@ function askEverythingBtn(q, from) {
   q = String(q || "").trim();
   const b = document.createElement("button");
   b.type = "button";
-  b.className = "ask-ai-btn ask-everything-btn";
-  b.style.marginTop = "0.7rem";
+  b.className = "ask-everything-btn";
   b.textContent = "🔎 Search everything for \"" + q + "\"";
   b.onclick = () => {
     trackEvent(from + " -> ask: " + q.slice(0, 90));
@@ -742,6 +743,11 @@ function codeHay(c) {
   return hay;
 }
 const diagPage = { key: null, shown: LIST_PAGE };
+const tstatPage = { key: null, shown: LIST_PAGE };
+// Manuals: one page counter per level (search results, a brand's model folders, a folder's manuals) and
+// the scroll each folder list was left at - see manualsUpOne().
+const manualsPage = { search: { key: null, shown: LIST_PAGE }, models: { key: null, shown: LIST_PAGE }, files: { key: null, shown: LIST_PAGE } };
+const manualsScroll = { brands: 0, models: 0 };
 
 // The code in a Codes search: the whole search when it is code-shaped ("13", "E13", "code 33"), or the one
 // code-shaped word beside a brand or other words ("carrier 33", "amana error 242"). "" when there is none.
@@ -1034,8 +1040,10 @@ const SCAN_PHOTO_APP_TOKEN = ASK_AI_APP_TOKEN;
 const ASK_KIND = {
   code:    { label: "Code",       rank: 0, open: (id) => openCodeDetail(id) },
   symptom: { label: "Fix",        rank: 1, open: (id) => openSymptomDetail(id) },
-  tstat:   { label: "Thermostat", rank: 2, open: (id) => openTstatDetail(id) },
-  gen:     { label: "Generator",  rank: 3, open: (id) => openGenDetail(id) },
+  // The card opens on the code (or terminal) the question names; before, it highlighted whatever was last
+  // typed on the Thermostats / Generators screen.
+  tstat:   { label: "Thermostat", rank: 2, open: (id) => { const t = tstatEntries().find(x => x.id === id); openTstatDetail(id, { q: t ? askCardCodeWords([...(t.diagnostics || []).map(x => x.code), ...(t.terminals || []).map(x => x.t)]) : "" }); } },
+  gen:     { label: "Generator",  rank: 3, open: (id) => { const g = genEntries().find(x => x.id === id); openGenDetail(id, undefined, { q: g ? askCardCodeWords([...(g.alarms || []), ...(g.warnings || [])].map(a => a.code)) : "" }); } },
   tool:    { label: "Tool",       rank: 4, open: (id) => openToolboxDetail(id) },
   manual:  { label: "Manual",     rank: 5, open: (id) => openManualDetail(id) },
   guide:   { label: "How-to",     rank: 3, open: (id) => askOpenGuide(id) },
@@ -3058,7 +3066,7 @@ async function askAiAnswer(question) {
       : (data && data.error === "network")
       ? "Couldn't reach the answer service — check signal and try again."
       : "AI couldn't answer" + (data && data.error ? " (" + escapeHtml(String(data.error)) + ")" : "") + ".";
-    const again = (data && (data.error === "timeout" || data.error === "network")) ? `<div style="margin-top:0.5rem"><button type="button" class="ask-ai-cite" id="askAiRetry" style="min-height:44px;padding:0 1.1rem;font-size:1rem">Try again</button></div>` : "";
+    const again = (data && (data.error === "timeout" || data.error === "network")) ? `<div class="ask-ai-retry-row"><button type="button" class="ask-ai-retry" id="askAiRetry">Try again</button></div>` : "";
     box.innerHTML = `<div class="ask-ai-card ask-ai-err">${msg}${again}</div>`;
     const rb = document.getElementById("askAiRetry");
     if (rb) rb.onclick = () => askAiAnswer(question);
@@ -3476,8 +3484,9 @@ const voiceKw = (t) => t.replace(/\s*(?:kilowatts?|k\.?\s?w\.?)(?=\s|$)/gi, "kW"
 
 // ---- Every search box (11-12 audit, screens #10) ----
 // The keyboard's Search / Enter key drops the keyboard so the results show (only Ask did), and an X
-// inside the box clears it (the browser's own X is switched off in the stylesheet). The X borrows the
-// mic button's look and sits to its left; it shows only while there is text in the box.
+// inside the box clears it (the browser's own X is switched off in the stylesheet). The X looks like the
+// mic button and sits to its left; it shows only while there is text in the box. Where it sits and the
+// room the box leaves for it are in style.css (.ask-input-row.has-mic / .has-clear).
 var searchClearSyncs = [];
 function searchClearSync() { for (const f of (searchClearSyncs || [])) f(); }
 document.querySelectorAll(".search-input").forEach((el) => {
@@ -3495,7 +3504,7 @@ document.querySelectorAll(".search-input").forEach((el) => {
   }
   const x = document.createElement("button");
   x.type = "button";
-  x.className = "ask-mic-btn search-clear-btn hidden";
+  x.className = "search-clear-btn hidden";
   x.textContent = "✕";
   x.setAttribute("aria-label", "Clear the search");
   x.title = "Clear";
@@ -3503,10 +3512,8 @@ document.querySelectorAll(".search-input").forEach((el) => {
   const sync = () => {
     const on = !!el.value;
     x.classList.toggle("hidden", !on);
-    const mic = row.querySelector(".ask-mic-btn:not(.search-clear-btn):not(.hidden)");
-    const w = (b) => (b && b.offsetWidth) || 37;
-    x.style.right = mic ? "calc(0.45rem + " + (w(mic) + 6) + "px)" : "";
-    el.style.paddingRight = on ? "calc(0.9rem + " + ((mic ? w(mic) + 6 : 0) + w(x)) + "px)" : "";
+    row.classList.toggle("has-mic", !!row.querySelector(".ask-mic-btn:not(.hidden)"));
+    row.classList.toggle("has-clear", on);
   };
   x.addEventListener("click", () => {
     el.value = "";
@@ -4535,7 +4542,9 @@ function renderTstats() {
   results.innerHTML = "";
   empty.classList.toggle("hidden", filtered.length !== 0);
   setAskEverything(empty, filtered.length ? "" : tstatState.search, "thermostats");
-  for (const t of filtered) results.appendChild(buildTstatCard(t));
+  // 11-12 audit (second wave): all 294 cards made a page 78,850 px tall (0.4 s to draw on a mid-range phone).
+  // 60 at a time, like Error Codes; the search and both filters still look through every thermostat.
+  drawPagedList(results, filtered, buildTstatCard, tstatPage, [tstatState.search, tstatState.brand, tstatState.type].join("|"), "or type the model above");
 }
 
 function tstatPowerBadge(t) {
@@ -4592,23 +4601,61 @@ function tstatHit(text, q) {
   return q.toLowerCase().split(/\s+/).filter(Boolean).some(w => w.length >= 2 && hay.includes(w));
 }
 
-function openTstatDetail(id) {
+// 11-12 audit (screens #5, speed #7): a generator card runs 6 to 300 phone screens and a thermostat card
+// about 9, with nothing to say what is further down. A row of buttons under the card's name, one per section
+// the card has, scrolls the card to that section's heading (the Close bar is stuck to the BOTTOM of the
+// card, so it never sits on a heading brought to the top). "Top" in the Close bar comes back to the buttons.
+// items: [label, key] pairs; each section carries data-sec="key".
+function cardJumpRow(items) {
+  if (items.length < 3) return "";
+  return `<div class="card-jump" role="navigation" aria-label="Jump to a section">${items.map(([label, key]) => `<button type="button" class="card-jump-btn" data-jump="${key}">${escapeHtml(label)}</button>`).join("")}</div>`;
+}
+function wireCardJump(modal, what) {
+  modal.querySelectorAll(".card-jump-btn").forEach(b => {
+    b.onclick = () => {
+      const sec = modal.querySelector('[data-sec="' + b.dataset.jump + '"]');
+      if (!sec) return;
+      sec.scrollIntoView({ block: "start" });
+      trackEvent("jumped to " + b.textContent.trim().slice(0, 40) + ": " + what.slice(0, 60));
+    };
+  });
+  const top = modal.querySelector("#modalTopBtn");
+  if (top) top.onclick = () => { modal.scrollTop = 0; };
+}
+// First-column text of a card table: may wrap after a slash ("Humidifier/dehumidifier/ventilator on AQ+/AQ-"
+// was one 300 px word and pushed the card sideways on a phone). Same text, no characters added.
+function termHtml(s) { return escapeHtml(s).split("/").join("/<wbr>"); }
+// The first row the search matched is brought into view: centred when it fits, by its top when it is
+// taller than the card's window (centring a tall row hid its code above the screen).
+function cardScrollToHit(modal, el) {
+  el.scrollIntoView({ block: el.offsetHeight > modal.clientHeight * 0.7 ? "start" : "center" });
+}
+// Opened from Ask Anything: the words of the question that ARE one of this card's codes (or terminals),
+// so the card opens on that row the way it does from its own screen's search. "" when there is none.
+function askCardCodeWords(names) {
+  // a code printed as a range or a pair ("1100-1101", "2094-2099 / 2098") counts under each number in it
+  const have = new Set(names.flatMap(x => { const s = String(x || "").toLowerCase(); return [s, ...s.split(/[^a-z0-9]+/)]; }));
+  return String((typeof askState !== "undefined" && askState.search) || "").toLowerCase().split(/[^a-z0-9-]+/)
+    .filter(w => w.length >= 2 && /\d/.test(w) && have.has(w)).join(" ");
+}
+
+function openTstatDetail(id, opts) {
   const t = tstatEntries().find(x => x.id === id);
   if (!t) return;
-  const q = tstatState.search;
+  const q = opts && typeof opts.q === "string" ? opts.q : tstatState.search;
   const modal = document.getElementById("modal");
   const p = t.power || {};
   const cWireText = { required: "C (common) wire REQUIRED", optional: "C wire optional", "not-used": "No C wire used" }[p.cWire] || "";
   const powerBits = [cWireText, p.batteries ? "Batteries: " + p.batteries : "", p.notes].filter(Boolean);
 
   const termRows = (t.terminals || []).map(x => `
-    <tr class="${tstatHit(x.t + " " + x.fn, q) ? "hit" : ""}"><td class="tstat-term${String(x.t).length <= 10 ? " short" : ""}">${escapeHtml(x.t)}</td><td>${escapeHtml(x.fn)}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
+    <tr class="${tstatHit(x.t + " " + x.fn, q) ? "hit" : ""}"><td class="tstat-term${String(x.t).length <= 10 ? " short" : ""}">${termHtml(x.t)}</td><td>${escapeHtml(x.fn)}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
   const wiringNotes = (t.wiringNotes || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
   const s = t.setup || {};
   const settingRows = (s.keySettings || []).map(x => `
-    <tr><td class="tstat-term${String(x.setting).length <= 10 ? " short" : ""}">${escapeHtml(x.setting)}</td><td>${escapeHtml(x.options || "")}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
+    <tr><td class="tstat-term${String(x.setting).length <= 10 ? " short" : ""}">${termHtml(x.setting)}</td><td>${escapeHtml(x.options || "")}${x.notes ? `<div class="tstat-note">${escapeHtml(x.notes)}</div>` : ""}</td></tr>`).join("");
   const diagRows = (t.diagnostics || []).map(x => `
-    <tr class="${tstatHit(x.code + " " + x.meaning, q) ? "hit" : ""}"><td class="tstat-term${String(x.code).length <= 10 ? " short" : ""}">${escapeHtml(x.code)}</td><td><b>${escapeHtml(x.meaning)}</b>${x.action ? `<div class="tstat-note">${escapeHtml(x.action)}</div>` : ""}${(x.techTips || []).map(tt => `<div class="tstat-tech-tip">💡 ${escapeHtml(tt.text)}${tt.source ? `<div class="tech-tip-src">${escapeHtml(tt.source)}</div>` : ""}</div>`).join("")}</td></tr>`).join("");
+    <tr class="${tstatHit(x.code + " " + x.meaning, q) ? "hit" : ""}"><td class="tstat-term${String(x.code).length <= 10 ? " short" : ""}">${termHtml(x.code)}</td><td><b>${escapeHtml(x.meaning)}</b>${x.action ? `<div class="tstat-note">${escapeHtml(x.action)}</div>` : ""}${(x.techTips || []).map(tt => `<div class="tstat-tech-tip">💡 ${escapeHtml(tt.text)}${tt.source ? `<div class="tech-tip-src">${escapeHtml(tt.source)}</div>` : ""}</div>`).join("")}</td></tr>`).join("");
   const cardTips = (t.techTips || []).map(tt => `<li>${escapeHtml(tt.text)}${tt.source ? `<div class="tech-tip-src">${escapeHtml(tt.source)}</div>` : ""}</li>`).join("");
   const tsBlocks = (t.troubleshooting || []).map(x => `
     <div class="tstat-ts ${tstatHit(x.symptom, q) ? "hit" : ""}"><b>${escapeHtml(x.symptom)}</b>
@@ -4634,33 +4681,46 @@ function openTstatDetail(id) {
         ${(x.notes || []).length ? `<ul class="tstat-howto-notes">${x.notes.map(n => `<li>${escapeHtml(n)}</li>`).join("")}</ul>` : ""}
         ${x.source ? `<div class="tech-tip-src">Source: ${escapeHtml(x.source)}</div>` : ""}
       </details>`).join("")}`).join("");
+  const hasSetup = !!(s.access || settingRows || s.factoryReset || s.installerTest);
+  const jumpRow = cardJumpRow([
+    howToHtml ? ["How to use it", "howto"] : null,
+    termRows ? ["Terminals", "terminals"] : null,
+    wiringNotes ? ["Wiring notes", "wiring"] : null,
+    hasSetup ? ["Installer setup", "setup"] : null,
+    diagRows ? ["Codes (" + (t.diagnostics || []).length + ")", "codes"] : null,
+    tsBlocks ? ["Troubleshoot", "trouble"] : null,
+    (t.tips || []).length ? ["Field notes", "notes"] : null,
+    manualBtns ? ["Manuals", "manuals"] : null,
+  ].filter(Boolean));
 
   modal.innerHTML = `
     ${t.img ? `<img class="tstat-hero" src="${escapeHtml(t.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(t.family)}</h2>
     <div class="sub">${escapeHtml(t.brand)}${t.aka ? " · " + escapeHtml(t.aka) : ""} · ${escapeHtml(TSTAT_TYPE_LABELS[t.type] || t.type || "")}${t.stages ? " · " + escapeHtml(t.stages) : ""}</div>
+    ${jumpRow}
     ${models ? `<div class="detail-section"><h3>Models</h3><p class="tstat-models">${escapeHtml(models)}</p></div>` : ""}
     ${powerBits.length ? `<div class="detail-section"><h3>Power</h3><p>${powerBits.map(escapeHtml).join("<br>")}</p></div>` : ""}
-    ${howToHtml ? `<div class="detail-section"><h3>How to use it - tap a topic</h3>${howToHtml}</div>` : ""}
-    ${termRows ? `<div class="detail-section"><h3>Terminals</h3><table class="tstat-table">${termRows}</table></div>` : ""}
-    ${wiringNotes ? `<div class="detail-section"><h3>Wiring notes</h3><ul>${wiringNotes}</ul></div>` : ""}
-    ${(s.access || settingRows || s.factoryReset || s.installerTest) ? `<div class="detail-section"><h3>Installer setup</h3>
+    ${howToHtml ? `<div class="detail-section" data-sec="howto"><h3>How to use it - tap a topic</h3>${howToHtml}</div>` : ""}
+    ${termRows ? `<div class="detail-section" data-sec="terminals"><h3>Terminals</h3><table class="tstat-table">${termRows}</table></div>` : ""}
+    ${wiringNotes ? `<div class="detail-section" data-sec="wiring"><h3>Wiring notes</h3><ul>${wiringNotes}</ul></div>` : ""}
+    ${hasSetup ? `<div class="detail-section" data-sec="setup"><h3>Installer setup</h3>
       ${s.access ? `<p><b>Get in:</b> ${escapeHtml(s.access)}</p>` : ""}
       ${settingRows ? `<table class="tstat-table">${settingRows}</table>` : ""}
       ${s.installerTest ? `<p><b>System test:</b> ${escapeHtml(s.installerTest)}</p>` : ""}
       ${s.factoryReset ? `<p><b>Factory reset:</b> ${escapeHtml(s.factoryReset)}</p>` : ""}
     </div>` : ""}
     ${cardTips ? `<div class="detail-section tech-tip"><h3>💡 Manufacturer tech tip</h3><ul>${cardTips}</ul></div>` : ""}
-    ${diagRows ? `<div class="detail-section"><h3>Codes &amp; alerts</h3><table class="tstat-table">${diagRows}</table></div>` : ""}
-    ${tsBlocks ? `<div class="detail-section"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
-    ${(t.tips || []).length ? `<div class="detail-section"><h3>Field notes</h3><ul>${(t.tips || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
-    ${manualBtns ? `<div class="detail-section"><h3>Manuals</h3><div class="tstat-manuals">${manualBtns}</div></div>` : ""}
+    ${diagRows ? `<div class="detail-section" data-sec="codes"><h3>Codes &amp; alerts</h3><table class="tstat-table">${diagRows}</table></div>` : ""}
+    ${tsBlocks ? `<div class="detail-section" data-sec="trouble"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
+    ${(t.tips || []).length ? `<div class="detail-section" data-sec="notes"><h3>Field notes</h3><ul>${(t.tips || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+    ${manualBtns ? `<div class="detail-section" data-sec="manuals"><h3>Manuals</h3><div class="tstat-manuals">${manualBtns}</div></div>` : ""}
     ${t.sourceNotes ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(t.sourceNotes)}</p></div>` : ""}
     <div class="modal-actions">
-      <button id="closeModalBtn">Close</button>
+      <button id="closeModalBtn">Close</button>${jumpRow ? `<button type="button" class="modal-top-btn" id="modalTopBtn">↑ Top</button>` : ""}
     </div>
   `;
   document.getElementById("closeModalBtn").onclick = closeModal;
+  wireCardJump(modal, t.brand + " " + t.family);
   modal.querySelectorAll(".tstat-manual-btn[data-seed]").forEach(btn => {
     btn.onclick = () => { trackEvent("opened thermostat manual: " + btn.textContent.trim().slice(0, 60)); openManualDetail(seedIdOf({ file: btn.dataset.seed })); };
   });
@@ -4669,7 +4729,8 @@ function openTstatDetail(id) {
   });
   const firstHit = modal.querySelector(".hit");
   document.getElementById("modalBackdrop").classList.remove("hidden");
-  if (firstHit) setTimeout(() => firstHit.scrollIntoView({ block: "center" }), 50);
+  modal.scrollTop = 0;   // a card opened over another one starts at its top too
+  if (firstHit) setTimeout(() => cardScrollToHit(modal, firstHit), 50);
   trackEvent("viewed thermostat: " + t.brand + " " + t.family);
 }
 
@@ -4853,7 +4914,7 @@ function genMaintResetHtml(g) {
   // whole RCL/RCLB card from opening (found 2026-10-06 wiring bulletins; same in v264).
   const srcList = Array.isArray(r.sources) ? r.sources : (r.sources ? [typeof r.sources === "string" ? { title: r.sources } : r.sources] : []);
   const src = srcList.map(s => `<div class="tech-tip-src">${escapeHtml(s.title || "")}${s.pages ? " - " + escapeHtml(s.pages) : ""}</div>`).join("");
-  return `<div class="detail-section"><h3>🔧 Reset the maintenance reminder</h3>
+  return `<div class="detail-section" data-sec="reset"><h3>🔧 Reset the maintenance reminder</h3>
     ${r.title ? `<p class="tstat-note"><b>${escapeHtml(r.title)}</b></p>` : ""}
     <div class="tstat-ts"><ol>${li(r.steps)}</ol></div>
     ${r.resets ? `<div class="tstat-ts"><b>What it resets</b><div class="tstat-note">${escapeHtml(r.resets)}</div></div>` : ""}
@@ -4869,15 +4930,30 @@ function openGenDetail(id, focusModel, opts) {
   opts = opts || {};
   // Opened from a scan or Ask: show that brand's tab under the card.
   if (genBrandOf(g) !== genState.brand) { genState.brand = genBrandOf(g); genState.series = "All"; genState.ctrl = "All"; if (currentScreen === "gen") renderGens(); }
-  const q = genState.search;
+  const q = typeof opts.q === "string" ? opts.q : genState.search;
   const modal = document.getElementById("modal");
   const hit = (txt) => tstatHit(txt, q);
-  const codeRows = (rows) => (rows || []).map(a => `
-    <tr class="${hit(a.code + " " + a.name + " " + a.meaning) ? "hit" : ""}"><td class="tstat-term ${genBrandOf(g) === "Generac" ? "short" : "wrap"}">${escapeHtml(a.code)}</td><td><b>${escapeHtml(a.name || "")}</b>${a.display ? `<div class="tstat-note">Screen: ${escapeHtml(a.display)}</div>` : ""}${a.meaning ? `<div>${escapeHtml(a.meaning)}</div>` : ""}${(a.causes || []).length ? `<div class="tstat-note">Causes: ${escapeHtml(a.causes.join(" · "))}</div>` : ""}${(a.steps || []).length ? `<ul>${a.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>` : ""}${a.clear ? `<div class="tstat-note">Clear: ${escapeHtml(a.clear)}</div>` : ""}</td></tr>`).join("");
+  // 11-12 audit (speed #7): one alarm row ran up to 4 phone screens and a card's alarm list up to 206.
+  // Each row now shows the code and its name and opens on a tap; a row the search matched is drawn open
+  // (and is still the row the card scrolls to). A "code" that is really a screen message ("Stepper
+  // Overcurrent", "2094-2099 / 2098") gets its own line above the text: in the narrow no-wrap code column
+  // it took 171 of a phone's 322 px and pushed the ends of the lines off the screen.
+  const codeRows = (rows) => (rows || []).map(a => {
+    const isHit = hit(a.code + " " + a.name + " " + a.meaning);
+    const body = `${a.display ? `<div class="tstat-note">Screen: ${escapeHtml(a.display)}</div>` : ""}${a.meaning ? `<div>${escapeHtml(a.meaning)}</div>` : ""}${(a.causes || []).length ? `<div class="tstat-note">Causes: ${escapeHtml(a.causes.join(" · "))}</div>` : ""}${(a.steps || []).length ? `<ul>${a.steps.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>` : ""}${a.clear ? `<div class="tstat-note">Clear: ${escapeHtml(a.clear)}</div>` : ""}`;
+    const name = `<b>${escapeHtml(a.name || "")}</b>`;
+    const text = body && a.name ? `<details class="gen-code"${isHit ? " open" : ""}><summary>${name}</summary>${body}</details>` : name + body;
+    const generac = genBrandOf(g) === "Generac";
+    if (generac && String(a.code).length > 10) return `
+    <tr class="gen-code-row${isHit ? " hit" : ""}"><td colspan="2"><div class="gen-code-long">${escapeHtml(a.code)}</div>${text}</td></tr>`;
+    return `
+    <tr class="gen-code-row${isHit ? " hit" : ""}"><td class="tstat-term ${generac ? "short" : "wrap"}">${escapeHtml(a.code)}</td><td>${text}</td></tr>`;
+  }).join("");
   const sp = g.specs || {};
   const specLabels = GEN_SPEC_LABELS;
-  const specRows = genSpecPairs(g).map(([l, v]) => `<tr><td class="tstat-term short">${escapeHtml(l)}</td><td>${escapeHtml(v)}</td></tr>`).join("");
-  const maintRows = (g.maintenance || []).map(x => `<tr><td class="tstat-term${String(x.interval).length <= 10 ? " short" : ""}">${escapeHtml(x.interval)}</td><td>${escapeHtml(x.task)}</td></tr>`).join("");
+  // The label column wraps (it was one no-wrap line: "Sensor / magneto air gap" took 212 px and left 114 for the figures).
+  const specRows = genSpecPairs(g).map(([l, v]) => `<tr><td class="tstat-term">${termHtml(l)}</td><td>${escapeHtml(v)}</td></tr>`).join("");
+  const maintRows = (g.maintenance || []).map(x => `<tr><td class="tstat-term${String(x.interval).length <= 10 ? " short" : ""}">${termHtml(x.interval)}</td><td>${escapeHtml(x.task)}</td></tr>`).join("");
   const tsBlocks = (g.troubleshooting || []).map(x => `
     <div class="tstat-ts ${hit(x.symptom) ? "hit" : ""}"><b>${escapeHtml(x.symptom)}</b>
       ${(x.causes || []).length ? `<div class="tstat-note">Check: ${escapeHtml(x.causes.join(" · "))}</div>` : ""}
@@ -4900,11 +4976,28 @@ function openGenDetail(id, focusModel, opts) {
   const kNorm = (k) => String(k || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   const kHit = kFocus ? (g.models || []).map(m => kNorm(m.k)).filter(k => k && kFocus.startsWith(k)).sort((a, b) => b.length - a.length)[0] || "" : "";
   const modelRows = genBrandOf(g) !== "Generac" ? (g.models || []).map(m => `<tr class="${kHit && kNorm(m.k) === kHit ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.k || "")}</td><td>${escapeHtml(m.desc || "")}</td></tr>`).join("") : (g.models || []).map(m => `<tr class="${focus && m.digits === focus ? "hit" : ""}"><td class="tstat-term short">${escapeHtml(m.digits || "")}</td><td>${escapeHtml(m.g || "")}${m.desc ? `<div class="tstat-note">${escapeHtml(m.desc)}</div>` : ""}</td></tr>`).join("");
+  const generac = genBrandOf(g) === "Generac";
+  const nAlarms = (g.alarms || []).length, nWarnings = (g.warnings || []).length;
+  const resetHtml = genMaintResetHtml(g);
+  const startup = genStartupFor(g);
+  // Short names so three fit across a phone. Install notes and Field notes have no button (they sit just
+  // above Manuals): with them the row was a quarter of the first screen.
+  const jumpRow = cardJumpRow([
+    nAlarms ? [(generac ? "Alarms" : "Faults") + " (" + nAlarms + ")", "alarms"] : null,
+    nWarnings ? ["Warnings (" + nWarnings + ")", "warnings"] : null,
+    tsBlocks ? ["Troubleshoot", "trouble"] : null,
+    specRows ? ["Specs", "specs"] : null,
+    maintRows ? ["Maintenance", "maint"] : null,
+    resetHtml ? ["Reset reminder", "reset"] : null,
+    startup ? ["Startup", "startup"] : null,
+    manualBtns ? ["Manuals", "manuals"] : null,
+  ].filter(Boolean));
 
   modal.innerHTML = `
     ${g.img ? `<img class="tstat-hero" src="${escapeHtml(g.img)}" alt="" onerror="this.remove()">` : ""}
     <h2>${escapeHtml(g.family)}</h2>
     <div class="sub">${escapeHtml(g.series)} · ${escapeHtml(g.controller || "")}${genShort(g.engine) ? " · " + escapeHtml(g.engine) : ""}${genShort(g.fuel) ? " · " + escapeHtml(g.fuel) : ""}${genShort(g.years) ? " · " + escapeHtml(g.years) : ""}</div>
+    ${jumpRow}
     ${(() => { try {
       // Bulletins for this family / model sit above everything else (Andy 2026-10-06). The serial comes
       // from the scan that opened the card, or from the last plate read for this exact model.
@@ -4913,19 +5006,27 @@ function openGenDetail(id, focusModel, opts) {
     } catch (e) { return ""; } })()}
     ${genIsAirCooled(g) ? `<div class="detail-section">${genChecklistBtnHtml(g.id, focusG)}${genTuneupEntry(g) ? `<button type="button" class="gcl-start-btn gen-tuneup-btn" data-tuneup="${escapeHtml(focusG || (genTuneupEntry(g).match || [])[0] || "")}">🔧 Tune-up figures (oil, plug, filters, kit)</button>` : ""}</div>` : ""}
     ${modelRows ? `<div class="detail-section"><h3>Models</h3><table class="tstat-table">${modelRows}</table></div>` : ""}
-    ${specRows ? `<div class="detail-section"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
-    ${genMaintResetHtml(g)}
-    ${(() => { const st = genStartupFor(g); return st ? `<div class="detail-section"><h3>Startup / commissioning</h3>${st.warn ? `<p class="tstat-note"><b>${escapeHtml(st.warn)}</b></p>` : ""}${(st.groups || []).map(gr => `<div class="tstat-ts"><b>${escapeHtml(gr.group)}</b><ol>${(gr.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ol></div>`).join("")}</div>` : ""; })()}
-    ${maintRows ? `<div class="detail-section"><h3>Maintenance</h3><table class="tstat-table">${maintRows}</table></div>` : ""}
-    ${(g.alarms || []).length ? `<div class="detail-section"><h3>${genBrandOf(g) === "Generac" ? "Alarm codes (red - unit shuts down)" : "Shutdown faults"}</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
-    ${(g.warnings || []).length ? `<div class="detail-section"><h3>${genBrandOf(g) === "Generac" ? "Warnings (yellow - keeps running)" : "Warnings and status messages"}</h3><table class="tstat-table">${codeRows(g.warnings)}</table></div>` : ""}
-    ${tsBlocks ? `<div class="detail-section"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
-    ${(g.installNotes || []).length ? `<div class="detail-section"><h3>Install notes</h3><ul>${g.installNotes.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
-    ${(g.tips || []).length ? `<div class="detail-section"><h3>Field notes</h3><ul>${g.tips.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
-    ${manualBtns ? `<div class="detail-section"><h3>Manuals</h3><div class="tstat-manuals">${manualBtns}</div></div>` : ""}
+    ${specRows ? `<div class="detail-section" data-sec="specs"><h3>Specs</h3><table class="tstat-table">${specRows}</table></div>` : ""}
+    ${resetHtml}
+    ${startup ? `<div class="detail-section" data-sec="startup"><h3>Startup / commissioning</h3>${startup.warn ? `<p class="tstat-note"><b>${escapeHtml(startup.warn)}</b></p>` : ""}${(startup.groups || []).map(gr => `<div class="tstat-ts"><b>${escapeHtml(gr.group)}</b><ol>${(gr.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ol></div>`).join("")}</div>` : ""}
+    ${maintRows ? `<div class="detail-section" data-sec="maint"><h3>Maintenance</h3><table class="tstat-table">${maintRows}</table></div>` : ""}
+    ${nAlarms ? `<div class="detail-section" data-sec="alarms"><h3>${generac ? "Alarm codes (red - unit shuts down)" : "Shutdown faults"} - tap one to open it</h3><table class="tstat-table">${codeRows(g.alarms)}</table></div>` : ""}
+    ${nWarnings ? `<div class="detail-section" data-sec="warnings"><h3>${generac ? "Warnings (yellow - keeps running)" : "Warnings and status messages"} - tap one to open it</h3><table class="tstat-table">${codeRows(g.warnings)}</table></div>` : ""}
+    ${tsBlocks ? `<div class="detail-section" data-sec="trouble"><h3>Troubleshooting</h3>${tsBlocks}</div>` : ""}
+    ${(g.installNotes || []).length ? `<div class="detail-section" data-sec="install"><h3>Install notes</h3><ul>${g.installNotes.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+    ${(g.tips || []).length ? `<div class="detail-section" data-sec="notes"><h3>Field notes</h3><ul>${g.tips.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+    ${manualBtns ? `<div class="detail-section" data-sec="manuals"><h3>Manuals</h3><div class="tstat-manuals">${manualBtns}</div></div>` : ""}
     ${g.sourceNotes ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(g.sourceNotes)}</p></div>` : ""}
-    <div class="modal-actions"><button id="closeModalBtn">Close</button></div>`;
+    <div class="modal-actions"><button id="closeModalBtn">Close</button>${jumpRow ? `<button type="button" class="modal-top-btn" id="modalTopBtn">↑ Top</button>` : ""}</div>`;
   document.getElementById("closeModalBtn").onclick = closeModal;
+  wireCardJump(modal, g.family);
+  // A tap on the code beside a folded row opens it too (the code is what the tech is looking at).
+  modal.querySelectorAll("tr.gen-code-row").forEach(tr => {
+    const d = tr.querySelector("details.gen-code");
+    if (!d) return;
+    const code = tr.querySelector("td.tstat-term, .gen-code-long");
+    if (code) code.onclick = () => { d.open = !d.open; };
+  });
   genWireChecklistBtns(modal);
   // v291: the family's tune-up figures live in Maintenance Figures (maint.js MAINT_GEN_TUNEUP).
   modal.querySelectorAll("[data-tuneup]").forEach(b => {
@@ -4942,7 +5043,8 @@ function openGenDetail(id, focusModel, opts) {
   });
   const firstHit = modal.querySelector(".hit");
   document.getElementById("modalBackdrop").classList.remove("hidden");
-  if (firstHit) setTimeout(() => firstHit.scrollIntoView({ block: "center" }), 50);
+  modal.scrollTop = 0;   // a card opened over another one starts at its top too
+  if (firstHit) setTimeout(() => cardScrollToHit(modal, firstHit), 50);
   trackEvent("viewed generator: " + g.series + " " + g.family);
 }
 
@@ -7455,10 +7557,10 @@ function manualModelOf(m) { return m.model && m.model.trim() ? m.model.trim() : 
 function renderManualBreadcrumb() {
   const el = document.getElementById("manualBreadcrumb");
   const parts = [];
-  parts.push({ label: "All Brands", onClick: () => { manualsState.brand = null; manualsState.model = null; renderManuals(); } });
+  parts.push({ label: "All Brands", onClick: () => { manualsState.model = null; manualsUpOne(); } });
   if (manualsState.brand) {
     if (manualsState.model) {
-      parts.push({ label: manualsState.brand, onClick: () => { manualsState.model = null; renderManuals(); } });
+      parts.push({ label: manualsState.brand, onClick: () => { manualsUpOne(); } });
       parts.push({ label: manualsState.model, current: true });
     } else {
       parts.push({ label: manualsState.brand, current: true });
@@ -7521,7 +7623,7 @@ async function renderManuals() {
       n.innerHTML = `<div class="maint-flag-title">No manual listed for ${escapeHtml(manualsState.search.trim())} exactly</div>These are the library manuals for models starting ${escapeHtml(r.closestTo)}. Check the series on the rating plate matches.`;
       results.appendChild(n);
     }
-    for (const m of r.list) results.appendChild(buildManualCard(m));
+    drawPagedList(results, r.list, buildManualCard, manualsPage.search, manualsState.search, "or type more of the model above");
     if (!r.list.length) results.appendChild(buildManualNotFound(manualsState.search));
     manualScheduleMissLog(manualsState.search, r.list.length);
     return;
@@ -7540,7 +7642,7 @@ async function renderManuals() {
     empty.classList.toggle("hidden", brands.length !== 0);
     for (const b of brands) {
       const count = byBrand.get(b).length;
-      results.appendChild(buildFolderCard("📁", b, `${count} manual${count === 1 ? "" : "s"}`, () => { manualsState.brand = b; renderManuals(); }));
+      results.appendChild(buildFolderCard("📁", b, `${count} manual${count === 1 ? "" : "s"}`, () => { manualsScroll.brands = window.scrollY; manualsState.brand = b; renderManuals().then(() => window.scrollTo(0, 0)); }));
     }
     return;
   }
@@ -7556,17 +7658,29 @@ async function renderManuals() {
     }
     const models = [...byModel.keys()].sort((a, b) => a === GENERAL_MODEL ? 1 : b === GENERAL_MODEL ? -1 : a.localeCompare(b));
     empty.classList.toggle("hidden", models.length !== 0);
-    for (const mo of models) {
+    // 11-12 audit (second wave): a brand holds up to 519 model folders (47,000 px). 60 at a time; the search
+    // box above still looks through every manual.
+    drawPagedList(results, models, (mo) => {
       const count = byModel.get(mo).length;
-      results.appendChild(buildFolderCard("📁", mo, `${count} manual${count === 1 ? "" : "s"}`, () => { manualsState.model = mo; renderManuals(); }));
-    }
+      return buildFolderCard("📁", mo, `${count} manual${count === 1 ? "" : "s"}`, () => { manualsScroll.models = window.scrollY; manualsState.model = mo; renderManuals().then(() => window.scrollTo(0, 0)); });
+    }, manualsPage.models, manualsState.brand, "or type the model above");
     return;
   }
 
   const files = inBrand.filter(m => manualModelOf(m) === manualsState.model)
     .sort((a, b) => (a.title||"").localeCompare(b.title||""));
   empty.classList.toggle("hidden", files.length !== 0);
-  for (const m of files) results.appendChild(buildManualCard(m));
+  drawPagedList(results, files, buildManualCard, manualsPage.files, manualsState.brand + "|" + manualsState.model, "or type the model above");
+}
+// One page counter per level (search results, a brand's model folders, a folder's manuals), so stepping
+// back out of a folder finds the list as long as it was left. A folder opens at its top; Back and the
+// breadcrumb return to where the list above it was left (before, a folder opened part-way down, at
+// whatever the scroll of the list above happened to be).
+function manualsUpOne() {
+  let y;
+  if (manualsState.model) { manualsState.model = null; y = manualsScroll.models; }
+  else { manualsState.brand = null; y = manualsScroll.brands; }
+  return renderManuals().then(() => window.scrollTo(0, y || 0));
 }
 
 function buildManualCard(m) {
@@ -12905,11 +13019,10 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   scanResultIntoView();
 });
 // 11-12 audit (screens #15): after Identify unit the page stayed at the top and the result's buttons
-// were below the screen. The 80 px keeps the result clear of the fixed top bar.
+// were below the screen. #scanResult's scroll-margin-top (style.css) keeps it clear of the fixed top bar.
 function scanResultIntoView() {
   const box = document.getElementById("scanResult");
   if (!box || !box.firstElementChild) return;
-  box.style.scrollMarginTop = "80px";
   try { box.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { box.scrollIntoView(); }
 }
 
