@@ -412,6 +412,7 @@ function showScreen(name, fromBack) {
   // firing isn't reliable on every device/browser, so resync explicitly here too.
   syncTopbarHeight();
   backGuardSync();
+  searchClearSync();   // a search filled in from another screen shows its X
 }
 
 document.querySelectorAll(".tile").forEach(tile => {
@@ -3266,6 +3267,50 @@ const voiceKw = (t) => t.replace(/\s*(?:kilowatts?|k\.?\s?w\.?)(?=\s|$)/gi, "kW"
   ["genSearchInput", "generators", "Listening… say the model, kW, or code", voiceKw],
   ["toolboxSearchInput", "toolbox", "Listening… say the tool, app, or brand"],
 ].forEach(([id, label, listening, n]) => addVoiceSearch(document.getElementById(id), { label, listening, norm: n }));
+
+// ---- Every search box (11-12 audit, screens #10) ----
+// The keyboard's Search / Enter key drops the keyboard so the results show (only Ask did), and an X
+// inside the box clears it (the browser's own X is switched off in the stylesheet). The X borrows the
+// mic button's look and sits to its left; it shows only while there is text in the box.
+var searchClearSyncs = [];
+function searchClearSync() { for (const f of (searchClearSyncs || [])) f(); }
+document.querySelectorAll(".search-input").forEach((el) => {
+  el.setAttribute("enterkeyhint", "search");
+  if (el.id !== "askInput") el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); } });
+  let row = el.parentElement;
+  if (!row || !row.classList.contains("ask-input-row")) {
+    row = document.createElement("div");
+    row.className = "ask-input-row";
+    el.parentNode.insertBefore(row, el);
+    row.appendChild(el);
+    // a box with its own top margin (Sensors' plug box): the margin moves to the row so the X stays centred
+    const mt = getComputedStyle(el).marginTop;
+    if (parseFloat(mt) > 0) { row.style.marginTop = mt; el.style.marginTop = "0"; }
+  }
+  const x = document.createElement("button");
+  x.type = "button";
+  x.className = "ask-mic-btn search-clear-btn hidden";
+  x.textContent = "✕";
+  x.setAttribute("aria-label", "Clear the search");
+  x.title = "Clear";
+  row.appendChild(x);
+  const sync = () => {
+    const on = !!el.value;
+    x.classList.toggle("hidden", !on);
+    const mic = row.querySelector(".ask-mic-btn:not(.search-clear-btn):not(.hidden)");
+    const w = (b) => (b && b.offsetWidth) || 37;
+    x.style.right = mic ? "calc(0.45rem + " + (w(mic) + 6) + "px)" : "";
+    el.style.paddingRight = on ? "calc(0.9rem + " + ((mic ? w(mic) + 6 : 0) + w(x)) + "px)" : "";
+  };
+  x.addEventListener("click", () => {
+    el.value = "";
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+    el.focus();
+  });
+  el.addEventListener("input", sync);
+  el.addEventListener("focus", sync);
+  searchClearSyncs.push(sync);
+});
 
 // ============================================================
 // DIAGNOSTIC HELP (symptoms)
