@@ -83,9 +83,9 @@ const APP_SHELL = [
 // (and passes a matching or a merely left-over list); run it as a publish gate / pre-commit hook.
 // SHELL_HASHES:BEGIN
 const SHELL_HASHES = {
-  "./index.html": "d27b5bba9287cc31b473",
-  "./style.css": "b5df4c4dca25a3932522",
-  "./app.js": "a32d62f2890963f0fb71",
+  "./index.html": "54a507c35f50011a6926",
+  "./style.css": "d911643a8847295e3e61",
+  "./app.js": "c666862407ea7ca8dbde",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "a07da5f19229c25d5c41",
   "./symptoms.js": "d55e8df6a99d8c9b1c50",
@@ -94,7 +94,7 @@ const SHELL_HASHES = {
   "./charging-charts.js": "daec2cb65dd460da0f69",
   "./daikin-sensors.js": "9e76c4d5d59b3b9bc604",
   "./brand-sensors.js": "4f42d941cfd6f71d07dc",
-  "./sensors.js": "a8ca5acca6b029b53b0c",
+  "./sensors.js": "a5d19473d6fe4358521e",
   "./toolbox.js": "c67328fc6c22100d95ec",
   "./thermostats.js": "19e10a6d11936eb4edfd",
   "./generators.js": "eb5e73ff29d7b0ebd4c7",
