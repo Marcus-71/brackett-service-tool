@@ -126,6 +126,18 @@ body {
   border-bottom: 1px solid var(--border);
   padding: 0.55rem 1rem;
 }
+/* 2026-11-12 audit #9: the note at the top of a screen is one line; the rest opens on a tap.
+   <details> so it needs no script. */
+details.disclaimer { padding-top: 0; padding-bottom: 0; }
+details.disclaimer > summary {
+  list-style: none; cursor: pointer; min-height: 44px; padding: 0.4rem 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+}
+details.disclaimer > summary::-webkit-details-marker { display: none; }
+details.disclaimer > summary::after { content: "▾"; flex: 0 0 auto; font-size: 1.1rem; }
+details.disclaimer[open] > summary::after { content: "▴"; }
+details.disclaimer[open] > summary { color: var(--text); font-weight: 600; }
+.disclaimer-more { padding: 0 0 0.7rem; line-height: 1.45; }
 
 .tag {
   display: inline-block;
