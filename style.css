@@ -534,12 +534,32 @@ main {
   .caution-box { background: #fff1d6; color: #8a5a00; }
 }
 
+/* 2026-11-12 audit #5: Close / Save stay in reach at the bottom of a long card (a generator card is
+   13,000 px). The bar is the last thing in the card, so at the end of the scroll it sits in its own
+   place and covers nothing. The negative bottom carries it over the card's bottom padding; the
+   -1.2rem side margins let its background reach the card edges. */
+.modal { scroll-padding-bottom: 5.5rem; }   /* a field brought into view stops above the bar */
 .modal-actions {
   display: flex;
   gap: 0.6rem;
-  margin-top: 1.2rem;
+  margin: 1.2rem -1.2rem 0;
+  padding: 0.6rem 1.2rem max(0.6rem, env(safe-area-inset-bottom));
+  position: sticky;
+  bottom: calc(-1 * max(1.2rem, env(safe-area-inset-bottom)));
+  z-index: 2;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
 }
-.modal-actions button {
+/* Last thing in the card (every card but the manual picker): sit on the card's bottom edge, so the
+   bar is in the same place stuck or not. */
+.modal-actions:last-child { margin-bottom: calc(-1 * max(1.2rem, env(safe-area-inset-bottom))); }
+/* A phone lying on its side (or any window under 480 px high): the bar would take a fifth of the
+   card, so it goes back to the end of the card. */
+@media (max-height: 479px) { .modal-actions { position: static; } }
+/* While a field in the card has the cursor (edit forms, follow-up readings) the bar also goes back to
+   the end of the card, so it can never sit on top of the box being typed in. */
+.modal:has(input:focus, select:focus, textarea:focus) .modal-actions { position: static; }
+.modal-actions button, .modal-actions a {
   flex: 1;
   min-height: 48px;
   padding: 0.7rem;
