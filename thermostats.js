@@ -31905,6 +31905,26 @@ const THERMOSTATS = [
     "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=GZQCUHAYVUWUDRRH"
    },
    {
+    "title": "Program Your Home Temperature Schedule (Amazon Smart Thermostat)",
+    "docType": "user",
+    "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=GT936T2J7AKMVYFW"
+   },
+   {
+    "title": "Update the Wi-Fi Settings on Your Amazon Smart Thermostat",
+    "docType": "user",
+    "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=GVKLKH4LMBZDDFEM"
+   },
+   {
+    "title": "Adjust Your Home Temperature Manually (Amazon Smart Thermostat)",
+    "docType": "user",
+    "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=GTWEDLQS8MQ8F3M7"
+   },
+   {
+    "title": "Perform a Partial Reset on Your Amazon Smart Thermostat",
+    "docType": "user",
+    "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=GKUTED5RCMWL9W8U"
+   },
+   {
     "title": "Connect the Wiring for Your Amazon Smart Thermostat",
     "docType": "wiring",
     "url": "https://www.amazon.com/gp/help/customer/display.html?nodeId=G5G4QAS54VUG26Z7"
@@ -31920,7 +31940,7 @@ const THERMOSTATS = [
     "url": "https://d1ergij2b6wmg5.cloudfront.net/S3+Cloudfront/Smart+Home/Amazon+Smart+Thermostat/most+common+hvac+system+types.jpg"
    }
   ],
-  "sourceNotes": "Amazon Smart Thermostat Support (hub); Set Up Your Amazon Smart Thermostat; Connect the Wiring for Your Amazon Smart Thermostat; Connect a C-wire Adapter to Your Amazon Smart Thermostat; Most Common HVAC System Types (wiring diagram image); Amazon Smart Thermostat Wire Terminals (diagram image)",
+  "sourceNotes": "Amazon Smart Thermostat Support (hub); Program Your Home Temperature Schedule; Update the Wi-Fi Settings; Adjust Your Home Temperature Manually; Control Your Home Temperature with Alexa Automatic Control; How to Activate Vacation Mode; How to Activate Emergency Heat; Perform a Partial Reset; Change the Display; What Do the Display Lights Mean (Amazon help pages, read 2026-11-12); Set Up Your Amazon Smart Thermostat; Connect the Wiring for Your Amazon Smart Thermostat; Connect a C-wire Adapter to Your Amazon Smart Thermostat; Most Common HVAC System Types (wiring diagram image); Amazon Smart Thermostat Wire Terminals (diagram image)",
   "img": "tstat-img/tst-amazon-smart-thermostat.jpg"
  },
  {
@@ -46396,8 +46416,8 @@ const THERMOSTATS = [
  {
   "id": "tst-york-hx3-thxu430w",
   "brand": "York / Coleman",
-  "family": "Hx3 Communicating Touch-Screen (S1-THXU430W)",
-  "aka": "RS485 Modbus",
+  "family": "Hx / Hx3 Communicating Touch-Screen (S1-THXU430W)",
+  "aka": "Hx 3 touch screen thermostat, RS485 Modbus",
   "models": [
    "S1-THXU430W"
   ],
@@ -63602,6 +63622,116 @@ tstatHowtoAdd({
    {
     "set": "hw-t6pro-cph",
     "label": "Installer settings"
+   }
+  ]
+ }
+});
+// add-amazon-v421.js
+tstatHowtoAdd({
+ "sets": {
+  "amazon-smart-tstat-2": [
+   {
+    "title": "Get around the screen and menus",
+    "steps": [
+     "The touch screen shows a mode button in the center, temperature down / up, the mode, current temperature, an info icon and an energy-saver icon - they only appear when in use.",
+     "The display dims when idle; touch the center mode button to bring it back to full brightness.",
+     "Press the Temperature Up or Temperature Down arrow for a quick change. Press the Mode indicator to switch between cooling, heating and fan modes.",
+     "Everything else is in the owner's Alexa app: Devices > Thermostat, select the thermostat under Thermostats (its control dashboard), then Device Settings.",
+     "The Info icon at the left of the display means an alert or notification. When it shows red, yellow or green, open the thermostat's page in the Alexa app.",
+     "The touch buttons may not respond through gloves."
+    ],
+    "source": "Smart Thermostat User Manual, model S6ED3R (FCC ID HS9-S6ED3R); Amazon help page: Adjust Your Home Temperature Manually; What Do the Display Lights on Your Amazon Smart Thermostat Mean?"
+   },
+   {
+    "title": "Connect to Wi-Fi",
+    "steps": [
+     "Wi-Fi is set from the Alexa app, not on the thermostat.",
+     "To set or change the Wi-Fi: in the Alexa app select Devices, then Thermostat, and pick the Amazon Smart Thermostat from the list.",
+     "Select Device Settings > Thermostat configuration > Wi-Fi and follow the on-screen instructions.",
+     "A thermostat not yet in the app: Devices > Add Device > Thermostat > Amazon. At \"Has your thermostat already been installed on the wall?\" answer Yes to go straight to connecting it to Wi-Fi and Alexa.",
+     "If the app reports a configuration failure during setup: pull the faceplate off the wall plate, wait a few seconds and gently put it back so it restarts and takes its updates."
+    ],
+    "source": "Amazon help page: Update the Wi-Fi Settings on Your Amazon Smart Thermostat; Set Up Your Amazon Smart Thermostat"
+   },
+   {
+    "title": "Set or change the schedule",
+    "steps": [
+     "In the Alexa app: Devices > Thermostat, then select the thermostat under Thermostats to open its control dashboard.",
+     "Select Device Settings > Control and schedules.",
+     "Under Daily schedule, enter the times and temperatures for each daily event.",
+     "To use the same day on other days, select Copy Schedule to Another Day.",
+     "Turn on the Use thermostat schedule switch - the schedule does not run until it is on."
+    ],
+    "source": "Amazon help page: Program Your Home Temperature Schedule"
+   },
+   {
+    "title": "Turn the schedule off (hold one temperature)",
+    "steps": [
+     "A manual change (arrows on the thermostat, or the dial in the Alexa app) while a schedule runs is a temporary hold: it lasts until the next scheduled change, such as from Home to Sleep.",
+     "The Use thermostat schedule switch (Device Settings > Control and schedules) is what runs the schedule. Amazon's page only describes turning it on; the same switch is the way to run without a schedule."
+    ],
+    "source": "Amazon help page: Program Your Home Temperature Schedule; Adjust Your Home Temperature Manually"
+   },
+   {
+    "title": "Change the temperature or mode from the app",
+    "steps": [
+     "In the Alexa app: Devices > Thermostat, then select the thermostat under Thermostats to open its control dashboard.",
+     "Use the dial to set the temperature. Select the button beneath the dial to change the mode."
+    ],
+    "notes": [
+     "Amazon's pages name cooling, heating and fan modes; they give no separate steps for turning the system off."
+    ],
+    "source": "Amazon help page: Adjust Your Home Temperature Manually"
+   },
+   {
+    "title": "Use Away or Vacation",
+    "steps": [
+     "Vacation Mode: in the Alexa app, Devices > Thermostat, then select the thermostat under Thermostats to open its control dashboard.",
+     "Select Device Settings > Vacation Mode, turn it on with the switch, then set the temperatures to keep in heat and in cool mode.",
+     "Vacation Mode missing or not working: update the Alexa app to the latest version.",
+     "Away / asleep setback: Device Settings > Alexa automatic control, switch on Set away temperature or Set sleep temperature and follow the on-screen instructions. Alexa then changes the temperature when it detects the house is empty or asleep.",
+     "Automatic control works on one thermostat only; a second Amazon thermostat is run by schedule, voice or by hand."
+    ],
+    "source": "Amazon help page: How to Activate Vacation Mode; Control Your Home Temperature with Alexa Automatic Control"
+   },
+   {
+    "title": "Emergency heat (heat pump)",
+    "steps": [
+     "Needs a heat pump wired in one of the layouts in Amazon's wiring configuration guide; otherwise Emergency Heat cannot be turned on.",
+     "In the Alexa app: Devices > Thermostat, then select the thermostat under Thermostats to open its control dashboard.",
+     "Select Device Settings > Thermostat Configuration and turn on Emergency Heat.",
+     "Emergency Heat cannot run together with the Prioritize Lower CO2 emissions setting."
+    ],
+    "source": "Amazon help page: How to Activate Emergency Heat"
+   },
+   {
+    "title": "Restart or reset the thermostat",
+    "steps": [
+     "Restart first (fixes most problems): gently pull the faceplate off the wall plate, wait a few seconds, put it back.",
+     "Partial reset (thermostat unresponsive in the Alexa app, no voice control, connection trouble): it erases everything on the thermostat except the HVAC configuration.",
+     "Press Temperature Up and the middle Mode button together for 10 seconds, until rEs shows on the display.",
+     "Then press and hold the middle Mode button until it resets, after a five-second countdown.",
+     "Wait for the red exclamation mark on the screen, then set it up again in the Alexa app."
+    ],
+    "source": "Amazon help page: Perform a Partial Reset on Your Amazon Smart Thermostat"
+   },
+   {
+    "title": "Change the display (F / C, brightness)",
+    "steps": [
+     "In the Alexa app: Devices > Thermostat, then select the thermostat under Thermostats to open its control dashboard.",
+     "Select Settings > Thermostat configuration.",
+     "Temperature units switches between Fahrenheit and Celsius. Display brightness sets the Active and Inactive brightness.",
+     "Thermostat icons (same menu) shows the display; tap an icon for what it means."
+    ],
+    "source": "Amazon help page: Change the Display on Your Amazon Smart Thermostat; What Do the Display Lights on Your Amazon Smart Thermostat Mean?"
+   }
+  ]
+ },
+ "use": {
+  "tst-amazon-smart-thermostat": [
+   {
+    "set": "amazon-smart-tstat-2",
+    "note": "Nearly everything is done in the owner's Alexa app. Steps are from Amazon's help pages (read 2026-11-12); app menus can move with app updates."
    }
   ]
  }

@@ -1333,12 +1333,13 @@ const ASK_HOWTO_KEY_STAT = /^(away|vacation|lock|locked|unlock)$/;
 // makes nothing but thermostats, the question says thermostat, or it names a model. On an equipment brand
 // alone, menu / settings put that brand's thermostats right after its own cards titled for the question
 // ("goodman menu" keeps the gPt menu card first) and ahead of everything else; "off" alone changes nothing.
-const ASK_HOWTO_KEY = /^(schedules?|scheduling|holds?|comfort|program|programming|wifi|wi-fi)$/;
+// v421: "vacation" is on this list too - no furnace or heat pump has a vacation setting ("rheem vacation").
+const ASK_HOWTO_KEY = /^(schedules?|scheduling|holds?|comfort|program|programming|wifi|wi-fi|vacation)$/;
 const ASK_HOWTO_KEY_SOFT = /^(menus?|settings?|setup|timers?)$/;
 const ASK_HOWTO_KEY_OFF = /^off$/;
 const ASK_STAT_WORD = /^(thermostats?|tstat|stat)$/;
 // Names a tech uses for a brand whose cards are filed under another name.
-const ASK_TSTAT_ALIAS = { resideo: ["honeywell"], honeywell: ["resideo"], emerson: ["white-rodgers", "sensi"], google: ["nest"] };
+const ASK_TSTAT_ALIAS = { resideo: ["honeywell"], honeywell: ["resideo"], emerson: ["white-rodgers", "sensi"], google: ["nest"], protech: ["rheem", "ruud"] };
 // Brands whose only entries in the app are thermostats: an equipment card is never their answer.
 const ASK_TSTAT_ONLY = new Set(["ecobee", "nest", "google", "honeywell", "resideo", "emerson", "sensi", "white-rodgers", "rodgers", "braeburn", "pro1", "lux", "venstar", "robertshaw", "totaline", "hunter", "mysa", "wyze", "aprilaire", "amazon"]);
 let askTstatBrandCache = null;
@@ -1346,7 +1347,7 @@ function askTstatBrandTokens() {
   if (askTstatBrandCache) return askTstatBrandCache;
   const set = new Set(ASK_TSTAT_ONLY);
   for (const t of tstatEntries()) for (const w of String(t.brand).toLowerCase().split(/[^a-z0-9]+/)) if (w.length >= 3 && w !== "home" && w !== "standard") set.add(w);
-  for (const w of ["bryant", "payne"]) set.add(w);
+  for (const w of ["bryant", "payne", "protech"]) set.add(w);
   return (askTstatBrandCache = set);
 }
 // Words that name a thermostat line and nothing else in the app ("chronotherm", "madoka", "icomfort", "sensi"):
@@ -1366,8 +1367,13 @@ function askTstatNameWords() {
 // ALWAYS: the name is the wall control itself. KEYED: the name is an equipment line too ("ion system off",
 // "infinity furnace"), so it counts only with a word that only a thermostat has (schedule, hold, program,
 // wifi), the word thermostat, or the word control.
-const ASK_TSTAT_LINE_ALWAYS = new Set(["icomfort", "intelisense", "connex", "thermidistat", "acculink", "comfortnet", "observer", "prestige", "echelon", "nexia"]);
-const ASK_TSTAT_LINE_KEYED = new Set(["ion", "infinity", "econet", "edge", "kumo", "cor", "merit"]);
+const ASK_TSTAT_LINE_ALWAYS = new Set(["icomfort", "intelisense", "connex", "thermidistat", "acculink", "comfortnet", "observer", "prestige", "echelon", "nexia", "hx"]);
+const ASK_TSTAT_LINE_KEYED = new Set(["ion", "infinity", "econet", "edge", "kumo", "cor", "merit", "one+"]);
+// v421: names that are a thermostat line only next to their brand ("daikin one away") ...
+const ASK_TSTAT_LINE_BRAND = { one: ["daikin"] };
+// ... or only next to the word control with a schedule / hold / wifi word ("evolution control schedule" is the
+// Bryant wall control; plain "evolution schedule" stays with the Generac Evolution controller).
+const ASK_TSTAT_LINE_CTRL = new Set(["evolution"]);
 const ASK_CTRL_WORD = /^(controls?|controller)$/;
 // Cards a line name covers although their own name does not print it (techs call every Lennox smart stat an iComfort).
 const ASK_TSTAT_LINE_ALSO = { icomfort: ["lennox s40", "lennox e40"] };
@@ -1379,7 +1385,9 @@ function askTstatLineNamed(th, units) {
   const live = askLiveUnits(units);
   const strong = live.some(u => u.alts.some(a => ASK_HOWTO_KEY.test(a) || ASK_STAT_WORD.test(a) || ASK_HOWTO_KEY_STAT.test(a)));
   const phrase = th.others.some(u => u.alts.some(a => ASK_CTRL_PHRASE.test(a)));
-  if (has(ASK_TSTAT_LINE_KEYED)) return strong || phrase || live.some(u => u.alts.some(a => ASK_CTRL_WORD.test(a)));
+  const ctrl = live.some(u => u.alts.some(a => ASK_CTRL_WORD.test(a)));
+  if (has(ASK_TSTAT_LINE_KEYED)) return strong || phrase || ctrl;
+  if (has(ASK_TSTAT_LINE_CTRL) && ctrl && live.some(u => u.alts.some(a => ASK_HOWTO_KEY.test(a)))) return true;
   return phrase && strong;
 }
 // A model word is in the card's own name. "infinity touch" / "infinity control" typed out count as typed
@@ -1388,7 +1396,16 @@ function askTstatLineNamed(th, units) {
 function askTstatIdHit(u, idHay, rq) {
   let alts = u.alts;
   if (rq && alts.some(a => ASK_CTRL_PHRASE.test(a))) { const typed = alts.filter(a => a.startsWith("infinity") && rq.includes(a)); if (typed.length) alts = typed; }
-  return alts.some(a => askTermHit(idHay, a) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => idHay.startsWith(x)));
+  return alts.some(a => askTermHit(idHay, a) || (a.endsWith("+") && idHay.includes(a)) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => idHay.startsWith(x)));
+}
+function askTstatStepCount(howT, u) {
+  if (u.alts.some(a => /^(lock|locked|unlock)$/.test(a))) return (howT.match(/\b(un)?lock(?!out|ed out)/g) || []).length;   // not "clock", not "locked out"
+  return Math.max(...u.alts.map(a => howT.split(a).length - 1));
+}
+// v421: the lock words read each other ("locked" finds a "Lock or unlock the screen" topic).
+function askTstatStepHit(howT, u) {
+  if (u.alts.some(a => /^(lock|locked|unlock)$/.test(a))) return /\b(un)?lock(?!out|ed out)/.test(howT);
+  return u.alts.some(a => askTermHit(howT, a) || (a === "wifi" && howT.includes("wi-fi")));
 }
 // null, or { brandU, others, pure, only }: brandU = units naming a thermostat brand, others = model words
 // ("t6", "infinity touch"), pure = nothing but brand + how-to words, only = a thermostat-only brand is named.
@@ -1399,13 +1416,24 @@ function askTstatHow(units) {
   const brandU = live.filter(u => isBrand(u) && !isHow(u));
   const howU = live.filter(isHow);
   const others = live.filter(u => !isHow(u) && !isBrand(u));
+  const key = (re) => howU.some(u => u.alts.some(a => re.test(a)));
+  // v421: no brand at all, the word thermostat and away / vacation / lock ("thermostat locked", "unlock
+  // thermostat"): the thermostats whose own steps cover it are the answer, whatever the brand.
+  if (howU.length && !brandU.length && !others.length && key(ASK_HOWTO_KEY_STAT) && live.some(u => u.alts.some(a => ASK_STAT_WORD.test(a))))
+    return { brandU, howU, others, pure: true, only: false, soft: false, generic: true };
   if (!howU.length || (!brandU.length && !others.length)) return null;
   const only = brandU.some(u => u.alts.some(a => ASK_TSTAT_ONLY.has(a)));
-  const key = (re) => howU.some(u => u.alts.some(a => re.test(a)));
+  const brandHas = (b) => brandU.some(u => u.alts.includes(b));
   const wide = only || others.length > 0 || live.some(u => u.alts.some(a => ASK_STAT_WORD.test(a)));
   let soft = false;
   const statKey = key(ASK_HOWTO_KEY_STAT) && (only || live.some(u => u.alts.some(a => ASK_STAT_WORD.test(a))) ||
-    others.some(u => u.alts.some(a => ASK_TSTAT_LINE_ALWAYS.has(a) || ASK_TSTAT_LINE_KEYED.has(a) || askTstatNameWords().has(a))));
+    others.some(u => u.alts.some(a => ASK_TSTAT_LINE_ALWAYS.has(a) || ASK_TSTAT_LINE_KEYED.has(a) || askTstatNameWords().has(a) ||
+      (ASK_TSTAT_LINE_BRAND[a] || []).some(brandHas))) ||
+    // ... or a model number that one of that brand's thermostat cards carries ("lennox s40 away"; a furnace
+    // model number is on no thermostat card, so "goodman gmvc96 locked out" stays an equipment question).
+    (brandU.length > 0 && others.some(u => u.alts.some(a => /\d/.test(a))) && (askIndexCache || []).some(it => it.kind === "tstat" &&
+      brandU.every(u => u.alts.some(a => askTermHit(it.nameHay, a) || (ASK_TSTAT_ALIAS[a] || []).some(x => askTermHit(it.nameHay, x)))) &&
+      others.every(u => askTstatIdHit(u, it.idHay)))));
   if (key(ASK_HOWTO_KEY) || statKey || (wide && (key(ASK_HOWTO_KEY_SOFT) || key(ASK_HOWTO_KEY_OFF)))) soft = false;
   else if (brandU.length && key(ASK_HOWTO_KEY_SOFT)) soft = true;
   else return null;
@@ -1415,14 +1443,25 @@ function askScoreItem(units, it) {
   let sc = askUnitHits(units, it.hay, it);
   let tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
   // (A card a line name covers without printing it - "icomfort" on the Lennox S40 - stays in for the how-to check below.)
-  if (!sc && !(it.kind === "tstat" && askLiveUnits(units).some(u => u.alts.some(a => (ASK_TSTAT_LINE_ALSO[a] || []).some(x => it.idHay.startsWith(x)))))) return { sc, tsc };
+  if (units.tHow === undefined) units.tHow = askTstatHow(units);
+  if (units.tHow && units.tHow.generic) {
+    // "thermostat locked": a thermostat card whose own steps cover every asked word, fuller cards first. They sit
+    // ahead of cards that only hold the words somewhere.
+    if (it.kind === "tstat" && it.how && !it.acc) {
+      const need = askLiveUnits(units).length;
+      const asked = units.tHow.howU.filter(u => !u.alts.some(a => ASK_STAT_WORD.test(a)));
+      // The card that says the most about it first (a card with its own lock topic before one that mentions a lock once).
+      if (asked.every(u => askTstatStepHit(it.howT, u))) return { sc: Math.max(sc, need), tsc: need + 0.1 + Math.min(0.4, 0.04 * asked.filter(u => u.alts.some(a => ASK_HOWTO_KEY_STAT.test(a))).reduce((n, u) => n + askTstatStepCount(it.howT, u), 0)) };
+    }
+  }
+  if (!sc && !(it.kind === "tstat" && askLiveUnits(units).some(u => u.alts.some(a => (a.endsWith("+") && it.idHay.includes(a)) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => it.idHay.startsWith(x)))))) return { sc, tsc };
   // A how-to card kept for one thermostat brand only answers a question that names that brand
   // (Andy 11-11: the ecobee menu / schedule steps show "only when they search that thermostat").
   if (it.brandOnly && !askUnitHits(units, String(it.brand).toLowerCase())) return { sc: 0, tsc: 0 };
   // Brand + how-to words ("ecobee menu", "turn ecobee off"): that brand's thermostats, whose cards carry
   // the steps, go ahead of other cards that only share a word.
   if (units.tHow === undefined) units.tHow = askTstatHow(units);
-  const th = units.tHow;
+  const th = units.tHow && !units.tHow.generic ? units.tHow : null;
   if (th) {
     const need = askLiveUnits(units).length;
     const named = (hay) => th.brandU.every(u => u.alts.some(a => askTermHit(hay, a) || (ASK_TSTAT_ALIAS[a] || []).some(x => askTermHit(hay, x))));
@@ -1438,7 +1477,7 @@ function askScoreItem(units, it) {
       // and a sensor, adapter or other accessory goes after the thermostats themselves.
       // Cards whose steps cover the asked topic come first (fuller cards first), then cards whose own text
       // holds the asked words ("wifi" on a smart thermostat), then other cards with steps, then the rest.
-      const hit = (hay) => th.howU.every(u => u.alts.some(a => askTermHit(hay, a) || (a === "wifi" && hay.includes("wi-fi"))));
+      const hit = (hay) => th.howU.every(u => askTstatStepHit(hay, u));
       // On a tie, a card named "non-programmable" goes after the programmable ones.
       const order = (it.acc ? 0.1 : it.how && hit(it.howT) ? 0.5 + it.howN * 0.01 : hit(it.hay) ? 0.4 + it.howN * 0.01
         : it.how ? 0.34 + it.howN * 0.01 : 0.25) - (it.nameHay.includes("non-programmable") ? 0.005 : 0);
@@ -3066,7 +3105,7 @@ function renderSymptoms() {
   const tUnits = query ? askLiveUnits(buildSearchUnits(query)) : null;
   if (tUnits) tUnits.rq = String(query).toLowerCase();
   const tHow = tUnits ? askTstatHow(tUnits) : null;
-  if (tHow && !tHow.soft && (tHow.brandU.length || askTstatLineNamed(tHow, tUnits))) {
+  if (tHow && !tHow.soft && (tHow.brandU.length || tHow.generic || askTstatLineNamed(tHow, tUnits))) {
     const note = document.createElement("div");
     note.className = "diag-fallback-note";
     note.innerHTML = `Thermostat question? <a href="#" id="diagToTstat">Open the thermostats for "${escapeHtml(query)}"</a>`;
@@ -3932,12 +3971,32 @@ function renderTstats() {
     (tstatState.type === "All" || t.type === tstatState.type) &&
     tstatIncludes(tstatSearchFields(t), tstatState.search)
   ).sort((a, b) => a.brand.localeCompare(b.brand) || (a.sort || 0) - (b.sort || 0) || a.family.localeCompare(b.family));
-  const lessUnits = tstatHowToLess(tstatState.search);
-  if (lessUnits) {
+  const sUnits = askLiveUnits(buildSearchUnits(tstatState.search || ""));
+  const howUnits = sUnits.filter(u => u.alts.some(a => ASK_HOWTO_WORD.test(a) && !ASK_STAT_WORD.test(a)));
+  const inChips = (t) => (tstatState.brand === "All" || t.brand === tstatState.brand) && (tstatState.type === "All" || t.type === tstatState.type);
+  const stepsOf = new Map();
+  const steps = (t) => { if (!stepsOf.has(t.id)) stepsOf.set(t.id, tstatHowReal(t).map(x => x.title + " " + (x.steps || []).join(" ") + " " + (x.notes || []).join(" ")).join(" ").toLowerCase()); return stepsOf.get(t.id); };
+  const stepHit = (t) => howUnits.length > 0 && !!steps(t) && howUnits.every(u => askTstatStepHit(steps(t), u));
+  const byRank = (rank) => { const rk = new Map(filtered.map((t, i) => [t.id, [rank(t), i]])); filtered.sort((a, b) => rk.get(a.id)[0] - rk.get(b.id)[0] || rk.get(a.id)[1] - rk.get(b.id)[1]); };
+  // v421: a line name that covers cards whose own name does not print it ("icomfort" = Lennox S40 / E40 too)
+  // adds those cards on a plain search as well, not only with a how-to word.
+  const lessUnits = tstatHowToLess(tstatState.search) || (sUnits.length ? sUnits : null);
+  if (sUnits.length && sUnits.every(u => u.alts.some(a => ASK_HOWTO_WORD.test(a))) && howUnits.some(u => u.alts.some(a => ASK_HOWTO_KEY_STAT.test(a)))) {
+    // v421: nothing but away / vacation / lock words ("thermostat locked", "vacation"): every thermostat whose own
+    // steps cover it, ahead of cards that only hold the words in their text.
+    const have = new Set(filtered.map(t => t.id));
+    for (const t of all) if (!have.has(t.id) && inChips(t) && stepHit(t)) filtered.push(t);
+    byRank(t => stepHit(t) ? 0 : 1);
+  } else if (lessUnits) {
     const have = new Set(filtered.map(t => t.id));
     const idHit = (t) => { const hay = [t.brand, t.family, t.aka, (t.models || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
-      return lessUnits.every(u => u.alts.some(a => hayHasTerm(hay, a) || (a.length >= 3 && hay.includes(a) && [...a].some(ch => ch >= "0" && ch <= "9")) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => hay.startsWith(x)))); };
-    for (const t of all) if (!have.has(t.id) && (tstatState.brand === "All" || t.brand === tstatState.brand) && (tstatState.type === "All" || t.type === tstatState.type) && idHit(t)) filtered.push(t);
+      return lessUnits.every(u => u.alts.some(a => hayHasTerm(hay, a) || (a.endsWith("+") && hay.includes(a)) || (a.length >= 3 && hay.includes(a) && [...a].some(ch => ch >= "0" && ch <= "9")) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => hay.startsWith(x)))); };
+    for (const t of all) if (!have.has(t.id) && inChips(t) && idHit(t)) filtered.push(t);
+    // v421: best match first on every search, not brand A-Z ("rheem wifi" listed Lux and Braeburn cards that only
+    // mention Rheem above the EcoNet; plain "rheem" led with an ecobee kit and a Honeywell zone panel). Cards named
+    // for the search whose steps cover the asked words, then other cards named for it, then cards that only hold
+    // the words in their text. The old order is kept inside each group.
+    byRank(t => !idHit(t) ? 2 : stepHit(t) ? 0 : 1);
   }
 
   const results = document.getElementById("tstatResults");
@@ -13388,7 +13447,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v420";
+const APP_VERSION = "v421";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
