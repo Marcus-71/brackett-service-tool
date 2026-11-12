@@ -454,9 +454,15 @@ function showScreen(name, fromBack) {
   // The Tag Scanner's full name does not fit a phone's top bar beside the back arrow and the signal pill:
   // there it reads "Tag Scanner + Figures" (the Home button and a pad's top bar carry the full name).
   if (name === "scanner") {
-    renderMaint();   // the figures block's hint line / list under the Identify button (nothing heavy while it is idle)
-    const st = document.getElementById("screenTitle");
-    if (st.scrollWidth > st.clientWidth) st.textContent = "Tag Scanner + Figures";
+    // the figures block's hint line / list under the Identify button (nothing heavy while it is idle);
+    // not on the way back, where a redraw would move the page off the place it was left at
+    // and after the screen itself is painted, so the photo buttons show as fast as they always did.
+    if (!fromBack) {
+      if (maintPanel.drawn) renderMaint();
+      else requestAnimationFrame(() => setTimeout(() => { maintPanel.drawn = true; renderMaint(); }, 0));
+    }
+    // (by screen width, not by measuring the title: measuring would lay the page out twice on every open)
+    if (window.innerWidth < 560) document.getElementById("screenTitle").textContent = "Tag Scanner + Figures";
   }
   syncTopbarHeight();
   backGuardSync();
@@ -1060,7 +1066,8 @@ document.getElementById("codesSearchInput").addEventListener("input", (e) => { c
 
 let askState = { search: "", kind: "All", brand: "All", equip: "All", _lastQ: null };
 let askIndexCache = null;
-let askManualToken = 0;      // guards the async in-manual search against stale renders
+let askBrowseDrawn = false;   // Troubleshoot's "pick the problem" part has been drawn once
+let askManualToken = 0;     // guards the async in-manual search against stale renders
 let askManualTimer = null;
 // Server-side AI relay (holds the API key; app never sees it). Empty = feature
 // dormant (no button). Fill in the deployed Apps Script /exec URL to turn it on.
@@ -2155,8 +2162,10 @@ function renderAsk() {
     const lead = document.getElementById("askLead");
     lead.innerHTML = `Searches <strong>${total.toLocaleString()}</strong> vetted entries — ${counts.code || 0} codes · ${counts.symptom || 0} fixes · ${counts.tstat || 0} thermostats · ${counts.gen || 0} generators · ${counts.tool || 0} tools · ${counts.manual || 0} manuals. It only shows what's really in here.`;
     lead.classList.toggle("hidden", !!diagState.equipment);
-    browse.classList.remove("hidden");
-    renderSymptoms();
+    // The very first draw of the list part waits for the search box to be on screen (its first run is
+    // the slow one), so opening this screen is never slower than Ask Anything was.
+    if (askBrowseDrawn || diagState.equipment) { askBrowseDrawn = true; browse.classList.remove("hidden"); renderSymptoms(); }
+    else requestAnimationFrame(() => setTimeout(() => { askBrowseDrawn = true; if (!askState.search.trim()) { browse.classList.remove("hidden"); renderSymptoms(); } }, 0));
     return;
   }
   examples.classList.add("hidden");
@@ -5589,7 +5598,7 @@ function bulMaintInject() {
 //    series like G61 / DM96 / 59TP6, a brand, a word), narrowed by the equipment filter. Nothing is drawn
 //    until something is typed or a kind is picked, so the scanner opens as fast as before.
 //  - unit: inside the identified unit's page, between its facts and its buttons, for that model only.
-const maintPanel = { unit: "" };
+const maintPanel = { unit: "", gapLogged: new Set() };
 function maintPanelEl() { return document.getElementById("maintPanel"); }
 function maintPanelNorm(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
 // Put the block back under the result box (before the box is rewritten, or after it was wiped).
@@ -5619,6 +5628,13 @@ function maintPanelUnit(info, guess) {
   maintState.guess = guess || null;
   if (typeof maintPage !== "undefined") maintPage.key = null;
   renderMaint();
+  // A photographed tag with no exact figures is a coverage gap for the office, as it was when the tag
+  // was scanned on the old Maintenance Figures screen: same row text, once per model per visit.
+  if (!info.typed && !maintPanel.gapLogged.has(info.model)) {
+    maintPanel.gapLogged.add(info.model);
+    const lk = typeof maintLookup === "function" ? maintLookup(info.model) : { exact: [] };
+    if (!lk.exact.length && !(typeof genMaintResolve === "function" && genMaintResolve(info.model))) trackEvent("maint scan -> " + info.model + " | no figures");
+  }
 }
 // showScreen("maint") from anywhere (an Ask "Specs" card, a generator's tune-up button): maintState is
 // already set by the caller. A plain model number also goes into the Model box, ready for Identify unit.
@@ -5640,6 +5656,7 @@ function maintPanelChrome() {
   const p = maintPanel.el || (maintPanel.el = maintPanelEl());
   if (!p) return;
   const unit = maintPanel.unit, q = String(maintState.query || "").trim();
+  p.classList.remove("hidden");   // hidden in index.html until its first draw, which comes after the screen's first paint
   p.classList.toggle("in-unit", !!unit);
   document.getElementById("maintPanelTitle").textContent = unit ? "📋 Maintenance figures for this unit" : "📋 Maintenance figures";
   const sel = document.getElementById("maintEquipChips");
@@ -5671,6 +5688,7 @@ if (typeof renderMaint === "function") {
   renderMaint = function () {
     const results = document.getElementById("maintResults"), empty = document.getElementById("maintEmptyState");
     if (!results || !empty) return;   // the block is between two places for a moment
+    maintPanel.drawn = true;
     maintPanelChrome();
     const unit = maintPanel.unit;
     if (!unit && !String(maintState.query || "").trim() && !maintState.equip && !maintState.showAll) {
