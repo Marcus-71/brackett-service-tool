@@ -942,7 +942,16 @@ main {
 .scan-unit-scen-h { font-weight: 700; font-size: 0.95rem; }
 .scan-unit-scen-btn { text-align: left; padding: 0.65rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer; }
 .unit-src-btn { margin: 0.3rem 0.3rem 0 0; padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
-.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.9rem; }
+.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.9rem; align-items: end; }   /* end: boxes in a row line up when one label wraps */
+/* 2026-11-12 audit #7: the verdict on the readings (#cc-results) was 1,890 px under the last gauge box,
+   below the list of manufacturer chart links that app.js draws inside #cc-targets. Shown order is now
+   targets, verdict, chart links, field calculators. Markup and ids are untouched. */
+#chargeScreen > main > #cc-targets { display: contents; }
+#chargeScreen > main > #cc-targets > .cc-chart-links,
+#chargeScreen > main > #cc-targets > .cc-target-grid ~ .cc-section-label { order: 1; }
+#chargeScreen > main > #cc-results ~ * { order: 2; }
+#chargeScreen > main > #cc-targets > .cc-section-label { margin: 0.4rem 0 -0.3rem; }
+#chargeScreen > main > #cc-targets > .cc-target-grid { margin-top: 0; }
 .charge-form { margin-bottom: 1rem; }
 .cc-section-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dim); margin: 0.9rem 0 0.4rem; }
 .cc-section-label:first-child { margin-top: 0; }
