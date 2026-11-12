@@ -79,9 +79,12 @@ body {
   background: none;
   border: none;
   color: var(--text);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1;
-  padding: 0.2rem 0.3rem;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0.5rem 0.6rem;
+  margin: -0.6rem 0 -0.6rem -0.6rem;
   cursor: pointer;
   flex: 0 0 auto;
 }
@@ -96,6 +99,8 @@ body {
   font-weight: 700;
   font-size: 0.95rem;
   cursor: pointer;
+  min-height: 44px;
+  margin: -0.5rem 0;   /* 44 px tall without making the bar taller on the screens that show it */
 }
 .icon-btn:active { transform: scale(0.97); }
 
@@ -155,12 +160,13 @@ body {
 .filter-select {
   flex: 1;
   min-width: 0;
+  min-height: 46px;
   padding: 0.5rem 0.6rem;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -324,6 +330,7 @@ main {
   font-weight: 600;
   cursor: pointer;
 }
+.bulletin-open, .bulletin-done { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .bulletin-open { background: var(--accent, #c8102e); color: #fff; text-decoration: none; border: 0; }
 .bulletin-done { background: transparent; border: 1px solid var(--border, #ccc); color: var(--text, #222); }
 
@@ -534,12 +541,14 @@ main {
 }
 .modal-actions button {
   flex: 1;
+  min-height: 48px;
   padding: 0.7rem;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
   font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
 }
 .modal-actions .primary { background: var(--accent-2); color: #06202e; border-color: var(--accent-2); }
@@ -567,6 +576,7 @@ main {
   font-size: 0.95rem;
   font-family: inherit;
 }
+.form-field input, .form-field select { min-height: 46px; }
 .form-field textarea { min-height: 4.5rem; resize: vertical; }
 .form-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.25rem; }
 
@@ -613,15 +623,15 @@ main {
 /* Voice input — a mic sitting inside the ask box; JS reveals it only where the
    browser supports speech recognition. */
 .ask-input-row { position: relative; }
-.ask-input-row .search-input { padding-right: 3rem; }
+.ask-input-row .search-input { padding-right: 3.2rem; }   /* the 44 px mic + its 0.45rem inset */
 .ask-input-row .search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 .ask-mic-btn {
   position: absolute;
   right: 0.45rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 2.3rem;
-  height: 2.3rem;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border-radius: 50%;
   border: 1px solid var(--border);
@@ -651,10 +661,10 @@ main {
 .ask-lead { font-size: 0.92rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 0.9rem; }
 .ask-lead strong { color: var(--text); }
 .ask-chip-label { font-size: 0.85rem; font-weight: 700; color: var(--text-dim); margin-bottom: 0.45rem; }
-.ask-chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ask-chip-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .ask-chip {
   font: inherit; font-size: 0.9rem; cursor: pointer;
-  padding: 0.4rem 0.7rem; border-radius: 999px;
+  min-height: 44px; padding: 0.6rem 0.9rem; border-radius: 999px;
   background: var(--bg-elevated); color: var(--text);
   border: 1px solid var(--border);
 }
@@ -1013,16 +1023,25 @@ main {
   border: none;
   color: var(--accent-2);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0.1rem 0.15rem;
+  min-height: 44px;
+  padding: 0.6rem 0.5rem;
+  margin-left: -0.5rem;
+}
+/* 2026-11-12 audit #6: yellow on the light page was 1.29:1 - navy and underlined there (10.3:1). */
+@media (prefers-color-scheme: light) {
+  .breadcrumb button { color: var(--brand-navy); text-decoration: underline; }
 }
 .breadcrumb button:last-child,
 .breadcrumb .crumb-current {
   color: var(--text);
   font-weight: 700;
   cursor: default;
+  text-decoration: none;
 }
+/* "All Brands" alone at the top level is a label, not a way back: keep it small. */
+.breadcrumb button:only-child { min-height: 0; padding: 0.1rem 0.15rem; margin-left: 0; font-size: 0.85rem; }
 .breadcrumb .sep { color: var(--text-dim); }
 
 .folder-card {
@@ -1120,6 +1139,7 @@ main {
 .cc-scan-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
 .cc-scan-row > button {
   flex: 1 1 40%;
+  min-height: 46px;
   padding: 0.65rem 0.5rem;
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -1281,6 +1301,7 @@ main {
   display: block;
   width: 100%;
   margin-top: 0.3rem;
+  min-height: 46px;
   padding: 0.6rem 0.7rem;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -1771,13 +1792,13 @@ main {
 .gwz-entry-text b { font-size: 1.12rem; font-weight: 800; line-height: 1.2; }
 .gwz-entry-text span { font-size: 0.92rem; color: var(--brand-yellow); font-weight: 600; }
 .gwz-entry-go { font-size: 2rem; line-height: 1; color: var(--brand-yellow); flex: none; }
-.gwz-entry-recent { align-self: flex-start; font-size: 0.9rem; color: var(--text-dim); min-height: 36px; }
+.gwz-entry-recent { align-self: flex-start; font-size: 0.9rem; color: var(--text-dim); min-height: 44px; margin-top: 0.4rem; }
 
 /* Wizard frame */
 .gwz-top { display: flex; flex-direction: column; gap: 0.35rem; }
 .gwz-top-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .gwz-stepno { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-dim); }
-.gwz-recent-link { font-size: 0.85rem; color: var(--text-dim); }
+.gwz-recent-link { font-size: 0.85rem; color: var(--text-dim); min-height: 44px; }
 .gwz-bar { height: 8px; border-radius: 99px; background: var(--border); overflow: hidden; }
 .gwz-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand-orange), var(--brand-yellow)); border-radius: 99px; transition: width 0.2s; }
 .gwz-title { margin: 0.25rem 0 0; font-size: 1.3rem; line-height: 1.25; }
@@ -1826,7 +1847,10 @@ main {
 .gwz-full > summary { cursor: pointer; font-weight: 700; min-height: 48px; display: flex; align-items: center; }
 .gwz-full[open] { padding-bottom: 0.8rem; }
 .gwz-ro-val { font-weight: 700; font-size: 0.95rem; line-height: 1.35; padding: 0.25rem 0; overflow-wrap: anywhere; }
-.gwz-edit { font-size: 0.72rem; min-height: 0; margin-left: 0.3rem; text-transform: none; color: var(--text-dim); }
+.gwz-edit { font-size: 0.72rem; min-height: 0; margin-left: 0.3rem; text-transform: none; color: var(--text-dim); position: relative; }
+/* 2026-11-12 audit #4: the "change" link is 39 x 15 px inside a field label. The unseen pad makes the
+   place a thumb can hit about 59 x 47 px without moving the label. */
+.gwz-edit::after { content: ""; position: absolute; inset: -16px -10px; }
 .gwz-sec-bar { display: flex; align-items: center; gap: 0.7rem; }
 .gwz-alldone {
   min-height: 52px; padding: 0.5rem 1.1rem; border-radius: var(--radius); cursor: pointer; font: inherit; font-size: 1.05rem; font-weight: 800;
@@ -1888,7 +1912,8 @@ main {
 /* Generators: Troubleshoot a Problem scan box under the checklist box (Andy 2026-10-02). */
 .gwz-entry-problem { margin-top: 0.35rem; border-color: var(--brand-yellow); }
 #genProblemScanStatus { margin-top: 0.3rem; }
-.gen-type-model { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
+.gen-type-model { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+.gen-type-model input, .gen-type-model button { min-height: 46px; }
 .gen-type-model input { flex: 1 1 9rem; min-width: 0; padding: 0.55rem 0.6rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elevated); color: var(--text); text-transform: uppercase; }
 .gen-type-model input#genProblemSerial { flex: 1 1 7rem; }
 .gen-type-model input#genProblemModel { flex: 1 1 100%; }
@@ -2101,7 +2126,7 @@ body.inv-cam-open { overflow: hidden; }
 .tile-sensors { border-left: 5px solid var(--brand-orange); }
 .sn-plug-input { margin-top: .6rem; font-weight: 700; }
 .sn-side-row { display: flex; gap: .5rem; margin-top: .6rem; }
-.sn-side-btn { flex: 1; padding: .55rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .95rem; }
+.sn-side-btn { flex: 1; min-height: 46px; padding: .55rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .95rem; }
 .sn-side-btn.active { background: var(--brand-navy); color: #fff; border-color: var(--brand-navy); }
 #snResults { padding: 0 1rem 2rem; }
 .sn-hint { color: var(--text-dim); font-size: .92rem; margin: .8rem 0; }
