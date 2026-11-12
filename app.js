@@ -528,7 +528,14 @@ function getAllCodes() {
   const deleted = new Set(loadDeletedCodeIds());
   const userIds = new Set(userCodes.map(c => c.id));
   const base = ERROR_CODES.filter(c => !deleted.has(c.id) && !userIds.has(c.id));
-  return [...base, ...userCodes.filter(c => !deleted.has(c.id))];
+  // 11-12 audit (accuracy #12): a library row rewritten on this phone is marked (_edited) so the list
+  // and the opened card can say so; rows the tech added himself have a "user-" id and are not marked.
+  return [...base, ...userCodes.filter(c => !deleted.has(c.id)).map(c => String(c.id).startsWith("user-") ? c : { ...c, _edited: true })];
+}
+// One plain line for a row whose confidence is "verify" (530 codes, 475 fixes on 11-12).
+const UNVERIFIED_LINE = "Not yet checked against the manufacturer's manual - confirm on the unit's own chart before acting.";
+function editedLineHtml(btnId) {
+  return `<div class="maint-flag"><div class="maint-flag-title">Edited on this phone</div>This is not the library's wording - someone changed it on this phone, and office corrections do not reach it. <button type="button" id="${btnId}" class="maint-manuals-btn">Restore the original</button></div>`;
 }
 
 // Filters render as dropdowns (not chip buttons) so long brand/equipment lists
@@ -568,12 +575,12 @@ const CODE_FAMILY_GUARDS = [
 const CODE_FAMILY_EXCLUDE = [
   { model: /^(?:ML180|ML193|ML196|EL180|EL195|EL196)(?:UH|DF)[0-9]{3}(?!.*K)/, fam: /EL195UHNEK/ },
 ];
-// The part of a family text a model may match: everything before its first "NOT" / "not". After that
-// word the text lists the boards this table is NOT for ("NOT the Infinity 98 (59MN7C)").
+// The part of a family text a model may match: the text without its "NOT ..." clauses (each from the
+// word NOT / not to the end of that sentence). Those clauses list the boards the table is NOT for
+// ("NOT the Infinity 98 (59MN7C) communicating board, which uses ..."); a model named only there does
+// not belong to the family.
 function codeFamilyOwnText(f) {
-  const s = String(f || "").toUpperCase();
-  const i = s.search(/\bNOT\b/);
-  return i < 0 ? s : s.slice(0, i);
+  return String(f || "").toUpperCase().replace(/\bNOT\b(?:[^.]|\.(?=\S))*/g, " ");
 }
 function codeFamilyNorm(q) { return String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
 function codeFamilyPool(m, codes) {
@@ -653,7 +660,11 @@ function buildCodeCard(code) {
   const card = document.createElement("div");
   card.className = "card";
   card.onclick = () => openCodeDetail(code.id);
-  const confTag = code.confidence === "verify" ? `<span class="tag verify">verify</span>` : `<span class="tag common">common</span>`;
+  // "occasional" (39 rows) used to be drawn as "common"; it now shows its own word.
+  const confTag = (code._edited ? `<span class="tag verify">edited here</span> ` : "")
+    + (code.confidence === "verify" ? `<span class="tag verify">verify</span>`
+      : code.confidence && code.confidence !== "common" ? `<span class="tag">${escapeHtml(code.confidence)}</span>`
+      : `<span class="tag common">common</span>`);
   card.innerHTML = `
     <div class="card-top">
       <div>
@@ -678,19 +689,38 @@ function openCodeDetail(id) {
   const causes = (code.causes || []).map(c => `<li>${escapeHtml(c)}</li>`).join("");
   const steps = (code.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
   const tips = (code.techTips || []).map(t => `<li>${escapeHtml(t.text)}${t.source ? `<div class="tech-tip-src">${escapeHtml(t.source)}</div>` : ""}</li>`).join("");
+  // accuracy #10: "Manuals for this unit", through the Manuals screen's own search, fed with the first
+  // model name the row's family text gives. Shown only when that search really finds manuals.
+  let famModel = "", famManuals = 0;
+  try {
+    famModel = (codeFamilyOwnText(code.family).match(/[A-Z0-9]+(?:-[A-Z0-9]+)?/g) || []).find(t => t.replace(/-/g, "").length >= 4 && /[A-Z]/.test(t) && /\d/.test(t) && !/^R-?\d{2,3}[A-Z]?$/.test(t) && !/^\d+-[A-Z]+$/.test(t) && !/^(?:SEER|HSPF|EER|AFUE|LED|TABLE|FIG|REV|SERIES|CODE|STAGE|PHASE|TYPE)-?\d*$|^\d+(?:V|VAC|VDC|HZ|KW|K|TON|PIN|ST|ND|RD|TH|SI|SM|PD)$|A2L/.test(t)) || "";
+    if (famModel && typeof manualSearch === "function") { const ms = manualSearch(manualSeedRows(), famModel); famManuals = ms.closestTo ? 0 : ms.list.length; }
+  } catch (e) { famManuals = 0; }
   modal.innerHTML = `
     <h2>${escapeHtml(code.code)} — ${escapeHtml(code.title)}</h2>
     <div class="sub">${escapeHtml(code.brand)}${code.family ? " · " + escapeHtml(code.family) : ""} · ${escapeHtml(code.equipment)}</div>
+    ${code.safety ? `<div class="safety-box">⚠ ${escapeHtml(code.safety)}</div>` : ""}
+    ${code._edited ? editedLineHtml("restoreCodeBtn") : ""}
+    ${code.confidence === "verify" ? `<div class="maint-flag"><div class="maint-flag-title">${UNVERIFIED_LINE}</div></div>` : ""}
     <div class="detail-section"><h3>What it means</h3><p>${escapeHtml(code.meaning || "—")}</p></div>
     ${tips ? `<div class="detail-section tech-tip"><h3>💡 Manufacturer tech tip</h3><ul>${tips}</ul></div>` : ""}
     ${causes ? `<div class="detail-section"><h3>Likely causes</h3><ul>${causes}</ul></div>` : ""}
     ${steps ? `<div class="detail-section"><h3>Diagnostic steps</h3><ol>${steps}</ol></div>` : ""}
-    ${code.safety ? `<div class="safety-box">⚠ ${escapeHtml(code.safety)}</div>` : ""}
+    ${famManuals ? `<button type="button" class="maint-manuals-btn" id="codeManualsBtn">📄 Manuals for ${escapeHtml(famModel)} (${famManuals})</button>` : ""}
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
       <button class="primary" id="editCodeBtn">Edit / correct</button>
     </div>
   `;
+  const restoreBtn = document.getElementById("restoreCodeBtn");
+  if (restoreBtn) restoreBtn.onclick = () => {
+    if (!confirm("Put the library's original wording back for this code?")) return;
+    saveUserCodes(loadUserCodes().filter(u => u.id !== code.id));
+    trackEvent("restored original code: " + code.brand + " " + code.code + " (" + code.id + ")");
+    renderCodes(); openCodeDetail(code.id);
+  };
+  const manBtn = document.getElementById("codeManualsBtn");
+  if (manBtn) manBtn.onclick = () => { trackEvent("code -> manuals: " + famModel); closeModal(); openManualsForModel(famModel); };
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editCodeBtn").onclick = () => openCodeEditForm(code);
   document.getElementById("modalBackdrop").classList.remove("hidden");
@@ -755,6 +785,8 @@ function openCodeEditForm(existing) {
     const userCodes = loadUserCodes().filter(u => u.id !== entry.id);
     userCodes.push(entry);
     saveUserCodes(userCodes);
+    // accuracy #12: the office hears about every edit / addition made on a phone (it never did).
+    trackEvent((existing ? (String(entry.id).startsWith("user-") ? "edited own code on this phone: " : "EDITED LIBRARY CODE on this phone: ") : "added a code on this phone: ") + entry.brand + " " + entry.code + " - " + entry.title.slice(0, 60) + " (" + entry.id + ")");
     if (existing) saveDeletedCodeIds(loadDeletedCodeIds().filter(id => id !== entry.id));
     closeModal(); renderCodes();
   };
@@ -990,6 +1022,7 @@ function askBuildIndex() {
   for (const c of getAllCodes()) {
     items.push({
       kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
+      unverified: c.confidence === "verify", edited: !!c._edited,   // shown on the Ask instant card, never scored
       title: c.code + " — " + c.title,
       sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
       codes: askCodeTokens(c.code), codesLit: [String(c.code).toLowerCase().trim(), String(c.code).toLowerCase().replace(/\s+/g, "")],
@@ -1000,6 +1033,7 @@ function askBuildIndex() {
   for (const s of getAllSymptoms()) {
     items.push({
       kind: "symptom", id: s.id, brand: s.brand || "", equip: s.equipment || "",
+      unverified: s.confidence === "verify", edited: !!s._edited,
       title: s.title,
       sub: [s.brand, s.equipment, s.summary].filter(Boolean).join(" · "),
       hay: [s.brand, s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
@@ -3010,6 +3044,8 @@ function renderAskInstant(q, it, units, partial, offBrand) {
       ${warn}
       <div class="ask-instant-title">${escapeHtml(it.title)}</div>
       ${it.sub ? `<div class="card-meta"><span>${escapeHtml(it.sub)}</span></div>` : ""}
+      ${it.edited ? `<div class="maint-flag-title">Edited on this phone - not the library's wording.</div>` : ""}
+      ${it.unverified && !offBrand ? `<div class="maint-flag-title">${UNVERIFIED_LINE}</div>` : ""}
       <div class="ask-instant-body">${body}${bulLines}</div>
       <button type="button" class="ask-ai-cite ask-instant-open">Open the full entry</button>
     </div>`;
@@ -3244,7 +3280,8 @@ function getAllSymptoms() {
   const deleted = new Set(loadDeletedSymptomIds());
   const userIds = new Set(userSymptoms.map(s => s.id));
   const base = [...SYMPTOMS, ...unitScenarioList()].filter(s => !deleted.has(s.id) && !userIds.has(s.id));
-  return [...base, ...userSymptoms.filter(s => !deleted.has(s.id))];
+  // accuracy #12: a library fix rewritten on this phone is marked, same as an edited code row.
+  return [...base, ...userSymptoms.filter(s => !deleted.has(s.id)).map(s => String(s.id).startsWith("user-") ? s : { ...s, _edited: true })];
 }
 
 function renderSymptoms() {
@@ -3452,6 +3489,7 @@ function buildSymptomCard(s) {
       <span>${escapeHtml([s.brand, s.equipment].filter(Boolean).join(" · "))}</span>
       ${getFollowups(s.id) ? `<span class="fu-badge">Guided</span>` : ""}
       ${s.confidence === "manual" ? `<span class="fu-badge">From the manual</span>` : ""}
+      ${s._edited ? `<span class="fu-badge">Edited on this phone</span>` : ""}
     </div>
     ${s.summary ? `<div class="card-meta">${escapeHtml(s.summary)}</div>` : ""}
   `;
@@ -3466,10 +3504,12 @@ function openSymptomDetail(id) {
   modal.innerHTML = `
     <h2>${escapeHtml(s.title)}</h2>
     <div class="sub">${escapeHtml([s.brand, s.equipment].filter(Boolean).join(" · "))}</div>
+    ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
+    ${s._edited ? editedLineHtml("restoreSymptomBtn") : ""}
+    ${s.confidence === "verify" ? `<div class="maint-flag"><div class="maint-flag-title">${UNVERIFIED_LINE}</div></div>` : ""}
     ${s.summary ? `<div class="detail-section"><p>${escapeHtml(s.summary)}</p></div>` : ""}
     <div id="followupBox"></div>
     ${steps ? `<div class="detail-section"><h3>Checklist</h3><ol>${steps}</ol></div>` : ""}
-    ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
     ${s.confidence === "manual" && s.source ? `<div class="detail-section"><h3>Source</h3><p>${escapeHtml(s.source)}</p>${s.manual ? (s.pages && s.pages.length ? s.pages.slice(0, 3) : [0]).map(pg => `<button class="unit-src-btn" data-page="${pg}">📄 Open the manual${pg ? " at p." + pg : ""}</button>`).join(" ") : ""}</div>` : ""}
     <div class="modal-actions">
       <button id="closeModalBtn">Close</button>
@@ -3482,6 +3522,13 @@ function openSymptomDetail(id) {
     trackEvent("unit scenario manual opened: " + s.id);
     if (pg) openManualAtPage("manual-seed-" + s.manual, pg); else openManualDetail("manual-seed-" + s.manual);
   });
+  const restoreSym = document.getElementById("restoreSymptomBtn");
+  if (restoreSym) restoreSym.onclick = () => {
+    if (!confirm("Put the library's original wording back for this fix?")) return;
+    saveUserSymptoms(loadUserSymptoms().filter(u => u.id !== s.id));
+    trackEvent("restored original fix: " + s.id);
+    renderSymptoms(); openSymptomDetail(s.id);
+  };
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editSymptomBtn").onclick = () => openSymptomEditForm(s);
   document.getElementById("modalBackdrop").classList.remove("hidden");
@@ -3795,6 +3842,7 @@ function openSymptomEditForm(existing) {
     const userSymptoms = loadUserSymptoms().filter(u => u.id !== entry.id);
     userSymptoms.push(entry);
     saveUserSymptoms(userSymptoms);
+    trackEvent((existing ? (String(entry.id).startsWith("user-") ? "edited own fix on this phone: " : "EDITED LIBRARY FIX on this phone: ") : "added a fix on this phone: ") + entry.title.slice(0, 70) + " (" + entry.id + ")");
     if (existing) saveDeletedSymptomIds(loadDeletedSymptomIds().filter(id => id !== entry.id));
     closeModal(); renderSymptoms();
   };
