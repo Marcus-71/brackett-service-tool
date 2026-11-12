@@ -10672,15 +10672,26 @@ function extractTagFields(text) {
 let tessWorkerPromise = null;
 function loadTesseract() {
   if (window.Tesseract) return Promise.resolve();
-  return new Promise((resolve, reject) => {
+  // One load at a time: the engine can now be started by the photo button while a scan asks for it too.
+  if (tessScriptPromise) return tessScriptPromise;
+  return tessScriptPromise = new Promise((resolve, reject) => {
     const s = document.createElement("script");
     s.src = "vendor/tesseract.min.js";
     s.onload = resolve;
-    s.onerror = () => reject(new Error("Could not load the OCR engine files."));
+    s.onerror = () => { tessScriptPromise = null; reject(new Error("Could not load the OCR engine files.")); };
     document.head.appendChild(s);
   });
 }
+let tessScriptPromise = null;
+// 11-12 speed audit #1: the engine's own progress lines go to the scan that is running NOW. They used to
+// stay tied to whichever scan started the engine, so from the second scan on every line carried the
+// "still reading" hint from second 3; and the engine can now be started before any scan (ocrWarmEngine).
+let tessStatusSink = null;
+function ocrWarmEngine() {
+  try { getTessWorker().catch(() => {}); } catch (e) {}
+}
 async function getTessWorker(onStatus) {
+  if (onStatus) tessStatusSink = onStatus;
   await loadTesseract();
   if (!tessWorkerPromise) {
     const base = new URL(".", location.href).href;
@@ -10693,7 +10704,7 @@ async function getTessWorker(onStatus) {
       // memory once per session, instead of keeping a second, unpacked 23.5 MB
       // copy in IndexedDB ("keyval-store") - cleared in startApp().
       cacheMethod: "none",
-      logger: (m) => { if (m.status && onStatus) onStatus(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
+      logger: (m) => { const sink = tessStatusSink; if (m.status && sink) sink(m.status + (m.progress ? ` ${Math.round(m.progress*100)}%` : "")); },
     });
   }
   return tessWorkerPromise;
@@ -11391,6 +11402,15 @@ let ocrStopRequested = false;
 // v302: a tag photo is being read. The update pill waits for it (Cameron
 // 2026-10-14 tapped "Tap to reload" mid-scan at 2:06 and lost the read).
 let tagScanRunning = 0;
+// 11-12 speed audit #1 (b): the Tag Scanner screen sets this while its scan runs, to SHOW the serial
+// as soon as a pass has one. Called with the best-so-far fields (read only, never changed) or with a
+// serial read from a barcode (fromCode = true, which wins at the end). It is told, nothing more: what
+// the scan reads and returns is the same with or without it. null everywhere else.
+let ocrPartialHook = null;
+function ocrTellPartial(f, fromCode) {
+  if (!ocrPartialHook || !f || !f.serial) return;
+  try { ocrPartialHook(f, !!fromCode); } catch (e) {}
+}
 const OCR_STOP = new Error("ocr-stopped");
 async function ocrTagFields(file, onStatus) {
   // Every screen's scan (Maintenance, generator checklist/problem, Charging Calc, Warranty) holds off the
@@ -11404,6 +11424,7 @@ async function ocrTagFieldsInner(file, onStatus) {
   if (viaBarcode && viaBarcode.model) { trackEvent("tag read by barcode"); return viaBarcode; }
   // The enlarged barcode read runs on this thread while Tesseract reads in its worker.
   const enlargedP = tagBarcodeFieldsEnlarged(file);
+  if (ocrPartialHook) { ocrTellPartial(viaBarcode, true); enlargedP.then(e => ocrTellPartial(e, true), () => {}); }   // display only
   const fields = await ocrTagText(file, onStatus);
   const enlarged = await enlargedP;
   if (enlarged && enlarged.model && !(fields && fields.model)) {
@@ -11460,7 +11481,7 @@ async function ocrTagTextPasses(file, onStatus) {
   // Prefer a failed pass that read the serial off its LABEL over one that only
   // found a bare digit run.
   const rank = (f) => (f.serial ? (f.serialSource === "label" ? 3 : f.serialSource === "shape" ? 2 : 1) : 0);
-  const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; };
+  const keep = (f) => { if (!best || rank(f) > rank(best)) best = f; ocrTellPartial(best); };
   // Longer reads of the same family win: "EL297" off a sideways Lennox sticker
   // is the start of EL297UH070XE36B, not the model.
   const score = (c) => (c.tier === 2 ? (c.exact ? 200 : 150) : c.tier === 1 ? 100 : c.lib ? 50 : 0) + c.conf + 2 * Math.min(16, c.model.length);
@@ -12134,6 +12155,13 @@ function inAppCameraSupported() {
   const me = getTechName().trim().toLowerCase();
   return !CAMERA_PILOT || CAMERA_PILOT.some(n => n.toLowerCase() === me);
 }
+// 11-12 speed audit #1 (a): every photo button here ends in a tag / gauge read, so the reading engine
+// starts loading at the tap (camera or photo picker) instead of when the photo comes back - it loads
+// while the tech frames the shot. Nothing is loaded for a tech who only types a model.
+document.addEventListener("click", (e) => {
+  const inp = e.target;
+  if (inp && inp.tagName === "INPUT" && inp.type === "file" && /image/.test(inp.getAttribute("accept") || "")) ocrWarmEngine();
+}, true);
 document.addEventListener("click", (e) => {
   const inp = e.target;
   if (!inp || inp.tagName !== "INPUT" || inp.type !== "file" || !inp.hasAttribute("capture")) return;
@@ -12445,7 +12473,25 @@ function scanFocusModelBox() {
   } catch (e) { /* cosmetic only */ }
 }
 
+// While the reading goes on: bring the Model box on screen (status line and photo under the top bar)
+// without touching the cursor - the keyboard only opens when the tech taps the box.
+function scanShowModelBox() {
+  try {
+    const st = document.getElementById("scanStatus"), box = document.getElementById("scanModelInput");
+    if (!box || document.getElementById("scannerScreen").classList.contains("hidden")) return;
+    const r = box.getBoundingClientRect();
+    if (r.top >= 0 && r.bottom <= window.innerHeight) return;   // already in view
+    const bar = document.querySelector(".topbar");
+    const top = (st.classList.contains("hidden") ? document.getElementById("scanPreview") : st).getBoundingClientRect().top + window.scrollY - ((bar ? bar.offsetHeight : 66) + 10);
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  } catch (e) { /* cosmetic only */ }
+}
+// The Tag Scanner scan that is running now (null when none): Identify unit tapped during it ends the
+// reading through the reader's own stop flag, and the typed model's result is not replaced afterwards.
+let scanLive = null;
+
 async function scanTagPhoto(file) {
+  const live = scanLive = { identified: false, stop: null };
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
   const scanT0 = Date.now();
@@ -12464,6 +12510,10 @@ async function scanTagPhoto(file) {
     // v280: what the tech types while the scan runs is theirs - a scan that
     // reads nothing (or is stopped) no longer wipes it.
     const modelEl = document.getElementById("scanModelInput"), serialEl = document.getElementById("scanSerialInput");
+    // 11-12 speed audit #1 (b): the last unit's model and serial leave the boxes when the new photo
+    // arrives (they were replaced by this scan's read at the end anyway), so what shows during the
+    // scan belongs to THIS tag and the Model box is empty for the tech to type in.
+    modelEl.value = ""; serialEl.value = "";
     const typedBefore = [modelEl.value, serialEl.value];
     ocrStopRequested = false;
     const stopBtn = document.getElementById("scanStopBtn");
@@ -12473,17 +12523,47 @@ async function scanTagPhoto(file) {
     // button - through the reader's own stop flag, so nothing about what is read changes.
     let timedOut = false;
     const scanTimer = setTimeout(() => { timedOut = true; ocrStopRequested = true; }, SCAN_TIME_LIMIT_MS);
-    try { fields = await ocrTagFields(file, scanStatus); }
-    finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; }
+    // 11-12 speed audit #1 (b): show what is known while the reading goes on. The serial goes into
+    // its box as soon as a pass has one (a barcode serial stays; a box the tech has touched is left
+    // alone). Once the four full-photo passes have found no model ("Taking a closer look" is the
+    // reader's next step) one steady line says the model can be typed now, with the Model box in view.
+    let shownSerial = null, serialFromCode = false, typeNow = false, phase = "";
+    live.stop = () => { ocrStopRequested = true; };
+    ocrPartialHook = (f, fromCode) => {
+      if (serialFromCode && !fromCode) return;
+      if (serialEl.value !== (shownSerial === null ? typedBefore[1] : shownSerial) || document.activeElement === serialEl) return;   // the tech's own
+      if (fromCode) serialFromCode = true;
+      shownSerial = f.serial; serialEl.value = f.serial;
+    };
+    const onStatus = (m) => {
+      if (live.identified) return;   // the tech typed the model and tapped Identify unit: his result stays up
+      if (!m) { scanStatus(m); return; }
+      const engine = /^recognizing text/.test(m);
+      if (!typeNow && /^Taking a closer look/.test(m)) { typeNow = true; scanShowModelBox(); }
+      if (!typeNow) { scanStatus(m); return; }
+      if (!engine) phase = m.replace(OCR_SLOW_HINT, "");
+      scanStatus((modelEl.value.trim() ? "Tap Identify unit for the model you typed. Still reading" : "No model found yet — you can type it in the box under the photo now. Still reading")
+        + (phase ? ": " + phase.charAt(0).toLowerCase() + phase.slice(1) : "…")
+        + (m.includes(OCR_SLOW_HINT) ? " A closer photo of just the tag reads faster." : ""));
+    };
+    try { fields = await ocrTagFields(file, onStatus); }
+    finally { clearTimeout(scanTimer); stopBtn.classList.add("hidden"); ocrStopRequested = false; ocrPartialHook = null; live.stop = null; }
     if (!fields.ocrStopped) timedOut = false;   // it finished by itself just as the limit hit
-    scanStatus(null);
+    if (!live.identified) scanStatus(null);
     const typedModel = modelEl.value !== typedBefore[0] && modelEl.value.trim();
-    const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value.trim();
+    const typedSerial = serialEl.value !== typedBefore[1] && serialEl.value !== shownSerial && serialEl.value.trim();
     if (fields.model || !typedModel) modelEl.value = fields.model;
     if (!typedSerial) serialEl.value = fields.serial;
     if (!fields.model) {
       const photoId = newScanPhotoId();
       trackEvent("SCAN - NO MODEL READ" + (timedOut ? " (time limit " + Math.round(SCAN_TIME_LIMIT_MS / 1000) + " s)" : fields.ocrStopped ? " (stopped by tech)" : "") + (fields.serial ? " | serial: " + fields.serial : "") + (fields.brandHint ? " | tag brand: " + fields.brandHint : "") + " | photo: " + photoId);
+      if (live.identified) {
+        // He typed the model and tapped Identify unit while the reading ran: that result card stays.
+        // The photo is still kept and sent like any other tag the scanner could not read.
+        await saveFailedScan(file, { id: photoId, kind: "unreadable", read: [fields.serial ? "serial " + fields.serial : "", fields.brandHint ? "brand " + fields.brandHint : ""].filter(Boolean).join(", ") });
+        scanRetakeRemember(file, photoId, fields, null, true);
+        return;
+      }
       // One plain line above the photo; the retake tips moved into the card under the boxes.
       scanStatus((timedOut ? "This is taking too long. " : fields.ocrStopped ? "Stopped. " : "I can't read this tag. ")
         + (typedModel ? "Tap Identify unit for the model you typed." : "Read the model off the photo and type it in the box under it."));
@@ -12541,6 +12621,7 @@ async function scanTagPhoto(file) {
     if (!lastTagScan || lastTagScan.file !== file) scanRetakeRemember(file, photoId, null, null, true);
     scanStatus("Scan failed: " + (err && err.message ? err.message : err) + " — you can still type the model number below.");
   } finally {
+    if (scanLive === live) scanLive = null;
     tagScanRunning--;
     scanRetakeSettle(prevScan, thisInfo);
     held.then(() => releaseScanPhoto(heldId));
@@ -12897,6 +12978,9 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   const model = document.getElementById("scanModelInput").value.trim();
   const serial = document.getElementById("scanSerialInput").value.trim();
   if (!model) { scanStatus("Type or scan a model number first."); return; }
+  // 11-12 speed audit #1 (b): typed while the photo was still being read - stop the reading (same as
+  // the Stop button) and keep this result on screen when it ends.
+  if (scanLive && scanLive.stop) { scanLive.identified = true; scanLive.stop(); document.getElementById("scanStopBtn").classList.add("hidden"); }
   scanStatus(null);
   trackEvent("identified unit: " + model);
   const info = identifyModel(model, serial, null, null, { log: true });
