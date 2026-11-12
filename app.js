@@ -74,7 +74,7 @@ const SEARCH_STOPWORDS = new Set([
   // pressure look like"). No card or page prints these, so as REQUIRED words they only pushed the
   // right entry out. Trade words that double as filler ("running", "stuck", "check", "install")
   // stay out of here on purpose - see ASK_PASSAGE_NOISE / ASK_ZERO_WORDS for the Ask-only list.
-  "keep","keeps","getting","still","always","select","apply","want","wants","like","look","looks",
+  "keep","keeps","getting","still","always","select","apply","want","wants","like","look","looks","give","gives","giving","instantly",
   "else","happen","happens","happening","going","mean","means","something","anything","nothing",
   "someone","anyone","tell","know","think","maybe","probably","okay","ok","hey","hi","hello",
   "thanks","thank","please","could","would","dies","doea","dose","doe","ia","fir","thee","unir",
@@ -116,7 +116,7 @@ const SEARCH_ALIAS_GROUPS = [
   ["low side", "suction"],
   ["high side", "head pressure", "discharge pressure", "head", "discharge"],
   ["not starting", "wont start", "won't start", "doesn't start", "does not start", "not coming on", "wont kick on", "won't kick on", "not turning on", "no start"],
-  ["not shutting off", "wont turn off", "won't turn off", "runs constantly", "runs non stop", "runs nonstop", "never stops", "won't shut off", "wont shut off", "doesn't shut off", "never shuts off", "runs continuously", "runs all the time", "keeps running"],
+  ["not shutting off", "wont turn off", "won't turn off", "runs constantly", "runs non stop", "runs nonstop", "never stops", "won't shut off", "wont shut off", "doesn't shut off", "never shuts off", "runs continuously", "runs all the time", "keeps running", "always runs", "runs always", "always running", "always run", "run always", "run all the time", "running all the time"],
   ["short cycling", "short cycles", "cycling on and off", "turns on and off", "kicks on and off"],
   ["frozen", "iced up", "ice up", "icing up", "icing", "frosted", "frost"],
   ["compressor", "comp"],
@@ -158,6 +158,9 @@ const SEARCH_ALIAS_GROUPS = [
   ["zone sensor", "smart sensor", "room sensor", "remote sensor", "remote room sensor"],
   ["wall control", "system control", "infinity control", "infinity touch", "touch control"],
   ["thermostat", "tstat", "stat", "wall stat"],
+  // v422 (audit 11-12): James asked for the Lennox "collector box" part number - the bulletin calls it the cold end header box.
+  ["collector box", "cold end header box", "header box", "cehb"],
+  ["manometer", "magnehelic", "magnahelic"],
   ["communicating", "comm bus", "abcd bus", "abcd", "data bus", "serial bus"],
   ["firmware", "software version", "software update", "firmware update", "update the control"],
 ];
@@ -863,6 +866,7 @@ function askAddModelAlts(units, q) {
     // Kohler switch prefixes are followed by a dash or a letter (RXT-JFNA); a digit after RXT is a
     // Daikin Aurora outdoor unit (RXT12AVJU9), not a switch (content audit 2026-10-06).
     const kTok = t.replace(/[^A-Z0-9.]/g, "");
+    if (u.word && t.length >= 4 && /[A-Z]/.test(t) && /\d/.test(t) && /^[A-Z0-9\-\/]+$/.test(t)) u.pre = t.toLowerCase().replace(/[^a-z0-9]/g, "");   // v422, see askPrefixHit
     if (!units.kFam && /^(\d{1,2}(\.5)?[A-Z]{3}|(RXT|RDT|RRT|RSB)(?![0-9]{2}[A-Z]{1,2}VJU)|RGEN|6VSG)/.test(kTok) && typeof genFamilyForModel === "function") {
       let kf = genFamilyForModel(kTok);
       if (!kf || genBrandOf(kf) !== "Kohler") kf = genEntries().find(g => genBrandOf(g) === "Kohler" && (g.models || []).some(m => String(m.k || "").toUpperCase().startsWith(kTok)));
@@ -873,6 +877,7 @@ function askAddModelAlts(units, q) {
       if (gf) { units.kFam = gf.id; units.kModel = kTok; }
     }
     if (t.length < 7 || !/[A-Z]/.test(t) || !/\d/.test(t) || !/^[A-Z0-9\-\/]+$/.test(t)) continue;
+    u.model = t;   // v422: lets a unit card answer for its own model number (askModelHit)
     const extra = new Set();
     const twin = carrierTwinModel(t);
     const fam = codeFamilyPrefix(t, getAllCodes()) || (twin ? codeFamilyPrefix(twin, getAllCodes()) : "");
@@ -886,6 +891,9 @@ function askAddModelAlts(units, q) {
     // Generac model numbers (G00722610, 007226-0) reach their family by the 4 digits.
     const gd = typeof genNormModel === "function" ? genNormModel(t) : "";
     if (gd) extra.add(gd);
+    // "XP25-048" is also asked as its family word: fix cards say "XP25", never the size ("xp25-048 pump down").
+    const head = t.split(/[-/]/)[0];
+    if (head !== t && head.length >= 4 && /^[A-Z]/.test(head) && /[0-9]/.test(head)) extra.add(head.toLowerCase());   // not "1F95-0671": that head is half a part number
     for (const e of extra) if (!u.alts.includes(e)) u.alts.push(e);
   }
   // No model number: series / controller / part-number words (ASK_FAMILY_WORDS). kModel stays unset -
@@ -1002,7 +1010,7 @@ function askBuildIndex() {
     for (const m of MAINT_SPECS) {
       const rows = (m.groups || []).flatMap(g => [g.title, ...(g.rows || []).flatMap(r => [r.label, r.value])]);
       items.push({
-        kind: "maint", id: m.brand + "|" + m.model, brand: m.brand || "", equip: m.equip || "",
+        kind: "maint", id: m.brand + "|" + m.model, brand: m.brand || "", equip: m.equip || "", spec: m,
         title: [m.brand, m.model].filter(Boolean).join(" ") + " - maintenance figures",
         sub: [m.equip, m.summary].filter(Boolean).join(" · "),
         titleHay: [m.brand, m.model, ...(m.match || []), m.equip, "maintenance specs figures"].filter(Boolean).join(" ").toLowerCase(),
@@ -1038,7 +1046,7 @@ function askBuildIndex() {
       if (!p.series) return;
       const pre = askPatternPrefix(p.re);
       items.push({
-        kind: "series", id: "series-" + i, brand: p.brand || "", equip: p.equipment || "",
+        kind: "series", id: "series-" + i, brand: p.brand || "", equip: p.equipment || "", pat: p,
         title: p.series,
         sub: [p.brand, p.equipment].filter(Boolean).join(" · "),
         titleHay: [p.brand, pre, p.series].filter(Boolean).join(" ").toLowerCase(),
@@ -1178,8 +1186,21 @@ function askFixModelLookalikes(q) {
     return info.brand && info.ocrGuess && info.model ? info.model : t;
   });
 }
+// v422 (audit 11-12, every question techs typed since August): spellings the typo fixer got wrong or could not
+// know, and words typed glued to a code. "allways" was "corrected" to hallway (Gus 8-17, three tries);
+// "Linux" is what voice typing hears for Lennox; "42.1error" and "XC25Pump" lost the code / the model.
+const ASK_KNOWN_TYPOS = [
+  [/\ball\s?ways\b|\balway\b/gi, "always"],
+  [/\blinux\b/gi, "lennox"],
+  [/\bal2\b/gi, "a2l"],
+  [/\bnex\s?ge(?:ge)?n\b/gi, "nexgen"],
+  [/\b(410|454|407)\s+([abc])\b/gi, "r-$1$2"],
+  [/(\d)(errors?|codes?|faults?|alarms?)\b/gi, "$1 $2"],
+  [/\b([a-z]{1,3}\d{2,3})(pump|defrost|reset|codes?|errors?)\b/gi, "$1 $2"],
+];
+function askKnownTypos(q) { let r = String(q || ""); for (const [re, to] of ASK_KNOWN_TYPOS) r = r.replace(re, to); return r; }
 function askRetrievalQ(q) {
-  let r = askFixTypos(askFixModelLookalikes(q));
+  let r = askFixTypos(askFixModelLookalikes(askKnownTypos(q)));
   const models = askModelTokens(r);
   const brandOf = (s) => { const m = String(s).toLowerCase().match(ASK_BRAND_RE); return m ? m[1] : ""; };
   // Fault codes said in the question (3-4 digits not followed by kW / cc / volts / amps ...).
@@ -1439,9 +1460,50 @@ function askTstatHow(units) {
   else return null;
   return { brandU, howU, others, pure: !others.length, only, soft };
 }
+// v422: a whole model number typed into Ask is matched the way the Tag Scanner and Maintenance Figures match it.
+// Their cards list a model by its family letters ("S9V2", "59SC5"), which the word search cannot find inside
+// "S9V2B080U4PSAAB" - Ask said nothing for units both of them knew (Nick 11-11, Bryce 11-06, audit 11-12).
+// The front part of a model number ("TEM3A", "59sc", "th622"; Cameron 11-10, Bryce 11-06) reaches the unit
+// cards and thermostats whose own model numbers start with it. Only for a word nothing in the card's text holds.
+function askPrefixHit(u, it) {
+  if (it.kind !== "maint" && it.kind !== "tstat") return false;
+  if (it.mtoks === undefined) {
+    const norm = (x) => String(x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    it.mtoks = it.kind === "maint"
+      ? (it.spec ? (it.spec.match || []).concat(String(it.spec.model || "").split(" (")[0].split("/")).map(norm) : [])
+      : String(it.idHay || "").split(/[\s,;()\/]+/).map(norm);
+    it.mtoks = it.mtoks.filter(t => t.length >= 5 && /\d/.test(t) && /[a-z]/.test(t));
+  }
+  const p = u.pre;
+  // A whole thermostat model one revision off the listed ones ("THX321WF2001W" next to THX321WF2003W).
+  if (it.kind === "tstat" && p.length >= 10) return it.mtoks.some(t => t.length >= 10 && t.slice(0, 9) === p.slice(0, 9));
+  return p.length <= 8 && it.mtoks.some(t => t.length > p.length && t.startsWith(p));
+}
+function askModelHit(u, it) {
+  if (it.kind === "maint") return !!it.spec && typeof maintIsExact === "function" && maintIsExact(it.spec, u.model);
+  if (it.kind === "series" && typeof MODEL_PATTERNS !== "undefined") {
+    if (u.pat === undefined) { const n = u.model.replace(/[^A-Z0-9]/g, ""); u.pat = MODEL_PATTERNS.find(x => x.re.test(n)) || null; }
+    return !!u.pat && u.pat === it.pat;
+  }
+  return false;
+}
 function askScoreItem(units, it) {
   let sc = askUnitHits(units, it.hay, it);
-  let tsc = sc ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
+  let byModel = 0;
+  if (it.kind === "maint" || it.kind === "series" || it.kind === "tstat") for (const u of units) {
+    if (u.zero || !(u.model || u.pre) || u.alts.some(a => askTermHit(it.hay, a))) continue;
+    if ((u.model && it.kind !== "tstat" && askModelHit(u, it)) || (u.pre && askPrefixHit(u, it))) byModel++;
+  }
+  let tsc = sc || byModel ? askUnitHits(units, it.titleHay || (it.title + " " + it.sub).toLowerCase()) : 0;
+  sc += byModel; tsc += byModel;
+  // The unit card that carries the typed model goes ahead of code rows and fix cards that share its family letters
+  // (v420 did this for the AI answer only; the list on the Ask screen still led with a code row - "EC041-1VTC-FLT").
+  // Only when the model number is the whole question: with other words ("xp25-048 pump down") the card about those words leads.
+  if (it.kind === "maint" && sc > 0 && askLiveUnits(units).every(u => u.model)) {
+    if (units.some(u => u.model && !u.zero && askModelHit(u, it))) tsc += 1;
+    // The card that lists this very model number goes before its family card (Bryce 11-11, 59TP6C060V141112).
+    if (units.some(u => u.model && hayHasTerm(it.titleHay || "", u.model.toLowerCase()))) tsc += 2;
+  }
   // (A card a line name covers without printing it - "icomfort" on the Lennox S40 - stays in for the how-to check below.)
   if (units.tHow === undefined) units.tHow = askTstatHow(units);
   if (units.tHow && units.tHow.generic) {
@@ -2418,7 +2480,7 @@ function askTopItems(units, limit) {
   const wholeModel = whole && whole.length >= 8 && /[a-z]/.test(whole) && /\d/.test(whole) && /^[a-z0-9-]+$/.test(whole) ? whole : "";
   for (const it of idx) {
     let { sc, tsc } = askScoreItem(units, it);
-    if (sc > 0 && wholeModel && it.kind === "maint" && hayHasTerm(it.titleHay || "", wholeModel)) tsc += 1;
+    if (sc > 0 && wholeModel && it.kind === "maint" && hayHasTerm(it.titleHay || "", wholeModel)) tsc += 1;   // exact card ahead of its family card
     if (sc > 0) scored.push({ it, sc, tsc });
   }
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
@@ -3996,7 +4058,10 @@ function renderTstats() {
     // mention Rheem above the EcoNet; plain "rheem" led with an ecobee kit and a Honeywell zone panel). Cards named
     // for the search whose steps cover the asked words, then other cards named for it, then cards that only hold
     // the words in their text. The old order is kept inside each group.
-    byRank(t => !idHit(t) ? 2 : stepHit(t) ? 0 : 1);
+    // Cards whose brand / name carries the search go before cards that only mention it in their notes or model
+    // list ("honeywell schedule" led with the Amazon card, which says "Honeywell Home-built").
+    const nameHit = (t) => { const hay = [t.brand, t.family].filter(Boolean).join(" ").toLowerCase(); return lessUnits.every(u => u.alts.some(a => hayHasTerm(hay, a) || (a.endsWith("+") && hay.includes(a)) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => hay.startsWith(x)))); };
+    byRank(t => nameHit(t) ? (stepHit(t) ? 0 : 1) : idHit(t) ? (stepHit(t) ? 2 : 3) : 4);
   }
 
   const results = document.getElementById("tstatResults");
@@ -13447,7 +13512,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v421";
+const APP_VERSION = "v422";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form
