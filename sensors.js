@@ -18,7 +18,9 @@ function snEnsure() {
     const add = (src) => new Promise((ok, bad) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
     snLoadP = Promise.all(["daikin-sensors.js", "brand-sensors.js"].map(add)).then(() => {
       snLoaded = true; snAll = null;
-      if (typeof askIndexCache !== "undefined") askIndexCache = null;   // rebuild Ask Anything with the sensor maps
+      // Ask Anything gets the sensor maps: added to the index it already has (app.js askSensorsLanded, 11-12 speed audit #4)
+      if (typeof askSensorsLanded === "function") askSensorsLanded();
+      else if (typeof askIndexCache !== "undefined") askIndexCache = null;
       document.dispatchEvent(new Event("sensors-loaded"));
     }).catch(e => { snLoadP = null; throw e; });
   }

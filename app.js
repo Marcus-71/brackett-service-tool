@@ -564,9 +564,9 @@ function safeSet(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); return true; }
   catch (e) { return false; }
 }
-function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); askIndexCache = null; }
+function saveUserCodes(list) { safeSet(CODES_STORAGE_KEY, list); askIndexDrop(); }
 function loadDeletedCodeIds() { try { return JSON.parse(localStorage.getItem(CODES_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); askIndexCache = null; }
+function saveDeletedCodeIds(list) { safeSet(CODES_DELETED_KEY, list); askIndexDrop(); }
 
 function getAllCodes() {
   const userCodes = loadUserCodes();
@@ -1212,10 +1212,83 @@ function askShortEE(code) {
 // Built once per screen visit (showScreen nulls the cache), reused on every
 // keystroke — so live typing never rebuilds ~10k haystacks.
 function askBuildIndex() {
-  // Sensor maps load on demand on low-memory devices (sensors.js snEnsure); start it so the next search includes them.
+  askWantSensors();
+  // 11-12 speed audit #4: the index is normally built in idle slices before the first question
+  // (askIdleKick). Here it is needed NOW: finish the build in hand, or do the whole of it, in one go.
+  const job = askIndexJob || askIndexStart();
+  askIndexJob = null; askSliceEnd = Infinity;
+  while (!job.gen.next().done) { /* run to the end */ }
+  return job.items;
+}
+// Sensor maps load on demand on low-memory devices (sensors.js snEnsure); start it so the next search includes them.
+function askWantSensors() {
   if (typeof snEnsure === "function" && typeof snLoaded !== "undefined" && !snLoaded) snEnsure().catch(() => {});
-  const items = [];
+}
+// ----- Ask index and word list built while the app is idle (11-12 speed audit #4) -----
+// The first question of a session used to freeze the phone 2-3 s while 13,700 entries and the word
+// list were built. Same entries, same order, same word list - built in short slices when nothing
+// else is going on, and finished on the spot if a question arrives first.
+let askIndexJob = null;        // { items, gen } - an index build in hand
+let askVocabJob = null;        // { idx, i, freq } - a word-list build in hand
+let askSliceEnd = Infinity;    // performance.now() at which an idle slice hands back; Infinity = run to the end
+let askIdleOn = false, askIdleQueued = false, askIdleAfterSensors = false;
+function askSliceDue() { return performance.now() >= askSliceEnd; }
+// A tech's own entry changed (saved, deleted, restored): the index is built again, a build in hand too.
+function askIndexDrop() { askIndexCache = null; askIndexJob = null; askIdleKick(); }
+function askIndexStart() { const items = []; return { items, gen: askIndexSteps(items) }; }
+function askIdleKick() {
+  if (!askIdleOn || askIdleQueued || (askIndexCache && askVocabCache)) return;
+  askIdleQueued = true;
+  const run = (dl) => {
+    askIdleQueued = false;
+    const left = dl && typeof dl.timeRemaining === "function" && !dl.didTimeout ? dl.timeRemaining() : 12;
+    if (left >= 3) {
+      askSliceEnd = performance.now() + Math.min(left - 1, 30);
+      try {
+        if (!askIndexCache) {
+          const job = askIndexJob || (askIndexJob = askIndexStart());
+          if (job.gen.next().done) { askIndexCache = job.items; askIndexJob = null; }
+        } else askVocabStep();
+      } catch (e) { askIndexJob = null; askVocabJob = null; askIdleOn = false; }   // the next question builds it in one go, as before
+      askSliceEnd = Infinity;
+    }
+    askIdleKick();
+  };
+  if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 3000 });
+  else setTimeout(run, 60);
+}
+// The sensor files have landed (sensors.js snEnsure): put their entries where a full build puts them
+// (after the charging charts) instead of throwing the whole index away, and build the word list again
+// so it holds the sensor words.
+const ASK_KINDS_AFTER_SENSORS = { series: 1, guide: 1, bulletin: 1, manual: 1 };
+function askSensorsLanded() {
+  askIndexJob = null;   // a half-built index may hold part of the sensor maps: start that again
+  const had = !!askIndexCache;
+  if (had) {
+    const keep = askIndexCache.filter(it => it.kind !== "sensor");
+    let at = keep.findIndex(it => ASK_KINDS_AFTER_SENSORS[it.kind]);
+    if (at < 0) at = keep.length;
+    const add = snMaps().map(askSensorItem);
+    askIndexCache = keep.slice(0, at).concat(add, keep.slice(at));
+  }
+  askVocabCache = null; askVocabJob = null;
+  if (had || askIdleAfterSensors) { askIdleOn = true; askIdleKick(); }
+}
+function askSensorItem(m) {
+  const ss = m.sensors || [];
+  return {
+    kind: "sensor", id: m.id, brand: m.brand || "Daikin", equip: "",
+    title: m.title + " - sensor plugs & charts",
+    sub: [m.side === "indoor" ? "Indoor" : "Outdoor", m.models].filter(Boolean).join(" · "),
+    titleHay: [m.brand, m.title, ...(m.match || []), "sensor thermistor plug connector chart"].filter(Boolean).join(" ").toLowerCase(),
+    hay: [m.brand, m.title, m.models, ...(m.match || []), "sensor sensors thermistor plug connector resistance ohm ohms kohm chart read reading reads should test check temperature temp degrees", ss.some(s => s.kind === "pressure") ? "pressure transducer volts voltage psi psig" : "", ss.some(s => s.kind === "eev") ? "eev expansion valve coil ohms" : "", ...ss.flatMap(s => [s.plug, s.code, s.name, s.location, s.spec])].filter(Boolean).join(" ").toLowerCase(),
+  };
+}
+// The index itself. A generator only so an idle slice can stop between entries ("yield" hands back when
+// the slice is used up); the entries and their order are exactly what one straight run makes.
+function* askIndexSteps(items) {
   for (const c of getAllCodes()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
       unverified: c.confidence === "verify", edited: !!c._edited,   // shown on the Ask instant card, never scored
@@ -1228,6 +1301,7 @@ function askBuildIndex() {
     });
   }
   for (const s of getAllSymptoms()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "symptom", id: s.id, brand: s.brand || "", equip: s.equipment || "",
       unverified: s.confidence === "verify", edited: !!s._edited,
@@ -1238,6 +1312,7 @@ function askBuildIndex() {
     });
   }
   for (const t of tstatEntries()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "tstat", id: t.id, brand: t.brand || "", equip: "Thermostat",
       title: [t.brand, t.family].filter(Boolean).join(" "),
@@ -1261,6 +1336,7 @@ function askBuildIndex() {
     });
   }
   for (const g of genEntries()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "gen", id: g.id, brand: genBrandOf(g), equip: "Generator",
       title: [g.series, g.family].filter(Boolean).join(" · "),
@@ -1273,6 +1349,7 @@ function askBuildIndex() {
     });
   }
   for (const t of getAllToolboxEntries()) {
+    if (askSliceDue()) yield;
     items.push({
       kind: "tool", id: t.id, brand: t.brand || "", equip: "",
       title: t.toolName + (t.title ? " — " + t.title : ""),
@@ -1282,6 +1359,7 @@ function askBuildIndex() {
   }
   if (typeof MAINT_SPECS !== "undefined") {
     for (const m of MAINT_SPECS) {
+      if (askSliceDue()) yield;
       const rows = (m.groups || []).flatMap(g => [g.title, ...(g.rows || []).flatMap(r => [r.label, r.value])]);
       items.push({
         kind: "maint", id: m.brand + "|" + m.model, brand: m.brand || "", equip: m.equip || "", spec: m,
@@ -1305,16 +1383,11 @@ function askBuildIndex() {
   }
   if (typeof snMaps === "function") {
     for (const m of snMaps()) {
-      const ss = m.sensors || [];
-      items.push({
-        kind: "sensor", id: m.id, brand: m.brand || "Daikin", equip: "",
-        title: m.title + " - sensor plugs & charts",
-        sub: [m.side === "indoor" ? "Indoor" : "Outdoor", m.models].filter(Boolean).join(" · "),
-        titleHay: [m.brand, m.title, ...(m.match || []), "sensor thermistor plug connector chart"].filter(Boolean).join(" ").toLowerCase(),
-        hay: [m.brand, m.title, m.models, ...(m.match || []), "sensor sensors thermistor plug connector resistance ohm ohms kohm chart read reading reads should test check temperature temp degrees", ss.some(s => s.kind === "pressure") ? "pressure transducer volts voltage psi psig" : "", ss.some(s => s.kind === "eev") ? "eev expansion valve coil ohms" : "", ...ss.flatMap(s => [s.plug, s.code, s.name, s.location, s.spec])].filter(Boolean).join(" ").toLowerCase(),
-      });
+      if (askSliceDue()) yield;
+      items.push(askSensorItem(m));
     }
   }
+  if (askSliceDue()) yield;
   if (typeof MODEL_PATTERNS !== "undefined") {
     MODEL_PATTERNS.forEach((p, i) => {
       if (!p.series) return;
@@ -1328,6 +1401,7 @@ function askBuildIndex() {
       });
     });
   }
+  if (askSliceDue()) yield;
   for (const el of askGuideCards()) {
     const t = el.querySelector("summary b"), sub = el.querySelector("summary .gwz-entry-text span");
     items.push({
@@ -1340,6 +1414,7 @@ function askBuildIndex() {
   }
   if (typeof BULLETINS !== "undefined" && Array.isArray(BULLETINS)) {
     for (const b of BULLETINS) {
+      if (askSliceDue()) yield;
       const a = b.applies || {};
       const head = [b.brand, b.number, b.docNo && b.docNo !== b.number ? b.docNo : "", (b.type || "Service") + " bulletin bulletins", b.title];
       items.push({
@@ -1356,6 +1431,7 @@ function askBuildIndex() {
   // same seed id and handles download-or-open, so a cloud manual works too.
   if (typeof MANUAL_SEEDS !== "undefined") {
     for (const seed of MANUAL_SEEDS) {
+      if (askSliceDue()) yield;
       items.push({
         kind: "manual", id: seedIdOf(seed), brand: seed.brand || "", equip: "",
         title: seed.title || (seed.file || "").split("/").pop(),
@@ -1364,7 +1440,6 @@ function askBuildIndex() {
       });
     }
   }
-  return items;
 }
 
 // How many query concepts a haystack contains — same semantics the codes/
@@ -1382,19 +1457,33 @@ function askBuildIndex() {
 let askVocabCache = null;
 function askVocab() {
   if (askVocabCache) return askVocabCache;
-  const freq = new Map();
+  if (!askIndexCache) askIndexCache = askBuildIndex();
+  askSliceEnd = Infinity;
+  while (!askVocabStep()) { /* finish it now */ }
+  return askVocabCache;
+}
+// One stretch of the word-list build over the finished index (askIndexCache); true when the list is
+// done. An idle slice stops between entries (askSliceDue); the words are counted in the same order as
+// one straight run, so the list is the same either way. A list begun on an index that has since been
+// replaced starts again.
+function askVocabStep() {
+  const idx = askIndexCache;
+  let job = askVocabJob;
+  if (!job || job.idx !== idx) job = askVocabJob = { idx, i: 0, freq: new Map() };
+  const freq = job.freq;
   // Apostrophes come out before tokenising, so "doesn't"/"won't" in the cards are the vocab words
   // "doesnt"/"wont" - before, the fragments "doesn"/"won" were vocab and a typed "doesnt" was
   // "corrected" to the required word "doesn" (James 2026-09-09; 2026-10-06 audit, F2).
   const add = (s) => { for (const w of String(s || "").toLowerCase().replace(/['’]/g, "").match(/[a-z]{3,}/g) || []) freq.set(w, (freq.get(w) || 0) + 1); };
-  for (const it of (askIndexCache || (askIndexCache = askBuildIndex()))) add(it.hay);
+  while (job.i < idx.length) { add(idx[job.i++].hay); if (job.i < idx.length && askSliceDue()) return false; }
   if (typeof MANUAL_SEEDS !== "undefined") for (const s of MANUAL_SEEDS) { add(s.brand); add(s.model); add(s.title); }
   const byFirst = new Map(), words = [];
   // Never offer a stopword or a 3-letter word as a correction target (3-letter words are only in
   // the vocab so "txv", "ecm", "ats", "hsi" are recognised as real).
   for (const [w, n] of freq) { if (n < 3 || w.length < 4 || SEARCH_STOPWORDS.has(w)) continue; const k = w[0]; if (!byFirst.has(k)) byFirst.set(k, []); byFirst.get(k).push([w, n]); words.push([w, n]); }
   askVocabCache = { freq, byFirst, words };
-  return askVocabCache;
+  askVocabJob = null;
+  return true;
 }
 // A short unknown word one letter off a stopword IS that stopword mistyped ("doe", "fir", "thee",
 // "unir"): drop it rather than find it a real word ("doe" matched "does"-with-plural-s into E214/Eb
@@ -1952,7 +2041,10 @@ function renderAsk() {
     askAiToken++;   // v342 (audit CODE-09): an answer still in flight is for the old question - drop it, don't paint it under the new one
   }
 
+  askWantSensors();   // the index may have been built ahead of time (askIdleKick), so ask here too
   if (!askIndexCache) askIndexCache = askBuildIndex();
+  // The word list for the first question is built while the tech types it (every phone, low memory too).
+  if (!askVocabCache) { askIdleOn = true; askIdleKick(); }
 
   // Kind filter: only offer kinds that exist, each with a live count.
   const counts = {};
@@ -3543,9 +3635,9 @@ function unitScenariosFor(model) {
 }
 
 function loadUserSymptoms() { try { return JSON.parse(localStorage.getItem(DIAG_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); askIndexCache = null; }
+function saveUserSymptoms(list) { safeSet(DIAG_STORAGE_KEY, list); askIndexDrop(); }
 function loadDeletedSymptomIds() { try { return JSON.parse(localStorage.getItem(DIAG_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); askIndexCache = null; }
+function saveDeletedSymptomIds(list) { safeSet(DIAG_DELETED_KEY, list); askIndexDrop(); }
 
 function getAllSymptoms() {
   const userSymptoms = loadUserSymptoms();
@@ -4134,9 +4226,9 @@ let toolboxState = { search: "", brand: "All", era: "All" };
 const TOOLBOX_ERA_LABEL = { current: "Current", legacy: "Legacy" };
 
 function loadUserToolbox() { try { return JSON.parse(localStorage.getItem(TOOLBOX_STORAGE_KEY)) || []; } catch { return []; } }
-function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); askIndexCache = null; }
+function saveUserToolbox(list) { safeSet(TOOLBOX_STORAGE_KEY, list); askIndexDrop(); }
 function loadDeletedToolboxIds() { try { return JSON.parse(localStorage.getItem(TOOLBOX_DELETED_KEY)) || []; } catch { return []; } }
-function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); askIndexCache = null; }
+function saveDeletedToolboxIds(list) { safeSet(TOOLBOX_DELETED_KEY, list); askIndexDrop(); }
 
 function getAllToolboxEntries() {
   const userEntries = loadUserToolbox();
@@ -14774,6 +14866,15 @@ function startApp() {
     if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 8000 });
     else setTimeout(run, 4000);
   })();
+
+  // 11-12 speed audit #4: build Ask Anything's index and word list in idle slices so the first
+  // question does not freeze the phone. Starts once the sensor files have landed (about 4 s after
+  // start; 9 s at the latest), never before first paint, and gives way to any tap. Phones that report
+  // 4 GB or less keep building on demand, as they keep the sensor files on demand (Andy 11-09).
+  if (!(typeof snLowMem !== "undefined" && snLowMem)) {
+    if (typeof snLoaded !== "undefined" && !snLoaded) askIdleAfterSensors = true;
+    setTimeout(() => { askIdleOn = true; askIdleKick(); }, typeof snLoaded !== "undefined" && !snLoaded ? 9000 : 1500);
+  }
 }
 
 updateNetStatus();
