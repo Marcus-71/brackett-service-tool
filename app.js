@@ -952,6 +952,10 @@ const ASK_EXAMPLES = [
   "oil capacity", "vent pipe size",
 ];
 
+function askShortEE(code) {
+  const c = String(code || "").trim();
+  return /^EE[0-9A-Za-z]$/.test(c) ? [("E" + c.slice(2)).toLowerCase()] : [];
+}
 // Built once per screen visit (showScreen nulls the cache), reused on every
 // keystroke — so live typing never rebuilds ~10k haystacks.
 function askBuildIndex() {
@@ -963,7 +967,8 @@ function askBuildIndex() {
       kind: "code", id: c.id, brand: c.brand || "", equip: c.equipment || "",
       title: c.code + " — " + c.title,
       sub: [c.brand, c.family, c.equipment].filter(Boolean).join(" · "),
-      codes: askCodeTokens(c.code), codesLit: [String(c.code).toLowerCase().trim(), String(c.code).toLowerCase().replace(/\s+/g, "")],
+      // v425: a Goodman three-character display code (EE0) is also the code itself in its short flow-chart form (E0).
+      codes: [...askCodeTokens(c.code), ...askShortEE(c.code)], codesLit: [String(c.code).toLowerCase().trim(), String(c.code).toLowerCase().replace(/\s+/g, ""), ...askShortEE(c.code)],
       titleHay: [c.brand, c.code, ...codeSearchAliases(c.code), c.title].filter(Boolean).join(" ").toLowerCase(),
       hay: [c.brand, c.family, c.equipment, c.code, ...codeSearchAliases(c.code), c.title, c.meaning, ...(c.causes || []), ...(c.steps || []), ...(c.techTips || []).map(t => t.text)].filter(Boolean).join(" ").toLowerCase(),
     });
