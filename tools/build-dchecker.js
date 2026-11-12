@@ -182,6 +182,11 @@ swap(/<link rel="apple-touch-icon"[^>]*>\r?\n/, "", "apple-touch-icon link");
 // the viewer may carry several favicon links (v51: svg + png); the first becomes ours, the rest go
 swap(/<link rel="icon"[^>]*>/, '<link rel="icon" href="../icons/icon-192.png">', "favicon link");
 html = html.replace(/<link rel="icon"(?! href="\.\.\/icons\/icon-192\.png">)[^>]*>\r?\n/g, "");
+// The viewer's Google Fonts stylesheet blocks the first paint until it answers. On weak signal
+// (phone online, nothing comes back) the tech got a blank white page for good (speed audit
+// 2026-11-12, finding 5). Loaded as a print sheet and switched on when it arrives, it never
+// blocks: the page paints at once in the system fonts its own CSS already names as fallbacks.
+swap(/<link rel="stylesheet" href="(https:\/\/fonts\.googleapis\.com\/[^"]+)">/, (() => { const m = html.match(/<link rel="stylesheet" href="(https:\/\/fonts\.googleapis\.com\/[^"]+)">/); return m ? `<link rel="stylesheet" href="${m[1]}" media="print" onload="this.media='all'">` : ""; })(), "Google Fonts stylesheet link");
 swap("navigator.serviceWorker.register('sw.js')", "Promise.resolve() /* SW disabled inside Brackett Service Tool - see tools/build-dchecker.js */", "service worker registration");
 
 // Anything that could wipe the Service Tool's own caches / storage, register a

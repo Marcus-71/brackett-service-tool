@@ -16,6 +16,7 @@ const WX_AREA = {
 };
 const WX_CACHE_KEY = "bfc-wx-cache";
 const WX_FRESH_MIN = 20; // minutes before we refetch
+const WX_TIMEOUT_MS = 8000; // weak signal: stop waiting for the station after this
 
 // Approximate design conditions for Evansville, per the ASHRAE 2021
 // Handbook of Fundamentals (station WMO 724320), rounded from the
@@ -37,10 +38,15 @@ async function wxFetch(force) {
   const cached = wxGetCached();
   if (!force && cached && wxAgeMin(cached) < WX_FRESH_MIN) return cached;
   if (!navigator.onLine) return cached ? Object.assign({}, cached, { stale: true }) : null;
+  // Weak signal (phone says online, nothing answers): give up after 8 s and fall back to the
+  // saved reading, instead of "Getting current conditions..." forever.
+  const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = ctl ? setTimeout(() => ctl.abort(), WX_TIMEOUT_MS) : 0;
   try {
-    const res = await fetch(WX_AREA.obsUrl, { headers: { "Accept": "application/geo+json" } });
+    const res = await fetch(WX_AREA.obsUrl, { headers: { "Accept": "application/geo+json" }, signal: ctl ? ctl.signal : undefined });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const p = (await res.json()).properties;
+    clearTimeout(timer);
     const rh = p.relativeHumidity && p.relativeHumidity.value;
     const obs = {
       tempF: wxRound(wxCToF(p.temperature && p.temperature.value), true),
@@ -54,6 +60,7 @@ async function wxFetch(force) {
     wxSaveCache(obs);
     return obs;
   } catch (e) {
+    clearTimeout(timer);
     return cached ? Object.assign({}, cached, { stale: true }) : null;
   }
 }
@@ -68,13 +75,28 @@ function wxObsTimeText(obs) {
 async function renderWeather() {
   const body = document.getElementById("wxBody");
   if (!body) return;
-  body.innerHTML = `<div class="wx-loading">Getting current conditions for ${WX_AREA.stationName} (${WX_AREA.station})…</div>`;
+  const run = ++wxRenderRun;
+  // A saved reading goes on screen at once (marked with its time) while a newer one is fetched
+  // behind it; before, it was only shown after the request had failed.
+  const saved = wxGetCached();
+  const willFetch = navigator.onLine && !(saved && wxAgeMin(saved) < WX_FRESH_MIN);
+  if (willFetch && saved && !(saved.tempF === null && saved.dewF === null)) wxDraw(body, Object.assign({}, saved, { checking: true }));
+  else body.innerHTML = `<div class="wx-loading">Getting current conditions for ${WX_AREA.stationName} (${WX_AREA.station})…</div>`;
   const obs = await wxFetch(false);
+  if (run !== wxRenderRun) return;   // a newer open / refresh owns the screen
   if (!obs || (obs.tempF === null && obs.dewF === null)) {
     body.innerHTML = `<div class="disclaimer">No weather yet. This needs signal the first time. When you're back in coverage, reopen this screen.</div>` + wxReferenceCardHtml();
     return;
   }
-  const staleNote = obs.stale ? `<div class="wx-stale">📵 Offline — showing the last reading from ${wxObsTimeText(obs)}.</div>` : "";
+  wxDraw(body, obs);
+}
+let wxRenderRun = 0;
+
+function wxDraw(body, obs) {
+  const typed = (document.getElementById("wxSurfT") || {}).value || "";   // keep a surface temp typed while the newer reading was on its way
+  const wasTyping = !!document.activeElement && document.activeElement.id === "wxSurfT";
+  const staleNote = obs.checking ? `<div class="wx-stale">Showing the reading from ${wxObsTimeText(obs)} — checking for a newer one…</div>`
+    : obs.stale ? `<div class="wx-stale">${navigator.onLine ? "📶 Weak signal" : "📵 Offline"} — showing the last reading from ${wxObsTimeText(obs)}.</div>` : "";
   const dew = obs.dewF;
   const sweatBig = (dew !== null)
     ? `<div class="wx-sweat">
@@ -116,6 +138,7 @@ async function renderWeather() {
     if (s <= dew) { el.innerHTML = `⚠️ <strong>WILL sweat</strong> — surface ${wxRound(s)}°F is at/below the ${d}°F dew point (by ${Math.max(0, Math.round(dew - s))}°F).`; el.className = "wx-surface-verdict wx-bad"; }
     else { el.innerHTML = `✓ No condensation — surface ${wxRound(s)}°F is ${Math.round(s - dew)}°F above the ${d}°F dew point. Stay above dew point to keep it dry.`; el.className = "wx-surface-verdict wx-good"; }
   });
+  if (surf && typed) { surf.value = typed; surf.dispatchEvent(new Event("input")); if (wasTyping) surf.focus(); }
   const toCharge = document.getElementById("wxToCharge");
   if (toCharge) toCharge.onclick = () => { showScreen("charge"); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, true); };
   const refresh = document.getElementById("wxRefresh");

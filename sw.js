@@ -63,6 +63,56 @@ const APP_SHELL = [
   "./manuals-seed/seed-index.js",
   "./manifest.json",
 ];
+// Update without downloading the whole app again (speed audit 2026-11-12, finding 2: every update
+// fetched all 6.4 MB although the median version changes 0.83 MB; on slow 4G the Updating screen
+// gave up before the download ended). SHELL_HASHES is the SHA-256 (first 20 hex digits) of each
+// APP_SHELL file exactly as published, written by  node tools/shell-hashes.js  (it reads the
+// files from the git index, i.e. the bytes the web host serves - not the CRLF working copies).
+// Install copies a file from the previous version's cache instead of downloading it ONLY when
+// all of these hold; in every other case it downloads the file as it always did:
+//   1. this list names a hash for the file,
+//   2. the bytes in the old cache hash to exactly that value (checked here, on the phone),
+//   3. the app.js just downloaded for THIS version hashes to the value the list holds for it.
+// Rule 3 is the guard against a list nobody regenerated: every version changes app.js
+// (APP_VERSION), so a list left over from an earlier version never matches and nothing is reused.
+// app.js itself is always downloaded. An empty list ({}) or one left over from an earlier version
+// simply means "download everything", exactly as before. RULE: the list is regenerated as the
+// LAST step before the commit, after every other file is staged. The one unsafe order is
+// regenerate -> change another app file -> commit without regenerating: phones would keep their
+// old copy of that file.  node tools/shell-hashes.js --check  exits 1 for exactly that state
+// (and passes a matching or a merely left-over list); run it as a publish gate / pre-commit hook.
+// SHELL_HASHES:BEGIN
+const SHELL_HASHES = {};
+// SHELL_HASHES:END
+const shellHash = async (bytes) => {
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+  let s = "";
+  for (let i = 0; i < 10; i++) s += d[i].toString(16).padStart(2, "0");
+  return s;
+};
+// url -> Response from another version's cache (newest first), for every APP_SHELL file whose
+// cached bytes hash to the value SHELL_HASHES publishes. app.js is never in it.
+async function reusePlan() {
+  const plan = new Map();
+  if (!self.crypto || !crypto.subtle || !SHELL_HASHES["./app.js"]) return plan;
+  const olds = (await caches.keys())
+    .map((n) => [n, +((/^bfc-cache-v(\d+)$/.exec(n) || [])[1] || 0)])
+    .filter((x) => x[1] && x[0] !== CACHE_NAME)
+    .sort((a, b) => b[1] - a[1]);
+  for (const url of APP_SHELL) {
+    if (url === "./app.js") continue;
+    const want = SHELL_HASHES[url === "./" ? "./index.html" : url];   // "./" is index.html
+    if (!want) continue;
+    for (const [name] of olds) {   // normally exactly one: the version this phone runs now
+      try {
+        const hit = await (await caches.open(name)).match(url);
+        if (!hit || hit.status !== 200) continue;
+        if ((await shellHash(await hit.clone().arrayBuffer())) === want) { plan.set(url, hit); break; }
+      } catch (e) {}
+    }
+  }
+  return plan;
+}
 
 self.addEventListener("install", (event) => {
   // Fetch with {cache:"reload"} instead of cache.addAll() — addAll() honors the
@@ -96,20 +146,65 @@ self.addEventListener("install", (event) => {
       const old = await caches.match(url);
       await stat.put(url, old && old.ok ? old : await fetchChecked(url));
     }));
+    // Files the previous version's cache already holds byte-for-byte as this version publishes
+    // them (see SHELL_HASHES above). Any doubt, any error -> not in the plan -> downloaded.
+    // Worked out while app.js is already downloading, so it costs the update no time.
+    const reusing = reusePlan().catch(() => new Map());
     const cache = await caches.open(CACHE_NAME);
-    // v336 (audit CODE-03b): right after a publish the web host can still hand out the previous
-    // app.js for a few minutes. Storing that under this version's name would leave the phone
-    // running the old version for good (and showing the Updating screen on every open). Refuse
-    // it: the install fails, the previous version stays, and the next check tries again.
+    // Tell the open app how the download is going, so its Updating screen can give up when
+    // NOTHING has arrived for a while rather than at a fixed time. Best effort only.
+    const progress = { files: 0, total: APP_SHELL.length, bytes: 0, reused: 0, last: 0 };
+    const report = (force) => {
+      const now = Date.now();
+      if (!force && now - progress.last < 700) return;
+      progress.last = now;
+      try {
+        self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((pages) => pages.forEach((c) => {
+          try { c.postMessage({ type: "bfc-update-progress", version: CACHE_NAME.replace("bfc-cache-", ""), files: progress.files, total: progress.total, bytes: progress.bytes, reused: progress.reused }); } catch (e) {}
+        })).catch(() => {});
+      } catch (e) {}
+    };
+    const count = (response) => {
+      // Reads a COPY of the body only to count bytes as they arrive; the original goes to the cache.
+      try {
+        const reader = response.clone().body.getReader();
+        const pump = () => reader.read().then((r) => { if (r.done) return; progress.bytes += r.value.length; report(false); return pump(); });
+        pump().catch(() => {});
+      } catch (e) {}
+    };
+    // Settles once this version's app.js is in hand: true = its hash is the one SHELL_HASHES
+    // holds, so the list was made for exactly this version and reuse is allowed.
+    let listProven, failed = false;
+    const listOk = new Promise((resolve) => { listProven = resolve; });
+    const download = (url) => fetchChecked(url).then(async (response) => {
+      if (url === "./app.js") {
+        // v336 (audit CODE-03b): right after a publish the web host can still hand out the previous
+        // app.js for a few minutes. Storing that under this version's name would leave the phone
+        // running the old version for good (and showing the Updating screen on every open). Refuse
+        // it: the install fails, the previous version stays, and the next check tries again.
+        const bytes = await response.clone().arrayBuffer();
+        const m = new TextDecoder().decode(bytes).match(/const APP_VERSION = "([^"]+)"/);
+        if (m && m[1] !== CACHE_NAME.replace("bfc-cache-", "")) throw new Error("precache app.js is " + m[1] + ", not " + CACHE_NAME + " - old copy from the web host, try later");
+        const mine = SHELL_HASHES["./app.js"] ? await shellHash(bytes).catch(() => "") : "";
+        listProven(!!mine && mine === SHELL_HASHES["./app.js"]);
+      }
+      count(response);
+      await cache.put(url, response);
+      progress.files++; report(true);
+    });
     try {
-      await Promise.all(APP_SHELL.map((url) => fetchChecked(url).then(async (response) => {
-        if (url === "./app.js") {
-          const m = (await response.clone().text()).match(/const APP_VERSION = "([^"]+)"/);
-          if (m && m[1] !== CACHE_NAME.replace("bfc-cache-", "")) throw new Error("precache app.js is " + m[1] + ", not " + CACHE_NAME + " - old copy from the web host, try later");
-        }
-        return cache.put(url, response);
-      })));
+      await Promise.all(APP_SHELL.map(async (url) => {
+        if (url === "./app.js") return download(url);   // always downloaded: it proves the version and the list
+        const old = (await reusing).get(url);
+        if (!old) return download(url);
+        const proven = await listOk;
+        if (failed) return;                    // app.js never arrived: this install is over
+        if (!proven) return download(url);     // list not made for this version: download as always
+        try { await cache.put(url, old); } catch (e) { return download(url); }
+        progress.files++; progress.reused++; report(true);
+      }));
     } catch (err) {
+      failed = true; listProven(false);   // release the files still waiting on app.js; they stop
       // Don't leave a half-filled cache under this version's name behind (the fetch handler
       // searches every cache); the next install starts clean.
       await caches.delete(CACHE_NAME).catch(() => {});
