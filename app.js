@@ -381,6 +381,14 @@ function showScreen(name, fromBack) {
     addBtn.onclick = ADD_HANDLERS[name];
   }
 
+  // A fresh visit to a long list starts at its first 60 cards again; coming BACK to it keeps the cards
+  // the tech had asked for with "Show 60 more", so the page returns to the same place.
+  if (!fromBack) {
+    if (name === "codes") codesPage.key = null;
+    if (name === "diagnostics") diagPage.key = null;
+    if (name === "maint" && typeof maintPage !== "undefined") maintPage.key = null;
+  }
+
   // v342 (audit CODE-07): the ~12,000-item Ask index is rebuilt only when a tech's own code / scenario /
   // tool changes (the save functions drop it), not on every visit - 85-98 ms here, several hundred on a phone.
   if (name === "ask") renderAsk();
