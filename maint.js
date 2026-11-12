@@ -1241,7 +1241,7 @@ const MAINT_MAKER_GROUPS = [
   ["lennox"],
   ["allied air", "armstrong", "airease", "ducane", "concord"],
   ["bosch", "fhp"],
-  ["generac"], ["kohler"], ["mitsubishi"], ["samsung"]
+  ["generac"], ["kohler", "rehlko"], ["mitsubishi"], ["samsung"]
 ];
 function maintMakerGroups(brand) {
   const b = String(brand || "").toLowerCase();
@@ -1381,6 +1381,14 @@ function renderMaint() {
       list = lk.exact;
       kindNote = maintKindNote(list[0], maintState.query);
       if (kindNote) notice = `<div class="maint-flag"><div class="maint-flag-title">Check which unit this card is for</div>${maintEsc(kindNote)}</div>`;
+      // accuracy #8: a model the Tag Scanner guessed, or one that only matched after look-alike
+      // characters were swapped (FESBNXC36 -> FE5BNXC36), says so above the card.
+      const g = maintState.guess && maintNormalize(maintState.guess.model) === qn ? maintState.guess : null;
+      const via = g ? "" : maintExactVia(list[0], maintState.query);
+      if (g) notice += `<div class="maint-flag"><div class="maint-flag-title">Guessed model - confirm ${q} on the tag</div>${!g.raw || maintNormalize(g.raw) === qn
+        ? "Part of " + q + " does not fit this model family's format, so a character may have been misread."
+        : "It was read as " + maintEsc(g.raw) + " and the app corrected it to " + q + (g.diff ? " (changed " + maintEsc(g.diff) + ")" : "") + "."} Check the tag before you use these figures.</div>`;
+      else if (via) notice += `<div class="maint-flag"><div class="maint-flag-title">Searched as ${maintEsc(via)}</div>${q} is not a known model. Look-alike characters were swapped to reach this card${maintCharDiff(maintState.query, via) ? " (changed " + maintEsc(maintCharDiff(maintState.query, via)) + ")" : ""}. Check them on the tag.</div>`;
     } else {
       list = lk.approx;
       const kind = lk.equip ? maintEsc(lk.equip.toLowerCase()) + " " : "";
@@ -1478,6 +1486,27 @@ function maintManualQuery(entry) {
   if (/[0-9]/.test(q) && q.replace(/[^A-Za-z0-9]/g, "").length >= 4) return q;
   const tok = (entry.match || []).find(t => /[0-9]/.test(t) && t.replace(/[^A-Za-z0-9]/g, "").length >= 4);
   return tok || entry.model;
+}
+
+// The re-read (upper case) through which a card is the exact match when the model as typed is not.
+function maintExactVia(entry, q) {
+  const parts = (s) => (s || "").split(" (")[0].split("/");
+  const models = (entry.match || []).concat(parts(entry.model)).map(maintNormalize).filter(t => t.length >= 4);
+  const brands = parts(entry.brand).map(maintNormalize).filter(Boolean);
+  const tokens = models.concat(brands.flatMap(b => models.map(m => b + m)));
+  const n = maintNormalize(q);
+  if (!n || tokens.some(t => n.startsWith(t))) return "";
+  const c = maintQueryCandidates(q).find(x => tokens.some(t => x.startsWith(t)));
+  return c ? c.toUpperCase() : "";
+}
+// "S to 9, T to 7": the characters that differ between what was read / typed and the model shown.
+// "" when the two are not the same length (nothing certain to point at).
+function maintCharDiff(from, to) {
+  const a = String(from || "").toUpperCase().replace(/[^A-Z0-9]/g, ""), b = String(to || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!a || a.length !== b.length) return "";
+  const d = [];
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) d.push(a[i] + " to " + b[i]);
+  return d.join(", ");
 }
 
 // A short series name against a card: the card's own model token STARTS with what was typed.

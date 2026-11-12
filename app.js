@@ -557,17 +557,46 @@ const CODE_FAMILY_GUARDS = [
   { re: new RegExp("^(?:" + ["AC9C8[^0]","AC9C9[^6]","AC9S9[^6]","ACSS9[^26]","ACVC9[^6]","ACVM9[^7]","AM9C8[^0]","AM9C9[^6]","AM9S9[^26]","AMSS9[^26]","AMVC9[^6]","AMVM9[^7]","DC96V[^C]","DD96S[^N]","DD96T[^N]","DM96V[^C]","DR92S[^N]","DR96S[^N]","GC9C8[^0]","GC9C9[^6]","GC9S9[^6]","GCEC9[^6]","GCES9[^6]","GCSS9[^26]","GCVC9[^6]","GCVM9[^7]","GD9T9[^6]","GM9C8[^0]","GM9C9[^6]","GM9S9[^26]","GMEC9[^6]","GMES9[^26]","GMSS9[^26]","GMVC9[^6]","GMVM9[^7]","GR9T9[^6]","VC9S9[^6]","VCSS9[^6]","VM9S9[^6]","VMSS9[^6]"].join("|") + ")"), min: 6 },
   { re: /^(?:AMVT|DMVT|AHVE|DFVE)[0-9]{2}[A-Z]P14/, min: 10 },
   { re: /^[AD]MST[0-9]{2}[A-Z]U14/, min: 10 },
+  // 11-12 audit (accuracy #5): every family that names a 24ANB names the two-stage 24ANB7 / 24ANB1. A
+  // single-stage 24ANB6 fell back to the five characters "24ANB" and got the two-stage tables.
+  { re: /^24ANB[^17]/, min: 6 },
 ];
+// Families a model cannot belong to, proven from the family text itself. Lennox: one family is titled
+// "... EL195 / EL196 gas furnace (non-K models)" and the other lists only names that end in K
+// (EL195UHNEK, EL196UHEK ...). A full model with no K anywhere in it (EL195UH070XE36B) is not one of
+// the K names, so the K family is dropped for it and "EL195" finds the non-K flash-code family.
+const CODE_FAMILY_EXCLUDE = [
+  { model: /^(?:ML180|ML193|ML196|EL180|EL195|EL196)(?:UH|DF)[0-9]{3}(?!.*K)/, fam: /EL195UHNEK/ },
+];
+// The part of a family text a model may match: everything before its first "NOT" / "not". After that
+// word the text lists the boards this table is NOT for ("NOT the Infinity 98 (59MN7C)").
+function codeFamilyOwnText(f) {
+  const s = String(f || "").toUpperCase();
+  const i = s.search(/\bNOT\b/);
+  return i < 0 ? s : s.slice(0, i);
+}
+function codeFamilyNorm(q) { return String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+function codeFamilyPool(m, codes) {
+  const ex = CODE_FAMILY_EXCLUDE.filter(x => x.model.test(m));
+  return ex.length ? (codes || []).filter(c => !ex.some(x => x.fam.test(String(c.family || "").toUpperCase()))) : (codes || []);
+}
 function codeFamilyPrefix(q, codes) {
-  const m = String(q || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m = codeFamilyNorm(q);
   if (m.length < 6 || !/[A-Z]/.test(m) || !/\d/.test(m)) return "";
-  const fams = [...new Set((codes || []).map(c => String(c.family || "").toUpperCase()))];
+  const fams = [...new Set(codeFamilyPool(m, codes).map(c => codeFamilyOwnText(c.family)))];
   const guard = CODE_FAMILY_GUARDS.find(g => g.re.test(m));
   for (let n = m.length - 1; n >= (guard ? guard.min : 5); n--) {
     const p = m.slice(0, n);
     if (fams.some(f => f.includes(p))) return p;
   }
   return "";
+}
+// The code rows a model's family covers - ONE function for the Error Codes list and for the Tag
+// Scanner's codes button, so the number on the button is the list it opens.
+function codeFamilyRows(q, codes) {
+  const pre = codeFamilyPrefix(q, codes);
+  if (!pre) return { pre: "", rows: [] };
+  return { pre, rows: codeFamilyPool(codeFamilyNorm(q), codes).filter(c => codeFamilyOwnText(c.family).includes(pre)) };
 }
 
 function renderCodes() {
@@ -592,8 +621,8 @@ function renderCodes() {
   // part of the model that a family names (Andy 2026-10-05).
   let viaPrefix = "";
   if (!filtered.length) {
-    const pre = codeFamilyPrefix(codesState.search, all.filter(inFilters));
-    if (pre) { viaPrefix = pre; filtered = all.filter(c => inFilters(c) && String(c.family || "").toUpperCase().includes(pre)); }
+    const fr = codeFamilyRows(codesState.search, all.filter(inFilters));   // same function as the Tag Scanner's codes button
+    if (fr.pre) { viaPrefix = fr.pre; filtered = fr.rows; }
   }
   filtered.sort((a, b) => a.brand.localeCompare(b.brand) || a.code.localeCompare(b.code));
 
@@ -1213,7 +1242,11 @@ const ASK_KNOWN_TYPOS = [
   [/\b([a-z]{1,3}\d{2,3})(pump|defrost|reset|codes?|errors?)\b/gi, "$1 $2"],
 ];
 function askKnownTypos(q) { let r = String(q || ""); for (const [re, to] of ASK_KNOWN_TYPOS) r = r.replace(re, to); return r; }
+// What the last askRetrievalQ call borrowed from the question before ({ words, codes }), or null. renderAsk
+// shows it as a chip the tech can remove (11-12 audit, accuracy #6) - a borrowed model is never silent.
+let askBorrowed = null;
 function askRetrievalQ(q) {
+  askBorrowed = null;
   let r = askFixTypos(askFixModelLookalikes(askKnownTypos(q)));
   const models = askModelTokens(r);
   const brandOf = (s) => { const m = String(s).toLowerCase().match(ASK_BRAND_RE); return m ? m[1] : ""; };
@@ -1236,7 +1269,9 @@ function askRetrievalQ(q) {
   const ownSize = /\b\d+(\.\d+)?\s*(kw|k|tons?)\b/i.test(r);
   if (askCtx && Date.now() - askCtx.ts < 15 * 60 * 1000 && !ownSize) {
     const live = askLiveUnits(askPassageUnits(r));   // filler ("need") does not count as a word of its own
-    const referent = /\b(this|it|its|that|same|unit|still|also|too|now|then|again|here|one|where|part|parts|replace|replacement)\b/.test(nq) || ASK_WIRING_RE.test(r);
+    // 11-12 audit: everyday words (unit, one, where, now, then, here, part, parts, replace, replacement, also,
+    // too) no longer count as pointing back - "rooftop unit pressure are 300 over 50" borrowed an XP21.
+    const referent = /\b(this|it|its|that|same|still|again)\b/.test(nq) || ASK_WIRING_RE.test(r);
     const ctxDom = /^(generac|kohler|rehlko)$/.test(askCtx.brand) ? "gen" : askCtx.brand ? "hvac"
       : /nexgen|next|power|pz|nexus|evo|guardian|protector|powerpact|corepower|synergy|ecogen/.test(askCtx.fam) ? "gen" : askCtx.fam ? "hvac" : "";
     const qDom = askDomain(live);
@@ -1249,8 +1284,10 @@ function askRetrievalQ(q) {
       const codeCue = referent || /\b(code|codes|error|fault|alarm|alert)\b/.test(nq);
       if (codes.length) askCtx.codes = codes;
       const carry = [...new Set([...askCtx.models, askCtx.brand, ...String(askCtx.fam || "").split(" ")].filter(Boolean))];
-      r += " " + carry.join(" ") + (codes.length || !codeCue ? "" : (askCtx.codes || []).map(c => " " + c).join(""));
-      askCtx.ts = Date.now();
+      const carryCodes = codes.length || !codeCue ? [] : (askCtx.codes || []);
+      r += " " + carry.join(" ") + carryCodes.map(c => " " + c).join("");
+      askBorrowed = { words: carry, codes: carryCodes };
+      // the 15 minutes run from the question that NAMED the unit - a borrow no longer renews them
     }
   }
   return r.replace(/\s{2,}/g, " ").trim();
@@ -1725,23 +1762,38 @@ function renderAsk() {
   }
   examples.classList.add("hidden");
 
-  const rq = askRetrievalQ(q);
-  const units = askQueryUnits(rq);
-  const need = askLiveUnits(units).length;
   const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
-
-  const scored = [];
-  for (const it of pool) {
-    const { sc, tsc } = askScoreItem(units, it);
-    if (sc > 0) scored.push({ it, sc, tsc });
+  let rq, units, hits, partial;
+  const scoreQ = (text) => {
+    rq = askRetrievalQ(text);
+    units = askQueryUnits(rq);
+    const need = askLiveUnits(units).length;
+    const scored = [];
+    for (const it of pool) {
+      const { sc, tsc } = askScoreItem(units, it);
+      if (sc > 0) scored.push({ it, sc, tsc });
+    }
+    // Prefer items that contain EVERY concept; if none do, fall back to the
+    // closest partial matches so a well-typed sentence never dead-ends.
+    // >= not ===: the typed-code bonus (above) lifts the right row ONE past need,
+    // and === was throwing exactly that row away ("DM97MC E0 lockout" -> DM80VC).
+    hits = scored.filter(x => x.sc >= need);
+    partial = false;
+    if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
+  };
+  scoreQ(q);
+  // 11-12 audit (field-use #3): while the cursor is still in the box the last word is unfinished
+  // ("what is vap", "wiring dia"). When the question as typed finds nothing, search without that word
+  // instead of flashing a dead end; Enter or leaving the box searches exactly what was typed.
+  const typing = document.activeElement === document.getElementById("askInput") && !/\s$/.test(askState.search);
+  let searchedAs = q;
+  if (!hits.length && typing && /\S\s+\S+$/.test(q)) {
+    const shorter = q.replace(/\s+\S+$/, "");
+    scoreQ(shorter);
+    if (hits.length) searchedAs = shorter; else scoreQ(q);
   }
-  // Prefer items that contain EVERY concept; if none do, fall back to the
-  // closest partial matches so a well-typed sentence never dead-ends.
-  // >= not ===: the typed-code bonus (above) lifts the right row ONE past need,
-  // and === was throwing exactly that row away ("DM97MC E0 lockout" -> DM80VC).
-  let hits = scored.filter(x => x.sc >= need);
-  let partial = false;
-  if (!hits.length) { hits = scored.filter(x => x.sc >= Math.max(1, Math.ceil(need * 0.6))); partial = hits.length > 0; }
+  const borrowed = askBorrowed;
+  askState._heldBack = searchedAs !== q;   // the blur listener redraws the final result when this is set
   // A question that names no brand gets the general answer before brand-specific ones on a tie:
   // "blower runs all the time" led with a Lennox rooftop (Gus 2026-08-17, four tries).
   const qBranded = ASK_BRAND_RE.test(normalizeQuery(rq));
@@ -1759,8 +1811,19 @@ function renderAsk() {
     (askState.equip === "All" || it.equip === askState.equip || !it.equip));
 
   const narrow = document.getElementById("askNarrow");
-  narrow.innerHTML = askWiringHtml(askRetrievalQ(q), units);
+  narrow.innerHTML = askWiringHtml(rq, units);
   wireAskWiring(narrow);
+  // accuracy #6: a model / brand borrowed from the question before is shown, and one tap removes it.
+  {
+    const ai0 = document.getElementById("askAi");
+    let bw = document.getElementById("askBorrow");
+    if (!bw && ai0) { bw = document.createElement("div"); bw.id = "askBorrow"; bw.className = "ask-narrow-tags"; ai0.parentNode.insertBefore(bw, ai0); }
+    if (bw) {
+      bw.innerHTML = borrowed ? `<button type="button" class="ask-narrow-tag" id="askBorrowDrop">Using ${escapeHtml([...borrowed.words, ...borrowed.codes.map(c => "code " + c)].join(" "))} from your last question <span class="x">✕</span></button>` : "";
+      const drop = document.getElementById("askBorrowDrop");
+      if (drop) drop.onclick = () => { trackEvent("Ask dropped borrowed unit: " + borrowed.words.join(" ")); askCtx = null; renderAsk(); };
+    }
+  }
   if (isPressureQuestion(q)) {   // v342 (FIELD-08): point pressure questions at the tool that answers them
     narrow.insertAdjacentHTML("afterbegin", `<div class="ask-chip-row"><button type="button" class="ask-chip" id="askGoCharge">${CHARGE_CHIP_TEXT}</button></div>`);
     narrow.querySelector("#askGoCharge").onclick = () => { trackEvent("ask -> charging calc"); showScreen("charge"); };
@@ -1805,7 +1868,12 @@ function renderAsk() {
   // A miss is a content ticket, not a dead end: log it like Diagnostic Help does and offer the same
   // one-tap web search (streamline review 2026-10-06, rec 10).
   if (!empty.dataset.base) empty.dataset.base = empty.innerHTML;
-  if (!shown.length && q.length >= 4) {
+  if (!shown.length && typing) {
+    // Still typing: no dead-end text and no NO ANSWER row for a half-typed question.
+    askState._heldBack = true;
+    empty.innerHTML = q.length >= 4 ? "Nothing yet - keep typing, or press Enter to search as typed." : "";
+    empty.classList.toggle("hidden", q.length < 4);
+  } else if (!shown.length && q.length >= 4) {
     reportUnanswered(q);
     const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent(q + " hvac generator troubleshooting");
     empty.innerHTML = empty.dataset.base + (navigator.onLine ? `<div style="margin-top:0.7rem;"><a href="${searchUrl}" target="_blank" rel="noopener" class="chip" style="display:inline-block; text-decoration:none;">🔍 Search the web for this</a></div>` : "");
@@ -1813,9 +1881,17 @@ function renderAsk() {
 
   // Instant answer: the top hit's own meaning / causes / first steps, shown at once so the tech can
   // start testing during the 10-20 s the AI answer takes (streamline review 2026-10-06, rec 2).
-  renderAskInstant(q, shown.length ? shown[0].it : null, units, partial);
+  // accuracy #7: a top card for another brand than the question names is not laid out as the answer.
+  const offBrand = shown.length ? askOffBrand(rq, shown[0].it) : null;
+  renderAskInstant(q, shown.length ? shown[0].it : null, units, partial, offBrand);
 
   const MAX = 60;
+  if (searchedAs !== q && shown.length) {
+    const note = document.createElement("div");
+    note.className = "ask-note";
+    note.textContent = "Showing results for \"" + searchedAs + "\" while you type - press Enter to search all of it.";
+    results.appendChild(note);
+  }
   if (partial && shown.length) {
     const note = document.createElement("div");
     note.className = "ask-note";
@@ -1835,6 +1911,42 @@ function renderAsk() {
 
   // Also search INSIDE the manuals the tech has downloaded (async, debounced).
   askScheduleManualSearch(q);
+}
+
+// Leaving the box (or Enter, which blurs it) = the question is finished: redraw once so the last word
+// counts and a real miss shows its dead-end text and is logged. Delayed so a tap on a result card or on
+// the AI button lands on the element that was under the finger before the list is redrawn.
+document.getElementById("askInput").addEventListener("blur", () => {
+  setTimeout(() => {
+    if (!askState._heldBack || document.activeElement === document.getElementById("askInput")) return;
+    if (document.getElementById("askScreen").classList.contains("hidden") || !document.getElementById("modalBackdrop").classList.contains("hidden")) return;
+    renderAsk();
+  }, 250);
+});
+
+// The top card's brand when the question names a brand or a model of ANOTHER maker (accuracy #7):
+// "wiring diagram to contactor for lennox xp21" led with a Daikin FIT fix. Null when the card has no
+// brand (general fixes answer many branded questions), when a brand in the question is the card's own
+// or a sister badge of it, or when the card's brand word is said anywhere in the question.
+function askOffBrand(rq, it) {
+  if (!it) return null;
+  const brandRe = new RegExp(ASK_BRAND_RE.source, "g");
+  // the card's brands: its own brand field, plus every brand its title names (fix cards carry it there)
+  const titleBrands = String(it.title || "").toLowerCase().match(brandRe) || [];
+  const cb = (String(it.brand || "") + " " + titleBrands.join(" ")).toLowerCase().trim();
+  if (!cb) return null;
+  const nq = normalizeQuery(rq);
+  const qBrands = nq.match(brandRe) || [];
+  const models = askModelTokens(rq);
+  const mBrands = models.map(m => { try { const i = identifyModel(m); return i && i.brand ? i.brand : ""; } catch (e) { return ""; } }).filter(Boolean);
+  const asked = [...qBrands, ...mBrands].map(a => String(a).toLowerCase());
+  if (!asked.length) return null;
+  const groups = typeof maintMakerGroups === "function" ? maintMakerGroups : () => [];
+  const cg = groups(cb);
+  if (asked.some(a => cb.includes(a) || (cg.length && groups(a).some(x => cg.includes(x))))) return null;
+  if (cb.split(/[^a-z0-9]+/).some(w => w.length >= 3 && nq.includes(w))) return null;
+  const cap = (w) => w.replace(/\b[a-z]/g, c => c.toUpperCase());
+  return { asked: [...new Set([...qBrands.map(cap), ...models])].join(" "), brand: it.brand || cap(titleBrands[0]) };
 }
 
 // Debounced so we don't scan IndexedDB on every keystroke; a token guards
@@ -2863,11 +2975,12 @@ function askInstantLines(it, units) {
   } else push("", it.sub);
   return lines;
 }
-function renderAskInstant(q, it, units, partial) {
+function renderAskInstant(q, it, units, partial, offBrand) {
   const ai = document.getElementById("askAi");
   if (!ai) return;
   let box = document.getElementById("askInstant");
-  if (!box) { box = document.createElement("div"); box.id = "askInstant"; box.className = "ask-instant"; ai.parentNode.insertBefore(box, ai); }
+  // field-use #3: the library card goes UNDER the "Get a direct answer" button, so the button stays in view.
+  if (!box) { box = document.createElement("div"); box.id = "askInstant"; box.className = "ask-instant"; ai.parentNode.insertBefore(box, ai.nextSibling); }
   if (q.trim().length < 3) { box.innerHTML = ""; return; }
   // Bulletins for the question's codes + unit: one line each, tap opens the bulletin (Andy 2026-10-06).
   let buls = [];
@@ -2884,11 +2997,17 @@ function renderAskInstant(q, it, units, partial) {
     wireBul();
     return;
   }
-  const body = lines.map(l => `<div class="ask-instant-line">${l.label ? `<span class="ask-instant-label">${escapeHtml(l.label)}</span> ` : ""}${escapeHtml(l.text).replace(/\n/g, "<br>")}</div>`).join("");
+  // accuracy #7: another maker's card is named as such and shown by title only - no steps or figures
+  // laid out as if they answered the question. A closest (partial) match says so in words, in colour.
+  const body = offBrand ? "" : lines.map(l => `<div class="ask-instant-line">${l.label ? `<span class="ask-instant-label">${escapeHtml(l.label)}</span> ` : ""}${escapeHtml(l.text).replace(/\n/g, "<br>")}</div>`).join("");
+  const warn = offBrand
+    ? `<div class="maint-flag"><div class="maint-flag-title">${partial ? "Nothing in the library has all of this for " + escapeHtml(offBrand.asked) + "." : "This card is not for " + escapeHtml(offBrand.asked) + "."}</div>The closest card is for ${escapeHtml(String(offBrand.brand).toUpperCase())}. Open it only if that is the unit in front of you.</div>`
+    : partial ? `<div class="maint-flag"><div class="maint-flag-title">Closest match - not every word of your question is on this card.</div></div>` : "";
   if (buls.length) bulTrackShown(buls, "ask instant", units && units.kModel);
   box.innerHTML = `
     <div class="ask-ai-card ask-instant-card">
       <div class="ask-ai-head">⚡ From the library <span class="ask-ai-tag">${escapeHtml(ASK_KIND[it.kind].label)}${partial ? " · closest match" : ""}</span></div>
+      ${warn}
       <div class="ask-instant-title">${escapeHtml(it.title)}</div>
       ${it.sub ? `<div class="card-meta"><span>${escapeHtml(it.sub)}</span></div>` : ""}
       <div class="ask-instant-body">${body}${bulLines}</div>
@@ -4851,7 +4970,12 @@ function bulMaintInject() {
   const list = bulletinsFor({ genFamily: hit ? hit.family.id : "", model });
   if (!list.length) return;
   const serial = hit && hit.model && typeof genLastScan !== "undefined" && genLastScan && genLastScan.modelG === hit.model.g ? genLastScan.serial : "";
-  results.insertAdjacentHTML("afterbegin", bulletinsHtml(list, { where: "maint lookup", serial, model }));
+  // 11-12 audit: the "not an exact match" / "guessed model" notices stay the first thing on the screen;
+  // the bulletins go right under them (a 12-bulletin box used to push the warning off the first screen).
+  let anchor = null;
+  for (const ch of results.children) { if (ch.classList.contains("maint-flag")) anchor = ch; else break; }
+  const bulHtmlStr = bulletinsHtml(list, { where: "maint lookup", serial, model });
+  if (anchor) anchor.insertAdjacentHTML("afterend", bulHtmlStr); else results.insertAdjacentHTML("afterbegin", bulHtmlStr);
 }
 if (typeof renderMaint === "function") {
   const bulRenderMaint0 = renderMaint;
@@ -11913,6 +12037,7 @@ function scanFocusModelBox() {
 async function scanTagPhoto(file) {
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
+  askCtx = null;   // a new tag = a new unit: Ask must not borrow the last question's model for it
   trackEvent("scanned a tag photo");
   const heldId = newScanPhotoId();
   const held = holdScanPhoto(file, heldId);   // uploads at the next start only if this scan never finishes
@@ -12054,7 +12179,13 @@ function renderScanResult(info) {
   } else if (info.age) facts.push(["Year made", info.age]);
   let brandCodes = info.brand ? getAllCodes().filter(c => c.brand === info.brand && c.equipment === info.equipment) : [];
   const twinModel = info.brand === "Carrier" ? carrierTwinModel(info.model) : "";
-  let famPre = codeFamilyPrefix(info.model, brandCodes) || (twinModel ? codeFamilyPrefix(twinModel, brandCodes) : "");
+  // accuracy #5: the count on the codes button and the list it opens come from one function
+  // (codeFamilyRows, also used by the Error Codes screen), and the button passes the MODEL on, so the
+  // list always carries its "showing the X family" note.
+  let codeModel = info.model;
+  let famRows = codeFamilyRows(info.model, brandCodes);
+  if (!famRows.pre && twinModel) { famRows = codeFamilyRows(twinModel, brandCodes); if (famRows.pre) codeModel = twinModel; }
+  let famPre = famRows.pre;
   // v425: Daikin / Goodman / Amana share furnaces and air handlers, and a code family is filed under one
   // badge only (a Daikin DR96SN tag has its rows under Goodman). When the scanned badge has no family
   // naming this model, use the family under the sister badge that names it.
@@ -12063,12 +12194,15 @@ function renderScanResult(info) {
     for (const b of ["Daikin", "Goodman", "Amana"]) {
       if (b === info.brand) continue;
       const bc = getAllCodes().filter(c => c.brand === b && c.equipment === info.equipment);
-      const p = codeFamilyPrefix(info.model, bc);
-      if (p) { famPre = p; brandCodes = bc; codeBrand = b; break; }
+      const r = codeFamilyRows(info.model, bc);
+      if (r.pre) { famRows = r; famPre = r.pre; brandCodes = bc; codeBrand = b; break; }
     }
   }
   if (twinModel && !(info.notes || []).some(n => /Carrier twin/.test(n))) info.notes = [...(info.notes || []), "Carrier twin: " + carrierTwinSeries(info.model) + " - same platform, so that model's codes, manuals and scenarios apply."];
-  const codeCount = famPre ? brandCodes.filter(c => String(c.family || "").toUpperCase().includes(famPre)).length : brandCodes.length;
+  const codeCount = famPre ? famRows.rows.length : brandCodes.length;
+  // accuracy #8: which characters the app changed, so the tech checks THOSE on the tag.
+  const guessDiff = info.ocrGuess && !info.tailBad && typeof maintCharDiff === "function" ? maintCharDiff(info.rawModel, info.model) : "";
+  const guessWatch = guessDiff ? "the app changed " + guessDiff + " - check " + (guessDiff.includes(",") ? "those characters" : "that character") + " on the tag" : "watch 0/O and 1/I";
   // Share across with Maintenance Figures: show the link only when this exact
   // model actually resolves to a maintenance entry (uses the same forgiving match).
   // v185: exact entries, or same-kind look-alikes (the list labels those); never
@@ -12088,8 +12222,8 @@ function renderScanResult(info) {
       : `<p>Model <strong>${escapeHtml(info.model)}</strong> isn't in the offline library yet — ${navigator.onLine ? "use the Web buttons below to pull its info from the internet" : "no signal, so get to coverage and the internet lookup buttons will light up"}. Tell the office so it gets added for offline use.</p>`)
     : "";
   const ocrBanner = info.tailBad ? `<p class="scan-ocr-note">📷 Part of <strong>${escapeHtml(info.model)}</strong> doesn't fit this model family's format, so the scan may have misread a character — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O, 1/I, 8/B and 6/G).</p>`
-    : info.ocrGuess && info.typed ? `<p class="scan-ocr-note">⌨️ You entered <strong>${escapeHtml(info.rawModel)}</strong>, which isn't a known model. Closest known model is <strong>${escapeHtml(info.model)}</strong> (a letter swapped for a lookalike digit) — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>`
-    : info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (watch 0/O and 1/I).</p>` : "";
+    : info.ocrGuess && info.typed ? `<p class="scan-ocr-note">⌨️ You entered <strong>${escapeHtml(info.rawModel)}</strong>, which isn't a known model. Closest known model is <strong>${escapeHtml(info.model)}</strong> (a letter swapped for a lookalike digit) — <strong>check the tag</strong> to confirm before trusting the details below (${escapeHtml(guessWatch)}).</p>`
+    : info.ocrGuess ? `<p class="scan-ocr-note">📷 The scan read <strong>${escapeHtml(info.rawModel)}</strong>, which looks like an OCR misread. Closest known model is <strong>${escapeHtml(info.model)}</strong> — <strong>check the tag</strong> to confirm before trusting the details below (${escapeHtml(guessWatch)}).</p>` : "";
   const manualsBrand = info.brand || info.brandGuess;
   // How many library manuals answer to this exact model (or its family).
   const modelManuals = info.model ? manualSearch(manualSeedRows(), info.model) : { list: [] };
@@ -12113,7 +12247,7 @@ function renderScanResult(info) {
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
         ${ownScenHtml}
         <div class="scan-actions">
-          ${info.brand ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " codes" : escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
+          ${info.brand && codeCount ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " family codes" : "All " + escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
           ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
           ${hasSensors ? `<button class="primary-act" id="scanGoSensors">🌡️ Sensor plugs &amp; charts</button>` : ""}
           <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
@@ -12129,14 +12263,26 @@ function renderScanResult(info) {
     codesState.brand = codeBrand; codesState.equipment = info.equipment;
     // Straight to this unit's own family when one is named by the model's
     // front part (59SP5A080E171216 -> 59SP5A), not every Carrier furnace code.
-    const pre = famPre;
+    // The model goes in the box (not the bare family letters, which were a plain text search with
+    // another count): Error Codes then resolves the family with the same function and shows its note.
+    const pre = famPre ? codeModel : "";
     codesState.search = pre;
     document.getElementById("codesSearchInput").value = pre;
     showScreen("codes");
+    // One-time lines above the list for this visit (gone at the next search, which is a new question).
+    const res = document.getElementById("codesResults");
+    const addNote = (txt) => { const n = document.createElement("div"); n.className = "disclaimer"; n.textContent = txt; res.insertBefore(n, res.firstChild); };
+    if (!famPre && codeCount) addNote("All " + codeBrand + " " + info.equipment + " boards - the app does not know which board " + info.model + " has. Pick by the board and display type on the unit.");
+    if (info.ocrGuess) addNote("Guessed model - the scan was corrected to " + info.model + ". Confirm it on the tag before you trust this list.");
   };
   const goMaint = document.getElementById("scanGoMaint");
   if (goMaint) goMaint.onclick = () => {
-    if (typeof maintState !== "undefined") { maintState.query = info.model; maintState.equip = ""; maintState.open = null; }
+    if (typeof maintState !== "undefined") {
+      maintState.query = info.model; maintState.equip = ""; maintState.open = null;
+      // accuracy #8: a guessed model stays marked as guessed on Maintenance Figures (renderMaint shows it
+      // while the box still holds this model).
+      maintState.guess = info.ocrGuess ? { model: info.model, raw: info.rawModel || "", diff: guessDiff } : null;
+    }
     const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = info.model;
     showScreen("maint");
   };
@@ -12199,10 +12345,14 @@ function maintScanStatus(msg) {
   if (msg) { el.textContent = msg; el.classList.remove("hidden"); }
   else el.classList.add("hidden");
 }
-function maintApplyScannedModel(model) {
+function maintApplyScannedModel(model, fixedFrom) {
   const input = document.getElementById("maintSearchInput");
   if (input) input.value = model;
-  if (typeof maintState !== "undefined") { maintState.query = model; maintState.open = null; }
+  if (typeof maintState !== "undefined") {
+    maintState.query = model; maintState.open = null;
+    // accuracy #8: the reader swapped look-alike characters to reach this model - renderMaint says so.
+    maintState.guess = fixedFrom && fixedFrom !== model ? { model, raw: fixedFrom, diff: typeof maintCharDiff === "function" ? maintCharDiff(fixedFrom, model) : "" } : null;
+  }
   if (typeof renderMaint === "function") renderMaint();
   // v185: only an EXACT model match counts as "has figures". Look-alikes of the
   // same kind still show (labelled in the list), but the scan is logged and its
@@ -12308,7 +12458,7 @@ if (maintPhotoInput) maintPhotoInput.addEventListener("change", async (e) => {
     if (scanned && maintModelPlausible(scanned) && !serialLike) {
       // v227: a serial read off its own S/N label goes into the generator checklist.
       if (typeof genNoteScan === "function") genNoteScan(scanned, fields && fields.serialSource === "label" ? fields.serial : "");
-      const matched = maintApplyScannedModel(scanned);
+      const matched = maintApplyScannedModel(scanned, fields && fields.ocrFixedFrom);
       // Read fine but no figures for it: that photo is a coverage gap for
       // Andy, same as an unreadable one. Only appends to the existing line.
       const photoId = matched ? "" : newScanPhotoId();
