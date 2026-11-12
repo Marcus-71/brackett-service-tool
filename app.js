@@ -8000,7 +8000,7 @@ function renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, s
   boxes.push(ccTargetBox("Target subcooling", `${scTarget}°F`, scTargetIsDefault ? "10°F default — check the nameplate" : "from nameplate"));
 
   document.getElementById("cc-targets").innerHTML =
-    `<div class="cc-section-label">🎯 Targets for this call</div><div class="cc-target-grid">${boxes.join("")}</div>`
+    `<div class="cc-section-label">🎯 Targets for this call - ${escapeHtml(refrig)}</div><div class="cc-target-grid">${boxes.join("")}</div>`
     + renderChartLinks(refrig);
 }
 
@@ -8060,6 +8060,14 @@ function renderChargeCalc() {
   const scTarget = scTargetRaw ?? 10;
   const wb = ccNum("cc-wb");
 
+  // No silent R-410A: until a refrigerant is picked (or set from the tag)
+  // there is no table to read, so no targets and no verdict.
+  if (!chart) {
+    document.getElementById("cc-targets").innerHTML = `<div class="cc-section-label">🎯 Targets for this call</div>`;
+    document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${ccVerdict("warn", "<strong>Pick the refrigerant first.</strong> Read it off the outdoor unit's nameplate and set the Refrigerant box above - the targets and the verdict wait for it.", "Covered: R-410A, R-32, R-454B. R-22 is not covered - use an R-22 P/T chart.")}</div>`;
+    return;
+  }
+
   renderChargeTargets(chart, refrig, meter, eff, od, id_, wb, scTarget, scTargetRaw == null);
   document.querySelectorAll("#cc-targets .cc-chart-link").forEach(b => {
     b.onclick = () => openChargingChart(b.dataset.chart);
@@ -8072,6 +8080,21 @@ function renderChargeCalc() {
   const condSat = head != null ? ptInterp(chart.bubble, head) : null;
   if (sh == null && slt != null && evapSat != null) sh = slt - evapSat;
   if (sc == null && llt != null && condSat != null) sc = condSat - llt;
+
+  // Readings that cannot happen on this refrigerant: superheat or subcooling
+  // below zero, or condensing colder than the outdoor air. That is the wrong
+  // refrigerant table (an R-22 unit read as R-410A does exactly this) or a
+  // wrong reading - never a charge verdict.
+  {
+    const noFit = [];
+    if (sh != null && sh < -0.5) noFit.push(`superheat works out to ${sh.toFixed(0)}°F`);
+    if (sc != null && sc < -0.5) noFit.push(`subcooling works out to ${sc.toFixed(0)}°F`);
+    if (condSat != null && od != null && condSat < od - 0.5) noFit.push(`head ${head} psig condenses at ${condSat.toFixed(0)}°F, colder than the ${od}°F outdoor air`);
+    if (noFit.length) {
+      document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${ccVerdict("bad", `<strong>These readings do not fit ${escapeHtml(refrig)}</strong> - ${escapeHtml(noFit.join("; "))}. That cannot happen on a running system.`, `Check the refrigerant choice against the nameplate (R-22 is not covered here) and check the gauges and probes. No charge verdict until the readings fit.`)}</div>`;
+      return;
+    }
+  }
 
   // --- Suction / evaporator ---
   if (suct == null) {
@@ -8156,6 +8179,20 @@ function renderChargeCalc() {
   if (patterns.length) out.push(`<div class="cc-pattern">🧭 ${patterns.map(escapeHtml).join("<br>")}</div>`);
 
   document.getElementById("cc-results").innerHTML = `<div class="card cc-card">${out.join("")}</div>`;
+}
+
+// The Refrigerant box starts blank ("Pick refrigerant") instead of on R-410A.
+// A pick made by hand is remembered as the tech's own (ccApplyScan only
+// clears a value it set itself).
+{
+  const sel = document.getElementById("cc-refrig");
+  if (sel && ![...sel.options].some(o => o.value === "")) {
+    const o = document.createElement("option");
+    o.value = ""; o.textContent = "Pick refrigerant";
+    sel.insertBefore(o, sel.firstChild);
+    sel.value = "";
+  }
+  if (sel) sel.addEventListener("change", () => { delete sel.dataset.auto; });
 }
 
 for (const fid of ["cc-refrig","cc-meter","cc-eff","cc-od","cc-id","cc-suct","cc-head","cc-sh","cc-slt","cc-sc","cc-llt","cc-sctarget","cc-wb"]) {
@@ -8280,10 +8317,30 @@ function ccInferRefrig(model) {
   if (/^(DX1[3-8]|DZ1[3-8]|DX20VC|DZ20VC|DZ17VS)/.test(m)) return "R-410A";
   if (/^4T[TW][RXBZV]/.test(m)) return "R-410A";
   if (/^(X[CP]1[3-9]|X[CP]2[0-9]|1[346]ACX|14HPX|ML1[467]X|EL1[678]X|SL2[58]X)/.test(m)) return "R-410A";
+  // Rheem / Ruud Endeavor: the letters after the SEER digits decide. The Tag
+  // Scanner's own notes state RA14AY / RA15AY / RP14AY / RP15AY / RD16AY /
+  // RD18AY are R-454B. Any other ...AY model is not stated anywhere in the
+  // app, so it stays unset rather than falling into the R-410A rule below.
+  if (/^(RA1[45]|RP1[45]|RD1[68])AY/.test(m)) return "R-454B";
+  if (/^(R[APD]|W[AP])\d{2}AY/.test(m)) return null;
   if (/^(RA1[3-9]|RA20|RP1[4-9]|RP20|WA1[3-5]|WP1[4-5]|1[34]AJ[MN])/.test(m)) return "R-410A";
   if (/^(24VNA|25VNA|24A[BC]|25H[BC])/.test(m)) return "R-410A";
   if (/^Y[CH][JG]/.test(m)) return "R-410A";
   return null;
+}
+
+// Refrigerant the Tag Scanner's own series text names for this model. Only
+// outdoor / packaged units, and only when the text names exactly ONE
+// refrigerant - "A4AC (R-410A) and A5AC (R-454B)" or "R-22 and early R-410A"
+// stays unset. Returns "R-410A" / "R-32" / "R-454B" / "R-22" or null.
+function ccRefrigFromSeries(model) {
+  if (!model || typeof identifyModel !== "function") return null;
+  let id = null;
+  try { id = identifyModel(model, "", null); } catch (e) { return null; }
+  if (!id || !id.series || !/Condenser|Heat Pump|Other/i.test(id.equipment || "")) return null;
+  const found = new Set();
+  for (const x of String(id.series).matchAll(/\bR-?(410A|454B|32|22)\b/gi)) found.add("R-" + x[1].toUpperCase());
+  return found.size === 1 ? [...found][0] : null;
 }
 
 // Metering from a matched chart's own meteringDevice line - only when the
@@ -8349,14 +8406,27 @@ function ccApplyScan() {
     if (effSel.value !== eff) { effSel.value = eff; }
     autoSet.push("condenser type: " + (eff === "high" ? "high-efficiency (15+ SEER)" : "standard (up to ~14 SEER)") + " from the model number");
   }
-  const refrigGuess = ccInferRefrig(outModel);
+  // Refrigerant: the scanner's own series text first (it names R-454B / R-32
+  // for families the short rule list below does not know), the family rule
+  // as the fallback. Never a guess: when neither speaks the box is left for
+  // the tech, and a value this function set for an EARLIER model is cleared.
+  const refSel = document.getElementById("cc-refrig");
+  const seriesRefrig = outModel ? ccRefrigFromSeries(outModel) : null;
+  const refrigGuess = seriesRefrig || ccInferRefrig(outModel);
+  let refrigSet = false, refrigNote = "";
+  if (outModel && refSel.dataset.auto && refSel.dataset.auto !== ccNormModel(outModel)) { refSel.value = ""; delete refSel.dataset.auto; }
   if (refrigGuess) {
-    const sel = document.getElementById("cc-refrig");
-    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(refrigGuess));
-    if (want && sel.value !== want.value) {
-      sel.value = want.value;
-      autoSet.push("refrigerant: " + refrigGuess + " from the model family");
+    const want = [...refSel.options].find(o => o.value && ccNormModel(o.value) === ccNormModel(refrigGuess));
+    if (want) {
+      refSel.value = want.value; refSel.dataset.auto = ccNormModel(outModel); refrigSet = true;
+      autoSet.push("refrigerant: " + refrigGuess + (seriesRefrig ? " from the app's notes on this series" : " from the model family"));
+    } else {
+      // R-22: the calc has no R-22 table. Say so, and do not leave the box on another refrigerant.
+      refSel.value = ""; delete refSel.dataset.auto;
+      refrigNote = `<div class="cc-scan-miss">⚠️ The app's notes on <strong>${escapeHtml(outModel)}</strong> name <strong>${escapeHtml(refrigGuess)}</strong>. This calculator has no ${escapeHtml(refrigGuess)} table - do not judge this unit's charge here. Check the nameplate and use an ${escapeHtml(refrigGuess)} P/T chart.</div>`;
     }
+  } else if (outModel) {
+    refrigNote = `<div class="cc-scan-miss">⚠️ <strong>Refrigerant NOT set from the model.</strong> Read it off the nameplate and set the Refrigerant box${refSel.value ? ` (it is on ${escapeHtml(refSel.value)} now - your own pick)` : ""}.</div>`;
   }
 
   let hits = ccMatchCharts(outModel);
@@ -8368,8 +8438,9 @@ function ccApplyScan() {
   }
   if (!hits.length) {
     box.innerHTML = `<div class="cc-scan-miss">No factory chart for <strong>${escapeHtml(outModel || inModel)}</strong> in the offline library — the rule-of-thumb targets below still apply. Check the unit's own charging sticker or nameplate subcool value and enter it above.</div>`
-      + (autoSet.length ? `<div class="cc-scan-applied">✅ Auto-set ${escapeHtml(autoSet.join("; "))}.</div>` : "");
-    trackEvent("charge scan no chart: " + (outModel || inModel));
+      + (autoSet.length ? `<div class="cc-scan-applied">✅ Auto-set ${escapeHtml(autoSet.join("; "))}.</div>` : "")
+      + refrigNote;
+    trackEvent("charge scan no chart: " + (outModel || inModel) + (outModel && !refrigSet ? " (refrigerant not set)" : ""));
     renderChargeCalc();
     return;
   }
@@ -8386,11 +8457,14 @@ function ccApplyScan() {
   let refrigWarn = "";
   {
     const sel = document.getElementById("cc-refrig");
-    const want = [...sel.options].find(o => ccNormModel(o.value) === ccNormModel(hits[0].chart.refrigerant));
-    if (!want) refrigWarn = hits[0].chart.refrigerant;
-    else if (sel.value !== want.value) {
-      sel.value = want.value;
-      autoSet.push("refrigerant: " + hits[0].chart.refrigerant + " from the factory chart");
+    const want = [...sel.options].find(o => o.value && ccNormModel(o.value) === ccNormModel(hits[0].chart.refrigerant));
+    if (!want) { refrigWarn = hits[0].chart.refrigerant; sel.value = ""; delete sel.dataset.auto; refrigNote = ""; }
+    else {
+      if (sel.value !== want.value || !refrigSet) {
+        for (let i = autoSet.length - 1; i >= 0; i--) if (/^refrigerant: /.test(autoSet[i])) autoSet.splice(i, 1);
+        autoSet.push("refrigerant: " + hits[0].chart.refrigerant + " from the factory chart");
+      }
+      sel.value = want.value; sel.dataset.auto = ccNormModel(outModel || inModel); refrigNote = "";
     }
   }
 
