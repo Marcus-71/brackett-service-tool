@@ -49,7 +49,8 @@ const SYMPTOMS = [
    "Check blower speed tap/setting matches system requirements",
    "Inspect blower wheel for dirt buildup",
    "Check evaporator coil for ice or heavy dirt buildup (restricts airflow)",
-   "Check ductwork for collapsed/disconnected sections, especially flex duct in attics/crawlspaces"
+   "Check ductwork for collapsed/disconnected sections, especially flex duct in attics/crawlspaces",
+   "If all of that looks right, take two readings - total external static and CFM - and read them together. See 'Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)'."
   ],
   "confidence": "common"
  },
@@ -90,6 +91,7 @@ const SYMPTOMS = [
    "Turn system to Off / fan-only and let it fully thaw before diagnosing further",
    "Check filter and airflow across the indoor coil first — the most common cause",
    "Check blower operation, speed, and wheel condition",
+   "Measure the air, do not guess: once the coil is thawed, take total external static and compare it with the maximum for the unit. Daikin's service manual says too great an external static pressure results in insufficient air, which can cause icing of the coil. See 'Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)'.",
    "Once thawed, check refrigerant charge (subcooling/superheat) against manufacturer spec — low charge is the #2 cause",
    "Inspect for a restriction (kinked line, clogged filter drier) if charge is correct but still freezes"
   ],
@@ -367,6 +369,7 @@ const SYMPTOMS = [
   "title": "High head pressure + low suction pressure",
   "summary": "The classic sign of a restriction between the condenser outlet and the metering device — refrigerant is backing up ahead of the blockage and starving everything downstream.",
   "steps": [
+   "Heat pump running in HEATING? Daikin's heat pump troubleshooting chart lists low suction pressure and (heating cycle) high head pressure together under a dirty air filter, a dirty indoor coil and not enough air across the indoor coil. Check the indoor air before you look for a restriction.",
    "Check the liquid line filter drier for a temperature drop across it (it should read the same temp in and out) — a noticeable drop, or a frost/sweat spot on the drier body, means it's restricted; replace it",
    "Check for a kinked, crushed, or undersized liquid line",
    "Confirm the liquid line service valve is fully open, not just cracked",
@@ -456,6 +459,7 @@ const SYMPTOMS = [
   "title": "Low superheat + high subcooling",
   "summary": "Refrigerant is overcharged, or a downstream restriction is trapping liquid in the condenser while still overfeeding the evaporator.",
   "steps": [
+   "Before you recover any refrigerant, prove the indoor air. Daikin's condenser instructions say airflow and total static pressure (0.5 in. w.c. or less) should be verified before attempting to charge. See 'Do not touch the charge until airflow is verified'.",
    "Check if this is a genuine overcharge first — compare against the manufacturer's subcooling target for current conditions and recover refrigerant to spec if actually over",
    "If low superheat persists even after correcting subcooling to spec, check for an overfeeding/stuck-open metering device rather than continuing to pull charge",
    "On a system with a fixed-orifice/piston metering device rather than a TXV, low superheat with high subcooling at high-load conditions can be a normal characteristic — compare against that specific system's own charging chart rather than TXV-style targets"
@@ -484,6 +488,7 @@ const SYMPTOMS = [
   "summary": "System runs briefly then trips off on high head pressure, repeatedly.",
   "steps": [
    "Check condenser coil cleanliness and airflow first — this is the most common cause by far",
+   "Heat pump tripping in HEATING: the indoor coil is the one giving off the heat, so check the indoor filter, indoor coil and blower first. See 'Heat pump tripping on high pressure in heat (high head pressure in heating) - check the indoor air first: filter, indoor coil, blower'.",
    "Check for overcharge against the manufacturer's chart",
    "Check for non-condensables (air/moisture) in the system",
    "If airflow and charge both check out, verify the high-pressure switch itself isn't simply failing — ohm test it against its rated trip point",
@@ -756,6 +761,7 @@ const SYMPTOMS = [
   "summary": "Supply air temperature minus return air temperature reads above the furnace's rated range — a precursor to limit trips.",
   "steps": [
    "Check filter and overall airflow restriction first — this is the most common cause by far",
+   "Measure total external static and compare it with the maximum on the furnace rating plate. Daikin: too much external static pressure results in insufficient air that can cause excessive temperature rise, and that can cause limit switch tripping and heat exchanger failure. See 'Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)'.",
    "Check blower speed tap/setting is correct for the installed equipment and duct static",
    "Check for closed/blocked supply or return registers reducing total system airflow",
    "Check gas input rate isn't set too high (overfiring) relative to the blower's airflow capacity",
@@ -1540,7 +1546,7 @@ const SYMPTOMS = [
   "id": "s-efurnace-limit-trips",
   "equipment": "Electric Furnace",
   "title": "Electric furnace high limit trips repeatedly",
-  "summary": "The heater assembly's own limit switch (separate from any furnace-level limit) keeps opening.",
+  "summary": "The heater assembly's own limit switch (separate from any furnace-level limit) keeps opening. Heat strips keep shutting off, strips cycle off and on, electric heat cuts out.",
   "steps": [
    "Check airflow across the heat strips first — a dirty filter or undersized/restricted duct system causes exactly this, since electric elements have very little thermal mass and heat up fast without adequate airflow",
    "Check blower speed/CFM setting matches the installed kW of heat strips — undersized airflow for the connected heat is a common mismatch after equipment changes",
@@ -3396,10 +3402,11 @@ const SYMPTOMS = [
  {
   "id": "s-static-pressure-methodology",
   "equipment": "Air Handler",
-  "title": "How to properly take and interpret total external static pressure readings",
+  "title": "How to check static pressure - taking and reading total external static (where the probes go, what the number means)",
   "summary": "A reference walkthrough for taking accurate TESP readings and understanding what the number actually tells you, rather than a single symptom-specific entry.",
   "steps": [
    "Take readings with a manometer at two points: immediately downstream of the equipment on the supply side (before any takeoffs), and immediately upstream of the equipment on the return side (after the filter, right at the cabinet) — total external static pressure is the sum of the supply reading and the return reading (return is typically negative, so add its absolute value)",
+   "Gas furnace with a cooling coil on top: Daikin's furnace manuals say the supply reading must be taken between the furnace and the coil, and the return reading between the filter and the furnace blower, so the coil and the filter are both counted. See 'Coil sits right on the furnace - where the supply static probe goes (Daikin / Goodman / Amana furnace with a cased coil)'.",
    "Drill test ports close to the equipment cabinet in a straight section of duct, avoiding locations right at a turn, takeoff, or transition, which give a falsely turbulent/inaccurate reading",
    "Compare the measured TESP against the equipment's rated maximum (found on the nameplate or in the installation manual) for the blower speed currently in use — a reading above the rated max means the blower is being asked to work harder than designed, regardless of whether airflow still feels adequate",
    "Take supplemental readings across individual components (filter, coil, each major duct section) by placing probes on both sides of that component — this isolates which specific section is contributing the most resistance rather than just knowing the total is high",
@@ -10335,6 +10342,7 @@ const SYMPTOMS = [
    "Locate the left, right, and center switches on the integrated control module.",
    "Press the left or right switch to rotate through the available speed numbers 1 through 9.",
    "Note that all 9 speeds are available for both single stage and two stage cooling applications.",
+   "Not sure which speed the tonnage needs? Measure static and read the model's airflow chart first - see 'Daikin DM96SN - what cooling tap for the tonnage? Read the airflow chart (the factory tap is not set for your condenser)'.",
    "Stop on the speed number you determined from the model's airflow chart for the installed cooling tonnage.",
    "Press the center switch to select the currently displayed speed.",
    "Run a cooling call and confirm the blower runs at the new speed.",
@@ -14409,7 +14417,7 @@ const SYMPTOMS = [
   "id": "s-verify-airflow-before-adjusting-charge",
   "equipment": "Air Handler",
   "title": "Do not touch the charge until airflow is verified",
-  "summary": "Superheat and subcooling both read wrong, so the instinct is to add or remove refrigerant. But every refrigerant-side number is downstream of airflow - a dirty filter, an undersized duct, or a wrong blower setting will move superheat and subcooling in ways that look exactly like a charge problem. Adjusting the charge to compensate for bad airflow leaves the system permanently mischarged.",
+  "summary": "Superheat and subcooling both read wrong, so the instinct is to add or remove refrigerant. But every refrigerant-side number is downstream of airflow - a dirty filter, an undersized duct, or a wrong blower setting will move superheat and subcooling in ways that look exactly like a charge problem. Adjusting the charge to compensate for bad airflow leaves the system permanently mischarged. Check airflow before charging, air before charge.",
   "steps": [
    "Check and replace the filter, and note whether the filter type and size match what the equipment can tolerate.",
    "Inspect the evaporator coil face for dirt, matted fins, and blockage - a coil restriction hides behind a clean filter.",
@@ -15007,7 +15015,7 @@ const SYMPTOMS = [
   "id": "s-static-pressure-component-breakdown",
   "equipment": "Air Handler",
   "title": "Total static is high - breaking it down by component to find the actual restriction",
-  "summary": "You have a high total external static reading and now have to prove which part of the system is eating it. Taking a single total number tells you there is a problem but not where it is; taking pressure drops across each component in turn turns a guess into a diagnosis. The biggest single drop is your first target, and it is very often the filter or the coil rather than the ducts everyone blames.",
+  "summary": "You have a high total external static reading and now have to prove which part of the system is eating it. Taking a single total number tells you there is a problem but not where it is; taking pressure drops across each component in turn turns a guess into a diagnosis. The biggest single drop is your first target, and it is very often the filter or the coil rather than the ducts everyone blames. High static pressure, static too high, filter pressure drop, coil pressure drop.",
   "steps": [
    "Read the equipment nameplate for its rated maximum external static and note it - do not work from a remembered number, since ratings differ by model.",
    "Take total external static with all panels on, the system at full airflow, and a clean filter installed.",
@@ -15811,7 +15819,7 @@ const SYMPTOMS = [
   "id": "s-evaporator-ice-pattern",
   "equipment": "Air Handler",
   "title": "Read the ice pattern on a frozen evaporator before you thaw it",
-  "summary": "Most techs shut the coil down, thaw it, and lose the best evidence on the call. The way the ice is laid on the coil separates a low airflow freeze from a low charge freeze before you ever hook up. A healthy coil ices starting at the metering device outlet and works evenly through the feeder tubes and the coil circuits.",
+  "summary": "Most techs shut the coil down, thaw it, and lose the best evidence on the call. The way the ice is laid on the coil separates a low airflow freeze from a low charge freeze before you ever hook up. A healthy coil ices starting at the metering device outlet and works evenly through the feeder tubes and the coil circuits. Edge of coil frozen, only part of the coil frozen, bottom of coil iced.",
   "steps": [
    "Before thawing, pull the panel and photograph the coil face and the metering device end.",
    "Note where the ice starts and how far it spread across the coil and down the suction line.",
@@ -21867,5 +21875,137 @@ const SYMPTOMS = [
   ],
   "safety": "Turn off all power to the unit before taking a Smart Sensor off the wall or working on its wiring (there may be more than one disconnect).",
   "confidence": "manual"
+ },
+ {
+  "id": "s-air-static-cfm-four-way",
+  "equipment": "Air Handler",
+  "title": "Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)",
+  "summary": "Weak air at the registers feels the same whether something is choking the blower or the blower itself is weak. Two readings sort it out: total external static pressure, and the CFM the blower is really moving. Static high with CFM low, static high with CFM fine, static low with CFM low, static low with CFM high - each one sends you to a different place. The four names (choked, forced, weak blower, wide open) are the way Brackett's class teaches it. Fix the air before you touch the charge or the gas. Static is high but airflow is fine, static is low and airflow is weak, furnace is loud after a new install, not cooling, not heating enough.",
+  "steps": [
+   "Set up before you trust a number: clean filter in, registers and dampers open, blower door on, blower running at the speed for the mode you are checking. For where the two probes go, see 'How to check static pressure - taking and reading total external static (where the probes go, what the number means)'.",
+   "Reading 1 - total external static. Return reading plus supply reading, signs ignored. Compare it with the maximum external static on the unit's rating plate or in its manual. Daikin's R-32 condenser instructions say total static should be 0.5 in. w.c. or less, and the airflow correct for the unit, before attempting to charge.",
+   "Reading 2 - CFM. Take your static and the blower tap or setting to the airflow chart in the unit's manual. In heat you can work it out from the temperature rise instead - see 'No flow hood on the truck - getting a CFM number out of the furnace itself' and 'Measuring total system airflow with the electric heat temperature-rise method'. A Daikin DM96VC shows it on the board - see 'Reading delivered CFM on the Daikin DM96VC dual 7-segment display'. Compare with what the tonnage needs: Daikin's DM96VC and DM97MC furnace manuals say most cooling systems are designed for 350 to 450 CFM per ton, and most manufacturers recommend about 400. The outdoor unit's own instructions give its required airflow.",
+   "Static HIGH and CFM LOW = choked. The blower is pushing against something: filter, coil, a small or crushed duct, a closed damper. Read the pressure drop across the filter and across the coil - the biggest drop is the first thing to fix. See 'Total static is high - breaking it down by component to find the actual restriction'.",
+   "Static HIGH and CFM OK = forced (class teaching, not a manufacturer statement). A variable-speed blower can hold its airflow by working harder, so the air number looks fine while the static is over the plate. The duct, filter or coil still needs fixing. See 'ECM blower hides a developing airflow restriction until it suddenly gets bad' and 'New install — airflow complaints from excessive duct static pressure'.",
+   "Static LOW and CFM LOW = weak blower. Nothing is choking it - the blower is not making the pressure. Check the tap or setting, the wheel and the motor. Fix the blower, not the duct. See 'Static pressure reads low but the airflow is still bad' and 'Airflow fell off but the filter is clean - check the blower wheel'.",
+   "Static LOW and CFM HIGH = wide open. The speed is set too high for the tonnage, or a duct has come apart and the air is dumping before the registers. Daikin's service manual warns that too much air can cause poor humidity control, pull condensate off the evaporator coil and overload the motor. See 'Condensate blow-off and poor humidity control - too much airflow'.",
+   "Both in range = the air is right. Only now read the charge ('Superheat and subcool together - what each pattern means (high superheat low subcool, both high, both low, low superheat high subcool, both normal but still not right)') or, in heat, the temperature rise and the gas.",
+   "After any fix, take both readings again before you put the gauges on."
+  ],
+  "safety": "Turn the power off before you change a blower speed tap or reach into the blower compartment (Daikin: turn off power to the furnace before changing speed taps). Never drill a test hole blind - know what is behind the metal (coil, tubing, drain pan, heat exchanger, wiring). Seal every test hole before you leave.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-daikin-static-probe-coil-on-furnace",
+  "equipment": "Gas Furnace",
+  "title": "Coil sits right on the furnace - where the supply static probe goes (Daikin / Goodman / Amana furnace with a cased coil)",
+  "summary": "Daikin's furnace manuals say the supply static reading must be taken between the furnace and the cooling coil, so the coil is counted. On most jobs the coil sits right on the furnace and there is no duct between them. Here is what the manuals say about reaching that spot, what they do not say, and what to do if you can only read above the coil. Where do I put the static probe with the coil on top of the furnace, static pressure with the coil on the furnace, supply probe location, CAPTA, CAPEA.",
+  "steps": [
+   "Where the two readings belong (Daikin DM96SN, DM96VC and DM97MC furnace manuals; Goodman's *MEC96 manual prints the same words): the supply pressure must be read between the furnace and the cooling coil; the negative (return) pressure must be read between the filter and the furnace blower. That way the coil and the filter are both inside the total.",
+   "The manuals' own way to reach the supply spot: the reading is usually taken by removing the A-shaped block-off plate from the end of the coil, drilling a test hole in that plate, putting the plate back and reading at the hole. Tape up the test hole when the test is done. This only works on a coil that has that removable end plate.",
+   "EEV cased coil (CAPEA) on a furnace or modular blower: Daikin's service manual for that system says to read return static at the inlet of the gas furnace or modular blower (between the filter and the furnace if a filter is fitted) and supply static at the outlet of the gas furnace or modular blower - with clean filters in.",
+   "What Daikin does NOT print: the CAPEA cased coil manual gives no test-hole location at all. It says, for wiring, do not cut, puncture or alter the cabinet or control panel, and for piping, do not alter the cabinet. Neither sentence is about a static test hole. Brackett's class rule from them: do not drill a CAPEA cabinet or its front panel (the control panel is mounted on it) - get the reading at the furnace outlet another way.",
+   "Other ways to reach the furnace outlet - these come from a trade source (HVAC Today / National Comfort Institute), not from Daikin: a test port in the side of the furnace, a reading through the limit switch opening, or a length of small tubing slipped through the gap at the corner of the furnace's outlet flange and resealed afterwards. The same source says to stay away from coils, cap tubes, condensate pans and circuit boards and to look before you drill. Taught in Brackett's class: on a new install, make the port before the coil is set, while you can still see inside the furnace outlet. See 'Measuring furnace external static pressure using the limit switch opening'.",
+   "If you can only read the plenum ABOVE the coil, that reading leaves the coil out. Class method (not in a Daikin manual) for a routine check on a CLEAN coil: add the coil's WET pressure drop at your CFM from the coil's spec sheet. From Daikin's R-32 coil spec sheet at 1,200 CFM wet: CAPTA3626C3 0.210, CAPTA3626B3 0.290, CAPEA3626C3 0.280, CAPEA3626B3 0.374 in. w.c. Example: return 0.14, above a CAPTA3626C3 0.10 - the estimated total is 0.14 + 0.10 + 0.21 = 0.45, not 0.24. Use the row for YOUR coil. If the coil itself is the suspect, this shortcut hides it - get a real reading under the coil.",
+   "Add the two readings, signs ignored, and compare with the maximum external static on the furnace rating plate. Then take the total to the furnace's airflow chart to get CFM.",
+   "Over the plate maximum: the Daikin manuals say to check for closed dampers and registers and for undersized or poorly laid out ductwork. Too much external static means too little air, which can cause excessive temperature rise, limit switch tripping and heat exchanger failure."
+  ],
+  "safety": "Never drill blind - the coil, refrigerant tubing, drain pan, heat exchanger and wiring are right behind the sheet metal. Edges of sheet metal holes may be sharp; wear gloves. Daikin's furnace manual warns never to allow products of combustion to enter the return duct or circulating air - seal or tape every test hole before you leave, and reseat and rewire the limit switch if you used its opening.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-dm96sn-cooling-tap-from-chart",
+  "equipment": "Gas Furnace",
+  "title": "Daikin DM96SN - what cooling tap for the tonnage? Read the airflow chart (the factory tap is not set for your condenser)",
+  "summary": "The DM96SN has nine cooling blower speeds, F01 to F09, and ships on a default cooling speed that may be far from what the outdoor unit needs. Example from the manual's chart: a DM96SN0603B at 0.5 in. w.c. moves 953 CFM on F04 (the default on a Y/Y1 call) and 689 CFM on F05 (the default on a Y2 call) - both short of the roughly 1,200 a 3-ton needs - and 1,192 CFM on F08. Measure static, read the chart, set the speed. What tap for a 3 ton on a DM96SN, blower speed for cooling, low airflow or freezing coil on a new DM96SN.",
+  "steps": [
+   "Work out the CFM the cooling system needs. The DM96SN manual does not print a CFM-per-ton rule; Daikin's DM96VC furnace manual gives the general one: most cooling systems are designed for 350 to 450 CFM per ton, about 400 (a 3-ton is about 1,200). Check the outdoor unit's own instructions for its required airflow.",
+   "Measure total external static pressure with the system running. See 'Coil sits right on the furnace - where the supply static probe goes (Daikin / Goodman / Amana furnace with a cased coil)'.",
+   "Open the Airflow Charts at the back of the DM96SN installation manual. Find your exact model, then the row for each speed F01 to F09, then the column for your static (0.1 to 0.8 in. w.c.). The Y/Y1 chart and the Y2 chart print the same CFM for a model; only the default mark (^) is on a different row.",
+   "Example, DM96SN0603B at 0.5 in. w.c.: F04 953 CFM, F05 689, F06 764, F07 1,128, F08 1,192, F09 1,297. For 3 tons, F08 is the closest to 1,200. The speeds are NOT in order of airflow - F05 moves less air than F04. The numbers are different for every model - a DM96SN0803B on F08 moves 1,034 CFM at 0.5.",
+   "Know which default you are starting from. The manual's cooling speed tables give F04 as the default for a Y/Y1 call and F05 as the default for a Y2 call. So the terminal the cooling call lands on decides the starting speed.",
+   "Change it at the furnace control: press the left or right switch until the display shows AC1 (single-stage cooling) or AC2 (two-stage cooling), press the center switch to see the current speed as Fxx, use left / right to step through the speeds, press center to select. The new speed is used on the next cooling call. See 'Daikin DM96SN - selecting a blower speed with the left/right/center pushbuttons'.",
+   "Heating has its own speed, changed the same way under gA1. The table lists F01 to F04 with F02 as the default, and the manual says to always check the Heating Chart: there F02 is marked default and recommended, F01 is marked not recommended for heating on every DM96SN size, and F04 is marked not recommended on the DM96SN1205D. After any change, check that the temperature rise is inside the range on the rating plate.",
+   "Read static again on the new speed (more air raises static), confirm the CFM on the chart, and write the speeds on the unit or the invoice."
+  ],
+  "safety": "Do not judge or adjust the refrigerant charge until the cooling airflow is set. Use the chart for your exact model - the same speed number moves very different air on different DM96SN sizes. An incorrect temperature rise may result in condensing in, or overheating of, the heat exchanger (Daikin).",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-duct-return-size-velocity-check",
+  "equipment": "Air Handler",
+  "title": "What size duct or return for a 3 ton? Quick check with CFM, duct area and air speed (a starting point, not a duct design)",
+  "summary": "A fast way to tell whether a trunk, return or filter grille is in the right range for the tonnage: work out the CFM, divide by the duct's area, and look at the air speed. Daikin's furnace manuals say to design duct by ACCA Manual D - this card is the on-the-job check, not the design, and it does not reproduce Manual D's tables. What size return for a 3 ton, what size duct for 1200 CFM, friction rate, feet per minute, noisy duct, undersized return.",
+  "steps": [
+   "CFM first: tons x about 400. Daikin's DM96VC furnace manual says most cooling systems are designed for 350 to 450 CFM per ton, about 400. 2 ton = 800, 3 ton = 1,200, 4 ton = 1,600, 5 ton = 2,000. The outdoor unit's own instructions give its required airflow.",
+   "Air speed in feet per minute (FPM) = CFM divided by the duct's area in square feet. Round duct: diameter in inches x diameter x 0.00545 = square feet. Rectangular: width x height in inches, divided by 144.",
+   "Worked example, 3 ton at 1,200 CFM: an 18 in. round is 1.77 sq ft, so 1,200 / 1.77 = about 680 FPM. A 16 in. round is 1.40 sq ft, so about 860 FPM. A 20 in. round is 2.18 sq ft, about 550 FPM. Two inches smaller on the trunk and the air is about a quarter faster.",
+   "What speed is too fast: the limits for trunks, branches and grilles are in ACCA Manual D, the method Daikin's furnace manuals tell you to design by. This app has no manufacturer figure for duct air speed and does not print Manual D's. Use your speed to compare: the same CFM through a smaller duct is faster, louder and costs more static. The working limits are on Brackett's class handout.",
+   "Filter check, with a Daikin figure: Daikin's DP14GM package unit instructions say a throwaway filter must be sized for a maximum face velocity of 300 feet per minute. As a check, CFM divided by 300 = square feet of filter face. 3 ton: 1,200 / 300 = 4 sq ft = 576 sq in, for example a 20 x 30. 4 ton: 768 sq in. 5 ton: 960 sq in. Your own unit's filter table wins. See 'Filter grille too small for the equipment's rated CFM'.",
+   "Manufacturer minimums come first. Example, Daikin DM96VC upflow furnaces: minimum recommended filter is one 16 x 25 (side or bottom) on the 040 to 080 models, and one 20 x 25 bottom or two 16 x 25 side returns on the 100 and 120 models. Daikin also says upflow installs needing 1,800 CFM or more must use two side returns, a bottom return, or a side and bottom combination. Look up the table for your furnace.",
+   "Filter drop: Daikin says to avoid highly restrictive 1 in. filters with a pressure loss over 0.25 in. w.c., and that a deep-pleated media filter often has lower pressure loss than a 1 in. filter.",
+   "Same duct, more air (physics, approximate): static goes up with the square of the airflow. New static = old static x (new CFM / old CFM) squared. 0.45 in. at 1,200 CFM becomes about 0.80 in. at 1,600 - a ton more air on the same ducts nearly doubles the static.",
+   "Friction rate, the number duct is sized on (Manual D's method as taught in Brackett's class - the allowances and the length are class example figures, not manufacturer numbers): what is left for the ducts = the blower's rated static minus the coil drop, minus the filter drop, minus allowances for the supply outlet, return grille and damper. Friction rate = what is left x 100 / total effective length in feet (longest supply plus longest return, fittings counted as feet). Class example: 0.50 - 0.21 coil - 0.06 filter - 0.09 for outlet, grille and damper = 0.14; 0.14 x 100 / 230 ft = 0.06 in. per 100 ft. The coil sets the budget - a coil that drops more leaves less for the duct.",
+   "For starting trunk, return and flex sizes by tonnage, use Brackett's class handout 'Airflow, Static Pressure & Duct Size' - a starting point only. If the house has a real duct problem, see 'Duct sizing doesn't match Manual D — field performance issues traced back to duct design', 'Supply or return plenum undersized for the equipment's airflow' and 'Return built from panned floor joists or a wall cavity'."
+  ],
+  "safety": "Edges of sheet metal may be sharp - wear gloves when removing sheet metal from return air openings. Never use a room, closet or alcove as a return air chamber for a furnace (Daikin furnace manuals).",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-pressures-x-over-y-what-to-check",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Pressures are X over Y (suction 68 head 240, 130 over 350, 300 over 50) - is that right? What to check before adding refrigerant",
+  "summary": "Two gauge pressures cannot tell you if the charge is right - they move with outdoor temperature, indoor load, airflow and the model. Fix the air first, then turn the pressures into temperatures and read superheat and subcool. Suction and head pressure, is this correct, normal pressures, low suction, high head, pressure does not rise when I add refrigerant.",
+  "steps": [
+   "Air first. Daikin's condenser instructions say airflow and total static pressure for the indoor unit should be verified before attempting to charge: total static 0.5 in. w.c. or less, and airflow correct for the installed unit. Filter, indoor coil, blower speed, registers. See 'Do not touch the charge until airflow is verified' and 'Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)'.",
+   "Check the outdoor coil and its air too - Daikin's troubleshooting chart lists high head pressure under a dirty outdoor coil and under recirculation of condensing air.",
+   "Let it run. Daikin: run in cooling 10 to 15 minutes or until the pressures stabilize before checking superheat, and the outdoor temperature must be 60 F or higher for the cooling charge check.",
+   "Turn each pressure into a temperature with the PT chart for the refrigerant on the nameplate (Charging Calc in this app). Suction pressure gives the coil's boiling temperature; head / liquid pressure gives the condensing temperature.",
+   "Add the two line temperatures. Superheat = suction line temperature minus saturated suction temperature (Daikin: thermometer on the suction line 4 to 6 in. from the compressor, good contact, insulated). Subcool = saturated liquid temperature minus liquid line temperature (Daikin: clamp thermometer on the liquid line near the liquid line service valve).",
+   "Use the right number for the metering device and THIS unit's own target. Daikin: a coil with a non-adjustable TXV is charged by subcooling only; a piston (fixed orifice) is charged to the superheat table for the outdoor dry bulb and indoor wet bulb.",
+   "Daikin's instructions also say: do NOT adjust the charge based exclusively on suction pressure, unless for general charging in the case of a gross undercharge.",
+   "Read the two together - see 'Superheat and subcool together - what each pattern means (high superheat low subcool, both high, both low, low superheat high subcool, both normal but still not right)'.",
+   "Low suction is not automatically low charge. Daikin's heat pump troubleshooting chart lists low suction pressure under a dirty air filter, a dirty indoor coil and not enough air across the indoor coil, as well as under shortage of refrigerant. See 'Low suction pressure and coil icing but the charge readings look normal - low indoor airflow hidden by the metering valve'.",
+   "If you are adding refrigerant and the pressure does not come up, stop adding. See 'Adding refrigerant but suction pressure won't come up (head climbing, subcooling already at target)'.",
+   "R-410A worked example with a maker's pressure table: 'R-410A - what should my pressures be? (152 over 325, 85 outside - is this correct)'."
+  ],
+  "safety": "Connect and disconnect gauge hoses carefully - escaping liquid refrigerant can cause burns. Do not vent refrigerant; recover it. On R-32 (A2L) systems Daikin requires leak detection and recovery equipment that is suitable for A2L refrigerants.",
+  "confidence": "common"
+ },
+ {
+  "id": "s-hp-high-pressure-trip-heating-indoor-air",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Heat pump tripping on high pressure in heat (high head pressure in heating) - check the indoor air first: filter, indoor coil, blower",
+  "summary": "In heating the indoor coil is where the heat pump gives its heat off. If not enough air crosses it, head pressure climbs until the high pressure switch opens. Daikin's heat pump troubleshooting chart lists high head pressure in the heating cycle under a dirty air filter, a dirty indoor coil, not enough air across the indoor coil and a faulty evaporator (indoor) fan motor. Do not pull charge out to stop the trips. Heat pump tripping on high pressure in heat, high head in heat mode, keeps going out on high pressure in winter.",
+  "steps": [
+   "Look at the filter first, then the indoor coil face.",
+   "Confirm the indoor blower is running and on the right speed for the unit - Daikin's remedy for not enough air across the indoor coil is to check blower speed, duct static pressure and the filter.",
+   "Open closed registers and dampers. Measure total external static and get the CFM - see 'Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)'.",
+   "If the system has electric heat strips, low air hurts them too - see 'Electric furnace high limit trips repeatedly' and 'Heat strips glowing red - energized elements with not enough air over them'.",
+   "Air is right and it still trips: the same Daikin chart also lists high head pressure under overcharge of refrigerant, noncondensables, a restricted liquid line or expansion device, a dirty outdoor coil and, in the heating cycle only, a faulty reversing valve, faulty defrost control or faulty defrost thermostat. See 'Compressor short-cycles on high-pressure lockout'.",
+   "Do not remove refrigerant to stop the trips until the air is proven right - if the charge was correct, it will be short once the filter is changed. For checking charge in cold weather see 'Checking charge on a heat pump in the middle of winter'.",
+   "On a mild day, a trip in heating can be normal - see 'Testing heat pump heating in mild weather trips the high pressure cutout'."
+  ],
+  "safety": "Do not bypass safety devices - never jumper the high pressure switch (Daikin). Turn power off before reaching into the blower compartment.",
+  "confidence": "verify"
+ },
+ {
+  "id": "s-air-numbers-what-is-normal",
+  "equipment": "Air Handler",
+  "title": "How many CFM per ton, what should static pressure be, filter pressure drop, coil pressure drop, temperature rise - the air numbers and where each is printed",
+  "summary": "The handful of air numbers to check before trusting any gauge or combustion reading, how to get each one, and where the real limit for the unit in front of you is printed. Figures here are Daikin's printed ones; the unit's own rating plate and manual always win. How many CFM per ton, what should static pressure be, filter pressure drop, coil pressure drop, check airflow before charging. How much air per ton and how much static is normal.",
+  "steps": [
+   "CFM per ton = CFM divided by tons. Daikin's DM96VC furnace manual: most cooling systems are designed for 350 to 450 CFM per ton, and most manufacturers recommend about 400. Daikin's DMVE / DFVE (EEV) air handler manual says ductwork is to be sized for 350 to 450 CFM per ton with static not over 0.5 in. w.c. Always check the outdoor unit's own required airflow.",
+   "Total external static = return reading + supply reading, signs ignored (Daikin's example: -0.30 and +0.20 is 0.50 in. w.c.). On a furnace the limit is the maximum external static on the rating plate. Daikin's R-32 condenser instructions want 0.5 in. w.c. or less before the charge is checked.",
+   "Filter drop = the reading before the filter compared with the reading after it. Daikin: avoid highly restrictive 1 in. filters with a pressure loss over 0.25 in. w.c.; a deep-pleated media filter often loses less.",
+   "Coil drop = the reading before the coil compared with the reading after it. Compare with the row for YOUR coil and CFM in the coil's spec sheet - it lists a wet and a dry figure. Examples from Daikin's R-32 coil spec sheet at 1,200 CFM wet: CAPTA3626C3 0.210, CAPTA3626B3 0.290, CAPEA3626C3 0.280, CAPEA3626B3 0.374 in. w.c. See 'Using coil pressure drop to get a CFM number and prove the coil is the restriction'.",
+   "EEV cased coils have a top airflow. Daikin's CAPEA manual lists maximum allowed CFM by model, upflow: 2418 - 910, 3022 - 1,160, 3626 - 1,450, 4830 - 1,520, 6030 - 1,890. Downflow is lower on some: 3626B and 3626C - 1,260, 4830 - 1,450.",
+   "Temperature rise (gas heat) = supply air minus return air. It must be inside the range on the furnace rating plate. Daikin: increase blower speed to reduce the rise, decrease it to raise the rise. See 'Temperature rise too high' and 'Temperature rise too low'.",
+   "CFM from the heat (physics): gas - output BTU per hour / (1.08 x rise). Electric - volts x amps x 3.41 / (1.08 x rise). Examples: 76,800 output at a 55 F rise = about 1,290 CFM; 240 V x 41.7 A at a 26 F rise = about 1,215 CFM. Do not try to get CFM from the cooling temperature split - part of the coil's work goes into removing water. See 'No flow hood on the truck - getting a CFM number out of the furnace itself' and 'Measuring total system airflow with the electric heat temperature-rise method'.",
+   "What bad air does (Daikin): too much static means too little air - in cooling that can ice the coil, in heat it causes excessive temperature rise, limit tripping and heat exchanger failure. Too much air can cause poor humidity control and pull condensate off the coil.",
+   "Read static and CFM as a pair - see 'Low airflow, high static or a loud blower - read static and CFM together (choked, forced, weak blower, wide open)'. Only when both are in range, read the charge."
+  ],
+  "safety": "These are Daikin's printed figures and examples. The rating plate, airflow chart and coil chart for the unit in front of you always win. Do not adjust the charge until the airflow is confirmed.",
+  "confidence": "verify"
  }
 ];
