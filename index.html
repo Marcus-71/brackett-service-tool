@@ -30,13 +30,13 @@
   <div class="home-tiles">
     <button class="tile tile-ask" data-screen="ask">
       <span class="tile-icon">🔎</span>
-      <span class="tile-label">Ask Anything</span>
-      <span class="tile-sub">Type it like you'd say it — searches every code, fix &amp; manual at once</span>
+      <span class="tile-label">Troubleshoot</span>
+      <span class="tile-sub">Ask it, say it, or pick the problem</span>
     </button>
     <button class="tile tile-scanner" data-screen="scanner">
       <span class="tile-icon">📷</span>
-      <span class="tile-label">Tag Scanner</span>
-      <span class="tile-sub">Snap the tag — identify the unit</span>
+      <span class="tile-label">Tag Scanner with Maintenance Figures</span>
+      <span class="tile-sub">Snap the tag - unit, figures, codes</span>
     </button>
     <button class="tile tile-codes" data-screen="codes">
       <span class="tile-icon">⚡</span>
@@ -52,16 +52,6 @@
       <span class="tile-icon">📄</span>
       <span class="tile-label">Manuals</span>
       <span class="tile-sub">Stored PDFs, works offline</span>
-    </button>
-    <button class="tile tile-maint" data-screen="maint">
-      <span class="tile-icon">📋</span>
-      <span class="tile-label">Maintenance Figures</span>
-      <span class="tile-sub">Specs &amp; clean-and-check list</span>
-    </button>
-    <button class="tile tile-diag" data-screen="diagnostics">
-      <span class="tile-icon">🩺</span>
-      <span class="tile-label">Diagnostic Help</span>
-      <span class="tile-sub">Troubleshoot by symptom</span>
     </button>
     <button class="tile tile-tstat" data-screen="tstat">
       <span class="tile-icon">🎛️</span>
@@ -130,10 +120,10 @@
   </div>
 </section>
 
-<!-- ASK ANYTHING -->
+<!-- TROUBLESHOOT (Ask Anything + Diagnostic Help, one screen since the 11-12 merge) -->
 <section id="askScreen" class="screen hidden">
   <!-- 2026-11-12 audit #9: the note at the top of each screen is one line; the full text opens on a tap (was 134 words here, the box started at y=302 on a phone) -->
-  <details class="disclaimer"><summary><span>Type or tap the mic. Works with no signal. Tap for how it works.</span></summary><div class="disclaimer-more">Ask the way you'd say it out loud — "goodman 3 flashes", "what size capacitor", "sequence of operation on a heat call", "does O or B energize in cooling". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once — the result cards only ever show what's actually stored in here. The 🤖 AI answer is different: it is written from the manual pages and entries it finds plus general HVAC practice, so a number in it that you can't open in a cited page is general practice, not this unit's spec — check it against the unit's own literature before acting on it. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you).</div></details>
+  <details class="disclaimer"><summary><span>Type or tap the mic. Works with no signal. Tap for how it works.</span></summary><div class="disclaimer-more">Ask the way you'd say it out loud — "goodman 3 flashes", "what size capacitor", "sequence of operation on a heat call", "does O or B energize in cooling". This searches every error code, diagnostic fix, thermostat, generator, board tool and manual in the app at once — the result cards only ever show what's actually stored in here. The 🤖 AI answer is different: it is written from the manual pages and entries it finds plus general HVAC practice, so a number in it that you can't open in a cited page is general practice, not this unit's spec — check it against the unit's own literature before acting on it. The search works with zero signal; tap 🎤 to ask out loud instead of typing (voice needs a signal to hear you). With the box empty, "Or pick the problem" lists step-by-step checks by kind of equipment - use your judgment on safety steps.</div></details>
   <div class="controls">
     <div class="ask-input-row">
       <input id="askInput" class="search-input" type="search" inputmode="search" placeholder="Code, symptom, model, manual" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -145,6 +135,14 @@
     </div>
   </div>
   <div id="askExamples" class="ask-examples"></div>
+  <!-- Diagnostic Help's browse list: shown only while the box above is empty -->
+  <div id="askBrowse" class="ask-browse hidden">
+    <div class="ask-chip-label" id="askBrowseLabel">Or pick the problem</div>
+    <div id="diagEquipBtns" class="diag-equip-btns"></div>
+    <div id="diagResults" class="diag-results"></div>
+    <div id="diagEmptyState" class="empty-state hidden">No matching symptoms. Try a different search, or add this one.</div>
+    <div id="askLead" class="ask-lead"></div>
+  </div>
   <div id="askAi" class="ask-ai"></div>
   <div id="askNarrow" class="ask-narrow"></div>
   <main id="askResults"></main>
@@ -163,35 +161,7 @@
     </div>
   </div>
   <main id="codesResults"></main>
-  <div id="codesEmptyState" class="empty-state hidden">No code matches. Try just the number, pick the brand, or use Ask Anything.</div>
-</section>
-
-<section id="maintScreen" class="screen hidden">
-  <details class="disclaimer"><summary><span>The tag on the unit wins over anything on this screen.</span></summary><div class="disclaimer-more">Pulled from manufacturer service literature. The tag on the unit wins over anything on this screen. Scanning in sun? Shade the whole label first.</div></details>
-  <div class="controls">
-    <input id="maintSearchInput" class="search-input" type="search" inputmode="search" placeholder="Full model - G61MPV-36B-070" autocomplete="off">
-    <label class="scan-btn" for="maintPhotoInput" style="margin-top:.7rem">📷 Scan the tag</label>
-    <input type="file" id="maintPhotoInput" accept="image/*" capture="environment" class="hidden">
-    <div id="maintScanStatus" class="scan-status hidden"></div>
-    <div class="filter-row">
-      <select id="maintEquipChips" class="filter-select" aria-label="Filter by equipment"></select>
-    </div>
-  </div>
-  <main id="maintResults"></main>
-  <div id="maintEmptyState" class="empty-state hidden">No maintenance figures for that model yet. Check Manuals for the PDF.</div>
-</section>
-
-<!-- DIAGNOSTIC HELP -->
-<section id="diagScreen" class="screen hidden">
-  <div class="disclaimer">Step-by-step checks. Use your judgment on safety steps.</div>
-  <div class="controls">
-    <input id="diagSearchInput" class="search-input" type="search" inputmode="search" placeholder="Search a symptom…" autocomplete="off">
-    <div class="filter-row">
-      <select id="diagEquipChips" class="filter-select" aria-label="Filter by equipment"></select>
-    </div>
-  </div>
-  <main id="diagResults"></main>
-  <div id="diagEmptyState" class="empty-state hidden">No matching symptoms. Try a different search, or add this one.</div>
+  <div id="codesEmptyState" class="empty-state hidden">No code matches. Try just the number, pick the brand, or use Troubleshoot.</div>
 </section>
 
 <!-- MANUALS -->
@@ -564,7 +534,7 @@
 
 <!-- TAG SCANNER -->
 <section id="scannerScreen" class="screen hidden">
-  <details class="disclaimer"><summary><span>Straight on, good light, shade the whole label. Check what it read.</span></summary><div class="disclaimer-more">Photograph the unit's tag straight-on in good light. In sun, shade the whole label, so no shadow line cuts across it. Reading happens on this phone — no signal needed. Always double-check the model/serial it reads before trusting it.</div></details>
+  <details class="disclaimer"><summary><span>Straight on, good light, shade the whole label. Check what it read.</span></summary><div class="disclaimer-more">Photograph the unit's tag straight-on in good light. In sun, shade the whole label, so no shadow line cuts across it. Reading happens on this phone — no signal needed. Always double-check the model/serial it reads before trusting it. Maintenance figures are pulled from manufacturer service literature - the tag on the unit wins over anything on this screen.</div></details>
   <main>
     <label class="scan-btn" for="tagPhotoInput">📷 Take photo of the tag</label>
     <input type="file" id="tagPhotoInput" accept="image/*" capture="environment" class="hidden">
@@ -579,6 +549,21 @@
       <button id="scanIdentifyBtn" class="scan-identify">Identify unit</button>
     </div>
     <div id="scanResult"></div>
+    <!-- Maintenance Figures lives here since the 11-12 merge: under the Identify button while browsing,
+         moved inside the unit page (between its facts and its buttons) once a unit is identified. -->
+    <div id="maintPanel" class="maint-panel hidden">
+      <div class="maint-panel-head">
+        <span id="maintPanelTitle" class="maint-panel-title">📋 Maintenance figures</span>
+        <button id="maintMicBtn" class="ask-mic-btn hidden" type="button" aria-label="Say the model" title="Say the model">🎤</button>
+      </div>
+      <div id="maintPanelHint" class="maint-panel-hint"></div>
+      <div id="maintScanStatus" class="scan-status hidden"></div>
+      <div class="filter-row" id="maintFilterRow">
+        <select id="maintEquipChips" class="filter-select" aria-label="Filter by equipment"></select>
+      </div>
+      <div id="maintResults" class="maint-results"></div>
+      <div id="maintEmptyState" class="empty-state hidden">No maintenance figures for that model yet. Check Manuals for the PDF.</div>
+    </div>
   </main>
 </section>
 

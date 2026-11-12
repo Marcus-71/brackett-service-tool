@@ -328,14 +328,14 @@ document.getElementById("modalBackdrop").addEventListener("click", (e) => {
 
 const SCREEN_TITLES = {
   home: "Brackett Service Tool",
-  ask: "Ask Anything",
+  ask: "Troubleshoot",
   codes: "Error Codes",
   diagnostics: "Diagnostic Help",
   manuals: "Manuals",
   toolbox: "Toolbox",
   tstat: "Thermostats",
   gen: "Generators",
-  scanner: "Tag Scanner",
+  scanner: "Tag Scanner with Maintenance Figures",
   charge: "Charging Calc",
   weather: "Local Weather",
   maint: "Maintenance Figures",
@@ -348,8 +348,15 @@ const SCREEN_TITLES = {
   genchecklist: "Generator Checklist",
   education: "Education",
 };
+// 11-12 merge (Andy: "combine diagnostic help and ask anything together and tag scanner with maintenance
+// figures"): Ask Anything + Diagnostic Help are the one screen "ask" (Troubleshoot), and Maintenance
+// Figures is drawn inside "scanner". showScreen("diagnostics") and showScreen("maint") still work - they
+// land on the merged screen with the same filter / model applied. The log keeps the short screen name
+// the office digest reads ("viewed Tag Scanner").
+const SCREEN_LOG_NAMES = { scanner: "Tag Scanner" };
 const ADD_HANDLERS = {
   codes: () => openCodeEditForm(null),
+  ask: () => openSymptomEditForm(null),
   diagnostics: () => openSymptomEditForm(null),
   manuals: () => openManualLibraryPicker({
     q: manualsState.search || (manualsState.model && manualsState.model !== GENERAL_MODEL ? manualsState.model : ""),
@@ -359,7 +366,7 @@ const ADD_HANDLERS = {
   toolbox: () => openToolboxEditForm(null),
 };
 // screens #18: "+ Add" meant "write my own code" on one screen and "pick a manual" on another.
-const ADD_LABELS = { codes: "+ My code", diagnostics: "+ My fix", manuals: "+ Manual", toolbox: "+ My tool" };
+const ADD_LABELS = { codes: "+ My code", ask: "+ My fix", diagnostics: "+ My fix", manuals: "+ Manual", toolbox: "+ My tool" };
 
 let currentScreen = "home";
 // Where the tech came FROM, so the swipe-back gesture can retrace one step at
@@ -371,16 +378,30 @@ let screenHistory = [];
 // part-way down. Back returns to where that screen was left.
 const screenScrollY = {};
 function showScreen(name, fromBack) {
+  // 11-12 merge: the two old screen names land on the merged screens (see SCREEN_LOG_NAMES).
+  if (name === "diagnostics") {
+    // Diagnostic Help = Troubleshoot with the box empty (or holding the old screen's search text) and
+    // the equipment filter the caller set in diagState.
+    name = "ask";
+    askState.search = String(diagState.search || "").trim(); diagState.search = "";
+    const ai = document.getElementById("askInput"); if (ai) ai.value = askState.search;
+    if (!diagState.equipment) diagState.equipment = "All";
+    diagState.picked = false;
+  } else if (name === "ask" && !fromBack && name !== currentScreen) {
+    // A fresh visit from the Home tile or a "Search everything" button starts with no list picked.
+    diagState.equipment = ""; diagState.picked = false; diagState.unitModel = "";
+  }
+  if (name === "maint") { name = "scanner"; maintPanelFromState(); }
   if (name !== currentScreen) screenScrollY[currentScreen] = window.scrollY;
   if (!fromBack && name !== currentScreen) {
     screenHistory.push(currentScreen);
     if (screenHistory.length > 20) screenHistory.shift();
   }
   currentScreen = name;
-  for (const id of ["homeScreen", "askScreen", "codesScreen", "diagScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "maintScreen", "checkerScreen", "sensorsScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
+  for (const id of ["homeScreen", "askScreen", "codesScreen", "manualsScreen", "toolboxScreen", "tstatScreen", "genScreen", "scannerScreen", "chargeScreen", "weatherScreen", "warrantyScreen", "sqftScreen", "requestScreen", "checkerScreen", "sensorsScreen", "genChecklistScreen", "inventoryScreen", "educationScreen"]) {
     document.getElementById(id).classList.add("hidden");
   }
-  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", diagnostics: "diagScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", maint: "maintScreen", checker: "checkerScreen", sensors: "sensorsScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
+  const screenEl = { home: "homeScreen", ask: "askScreen", codes: "codesScreen", manuals: "manualsScreen", toolbox: "toolboxScreen", tstat: "tstatScreen", gen: "genScreen", scanner: "scannerScreen", charge: "chargeScreen", weather: "weatherScreen", warranty: "warrantyScreen", sqft: "sqftScreen", request: "requestScreen", checker: "checkerScreen", sensors: "sensorsScreen", genchecklist: "genChecklistScreen", inventory: "inventoryScreen", education: "educationScreen" }[name];
   document.getElementById(screenEl).classList.remove("hidden");
   document.getElementById("screenTitle").textContent = SCREEN_TITLES[name];
   document.getElementById("backBtn").classList.toggle("hidden", name === "home");
@@ -399,8 +420,7 @@ function showScreen(name, fromBack) {
   // the tech had asked for with "Show 60 more", so the page returns to the same place.
   if (!fromBack) {
     if (name === "codes") codesPage.key = null;
-    if (name === "diagnostics") diagPage.key = null;
-    if (name === "maint" && typeof maintPage !== "undefined") maintPage.key = null;
+    if (name === "ask") diagPage.key = null;
     if (name === "tstat") tstatPage.key = null;
     if (name === "manuals") { manualsPage.search.key = manualsPage.models.key = manualsPage.files.key = null; }
   }
@@ -411,8 +431,6 @@ function showScreen(name, fromBack) {
   if (name === "codes") renderCodes();
   if (name === "home") diagState.unitModel = "";
   if (name === "scanner" && cameraLostInput === "tagPhotoInput") { cameraLostInput = ""; scanStatus(CAMERA_LOST_MSG); }
-  if (name === "maint" && cameraLostInput === "maintPhotoInput") { cameraLostInput = ""; maintScanStatus(CAMERA_LOST_MSG); }
-  if (name === "diagnostics") renderSymptoms();
   if (name === "manuals") renderManuals();
   if (name === "toolbox") renderToolbox();
   if (name === "checker") renderChecker();
@@ -424,16 +442,28 @@ function showScreen(name, fromBack) {
   if (name === "gen") { renderGens(); if (typeof genClEntryCount === "function") genClEntryCount(); if (typeof genProblemScanStatus === "function") genProblemScanStatus(""); window.scrollTo(0, 0); }
   if (name === "charge") { renderChargeCalc(); if (typeof wxFillOutdoorTemp === "function") wxFillOutdoorTemp(true, false); }
   if (name === "weather") { if (typeof renderWeather === "function") renderWeather(); }
-  if (name === "maint") renderMaint();
   if (name === "genchecklist") renderGenChecklist();
   if (name !== "inventory" && typeof invCloseCamera === "function") invCloseCamera();
   if (name === "inventory" && typeof renderInventory === "function") { renderInventory(); window.scrollTo(0, 0); }
 
-  if (name !== "home") trackEvent("viewed " + SCREEN_TITLES[name]);
+  if (name !== "home") trackEvent("viewed " + (SCREEN_LOG_NAMES[name] || SCREEN_TITLES[name]));
 
   // Toggling the back/add buttons changes the topbar's own height (its tallest
   // child differs per screen), which should retrigger ResizeObserver — but that
   // firing isn't reliable on every device/browser, so resync explicitly here too.
+  // The Tag Scanner's full name does not fit a phone's top bar beside the back arrow and the signal pill:
+  // there it reads "Tag Scanner + Figures" (the Home button and a pad's top bar carry the full name).
+  if (name === "scanner") {
+    // the figures block's hint line / list under the Identify button (nothing heavy while it is idle);
+    // not on the way back, where a redraw would move the page off the place it was left at
+    // and after the screen itself is painted, so the photo buttons show as fast as they always did.
+    if (!fromBack) {
+      if (maintPanel.drawn) renderMaint();
+      else requestAnimationFrame(() => setTimeout(() => { maintPanel.drawn = true; renderMaint(); }, 0));
+    }
+    // (by screen width, not by measuring the title: measuring would lay the page out twice on every open)
+    if (window.innerWidth < 560) document.getElementById("screenTitle").textContent = "Tag Scanner + Figures";
+  }
   syncTopbarHeight();
   backGuardSync();
   searchClearSync();   // a search filled in from another screen shows its X
@@ -484,6 +514,12 @@ function goBackOneStep() {
   if (currentScreen === "genchecklist" && genCl.view === "wizard" && genCl.step > 0 && genCl.draft && !genCl.draft.finished) { genWizGo(genCl.step - 1); return; }
   if (currentScreen === "manuals" && (manualsState.model || manualsState.brand)) {
     manualsUpOne();   // one folder up, back at the place that list was left
+    return;
+  }
+  // Troubleshoot: a problem list picked ON this screen is one step - Back returns to the equipment buttons.
+  if (currentScreen === "ask" && diagState.picked && !askState.search.trim()) {
+    diagState.equipment = ""; diagState.picked = false; diagState.unitModel = "";
+    renderAsk(); window.scrollTo(0, 0);
     return;
   }
   if (screenHistory.length) { showScreen(screenHistory.pop(), true); return; }
@@ -754,8 +790,8 @@ function setAskEverything(holder, q, from) {
   new MutationObserver(sync).observe(empty, { attributes: true, attributeFilter: ["class"] });
   new MutationObserver(sync).observe(results, { childList: true });
   // still nothing after another letter: neither box changes, so the button's text is brought up to date here
-  const inp = document.getElementById("maintSearchInput");
-  if (inp) inp.addEventListener("input", () => setTimeout(sync, 0));
+  const inp = document.getElementById("scanModelInput");   // 11-12 merge: the Tag Scanner's Model box is the figures search
+  if (inp) inp.addEventListener("input", () => setTimeout(sync, 250));
 })();
 const codesPage = { key: null, shown: LIST_PAGE };
 // The text a Codes search looks through, built once per card. A tech's own / edited code is a new object
@@ -1033,7 +1069,8 @@ document.getElementById("codesSearchInput").addEventListener("input", (e) => { c
 
 let askState = { search: "", kind: "All", brand: "All", equip: "All", _lastQ: null };
 let askIndexCache = null;
-let askManualToken = 0;      // guards the async in-manual search against stale renders
+let askBrowseDrawn = false;   // Troubleshoot's "pick the problem" part has been drawn once
+let askManualToken = 0;     // guards the async in-manual search against stale renders
 let askManualTimer = null;
 // Server-side AI relay (holds the API key; app never sees it). Empty = feature
 // dormant (no button). Fill in the deployed Apps Script /exec URL to turn it on.
@@ -2103,7 +2140,9 @@ function renderAsk() {
   }
   kindSel.onchange = () => { askState.kind = kindSel.value; renderAsk(); };
 
-  // No query yet — show what's in here + tappable example questions.
+  // No query yet — tappable example questions, then Diagnostic Help's list to pick a problem from
+  // (11-12 merge), then what's in here.
+  const browse = document.getElementById("askBrowse");
   if (!q) {
     empty.classList.add("hidden");
     document.getElementById("askNarrow").innerHTML = "";
@@ -2111,20 +2150,29 @@ function renderAsk() {
     const inst = document.getElementById("askInstant"); if (inst) inst.innerHTML = "";
     const total = askIndexCache.length;
     const chips = ASK_EXAMPLES.map(x => `<button class="ask-chip" data-q="${escapeHtml(x)}">${escapeHtml(x)}</button>`).join("");
+    // The examples are one row that slides sideways, so the problem list starts on the first screen;
+    // they step aside once a list is picked. The count line sits under the equipment buttons.
     examples.innerHTML = `
-      <div class="ask-lead">Searches <strong>${total.toLocaleString()}</strong> vetted entries — ${counts.code || 0} codes · ${counts.symptom || 0} fixes · ${counts.tstat || 0} thermostats · ${counts.gen || 0} generators · ${counts.tool || 0} tools · ${counts.manual || 0} manuals. It only shows what's really in here.</div>
       <div class="ask-chip-label">Try:</div>
-      <div class="ask-chip-row">${chips}</div>`;
-    examples.classList.remove("hidden");
+      <div class="ask-chip-row ask-chip-slide">${chips}</div>`;
+    examples.classList.toggle("hidden", !!diagState.equipment);
     examples.querySelectorAll(".ask-chip").forEach(b => {
       b.onclick = () => {
         const el = document.getElementById("askInput");
         el.value = b.dataset.q; askState.search = b.dataset.q; renderAsk(); el.focus();
       };
     });
+    const lead = document.getElementById("askLead");
+    lead.innerHTML = `Searches <strong>${total.toLocaleString()}</strong> vetted entries — ${counts.code || 0} codes · ${counts.symptom || 0} fixes · ${counts.tstat || 0} thermostats · ${counts.gen || 0} generators · ${counts.tool || 0} tools · ${counts.manual || 0} manuals. It only shows what's really in here.`;
+    lead.classList.toggle("hidden", !!diagState.equipment);
+    // The very first draw of the list part waits for the search box to be on screen (its first run is
+    // the slow one), so opening this screen is never slower than Ask Anything was.
+    if (askBrowseDrawn || diagState.equipment) { askBrowseDrawn = true; browse.classList.remove("hidden"); renderSymptoms(); }
+    else requestAnimationFrame(() => setTimeout(() => { askBrowseDrawn = true; if (!askState.search.trim()) { browse.classList.remove("hidden"); renderSymptoms(); } }, 0));
     return;
   }
   examples.classList.add("hidden");
+  browse.classList.add("hidden");
 
   const pool = askState.kind === "All" ? askIndexCache : askIndexCache.filter(i => i.kind === askState.kind);
   let rq, units, hits, partial;
@@ -3546,14 +3594,16 @@ function addVoiceSearch(input, opts) {
   if (!input || !AskSpeech || input.dataset.voice) return;
   opts = opts || {};
   input.dataset.voice = "1";
-  let row = input.parentElement;
-  if (!row || !row.classList.contains("ask-input-row")) {
+  // opts.btn: a mic button that already sits somewhere else (Maintenance figures inside the Tag Scanner) -
+  // the box is left exactly where it is.
+  let row = opts.btn ? opts.btn.parentElement : input.parentElement;
+  if (!opts.btn && (!row || !row.classList.contains("ask-input-row"))) {
     row = document.createElement("div");
     row.className = "ask-input-row";
     input.parentNode.insertBefore(row, input);
     row.appendChild(input);
   }
-  let btn = row.querySelector(".ask-mic-btn");
+  let btn = opts.btn || row.querySelector(".ask-mic-btn");
   if (!btn) {
     btn = document.createElement("button");
     btn.type = "button"; btn.className = "ask-mic-btn"; btn.textContent = "🎤";
@@ -3599,13 +3649,13 @@ function addVoiceSearch(input, opts) {
 const voiceKw = (t) => t.replace(/\s*(?:kilowatts?|k\.?\s?w\.?)(?=\s|$)/gi, "kW");
 [
   ["codesSearchInput", "error codes", "Listening… say the code, symptom, or brand"],
-  ["maintSearchInput", "maintenance figures", "Listening… say the model"],
-  ["diagSearchInput", "diagnostic help", "Listening… say the symptom"],
   ["manualSearchInput", "manuals", "Listening… say the brand or model"],
   ["tstatSearchInput", "thermostats", "Listening… say the model, terminal, or code"],
   ["genSearchInput", "generators", "Listening… say the model, kW, or code", voiceKw],
   ["toolboxSearchInput", "toolbox", "Listening… say the tool, app, or brand"],
 ].forEach(([id, label, listening, n]) => addVoiceSearch(document.getElementById(id), { label, listening, norm: n }));
+// Maintenance figures (inside the Tag Scanner): its mic sits in the figures panel and fills the Model box.
+addVoiceSearch(document.getElementById("scanModelInput"), { label: "maintenance figures", listening: "Listening… say the model", btn: document.getElementById("maintMicBtn") });
 
 // ---- Every search box (11-12 audit, screens #10) ----
 // The keyboard's Search / Enter key drops the keyboard so the results show (only Ask did), and an X
@@ -3691,8 +3741,28 @@ function getAllSymptoms() {
 function renderSymptoms() {
   // A how-to card kept for one thermostat brand (askBrandOnly) only lists when the search names that brand.
   const all = getAllSymptoms().filter(s => !s.askBrandOnly || hayHasTerm(String(diagState.search || "").toLowerCase(), String(s.brand).toLowerCase()));
-  const equips = ["All", ...uniqueSorted(all.map(s => s.equipment))];
-  renderChips("diagEquipChips", equips, diagState.equipment, (v) => { diagState.equipment = v; renderSymptoms(); }, "All Equipment");
+  // 11-12 merge: this list is the "Or pick the problem" part of Troubleshoot (box empty). The equipment
+  // filter is large buttons; nothing is listed until one is tapped (diagState.equipment "" = none
+  // picked, "All" = every card), and the picked one shows as a tag with an X to change it.
+  const equipN = new Map();
+  for (const s of all) equipN.set(s.equipment, (equipN.get(s.equipment) || 0) + 1);
+  // biggest lists first, so the common kinds sit under the thumb and the one-card kinds come last
+  const equips = ["All", ...uniqueSorted(all.map(s => s.equipment)).sort((a, b) => equipN.get(b) - equipN.get(a))];
+  if (diagState.equipment && !equips.includes(diagState.equipment)) diagState.equipment = "All";
+  const equipBox = document.getElementById("diagEquipBtns");
+  const pickEquip = (v, picked) => { diagState.equipment = v; diagState.picked = picked; if (!v) diagState.unitModel = ""; renderAsk(); if (!v) window.scrollTo(0, 0); };
+  document.getElementById("askBrowseLabel").textContent = diagState.equipment ? "Problems to pick from" : "Or pick the problem";
+  if (!diagState.equipment) {
+    equipBox.className = "diag-equip-btns";
+    equipBox.innerHTML = equips.map(v => `<button type="button" class="diag-equip-btn" data-v="${escapeHtml(v)}">${escapeHtml(v === "All" ? "All equipment" : v)} <span class="ask-chip-n">${v === "All" ? all.length : equipN.get(v)}</span></button>`).join("");
+    equipBox.querySelectorAll("button").forEach(b => { b.onclick = () => pickEquip(b.dataset.v, true); });
+    document.getElementById("diagResults").innerHTML = "";
+    document.getElementById("diagEmptyState").classList.add("hidden");
+    return;
+  }
+  equipBox.className = "ask-narrow-tags";
+  equipBox.innerHTML = `<button type="button" class="ask-narrow-tag" id="diagEquipClear">${escapeHtml(diagState.equipment === "All" ? "All equipment" : diagState.equipment)} <span class="x">✕</span></button><span class="diag-equip-change">tap to pick another</span>`;
+  document.getElementById("diagEquipClear").onclick = () => pickEquip("", false);
 
   const scoped = all.filter(s => diagState.equipment === "All" || s.equipment === diagState.equipment);
   const fields = (s) => [s.title, s.summary, s.equipment, s.brand, ...(s.steps || [])];
@@ -4092,7 +4162,7 @@ function renderFollowups() {
     `;
   } else if (fuState.exhausted) {
     body = `
-      <div class="fu-verdict fu-exhausted"><strong>That's every branch of this one</strong><p>You've ruled out ${fuState.tried.length} thing${fuState.tried.length === 1 ? "" : "s"} here. Work the checklist below in order — it covers the same causes the long way — and if it still doesn't land, search Diagnostic Help for the symptom again; a neighbouring scenario may fit better. Send it in from Request Info if the app missed it.</p></div>
+      <div class="fu-verdict fu-exhausted"><strong>That's every branch of this one</strong><p>You've ruled out ${fuState.tried.length} thing${fuState.tried.length === 1 ? "" : "s"} here. Work the checklist below in order — it covers the same causes the long way — and if it still doesn't land, search Troubleshoot for the symptom again; a neighbouring scenario may fit better. Send it in from Request Info if the app missed it.</p></div>
       <button class="fu-restart" id="fuRestartBtn">Start these questions over</button>
     `;
   } else {
@@ -4254,7 +4324,7 @@ function openSymptomEditForm(existing) {
   document.getElementById("modalBackdrop").classList.remove("hidden");
 }
 
-document.getElementById("diagSearchInput").addEventListener("input", (e) => { diagState.search = e.target.value; renderSymptoms(); });
+// (11-12 merge: Diagnostic Help's own search box is gone - typing on Troubleshoot is Ask's search.)
 
 // ============================================================
 // TOOLBOX (board programming tools — CoolCloud, Data Loader, etc.)
@@ -5523,13 +5593,165 @@ function bulMaintInject() {
   const bulHtmlStr = bulletinsHtml(list, { where: "maint lookup", serial, model });
   if (anchor) anchor.insertAdjacentHTML("afterend", bulHtmlStr); else results.insertAdjacentHTML("afterbegin", bulHtmlStr);
 }
+// ---- Maintenance figures inside the Tag Scanner (11-12 merge) ----
+// Andy: "I would leave tag scanner with maintenance figures". The old Maintenance Figures screen is the
+// #maintPanel block of the Tag Scanner. maint.js still draws the cards (renderMaint, same exact /
+// look-alike rules); this only decides WHERE the block sits and what it lists:
+//  - browse: under the Identify button. Lists the cards for what is in the Model box (a full model, a
+//    series like G61 / DM96 / 59TP6, a brand, a word), narrowed by the equipment filter. Nothing is drawn
+//    until something is typed or a kind is picked, so the scanner opens as fast as before.
+//  - unit: inside the identified unit's page, between its facts and its buttons, for that model only.
+const maintPanel = { unit: "", gapLogged: new Set() };
+function maintPanelEl() { return document.getElementById("maintPanel"); }
+function maintPanelNorm(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+// Put the block back under the result box (before the box is rewritten, or after it was wiped).
+function maintPanelHome() {
+  const p = maintPanel.el || (maintPanel.el = maintPanelEl()), home = document.getElementById("scanResult");
+  if (p && home && p.previousElementSibling !== home) home.after(p);
+  maintPanel.unit = "";
+}
+// Browse: list the figure cards for q (what was typed in the Model box, or what another screen asked for).
+function maintPanelBrowse(q) {
+  if (typeof maintState === "undefined") return;
+  maintPanelHome();
+  maintPanel.lastUnit = "";
+  maintState.query = String(q || ""); maintState.open = null; maintState.guess = null;
+  renderMaint();
+}
+// The identified unit's own figures, inside its page. guess: see renderMaint's "Guessed model" notice.
+function maintPanelUnit(info, guess) {
+  const slot = document.getElementById("scanMaintSlot"), p = maintPanel.el || (maintPanel.el = maintPanelEl());
+  if (typeof maintState === "undefined" || !p) return;
+  if (!slot || !info || !info.model || info.serialLike) { maintPanelBrowse(info && info.serialLike ? "" : document.getElementById("scanModelInput").value.trim()); return; }
+  slot.appendChild(p);
+  // the same unit drawn again (signal came back): a card the tech had open stays open
+  if (maintPanel.lastUnit !== info.model) { maintState.open = null; maintState.reveal = null; maintPanel.allCards = false; }
+  maintPanel.unit = maintPanel.lastUnit = info.model;
+  maintState.query = info.model; maintState.equip = ""; maintState.showAll = false;
+  maintState.guess = guess || null;
+  if (typeof maintPage !== "undefined") maintPage.key = null;
+  renderMaint();
+  // A photographed tag with no exact figures is a coverage gap for the office, as it was when the tag
+  // was scanned on the old Maintenance Figures screen: same row text, once per model per visit.
+  if (!info.typed && !maintPanel.gapLogged.has(info.model)) {
+    maintPanel.gapLogged.add(info.model);
+    const lk = typeof maintLookup === "function" ? maintLookup(info.model) : { exact: [] };
+    if (!lk.exact.length && !(typeof genMaintResolve === "function" && genMaintResolve(info.model))) trackEvent("maint scan -> " + info.model + " | no figures");
+  }
+}
+// showScreen("maint") from anywhere (an Ask "Specs" card, a generator's tune-up button): maintState is
+// already set by the caller. A plain model number also goes into the Model box, ready for Identify unit.
+function maintPanelFromState() {
+  if (typeof maintState === "undefined") return;
+  const q = String(maintState.query || "").trim(), box = document.getElementById("scanResult"), mi = document.getElementById("scanModelInput");
+  if (typeof maintPage !== "undefined") maintPage.key = null;
+  if (maintPanel.unit && box.firstElementChild && maintPanelNorm(q) === maintPanelNorm(maintPanel.unit)) { renderMaint(); return; }   // this unit's page is already up
+  maintPanelHome();
+  box.innerHTML = "";
+  const preview = document.getElementById("scanPreview"); if (preview) preview.classList.add("hidden");
+  scanStatus(null);
+  if (mi) mi.value = /^[A-Za-z0-9][A-Za-z0-9.\/-]{2,23}$/.test(q) && /[0-9]/.test(q) ? q : "";
+  const si = document.getElementById("scanSerialInput"); if (si) si.value = "";
+  renderMaint();
+  setTimeout(() => { const p = maintPanelEl(); if (p && currentScreen === "scanner") { try { p.scrollIntoView({ block: "start" }); } catch (e) {} } }, 0);
+}
+function maintPanelChrome() {
+  const p = maintPanel.el || (maintPanel.el = maintPanelEl());
+  if (!p) return;
+  const unit = maintPanel.unit, q = String(maintState.query || "").trim();
+  p.classList.remove("hidden");   // hidden in index.html until its first draw, which comes after the screen's first paint
+  p.classList.toggle("in-unit", !!unit);
+  document.getElementById("maintPanelTitle").textContent = unit ? "📋 Maintenance figures for this unit" : "📋 Maintenance figures";
+  const sel = document.getElementById("maintEquipChips");
+  if (sel && !sel.dataset.filled) {   // same list and handler maint.js would set up on its first draw
+    const kinds = [...new Set(MAINT_SPECS.map(e => e.equip))].sort();
+    sel.innerHTML = '<option value="">All equipment</option>' + kinds.map(k => `<option value="${k}">${k}</option>`).join("");
+    sel.dataset.filled = "1";
+    sel.addEventListener("change", () => { maintState.equip = sel.value; renderMaint(); });
+  }
+  if (sel && sel.value !== (maintState.equip || "")) sel.value = maintState.equip || "";
+  const hint = document.getElementById("maintPanelHint");
+  if (unit) { hint.innerHTML = ""; hint.classList.add("hidden"); return; }
+  hint.classList.remove("hidden");
+  const idle = !q && !maintState.equip && !maintState.showAll;
+  hint.innerHTML = idle
+    ? `No tag handy? Type a model or just the series in the Model # box above (G61, DM96, 59TP6), tap 🎤 and say it, or pick a kind of equipment. <button type="button" class="maint-panel-link" id="maintShowAll">Show all ${MAINT_SPECS.length} cards</button>`
+    : (q ? `Figures for <strong>${escapeHtml(q)}</strong>. ` : (maintState.equip ? "" : "All cards. ")) + `<button type="button" class="maint-panel-link" id="maintPanelClear">✕ Clear</button>`;
+  const all = document.getElementById("maintShowAll");
+  if (all) all.onclick = () => { maintState.showAll = true; renderMaint(); };
+  const clr = document.getElementById("maintPanelClear");
+  if (clr) clr.onclick = () => {
+    const mi = document.getElementById("scanModelInput"); if (mi) mi.value = "";
+    maintState.equip = ""; maintState.showAll = false;
+    maintPanelBrowse("");
+  };
+}
 if (typeof renderMaint === "function") {
   const bulRenderMaint0 = renderMaint;
   renderMaint = function () {
+    const results = document.getElementById("maintResults"), empty = document.getElementById("maintEmptyState");
+    if (!results || !empty) return;   // the block is between two places for a moment
+    maintPanel.drawn = true;
+    maintPanelChrome();
+    const unit = maintPanel.unit;
+    if (!unit && !String(maintState.query || "").trim() && !maintState.equip && !maintState.showAll) {
+      results.innerHTML = ""; empty.classList.add("hidden");   // nothing asked for yet
+      return;
+    }
     const r = bulRenderMaint0.apply(this, arguments);
-    try { bulMaintInject(); } catch (e) {}
+    if (!unit) { try { bulMaintInject(); } catch (e) {} }   // the unit page already lists its bulletins
+    else if (!empty.classList.contains("hidden")) {
+      // unit page with no card at all: one line, not the browse screen's box and buttons
+      empty.classList.add("hidden");
+      results.innerHTML = `<p class="maint-note maint-none">No maintenance figures for this model yet. Check Manuals for the PDF.</p>`;
+    } else if (!maintPanel.allCards) {
+      // unit page with a long list of look-alike / same-series cards: the first three (best match first),
+      // the rest behind one button, so the unit's own buttons are not pushed screens away
+      const cards = [...results.querySelectorAll(".maint-card")];
+      if (cards.length > 4 && !cards.slice(3).some(k => k.querySelector(".maint-body"))) {
+        cards.slice(3).forEach(k => k.classList.add("hidden"));
+        const pager = document.getElementById("maintMoreBtn"); if (pager) pager.classList.add("hidden");
+        const more = document.createElement("button");
+        more.type = "button"; more.className = "list-more-btn";
+        more.textContent = "Show all " + (cards.length + (pager ? "+" : "")) + " cards";
+        more.onclick = () => { maintPanel.allCards = true; renderMaint(); };
+        results.appendChild(more);
+      }
+    }
     return r;
   };
+  // A result box rewritten by the scan itself (new photo, "no model read") takes the block with it:
+  // bring it back under the box, in browse mode.
+  const scanBox = document.getElementById("scanResult");
+  if (scanBox) new MutationObserver(() => {
+    const p = maintPanel.el || (maintPanel.el = maintPanelEl());
+    if (p && !p.isConnected) maintPanelBrowse("");
+  }).observe(scanBox, { childList: true });
+  // A new photo: the Model box was just emptied for it (scanTagPhoto), so the list for the old text goes too.
+  ["tagPhotoInput", "tagPhotoPick"].forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) inp.addEventListener("change", () => { if (!maintPanel.unit && maintState.query) maintPanelBrowse(""); });
+  });
+  // Typing in the Model box lists the matching figure cards (the old Maintenance Figures search). A unit
+  // page for another model leaves the screen first, so the list is never mixed up with the old unit.
+  const scanModelBox = document.getElementById("scanModelInput");
+  let maintTypeTimer = null;
+  if (scanModelBox) {
+    scanModelBox.addEventListener("input", () => {
+      clearTimeout(maintTypeTimer);
+      maintTypeTimer = setTimeout(() => {
+        const v = scanModelBox.value.trim();
+        if (maintPanel.unit) {
+          if (maintPanelNorm(v) === maintPanelNorm(maintPanel.unit)) return;
+          maintPanelHome();
+          document.getElementById("scanResult").innerHTML = "";
+        }
+        maintPanelBrowse(v);
+      }, 200);
+    });
+    scanModelBox.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); scanModelBox.blur(); } });   // keyboard down, list in view
+  }
+  maintPanel.el = maintPanelEl();
 }
 
 // ---- v227 genModelFacts START
@@ -12897,7 +13119,8 @@ function renderScanResult(info) {
   scanStatus(null);
   lastScanInfo = info;
   const box = document.getElementById("scanResult");
-  if (!info) { box.innerHTML = ""; return; }
+  maintPanelHome();   // 11-12 merge: the figures block leaves the old unit page before the box is rewritten
+  if (!info) { box.innerHTML = ""; maintPanelBrowse(document.getElementById("scanModelInput").value.trim()); return; }
   const facts = [];
   if (info.brand) {
     facts.push(["Brand", info.brand]);
@@ -12985,12 +13208,12 @@ function renderScanResult(info) {
         ${ocrBanner}
         ${bulHtml}
         <ul class="scan-id-facts">${factsHtml}${notes}</ul>
+        <div id="scanMaintSlot"></div>
         ${ownScenHtml}
         <div class="scan-actions">
           ${info.brand && codeCount ? `<button class="primary-act" id="scanGoCodes">⚡ ${famPre ? escapeHtml(famPre) + " family codes" : "All " + escapeHtml(info.brand) + " " + escapeHtml(info.equipment) + " codes"} (${codeCount})</button>` : ""}
-          ${hasMaint ? `<button class="primary-act" id="scanGoMaint">📋 Maintenance figures</button>` : ""}
           ${hasSensors ? `<button class="primary-act" id="scanGoSensors">🌡️ Sensor plugs &amp; charts</button>` : ""}
-          <button id="scanGoDiag">🩺 Diagnostics${info.equipment ? " for " + escapeHtml(info.equipment) : ""}</button>
+          <button id="scanGoDiag">🩺 Troubleshoot this unit</button>
           ${nModelManuals ? `<button class="primary-act" id="scanGoModelManuals">📄 Manuals for this model (${nModelManuals})</button>` : ""}
           ${manualsBrand ? `<button id="scanGoManuals">📄 ${escapeHtml(manualsBrand)} manuals</button>` : ""}
           ${((info.brand === "Generac" || info.brand === "Kohler") && typeof genFamilyForModel === "function" && genFamilyForModel(info.model)) ? `<button class="primary-act" id="scanGoGen">🔌 Open in Generators</button>` : ""}
@@ -13013,6 +13236,21 @@ function renderScanResult(info) {
     bulRows.slice(3).forEach(el => fold.appendChild(el));
     bulCard.appendChild(fold);
   }
+  // 11-12 merge: the same fold for "Problems for this unit" (some units have 15+): first three, then one
+  // "Show all N" row, so the figures and the buttons under them stay within reach.
+  const scenBtns = [...box.querySelectorAll(".scan-unit-scen > .scan-unit-scen-btn")];
+  if (scenBtns.length > 4) {
+    const fold = document.createElement("details");
+    fold.className = "scan-unit-scen-more";
+    const sum = document.createElement("summary");
+    sum.textContent = "Show all " + scenBtns.length + " problems";
+    fold.appendChild(sum);
+    scenBtns.slice(3).forEach(el => fold.appendChild(el));
+    box.querySelector(".scan-unit-scen").appendChild(fold);
+  }
+  // The unit's maintenance figures, drawn in the page (was the "Maintenance figures" button and a
+  // second screen). accuracy #8: a guessed model stays marked as guessed above its card.
+  maintPanelUnit(info, info.ocrGuess ? { model: info.model, raw: info.rawModel || "", diff: guessDiff } : null);
   const goCodes = document.getElementById("scanGoCodes");
   if (goCodes) goCodes.onclick = () => {
     codesState.brand = codeBrand; codesState.equipment = info.equipment;
@@ -13029,17 +13267,6 @@ function renderScanResult(info) {
     const addNote = (txt) => { const n = document.createElement("div"); n.className = "disclaimer"; n.textContent = txt; res.insertBefore(n, res.firstChild); };
     if (!famPre && codeCount) addNote("All " + codeBrand + " " + info.equipment + " boards - the app does not know which board " + info.model + " has. Pick by the board and display type on the unit.");
     if (info.ocrGuess) addNote("Guessed model - the scan was corrected to " + info.model + ". Confirm it on the tag before you trust this list.");
-  };
-  const goMaint = document.getElementById("scanGoMaint");
-  if (goMaint) goMaint.onclick = () => {
-    if (typeof maintState !== "undefined") {
-      maintState.query = info.model; maintState.equip = ""; maintState.open = null;
-      // accuracy #8: a guessed model stays marked as guessed on Maintenance Figures (renderMaint shows it
-      // while the box still holds this model).
-      maintState.guess = info.ocrGuess ? { model: info.model, raw: info.rawModel || "", diff: guessDiff } : null;
-    }
-    const mi = document.getElementById("maintSearchInput"); if (mi) mi.value = info.model;
-    showScreen("maint");
   };
   const goSensors = document.getElementById("scanGoSensors");
   if (goSensors) goSensors.onclick = () => { trackEvent("scan -> sensor plugs: " + info.model); openSensors({ model: info.model }); };
@@ -13060,8 +13287,7 @@ function renderScanResult(info) {
   document.getElementById("scanGoDiag").onclick = () => {
     diagState.equipment = info.equipment || "All"; diagState.search = "";
     diagState.unitModel = ownScen.length ? info.model : "";
-    document.getElementById("diagSearchInput").value = "";
-    showScreen("diagnostics");
+    showScreen("diagnostics");   // = Troubleshoot, box empty, this unit's kind of equipment listed, its own problems first
   };
   const goModelManuals = document.getElementById("scanGoModelManuals");
   if (goModelManuals) goModelManuals.onclick = () => openManualsForModel(info.model);
@@ -14772,7 +14998,6 @@ function logAsked() {
 }
 logAsked();
 logSearches("codesSearchInput", "searched codes");
-logSearches("diagSearchInput", "searched diagnostics");
 logSearches("manualSearchInput", "searched manuals");
 logSearches("toolboxSearchInput", "searched toolbox");
 logSearches("tstatSearchInput", "searched thermostats");
