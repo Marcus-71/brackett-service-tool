@@ -606,7 +606,7 @@ const GENERATORS = [
      "If oil level is correct, contact a Generac Service Dealer.",
      "Listed as ALARM code 1300 in the Guardian-series table; referenced as a possible-low-oil-level scenario in the outage troubleshooting guide."
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "1400-1401",
@@ -629,13 +629,13 @@ const GENERATORS = [
      "Clear the alarm and restart (never under load).",
      "The generator has experienced a [operational] alarm - dealer contact recommended if issue persists after cooling/clearance checks. (dealer-call table lists High Temperature/1400 as ALARM)"
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "1522",
     "name": "RPM Sensor",
     "display": "RPM Sensor",
-    "meaning": "Crankshaft position sensor RPM and DPE frequency both read 0 after the crank command. (Generac A0004542981 Rev E (dealer manual), p.17, 25, 26, 89, 90, 91, 121). Remote reset: Yes.",
+    "meaning": "Crankshaft position sensor (CRKS, crank sensor) RPM and DPE frequency both read 0 after the crank command. (Generac A0004542981 Rev E (dealer manual), p.17, 25, 26, 89, 90, 91, 121). Remote reset: Yes.",
     "causes": [
      "Weak/discharged battery or high-resistance cable connection (pp.89-91)",
      "Blown controller 7.5A fuse (p.90)",
@@ -1025,7 +1025,7 @@ const GENERATORS = [
      "If fuse is good and seated, inspect the battery and battery cables.",
      "If the error persists after replacing the fuse and checking the battery, a dealer visit is needed so a technician can test the starter circuit for continuity (why the fuse keeps blowing)."
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "2670",
@@ -1672,7 +1672,7 @@ const GENERATORS = [
     "code": "4101",
     "name": "Engine Position Sensor",
     "display": "Engine Position Sensor",
-    "meaning": "Crankshaft sensor signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No.",
+    "meaning": "Crankshaft sensor (crankshaft position sensor, CRKS, crank sensor) signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No.",
     "causes": [
      "CRKS, ETMC or TTMAP connector loose (p.98)",
      "Wire 79A/79B open - harness (p.98)",
@@ -1706,7 +1706,7 @@ const GENERATORS = [
     "code": "4201",
     "name": "Secondary Sync",
     "display": "Secondary Sync",
-    "meaning": "Engine timing sensor signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No. NOTE - the owner's-manual text this card carried before reads differently: \"Engine secondary sync loss.\" - go by the dealer manual.",
+    "meaning": "Engine timing sensor signal below normal range, high severe level. Its action step, the Engine Timing Sensor Test, covers the crankshaft position sensor (CRKS, crank sensor) and the TTMAP sensor: the ECM sets an E-code if it cannot sync the two signals while cranking above 300 RPM. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No. NOTE - the owner's-manual text this card carried before reads differently: \"Engine secondary sync loss.\" - go by the dealer manual.",
     "causes": [
      "CRKS, ETMC or TTMAP connector loose (p.98)",
      "Wire 79A/79B open - harness (p.98)",
@@ -3726,7 +3726,7 @@ const GENERATORS = [
      "If oil level is correct, contact a Generac Service Dealer.",
      "Listed as ALARM code 1300 in the Guardian-series table; referenced as a possible-low-oil-level scenario in the outage troubleshooting guide."
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "1400-1401",
@@ -3749,13 +3749,13 @@ const GENERATORS = [
      "Clear the alarm and restart (never under load).",
      "The generator has experienced a [operational] alarm - dealer contact recommended if issue persists after cooling/clearance checks. (dealer-call table lists High Temperature/1400 as ALARM)"
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "1522",
     "name": "RPM Sensor",
     "display": "RPM Sensor",
-    "meaning": "Crankshaft position sensor RPM and DPE frequency both read 0 after the crank command. (Generac A0004542981 Rev E (dealer manual), p.17, 25, 26, 89, 90, 91, 121). Remote reset: Yes.",
+    "meaning": "Crankshaft position sensor (CRKS, crank sensor) RPM and DPE frequency both read 0 after the crank command. (Generac A0004542981 Rev E (dealer manual), p.17, 25, 26, 89, 90, 91, 121). Remote reset: Yes.",
     "causes": [
      "Weak/discharged battery or high-resistance cable connection (pp.89-91)",
      "Blown controller 7.5A fuse (p.90)",
@@ -4145,7 +4145,7 @@ const GENERATORS = [
      "If fuse is good and seated, inspect the battery and battery cables.",
      "If the error persists after replacing the fuse and checking the battery, a dealer visit is needed so a technician can test the starter circuit for continuity (why the fuse keeps blowing)."
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "2670",
@@ -4792,7 +4792,7 @@ const GENERATORS = [
     "code": "4101",
     "name": "Engine Position Sensor",
     "display": "Engine Position Sensor",
-    "meaning": "Crankshaft sensor signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No.",
+    "meaning": "Crankshaft sensor (crankshaft position sensor, CRKS, crank sensor) signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No.",
     "causes": [
      "CRKS, ETMC or TTMAP connector loose (p.98)",
      "Wire 79A/79B open - harness (p.98)",
@@ -4826,7 +4826,7 @@ const GENERATORS = [
     "code": "4201",
     "name": "Secondary Sync",
     "display": "Secondary Sync",
-    "meaning": "Engine timing sensor signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No. NOTE - the owner's-manual text this card carried before reads differently: \"Engine secondary sync loss.\" - go by the dealer manual.",
+    "meaning": "Engine timing sensor signal below normal range, high severe level. Its action step, the Engine Timing Sensor Test, covers the crankshaft position sensor (CRKS, crank sensor) and the TTMAP sensor: the ECM sets an E-code if it cannot sync the two signals while cranking above 300 RPM. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No. NOTE - the owner's-manual text this card carried before reads differently: \"Engine secondary sync loss.\" - go by the dealer manual.",
     "causes": [
      "CRKS, ETMC or TTMAP connector loose (p.98)",
      "Wire 79A/79B open - harness (p.98)",
@@ -6815,7 +6815,7 @@ const GENERATORS = [
      "If oil level is correct, contact a Generac Service Dealer.",
      "Listed as ALARM code 1300 in the Guardian-series table; referenced as a possible-low-oil-level scenario in the outage troubleshooting guide."
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "1400-1401",
@@ -6838,13 +6838,13 @@ const GENERATORS = [
      "Clear the alarm and restart (never under load).",
      "The generator has experienced a [operational] alarm - dealer contact recommended if issue persists after cooling/clearance checks. (dealer-call table lists High Temperature/1400 as ALARM)"
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "1522",
     "name": "RPM Sensor",
     "display": "RPM Sensor",
-    "meaning": "Crankshaft position sensor RPM and DPE frequency both read 0 after the crank command. (Generac A0004542981 Rev E (dealer manual), p.17, 25, 26, 89, 90, 91, 121). Remote reset: Yes.",
+    "meaning": "Crankshaft position sensor (CRKS, crank sensor) RPM and DPE frequency both read 0 after the crank command. (Generac A0004542981 Rev E (dealer manual), p.17, 25, 26, 89, 90, 91, 121). Remote reset: Yes.",
     "causes": [
      "Weak/discharged battery or high-resistance cable connection (pp.89-91)",
      "Blown controller 7.5A fuse (p.90)",
@@ -7276,7 +7276,7 @@ const GENERATORS = [
      "If fuse is good and seated, inspect the battery and battery cables.",
      "If the error persists after replacing the fuse and checking the battery, a dealer visit is needed so a technician can test the starter circuit for continuity (why the fuse keeps blowing)."
     ],
-    "clear": "Evolution 1/2: press OFF, then ENTER twice, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
+    "clear": "Evolution 1/2: press OFF, then ENTER, then AUTO. (7.5kW PowerPact: press OFF twice for a single active alarm/warning, or 3 times if an alarm and a warning are both active.) Next Generation Series (Power Zone 200): hold OFF for at least 3 seconds; red LED goes solid when cleared, then press AUTO. Nexus (rocker switch): move rocker to OFF, press ENTER twice, move rocker back to AUTO. Nexus without rocker: press OFF, then press ENTER twice."
    },
    {
     "code": "2670",
@@ -7923,7 +7923,7 @@ const GENERATORS = [
     "code": "4101",
     "name": "Engine Position Sensor",
     "display": "Engine Position Sensor",
-    "meaning": "Crankshaft sensor signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No.",
+    "meaning": "Crankshaft sensor (crankshaft position sensor, CRKS, crank sensor) signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No.",
     "causes": [
      "CRKS, ETMC or TTMAP connector loose (p.98)",
      "Wire 79A/79B open - harness (p.98)",
@@ -7957,7 +7957,7 @@ const GENERATORS = [
     "code": "4201",
     "name": "Secondary Sync",
     "display": "Secondary Sync",
-    "meaning": "Engine timing sensor signal below normal range, high severe level. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No. NOTE - the owner's-manual text this card carried before reads differently: \"Engine secondary sync loss.\" - go by the dealer manual.",
+    "meaning": "Engine timing sensor signal below normal range, high severe level. Its action step, the Engine Timing Sensor Test, covers the crankshaft position sensor (CRKS, crank sensor) and the TTMAP sensor: the ECM sets an E-code if it cannot sync the two signals while cranking above 300 RPM. (Generac A0004542981 Rev E (dealer manual), p.18, 25, 30, 84, 94, 95, 96, 97, 98, 104, 121, 123, 124). Remote reset: No. NOTE - the owner's-manual text this card carried before reads differently: \"Engine secondary sync loss.\" - go by the dealer manual.",
     "causes": [
      "CRKS, ETMC or TTMAP connector loose (p.98)",
      "Wire 79A/79B open - harness (p.98)",
@@ -10063,7 +10063,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -10088,7 +10088,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -10104,7 +10104,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -10123,7 +10123,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -10145,7 +10145,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -10166,7 +10166,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -10185,7 +10185,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -10205,7 +10205,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -10221,7 +10221,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -10237,7 +10237,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -10250,13 +10250,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -10277,7 +10277,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -10294,7 +10294,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -10309,7 +10309,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -10337,10 +10337,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -10866,7 +10866,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -10891,7 +10891,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -10907,7 +10907,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -10926,7 +10926,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -10948,7 +10948,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -10969,7 +10969,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -10988,7 +10988,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -11008,7 +11008,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -11024,7 +11024,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -11040,7 +11040,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -11053,13 +11053,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -11080,7 +11080,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -11097,7 +11097,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -11112,7 +11112,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -11140,10 +11140,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -11858,7 +11858,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -11883,7 +11883,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -11899,7 +11899,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -11918,7 +11918,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -11940,7 +11940,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -11961,7 +11961,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -11980,7 +11980,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -12000,7 +12000,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -12016,7 +12016,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -12032,7 +12032,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -12045,13 +12045,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -12072,7 +12072,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -12089,7 +12089,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -12104,7 +12104,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -12132,10 +12132,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -12660,7 +12660,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -12685,7 +12685,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -12701,7 +12701,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -12720,7 +12720,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -12742,7 +12742,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -12763,7 +12763,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -12782,7 +12782,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -12802,7 +12802,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -12818,7 +12818,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -12834,7 +12834,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -12847,13 +12847,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -12874,7 +12874,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -12891,7 +12891,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -12906,7 +12906,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -12934,10 +12934,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -13407,7 +13407,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -13432,7 +13432,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -13448,7 +13448,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -13467,7 +13467,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -13489,7 +13489,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -13510,7 +13510,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -13529,7 +13529,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -13549,7 +13549,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -13565,7 +13565,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -13581,7 +13581,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -13594,13 +13594,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -13621,7 +13621,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -13638,7 +13638,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -13653,7 +13653,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -13681,10 +13681,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -14152,7 +14152,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -14177,7 +14177,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -14193,7 +14193,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -14212,7 +14212,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -14234,7 +14234,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -14255,7 +14255,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -14274,7 +14274,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -14294,7 +14294,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -14310,7 +14310,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -14326,7 +14326,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -14339,13 +14339,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -14366,7 +14366,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -14383,7 +14383,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -14398,7 +14398,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -14426,10 +14426,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -14890,7 +14890,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -14915,7 +14915,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -14931,7 +14931,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -14950,7 +14950,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -14972,7 +14972,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -14993,7 +14993,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -15012,7 +15012,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -15032,7 +15032,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -15048,7 +15048,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -15064,7 +15064,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -15077,13 +15077,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -15104,7 +15104,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -15121,7 +15121,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -15136,7 +15136,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -15164,10 +15164,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -15638,7 +15638,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -15663,7 +15663,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -15679,7 +15679,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -15698,7 +15698,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -15720,7 +15720,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -15741,7 +15741,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -15760,7 +15760,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -15780,7 +15780,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -15796,7 +15796,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -15812,7 +15812,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -15825,13 +15825,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -15852,7 +15852,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -15869,7 +15869,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -15884,7 +15884,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -15912,10 +15912,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -16388,7 +16388,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -16413,7 +16413,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER, then AUTO (fault re-latches until repaired)."
    },
    {
     "code": "1300",
@@ -16429,7 +16429,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, ENTER, AUTO."
    },
    {
     "code": "1400-1401",
@@ -16448,7 +16448,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Press OFF, then ENTER, then AUTO once the unit has cooled."
    },
    {
     "code": "1500-1522",
@@ -16470,7 +16470,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -16491,7 +16491,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -16510,7 +16510,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -16530,7 +16530,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -16546,7 +16546,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -16562,7 +16562,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "Press OFF, ENTER, AUTO after shedding load."
    },
    {
     "code": "2299",
@@ -16575,13 +16575,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, ENTER, AUTO."
    },
    {
     "code": "2399",
@@ -16602,7 +16602,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    },
    {
     "code": "2400",
@@ -16619,7 +16619,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then OFF, ENTER, AUTO."
    },
    {
     "code": "2800-2801",
@@ -16634,7 +16634,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, ENTER, AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -16662,10 +16662,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, ENTER, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER, then AUTO."
    }
   ],
   "warnings": [
@@ -17156,7 +17156,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -17181,7 +17181,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO. The fault re-latches until repaired."
    },
    {
     "code": "1300",
@@ -17197,7 +17197,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1400-1401",
@@ -17216,7 +17216,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Once the unit has cooled, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1500-1522",
@@ -17238,7 +17238,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -17259,7 +17259,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -17278,7 +17278,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -17298,7 +17298,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -17314,7 +17314,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -17330,7 +17330,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "After shedding load, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2299",
@@ -17343,13 +17343,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2399",
@@ -17370,7 +17370,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -17387,7 +17387,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2800-2801",
@@ -17402,7 +17402,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -17430,10 +17430,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, then ENTER). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -17968,7 +17968,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -17993,7 +17993,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO. The fault re-latches until repaired."
    },
    {
     "code": "1300",
@@ -18009,7 +18009,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1400-1401",
@@ -18028,7 +18028,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Once the unit has cooled, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1500-1522",
@@ -18050,7 +18050,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -18071,7 +18071,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -18090,7 +18090,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -18110,7 +18110,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -18126,7 +18126,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -18142,7 +18142,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "After shedding load, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2299",
@@ -18155,13 +18155,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2399",
@@ -18182,7 +18182,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -18199,7 +18199,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2800-2801",
@@ -18214,7 +18214,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -18242,10 +18242,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, then ENTER). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -18838,7 +18838,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -18863,7 +18863,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO. The fault re-latches until repaired."
    },
    {
     "code": "1300",
@@ -18879,7 +18879,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1400-1401",
@@ -18898,7 +18898,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Once the unit has cooled, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1500-1522",
@@ -18920,7 +18920,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -18941,7 +18941,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -18960,7 +18960,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -18980,7 +18980,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -18996,7 +18996,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -19012,7 +19012,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "After shedding load, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2299",
@@ -19025,13 +19025,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2399",
@@ -19052,7 +19052,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -19069,7 +19069,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2800-2801",
@@ -19084,7 +19084,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -19112,10 +19112,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, then ENTER). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -19705,7 +19705,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -19730,7 +19730,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO. The fault re-latches until repaired."
    },
    {
     "code": "1300",
@@ -19746,7 +19746,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1400-1401",
@@ -19765,7 +19765,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Once the unit has cooled, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1500-1522",
@@ -19787,7 +19787,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -19808,7 +19808,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -19827,7 +19827,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -19847,7 +19847,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -19863,7 +19863,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -19879,7 +19879,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "After shedding load, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2299",
@@ -19892,13 +19892,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2399",
@@ -19919,7 +19919,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -19936,7 +19936,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2800-2801",
@@ -19951,7 +19951,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -19979,10 +19979,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, then ENTER). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    }
   ],
   "warnings": [
@@ -20434,7 +20434,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1200-1208",
@@ -20459,7 +20459,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO. The fault re-latches until repaired."
    },
    {
     "code": "1300",
@@ -20475,7 +20475,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1400-1401",
@@ -20494,7 +20494,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Once the unit has cooled, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1500-1522",
@@ -20516,7 +20516,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1600-1603",
@@ -20537,7 +20537,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1800-1801",
@@ -20557,7 +20557,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1900-1916",
@@ -20578,7 +20578,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -20594,7 +20594,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "2100-2103",
@@ -20610,7 +20610,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "After shedding load, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "2299",
@@ -20623,13 +20623,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "2399",
@@ -20650,7 +20650,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "2400",
@@ -20667,7 +20667,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "2800-2801",
@@ -20682,7 +20682,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -20710,10 +20710,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, then ENTER). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1048",
@@ -20757,7 +20757,7 @@ const GENERATORS = [
      "Check the AVR power and ground circuits from the controller to the AVR for proper voltage and ground (Generac 0K9138 Rev B (dealer manual), p.53).",
      "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1052",
@@ -20947,7 +20947,7 @@ const GENERATORS = [
      "Check the static voltages on the communication wires with the unit not running; check the AVR LEDs - only the green one should be lit.",
      "Contact an IASD if a controller or the AVR is damaged."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1063",
@@ -20966,7 +20966,7 @@ const GENERATORS = [
      "Check the Enable circuit for proper operation (wire present, not shorted or miswired, connector tight).",
      "Contact an IASD if the enable circuit is good - the remaining causes are a faulty controller or AVR."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1064",
@@ -20984,7 +20984,7 @@ const GENERATORS = [
      "Check the connector and pin fit.",
      "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1065",
@@ -21002,7 +21002,7 @@ const GENERATORS = [
      "Check the fuel supply and pressure are within the unit's specifications and that the fuel selection matches the fuel (Generac 0K9138 Rev B (dealer manual), p.55).",
      "If the stepper and fuel check out, the remaining listed cause is an internal AVR issue - contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). Generac's Evolution help article adds: then press AUTO."
    },
    {
     "code": "1066",
@@ -21492,10 +21492,10 @@ const GENERATORS = [
      "Controller internal failure (the dealer table gives no field test - the action step is replacement)"
     ],
     "steps": [
-     "Clear it once (OFF, ENTER twice, AUTO). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
+     "Clear it once (OFF, then ENTER). If it returns, the dealer action step is Replace Controller (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD for the controller; after replacement follow the Model Ident power-up sequence on this card (resistor-plug connector first, then power, then the large connector)."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1100-1101",
@@ -21520,7 +21520,7 @@ const GENERATORS = [
      "Confirm correct fuel selection in the controller menu and correct fuel-jet orientation.",
      "If it will not start or runs rough, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1200-1208",
@@ -21545,7 +21545,7 @@ const GENERATORS = [
      "1207: Test 64 Wire 18 magneto signal (about 3-6 VAC V-twin, 2-3 VAC single while cranking) and Test 60 magnetos (0H9172 Rev M p.194).",
      "Do not attempt a field governor adjustment - there is none on these units; contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO (fault re-latches until repaired)."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO. The fault re-latches until repaired."
    },
    {
     "code": "1300",
@@ -21561,7 +21561,7 @@ const GENERATORS = [
      "If the level is correct, contact an IASD.",
      "If the unit was never activated, refer to the Activation section of the installation manual."
     ],
-    "clear": "Correct oil level, then press OFF, ENTER twice, AUTO."
+    "clear": "Correct oil level, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1400-1401",
@@ -21580,7 +21580,7 @@ const GENERATORS = [
      "Verify the enclosure roof and doors are in place while running.",
      "If no obstructions are found, contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once the unit has cooled."
+    "clear": "Once the unit has cooled, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1500-1522",
@@ -21602,7 +21602,7 @@ const GENERATORS = [
      "Owner's-manual checks still apply: BATTERY MENU - GOOD means call a dealer, CHECK BATTERY means replace the battery; after a shutdown clear the alarm, remove household loads and restart in AUTO.",
      "Contact an IASD if it will not restart after these checks."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1600-1603",
@@ -21623,7 +21623,7 @@ const GENERATORS = [
      "1603 (never reaches 3600 rpm): check the fuel selection and the fuel supply - the Test 50 checks above (Generac 10000041488 Rev C (dealer manual), p.39).",
      "Contact an IASD if the engine still cannot hold speed with the load within rating and fuel pressure within spec."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1800-1801",
@@ -21643,7 +21643,7 @@ const GENERATORS = [
      "The flowchart also branches to Test 7 (stator, then stator insulation resistance) and Test 10 (rotor); replace the stator and/or rotor per the result (0H9172 Rev M p.44).",
      "Contact an IASD if the output cannot be brought into calibration."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1900-1916",
@@ -21664,7 +21664,7 @@ const GENERATORS = [
      "New install: before the electrical tests confirm the controller's NG/LP selection and the fuel jet match the fuel, LP tank above 30 percent, and fuel pressure in spec (Test 50, 0H9172 Rev M p.180) - Generac's support article lists fuel supply and selection as causes.",
      "Contact an IASD if the test points at the excitation winding, rotor or stator."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2094-2099 / 2098",
@@ -21680,7 +21680,7 @@ const GENERATORS = [
      "2099: check the customer connection in the generator - the low- and high-voltage wires are crossed; correct the field wiring against the install manual's interconnect diagram (0H9172 Rev M p.40).",
      "Contact the installing dealer / IASD if the connections check out."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2100-2103",
@@ -21696,7 +21696,7 @@ const GENERATORS = [
      "Put the unit back in AUTO and restart.",
      "If it recurs at normal load, contact an IASD."
     ],
-    "clear": "Press OFF, ENTER twice, AUTO after shedding load."
+    "clear": "After shedding load, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2299",
@@ -21709,13 +21709,13 @@ const GENERATORS = [
     ],
     "steps": [
      "Remove the load (dealer action step): open the generator main breaker or shed the large loads so the unit starts unloaded (Generac 10000041488 Rev C (dealer manual), p.40; 0H9172 Rev M p.40).",
-     "Clear the alarm (OFF, then ENTER twice), restart in MANUAL with no load, then put loads back on a few at a time.",
+     "Clear the alarm (OFF, then ENTER), restart in MANUAL with no load, then put loads back on a few at a time.",
      "If it comes back with a normal load, treat it as the 2100 overload: check the transfer-switch load-shed operation (2100 row action, 0H9172 Rev M p.40) and run Problem 3.",
      "Problem 3 - Voltage and Frequency Drop Excessively When Loads Are Applied (0H9172 Rev M p.45): Test 14 - apply load equal to the unit's rating and read frequency and voltage at the stator power leads; 60 Hz and about 248 VAC at full load passes (p.60). Both low: Test 15 - clamp-on ammeter with all normal loads transferred to the generator; if the amps are above the unit's rating, reduce the load to rated capacity.",
      "Not overloaded: if the unit was reconfigured to LP, verify the conversion procedure was followed (install manual); then Test 12 - stepper motor control (steps above / p.58-60), Test 16 - engine condition, Test 7 - stator AC power windings, and look for a shorted condition in a connected load or load circuit (0H9172 Rev M p.45).",
      "Contact an IASD if the generator still cannot pick up its rated load."
     ],
-    "clear": "Shed the load, then press OFF, ENTER twice, AUTO."
+    "clear": "Shed the load, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2399",
@@ -21736,7 +21736,7 @@ const GENERATORS = [
      "Verify the controller has the latest firmware (note on the 2399 action step, Generac 10000041488 Rev C (dealer manual), p.40).",
      "Contact an IASD if the stepper tests good and the alarm returns."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO."
+    "clear": "Press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2400",
@@ -21753,7 +21753,7 @@ const GENERATORS = [
      "If the fuse keeps blowing, correct the short - contact an IASD.",
      "If the fuse is intact, contact an IASD."
     ],
-    "clear": "Replace the fuse, then OFF, ENTER twice, AUTO."
+    "clear": "Replace the fuse, then press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "2800-2801",
@@ -21768,7 +21768,7 @@ const GENERATORS = [
      "Check the generator emergency shutdown switch(es).",
      "Set the emergency shutdown switch to CLOSED (I)."
     ],
-    "clear": "With the switch closed, press OFF, ENTER twice, AUTO."
+    "clear": "With the switch closed, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "Model Ident Problem - Fix Harness Resistor",
@@ -21829,7 +21829,7 @@ const GENERATORS = [
      "Check the AVR power and ground circuits from the controller to the AVR for proper voltage and ground (Generac 0K9138 Rev B (dealer manual), p.53).",
      "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1052",
@@ -22019,7 +22019,7 @@ const GENERATORS = [
      "Check the static voltages on the communication wires with the unit not running; check the AVR LEDs - only the green one should be lit.",
      "Contact an IASD if a controller or the AVR is damaged."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1063",
@@ -22038,7 +22038,7 @@ const GENERATORS = [
      "Check the Enable circuit for proper operation (wire present, not shorted or miswired, connector tight).",
      "Contact an IASD if the enable circuit is good - the remaining causes are a faulty controller or AVR."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1064",
@@ -22056,7 +22056,7 @@ const GENERATORS = [
      "Check the connector and pin fit.",
      "Contact an IASD if the wiring is good - the remaining causes are a faulty controller or AVR."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1065",
@@ -22074,7 +22074,7 @@ const GENERATORS = [
      "Check the fuel supply and pressure are within the unit's specifications and that the fuel selection matches the fuel (Generac 0K9138 Rev B (dealer manual), p.55).",
      "If the stepper and fuel check out, the remaining listed cause is an internal AVR issue - contact an IASD."
     ],
-    "clear": "Press OFF, then ENTER twice, then AUTO once corrected."
+    "clear": "Once corrected, press OFF, then ENTER (owner's manual). A Quick Reference page for this family prints ENTER twice, then AUTO."
    },
    {
     "code": "1066",
@@ -24859,7 +24859,7 @@ const GENERATORS = [
    "7",
    "7.5"
   ],
-  "engine": "GA-420 (0K6020 spec table); LH-420 / LH-720 / LV-432 on other SKU vintages, 420 cc 1-cyl",
+  "engine": "GA-420, 420 cc, 1 cylinder (0K6020 spec table; dealer manual 0H9174 p.6). Generac's SKU descriptions read LH420 - one, G0065610, reads LH720, but the manuals Generac lists for it are 420 cc",
   "fuel": "Dual-fuel carburetor, factory-set NG, field-convertible to LP",
   "years": "2013-2024",
   "sort": 20,
@@ -24887,7 +24887,7 @@ const GENERATORS = [
    {
     "g": "G0065610",
     "digits": "6561",
-    "desc": "7KW/LH720 GEN UNBUNDLED"
+    "desc": "7KW/LH720 GEN UNBUNDLED (as Generac's lookup prints it; the manuals it lists for this model are 420 cc - owner's 0K6020, engine parts 0K4359PMNL)"
    },
    {
     "g": "G0065611",
