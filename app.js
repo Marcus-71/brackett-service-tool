@@ -3049,7 +3049,7 @@ function addVoiceSearch(input, opts) {
   if (!hintEl) { hintEl = document.createElement("div"); hintEl.className = "ask-note voice-hint hidden"; row.after(hintEl); }
   let rec = null, listening = false, hintTimer = null;
   const hint = (msg) => { hintEl.textContent = msg; hintEl.classList.remove("hidden"); clearTimeout(hintTimer); hintTimer = setTimeout(() => hintEl.classList.add("hidden"), 4500); };
-  const norm = (t) => { t = String(t || "").trim().replace(/.$/, ""); return opts.norm ? opts.norm(t) : t; };
+  const norm = (t) => { t = String(t || "").trim().replace(/\.$/, ""); return opts.norm ? opts.norm(t) : t; };
   const apply = (t) => { input.value = t; input.dispatchEvent(new Event("input", { bubbles: true })); };
   btn.addEventListener("click", () => {
     if (listening) { try { rec && rec.stop(); } catch (e) {} return; }
@@ -3080,7 +3080,7 @@ function addVoiceSearch(input, opts) {
   });
 }
 // "22 kilowatt" -> "22kW" so it matches the generator kW search.
-const voiceKw = (t) => t.replace(/s*(?:kilowatts?|k.?s?w.?)(?=s|$)/gi, "kW");
+const voiceKw = (t) => t.replace(/\s*(?:kilowatts?|k\.?\s?w\.?)(?=\s|$)/gi, "kW");
 [
   ["codesSearchInput", "error codes", "Listening… say the code, symptom, or brand"],
   ["maintSearchInput", "maintenance figures", "Listening… say the model"],
