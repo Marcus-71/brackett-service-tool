@@ -16,8 +16,11 @@
   --text: #f2ede2;
   --text-dim: #a6b2bf;
   --accent: #C4622D;
+  /* 2026-11-12 audit #6: the brand orange as TEXT. On the dark card the brand orange itself is 3.66:1,
+     so text uses a lighter tint of it (5.8:1); buttons and borders keep --accent. */
+  --accent-ink: #E58A55;
   --accent-2: #FDD26E;
-  --danger: #ef4444;
+  --danger: #f87171;   /* was #ef4444: 3.98:1 as text on the dark card, now 5.4:1 */
   --ok: #22c55e;
   --radius: 14px;
   color-scheme: dark;
@@ -31,6 +34,13 @@
     --border: #ddd6c4;
     --text: #101820;
     --text-dim: #5c6470;
+    /* 2026-11-12 audit #6: on white the brand orange is 4.09:1 and the bright red / green are 3.8 / 2.3:1.
+       Same hues, darkened until text passes 4.5:1 (orange 5.5, red 6.5, green 5.0). The top bar rule, tile
+       rails and the checklist keep the true brand orange (--brand-orange). */
+    --accent: #A84F1F;
+    --accent-ink: #A84F1F;
+    --danger: #b91c1c;
+    --ok: #15803d;
     color-scheme: light;
   }
 }
@@ -71,17 +81,24 @@ body {
 .brand { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
 .brand-name { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .topbar-right { display: flex; align-items: center; gap: 0.6rem; flex: 0 0 auto; }
-.status-pill { font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; }
-.status-pill.online { color: var(--ok); }
-.status-pill.offline { color: var(--danger); }
+/* The pill always sits on the navy bar, so its colours are fixed (not theme tokens): grey 7.5:1,
+   green 6.6:1, red 5.7:1 on navy. The theme red on navy was 3.0:1. */
+.status-pill { font-size: 0.8rem; color: #c9d3de; white-space: nowrap; }
+.status-pill.online { color: #4ade80; }
+.status-pill.offline { color: #ff9b9b; }
 
+/* 2026-11-12 audit #4: the only Home control was 32 x 29 px. Now 48 x 48; the negative margins keep
+   the bar the same height. */
 .back-btn {
   background: none;
   border: none;
   color: var(--text);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1;
-  padding: 0.2rem 0.3rem;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0.5rem 0.6rem;
+  margin: -0.6rem 0 -0.6rem -0.6rem;
   cursor: pointer;
   flex: 0 0 auto;
 }
@@ -96,20 +113,35 @@ body {
   font-weight: 700;
   font-size: 0.95rem;
   cursor: pointer;
+  min-height: 44px;
+  margin: -0.5rem 0;   /* 44 px tall without making the bar taller on the screens that show it */
 }
 .icon-btn:active { transform: scale(0.97); }
+@media (prefers-color-scheme: light) { .icon-btn { color: #fff; } }   /* on the darker light-theme orange */
 
 .disclaimer {
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   color: var(--text-dim);
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
   padding: 0.55rem 1rem;
 }
+/* 2026-11-12 audit #9: the note at the top of a screen is one line; the rest opens on a tap.
+   <details> so it needs no script. */
+details.disclaimer { padding-top: 0; padding-bottom: 0; }
+details.disclaimer > summary {
+  list-style: none; cursor: pointer; min-height: 44px; padding: 0.4rem 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+}
+details.disclaimer > summary::-webkit-details-marker { display: none; }
+details.disclaimer > summary::after { content: "▾"; flex: 0 0 auto; font-size: 1.1rem; }
+details.disclaimer[open] > summary::after { content: "▴"; }
+details.disclaimer[open] > summary { color: var(--text); font-weight: 600; }
+.disclaimer-more { padding: 0 0 0.7rem; line-height: 1.45; }
 
 .tag {
   display: inline-block;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -155,12 +187,13 @@ body {
 .filter-select {
   flex: 1;
   min-width: 0;
+  min-height: 46px;
   padding: 0.5rem 0.6rem;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -207,11 +240,11 @@ main {
 .card-code {
   font-size: 1.05rem;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .card-title { font-weight: 600; margin-top: 0.1rem; }
 .card-meta {
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   color: var(--text-dim);
   margin-top: 0.35rem;
   display: flex;
@@ -324,6 +357,7 @@ main {
   font-weight: 600;
   cursor: pointer;
 }
+.bulletin-open, .bulletin-done { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .bulletin-open { background: var(--accent, #c8102e); color: #fff; text-decoration: none; border: 0; }
 .bulletin-done { background: transparent; border: 1px solid var(--border, #ccc); color: var(--text, #222); }
 
@@ -343,11 +377,11 @@ main {
 
 .fu-badge {
   display: inline-block;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
   border: 1px solid var(--accent);
   border-radius: 999px;
   padding: 0.05rem 0.45rem;
@@ -367,7 +401,7 @@ main {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 700;
   margin-bottom: 0.6rem;
 }
@@ -407,7 +441,7 @@ main {
   cursor: pointer;
   padding: 0.3rem;
 }
-.fu-err { color: var(--accent); font-size: 0.85rem; margin-top: 0.5rem; }
+.fu-err { color: var(--accent-ink); font-size: 0.85rem; margin-top: 0.5rem; }
 .fu-answered {
   border-left: 3px solid var(--border);
   padding: 0.1rem 0 0.5rem 0.7rem;
@@ -428,7 +462,7 @@ main {
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
   margin-bottom: 0.35rem;
 }
 .fu-verdict p { margin: 0; font-size: 0.98rem; line-height: 1.5; }
@@ -527,19 +561,41 @@ main {
   .caution-box { background: #fff1d6; color: #8a5a00; }
 }
 
+/* 2026-11-12 audit #5: Close / Save stay in reach at the bottom of a long card (a generator card is
+   13,000 px). The bar is the last thing in the card, so at the end of the scroll it sits in its own
+   place and covers nothing. The negative bottom carries it over the card's bottom padding; the
+   -1.2rem side margins let its background reach the card edges. */
+.modal { scroll-padding-bottom: 5.5rem; }   /* a field brought into view stops above the bar */
 .modal-actions {
   display: flex;
   gap: 0.6rem;
-  margin-top: 1.2rem;
+  margin: 1.2rem -1.2rem 0;
+  padding: 0.6rem 1.2rem max(0.6rem, env(safe-area-inset-bottom));
+  position: sticky;
+  bottom: calc(-1 * max(1.2rem, env(safe-area-inset-bottom)));
+  z-index: 2;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
 }
-.modal-actions button {
+/* Last thing in the card (every card but the manual picker): sit on the card's bottom edge, so the
+   bar is in the same place stuck or not. */
+.modal-actions:last-child { margin-bottom: calc(-1 * max(1.2rem, env(safe-area-inset-bottom))); }
+/* A phone lying on its side (or any window under 480 px high): the bar would take a fifth of the
+   card, so it goes back to the end of the card. */
+@media (max-height: 479px) { .modal-actions { position: static; } }
+/* While a field in the card has the cursor (edit forms, follow-up readings) the bar also goes back to
+   the end of the card, so it can never sit on top of the box being typed in. */
+.modal:has(input:focus, select:focus, textarea:focus) .modal-actions { position: static; }
+.modal-actions button, .modal-actions a {
   flex: 1;
+  min-height: 48px;
   padding: 0.7rem;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
   font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
 }
 .modal-actions .primary { background: var(--accent-2); color: #06202e; border-color: var(--accent-2); }
@@ -548,7 +604,7 @@ main {
 .form-field { margin-bottom: 0.8rem; }
 .form-field label {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-dim);
   margin-bottom: 0.3rem;
@@ -567,6 +623,7 @@ main {
   font-size: 0.95rem;
   font-family: inherit;
 }
+.form-field input, .form-field select { min-height: 46px; }
 .form-field textarea { min-height: 4.5rem; resize: vertical; }
 .form-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.25rem; }
 
@@ -600,7 +657,7 @@ main {
 
 .tile-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
 .tile-label { font-size: 1.2rem; font-weight: 800; }
-.tile-sub { font-size: 0.85rem; color: var(--text-dim); }
+.tile-sub { font-size: 0.9rem; color: var(--text-dim); }
 
 .tile-ask { border-left: 5px solid var(--brand-yellow); background: linear-gradient(180deg, rgba(253,210,110,0.10), transparent 60%), var(--card); }
 .tile-codes { border-left: 5px solid var(--brand-orange); }
@@ -613,15 +670,15 @@ main {
 /* Voice input — a mic sitting inside the ask box; JS reveals it only where the
    browser supports speech recognition. */
 .ask-input-row { position: relative; }
-.ask-input-row .search-input { padding-right: 3rem; }
+.ask-input-row .search-input { padding-right: 3.2rem; }   /* the 44 px mic + its 0.45rem inset */
 .ask-input-row .search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 .ask-mic-btn {
   position: absolute;
   right: 0.45rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 2.3rem;
-  height: 2.3rem;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border-radius: 50%;
   border: 1px solid var(--border);
@@ -647,14 +704,17 @@ main {
 }
 @media (prefers-reduced-motion: reduce) { .ask-mic-btn.listening { animation: none; } }
 
-.ask-examples { padding: 0.25rem 0 0.5rem; }
+/* 2026-11-12 audit #16: these sat against the screen edge; the rest of the app has a 1rem margin.
+   (#askResults is a <main>, already padded.) */
+#askExamples, #askAi, #askNarrow, #askManualHits { padding-left: 1rem; padding-right: 1rem; }
+.ask-examples { padding-top: 0.25rem; padding-bottom: 0.5rem; }
 .ask-lead { font-size: 0.92rem; color: var(--text-dim); line-height: 1.45; margin-bottom: 0.9rem; }
 .ask-lead strong { color: var(--text); }
 .ask-chip-label { font-size: 0.85rem; font-weight: 700; color: var(--text-dim); margin-bottom: 0.45rem; }
-.ask-chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ask-chip-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .ask-chip {
   font: inherit; font-size: 0.9rem; cursor: pointer;
-  padding: 0.4rem 0.7rem; border-radius: 999px;
+  min-height: 44px; padding: 0.6rem 0.9rem; border-radius: 999px;
   background: var(--bg-elevated); color: var(--text);
   border: 1px solid var(--border);
 }
@@ -708,7 +768,7 @@ main {
   padding: 0.85rem 1rem;
 }
 .ask-ai-card.ask-ai-err { border-color: var(--border); color: var(--text-dim); font-size: 0.9rem; }
-.ask-ai-head { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.ask-ai-head { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent-ink); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .ask-ai-tag { font-size: 0.68rem; font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--text-dim); border: 1px solid var(--border); border-radius: 5px; padding: 0.05rem 0.4rem; }
 .ask-ai-body { font-size: 0.98rem; line-height: 1.5; color: var(--text); }
 .ask-ai-cites { margin-top: 0.7rem; padding-top: 0.55rem; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
@@ -850,7 +910,13 @@ main {
 }
 
 .scan-fields { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.scan-fields label { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); display: flex; flex-direction: column; gap: 0.25rem; }
+.scan-fields label { font-size: 0.9rem; font-weight: 700; color: var(--text-dim); display: flex; flex-direction: column; gap: 0.25rem; }
+/* 2026-11-12 audit #12: the House Size County / Town lists were unstyled 19 px boxes. */
+.scan-fields select {
+  font: inherit; font-size: 1.05rem; font-weight: 400; min-height: 48px; padding: 0.7rem 0.9rem;
+  border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text);
+}
+.scan-fields input::placeholder { text-transform: none; }   /* hints read "OR TYPE IT HERE" */
 .scan-fields input {
   font-size: 1.05rem;
   padding: 0.7rem 0.9rem;
@@ -897,7 +963,16 @@ main {
 .scan-unit-scen-h { font-weight: 700; font-size: 0.95rem; }
 .scan-unit-scen-btn { text-align: left; padding: 0.65rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 0.95rem; cursor: pointer; }
 .unit-src-btn { margin: 0.3rem 0.3rem 0 0; padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
-.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.9rem; }
+.charge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; margin-bottom: 0.9rem; align-items: end; }   /* end: boxes in a row line up when one label wraps */
+/* 2026-11-12 audit #7: the verdict on the readings (#cc-results) was 1,890 px under the last gauge box,
+   below the list of manufacturer chart links that app.js draws inside #cc-targets. Shown order is now
+   targets, verdict, chart links, field calculators. Markup and ids are untouched. */
+#chargeScreen > main > #cc-targets { display: contents; }
+#chargeScreen > main > #cc-targets > .cc-chart-links,
+#chargeScreen > main > #cc-targets > .cc-target-grid ~ .cc-section-label { order: 1; }
+#chargeScreen > main > #cc-results ~ * { order: 2; }
+#chargeScreen > main > #cc-targets > .cc-section-label { margin: 0.4rem 0 -0.3rem; }
+#chargeScreen > main > #cc-targets > .cc-target-grid { margin-top: 0; }
 .charge-form { margin-bottom: 1rem; }
 .cc-section-label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dim); margin: 0.9rem 0 0.4rem; }
 .cc-section-label:first-child { margin-top: 0; }
@@ -1013,16 +1088,25 @@ main {
   border: none;
   color: var(--accent-2);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0.1rem 0.15rem;
+  min-height: 44px;
+  padding: 0.6rem 0.5rem;
+  margin-left: -0.5rem;
+}
+/* 2026-11-12 audit #6: yellow on the light page was 1.29:1 - navy and underlined there (10.3:1). */
+@media (prefers-color-scheme: light) {
+  .breadcrumb button { color: var(--brand-navy); text-decoration: underline; }
 }
 .breadcrumb button:last-child,
 .breadcrumb .crumb-current {
   color: var(--text);
   font-weight: 700;
   cursor: default;
+  text-decoration: none;
 }
+/* "All Brands" alone at the top level is a label, not a way back: keep it small. */
+.breadcrumb button:only-child { min-height: 0; padding: 0.1rem 0.15rem; margin-left: 0; font-size: 0.85rem; }
 .breadcrumb .sep { color: var(--text-dim); }
 
 .folder-card {
@@ -1120,6 +1204,7 @@ main {
 .cc-scan-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
 .cc-scan-row > button {
   flex: 1 1 40%;
+  min-height: 46px;
   padding: 0.65rem 0.5rem;
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -1281,6 +1366,7 @@ main {
   display: block;
   width: 100%;
   margin-top: 0.3rem;
+  min-height: 46px;
   padding: 0.6rem 0.7rem;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -1316,6 +1402,7 @@ main {
    crawlspace, with the caption right under it so it is never read bare. */
 .sqft-hero { margin-top: 0.7rem; display: flex; align-items: baseline; gap: 0.4rem; }
 .sqft-hero-n { font-size: 2.4rem; font-weight: 800; color: var(--accent-2); line-height: 1; }
+@media (prefers-color-scheme: light) { .sqft-hero-n { color: var(--brand-navy); } }   /* yellow on white was 1.44:1 */
 .sqft-hero-u { font-size: 1rem; color: var(--text-dim); }
 .sqft-hero-cap { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.15rem; }
 
@@ -1394,7 +1481,7 @@ main {
 .tile-gen { border-left: 5px solid #e8590c; }
 .tstat-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
 .tstat-badge {
-  font-size: 0.72rem; font-weight: 600; padding: 0.12rem 0.5rem; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 600; padding: 0.12rem 0.5rem; border-radius: 999px;
   border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-elevated, transparent);
 }
 .tstat-badge.need-c { border-color: #c4622d; color: #ffb27a; }
@@ -1477,15 +1564,15 @@ main {
 .cc-gauge-raw { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem; word-break: break-word; }
 
 /* Local Weather & Humidity */
-.wx-loading{padding:1rem;color:var(--muted,#888);}
+.wx-loading{padding:1rem;color:var(--text-dim);}
 .wx-stale{background:rgba(255,180,0,.12);border-radius:.5rem;padding:.5rem .7rem;margin-bottom:.6rem;font-size:.9rem;}
 .wx-headline{margin-bottom:.6rem;}
 .wx-place{font-weight:600;}
-.wx-asof{font-size:.82rem;color:var(--muted,#888);}
+.wx-asof{font-size:.82rem;color:var(--text-dim);}
 .wx-now{display:flex;gap:.6rem;margin-bottom:.8rem;}
 .wx-cell{flex:1;text-align:center;background:var(--card,#1c1c1e);border-radius:.6rem;padding:.7rem .3rem;}
 .wx-cell-num{font-size:1.7rem;font-weight:700;line-height:1;}
-.wx-cell-lbl{font-size:.75rem;color:var(--muted,#888);margin-top:.3rem;}
+.wx-cell-lbl{font-size:.75rem;color:var(--text-dim);margin-top:.3rem;}
 .wx-cell.wx-hi .wx-cell-num{color:#ff9f43;}
 .wx-sweat{background:var(--card,#1c1c1e);border-radius:.7rem;padding:.9rem;margin-bottom:.8rem;border:1px solid rgba(90,160,255,.35);}
 .wx-sweat-head{font-weight:600;font-size:.9rem;}
@@ -1497,13 +1584,21 @@ main {
 .wx-surface-verdict{margin-top:.5rem;font-size:.9rem;min-height:1.2em;}
 .wx-surface-verdict.wx-bad{color:#ff6b6b;}
 .wx-surface-verdict.wx-good{color:#4cd964;}
-.wx-note-small{font-size:.78rem;color:var(--muted,#888);margin-top:.5rem;}
+.wx-note-small{font-size:.78rem;color:var(--text-dim);margin-top:.5rem;}
 .wx-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem;}
 .wx-ref-list{list-style:none;padding:0;margin:0;}
 .wx-ref-list li{margin-bottom:.5rem;font-size:.9rem;}
-.wx-ref-list .k{display:block;font-weight:600;font-size:.8rem;color:var(--muted,#888);}
-.wx-ref-src{font-size:.76rem;color:var(--muted,#888);margin-top:.4rem;}
-.cc-wx-note{font-size:.86rem;margin:.4rem 0;color:var(--muted,#aaa);line-height:1.35;}
+.wx-ref-list .k{display:block;font-weight:600;font-size:.8rem;color:var(--text-dim);}
+.wx-ref-src{font-size:.76rem;color:var(--text-dim);margin-top:.4rem;}
+.cc-wx-note{font-size:.86rem;margin:.4rem 0;color:var(--text-dim);line-height:1.35;}
+/* 2026-11-12 audit #6: --muted was never defined, so the weather labels were #888 (3.2:1 on the light
+   page); they use --text-dim now. The weather numbers and verdicts were picked for the dark theme. */
+@media (prefers-color-scheme: light) {
+  .wx-cell.wx-hi .wx-cell-num { color: var(--accent-ink); }
+  .wx-sweat-num { color: #1c4f92; }
+  .wx-surface-verdict.wx-bad { color: #b91c1c; }
+  .wx-surface-verdict.wx-good { color: #15803d; }
+}
 
 .tile-maint { border-left: 5px solid var(--brand-sage); }
 
@@ -1771,13 +1866,13 @@ main {
 .gwz-entry-text b { font-size: 1.12rem; font-weight: 800; line-height: 1.2; }
 .gwz-entry-text span { font-size: 0.92rem; color: var(--brand-yellow); font-weight: 600; }
 .gwz-entry-go { font-size: 2rem; line-height: 1; color: var(--brand-yellow); flex: none; }
-.gwz-entry-recent { align-self: flex-start; font-size: 0.9rem; color: var(--text-dim); min-height: 36px; }
+.gwz-entry-recent { align-self: flex-start; font-size: 0.9rem; color: var(--text-dim); min-height: 44px; margin-top: 0.4rem; }
 
 /* Wizard frame */
 .gwz-top { display: flex; flex-direction: column; gap: 0.35rem; }
 .gwz-top-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .gwz-stepno { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-dim); }
-.gwz-recent-link { font-size: 0.85rem; color: var(--text-dim); }
+.gwz-recent-link { font-size: 0.85rem; color: var(--text-dim); min-height: 44px; }
 .gwz-bar { height: 8px; border-radius: 99px; background: var(--border); overflow: hidden; }
 .gwz-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand-orange), var(--brand-yellow)); border-radius: 99px; transition: width 0.2s; }
 .gwz-title { margin: 0.25rem 0 0; font-size: 1.3rem; line-height: 1.25; }
@@ -1826,7 +1921,10 @@ main {
 .gwz-full > summary { cursor: pointer; font-weight: 700; min-height: 48px; display: flex; align-items: center; }
 .gwz-full[open] { padding-bottom: 0.8rem; }
 .gwz-ro-val { font-weight: 700; font-size: 0.95rem; line-height: 1.35; padding: 0.25rem 0; overflow-wrap: anywhere; }
-.gwz-edit { font-size: 0.72rem; min-height: 0; margin-left: 0.3rem; text-transform: none; color: var(--text-dim); }
+.gwz-edit { font-size: 0.72rem; min-height: 0; margin-left: 0.3rem; text-transform: none; color: var(--text-dim); position: relative; }
+/* 2026-11-12 audit #4: the "change" link is 39 x 15 px inside a field label. The unseen pad makes the
+   place a thumb can hit about 59 x 47 px without moving the label. */
+.gwz-edit::after { content: ""; position: absolute; inset: -16px -10px; }
 .gwz-sec-bar { display: flex; align-items: center; gap: 0.7rem; }
 .gwz-alldone {
   min-height: 52px; padding: 0.5rem 1.1rem; border-radius: var(--radius); cursor: pointer; font: inherit; font-size: 1.05rem; font-weight: 800;
@@ -1888,7 +1986,8 @@ main {
 /* Generators: Troubleshoot a Problem scan box under the checklist box (Andy 2026-10-02). */
 .gwz-entry-problem { margin-top: 0.35rem; border-color: var(--brand-yellow); }
 #genProblemScanStatus { margin-top: 0.3rem; }
-.gen-type-model { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
+.gen-type-model { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+.gen-type-model input, .gen-type-model button { min-height: 46px; }
 .gen-type-model input { flex: 1 1 9rem; min-width: 0; padding: 0.55rem 0.6rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-elevated); color: var(--text); text-transform: uppercase; }
 .gen-type-model input#genProblemSerial { flex: 1 1 7rem; }
 .gen-type-model input#genProblemModel { flex: 1 1 100%; }
@@ -1957,6 +2056,15 @@ body.inv-cam-open { overflow: hidden; }
 .gen-guide { margin-top: 0.35rem; border: 2px solid var(--border); border-radius: var(--radius); background: var(--card); }
 .gen-guide > summary { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 0.85rem; cursor: pointer; list-style: none; }
 .gen-guide > summary::-webkit-details-marker { display: none; }
+/* 2026-11-12 audit #6: the yellow sub-line is for the navy buttons; on these white boxes it was 1.44:1. */
+.gen-guide .gwz-entry-text span { color: var(--text-dim); }
+/* 2026-11-12 audit #8: the code search now sits above these two boxes and sticks under the top bar.
+   A guide opened from Ask Anything scrolls to its title, clear of the bar and the search block. */
+.gen-guide { scroll-margin-top: calc(var(--topbar-h, 3.6rem) + 8.5rem); }
+.gen-guides { padding-top: 0.2rem; }
+/* While a search is typed the closed guide boxes step aside, so the first result is right under the
+   search box. An open guide stays. (Browsers without :has() just keep the boxes.) */
+#genScreen:has(#genSearchInput:not(:placeholder-shown)) .gen-guide:not([open]) { display: none; }
 .gen-guide-body { padding: 0 0.9rem 0.9rem; font-size: 0.95rem; }
 .gen-guide-body ul { margin: 0.3rem 0 0.5rem 1.1rem; padding: 0; }
 .gen-guide-body li { margin: 0.25rem 0; }
@@ -2004,7 +2112,7 @@ body.inv-cam-open { overflow: hidden; }
 .bul-item summary::after { content: "▸"; grid-column: 4; grid-row: 1; color: var(--text-dim); }
 .bul-item[open] summary::after { content: "▾"; }
 .bul-pri { grid-column: 1; grid-row: 1; font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; border-radius: 5px; padding: 0.08rem 0.4rem; border: 1px solid var(--border); color: var(--text-dim); white-space: nowrap; }
-.bul-high .bul-pri { color: #fff; background: var(--danger); border-color: var(--danger); }
+.bul-high .bul-pri { color: #fff; background: #b91c1c; border-color: #b91c1c; }   /* white on it 6.5:1 (was 3.76) */
 .bul-num { grid-column: 2; grid-row: 1; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .bul-date { grid-column: 3; grid-row: 1; font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .bul-title { grid-column: 1 / -1; grid-row: 2; min-width: 0; overflow-wrap: anywhere; }
@@ -2067,10 +2175,15 @@ body.inv-cam-open { overflow: hidden; }
   html { font-size: 17px; }
   :root { --pad-col: 860px; }
   .screen > .controls, .screen > main, .screen > .disclaimer, .screen > .empty-state,
-  .screen > .home-footer, .topbar {
+  .screen > .home-footer, .topbar,
+  .screen > .gwz-entry-wrap, .screen > #snResults,
+  #askExamples, #askAi, #askNarrow, #askManualHits {
     padding-left: max(1.2rem, calc((100% - var(--pad-col)) / 2));
     padding-right: max(1.2rem, calc((100% - var(--pad-col)) / 2));
   }
+  /* 2026-11-12 audit #17: the Generators top block, its brand tabs and the Sensors results ran edge to
+     edge on a pad while everything else sat in the centred column. */
+  .gen-brand-tabs { margin-left: max(1.2rem, calc((100% - var(--pad-col)) / 2)); margin-right: max(1.2rem, calc((100% - var(--pad-col)) / 2)); }
   .home-logo { width: min(40%, 300px); margin-top: 1.2rem; }
   .home-tiles { display: grid; grid-template-columns: 1fr 1fr; max-width: var(--pad-col); padding: 1.2rem; }
   .tile { min-height: 124px; }
@@ -2101,7 +2214,7 @@ body.inv-cam-open { overflow: hidden; }
 .tile-sensors { border-left: 5px solid var(--brand-orange); }
 .sn-plug-input { margin-top: .6rem; font-weight: 700; }
 .sn-side-row { display: flex; gap: .5rem; margin-top: .6rem; }
-.sn-side-btn { flex: 1; padding: .55rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .95rem; }
+.sn-side-btn { flex: 1; min-height: 46px; padding: .55rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .95rem; }
 .sn-side-btn.active { background: var(--brand-navy); color: #fff; border-color: var(--brand-navy); }
 #snResults { padding: 0 1rem 2rem; }
 .sn-hint { color: var(--text-dim); font-size: .92rem; margin: .8rem 0; }
@@ -2114,10 +2227,10 @@ body.inv-cam-open { overflow: hidden; }
 .sn-sensor > summary::-webkit-details-marker { display: none; }
 .sn-plug { display: inline-block; min-width: 3.4rem; text-align: center; font-weight: 800; background: var(--brand-yellow); color: var(--brand-black); border-radius: 6px; padding: 0 .35rem; margin-right: .35rem; }
 .sn-pins { font-size: .78rem; color: var(--text-dim); margin-right: .3rem; }
-.sn-code { font-size: .8rem; color: var(--accent); font-weight: 700; }
+.sn-code { font-size: .8rem; color: var(--accent-ink); font-weight: 700; }
 .sn-sensor p, .sn-test { margin: .35rem 0; font-size: .92rem; }
 .sn-sensor .k, .sn-test .k { display: inline-block; min-width: 3.6rem; font-weight: 700; color: var(--text-dim); font-size: .8rem; text-transform: uppercase; }
-.sn-note { color: var(--accent); font-size: .88rem; }
+.sn-note { color: var(--accent-ink); font-size: .88rem; }
 .sn-none { color: var(--text-dim); }
 .sn-chart { margin: .5rem 0; }
 .sn-chart > summary { cursor: pointer; font-weight: 700; }
@@ -2131,7 +2244,7 @@ body.inv-cam-open { overflow: hidden; }
 .sn-table tr.sn-hit td { background: var(--brand-yellow); color: var(--brand-black); font-weight: 700; }
 .sn-src { font-size: .75rem; color: var(--text-dim); margin-top: .35rem; overflow-wrap: anywhere; }
 .sn-gaps { margin-top: .5rem; font-size: .88rem; }
-.sn-gaps summary { cursor: pointer; color: var(--accent); }
+.sn-gaps summary { cursor: pointer; color: var(--accent-ink); }
 .sn-plug-eev { background: var(--brand-sage); }
 .sn-spec { font-weight: 600; }
 .sn-read label { display: inline-block; margin: 0 .6rem .3rem 0; }
@@ -2146,8 +2259,9 @@ body.inv-cam-open { overflow: hidden; }
   .home-tiles .tile-ask, .home-tiles .tile-scanner { grid-column: 1 / -1; min-height: 0; }
   .home-tiles .tile-icon { font-size: 1.4rem; margin-bottom: 0.1rem; }
   .home-tiles .tile-label { font-size: 1rem; line-height: 1.15; }
-  .home-tiles .tile-sub { font-size: 0.74rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .home-tiles .tile-ask .tile-sub, .home-tiles .tile-scanner .tile-sub { font-size: 0.82rem; }
+  /* 2026-11-12 audit #13: was 0.74rem (11.8 px) and cut off with "..." on 9 tiles; the lines in
+     index.html are now short enough to fit two lines at 0.9rem. */
+  .home-tiles .tile-sub { font-size: 0.9rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 }
 /* v405: bulletin serial list + check box */
 .bul-sn { margin-top: 0.4rem; font-size: 0.85rem; }
