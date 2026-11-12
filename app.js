@@ -823,6 +823,7 @@ function openCodeDetail(id) {
   const code = getAllCodes().find(c => c.id === id);
   if (!code) return;
   const modal = document.getElementById("modal");
+  const backFromEdit = !!modal.querySelector("#saveCodeBtn") && !document.getElementById("modalBackdrop").classList.contains("hidden");   // Cancel on the edit form: same card, not a new look-up
   const causes = (code.causes || []).map(c => `<li>${escapeHtml(c)}</li>`).join("");
   const steps = (code.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
   const tips = (code.techTips || []).map(t => `<li>${escapeHtml(t.text)}${t.source ? `<div class="tech-tip-src">${escapeHtml(t.source)}</div>` : ""}</li>`).join("");
@@ -835,13 +836,15 @@ function openCodeDetail(id) {
     ${steps ? `<div class="detail-section"><h3>Diagnostic steps</h3><ol>${steps}</ol></div>` : ""}
     ${code.safety ? `<div class="safety-box">⚠ ${escapeHtml(code.safety)}</div>` : ""}
     <div class="modal-actions">
-      <button id="closeModalBtn">Close</button>
-      <button class="primary" id="editCodeBtn">Edit / correct</button>
+      <button class="primary" id="closeModalBtn">Close</button>
+      <button id="editCodeBtn">Fix this entry</button>
     </div>
   `;
   document.getElementById("closeModalBtn").onclick = closeModal;
   document.getElementById("editCodeBtn").onclick = () => openCodeEditForm(code);
   document.getElementById("modalBackdrop").classList.remove("hidden");
+  // 11-12 audit (field-use #9): which code card was opened was never logged.
+  if (!backFromEdit) trackEvent("opened code: " + [code.brand, code.code].filter(Boolean).join(" ").slice(0, 90));
 }
 
 function openCodeEditForm(existing) {
@@ -3160,6 +3163,7 @@ function startAskVoice() {
   askRecognition.continuous = false;
   askRecognition.maxAlternatives = 1;
   askListening = true;
+  let heard = false;
   btn.classList.add("listening");
   input.setAttribute("placeholder", "Listening… say the code, unit, or problem");
   const hint = document.getElementById("askVoiceHint");
@@ -3170,6 +3174,7 @@ function startAskVoice() {
     for (let i = ev.resultIndex; i < ev.results.length; i++) text += ev.results[i][0].transcript;
     text = text.trim();
     if (!text) return;
+    heard = true;
     input.value = text;
     askState.search = text;
     renderAsk();
@@ -3189,9 +3194,15 @@ function startAskVoice() {
     // deliver the last result and the end event in an order that left the
     // results not yet refreshed, so the screen "just sat there".
     if (input.value.trim()) {
-      askState.search = input.value.trim();
+      const q = input.value.trim();
+      askState.search = q;
       renderAsk();
-      trackEvent("asked by voice");
+      // 11-12 audit (field-use #8, #9): the spoken words go in the log, and a spoken question gets its
+      // AI answer the way a typed one does on Enter (4 of 22 spoken questions sat with no answer).
+      // Only when words were heard this time - a mic tap that heard nothing leaves the old text alone.
+      trackEvent(heard ? "asked by voice: " + q.slice(0, 90) : "asked by voice");
+      searchClearSync();
+      if (heard && ASK_AI_RELAY && navigator.onLine && q.length >= 4) askAiAnswer(q);
     }
   };
 
@@ -3251,7 +3262,7 @@ function addVoiceSearch(input, opts) {
     rec.onend = () => {
       listening = false; btn.classList.remove("listening");
       input.setAttribute("placeholder", original);
-      if (input.value.trim()) { apply(norm(input.value)); trackEvent("voice search: " + (opts.label || input.id)); }
+      if (input.value.trim()) { apply(norm(input.value)); trackEvent("voice search: " + (opts.label || input.id) + " | " + input.value.trim().slice(0, 90)); }
     };
     try { rec.start(); } catch (e) { rec.onend(); }
   });
@@ -3575,8 +3586,8 @@ function openSymptomDetail(id) {
     ${s.safety ? `<div class="safety-box">⚠ ${escapeHtml(s.safety)}</div>` : ""}
     ${s.confidence === "manual" && s.source ? `<div class="detail-section"><h3>Source</h3><p>${escapeHtml(s.source)}</p>${s.manual ? (s.pages && s.pages.length ? s.pages.slice(0, 3) : [0]).map(pg => `<button class="unit-src-btn" data-page="${pg}">📄 Open the manual${pg ? " at p." + pg : ""}</button>`).join(" ") : ""}</div>` : ""}
     <div class="modal-actions">
-      <button id="closeModalBtn">Close</button>
-      <button class="primary" id="editSymptomBtn">Edit / correct</button>
+      <button class="primary" id="closeModalBtn">Close</button>
+      <button id="editSymptomBtn">Fix this entry</button>
     </div>
   `;
   startFollowups(s);
@@ -4007,8 +4018,8 @@ function openToolboxDetail(id) {
     ${(guideBtns || manualBtns || linkBtns) ? `<div class="detail-section"><h3>Guides &amp; links</h3><div class="tstat-manuals">${guideBtns}${manualBtns}${linkBtns}</div></div>` : ""}
     ${t.source ? `<div class="detail-section"><p class="tstat-source">Source: ${escapeHtml(t.source)}</p></div>` : ""}
     <div class="modal-actions">
-      <button id="closeModalBtn">Close</button>
-      <button class="primary" id="editToolboxBtn">Edit / correct</button>
+      <button class="primary" id="closeModalBtn">Close</button>
+      <button id="editToolboxBtn">Fix this entry</button>
     </div>
   `;
   document.getElementById("closeModalBtn").onclick = closeModal;
@@ -12048,6 +12059,7 @@ document.getElementById("scanStopBtn").addEventListener("click", (e) => {
 async function scanTagPhoto(file) {
   const prevScan = scanRetakeTake(Date.now());
   let thisInfo = null;
+  const scanT0 = Date.now();
   trackEvent("scanned a tag photo");
   const heldId = newScanPhotoId();
   const held = holdScanPhoto(file, heldId);   // uploads at the next start only if this scan never finishes
@@ -12113,6 +12125,9 @@ async function scanTagPhoto(file) {
       scanRetakeRemember(file, photoId, fields, info, !!(info && !info.brand) || guessed);   // uploaded below
       thisInfo = info;
       renderScanResult(info);
+      scanResultIntoView();
+      // 11-12 audit (field-use #9): a good read wrote no row, so a clean scan and an abandoned one looked alike.
+      if (info && info.brand && !guessed) trackEvent("scan ok: " + info.model + " (" + Math.round((Date.now() - scanT0) / 1000) + " s)");
       if (info && !info.brand) {
         saveFailedScan(file, { id: photoId, kind: info.serialLike ? "serial-in-model" : "not-in-library", read: fields.model + (fields.serial ? " / " + fields.serial : "") }).catch(() => {});
       } else if (guessed) {
@@ -12465,7 +12480,16 @@ document.getElementById("scanIdentifyBtn").addEventListener("click", () => {
   const info = identifyModel(model, serial, null, null, { log: true });
   if (info) info.typed = true;
   renderScanResult(info);
+  scanResultIntoView();
 });
+// 11-12 audit (screens #15): after Identify unit the page stayed at the top and the result's buttons
+// were below the screen. The 80 px keeps the result clear of the fixed top bar.
+function scanResultIntoView() {
+  const box = document.getElementById("scanResult");
+  if (!box || !box.firstElementChild) return;
+  box.style.scrollMarginTop = "80px";
+  try { box.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { box.scrollIntoView(); }
+}
 
 // ============================================================
 // Warranty Check — scan the tag, jump to the maker's own warranty
