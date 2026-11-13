@@ -11133,6 +11133,10 @@ function extractTagFields(text) {
   // v344: Generac's stencil G reads as 3, 5 or S (Vern's G0072101 came back "30072101" and
   // "S0072101", 2026-10-20). Only on a plate that shows Generac's own words.
   if (/^[35S]0\d{6,7}$/.test(model) && /NERAC|LPV\s*AM|NG\s*AMP/.test(up)) model = "G" + model.slice(1);
+  // v435: the MODEL box's left edge reads as a "1" in front of the bare plate number (Vern 11-12:
+  // 0067300 came back "10067300" and was taken for a serial). Only on a plate with Generac's own
+  // words, and only when the rest is a G-number the generator library lists exactly.
+  else if (/^[1IL]00\d{5}$/.test(model) && /NERAC/.test(up) && typeof genBareToG === "function" && genBareToG(model.slice(1))) model = genBareToG(model.slice(1));
   // v346: the bare plate number becomes its G-number, so the checklist and history carry the real model.
   else if (typeof genBareToG === "function" && genBareToG(model)) model = genBareToG(model);
   return { model: model.replace(/[.]+$/, ""), serial: serial.replace(/[.]+$/, ""), serialSource, modelSource, brandHint: detectBrandInText(up), modelFromProd: !!(model && modelFromProd) };
@@ -14879,7 +14883,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v434";
+const APP_VERSION = "v435";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

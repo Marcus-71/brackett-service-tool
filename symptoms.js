@@ -22007,5 +22007,23 @@ const SYMPTOMS = [
   ],
   "safety": "These are Daikin's printed figures and examples. The rating plate, airflow chart and coil chart for the unit in front of you always win. Do not adjust the charge until the airflow is confirmed.",
   "confidence": "verify"
+ },
+ {
+  "id": "s-ohm-out-wire-for-short",
+  "equipment": "Other",
+  "title": "How to ohm out a wire for a short (wire to wire, or wire to ground)",
+  "summary": "Power off, take every wire in that cable loose at both ends, then read the suspect wire on ohms against each other wire and against ground. OL is what you want; any other reading means a path, and near zero is a dead short.",
+  "steps": [
+   "Kill the power and prove it dead with the meter on volts. Never read ohms on a live circuit. If the circuit has a capacitor, discharge it first.",
+   "Check the meter: set it to ohms and leave it on auto range. Touch the leads together - it should read near 0 ohms. Apart, it shows OL. Don't rely on the continuity beeper alone to prove a wire is clear: it only sounds on a low reading, so a partial short can stay silent.",
+   "Take EVERY conductor in that cable loose at BOTH ends (thermostat end and board/equipment end), not just the suspect wire. Anything left connected is a parallel path and gives a false reading - R to C will read through the transformer, Y to C through the contactor coil. Mark the colors and terminals before you pull them. Most systems have more than one run (thermostat to furnace, furnace to outdoor unit) spliced at the furnace, often with a float switch or other device in line - test each run on its own with the splices and in-line devices opened.",
+   "Wire to wire: put one lead on the suspect conductor and touch the other lead to every other conductor in the same cable (R to C, R to Y, Y to C, and so on). Keep your fingers off the metal probe tips. OL on every pair = no short between wires. Any reading other than OL means a path between those two; near 0 ohms = they are touching somewhere in the run.",
+   "Wire to ground: read each conductor to clean bare cabinet metal or the ground wire. OL is normal. A low reading = that wire is touching grounded metal somewhere in the run, usually rubbed through at sheet metal.",
+   "Checking for a broken (open) wire instead: twist two conductors together at the far end and read across them at the near end. A few ohms or less = both are whole (a long run reads an ohm or two, not 0.0); OL = at least one is broken.",
+   "Short that comes and goes: leave the leads on and flex the run where it is most likely damaged - where it enters the outdoor unit, under the air handler panel, at staples, at the thermostat baseplate - and watch for the reading to drop from OL.",
+   "Found it: replace or properly splice the damaged section. Never put in a bigger fuse or jump the fuse to get by. If the board's low-voltage fuse keeps blowing and you don't know which wire yet, use the card 'Hunting a low-voltage short methodically (3A/5A fuse keeps blowing)' first to find the circuit."
+  ],
+  "safety": "Ohms readings are taken with the power OFF. Prove the circuit dead first, and lock out line-voltage circuits before you lift wires. A meter on ohms finds a solid short; it does not prove the insulation on line-voltage wiring is good - that takes an insulation tester.",
+  "confidence": "common"
  }
 ];
