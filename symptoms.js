@@ -22097,5 +22097,40 @@ const SYMPTOMS = [
   ],
   "safety": "Turn off main power and install a lockout tag before servicing; there may be more than one disconnect. Do not jumper or bypass any safety device. After purging air from a gas line wait at least 5 minutes for gas to clear before trying to light, and never purge a gas line into a combustion chamber. Keep manifold pressure inside the stated range - the manual warns operation outside it is unsafe. If the IGC has to be replaced, ground yourself first: the board is static sensitive.",
   "confidence": "manual"
+ },
+ {
+  "id": "s-limit-switch-ohm-check",
+  "equipment": "Gas Furnace",
+  "title": "Limit ohms - checking a furnace limit, auxiliary limit or rollout switch with an ohmmeter (what a good one reads)",
+  "summary": "A limit, auxiliary limit or rollout switch is a safety switch that should be closed when it is cool. With power off and its wires off, Goodman's service manuals say a good primary limit should read continuous (a closed path) unless the heat exchanger is hotter than the limit's setting. Open on a cool switch: if it is a manual-reset type (rollout, some auxiliary limits) reset it first; still open means replace it. The steps and locations below are Goodman's (80% furnaces); on other brands use the furnace's own manual for where the limits are. On a Lennox furnace also see \"Lennox gas furnace — primary limit operational check procedure (H-04-9)\".",
+  "steps": [
+   "Disconnect all power to the furnace first. Goodman warns more than one power source may be present.",
+   "Take the wires off the limit's terminals so the meter reads the switch alone.",
+   "Primary limit (Goodman: behind the burner compartment door): ohmmeter across the two terminals. It should read continuous unless the heat exchanger is hotter than the limit's setting. If not, replace the control.",
+   "Auxiliary limits (Goodman: two on the blower housing, one each side; manual or automatic reset; they stop the furnace if the main blower fails in horizontal or counterflow installs): test for continuity across the two terminals only when the limit is at room temperature. Goodman warning: to avoid possible fire, reset the auxiliary limit only once - if it opens a second time, a qualified servicer must find out why before resetting it again.",
+   "Flame rollout switch (Goodman: manual reset, on the manifold / burner bracket): reset it, take its wires off, then check continuity across it. If it will not close after resetting, replace it. If the rollout has opened, the circulating blower runs continuously.",
+   "A tripped rollout needs a cause found. Goodman lists: flame impingement, orifice plate out of position, over-firing, wrong orifices, improper gas pressure, air leaking into the burner compartment from around the heat exchanger, or through the heat exchanger itself.",
+   "A limit that tests good but keeps tripping is usually reporting a real overheat. Check the filter, blower and blower speed, duct static (Goodman: too much static means too little air, high temperature rise and limit tripping), that the temperature rise is inside the range on the rating plate, and that the input does not exceed the rating plate. On a Lennox furnace see \"Lennox gas furnace — primary limit operational check procedure (H-04-9)\". Heat strips: see \"Electric heater auto-reset limit control - continuity check before condemning a strip\".",
+   "Goodman primary limits: part number, temperature setting and colour code are in the Primary Limit Charts in that furnace's Technical Manual - match them when replacing. Afterwards put the wires back on the switch, put the burner compartment door back, turn power on and check the furnace runs properly."
+  ],
+  "safety": "Disconnect all power before taking wires off or testing. Goodman: do not bypass any safety limit connection.",
+  "confidence": "manual"
+ },
+ {
+  "id": "s-meter-continuity-beep-meaning",
+  "equipment": "Other",
+  "title": "Ohm meter beeps - what the continuity beep means and when it is not enough",
+  "summary": "On the continuity setting the meter beeps when the resistance between the probes is under its beeper cut-off. Fluke 110-117 series: the beeper turns on below 20 ohms and off above 250 ohms. Fluke 12: on below 25 ohms, off above 250 ohms. Between those two figures it may or may not beep. Other meters differ - check yours. A beep across a cool limit or rollout switch means it is closed, which is what you want. A beep proves a closed path, not a clean contact, and no beep does not always mean open. For a part with a resistance to meet, read the number in ohms.",
+  "steps": [
+   "Turn power off to what you are testing. Fluke: voltage across the part gives invalid readings. Trade practice: take at least one wire off the part so you are not reading through the rest of the circuit.",
+   "Trade practice: touch the probes together first - it should beep, which proves the leads and the setting.",
+   "OL on the display means open. No beep with a number on the display only means the resistance is above the beeper's cut-off - read the ohms.",
+   "A beep across a switch, limit, fuse or closed contacts shows a closed path, but on these Fluke meters it can be anything under their cut-off, not necessarily near zero. If the part should read near zero, switch to ohms and read the number.",
+   "A beep is not a pass for a part with a published resistance (igniters, sensors, thermistors, motor windings, coils). Switch to ohms and compare with the manufacturer's figure for that part.",
+   "Checking a furnace limit or rollout: see \"Limit ohms - checking a furnace limit, auxiliary limit or rollout switch with an ohmmeter\". Contactors: see \"Contactor ohm readings - coil and contacts\".",
+   "Trade practice: a beep that cuts in and out when you tap or wiggle the part or its wires points to a loose or intermittent connection."
+  ],
+  "safety": "Never use continuity or ohms on a live circuit.",
+  "confidence": "common"
  }
 ];
