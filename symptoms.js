@@ -21559,6 +21559,28 @@ const SYMPTOMS = [
   "confidence": "common"
  },
  {
+  "id": "s-ecobee-aux-heat-strips-sooner",
+  "brand": "ecobee",
+  "equipment": "Thermostat",
+  "askBrandOnly": true,
+  "title": "ecobee - get the heat strips (aux heat / auxiliary heat) to come on sooner when the heat pump can't keep up: Thresholds, Configure Staging, Aux Savings Optimization, Compressor to Aux Temp Delta",
+  "summary": "Make these changes ON THE THERMOSTAT - ecobee says threshold settings cannot be changed in the app. Applies to every ecobee; the exact screens for each model are on its card in Thermostats under 'How to use it'. Written for the Smart Thermostat Enhanced (also sold as ecobee by Generac). From ecobee's support articles and user guides.",
+  "steps": [
+   "Path: Main Menu > General (Gear icon) > Settings > Installation Settings > Thresholds. On Smart Thermostat Lite / Essential, ecobee3 and older screens there is no General step: Main Menu > Settings > Installation Settings > Thresholds.",
+   "If Compressor to Aux Temp Delta is missing, look for Configure Staging. Set to Automatically (the factory setting), the ecobee hides the delta and runtime settings and shows Aux Savings Optimization instead.",
+   "Option A - keep automatic staging (simplest): turn Aux Savings Optimization DOWN, toward the comfort end. Premium / Enhanced choices are 2.0, 2.3, 2.6, 2.9 (factory setting) and 3.2 F. A lower value lets the strips come on with a smaller temperature drop.",
+   "Option B - take manual control: change Configure Staging from Automatically to Manually. Compressor to Aux Temp Delta and Compressor to Aux Runtime now show (both Auto from the factory).",
+   "Set Compressor to Aux Temp Delta to 1-2 F, OR set Compressor to Aux Runtime to 10-15 minutes (shop starting points - ecobee prints no recommended value). Set one, not both: ecobee says once one is adjusted the other is ignored, and the Delta takes precedence.",
+   "Either way, check Aux Heat Max Outdoor Temp (ecobee's article gives 50 F as the default; ecobee3 and Smart Si 70 F). If it is set low, the strips are locked out on milder days. Raise it to just above the outdoor temperature where the heat pump starts falling behind.",
+   "Compressor Min Outdoor Temp: leave it alone unless the heat pump should be shut off completely below a certain temperature. Check the heat pump maker's rating first.",
+   "If none of the aux settings show up at all: Installation Settings > Equipment should show a heat pump with aux heat (electric strips). If not, the strip wire is not on the W1 / AUX terminal or was not detected during setup.",
+   "If the heat pump can't keep up at mild outdoor temps (40s or above), look for the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow.",
+   "Smart Si (buttons, not a touch screen) is different: MENU > Settings > Installation Settings > Equipment > Heat Pump > Allow HP with Aux Heat = Yes brings the strips on with the heat pump after 30 minutes. See its card.",
+   "'ecobee by Generac' is just the brand name (Generac owns ecobee). The model number is on the back label. Open that model's card in Thermostats (brand ecobee) and tap 'Get the heat strips (aux heat) on sooner' under 'How to use it' for its exact screens."
+  ],
+  "confidence": "common"
+ },
+ {
   "id": "s-hp-runs-nonstop-heat-no-strips",
   "equipment": "Condenser/Heat Pump",
   "title": "Heat pump runs constantly (all the time) in heat mode, won't turn off (air handler, no heat strips)",
