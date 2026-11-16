@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v437";
+const CACHE_NAME = "bfc-cache-v438";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -85,7 +85,7 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "18adf7ceccf085c2a359",
   "./style.css": "3f6aed80648576b6f6b0",
-  "./app.js": "f2ca0e7b4c9087bd2df8",
+  "./app.js": "c58c63f8b20a6d1349c8",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "0749df230b9da90b24cf",
   "./symptoms.js": "b36024a9dc1ccdd90594",
@@ -105,7 +105,7 @@ const SHELL_HASHES = {
   "./inventory.js": "5cfc7dc549d17149b4a9",
   "./dchecker/index.html": "2487e203cbdae9ed9c1d",
   "./guides/daikin-checker-guide.html": "0d7a518082b6f948041a",
-  "./manuals-seed/seed-index.js": "9a1364d64d4586ce30e5",
+  "./manuals-seed/seed-index.js": "42629ce3eb3594ef0554",
   "./manifest.json": "15eb1fe115900d4110be",
 };
 // SHELL_HASHES:END
