@@ -11069,7 +11069,7 @@ const THERMOSTATS = [
   "id": "tst-ecobee-enhanced",
   "brand": "ecobee",
   "family": "Smart Thermostat Enhanced",
-  "aka": "EB-STATE6L-01 / ECB501 (model number as read off a unit - ecobee's guide does not print it) / ecobee by Generac",
+  "aka": "EB-STATE6L-01 / ECB501 (the model number on the back label of an ecobee by Generac unit) / ecobee by Generac",
   "models": [
    "EB-STATE6L-01"
   ],

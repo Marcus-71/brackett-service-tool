@@ -21564,7 +21564,7 @@ const SYMPTOMS = [
   "equipment": "Thermostat",
   "askBrandOnly": true,
   "title": "ecobee - get the heat strips (aux heat / auxiliary heat) to come on sooner when the heat pump can't keep up: Thresholds, Configure Staging, Aux Savings Optimization, Compressor to Aux Temp Delta",
-  "summary": "Make these changes ON THE THERMOSTAT - ecobee says threshold settings cannot be changed in the app. Applies to every ecobee; the exact screens for each model are on its card in Thermostats under 'How to use it'. Written for the Smart Thermostat Enhanced (also sold as ecobee by Generac). From ecobee's support articles and user guides.",
+  "summary": "Make these changes ON THE THERMOSTAT - ecobee says threshold settings cannot be changed in the app. Applies to every ecobee; the exact screens for each model are on its card in Thermostats under 'How to use it'. Written for the Smart Thermostat Enhanced (also sold as ecobee by Generac - back label model ECB501). From ecobee's support articles and user guides.",
   "steps": [
    "Path: Main Menu > General (Gear icon) > Settings > Installation Settings > Thresholds. On Smart Thermostat Lite / Essential, ecobee3 and older screens there is no General step: Main Menu > Settings > Installation Settings > Thresholds.",
    "If Compressor to Aux Temp Delta is missing, look for Configure Staging. Set to Automatically (the factory setting), the ecobee hides the delta and runtime settings and shows Aux Savings Optimization instead.",
