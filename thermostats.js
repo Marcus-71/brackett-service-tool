@@ -4146,37 +4146,37 @@ const THERMOSTATS = [
      "notes": ""
     },
     {
-     "setting": "ISU 2200 Cool Stages / Compressor Stages",
+     "setting": "ISU 2180 Cool Stages / Compressor Stages",
      "options": "0, 1, 2",
      "notes": ""
     },
     {
-     "setting": "ISU 2220 Heat Stages / Backup Heat Stages",
+     "setting": "ISU 2200 Heat Stages / Backup Heat Stages",
      "options": "Heat 0-2, Backup 0-1",
      "notes": ""
     },
     {
-     "setting": "ISU 2240 Fan Operation in Heat",
+     "setting": "ISU 2220 Fan Operation in Heat",
      "options": "0 No fan, 1 Equipment controls fan, 2 Thermostat controls fan",
      "notes": ""
     },
     {
-     "setting": "ISU 3120 Backup Heat Type",
+     "setting": "ISU 2240 Backup Heat Type",
      "options": "31 Electric Forced Air, 32 Gas/Oil Forced Air",
      "notes": ""
     },
     {
-     "setting": "ISU 3220 External Fossil Fuel Kit",
+     "setting": "ISU 2260 External Fossil Fuel Kit",
      "options": "0 Thermostat controls backup heat, 1 External Fossil Fuel Kit controls backup heat",
      "notes": ""
     },
     {
-     "setting": "ISU 3240 Staging Control - Backup Heat Differential",
+     "setting": "ISU 3120 Staging Control - Backup Heat Differential",
      "options": "Comfort, 2.0-15.0F from setpoint",
      "notes": ""
     },
     {
-     "setting": "ISU 4120 Compressor Lockout / Balance Point",
+     "setting": "ISU 3160 Compressor Lockout / Balance Point",
      "options": "Off, 5-60F",
      "notes": ""
     },
@@ -63963,4 +63963,4557 @@ tstatHowtoAdd({
   const use = {};
   for (const [id, set] of [["tst-daikin-one-touch","audit1112-daikin-one-touch"],["tst-daikin-one-plus","audit1112-daikin-one-plus"],["tst-carrier-infinity-system-control","audit1112-carrier-infinity-system-control"],["tst-carrier-infinity-touch-a","audit1112-carrier-infinity-touch-a"],["tst-carrier-infinity-control-uid","audit1112-carrier-infinity-control-uid"],["tst-lennox-s30-e30","audit1112-lennox-s30-e30"]]) use[id] = (TSTAT_HOWTO.use[id] || []).concat([{ set }]);
   tstatHowtoAdd({ sets, use });
+})();
+
+// ============================================================
+// HEAT STRIPS (AUX HEAT) ON SOONER - Andy 2026-11-16: "do the same for nest and honeywell", then "all the
+// other thermostat brands" (ecobee's topic is in TSTAT_HOWTO above). One topic per thermostat card, written from
+// that model's own manual: applies = yes (has a setting), no-setting (runs aux but prints no setting for when
+// it comes on) or not-heat-pump (cannot stage strips). Accessories and zone panels carry none.
+// ============================================================
+const TSTAT_AUX_SOONER = {
+ "tst-amazon-smart-thermostat": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "No Amazon document this app could read prints a setting for when aux heat comes on. There is no installer menu on the thermostat - setup is in the Alexa app.",
+   "To run the backup heat by hand, turn on Emergency Heat in the Alexa app, in the thermostat settings.",
+   "Emergency Heat is a stopgap, not a staging fix. If the customer needs strips whose timing can be adjusted, Amazon documents no setting for it on this thermostat."
+  ],
+  "notes": [
+   "Not confirmed word for word: Amazon's help page could not be opened when this was written. Check the Alexa app on site.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Amazon Smart Thermostat help pages (amazon.com) - Emergency Heat; not confirmed word for word"
+ },
+ "tst-aprilaire-8400-series": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Heat pump models only: 8446, 8465, and 8448 / 8466 with the equipment type switch on HEAT PUMP. Models 8444 and 8463 are heat/cool only.",
+   "To get in: set the system to OFF, then press and hold the two buttons shown in the install manual for three seconds (see this card's Setup section for which two). The first system setting shows. Change the value with the up / down buttons and step to the next setting. After the last setting the screen shows DONE. It also saves and goes back by itself after 20 seconds with no key pressed.",
+   "Setting 13 - Stage rate. 1 is more rapid staging (comfort), 5 is slower staging (economy), OFF disables it. Factory setting 2. A lower number brings the next stage on sooner.",
+   "Stage differentials - setting 10 is 2nd stage (8448, 8466) and setting 11 is 3rd and 4th stage (8448HP, 8466HP). Each is 1 F to 4 F, factory 1 F. The manual does not explain them; a smaller differential should bring that stage on sooner, so check nobody raised it. The table does not list the 8446 or 8465 for these two settings - on those use Stage rate and the balance points.",
+   "Setting 17 - High Balance Pt. Above this outdoor temperature the aux heat is locked out and only the heat pump runs. Factory 65 F, range 0 F to 80 F, or OFF. If the strips never come on in mild weather, raise it or set it OFF.",
+   "Setting 16 - Low Balance Pt. Below this outdoor temperature the heat pump is locked out and only aux heat is used. Factory 20 F, range 0 F to 60 F, or OFF.",
+   "Both balance points need the 8052 outdoor sensor on S1 and S2 and setting 05 (Outdoor temperature sensor) set to 1."
+  ],
+  "notes": [
+   "EM-HEAT mode: the thermostat runs the emergency / auxiliary heat and the heat pump does not operate (models 8446, 8465, 8448HP and 8466HP).",
+   "Setting 02 on heat pump models is the auxiliary equipment type: 0 is gas or oil furnace (used for dual fuel), 1 is electric. Strips should be set to 1.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire 8400 Series Thermostats Installation Instructions; Aprilaire 8400 Series Owner's Manual"
+ },
+ "tst-aprilaire-8476-8476w-8810": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The setting numbers are different on each model - check the model number first. Model 8476 uses the short list; 8476W and 8810 use the long list.",
+   "To get in: set the system to OFF, then press and hold the two buttons shown in the install manual for three seconds (see this card's Setup section for which two). Change the value with the up / down buttons and step to the next setting. After the last setting the screen shows DONE.",
+   "8476W and 8810 - setting 37 Stage Rate. 1 is more rapid staging (comfort), 5 is slower staging (economy), OFF ignores run time. Factory setting 2. A lower number brings the next stage on sooner.",
+   "8476W and 8810 - stage differentials are settings 23 (second stage), 24 (third stage) and 25 (fourth stage). Each is 1 F to 9 F, factory 1 F. Keep the strip stage's differential low.",
+   "8476W and 8810 - setting 40 High Balance Point. Above this outdoor temperature the aux heat is locked out. Factory 65 F, range 0 F to 80 F, or OFF. Raise it or set it OFF if the strips are held off in mild weather. Setting 39 Low Balance Point (factory 20 F, 0 F to 60 F, or OFF) locks the heat pump out below it.",
+   "Model 8476 - stage differentials are settings 10 (2nd stage) and 11 (3rd stage, heat pump only). Each is 1 F to 4 F, factory 1 F.",
+   "Model 8476 - setting 17 High Balance Pt. Factory 60 F, range 40 F to 80 F, or OFF. Above it the aux heat is locked out. Setting 16 Low Balance Pt. is factory 20 F, range 1 F to 35 F, or OFF.",
+   "The balance points only work with an outdoor sensor (8052 on S1 and S2) and the outdoor sensor setting turned on - setting 15 on 8476W / 8810, setting 05 on 8476. On the 8810 the outdoor temperature can also come from the automation system."
+  ],
+  "notes": [
+   "EM-HEAT mode: the thermostat runs the emergency / auxiliary heat and the heat pump does not operate.",
+   "Model 8476 has no Stage Rate setting. Its setting 13 is an integral factor period that changes cycles per hour, not staging.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire Model 8476 Installation Instructions; Aprilaire Model 8476W Installation Instructions; Aprilaire Model 8810 Installation Instructions; Aprilaire Model 8476W Owner's Manual"
+ },
+ "tst-aprilaire-8600-8620": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The setting numbers are different on each model - check the model number first.",
+   "To get in: press MODE to set the system to OFF, press MENU, then press and hold SETUP for seven seconds until INSTALL SETUP shows, and press it. NEXT and BACK page through the settings, the arrows change the value. DONE saves and exits, CANCEL exits without saving. It drops out without saving if nothing is pressed for 60 seconds.",
+   "Stage Rate - setting 25 on the 8620, setting 37 on the 8620W. 1 is more rapid staging (comfort), 5 is slower staging (economy), OFF ignores run time. Factory setting 2. A lower number brings the next stage on sooner.",
+   "Stage differentials - on the 8600 and 8620 they are settings 17 (2nd stage), 18 (3rd stage) and 19 (4th stage). On the 8620W they are settings 23, 24 and 25. Factory 1 F on all three; the range is 1 F to 4 F on the 8600 and 1 F to 9 F on the 8620 and 8620W. Keep the strip stage's differential low.",
+   "High balance point - above this outdoor temperature the aux heat is locked out. It is setting 29 on the 8600 and 8620 and setting 40 on the 8620W. Factory 65 F on all three. Printed ranges: 8600 40 F to 65 F, 8620 40 F to 85 F, 8620W 0 F to 80 F, or OFF. Raise it or set it OFF if the strips are held off in mild weather.",
+   "Low balance point - below this outdoor temperature the heat pump is locked out and only aux heat runs. It is setting 28 on the 8600 and 8620 (factory 20 F, 10 F to 50 F, or OFF) and setting 39 on the 8620W (factory 20 F, 0 F to 60 F, or OFF).",
+   "The balance point settings only show when the outdoor temperature sensor is enabled in installer setup."
+  ],
+  "notes": [
+   "EM HEAT mode (press MODE): the thermostat runs the auxiliary heat and the heat pump does not operate.",
+   "The 8600 has no Stage Rate. Its setting 25 is an integral factor period (factory 2 minutes, 1 to 5 minutes or OFF) - a short period means more cycles per hour.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire Model 8600 Installation Instructions; Aprilaire Model 8620 Installation Instructions; Aprilaire Model 8620W Installation Instructions; Aprilaire Model 8600 Owner's Manual; Aprilaire Model 8620W Owner's Manual"
+ },
+ "tst-aprilaire-8910-8920w": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The way in and the setting numbers are different on each model - check the model number first.",
+   "8910 and 8910W - press MODE to set the system to OFF, press MENU, then press and hold SETUP for seven seconds until INSTALL SETUP shows, and press it. DONE saves and exits, CANCEL exits without saving.",
+   "8920W - press MENU, then press and hold the Contractor Info button for 10 seconds to open the Installer Menu. Settings are listed by name, not by number.",
+   "Stage Rate - setting 25 on the 8910, setting 37 on the 8910W, Stage Rate Factor on the 8920W. 1 is more rapid staging (comfort), 5 is slower staging (economy). Factory setting 2. A lower number brings the next stage on sooner.",
+   "Stage differentials - settings 17, 18 and 19 (second, third, fourth stage) on the 8910; settings 23, 24 and 25 on the 8910W; Second / Third / Fourth Stage Differential on the 8920W. Each is 1 F to 9 F, factory 1 F. Keep the strip stage's differential low.",
+   "High balance point - above this outdoor temperature aux heat is not allowed. Setting 29 on the 8910 (factory 65 F, 40 F to 85 F, or OFF), setting 40 on the 8910W (factory 65 F, 0 F to 80 F, or OFF), Outdoor Temperature High Balance Point on the 8920W (enable or disable, then 65 F factory, 0 to 80 F). Raise it or turn it off if the strips are held off in mild weather.",
+   "Low balance point - below this outdoor temperature the compressor is not allowed and only aux heat runs. Setting 28 on the 8910 (factory 20 F, 10 F to 50 F, or OFF), setting 39 on the 8910W (factory 20 F, 0 F to 60 F, or OFF), Outdoor Temperature Low Balance Point on the 8920W (20 F factory, 0 to 60 F).",
+   "The balance points only show when an outdoor temperature sensor is installed and enabled."
+  ],
+  "notes": [
+   "Emergency heat mode (8910 / 8910W: EM HEAT under MODE): the thermostat runs the auxiliary heat and the heat pump does not operate.",
+   "On the 8910 and 8910W, heat pump or heat/cool is set by switch SW1 on the back, not in the menu.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire Model 8910 Installation Instructions; Aprilaire Model 8910W Installation Instructions; Aprilaire Model 8920W Installation Instructions; Aprilaire Model 8910 / 8910W Owner's Manuals"
+ },
+ "tst-aprilaire-s84n": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the S84N SU can run a heat pump with auxiliary heat. The S84N 1H1C is a conventional 1 heat / 1 cool thermostat - none of this applies to it.",
+   "To get in: press SELECT for the Main Menu, go to Settings and press SELECT, then press and hold the two arrow buttons for 3 seconds to unlock the Installer option. Go to Installer and press SELECT. The staging settings are under HVAC Advanced.",
+   "Stage Rate Factor - 1 is more rapid staging (comfort), 5 is slower staging (economy). Factory setting 2. A lower number brings the strips on sooner. Stage Rate itself can be Enabled or Disabled.",
+   "Second Stage Differential (S84N SU only) - 1 to 9 F, factory 1 F. Keep it low.",
+   "Outdoor Temperature High Balance Point - when it is enabled, aux heat is not allowed when it is warmer outside than the High Balance Point Temperature (factory 65 F, 0 to 80 F). Raise the temperature or disable it if the strips are held off in mild weather.",
+   "Outdoor Temperature Low Balance Point - when it is enabled, the compressor is not allowed below the Low Balance Point Temperature (factory 20 F, 0 to 60 F) and only aux heat runs.",
+   "The balance points only show when an outdoor temperature sensor (the 8052 on T1 and T2) is installed and set up as Outdoor."
+  ],
+  "notes": [
+   "Emergency Heat: Main Menu > Mode > Em Heat, then SELECT. The thermostat runs the auxiliary heat and the heat pump does not operate.",
+   "Check Heat Pump Auxiliary Type in HVAC Settings so the strips are set up as the aux heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire S84N 1H1C / S84N SU Safety & Installation Instructions; Aprilaire S84N Owner's Manual"
+ },
+ "tst-aprilaire-s86n": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "To get in: press SELECT for the Main Menu, go to Settings and press SELECT, then press and hold the two arrow buttons for 3 seconds to unlock the Installer option. Go to Installer and press SELECT. The staging settings are under HVAC Advanced.",
+   "Stage Rate Factor - 1 is more rapid staging (comfort), 5 is slower staging (economy). Factory setting 2. A lower number brings the next stage on sooner. Stage Rate itself can be Enabled or Disabled.",
+   "Second, Third and Fourth Stage Differential - each 1 to 9 F, factory 1 F. Keep the strip stage's differential low.",
+   "Outdoor Temperature High Balance Point - when it is enabled, aux heat is not allowed when it is warmer outside than the High Balance Point Temperature (factory 65 F, 0 to 80 F). Raise the temperature or disable it if the strips are held off in mild weather.",
+   "Outdoor Temperature Low Balance Point - when it is enabled, the compressor is not allowed below the Low Balance Point Temperature (factory 20 F, 0 to 60 F) and only aux heat runs.",
+   "The balance points only show when an outdoor temperature sensor (ODT) is installed."
+  ],
+  "notes": [
+   "Emergency Heat: Main Menu > Mode > Emergency Heat, then SELECT. The thermostat runs the auxiliary heat and the heat pump does not operate.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire S86N MU / S86N MUPR Safety & Installation Instructions; Aprilaire S86N Owner's Manual"
+ },
+ "tst-aprilaire-s86wmupr": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "To get in: press SELECT for the Main Menu, go to Settings and press SELECT, then press and hold the two arrow buttons for 3 seconds to unlock the Installer option. Go to Installer and press SELECT. The staging settings are under HVAC Advanced.",
+   "Stage Rate Factor - 1 is more rapid staging (comfort), 5 is slower staging (economy). Factory setting 2. A lower number brings the next stage on sooner. Stage Rate itself can be Enabled or Disabled.",
+   "Second, Third and Fourth Stage Differential - each 1 to 9 F, factory 1 F. Keep the strip stage's differential low.",
+   "Outdoor Temperature High Balance Point - when it is enabled, aux heat is not allowed when it is warmer outside than the High Balance Point Temperature (factory 65 F, 0 to 80 F). Raise the temperature or disable it if the strips are held off in mild weather.",
+   "Outdoor Temperature Low Balance Point - when it is enabled, the compressor is not allowed below the Low Balance Point Temperature (factory 20 F, -15 to 60 F) and only aux heat runs.",
+   "The balance points only show when an outdoor temperature sensor (ODT) is installed."
+  ],
+  "notes": [
+   "Emergency Heat: Main Menu > Mode > Em Heat, then SELECT. The thermostat runs the auxiliary heat and the heat pump does not operate.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Aprilaire S86W MUPR Safety & Installation Instructions; Aprilaire S86W MUPR Owner's Manual"
+ },
+ "tst-bosch-bcc100-bcc110": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the thermostat go Main Menu > System Settings > Unit Configuration > Heat Type (Heat Pump) > Setup Auxiliary Heating. Auxiliary heating has to be on Enable (Enable is the factory setting).",
+   "Same place: Aux Heat Max Outdoor Temperature. It sets from 5 F to 60 F, factory 40 F. The strips are only used below this outdoor temperature. Set low, it locks the strips out on milder days - raise it to let them in sooner.",
+   "Then the staging: Main Menu > Advanced Settings > Installer Access, Professional Access Code 1886, action code ST. Stage Delay is how long a call runs before the thermostat steps up a stage. It sets from 3 minutes to 90 minutes, factory 10 min. A shorter delay brings the next stage on sooner.",
+   "Stage Temp is on the same ST screen: 0 F to 15 F, factory 4 F. Bosch says it decides how quickly the next stage of heat is called from the temperature difference.",
+   "With a Bosch electric heat kit, use action code EHK instead. EHK Stage Delay sets from the Stage Delay value up to 180 minutes, factory 40 min. A shorter delay brings the heat kit on sooner."
+  ],
+  "notes": [
+   "Advanced Settings only open when the thermostat is connected to Wi-Fi.",
+   "Leave a menu with the Exit / Save Settings icon.",
+   "Strips only: pick Emergency Heat as the system mode (heat pumps only). It turns the compressor off and runs the backup electric heat.",
+   "Wiring: W/E is the Emergency Heat output and W2/AUX is the Auxiliary Heat output. The single-stage heat pump diagram shows a jumper between W/E and W2/AUX.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Bosch Connected Control BCC100 / BCC110 Advanced Settings Guide (BTC 469902301 B, 10.2025); Bosch Connected Control BCC100 Installation Guide and User Manual"
+ },
+ "tst-bosch-bcc50": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The BCC50 Advanced Settings are in the Menu of the BCC50 phone app, and the thermostat has to be connected to Wi-Fi. The access code is 1886.",
+   "In the app: Advanced Settings, enter the Professional Access Code, click Installer, then enter action code ST (Staging). It gives Latching, Stage Delay and Stage Temp.",
+   "Stage Delay is the time delay before the thermostat stages up. A shorter delay brings the next stage (the strips) on sooner.",
+   "Stage Temp is the temperature gap used for staging up and down. Bosch describes both Stage Delay and Stage Temp for non-latching equipment, so check Latching first. With Latching on, the thermostat does not cycle between stages until the setpoint is met."
+  ],
+  "notes": [
+   "The BCC50 guide prints no range and no factory setting for Stage Delay or Stage Temp. Read what is on the screen before changing it.",
+   "Strips only: on the thermostat use the up and down arrows under System to pick Emergency Heat (heat pump and dual fuel systems only).",
+   "Wiring: one terminal, W/E/AUX, runs both the Emergency Heat and Auxiliary Heat outputs.",
+   "Balance Point is a dual fuel setting only (heat pump with a fossil fuel appliance). The guide prints no outdoor lockout for electric strips.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Bosch Connected Control BCC50 Wi-Fi Thermostat Installation Guide and User Manual"
+ },
+ "tst-braeburn-1000-builder": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 1220NC can run a heat pump with aux heat. The 1020NC is single stage - it has no aux stage and no setting for it.",
+   "On the 1220NC, the strips are the 2nd stage of heat (W2 terminal). The only setting for when they come on is the 2nd stage differential, User Option 2.",
+   "Hold the up and down arrow buttons together for about 3 seconds until the first User Option shows. Press both arrows together again to step to User Option 2.",
+   "Use the up or down arrow to change it. Factory setting is 2.0. The choices are 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). The manual says a smaller setting gives tighter temperature control, so a smaller number should bring the strips on with less temperature drop.",
+   "To save and leave, press both arrows together after the last option, or touch nothing for 15 seconds. The thermostat goes back to normal by itself.",
+   "To run the strips by themselves, slide the SYSTEM switch to EMER (Emergency Heat)."
+  ],
+  "notes": [
+   "There is no code and no separate installer menu on this model. The manual prints no timer, outdoor lockout or balance point setting for aux heat - the differential is all there is.",
+   "The reset button on the front puts all user settings back to factory, so the 2nd stage differential goes back to the factory setting. Set it again after any reset.",
+   "EMER shows NO EMER SET: the CONV / HP switch on the back is set to CONV. It has to be on HP for a heat pump, and the reset button must be pressed after moving a switch.",
+   "Strips never come on: check the W2 wire. If there is no separate emergency heat relay, the manual calls for a field jumper between W2 and E.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 1020NC / 1220NC Non-Programmable Thermostats Installer Guide (1020NCW-100-03)"
+ },
+ "tst-braeburn-1000-premier": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 1220 can run a heat pump with aux heat. The 1020 is single stage - it has no aux stage and no setting for it.",
+   "On the 1220, the strips are the 2nd stage of heat (W2 terminal). The only setting for when they come on is the 2nd stage differential, User Option 2.",
+   "Hold the up and down arrow buttons together for about 3 seconds until the first User Option shows. Press both arrows together again to step to User Option 2.",
+   "Use the up or down arrow to change it. Factory setting is 2.0. The choices are 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). The manual says a smaller setting gives tighter temperature control, so a smaller number should bring the strips on with less temperature drop.",
+   "To save and leave, press both arrows together after the last option, or touch nothing for 15 seconds. The thermostat goes back to normal by itself.",
+   "To run the strips by themselves, slide the SYSTEM switch to EMER (Emergency Heat)."
+  ],
+  "notes": [
+   "There is no code and no separate installer menu on this model. The manual prints no timer, outdoor lockout or balance point setting for aux heat - the differential is all there is.",
+   "The reset button on the front puts all user settings back to factory, so the 2nd stage differential goes back to the factory setting. Set it again after any reset.",
+   "EMER shows NO EMER SET: the CONV / HP switch on the back is set to CONV. It has to be on HP for a heat pump, and the reset button must be pressed after moving a switch.",
+   "Strips never come on: check the W2 wire. If there is no separate emergency heat relay, the manual calls for a field jumper between W2 and E.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 1020 / 1220 Non-Programmable Thermostats Installer Guide (1020W-100-03)"
+ },
+ "tst-braeburn-1030-1230": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This works on the 1230 only. The 1030 is 1 heat / 1 cool with no W2 or E terminal, so it cannot run aux heat at all.",
+   "1230: Hold MENU for 5 seconds and let go when the first installer setting shows. Change a value with the arrow buttons. Press MENU to go to the next setting. It saves and exits by itself after the last setting.",
+   "If 0000 IL shows, the menu is locked and needs the 4-digit installer lock code.",
+   "Go to setting 3, 2nd Stage Differential (shows DIF2). The strips are second stage heat. This is how far the room must fall past first stage before they come on. The choices are 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 F and the factory setting is 2.0. A smaller number brings the strips on sooner.",
+   "Setting 2, 1st Stage Differential (DIF1), is 0.5, 1.0 or 2.0 F, factory 0.5. That is the drop below setpoint before the heat pump starts. DIF2 is counted from first stage, so a large DIF1 holds the strips off too.",
+   "Check the two installer switches on the back of the thermostat: CONV / HP has to be on HP for a heat pump (it ships on CONV), and HG / HE on HE for electric heat."
+  ],
+  "notes": [
+   "Strips needed right now: move the SYSTEM switch to EMER (1230 only). That runs the backup heat source.",
+   "HEAT ON AUX on the display means the aux stage is running.",
+   "No separate emergency heat relay: land the strips on W2 and put a field jumper from W2 to E.",
+   "The manual prints no aux heat timer, outdoor lockout or balance point for these models. The 2nd stage differential is the only adjustment.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn Economy Series 1030 / 1230 Installer Manual (1030-100-01); Braeburn Economy Series 1030 / 1230 User Manual (1030-110-01)"
+ },
+ "tst-braeburn-1232-2232": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Hold MENU for 5 seconds and let go when the first installer setting shows. Change a value with the arrow buttons. NEXT and BACK move between settings (on the 2232 NEXT is the HOLD button and BACK is the PROG button). RETURN (the FAN button) saves and exits. It also exits by itself after the last setting.",
+   "If UNLOCK 0000 shows, the menu needs the 4-digit installer lock code.",
+   "The setting numbers differ by model. Below, the 1232 number is first and the 2232 number second.",
+   "Check System Type first (setting 4 / 6). Aux heat only stages on HP 21 (one compressor stage plus aux) or HP 32 (two compressor stages plus aux as stage 3). The thermostat ships as CONV 11.",
+   "On HP 21 the strips are stage 2: change 2nd Stage Differential, DIF2 (setting 6 / 8). On HP 32 the strips are stage 3: change 3rd Stage Differential, DIF3 (setting 7 / 9) - DIF2 then sets the second compressor stage. Each one is 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 F, factory 2.0. A smaller number brings that stage on sooner.",
+   "1st Stage Differential, DIF1 (setting 5 / 7), is 0.5, 1.0 or 2.0 F, factory 0.5. Each stage is counted from the one before it, so large first and second stage numbers hold the strips off too.",
+   "Outdoor sensor wired in (Braeburn 5490): check Auxiliary Heat Balance Point, BALPOINT AUX (setting 20 / 23). It locks the strips out when it is warmer outside than the setting. The range is 70 to 40 F and the factory setting is NO (off). If the strips will not come on on a mild day, raise it or set it to NO.",
+   "Compressor Balance Point, BALPOINT COMP (setting 19 / 22), locks the compressor out when it is colder outside than the setting. The range is 0 to 50 F, factory NO. Below it only the aux heat runs. It does not hold the strips back. Do not raise it to get the strips on sooner - that shuts the heat pump off and leaves the house on strips alone.",
+   "Fossil Fuel Backup Heat, AUX HEAT (setting 12 / 14), has to be ELEC for strips - that is the factory setting. On GAS the compressor is locked out one minute after a call for aux heat."
+  ],
+  "notes": [
+   "The two balance points only show on a 2 or 3 stage heat pump setup with the Braeburn 5490 outdoor sensor connected. The sensor lands on S1 and S2 and needs no setup.",
+   "Finish with High Stage, AUX FNSH (setting 10 / 12): the factory setting is NO, which drops the strips about 0.5 degrees before setpoint and lets the heat pump finish. YES keeps the strips on until the setpoint is met. It does not bring them on sooner, it keeps them on longer.",
+   "Strips needed right now: press SYSTEM until emergency heat (EMER) is selected. It runs the backup heat source.",
+   "HEAT ON AUX on the display means the aux stage is running.",
+   "No separate emergency heat relay: land the strips on AUX and put a field jumper from AUX to E.",
+   "The manual prints no aux heat timer. The stage differentials and the balance points are the settings that decide when the strips run.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn Economy Series 1232 Installer Manual (1232-100-01); Braeburn Economy Series 2232 Installer Manual (2232-100-01); Braeburn 1232 User Manual (1232-110-01); Braeburn 2232 User Manual (2232-110-01)"
+ },
+ "tst-braeburn-2000-builder": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 2220NC can run a heat pump with aux heat. The 2020NC is single stage - it has no aux stage and no setting for it.",
+   "On the 2220NC, the strips are the 2nd stage of heat (W2 terminal). The only setting for when they come on is the 2nd stage differential, User Option 3.",
+   "Hold the RETURN button for about 3 seconds until the first User Option shows. Press RETURN to step to User Option 3.",
+   "Use the up or down arrow to change it. Factory setting is 2.0. The choices are 1.0, 2.0, 3.0, 4.0, 5.0 and 6.0 (degrees F). The manual says a smaller setting gives tighter temperature control, so a smaller number should bring the strips on with less temperature drop.",
+   "To save and leave, keep pressing RETURN past the last option, or touch nothing for 15 seconds. The thermostat goes back to normal by itself.",
+   "To run the strips by themselves, slide the SYSTEM switch to EMER (Emergency Heat)."
+  ],
+  "notes": [
+   "There is no code and no separate installer menu on this model. The manual prints no timer, outdoor lockout or balance point setting for aux heat - the differential is all there is.",
+   "The reset button on the front puts all user settings back to factory, so the 2nd stage differential goes back to the factory setting. Set it again after any reset.",
+   "EMER shows NO EMER SET: the CONV / HP switch on the back is set to CONV. It has to be on HP for a heat pump, and the reset button must be pressed after moving a switch.",
+   "Strips never come on: check the W2 wire. If there is no separate emergency heat relay, the manual calls for a field jumper between W2 and E.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 2020NC / 2220NC Programmable Thermostats Detailed User Guide (2020NCW-100-05)"
+ },
+ "tst-braeburn-2000-premier": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 2220 can run a heat pump with aux heat. The 2020 is single stage - it has no aux stage and no setting for it.",
+   "On the 2220, the strips are the 2nd stage of heat (W2 terminal). The only setting for when they come on is the 2nd stage differential, User Option 3.",
+   "Hold the RETURN button for about 3 seconds until the first User Option shows. Press RETURN to step to User Option 3.",
+   "Use the up or down arrow to change it. Factory setting is 2.0. The choices are 1.0, 2.0, 3.0, 4.0, 5.0 and 6.0 (degrees F). The manual says a smaller setting gives tighter temperature control, so a smaller number should bring the strips on with less temperature drop.",
+   "To save and leave, keep pressing RETURN past the last option, or touch nothing for 15 seconds. The thermostat goes back to normal by itself.",
+   "To run the strips by themselves, slide the SYSTEM switch to EMER (Emergency Heat)."
+  ],
+  "notes": [
+   "There is no code and no separate installer menu on this model. The manual prints no timer, outdoor lockout or balance point setting for aux heat - the differential is all there is.",
+   "The reset button on the front puts all user settings back to factory, so the 2nd stage differential goes back to the factory setting. Set it again after any reset.",
+   "EMER shows NO EMER SET: the CONV / HP switch on the back is set to CONV. It has to be on HP for a heat pump, and the reset button must be pressed after moving a switch.",
+   "Strips never come on: check the W2 wire. If there is no separate emergency heat relay, the manual calls for a field jumper between W2 and E.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 2020 / 2220 Programmable Thermostats Detailed User Guide (2020W-100-06)"
+ },
+ "tst-braeburn-2030-2230": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This works on the 2230 only. The 2030 is 1 heat / 1 cool with no W2 or E terminal, so it cannot run aux heat at all.",
+   "2230: Hold MENU for 5 seconds and let go when the first installer setting shows. Change a value with the arrow buttons. NEXT (the HOLD button) and BACK (the PROG button) move between settings. Press MENU to save and exit - it also exits by itself after the last setting.",
+   "If 0000 IL shows, the menu is locked and needs the 4-digit installer lock code.",
+   "Go to setting 4, 2nd Stage Differential (shows DIF2). The strips are second stage heat. This is how far the room must fall past first stage before they come on. The choices are 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 F and the factory setting is 2.0. A smaller number brings the strips on sooner.",
+   "Setting 3, 1st Stage Differential (DIF1), is 0.5, 1.0 or 2.0 F, factory 0.5. That is the drop below setpoint before the heat pump starts. DIF2 is counted from first stage, so a large DIF1 holds the strips off too.",
+   "Check the two installer switches on the back of the thermostat: CONV / HP has to be on HP for a heat pump (it ships on CONV), and HG / HE on HE for electric heat."
+  ],
+  "notes": [
+   "Strips needed right now: move the SYSTEM switch to EMER (2230 only). That runs the backup heat source.",
+   "HEAT ON AUX on the display means the aux stage is running.",
+   "No separate emergency heat relay: land the strips on W2 and put a field jumper from W2 to E.",
+   "The manual prints no aux heat timer, outdoor lockout or balance point for these models. The 2nd stage differential is the only adjustment.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn Economy Series 2030 / 2230 Installer Manual (2030-100-01); Braeburn Economy Series 2030 / 2230 User Manual (2030-110-02)"
+ },
+ "tst-braeburn-3000-3200": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This works on the 3200 only. The 3000 is single stage with one heat terminal (W). On a heat pump it has no aux or emergency heat output, so there is nothing to bring on sooner.",
+   "3200: the strips are second stage heat. They come on when the room falls the Second Stage Differential past the point where first stage started. The choices are 2, 3, 4, 5 or 6 F and the factory setting is 2 F. A smaller number brings the strips on sooner.",
+   "To get there: from the normal screen hold the UP and DOWN arrow buttons together for 3 seconds. The display shows SET D1 - the first stage differential (.5, 1 or 2 F, factory 0.5 F). Change it with the arrows.",
+   "Press both arrows together again. The display shows SET D2 - the second stage differential. Set it with the arrows.",
+   "To save and leave, wait 5 seconds and it goes back to the normal screen. Pressing both arrows again goes on to the cooling fan delay instead.",
+   "The two differentials add up. The manual says the room must change the second stage amount in addition to the first stage differential, so a large D1 also holds the strips off.",
+   "Check the switches on the circuit board on the back of the thermostat body: NORM / HP has to be on HP, and AE-AG on AE for electric strips. On AG the compressor is locked out 1 minute after a second stage heat call - that position is for gas or oil backup.",
+   "If a switch is changed with the batteries already in, press RESET with a paper clip so the thermostat reads the switches. RESET puts the differentials back to factory, so set them again afterward."
+  ],
+  "notes": [
+   "Strips needed right now: slide the system switch to EM HEAT (3200 only).",
+   "AUX on the display means the auxiliary second stage of heat is running.",
+   "Strip heat used for both aux and emergency heat: the manual calls for an installer jumper on units without separate emergency heat and auxiliary heat terminals. Do not jumper if both terminals are there.",
+   "The manual prints no aux heat timer, outdoor lockout or balance point for these models. The differential is the only adjustment.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn Premier Series Non-Programmable Thermostats Model 3000 / Model 3200 manual (3000-100-010)"
+ },
+ "tst-braeburn-4020": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot run a heat pump or heat strips. The 4020 is heat only, for hot water, steam and in-floor heat. Its terminals are R, W, V3, C, S1 and S2 - one heat output and no compressor, aux or emergency heat terminal."
+  ],
+  "notes": [
+   "The system types in its installer menu are HWTR (hot water), STM (steam) and UFLR (under-floor). There is no heat pump choice."
+  ],
+  "source": "Braeburn Premier Series 4020 Installer Manual (4020-100-03)"
+ },
+ "tst-braeburn-4030-4235": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Hold MENU for 5 seconds and let go when the first installer setting shows. Change a value with the arrow buttons. NEXT (the HOLD button) and BACK (the PROG button) move between settings. RETURN (the FAN button) saves and exits. It also exits by itself after the last setting.",
+   "If UNLOCK 0000 shows, the menu needs the 4-digit installer lock code.",
+   "Check System Type first (setting 8). Aux heat only stages on HP 21 (one compressor stage plus aux) or HP 32 (two compressor stages plus aux as stage 3). HP 32 is not available on the 4030. The thermostat ships as CONV 11.",
+   "On HP 21 the strips are stage 2: change 2nd Stage Differential, DIF2 (setting 10). On HP 32 (4235) the strips are stage 3: change 3rd Stage Differential, DIF3 (setting 11) - DIF2 then sets the second compressor stage. Each one is 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 F, factory 2.0. A smaller number brings that stage on sooner.",
+   "1st Stage Differential, DIF1 (setting 9), is 0.5, 1.0 or 2.0 F, factory 0.5. Each stage is counted from the one before it, so large first and second stage numbers hold the strips off too.",
+   "Outdoor sensor wired in (Braeburn 5490): check Auxiliary Heat Balance Point, BALPOINT AUX (setting 34). It locks the strips out when it is warmer outside than the setting. The range is 70 to 40 F and the factory setting is NO (off). If the strips will not come on on a mild day, raise it or set it to NO.",
+   "Compressor Balance Point, BALPOINT COMP (setting 33), locks the compressor out when it is colder outside than the setting. The range is 0 to 50 F, factory NO. Below it only the aux heat runs. It does not hold the strips back. Do not raise it to get the strips on sooner - that shuts the heat pump off and leaves the house on strips alone.",
+   "Fossil Fuel Backup Heat, AUX HEAT (setting 16), has to be ELEC for strips - that is the factory setting. On GAS the compressor is locked out one minute after a call for aux heat."
+  ],
+  "notes": [
+   "The two balance points only show on a 2 or 3 stage heat pump setup with the Braeburn 5490 outdoor sensor connected. The sensor lands on S1 and S2 and needs no setup.",
+   "The 4030 has no W2/AUX terminal. Its backup heat terminal is W1/E. The 4235 has both W1/E and W2/AUX.",
+   "Finish with High Stage, AUX FNSH (setting 14): the factory setting is NO, which drops the strips about 0.5 degrees before setpoint and lets the heat pump finish. YES keeps the strips on until the setpoint is met. It does not bring them on sooner, it keeps them on longer.",
+   "Strips needed right now: press SYSTEM until emergency heat (EMER) is selected. It runs the backup heat source.",
+   "HEAT ON AUX on the display means the aux stage is running.",
+   "4235 with no separate emergency heat relay: land the strips on AUX and put a field jumper from AUX to E.",
+   "The manual prints no aux heat timer. The stage differentials and the balance points are the settings that decide when the strips run.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn Premier Series 4030 / 4235 Installer Manual (4030-100-05); Braeburn Premier Series 4030 / 4235 User Manual (4030-110-05)"
+ },
+ "tst-braeburn-500-505": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "These mechanical thermostats cannot bring heat strips on sooner. The 505 is heat only. The 500 is 1 heat / 1 cool - it will run a single stage heat pump with the installer jumper between W and Y, but it has one heat terminal and no aux or emergency heat terminal. If the thermostat has to stage the strips, the job needs a heat pump thermostat with an aux / E terminal."
+  ],
+  "notes": [
+   "The only adjustment is the heat anticipator, which sets how often the heat cycles. It does not bring on backup heat."
+  ],
+  "source": "Braeburn Builder Series Models 500 / 505 Mechanical Thermostats User Manual (500-100-04)"
+ },
+ "tst-braeburn-5000-premier": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into Installer Settings: hold RETURN and the down arrow together for 3 seconds, then let go. Change a setting with the SpeedBar arrows. HOLD is NEXT and PROG is BACK. Press RETURN to save and exit. The manual prints no installer code for this menu. These models do have a keypad lock - its code is set in User Settings.",
+   "Check setting 6, System Type, first. Aux heat only works on 21HP (5020) or on 22HP or 32HP (5220). On 11HP there is no aux stage and the aux settings are skipped.",
+   "Setting 8, 2nd Stage Differential (DIF2) - this is the strips on 21HP and 22HP. Factory 2.0. Choices 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). This manual does not say which way it works. A smaller number should bring the strips on with less temperature drop - change it and watch for AUX in the display.",
+   "5220 on 32HP (two-stage compressor): the strips are the 3rd stage, so change setting 9, 3rd Stage Differential (DIF3). Factory 2.0, same choices.",
+   "Setting 13, Fossil Fuel Backup Heat - leave it on AE AUX (factory) for electric strips, so the compressor and strips run together. On AG AUX the compressor is locked out one minute after aux is called.",
+   "Setting 24, Auxiliary Heat Balance Point (BALA) - only shows with a Braeburn outdoor sensor wired to S1 and S2. Factory is NO BALA (off). If someone set it (70 down to 40 F), the strips are locked out whenever it is warmer outside than that number. Raise it or set NO BALA.",
+   "Setting 23, Compressor Balance Point (BALC) - also needs the outdoor sensor. Factory NO BALC. Set from 15 to 50 F, it locks the compressor out of heating below that outdoor temperature. It does not hold the strips back.",
+   "To run the strips by themselves, press SYSTEM until EMER shows."
+  ],
+  "notes": [
+   "The manual prints no timer or delay setting for aux heat. The stage differential and the balance points are all there is.",
+   "Changing System Type (setting 6) resets settings 7 through 15 to factory. Go back through the differentials after changing it.",
+   "Setting the aux balance point overrides setting 13: on AG AUX, with the outdoor temperature above the aux balance point, the compressor stays on during an aux call.",
+   "AUX in the display means the aux stage is running.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 5020 / 5220 Premier Series Detailed Installer Guide (5020W-100-05); Braeburn 5020 / 5220 User Manual (5020W-110-03)"
+ },
+ "tst-braeburn-5300-touchscreen": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 5320 can run aux heat. The 5310 is single stage - the manual says it is not for multi stage equipment, so it has no aux stage and no setting for it.",
+   "Get into Installer Settings on the 5320: touch and hold SYSTEM and CONFIG together for 3 seconds, then let go. Change a setting with UP or DOWN on the SpeedBar. Touch NEXT or BACK to move. Touch RETURN to save and exit. The manual prints no installer code for this menu. These models do have a keypad lock - its code is set in User Settings.",
+   "Check setting 6, System Type, first. Aux heat needs 22HP, 32HP or 42HP. On 11HP there is no aux stage and the aux settings are skipped.",
+   "On 22HP the strips are the 2nd stage: change setting 8, 2nd Stage Differential (DIF2). Factory 2.0. Choices 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). This manual does not say which way it works. A smaller number should bring the strips on with less temperature drop - change it and watch for AUX in the display.",
+   "On 32HP (two-stage compressor) the strips are the 3rd stage: change setting 9, 3rd Stage Differential (DIF3). On 42HP the second bank of strips (AUX2) is the 4th stage: setting 10, 4th Stage Differential (DIF4). Both are factory 2.0 with the same choices.",
+   "Setting 14, Fossil Fuel Backup Heat - leave it on AE AUX (factory) for electric strips, so the compressor and strips run together. On AG AUX the compressor is locked out one minute after aux is called.",
+   "Setting 25, Auxiliary Heat Balance Point (BALA) - only shows with a Braeburn outdoor sensor connected. Factory is NO BALA (off). If someone set it (70 down to 40 F), the strips are locked out whenever it is warmer outside than that number. Raise it or set NO BALA.",
+   "Setting 24, Compressor Balance Point (BALC) - also needs the outdoor sensor. Factory NO BALC. Set from 15 to 50 F, it locks the compressor out of heating below that outdoor temperature. It does not hold the strips back.",
+   "To run the strips by themselves, touch SYSTEM until EMER shows."
+  ],
+  "notes": [
+   "The manual prints no timer or delay setting for aux heat. The stage differentials and the balance points are all there is.",
+   "Changing System Type (setting 6) resets settings 7 through 15 to factory. Go back through the differentials after changing it.",
+   "Setting the aux balance point overrides setting 14: on AG AUX, with the outdoor temperature above the aux balance point, the compressor stays on during an aux call.",
+   "AUX in the display means the aux stage is running.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 5310 / 5320 Touchscreen Detailed Installer Guide (5310W-100-04); Braeburn 5310 / 5320 User Manual (5310W-110-03)"
+ },
+ "tst-braeburn-6000-deluxe": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 6300 can run aux heat. The 6100 is single stage - the manual says it is not for multi stage equipment, so it has no aux stage and no setting for it.",
+   "Get into Installer Settings on the 6300: touch and hold SYSTEM and CONFIG together for 3 seconds, then let go. Change a setting with UP or DOWN on the SpeedBar. Touch NEXT or BACK to move. Touch RETURN to save and exit. The manual prints no installer code for this menu. These models do have a keypad lock - its code is set in User Settings.",
+   "Check setting 6, System Type, first. Aux heat needs 22HP, 32HP or 42HP. On 11HP there is no aux stage and the aux settings are skipped.",
+   "On 22HP the strips are the 2nd stage: change setting 8, 2nd Stage Differential (DIF2). Factory 2.0. Choices 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). This manual does not say which way it works. A smaller number should bring the strips on with less temperature drop - change it and watch for AUX in the display.",
+   "On 32HP (two-stage compressor) the strips are the 3rd stage: change setting 9, 3rd Stage Differential (DIF3). On 42HP the second bank of strips (AUX2) is the 4th stage: setting 10, 4th Stage Differential (DIF4). Both are factory 2.0 with the same choices.",
+   "Setting 14, Fossil Fuel Backup Heat - leave it on AE AUX (factory) for electric strips, so the compressor and strips run together. On AG AUX the compressor is locked out one minute after aux is called.",
+   "Setting 25, Auxiliary Heat Balance Point (BALA) - only shows with a Braeburn outdoor sensor connected. Factory is NO BALA (off). If someone set it (70 down to 40 F), the strips are locked out whenever it is warmer outside than that number. Raise it or set NO BALA.",
+   "Setting 24, Compressor Balance Point (BALC) - also needs the outdoor sensor. Factory NO BALC. Set from 15 to 50 F, it locks the compressor out of heating below that outdoor temperature. It does not hold the strips back.",
+   "To run the strips by themselves, touch SYSTEM until EMER shows."
+  ],
+  "notes": [
+   "The manual prints no timer or delay setting for aux heat. The stage differentials and the balance points are all there is.",
+   "Changing System Type (setting 6) resets settings 7 through 15 to factory. Go back through the differentials after changing it.",
+   "Setting the aux balance point overrides setting 14: on AG AUX, with the outdoor temperature above the aux balance point, the compressor stays on during an aux call.",
+   "AUX in the display means the aux stage is running.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 6100 / 6300 Touchscreen Installer Guide (6100-100-01); Braeburn 6100 / 6300 User Manual (6100-110-01)"
+ },
+ "tst-braeburn-7205-7320": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "7205: hold RETURN and the DOWN arrow together for 3 seconds. The SpeedBar changes the value. RETURN goes to the next setting and PROG goes back. After the last setting it saves and returns to the main screen. If 0000 shows, it needs the 4-digit installer lock code.",
+   "7320: touch and hold the SYSTEM and CONFIG touchpads together for 3 seconds. The SpeedBar changes the value. NEXT and BACK move between settings. RETURN saves and exits.",
+   "Check System Type first (7205 setting 4, 7320 setting 6). One compressor stage plus strips is HP 22 on the 7205 and 22HP on the 7320 - the strips are stage 2. Two compressor stages plus strips is HP 32 or 32HP - the strips are stage 3.",
+   "Strips on stage 2: change 2nd Stage Differential, DIF2 (7205 setting 6, 7320 setting 8). Strips on stage 3: change 3rd Stage Differential, DIF3 (7205 setting 7, 7320 setting 9). Each one is 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 F, factory 2.0. Neither manual says which way it works. A smaller number should bring that stage on sooner - change it and watch for AUX in the display.",
+   "1st Stage Differential, DIF1 (7205 setting 5, 7320 setting 7), is 0.5, 1.0 or 2.0 F, factory 0.5. Large first and second stage numbers should hold the strips off too - the manuals do not spell that out.",
+   "Fossil Fuel Backup Heat (7205 setting 16, 7320 setting 13) has to be AE for electric strips - that is the factory setting. On AG the compressor is locked out one minute after a call for aux heat.",
+   "7320 with a Braeburn outdoor sensor: check Auxiliary Heat Balance Point, BALA (setting 24). It locks the strips out when it is warmer outside than the setting. The range is 70 to 40 F and the factory setting is NO (off). If the strips will not come on on a mild day, raise it or set it to NO.",
+   "7320 with a Braeburn outdoor sensor: Compressor Balance Point, BALC (setting 23), locks the compressor out when it is colder outside than the setting. The range is 0 to 50 F, factory NO. It does not hold the strips back. Do not raise it to get the strips on sooner - that shuts the heat pump off and leaves the house on strips alone.",
+   "The 7205 manual prints no balance point settings. On the 7205 the stage differential is the only adjustment."
+  ],
+  "notes": [
+   "The 7320 balance points only show on a 2 or 3 stage heat pump setup with a Braeburn outdoor sensor connected (wired) or paired (wireless). The thermostat picks the sensor up by itself.",
+   "Changing System Type resets other installer settings to their defaults, the stage differentials included. Set System Type first, then the differentials.",
+   "Strips needed right now: press SYSTEM until EMER shows. It runs the backup heat source.",
+   "AUX on the display means the aux stage is running.",
+   "No separate emergency heat relay: the 7205 manual calls for a field jumper between W2 and W1/E/W3, the 7320 manual between W2/AUX and W1/E.",
+   "Neither manual prints an aux heat timer.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 7205 Universal Programmable Smart Wi-Fi Thermostat Installer Guide (7205-100-03); Braeburn 7320 Universal Programmable Smart Wi-Fi Thermostat Installer Guide (7320-100-02); Braeburn 7205 User Manual (7205-110-03); Braeburn 7320 User Manual (7320-110-03)"
+ },
+ "tst-braeburn-7500-bluelink": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "All of this is set on the wireless thermostat, not on the control module. Hold RETURN and the down arrow together for 3 seconds, then let go. Change a setting with the SpeedBar arrows. HOLD is NEXT and PROG is BACK. Press RETURN to save and exit. The manual prints no installer code for this menu. These models do have a keypad lock - its code is set in User Settings.",
+   "Check setting 6, System Type, first. Aux heat needs 22HP or 32HP. On 11HP there is no aux stage and the aux settings are skipped.",
+   "On 22HP the strips are the 2nd stage: change setting 8, 2nd Stage Differential (DIF2). Factory 2.0. Choices 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). This manual does not say which way it works. A smaller number should bring the strips on with less temperature drop.",
+   "On 32HP (two-stage compressor) the strips are the 3rd stage: change setting 9, 3rd Stage Differential (DIF3). Factory 2.0, same choices.",
+   "Setting 13, Fossil Fuel Backup Heat - leave it on AE AUX (factory) for electric strips, so the compressor and strips run together. On AG AUX the compressor is locked out one minute after aux is called.",
+   "Setting 23, Auxiliary Heat Balance Point (BALA) - only shows with a Braeburn outdoor sensor, wired or wireless. Factory is NO BALA (off). If someone set it (70 down to 40 F), the strips are locked out whenever it is warmer outside than that number. Raise it or set NO BALA.",
+   "Setting 22, Compressor Balance Point (BALC) - also needs the outdoor sensor. Factory NO BALC. Set from 0 to 50 F, it locks the compressor out of heating below that outdoor temperature. It does not hold the strips back.",
+   "To run the strips by themselves, press SYSTEM until EMER shows."
+  ],
+  "notes": [
+   "The manual prints no timer or delay setting for aux heat. The stage differentials and the balance points are all there is.",
+   "Changing System Type (setting 6) resets settings 7 through 15 to factory. Go back through the differentials after changing it.",
+   "Strips never come on: check the AUX wire at the control module. If there is no separate emergency heat relay, the manual calls for a field jumper between AUX and E.",
+   "Setting the aux balance point overrides setting 13: on AG AUX, with the outdoor temperature above the aux balance point, the compressor stays on during an aux call.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 7500 Universal Wireless Thermostat Kit Installer Guide (7500-100-05); Braeburn 7500 User Manual (7500-110-02)"
+ },
+ "tst-braeburn-8205": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Hold MENU for 5 seconds and let go when the first installer setting shows. Change a value with the arrow buttons. NEXT (the HOLD button) and BACK (the PROG button) move between settings. RETURN (the FAN button) saves and exits, or wait 30 seconds. It may ask for an installer lock code.",
+   "Check System Type first (setting 4). One compressor stage plus strips is HP 22 - the strips are stage 2. Two compressor stages plus strips is HP 32 - the strips are stage 3. The thermostat ships as CONV 11.",
+   "Strips on stage 2: change 2nd Stage Differential, DIF2 (setting 6). Strips on stage 3: change 3rd Stage Differential, DIF3 (setting 7) - DIF2 then sets the second compressor stage. Each one is 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 F, factory 2.0. A smaller number brings that stage on sooner.",
+   "1st Stage Differential, DIF1 (setting 5), is 0.5, 1.0 or 2.0 F, factory 0.5. Each stage is counted from the one before it, so large first and second stage numbers hold the strips off too.",
+   "Fossil Fuel Backup Heat, AUX HEAT (setting 16), has to be ELEC for strips - that is the factory setting. On GAS the compressor is locked out one minute after a call for aux heat."
+  ],
+  "notes": [
+   "The 8205 installer settings list has no balance point, outdoor lockout or aux heat timer. The stage differential is the only adjustment.",
+   "Strips needed right now: press SYSTEM until EMR HEAT (emergency heat) shows. It runs the backup heat source.",
+   "HEAT ON AUX on the display means the aux stage is running.",
+   "No separate emergency heat relay: land the strips on AUX or E and put a field jumper between the two.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 8205 Universal Smart Wi-Fi Thermostat Installer Manual (8205-100-02); Braeburn 8205 User Manual (8205-110-01)"
+ },
+ "tst-braeburn-8500-bluelink": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "All of this is set on the wireless thermostat, not on the control module. Hold the MENU button for 5 seconds and let go when the first installer setting shows. Change a setting with the arrow buttons. HOLD is NEXT and PROG is BACK. Press FAN (RETURN) to save and exit, or wait 30 seconds. The manual prints no installer code for this menu. These models do have a keypad lock - its code is set in User Settings.",
+   "Check setting 7, System Type (SYSTEM), first. Aux heat needs HP 21 or HP 32. On HP 11 there is no aux stage and the aux settings do not show.",
+   "On HP 21 the strips are the 2nd stage: change setting 9, 2nd Stage Differential (DIF2). Factory 2.0. Choices 1.0, 2.0, 3.0, 4.0, 5.0 or 6.0 (degrees F). The manual says this is the separation between the 1st and 2nd stage, so a smaller number brings the strips on with less temperature drop.",
+   "On HP 32 (two-stage compressor) the strips are stage 3: change setting 10, 3rd Stage Differential (DIF3). Factory 2.0, same choices.",
+   "Setting 14, Fossil Fuel Backup Heat (AUX HEAT) - leave it on ELEC (factory) for electric strips, so the compressor and strips run together. On GAS the compressor is locked out one minute after aux is called.",
+   "Setting 24, Auxiliary Heat Balance Point (BALPOINT AUX) - only shows with a Braeburn outdoor sensor connected. Factory is NO (off). If someone set it (70 down to 40 F), the strips are locked out whenever it is warmer outside than that number. Raise it or set NO.",
+   "Setting 23, Compressor Balance Point (BALPOINT COMP) - also needs the outdoor sensor. Factory NO. Set from 0 to 50 F, it locks the compressor out of heating below that outdoor temperature and only the aux heat runs. It does not hold the strips back. Do not raise it to get the strips on sooner - that shuts the heat pump off and leaves the house on strips alone.",
+   "To run the strips by themselves, press SYSTEM until EMR HEAT (Emergency Heat) shows."
+  ],
+  "notes": [
+   "The manual prints no timer or delay setting for aux heat. The stage differentials and the balance points are all there is.",
+   "Strips never come on: check the W2/AUX wire at the control module. If there is no separate emergency heat relay, the manual says to land on AUX or E and add a field jumper.",
+   "Setting the aux balance point overrides setting 14: on GAS, with the outdoor temperature above the aux balance point, the compressor stays on during an aux call.",
+   "HEAT ON AUX in the display means the aux stage is running.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Braeburn 8500 Universal Wireless Thermostat Kit Installer Guide (8500-100-02); Braeburn 8500 User Manual (8500-110-02)"
+ },
+ "tst-carrier-base-series-tb": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting for this on the Base Series. The only configuration options are 01, 03, 04, 10, 13, 21, 26 and 27 on the programmable models and 01, 03, 04, 10 and 13 on the non-programmable ones. None of them moves the strips.",
+   "What it does on its own (heat pump model - it shows HP at power up): the compressor (Y) comes on first, and the strips (W) are allowed 15 minutes later if the room is still not satisfied. If the room is more than 5 F below the setting, the wait is only 30 seconds.",
+   "Check Option 01, Equipment Type. Hold FAN about 10 seconds to get into configuration mode. For strips behind a heat pump it must read HP (or PH on a PTAC) - a 1 speed heat pump with 1 stage of aux heat. Set to AC or PC the thermostat runs as an air conditioner with one stage of heat. Exit with HOLD/END on the programmable models, or FAN on the non-programmable ones. It also exits after 3 minutes with no button pressed.",
+   "Strips only right now - press H/C until EMHT shows. W is on and Y is off. EMHT only shows on the heat pump models."
+  ],
+  "notes": [
+   "To test without waiting on the timers, press UP and FAN together.",
+   "Strips heat but no air moves: check Option 04. Some aux heaters need the fan (G) signal with W. ON runs G with W. Factory setting is OF.",
+   "The AC models are 1 stage heat, 1 stage cool and cannot stage strips behind a heat pump.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Base Series Programmable Thermostats Installation Instructions (TB-PAC-09SI); Base Series Non-Programmable Thermostat Installation Instructions (TB-NAC01-A / TB-NHP01-A)"
+ },
+ "tst-carrier-comfort-series-nonprog": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Heat pump use needs the HP or 2S model with Option 05 left on HP (the factory setting). The AC model is 1-stage cool, 1-stage heat for AC systems only and has none of this.",
+   "Hold the FAN button down for about 15 seconds, until an option number shows and the SERVICE icon comes on.",
+   "Use the up and down buttons to get to Option 08 (high ambient auxiliary heat lockout). Press MODE once so the SET icon comes on. Use up and down to change it: OF, or 5 through 55 in 5 degree steps. Factory default is OF.",
+   "Option 08 locks out the electric heat whenever it is warmer outside than the number set. Set low, it keeps the strips off on milder days. Raise the number, or set OF, to let them run. It needs the outdoor temperature sensor attached - without one the option is not there.",
+   "Press MODE again, then press FAN to exit. It also exits by itself if no button is pressed for 3 minutes.",
+   "The wait before the strips is not adjustable. A higher stage cannot come on until the stage before it has been on for 15 minutes. That timer is skipped when the room is more than 5 F away from the setpoint.",
+   "For strips right now, press MODE until EHEAT (emergency heat) shows. The compressor is locked out and W comes on with a call for heat. EHEAT always overrides the Option 08 lockout."
+  ],
+  "notes": [
+   "Option 07 (zoning) turns the staging timer off along with the cycle timer and compressor timeguard. The manual says those timers must stay enabled (zoning OF) for normal operation - do not use it as a shortcut.",
+   "E3 flashing with the room temperature means the outdoor sensor cannot be read while Option 08 is in use.",
+   "These option numbers are from the -C install manual (TSTATCCNAC01-C, TSTATCCNHP01-C, TSTATCCN2S01-C). For the older TSTATCCNHP01 without the -C, only the homeowner guide is on file and it prints no option numbers.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Non-Programmable Thermostat TSTATCCN(AC,HP,2S)01-C Installation and Operating Instructions (Form TSTAT-30SI); Comfort Series Thermostat Homeowner's Guide (OMTSTAT-38)"
+ },
+ "tst-carrier-comfort-tc-a": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Hold the FAN key about 10 seconds until only two pairs of digits show. That is configuration mode. UP and DOWN change the flashing pair. MODE switches between the option number and its setting.",
+   "Go to Option 17, Minimum Time Between Equipment Stages. This is how long the heat pump must run before the aux stage can turn on. Choices are 10, 15, 20 or 25 minutes. Factory setting is 15. A shorter time brings the strips on sooner. It is not offered on the AC thermostats.",
+   "Check Option 01, Equipment Type. For strips behind a heat pump it must be HP (1 speed heat pump with 1 stage of aux heat) or H2 (2 speed heat pump with 1 stage of aux heat). Only the HP thermostats offer those two choices.",
+   "Press FAN to exit. It also exits by itself after 3 minutes with no key pressed.",
+   "Strips only right now - press MODE until Em heat shows in the upper left of the display. Press MODE again to go back to heat, cool or auto."
+  ],
+  "notes": [
+   "This series has no outdoor lockout for the strips. The option list has no aux heat lockout and no balance point.",
+   "Option 16, Maximum Cycles Per Hour (2, 4 or 6, factory 4) only limits how often the equipment starts. It is not a strip setting.",
+   "Strips heat but no air moves: Option 04 turns the fan (G) on with W for aux heaters that need a G signal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Comfort Series Programmable and Non-Programmable Thermostats Installation Instructions (TC-PAC / TC-PHP / TC-NAC / TC-NHP -A); Bryant Legacy Line T2 Installation Instructions; Comfort Series Non-Programmable Owner's Manual"
+ },
+ "tst-carrier-cor-5": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the main screen touch and hold MENU for about 5 seconds, until the options menu shows SW01 blinking. This is the dealer options menu.",
+   "Use the Up/Dn arrows to pick the SW number. Touch NEXT to move from the SW number to its setting, then Up/Dn to change it. NEXT moves back to the SW number.",
+   "SW17 - Minimum Time Between Equipment Stages. This is how many minutes the compressor must run on its highest stage before aux heat is allowed. Choices are 10, 15, 20 and 25. Default is 15. A lower number brings the strips on sooner.",
+   "SW08 - Auxiliary Heat Lockout Temperature. Choices are Off, or 5 to 55 F by fives. Default is OFF. When it is warmer outside than the number set, the strips are not allowed (except in emergency heat). Set low, it keeps the strips off on milder days - raise it or set OFF.",
+   "SW08 needs an outdoor temperature sensor, or Wi-Fi with internet weather set up. With neither, the thermostat cannot lock the aux heat out at all.",
+   "Touch DONE (or START) to go back to the home screen.",
+   "For strips right now, touch the HEAT/COOL button until the flame is over aux heat at the top of the screen. That runs on auxiliary heat."
+  ],
+  "notes": [
+   "The stage timer is skipped when the room is more than 5 degrees off setpoint. Stages then come on 60 seconds apart.",
+   "With SW08 set, the strips are still let on if the room falls below 45 F.",
+   "SW43 - Intelligent Heat Staging. Only on a single speed heat pump. Set On when the air handler has two banks of strips so the thermostat stages them in three steps. Factory default is OFF.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Cor 5 / 5C / 7 / 7C Residential Thermostats Advanced Installation and Configuration Instructions (IM-TST-03); Cor 5 / 5C / 7 / 7C Installation Instructions; Cor 5 / 5C Owner's Manual (OG-TSTPHA)"
+ },
+ "tst-carrier-cor-7": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "If the MENU button is not showing, press START. Touch and hold MENU about 5 seconds until the options menu shows SW01 blinking. The Up/Dn arrows move through the choices. NEXT moves from the SW number to its setting and back.",
+   "SW17, Time Between Equipment Stages - the minutes the heat pump must run on its highest compressor stage before it is allowed to go to aux heat. Choices are 10, 15, 20 and 25. Factory setting is 15. A shorter time brings the strips on sooner.",
+   "SW08, Auxiliary Heat Lockout Temperature - the strips are not allowed to run when it is warmer outside than this. Choices are Off, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55. Factory setting is OFF, which lets the strips run whenever there is enough demand. If a number is set and the strips are held off on mild days, raise it or set OFF.",
+   "SW08 needs an outdoor sensor or Wi-Fi internet weather. With neither, the thermostat cannot lock the strips out at all.",
+   "Two banks of strips on a single speed heat pump: SW43, Intelligent Heat Staging, set to On stages the electric heat - smallest bank, then the larger bank, then both. Factory setting is OFF.",
+   "Press DONE or START to leave the setup menu.",
+   "Strips only right now - touch the HEAT/COOL button until a flame shows over aux heat at the top of the screen. The compressor (Y) is locked out and W runs on a call for heat. This mode is not held back by the SW08 lockout."
+  ],
+  "notes": [
+   "Even with SW08 set, the strips are let on if the room falls below 45 F.",
+   "SW09, Heat Pump Lockout Temperature Balance Point, is only offered on Hybrid Heat systems (heat pump with a furnace). It keeps the heat pump off below the set outdoor temperature.",
+   "The manual prints the stage timer between compressor speeds or fan coil stages as fixed at 10 minutes.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Cor 5 / Cor 7 Thermostat Installation Guide; Cor 5 / Cor 7 Advanced Installation and Configuration Instructions; Cor 7 Owner's Manual"
+ },
+ "tst-carrier-cor-wifi-tp-wem01": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the thermostat touch Menu, then touch and hold the Service icon about 10 seconds until the service menu with Installation Settings shows.",
+   "Go to Installation Settings > Thresholds (the manual also prints it as Operating Thresholds) > Auxiliary Heat Configuration. Equipment Setup has to be done first, and only the options that fit the equipment show.",
+   "Auxiliary Heat Temperature Delta - how far the room must be below the setpoint before the strips come on. Factory setting is Auto, which lets Carrier's own logic decide. Choices are 1 F to 10 F or Auto. A smaller number brings the strips on sooner.",
+   "Auxiliary Heat Minimum Delay Time - how long the compressor must run before the strips can come on. Factory setting is 10 minutes. Choices are 10 to 120 minutes. The factory setting is already the shortest.",
+   "Auxiliary Heat Lockout Temperature - the strips are not used when it is warmer outside than this. Factory setting is 70 F. Choices are 5 F to 80 F. Set low, it locks the strips out on milder days - raise it if that is the complaint. It needs an internet connection to work.",
+   "Two-stage strips on W1 and W2: Auxiliary Heat Stage 2 Temperature Delta (factory 3 F, choices 1 F to 10 F or Auto) and Auxiliary Heat Stage 1 Max Runtime (factory Auto, choices 10 to 120 minutes or Auto) set when the second bank joins in. Carrier warns that lowering the delta increases aux heat run time.",
+   "Touch Save to keep each change, then Done to go back to the Home Screen.",
+   "Strips only right now - pick Aux in the Mode drop-down on the Home Screen. It uses only the aux heat to hold the heat setpoint. Aux only shows if aux heat was set up at install."
+  ],
+  "notes": [
+   "Heat pump Lockout Temperature (Installation Settings > Equipment Setup > Heat Pump): below this outdoor temperature the thermostat stops the heat pump and uses only aux heat. Factory setting is Off; it can be set from 5 F to 55 F. It needs an internet connection - with no weather data the thermostat just stages normally.",
+   "Auxiliary Heat During Defrost (factory Enabled) runs the strips while the heat pump defrosts.",
+   "Auxiliary Heat Minimum On Time (factory 5 minutes, 1 to 20 minutes) is how long the strips stay on once started. It does not bring them on sooner.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Cor Thermostat TP-WEM01 Advanced Installation and Configuration Instructions; Cor Thermostat TP-WEM01 Owner's Manual"
+ },
+ "tst-carrier-housewise": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Bryant's Housewise owner's manual and installation instructions print no setting for when aux heat comes on. The owner's manual only says Menu > Settings is where the equipment operating parameters (thresholds, sensors) are set. Look there on the thermostat - the manuals do not list what is inside.",
+   "System settings can only be changed at the thermostat, not in the phone app. If it asks for a 4-digit security code, Access Control is on and the owner has to give you the code.",
+   "For strips right now, touch Mode on the Home Screen (or Menu > System > HVAC Operating Mode) and pick Aux. That heats with the auxiliary heat only.",
+   "If Aux is not in the list, the thermostat was not set up with auxiliary heat at install. Check the strip wire is on the W terminal (W1, and W2 for a second stage) and check the equipment configuration."
+  ],
+  "notes": [
+   "Menu > Alerts > Preferences has an Aux Heat Runtime Alert and an Aux Outdoor Temperature Alert. They only send alerts. They do not change when the strips run.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Bryant Housewise Thermostat T6-WEM01-A Owner's Manual (OM-T6WEM-02); Bryant Housewise Thermostat T6-WEM01-A Installation Instructions (IIT6-WEM-04)"
+ },
+ "tst-carrier-infinity-control-uid": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Open the door and press and hold the ADVANCED button at least ten seconds. The INSTALL/SERVICE menu comes up. Scroll to SETUP and press the right side button.",
+   "In the fan coil setup find Elect Heat Lockout. The electric heat will not run above this outdoor temperature, except for defrost. Factory setting is NONE. It can be set from 5 to 55 F. If a number is set and the strips are being held off, raise it or go back to NONE.",
+   "In the heat pump setup check Lockout Temp. That one locks the heat pump out below the set outdoor temperature, so the strips do the heating. Factory setting is Off; it can be set from 5 to 55 F. It only shows with a fan coil and has to be below any electric heat lockout.",
+   "There is no adjustable timer for the strips. A higher stage waits until the stage before it has been on 10 minutes, and a demand of 5 degrees or more skips that timer.",
+   "Back out with BACK / EXIT at the bottom of the screen. The INSTALL / SERVICE menu also exits by itself after 60 minutes with no button pressed.",
+   "Strips only right now - press and hold the red HEAT button (the installer sheet says 3 seconds, the owner's manual says four). On a heat pump with electric heat the screen gives SYSTEM IN CONTROL, HEAT PUMP ONLY and ELECTRIC HEAT ONLY. Scroll to ELECTRIC HEAT ONLY and press the left side button to save. Do the same and pick SYSTEM IN CONTROL to put it back."
+  ],
+  "notes": [
+   "If the strips never come on, look at that same HEAT button screen first. Left on HEAT PUMP ONLY, only the heat pump is used for heating.",
+   "With a communicating outdoor unit no separate outdoor sensor is needed - the control uses the sensor in the outdoor unit.",
+   "Hybrid Heat (heat pump with a furnace) uses the HYBRID HEAT SETUP screen instead: furnace lockout, heat pump lockout and a heat pump to furnace staging time.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Infinity Control Installation and Start-Up Instructions (UID01-06SI); Infinity Control Owner's Manual (OMUID-3CA); Bryant Evolution Control Installation Instructions"
+ },
+ "tst-carrier-infinity-system-control": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This applies when the system is a heat pump on a fan coil with electric heaters. The control decides the staging itself. The setting a tech can change is the outdoor lockout for the electric heat.",
+   "Touch MENU, then touch and hold the SERVICE icon for at least ten seconds, until the icon turns green.",
+   "Touch SETUP, then touch HEAT SOURCE LOCKOUTS.",
+   "Look at Furnace, Electric Heat or Hydronic Lockout. It can be None or 15 to 55 F. The factory setting is None. The manual only spells out the direction for a hydronic coil: the temperature above which the coil will not operate. Electric heat is on the same setting line, so the strips should follow the same rule. If a number is set and the strips will not come on in milder weather, raise it or set None.",
+   "HP Lockout is on the same screen: None or -20 to 55 F, factory setting None. The manual words it for a hydronic coil - the temperature below which only the coil will operate - so with strips it should shut the heat pump off below that number. Do not raise it just to get more heat. Leave it at None unless the heat pump is meant to stay off in cold weather.",
+   "Touch SAVE. Touch DONE to leave the Service menus.",
+   "To run on strips only for now, try the homeowner menu: touch the HEAT SOURCE icon, pick ELECTRIC ONLY, then SAVE. This comes from the -C control's owner's manual, which describes the screen for Hybrid Heat systems and says the choices depend on the equipment attached, so ELECTRIC ONLY may not show on every job. The factory choice is for the system to control the heat source - put it back when done."
+  ],
+  "notes": [
+   "The -B and -C controls and the Bryant Evolution Connex (SYSTXBBECC01) manuals all print the same lockout screen and the same ranges.",
+   "Defrost with Furnace, Electric Heat or Hydronic is on the same lockout screen: Yes or No, factory setting Yes.",
+   "Geothermal units: the manual says lockout for auxiliary heat is not enabled.",
+   "To prove the strips, use CHECKOUT in the Service menus, then Electric Heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Infinity System Control Installation Instructions (SYSTXCCITC-12SI, also -11SI and -08SI); Bryant Evolution Connex Control SYSTXBBECC01 Installation Instructions; Infinity System Control Owner's Manual (OMSYSTXCCITC-VC-03)"
+ },
+ "tst-carrier-infinity-touch-a": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Touch MENU, then touch and hold the SERVICE icon at least ten seconds to get into the service menus.",
+   "Touch SETUP, then HEAT SOURCE LOCKOUTS.",
+   "Furnace, Electric Heat or Hydronic Lockout - factory setting is None. It can be set from 15 to 55 F. The manual words it for a hot water coil - the temperature above which the coil will not operate - and puts electric heat on the same line. If a number is set and the strips will not come on in milder weather, raise it or set None.",
+   "HP Lockout - factory setting is None. It can be set from -20 to 55 F. The manual words it as the temperature below which only the backup heat (a hot water coil in its example) will operate.",
+   "Touch SAVE after the selections. BACK goes to the previous screen and DONE leaves the service menus."
+  ],
+  "notes": [
+   "The manual prints no timer or temperature-drop setting for when the strips stage on. The lockouts are the only adjustment it gives.",
+   "Defrost with Furnace, Electric Heat or Hydronic is on the same screen - Yes or No, factory Yes.",
+   "Geothermal units: the lockout for auxiliary heat is not enabled.",
+   "The service screens use degrees F only.",
+   "Hybrid Heat systems get a HEATSOURCE icon on the menu screen: the system picks the heat source by default, or choose FURNACE ONLY or HEAT PUMP ONLY, then SAVE. The manual says the choices there match the equipment attached.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Infinity Touch Control Installation Instructions (SYSTXCCITW01-A / SYSTXCCITN01-A); Infinity Touch Control Owner's Manual; Bryant Evolution Connex Control Installation Instructions"
+ },
+ "tst-carrier-infinity-vc": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This applies when the system is a heat pump on a fan coil with electric heaters. The control decides the staging itself. The setting a tech can change is the outdoor lockout for the electric heat.",
+   "Touch MENU, then touch and hold the SERVICE icon for at least ten seconds, until the icon turns green.",
+   "Touch SETUP, then touch HEAT SOURCE LOCKOUTS.",
+   "Look at Furnace, Electric Heat or Hydronic Lockout. It can be None or 15 to 55 F. The factory setting is None. The manual only spells out the direction for a hydronic coil: the temperature above which the coil will not operate. Electric heat is on the same setting line, so the strips should follow the same rule. If a number is set and the strips will not come on in milder weather, raise it or set None.",
+   "HP Lockout is on the same screen: None or -20 to 55 F, factory setting None. The manual words it for a hydronic coil - the temperature below which only the coil will operate - so with strips it should shut the heat pump off below that number. Do not raise it just to get more heat. Leave it at None unless the heat pump is meant to stay off in cold weather.",
+   "Touch SAVE. Touch DONE to leave the Service menus.",
+   "To run on strips only for now, try the homeowner menu: touch the HEAT SOURCE icon, pick ELECTRIC ONLY, then SAVE. The owner's manual describes this screen for Hybrid Heat systems and says the choices depend on the equipment attached, so ELECTRIC ONLY may not show on every job. The factory choice is for the system to control the heat source - put it back when done."
+  ],
+  "notes": [
+   "Defrost with Furnace, Electric Heat or Hydronic is on the same lockout screen: Yes or No, factory setting Yes.",
+   "Geothermal units: the manual says lockout for auxiliary heat is not enabled.",
+   "To prove the strips, use CHECKOUT in the Service menus, then Electric Heat. With self-identifying heaters the manual says three stages can be run in any combination.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Infinity System Control SYSTXCCITC01-C / SYSTXCCWIC01-C Installation Instructions (SYSTXCCITC-VC-03SI); Infinity System Control Owner's Manual (OMSYSTXCCITC-VC-03)"
+ },
+ "tst-carrier-performance-edge-achp": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the HP models (TP-PHP, TP-NHP) can be set up as a heat pump. Their Option 01 range is HP, AC, H, C, H2, A2. The AC models (TP-PAC, TP-NAC) only offer AC, H, C.",
+   "Press and hold the FAN button for about 10 sec to get into configuration mode.",
+   "The option number shows where the heat setpoint normally is. Its setting shows where the cool setpoint normally is. MODE moves between the two. UP and DOWN change the one picked.",
+   "Option 17 - Time Between Equipment Stages. This is how many minutes the compressor must run on its highest stage before aux heat is allowed. Choices are 10, 15, 20 and 25. Default is 15. A lower number brings the strips on sooner.",
+   "Option 08 - Auxiliary Heat Lockout Temperature. Choices are Off, or 5 to 55 F by fives. Default is OF (off). When it is warmer outside than the number set, the strips are not allowed (except in Emergency Heat). Set low, it keeps the strips off on milder days - raise it or set OF. It needs an outdoor temperature sensor; the option is not there without one.",
+   "Press DONE (or FAN) to exit. Changes are saved as they are made. It also exits by itself if no button is pressed for 3 minutes.",
+   "For strips right now, press MODE to Em heat. All Y signals are locked out and W comes on with a call for heat."
+  ],
+  "notes": [
+   "The stage timer is skipped when the room is more than 5 degrees off setpoint. Stages then come on 60 seconds apart.",
+   "With Option 08 set, the strips are still let on if the room falls below 45 F.",
+   "Option 44 - Super Comfort Heat. Only on heat pump setups with Option 41 (variable speed blower) On and an outdoor sensor. When On, below 12 F outdoors with enough demand the W/W1 output is energized. Default is OF.",
+   "The Bryant Preferred T6-PAC / T6-PHP manual prints the same Option 08 and Option 17 choices and defaults.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Performance Series AC/HP Thermostat TP-PAC01-A / TP-PHP01-A / TP-NAC01-A / TP-NHP01-A Installation Instructions (TP-PACA-02SI); Bryant Preferred Series T6-PAC Installation Instructions; Performance Series Programmable Thermostat Owner's Manual (OM-TPPACA-02)"
+ },
+ "tst-carrier-performance-edge-thermidistat": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press and hold the FAN button for about 10 sec to get into configuration mode.",
+   "The option number shows where the heat setpoint normally is, and its setting shows beside it. MODE moves between the two. UP and DOWN change the one picked.",
+   "Option 17 - Time Between Equipment Stages. This is how many minutes the compressor must run on its highest stage before aux heat is allowed. Choices are 10, 15, 20 and 25. Default is 15. A lower number brings the strips on sooner.",
+   "Option 08 - Auxiliary Heat Lockout Temperature. Choices are Off, or 5 to 55 F by fives. Default is OF (off). When it is warmer outside than the number set, the strips are not allowed (except in Emergency Heat). Set low, it keeps the strips off on milder days - raise it or set OF. It needs an outdoor temperature sensor.",
+   "Option 43 - Intelligent Heat Staging. Only on a single speed heat pump (Option 01 = HP). Set On when the air handler has two banks of strips: the thermostat then stages them in three steps, small bank, large bank, then both. Factory default is OF.",
+   "Press DONE to exit. It also exits by itself if no button is pressed for 3 minutes.",
+   "For strips right now, press MODE to emergency heat. All Y signals are locked out and W comes on with a call for heat."
+  ],
+  "notes": [
+   "The stage timer is skipped when the room is more than 5 degrees off setpoint. Stages then come on 60 seconds apart.",
+   "Option 09 (Heat Pump Lockout Temperature Balance Point) is only for Hybrid Heat systems with a furnace. It does not apply to a fan coil with strips.",
+   "Option 44 - Super Comfort Heat. Needs Option 41 (variable speed blower) On and an outdoor sensor. When On, below 12 F outdoors with enough demand the W/W1 output is energized. Default is OF.",
+   "Both -B Thermidistat manuals (TP-PRHB-01SI and -02SI) and the Bryant T6-PRH manual print the same Option 08, 17 and 43. No -A install manual was on file, so on a TP-PRH01-A or TP-NRH01-A check what the option shows before changing it.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Performance Series Edge Thermidistat Control TP-PRH01-B / TP-NRH01-B Installation Instructions (TP-PRHB-02SI and -01SI); Bryant Preferred Series T6-PRH Thermidistat Installation Instructions"
+ },
+ "tst-carrier-smart-thermostat-ewf": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this thermostat's own buttons for when the strips come on. The install manual prints none. Setup at the wall only picks F or C, the system type, the stages and the reversing valve.",
+   "Check the system type first. The strips only run if it was set up as a heat pump with aux: system type L2 with stage code 11 (1 Stage with Aux), 12 (1 Stage with 2 Stage Aux) or 21 (2 Stage with Aux).",
+   "Check the strip wire. Aux stage 1 goes on W1/A1. A second strip stage goes on Y2/A2.",
+   "Prove the strips work. Hold the Mode key for 10 seconds - the display shows S0 (Output Test Mode). Use Up and Down to pick A1 (aux stage 1) or A2 (aux stage 2) and press Fan to start it. The test runs for 20 min at most. Pick S0 to stop.",
+   "The manual says the Carrier Service Technician App (Connect to Equipment, then Smart Thermostat) does the full setup, including HVAC configuration and advanced settings. It does not list what those advanced settings are, so look in the app for any staging or lockout choice."
+  ],
+  "notes": [
+   "The E* icon at the lower left of the display means aux heat is running.",
+   "The install manual does not show an Emergency Heat mode to pick on this model.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Carrier Smart Thermostat TSTATCCEWF-01 Installation Instructions (TSTATCCEWF-02SI)"
+ },
+ "tst-carrier-smart-thermostat-intelisense": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "These settings are made in the Carrier Service Technician App, not on the thermostat buttons. Open the app, sign in or pick Continue As Guest, pick Connect to Equipment, then Smart Thermostat. To finish pairing, touch the fan button on the thermostat when the app says to.",
+   "When the app offers Factory Settings or Custom Settings, pick Custom Settings. That opens the Advanced Settings.",
+   "Stage Settings - this is the temperature difference between the setpoint and the room temperature that brings each stage of heat on. A smaller difference for the aux stage brings the strips on sooner. The guide prints no numbers and no default for it.",
+   "Lockout Settings - this picks an outdoor temperature above which, or below which, equipment is kept from running. If aux heat is locked out above an outdoor temperature, the strips will not help on days warmer than that. Move that temperature up, or take the lockout off, if the strips are needed.",
+   "When the Advanced Settings are done, pick Test and run every stage including AUX heat. Then pick Return to System Summary and check the choices are right."
+  ],
+  "notes": [
+   "Carrier's own note in this guide: unless local code requires otherwise, it recommends using the default settings.",
+   "The guide does not say where the outdoor temperature for Lockout Settings comes from.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TSTATCCIEWF-01 Thermostat Set-up with Service Technician App Including Advanced Settings (TSTATCCIEWF-01SA)"
+ },
+ "tst-carrier-thermidistat-legacy": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The setting that matters is Option 8, Auxiliary Heat Lockout. With a number set, the strips cannot run when it is warmer outside than that number. It is only offered when DIP switch 1 is ON (heat pump).",
+   "Hold the FAN button about 10 seconds until the small COOL set point display flashes 01. That is configuration mode.",
+   "Use the up and down buttons to bring the small flashing number to 08. Press SET TIME/TEMP once so the large display flashes.",
+   "The choices are OF, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50 or 55. Factory setting is OF, which allows the strips at any outdoor temperature. If a number is set and the strips are being held off, raise it or set OF.",
+   "Press END to leave configuration mode. It also leaves by itself after 3 minutes with no button pressed.",
+   "There is no setting for how long the heat pump runs before the strips. The staging timer is fixed: a higher stage waits until the stage before it has been on 15 minutes. The timer is skipped when the room is more than 5 F off the setting.",
+   "Strips only right now - press MODE until EHEAT shows. All compressor (Y) calls are locked out and W runs on a call for heat. EHEAT also overrides the Option 8 lockout."
+  ],
+  "notes": [
+   "Dual fuel jobs (Option 10 ON): Option 8 holds off the furnace instead of strips, and Option 11, Balance Point, keeps the heat pump off below its setting. Option 8 can only be equal to or above Option 11.",
+   "E3 on the display means the control cannot read the outdoor temperature and needs it. Check the outdoor sensor and its wiring at S1 and S2.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Thermidistat Control Installation, Start-Up, and Operating Instructions (TSTAT-19SI); TSTATCCPRH Thermidistat Control Low Voltage Wiring Diagrams (TSTAT-3W); Programmable Thermidistat Control Homeowner's Guide (OMTSTAT-10)"
+ },
+ "tst-carrier-tstatccpac01": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "TSTATCCPAC01 is the AC model of this thermostat - 1 stage cool, 1 stage heat, for AC systems only. It cannot run a heat pump with strip heat, so there is no aux heat setting on it."
+  ],
+  "notes": [
+   "The two letters after TSTATCCP give the model: AC, HP or 2S. They are also printed on the circuit board. If the one on the wall is an HP or 2S model set up as a heat pump, it does have a strip lockout: High Ambient Electric Heat Lockout. It needs the outdoor sensor and the factory setting is OFF. Hold FAN about 10 seconds for configuration mode, press COPY PREVIOUS DAY, and make sure it reads OF or a number high enough for the strips to run.",
+   "A heat pump with strips needs the HP or 2S model, or another heat pump thermostat."
+  ],
+  "source": "Programmable Thermostats Installation, Start-Up, and Operating Instructions (TSTAT-7SI); Programmable Thermostat Homeowner's Guide (OMTSTAT-7)"
+ },
+ "tst-daikin-brc1e73-navigation": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting on this controller. The BRC1E73 is a wired remote controller for a Daikin indoor unit - it connects to the indoor unit on P1 and P2 and has no W, Aux or E terminal.",
+   "The manuals print nothing about auxiliary heat lockout, staging or an Emergency Heat mode.",
+   "If the indoor unit has an optional electric heater, it is controlled by the indoor unit. Daikin says installing an optional accessory may need field setting changes and to see the accessory manual and the indoor unit installation manual.",
+   "To get to field settings: hold the Cancel button for 4 seconds or longer, pick Field Settings in the Service Settings menu and press Menu/OK. The service manual's maintenance menu also shows Electric heater ON/OFF as a status line for the indoor unit."
+  ],
+  "notes": [
+   "A unit that cannot keep up here is a ductless / VRV style heat pump problem, not a thermostat staging problem.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin BRC1E73 Installation Manual; Daikin BRC1E73 Service Manual (SiUS721424EB)"
+ },
+ "tst-daikin-brc1h71w-madoka": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting on this controller. The BRC1H71W is a wired remote controller for a Daikin indoor unit - it connects to the indoor unit on P1 and P2 and has no W, Aux or E terminal.",
+   "The manual prints nothing about auxiliary heat, backup heat or emergency heat, and no Emergency Heat mode. The Backup icon in the operation handbook means backup operation of the indoor units, not backup heat.",
+   "If the indoor unit has an optional electric heater, it is controlled by the indoor unit. Daikin says to look in the installation manual of the indoor unit and of the optional accessory for the field settings.",
+   "To see what field settings the indoor unit offers, go into the installer menu and pick Field Setting. Settings the connected indoor unit does not have are not shown."
+  ],
+  "notes": [
+   "A unit that cannot keep up here is a ductless / VRV style heat pump problem, not a thermostat staging problem.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin BRC1H71W Installation Manual; Daikin BRC1H71W Operation Handbook"
+ },
+ "tst-daikin-dt4272-dt4273": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, then Settings, then Installation Settings. The manual prints no installer code for it. The heat pump items only show when the dip switches on the back are set to HP and ELEC.",
+   "Heat & Cool Stages - check Aux Heat Stages. It can be 0 to 2. Set at 0, the thermostat has no strip stage to bring on.",
+   "Heat Pump Settings - look at Aux Heat Lockout. When it is ENABLED the strips will not run when it is warmer outside than Aux Heat Lockout Temp (shown in the manual at 65 F, range 0 to 75 F). If the strips are being held off, raise the temperature or set the lockout to DISABLED.",
+   "Timers & Deadbands - the strips are the heat stage after the compressor. With one compressor stage that is 2nd stage. 2nd Stage Deadband is the number of degrees past 1st stage before 2nd stage turns on (shown at 2, range 0 to 10 F). A smaller number brings the strips on sooner.",
+   "2nd Stage Timer is the minutes past 1st stage before 2nd stage turns on (shown at 2 minutes, range 0 to 60). A shorter time brings the strips on sooner. The 2nd stage deadband must also be met, so set both.",
+   "Two-stage heat pump or two strip stages - do the same on 3rd Stage and 4th Stage. The manual says they have the same adjustable steps as 2nd stage.",
+   "Need strips only right now - press MENU, then Emergency Heat. The thermostat runs the fan and the aux stages and leaves the compressor off. Press the Emergency Heat button again to go back."
+  ],
+  "notes": [
+   "Heat Pump Lockout is on the same screen. When it is ENABLED the heat pump will not run below HP Lockout Outdoor Temp (shown at 65 F, range 20 to 75 F) and the strips carry the house below that.",
+   "Both lockouts work from outdoor temperature. The manual lists a wired sensor that can be set up as the outdoor sensor.",
+   "Applies to DT4272, DT4273 and DT4273C. The settings pages read the same in each manual.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin DT4272 TouchScreen Owner's Manual & Installation Instructions; Daikin DT4273 TouchScreen Owner's Manual & Installation Instructions; Daikin DT4273C TouchScreen manual"
+ },
+ "tst-daikin-one-lite": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The One Lite runs Daikin ductless (S21) indoor units, so there are no strips in an air handler. Its aux heat is a separate heater switched by the Aux / Aux C dry contact through a field relay. Daikin says aux heat is for heat pump systems only.",
+   "Hold MODE and FAN together for 5 seconds to open SETUP. MODE moves to the next step, up and down change the value.",
+   "Step 15 AUX HEAT has to be on, and step 16 SECOND/PRIMARY decides if the aux is the second or the main heat. The steps below are the ones listed for aux heat as secondary.",
+   "Step 19 ENABLE AUX HEAT LOCKOUT (OFF, ON) and step 20 AUX HEAT LOCKOUT TEMP (-10 F to 75 F in 5 F steps). Daikin's sheet does not print which side is locked out. Read as the usual aux lockout (aux held off when it is warmer outside than the setting), turning step 19 OFF or raising step 20 should let the aux run on milder days.",
+   "Step 21 T ON (-7 F to -3 F in 1 F steps) and step 22 T OFF (-4 F to 1 F in 1 F steps) set the temperature swing that turns the aux on and off. For T ON, -3 is the smallest drop, so it brings the aux on soonest.",
+   "Steps 17 and 18 are ENABLE HEAT PUMP LOCKOUT and HEAT PUMP LOCKOUT TEMP (-20 F to 65 F in 5 F steps). Below that outdoor temperature the heat pump is held off and the aux does the heating.",
+   "Need aux only right now - press MODE until it shows EMERGENCY HEAT."
+  ],
+  "notes": [
+   "The same settings can be changed from the SkyportCare app: edit the thermostat profile and tap Send to Thermostat.",
+   "The aux terminals have to be selected in the installer app before any of this works.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin One Lite Local Thermostat Menu Outline, mini-splits, v3.2.12 software; Daikin One Lite Installation & Commissioning (TRC-11)"
+ },
+ "tst-daikin-one-plus": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get back into the installer screens: tap the settings menu icon at the top left of the main screen, scroll to the bottom and pick dealer edit, then continue and enter the 4-digit PIN. Daikin's training guide says the code shows when you press the information icon at the top right of that screen.",
+   "Strips in the communicating air handler (heater kit) - go to equipment setup > heat pump > heat pump settings > aux heat lockout temp. The strips will not run when it is warmer outside than this. Range -10 F to 75 F in 5 F steps, default 50 F. It has to be at least 10 F above the heat pump lockout. Raise it if the strips are being held off on mild days.",
+   "Same screen - heat pump lockout temp. The compressor will not run when it is colder outside than this, so the strips carry the house below it. Daikin prints the range two ways: -20 F to 65 F in 5 F steps, default 15 F (Reference Guide), and -40 F to 65 F in 5 F steps with -5 F beside it (v3.9 menu outline). Go by what the thermostat shows.",
+   "There is no droop or timer to set for a heater kit. Daikin says that between the two lockout temperatures backup heat is called right away when the room is more than 4 F under the heat set-point. Otherwise the thermostat waits and only calls for it when the temperature is not rising in a reasonable time.",
+   "Aux heat wired to the thermostat's own Aux 1 or Aux 2 dry contact (set up under equipment setup > add equipment > aux heat source) has its own settings. Open its control section. It has its own aux heat lockout, -10 F to 75 F, default 50 F.",
+   "On that same aux heat source you can switch to T on / T off control. T on is how far under the heat setpoint the room gets before aux is called: -7 F to -3 F, default -3 F. -3 is the soonest it can be set. T off is -4 F to 1 F, default 1 F.",
+   "Need strips only right now - tap the system mode and pick emergency heat. It shows on heat pump systems and turns the aux heat on directly."
+  ],
+  "notes": [
+   "Both lockouts work from the outdoor temperature reported by the outdoor unit. No extra sensor is needed.",
+   "The v3.9 menu outline calls the heater kit setting supplemental heat lockout and says it only shows on systems with a heat pump and a heater kit.",
+   "Dual fuel (heat pump with a gas furnace) uses a balance point instead of these lockouts.",
+   "Daikin's Reference Guide prints the T on range one way (-7 F to 3 F, default 3 F) and the aux heater setup sheet and training guide another (-7 F to -3 F, default -3 F).",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin One+ Smart Thermostat Reference Guide for Unitary Equipment (PM-ONE-ST1); Daikin One+ Unitary Aux Heater Installation and Setup Instructions; Daikin One+ Installation & Commissioning (TRC-3); Daikin One+ and Touch Commissioning Menu Outline for Unitary Equipment, v3.9 software"
+ },
+ "tst-daikin-one-touch": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get back into the installer screens through dealer edit. Tap continue, press the information icon in the top right corner to see the installer code, close it with the X, type the code in and press unlock thermostat.",
+   "Strips in the communicating air handler (heater kit) - in equipment setup open the heat pump and go to Heat Pump Settings. The setting is supplemental heat lockout. Range -10 F to 75 F in 5 F steps, shown in the menu outline at 50 F. It only shows on a system with a heat pump and a heater kit. The Daikin One+ guide for the same menu says the strips will not run when it is warmer outside than this - raise it if the strips are being held off on mild days.",
+   "Same screen - heat pump lockout temp. Below it the compressor stays off and the strips carry the house.",
+   "Aux heat wired to the thermostat's own Aux dry contact (equipment setup > add equipment > aux heat source) has its own control section with lockouts. Its aux heat lockout is -10 F to 75 F in 5 F steps, default 50 F. Its heat pump lockout is printed two ways: -20 F to 65 F, default 15 F, in the installation guide, and -40 F to 65 F in 5 F steps with -5 F beside it in the v3.9 menu outline. Go by what the thermostat shows.",
+   "On that same aux heat source you can use T on / T off. T on is how far under the heat setpoint the room gets before aux is called: -7 F to -3 F, default -3 F. -3 is the soonest it can be set. T off is -4 F to 1 F, default 1 F.",
+   "Need strips only right now - tap the system mode icon and pick Emergency heat (heat pump only)."
+  ],
+  "notes": [
+   "The menu outline says the heat pump lockout must be at least 10 F under the aux heat lockout.",
+   "Dual fuel (heat pump with a gas furnace) shows balance point instead, only on dual-fuel systems.",
+   "The One Touch documents print no droop or upstage timer for a heater kit.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin One Touch Installation Guide (TRC-10); Daikin One+ and Touch Commissioning Menu Outline for Unitary Equipment, v3.9 software; Daikin One+ Smart Thermostat Reference Guide for Unitary Equipment (PM-ONE-ST1)"
+ },
+ "tst-daikin-premium-mini-d2270": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Hold MODE and FAN together for 5 seconds. Let go when the display shows Setup. WARMER or COOLER changes the value, MODE moves to the next step. Press MODE and FAN together again to leave.",
+   "Step 18 - 2nd Stage Deadband. This is the extra temperature drop after 1st stage is on before 2nd stage turns on. Range 0 to 10 degrees, factory 2. A smaller number brings the strips on sooner.",
+   "Step 19 - Minutes Between 1st and 2nd Stage. The shortest time 1st stage has to run before 2nd stage can turn on. Range 0 to 60 minutes, factory 2. A shorter time brings the strips on sooner. Both the time and the deadband have to be met.",
+   "D2270C (commercial) - the buttons and numbers change. Hold MODE and OVERRIDE for 5 seconds to get in. 2nd Stage Deadband is step 19 and Minutes Between 1st and 2nd Stage is step 20. Emergency heat is OVERRIDE and UP for two seconds.",
+   "Need strips only right now - hold FAN and press UP for two seconds until the display reads EM HEAT. The thermostat runs the fan and the strips and the heat pump is off. Do the same again to leave. Only OFF and HEAT modes work while it is on."
+  ],
+  "notes": [
+   "This thermostat has two heat stages only. On a single-stage heat pump the strips are the 2nd stage. On the two-stage heat pump wiring diagram the manual says aux heat turns on with the second stage of heat pump heating.",
+   "The manual prints no outdoor lockout for the strips and no balance point on this model.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin D2270 Premium Mini Owner's Manual & Installation Instructions; Daikin D2270C Premium Mini Owner's Manual & Installation Instructions"
+ },
+ "tst-daikin-premium-series": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This card covers five thermostats and the step numbers are different on each. Check the model on the thermostat first.",
+   "Getting in is the same on all of them: press SETUP, then MODE. WARMER or COOLER changes the value, MODE moves to the next step, SETUP again leaves setup.",
+   "The strips are staged by deadband and time. The manual calls the strips 2nd stage on a heat pump, and on a two-stage heat pump the 4th stage is the final stage of strip heat. Each stage deadband is 0 to 10 degrees (factory 2) and each minutes-between-stages timer is 0 to 60 minutes (factory 2). A smaller deadband and a shorter time bring the strips on sooner.",
+   "D4272 step numbers: 28, 29 and 30 are the 2nd, 3rd and 4th Stage Deadband. 31, 32 and 33 are the minutes between stages. Step 26 is Number of Aux Stages (0, 1 or 2, factory 0) - at 0 there is no strip stage.",
+   "D4273 step numbers: 33, 34 and 35 are the stage deadbands. 36, 37 and 38 are the minutes between stages. Step 31 is Number of Aux Stages.",
+   "D4271C step numbers: 29, 30 and 31 are the stage deadbands. 32, 33 and 34 are the minutes between stages. Step 27 is Number of Aux Stages.",
+   "D4272C step numbers: 34, 35 and 36 are the stage deadbands. 37, 38 and 39 are the minutes between stages. Step 32 is Number of Aux Stages.",
+   "D4273 only - aux heat lockout. Step 58 Lockout Aux Heat With Outdoor Temp (On or Off, factory Off). Step 59 Aux Heat Lockout Temp, 20 to 75 F (the setup table shows 75). With step 58 On, the strips are locked out when it is warmer outside than step 59. Turn step 58 Off or raise step 59 if the strips are being held off. It needs a local outdoor sensor, and it cannot be set lower than 5 degrees above the heat pump lockout.",
+   "D2111 has no stage deadband or timer steps - only the 1st Stage Deadband (step 23). Step 22 is Number of Aux Stages. Check that it is not 0.",
+   "Need strips only right now - press the EMERGCY HEAT button. The thermostat runs the fan and the aux stages and leaves the compressor off. Press it again to go back."
+  ],
+  "notes": [
+   "D4273 also has a heat pump lockout: step 56 On or Off (factory Off), step 57 the temperature. The page heading prints 10 to 45, the text and the setup table print 0 to 75 F in five degree steps, table value 35. Below it the heat pump stays off and the strips carry the house. It needs a local outdoor sensor.",
+   "The lockout steps only show when the jumpers are set for Heat Pump and Electric Heat.",
+   "The manuals print no aux heat lockout for the D4272, D4271C, D4272C or D2111.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin D4272 Owner's Manual & Installation Instructions; Daikin D4273 Owner's Manual & Installation Instructions; Daikin D4271C Owner's Manual & Installation Instructions; Daikin D4272C Owner's Manual & Installation Instructions; Daikin D2111 Owner's Manual & Installation Instructions"
+ },
+ "tst-daikin-value-series": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the heat pump models have strip control: TSTATD2100-2 and TSTATD2152-2. The TSTATD1100-2 manual says that thermostat has no auxiliary or emergency heat.",
+   "Check the AUX HEAT slide switch first. Normal lets the strips run along with the heat pump when needed. Lockout means the strips never come on, whatever the demand. Emergency shuts the compressor off and heats on the strips only.",
+   "The strips are the 2nd stage of heat. They come on when the room is at or below the setpoint minus the 1st stage deadband minus the 2nd stage deadband. The 2nd stage deadband is two degrees and cannot be changed on either model.",
+   "TSTATD2152-2 - the 1st stage deadband can be set from 1 to 6 degrees. A smaller number brings the heat pump and the strips on sooner. Slide the Program Switch to SET. When the clock is flashing, hold NEXT for 5 seconds. Press NEXT to reach the deadband screen and use the up and down buttons. Slide the Program Switch to OFF or RUN to exit.",
+   "TSTATD2100-2 - nothing to adjust. The manual prints both deadbands as non-adjustable. All you can do is make sure the switch is on Normal, or use Emergency."
+  ],
+  "notes": [
+   "There is no outdoor lockout, timer or balance point on these thermostats.",
+   "With the switch on Emergency the compressor is also locked out in cooling. Put it back on Normal before you leave.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Daikin TSTATD2152-2 Owner's Manual; Daikin TSTATD2100-2 Owner's Manual and Installation Instructions; Daikin TSTATD1100-2 Owner's Manual and Installation Instructions"
+ },
+ "tst-goodman-comfortnet-ctk04": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, scroll down and press INSTALLER OPTIONS. The password is the date code - it is printed on the back of the thermostat, or look under MENU > EQUIPMENT STATUS. Then press VIEW/EDIT CURRENT SETUP to change one item.",
+   "Temperature Control Options (ISU 3010) - Basic shows the three that matter here: Backup Heat Differential, Backup Heat Upstage Timer and Outdoor Temperature Lockouts.",
+   "Backup Heat Differential (ISU 3090) - set to Comfort, the thermostat uses the strips as needed to hold the room within 1 F of the setpoint. That is the soonest setting. Set to 2 F or higher, the strips stay off until the room drops that far or the upstage timer runs out, whichever comes first. A higher number means less strip heat.",
+   "Backup Heat Upstage Timer (ISU 3110) - it starts when the highest heat pump stage turns on. A shorter time brings the strips on sooner.",
+   "Outdoor Backup Heat Lockout (ISU 3120) - optional. If one is set, it is heat pump only when it is warmer outside than that temperature. Raise it or turn it off if the strips are being held off on mild days.",
+   "Need strips only right now - press SYSTEM and pick Emergency Heat. The thermostat runs the auxiliary heat and the compressor is not used."
+  ],
+  "notes": [
+   "Outdoor Compressor Lockout is under the same ISU 3120. Below that outdoor temperature it is backup heat only.",
+   "With electric backup heat the heat pump stays on when the strips come on.",
+   "After a setpoint change or a programmed recovery the thermostat holds the strips back while the heat pump is making progress. If the strips were needed in the last 2 hours it may bring them on earlier.",
+   "The CTK04 installation guide prints no ranges or factory values for these settings.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortNet CTK04 Communicating Thermostat System Installation Guide (I/O-CHTSTAT03, 69-2688-07); ComfortNet CTK04 Operating Manual (HID-350, 69-2687EFS-03)"
+ },
+ "tst-goodman-gtst": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with an electric heater kit in the communicating air handler. The lockout steps only show on that kind of system.",
+   "Hold MODE and FAN together for 5 seconds to open the setup steps. MODE moves to the next step, the up and down buttons change the value. Goodman says equipment setup starts at step 11 and is for the dealer.",
+   "Step 12 HEATER KIT - make sure the kit is turned on or the right size is picked. Without it the lockout steps do not show.",
+   "Step 14 AUX HEAT LOCKOUT - the outdoor temperature limit for the strips. Range -10 F to 75 F in 5 F steps. Goodman does not print which side is locked out. Read as the usual aux lockout (strips held off when it is warmer outside than the setting), moving it warmer should let the strips run on milder days.",
+   "Step 13 HEAT PUMP LOCKOUT - the outdoor temperature limit for the heat pump. Range -20 F to 65 F in 5 F steps. Below it the strips do the heating.",
+   "Need strips only right now - press MODE until it shows EMERGENCY HEAT.",
+   "When you reach the end of the setup steps the thermostat goes back to the main screen. It also drops out by itself after 2 minutes with no button pressed."
+  ],
+  "notes": [
+   "Goodman prints no droop, timer or stage setting for the strips on this thermostat - the two lockouts are all there is.",
+   "A heat pump with a gas furnace shows step 15 BALANCE POINT instead of steps 13 and 14.",
+   "A separate aux heater wired to the Aux / Aux C dry contact is set up in the SkyportCare app profile: select CONNECTED under AUX Heat Source, then send it to the thermostat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Goodman GTST Local Thermostat Settings for Unitary (menu outline); Goodman GTST Connected Thermostat Operational Guide; Goodman GTST Connected Thermostat Auxiliary Heating Wiring Diagram & Instructions"
+ },
+ "tst-goodman-premium-g4272-g4273": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This card covers three thermostats and the step numbers are different on each. Check the model on the thermostat first.",
+   "Getting in is the same on all of them: press SETUP, then MODE. WARMER or COOLER changes the value, MODE moves to the next step, SETUP again leaves setup.",
+   "The strips are staged by deadband and time. The manual calls the strips 2nd stage on a heat pump, and on a two-stage heat pump the 4th stage is the final stage of strip heat. Each stage deadband is 0 to 10 degrees (factory 2) and each minutes-between-stages timer is 0 to 60 minutes (factory 2). A smaller deadband and a shorter time bring the strips on sooner.",
+   "G4272 step numbers: 28, 29 and 30 are the 2nd, 3rd and 4th Stage Deadband. 31, 32 and 33 are the minutes between stages. Step 26 is Number of Aux Stages (0, 1 or 2, factory 0) - at 0 there is no strip stage.",
+   "G4273 step numbers: 33, 34 and 35 are the stage deadbands. 36, 37 and 38 are the minutes between stages. Step 31 is Number of Aux Stages.",
+   "G4273 only - aux heat lockout. Step 58 Lockout Aux Heat With Outdoor Temp (On or Off, factory Off). Step 59 Aux Heat Lockout Temp, 20 to 75 F (the setup table shows 75). With step 58 On, the strips are locked out when it is warmer outside than step 59. Turn step 58 Off or raise step 59 if the strips are being held off. It needs a local outdoor sensor, and it cannot be set lower than 5 degrees above the heat pump lockout.",
+   "G2111 has no stage deadband or timer steps - only the 1st Stage Deadband (step 23). Step 22 is Number of Aux Stages. Check that it is not 0.",
+   "Need strips only right now - press the EMERGCY HEAT button. The thermostat runs the fan and the aux stages and leaves the compressor off. Press it again to go back."
+  ],
+  "notes": [
+   "G4273 also has a heat pump lockout: step 56 On or Off (factory Off), step 57 the temperature. The page heading prints 10 to 45, the text and the setup table print 0 to 75 F in five degree steps, table value 35. Below it the heat pump stays off and the strips carry the house. It needs a local outdoor sensor.",
+   "The lockout steps only show when the jumpers are set for Heat Pump and Electric Heat.",
+   "The manuals print no aux heat lockout for the G4272 or G2111.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Goodman G4272 Owner's Manual & Installation Instructions; Goodman G4273 Owner's Manual & Installation Instructions; Goodman G2111 Owner's Manual & Installation Instructions"
+ },
+ "tst-goodman-premium-mini-g2270": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Hold MODE and FAN together for 5 seconds. Let go when the display shows Setup. WARMER or COOLER changes the value, MODE moves to the next step. Press MODE and FAN together again to leave.",
+   "Step 18 - 2nd Stage Deadband. This is the extra temperature drop after 1st stage is on before 2nd stage turns on. Range 0 to 10 degrees, factory 2. A smaller number brings the strips on sooner.",
+   "Step 19 - Minutes Between 1st and 2nd Stage. The shortest time 1st stage has to run before 2nd stage can turn on. Range 0 to 60 minutes, factory 2. A shorter time brings the strips on sooner. Both the time and the deadband have to be met.",
+   "Need strips only right now - hold FAN and press UP for two seconds until the display reads EM HEAT. The thermostat runs the fan and the strips and the heat pump is off. Do the same again to leave. Only OFF and HEAT modes work while it is on."
+  ],
+  "notes": [
+   "This thermostat has two heat stages only. On a single-stage heat pump the strips are the 2nd stage. On the two-stage heat pump wiring diagram the manual says aux heat turns on with the second stage of heat pump heating.",
+   "The manual prints no outdoor lockout for the strips and no balance point on this model.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Goodman G2270 Premium Mini Owner's Manual & Installation Instructions"
+ },
+ "tst-goodman-prostat-plus": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, then Settings, then Installation Settings. The manual prints no installer code for it. The heat pump items only show when the dip switches on the back are set to HP and ELEC.",
+   "Heat & Cool Stages - check Aux Heat Stages. It can be 0 to 2. Set at 0, the thermostat has no strip stage to bring on.",
+   "Heat Pump Settings - look at Aux Heat Lockout. When it is ENABLED the strips will not run when it is warmer outside than Aux Heat Lockout Temp (shown in the manual at 65 F, range 0 to 75 F). If the strips are being held off, raise the temperature or set the lockout to DISABLED.",
+   "Timers & Deadbands - the strips are the heat stage after the compressor. With one compressor stage that is 2nd stage. 2nd Stage Deadband is the number of degrees past 1st stage before 2nd stage turns on (shown at 2, range 0 to 10 F). A smaller number brings the strips on sooner.",
+   "2nd Stage Timer is the minutes past 1st stage before 2nd stage turns on (shown at 2 minutes, range 0 to 60). A shorter time brings the strips on sooner. The 2nd stage deadband must also be met, so set both.",
+   "Two-stage heat pump or two strip stages - do the same on 3rd Stage and 4th Stage. The manual says they have the same adjustable steps as 2nd stage.",
+   "Need strips only right now - press MENU, then Emergency Heat. The thermostat runs the fan and the aux stages and leaves the compressor off. Press the Emergency Heat button again to go back."
+  ],
+  "notes": [
+   "Heat Pump Lockout is on the same screen. When it is ENABLED the heat pump will not run below HP Lockout Outdoor Temp (shown at 65 F, range 20 to 75 F) and the strips carry the house below that.",
+   "Both lockouts work from outdoor temperature. The manual lists a wired sensor that can be set up as the outdoor sensor.",
+   "Applies to PSP4272RT and PSP4273RT (one manual covers both). The settings pages read the same in each manual.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ProStat+ PSP4272RT / PSP4273RT TouchScreen Manual & Installer Guide"
+ },
+ "tst-goodman-touchscreen-gt4272-gt4273": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, then Settings, then Installation Settings. The manual prints no installer code for it. The heat pump items only show when the dip switches on the back are set to HP and ELEC.",
+   "Heat & Cool Stages - check Aux Heat Stages. It can be 0 to 2. Set at 0, the thermostat has no strip stage to bring on.",
+   "Heat Pump Settings - look at Aux Heat Lockout. When it is ENABLED the strips will not run when it is warmer outside than Aux Heat Lockout Temp (shown in the manual at 65 F, range 0 to 75 F). If the strips are being held off, raise the temperature or set the lockout to DISABLED.",
+   "Timers & Deadbands - the strips are the heat stage after the compressor. With one compressor stage that is 2nd stage. 2nd Stage Deadband is the number of degrees past 1st stage before 2nd stage turns on (shown at 2, range 0 to 10 F). A smaller number brings the strips on sooner.",
+   "2nd Stage Timer is the minutes past 1st stage before 2nd stage turns on (shown at 2 minutes, range 0 to 60). A shorter time brings the strips on sooner. The 2nd stage deadband must also be met, so set both.",
+   "Two-stage heat pump or two strip stages - do the same on 3rd Stage and 4th Stage. The manual says they have the same adjustable steps as 2nd stage.",
+   "Need strips only right now - press MENU, then Emergency Heat. The thermostat runs the fan and the aux stages and leaves the compressor off. Press the Emergency Heat button again to go back."
+  ],
+  "notes": [
+   "Heat Pump Lockout is on the same screen. When it is ENABLED the heat pump will not run below HP Lockout Outdoor Temp (shown at 65 F, range 20 to 75 F) and the strips carry the house below that.",
+   "Both lockouts work from outdoor temperature. The manual lists a wired sensor that can be set up as the outdoor sensor.",
+   "Applies to GT4272 and GT4273. The settings pages read the same in each manual.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Goodman GT4272 TouchScreen Owner's Manual & Installation Instructions; Goodman GT4273 TouchScreen Owner's Manual & Installation Instructions"
+ },
+ "tst-honeywell-chronotherm-iii": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The owner's guide prints no setting for when backup heat comes on. Only the heat pump model stages backup heat at all - it is the one with the EM HT - HT - OFF - AUTO - COOL system switch. The gas / oil / electric models (HEAT-OFF-COOL or HEAT-AUTO-COOL-OFF) do not.",
+   "On the heat pump model the thermostat decides by itself. The AUX HT light glows whenever it is calling for the backup heater.",
+   "To put it in emergency heat, slide the system switch on the subbase to EM HT. The EM HT light glows while the switch is there.",
+   "If the AUX HT light never glows with the house falling behind on a cold day, check the wiring at the subbase and the strip heat itself. Allow up to 10 minutes after a setting change - the heat pump model has a built-in time delay before the compressor starts."
+  ],
+  "notes": [
+   "Setback matters on this one. During recovery the thermostat raises the setting gradually to make the most efficient use of the equipment, so the PRESENT SETTING reading will not match the program. A smaller night setback leaves less for the heat pump to make up.",
+   "This topic is from the owner's guide only. It prints no installer setup, no terminal list and no stage figures.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Chronotherm III Fuel Saver Thermostat User's Guide (69-0341)"
+ },
+ "tst-honeywell-ct87-round": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. Honeywell's compatibility chart lists no CT87 model for a heat pump with auxiliary or backup heat.",
+   "Only the CT87J runs a heat pump, and only a single stage one with no backup heat (W jumpered to Y on the subbase). The CT87A and CT87B are for conventional heating and cooling. A heat pump with strips needs a heat pump thermostat with an aux terminal."
+  ],
+  "notes": [
+   "The heat anticipator pointer only matches the thermostat to the heating system. It is not a backup heat setting."
+  ],
+  "source": "CT87A,B,J Round Thermostat Installation Instructions (69-0274)"
+ },
+ "tst-honeywell-focuspro-5000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for the heat pump models TH5220D and TH5320U. The TH5110D is a 1 heat / 1 cool model and has no aux heat step.",
+   "Enter installer setup: press and hold the up arrow and FAN buttons until the display changes. The function number is on the left and the setting on the right.",
+   "Press NEXT to step through the functions. Use the up or down arrow to change a setting.",
+   "Check Function 1 (System type) first. It has to be 5 (2 heat / 1 cool heat pump with aux heat) or, on the TH5320U only, 10 (3 heat / 2 cool heat pump with aux heat). On 1 or 9 (heat pump, no aux heat) the strips are never called.",
+   "Go to Function 26 (Auxiliary heat control). The choices are 0 Comfort (shown in bold as the factory setting) and 1 Economy.",
+   "Set it to 0 Comfort to get the strips sooner. Honeywell says on Comfort a setpoint raise of just a few degrees will often bring aux heat on. On 1 Economy the thermostat tries to reach the setting without the strips and waits before using them.",
+   "Press DONE to save and exit.",
+   "To run on the strips alone, press SYSTEM until Em Heat shows. Honeywell says Em Heat runs emergency and auxiliary heat with the compressor locked out (select models only)."
+  ],
+  "notes": [
+   "Function 26 is the only setting this manual prints for when aux heat comes on. The setup table prints no outdoor temperature lockout or balance point for this model.",
+   "Functions 6, 7 and 8 are cycle rates (cycles per hour) for stage 2 / auxiliary and emergency heat. They are not a setting for when the strips start.",
+   "Strips never come on: check the wire on Aux. On the TH5220D, Aux and E are separate terminals and the manual says to put a field jumper between Aux and E if there is no emergency heat relay. On the TH5320U, Aux and E are one combined terminal.",
+   "Prove the strips from the thermostat: hold the up and down arrows until the display changes (installer system test). Test 10 steps the heat stages, test 20 is emergency heat. Compressor protection is bypassed in the test, so do not cycle the compressor quickly.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "FocusPRO TH5000 Series Installation Guide (69-1922EFS-03); FocusPRO TH5000 Series Installation Guide (69-2698EFS); FocusPRO TH5000 Series Operating Manual (69-1923EFS); FocusPRO 5000 / 6000 installer setup quick reference (69-2026)"
+ },
+ "tst-honeywell-focuspro-6000": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the FocusPRO 6000 (TH6110D, TH6220D, TH6320U) for when the strips come on. Its installer setup table has no Auxiliary heat control function. Honeywell's 5000 / 6000 quick reference says function 26 is only on the 5000 series.",
+   "Make sure it is set up to call the strips at all. Press and hold the up arrow and FAN buttons until the display changes. Function 1 (System type) has to be 5 (2 heat / 1 cool heat pump with aux heat) or, on the TH6320U only, 10 (3 heat / 2 cool heat pump with aux heat). Press NEXT to move on and DONE to save and exit.",
+   "To run on the strips alone, press SYSTEM until Em Heat shows. Honeywell says Em Heat runs emergency and auxiliary heat with the compressor locked out (select models only).",
+   "Check the wire on the Aux/E terminal, then prove the strips with the installer system test: hold the up and down arrows until the display changes. Test 10 steps the heat stages and test 20 is emergency heat."
+  ],
+  "notes": [
+   "Functions 5, 6, 7 and 8 are cycle rates (cycles per hour). They are not a setting for when the strips start.",
+   "If Function 12 is set to Auto changeover only, the System setting is locked in Auto and the user cannot pick Em Heat.",
+   "Compressor protection is bypassed during the system test - do not cycle the compressor quickly.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "FocusPRO TH6000 Series Installation Guide (69-2695EFS); FocusPRO TH6000 Series Installation Guide (69-1920EFS); FocusPRO TH6000 Series Operating Manual (69-1921EFS); FocusPRO 5000 / 6000 installer setup quick reference (69-2026)"
+ },
+ "tst-honeywell-focuspro-wifi": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Enter installer setup at the thermostat: press Fan and the up arrow together and hold about 3 seconds. The screen changes to two numbers with Done, Back and Next buttons.",
+   "Press Next until the function number you want (the larger number on the left) shows. Use the up or down arrow to change the option (the smaller number on the right).",
+   "Check Function 1 (Select System Type) first. It has to be 5 (heat pump with backup or auxiliary heating) or 10 (heat pump multiple stages, 3 heat stages, 2 cool stages). On 1 (heat pump without backup or auxiliary heat) the strips are never called.",
+   "Go to Function 26 (Auxiliary Control). The choices are 0 Comfort and 1 Economy. 0 Comfort should be the one that uses the strips sooner - this model's guide does not explain the two choices, see the first note.",
+   "Press Done to save and exit.",
+   "To run on the strips alone, press System until Em Heat shows. Honeywell says Em Heat controls auxiliary / emergency heat with the compressor off."
+  ],
+  "notes": [
+   "This model's own guide lists the two choices for Function 26 but does not explain them or mark a factory setting. The meaning comes from the FocusPRO 5000 guide, which has the same function 26: on Comfort a raise of a few degrees will often bring aux heat on, on Economy the thermostat tries to reach the setting without aux heat.",
+   "The guide prints no outdoor temperature lockout or balance point for this model. Functions 5, 6, 7 are heating cycle rates, not a setting for when the strips start.",
+   "Strips never come on: check the wire on the Aux/E terminal, then run the installer system test - hold the up and down arrows until the display changes. Test 10 steps the heat stages, test 20 is emergency heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "FocusPRO Wi-Fi TH6320WF Installation Guide (69-2738EFS-05); FocusPRO Wi-Fi TH6320WF User Guide (69-2736EFS); FocusPRO TH5000 Series Installation Guide (69-1922EFS-03) for what Comfort and Economy mean"
+ },
+ "tst-honeywell-focuspro-wireless": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Enter installer setup at the thermostat: press and hold the FAN and up arrow buttons until the display changes (about 3 seconds). Use the up or down arrow to change a setting, NEXT for the next function, DONE to save and exit.",
+   "Check the basics first. Function 1 (System type) has to be a heat pump with aux: 5 (2 heat / 1 cool heat pump) or 10 (3 heat / 2 cool heat pump). With an Equipment Interface Module (EIM), Function 4 (Backup heat) has to be 1 Electric backup heat for strips.",
+   "Function 26 (Auxiliary heat control) - the manual says this one applies only to model TH6320. Choices are 0 Comfort (shown in bold as the factory setting) and 1 Economy. On Comfort, aux heat responds quickly to meet the setpoint. On Economy the system waits longer and uses aux only if the setpoint is not reached in a reasonable time. Set 0 Comfort to get the strips sooner.",
+   "Function 26 is not available when Function 17 (External fossil fuel kit) is set to 0.",
+   "EIM systems only - Function 25 (Heat pump auxiliary lockout). Factory setting is 0, no auxiliary lockout. Choices 1 to 13 run from 5 F to 65 F outdoor. Above that outdoor temperature the compressor and fan run alone and the strips are locked out. If the strips will not help on a mild day, raise this number or set it back to 0.",
+   "EIM systems only - Function 24 (Heat pump compressor lockout, the balance point). Factory setting is 0, no compressor lockout. Choices 1 to 12 run from 5 F to 60 F outdoor. Below that outdoor temperature the compressor is off and electric backup heat and the fan run alone. This is not the setting for getting the strips sooner - only raise it if the heat pump should be shut off in the cold.",
+   "Between the two temperatures the heat pump runs first. Honeywell says if the compressor cannot reach or maintain the setting, both the compressor and the electric backup heat operate.",
+   "Functions 24 and 25 need the wireless outdoor sensor linked to the EIM. Function 22 (Outdoor air sensor) shows whether one is set up - 0 No (factory setting), 1 Yes. Error E53 means a lockout is set with no outdoor sensor reporting.",
+   "To run on the strips alone, press SYSTEM until Em Heat shows. Honeywell says the thermostat then controls emergency and auxiliary heat and the compressor is locked out."
+  ],
+  "notes": [
+   "Functions 4, 17, 18, 20, 21, 22, 24 and 25 are marked EIM only. On a TrueZONE panel with the wireless adapter they do not apply at the thermostat.",
+   "Functions 18, 20 and 21 (droop control, droop temperature, upstage to furnace timer) are for dual fuel - a heat pump with a fossil fuel furnace. They are not the strip heat settings.",
+   "E53 that will not clear: Honeywell says to put 2 fresh AA lithium batteries in the outdoor sensor.",
+   "The manual gives no recommended lockout temperatures. The 55 and 40 on its diagram are only an example.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "FocusPRO Wireless Thermostats Installation Guide (69-2092EFS-11); FocusPRO TH6320R Operating Manual (69-2093EFS); FocusPRO TH5320R Operating Manual (69-2094EFS)"
+ },
+ "tst-honeywell-lyric-round": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Press and hold the Weather button for 5 seconds to open the Main Menu. Go to Device Details and write down the 4-digit password (date code). Then highlight Set Up, press OK, highlight Contractor, press OK, enter the password, highlight Set Up and press OK.",
+   "ISU 3120 Staging control - backup heat differential: Comfort, or 2.0 F to 15.0 F from setpoint in 0.5 F steps. If it is on a number, a smaller number (or Comfort) brings the strips on sooner.",
+   "ISU 3140 Backup heat upstage timer: Off, 30, 45, 60, 75 or 90 minutes, or 2 to 16 hours. If a long time has been set, a shorter one brings the strips on sooner.",
+   "ISU 3180 Backup heat lockout: Off, or 5 F to 65 F in 5 F steps. The guide prints no description. Going by the name it should lock the strips out by outdoor temperature, so if it is set and the strips will not come on when the heat pump can't keep up, raise it or set it to Off. The guide does not say where the outdoor temperature comes from.",
+   "ISU 3160 Compressor lockout / balance point: Off, or 5 F to 60 F in 5 F steps.",
+   "When done you are asked to save. Highlight Yes and press OK to save and exit."
+  ],
+  "notes": [
+   "The strips have to be set up first: heating system type Heat pump, backup heat stages 1, and backup heat type 31 = Electric forced air.",
+   "The strip wire goes on W2 (AUX). That one terminal is both auxiliary and emergency heat on the Round.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Round Smart Thermostat TH8732WFH5004 Professional Install Guide (33-00445EFS); Round Smart Thermostat TH8732WF, RCH9300WF and RCH9310WF Professional Install Guide (33-00390EFS)"
+ },
+ "tst-honeywell-prestige-iaq": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, scroll down to INSTALLER OPTIONS and enter the date code when asked. It is printed on the back of the thermostat, or press MENU > EQUIPMENT STATUS (the product data says MENU > Dealer Information) to read it. Then press VIEW/EDIT CURRENT SETUP to go straight to one setting.",
+   "ISU 3010 Temperature Control Options: the backup heat settings show on either choice, Basic Options or Advanced Options.",
+   "ISU 3080 / 3090 Backup Heat Differential (the droop): Comfort or 2.0 to 15.0 F from setpoint in 0.5 F steps. Default is Comfort. On Comfort the strips are used as needed to hold within 1 F of setpoint - the soonest setting. If a number is set, the room has to drop that far first. Go back to Comfort or pick a smaller number.",
+   "ISU 3110 Backup Heat Upstage Timer only shows when the differential is 2 F or higher. Choices are Off, 30 to 90 minutes, or 2 to 16 hours. Default is Off. Strips come on at the differential or when the timer runs out, whichever is first. A shorter time is sooner.",
+   "ISU 3110 Backup Heat Holdoff Timer only shows when the upstage timer is 30 minutes or longer. It covers setpoint changes. Choices are Auto or 15 to 120 minutes. Auto is the out-of-box setting and holds the strips off as long as possible after a setpoint change. A time forces the strips on when it runs out - a shorter time is sooner.",
+   "ISU 3120 Backup Heat Lockout: Off or 5 to 65 F in 5 F steps, default Off, and it needs an outdoor sensor. Above that outdoor temperature the heat pump runs alone. If it is set low, raise it or turn it Off.",
+   "ISU 3120 Compressor Lockout / Balance Point: Off or -15 to 60 F in 5 F steps. Default is Off with electric backup. Below it only the backup heat runs."
+  ],
+  "notes": [
+   "The upstage timer is steady-state only. After someone bumps the setpoint, the holdoff timer is the one that applies.",
+   "Comfort is not available on dual fuel (heat pump with gas furnace).",
+   "System choices include Em Heat for running on the strips alone while you sort out the heat pump.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "THX9321 Prestige 2.0 and THX9421 Prestige IAQ with EIM Product Data (68-0311); Prestige IAQ 2.0 with EIM System Installation Guide (69-2490)"
+ },
+ "tst-honeywell-pro-1000-2000": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on these for when the strips come on. Only the TH1210D and TH2210D run a heat pump with auxiliary heating (2 heat / 1 cool). The TH1110D and TH2110D are 1 heat / 1 cool - on a heat pump, only one without auxiliary heating. The TH1100D is heat only.",
+   "Installer setup has 7 functions - temperature format, time format, heating cycles per hour, cooling cycles per hour, compressor protection, Adaptive Intelligent Recovery and application (indoor / garage). None of them is an aux heat setting.",
+   "To run on the strips alone, slide the System switch to Em Heat. Honeywell says Em Heat is emergency and auxiliary heat control with the compressor locked out (select models only).",
+   "Strips never come on in Heat: check the auxiliary heat wire at the thermostat and at the air handler. The screen shows Aux On when auxiliary heat is running."
+  ],
+  "notes": [
+   "To look at setup: press the up and down arrows together for three seconds until the function number and option number show. Up or down changes the option. Press both for one second for the next function. After the last function, press both to save and exit. It also saves and exits by itself after 60 seconds, and on programmable models the Run button saves and exits.",
+   "The O / B reversing valve choice on these is a jumper on the back of the faceplate, not a setup function. O is the factory setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PRO 1000 / 2000 Series Installation Manual (69-1968EFS-08); PRO 2000 Operating Manual (69-2608EFS)"
+ },
+ "tst-honeywell-pro-1000-2000dv": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on these for when the strips come on. Only the TH2210DV and TH1210DV run a heat pump with aux heat (2 heat / 1 cool). The TH2110DV and TH1110DV are 1 heat / 1 cool and the TH1100DV is heat only.",
+   "The only aux function in installer setup is Function 6, Auxiliary heat cycle rate (cycles per hour), on the TH2210DV and TH1210DV. It is not a setting for when the strips start.",
+   "To run on the strips alone, slide the System switch to Em Heat. Honeywell says in Em Heat only auxiliary heating can be activated and the compressor is disabled.",
+   "Strips never come on in Heat: check the wire on the Aux/E terminal. The screen shows Aux On when auxiliary heat is running."
+  ],
+  "notes": [
+   "To look at setup: press and hold the up and down arrows until the display changes. Up or down changes the setting. Press both for one second for the next function. Press and hold both to exit and save. It also saves and exits by itself after 60 seconds with no button pressed.",
+   "Function 13 Early Start (TH2110DV and TH2210DV) starts heating or cooling early for the schedule. It is not an aux heat setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PRO TH2000DV / TH1000DV Series Installation Guide (69-2800EFS-05); PRO 1000 Operating Manual (69-2607EFS); PRO 2000 Operating Manual (69-1969EFS)"
+ },
+ "tst-honeywell-pro-3000": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the PRO 3000 for when the strips come on. Only the TH3210D runs a 2 heat / 1 cool heat pump with Aux and E terminals. The TH3110D has no aux heat terminal.",
+   "The only aux functions in installer setup are cycle rates (cycles per hour): Function 6 Auxiliary heat cycle rate and Function 8 Emergency heat cycle rate, both TH3210D only. They are not a setting for when the strips start.",
+   "To run on the strips alone, slide the System switch to Em Heat (TH3210D only).",
+   "Strips never come on: check the wires on Aux and E. The manual says to put a field jumper between Aux and E if there is no emergency heat relay. Then prove them with the installer system test: set the System switch to Heat and press the down arrow - status 1 is heat on, status 2 is auxiliary heat on. Press and hold both arrows to end the test."
+  ],
+  "notes": [
+   "To look at setup: press and hold the up and down arrows until the display changes. The down arrow changes the setting, the up arrow goes to the next function, and holding both exits and saves.",
+   "The L terminal sends an output whenever the thermostat is set to Em Heat (used to switch a zone panel to emergency heat).",
+   "Compressor protection is bypassed during the system test - do not cycle the compressor quickly.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PRO 3000 Non-Programmable Digital Thermostat Installation Instructions, TH3110D1008 / TH3210D1004 (69-1929EFS-07)"
+ },
+ "tst-honeywell-pro-4000": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the PRO 4000 for when the strips come on. Only the TH4210D runs a 2 heat / 1 cool heat pump with Aux and E terminals. The TH4110D has no aux heat terminal.",
+   "The only aux functions in installer setup are cycle rates (cycles per hour): Function 6 Auxiliary heat cycle rate and Function 8 Emergency heat cycle rate, both TH4210D only. They are not a setting for when the strips start.",
+   "To run on the strips alone, slide the System switch to Em Heat (TH4210D only).",
+   "Strips never come on: check the wires on Aux and E. The manual says to put a field jumper between Aux and E if there is no emergency heat relay. Then prove them with the installer system test: set the System switch to Heat and press the down arrow - status 1 is heat on, status 2 is auxiliary heat on. Press and hold both arrows to end the test."
+  ],
+  "notes": [
+   "To look at setup: press and hold the up and down arrows until the display changes. The down arrow changes the setting, the up arrow goes to the next function, and holding both exits and saves.",
+   "Function 13 Adaptive Intelligent Recovery is in the same menu. The manual does not print it as an aux heat setting.",
+   "The L terminal sends an output whenever the thermostat is set to Em Heat (used to switch a zone panel to emergency heat).",
+   "Compressor protection is bypassed during the system test - do not cycle the compressor quickly.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PRO 4000 Series Programmable Digital Thermostat Installation Instructions (69-1928EFS-04)"
+ },
+ "tst-honeywell-rth111": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot run heat strips behind a heat pump. Honeywell says the RTH111 cannot be used on heat pumps with backup heat or on multistage systems. It only works on a heat pump that has no auxiliary / backup heat. If the house has a heat pump with strips, this is the wrong thermostat - replace it with one that has an Aux terminal."
+  ],
+  "notes": [
+   "On a heat pump without backup heat the manual has you connect O or B (not both) and put a jumper between Y and W."
+  ],
+  "source": "RTH111 Series Owner's Manual (33-00137EF); RTH111 Quick Installation Guide (69-2384ES)"
+ },
+ "tst-honeywell-rth2300": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot run heat strips behind a heat pump. Honeywell says the RTH2300 / RTH221 cannot be used on heat pumps with backup heat or on multistage systems. It only works on a heat pump that has no auxiliary / backup heat. If the house has a heat pump with strips, this is the wrong thermostat - replace it with one that has an Aux terminal."
+  ],
+  "notes": [
+   "On a heat pump without backup heat the manual has you connect O or B (not both) and put a jumper between Y and W."
+  ],
+  "source": "RTH2300 / RTH221 Series Owner's Manual (33-00100EF); RTH2300 / RTH221 Series Owner's Manual (33-00102EF); RTH2300 Quick Installation Guide (69-2327ES)"
+ },
+ "tst-honeywell-rth2410-2510": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH2410 / RTH2510 (or RTHL2410 / RTHL2510) for when the strips come on. It can run a heat pump with auxiliary / backup heat, but setup has no function for aux timing or lockout.",
+   "Make sure it is set up as a heat pump with backup heat, or the strips are never called. Press and hold the up and down arrows until the display changes (about 5 seconds). Function 1 (System type) has to be 1, heat pump with auxiliary / backup heat. On 0 it runs as a plain heating and cooling system or a heat pump without backup heat.",
+   "In setup, up or down changes the setting, pressing both for one second goes to the next function, and RUN saves and exits. It also saves and exits by itself after 60 seconds with no button pressed.",
+   "Check the strip wire. It goes on the W / Aux terminal. If the old thermostat had separate E and Aux wires, the manual says to connect both to the Aux terminal.",
+   "The manuals show the System switch with Heat, Off and Cool only - no Em Heat position is described. There is no way printed to force strips only from this thermostat."
+  ],
+  "notes": [
+   "Older RTH2410 / RTH2510 quick install guide (69-2421ES): hold the up and down arrows for three seconds, and the system type is the last item, called System startup - 0 conventional system (1H1C), 1 heat pump system with auxiliary / backup heat (2H1C).",
+   "Function 5 (heating cycle rate) and Function 13 (Early Start) are in the same menu. They are not a setting for when the strips start.",
+   "The manual says it will not work on multistage conventional systems.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH2410 / RTH2510 Series Owner's Manual (33-00110ES); RTHL2410 / RTHL2510 Quick Installation Guide (69-2714EF); RTH2510 / RTH2410 Quick Installation Guide (69-2421ES)"
+ },
+ "tst-honeywell-rth3100c": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH3100C for when the strips come on. System setup has only Function 6 (Auxiliary heat cycle rate), Function 8 (Emergency heat cycle rate) and Function 14 (temperature display).",
+   "To run on the strips alone, slide the System switch to Em Heat. Honeywell says Em Heat is emergency and auxiliary heat control with the compressor locked out.",
+   "Strips never come on in Heat: check the wires on Aux and E. If no wire matches the E terminal, the manual says to use a small piece of wire to connect E and Aux. The screen shows Aux when auxiliary heat is on and Em when emergency heat is on."
+  ],
+  "notes": [
+   "To look at setup: press and hold the up and down arrows until the display changes. The down arrow changes the setting, the up arrow goes to the next function, and holding both exits and saves.",
+   "Functions 6 and 8 only pick the cycle rate for the type of aux / emergency heat. The manual lists 9 for electric furnaces.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH3100C Installation Guide (69-1891ES); RTH3100C Operating Manual (69-1892ES)"
+ },
+ "tst-honeywell-rth5160": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH5160 for when the strips come on. Its System Setup list stops at system type, stages and changeover. The thermostat decides on its own.",
+   "Check the setup instead. From the Home screen press and hold the Menu button for about 5 seconds. Press Next (+) to step through and Edit (-) to change a value. Setup 200 has to be 2 = Heat Pump and setup 221 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1), or the strips are never called. Press Done at the end to save.",
+   "Check the wiring: on a heat pump the strip wire goes on the Aux terminal of the wall plate.",
+   "Heat pump down: press Menu, press Mode (+) until Em Heat shows, then press Done. The thermostat runs the auxiliary heat and the compressor is not used."
+  ],
+  "notes": [
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH5160 Series Quick Installation Guide (33-00200ES)"
+ },
+ "tst-honeywell-rth6350-6450": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH6350 / RTH6450 for when the strips come on. It can run a heat pump with backup heat, but setup has no function for aux timing or lockout.",
+   "Make sure it is set up as a heat pump with backup heat, or the strips are never called. Press and hold the up arrow and FAN buttons until the display changes (about 5 seconds). Function 1 has to be 5, heat pump with backup or auxiliary heating. On 1 it is a heat pump without backup or auxiliary heat. Up or down changes the setting, NEXT goes to the next function, DONE saves and exits.",
+   "Check the strip wire on Aux. If E and Aux do not each have a wire, the manual says to connect them to each other with a small piece of wire. If the old thermostat had separate E and Aux wires, both go in the Aux/E terminal.",
+   "The owner's manual lists Heat, Cool, Off and Auto for the SYSTEM button and does not describe an Em Heat choice. If Em Heat shows when you press SYSTEM on a heat pump setup, that is the strips-only mode."
+  ],
+  "notes": [
+   "Function 6 (Stage 2 heat cycle rate) and Function 8 (Emergency Heat Cycle Rate, heat pumps only) are cycle rates. They are not a setting for when the strips start.",
+   "Function 13 Smart Response Technology is in the same menu. The manual does not print it as an aux heat setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH6350 / RTH6450 Series Owner's Manual (33-00116ES); RTH6350 / RTH6450 Series Quick Installation Guide (69-2416ES)"
+ },
+ "tst-honeywell-rth6360": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH6360 for when the strips come on. Its System Setup list has the stage counts and nothing for droop, timers or lockouts. The thermostat decides on its own.",
+   "Check the setup instead. Press and hold Menu and + together for about 5 seconds, then press Select to enter System Setup (ISU). Setup 200 has to be 2 = Heat Pump and setup 221 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1), or the strips are never called. Press Select through to Done, or press Home to save and exit early.",
+   "Check the wiring: on a heat pump the strip wire goes on the Aux terminal of the wall plate.",
+   "Heat pump down: press the Mode button until Em Heat shows and leave it. The thermostat runs the auxiliary heat and the compressor is not used."
+  ],
+  "notes": [
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH6360 Series Quick Installation Guide (33-00201ES)"
+ },
+ "tst-honeywell-rth6580wf": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this model for when the strips come on. The function list has system type, changeover valve, fan control and cycle rates - no droop, timer or outdoor lockout.",
+   "Check the system type. Press Fan and the up arrow together and hold about 3 seconds until the screen shows two numbers. Function 1 must be 5 - heat pump with backup or auxiliary heating. Press Next to move through functions and Done to save and exit.",
+   "To run on the strips right now, press System until Em Heat shows. It controls auxiliary / emergency heat and the compressor is off.",
+   "If Em Heat is not offered, Function 1 is not set to 5 or the strip wire is not landed."
+  ],
+  "notes": [
+   "Function 6, Heating Cycle Rate Stage 2, only changes how often second stage cycles.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH6580WF Wi-Fi Programmable Thermostat User Guide (69-2715EF); RTH6500WF Quick Start Guide (69-2720)"
+ },
+ "tst-honeywell-rth7400-7500": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH7400 / RTH7500 for when the strips come on - not on the current models and not on the older ones. The thermostat decides on its own.",
+   "Current models (RTH7460 / RTH7560, setup numbers like 200 and 221): press and hold Menu and + together for about 5 seconds, then press Select to enter System Setup (ISU). Setup 200 has to be 2 = Heat Pump and setup 221 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1). Press Select through to Done, or press Home to save and exit early.",
+   "Older models (four-digit function numbers, owner's manual 33-00090): press and release the left button, then press and hold the center button about 5 seconds until the screen changes. Function 0170 has to be 7 (heat pump with backup or auxiliary heating). Press NEXT to move on and DONE to save and exit.",
+   "Heat pump down: on current models press the Mode button until Em Heat shows. On older models press SYSTEM & FAN, then SYSTEM, and pick Em Heat. The compressor is locked out and the aux heat carries the house."
+  ],
+  "notes": [
+   "On the older models 'Aux Heat On' shows on the screen when the auxiliary heat is running.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH7400 / RTH7500 Series Quick Installation Guide (33-00202EF); RTH7400 / RTH7500 / RET97D Owner's Manual (33-00090EF)"
+ },
+ "tst-honeywell-rth7600": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this model for when the strips come on. The setup list has system type, fan control, changeover valve and cycle rates - no droop, timer or outdoor lockout.",
+   "Check the system type. Press System & Fan, then press and hold the center key about 5 seconds until the screen changes. Function 0170 must be 7 - heat pump with backup or auxiliary heating. Press NEXT to move on and DONE to save and exit.",
+   "To run on the strips right now, press System & Fan, press System until Em Heat shows, then Done. The compressor is locked out.",
+   "If Em Heat is not offered, function 0170 is not set to 7 or the strip wire is not landed."
+  ],
+  "notes": [
+   "Function 0270 is the emergency heat cycle rate. It changes how often the strips cycle, not when they come on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH7600 Quick Installation Guide (69-2206EF); RTH7600 Operating Manual (69-2207ES); RTH7600 / RET97C Owner's Manual (33-00089ES)"
+ },
+ "tst-honeywell-rth8500": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the RTH8500 for when the strips come on - no droop, timer or outdoor lockout in either version's setup list.",
+   "Older RTH8500 (SYSTEM button, four-digit functions): press SYSTEM, then press and hold the blank center key about 5 seconds until the screen changes. Function 0170 must be 7 - multi-stage heat pump with backup or auxiliary heating. Press DONE to exit and save.",
+   "Newer RTH8500 (Menu button, three-digit numbers): press and hold MENU for 5 seconds. 200 must be 2 = Heat Pump and 221 must show 1 backup heat stage. When the list ends, Done shows - press Select to save and exit.",
+   "To run on the strips right now, set the mode to Em Heat. The compressor is not used."
+  ],
+  "notes": [
+   "On the newer version, 375 Aux Heat CPH only shows when aux heat is set up. It is a cycle rate, not a delay.",
+   "The older owner's manual says Em Heat is on select models only.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH8500 Installation Guide (69-1902EF); RTH8500 Owner's Manual (33-00179EF); RTH8500 Series Quick Installation Guide (33-00406)"
+ },
+ "tst-honeywell-rth8580wf": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this model for when the strips come on. The function list has no droop, timer or outdoor lockout.",
+   "Check the system type. Press SYSTEM, then press and hold the center blank button about 5 seconds until the screen changes. Function 0170 must be the heat pump with backup or auxiliary heating choice. Press DONE to save and exit.",
+   "To run on the strips right now, press SYSTEM and pick EM HEAT. The compressor is locked out.",
+   "If EM HEAT is not offered, the thermostat was not set up as a heat pump with aux heat - go back to function 0170 and check the strip wire."
+  ],
+  "notes": [
+   "Functions 0240 and 0250 are heating cycle rates. They do not change when the strips come on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH8580WF Wi-Fi Touchscreen Programmable Thermostat User Guide (33-00133EF)"
+ },
+ "tst-honeywell-rth9585wf": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this model for when the strips come on. System Setup only asks whether there is backup heat - no droop, timer or outdoor lockout.",
+   "Check the setup. Touch SETTINGS (MENU on the RTH9580WF), then System Setup, and touch Next through the screens. Your system type must be Heat Pump and Your backup heat must be Yes. Press Done to save and exit.",
+   "To run on the strips right now, touch MODE (SYSTEM on the RTH9580WF) and pick Emergency Heat. The compressor is locked out.",
+   "If Emergency Heat is not offered, the setup is not heat pump with backup heat, or the strip wire is not landed."
+  ],
+  "notes": [
+   "Your backup heat only shows when Your System Type is set to Heat Pump.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "RTH9585WF Smart Color Thermostat User Guide (honeywell-home-rth9585-userguide); RTH9580WF Wi-Fi Smart Thermostat User Guide (33-00167)"
+ },
+ "tst-honeywell-t1-pro": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The T1 Pro cannot run heat strips with a heat pump. The TH1110D can run a one-stage heat pump with no aux heat only - it has no Aux or E output and no backup heat setting. The TH1010D does not do heat pumps at all. If the system has strips, it needs a different thermostat (Resideo's wiring sheet lists the TH4210U for a heat pump with electric aux heat)."
+  ],
+  "notes": [],
+  "source": "T1 Pro Non-Programmable Thermostat Installation Instructions (33-00189EFS); T4 and T1 Pro Wiring Diagrams (33-00325)"
+ },
+ "tst-honeywell-t10-pro": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Touch the Menu icon (3 lines at the bottom), scroll down to Thermostat Information and write down the date code. Go back, scroll down to Installer Options, enter the date code, then pick Installer Setup. Touch NEXT to move through the settings.",
+   "Backup Heat differential (ISU 3090): the choices are Comfort or 2 F to 15 F. On Comfort the thermostat brings the strips on as needed to hold the room within 1 F of the setpoint. On a number, the room has to fall that many degrees below the setpoint first. Resideo's own advice when the heat pump struggles with electric backup heat: set it to Comfort. If it has to stay on a number, a smaller number brings the strips on sooner.",
+   "Backup heat upstage timer (ISU 3110): only shows when the differential is a number, not Comfort. Choices are Off or 30 minutes up to 16 hours. Factory setting is Off. A shorter time lets the strips in sooner, but it only counts while the thermostat is holding a steady setpoint - turning the setpoint up does not start it.",
+   "Backup Heat holdoff timer (the setup table marks it T10+ only): shows only when the differential is 2 F or more and the upstage timer is 30 minutes or more. Out of the box it is Auto, which holds the strips off as long as it can after a setpoint change. Set to a time (15 to 120 minutes) and the strips are forced on once that time is up.",
+   "Equipment Lockouts (ISU 3120) - Backup Heat Lockout: the strips will not run when it is warmer outside than this setting. The manual prints the choices as Off or 55 F to 65 F, but the Celsius range printed beside it starts at -15 C, so the 55 F looks like a misprint - go by what the screen offers. If the strips are locked out on days the heat pump can't keep up, raise it or set it to Off.",
+   "Equipment Lockouts (ISU 3120) - Compressor Lockout / Balance point: Off or -15 F to 50 F. When it is colder outside than this, the heat pump is locked out and the thermostat runs backup heat only. Do not raise it just to get more strip heat. Resideo's order when a heat pump struggles: first verify the heat pump is operating as expected; then set a balance point, or raise the one already set, only if the heat pump cannot handle the load even when it is operating correctly.",
+   "Both lockouts need an outdoor temperature (ISU 1060 Outdoor Temperature): a wired outdoor sensor, the wireless outdoor sensor on a T10+, or Internet weather.",
+   "Touch Done in the upper left of the display to save and finish."
+  ],
+  "notes": [
+   "None of this shows unless the thermostat is set up as a heat pump (ISU 2000) with Backup Heat stages at 1 (ISU 2071).",
+   "After a setpoint change or a scheduled recovery the T10 holds the strips back on purpose. It only uses them when the room is not warming fast enough, so a slow morning warm-up is not always a setting problem.",
+   "Heat pump down: touch the Menu icon, then System Mode, then Emergency Heat. The heat pump is locked out and the backup heat holds the setpoint.",
+   "Dual fuel (gas or oil backup): Comfort is not offered. The differential defaults to 2 F and adjusts from 2 F to 15 F.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T10 & T10+ Pro Smart Thermostat with RedLINK 3.0 Product Data (33-00462-07)"
+ },
+ "tst-honeywell-t3-pro": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the TH3210U has aux heat terminals and these settings. The TH3110U does not.",
+   "From the Home screen press and hold the Menu button for about 5 seconds to get back into System Setup. Press Next (+) to step through the setup numbers and Edit (-) to change a value.",
+   "ISU 340 Backup Heat Droop: 0 = Comfort, or 2 to 15 for 2 F to 15 F. Factory setting is 0 = Comfort. If it has been set to a number, go back to Comfort or pick a smaller number to bring the strips on sooner.",
+   "ISU 350 Upstage Timer to Backup Heat: 0 = Off (factory), 1 = 30 minutes, 2 = 45, 3 = 60, 4 = 75, 5 = 90 minutes, 6 = 2 hours, 7 = 3 hours, 8 = 4 hours, and 5 hours (the manual prints that last one as choice 10 - go by the hours on the screen). If a long time has been set, a shorter one brings the strips on sooner.",
+   "Step through to the end of the list and press Done. The thermostat saves and goes back to the home screen."
+  ],
+  "notes": [
+   "ISU 221 Backup Heat Stages has to be 1 (choices 0 or 1) or the thermostat never calls the strips.",
+   "There is no outdoor lockout or balance point setting on the T3 Pro.",
+   "Heat pump down (TH3210U): press Menu, press Mode (+) until Em heat shows, then press Done. The thermostat runs the aux heat and the compressor is not used.",
+   "On a heat pump nothing goes on the W terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T3 Pro Non-Programmable Thermostat Installation Instructions (33-00520EFS)"
+ },
+ "tst-honeywell-t4-pro": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the TH4210U can run a heat pump with aux heat, and only it has these settings. The TH4110U has no aux heat settings.",
+   "Press and hold the CENTER button and the + button together for about 3 seconds to open the advanced menu. Press Select to enter ISU, then Select to step through the numbers. Use + or - to change a value and Select to confirm it.",
+   "ISU 340 Backup Heat Droop: 0 = Comfort, or 2 to 15 for 2 F to 15 F. Factory setting is 0 = Comfort. If it has been set to a number, go back to Comfort or pick a smaller number to bring the strips on sooner.",
+   "ISU 350 Upstage Timer for Backup Heat: 0 = Off (factory), 1 = 30 minutes, 2 = 45, 3 = 60, 4 = 75, 5 = 90 minutes, 6 = 2 hours, 7 = 3 hours, 8 = 4 hours, and 5 hours (the manual prints that last one as choice 10 - go by the hours on the screen). If a long time has been set, a shorter one brings the strips on sooner.",
+   "Press Home to save and go back to the Home screen."
+  ],
+  "notes": [
+   "ISU 221 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1) or the thermostat never calls the strips.",
+   "There is no outdoor aux heat lockout on the T4 Pro. Resideo says to use a TH6220U with a C7089U1006 outdoor sensor if one is needed.",
+   "On a heat pump nothing goes on the W terminal. The strip wire goes on AUX.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T4 Pro Programmable Thermostat Installation Instructions (33-00187EFS); T4 Pro Product Data (33-00614EFS); T4 and T1 Pro Wiring Diagrams (33-00325)"
+ },
+ "tst-honeywell-t5-t5plus": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The T5 has no droop and no upstage timer in its setup list. The only settings that touch the strips are two outdoor lockouts, ISU 355 and ISU 356. Both leave the factory Off.",
+   "Both lockouts need an outdoor temperature from the internet (ISU 130 Outdoor Temp: No or Internet; factory setting No). ISU 130 switches itself to Internet once the thermostat is registered in the Resideo app. No Wi-Fi, no lockouts.",
+   "ISU 356 Aux Heat Lock Out: Off, or 5 F to 65 F in 5 F steps. The strips are not allowed to run when it is warmer outside than this. If the strips are locked out on days the heat pump can't keep up, raise it or set it to Off.",
+   "ISU 355 Balance Point (Compressor Lockout): Off, or 5 F to 60 F in 5 F steps. When it is colder outside than this the heat pump is locked out and only the strips run. This is not the setting for more strip heat - raising it shuts the heat pump off at a milder outdoor temperature. Leave it alone unless the heat pump should not be running there.",
+   "Getting to them: the manual prints these as the Equipment Setup Options run at START SETUP. For setup on the thermostat touch START SETUP, answer No at USE APP, use the arrows to move, touch Edit to change a value and Done to accept it, then go to Finish Setup and touch Select. Otherwise setup is done in the Resideo app.",
+   "Heat pump down: touch Mode and pick EM Heat (emergency heat)."
+  ],
+  "notes": [
+   "ISU 355 and 356 only show when ISU 200 System Type is Heat Pump and ISU 221 AUX/E Stages is 1. AUX/E Stages leaves the factory at 0 - if it was left there the thermostat never calls the strips.",
+   "The Lyric T5 quick install guides list only the stage options and point to the T5 product data for the full list.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T5 Smart Thermostat product data / install guide (33-00474); T5 Smart Thermostat Quick Install Guide (33-00498EF)"
+ },
+ "tst-honeywell-t6-pro": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press and hold the CENTER button and the + button together for about 3 seconds to open the advanced menu. Press Select to enter ISU, then Select to step through the numbers. Use + or - to change a value and Select to confirm it.",
+   "ISU 340 Backup Heat Droop: 0 = Comfort, or 2 to 15 for 2 F to 15 F. Factory setting is 0 = Comfort. Comfort is only offered when ISU 255 Backup Heat Source is electric. If it has been set to a number, go back to Comfort or pick a smaller number to bring the strips on sooner.",
+   "ISU 350 Upstage Timer for Backup Heat: 0 = Off (factory), 1 = 30 minutes, 2 = 45, 3 = 60, 4 = 75, 5 = 90 minutes, then 2 hours up to 16 hours. If a long time has been set, a shorter one brings the strips on sooner.",
+   "ISU 356 Outdoor Lockout Backup Heat: -- = Off (factory), or 5 F to 65 F in 5 F steps. The strips are locked out when it is warmer outside than this. If they are locked out on days the heat pump can't keep up, raise it or set it to Off. It needs a C7089U1006 wired outdoor sensor on the two S terminals. The TH6210U cannot do aux heat lockout at all.",
+   "ISU 355 Compressor Lockout / Balance Point: -- = Off (factory), or 5 F to 60 F in 5 F steps. It needs the wired outdoor sensor (TH6320U / TH6220U).",
+   "Press Home to save and go back to the Home screen."
+  ],
+  "notes": [
+   "ISU 221 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1) or the thermostat never calls the strips.",
+   "ISU 253 Aux/E terminal control is fixed at 0 (Aux and E driven together) on every model except the TH6320U. It only matters when aux heat and emergency heat are two separate sets of strips.",
+   "On a heat pump nothing goes on the W terminal. The strip wire goes on AUX.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T6 Pro Programmable Thermostat Installation Instructions (33-00181EFS); T6 Pro Wiring Diagrams (33-00323)"
+ },
+ "tst-honeywell-t6-pro-hydronic": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is a heat-only hydronic thermostat. Its only equipment types are hot water radiant heat, hot water radiant floor heat and steam. It cannot run a heat pump or heat strips, so there is no aux heat setting."
+  ],
+  "notes": [],
+  "source": "T6 Pro Hydronic Programmable Thermostat TH6100AF2004 Installation Instructions (33-00340EFS)"
+ },
+ "tst-honeywell-t6-pro-wifi": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the thermostat, press and hold the Menu button for 5 seconds to open the advanced menu. Use the arrows to go to Device Setup and select it. Arrows scroll the ISU list, Edit changes a value, Done accepts it.",
+   "ISU 340 Aux Heat Droop: 0 = Comfort, or 2 F to 15 F from setpoint. Factory setting is Comfort with electric aux heat (2 F with gas / oil). On Comfort the thermostat uses the strips as needed to stay within 1 F of setpoint. On a number, the room has to drop that many degrees before the strips come on. For strips sooner, use Comfort or a smaller number.",
+   "ISU 350 Up Stage Timer Aux Heat: Off, 30, 45, 60, 75 or 90 minutes, or 2 to 16 hours. Factory setting is Off. It only shows when ISU 340 is 2 F or higher. The timer starts when the highest heat pump stage turns on, and the strips are used if needed once it runs out. A shorter time brings them on sooner.",
+   "ISU 356 Aux Heat Lock Out: Off, or 5 F to 65 F in 5 F steps. Factory setting is Off. The strips are not allowed to run when it is warmer outside than this. If they are locked out on days the heat pump can't keep up, raise it or set it to Off.",
+   "ISU 355 Balance Point (Compressor Lockout): Off, or 5 F to 60 F in 5 F steps. Off is the default with an air-to-air heat pump and electric aux heat. When it is colder outside than this the heat pump is locked out and only the strips run.",
+   "ISU 355 and 356 need an outdoor temperature. ISU 130 Outdoor Temp: No (factory), Wired or Internet. It switches itself to Internet once the thermostat is registered in the app. Resideo recommends a wired outdoor sensor on the S terminals.",
+   "To save, scroll to the Finish screen at the end of the ISU list and touch Select."
+  ],
+  "notes": [
+   "The aux settings only show when ISU 200 System Type is Heat Pump and ISU 221 AUX/E Stages is 1. AUX/E Stages leaves the factory at 0 - if it was left there the thermostat never calls the strips.",
+   "ISU 253 Aux/E Control (TH6320 model only): Both Aux/E (factory) or Either Aux/E. It only matters when aux heat and emergency heat are two separate heat sources.",
+   "Comfort is not offered on dual fuel.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T6 Pro Smart Programmable Thermostat TH6220WF2006 / TH6320WF2003 Professional Install Guide (33-00392)"
+ },
+ "tst-honeywell-t6-pro-zwave": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the thermostat, press and hold the Menu button for 5 seconds to open the advanced menu. Use the arrows to go to Device Setup and select it. Arrows scroll the ISU list, Edit changes a value, Done accepts it.",
+   "ISU 340 Aux Heat Droop: 0 = Comfort, or 2 F to 15 F from setpoint. Factory setting is Comfort with electric aux heat (2 F with gas / oil). On Comfort the thermostat uses the strips as needed to stay within 1 F of setpoint. On a number, the room has to drop that many degrees before the strips come on. For strips sooner, use Comfort or a smaller number.",
+   "ISU 350 Up Stage Timer Aux Heat: Off, 30, 45, 60, 75 or 90 minutes, or 2 to 16 hours. Factory setting is Off. It only shows when ISU 340 is 2 F or higher. The timer starts when the highest heat pump stage turns on, and the strips are used if needed once it runs out. A shorter time brings them on sooner.",
+   "ISU 356 Aux Heat Lock Out: Off, or 5 F to 65 F in 5 F steps. Factory setting is Off. The strips are not allowed to run when it is warmer outside than this. If they are locked out on days the heat pump can't keep up, raise it or set it to Off.",
+   "ISU 355 Balance Point (Compressor Lockout): Off, or 5 F to 60 F in 5 F steps. Off is the default with an air-to-air heat pump and electric aux heat. When it is colder outside than this the heat pump is locked out and only the strips run.",
+   "ISU 355 and 356 only show when ISU 130 Outdoor Temp is set to Wired (choices are No or Wired; factory setting No). This model has no internet weather, so the lockouts need a wired outdoor sensor.",
+   "To save, scroll to the Finish screen at the end of the ISU list and touch Select."
+  ],
+  "notes": [
+   "The aux settings only show when ISU 200 System Type is Heat Pump and ISU 221 AUX/E Stages is 1. AUX/E Stages leaves the factory at 0 - if it was left there the thermostat never calls the strips.",
+   "ISU 253 Aux/E Control: Both Aux/E (factory) or Either Aux/E. It only matters when aux heat and emergency heat are two separate heat sources.",
+   "Comfort is not offered on dual fuel.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T6 Pro Z-Wave Programmable Thermostat TH6320ZW2003 / TH6320ZW2007 Professional Install Guide (33-00587EFS)"
+ },
+ "tst-honeywell-t834": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The T834N, T834L and T8034N are single-stage. There is one heat terminal (W) and no aux or emergency heat terminal. The T834L is cool only.",
+   "On a heat pump the manual has you jumper W to Y, so the one heat call runs the compressor. There is no second stage, no Emergency Heat position and no setting for backup heat. If the strips must be staged by the thermostat, it needs a heat pump thermostat with an Aux / E terminal."
+  ],
+  "notes": [
+   "The heat anticipator arrow only matches the thermostat to the heating system. It is not a backup heat setting.",
+   "The F / E fan switch goes to E for a heat pump or electric heat so the thermostat runs the fan on a heat call."
+  ],
+  "source": "T834 Series Thermostat Owner's Manual (69-1944EFS)"
+ },
+ "tst-honeywell-t8400-t8401-t8411": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "T8400C and T8401C: these are single-stage thermostats with W, Y, G, R (and C on the T8401C) only. They cannot stage heat strips at all.",
+   "T8411R (the heat pump model, W2 = auxiliary heat, E = emergency heat): the manual prints no setting for when the strips come on - no droop, timer or outdoor lockout. The thermostat brings on Aux Ht by itself when backup heat is needed, and the indicator points to Aux Ht when it does.",
+   "To run on the strips alone, slide the SYSTEM switch (bottom right) to Em Ht. The thermostat then cycles W2 and E to hold the setpoint and the compressor stays off.",
+   "To prove the strips work: set the setpoint to 52 F (11 C if it reads in Celsius), then hold the up and down keys together for more than one second to enter installer setup. With SYSTEM at Heat, press the down key once for heat, again for auxiliary heat (Aux Ht shows), a third time for aux off, a fourth for heat off. This test only works in steps 2 and 3 of setup. Keep pressing the up key through all the steps to save and exit, then put the setpoint back."
+  ],
+  "notes": [
+   "The only heat setting on the T8411R is the stage-two (aux) heat cycle rate, at step 6 of installer setup: press down to scroll, up to move on. Page 1 of the manual lists 3, 4, 5, 6 or 9 cph; the setup steps list 3, 4, 5, 6, 9 and 12. The table shows 9 for electric heat. This sets how often the strips cycle - the manual does not say it changes when they first come on. Stage one is fixed at 3 cph.",
+   "The 5 minute compressor off-timer is bypassed while outputs are forced on in the setup test. Do not short cycle the compressor.",
+   "Aux Ht never shows on a T8411R: check the strip wire is on W2 and the emergency heat relay on E.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T8411R Electronic Heat Pump Thermostat Installation Instructions (69-1481); T8400C and T8401C Electronic Thermostats Installation Instructions (69-1480)"
+ },
+ "tst-honeywell-t87-round": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The T87N, T87K and CT87N have one heat terminal (W) and no aux or emergency heat terminal. The T87K is heat only.",
+   "On a heat pump the T87N manual has you jumper W to Y, so the one heat call runs the compressor. There is no second stage and no setting for backup heat. If the home needs the strips staged by the thermostat, it needs a heat pump thermostat with an Aux / E terminal."
+  ],
+  "notes": [
+   "The two cycle rate switches on the back only set how often the heat cycles (the heat pump position is 3 CPH). They do not bring on backup heat.",
+   "The F / E fan switch goes to E for a heat pump or electric heat so the thermostat runs the fan on a heat call."
+  ],
+  "source": "T87N/T87K The Round Owner's Manual (69-1958EFS); CT87N Easy-To-See The Round Owner's Manual (69-1919EFS)"
+ },
+ "tst-honeywell-t8775-digital-round": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The T8775A and T8775C are single-stage. The T8775A is heat only. The T8775C can run a single-stage heat pump with W jumpered to Y and O or B for the changeover valve, but it has no aux or emergency heat terminal and no backup heat setting.",
+   "If the strips must be staged by the thermostat, it needs a heat pump thermostat with an Aux / E terminal."
+  ],
+  "notes": [
+   "DIP switches 1 and 2 on the back only set the heat cycle rate (the heat pump position is 3 cycles per hour). They do not bring on backup heat.",
+   "On the T8775C set the fuel switch to E for a heat pump or electric heat so the fan starts with the heat."
+  ],
+  "source": "T8775A,C The Digital Round Installation Instructions (69-1677EF); T8775A,C The Digital Round Owner's Guide (69-1679EF)"
+ },
+ "tst-honeywell-t87f-round": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The T87F is a mercury heating (or heating and cooling, with the Q539 subbase) thermostat for two-wire and three-wire 24 volt heating systems. The manual shows no heat pump hookup and no aux or emergency heat terminal."
+  ],
+  "notes": [
+   "The heat anticipator only sets burn time and cycles per hour for the heating control. It is not a backup heat setting.",
+   "A heat pump with strips needs a heat pump thermostat with an aux terminal."
+  ],
+  "source": "T87F Easy-to-See Thermostats Installation Instructions (69-0200)"
+ },
+ "tst-honeywell-t9-smart": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the T9 for when the strips come on. Its configuration list has the stage counts (ISU 2070) but no droop, no upstage timer, no balance point and no aux lockout. The thermostat decides on its own.",
+   "Check the setup instead. Touch the Menu icon (3 lines at the bottom), scroll down to Advanced setup, then modify configuration. Touch NEXT to step through. System type has to be Heat Pump and Backup heat stages (ISU 2070) has to be 1, or the strips are never called. Touch Done in the upper left to save.",
+   "Check the wiring. The strip wire belongs on W2 (Aux). On a heat pump nothing should be on W.",
+   "Heat pump down: touch the Menu icon, then Select Mode, then Em Heat. The heat pump is locked out and the backup heat holds the setpoint."
+  ],
+  "notes": [
+   "Em Heat only shows when the thermostat is set up for a heat pump with an auxiliary / emergency heat stage.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T9 Smart Thermostat with Smart Room Sensor User Guide (33-00478-04); T9 Smart Thermostat Installation Guide (33-00421)"
+ },
+ "tst-honeywell-tb7220-tb8220": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no droop or timer setting on these. What you can change is the outdoor lockouts, and they only show on a heat pump set up with more heat stages than cool stages and an outdoor sensor set for control.",
+   "TB8220U - press SYSTEM, then press and hold the two blank keys on either side of the center blank key for about five seconds. Use the up and down arrows to move through the setup numbers.",
+   "TB7220U - press and release the System key, then press System and Done together and hold about five seconds until the screen changes.",
+   "Setup 0340, Remote Temperature Sensor, must be 2 - Outdoor for Control.",
+   "Setup 0360, Heat Pump Auxiliary Lockout: default 0 (None). Choices are 40, 45, 50, 55 and 60 F. Above this outdoor temperature only the compressor runs. If the strips are being held off, raise it or set 0.",
+   "Setup 0350, Heat Pump Compressor Lockout: default 0 (None). Choices are 15 to 45 F in 5 F steps. Below this outdoor temperature only the auxiliary heat runs.",
+   "Press Done to exit."
+  ],
+  "notes": [
+   "The manual notes a 5 F deadband between the compressor and auxiliary lockout temperatures.",
+   "Emergency Heat is only offered when setup 0170 is setting 7 or 12.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TB8220U Commercial VisionPRO Installation Instructions (62-3070); TB7220U CommercialPRO Installation Instructions (62-0221)"
+ },
+ "tst-honeywell-th7000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This applies to the TH7220U (heat pump with aux heat). The TH7110U is a single-stage model.",
+   "There is no droop or timer setting. What you can change is the outdoor lockouts, and they need a wired outdoor sensor.",
+   "Enter installer setup: press SYSTEM & FAN, then press and hold the SYSTEM and DONE buttons until the display changes. Use the up and down arrows to change a setting and NEXT to move to the next function.",
+   "Function 0340 (remote sensor) must be 2 - outdoor control sensor - for the lockouts to work.",
+   "Function 0360, heat pump auxiliary lockout: 0 means no lockout. Other choices are 5 to 65 F in 5 F steps. When it is warmer outside than this number only the compressor runs. If the strips are being held off, raise it or set 0.",
+   "Function 0350, heat pump compressor lockout: 0 means no lockout. Other choices are 5 to 60 F in 5 F steps. Below this outdoor temperature the compressor is locked out and only the strips run. Do not raise it just to get more strip heat - a higher number shuts the heat pump off at a milder outdoor temperature.",
+   "Press DONE to exit and save."
+  ],
+  "notes": [
+   "Between the two lockout temperatures both the compressor and the strips can run.",
+   "Fast check: press SYSTEM & FAN, press SYSTEM until Em Heat shows, then DONE. The compressor is locked out and the strips carry the call.",
+   "Check function 0170 is 7 (2 heat / 1 cool heat pump with aux heat) or none of this applies.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TH7000 Series Installation Guide (69-2668ES); TH7000 Series Operating Manual (69-2667ES)"
+ },
+ "tst-honeywell-th8320zw": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this model for when the strips come on. The installer function list has no droop, no upstage timer and no outdoor lockouts.",
+   "Check the setup instead. Press SYSTEM, then press and hold the two buttons shown in the manual until the display changes. Function 0170 must be 7 (2 heat / 1 cool heat pump with aux heat) or 12 (3 heat / 2 cool heat pump with aux heat). Press DONE to exit and save.",
+   "Check the strip wire is on Aux. If there is no separate emergency heat relay, the manual calls for a field jumper between Aux and E.",
+   "To run on the strips right now, press SYSTEM and pick Em Heat."
+  ],
+  "notes": [
+   "Function 0680, heat temperature control, has a choice 3 described as 'Choose if room does not reach set temperature'. The manual does not say it changes when aux heat comes on - treat it as a try, not a fix.",
+   "The installer test can prove the strips: one test step turns on second stage heat (auxiliary heat).",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TH8320ZW Installation Guide (69-2486); TH8320ZW Operating Manual (69-2485EFS)"
+ },
+ "tst-honeywell-visionpro-8000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This applies to the TH8320U and TH8321U. The TH8110U is a one heat / one cool model and cannot stage strips.",
+   "There is no droop or timer setting on this model. The manual says it brings on the next stage when the stage that is running reaches 90% capacity. What you can change is the outdoor lockouts, and they only work with a wired outdoor sensor.",
+   "Enter installer setup: press SYSTEM, then press and hold the two blank keys on either side of the center blank key for about five seconds until the display changes. Use the arrows to pick the function and change the setting.",
+   "Function 0340 (remote sensor) must be 2 - outdoor control sensor - or the lockouts do nothing.",
+   "Function 0360, heat pump auxiliary lockout: 0 means no lockout, the other choices are 40, 45, 50, 55 and 60 F. When it is warmer outside than this number only the compressor runs and the strips are locked out. If the strips will not come on during a mild-weather call, raise this number or set it to 0.",
+   "Function 0350, heat pump compressor lockout: 0 means no lockout. The installation guide lists 15, 20, 25, 30, 35 and 40 F and the product data also lists 45 F. Below this outdoor temperature the compressor is locked out and only the strips run. Do not raise it just to get more strip heat - a higher number shuts the heat pump off at a milder outdoor temperature.",
+   "Press DONE to save and exit."
+  ],
+  "notes": [
+   "The product data says there is a 5 F deadband between the compressor lockout and the auxiliary lockout settings.",
+   "Fast check: press SYSTEM and pick Em Heat. The compressor is locked out, the strips carry the call, and both outdoor lockouts are ignored in that mode.",
+   "Functions 0350 and 0360 are heat pump functions. Check function 0170 is 7 (2 heat / 1 cool heat pump with aux heat) or 12 (3 heat / 2 cool heat pump with aux heat).",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "VisionPRO TH8000 Series Installation Guide (69-1896); VisionPRO 8000 Touchscreen Programmable Thermostat Product Data (68-0280)"
+ },
+ "tst-honeywell-visionpro-8000-redlink": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Touch MENU, select Installer Options, enter the password and touch Done, then select Installer Setup. The password is the date code - it is on the back of the thermostat, or touch MENU > Dealer Information to read it.",
+   "ISU 301 Control Options: the backup heat settings show on either choice, Basic Options or Advanced Options. Advanced Options is only needed to see the second-stage droop.",
+   "ISU 308 / 309 Backup Heat Droop: the choices are Comfort or 2.0 to 15.0 F from setpoint in 0.5 F steps. Comfort is the default. On Comfort the thermostat uses the strips as needed to stay within 1 F of setpoint - that is the soonest setting. If someone set a number, the strips wait until the room has dropped that far. Go back to Comfort or pick a smaller number.",
+   "ISU 311 Upstage Timer for Backup Heat only shows when the droop is 2 F or higher. Choices are Off, 30 to 90 minutes, or 2 to 16 hours. Default is Off. With a timer set, the strips come on when the room drops to the droop or the timer runs out, whichever is first. A shorter time brings them on sooner.",
+   "ISU 312 Outdoor Lockout Backup Heat: Off or 5 to 65 F in 5 F steps, default Off. It needs an outdoor sensor. It keeps the strips off by outdoor temperature. If the strips will not come on and this is set, turn it Off to rule it out.",
+   "ISU 312 Outdoor Lockout Heat Pump: Off or 5 to 60 F in 5 F steps. Default is Off with electric backup heat. This one locks the heat pump out by outdoor temperature.",
+   "Follow the screen prompts through the rest of setup and touch Done to save."
+  ],
+  "notes": [
+   "The upstage timer only works in steady state. The manual says it is not used when the setpoint was changed by hand or by the schedule.",
+   "Comfort is not offered on dual fuel (heat pump with gas furnace). These steps are for electric strips.",
+   "Second-stage strips have their own droop (Backup Heat Droop Stage 2), shown only with Advanced Options and two backup heat stages.",
+   "Fast check: set the system to Em Heat. The thermostat then holds temperature with the backup heat alone.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "VisionPRO 8000 with RedLINK 2.0 Product Data (68-0312); VisionPRO Series with RedLINK 2.0 Installation Guide (69-2760)"
+ },
+ "tst-honeywell-visionpro-iaq": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "For electric strips this thermostat has no droop setting - the product data says the next stage comes on when the one running reaches 90% capacity. What you can change is the outdoor lockouts. They only show when an outdoor temperature sensor is present.",
+   "Enter installer setup: press and release the SYSTEM key, then press and hold the two blank keys on either side of the center blank key for about five seconds until the screen changes.",
+   "ISU 360, Heat Pump Auxiliary Heat Lockout Temperature: 0 means no auxiliary lockout. The other choices run from 5 F to 65 F. Above this outdoor temperature only the compressor runs. If the strips are being held off, raise the number or set 0.",
+   "ISU 350, Heat Pump Balance Point (compressor lockout): 0 means no compressor lockout. Choices run from 5 F to 60 F. With electric backup the default is no compressor lockout. Below this outdoor temperature only the strips run.",
+   "Press DONE to save and exit."
+  ],
+  "notes": [
+   "The product data says an outdoor temperature sensor is required for ISU 350 and ISU 360, and that there is a 5 F deadband between the two lockouts.",
+   "ISU 345, 346 and 347 (dual fuel control, upstage-to-furnace timer and droop temperature) are for dual fuel - a heat pump with a fossil fuel furnace - not for strips.",
+   "Fast check: set the system to Em Heat. The compressor is locked out and both outdoor lockouts are turned off in that mode.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "VisionPRO IAQ Total Home Comfort System Product Data (68-0287)"
+ },
+ "tst-honeywell-visionpro-wifi": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Two different thermostats are on this card. The TH8321WF (VisionPRO 8000 Smart, MENU button) has backup heat settings. The older TH8320WF (SYSTEM button, four-digit functions) does not print any.",
+   "TH8321WF - touch MENU, select Installer Options, enter the password (the date code) and touch Done, then select Installer Setup. Press Next to move through the settings and Done when finished.",
+   "TH8321WF - ISU 308 / 309 Backup Heat Droop: Comfort (factory setting) or 2.0 F to 15.0 F from setpoint in 0.5 F steps. With a number, the room has to fall that far below the setpoint before backup heat comes on. Comfort, or a smaller number, brings the strips on sooner.",
+   "TH8321WF - ISU 311 Upstage Timer for Backup Heat: Off (factory setting), 30, 45, 60, 75 or 90 minutes, or 2 to 16 hours. It only shows when the stage 1 droop is 2 F or higher. The timer starts when the highest heat pump stage turns on and backup heat is used, if needed, when it runs out. A shorter time brings the strips on sooner.",
+   "TH8321WF - ISU 312 Outdoor Lockout Backup Heat: Off (factory setting) or 5 F to 65 F in 5 F steps. It needs an outdoor temperature - ISU 106 Outdoor Temp set to Wired/Internet (a wired outdoor sensor or the Internet). If it is set, turn it Off to rule it out.",
+   "TH8321WF - ISU 312 Outdoor Lockout Heat Pump (Balance Point): Off or 5 F to 60 F in 5 F steps, factory Off with electric backup heat. It needs an outdoor sensor.",
+   "TH8320WF - the user guide lists no droop, timer or lockout function. Press SYSTEM, then press and hold the center blank key for about five seconds, and check function 0170 is set for a heat pump with aux heat.",
+   "Either model - to run on the strips right now, set the system to Em Heat. The compressor is locked out."
+  ],
+  "notes": [
+   "Em Heat does not show unless the thermostat was set up as a heat pump with aux heat.",
+   "TH8321WF: the setup numbers are from Resideo's product data sheet 33-00096, not the installation guide, which lists none. A second backup heat stage has its own droop (2.0 F to 15.5 F) and only shows with ISU 301 Control Options on Advanced Options.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "VisionPRO 8000 Smart Installation Guide (33-00065); VisionPRO 8000 Smart User Guide (33-00066); VisionPRO Wi-Fi TH8320WF User Guide (69-2734); VisionPRO 8000 Smart Thermostat Product Data (33-00096, customer.resideo.com)"
+ },
+ "tst-honeywell-wifi-9000": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on this model for when the strips come on. System Setup only asks whether there is backup heat - no droop, timer or outdoor lockout.",
+   "Check the setup. Touch MENU, select System Setup and touch Next through the screens. Number of heat pump compressor stages and Your backup heat must match the equipment - Your backup heat is No or Yes, and Yes is the default. Touch Done to save and exit.",
+   "To run on the strips right now, set the system to Emergency Heat. The compressor is locked out.",
+   "If Emergency Heat is not offered, the thermostat is not set up as a heat pump with backup heat, or the strip wire is not landed."
+  ],
+  "notes": [
+   "MENU > Preferences > Advanced Preferences is a separate list of options. Nothing there is printed as changing aux heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Wi-Fi 9000 Color Touchscreen Thermostat Installation Guide (69-2815EFS); Wi-Fi 9000 User Guide (69-2814EFS)"
+ },
+ "tst-hunter-44100-44550": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Neither Hunter model on this card can bring on heat strips. The Auto Saver manual says it runs single-stage heat pumps only when they have no auxiliary or emergency heat, and the other model's manual says it will not control multistage heating or cooling. For a heat pump with strips, fit a heat pump thermostat with an aux terminal."
+  ],
+  "notes": [],
+  "source": "Hunter 44550 Auto Saver 550 Owner's Manual; Hunter 44100 Owner's Manual"
+ },
+ "tst-icp-ion-gray-smart": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The install guide prints no setting for when aux heat comes on - no droop, no timer, no lockout temperature. It says advanced settings are done in the Fast OEM Mobile Tech app, so look there (Connect to Equipment, then Smart Thermostat).",
+   "Make sure it is set up as a heat pump WITH aux, or the strips will never be called. Heat Pump is system type L2. The stage choices are 11 (1 Stage with Aux), 12 (1 Stage with 2 Stage Aux) and 21 (2 Stage with Aux). Types 10 and 20 have no aux.",
+   "Check the strip wire. Aux stage 1 goes on W1/A1. A second aux stage goes on Y2/A2.",
+   "Prove the strips work with Output Test Mode: hold the Mode key for 10 seconds (the display shows S0). Use Up / Down to pick A1 or A2 and press Fan to select. The test runs for 20 min. Choose S0 to stop."
+  ],
+  "notes": [
+   "When the aux heat is running the Emergency Heating icon lights on the display.",
+   "The guide prints no Emergency Heat mode selection for this thermostat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Ion Gray Smart Thermostat TSTATIIEWF-01 Installation Guide"
+ },
+ "tst-icp-ion-system-control": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is a communicating control - it stages the heat pump and the electric heat itself. The settings a tech can change are the outdoor temperature lockouts.",
+   "Get into the service menus: touch MENU, then touch and hold the SERVICE icon for at least ten seconds until it turns green.",
+   "Touch SETUP, then HEAT SOURCE LOCKOUTS.",
+   "Furnace, Electric Heat or Hydronic Lockout - the strips will not run when it is warmer outside than this. Adjustable from 15 to 55 F or None. Default is None. If someone set a low number here the strips are held off on milder days - raise it or set it to None.",
+   "HP Lockout - below this outdoor temperature the heat pump is locked out and the backup heat carries the house. Adjustable from -20 to 55 F or None. Default is None. This is not a way to make the strips help sooner - it shuts the heat pump off.",
+   "Defrost with Furnace, Electric Heat or Hydronic - Yes or No. Default is Yes. Leave it on Yes so the strips temper the air in defrost.",
+   "Touch SAVE after the selections. Touch DONE to leave the service menus."
+  ],
+  "notes": [
+   "The service screens use degrees F only.",
+   "On geothermal units the lockout for auxiliary heat is not enabled.",
+   "To prove the strips work: the Checkout menu has an Electric Heat item that lets you run the heater stages.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Ion System Control SYST0101CW Installation Instructions"
+ },
+ "tst-icp-observer": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Both models (TSTAT0101SC and the Wi-Fi TSTAT0201CW) have the same two settings. They work off outdoor temperature.",
+   "Get into the installer menus: press and hold the FAN button for at least ten seconds. The menu drops out by itself after 90 seconds with no touch.",
+   "Find Auxiliary Heat Lockout. The strips are not used when it is warmer outside than this setting. Off = strips can come on any time there is enough demand. Or set an outdoor temperature from 5 to 55 F. Default is Off. If a low number is set here the strips are held off on milder days - raise it or set it to Off.",
+   "Find Heat Pump Lockout. Below this outdoor temperature the heat pump is locked out and only aux heat is used. Off = heating always starts with the heat pump. Or set 5 to 55 F. Default is Off. This is not a way to make the strips help sooner - it shuts the heat pump off.",
+   "Quick fix for the customer today: press MODE and pick Emergency Heat. Only the electric heat is used. It only shows on a heat pump with auxiliary heat."
+  ],
+  "notes": [
+   "An item that is grayed out in the installer menu does not apply to the equipment the control is set up for.",
+   "With non-communicating equipment the outdoor temperature comes from an accessory outdoor temperature sensor. Communicating outdoor units have the sensor from the factory. No outdoor reading, no lockout.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Observer Communicating Wall Control Installation Instructions (616 01 1018 00); Observer Wi-Fi TSTAT0201CW Installation Instructions (616 01 1019 01); Observer Wi-Fi Owner's Manual (616 02 1019 01); Observer product specifications"
+ },
+ "tst-icp-tstat07-series": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only TSTAT0710 and TSTAT0713 on this card run a heat pump with aux heat. TSTAT0712 does not control auxiliary heat and TSTAT0711 is 1-stage heat, 1-stage cool.",
+   "The strips are the 2nd stage of heat. On both models the one setting that moves them is the deadband in Advanced Setup. A smaller deadband brings the 2nd stage on sooner.",
+   "Get into Advanced Setup: hold the MODE button and press the PROGRAM button. On TSTAT0713 put the thermostat in OFF with MODE first. Press MODE to move to the next step. The step number shows at the top right of the display.",
+   "TSTAT0710 - step 6, Deadband. Adjustable from 1 to 6 degrees. The table shows a factory setting of 1. The 2nd stage comes on after the 1st stage has run at least two minutes and the room is off setpoint by the deadband plus 2 degrees.",
+   "TSTAT0713 - step 10, Deadband. This is the 2nd stage deadband. Adjustable from 1 to 6 degrees, default two degrees. The 2nd stage comes on after the 1st stage has run two minutes and the room is off setpoint by the 1st stage deadband (two degrees) plus this 2nd stage deadband.",
+   "While you are in there check Heat Pump is set to On (TSTAT0710 step 3, TSTAT0713 step 7). The wiring diagrams say a residential heat pump must have it On, and the strips go on W2.",
+   "To leave: on TSTAT0710 hold the MODE button and press the FAN button for 2 seconds - the display also leaves the setup screens by itself after 30 seconds with no button press. On TSTAT0713 press PROGRAM to exit."
+  ],
+  "notes": [
+   "Quick fix for the customer today - Emergency Heat. Hold the FAN button and press the Up button (2 seconds on TSTAT0710) until the cool setpoint reads EH. The thermostat then runs the fan and the 2nd stage of heat and locks the compressor out. Do the same again to get out of it.",
+   "There is no outdoor lockout or balance point setting printed for these models.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TSTAT0710 Owner's Manual (ICP); TSTAT0713K Owner's Manual (616 02 1013 00); TSTAT0710 Installation Instructions (2003); TSTAT0713 Installation Manual; ICP Thermostats Product Specifications (770 31 1303 00)"
+ },
+ "tst-lennox-allied-comfortsync-a3": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "From the home screen: menu > settings > advanced settings > view dealer control center > equipment. Touch exit when done to go back to the main screen.",
+   "Aux Heating Activation Threshold. This is how far below setpoint the room has to fall, with the heat pump at 100%, before electric heat is allowed. Range 0 to 10 F, factory 2.5 F. Allied: the lower it is set, the quicker the aux heat responds.",
+   "Electric Heating Activation Hold Time is how long the system waits before it checks whether aux is needed. Range 0 to 15 minutes, factory 10 minutes, in 1 minute steps. A shorter time lets the strips in sooner.",
+   "Balance Point Control. Factory setting is disabled. When enabled, electric heat is locked out any time it is warmer outside than the High Balance Point (range -17 to 75 F, factory 50 F). If the strips will not come on in mild weather, raise the High Balance Point or disable Balance Point Control.",
+   "Low Balance Point (range -20 to 72 F, factory 25 F) locks the heat pump out below that outdoor temperature, so only the backup heat runs. Raising it does not make the strips help the heat pump sooner - it shuts the heat pump off in milder weather and leaves the house on strips alone. Leave it alone unless the heat pump should be off.",
+   "Stage Delay Timers. Enabled from the factory. Stages 2 through 6 come on by timer, 20 minutes by default, adjustable 5 to 120 minutes in 5-minute steps. A shorter delay on the strip stage brings it on sooner. Ignored with a variable capacity furnace, zoning or a variable outdoor unit."
+  ],
+  "notes": [
+   "Balance points need an outdoor temperature. Communicating heat pumps have the sensor built in; otherwise the field-installed outdoor sensor (X2658) is needed.",
+   "Electric Heat Stages During Defrost (range 0 to 5, factory 2) only sets how many elements come on during defrost. Selecting 0 allows none.",
+   "For strips only, turn on Emergency Heat at the thermostat: all heat then comes from the backup heat and the heat pump is not used.",
+   "Allied variable capacity systems stage the electric heat on the thermostat's own logic, not on the stage differentials.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Comfort Sync A3 Ultra Smart Thermostat Installation and Setup Guide (508026-01); Comfort Sync A3 User Guide (508027-01)"
+ },
+ "tst-lennox-comfortsense-3000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the L3532H runs a heat pump with backup heat. The L3011C is a non-heat pump 1 heat / 1 cool thermostat - nothing to set on it.",
+   "L3532H: there is no installer menu and no timer or droop setting. The thermostat brings on backup heat (W1) by itself only on a very large heat demand. A large demand just adds the second compressor stage. The upstage timers are fixed: 30 minutes from small to large demand, then 15 minutes from large to very large demand.",
+   "The one adjustment is the Balance Point, and it only shows with the optional outdoor sensor (X2658) connected. Press the SETTINGS button three times to reach the Balance Point screen, then use the Up/Down arrows. The home screen comes back by itself after about 15 seconds.",
+   "Balance point can be set from 1 F to 55 F. Factory setting is 55 F. A setting of zero turns the balance point off and the thermostat acts as if no outdoor sensor is attached.",
+   "With electric backup and the sensor on, the output table shows W1 (the strips) only below the balance point. So if the balance point has been turned down, the strips are locked out above it - raise it back toward 55 F, or set it to zero, to let the strips help on milder days.",
+   "For strips only: press the HEAT button again while in heat mode to get EMG. HEAT. The heat pump is off in that mode."
+  ],
+  "notes": [
+   "Back of the thermostat body, DIP switch 5 picks the backup heat: Aux for electric, Dual for gas. Set to Dual with electric strips, the heat pump and strips will not run together.",
+   "The balance point has a 3 F swing either side before the thermostat changes over.",
+   "E is jumpered to W1 on most jobs. If there are not separate wires for E and W1, jumper E to W1 at the subbase.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Lennox ComfortSense 3000 Series L3532H 5/2 Day Programmable Thermostat Operation Manual (506074-01); ComfortSense 3000 L3011C Non-Programmable Thermostat Operation Manual; CS3000 5/2 Day Programmable Thermostats Installation Instructions (506077-02)"
+ },
+ "tst-lennox-comfortsense-5000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the L5732U (X4147, 3 heat / 2 cool) can run a heat pump with aux heat. The L5711U (X4146) system type list stops at a single-stage heat pump with no backup or auxiliary heat, so it has no aux to adjust.",
+   "Enter installer set-up: press and release the SYSTEM key, then press and hold the two blank keys on either side of the center blank key for about five seconds. The set-up number is on the left. Change the value with the up and down arrows on the right side, go to the next number with the up arrow in the center, and press DONE to save.",
+   "Check 0170 System Type is 7 (two heat / one cool heat pump with aux) or 12 (three heat / two cool heat pump with aux), and 0200 Auxiliary Heat Source is 0 for electric.",
+   "0360 Heat Pump Auxiliary Heat Lock-Out. Factory setting is 0, no lock-out. The other choices are 40, 45, 50, 55 or 60 F. Above the chosen temperature only the compressor runs. If the strips will not come on in mild weather, raise this or set it back to 0.",
+   "0350 Heat Pump Compressor Lock-Out (balance point). Factory setting is 0, no lock-out. Choices are 15, 20, 25, 30, 35, 40 or 45 F. Below it only the aux heat runs. Raising it does not make the strips help the heat pump sooner - it shuts the compressor off in milder weather. Leave it alone unless the heat pump should be off. There is a minimum 5 F gap between 0350 and 0360.",
+   "Both lock-outs need the outdoor sensor, with 0340 set to 2 (sensor used to control the heat pump lock-outs). Factory setting for 0340 is 0, no sensor.",
+   "0680 Heating Mode Temperature Control: 1 less aggressive, 2 standard (factory), 3 more aggressive. Lennox says to pick 3 if the temperature is undershooting the setpoint, and that this setting applies to the recovery ramp and the use of auxiliary heat during recovery."
+  ],
+  "notes": [
+   "For strips only, press SYSTEM until EM HEAT shows. The compressor is off in that mode.",
+   "If there is only one source of backup heat, the E terminal must be jumped to the Aux terminal.",
+   "The install guide prints no droop or timer setting for aux in normal heating - 0680 and the two lock-outs are what there is.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortSense 5000 Series L5732U (X4147) Installation Instructions (506068-01); L5711U (X4146) Installation Instructions (506069-01); L5711U / L5732U Owner's Guide (506067-01)"
+ },
+ "tst-lennox-comfortsense-5500": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat (13H13) cannot run a heat pump with aux heat. Lennox says it supports single-stage non-heat pump units only, and it has just one heat terminal, W1. There is no aux or backup heat setting on it."
+  ],
+  "notes": [],
+  "source": "ComfortSense 5500 Installation and Setup Guide (507501-02)"
+ },
+ "tst-lennox-comfortsense-7000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press the OPTIONS tab, arrow to INSTALLER SETTINGS and press ENTER. 'MUST BE SET BY QUALIFIED PERSON' shows - press ENTER again. Press SAVE after each change.",
+   "SYSTEM SETUP has to be HEAT PUMP with ELECTRIC backup heat and the right number of indoor heat stages, or the strips are not staged at all.",
+   "STG DELAY TIMERS. Default ON. Each stage after the first comes on by timer when the stage before it is not moving the room: default 20 minutes, and the 2nd through 4th stage delay can be set from 5 to 120 minutes in 5-minute steps. A shorter delay on the strip stage brings the strips on sooner.",
+   "STG 2 DIFF through STG 4 DIFF. Default 1.0 F, adjustable 0.5 to 8.0 F in 0.5 F steps. A smaller differential on the strip stage brings it on with less temperature drop. STG 3 DIFF is for 2-stage heat pumps with backup heat.",
+   "HIGH BALANCE POINT (heat pump only, outdoor sensor installed). Default 50 F. Any time it is warmer outside than this, auxiliary heat is not allowed. If the strips will not come on in mild weather, raise it (up to 75 F) or set it to OFF. It cannot be set closer than 2 F above the Low Balance Point.",
+   "LOW BALANCE POINT. Default 25 F, OFF or anything from -20 F up to the High Balance Point. Below it compressor heating is not allowed.",
+   "If SMOOTH SET BACK is turned on (default is OFF), SSR STG2 LOCK OUT holds the backup heat off during a schedule recovery until 20 minutes (default) before the programmed time. It can be OFF or 20 to 120 minutes in 10 minute steps - a bigger number, or OFF, lets the strips help earlier."
+  ],
+  "notes": [
+   "With the stage delay timers OFF, stages change on temperature only.",
+   "For strips only, press MODE until EM HEAT shows. It skips the heat pump and goes straight to the backup heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortSense 7000 Series Model L7742U Programming and Application Guide (506228-01)"
+ },
+ "tst-lennox-comfortsense-7500": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press menu on the home screen, then press and hold the settings option. The installer settings notice comes up - press confirm. Use < to go back a menu when done.",
+   "SYSTEM SETUP has to show a heat pump with electric indoor heat and the right number of indoor heat stages, or the strips are not staged at all.",
+   "STAGE DELAY TIMER. Factory setting is ON. Each stage after the first comes on by timer when the stage before it is not moving the room: the default delay is 20 minutes, and STAGE 2 through 4 DELAY can be set from 5 to 120 minutes in 5-minute steps. A shorter delay on the strip stage brings the strips on sooner.",
+   "STAGE 2 THROUGH 4 DIFF. Default 1.0 F, adjustable 0.5 to 8.0 F in 0.5 F steps. A smaller differential on the strip stage brings it on with less temperature drop.",
+   "LOW AND HIGH BALANCE POINTS (need the outdoor sensor installed and OUTDOOR SENSOR set to yes). Factory setting is disable for both. When enabled, backup heat is not used any time it is warmer outside than the High Balance Point: default 50 F, range 50 to 75 F. If the strips will not come on in mild weather, raise it or disable the balance points.",
+   "Low Balance Point: default 25 F, range -40 to 48 F. Below it the heat pump is not allowed and only backup heat is used.",
+   "SMOOTH SET RECOVERY (SSR) is enabled from the factory. With SSR on, SSR STAGE 2 LOCK OUT holds the backup heat off during a schedule recovery until 20 minutes (default) before the programmed time. It adjusts from 20 to 120 minutes in 10 minute steps - a bigger number lets the strips help earlier in the recovery."
+  ],
+  "notes": [
+   "With the stage delay timers OFF, stages change on temperature only.",
+   "If compressor protection is timing and there is a call for electric heat, the system waits for the timer to run out.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortSense 7500 (13H14) Installation and Setup Guide"
+ },
+ "tst-lennox-e40-m40": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "E40: tap Menu > Settings > Advanced Settings > View Support Service Control Center, then Equipment Settings. M40: Menu > Advanced Settings > View Support Service Control Center.",
+   "Find Balance Point Control. Factory setting is disabled. With it disabled there is no outdoor lockout on the strips. With it enabled, the strips are locked out any time it is warmer outside than the High Balance Point.",
+   "If it is enabled and the strips will not come on in mild weather, raise the High Balance Point or disable Balance Point Control. High Balance Point: range -17 to 75 F, factory 50 F. On the M40 the range runs from the low balance point + 2 up to 75 F.",
+   "Low Balance Point (range -20 to 72 F, factory 25 F) is the other end: below it the heat pump is locked out and only aux heat runs. Raising it does not make the strips help the heat pump sooner - it shuts the heat pump off in milder weather and leaves the house on strips alone. Leave it alone unless the heat pump should be off.",
+   "Check the Stage Delay Timers. E40: Enabled is the factory setting and brings on the next heat stage on a timer, 20 minutes by default, when the stage before it is not moving the room temperature. E40 spec sheet: the 2nd through 6th stage delay can be set from 5 to 120 min in 5 min steps - a shorter delay brings the strips on sooner. M40: the timers can only be enabled or disabled; the guide says the time is fixed and does not print it.",
+   "Stage differentials: the E40 spec sheet lists the stage differentials as adjustable from 0.5 to 8 F. A smaller differential on the strip stage brings it on with less temperature drop.",
+   "To leave: tap Back until the Service Center shows, then Exit."
+  ],
+  "notes": [
+   "E40: the balance points need the field-installed outdoor sensor (X2658). M40: the guide says the balance points run from internet weather, so the thermostat has to be online.",
+   "The homeowner can also reach this on the E40: Menu > Settings > Heat/Cool has Balance Point Control and Auxiliary Heat On/Off with a slider (-20 to 75 F, factory 25 F low and 50 F high).",
+   "Lennox variable capacity systems do not stage the electric heat on the differentials, and the stage delay timers are ignored with a variable capacity furnace or variable outdoor unit.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Lennox E40 Smart Thermostat Installation and Setup Guide (508808-01); Lennox E40 Smart Thermostat Product Specifications (EHB); Lennox M40 Smart Thermostat Installation and Setup Guide (508806-01)"
+ },
+ "tst-lennox-icomfort-touch": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the home screen press and hold the Lennox logo for 5 seconds, then press yes on the qualified installer warning. Go to the equipment tab, highlight the System (thermostat) device and press edit. Press save after each change.",
+   "Staged Delay Timers. Factory setting is Enabled. Each stage after the first comes on by timer, 20 minutes by default, when the stage before it is not getting to setpoint. The 2nd through 6th Stage Delay can be set from 5 to 120 minutes in 5-minute steps. A shorter delay on the strip stage brings the strips on sooner.",
+   "Stage differentials. 1st stage: default 1.0 F, range 0.5 to 3.0 F. 2nd stage: default 1.0 F, range 0.5 to 8.0 F. 3rd through 6th stage: default 0.5 F, range 0.5 to 8.0 F. Each one starts where the stage before it ends. Smaller differentials bring the strip stage on with less temperature drop.",
+   "Balance Point Control. Factory setting is Disabled. When Enabled, aux electric heat is not allowed any time it is warmer outside than the High Balance Point (factory 50 F; the parameter table prints the range as -17 to 75 F). If the strips will not come on in mild weather, raise the High Balance Point or disable Balance Point Control.",
+   "Low Balance Point (factory 25 F; the table prints -20 to 72 F, the text says -20 F up to the high balance point). Below it the compressor is not allowed and the strips carry the house."
+  ],
+  "notes": [
+   "Balance points need an outdoor sensor. iComfort-enabled heat pumps have one; a non-communicating heat pump needs the X2658 sensor installed and enabled.",
+   "If High and Low Balance Point are not on the list, Balance Point Control is not enabled, or the system does not see an outdoor sensor or is not set up as a heat pump.",
+   "Electric heat comes on 2 elements at a time if available.",
+   "The 2nd stage delay timer is used for heating and cooling. A variable capacity furnace ignores the delay timers in heating.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "iComfort Touch Installer's System Setup Guide (506052-01)"
+ },
+ "tst-lennox-icomfort-wifi-10f81": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the home screen touch and hold the Lennox logo for 5 seconds, then press yes on the qualified installer warning. Touch the equipment button, highlight System in the system devices list and press edit. Press save after each change.",
+   "Staged Delay Timers. Factory setting is Enabled. Each stage after the first comes on by timer, 20 minutes by default, when the stage before it is not getting the room to setpoint. The stage delay can be set from 5 to 120 minutes in 5-minute steps. A shorter delay on the strip stage brings the strips on sooner.",
+   "Second-stage differential: default 1.0 F, adjustable 0.5 to 8.0 F in 0.5 F steps. A smaller differential on the strip stage brings it on with less temperature drop.",
+   "Balance Point Control. Factory setting is Disabled. When Enabled, aux electric heat is not allowed any time it is warmer outside than the High Balance Point (factory 50 F). If the strips will not come on in mild weather, raise the High Balance Point or disable Balance Point Control.",
+   "Low Balance Point (factory 25 F, adjustable from -20 F up to the high balance point). Below it the compressor is not allowed and the strips carry the house.",
+   "XP20 and XP25 only - Modulating HP Electric Heating Switching Point. Lennox: the higher this is set, the quicker the aux heat responds in step change mode. It does nothing for the response time in steady state mode."
+  ],
+  "notes": [
+   "Balance points need an outdoor temperature at the thermostat: either Wi-Fi (local weather) or an outdoor sensor. Communicating iComfort heat pumps have the sensor; a non-communicating heat pump needs the X2658.",
+   "Alert text 'Outdoor Temp is above the High Balance Point' means the indoor unit heat is being held off by that setting.",
+   "Electric heat comes on 2 elements at a time if available.",
+   "The short install manual does not list these settings. They are in the longer Installer's System Setup Guide.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "iComfort Wi-Fi Thermostat Installer's System Setup Guide (507343-02); iComfort Wi-Fi Installation Manual (507341-01)"
+ },
+ "tst-lennox-m30": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "On the thermostat go to settings > advanced settings. The settings below are on that list.",
+   "OUTDOOR SENSOR must be set to Yes. The balance point choices do not show until an outdoor sensor is installed and enabled.",
+   "BALANCE POINT: Disabled or Enabled. When enabled, the strips are locked out any time it is warmer outside than the High Balance Point (factory 50 F). If the strips will not come on in mild weather, raise the High Balance Point or disable it.",
+   "The guide prints two ranges for the High Balance Point: -17 to 75 F in the settings table, and from the low balance point + 2 up to 75 F in the description.",
+   "Low Balance Point (factory 25 F): below it the compressor is not allowed and the thermostat goes straight to backup heat. Printed ranges: -20 to 72 F in the settings table, -40 F to the High Balance Point - 2 in the description. Raising it does not make the strips help the heat pump sooner - it shuts the heat pump off in milder weather and leaves the house on strips alone. Leave it alone unless the heat pump should be off.",
+   "STAGE DELAY: On (factory) or Off. Stage 2 through 4 delay is 20 min from the factory and adjustable 5 to 120 minutes in 5-minute steps. If the stage before it does not move the room 1.0 F toward setpoint in that time, the next stage comes on. A shorter delay on the strip stage brings the strips on sooner.",
+   "STAGE DIFFERENTIAL: Stage 1 and Stage 2 are 1.0 F, Stage 3 and Stage 4 are 0.5 F from the factory, each adjustable 0.5 to 8.0 F. A smaller differential on the strip stage brings it on with less temperature drop."
+  ],
+  "notes": [
+   "With Stage Delay turned Off, stages change on temperature only, not on the timers.",
+   "On a heat pump the W1 terminal is third-stage heat and W2 is 4th stage, so the strip stage number depends on whether the outdoor unit is 1 or 2 stage.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Lennox M30 Smart Thermostat Installation and Setup Guide (507739-02)"
+ },
+ "tst-lennox-merit-51m32-51m33": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 51M33 runs a heat pump with backup heat. The 51M32 is a non-heat pump 1 heat / 1 cool thermostat - nothing to set on it.",
+   "51M33: there is no installer menu and no timer or droop setting. Backup heat comes on by itself on a large heat demand: the room more than 1.5 F under setpoint, or a fixed 30-minute upstage timer running out.",
+   "The one adjustment is the Balance Point, and it only shows with the optional outdoor sensor (X2658) connected. Press the SETTINGS button (behind the door on the right side) twice to reach the Balance Point screen, then use the UP or DOWN arrows. The home screen comes back by itself after a few seconds.",
+   "Balance point can be set from 1 F to 55 F. Factory setting is 55 F. A setting of zero turns the balance point off and the thermostat acts as if no outdoor sensor is attached.",
+   "With electric backup and the sensor on, the output table shows W1 (the strips) only below the balance point. So if the balance point has been turned down, the strips are locked out above it - raise it back toward 55 F, or set it to zero, to let the strips help on milder days.",
+   "For strips only: press the HEAT button again while in normal heat mode to get EMG. HEAT. The heat pump is off in that mode."
+  ],
+  "notes": [
+   "DIP switch #5 picks the backup heat: Aux for an electric furnace, Dual for gas. Set to Dual with electric strips, a large demand drops the heat pump instead of adding the strips.",
+   "The balance point has a 3 F swing either side before the thermostat changes over.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Lennox Merit Series Non-Programmable Thermostats Operation Manual - 51M33 section (504,931M) and 51M32 section"
+ },
+ "tst-lennox-merit-51m34-51m35": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Of the models on this card only the 51M37 and 51M42 run a heat pump with backup heat (3-stage heat / 2-stage cool). The 51M34, 51M35, 51M38, 51M39, L3511C and L3522C are non-heat pump thermostats - nothing to set on those.",
+   "51M37 / 51M42: there is no installer menu and no timer or droop setting. The thermostat brings on backup heat (W1) by itself only on a very large heat demand. A large demand just adds the second compressor stage. The upstage timers are fixed: 30 minutes from small to large demand, then 15 minutes from large to very large demand.",
+   "The one adjustment is the Balance Point, and it only shows with the outdoor sensor (X2658) connected. Press the SETTINGS button three times to reach the Balance Point screen, then use the Up/Down arrows. The home screen comes back by itself after about 15 seconds.",
+   "Balance point can be set from 1 F to 55 F. Factory setting is 55 F. A setting of zero turns the balance point off and the thermostat acts as if no outdoor sensor is attached.",
+   "With electric backup and the sensor on, the output table shows W1 (the strips) only below the balance point. So if the balance point has been turned down, the strips are locked out above it - raise it back toward 55 F, or set it to zero, to let the strips help on milder days.",
+   "For strips only: press the HEAT button again while in heat mode to get emergency heat (EMG. HEAT). The heat pump is off in that mode."
+  ],
+  "notes": [
+   "The heat pump models have a DIP switch on the back of the thermostat body that tells it whether the backup heat is electric or gas. Check it is set for electric with strips.",
+   "The balance point has a 3 F swing either side before the thermostat changes over.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Lennox Merit Series Programmable Thermostats Operation Manual - 51M37 section (505050M) and 51M42 section; CS3000 5/2-Day Programmable Thermostats Installation Instructions (506077-02)"
+ },
+ "tst-lennox-s30-e30": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "From the home screen: menu > settings > advanced settings > view dealer control center, touch proceed, then touch equipment. Touch exit when done to go back to the main screen.",
+   "S30 with a communicating heat pump - Aux Heating Activation Threshold. This is how far below setpoint the room has to fall, with the heat pump at 100%, before electric heat is allowed. Range 0 to 10 F, factory 2.5 F. Lennox: the lower it is set, the quicker the aux heat responds.",
+   "S30 - Electric Heating Activation Hold Time is how long the system waits before it checks whether aux is needed. Range 0 to 60 minutes, factory 10 minutes. A shorter time lets the strips in sooner.",
+   "S30 with an air handler and modulating heat pump - Electric Heating Activation Temp Difference: how far below setpoint is allowed at full heat pump demand before aux is used. Range 0.5 to 10 F, factory 1.5 F. Smaller brings the strips on sooner.",
+   "S30 and E30 - Balance Point Control. Factory setting is disabled. When enabled, electric heat is locked out any time it is warmer outside than the High Balance Point (range -17 to 75 F, factory 50 F). If the strips will not come on in mild weather, raise the High Balance Point or disable Balance Point Control.",
+   "Low Balance Point (range -20 to 72 F, factory 25 F) locks the heat pump out below that outdoor temperature, so only the backup heat runs. Raising it does not make the strips help the heat pump sooner - it shuts the heat pump off in milder weather and leaves the house on strips alone. Leave it alone unless the heat pump should be off.",
+   "S30 and E30 - Stage Delay Timers. Enabled from the factory. Stages 2 through 6 come on by timer, 20 minutes by default, adjustable 5 to 120 minutes in 5-minute steps. A shorter delay on the strip stage brings it on sooner. Not used on variable capacity equipment."
+  ],
+  "notes": [
+   "The E30 guide does not list the Aux Heating Activation Threshold or the Electric Heating Activation settings. On an E30 use the balance points and stage delay timers.",
+   "Balance points need an outdoor temperature. Communicating heat pumps have the sensor built in; otherwise the field-installed outdoor sensor (X2658) is needed.",
+   "Electric Heat Stages During Defrost (range 0 to 5, factory 2) only sets how many elements come on during defrost. Selecting 0 allows none.",
+   "S30 tip from Lennox: if the mode screen has no emerg. heat choice, the electric heat may not be working or may not have been configured at the air handler.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Lennox iComfort S30 Installation and Setup Guide (507536-08); iComfort E30 Installation and Setup Guide (507686-06); S30 Product Specifications (210746)"
+ },
+ "tst-lennox-s40": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Menu > Settings > Advanced Settings > View Support Service Control Center > Ok > Equipment Settings > Thermostat. Shortcut: press and hold the Lennox logo in the top right corner of the home screen for about 5 seconds.",
+   "Aux Heating Activation Threshold: how far below setpoint the room has to fall, with the heat pump at 100%, before electric heat is allowed. Range 0 to 10 F, factory 2.5 F. Lennox: the lower it is set, the quicker the aux heat responds.",
+   "Electric Heating Activation Hold Time: range 0 to 60 min, factory 10 min. This is the wait before the system checks whether aux is needed. A shorter time lets the strips in sooner.",
+   "Balance Point Control: Enabled or Disabled. When enabled, electric heat is locked out any time it is warmer outside than the High Balance Point (range -17 to 75 F, factory 50 F). If the strips will not come on in mild weather, raise the High Balance Point or disable Balance Point Control.",
+   "Low Balance Point (range -20 to 72 F, factory 25 F) locks the heat pump out below that outdoor temperature. Lennox's S40 cheat sheet says it is not recommended to lock out a heat pump at any outdoor temperature when it has an air handler with backup electric heat.",
+   "Staged Delay Timers: Enabled or Disabled. The 2nd through 6th stage delay is 20 min from the factory, adjustable 5 to 120 min in 5 min steps. A shorter delay on the strip stage brings it on sooner."
+  ],
+  "notes": [
+   "Balance points need an outdoor temperature: a communicating heat pump's own sensor or the field-installed outdoor sensor (X2658).",
+   "The homeowner Heat/Cool settings screen also has Auxiliary Heat On/Off for heat pump systems. Selecting it shows a slider for the balance point levels.",
+   "Electric Heat Stages During Defrost (range 0 to 5, factory 2) only sets how many elements come on in defrost.",
+   "Electric heat is staged two elements at a time.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "S40 Smart Thermostat Product Specifications (210953); S40 Cheat Sheet - Quick Setup Tips; Lennox S40 Smart Thermostat Installation and Setup Guide (508222-03)"
+ },
+ "tst-lux-geo": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Press the dial toward the blue arrow to open the menu, then go to Settings, then System.",
+   "Check System Type is set to Heatpump.",
+   "Open Stage 2 Offset. It turns second stage heat on or off and sets the temperature difference at which the second stage (the strips) comes on. Make sure it is turned on. Lux does not print which way it works - a smaller offset should bring the strips on sooner. Lux prints no range and no factory default for it.",
+   "If Stage 2 Offset cannot be set, look at how it was set up. At first setup GEO asks for the number of heat stages, and the OFFSET setting only applies when more than 1 stage was chosen."
+  ],
+  "notes": [
+   "Wiring on a heat pump: the strip wire goes on W2 (Auxiliary/Emergency Heat). There should be no wire on W1, and the YELLOW shorting cap has to be across both pins.",
+   "GEO is not for heat pumps with two compressor stages (Y2).",
+   "The GEO manual prints no outdoor lockout, no balance point and no emergency heat mode. Stage 2 Offset is the only setting found for when the strips come on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "LUX/GEO Installation and Operating Instructions (53599-17); Lux support article 'Navigating the LUX GEO menu'"
+ },
+ "tst-lux-kono-wifi": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Open the main menu and pick the gear icon. The screen shows IS and asks yes or no - pick yes. Press the knob to confirm each screen and step through the settings.",
+   "Check -06 System Type is Heat Pump. The aux offset setting is listed for heat pump systems only.",
+   "Go to -11 Stage 2 (Auxiliary) Heating Offset. The choices are Off, 1, 2, 3, 4 or 5 degrees. It is the value the thermostat uses to decide when to turn on second stage heat. A smaller number should bring the strips on sooner. Off means no second stage heat - if it reads Off, pick a number. The guide prints no factory default.",
+   "Check -14 Dual Fuel. Set to ON, the balance points in settings 15 and 16 decide when the compressor and the aux heat are used. Set to OFF, outdoor temperature is not used for staging.",
+   "With Dual Fuel ON, look at -15 Balance Point High. Aux heat is disabled when it is warmer outside than this number. Set low, it locks the strips out on milder days - raise it to let the strips help. The guide shows 32 F and 99 F for this setting.",
+   "Also with Dual Fuel ON, -16 Balance Point Low is the outdoor temperature below which the compressor is disabled and only aux heat runs. The guide shows 1 F and 77 F for this setting.",
+   "To save and leave: press and hold the knob for 3 seconds after confirming a change, or step on past setting 99, or wait 60 seconds."
+  ],
+  "notes": [
+   "Emergency heat: with stage 2 (aux) heat enabled on a heat pump, EMER heat can be picked from the mode menu. The compressor stays off and the aux heat is the only heat source.",
+   "The strip wire belongs on the W1 terminal. Lux says W1 is used for auxiliary / emergency heat, and an old W2 wire with no W1 wire goes into W1.",
+   "The settings guide does not say where the thermostat gets the outdoor temperature it uses for the balance points.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "KONO Smart Installation Settings Guide; KONO Smart Installation and Operating Manual"
+ },
+ "tst-lux-kono-zigbee": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Open the main menu and pick the gear icon. The screen shows IS and asks yes or no - pick yes. Turn the knob to change a value, press the knob to confirm and go to the next setting.",
+   "Check -08 System Type is Heat Pump. The aux offset setting is listed for heat pump systems only.",
+   "Go to -13 Stage 2 (Auxiliary) Heating Offset. The choices are Off, 1, 2, 3, 4 or 5 degrees F. It is the value the thermostat uses to decide when to turn on second stage heat. A smaller number should bring the strips on sooner. Off means no second stage heat - if it reads Off, pick a number. The guide prints no factory default.",
+   "To save and leave: press and hold the knob for 3 seconds after confirming a change, or step on past setting 99, or wait 60 seconds."
+  ],
+  "notes": [
+   "The KONOz settings guide has no balance point, dual fuel or outdoor lockout setting. The aux offset is the only setting for when the strips come on.",
+   "Emergency heat: with stage 2 (aux) heat enabled on a heat pump, EMER heat can be picked from the mode menu. The compressor stays off and the aux heat is the only heat source.",
+   "The strip wire belongs on the W1 terminal. Lux says W1 is used for auxiliary / emergency heat, and an old W2 wire with no W1 wire goes into W1.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "KONOz Installation Settings Guide; KONOz Installation and Operating Manual"
+ },
+ "tst-lux-kono-zwave": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. From the HOME screen press the knob for the main menu and pick the setting option. When the screen shows iS, turn the knob clockwise to YES and press to confirm.",
+   "Turn the knob to move through the items and values, press the knob once to select. Press and hold the knob for 3 seconds to go back.",
+   "Item 08 System Type has to be HP. Item 13 only shows when the system type is HP.",
+   "Go to item 13, Stage Aux offset. The choices are OFF, -1.0 F, -2.0 F, -3.0 F, -4.0 F and -5.0 F. The default column prints OFF / 2 F, depending on terminal detection. Lux does not print which way it works - as an offset below set point, the choice nearest zero (-1.0 F) should bring the strips on soonest. If it reads OFF, pick a number.",
+   "Item 99 is the factory reset. Leave it on NO."
+  ],
+  "notes": [
+   "The KONOzw installer table has no balance point, dual fuel or outdoor lockout item. The aux offset is the only setting for when the strips come on.",
+   "Item 11 Swing has four choices from +/-0.25 F to +/-2.25 F. The default is the smallest choice.",
+   "The KONOzw operation guide does not print an emergency heat mode or how to leave the installer settings.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "KONOzw Operation Guideline (KN-ZW-WH1-B04, Rev 1.7)"
+ },
+ "tst-lux-p722u": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "First check the hardware. DIP switch #1 on the circuit board has to be ON/UP = HP. After moving a switch, move the HEAT/OFF/COOL switch or press the HW RST button, or the change is not read.",
+   "Put the System Mode switch at OFF and the Set Slide switch at RUN. Hold the HOLD button at least 5 seconds until SET and SWING show in the upper right corner.",
+   "Press NEXT to accept the swing and move on to OFFSET. Use UP / DOWN to change it. Offset runs 0 to 9 degrees.",
+   "The Offset is the number of degrees from set point needed before the second (aux) heat stage turns on. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode.",
+   "Move along - the screens drop out after about 10 seconds with no button press."
+  ],
+  "notes": [
+   "There is no outdoor lockout or balance point on this thermostat. The Offset is the only setting for when the strips come on.",
+   "There is only one Swing setting and it sets the cut-in and cut-out for both the first and second stage. A smaller swing number makes the system cycle closer to set point.",
+   "Emergency heat: in Heat mode with the Set Slide switch at RUN, press the COPY/EMER button once. EMER shows on the screen, the heat pump stays off and only the W2 (aux heat) terminal heats. Press it again to go back to normal Heat.",
+   "The manual prints no factory default for Offset.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "P722U Installation and Operating Instructions"
+ },
+ "tst-lux-tx100e-p711-p721": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "None of these three can bring heat strips on. The TX100E and P711 take a single-stage heat pump only - Lux lists them as not compatible with heat pumps that have auxiliary or emergency heat. The P721 is 2 stage heat / 1 stage cool for gas, oil or electric systems and Lux lists it as not compatible with heat pump systems. If the strips have to be staged from the wall, the home needs a heat pump thermostat with an aux terminal."
+  ],
+  "notes": [
+   "The P721 does have a Stage-2 Offset (setup ITEM #06), but that stages the W2 terminal on a 2 stage furnace, not heat pump strips."
+  ],
+  "source": "TX100E Installation and Operating Instructions; P711 Installation and Operating Instructions; P721 Installation and Operating Instructions"
+ },
+ "tst-lux-tx1500-dial": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on at all. The TX1500 / TX1500b and the TX1500E are single stage only. Lux says they work on single-stage heat pumps but cannot be used with multistage heat pumps, so there is no aux heat stage, no emergency heat and no setting for it. If the strips have to be staged from the wall, the home needs a heat pump thermostat with an aux terminal."
+  ],
+  "notes": [
+   "The Swing setting only changes how far the room drifts before the one heat stage cycles. It does not bring on backup heat."
+  ],
+  "source": "TX1500 Installation and Operating Instructions; TX1500E Installation and Operating Instructions"
+ },
+ "tst-lux-tx1500u": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There are two versions and they are set differently. The TX1500Uc has a setup menu on the screen. The older TX1500U manual uses DIP switches on the circuit board plus a button hold. Work out which one is on the wall first.",
+   "TX1500Uc - open the menu: slide the System Mode switch to OFF, then hold the EMER button about 5 seconds until the screen changes. NEXT moves to the next item, UP / DOWN changes it.",
+   "TX1500Uc - ITEM #06 (System Mode) has to be HP. Then go to ITEM #09 STAGE-2 OFFSET. It runs 0 to 9 and the factory default is 2. It is the number of degrees below set point the room has to fall before the second stage (the strips) turns on. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode.",
+   "TX1500U (switch version) - DIP switch #1 on the circuit board has to be ON/UP = HP. After moving a switch, move the HEAT/OFF/COOL switch or press the HW RST button, or the change is not read.",
+   "TX1500U (switch version) - put the System Mode switch at OFF and the Set Slide switch at RUN. Hold the HOLD button at least 5 seconds until SET and SWING show. Press NEXT to accept the swing and move on to OFFSET, then use UP / DOWN.",
+   "TX1500U (switch version) - Offset runs 0 to 9 degrees. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode. This manual prints no factory default for Offset. The screens drop out after about 10 seconds with no button press."
+  ],
+  "notes": [
+   "There is no outdoor lockout or balance point on this thermostat. The Stage-2 Offset is the only setting for when the strips come on.",
+   "There is only one Swing setting and it sets the cut-in and cut-out for both the first and second stage. A smaller swing number makes the system cycle closer to set point.",
+   "Emergency heat: in Heat mode with the Set Slide switch at RUN, press the EMER button once. EMER shows on the screen, the heat pump stays off and only the W2 (aux heat) terminal heats. Press it again to go back to normal Heat.",
+   "This thermostat uses the W2 terminal for both aux and emergency heat. If the old thermostat had a separate E wire, Lux says to tape it off.",
+   "The TX1500Uc manual does not print how to leave the setup menu.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TX1500U Installation and Operating Instructions; TX1500Uc Installation and Operating Instructions"
+ },
+ "tst-lux-tx500-dial": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on at all. Lux says the TX500 cannot be used with heat pumps. The TX500E works on single stage heat pumps only and cannot be used with multi-stage heat pumps. Neither has an aux heat stage, emergency heat or a setting for it. If the strips have to be staged from the wall, the home needs a heat pump thermostat with an aux terminal."
+  ],
+  "notes": [
+   "The Swing setting only changes how far the room drifts before the one heat stage cycles. It does not bring on backup heat."
+  ],
+  "source": "TX500 Installation and Operating Instructions; TX500E Installation and Operating Instructions"
+ },
+ "tst-lux-tx500u": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There are two versions and they are set differently. The TX500Uc has a setup menu on the screen. The older TX500U manual uses DIP switches on the circuit board plus a button hold. Work out which one is on the wall first.",
+   "TX500Uc - open the menu: slide the System Mode switch to OFF, then hold the EMER button about 5 seconds until the screen changes. NEXT moves to the next item, UP / DOWN changes it.",
+   "TX500Uc - ITEM #06 (System Mode) has to be HP. Then go to ITEM #09 STAGE-2 OFFSET. It runs 0 to 9 and the factory default is 2. It is the number of degrees below set point the room has to fall before the second stage (the strips) turns on. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode.",
+   "TX500U (switch version) - DIP switch #1 on the circuit board has to be ON/UP = HP. After moving a switch, move the HEAT/OFF/COOL switch or press the HW RST button, or the change is not read.",
+   "TX500U (switch version) - put the System Mode switch at OFF and the Set Slide switch at RUN. Hold the HOLD button at least 5 seconds until SET and SWING show. Press NEXT to accept the swing and move on to OFFSET, then use UP / DOWN.",
+   "TX500U (switch version) - Offset runs 0 to 9 degrees. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode. This manual prints no factory default for Offset. The screens drop out after about 10 seconds with no button press."
+  ],
+  "notes": [
+   "There is no outdoor lockout or balance point on this thermostat. The Stage-2 Offset is the only setting for when the strips come on.",
+   "There is only one Swing setting and it sets the cut-in and cut-out for both the first and second stage. A smaller swing number makes the system cycle closer to set point.",
+   "Emergency heat: in Heat mode with the Set Slide switch at RUN, press the EMER button once. EMER shows on the screen, the heat pump stays off and only the W2 (aux heat) terminal heats. Press it again to go back to normal Heat.",
+   "This thermostat uses the W2 terminal for both aux and emergency heat. If the old thermostat had a separate E wire, Lux says to tape it off.",
+   "The TX500Uc manual does not print how to leave the setup menu.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TX500U Installation and Operating Instructions; TX500Uc Installation and Operating Instructions"
+ },
+ "tst-lux-tx700u": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Open the setup menu: slide the System Mode switch to OFF, then hold the EMER button about 5 seconds until the screen changes. NEXT moves to the next item, UP / DOWN changes it.",
+   "ITEM #06 (System Mode) has to be HP. With HP, Lux also wants the Gas/Electric option on the circuit board set to ELEC.",
+   "Go to ITEM #09 STAGE-2 OFFSET. It runs 0 to 9 and the factory default is 2. It is the number of degrees below set point the room has to fall before the second stage (the strips) turns on. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode."
+  ],
+  "notes": [
+   "There is no outdoor lockout or balance point on this thermostat. The Stage-2 Offset is the only setting for when the strips come on.",
+   "Emergency heat only shows when ITEM #06 is HP. In Heat mode with the Set Slide switch at RUN, press the EMER button once. EMER shows on the screen, the outdoor unit stays off and only the W2 (aux heat) terminal heats. Press it again to go back to normal Heat.",
+   "Lux's general advice in this manual: use Emergency Heat mode when it is less than 32F outside, but go by the heat pump maker's literature.",
+   "This thermostat uses the W2 terminal for both aux and emergency heat. If the old thermostat had a separate E wire, Lux says to tape it off.",
+   "The manual does not print how to leave the setup menu.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TX700U Installation and Operating Instructions"
+ },
+ "tst-lux-tx9000ts": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on at all. Lux says the TX9000TS works with single stage heat pumps and cannot be used with multistage systems. It has no aux heat stage, no emergency heat and no setting for it. If the strips have to be staged from the wall, the home needs a heat pump thermostat with an aux terminal."
+  ],
+  "notes": [
+   "The Swing value in the MENU only changes how far the room drifts before the one heat stage cycles. It does not bring on backup heat."
+  ],
+  "source": "TX9000TS Installation and Operating Instructions"
+ },
+ "tst-lux-tx9100u": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Three versions, set three ways. Lux says the a, b and c revisions of this model differ - some use DIP switches on the circuit board, some a menu on the screen. Check which one is on the wall.",
+   "TX9100Uc (screen menu) - slide the System Mode switch to OFF, then hold the EMER button about 5 seconds until the screen changes. NEXT moves to the next item, UP / DOWN changes it.",
+   "TX9100Uc - ITEM #06 (System Mode) has to be HP. Then go to ITEM #10 STAGE-2 OFFSET. It runs 0 to 9 and the factory default is 2. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode.",
+   "TX9100U (switch version) - DIP switch #1 on the circuit board has to be ON/UP = HP. After moving a switch, move the HEAT/OFF/COOL switch or press the HW RST button.",
+   "TX9100U (switch version) - System Mode switch at OFF, Set Slide switch at RUN. Hold the HOLD button at least 5 seconds until SET and SWING show. Press NEXT to accept the swing and move on to OFFSET. Offset runs 0 to 9 degrees, 0 turns the second stage off. This manual prints no factory default for Offset.",
+   "TX9100E - option switch [1] on the back has to be ON (HP). Then System Mode switch at OFF, rotary dial at RUN, press HOLD at least 2 seconds until SET: and SWING show. Press NEXT to get to OFFSET. Offset runs 0 to 9 degrees, 0 turns the second stage off.",
+   "On all three the Offset is the number of degrees from set point needed before the second (aux) heat stage turns on, so a smaller number brings the strips on sooner. On the TX9100U the screens drop out after about 10 seconds with no button press."
+  ],
+  "notes": [
+   "Lux's own troubleshooting sheet: for no second stage or AUX heating, the offset may be set to 0 and needs to be at least 1. For emergency heat that does not turn on, the system type must be set from Furn to HP.",
+   "There is no outdoor lockout or balance point on this thermostat. The Stage-2 Offset is the only setting for when the strips come on.",
+   "AUX on the display means the thermostat is running the first stage and the auxiliary stage together.",
+   "Emergency heat: in Heat mode with the slide or dial at RUN, press the COPY/EMER button once. EMER shows on the screen, the heat pump stays off and only the W2 (aux heat) terminal heats. Press it again to go back to normal Heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TX9100U Installation and Operating Instructions; TX9100Uc Installation and Operating Instructions; TX9100E Installation and Operating Instructions; LUX TX9100U Troubleshooting / FAQ"
+ },
+ "tst-lux-tx9600": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "First check the hardware. DIP switch #1 on the circuit board has to be ON/LEFT = HP. After moving a switch, move the HEAT/OFF/COOL switch or press the HW RST button, or the change is not read.",
+   "On the screen press MENU, then SCROLL until SET/REVIEW SWING VALUE shows, then press OK. ADJUST VALUE SWING shows first.",
+   "Press NEXT to accept the swing. ADJUST VALUE OFFSET shows next. Use UP and DOWN to set it between 0 F and 9 F.",
+   "The Offset is the number of degrees from set point needed before the second (aux) heat stage turns on. A smaller number brings the strips on sooner. 0 turns the second stage off in normal Heat mode.",
+   "Press NEXT to accept, then EXIT to go back to the normal screen. The screens drop out after about 10 seconds with no button press."
+  ],
+  "notes": [
+   "There is no outdoor lockout or balance point on this thermostat. The Offset is the only setting for when the strips come on.",
+   "There is only one Swing setting and it sets the cut-in and cut-out for both the first and second stage. A smaller swing number makes the system cycle closer to set point.",
+   "Emergency heat: press the EMER button once in Heat mode. The top of the screen changes to Emer Heat. The heat pump stays off and only the W2 (aux heat) terminal heats. Press EMER again to go back to normal Heat.",
+   "This thermostat uses the W2 terminal for both aux and emergency heat. If the old thermostat had a separate E wire, Lux says to tape it off.",
+   "The manual prints no factory default for Offset.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TX9600TS Installation and Operating Instructions"
+ },
+ "tst-mitsubishi-mhk1": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting on this controller. It runs a Mitsubishi ductless or ducted heat pump indoor unit, and its installer setup list prints nothing for a backup heater.",
+   "To look through installer setup anyway: press and hold the FAN and up arrow buttons until the display changes (WAIT can show for up to 40 seconds). Press NEXT to step through the functions. Press DONE to save and exit.",
+   "Check Function 142 (System Type). It must be Heat & Cool (Heat Pump), not Cool Only, or there is no heat mode at all.",
+   "If the indoor unit has a backup heater, it is run by the indoor unit, not by this controller. Look in the indoor unit's manuals for its heater settings."
+  ],
+  "notes": [
+   "Setup functions 101 to 128 are indoor unit settings and their defaults are set automatically by the equipment. None of the ones printed is for a heater.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "MHK1 Wireless System Installation Guide (69-2426-01)"
+ },
+ "tst-mitsubishi-mhk2": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This kit runs a Mitsubishi M-Series or P-Series heat pump indoor unit. Any backup heater is switched by the indoor unit (CN24 output), and the MHK2 can change the indoor unit's Function Codes for it.",
+   "Press and hold the Menu button for 5 seconds to open the advanced menu, then scroll to Function Codes. Allow up to 40 seconds to get in. If the indoor unit does not support function codes, that menu is not shown.",
+   "SLZ and SEZ indoor units - Function Code 23 (CN24 backup heat integration). Setting 1 = heater on when the room falls 4.5 F below setpoint. Setting 2 = heater on when the room falls 1.8 F below setpoint. Setting 2 brings the heater on sooner.",
+   "SVZ, PEAD and PVA indoor units - Function Code 11 (Heater Control, used with Mode 23). Setting 1 = 12 VDC output disabled (OFF). Setting 2 = 12 VDC output enabled (ON). If it is on 1 the heater output is off.",
+   "SVZ, PEAD and PVA - Function Code 23 (CN24 backup heat integration). Setting 1 = disabled during defrost operation and error states. Setting 2 = enabled during defrost operation and error states. The table footnote on setting 2 says the heater will only operate during a communication error between the indoor and outdoor unit - read the indoor unit service manual before counting on it.",
+   "Leave the Function Codes menu when done. Allow up to 30 seconds to exit."
+  ],
+  "notes": [
+   "The manual says the default for each Function Code is set automatically by the equipment, so it prints no factory setting for these. Write down what you find before you change it.",
+   "Function Codes are not available on City Multi or on M-Series models beginning with MFZ, MLZ and MSZ, and some settings may not show on a multi-zone outdoor unit.",
+   "PAA coil on a furnace is different: Function Codes 8 and 10 set the economic balance point (the outdoor temperature below which the furnace alone heats). That is a furnace changeover, not heat strips.",
+   "The manual sends you to the indoor unit service manual for how backup heat operates.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "MHK2 Wireless Remote Controller Kit Installation Manual (M-Series & P-Series Indoor Unit Function Codes table)"
+ },
+ "tst-mitsubishi-pac-yt53crau": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting printed for this controller. It is a simple wired controller for Mitsubishi M-Series, P-Series and CITY MULTI indoor units, and its manual prints nothing about backup or auxiliary heat.",
+   "What it can do on M-Series and P-Series is change indoor unit functions. With the controller Off, hold the FAN button and the TEMP button shown in the manual's figure together for two seconds or longer. Set the refrigerant address and unit address, pick the mode number, pick the setting number and register it. Hold the same two buttons again to end.",
+   "The function table in this manual stops at mode 11 and none of the modes it lists is a heater setting. For other mode numbers it says to see the indoor unit installation manual - look there for any heater setting."
+  ],
+  "notes": [
+   "Do not run the system from the controller for 30 seconds after you end function selection.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PAC-YT53CRAU Simple MA Remote Controller Installation Manual (WT06429X01)"
+ },
+ "tst-mitsubishi-par-21maau": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting printed for this controller. It is a wired controller for Mitsubishi Mr. SLIM and CITY MULTI indoor units, and its manual prints nothing about backup or auxiliary heat.",
+   "What it can do on Mr. SLIM is change indoor unit functions. With the controller Off, hold FILTER and TEST together for two seconds or longer until FUNCTION SELECTION blinks. Set the refrigerant address and unit address, pick the mode number, pick the setting number and register it. Hold FILTER and TEST together again to end.",
+   "The function table in this manual lists no heater mode. It says to see the indoor unit installation manual for each indoor unit's modes and factory settings - look there for any heater setting."
+  ],
+  "notes": [
+   "Function selection cannot be done on a CITY MULTI system from this controller.",
+   "Do not run the system from the controller for 30 seconds after you end function selection.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PAR-21MAAU MA Remote Controller Installation Manual"
+ },
+ "tst-mitsubishi-par-30maau": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting printed for this controller. Its installation manual is for CITY MULTI indoor units and covers mounting and wiring only - nothing about backup or auxiliary heat.",
+   "The manual points to a separate Initial Setting Manual and Instructions Book for settings. Those are not on file for this card.",
+   "If the indoor unit has a backup heater, look in the indoor unit's own Installation Manual for how it is set up."
+  ],
+  "notes": [
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PAR-30MAAU MA Remote Controller Installation Manual (WT06014X01)"
+ },
+ "tst-mitsubishi-par-40maau": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting printed for this controller. It is a wired controller for Mitsubishi M-Series, P-Series and CITY MULTI heat pump indoor units, and its manual prints nothing about backup or auxiliary heat.",
+   "What it can do is change indoor unit function settings. At the Main display press the Setting button and select Service. Enter the maintenance password - 9999 from the factory unless it was changed. Then select Function setting.",
+   "On M-Series and P-Series: set the refrigerant address and unit number, pick the mode number, change the setting number, then press SELECT to send it to the indoor unit.",
+   "The table in this manual stops at mode 11 and none of the modes it lists is a heater setting. It says to get the full list of mode numbers from the indoor unit's Installation Manual - look there for any heater setting on that indoor unit."
+  ],
+  "notes": [
+   "Write down the settings before you change any. The manual tells you to record every function you change.",
+   "Forgot the maintenance password: hold F1 for ten seconds on the maintenance password screen to put it back to 9999.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PAR-40MAAU MA Remote Controller Installation Manual"
+ },
+ "tst-mitsubishi-par-41maau-42maaub": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting printed for this controller. It is a wired controller for Mitsubishi M-Series, P-Series and CITY MULTI heat pump indoor units, and its manual prints nothing about backup or auxiliary heat.",
+   "What it can do is change indoor unit function settings. At the Main display press the MENU button and select Service. Enter the maintenance password - 9999 from the factory unless it was changed. Then select Function setting.",
+   "On M-Series and P-Series: set the refrigerant address and unit number, pick the mode number, change the setting number, then press SELECT/HOLD to send it to the indoor unit.",
+   "The table in this manual stops at mode 11 and none of the modes it lists is a heater setting. It says to get the full list of mode numbers from the indoor unit's Installation Manual - look there for any heater setting on that indoor unit."
+  ],
+  "notes": [
+   "Write down the settings before you change any. The manual tells you to record every function you change.",
+   "Some indoor units show the function list a second way: page through with F3 / F4, pick the mode number with F1 / F2 and press SELECT/HOLD, then pick the setting number. The manual prints setting numbers 1 through 3 for modes 1 through 28 and 1 through 15 for modes 31 through 66.",
+   "Forgot the maintenance password: hold F1 for ten seconds on the maintenance password screen to put it back to 9999.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PAR-41MAAU MA Remote Controller Installation Manual; PAR-42MAAUB MA Remote Controller Installation Manual"
+ },
+ "tst-mitsubishi-par-ct01mau-sb": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no aux heat setting printed for this controller. It is a wired controller for Mitsubishi M-Series, P-Series and CITY MULTI heat pump indoor units, and its manual prints nothing about backup or auxiliary heat.",
+   "What it can do is change indoor unit function settings. At the Main display press the Setting button and select Service. Enter the maintenance password - 9999 from the factory unless it was changed. Then select Function setting.",
+   "On M-Series and P-Series: set the refrigerant address and unit number, pick the mode number, change the setting number, then press SELECT to send it to the indoor unit.",
+   "The table in this manual stops at mode 11 and none of the modes it lists is a heater setting. It says to get the full list of mode numbers from the indoor unit's Installation Manual - look there for any heater setting on that indoor unit."
+  ],
+  "notes": [
+   "Write down the settings before you change any. The manual tells you to record every function you change.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "PAR-CT01MAU-SB MA Touch Remote Controller Installation Manual"
+ },
+ "tst-mysa-smart-thermostat": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is done in the Mysa app, not on the thermostat. Mysa calls it Staged Auxiliary Heat. It needs firmware 4.5.16 or newer and app version 4.13 or newer.",
+   "It only shows when the configuration code is one with aux heat - Mysa lists codes ending in C, D, K, L, O or P.",
+   "In the app tap the thermostat, then the Settings icon (bottom right) > Thermostat Configuration > Staged Auxiliary Heat. It is off by default - turn it on. Pick Electric Resistance as the aux type for heat strips, so the strips run along with the compressor.",
+   "Auxiliary Heat Delta is how far the room has to fall before the strips come on. Electric defaults are 4 F on a single-stage heat pump and 6 F on a two-stage. Mysa prints the range in Celsius only: 0.5 to 5 C. A smaller delta brings the strips on sooner. On a two-stage heat pump it stacks below the Stage 2 temperature difference, which is its own setting.",
+   "Auxiliary Heat Time Delay is how long the heat pump runs without reaching the setting before the strips come on. Electric default is 40 min, range 10 to 120 min, in 10-minute steps. A shorter delay brings the strips on sooner. The strips come on when either one is passed."
+  ],
+  "notes": [
+   "Staged Auxiliary Heat is off by default. Until it is turned on, Mysa describes switching to Aux / Emergency mode by hand.",
+   "Aux mode (in the mode menu) forces aux heat instead of the heat pump. If Aux / Emergency mode is set by hand, the automatic staging stands back.",
+   "Picking the wrong aux type matters: Mysa warns about running the heat pump and aux together on a gas or oil furnace.",
+   "No outdoor temperature lockout for aux is printed by Mysa.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Mysa Support: Staged Auxiliary Heat; Mysa Support: Thermostat Modes; Mysa Support: Thermostat Configuration (help.getmysa.com); Mysa Smart Thermostat for Central HVAC User Guide"
+ },
+ "tst-nest-learning-1st-gen": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The 1st gen runs a one-stage heat pump with auxiliary heat. Its own install guide prints no aux settings, so these steps come from Google's help pages for the Nest Learning Thermostat (3rd gen or earlier). Menus on an old 1st gen may look a little different.",
+   "Do it on the thermostat, in the regular Settings menu. Press the ring to open the menu, select Settings, then Nest Sense, then Heat Pump Balance.",
+   "Pick Max Comfort. Google says Max Comfort generally gives a higher AUX lockout temperature, so aux comes on sooner and more often. Max Savings does the opposite. Balanced sits between the two. Google's help page prints Max Comfort as the default, but its Pro Install Guides for the later Nest models print Balanced - look at what it is set to, do not assume.",
+   "To set the lockout by hand - set Heat Pump Balance to Off. The thermostat then uses the AUX lockout temperature you set at Settings > Equipment > Heat Pump. Aux comes on when it is colder outside than that temperature, so raise it if the strips are being held off on mild days.",
+   "If Emer. Heat shows in the Equipment menu: press the ring, Settings > Equipment, Continue at the wire diagram, Continue again at the summary, select Emer. Heat, then Emer. Heat again. It stays on until it is turned off (press the ring, select Thermostat, then Turn Off). It only shows when a wire in the star terminal is set as Emergency Heat."
+  ],
+  "notes": [
+   "Heat Pump Balance and the lockout need Wi-Fi for the outdoor temperature. Google says without Wi-Fi the thermostat will not take specific measures to avoid aux heating.",
+   "No Heat Pump Balance in Nest Sense: check the wires. No wire on O/B means it is not set up as a heat pump. No wire on W2/AUX means it sees no aux heat.",
+   "Google prints no default or range for the lockout temperature that is specific to the 1st gen.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Nest Learning Thermostat Installation Guide (1st generation); Heat Pump Balance, Nest thermostat settings, and Emergency Heat for heat pump systems (Google Home and Nest Help, support.google.com)"
+ },
+ "tst-nest-learning-3rd-2nd-gen": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips on W2/AUX (set up as single fuel). A dual fuel system does not get Heat Pump Balance.",
+   "Do it on the thermostat, in the regular Settings menu - Google prints no installer code for it. Press the ring to open the menu, turn to Settings and press.",
+   "Simplest - go to Nest Sense > Heat Pump Balance and pick Max Comfort. Google says Max Comfort generally gives a higher AUX lockout temperature, so aux comes on sooner and more often. The choices are Max Comfort, Balanced, Max Savings and Off. Google's heat pump sheet and help page print Max Comfort as the default; the 3rd gen Pro Install Guide prints Balanced.",
+   "Heat Pump Balance also sets the wait before the strips come in. The 3rd gen Pro Install Guide prints 60 minutes for Max Comfort, 90 minutes for Balanced and 120 minutes for Max Savings. There is no separate timer setting on this model.",
+   "To set the lockout by hand - set Heat Pump Balance to Off first. Then press the ring, Settings > Equipment > Heat Pump, and change the auxiliary heat lockout. The strips are locked out when it is warmer outside than this. Range 0 F to 90 F, or Always (always use aux heat). Default is 40 F on the heat pump sheet and the Pro guide table; the Pro guide how-to pages say 50 F. Raise it if the strips are being held off on mild days.",
+   "Compressor Lockout is on the same Heat Pump screen (default -25 F, range -25 F to 32 F or Always). It can be changed even with Heat Pump Balance on.",
+   "Need strips only right now - Emergency Heat. Press the ring, Settings > Equipment, select Continue at the wiring diagram, Continue again at the system summary, select Emer. Heat, then Emer. Heat again to confirm. It stays on until someone turns it off: press the ring, select Thermostat, then Turn Off.",
+   "Emergency Heat only shows on the Learning Thermostat if there is a wire in the * (star) terminal set up as emergency heat. Google's sheet says W1/W2 can be jumped to that terminal to run the aux heat as E heat."
+  ],
+  "notes": [
+   "The same settings can be reached from the phone. Nest app: Settings > the thermostat > Heat Pump Balance, and Settings > Thermostat > Equipment > Auxiliary Lockout Temp.",
+   "The droop on these thermostats is 1 F and cannot be changed. At the start of a heat cycle aux is held off by the upstage timer; if the room drops 1 F below where the cycle started, the timer is ignored and aux is allowed.",
+   "The lockout temperatures use internet weather and are only enforced on Wi-Fi. No outdoor sensor can be connected. Without Wi-Fi the strips come on when the house takes longer than expected to reach the target.",
+   "To test the strips: turn the aux lockout off in Equipment > Heat Pump, then raise the setpoint 4 F in Heat mode.",
+   "No Heat Pump Balance in Nest Sense: check for a wire on W2/AUX and on O/B. Only one aux heat wire is supported.",
+   "Pro Setup (Settings > Equipment > Continue > Continue > Pro Setup) asks for a Nest Pro ID. It is for wire setup, not needed for the settings above.",
+   "The Pro Install Guide is written for the 3rd gen. Google's help pages give the same Settings menus for the 3rd gen or earlier, so the 2nd gen follows the same steps, but the printed numbers come from the 3rd gen guide.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Configuring Heat Pump Settings - Nest Learning Thermostat & Nest Thermostat E (Google Nest Pro sheet); Nest Learning Thermostat 3rd gen Pro Install Guide; Heat Pump Balance and Emergency Heat for heat pump systems (Google Home and Nest Help)"
+ },
+ "tst-nest-learning-4th-gen": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips (set up as Single Fuel). A dual fuel system does not get Heat Pump Balance - it uses the Dual Fuel Breakpoint instead.",
+   "Google prints no installer code for these settings and says the changes can be made in the Google Home app or on the thermostat. In the Google Home app open the thermostat, then Settings > Equipment > Heat Pump.",
+   "Simplest - leave Use Heat Pump Balance on and pick Max Comfort. Google describes Max Comfort as using AUX heat more to reach the setpoint faster, and Max Savings as using it less. The choices are Max Comfort, Balanced, Max Savings and Off. Google's heat pump sheet prints Max Comfort as the default; the Pro Install Guide prints Balanced.",
+   "For direct control - turn Use Heat Pump Balance off, then open Advanced Configuration. The four settings below can only be changed with Heat Pump Balance off.",
+   "Auxiliary Lockout Temp - the strips cannot run when it is warmer outside than this. Default 40 F, range 0 F to 70 F, or Always or Never. Raise it if the strips are being held off on mild days.",
+   "Auxiliary Upstage Timer - how long the heat pump runs alone before the strips are allowed. Default 90 minutes. Choices: 30 min, 60 min, 90 min, 2 hr, 3 hr, 5 hr, 8 hr, 12 hr. A shorter time brings the strips on sooner.",
+   "Droop - how far the room has to fall below the target before the strips can be used. Default 0 F. Choices: 0, 1, 2, 3, 4, 5 F. A smaller droop brings the strips on sooner.",
+   "Minimum Delay - the shortest wait after a heat cycle starts before the strips can be used. Default 15 minutes. Choices: 15, 30, 45, 60 min. A shorter delay brings the strips on sooner.",
+   "Compressor Lockout is a separate setting at Settings > Equipment > Compressor lockout (default -25 F, range -25 F to 32 F or Always). It can be changed even with Heat Pump Balance on.",
+   "Need strips only right now - turn on Emergency Heat. App: Settings > Equipment > Emergency Heat, switch User Emergency Heat to On. On the thermostat: press it for the menu, turn the ring to Settings, select Emergency Heat, then Yes. The strips become the main heat and the heat pump is shut off until someone turns Emergency Heat off."
+  ],
+  "notes": [
+   "The lockout temperatures use internet weather. This thermostat does not take an outdoor sensor. Without Wi-Fi it cannot adjust or enforce the aux lockout, and the strips come on when the house takes longer than expected to reach the target.",
+   "No Heat Pump Balance or aux settings showing: check the wiring. With a wire only on W2/AUX (none on W1) the thermostat sets itself up as single fuel. No wire on W2/AUX means it sees no aux heat.",
+   "Two-stage strips have their own stage 2 timer and temperature settings among the custom aux settings.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Configuring Heat Pump Settings - Nest thermostats (Google Nest Pro sheet); Nest Learning Thermostat (4th gen) Pro Install Guide; Heat Pump Balance (Google Home and Nest Help)"
+ },
+ "tst-nest-thermostat-2020": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips on the W wire (set up as Single Fuel). A dual fuel system does not get Heat Pump Balance.",
+   "Do this in the Google Home app - Google says to set Heat Pump Balance and the lockout temperatures on the app. Google prints no installer code for it. Open the thermostat in the app, tap Settings at the top right, then scroll down to Equipment.",
+   "Simplest - set Heat Pump Balance to Max Comfort. Google describes Max Comfort as using AUX heat more to reach the setpoint faster. The choices are Max Comfort, Balanced, Max Savings and Off. Google's heat pump sheet shows it at Settings > Equipment > Heat Pump > Use Heat Pump Balance; Google's help page shows it at Settings > Temperature Preferences. The sheet prints Max Comfort as the default; the Pro Install Guide prints Balanced.",
+   "For direct control - turn Heat Pump Balance off, then go to Settings > Equipment > Heat Pump > Advanced Configuration. These settings only show with Heat Pump Balance off and the thermostat fully set up and on Wi-Fi. The Pro Install Guide and Google's heat pump sheet list them for this model, but Google's help page calls Advanced Configuration Nest Learning Thermostat 4th gen only. If it does not show, the lockout temperatures are still under Equipment.",
+   "Aux lockout temperature - the strips cannot run when it is warmer outside than this. Range 0 F to 70 F, default 40 F (one page of the Pro guide says 50 F). Raise it if the strips are being held off on mild days.",
+   "Aux upstage timer - how long the heat pump runs alone before the strips come in. Default 90 min. Choices: 30 min, 60 min, 90 min, 2 hr, 3 hr, 5 hr, 8 hr, 12 hr. A shorter time brings the strips on sooner.",
+   "Droop - how far the room has to fall below the target before the strips can be used. Choices: 0, 1, 2, 3, 4, 5 F. The Pro guide prints 0 F as the default; the heat pump sheet prints both 0 F and 1 F for this model. A smaller droop brings the strips on sooner.",
+   "Minimum delay - the shortest wait after a heat cycle starts before the strips can be used. Default 15 min. Choices: 15, 30, 45, 60 min. A shorter delay brings the strips on sooner.",
+   "Compressor Lockout is a separate setting under Equipment (default -25 F, range -25 F to 32 F or Always). It can be changed even with Heat Pump Balance on.",
+   "Need strips only right now - turn on Emergency Heat. App: Settings > Equipment > Emergency Heat, switch User Emergency Heat to On. On the thermostat: tap the side for the menu, scroll to Settings, select Emergency Heat, tap again for Yes. It powers the W terminal alone and the heat pump stays off until someone turns Emergency Heat off."
+  ],
+  "notes": [
+   "The lockout temperatures use internet weather. This thermostat does not take an outdoor sensor. Without Wi-Fi the lockouts are not enforced and the strips come on when the house takes longer than expected to reach the target.",
+   "To test the strips: with the aux lockout turned off, raise the setpoint 4 F above room temperature in Heat mode.",
+   "This model has no separate emergency heat wire. Emergency Heat uses the same W wire as the strips.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Configuring Heat Pump Settings - Nest thermostats (Google Nest Pro sheet); Nest Thermostat Pro Install Guide; Heat Pump Balance (Google Home and Nest Help)"
+ },
+ "tst-nest-thermostat-e": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips on the W1 wire (set up as single fuel, W1 showing AUX heat). A dual fuel system does not get Heat Pump Balance.",
+   "Do it on the thermostat, in the regular Settings menu - Google prints no installer code for it. Press the ring to open the menu, turn to Settings and press.",
+   "Simplest - go to Nest Sense > Heat Pump Balance and pick Max Comfort. Google says Max Comfort generally gives a higher AUX lockout temperature, so aux comes on sooner and more often. The choices are Max Comfort, Balanced, Max Savings and Off. Google's heat pump sheet and help page print Max Comfort as the default (the Pro guides for other Nest models print Balanced).",
+   "To set the lockout by hand - set Heat Pump Balance to Off first. Then press the ring, Settings > Equipment > Heat Pump, and change the auxiliary heat lockout. The strips are locked out when it is warmer outside than this. Range 0 F to 90 F, or Always. Google's heat pump sheet prints a 40 F default; the Thermostat E Pro Install Guide says 50 F. Raise it if the strips are being held off on mild days.",
+   "Compressor Lockout is on the same Heat Pump screen (default -25 F, range -25 F to 32 F or Always).",
+   "Need strips only right now - Emergency Heat. Press the ring, Settings > Equipment, select Continue at the wiring diagram, Continue again at the system summary, select Emer. Heat, then Turn On. It stays on until someone turns it off: press the ring, select Thermostat, then Turn Off.",
+   "On the Thermostat E both aux and emergency heat run on the W1 wire - there is no separate E wire. If Equipment shows Alt heat instead of AUX heat, it is set up as dual fuel and there is no Emergency Heat choice."
+  ],
+  "notes": [
+   "The same settings can be reached from the phone. Nest app: Settings > the thermostat > Heat Pump Balance, and Settings > Thermostat > Equipment > Auxiliary Lockout Temp.",
+   "The droop on this thermostat is 1 F and cannot be changed. There is no aux timer setting to adjust.",
+   "The lockout temperatures use internet weather and are only enforced on Wi-Fi. No outdoor sensor can be connected. Without Wi-Fi the strips come on when the house takes longer than expected to reach the target.",
+   "To test the strips: turn the aux lockout off in Equipment > Heat Pump, then raise the setpoint 4 F in Heat mode.",
+   "Only one aux heat wire is supported. Pro Setup (Settings > Pro Setup) asks for a Nest Pro ID; it is for wire setup, not needed for the settings above.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Configuring Heat Pump Settings - Nest Learning Thermostat & Nest Thermostat E (Google Nest Pro sheet); Nest Thermostat E Pro Installation and Configuration Guide; Heat Pump Balance and Emergency Heat for heat pump systems (Google Home and Nest Help)"
+ },
+ "tst-pro1-t501m": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on. The T501M is a mechanical single-stage thermostat. Pro1 lists it for a heat pump with NO auxiliary heat and says it is not for multi-stage systems. On a heat pump the W and Y terminals are jumpered together, so there is no separate aux heat output and no setting for it. If the home needs staged strips, it needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T501M Installation Manual (Rev. 1810)"
+ },
+ "tst-pro1-t501ml2-t501ml4": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This does not apply. The T501ML2 and T501ML4 are line-voltage electric heat thermostats (baseboard-type resistive heat). They switch the heater power directly and cannot control a heat pump or its aux heat."
+  ],
+  "notes": [],
+  "source": "Pro1 T501ML2 / T501ML4 Installation Manual (Rev. 1810)"
+ },
+ "tst-pro1-t601-2": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Not on this thermostat. The T601-2 is single stage. Pro1's application guide lists Heat Pump With Aux or Emergency Heat as No. It can run a heat pump that has no strips (W jumpered to Y), but it has no aux or emergency heat output, so there is nothing to bring on sooner. A heat pump with strips needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T601-2 Installation Manual (Rev. 1814)"
+ },
+ "tst-pro1-t605-2": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Not on this thermostat. The T605-2 is single stage. Pro1's application guide lists Heat Pump With Aux or Emergency Heat as No. It can run a heat pump that has no strips (W jumpered to Y), but it has no aux or emergency heat output, so there is nothing to bring on sooner. A heat pump with strips needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T605-2 Installation Manual (Rev. 1823)"
+ },
+ "tst-pro1-t621-2": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting for this on the T621-2. Its manual prints no stage delay, no aux differential and no outdoor lockout, and it does not say how far below the setpoint second stage (the strips on W2) comes on.",
+   "For heat right now, slide the System Switch to EmH. Pro1 says EmH locks out the compressor and turns on the secondary heat. Slide it back to HEAT when the house has caught up.",
+   "Check the setup. The Conventional / Heat Pump switch has to be on Heat Pump. The strips go on W2 (second stage of heat / emergency heat). Where there is no separate emergency heat relay, Pro1 shows a jumper between E and W2.",
+   "Check Dual Fuel Auxiliary for Heat Pump in Tech Settings: System Switch to OFF, hold + and - together for 3 seconds, press + and - together to step, slide the switch or wait about 20 seconds to exit. OFF lets the heat pump and the strips run together. ON drops the compressor (Y) 45 seconds after the strips are called, so with electric strips ON means strips only."
+  ],
+  "notes": [
+   "Heating Swing is adjustable from 0.2 to 2 degrees and changes how far below the setpoint heat starts. The T621-2 manual does not say that swing moves second stage, so do not count on it to bring the strips on sooner.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T621-2 Installation Manual (Rev. 1814); Pro1 T621-2 Operation Manual (Rev. 1814, pro1iaq.com)"
+ },
+ "tst-pro1-t625-2": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting for this on the T625-2. Its manual prints no stage delay, no aux differential and no outdoor lockout. It only says the thermostat tries to hold the setpoint on first stage and uses second stage (the strips) if it is needed. Stage 2 shows on the screen when the strips are called.",
+   "For heat right now, slide the System Switch to EmH. Pro1 says EmH (for heat pumps with auxiliary heat) locks out the compressor and runs the emergency / auxiliary heat. Slide it back to HEAT when the house has caught up.",
+   "Check the setup. The Conventional / Heat Pump switch has to be on Heat Pump. The strips go on W2 (second stage of heat / emergency heat). Where there is no separate emergency heat relay, Pro1 shows a jumper between E and W2.",
+   "Check Dual Fuel Auxiliary for Heat Pump in the Technician Setup Menu: hold the + and - buttons together for 3 seconds, Program goes to the next step, Time goes back, Hold/Run exits. OFF lets the heat pump and the strips run together. ON drops the compressor (Y) 45 seconds after the strips are called, so with electric strips ON means strips only."
+  ],
+  "notes": [
+   "Heating Swing is adjustable from 0.2 to 2.0 degrees and changes how far below the setpoint heat starts. The T625-2 manual does not say that swing moves second stage, so do not count on it to bring the strips on sooner.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T625-2 Installation Manual (Rev. 1823); Pro1 T625-2 Operation Manual (Rev. 1823)"
+ },
+ "tst-pro1-t631-2": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The only setting that moves the strips on this model is the Heating Swing. Pro1 says the second stage of heat (the aux relay on W) turns on at 2x the swing setting.",
+   "Slide the system switch to HEAT. Press and hold both setpoint buttons together for 3 seconds. The swing shows in tenths of a degree.",
+   "Use the setpoint buttons to change it. Heating swing adjusts from 0.2 to 2 degrees. Factory setting is 0.8.",
+   "A smaller swing brings the strips on sooner. Pro1's example: with 0.8 and a 70 F setpoint, the heat pump starts at about 69.2 F and the second stage starts at 68.4 F. A smaller swing also makes the heat pump cycle more often.",
+   "To save and exit, move the system switch or wait 15 seconds.",
+   "No aux at all: check the Heat Pump step in Tech Setup. Slide the system switch to OFF, hold both setpoint buttons together for 3 seconds, and tap both together to step to the Heat Pump option. It ships OFF (conventional). It must be ON for W to work as second stage heat."
+  ],
+  "notes": [
+   "This model has no Emergency Heat mode, no aux timer and no outdoor lockout. The swing is the only adjustment.",
+   "+1 shows in the display when the aux heat is on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T631-2 Installation Manual (Rev. 1809); Pro1 T631-2 Operation Manual (Rev. 1809)"
+ },
+ "tst-pro1-t631w-2": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The only setting that moves the strips on this model is the Heating Swing. Pro1 says the second stage (the aux relay on W at the base module) turns on at 2x the swing setting.",
+   "Do this at the wall thermostat. Slide the system switch to HEAT. Press and hold both setpoint buttons together for 3 seconds. The swing shows in tenths of a degree.",
+   "Use the setpoint buttons to change it. Heating swing adjusts from 0.2 to 2 degrees. Factory setting is 0.8.",
+   "A smaller swing brings the strips on sooner. Pro1's example: with 0.8 and a 70 F setpoint, the heat pump starts at about 69.2 F and the second stage starts at 68.4 F. A smaller swing also makes the heat pump cycle more often.",
+   "To save and exit, move the system switch or wait 15 seconds.",
+   "No aux at all: check the Heat Pump step in Tech Setup. Slide the system switch to OFF, hold both setpoint buttons together for 3 seconds, and tap both together to step to the Heat Pump option. It ships OFF (conventional). It must be ON for W to work as second stage heat."
+  ],
+  "notes": [
+   "This model has no Emergency Heat mode, no aux timer and no outdoor lockout. The swing is the only adjustment.",
+   "+1 shows in the display when the aux heat is on. The base module also has a relay light for each output, so you can see there whether W is on.",
+   "If the base module hears nothing from the thermostat for 15 minutes it turns every relay off. Check the link before blaming the settings.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T631W-2 Installation Manual (Rev. 1809); Pro1 T631W-2 Operation Manual (Rev. 1809)"
+ },
+ "tst-pro1-t701": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Not on this thermostat. The T701 is single stage. Pro1's application guide lists Heat Pump With Aux or Emergency Heat as No. It can run a heat pump that has no strips (W jumpered to Y), but it has no aux or emergency heat output, so there is nothing to bring on sooner. A heat pump with strips needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T701 Installation Manual (Rev. 1809)"
+ },
+ "tst-pro1-t701i": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Not on this thermostat. The T701i is single stage and Pro1's application guide lists both Heat Pump lines as No - with or without aux or emergency heat. It has no aux heat output, so there is nothing to bring on sooner. A heat pump with strips needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T701i Product Installation Guide (Rev. 2251)"
+ },
+ "tst-pro1-t705": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Not on this thermostat. The T705 is single stage. Pro1's application guide lists Heat Pump With Aux or Emergency Heat as No. It can run a heat pump that has no strips (W jumpered to Y), but it has no aux or emergency heat output, so there is nothing to bring on sooner. A heat pump with strips needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T705 Installation Manual (Rev. 1751)"
+ },
+ "tst-pro1-t715": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Not on this thermostat. The T715 is multi-stage, but Pro1's application guide lists Heat Pump With Aux or Emergency Heat as No, and the only heat pump wiring diagram in the manual is a two-stage heat pump without aux. It has no aux or emergency heat control, so there is no strip setting to change. A heat pump with strips needs a heat pump thermostat with aux and emergency heat."
+  ],
+  "notes": [],
+  "source": "Pro1 T715 Installation Manual (Rev. 1751)"
+ },
+ "tst-pro1-t721": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into Tech Settings: slide the System Switch to OFF, then hold the + and - buttons together for 3 seconds. Use + and - to change a setting and the glow in the dark light button to move to the next one. To exit, slide the System Switch to another position or wait about 20 seconds.",
+   "Step to Staging Delay. It makes the thermostat wait before it brings on second stage (the strips on W2). The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the factory setting is OFF. OFF or a shorter time brings the strips on sooner. If someone set a long delay here, that is why the strips are late.",
+   "Check Heat Pump is ON (the factory setting). Set to OFF the thermostat runs as a conventional system.",
+   "Check Dual Fuel Auxiliary for Heat Pump. OFF lets the heat pump and the strips run together. ON drops the compressor (Y) 45 seconds after the strips are called, so with electric strips ON means strips only.",
+   "Satisfy Setpoint (factory OFF): turned ON, it keeps both stages running until the setpoint is reached, so the strips stay on longer once they start.",
+   "For heat right now, slide the System Switch to EmH. It locks out the compressor and runs the emergency / auxiliary heat. Emergency Heat Stages in Tech Settings picks 1-stage or 2-stage emergency heat."
+  ],
+  "notes": [
+   "The T721 manual does not print how far below the setpoint second stage starts, and it has no outdoor lockout or balance point setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T721 Installation Manual (Rev. 1751); Pro1 T721 Operation Manual (Rev. 1751)"
+ },
+ "tst-pro1-t721i": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into tech setup on the thermostat: hold the + and - buttons for 3 seconds, then hold the TECH button for 3 seconds. Use + or - to change a setting and the lower left and right buttons to move between steps. To exit, hold + and - for 3 seconds or wait 60 seconds.",
+   "Step to STG DELAY (Staging Delay). It makes the thermostat wait before it brings on second stage (the strips on W2). The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the manual shows it OF (off) from the factory. OFF or a shorter time brings the strips on sooner. If someone set a long delay here, that is why the strips are late.",
+   "Check HEAT PUMP is ON (the factory setting). Set to OFF the thermostat runs as a conventional system and Emergency Heat is not offered.",
+   "Check DUAL FUEL. OFF lets the heat pump and the strips run together. ON drops the compressor (Y) 45 seconds after the strips are called, so with electric strips ON means strips only.",
+   "SATISFY SP (Satisfy Setpoint): turned ON, it keeps both stages running until the setpoint is reached, so the strips stay on longer once they start.",
+   "For heat right now, press the System button to EmH. It locks out the compressor and runs the emergency / auxiliary heat. Emergency Heat Stages in tech setup picks 1-stage or 2-stage emergency heat."
+  ],
+  "notes": [
+   "The T721i manual does not print how far below the setpoint second stage starts, and it has no outdoor lockout or balance point setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T721i Product Installation Guide (Rev. 2224); Pro1 T721i Operation Manual (Rev. 2224)"
+ },
+ "tst-pro1-t725": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This applies when the T725 is set up as a heat pump (Heat Pump ON in Tech Settings, which is the factory setting). The strips are the second stage of heat on the W2 terminal.",
+   "Get into Tech Settings: press MENU, then press and hold TECH SET for 3 seconds. The up and down keys change a setting. NEXT STEP and PREV STEP move between steps. Press DONE only when you are finished - DONE exits.",
+   "Step to Staging Delay. It makes the thermostat wait before it brings on the second stage, to give the heat pump more time. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the manual shows OFF as the default. OFF or a shorter time brings the strips on sooner. A long delay left in here is a common reason the strips come on late.",
+   "Check Dual Fuel Auxiliary for Heat Pump. OFF (the default) lets the compressor (Y) and the strips (W2) run together, which is what you want with electric strips. ON drops the compressor 45 seconds after the strips are called.",
+   "Satisfy Setpoint Staging: turned ON, the thermostat keeps every running stage on until the setpoint is met, so the strips stay on to the end of the cycle once they start. The manual shows OFF as the default.",
+   "For heat right now, slide the system switch to EmH. That locks out the compressor and runs the emergency / auxiliary heat. The Emergency Heat Stages step in Tech Settings picks 1-stage or 2-stage operation for that mode."
+  ],
+  "notes": [
+   "The manual does not print how far below setpoint the second stage starts. It only says the thermostat tries to hold the setting with only 1 stage, uses the 2nd stage if it is necessary, and shows Stage 2 in the display when it is on.",
+   "This manual prints no outdoor sensor, balance point or aux heat lockout setting for the T725.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T725 Installation Manual (Rev. 1751); T725 Operation Manual (Rev. 1823)"
+ },
+ "tst-pro1-t731": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the T731 for when the strips come on. On a heat pump the aux heat relay on the W terminal is simply the second stage of heat. The manual prints no staging delay, no stage differential and no outdoor lockout for it.",
+   "Check the setup, because a wrong setup means no strips at all. Put the system switch in OFF and hold the + and - buttons together for 3 seconds. The glow in the dark light button moves to the next step, + and - change it. Heat Pump must be ON. Dual Fuel Auxiliary is for gas, oil or propane backup - the thermostat defaults to electric aux. To exit, slide the system switch to a different position or wait about 20 seconds.",
+   "Check the strip wire is on W, and watch the display on a cold call. Stage 1 and 2 show which heat stages are on. If Stage 2 never shows, the thermostat is not asking for the strips.",
+   "The manual shows no emergency heat position on this model - the system switch is HEAT, OFF and COOL. If the home needs the strips sooner or an emergency heat mode, it needs a different thermostat."
+  ],
+  "notes": [
+   "Heating swing is adjustable from 0.2 to 2 degrees (set with the system switch in HEAT, same button hold). The manual only ties it to how often the heat cycles. It does not say it changes when the second stage comes on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T731 Installation Manual (Rev. 2224); T731 Operation Manual (Rev. 2224)"
+ },
+ "tst-pro1-t731w-t731wo": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the T731W / T731WO for when the strips come on. With Heat Pump turned on, Y is the first stage of heat and W is the second stage - the aux heat relay just runs as second stage. The manual prints no staging delay step, no stage differential and no outdoor lockout.",
+   "Check the setup. Press and hold the - and + buttons together for 3 seconds to enter the Tech Setup Menu. - and + change a setting, Prev and Next move between settings. HEAT PUMP has to be ON (the manual shows OFF as the default) or W will not work as second stage. To exit, hold - and + together for 3 seconds again or wait 60 seconds. The settings transfer to the base module by themselves when you exit.",
+   "Check the strip wire is on W at the base module, and watch the stage indicator on a cold call - it shows STAGE 1+2 when the second stage is on. A flashing stage or fan indicator means the system is in a delay or a change is pending.",
+   "This model has no emergency heat - the manual's application guide lists Emergency Heat as No. It is rated for a heat pump with electric aux, not gas aux."
+  ],
+  "notes": [
+   "Heating swing is adjustable from 0.2 to 2 degrees and the manual shows 0.8 as the default. The manual only ties it to how often the system cycles. It does not say it changes when the second stage comes on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T731W(O) Installation Manual (Rev. 2132); T731W(O) Operation Manual (Rev. 2010)"
+ },
+ "tst-pro1-t751": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into Tech Settings: hold the + and - buttons together for 3 seconds. + and - change a setting, the System button goes forward a step and the Fan button goes back. To exit, hold + and - together for 3 seconds again or wait 60 seconds.",
+   "First check HEAT PUMP is ON (the manual shows OFF as the default) and SET STAGES matches the equipment, for example 2H/1C for a single-stage heat pump with strips. On a heat pump the strips are on W2. Set wrong, the strips never stage.",
+   "HEAT SWING is the main adjustment. It is adjustable from 0.2 to 2 degrees and the default is 0.4. The manual says the second stage turns on at twice the swing setting, so a smaller heating swing brings the strips on after a smaller drop below setpoint. A smaller swing also makes the system cycle more often.",
+   "STAGING DELAY makes the thermostat wait before it adds a stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the default is OFF. OFF or a shorter time brings the strips on sooner. A long delay left in here is a common reason the strips come on late.",
+   "SS STAGING (Satisfy Setpoint Staging), default OFF: turned ON, every running stage stays on until the setpoint is met, so the strips stay on to the end of the cycle once they start.",
+   "DUAL FUEL is for gas, oil or propane backup heat. Leave it OFF for electric strips - the thermostat defaults to electric aux in heat pump applications.",
+   "For heat right now, press the System button to EM HEAT. It only shows when the thermostat is set up as a heat pump."
+  ],
+  "notes": [
+   "The manual's example: with the swing at half a degree and the thermostat set at 70 F, first stage comes on at about 69.5 F and second stage at 69 F. If a third stage is used it comes on at 68.5 F. On a 3H/2C heat pump the strips on W2 are the third / fourth stage.",
+   "The manual notes the Staging Delay step does not show when an outdoor sensor with a balance point temperature is in use. This manual prints no balance point or aux lockout step for the T751.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T751 Installation Manual (Rev. 2040); T751 Operation Manual (Rev. 2040)"
+ },
+ "tst-pro1-t751i": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into tech setup on the thermostat: hold the + and - buttons for 3 seconds, then hold the TECH button for 3 seconds. Use + or - to change a setting and the lower left and right buttons to move between steps. To exit, hold + and - for 3 seconds or wait 60 seconds.",
+   "Check HEAT PUMP is ON - it ships OFF (conventional). Then check SET STAGES matches the equipment. On a 2H/1C heat pump the strips are second stage on W2. On a 4H/2C heat pump the strips are on W/E and W2, after both compressor stages.",
+   "Step to STG DELAY (Staging Delay). It makes the thermostat wait before it brings on the next stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the factory setting is OFF. OFF or a shorter time brings the strips on sooner. If someone set a long delay here, that is why the strips are late.",
+   "Step to HEAT SWING, adjustable from 0.2 to 2 degrees (the manual shows 0.8). Pro1 says second stage comes on at 2x the swing below the setpoint and each stage after that one more swing lower. A smaller swing brings the strips on after a smaller temperature drop. It also makes first stage cycle more often.",
+   "Check DUAL FUEL is OFF for electric strips (factory setting). ON is for gas, oil or propane auxiliary heat.",
+   "SATISFY SP (Satisfy Setpoint Staging, factory OFF): turned ON, it keeps all the stages running until the setpoint is reached, so the strips stay on longer once they start.",
+   "For heat right now, use the System button to pick Em.Heat. It is only offered when HEAT PUMP is ON."
+  ],
+  "notes": [
+   "The manual says STG DELAY will not show if an outdoor sensor with a balance point temperature is in use. The T751i manual prints no steps for setting up an outdoor sensor or balance point.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T751i Product Installation Guide (Rev. 2403)"
+ },
+ "tst-pro1-t755-t755s": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Same steps for the T755 and T755S - one manual covers both. Get into Tech Settings: press MENU, then press and hold TECH SET for 3 seconds. The up and down keys change a setting, NEXT and PREV move between steps. Press DONE only when you are finished - DONE exits.",
+   "First check HEAT PUMP is ON and SET STAGES matches the equipment, for example 2H/1C for a single-stage heat pump with strips. On a heat pump the strips are on W2. Set wrong, the strips never stage.",
+   "HEAT SWING is the main adjustment. It is adjustable from 0.2 to 2 degrees and the default is 0.4. The manual says the second stage turns on at twice the swing setting, so a smaller heating swing brings the strips on after a smaller drop below setpoint. A smaller swing also makes the system cycle more often.",
+   "STAGING DELAY makes the thermostat wait before it adds a stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the default is OFF. OFF or a shorter time brings the strips on sooner. This step does not show when an outdoor sensor with a balance point temperature is in use.",
+   "SS STAGING (Satisfy Setpoint Staging), default OFF: turned ON, every running stage stays on until the setpoint is met, so the strips stay on to the end of the cycle once they start.",
+   "DUAL FUEL is for gas, oil or propane backup heat. Leave it OFF for electric strips. If it was turned ON and an R250S outdoor sensor is wired in with a BALANCE POINT set (OFF or 10 to 50 degrees in steps of 5), the thermostat runs only Y above the balance point and only W2 below it - so the strips will not help the heat pump on a mild day.",
+   "For heat right now, press the System button to EM HEAT. It only shows when the thermostat is set up as a heat pump."
+  ],
+  "notes": [
+   "The manual's example: with the swing at half a degree and the thermostat set at 70 F, first stage comes on at about 69.5 F and second stage at 69 F. If a third stage is used it comes on at 68.5 F.",
+   "BP RUN TIME (Off, 15, 30, 45, 60, 75, 90) only shows with the outdoor sensor and a balance point set. It lets the W2 aux come on above the balance point once the run time has expired.",
+   "This manual prints no outdoor lockout for electric strips on the T755 / T755S - the balance point step only shows with Dual Fuel on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T755(S) Installation Manual (Rev. 2212); T755(S) Operation Manual (Rev. 2028)"
+ },
+ "tst-pro1-t755h": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, then press and hold TECH SET for 3 seconds. Change a setting with the up or down key. Move between steps with NEXT STEP or PREV STEP. Press DONE only when you are finished - it exits.",
+   "Step to Staging Delay. It holds the next stage back so the stage already running gets more time. The choices are OFF, 10, 15, 30, 45, 60 or 90 minutes. Factory setting is OFF. If someone set a delay, the strips wait that long - shorten it or set it to OFF to get them on sooner.",
+   "Step to Heating Swing. It adjusts from 0.2 to 2 degrees. Factory setting is 0.4. A smaller swing starts the heat closer to the setpoint, but it also makes the equipment cycle more often.",
+   "Step to Satisfy Setpoint. Factory setting is OFF. Set to ON, the thermostat keeps every stage that came on, strips included, running until the setpoint is reached. It does not start the strips earlier, but it stops them dropping out part way.",
+   "Check Dual Fuel Auxiliary for Heat Pump. With electric strips leave it OFF so the heat pump (Y) and the strips (W2) run together. Set to ON, the thermostat drops the compressor 45 seconds after the strips are called.",
+   "Check Heat Pump is ON and Stages of Heat matches the equipment (2H or 3H). W2 is the aux heat relay in both. If Heat Pump is OFF the thermostat is not staging strips as aux at all.",
+   "For strips right now: press the SYSTEM button until EM HEAT shows. That option only appears when Heat Pump is ON."
+  ],
+  "notes": [
+   "This model has no outdoor sensor, balance point or aux lockout setting.",
+   "This manual does not print how far below the setpoint the aux stage comes on.",
+   "+1 in the display means the second stage of heat is on. +2 means the third stage.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T755H Installation Manual (Rev. 1845); Pro1 T755H Operation Manual (Rev. 1845)"
+ },
+ "tst-pro1-t755who": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into the Technician Setup Menu: press MENU, then press and hold the technician setup (Tech Set) button for 3 seconds. The up and down keys change a setting, NEXT step and PREVIOUS step move between steps. Press DONE only when you are finished - DONE exits.",
+   "First check HEAT PUMP is ON and SET STAGES matches the equipment, for example 2H/1C for a single-stage heat pump with strips. Set wrong, the strips never stage.",
+   "STAGING DELAY makes the thermostat wait before it adds a stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the default is OFF. OFF or a shorter time brings the strips on sooner. A long delay left in here is a common reason the strips come on late.",
+   "If a wireless outdoor remote sensor is paired to the equipment module, check the two electric aux balance point steps (they show only with Heat Pump ON and Dual Fuel Aux OFF). Above the BP AUX CUT OUT temperature the strips (W2) are locked out and only the heat pump runs. Between CUT OUT and CUT IN both can run. Below BP AUX CUT IN only the strips run and the heat pump is locked out.",
+   "Both steps are picked from 10 to 50 degrees in steps of 5. To let the strips help on milder days, raise BP AUX CUT OUT. Set low, it locks the strips out until it is that cold outside. The manual shows OFF in the Default column for BP AUX CUT IN.",
+   "SS STAGING (Satisfy Setpoint Staging), default OFF: turned ON, every running stage stays on until the setpoint is met, so the strips stay on to the end of the cycle once they start.",
+   "DUAL FUEL is for gas, oil or propane backup - leave it OFF for electric strips. With it ON and an outdoor sensor, the Dual Fuel BALANCE POINT step runs only Y above the balance point and only W2 below it.",
+   "For heat right now, press the System button to EM HEAT. It only shows when the thermostat is set up as a heat pump."
+  ],
+  "notes": [
+   "No outdoor remote sensor paired: the balance point steps do not show and there is no outdoor lockout on the strips.",
+   "This manual does not print how far below setpoint the second stage starts.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T755WHO Installation Manual (Rev. 2321); T755WHO Operation Manual (Rev. 2321)"
+ },
+ "tst-pro1-t771": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The T771 cannot run a heat pump or heat strips as backup. It is a heat only or cool only thermostat with one Y/W output, and the manual's application guide lists both heat pump types and multi-stage as No. If the home has a heat pump with strips, it needs a heat pump thermostat."
+  ],
+  "notes": [],
+  "source": "T771 Installation Manual (Rev. 1823)"
+ },
+ "tst-pro1-t801": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on. The T801 is single stage. Pro1 lists it as No for a heat pump with aux or emergency heat and No for multi-stage systems. On a heat pump the W and Y terminals are jumpered together, so there is no separate aux heat output and no setting for it. If the home needs staged strips, it needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T801 Installation Manual (Rev. 1751)"
+ },
+ "tst-pro1-t805": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The T805 cannot bring on heat strips. It is a 1 Heat 1 Cool thermostat. It can run a heat pump that has no aux heat, but the manual's application guide lists Heat Pump (With Aux. or Emergency Heat) as No and multi-stage as No, and in heat pump setup the W terminal is not used. If the home has a heat pump with strips, it needs a multi-stage heat pump thermostat."
+  ],
+  "notes": [],
+  "source": "T805 Installation Manual (Rev. 1915)"
+ },
+ "tst-pro1-t855": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into the Technician Setup Menu: press MENU, then press and hold TECH SET for 3 seconds. The up and down keys change a setting, NEXT and PREV move between steps. Press DONE only when you are finished - DONE exits.",
+   "First check HEAT PUMP is ON (it ships set up for a conventional system, default OFF) and HEAT STAGES matches the equipment - the choices are 1H, 2H, 3H, 4H. On a heat pump the strips are on W2. Set wrong, the strips never stage.",
+   "HEAT SWING is the main adjustment. It is adjustable from 0.2 to 2 degrees and the default is 0.4. The manual says the second stage turns on at twice the swing setting, so a smaller heating swing brings the strips on after a smaller drop below setpoint. A smaller swing also makes the system cycle more often.",
+   "STAGING DELAY makes the thermostat wait before it adds a stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the default is OFF. OFF or a shorter time brings the strips on sooner. A long delay left in here is a common reason the strips come on late.",
+   "SS STAGING (Satisfy Setpoint Staging), default OFF: turned ON, every running stage stays on until the setpoint is met, so the strips stay on to the end of the cycle once they start.",
+   "DUAL FUEL is for gas, oil or propane backup heat. Leave it OFF for electric strips - the thermostat defaults to electric aux in heat pump applications.",
+   "For heat right now, press the System button to EM HEAT. It only shows when the thermostat is set up as a heat pump."
+  ],
+  "notes": [
+   "The manual's example: with the swing at half a degree and the thermostat set at 70 F, first stage comes on at about 69.5 F and second stage at 69 F. If a third stage is used it comes on at 68.5 F.",
+   "A flashing stage or fan indicator means the system is in a delay (compressor delay, cooling fan delay or staging delay).",
+   "This manual prints no balance point or aux lockout step for the T855. The T855SH is the model with the outdoor sensor balance point steps.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T855 Installation Manual (Rev. 2214); T855 Operation Manual (Rev. 1910)"
+ },
+ "tst-pro1-t855ish": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into the Technician Setup Menu: press MENU, then press and hold TECH SET for 3 seconds. NEXT and PREV move between steps. Press DONE to exit.",
+   "Check HEAT PUMP is ON - it ships OFF (conventional). Then check SET STAGES matches the equipment. On a 2H/1C heat pump the strips are on W2. On a 4H/2C heat pump the strips are on W/E and W2, after both compressor stages.",
+   "No outdoor sensor: step to STAGING DELAY. It makes the thermostat wait before it brings on the next stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the manual shows it OF (off). OFF or a shorter time brings the strips on sooner.",
+   "Step to HEAT SWING, adjustable from 0.2 to 2 degrees (factory 0.4). Pro1 says second stage comes on at 2x the swing below the setpoint and each stage after that one more swing lower. A smaller swing brings the strips on after a smaller temperature drop. It also makes first stage cycle more often.",
+   "With a wired outdoor sensor (R250S on S1/S2, REMOTE MODE set to 2 Outdoor) and Dual Fuel OFF, check AUX CUT OUT, 10 to 50 degrees. When it is warmer outside than this the strips (W2) are locked out. Set too low, it is the reason the strips never come on - raise it to let them run on milder days.",
+   "Check AUX CUT IN, 10 to 50 degrees. Colder outside than this, the thermostat runs the strips only and locks out the compressor. Between AUX CUT IN and AUX CUT OUT the compressor and the strips can both run.",
+   "Check BP RUN TIME (Balance Point Run Time): Off, 15, 30, 45, 60, 75 or 90. It lets the strips come on even when it is warmer outside than the balance point, once that run time has passed. A shorter time brings the strips on sooner. Off leaves them locked out above the balance point.",
+   "For heat right now, press the System button to EM HEAT. It only shows when the thermostat is set up for a heat pump."
+  ],
+  "notes": [
+   "STAGING DELAY does not show when an outdoor sensor with a balance point temperature is in use. Then AUX CUT OUT, AUX CUT IN and BP RUN TIME decide when the strips run.",
+   "The balance point steps need the wired outdoor sensor. The manual prints nothing about using internet weather for them.",
+   "Dual Fuel ON (gas, oil or propane backup) swaps the AUX CUT steps for a single BALANCE POINT step: above it only the compressor runs, below it only W2 runs.",
+   "SS STAGING (Satisfy Setpoint Staging): turned ON, it keeps all the stages running until the setpoint is reached, so the strips stay on longer once they start.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T855iSH Installation Manual (Rev. 2028); Pro1 T855iSH Operation Manual (Rev. 2028)"
+ },
+ "tst-pro1-t855s": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, then press and hold TECH SETUP for 3 seconds. Change a setting with the up or down key. Move between steps with NEXT STEP or PREV STEP. Press DONE to exit.",
+   "Step to Heating Swing (HEAT SWING). It adjusts from 0.2 to 2 degrees. Factory setting is 0.4. The second stage turns on at 2x the swing, so a smaller swing brings the strips on sooner. Pro1's example: with a 0.5 swing and a 70 F setpoint, first stage starts at about 69.5 F, second stage at 69 F, and a third stage at 68.5 F.",
+   "Step to Staging Delay. It holds the next stage back so the stage already running gets more time. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes. Factory setting is OFF. If someone set a delay, shorten it or set it to OFF. This step does not show when an outdoor sensor with a balance point temperature is in use.",
+   "If a wired outdoor sensor is on S1/S2, check Balance Point Temp (bAL POINT). When it is warmer outside than this setting, the strips (W2) are locked out and only the compressor runs. The choices are NO (not used) or 10, 20, 30, 35, 40, 45 or 50 degrees. Factory setting is NO. A higher number lets the strips in on milder days. NO removes the lockout.",
+   "With a balance point set, check Balance Point Run Time. It lets the strips come on even above the balance point once the heat pump has run that long without finishing the cycle. The choices are NO or 15, 30, 45, 60, 75 or 90 minutes. Factory setting is NO. A shorter time brings the strips on sooner.",
+   "Check Dual Fuel Auxiliary for Heat Pump (GAS AUX). With electric strips leave it OFF so the heat pump (Y) and the strips (W2) run together. Set to ON, the thermostat drops the compressor 45 seconds after the strips are called.",
+   "For strips right now: press the SYSTEM button until EM HEAT shows. That option only appears when the Heat Pump step is ON."
+  ],
+  "notes": [
+   "Balance Point Temp only shows when Heat Pump is ON and the Remote Sensor step is set to 2 (outdoor). It needs the wired outdoor sensor - there is no internet weather on this model.",
+   "Satisfy Setpoint (SS STAGING), factory OFF: set to ON it keeps every stage that came on, strips included, running until the setpoint is reached. It does not start them sooner.",
+   "Stages of Heat: 2 heat uses Y1 then W2 as aux. 3 heat uses Y1, then Y2, then W2 as aux - so the strips are the third stage and come on later.",
+   "+1 in the display means the second stage of heat is on. +2 means the third stage. Flashing indicators mean a delay is running (compressor delay or staging delay).",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T855S Installation Manual (Rev. 1809); Pro1 T855S Operation Manual (Rev. 1809)"
+ },
+ "tst-pro1-t855sh": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into the Technician Setup Menu: press MENU, then press and hold TECH SET for 3 seconds. The up and down keys change a setting, NEXT and PREV move between steps. Press DONE only when you are finished - DONE exits.",
+   "First check HEAT PUMP is ON (it ships set up for a conventional system, default OFF) and SET STAGES matches the equipment, for example 2H/1C for a single-stage heat pump with strips. Set wrong, the strips never stage.",
+   "HEAT SWING: adjustable from 0.2 to 2 degrees, default 0.4. The manual says the second stage turns on at twice the swing setting, so a smaller heating swing brings the strips on after a smaller drop below setpoint. A smaller swing also makes the system cycle more often.",
+   "STAGING DELAY makes the thermostat wait before it adds a stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes. OFF or a shorter time brings the strips on sooner. This step does not show when an outdoor sensor with a balance point temperature is in use.",
+   "If an R250S outdoor sensor is wired to S1 / S2 (Remote Sensor step set to 2 Outdoor) and Dual Fuel is OFF, check AUX CUT OUT and AUX CUT IN. Above the AUX CUT OUT temperature the strips (W2) are locked out and only the heat pump runs. Between CUT OUT and CUT IN both can run. Below AUX CUT IN only the strips run and the heat pump is locked out.",
+   "Both are picked from 10 to 50 degrees in steps of 5, and the manual shows 40 for AUX CUT IN. To let the strips help on milder days, raise AUX CUT OUT. Set low, it locks the strips out until it is that cold outside.",
+   "BP RUN TIME (Off, 15, 30, 45, 60, 75, 90) is the way around the lockout: once the run time has expired, the W2 aux is allowed on for that cycle even when it is warmer outside than the balance point. A shorter time brings the strips on sooner. It only shows when a balance point is set.",
+   "For heat right now, press the System button to EM HEAT. It only shows when the thermostat is set up as a heat pump."
+  ],
+  "notes": [
+   "The manual's example for swing: at half a degree with the thermostat set at 70 F, first stage comes on at about 69.5 F and second stage at 69 F. If a third stage is used it comes on at 68.5 F.",
+   "SS STAGING (Satisfy Setpoint Staging) turned ON keeps every running stage on until the setpoint is met.",
+   "DUAL FUEL is for gas, oil or propane backup - leave it OFF for electric strips. With it ON and the outdoor sensor, the Dual Fuel BALANCE POINT step runs only Y above the balance point and only W2 below it.",
+   "No outdoor sensor: the balance point steps do not show and there is no outdoor lockout on the strips.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T855SH Installation Manual (Rev. 2028); T855SH Operation Manual (Rev. 1841)"
+ },
+ "tst-pro1-t905": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on. The T905 is single stage. Pro1 lists it as No for a heat pump with aux or emergency heat and No for multi-stage systems. On a heat pump the W and Y terminals are jumpered together, so there is no separate aux heat output and no setting for it. If the home needs staged strips, it needs a heat pump thermostat with an aux (W2) terminal."
+  ],
+  "notes": [],
+  "source": "Pro1 T905 Installation Manual (Rev. 1935)"
+ },
+ "tst-pro1-t955": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The only setting that moves the strips on this model is the Heating Swing. Pro1 says the second stage turns on at 2x the swing setting.",
+   "Press Menu, then press and hold TECHNICIAN SETUP for 3 seconds. Change a setting with the up or down key. Move between steps with Previous or Next. Press DONE to exit.",
+   "Step to Heating Swing (HEAT SWING). It adjusts from 0.2 to 2 degrees. Factory setting is 0.4. A smaller swing brings the strips on sooner and makes the equipment cycle more often.",
+   "Pro1's example: with a 0.5 swing and a 70 F setpoint, first stage starts at about 69.5 F, second stage at 69 F, and a third stage at 68.5 F.",
+   "Check Stages of Heat. 2 heat uses Y1 then W2 as aux. 3 heat uses Y1, then Y2, then W2 as aux - so the strips are the third stage and come on later. Match it to the equipment.",
+   "Check Dual Fuel Auxiliary for Heat Pump (GAS AUX). With electric strips leave it OFF so the heat pump (Y) and the strips (W2) run together. Set to ON, the thermostat drops the compressor 45 seconds after the strips are called.",
+   "For strips right now: press the SYSTEM key until Em. Heat shows. That option only appears when the Heat Pump step is ON."
+  ],
+  "notes": [
+   "The T955 manual prints no staging delay, no balance point and no outdoor lockout. Those are on the T955S, which takes an outdoor sensor.",
+   "If the Heat Pump step is OFF (the factory setting), the thermostat is set for a conventional system and is not staging the strips as aux.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T955 Installation Manual (Rev. 1845)"
+ },
+ "tst-pro1-t955s": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press Menu, then press and hold TECHNICIAN SETUP for 3 seconds. Change a setting with the up or down key. Move between steps with Previous or Next. Press DONE to exit.",
+   "Step to Heating Swing (HEAT SWING). It adjusts from 0.2 to 2 degrees. Factory setting is 0.4. The second stage turns on at 2x the swing, so a smaller swing brings the strips on sooner. Pro1's example: with a 0.5 swing and a 70 F setpoint, first stage starts at about 69.5 F, second stage at 69 F, and a third stage at 68.5 F.",
+   "Step to Staging Delay. It holds the next stage back so the stage already running gets more time. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes. If someone set a delay, shorten it or set it to OFF.",
+   "If a wired outdoor sensor is on S1/S2, check Balance Point Temp (bAL POINT). When it is warmer outside than this setting, the strips (W2) are locked out and only the compressor runs. The choices are NO (not used) or 10, 20, 30, 35, 40, 45 or 50 degrees. A higher number lets the strips in on milder days. NO removes the lockout.",
+   "With a balance point set, check Balance Point Run Time. It lets the strips come on even above the balance point once the heat pump has run that long without finishing the cycle. The choices are NO or 15, 30, 45, 60, 75 or 90 minutes. A shorter time brings the strips on sooner.",
+   "Check Dual Fuel Auxiliary for Heat Pump (GAS AUX). With electric strips leave it OFF so the heat pump (Y) and the strips (W2) run together. Set to ON, the thermostat drops the compressor 45 seconds after the strips are called.",
+   "For strips right now: press the SYSTEM button until EM HEAT shows. That option only appears when the Heat Pump step is ON."
+  ],
+  "notes": [
+   "Balance Point Temp only shows when Heat Pump is ON and the Remote Sensor step is set to 2 (outdoor). It needs the wired outdoor sensor - there is no internet weather on this model.",
+   "Satisfy Setpoint (SS STAGING): set to ON it keeps every stage that came on, strips included, running until the setpoint is reached. It does not start them sooner.",
+   "On a 3 heat setup the strips (W2) are the third stage of heat, so they come on later than on a 2 heat setup.",
+   "+1 in the display means the second stage of heat is on. +2 means the third stage. Flashing indicators mean a delay is running (compressor delay or staging delay).",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Pro1 T955S Installation Manual (Rev. 1802); Pro1 T955S Operation Manual (Rev. 1803)"
+ },
+ "tst-pro1-t955wh": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into Technician Setup: press MENU, then press and hold the technician setup button for 3 seconds. The up and down keys change a setting, next step and previous step move between steps. Press DONE only when you are finished - DONE exits.",
+   "First check HEAT PUMP is ON and the Stages of Heat step is right. With 2 heat, Y1 is first stage and W2 is the auxiliary. With 3 heat, Y1 is first, Y2 is second and W2 is the auxiliary. The strip wire goes on W2.",
+   "STAGING DELAY sets how many minutes the thermostat waits before each added stage. The choices are OFF, 5, 10, 15, 30, 45, 60 or 90 minutes and the default is OFF. OFF or a shorter time brings the strips on sooner. A long delay left in here is a common reason the strips come on late.",
+   "If a wireless outdoor sensor is connected, check BALANCE POINT. When the outdoor temperature is ABOVE this setting the aux heat terminal (W2) is locked out and only the heat pump runs. Below it, with Gas Aux / Dual Fuel OFF, the heat pump and strips can run together. The choices are YES or NO, then 10, 20, 30, 35, 40, 45 or 50 degrees. To let the strips help on milder days, raise the balance point, or set it to NO to take the lockout away.",
+   "BALANCE RUNTIME is the way around that lockout: set to YES with 15, 30, 45, 60, 75 or 90 minutes, the W2 aux is allowed on for that cycle after the heat pump has run that long, even when it is warmer outside than the balance point. A shorter time brings the strips on sooner.",
+   "Dual Fuel Auxiliary for Heat Pump should be OFF for electric strips so Y and W2 can run together. ON locks out the heat pump when the aux is on.",
+   "For heat right now, press the System key to Em. Heat. It shows when the thermostat is set up as a heat pump."
+  ],
+  "notes": [
+   "Balance point needs the outdoor sensor. The Outdoor Sensor step (default NO) has to be YES and the thermostat must have 24V on C and R. The Balance Point step only shows with Heat Pump ON and the outdoor sensor set up.",
+   "SS STAGING (Satisfy Setpoint), default OFF: turned ON, every running stage stays on until the setpoint is met.",
+   "Heating swing is adjustable from 0.2 to 2 degrees. A smaller swing makes the system cycle more often. The printed manual's swing tip says the second stage comes on at twice the swing setting, so a smaller heating swing also brings the strips on after a smaller drop.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "T955WH Installation Manual (Rev. 1845); T955WH Operation Manual (Rev. 1845)"
+ },
+ "tst-rheem-200-300-24v": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "All three models have two installer settings that move the strips: the auxiliary (Emer) cycle rate and Fast second stage of heat. Only the TST305 also has an outdoor lockout for the strips. Item numbers are different on each model - use the list for the model on the wall.",
+   "TST213 - get in: with the system in Heat, Cool or Auto, hold the Menu button for at least 5 seconds. Press Menu to step to the next item and the up or down arrow to change it. Press RUN SCHED to leave.",
+   "TST213 - menu reference 8, CR Emer: the cycle rate for Emergency mode and the auxiliary stage. Factory setting is FA (fast). The manual prints the Emer differential as 0.6 F on FA and 1.7 F on SL. FA is the tighter swing and should keep the strips closer to the setpoint - the manual does not say it changes when they first come on.",
+   "TST213 - menu reference 19, Heat FA (Fast second stage): factory setting On. With it On, raising the setpoint 3 F or more above room temperature brings the second stage on right away. With it OFF, the second stage waits until the setpoint is 1 F or more above the room for more than ten minutes. Keep it On.",
+   "TST305 and TST314 - get in: press the Menu touch key, then press and hold Installer Config for 5 seconds. Item 1 shows. The manuals use Run Schedule to return to normal operation.",
+   "TST314 - item 9, Cr/AU Emer (auxiliary cycle rate): FA is the factory setting. The manual prints Emer as 1.2 F on fast and 1.7 F on slow. Items 23 and 24 are Fast second stage - FS Heat is On from the factory and works the same as on the TST213. Keep FA and On.",
+   "TST305 - item 10, Cr/AU Em (auxiliary cycle rate): FA is the factory setting, 1.2 F on fast and 1.7 F on slow. Item 25, FS Heat (Fast second stage of heat): On from the factory. With it OFF the thermostat picks its own time and the extra heat stages can come on as much as 30 minutes later. Keep it On.",
+   "TST305 - item 30, Auxiliary Off (AO): the strips will not turn on while it is warmer outside than this setting. The write-up prints a default of 60 with a range of 35 to 80; the menu table prints AO (80). Raise it to let the strips run on milder days. It only shows when HP1 or HP2 is selected and an outdoor sensor is installed and enabled (item 27).",
+   "Right now fix on any of them: press SYSTEM to Emer (EM on the TST305). That runs the backup heat only."
+  ],
+  "notes": [
+   "None of these settings show unless the system type item is set to a heat pump (HP1, or HP2 on the TST305 / TST314) and the strips are on W/E (and W2).",
+   "Dual Fuel (dF) is for a gas furnace backup - it shuts the compressor off when the backup comes on. Leave it OFF with electric strips. Its factory setting of 5 on the TST314 means disabled.",
+   "The TST314 has no Auxiliary Off (outdoor lockout) item in its manual.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Rheem (-)HC-TST213UNMS Installation and Operating Instructions; Rheem (-)HC-TST305UNMS Installation and Operating Instructions; Rheem (-)HC-TST314UNMS Installation and Operating Instructions (37-7076A)"
+ },
+ "tst-rheem-400-modulating": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in (both models): press the Menu touch key, then press and hold Installer Config for 5 seconds. Item 1 shows. Step through with the arrow keys. The manuals use Run Schedule to return to normal operation.",
+   "Item 27, Auxiliary Off (AO) - check this first. The strips are held off while it is warmer outside than this setting. Raise it to let the strips run on milder days. Range is 35 to 80.",
+   "TST401: the manual prints the AO factory default as 80, which disables the lockout, and AO cannot be set at or below the Dual Fuel (DF) setpoint.",
+   "TST412: the item 27 write-up prints a default of 60; the menu table prints AO (80). The item only appears when HP1 or HP2 is selected and an outdoor sensor is installed and enabled.",
+   "Item 9, Cr/AU Emer (Em on the TST412) - auxiliary cycle rate. FA (fast) is the factory setting. The manuals print the Emer rate as 1.2 F on fast and 1.7 F on slow. Keep FA.",
+   "Items 23 and 24, Fast second stage - FS Heat is On from the factory. With it On, raising the setpoint 3 F or more above room temperature brings the second stage on right away. With it OFF, the second stage waits until the setpoint is 1 F or more above the room for more than ten minutes. Keep it On.",
+   "Right now fix: press SYSTEM to the emergency position (EM). That bypasses the heat pump and heats with whatever is wired to W/E and W2."
+  ],
+  "notes": [
+   "These items only show when item 1 (system type) is set to HP1 or HP2.",
+   "Dual Fuel (dF) is for a gas furnace backup and shuts the compressor off. With electric strips leave it at its disabled setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Rheem (-)HC-TST401MDMS Installation and Operating Instructions; Rheem (-)HC-TST412MDMS Installation and Operating Instructions"
+ },
+ "tst-rheem-400-universal": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in: press the Menu touch key, then press and hold Installer Config for 5 seconds. Item 1 shows. Step through with the arrow keys. The manual uses Run Schedule to return to normal operation.",
+   "Item 30, Auxiliary Off (AO) - check this first. The strips will not turn on while it is warmer outside than this setting. Raise it to let the strips run on milder days. The write-up prints a default of 60 with a range of 35 to 80; the menu table prints AO (80). It needs an outdoor sensor installed and enabled.",
+   "Item 10, Cr/AU Em - auxiliary cycle rate. FA (fast) is the factory setting. The manual prints the Em rate as 1.2 F on fast and 1.7 F on slow. Keep FA.",
+   "Item 25, FS Heat (Fast second stage of heat) - On from the factory. FA ON forces the extra heat stages on quickly when the setpoint is raised a few degrees. With it OFF the thermostat picks its own time. Keep it On.",
+   "Right now fix: press the SYSTEM key to EM. Emergency heat bypasses the heat pump and uses the heat wired to W/E and W2."
+  ],
+  "notes": [
+   "These items only show when item 1 (system type) is set to HP1 or HP2.",
+   "Items 28 and 29, Dual Fuel (dF), are for a gas furnace backup - Dual Fuel shuts the compressor off when the backup comes on. Leave them OFF with electric strips.",
+   "Item 31, Blower Balance Point (bP), only slows the blower in first stage heat below an outdoor temperature. It does not bring the strips on.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Rheem (-)HC-TST422DFMS Installation and Operating Instructions"
+ },
+ "tst-rheem-500-communicating": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This control has no stage timer or droop setting for the strips in its manual. What it does have is two outdoor temperature settings that decide when the strips are allowed and when the heat pump is shut off.",
+   "Get in: on the Home Screen touch Menu, then touch and hold Installer Config for about 3 seconds (Thermostat Options menu). Touch and hold Installer Config again for about 3 seconds - ADVANCED shows on the right of the display.",
+   "Step through the equipment list to the Thermostat User Menu, touch Installer Config to open it, and go to its Setup items.",
+   "Air Handler Lockout Temperature (AH) - the strips are held off whenever it is warmer outside than this number. The manual prints the factory default as OFF, which disables the lockout. If someone has set it low, raise it or set it back to OFF so the strips are allowed on milder days. It can be set from the Heat Pump Disable (HP) value up to 95 F and cannot be at or below the HP value.",
+   "Heat Pump Disable (HP) - OFF, or 5 to 50 F. Below this outdoor temperature the thermostat shuts the compressor off and heats with the strips only. This is not a way to make the strips help sooner - raising it only shuts the heat pump off at a warmer outdoor temperature.",
+   "Both settings work off the outdoor temperature. If an outdoor ambient sensor was field installed, the Outdoor Temp Sens item in the outdoor unit's menu has to be turned On - its factory default is Off.",
+   "Right now fix: touch the SYSTEM key until Em shows. In Em the thermostat runs emergency heat only."
+  ],
+  "notes": [
+   "The settings table for Air Handler Lockout Temperature also prints \"OFF defaults to 50 F\". The write-up on the next page says OFF disables the feature. Read what the screen shows before trusting either.",
+   "HP Staging (On / Off) in the heat pump menu is about low and high compressor stages on multi-stage units. It does not change when the strips come on.",
+   "The Thermostat Options menu (first 3 second hold) is left by touching Run Schedule.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Rheem (-)HC-TST501CMMS Communicating Thermostat Installation and Operating Instructions"
+ },
+ "tst-rheem-econet": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "EcoNet keeps these under the Installer menu. Go to Menu > Settings, then tap and hold Installer at the bottom right of the screen for five seconds. Rheem marks these settings as for a qualified HVAC contractor only.",
+   "In the Installer menu open Thermostat and find Aux Heat Hold Off Time. On Auto the thermostat brings the strips on once the room is 1 full degree past the heat set point, or when the heat pump alone is not holding the set point. A time setting (1 to 60 minutes) holds the strips off for that many minutes even after the room has dropped past that point. If a long time is set, shorten it or go back to Auto to get the strips sooner.",
+   "In the Installer menu open AC/HP and check the lockouts. The furnace / supplemental electric heat lockout is the outdoor temperature above which the strips will not run. Rheem prints the default as disabled, adjustable 0-55 F. If it is set low, raise it or disable it.",
+   "Same AC/HP screen - the heat pump lockout is the outdoor temperature below which the heat pump will not run and the system heats on the strips alone. EcoNet keeps the two lockouts two degrees apart.",
+   "Right now fix: touch the Mode icon until Emergency Heat shows. That brings the backup heat on and locks the heat pump out."
+  ],
+  "notes": [
+   "Lockouts use the outdoor temperature sensor wired to the outdoor unit, not the weather shown on the thermostat.",
+   "The strips also have to be set up in the Air Handler settings (electric heat installed, heater size) or the thermostat will not stage them.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Rheem EcoNet Smart Thermostat User Guide RETST800SYS (RHM5429.1); Rheem / Ruud EcoNet Control Center User Guide & Installation RETST600SYS / UETST600SYS"
+ },
+ "tst-rheem-pro-series-83-85": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Which model: TST83C is single stage and cannot run strips behind a heat pump (heat pump with no aux heat only). TST83H (heat pump) and TST85U (universal) can, and both have one setting for it - Aux Cycle Rate.",
+   "TST83H - get in: hold the Menu button for 8 seconds. The display opens on item 30. Use Next and Back to move, the up or down arrow to change. Exit (the Hold button) goes back to the home screen.",
+   "TST85U - get in the same way: hold Menu for 8 seconds. The display opens on item 05. Exit is the Hold/Run button.",
+   "Go to Aux Cycle Rate (how often the auxiliary heat will turn on). The choices are SLO, MEd and FAS. Factory setting is MEd.",
+   "Ruud's sheet prints the aux differential as 0.5 F on fast, 0.75 F on medium and 1.9 F on slow. FAS is the tightest swing and SLO the widest, so FAS should bring the strips on with the smaller temperature drop - the manuals do not say so in words.",
+   "Right now fix: set the system switch / System button to Aux. That runs the auxiliary heat only."
+  ],
+  "notes": [
+   "On the TST83H leave Duel Fuel Logic OFF for electric strips - On is for a gas furnace as the auxiliary heat.",
+   "There is no outdoor lockout or stage timer for the strips in these manuals. Aux Cycle Rate is the only adjustment.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Ruud Professional Thermostats sheet (PRO-5116); White-Rodgers 1F83H-21PR Installation and Operating Instructions (0037-7511003); White-Rodgers 1F83C-11PR Installation and Operating Instructions; White-Rodgers 1F85U-42PR Installation and Operating Instructions (0037-7554001)"
+ },
+ "tst-rheem-tst211gess": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot run heat strips behind a heat pump. Rheem's application list says Yes for a heat pump with no aux or emergency heat and No for a heat pump with aux or emergency heat - its terminal list shows a single W heat relay terminal. A heat pump with strips needs a different thermostat."
+  ],
+  "notes": [],
+  "source": "Rheem (-)HC-TST211GESS Installation and Operating Instructions"
+ },
+ "tst-robertshaw-9400-series": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 9420 runs a heat pump with strips. The 9400 and 9401 are single-stage (single-stage heat pump, nothing to stage up to) and the 9415 is for two-stage gas or electric heat, not a heat pump.",
+   "9420: press and hold both arrow buttons together. The customizing page says three seconds and the display reads F or C first; the install page says hold for 1 second. Do not touch anything and after three seconds it steps on by itself: DIFFERENTIAL 1st, then DIFFERENTIAL 2nd, then the 2nd stage delay. Change each one with the arrow buttons. Wait three seconds after the last one and it goes back to room temperature.",
+   "DIFFERENTIAL 2nd is factory set at 2 F and adjusts between 1 F and 6 F. The strips come on when the room is off the setting by the 1st and 2nd stage differentials added together. A smaller 2nd stage number brings them on sooner.",
+   "2nd stage delay is factory set at 20 minutes and changes in 5 minute steps (the feature list says 10-40 min.). It holds the strips off until the delay has run out. A shorter delay brings them on sooner."
+  ],
+  "notes": [
+   "The manual also says the 2nd stage turns on if the temperature has not increased for a period of 20 minutes.",
+   "Strips only: slide the system switch to EMER. The E terminal is powered in EM mode only. With no separate E wire, jumper E and W2.",
+   "No outdoor lockout for the strips is printed for the 9420.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Robertshaw 9420 User's Manual (110-1044C); Robertshaw 9400 User's Manual (110-1039); Robertshaw 9401 User's Manual (110-1041); Robertshaw 9415 User's Manual (110-1043B)"
+ },
+ "tst-robertshaw-9610-9620": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 9620 runs a heat pump with auxiliary / emergency heat. The 9610 is 1 Heat / 1 Cool - no second stage to bring on.",
+   "9620: press SET and PROG/MAN together and release. That opens time of day. Each press of SET moves to the next item: day of week, 1st stage temperature differential, 2nd stage temperature differential, then residual cooling. Change the value with the arrow buttons.",
+   "The 2nd stage temperature differential is the strip setting. It is factory preset at 2 degrees. The manual does not print the direction - a smaller number should bring the strips on after a smaller temperature drop.",
+   "The manual says the AUX light comes on during a call for second stage heat, and if AUX is lit too often in mild weather to check the differential settings. Use the AUX light to see what your change did."
+  ],
+  "notes": [
+   "Coming out of a setback, the EER recovery feature locks the auxiliary stages out until 20 minutes before the program time. Strips that seem late in the morning may be this, not the differential.",
+   "Strips only: slide the system switch to EM (emergency heat). The EMER light shows it. With no separate emergency heat wire, jump W2 and E.",
+   "No stage timer and no outdoor lockout for the strips is printed for the 9620.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Robertshaw 9620 User's Manual (110-732E); Robertshaw 9610 User's Manual (110-655B)"
+ },
+ "tst-robertshaw-pro-series-rs8-rs9": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the RS8210 and RS9210 (2 Heat / 1 Cool) are listed for heat pumps with auxiliary or emergency heat. The RS8110, RS9110 and RS9220 manuals list heat pumps without auxiliary or emergency heat only - they cannot bring on strips.",
+   "RS8210 / RS9210: there is no setting for when the second stage (the strips) comes on. The installer menu prints no second-stage differential, no stage timer and no outdoor lockout.",
+   "The only heat staging number in the menu is Heating Differential. Press MENU, then press and hold TECH SET for 3 seconds. NEW STEP / PREV STEP moves between steps. Press DONE only when finished - DONE exits the menu. It is factory preset at 0.4 and adjusts from 0.2 F to 2 F. The manual ties it to when the heating system turns on; it does not say it moves the second stage.",
+   "For strips only, the system switch has an EMH position. The manuals name it but do not say what it does on a heat pump, so watch what runs. Then check the wiring: on a heat pump the W/E terminal is first stage of emergency heat and W2 is second stage of heat / emergency heat. With no emergency heat relay the manuals show a jumper to W2 (from W on the RS8210 sheet, from E on the RS9210 sheet)."
+  ],
+  "notes": [
+   "If the strips never come on at all, look at the W2 wire and the jumper before anything else.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Robertshaw RS8210 Installation Manual; Robertshaw RS9210 Installation Manual; Robertshaw RS8110, RS9110 and RS9220 Installation Manuals; Robertshaw Pro-Series Wall Thermostats Cross-Reference (150-2805 Rev D)"
+ },
+ "tst-robertshaw-rs10420t-rs10421t": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press MENU, then press and hold TECHNICIAN SETUP for 3 seconds. NEXT STEP / PREV STEP moves between steps. Press DONE only when you are finished - DONE exits setup.",
+   "Check Heat Pump is ON and the Stages of Heat and Cool step matches the equipment (it goes up to a 4H/2C heat pump). The strips are a heat stage. If the stage count is short they never get called.",
+   "Go to Heating Differential. It is factory preset at 0.4 and adjusts from 0.2 F to 2 F. There is no separate aux setting - every stage hangs off this one number. The second stage comes on at 2x the differential and each stage after that is one more differential lower.",
+   "A smaller Heating Differential brings the strips on after a smaller temperature drop. A bigger one holds them off longer."
+  ],
+  "notes": [
+   "The manual's own example: differential 0.5, thermostat set at 70 F - first stage on at 69.5 F, second stage on at 69 F, third stage on at 68.5 F.",
+   "No stage timer and no outdoor lockout for the strips is printed for either model.",
+   "RS10421T only: the Dual Fuel step works with the RS9055OUT wireless outdoor sensor. It is a balance point for a heat pump with a fossil fuel furnace - above the setting it heats electric, below it it heats with fuel. It is not a strip setting.",
+   "Emergency Heat is only offered when Heat Pump is set to ON. With no emergency heat relay the manual shows a jumper between E and W2.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Robertshaw RS10420T Installation Manual; Robertshaw RS10421T Installation Manual"
+ },
+ "tst-sensi-classic": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The printed Sensi manuals for this model list no aux heat timing setting. What follows is from Sensi's own support pages.",
+   "Aux Lockout and Balance Point are on some of these thermostats only (Sensi lists the ST55 series). Check: tap Menu at the thermostat. Sensi says if it shows \"33\" it has them. It must be set up as a heat pump with backup heat and connected to Wi-Fi.",
+   "At the thermostat tap Menu, then tap Next until AL shows in the center of the screen. Set Aux Lockout with the up and down arrows. Tap Next for bP (Balance Point) and set it the same way. Tap Exit to save.",
+   "Aux Lockout: the strips are locked out and only the heat pump heats when it is warmer outside than this setting. Sensi prints a range of -4 to 80. If it is set low, the strips are held off on mild days - raise it to let them help sooner.",
+   "Balance Point: when it is colder outside than this setting the heat pump is locked out and only the strips heat. Sensi prints a range of -5 to 55. Raising it does not make the strips help the heat pump - it shuts the heat pump off at a warmer outdoor temperature, so leave it alone unless the heat pump should not run in the cold. Aux Lockout can never be set below Balance Point.",
+   "Boost is in the Sensi app, not on the wall: open the app, tap the thermostat name, the settings gear, then System settings. With Boost on, every heat stage comes on when the setpoint is raised by three degrees. Sensi says Boost ships On. With it off the thermostat adds stages by its own calculation. Sensi says Boost only shows when the equipment has more than one stage.",
+   "Cycle Rate is on the same System settings screen - Fast, Medium or Slow for each mode. Sensi says the staging calculation itself cannot be changed, only adjusted slightly with Cycle Rate, and that a delay of 0-30 minutes before the next stage is possible."
+  ],
+  "notes": [
+   "Aux Lockout and Balance Point need an outdoor temperature. Sensi takes it from the zip code the thermostat was registered with, so the thermostat has to be on Wi-Fi. If it is offline or cannot get the weather, Sensi turns these two settings off for the time being and stages by system performance.",
+   "Sensi prints no factory setting for Aux Lockout or Balance Point. Sensi calls these advanced settings to be set with an HVAC technician.",
+   "Strips only, right now: press the Mode button on the thermostat until Aux shows. In Aux mode the backup heat is used as the main heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Sensi support: Aux Heat Settings; Aux Heat; Boost; Cycle rate; My thermostat brings on second stage too slowly or quickly (sensi.copeland.com); Sensi Smart Thermostat Manual Operation Guide (R-5029)"
+ },
+ "tst-sensi-lite": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The thermostat has to be set up as a heat pump (HP at the first step of the configuration menu) and connected to Wi-Fi, or the aux settings do not apply.",
+   "At the thermostat press and hold the menu icon (the three dots) for 8 seconds, or until it shows \"Setup Outdoor\".",
+   "Tap the menu icon 3 times to reach the Outdoor Temperature AUX Control (AUX Lockout) and set it. Tap the menu icon once more for Balance Point (AUX Heat only) and set it.",
+   "Aux Lockout: the strips are locked out and only the heat pump heats when it is warmer outside than this setting. Sensi prints a range of -4 to 80. If it is set low, the strips are held off on mild days - raise it to let them help sooner.",
+   "Balance Point: when it is colder outside than this setting the heat pump is locked out and only the strips heat. Sensi prints a range of -5 to 55. Raising it does not make the strips help the heat pump - it shuts the heat pump off at a warmer outdoor temperature, so leave it alone unless the heat pump should not run in the cold. Aux Lockout can never be set below Balance Point.",
+   "To leave, tap the menu icon until it is back at the mode screen. The Pro Install Guide also says holding the three dots for four seconds exits the menu.",
+   "Boost is in the Sensi app, not on the wall: open the app, tap the thermostat name, the settings gear, then System settings. With Boost on, every heat stage comes on when the setpoint is raised by three degrees. Sensi says Boost ships On. With it off the thermostat adds stages by its own calculation. Sensi says Boost only shows when the equipment has more than one stage.",
+   "Cycle Rate is on the same System settings screen - Fast, Medium or Slow for each mode. Sensi says the staging calculation itself cannot be changed, only adjusted slightly with Cycle Rate, and that a delay of 0-30 minutes before the next stage is possible."
+  ],
+  "notes": [
+   "Aux Lockout and Balance Point need an outdoor temperature. Sensi takes it from the zip code the thermostat was registered with, so the thermostat has to be on Wi-Fi. If it is offline or cannot get the weather, Sensi turns these two settings off for the time being and stages by system performance.",
+   "Sensi prints no factory setting for Aux Lockout or Balance Point.",
+   "Strips only, right now: tap the three dots until AUX mode shows. The install guide says this bypasses the heat pump and runs auxiliary-only heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Sensi support: Aux Heat Settings; Boost; Cycle rate; My thermostat brings on second stage too slowly or quickly (sensi.copeland.com); Sensi Lite smart thermostat Pro Install Guide"
+ },
+ "tst-sensi-touch": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Sensi does not list this model for Aux Lockout or Balance Point. Its Aux Heat Settings page lists the Sensi Touch 2, Sensi Lite and Sensi smart thermostat only - not the original Sensi Touch. The printed Sensi Touch manuals list no aux timing setting either.",
+   "What can be changed is in the Sensi app, not on the wall: open the app, tap the thermostat name, the settings gear, then System settings.",
+   "Boost: with Boost on, every heat stage comes on when the setpoint is raised by three degrees. Sensi says Boost ships On. With it off the thermostat adds stages by its own calculation. Sensi says Boost only shows when the equipment has more than one stage.",
+   "Cycle Rate, same screen: Fast, Medium or Slow for each mode. Sensi says the staging calculation itself cannot be changed, only adjusted slightly with Cycle Rate, and that a delay of 0-30 minutes before the next stage is possible.",
+   "Strips only, right now: press Mode on the thermostat until Aux shows. In Aux mode the backup heat is used as the main heat."
+  ],
+  "notes": [
+   "Strips never come on in Heat mode: check the setup at Menu > Advanced Set Up > Set Up HVAC Equipment. Outdoor Setup has to be a heat pump choice and Indoor Setup has to match the air handler, and the strip wire has to be on the aux heat terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Sensi support: Aux Heat Settings; Aux Heat; Boost; Cycle rate; My thermostat brings on second stage too slowly or quickly (sensi.copeland.com); Sensi Touch Thermostat Manual Operation Guide (R-5030)"
+ },
+ "tst-sensi-touch-2": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The thermostat has to be set up as a heat pump with backup heat and connected to Wi-Fi, or the Aux Heat Settings do not apply.",
+   "At the thermostat tap the menu icon > Advanced HVAC Settings > HVAC Equipment > Configure > Aux Heat Settings.",
+   "Turn AUX Lockout (Disables AUX Heat) and / or Balance Point (AUX Heat Only) On or Off, set the temperatures, then tap Save.",
+   "Aux Lockout: the strips are locked out and only the heat pump heats when it is warmer outside than this setting. Sensi prints a range of -4 to 80. If it is set low, the strips are held off on mild days - raise it to let them help sooner.",
+   "Balance Point: when it is colder outside than this setting the heat pump is locked out and only the strips heat. Sensi prints a range of -5 to 55. Raising it does not make the strips help the heat pump - it shuts the heat pump off at a warmer outdoor temperature, so leave it alone unless the heat pump should not run in the cold. Aux Lockout can never be set below Balance Point.",
+   "Boost is in the Sensi app, not on the wall: open the app, tap the thermostat name, the settings gear, then System settings. With Boost on, every heat stage comes on when the setpoint is raised by three degrees. Sensi says Boost ships On. With it off the thermostat adds stages by its own calculation. Sensi says Boost only shows when the equipment has more than one stage.",
+   "Cycle Rate is on the same System settings screen - Fast, Medium or Slow for each mode. Sensi says the staging calculation itself cannot be changed, only adjusted slightly with Cycle Rate, and that a delay of 0-30 minutes before the next stage is possible."
+  ],
+  "notes": [
+   "Aux Lockout and Balance Point need an outdoor temperature. Sensi takes it from a Sensi outdoor sensor (Touch 2 only) or from the zip code the thermostat was registered with. If the thermostat is offline or cannot get the weather, Sensi turns these two settings off for the time being and stages by system performance.",
+   "Sensi prints no factory setting for Aux Lockout or Balance Point.",
+   "Strips only, right now: press the Mode button until Aux shows. The manual says Heat mode switches between the heat pump and the backup heat on its own, and Aux uses only the backup heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Sensi support: Aux Heat Settings; Boost; Cycle rate; My thermostat brings on second stage too slowly or quickly (sensi.copeland.com); Sensi Touch 2 smart thermostat Manual Operation Guide"
+ },
+ "tst-totaline-p274-programmable": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "P274-1100 is the AC model (1 stage cool, 1 stage heat) and cannot run a heat pump. The rest applies to the P274-1200 (heat pump) and P274-1300 (2-speed) set up as heat pumps - DIP switch C OFF.",
+   "Hold the Fan button about 10 seconds. The room temperature goes away and a small flashing option number shows in the upper right.",
+   "Use the arrows to get to Option 08, Auxiliary Heat Lockout Temperature, then press Set Time/Temp. The larger value on the left flashes. Choices are OF or 5 to 55 F in 5 degree steps. Factory setting is OF, which allows the strips at all outdoor temperatures. With a number set, the strips cannot run when it is warmer outside than that number - raise it or set OF if they are being held off.",
+   "Press Set Time/Temp again to save, then End to exit. It also exits by itself after 3 minutes with no button pressed.",
+   "Option 08 needs the outdoor temperature sensor attached. E3 on the display means the outdoor reading is out of range and Option 8 needs it - check the sensor and its wiring.",
+   "There is no setting for how long the heat pump runs before the strips. The staging timer is fixed at 15 minutes between stages. It is skipped when the room is more than 5 degrees off the setting.",
+   "Strips only right now - press Mode until E HEAT shows. That runs auxiliary heat only, and E HEAT overrides the Option 08 lockout."
+  ],
+  "notes": [
+   "Strips heat but no air moves: Option 04 turns the fan (G) on with heat (W) for auxiliary heaters that need a G signal. Factory setting is OF.",
+   "P274-1300 with DIP switch D ON runs a 1-speed heat pump with 3 stages of auxiliary heat. It needs the matched heaters and a variable-speed fan coil.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Totaline Residential Programmable Thermostats P274-1100, 1200, 1300 Installation and Operating Instructions (P274-8SI)"
+ },
+ "tst-totaline-p474-0130": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on. It is a 1 stage heat, 1 stage cool thermostat with W, Y, B, O, G and R terminals only - no aux or emergency heat terminal. The heat pump hookups in its manual are for heat pumps with no auxiliary heat."
+  ],
+  "notes": [
+   "The HEAT PUMP jumper only tells it the unit is a heat pump. The FAN W/ HEAT jumper goes ON for first stage electric heat so the fan starts right away on a heat call. Neither one stages strips.",
+   "A heat pump with strips needs a heat pump thermostat with an aux terminal."
+  ],
+  "source": "Totaline P474-0130 Non-Programmable Digital Thermostat Owner's Manual / Installation Instructions (P/N 88-396 Rev. 2)"
+ },
+ "tst-totaline-p474-2150": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Put the thermostat in OFF first. The manual says to before changing anything in setup.",
+   "Press and hold Mode and, while holding it, press Override to get into the Setup screens. The manual prints 5 seconds in Advanced Setup and 2 seconds in Quick Start. The step number shows in the top right corner. Mode moves to the next item; Up and Down change the flashing one.",
+   "Step 5, Heat Pump, must be On. Factory setting is Off - as shipped it is not set up to run a heat pump.",
+   "Step 8, Deadband - 1 to 6 degrees, factory setting 2. The second stage of heat (the backup heat on a heat pump) turns on once the first stage has been on at least two minutes and the room is the deadband plus 2 degrees away from the setpoint. A smaller deadband brings the second stage on sooner.",
+   "To leave, press and hold Mode and press Override for 2 seconds. It also leaves by itself after 30 seconds with no buttons pressed.",
+   "Strips only right now - hold Override and press Up for 2 seconds. The cool setpoint display reads EH. The fan and the second stage of heat run on a heat call and the compressor is locked out. Do the same thing again to turn it off."
+  ],
+  "notes": [
+   "This model has no outdoor lockout and no stage timer setting. The deadband is the only adjustment that moves the second stage.",
+   "Step 7, Electric Heat, only shows with Heat Pump off in step 5. It is for straight electric heat (fan on at once with a heat call), not for heat pump strips.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Totaline P474-2150 1 For All Programmable Digital Thermostat Owner's Manual (11/98)"
+ },
+ "tst-trane-link-ux360": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the UX360. Tap Menu and open the Service / Tech Access menu, then go to Technician Access > Configuration. The settings below are in the Energy and Climate Control parts of Configuration.",
+   "Energy > Indoor Heat first. If Auxiliary Heat Lockout is Enabled, the strips will not run when it is warmer outside than Auxiliary Heat Lockout Temp (32 F to 70 F, factory 45 F). The lockout ships Disabled. To let the strips run on milder days, raise the temperature or set the lockout to Disabled.",
+   "Climate Control > General System Operation. The system holds the next stage back with a 15-minute staging inhibit. Aggressive Recovery by Temp Error (factory Disabled): set to Enabled and that wait is dropped in heating whenever the room is more than 2 F off the setpoint.",
+   "Heating Aggressive Recovery by ODT (factory Disabled) does the same thing, but only when it is colder outside than the Heating Aggressive Recovery Setting (0 F to 70 F, factory 40 F). A higher setting drops the wait on more days. It needs an outdoor temperature sensor connected and enabled.",
+   "Only one of those two can be on. The manual will not let both be enabled at once."
+  ],
+  "notes": [
+   "If Auxiliary Heat Lockout and Compressor Heat Lockout are both enabled they have to be at least 10 degrees apart.",
+   "No strips at all: check Climate Control > Indoor Heat > Heater Type. It ships as None and has to read Electric, with the right heater size. Communicating equipment fills this in by itself.",
+   "A + sign under the indoor temperature on the home screen means the compressor heat and the indoor heat are both being called.",
+   "Emergency Heating system mode runs the indoor heat only. It only shows when the outdoor unit is a heat pump.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "UX360 Smart Thermostat Installation Guide (CNTR-SVN001-EN); UX360 User Guide (32-5102-1C-EN)"
+ },
+ "tst-trane-tcont302-303": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "From the home screen press Menu, then press and hold the Installer Config key for 5 seconds. The screen reference number (the item number) shows in the top right corner of the display.",
+   "Item 1 has to be HP 1 or HP 2 for a heat pump. Items 1 and 3 must match the heat pump or nothing below works right.",
+   "Go to item 28, Fast second stage of heat (factory On). On brings the extra heat stages on quickly when the setting is raised a few degrees above room temperature. With it OFF the thermostat picks its own time and the strips can be up to 30 minutes late. If someone turned it OFF, turn it back On.",
+   "Go to item 37, AO, the auxiliary heat cut out temperature. It only shows with HP 1 or HP 2 picked and an outdoor sensor installed and turned on. The strips will not turn on while it is warmer outside than this setting. The factory setting is 80, which the manual calls disabled, and it can be set from -5 to 79. If it has been set low, it is holding the strips off on milder days - raise it, or put it back to 80."
+  ],
+  "notes": [
+   "The outdoor sensor is turned on at item 30 (remote sensor On, factory OFF) and item 31 (set to Outdoor Remote).",
+   "Item 33, Dual Fuel (dF), ships OFF and stays OFF with electric strips. If it is On with no outdoor sensor, item 35 sets the staging (01 to 09, factory 05): the higher the number, the sooner the auxiliary stage comes on.",
+   "Quick check: in Heat, set the temperature 3 degrees above room temperature. The auxiliary heat should start and the display shows System On +2.",
+   "Emergency heat: press the SYSTEM key until EM shows. That skips the heat pump and runs the heat wired to W/E, W2.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Trane XR302 and XR303 Touchscreen Thermostat Installation and User Guide (18-HD48D1-1C-EN)"
+ },
+ "tst-trane-tcont600-602": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "TCONT600: this one is single-stage only. It has one W (O) heat terminal and no aux or emergency heat terminal, so it cannot bring strips on behind a heat pump at all. The rest of this is for the TCONT602.",
+   "TCONT602: there is no setting for when the aux heat comes on. Installer setup only has cycle rates for it - Function 6 (second stage heat / auxiliary heat cycle rate) and Function 8 (emergency heat cycle rate), where 9 is the choice for electric heat. Those set how often the heat cycles, not how soon the strips start.",
+   "Check the system type. Press and hold the up arrow and FAN buttons until the display changes. Function 1 has to be 5 (2 heat/1 cool heat pump). If it is 1 (1 heat/1 cool heat pump) the thermostat never calls for the strips. Next goes to the next function. Done exits and saves.",
+   "Check the wiring. W1 is the auxiliary heat relay and X2 is the emergency heat relay. The manual says to jumper W1 to X2 if there is no emergency heat relay, and to jumper W1 to W2 at the air handler if an ODT-1 outdoor thermostat is not used. A missing jumper or an outdoor thermostat set too low will hold the strips off.",
+   "If the house needs heat now, set the system to Em Heat. The screen shows Auxiliary Heat On when the strips are running."
+  ],
+  "notes": [
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TCONT600AF11MA Programmable Comfort Control Installation Instructions (Pub. No. 18-HD25D20-3, 69-1834-2); TCONT602AF22MA Programmable Comfort Control Installation Instructions (Pub. No. 18-HD25D21-2, 69-1835-1)"
+ },
+ "tst-trane-tcont800": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The TCONT800AS11AA only runs a single-stage heat pump with no aux heat (Installer Setup 0170, choice 2). It has no aux or emergency heat output for strips. If the thermostat has to stage strips, the home needs a heat pump thermostat with an aux heat terminal."
+  ],
+  "notes": [
+   "To check the system type: press and release the System key, then hold the two blank keys on either side of the center blank key for about five seconds. Look at Installer Setup 0170. Press Done to exit."
+  ],
+  "source": "TCONT800AS11AA Touch Screen Programmable Comfort Control installer instructions (Pub. No. 18-HD25D18-3 / 69-1787-03)"
+ },
+ "tst-trane-tcont802-803": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press and release the System key. Then press and hold the two blank keys on either side of the center blank key for about five seconds, until the screen changes to the Installer Setup number screen. Press Done to exit when finished.",
+   "Check 0170 System Type first: 7 is a 2 heat/1 cool heat pump, 12 is a 3 heat/2 cool heat pump with auxiliary heat. Then 0200 Backup Heat Source should be 0 (electric).",
+   "Go to 0360 Heat Pump Auxiliary Lockout. Factory is 0, no lockout. The other choices are 40, 45, 50, 55 and 60 F. With one of those set, only the compressor runs when it is warmer outside than that number - the strips are locked out. To let the strips run on milder days, raise it or set it back to 0.",
+   "0360 only shows when backup heat is electric and 0340 is set to 2 (outdoor temperature sensor for system control). If 0360 is not in the list, there is no aux lockout in play.",
+   "Go to 0680 Temperature Control in Heat. Factory is 2 (standard). 1 is less aggressive and 3 is more aggressive. The manual says this setting covers the recovery ramp and the use of auxiliary heat during recovery, and to choose 3 if the house is undershooting. If it has been set to 1, put it back to 2 or go to 3."
+  ],
+  "notes": [
+   "0350 Heat Pump Compressor Lockout (factory 0, none; choices 15 to 45 F) shuts the compressor off below that outdoor temperature so only the aux heat runs. The thermostat keeps a 5 F gap between the compressor and auxiliary lockout temperatures.",
+   "Em Heat system setting locks out the compressor and turns the compressor and auxiliary lockouts off. First stage is whatever is on X2, second stage is W1. X2 is often jumpered to W1.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TCONT802AS32DA Touch Screen and TCONT803AS32DA Touch Screen with Dehumidification installation instructions (Pub. No. 18-HD25D19-3, 69-1790-3)"
+ },
+ "tst-trane-xb200": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot run heat strips as backup for a heat pump. The XB200 (TCONT200AN11AA) is a one heat / one cool control set up for heating only (gas or electric) or cooling only. It has one heat output (W) and no heat pump or aux heat setup. A heat pump with strips needs a heat pump thermostat."
+  ],
+  "notes": [],
+  "source": "XB200 TCONT200AN11AA Installer's Guide (Pub. No. 18-HD29D1-3)"
+ },
+ "tst-trane-xl1050": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Tap Menu > Service > Technician Access > Proceed. That is the technician menu the manual prints for the Installation Wizard, and it says Installer Setup can be opened on its own from there.",
+   "In Installer Setup use the up and down arrows to pick a settings group, press Edit, then Next to reach the setting. Press Save to keep the change. Exit throws the change away.",
+   "Look at the Lockout Settings group first. If Auxiliary Heat Lockout is set to Enable, the strips will not run when it is warmer outside than the Auxiliary Heat Lockout Setting (32 F to 70 F, factory 45 F). The lockout ships set to Disable. To let the strips run on milder days, raise the setting or set the lockout to Disable.",
+   "Then the Comfort Settings group. The control holds the strips back with a 10-minute stage inhibit - it watches how fast the house is recovering before it adds the next stage. Two settings switch that wait off, and only one of them can be on at a time.",
+   "Aggressive Recovery > 2 Setpoint Change (factory Disable): set to Enable and the wait is skipped any time the setpoint is moved more than 2 F.",
+   "Heating Aggressive Recovery by Outdoor Temperature (factory Disable): set to Enable and the wait is skipped in heating any time it is colder outside than the Heating Aggressive Recovery Setting (0 to 70 F, factory 40 F). A higher setting skips the wait on more days.",
+   "Control Response Rate (factory Normal, other choice Fast): Fast makes the control build load value faster, and load value is what calls for the next stage. Fast should get to the strips sooner - the manual does not say by how much."
+  ],
+  "notes": [
+   "Lockout settings and Heating Aggressive Recovery by Outdoor Temperature cannot be selected unless an outdoor temperature sensor is connected and enabled (Sensor Settings group).",
+   "With a variable speed outdoor unit the manual says stage thresholds and stage inhibits do not apply, so the two Aggressive Recovery settings will not change much there. The lockout still matters.",
+   "If Auxiliary Heat Lockout and Compressor Heat Lockout are both enabled, the control keeps them at least 10 degrees apart.",
+   "Zoned system with a variable speed outdoor unit: Zoning Settings has Clamp LV for Auxiliary Heat and Auxiliary Heat Threshold (25 to 99 percent). With the clamp on, the strips are only allowed when the calling zones add up to more than the threshold. A lower threshold lets the strips in sooner.",
+   "Emergency Heat system mode runs the indoor heat only. It only shows when the outdoor unit type is a heat pump.",
+   "No strips at all: check Standard Settings - Indoor Unit Type should be Electric and Indoor Heat Stages should match the heater. These fill in by themselves on a fully communicating system.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortLink II XL 1050 Installation Guide (18-HD80D1-6F-EN)"
+ },
+ "tst-trane-xl624": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press Menu, then press Next until Service shows. Press Select and hold it 5 seconds until Installer Settings shows, then press Select again to go in. Next moves to the next setting. Done saves and backs out to the menu.",
+   "Go to Comfort Setting and find Indoor Heat Delta Stage 1 On (.5 to 8 degrees). The strips only come on once this delta On threshold is met in heat pump heating. A smaller number brings the first stage of strips on sooner. This manual does not print a factory value for it - read what is there before you change it.",
+   "Indoor Heat Delta Stage 2 On (1 to 8 degrees) does the same job for the second stage of strips.",
+   "Go to Lockouts. If Aux Heating Lockout is Yes, the strips are held off when it is warmer outside than Aux Lockout Outdoor Temp (30 to 70 degrees, factory 50). The lockout ships as No. To let the strips run on milder days, raise the temperature or set the lockout to No.",
+   "Still in Comfort Setting, check Recovery Enable (factory No). When it is Yes, the strips will not come on while the thermostat is in Recovery, which can last up to one hour before a scheduled setpoint. Set it to No if the house needs the strips on morning warm-up."
+  ],
+  "notes": [
+   "The Lockouts menu needs an outdoor temperature sensor wired to ODT and Outdoor Sensor set to Outdoor in Sensor Settings (it ships as None).",
+   "Heat Stage Up Timer does not help here. The manual says it only works on the primary heat (Y1 to Y2 on a heat pump), not on aux heat or the step from heat pump to aux.",
+   "EM Heat system mode runs the indoor heat only.",
+   "No strips at all: in Equipment Type, Outdoor Unit Type ships as AC and Indoor Unit Type ships as Gas/Oil. For a heat pump with strips they have to be HP and Electric, with Indoor Heat Stages (1 or 2) matching the heater.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Touchscreen Comfort Control TCONT624AS42DA User Guide and Installation Instructions (18-HD45D1-7)"
+ },
+ "tst-trane-xl824": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Tap Menu > Service > Technician Access > Proceed. That is the technician menu the manual prints for the Installation Wizard, and it says Installer Setup can be opened on its own from there.",
+   "In Installer Setup use the up and down arrows to pick a settings group, press Edit, then Next to reach the setting. Press Save to keep the change. Exit throws the change away.",
+   "Look at Lockout Settings first. If Auxiliary Heat Lockout is set to Enable, the strips will not run when it is warmer outside than the Auxiliary Heat Lockout Setting (32 F to 70 F, factory 45). The lockout ships set to Disable. To let the strips run on milder days, raise the setting or set the lockout to Disable.",
+   "Then Comfort Settings. The control holds the strips back with a stage inhibit - it watches how fast the house is recovering before it adds the next stage. The settings table calls it a 10-minute inhibit; the Stage Inhibits section of the same manual says 15 minutes. Two settings switch that wait off.",
+   "Aggressive Recovery > 2 Setpoint Change (factory Disable): set to Enable and the wait is skipped any time the setpoint is moved more than 2 F.",
+   "Heating Aggressive Recovery by Outdoor Temperature (factory Disable): set to Enable and the wait is skipped in heating any time it is colder outside than the Heating Aggressive Recovery Setting (0 to 70 F, factory 40 F). A higher setting skips the wait on more days.",
+   "Control Response Rate (factory Normal, other choice Fast): Fast makes the control build load value faster, and load value is what calls for the next stage. Fast should get to the strips sooner - the manual does not say by how much."
+  ],
+  "notes": [
+   "Lockout settings and Heating Aggressive Recovery by Outdoor Temperature cannot be selected unless an outdoor temperature sensor is connected and enabled. Sensor Settings ships set to No ODT Sensor.",
+   "If Auxiliary Heat Lockout and Compressor Lockout are both enabled, the control keeps them at least 10 degrees apart.",
+   "Emergency Heat system mode runs the indoor heat only. It only shows when the outdoor unit type is a heat pump.",
+   "No strips at all: check Standard Settings. Outdoor Unit Type ships as Cooling Only and Indoor Unit Type ships as Gas/Oil - for a heat pump with strips they have to be Heat Pump and Electric, with Indoor Heat Stages matching the heater.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Trane XL824 Connected Control Installation Guide (18-HD72D1-11F-EN)"
+ },
+ "tst-trane-xl850": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Do this on the thermostat. Tap Menu > Service > Technician Access > Proceed. That is the technician menu the manual prints for the Installation Wizard, and it says Installer Setup can be opened on its own from there.",
+   "In Installer Setup use the up and down arrows to pick a settings group, press Edit, then Next to reach the setting. Press Save to keep the change. Exit throws the change away.",
+   "Look at Lockout Settings first. If Auxiliary Heat Lockout is set to Enable, the strips will not run when it is warmer outside than the Auxiliary Heat Lockout Setting (32 F to 70 F, factory 45). The lockout ships set to Disable. To let the strips run on milder days, raise the setting or set the lockout to Disable.",
+   "Then Comfort Settings. The control holds the strips back with a 10-minute stage inhibit - it watches how fast the house is recovering before it adds the next stage. Two settings switch that wait off. The manual says if Aggressive Recovery is enabled, Heating Aggressive Recovery is disabled, so use one or the other.",
+   "Aggressive Recovery > 2 Setpoint Change (factory Disable): set to Enable and the wait is skipped any time the setpoint is moved more than 2 F.",
+   "Heating Aggressive Recovery by Outdoor Temperature (factory Disable): set to Enable and the wait is skipped in heating any time it is colder outside than the Heating Aggressive Recovery Setting (0 to 70 F, factory 40 F). A higher setting skips the wait on more days.",
+   "Control Response Rate (factory Normal, other choice Fast): Fast makes the control build load value faster, and load value is what calls for the next stage. Fast should get to the strips sooner - the manual does not say by how much."
+  ],
+  "notes": [
+   "Lockout settings and Heating Aggressive Recovery by Outdoor Temperature cannot be selected unless an outdoor temperature sensor is connected and enabled (Sensor Settings group).",
+   "With a variable speed outdoor unit the manual says stage thresholds and stage inhibits do not apply, so the two Aggressive Recovery settings will not change much there. The lockout still matters.",
+   "If Auxiliary Heat Lockout and Compressor Lockout are both enabled, the control keeps them at least 10 degrees apart.",
+   "Emergency Heat system mode runs the indoor heat only. It only shows when the outdoor unit type is a heat pump.",
+   "No strips at all: check Standard Settings - Indoor Unit Type should be Electric and Indoor Heat Stages should match the heater.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortLink II XL 850 Installation Guide (18-HD73D1-9E-EN)"
+ },
+ "tst-trane-xl900": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into Installer Setup: from the home screen press and release the System key, then hold the two blank keys on either side of the center key for about five seconds. One key steps to the next setup number, the arrows change the setting. Press Done to exit.",
+   "ISU 0360, Auxiliary Heat Lockout Outdoor Temperature. Factory setting is 0 (no auxiliary heat lockout). The other choices are 5 to 65 F. When it is set, none of the strips come on in heating while it is warmer outside than this number. If the strips never help on a mild day, raise it or set it back to 0.",
+   "ISU 0350, Heat Pump Compressor Lockout Outdoor Temperature. Factory setting is 0 (no compressor lockout), 40 on dual fuel. The other choices are 5 to 60 F. Colder than this number outside, only the aux heat runs. That shuts the heat pump off, so do not raise it just to get more heat. The manual says there is a 5 F deadband between the compressor and aux lockout temperatures.",
+   "ISU 0680, Temperature Control in Heat. Factory setting is 2 (standard). 1 is less aggressive, 3 is more aggressive. The manual says this applies to the recovery ramp and the use of auxiliary heat during recovery. 3 is the more aggressive choice and the manual warns it could overshoot.",
+   "Check the equipment setup while you are in there: ISU 0172 System Selection has to be 2 (Heat Pump) or E (Auto-Discover), ISU 0176 Heater Stages cannot be 0 (None), and ISU 0200 Backup Heat Source is 0 for electric.",
+   "To run the strips without the heat pump, set System to Em Heat. The compressor is locked out and the aux heat cycles to hold temperature. In Emergency Heat the compressor and aux lockout settings are turned off."
+  ],
+  "notes": [
+   "ISU 0350 and 0360 only show if outdoor temperature is available. Communicating outdoor units have an ambient sensor that is auto-discovered. ISU 0342 is the outdoor temperature sensor setting.",
+   "The manual prints no time delay or droop setting for bringing electric strips on. Lockouts and ISU 0680 are the only settings it gives.",
+   "ISU 0345 and 0346 (Upstage to Furnace Timer) are dual fuel settings. They decide when a gas furnace takes over, not strips.",
+   "During defrost the aux lockout number is ignored. The defrost heater balance points are used instead.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "TCONT900AC43UA ComfortLink II Comfort Control installer guide (Pub. No. 18-HD32D1-2 / 69-2079-05)"
+ },
+ "tst-trane-xl950": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into the technician screens: Home > Menu > Service, then press and hold Technician Access (it has a 5 second hold delay) and press Proceed on the caution screen. Open Installer Setup, then Advanced.",
+   "Advanced > Comfort > Aggressive Recovery > 2 degree Setpoint Change. The control normally holds a 10 minute inhibit between compressor heating and auxiliary heating. Enabled, this drops the 10 minute wait any time the control sees more than a 2 degree change. It works in heating and cooling.",
+   "Advanced > Comfort > Heating Aggressive Recovery and Heating Aggressive Recovery - Outdoor Temperature (0 to 70). This drops the 10 minute wait based on outdoor temperature, in heating only. It can only be enabled when Aggressive Recovery is disabled.",
+   "Advanced > Lockouts > Auxiliary Heat Lockout (Disable or Enable) and Auxiliary Heat Lockout - Outdoor Temperature (32 to 70). When enabled, the aux heat stages are locked out while it is warmer outside than this number. If the strips never help on a mild day, raise the number or disable the lockout. The manual says it must be set higher than the compressor heating lockout.",
+   "Advanced > Lockouts > Compressor Heating Lockout and Compressor Lockout - Outdoor Temperature (5 to 70). Colder than this number outside, all compressor operation is locked out. That shuts the heat pump off, so do not raise it just to get more heat.",
+   "To run the strips without the heat pump, set the system mode to Emergency Heat. The heat pump is disabled and the heat strips are enabled."
+  ],
+  "notes": [
+   "The manual lists the choices for these settings but prints no factory defaults for them.",
+   "Lockouts work off outdoor temperature. Check Advanced > Sensors > Select Outdoor Temperature Sensor is not set to No ODT Sensor.",
+   "Advanced > Comfort also lists Control Response Rate (Normal or Fast). The manual does not say what it does to aux heat.",
+   "On zoned systems, Advanced > Zoning lists Clamp LV for Auxiliary Heat and Auxiliary Heat Threshold (25% to 99%). The manual lists them without explaining them.",
+   "If only strips run and the heat pump stays off, the manual says to check the compressor lockout temperature setting and the outdoor sensor.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "ComfortLink II XL950 Control TZONE950AC52ZA Installer's Guide (18-HD64D1-10)"
+ },
+ "tst-trane-xr102-xr103": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "XR102 (TCONT102): nothing to set. It is a one heat / one cool thermostat and its manual says it does not support auxiliary heat. The steps below are for the XR103 (TCONT103) heat pump model only.",
+   "XR103: put the SYSTEM switch in OFF and hold the up and down arrows together for at least two seconds. FA shows first. Press both arrows again to step to the next item. Press one arrow to change the setting. Move the SYSTEM switch out of OFF to exit.",
+   "FA is the fast second stage setting and it is what brings the aux heat on sooner. Factory setting is ON. With FA on, raising the setpoint 3 F or more above room temperature with the up key brings second stage on right away. With FA off, second stage waits until the setpoint has been 1 F or more above room temperature for more than ten minutes. Make sure FA is ON.",
+   "Jumper W905 on the base sets the cycle rate. Uncut (the factory setting) is fast cycle: the manual says 1st stage cycles at about 1.2 F and 2nd stage at 0.75 F. Clipped is slow cycle: 1.5 F and 1.2 F. The manual gives these as cycle figures and does not say they change when 2nd stage starts, so do not count on this to bring the aux heat on sooner. FA is the setting that does.",
+   "To run the backup heat without the heat pump, move the SYSTEM switch to EMER. It bypasses the heat pump and uses the heat source wired to terminal E."
+  ],
+  "notes": [
+   "Quick test from the manual: set the temperature 4 degrees above room temperature in HEAT. The auxiliary heat should come on and the flame icon will flash.",
+   "CL in the same menu is the compressor lockout. It is a 5 minute short-cycle delay, not an aux heat setting.",
+   "The XR103 manual prints no outdoor temperature lockout or balance point setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Trane XR102 Installation and User Guide (Pub. No. 18-HD54D1-1B-EN); Trane XR103 Installation and User Guide (Pub. No. 18-HD55D1-1C-EN)"
+ },
+ "tst-trane-xr202-xr203": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "XR202 (TCONT202): nothing to set. It is a one heat / one cool thermostat and its manual says the 202 does not support auxiliary heat. The steps below are for the XR203 (TCONT203) only.",
+   "XR203: hold the Menu button for 8 seconds to open the INSTALLER MENU. It opens on item 05. Use Next and Back to move through the items and the arrows to change a setting. Exit goes back to the home screen.",
+   "Item 05, Outdoor Equipment, has to be HP1 or HP2 for a heat pump. The factory setting is AC2.",
+   "There is no setting on the XR203 for when the aux heat starts. The nearest thing is item 32 CR, Aux Cycle Rate: SLO, MEd or FAS, factory setting MEd. The manual says it sets how often the auxiliary heat will turn on, and the spec page lists the rated differential for HP Aux as 0.5 F on fast, 0.75 F on medium and 1.9 F on slow. It does not say this changes how soon the strips come on.",
+   "Item 15 dE, Dedicated Emergency. Factory setting is OFF. Turned on, the W/E terminal only runs in Emergency / Aux mode and W2 becomes the first stage of aux heat. If dE is on and the strips are only wired to W/E, they will not come on as aux heat - check which terminal the strip wire is on.",
+   "To run the aux heat by itself, press the System button to the Aux position (the spec page lists this mode as Emergency Heat)."
+  ],
+  "notes": [
+   "Quick test from the manual: in Heat, set the temperature 3 degrees above room temperature. The auxiliary heat should come on and the display shows Heat On Aux.",
+   "The XR203 manual prints no time delay, outdoor lockout or balance point setting for aux heat. It only says the auxiliary runs in Heat mode when the heat pump cannot maintain the set temperature.",
+   "Item 50 CL is the compressor lockout. It is a 5 minute short-cycle delay, not an aux heat setting.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Trane XR202 Installation and User Guide (Pub. No. 18HD51D1-1C-EN); Trane XR203 Installation and User Guide (Pub. No. 18HD50D1-1D-EN)"
+ },
+ "tst-trane-xr401": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "There is no setting on the XR401 (TCONT401AN21MA) for when the strips come on. Its installer setup table has no aux lockout, no stage delay and no outdoor temperature setting for aux heat.",
+   "Check the setup instead. Set System Mode to OFF and Fan to AUTO, then hold Mode and Up Arrow together until SET-UP shows. Mode goes to the next step, Fan goes back, the arrows change the setting. Step 5 System Type has to be 2 (HP). Step 7 Indoor Heater Type is 2 for electric. Step 8 Indoor Heater Stages cannot be 0 (None). To save, press the $ key to jump to step 99, pick SA (Save) and press Mode. Leave power on for at least 5 seconds after saving.",
+   "Check the wiring at the air handler. The heat pump wiring figure says if outdoor thermostat ODT-1 is not used, jumper W1 to W2. If there is an outdoor thermostat in the strip circuit, check it.",
+   "If the heat pump cannot carry the house, use the Mode key to pick Emergency Heat. It is one of the system modes on this model."
+  ],
+  "notes": [
+   "The manual says picking 2 heater stages with a heat pump only changes Emergency Heat operation, because this control is 2H/1C only.",
+   "Step 33, Control Response Rate, is 0 (Normal) from the factory and 1 is Fast. The manual only suggests Fast when the heating or cooling cycle is too fast or too slow. It does not say it changes aux heat.",
+   "Step 9, Outdoor Sensor, is for outdoor temperature sensing and display. The manual gives it no aux heat job.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "XR401 TCONT401AN21MA Installer's Guide (Pub. No. 18-HD29D2-4)"
+ },
+ "tst-trane-xr402": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get into Installer Setup: set System Mode to OFF and Fan to AUTO, then hold Mode and Up Arrow together until SET-UP shows. Mode goes to the next step. The arrows change the setting.",
+   "Step 35, Aggressive Recovery Due To A Setpoint Change > 2 Degrees F. Factory setting is 0 (Disabled). Set it to 1 (Enabled). The thermostat normally waits 10 minutes between the highest compressor stage and the first stage of aux heat. With step 35 enabled, that wait is dropped when a setpoint change leaves the room 2 degrees or more off.",
+   "Step 46, Auxiliary Heat Lockout Outdoor Temperature. Factory setting is -- (Disabled). Turned on, the table shows 45 and a range of 15 to 75 F. None of the strips come on in heating while it is warmer outside than this number. If the strips never help on a mild day, raise it or set it back to --.",
+   "Step 45, Heating Aggressive Recovery Outdoor Temperature. Factory setting is -- (Disabled). Turned on, the table shows 40 and a range of 10 to 70 F. The manual says step 35 overrides step 45 when step 35 is enabled.",
+   "Steps 45 and 46 need the outdoor sensor. Step 10, Outdoor Sensor, has to be 2 (Has Sensor for Display and for Control). Factory setting is 0 (None).",
+   "To save, press the $ key to jump to step 99, pick SA (Save) and press MODE. Leave power on for at least 5 seconds after saving."
+  ],
+  "notes": [
+   "If step 46 does not show: step 9 Indoor Heater Stages is 0 (None), or step 10 is 0 or 1 (Display Only).",
+   "Step 34, Control Response Rate, is 0 (Normal) from the factory and 1 is Fast. The manual says Fast uses higher gain control constants to make the temperature control more responsive. It does not say it changes aux heat.",
+   "During defrost the aux lockout number is ignored. The defrost heater balance points are used instead.",
+   "Emergency Heat is one of the system modes on this model.",
+   "On dual fuel (gas or oil furnace as backup), steps 43 and 44 set when the furnace takes over. Those are not strip settings.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "XR402 TCONT402AN32DA Installer's Guide (Pub. No. 18-HD29D3-4)"
+ },
+ "tst-trane-xr724": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press the Menu button and go to Service. Press and hold the Service button for 5 seconds until the service menu shows, then open Installer Settings. Next moves to the next setting. Done exits back to the menu.",
+   "Go to Comfort Settings > Control Response. The choices are Normal (factory), Less Aggressive and More Aggressive. This one setting moves all the staging numbers together.",
+   "For the strips, the number that matters is Indoor Heat Delta Stage 1 ON on a heat pump: Normal 2.5 degrees, Less Aggressive 3, More Aggressive 1.5. The second stage of strips is 3.5, 4 and 2.0. More Aggressive brings the strips on with the smallest temperature drop.",
+   "Go to Lockouts. Aux Heat ships as No. Set to Yes, the strips are locked out by outdoor temperature at Aux Lockout ODT (30 to 70 degrees, factory 50). This manual does not print which side of the number is locked out. An aux heat lockout normally holds the strips off when it is warmer outside than the number, so raising it should let them run on milder days. Setting Aux Heat back to No takes the lockout off."
+  ],
+  "notes": [
+   "Lockouts is a starred menu item - it only shows when other settings allow it. The outdoor sensor is turned on in Sensor Settings > ODT Sensor (ships as None, other choice Outdoor).",
+   "More Aggressive also shortens the Heat Stage UP Timer to 10 minutes (Normal 15, Less Aggressive 20).",
+   "EM Heat on the System Mode button shuts the compressor off and runs the indoor heat only.",
+   "No strips at all: in Equipment Type, ODU Type ships as AC and IDU Type ships as Gas / Oil. For a heat pump with strips they have to be HP and Electric, with ID Heat Stages matching the heater.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "XR724 Touchscreen Comfort Control TCONT724AS42DA User Guide and Installation Instructions (18-HD82D1-1E-EN)"
+ },
+ "tst-venstar-colortouch-1st-gen": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips. The heat pump and aux settings only show when the dip switches are set for HP and for ELEC.",
+   "Press MENU, then Settings, and scroll down to Installation Settings. The manual prints no installer code.",
+   "Under Heat & Cool Stages check Aux Heat Stages. It can be set from 0 to 2 stages. Make sure it matches the strips that are wired.",
+   "Open Timers & Deadbands. The strips are the heat stage after the last compressor stage, so find that stage's deadband and timer.",
+   "2nd Stage Deadband is the number of degrees past 1st stage before 2nd stage turns on. Factory setting 2 degrees, range 0 to 10 F. A smaller number brings the next stage on sooner.",
+   "2nd Stage Timer is the number of minutes past 1st stage before 2nd stage turns on. Factory setting 2 minutes, range 0 to 60. The deadband must also be met, so shortening the timer alone will not do it.",
+   "The 3rd and 4th stage deadband settings adjust the same way as 2nd stage.",
+   "Open Heat Pump Settings and check Aux Heat Lockout (Enabled or Disabled). When it is ENABLED the strips will not run when it is warmer outside than Aux Heat Lockout Temp, shown as 65 F. The T5800 / T5900 manuals print the range as 20 to 75 F; the T6800 / T6900 manuals print 0 to 75 F. Raise that temperature or disable the lockout if the strips are being held off.",
+   "Under General Setup check Smart Recovery. With a heat pump, the strips are disabled while Smart Recovery is active. Turn it OFF if cold mornings are the complaint.",
+   "Press the HOME button to go back to the Home Screen when done."
+  ],
+  "notes": [
+   "Emergency Heat: press MENU, then the Emergency Heat button. The thermostat runs the fan and the aux stages only; 1st stage heat and all cooling are off. Press the button again to exit.",
+   "The T6800 manual says the lockout temperatures need a local outdoor sensor wired to the thermostat - Skyport outdoor temperature will not work in its place.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar ColorTouch T5800 / T5900 / T6800 / T6900 Owner's Manual and Installation Instructions"
+ },
+ "tst-venstar-colortouch-t7850-t7900": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips. The heat pump and aux settings only show when the dip switches are set for HP and for ELEC.",
+   "Press MENU, then Settings, and scroll down to Installation Settings. The manual prints no installer code.",
+   "Under Heat & Cool Stages check Aux Heat Stages. It can be set from 0 to 2 stages. Make sure it matches the strips that are wired.",
+   "Open Timers & Deadbands. The strips are the heat stage after the last compressor stage, so find that stage's deadband and timer.",
+   "2nd Stage Deadband is the number of degrees past 1st stage before 2nd stage turns on. Factory setting 2 degrees, range 0 to 10 F. A smaller number brings the next stage on sooner.",
+   "2nd Stage Timer is the number of minutes past 1st stage before 2nd stage turns on. Factory setting 2 minutes, range 0 to 60. The deadband must also be met, so shortening the timer alone will not do it.",
+   "The 3rd and 4th stage deadband settings adjust the same way as 2nd stage.",
+   "Open Heat Pump Settings and check Aux Heat Lockout (DISABLED or ENABLED). When it is ENABLED the strips will not run when it is warmer outside than Aux Heat Lockout Temp - shown as 65 F, range 0 to 75 F. Raise that temperature or disable the lockout if the strips are being held off.",
+   "Under General Setup check Smart Recovery. With a heat pump, the strips are disabled while Smart Recovery is bringing the house up to the Morning setpoint. Turn it OFF if cold mornings are the complaint.",
+   "Press the HOME button to go back to the Home Screen when done."
+  ],
+  "notes": [
+   "Emergency Heat: press MENU, then the Emergency Heat button. The thermostat runs the fan and the aux stages only; 1st stage heat and all cooling are off. Press the button again to exit.",
+   "The lockouts work from outdoor temperature. The T7850 / T7900 manuals show an outdoor reading with the optional sensor or a Skyport connection; the T7800 manual shows it with the optional outdoor sensor.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar ColorTouch T7850 Owner's Manual & Installation Instructions; ColorTouch T7900 Owner's Manual & Installation Instructions; ColorTouch T7800 Owner's Manual & Installation Instructions"
+ },
+ "tst-venstar-colortouch-t8850-t8900": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This is for a heat pump with electric strips. The heat pump and aux settings only show when the dip switches are set for HP and for ELEC.",
+   "Press MENU, then Settings, and scroll down to Installation Settings. The manual prints no installer code.",
+   "Under Heat & Cool Stages check Aux Heat Stages. It can be set from 0 to 2 stages. Make sure it matches the strips that are wired.",
+   "Open Timers & Deadbands. The strips are the heat stage after the last compressor stage, so find that stage's deadband and timer.",
+   "2nd Stage Deadband is the number of degrees past 1st stage before 2nd stage turns on. Factory setting 2 degrees, range 0 to 10 F. A smaller number brings the next stage on sooner.",
+   "2nd Stage Timer is the number of minutes past 1st stage before 2nd stage turns on. Factory setting 2 minutes, range 0 to 60. The deadband must also be met, so shortening the timer alone will not do it.",
+   "The 3rd and 4th stage deadband settings adjust the same way as 2nd stage.",
+   "Open Heat Pump Settings and check Aux Heat Lockout (DISABLED or ENABLED). When it is ENABLED the strips will not run when it is warmer outside than Aux Heat Lockout Temp - shown as 65 F, range 0 to 75 F. Raise that temperature or disable the lockout if the strips are being held off.",
+   "Under General Setup check Smart Recovery. With a heat pump, the strips are disabled while Smart Recovery is bringing the space up to the Occupied setpoint. Turn it OFF if cold mornings are the complaint.",
+   "Press the HOME button to go back to the Home Screen when done."
+  ],
+  "notes": [
+   "Emergency Heat: press MENU, then the Emergency Heat button. The thermostat runs the fan and the aux stages only; 1st stage heat and all cooling are off. Press the button again to exit.",
+   "The lockouts work from outdoor temperature. The manual shows an outdoor reading with the optional sensor or a Skyport connection.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar ColorTouch T8850 Owner's Manual & Installation Instructions; ColorTouch T8900 Owner's Manual & Installation Instructions"
+ },
+ "tst-venstar-explorer-commercial": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "T4800 and T4900 have settings for when the strips come on. The T4700 manual prints only a 1st Stage Deadband (setup step 29) and Number of Aux Stages (setup step 28) - no 2nd stage deadband or timer.",
+   "To get in: press SETUP, then press MODE. WARMER or COOLER changes the value, MODE goes to the next setup step, SETUP again leaves setup.",
+   "Check Number of Aux Stages first - step 27 on T4800, step 32 on T4900. The table prints 0, 1, 2 with a factory setting of 0. With it at 0 the thermostat has no strip stage to bring on.",
+   "T4800 - 2nd Stage Deadband is step 29, 3rd is step 30, 4th is step 31. Each is 0 to 10 degrees, factory 2. Minutes Between 1st and 2nd Stage is step 32, 2nd and 3rd is step 33, 3rd and 4th is step 34. Each is 0 to 60 minutes, factory 2.",
+   "T4900 - 2nd Stage Deadband is step 34, 3rd is step 35, 4th is step 36. Each is 0 to 10 degrees, factory 2. Minutes Between 1st and 2nd Stage is step 37, 2nd and 3rd is step 38, 3rd and 4th is step 39. Each is 0 to 60 minutes, factory 2.",
+   "The strips are the heat stage after the last compressor stage. A smaller deadband and a shorter time for that stage bring the strips on sooner.",
+   "Check Comfort Recovery - step 40 on T4800, step 65 on T4900. With a heat pump the strips are disabled while Comfort Recovery is active. Turn it Off if cold mornings are the complaint.",
+   "These manuals print no aux heat lockout by outdoor temperature."
+  ],
+  "notes": [
+   "Emergency Heat (T4800 / T4900): press the EMERGENCY button. The thermostat runs the fan and the aux stages only; 1st stage heat and all cooling are off. Press it again to exit.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar Explorer T4700 Owner's Manual and Installation Instructions; Explorer T4800 Owner's Manual and Installation Instructions; Explorer T4900 Owner's Manual and Installation Instructions"
+ },
+ "tst-venstar-explorer-mini-t2000": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "To get in: press MODE and FAN together for 5 seconds and let go when the display shows Setup. WARMER or COOLER changes the value, MODE goes to the next setup step. Press MODE and FAN together again to leave.",
+   "The strips are the 2nd stage of heat on a single stage heat pump (W2). On a dual stage heat pump the manual says aux heat turns on with the second stage of heat pump heating.",
+   "Setup step 18 - 2nd Stage Deadband. It is the extra temperature difference after 1st stage turns on before 2nd stage is activated. 0 to 10 degrees, factory 2. A smaller number brings the strips on sooner.",
+   "Setup step 19 - Minutes Between 1st and 2nd Stage. It is the minimum time 1st stage has to be on before 2nd stage can turn on. 0 to 60 minutes, factory 2. A shorter time brings the strips on sooner. Both the time and the deadband have to be met.",
+   "Setup step 23 - Comfort Recovery, factory Off. With a heat pump the strips are disabled while Comfort Recovery is active. Turn it Off if cold mornings are the complaint.",
+   "This manual prints no aux heat lockout by outdoor temperature."
+  ],
+  "notes": [
+   "Emergency Heat: hold the FAN button and press the UP button for two seconds. The display reads EM HEAT. The thermostat runs the fan and the aux strip heat only; the heat pump is off. Do the same again to exit.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar Explorer Mini T2000 Owner's Manual and Installation Instructions"
+ },
+ "tst-venstar-explorer-residential": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "T3800 and T3900 have settings for when the strips come on. The T3700 manual prints only a 1st Stage Deadband (setup step 23) and Number of Aux Stages (setup step 22) - no 2nd stage deadband or timer.",
+   "To get in: press SETUP, then press MODE. WARMER or COOLER changes the value, MODE goes to the next setup step, SETUP again leaves setup.",
+   "Check Number of Aux Stages first - step 26 on T3800, step 31 on T3900. The table prints 0, 1, 2 with a factory setting of 0. With it at 0 the thermostat has no strip stage to bring on.",
+   "T3800 - 2nd Stage Deadband is step 28, 3rd is step 29, 4th is step 30. Each is 0 to 10 degrees, factory 2. Minutes Between 1st and 2nd Stage is step 31, 2nd and 3rd is step 32, 3rd and 4th is step 33. Each is 0 to 60 minutes, factory 2.",
+   "T3900 - 2nd Stage Deadband is step 33, 3rd is step 34, 4th is step 35. Each is 0 to 10 degrees, factory 2. Minutes Between 1st and 2nd Stage is step 36, 2nd and 3rd is step 37, 3rd and 4th is step 38. Each is 0 to 60 minutes, factory 2.",
+   "The strips are the heat stage after the last compressor stage. A smaller deadband and a shorter time for that stage bring the strips on sooner.",
+   "T3900 only - Auxiliary Heat Lockout. Step 58 (Lockout Aux Heat With Outdoor Temp) turns it On or Off, factory Off. Step 59 is the lockout temperature, 20 to 75 F, factory 75. When it is On the strips are locked out above that outdoor temperature - raise it or turn step 58 Off. It needs a local outdoor sensor, and the steps only show with jumper J1 on Heat Pump and J3 on Electric Heat.",
+   "Check Comfort Recovery - step 46 on T3800, step 77 on T3900. With a heat pump the strips are disabled while Comfort Recovery is active. Turn it Off if cold mornings are the complaint."
+  ],
+  "notes": [
+   "Emergency Heat: press the EMERGCY button. The thermostat runs the fan and the aux stages only; the compressor is off for heating. Press EMERGCY again to exit.",
+   "T3900: the Aux Heat Lockout Temp cannot be set lower than 5 degrees above the Heat Pump Lockout temperature.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar Explorer T3700 Owner's Manual and Installation Instructions; Explorer T3800 Owner's Manual and Installation Instructions; Explorer T3900 Owner's Manual and Installation Instructions"
+ },
+ "tst-venstar-slimline-commercial": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "T2800 and T2900 have deadbands and stage timers. On the T2700 the install sheet prints the 2nd stage as fixed: it comes on after 1st stage has run two minutes and the room is off setpoint by the 1st stage deadband plus two degrees.",
+   "To get in (T2900 owner's manual): press and hold MODE, then press PROGRAM. Tap MODE to step forward through the setup screens, hold MODE to step back. Press PROGRAM to leave - setup also closes by itself after 30 seconds with no button pressed. The step number shows on the screen.",
+   "How it stages: 2nd stage comes on when 1st stage has run for the set time AND the room is off setpoint by the 1st stage deadband plus the 2nd stage deadband. 3rd stage works the same way with its own time and deadband. The strips are the heat stage after the compressor.",
+   "2nd and 3rd stage deadbands: each adjusts 0 to 10 degrees, factory two degrees. A smaller number brings that stage on sooner.",
+   "Minutes before the next stage: each adjusts 0 to 60 minutes, factory two minutes. A shorter time brings that stage on sooner.",
+   "T2900 step numbers - 1st / 2nd / 3rd stage deadbands are steps 24, 25 and 26; stage times are steps 27 and 28.",
+   "T2800 step numbers (install sheet) - deadbands are steps 20, 21 and 22; stage times are steps 23 and 24.",
+   "T2700 - the only adjustment is the 1st stage deadband, step 19 (1 to 6). A smaller 1st stage deadband also moves the 2nd stage point closer to setpoint.",
+   "These manuals print no aux heat lockout by outdoor temperature."
+  ],
+  "notes": [
+   "Emergency Heat (T2900 owner's manual): hold the FAN button and press the UP button. The thermostat runs the fan and the 2nd stage of heat; 1st stage is off. Do the same again to exit.",
+   "Set the thermostat mode to OFF before changing settings in setup.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar Slimline T2900 Owner's Manual; Slimline T2900 Installation Instructions; Slimline T2800 Installation Instructions; Slimline T2700 Installation Instructions (P/N 88-602)"
+ },
+ "tst-venstar-slimline-residential": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "T1800 and T1900 have deadbands and stage timers. The T1700 install sheet prints no setting for when 2nd stage heat comes on.",
+   "To get in (T1900 owner's manual): press and hold MODE, then press PROGRAM. Tap MODE to step forward through the setup screens, hold MODE to step back. Press PROGRAM to leave - setup also closes by itself after 30 seconds with no button pressed. The step number shows on the screen.",
+   "How it stages: 2nd stage comes on when 1st stage has run for the set time AND the room is off setpoint by the 1st stage deadband plus the 2nd stage deadband. 3rd stage works the same way with its own time and deadband. The strips are the heat stage after the compressor.",
+   "2nd and 3rd stage deadbands: each adjusts 0 to 10 degrees, factory two degrees. A smaller number brings that stage on sooner.",
+   "Minutes before the next stage: each adjusts 0 to 60 minutes, factory two minutes. A shorter time brings that stage on sooner.",
+   "T1900 step numbers - the owner's manual prints the 1st / 2nd / 3rd stage deadbands as steps 25, 26 and 27 and the stage times as steps 28 and 29. The T1900 install sheet prints them as steps 24, 25, 26 and steps 27 and 28. Go by the wording on the screen.",
+   "T1800 step numbers (install sheet) - deadbands are steps 19, 20 and 21; stage times are steps 22 and 23.",
+   "These manuals print no aux heat lockout by outdoor temperature."
+  ],
+  "notes": [
+   "Emergency Heat (T1900 owner's manual): hold the FAN button and press the UP button. The cool setpoint display reads EH. The thermostat runs the fan and the 2nd stage of heat; 1st stage is off. Do the same again to exit.",
+   "Set the thermostat mode to OFF before changing settings in setup.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Venstar Slimline T1900 Owner's Manual; Slimline T1900 Installation Instructions; Slimline T1800 Installation Instructions; Slimline T1700 Installation Instructions"
+ },
+ "tst-wr-1e78": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot stage heat strips. It is a single stage thermostat with no aux or emergency heat output - the manufacturer's compatibility chart only lists heat pump systems with no aux or emergency heat. A heat pump with strips needs a heat pump thermostat."
+  ],
+  "notes": [],
+  "source": "1E78 Non-Programmable Thermostat Installation Instructions (37-6620)"
+ },
+ "tst-wr-1f56n-444": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The 1F56N-444 / 1E56N-444 is a mechanical 1 heat / 1 cool thermostat with no menu. Its chart lists no model for a heat pump with aux or emergency heat. On a heat pump it is wired with a jumper from W to Y, so one heat call runs the compressor only. A heat pump with strips needs a heat pump thermostat with W2 / E terminals."
+  ],
+  "notes": [
+   "The heat anticipator only changes how long the heat cycles run. It does not add a stage."
+  ],
+  "source": "1F56N-444 / 1E56N-444 Snap-Action Thermostat Installation Instructions"
+ },
+ "tst-wr-1f75": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 1F75H (heat pump) models run aux heat. The 1F75C models are single stage - on a heat pump they have no aux heat and nothing to set.",
+   "1F75H: set the SYSTEM switch to OFF, then press and hold both temperature buttons for 3 seconds. Item 30 shows. Press both buttons together to move to the next item. Up or down alone changes the setting.",
+   "Go to item 32, Aux Cycle Rate. The manual describes it as how often the auxiliary heat will turn on. Choices are SLO, MEd and FAS. MEd is the factory setting. The rated aux differentials are 0.5 F fast, 0.75 F medium and 1.9 F slow, so FAS is the smallest swing and SLO is the widest. If it was left on SLO, move it toward FAS.",
+   "Check item 60, Dual Fuel Logic. It must read OFF (electric auxiliary heat) for heat strips. OFF is the factory setting. On is only for gas as the aux heat.",
+   "Heat pump down or badly behind: move the SYSTEM switch to Aux. That runs the auxiliary heat by itself."
+  ],
+  "notes": [
+   "There is no outdoor lockout, balance point or droop setting on this model.",
+   "The 1F75H has W2 (second stage) and E (emergency) terminals joined by a W2/E jumper. The manual says to cut it only when separate heat sources are used for W2 and E. If the jumper is cut and the strip wire is on E only, the strips will not run as second stage in Heat.",
+   "Item 50 (compressor lockout) is only a 5 minute delay. It does not hold the strips off.",
+   "Quick check from the manual: in Heat, set the temperature 3 degrees above the room. The aux heat should start and the display shows Heat On Auxiliary.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F75H-21PR Programmable Heat Pump Thermostat Installation and Operating Instructions (37-7843); 1F75H-21NP Non-Programmable Heat Pump Thermostat Installation and Operating Instructions (37-7842); 1F75C-11PR / 1F75C-11NP Single Stage Installation and Operating Instructions"
+ },
+ "tst-wr-1f80-1f86-0471-selecto": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The Blue Selecto is single stage. With the SS/HP switch on HP it runs a single-stage heat pump - compressor only. The compatibility chart in its manual says No for a heat pump with auxiliary or emergency heat. There is no aux stage to set. A heat pump with strips needs a heat pump thermostat with W2 / E terminals."
+  ],
+  "notes": [
+   "The SS/HP switch only picks conventional or single-stage heat pump. It does not add a stage."
+  ],
+  "source": "1F80ST-0471 and 1F86ST-0471 Blue Selecto Thermostat Instructions, Spanish (0037-6952)"
+ },
+ "tst-wr-1f82-heat-pump": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "1F82-0261 (Blue, RUN/HOLD button): set SYSTEM to OFF and press the up and down buttons together. RUN/HOLD goes to the next item, TIME goes back, PRGM exits.",
+   "1F82-0261: go to item 9, Fast Second Stage (shows FH). On is the factory setting. With FH On, raising the setting 3 F or more above the actual temperature brings the second stage (the strips) on right away. With FH OFF the thermostat picks its own time, roughly 0 to 30 minutes. If it reads OFF, set it back to On.",
+   "1F82-0261: check item 4, CR Aux (aux stage cycle rate). FA (fast) is the factory setting, SL is slow. The manual lists the HP Aux differential as 0.8 F on FA and 1.2 F on SL. FA is the smaller swing.",
+   "1F82-261 (older, separate RUN and HOLD buttons): press RUN, then press PRGM and RUN at the same time. HOLD goes to the next item, TIME goes back, RUN exits.",
+   "1F82-261: go to step 10, fast second stage (shows FA). On is the factory setting. With FA on, raising the setting 3 F or more above room temperature brings the second stage on right away. With FA off, the manual says the second stage will not come on until the setting is 10 F or more above room temperature. If it reads OFF, turn it back on.",
+   "1F82-261: check step 3, the Auxiliary and Emergency cycle rate (shows EMER). FA is the factory setting, SL is slow. The manual says FA cycles just under .6 F; the SL figure is cut off in print.",
+   "Either model, heat pump down or badly behind: slide SYSTEM to EMER. That bypasses the heat pump and runs the backup heat."
+  ],
+  "notes": [
+   "There is no outdoor lockout, balance point or droop setting on either model.",
+   "Energy Management Recovery (E in the menu, factory On) starts a scheduled warm-up early so the heat pump can do it alone. During that recovery the thermostat uses aux heat only if it figures the heat pump will not make the setting by the programmed time. Turn E OFF and the setting changes exactly at the program time.",
+   "The 1F82-261 has separate W2 (aux) and E (emergency) terminals. With one bank of strips the manual calls for a jumper so the same heat works for second stage and emergency. The 1F82-0261 has W2 only.",
+   "Compressor lockout (CL on the 1F82-0261, LOC on the 1F82-261) is only a 5 minute compressor delay. It does not hold the strips off.",
+   "Quick check from both manuals: in HEAT, set the temperature 4 degrees above the room. The aux heat should start.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F82-0261 Blue 2 inch Heat Pump Thermostat Installation and Operating Instructions; 1F82-261 Programmable Electronic Digital Heat Pump Thermostat Installation and Operation Instructions (37-6175)"
+ },
+ "tst-wr-1f83-1f85-0422": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "With the thermostat in Heat, Cool or Auto, press and hold Menu for at least 5 seconds. Menu steps to the next item and the up and down buttons change it. The last item, RUN SCHED, returns to normal operation.",
+   "Go by the letters on the screen. The manual lists a different item number for heat pump setups than for the main list (Heat FA is 19 in the main list and 18 in the heat pump column).",
+   "Heat FA (Fast Heat) - factory setting is On. With it On, raising the setpoint 3 F or more above the room brings the second stage on right away. With it OFF, the second stage waits until the setpoint has been 1 F or more above the room for more than ten minutes.",
+   "CR Emer (emergency / aux cycle rate) - choices FA or SL. Factory setting is FA (fast). The manual rates Emer at 0.6 F on fast and 1.7 F on slow. Leave it on FA for the tightest aux cycling.",
+   "Check the system type item reads HP 1 (heat pump with one stage of compressor). The thermostat ships as MS 2, which is not a heat pump setup."
+  ],
+  "notes": [
+   "No outdoor sensor lockout or timer for the strips is printed for these models.",
+   "Strips only, right now: press SYSTEM until Emer shows. In Emer the thermostat controls only the backup heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F83-0422 / 1F85-0422 Blue Universal Thermostat Installation and Operating Instructions (37-7136)"
+ },
+ "tst-wr-1f85u": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "The manual prints no timer, droop or outdoor lockout for the strips on this model. It says only that the auxiliary runs in Heat mode when the heat pump cannot maintain the set temperature. Two installer items affect the strips.",
+   "Press and hold Menu for 8 seconds to open the Installer Menu. It opens on item 05. Next (the Menu button) and Back (the Fan button) move through the items, the up and down arrows change a setting, and Exit (the Hold/Run button) goes back to the home screen.",
+   "Item 32 Aux Cycle Rate: SLO, MEd or FAS. Factory setting is MEd. The manual rates the Heat Pump Aux swing at 0.5 F on fast, 0.75 F on medium and 1.9 F on slow. FAS holds the strips to the tightest swing, SLO the widest.",
+   "Item 15 Dedicated Emergency: factory setting is OFF. Turned On, W/E works only in Emergency Aux mode and W2 becomes the first stage of aux heat. If the strips are wired to W/E and this is On, they will not help in Heat mode - set it OFF or move the wire.",
+   "Check items 05 and 10 match the equipment: 05 Outdoor Equipment has to be HP1 or HP2 and 10 Indoor Equipment EL1 or EL2 for electric strips. They ship as AC2 and EL2.",
+   "Test: in Heat, set the temperature 3 degrees above the room. The aux heat should start and the display should read Heat On Aux."
+  ],
+  "notes": [
+   "Strips only, right now: press the System button to the Aux position.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F85U-42PR Universal Thermostat Installation and Operating Instructions (37-7554001)"
+ },
+ "tst-wr-1f86": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The 1F86-344 and 1F86-0244 are single stage. On a heat pump they run the compressor only - both manuals list single-stage heat pumps with no auxiliary heat. There is one heat terminal (W), no aux or emergency terminal and no second stage, so there is nothing to set. A heat pump with strips needs a heat pump thermostat with W2 / E terminals."
+  ],
+  "notes": [
+   "The compressor lockout item in the menu is only a short-cycle delay. It has nothing to do with backup heat."
+  ],
+  "source": "1F86-344 Non-Programmable Electronic Digital Thermostat Installation and Operation Instructions (37-6585); 1F86-0244 Blue 2 inch Single Stage Thermostat Installation and Operating Instructions"
+ },
+ "tst-wr-1f89-0211": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Slide SYSTEM to OFF. Press and hold the up and down arrow buttons together for about 5 seconds. The first menu item shows.",
+   "Press up and down together again to step to the next item. Up or down alone changes the setting.",
+   "Step to item 8, Fast Second Stage (shows FH). On is the factory setting. With FH On, raising the setting 3 F or more above the room temperature brings the second stage (the strips) on right away. With FH OFF the thermostat picks its own time, roughly 0 to 30 minutes, before it adds the strips. If it reads OFF, set it back to On.",
+   "Check item 3, the aux heat cycle rate (CR Aux). The choices are FA (fast, the factory setting) and SL (slow). The manual lists the HP Aux differential as 0.8 F on FA and 1.2 F on SL. FA is the smaller swing.",
+   "To leave the menu, move SYSTEM to COOL, HEAT or EMER.",
+   "Heat pump down or badly behind: slide SYSTEM to EMER. That bypasses the heat pump and runs the heat wired to W2."
+  ],
+  "notes": [
+   "There is no outdoor lockout, balance point or droop setting on this model. Fast Second Stage and the aux cycle rate are the only aux items in the menu.",
+   "Compressor lockout (CL) is only a 5 minute wait between cooling cycles. It does not hold the strips off.",
+   "Quick check from the manual: in HEAT, set the temperature 4 degrees above the room. The aux heat should start and AUX shows on the display. If it does not, check the W2 wire.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F89-0211 Blue 2 inch Heat Pump Thermostat Installation and Operating Instructions (0037-6997)"
+ },
+ "tst-wr-1f89-211": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Move SYSTEM to OFF, then press the up and down buttons at the same time. The first menu item shows.",
+   "Press up and down together to step to the next item. Up or down alone changes the setting.",
+   "Go to step 9, fast second stage (shows FA). On is the factory setting. With FA on, raising the setting 3 F or more above room temperature brings the second stage (the strips) on right away. With FA off, the manual says the second stage will not come on until the setting is 10 F or more above room temperature. If it reads OFF, turn it back on.",
+   "Check step 3, the Auxiliary and Emergency heat cycle rate (shows EMER). FA (fast) is the factory setting, SL is slow. The manual says FA cycles just under .6 F; the SL figure is cut off in print. SL gives a longer heating cycle, so leave it on FA.",
+   "To leave the menu, move SYSTEM to HEAT or COOL.",
+   "Heat pump down or badly behind: slide SYSTEM to EMER. That bypasses the heat pump and runs the heat wired to terminal E."
+  ],
+  "notes": [
+   "There is no outdoor lockout, balance point or droop setting on this model.",
+   "This thermostat has separate W2 (aux) and E (emergency) terminals. With one bank of strips, the manual calls for a jumper between W2 and E so the same heat works for second stage and emergency. No jumper and the strip wire on E only means no aux in HEAT.",
+   "Compressor lockout (LOC) is only a 5 minute compressor delay. It does not hold the strips off.",
+   "Quick check from the manual: in HEAT, set the temperature 4 degrees above the room. The aux heat should start and the flame icon flashes.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F89-211 Non-Programmable Electronic Digital Heat Pump Thermostat Installation and Operation Instructions"
+ },
+ "tst-wr-1f95-0671": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Put the thermostat in Heat, Cool or Auto. Press and hold Menu for at least 5 seconds. Menu steps to the next item and the up and down buttons change it. The last item, RUN SCHED, returns to normal operation.",
+   "Go by the letters on the screen. The manual lists a different item number for heat pump setups than for the main list (Heat FA is 18 in the main list and 17 in the heat pump column; AO is 26 and 25).",
+   "AO (Auxiliary Off) - needs an outdoor sensor. The strips will not come on when it is warmer outside than this setting. Factory setting is 80, which turns the feature off. It can be set from 35 to 79. If someone set it low, raise it or put it back to 80.",
+   "Heat FA (Fast Heat) - factory setting is On. With it On, raising the setpoint 3 F or more above the room brings the second stage on right away. With it OFF, the second stage waits until the setpoint has been 1 F or more above the room for more than ten minutes. The menu table marks this item not applicable to an HP1 setup; the text says heat pump or multi-stage.",
+   "CR AU (aux cycle rate) - choices FA or SL. Factory setting is FA (fast). Leave it on FA for the tightest aux cycling.",
+   "CO (Compressor Off, the balance point) - needs an outdoor sensor. Factory setting is 05, which is off; it can be set from 06 to 50. If CO is in use, the next choice has to be EA (Electric Aux) for strips so the compressor keeps running with the aux. The factory choice there is dF (dual fuel), which is for gas or oil backup."
+  ],
+  "notes": [
+   "AO and CO only work with the wired outdoor remote sensor (F145-1378) connected and turned on in this same menu.",
+   "Strips only, right now: press SYSTEM until EM shows. EM bypasses the heat pump and uses the heat wired to W/E.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F95-0671 Blue Universal Thermostat Installation and Operating Instructions (37-6979)"
+ },
+ "tst-wr-1f95-1277": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Touchscreen models (1F95-1277 and 1F95-1280): press the Menu key, then press and hold the Installer Config key for 5 seconds. The screen number shows in the top right corner. Button model (1F95-0680): press and hold Menu for at least 5 seconds.",
+   "The screen numbers below are for the 1F95-1277. The other two models number the items differently - go by the letters on the screen.",
+   "Screen 37, AO (Auxiliary Off) - only shows with a heat pump setup and an outdoor sensor installed and turned on. The strips will not come on when it is warmer outside than this setting. Factory setting is 80, which is disabled. It can be set from -5 to 79. If someone set it low, raise it or put it back to 80.",
+   "Screen 28, Heat FS (fast second stage of heat) - factory setting is On. On forces the extra heat stages on quickly when the setpoint is raised a few degrees above the room. OFF lets the thermostat work out the time itself, which the manual says can be up to 30 minutes later.",
+   "Screen 10, Cr/AU Em (aux cycle rate) - FA or SL. Factory setting is FA (fast). The manual rates Emer Heat at 0.6 F on fast and 1.7 F on slow. Leave it on FA for the tightest aux cycling.",
+   "Screen 33, dF (Dual Fuel) - factory setting is OFF. Leave it OFF for electric strips. Turned On, it shuts the compressor off when the aux comes on - that is for gas backup.",
+   "1F95-1280: Auxiliary Off is item 36 and fast second stage is items 27 and 28. Its menu table shows AO shipping at 80 but its text says the default is 60 - check what the screen shows.",
+   "1F95-0680: AO ships at 80 (off) and can be set from 35 to 79. It also has Heat FA (Fast Heat) and CR AU, both the same idea as above."
+  ],
+  "notes": [
+   "AO needs the wired outdoor remote sensor (F145-1378) connected and turned on in the same menu.",
+   "On the 1F95-1277 the thermostat will not allow AO to be set at or below the dual fuel setting.",
+   "The manual prints no separate exit step for the installer menu. Elsewhere it uses Run Schedule to return to normal operation.",
+   "Strips only, right now: press SYSTEM until EM shows. Emergency Heat bypasses the heat pump and uses the backup heat.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F95-1277 Blue Touchscreen Thermostat Installation and Operating Instructions (37-6753); 1F95-1280 Blue Commercial Touchscreen Thermostat Installation and Operating Instructions; 1F95-0680 Blue Commercial Thermostat Installation and Operating Instructions"
+ },
+ "tst-wr-1f95-1291": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press Menu, then press and hold Installer Config for 5 seconds. The screen reference number shows in the top right corner. The up arrow goes to the next item, the down arrow goes back, and the two side arrow keys change the option.",
+   "The aux items only show when item 1 is set to HP1 or HP2. The manual says items 1 and 3 must match the heat pump system.",
+   "Item 28, Heat FS (fast second stage of heat): On is the factory setting. On forces the extra heat stages on quickly when the setting is raised a few degrees above the room. With it OFF the thermostat picks its own time - the extra stages may come on very quickly or up to 30 minutes later. If it reads OFF, set it back to On.",
+   "Item 37, AO (Auxiliary Off, the aux cut-out): the strips will NOT run while it is warmer outside than this setting. It only shows with an outdoor sensor installed and enabled. The factory setting is 80, which means disabled. The range is -5 to 79. Set low, it locks the strips out on milder days - raise it, or put it back to 80.",
+   "Item 33, dF (dual fuel): OFF is the factory setting. Dual fuel turns the compressor off whenever the aux stages come on, so know that before turning it on with heat strips.",
+   "If dF is On with no outdoor sensor, item 35 sets when the second stage comes on. The factory setting is 05. The higher the number, the sooner the aux stage comes on. The lower the number, the longer before aux comes on. The manual says this number is not minutes or degrees.",
+   "If dF is On with an outdoor sensor, item 34 is the outdoor temperature where the thermostat switches to the backup heat and shuts the compressor down. The factory setting is 35 and the range is -5 to 50. A lower setting delays the switch.",
+   "Item 10, Cr/AU Em (aux cycle rate): FA (fast) is the factory setting, SL is slow.",
+   "Heat pump down or badly behind: press the SYSTEM key until EM shows. That bypasses the heat pump and runs the heat wired to W/E and W2."
+  ],
+  "notes": [
+   "Items 34 and 37 need the outdoor remote sensor: item 30 (Remote) On and item 31 set to Outdoor Remote.",
+   "The item 35 range is printed two ways: 0 - 09 in the menu table and 01-09 in the text.",
+   "Item 36, Cd, is how many seconds the compressor keeps running after the aux comes on in dual fuel. Factory 60, range 0 to 99.",
+   "Built-in safety: if the room drops below 45 because of a possible heat pump fault, the thermostat turns the pump off, switches to auxiliary heat and shows Call for Service.",
+   "The manual prints the Emer Heat cycle rate as 0.6 F and 1.7 F for the two settings.",
+   "Item 12, CL (compressor lockout), is only a wait between cooling cycles. It does not hold the strips off.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F95-1291 Blue Humidity Touchscreen Universal Thermostat Installation and Operating Instructions (37-7313F)"
+ },
+ "tst-wr-1f95ez-0671": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "With Heat or A/C selected, press and hold Menu for at least 5 seconds. Each press of Menu steps to the next item and the up and down buttons change it. The last item is Exit Menu; the Run button also leaves any menu.",
+   "Go by the letters on the screen - the installer sheet and the Homeowner's Guide number the same items differently.",
+   "Heat FA (Fast Heat) - installer sheet item 15, Homeowner's Guide item 16. Factory setting is On. With it On, raising the setpoint 3 F or more above the room brings the second stage on right away. With it OFF, the second stage waits until the setpoint has been 1 F or more above the room for more than ten minutes.",
+   "Cr Aux Heat (aux cycle rate) - installer sheet item 6, Homeowner's Guide item 7. Choices FA or SL. Factory setting is FA (fast). Leave it on FA for the tightest aux cycling.",
+   "dF (Dual Fuel) - installer sheet item 20, Homeowner's Guide item 21. Leave it at 0 for electric strips; the manual says 0 is the setting for electric aux. 1 to 9 is for gas or oil backup only - it shuts the compressor down when the aux comes on.",
+   "There is no other timer to set. The manual says the thermostat picks the time to bring on the second stage itself, with a delay from 0-30 minutes depending on how the first stage has been doing.",
+   "Strips only, right now: press and hold the HEAT button for at least 5 seconds until the Aux indicator changes. Press HEAT again to go back to the heat pump."
+  ],
+  "notes": [
+   "No outdoor sensor lockout for the strips is printed for this model.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F95EZ-0671 Blue Easy Reader Thermostat Installation Instructions (37-6986); 1F95EZ-0671 Blue Easy Reader Thermostat Homeowner's Guide (37-6994001)"
+ },
+ "tst-wr-1f97-1277": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Press the Menu key, then press and hold the Installer Config key for 5 seconds. The screen number shows in the top right corner. The arrow keys move to the next or previous item and the up and down keys change it.",
+   "Screen 35, AO (Auxiliary Off) - only shows with a heat pump setup and an outdoor sensor installed and turned on. The strips will not come on when it is warmer outside than this setting. Factory setting is 80, which is disabled. It can be set from -5 to 79. If someone set it low, raise it or put it back to 80.",
+   "Screen 10, Cr/AU Em (aux cycle rate) - FA or SL. Factory setting is FA (fast). The manual rates Emer Heat at 0.6 F on fast and 1.7 F on slow. Leave it on FA for the tightest aux cycling.",
+   "Screen 31, dF (Dual Fuel) - factory setting is OFF. Leave it OFF for electric strips. Turned On, it shuts the compressor off when the aux comes on - that is for gas backup.",
+   "Only with dual fuel On and no outdoor sensor, there is a dF staging number from 01 to 09: the higher the number, the sooner the auxiliary stage comes on. The manual prints no such staging number for a system with dual fuel OFF."
+  ],
+  "notes": [
+   "AO needs the wired outdoor remote sensor (F145-1378). The sensor is turned on at screen 28 and set to Outdoor at screen 29.",
+   "The thermostat will not allow AO to be set at or below the dual fuel setting.",
+   "The manual prints no separate exit step for this menu. Elsewhere it uses Run Schedule to return to normal operation.",
+   "Strips only, right now: press SYSTEM until EM shows. Emergency Heat bypasses the heat pump and uses the heat wired to W/E.",
+   "Test: in Heat, set the temperature 3 degrees above the room - the aux heat should start.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F97-1277 Blue Universal Touchscreen Thermostat Installation and Operating Instructions (37-7388001)"
+ },
+ "tst-wr-70-series-1f78": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. The 1F78 is single stage - one heat terminal (W) and no aux or emergency terminal. Its compatibility chart lists heat pump systems only as 'No Aux. or Emergency Heat'. On a heat pump it runs the compressor and nothing else. A heat pump with strips needs a heat pump thermostat with aux / emergency heat terminals."
+  ],
+  "notes": [
+   "The GAS / ELECTRIC switch only decides whether the thermostat brings the fan on with a heat call. It does not add a stage."
+  ],
+  "source": "1F78 5/2 Day Programmable Thermostat Installation Instructions (37-6614C); 1F78 Non-Programmable Thermostat Installation Instructions (37-6615C)"
+ },
+ "tst-wr-70-series-heat-pump": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "1F72 (programmable): press RUN, then press PRGM and RUN at the same time. The first item is FA, fast second stage. HOLD goes to the next item, TIME goes back, RUN exits.",
+   "1F79 (non-programmable): with SYSTEM in OFF, hold the down and up buttons for at least 2 seconds. FA, fast second stage, is the first item. To exit, move the SYSTEM switch out of OFF.",
+   "Both models: FA on is the factory setting. With FA on, raising the setting 3 F or more above the actual temperature with the up key brings the second stage (the strips) on right away. With FA off, the second stage waits until the setting has been 1 F or more above the actual temperature for more than ten minutes. If it reads OFF, turn it back on.",
+   "Heat pump down or badly behind: slide SYSTEM to EMER. That bypasses the heat pump and runs the heat wired to terminal E."
+  ],
+  "notes": [
+   "Fast second stage is the only aux setting on these two. There is no aux cycle rate, outdoor lockout, balance point or droop setting.",
+   "CL (compressor lockout) is only a 5 minute compressor delay. It does not hold the strips off.",
+   "Quick check from the manuals: in HEAT, set the temperature 4 degrees above the room. The aux heat should start and the flame icon flashes.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F72 5/2 Day Programmable Heat Pump Thermostat Installation and Operation Instructions; 1F79 Non-Programmable Heat Pump Thermostat Installation and Operation Instructions"
+ },
+ "tst-wr-80-series-1f80": {
+  "applies": "not-heat-pump",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "This thermostat cannot bring heat strips on sooner. Every 1F80 on this card is single stage with one heat terminal (W). The manuals list single-stage heat pumps with no aux heat, and the older ones say do not use with multi-stage systems. There is no aux or emergency stage to set. A heat pump with strips needs a heat pump thermostat with W2 / E terminals."
+  ],
+  "notes": [
+   "The compressor lockout item in the menu is only a short-cycle delay. It has nothing to do with backup heat."
+  ],
+  "source": "1F80-0224 Blue 2 inch Single Stage Thermostat Installation and Operating Instructions; 1F80-0261 Blue 2 inch Single Stage Thermostat Installation and Operating Instructions (0037-7009); 1F80-361 Programmable Electronic Digital Thermostat Installation and Operation Instructions (37-6621); 1F80-71 Installation and Operation Instructions; 1F87-361 Programmable Electronic Digital Thermostat Installation and Operation Instructions"
+ },
+ "tst-wr-blue-4in-1f83": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Check the model first. The 1F83H models are the heat pump thermostats with one stage of aux / emergency heat - the steps below are for them. The 1F83C models are single stage and the manual lists them for a heat pump with no aux heat, so they cannot run strips as a second stage.",
+   "1F83H: the manual prints no timer, droop or outdoor lockout for the strips. Two installer items affect them.",
+   "Press and hold Menu for 8 seconds to open the Installer's Menu. It opens on item 30. Next and Back move through the items and the up and down arrows change a setting. Exit (the Hold button) goes back to the home screen.",
+   "Item 32 Aux Cycle Rate: SLO, MEd or FAS. Factory setting is MEd. FAS is the fast setting and holds the strips to the tightest swing, SLO the widest.",
+   "Item 60 Dual Fuel Logic: factory setting is OFF, which is the electric aux heat setting. Leave it OFF for strips. On is for gas aux heat.",
+   "Test: in Heat, set the temperature 3 degrees above the room. The aux heat should start and the display should read Heat On Auxiliary."
+  ],
+  "notes": [
+   "The thermostat ties W2 and E together inside. The manual says to cut the W2/E jumper only when separate heat sources are used for W2 and E.",
+   "Strips only, right now: move the System switch to the Aux position.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F83H-21PR Heat Pump Thermostat Installation and Operating Instructions (37-7511005); 1F83C-11PR Single Stage Thermostat Installation and Operating Instructions"
+ },
+ "tst-wr-blue-easy-set": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Only the 1F89EZ (heat pump model) runs aux heat. The 1F86EZ is single stage - on a heat pump it has no aux heat and nothing to set.",
+   "1F89EZ: slide SYSTEM to OFF, then press and hold the up and down buttons for 3 seconds. The AWAY button goes to the next screen, HOME goes back. Up or down changes the setting.",
+   "Go to screen 11, FH (fast second stage). On is the factory setting. If it reads OFF, set it back to On.",
+   "Check screen 06, CR Aux (cycle rate for Aux./Emer heat). FA (fast) is the factory setting, SL is slow. The manual lists the Aux./Emer differential as .8 F fast and 1.2 F slow. FA is the smaller swing.",
+   "To leave the menu, set the SYSTEM switch to Cool or Heat.",
+   "Heat pump down or badly behind: slide SYSTEM to EMER. That bypasses the heat pump and runs the heat wired to W2."
+  ],
+  "notes": [
+   "There is no outdoor lockout, balance point or droop setting on this model.",
+   "Screen 07 (CL, compressor lockout) is only a 5 minute compressor delay. It does not hold the strips off.",
+   "AUX on the display means the auxiliary stage is running.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "1F89EZ-0251 Blue Easy Set Heat Pump Installation Instructions and User Guide; 1F86EZ-0251 Blue Easy Set Installation and Operation Instructions"
+ },
+ "tst-wyze-thermostat": {
+  "applies": "no-setting",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Wyze publishes no setting for when aux heat comes on - no aux temperature, no stage timer and no outdoor lockout in its support articles or the Quick Start Guide.",
+   "The only thing Wyze prints about staging is a firmware note that the heating stage difference was reduced from 5F to 4F. Wyze does not publish a setting for it.",
+   "To run the backup heat by hand: Wyze app > tap the thermostat > Settings > Advanced > Emergency Heat, and turn the toggle on. The option only shows when the emergency heat wire is on the * terminal.",
+   "Know its limits: Wyze says Emergency Heat cannot be set to come on at a temperature, it runs 30 minutes, shuts off, and waits 5 minutes before it will come on again. If the strips never come on by themselves in Heat, check the wiring and the system type in the app."
+  ],
+  "notes": [
+   "Wyze firmware notes also mention a differential temperature feature, but Wyze does not publish how it affects the aux stage.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Wyze Support: What is Emergency Heat for Wyze Thermostat?; Wyze Support: Release Notes & Firmware (Wyze Thermostat Firmware); Wyze Thermostat Quick Start Guide"
+ },
+ "tst-york-echelon-ttscc01": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in: press and hold the brand symbol in the upper right of the screen for 5 seconds. The background turns gray - that is service mode. Leave with Exit Service Mode on the system map.",
+   "Heat Pump Configuration (only shows with a communicating heat pump): check Balance Point. Above the balance point outdoor temperature the strips are not used - unless the call has gone 4 hours without being satisfied. Raise the Balance Point to let the strips help on milder days.",
+   "Same screen - Low Temp Cutout (LTCO). Below it the heat pump is not used and the house heats on the strips alone. Between LTCO and Balance Point the control stages heat pump and strips together as demand grows.",
+   "Tools and Settings > Comfort Settings > Temperature Control Settings: the stage differentials set how far the room has to fall before each stage. Each stage's differential adds to the ones before it. Factory setting is 0.5 on each; choices run from 0.3 up to 8.0. A smaller number on the strip stage brings the strips on sooner.",
+   "Same screen - Force stage up: when this timer runs out the control stages up no matter what the differentials say. Factory setting 90 min; choices are Off, 10, 20, 30, 60, 90 and 120 min. A shorter time brings the strips on sooner.",
+   "Same screen - Stage Up Inhibit Timer: the control will not stage up until this timer is done. Factory setting 5 min, adjustable 5-60 min in 5 min steps. Make sure nobody has set it long.",
+   "Right now fix: press Menu, then Emergency Heat. It is only offered on heat pumps with electric strips or a furnace."
+  ],
+  "notes": [
+   "If the heat kit was changed, set it again under Heat Kit Configuration so the air handler uses the right airflow. A wrong heat kit selection can cause limit trips or cold blow.",
+   "The Heating Temperature Limit under Equipment Temp Limits, when enabled, blocks all heating above an outdoor temperature. Check it if nothing heats on a mild day.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "York Touch Screen Communicating Control Installation Manual (542933-UIM-D-0513); York Touch Screen Communicating Control User's Manual (542937-UUM-B-0212)"
+ },
+ "tst-york-hx3-thxu430w": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in: on the Settings screen tap and hold the Service icon for 5 seconds. That opens System Settings (installer settings).",
+   "AUX Heat Lockout - check this first. If it is warmer outside than this setting, the strips (W1 and W2) are not energized. Factory setting is Off. Choices are Off and 5 F to 55 F in 5 F steps. If it has been set low, raise it or turn it Off. The manual marks this item 'Applies to CONVENTIONAL ONLY', so it may not show on a communicating system.",
+   "On a 2-stage communicating heat pump the same job is done by Balance Point: it blocks auxiliary heat above the set temperature. Factory setting 35 F; choices are 0 F and 10 F to 45 F. Raise it to let the strips run on milder days.",
+   "Stage Delay - the minimum time a stage has to run before the thermostat stages up. Factory setting 10 MIN, adjustable 2-15 MIN. A shorter delay gets to the strips sooner.",
+   "Forced Stage Up - when a stage has run this long the thermostat stages up even if the differential is not met. Factory setting 30 MIN; OFF to 120 MIN in 10 minute steps. A shorter time brings the strips on sooner. OFF takes the forced stage-up away.",
+   "Differential - the gap between room temperature and setpoint before a stage is called. It adds up for each extra stage. Factory setting 0.5 F; choices 0.3 F to 2.0 F. A smaller number brings every stage, strips included, on sooner.",
+   "HP Lockout - factory Off. With a temperature picked, the heating cycle starts on AUX heat whenever it is colder outside than that temperature. This takes the heat pump out, it does not make the strips help sooner - leave it Off unless the heat pump should not run in the cold. The manual marks this item 'Applies to CONVENTIONAL ONLY'.",
+   "Right now fix: pick E-Heat (Emergency Heat) from the mode choices on the Home screen. Heat pump only."
+  ],
+  "notes": [
+   "The lockouts work off outdoor temperature. York says dual fuel systems need the ambient sensor when the thermostat controls the changeover; the Remote Sensor setting can be set to Outdoor.",
+   "Variable capacity systems use longer timers: Stage Delay default 120 MIN (2-120 MIN) and Forced Stage Up default 360 MIN (OFF-360 MIN).",
+   "On a 2-stage communicating heat pump, Low Temperature Cutout (LTCO) stops the compressor below its setting - the strips carry the house below that.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "York Hx3 Touch Screen Thermostat Installation Manual (5407934-UIM-D-1020); York Hx3 Touch Screen Thermostat User Manual (5407935-UUM-E-1020)"
+ },
+ "tst-york-source1-cts-touchscreen": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in: press MENU, then Settings, then Installation Settings. The manual prints no installer code - if the screen is locked, press UNLOCK and enter the owner's passcode first. Press BACK when finished.",
+   "Heat & Cool Stages > Aux Heat Stages - 0 to 2. The strips have to be counted here or the thermostat has nothing to bring on. It only shows when the dip switch on the back is set for Heat Pump.",
+   "Timers & Deadbands > 2nd Stage Deadband - degrees past 1st stage before 2nd stage turns on. Factory setting 2, range 0 - 10. A smaller number brings the strips on sooner.",
+   "Timers & Deadbands > 2nd Stage Timer - minutes past 1st stage before 2nd stage turns on. Factory setting 2 mins, range 0 - 60. A smaller number brings the strips on sooner. The 2nd stage deadband has to be met as well.",
+   "With two compressor stages the strips are a later stage. The 3rd and 4th stage deadband settings have the same adjustable steps as 2nd stage.",
+   "Heat Pump Settings > Aux Heat Lockout - with it ENABLED the strips will not run above the Aux Heat Lockout Temp (range 0 - 75; the manual shows 65). Set it to DISABLED or raise the temperature to let the strips run on milder days.",
+   "Heat Pump Settings > Heat Pump Lockout - with it ENABLED the heat pump will not run below the HP Lockout Outdoor Temp (range 20 - 75) and the strips carry the house.",
+   "Right now fix: press MENU, then Emergency Heat. The thermostat runs the fan and the auxiliary heat stages only. Press it again to go back."
+  ],
+  "notes": [
+   "Aux Heat Lockout only works with the GAS/EL or HP dip switch set for HP and the GAS or ELEC dip switch set for ELEC. Set for GAS, the auxiliary heat is not allowed to run during heat pump operation at all - that is the dual fuel setting.",
+   "The lockouts work off outdoor temperature. The thermostat shows an outdoor temperature only when the optional sensor is used or it is connected to Skyport.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Source 1 CTS Series Color Touch Screen S1-THPU432-S Installation / Owner's Manual; Source 1 CTS Series Color Touch Screen S1-THPU433-S Installation / Owner's Manual"
+ },
+ "tst-york-source1-lx-series-30x": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in (all three): press SETUP, then press MODE. MODE steps to the next setup step, WARMER and COOLER change the value. Press SETUP again to leave. Step numbers are different on each model.",
+   "First check the Number of Aux Stages step - its factory setting is 0, and at 0 the thermostat has no strips to bring on. It is step 22 on the THSU301-S (0 or 1), step 26 on the THSU302-S and step 31 on the THSU303-S (0, 1 or 2).",
+   "THSU302-S - step 28, 2nd Stage Deadband (0 - 10 degrees, factory 2) and step 31, Minutes Between 1st and 2nd Stage (0 - 60 minutes, factory 2). Smaller numbers bring the strips on sooner. With two compressor stages the strips are third stage: steps 29 and 32.",
+   "THSU303-S - step 33, 2nd Stage Deadband (0 - 10 degrees, factory 2) and step 36, Minutes Between 1st and 2nd Stage (0 - 60 minutes, factory 2). Smaller numbers bring the strips on sooner. With two compressor stages the strips are third stage: steps 34 and 37.",
+   "THSU303-S only - step 58, Lockout Aux Heat with Outdoor Temp (factory Off) and step 59, Aux Heat Lockout Temp (20 - 75 degrees, factory 75). With step 58 ON the strips (W2 and W3) are locked out above the step 59 temperature. Turn 58 Off or raise 59. A local outdoor sensor must be used for this to work.",
+   "THSU303-S only - steps 56 and 57, Lockout Heatpump with Outdoor Temp (factory Off; lockout temp 0 - 75 degrees, factory 35). With it ON the heat pump is stopped below that temperature and the strips carry the house. It also needs the local outdoor sensor.",
+   "THSU301-S - the setup table has no second stage deadband or stage timer. The only settings are step 22 (aux stages) and step 23, 1st Stage Deadband (1 - 6 degrees, factory 2).",
+   "Right now fix: press the EMERGCY HEAT button. The thermostat runs the fan and the auxiliary heat stages and keeps the compressor off. Press it again to go back."
+  ],
+  "notes": [
+   "On the THSU303-S the aux lockout steps only show when jumper J1 is set for Heat Pump and J3 is set for Electric Heat.",
+   "On the THSU303-S the aux lockout temperature cannot be set lower than 5 degrees above the heat pump lockout temperature.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Source 1 LX Series S1-THSU301-S Installation / Owner's Manual; Source 1 LX Series S1-THSU302-S Installation / Owner's Manual; Source 1 LX Series S1-THSU303-S Installation / Owner's Manual"
+ },
+ "tst-york-source1-lx-series-legacy": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Get in: press SETUP, then press MODE. MODE steps to the next setup step, WARMER and COOLER change the value. Press SETUP again to leave.",
+   "Step 26, 2nd Stage Deadband - how many more degrees the room has to fall after first stage is on before second stage comes on. Range 0-10, factory setting 2. A smaller number brings the strips on sooner.",
+   "Step 29, Minutes Between 1st and 2nd Stage - the least time first stage has to run before second stage can come on. Range 0-60, factory setting 2. A smaller number brings the strips on sooner.",
+   "Two-stage heat pump: the strips are further up. Steps 27 and 30 are the same two settings for third stage, and steps 28 and 31 for the fourth (final strip) stage.",
+   "Step 48, Lockout Aux Heat With Outdoor Temp, and step 49, Aux Heat Lockout Temp. With step 48 ON the strips (W2 and W3) are locked out above the step 49 temperature, which adjusts from 20 to 75 F. Turn step 48 OFF or raise step 49 to let the strips run on milder days. Step 49 cannot be set lower than 5 degrees above the Heat Pump Lockout temperature.",
+   "Steps 46 and 47, Lockout Heat Pump With Outdoor Temp: with step 46 ON the heat pump is stopped below the step 47 temperature (10 to 45 F in five degree steps) and the strips carry the house.",
+   "Right now fix: press the EMERGCY button. The thermostat runs the fan and the auxiliary heat stages only. Press it again to go back."
+  ],
+  "notes": [
+   "Steps 48 and 49 only show when jumper J1 on the back of the thermostat is set for Heat Pump and J3 is set for Electric Heat.",
+   "The setup table marks the stage, timer and lockout steps as not available on all models. If a step is missing on the screen, that model does not have it.",
+   "Steps 32 to 34 set whether each upper stage shuts off at the deadband below it or stays on until the setpoint is met (Deadband or Setpoint).",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Source 1 LX Series Digital Thermostat Installation / Owner's Manual (S1-THSU21P1 / S1-THSU32P7 / S1-THSU32HP7)"
+ },
+ "tst-york-source1-the-series": {
+  "applies": "yes",
+  "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+  "steps": [
+   "Which model: S1-THEC11 (1 heat / 1 cool) cannot run strips at all - York prints that it has no auxiliary heat / emergency heat capability. The steps below are for the S1-THEH21 heat pump models.",
+   "There is no installer menu for the strips on the THEH21. Check the AUX HEAT SWITCH on the thermostat first - it has three positions: Emergency, Normal and Lockout.",
+   "Lockout - aux heat will never turn on, whatever the demand. If a house will not bring the strips on, this is the first thing to look at. Slide it to Normal.",
+   "Normal - aux heat is allowed to run along with the heat pump when it is needed. Second stage (aux) comes on when the room is at or below the setpoint minus the 1st stage deadband, minus the 2nd stage deadband.",
+   "THEH21NS: both deadbands are fixed - one degree for 1st stage and two degrees for 2nd stage. Nothing to adjust.",
+   "THEH21P5S: the 2nd stage deadband is fixed at two degrees, but the 1st stage deadband is adjustable 1-6. A smaller 1st stage deadband brings both the heat pump and the strips on closer to setpoint.",
+   "Right now fix: slide the AUX HEAT SWITCH to Emergency. That shuts off the compressor and heats with aux heat only. Put it back to Normal after - in Emergency the compressor is also locked out in cooling."
+  ],
+  "notes": [
+   "Strips never come on and the switch is on Normal: check the W wire (auxiliary heat) at the thermostat and the air handler.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "source": "Source 1 S1-THEH21NS Owner's Manual; Source 1 S1-THEH21P5S Installation Instructions; Source 1 S1-THEC11P5S Installation Instructions"
+ }
+};
+(function () {
+  for (const e of THERMOSTATS) {
+    const x = TSTAT_AUX_SOONER[e.id];
+    if (!x) continue;
+    const topic = { title: x.title, steps: x.steps, notes: x.notes, source: x.source };
+    const how = e.howTo || [];
+    // One group: the topic joins it (a copy - the step sets are shared between cards). Several groups are
+    // model variants, so the topic gets its own group for the whole card.
+    if (how.length === 1) e.howTo = [{ ...how[0], topics: [...how[0].topics, topic] }];
+    else e.howTo = [...how, { label: how.length ? "All models on this card" : "", note: "", topics: [topic] }];
+    // No troubleshooting row here: on 258 cards it put thermostat cards into plain questions ("heat strips
+    // not coming on"). The card is found by its name; the subject is found through the brand's Ask card.
+  }
 })();

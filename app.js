@@ -1387,6 +1387,11 @@ function* askIndexSteps(items) {
       sub: [s.brand, s.equipment, s.summary].filter(Boolean).join(" · "),
       hay: [s.brand, s.equipment, s.title, s.summary, ...(s.steps || [])].filter(Boolean).join(" ").toLowerCase(),
       brandOnly: !!s.askBrandOnly,
+      // askBrandGate (v441): shown only when the question names the brand (askBrandAlso, when set, is the
+      // list of names that count instead - "honeywell resideo", so "home" alone does not open the gate), like
+      // askBrandOnly, but with no lead over the brand's other cards in a how-to question ("honeywell menu"
+      // keeps the Installer Setup Menu first, not the per-brand heat strips card).
+      brandGate: !!(s.askBrandOnly || s.askBrandGate), brandAlso: String(s.askBrandAlso || "").toLowerCase(),
     });
   }
   for (const t of tstatEntries()) {
@@ -1969,7 +1974,7 @@ function askScoreItem(units, it) {
   if (!sc && !(it.kind === "tstat" && askLiveUnits(units).some(u => u.alts.some(a => (a.endsWith("+") && it.idHay.includes(a)) || (ASK_TSTAT_LINE_ALSO[a] || []).some(x => it.idHay.startsWith(x)))))) return { sc, tsc };
   // A how-to card kept for one thermostat brand only answers a question that names that brand
   // (Andy 11-11: the ecobee menu / schedule steps show "only when they search that thermostat").
-  if (it.brandOnly && !askUnitHits(units, String(it.brand).toLowerCase())) return { sc: 0, tsc: 0 };
+  if (it.brandGate && !askUnitHits(units, it.brandAlso || String(it.brand).toLowerCase())) return { sc: 0, tsc: 0 };
   // Brand + how-to words ("ecobee menu", "turn ecobee off"): that brand's thermostats, whose cards carry
   // the steps, go ahead of other cards that only share a word.
   if (units.tHow === undefined) units.tHow = askTstatHow(units);
@@ -3019,6 +3024,8 @@ function askKindRank(units, x) {
   if (askUnitHits(units, title) >= live.length) return -0.5;
   return !ASK_BRAND_RE.test(title) && askUnitHits(units, title, it) >= live.length ? -0.25 : r;
 }
+// Words that ask about backup heat coming on (the subject of the per-brand askBrandGate cards).
+const ASK_GATE_TOPIC_RE = /\b(aux|auxiliary|strips?|backup|back-up|emergency|supplemental|droop|lockout|lock-out|balance|upstage|staging|keep up|keeping up|cant keep|can't keep|falling behind|sooner|heat kit)\b/;
 function askTopItems(units, limit) {
   const idx = askIndexCache || (askIndexCache = askBuildIndex());
   const scored = [];
@@ -3042,14 +3049,23 @@ function askTopItems(units, limit) {
   // Ties go to the entry whose headline names what was asked ("Evolution 20 kW"
   // beats a card that only mentions Evolution in a footnote), then answers before references.
   scored.sort((a, b) => b.sc - a.sc || b.tsc - a.tsc || askGeneralTie(units, a, b));
-  const seen = new Set(), out = [];
+  // v441: a per-brand topic card (askBrandGate: "Honeywell thermostat - get the heat strips on sooner") is an
+  // answer to its own subject. On a question that does not ask about that subject ("honeywell", "lennox
+  // thermostat") it still shows, but never above 4th.
+  const rq = String(units.rq || units.map(u => (u.alts || [])[0] || "").join(" ")).toLowerCase();
+  const topicAsked = ASK_GATE_TOPIC_RE.test(rq);
+  const seen = new Set(), out = [], held = [];
   for (const x of scored) {
     const k = x.it.kind + "|" + x.it.title.replace(/\s+/g, " ").toLowerCase();
     if (seen.has(k)) continue;
-    seen.add(k); out.push(x);
+    seen.add(k);
+    if (!topicAsked && x.it.brandGate && !x.it.brandOnly && out.length < 3) { held.push(x); continue; }
+    out.push(x);
+    if (out.length === 3 && held.length) out.push(...held.splice(0));
     if (out.length >= (limit || 5)) break;
   }
-  return out;
+  if (held.length) out.push(...held);   // fewer than three other results: the held cards follow them
+  return out.slice(0, limit || 5);
 }
 function askAiEntries(q, limit, rqGiven) {
   const rq = rqGiven || askRetrievalQ(q);
@@ -14883,7 +14899,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v440";
+const APP_VERSION = "v441";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

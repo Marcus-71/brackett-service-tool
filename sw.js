@@ -1,4 +1,4 @@
-const CACHE_NAME = "bfc-cache-v440";
+const CACHE_NAME = "bfc-cache-v441";
 // v286: library files that never change between versions (OCR engine, barcode
 // reader, PDF viewer, icons, Education PDFs) live in their own cache, kept from
 // one version to the next. A version update now downloads only the app's own
@@ -85,10 +85,10 @@ const APP_SHELL = [
 const SHELL_HASHES = {
   "./index.html": "18adf7ceccf085c2a359",
   "./style.css": "3f6aed80648576b6f6b0",
-  "./app.js": "4d7e59926514926a4e13",
+  "./app.js": "e2dab34173e67b8b09d2",
   "./pt-data.js": "683d0d877945d72a0b2a",
   "./data.js": "0749df230b9da90b24cf",
-  "./symptoms.js": "80db8c228e083a8b6a98",
+  "./symptoms.js": "cf8d88f1b45e8c62b366",
   "./unit-scenarios.js": "daeb283e183406a1d4cb",
   "./followups.js": "00cb8c95c37206b41583",
   "./charging-charts.js": "daec2cb65dd460da0f69",
@@ -96,7 +96,7 @@ const SHELL_HASHES = {
   "./brand-sensors.js": "4f42d941cfd6f71d07dc",
   "./sensors.js": "a5d19473d6fe4358521e",
   "./toolbox.js": "c67328fc6c22100d95ec",
-  "./thermostats.js": "1b2422c888bf9ef3c436",
+  "./thermostats.js": "1e40435da97e40fc7e15",
   "./generators.js": "eb5e73ff29d7b0ebd4c7",
   "./kohler-gens.js": "e16661411a2fbac2b479",
   "./weather.js": "5b9215e305c303ac986f",

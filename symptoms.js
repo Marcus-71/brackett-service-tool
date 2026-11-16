@@ -21581,6 +21581,432 @@ const SYMPTOMS = [
   "confidence": "common"
  },
  {
+  "id": "s-amazon-tstat-aux-heat-strips-sooner",
+  "brand": "Amazon",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "amazon alexa",
+  "title": "Amazon thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Amazon thermostat does this its own way. 0 of the 1 Amazon thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Amazon thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Amazon) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): Amazon Smart Thermostat.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-aprilaire-tstat-aux-heat-strips-sooner",
+  "brand": "Aprilaire",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "aprilaire",
+  "title": "Aprilaire thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Aprilaire thermostat does this its own way. 7 of the 7 Aprilaire thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Aprilaire thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Aprilaire) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): 8400 Series (8444 / 8446 / 8448 / 8463 / 8465 / 8466); 8476 / 8476W / 8810 (Event-Based Air Cleaning); 8600 / 8620 / 8620W Touch Screen; 8910 / 8910W / 8920W Home Comfort Control (with Equipment Control Module); S84N 1H1C / S84N SU; S86N MU / S86N MUPR; S86W MUPR Wi-Fi with IAQ.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-bosch-tstat-aux-heat-strips-sooner",
+  "brand": "Bosch",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "bosch",
+  "title": "Bosch thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Bosch thermostat does this its own way. 2 of the 2 Bosch thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Bosch thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Bosch) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): BCC100 / BCC110 Connected Control; BCC50 Connected Control.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-braeburn-tstat-aux-heat-strips-sooner",
+  "brand": "Braeburn",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "braeburn",
+  "title": "Braeburn thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Braeburn thermostat does this its own way. 16 of the 18 Braeburn thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Braeburn thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Braeburn) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): 1000 Series Builder Non-Programmable; 1000 Series Premier Non-Programmable; 2000 Series Builder Non-Programmable; 2000 Series Premier Programmable; 5000 Series Premier Programmable; 5300 Series Premier Touchscreen; 6000 Series Deluxe Touchscreen; 7500 BlueLink Universal Wireless Kit; 8500 BlueLink Universal Wireless Kit; 3000 / 3200 Premier Non-Programmable; 1030 / 1230 Economy Series Non-Programmable; 2030 / 2230 Economy Series Programmable; 1232 / 2232 Economy Series Universal (2025); 4030 / 4235 Premier Series; BlueLink Wi-Fi 7205 / 7320; BlueLink 8205 Universal Smart Wi-Fi.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): 4020 Premier Hydronic (heat only, freeze protection); 500 / 505 Builder Mechanical.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-carrier-tstat-aux-heat-strips-sooner",
+  "brand": "Carrier",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "carrier bryant payne",
+  "title": "Carrier thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Carrier thermostat does this its own way. 13 of the 17 Carrier thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Carrier thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Carrier) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Carrier Smart Thermostat w/ InteliSense; Infinity System Control -C (VC revision); Infinity System Control (-B / -C); Comfort Series Non-Programmable (-C); Performance Series Edge AC/HP; Performance Series Edge Thermidistat; Cor 5 / Cor 5C; Thermidistat Control (legacy); Comfort Series TC-PAC / TC-PHP (-A) and Bryant Legacy T2; Cor 7 / Cor 7C (humidity); Cor Wi-Fi Thermostat (TP-WEM01); Infinity Control (SYSTXCCUID01) / Bryant Evolution Control; Infinity Touch Control (-A) / Bryant Evolution Connex (-A).",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): Carrier / Bryant Smart Thermostat; Housewise Wi-Fi Thermostat; Base Series TB-PAC / TB-PHP / TB-NAC / TB-NHP and Bryant T1.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): Legacy TSTATCC Programmable.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-daikin-tstat-aux-heat-strips-sooner",
+  "brand": "Daikin",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "daikin",
+  "title": "Daikin thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Daikin thermostat does this its own way. 7 of the 9 Daikin thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Daikin thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Daikin) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Daikin One Lite; Daikin One Touch; Daikin One+; DT4272 / DT4273 TouchScreen; Daikin Premium Series Digital Thermostats (D2111 / D4271C / D4272C / D4272 / D4273); Daikin Premium Mini Wi-Fi Thermostat (D2270 / D2270C); Daikin Value Series Digital Thermostats (TSTATD1100-2 / 1152-2 / 2100-2 / 2152-2).",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): Madoka Wired Remote Controller (BRC1H71W); Navigation Wired Remote Controller (BRC1E73).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-goodman-amana-tstat-aux-heat-strips-sooner",
+  "brand": "Goodman / Amana",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "goodman amana",
+  "title": "Goodman / Amana thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Goodman / Amana thermostat does this its own way. 6 of the 6 Goodman / Amana thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Goodman / Amana thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Goodman / Amana) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): GTST Connected Thermostat; ProStat+ TouchScreen; ComfortNet CTK04 / CTK03; Goodman Premium Series Digital Thermostats (G4272 / G4273 / G2111); Goodman TouchScreen Series (GT4272 / GT4273); Goodman Premium Mini Wi-Fi Thermostat (G2270).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-nest-tstat-aux-heat-strips-sooner",
+  "brand": "Google Nest",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "nest google",
+  "title": "Nest thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up: Heat Pump Balance, auxiliary lockout temperature, aux upstage timer, droop",
+  "summary": "Each Nest thermostat does this its own way. 5 of the 5 Nest thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Nest thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Google Nest) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Nest Learning Thermostat (4th gen, 2024); Nest Thermostat (2020, mirror display); Nest Learning Thermostat 3rd / 2nd gen; Nest Thermostat E; Nest Learning Thermostat (1st gen, 2011).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-honeywell-resideo-tstat-aux-heat-strips-sooner",
+  "brand": "Honeywell Home",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "honeywell resideo",
+  "title": "Honeywell / Resideo thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up: Backup Heat Droop, Upstage Timer, aux heat lockout, balance point, Auxiliary heat control comfort / economy",
+  "summary": "Each Honeywell / Resideo thermostat does this its own way. 18 of the 48 Honeywell / Resideo thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Honeywell / Resideo thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Honeywell Home) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): T10 / T10+ Pro Smart; T5 / T5+ Smart; T6 Pro Wi-Fi / T6 Pro Smart; T6 Pro Z-Wave; T6 Pro (programmable); T4 Pro; T3 Pro; Lyric Round / Round Smart; VisionPRO 8000; VisionPRO 8000 with RedLINK; VisionPRO Wi-Fi; VisionPRO IAQ (TH9421C with EIM); Prestige IAQ; TH7000 Series Touchscreen Programmable; TB7220U CommercialPRO / TB8220U Commercial VisionPRO; FocusPRO 5000; FocusPRO Wireless (RedLINK); FocusPRO Wi-Fi (FocusPRO Smart).",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): T9 Smart; RTH6360; RTH5160 Non-Programmable; RTH7400 / RTH7500 Programmable; TH8320ZW Z-Wave Touchscreen; RTH7600 Touchscreen; RTH8500 Touchscreen; RTH8580WF Wi-Fi Touchscreen; Wi-Fi Smart Color Thermostat; Wi-Fi 9000 / Smart Thermostat 9000 Color Touchscreen; Wi-Fi 7-Day Programmable; FocusPRO 6000; PRO 1000 / 2000 DV; PRO 1000 / PRO 2000 (horizontal); PRO 3000; PRO 4000; RTH2410 / RTH2510; RTH3100C Heat Pump Non-Programmable; RTH6350 / RTH6450 Programmable; T8400C / T8401C / T8411R Electronic Non-Programmable; Chronotherm III Fuel Saver (legacy).",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): T1 Pro; T6 Pro Hydronic; RTH2300; RTH111 Non-Programmable; The Round (T87N / T87K); CT87 Round (retail mercury: CT87A / CT87B / CT87J); T87F Round (Easy-to-See, mercury); T834 / T8034 Mechanical Heat-Cool; The Digital Round (T8775).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-hunter-tstat-aux-heat-strips-sooner",
+  "brand": "Hunter",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "hunter",
+  "title": "Hunter thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Hunter thermostat does this its own way. 0 of the 1 Hunter thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Hunter thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Hunter) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): 44100 / 44550 Auto Saver 550 (battery programmable, c.2001).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-icp-heil-tempstar-comfortmaker-tstat-aux-heat-strips-sooner",
+  "brand": "ICP (Heil / Tempstar / Comfortmaker)",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "icp heil tempstar comfortmaker arcoaire keeprite",
+  "title": "ICP (Heil / Tempstar / Comfortmaker) thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each ICP (Heil / Tempstar / Comfortmaker) thermostat does this its own way. 3 of the 4 ICP (Heil / Tempstar / Comfortmaker) thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which ICP (Heil / Tempstar / Comfortmaker) thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand ICP (Heil / Tempstar / Comfortmaker)) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Ion System Control (SYST0101CW); Observer Communicating Wall Control (TSTAT0101SC / TSTAT0201CW Wi-Fi); ICP TSTAT07xx Digital Programmable (TSTAT0709 - TSTAT0716).",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): Ion Gray Smart Thermostat (TSTATIIEWF).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-lennox-tstat-aux-heat-strips-sooner",
+  "brand": "Lennox",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "lennox",
+  "title": "Lennox thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Lennox thermostat does this its own way. 13 of the 14 Lennox thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Lennox thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Lennox) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): E40 / M40 Smart Thermostat; M30 Smart Thermostat; S30 / E30 iComfort; S40 Smart Thermostat; ComfortSense 3000 (non-programmable / heat pump); ComfortSense 5000 / Elite X4146 & X4147; ComfortSense 7500; iComfort Touch; iComfort Wi-Fi (10F81); Merit 51M32 / 51M33; Merit 51M34 / 51M35; Allied Air Comfort Sync A3 (Armstrong / AirEase / Ducane / Concord); ComfortSense 7000 (L7742U).",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): ComfortSense 5500.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-lux-tstat-aux-heat-strips-sooner",
+  "brand": "Lux",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "lux",
+  "title": "Lux thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Lux thermostat does this its own way. 10 of the 14 Lux thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Lux thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Lux) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Kono Wi-Fi; Kono Smart Hub - Z-Wave (KONOzw); Kono Smart Hub - Zigbee (KONOz); TX1500U Series (digital menu); TX500U Series (digital menu); TX9600 Series Touchscreen; GEO Wi-Fi; TX9100U / TX9100E Smart Temp; TX700U; P722U LuxPRO Universal Programmable.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): TX1500 Series (dial generation); TX500 Series (dial generation); TX100E / P711 / P721 (single-stage and 2H/1C); TX9000TS Smart Temp Touchscreen.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-mitsubishi-tstat-aux-heat-strips-sooner",
+  "brand": "Mitsubishi",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "mitsubishi",
+  "title": "Mitsubishi thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Mitsubishi thermostat does this its own way. 1 of the 8 Mitsubishi thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Mitsubishi thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Mitsubishi) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): MHK2 Wireless Remote Controller Kit.",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): MHK1 Wireless Remote Controller Kit (RedLINK, 1st gen); PAR-40MAAU Deluxe Wired MA Remote Controller; PAR-41MAAU / PAR-42MAAUB Deluxe Wired MA Remote Controller; PAR-CT01MAU-SB Touch MA Wired Remote Controller; PAR-30MAAU Wired MA Remote Controller (legacy); PAR-21MAAU Wired MA Remote Controller (legacy); PAC-YT53CRAU Simple MA Remote Controller.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-mysa-tstat-aux-heat-strips-sooner",
+  "brand": "Mysa",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "mysa",
+  "title": "Mysa thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Mysa thermostat does this its own way. 1 of the 1 Mysa thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Mysa thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Mysa) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Mysa Smart Thermostat (for Central HVAC).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-pro1-tstat-aux-heat-strips-sooner",
+  "brand": "Pro1",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "pro1",
+  "title": "Pro1 thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Pro1 thermostat does this its own way. 17 of the 33 Pro1 thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Pro1 thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Pro1) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): T721i; T751i; T855iSH; T721; T725; T751; T755/T755S; T755WHO; T855; T855SH; T955WH; T631-2; T631W-2; T755H; T855S; T955; T955S.",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): T621-2; T625-2; T731; T731W / T731WO.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): T701i; T601-2; T605-2; T701; T705; T715; T771; T805; T501M; T501ML2 / T501ML4; T801; T905.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-rheem-ruud-tstat-aux-heat-strips-sooner",
+  "brand": "Rheem / Ruud",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "rheem ruud",
+  "title": "Rheem / Ruud thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Rheem / Ruud thermostat does this its own way. 6 of the 7 Rheem / Ruud thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Rheem / Ruud thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Rheem / Ruud) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): 500 Series Communicating; EcoNet Smart Thermostat; 200 / 300 Series 24V Programmable; 400 Series Modulating Touchscreen; 400 Series Universal; Professional Thermostats 83 / 85 Series (UHC/RHC-TST83C, 83H, 85U).",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): 200 Series Single Stage Programmable (RHC/UHC-TST211GESS).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-robertshaw-tstat-aux-heat-strips-sooner",
+  "brand": "Robertshaw",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "robertshaw",
+  "title": "Robertshaw thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Robertshaw thermostat does this its own way. 3 of the 4 Robertshaw thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Robertshaw thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Robertshaw) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Pro-Series RS10420T / RS10421T Touchscreen; 9400 Series Digital Non-Programmable (9400 / 9401 / 9415 / 9420); 9610 / 9620 Digital Programmable.",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): Pro-Series RS8110 / RS8210 / RS9110 / RS9210 / RS9220.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-totaline-tstat-aux-heat-strips-sooner",
+  "brand": "Totaline",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "totaline",
+  "title": "Totaline thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Totaline thermostat does this its own way. 2 of the 3 Totaline thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Totaline thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Totaline) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): P274-1100 / 1200 / 1300 Residential Programmable; P474-2150 '1 For All' Programmable.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): P474-0130 Non-Programmable Battery Digital.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-trane-american-standard-tstat-aux-heat-strips-sooner",
+  "brand": "Trane / American Standard",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "trane american standard",
+  "title": "Trane / American Standard thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Trane / American Standard thermostat does this its own way. 12 of the 17 Trane / American Standard thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Trane / American Standard thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Trane / American Standard) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): ComfortLink II XL1050; ComfortLink II XL850; ComfortLink II XL824; XL624 Nexia Z-Wave; XR724; TCONT302 / TCONT303 Touchscreen; TCONT802 / TCONT803 Touch Screen; Link UX360; XL900 ComfortLink II Communicating; ComfortLink II XL950; XR102 / XR103 Non-Programmable; XR402 Non-Programmable.",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): TCONT600 / TCONT602; XR202 / XR203 Programmable; XR401 Non-Programmable.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): TCONT800 Touch Screen (XL800); XB200 Non-Programmable.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-venstar-tstat-aux-heat-strips-sooner",
+  "brand": "Venstar",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "venstar",
+  "title": "Venstar thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Venstar thermostat does this its own way. 8 of the 8 Venstar thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Venstar thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Venstar) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): ColorTouch T7850 / T7900 (residential); ColorTouch T8850 / T8900 (commercial); ColorTouch 1st gen (T5800 / T5900 / T6800 / T6900); Explorer Residential T3700 / T3800 / T3900; Explorer Commercial T4700 / T4800 / T4900; Explorer Mini T2000; Slimline Residential T1700 / T1800 / T1900; Slimline Commercial T2700 / T2800 / T2900.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-white-rodgers-tstat-aux-heat-strips-sooner",
+  "brand": "White-Rodgers",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "white-rodgers emerson sensi",
+  "title": "White-Rodgers thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each White-Rodgers thermostat does this its own way. 18 of the 24 White-Rodgers thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which White-Rodgers thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand White-Rodgers) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Sensi Classic Wi-Fi; Sensi Lite; Sensi Touch 2; Sensi Touch Wi-Fi; 1F85U Universal (Blue 4 inch); 1F95-0671 Blue 6 inch Universal; 1F95EZ-0671 Blue Easy Reader; 1F97-1277 Touchscreen; Blue Series 4 inch Universal (1F83); Blue Series Touchscreen (1F95-1277); 1F83-0422 / 1F85-0422 Blue Universal; 1F89-0211 Blue 2 inch Heat Pump; 1F89-211 Heat Pump (non-programmable); 1F75 Series (1F75C-11NP / 11PR, 1F75H-21NP / 21PR); 1F82 Heat Pump Programmable (1F82-0261 Blue 2 inch / 1F82-261); Blue Easy Set (1F86EZ-0251 / 1F89EZ-0251); 70 Series Heat Pump (1F72 programmable / 1F79 non-programmable); 1F95-1291 Blue Humidity Touchscreen Universal.",
+   "These cannot stage heat strips at all (single stage, heat only or not built for a heat pump with backup heat): 1E78 Non-Programmable; 1F86 Non-Programmable; 70 Series (1F78); 80 Series (1F80); Blue Selecto (1F80-0471 / 1F86-0471); 1F56N-444 / 1E56N-444 Mechanical Snap-Action.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-wyze-tstat-aux-heat-strips-sooner",
+  "brand": "Wyze",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "wyze",
+  "title": "Wyze thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each Wyze thermostat does this its own way. 0 of the 1 Wyze thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which Wyze thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand Wyze) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These can run a heat pump with strips, but the maker's manual prints no setting for when the strips come on. The card says what can be checked instead (Emergency Heat, system type, the aux wire): Wyze Thermostat.",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
+  "id": "s-york-coleman-tstat-aux-heat-strips-sooner",
+  "brand": "York / Coleman",
+  "equipment": "Thermostat",
+  "askBrandGate": true,
+  "askBrandAlso": "york coleman luxaire",
+  "title": "York / Coleman thermostat - get the heat strips (aux heat / auxiliary heat / backup heat) to come on sooner when the heat pump can't keep up",
+  "summary": "Each York / Coleman thermostat does this its own way. 6 of the 6 York / Coleman thermostat cards have a setting for it; the steps for each are on its card in Thermostats under 'How to use it'. From the manufacturer's own manuals and support pages.",
+  "steps": [
+   "Which York / Coleman thermostat? The setting names, numbers and steps differ by model. Open the model's card in Thermostats (brand York / Coleman) and tap 'Get the heat strips (aux heat) on sooner when the heat pump can't keep up' under 'How to use it' for the steps from that model's own manual.",
+   "These have a setting for it (backup heat droop, upstage timer, aux lockout, balance point, staging or similar - see the card): Echelon Touch Screen Communicating (S1-TTSCC01); Hx / Hx3 Communicating Touch-Screen (S1-THXU430W); Source 1 LX Series Digital Thermostat (S1-THSU21P1 / 32P7 / 32HP7); Source 1 LX Series (S1-THSU301-S / 302-S / 303-S); Source 1 THE Series Digital Thermostats (S1-THEC11 / S1-THEH21); Source 1 CTS Series Color Touch Screen (S1-THPU432-S / 433-S).",
+   "Two kinds of setting matter. One brings the strips ON (droop, stage differential, upstage timer, comfort vs economy). The other LOCKS THEM OUT above an outdoor temperature (aux heat lockout, balance point). A lockout set low keeps the strips off on milder days, and most lockouts need an outdoor sensor or internet weather to work.",
+   "No aux settings showing at all: the thermostat has to be set up as a heat pump with backup / auxiliary heat, and the strip wire has to be on its Aux / W2 / E terminal.",
+   "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+  ],
+  "confidence": "common"
+ },
+ {
   "id": "s-hp-runs-nonstop-heat-no-strips",
   "equipment": "Condenser/Heat Pump",
   "title": "Heat pump runs constantly (all the time) in heat mode, won't turn off (air handler, no heat strips)",
