@@ -8192,7 +8192,7 @@ const UNIT_SCENARIOS = [
    43,
    61
   ],
-  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.41, p.42, p.43, p.61",
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.41, p.42, p.43, p.61",
   "confidence": "manual"
  },
  {
@@ -8220,7 +8220,7 @@ const UNIT_SCENARIOS = [
    37,
    38
   ],
-  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.35, p.36, p.37, p.38",
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.35, p.36, p.37, p.38",
   "confidence": "manual"
  },
  {
@@ -8246,7 +8246,7 @@ const UNIT_SCENARIOS = [
    43,
    49
   ],
-  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.34, p.36, p.38, p.43, p.49",
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.34, p.36, p.38, p.43, p.49",
   "confidence": "manual"
  },
  {
@@ -8272,7 +8272,7 @@ const UNIT_SCENARIOS = [
    39,
    40
   ],
-  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.34, p.39, p.40",
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.34, p.39, p.40",
   "confidence": "manual"
  },
  {
@@ -8297,7 +8297,7 @@ const UNIT_SCENARIOS = [
    35,
    47
   ],
-  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.25, p.26, p.35, p.47",
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.25, p.26, p.35, p.47",
   "confidence": "manual"
  },
  {
@@ -8331,7 +8331,7 @@ const UNIT_SCENARIOS = [
    59,
    60
   ],
-  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.40, p.43, p.46, p.48, p.49, p.50, p.52, p.56, p.59, p.60",
+  "source": "YD5 / XD5 (15.2 SEER2 inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YD5 and XD5 Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910503201 B, 07.2026), p.40, p.43, p.46, p.48, p.49, p.50, p.52, p.56, p.59, p.60",
   "confidence": "manual"
  },
  {
@@ -8358,7 +8358,7 @@ const UNIT_SCENARIOS = [
    39,
    40
   ],
-  "source": "YDV / XDV (20-21 SEER2 inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YDV and XDV Series Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910103201 B, 07.2026), p.36, p.38, p.39, p.40",
+  "source": "YDV / XDV (inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YDV and XDV Series Condensing Unit, 2-3-4-5 Ton, R-454B (BTC 910103201 B, 07.2026), p.36, p.38, p.39, p.40",
   "confidence": "manual"
  },
  {
@@ -8391,7 +8391,1117 @@ const UNIT_SCENARIOS = [
    65,
    68
   ],
-  "source": "YDC (cold climate inverter heat pump, Bosch platform) Installation and Operating Instructions: Split System Heat Pump YDC Series Condensing Unit, 3-5 Ton, R-454B (BTC 910803201 B, 07.2026), p.29, p.37, p.41, p.42, p.43, p.45, p.57, p.65, p.68",
+  "source": "YDC (cold climate inverter heat pump) Installation and Operating Instructions: Split System Heat Pump YDC Series Condensing Unit, 3-5 Ton, R-454B (BTC 910803201 B, 07.2026), p.29, p.37, p.41, p.42, p.43, p.45, p.57, p.65, p.68",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-read-codes",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the fault code at the outdoor unit - B5A1V / B5H0V / B5H3V",
+  "summary": "Codes are two numbers, base-expansion (for example 31-16). The outdoor board always shows the full code; the wall control can lose the second half.",
+  "steps": [
+   "Active codes scroll continuously on the 5x7 matrix display on the PCM board - up to four at a time, highest priority first, with a brief pause between sequences. A blank display means no code is active.",
+   "If the Ion control lost communication with the outdoor unit after the code was set, it keeps the base code but shows the expansion as 00 - 38-18 shows as 38-00. Get the complete code from the Service Tech App or with Diagnostic Code Recall at the PCM.",
+   "Amber STATUS light with PCM software 4.0: On = standby with nothing wrong; continuous slow flash = operation interrupted or limited; continuous fast flash = lockout (or recall mode); Off = no power to the PCM or a fundamental PCM fault.",
+   "With PCM software older than 4.0 the same light is Off in standby and flashes the base code: short flashes = first digit, long flashes = second digit.",
+   "To recall the last code: remove power, put a clip wire across the Forced Defrost header pins (the service manual calls them J3; the installation instructions say the connector is labeled J2 on the board), then apply power. The display scrolls RECALL and then the most recent, highest priority code if it happened within the last 240 hours of operation. Only RECALL scrolls if there is nothing to show.",
+   "The unit will not run while in recall mode. Remove the short to leave it (it also ends by itself 15 minutes after power-up)."
+  ],
+  "safety": "Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   15,
+   20
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.15, p.20",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-comm-lost-emergency",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Green COMM light off / running on a 24 V thermostat in emergency mode - B5A1V / B5H0V / B5H3V",
+  "summary": "Lost communication with the Ion control turns the COMM light off; the manual says no diagnostic fault is set (printed under 'B5H0V, B5H3V Models Only'). The unit falls back to its 24 V inputs, with very limited function.",
+  "steps": [
+   "COMM light On = communication received from the Ion control within the last 2 minutes. Off = none for 2 minutes; the unit is in emergency communicating mode.",
+   "After 2 minutes in that mode the unit looks for a non-communicating (24 V) control signal. If no signal is detected, the unit shuts off. The manual says there is no diagnostic fault for lost communication (printed under 'B5H0V, B5H3V Models Only').",
+   "The Ion control uses a 2-wire connection (A and B). A third wire for ground is optional and recommended for long runs or if communication is not consistent on two wires.",
+   "Non-communicating control is for emergency situations only and gives very limited function as a single or two stage unit. The PCM terminals are O, W, Y2, Y1, C (plus LLS and UTIL). O should be active in cooling; O and W are driven during defrost on heat pumps.",
+   "In non-communicating mode set the PCM DIP switches: switches 1 and 2 = defrost interval (Up / Up Auto, Up / Down 30 minutes, Down / Up 60 minutes, Down / Down 90 minutes); switch 3 = performance mode (Up Efficiency, Down Comfort).",
+   "The amber STATUS light shows the stage in emergency mode: 1 slow flash = low capacity, 2 slow flashes = high capacity."
+  ],
+  "safety": "Do not connect the outdoor unit's 24 VAC supply (Rc) to the indoor equipment's 24 VAC supply (Rh) - doing so may destroy one or both transformers.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   4,
+   9,
+   10,
+   15,
+   21
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.4, p.9, p.10, p.15, p.21",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-replace-pcm-model",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "New PCM board or code 25-61 / 25-62 / 25-63 - setting the model - B5A1V / B5H0V / B5H3V",
+  "summary": "The PCM must hold the right model configuration (size and AC / HP). It can be set with DIP switch 4, the Ion control, the Service Tech App or a physical model plug.",
+  "steps": [
+   "Set PCM DIP switch #4 ON to enter the menu mode. The display scrolls the PCM models that are compatible with the VFD it detects - for a 5 ton VFD: 60K-AC, 60K-HP and NOCFG.",
+   "Set the switch OFF while the right model is scrolling (for a 5 ton heat pump, when 60K-HP is scrolling). The selected model stays on the display for 2 minutes.",
+   "Cycle power - a power cycle is required for the model configuration to be stored in the PCM memory.",
+   "PCM models: B5A1V 24 / 36 / 48 / 60 = 24K-AC / 36K-AC / 48K-AC / 60K-AC. B5H0V and B5H3V 24 / 36 / 48 / 60 = 24K-HP / 36K-HP / 48K-HP / 60K-HP.",
+   "A physical model plug set is available as a service component. A plug installed at power-up takes precedence over the stored value. Plug numbers: B5A1V HK70EZ009 / 021 / 033 / 045; B5H0V and B5H3V HK70EZ003 / 015 / 027 / 039 (24 / 36 / 48 / 60).",
+   "If the models that scroll do not include the unit's model (code 25-63), the VFD does not match: check and install the correct VFD, then set the model again.",
+   "25-62 (configuration missing) clears at power-down or when a model is selected electronically. 25-24 (configuration changed) after an intentional plug change needs no action - it clears on the next power cycle."
+  ],
+  "safety": "Do not attempt to operate the system with an incorrect model plug - this could cause equipment damage. An incorrect plug can make units operate incorrectly and fail prematurely.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   14,
+   21,
+   27
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.14, p.21, p.27",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-high-pressure",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "High pressure codes 31-11 / 31-58 / 31-16 / 31-19 - B5A1V / B5H0V / B5H3V",
+  "summary": "The control first slows the compressor and speeds the fan on the transducer reading; the 670 psig switch is a backstop wired to the VFD.",
+  "steps": [
+   "31-11 (limit): the system shuts down and restarts after the 5 minute delay if demand remains. Each occurrence cuts the next cycle's capacity by 25%; each hour of running without the fault gives 25% back.",
+   "31-58 (lockout): the limit was reached at minimum compressor speed - 2 hour lockout, then it tries again.",
+   "For a high pressure trip or lockout: check the refrigerant for an overcharge. If the charge is correct, check for outdoor coil blockage in cooling; in heating check the indoor coil for blockage and the indoor fan for proper operation.",
+   "Other causes the manual lists: dirty condenser, lack of airflow or recirculation at the condenser, extreme high temperature and sun loading, refrigerant circuit blockage, faulty EXV / TXV.",
+   "31-16 (high pressure switch): the switch opens at 670 psig and cuts high voltage to the VFD, so VFD communication codes may come with it. It should not normally trip - a fast transient, or a break or short in the switch harness, sets it. Make sure the switch is closed and securely connected to the VFD. Three 31-16 trips give a 2 hour lockout.",
+   "The unit will not try to run again until discharge pressure is below 425 psig (the component description on another page says the switch itself closes at 470 psig).",
+   "31-19 (disable): discharge pressure is too high to start (620 psig) - extreme high ambient can set it; the unit stays off until pressure drops."
+  ],
+  "safety": "Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   8,
+   21,
+   22,
+   28
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.8, p.21, p.22, p.28",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-low-pressure",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Low pressure codes 32-15 / 32-55 / 32-59 and coil freeze 18-11 - B5A1V / B5H0V / B5H3V",
+  "summary": "The transducer on the suction side stands in for a low pressure switch. Limits depend on compressor and speed; 30 psi and 15 psi are typical.",
+  "steps": [
+   "32-15: suction went under the soft limit for 2 minutes, or under the hard limit at once. The control shuts the system down immediately if pressure drops to 15 psig. It waits 5 minutes and restarts if demand remains.",
+   "Four low pressure trips within 2 hours give a 2 hour lockout (32-55).",
+   "For a low pressure trip or lockout: check the refrigerant for an undercharge. If the charge is correct, check for low indoor airflow in cooling; in heating check the outdoor fan for proper operation and the outdoor coil for airflow restrictions.",
+   "Other causes the manual lists: blockage in the liquid line, a stuck TXV or EXV, no airflow across the evaporator. Check the pressure drop of the liquid line at the condenser and the evaporator. Low ambient makes the code more sensitive to all of these.",
+   "32-59 (disable): suction pressure is too low to start the compressor safely. The most likely cause is a leak in the refrigeration system.",
+   "18-11 (indoor coil freeze protection): the unit is slowing the compressor because saturated suction is near freezing. Causes: dirty filter or restrictive ductwork, or low charge - check indoor static pressure and the charge."
+  ],
+  "safety": "Do not operate the unit in a vacuum or at negative pressure, and do not disable the low pressure transducer.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   18,
+   22,
+   26,
+   28
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.18, p.22, p.26, p.28",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-wont-start-pev",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Compressor will not start - 38-18, 38-13 / 38-53, 44-13, 62-01 (pressure equalization valve) - B5A1V / B5H0V / B5H3V",
+  "summary": "These units will not start the compressor with more than 100 psi across it. A pressure equalization valve (PEV) bleeds the difference down first.",
+  "steps": [
+   "38-18 (high differential pressure start disable): a call exists and the pressure difference is not under 100 psi. It clears and the unit starts once the difference is under 100 psi.",
+   "On these models the most likely cause of 38-18 is a PEV that is not working - a mechanical failure, or the coil is not on the valve. Verify the PEV coil is attached to the PEV valve body. If it is, replace the PEV harness and coil first, and the PEV body if that does not fix it.",
+   "44-13 (PEV timeout): the PEV was open 10 minutes and did not bring the difference under 40 psi - likely the valve or coil has failed. Replace the coil and harness first; if the fault persists open the refrigeration system and replace the PEV valve.",
+   "62-01 (PEV solenoid open): remove the PEV connector from the PCM and measure continuity between pins 1 and 3. If open, inspect the wire for damage and repair; if no damage is found, replace the coil and harness.",
+   "38-13 (start fail), three in a row = 38-53 lockout: the VFD cannot turn the rotor enough to finish the start. Check compressor wiring for secure connections, damage and wire order. If malfunctions continue and the difference across the compressor is confirmed under 40 psi, replace the compressor.",
+   "38-54 (no pump): above 400 rpm the compressor has 30 seconds to build 20 psi of difference; if not it locks out 30 minutes. Most likely the compressor leads are wired wrong - check U, V, W colours against the wiring diagram.",
+   "Winding check at 68 F between T1, T2 and T3: B5A1V 24 / 36 / 48 / 60 = 1.63 / 0.74 / 0.46 / 0.424 ohm; B5H0V = 1.63 / 0.46 / 0.424 / 0.424; B5H3V = 0.74 / 0.453 / 0.424 / 0.424. Terminal to ground more than 1 megohm."
+  ],
+  "safety": "Do not use a megger for measuring the winding resistance. Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   22,
+   29,
+   30,
+   32
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.22, p.29, p.30, p.32",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-fan-faults",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Outdoor fan codes 39-13 / 39-53 / 39-14 / 39-15 / 39-55 / 39-58 - B5A1V / B5H0V / B5H3V",
+  "summary": "The fan is a brushless motor with its own electronics, fed high-voltage DC and a 0-5 V speed signal from the VFD. Its windings cannot be ohmed.",
+  "steps": [
+   "39-13 / 39-53 (start failure): no speed feedback for 25 seconds; the PCM resets the VFD and retries - code after 3 resets, 1 hour lockout after 6. Inspect all wiring and connectors for damage and loose connections, check for blade blockage and free spin, and check the external fan fuse on the VFD.",
+   "39-14 (speed error): actual speed is more than 20% off a command above 200 rpm. Most likely a partial blockage of the blade, ice on the blade, extreme coil blockage, or stiff bearings.",
+   "39-15 / 39-55 (unexpected shutdown): commanded above 200 rpm but under 80 rpm for 10 seconds. An intermittent open on the fan feedback (FG) wire or a failing motor may cause it.",
+   "39-58: no feedback for 30 seconds while a speed signal is sent; 30 minute lockout. Replace the fan motor first, then the VFD.",
+   "To check the motor: remove the fan harness at the VFD and measure between connector pins. By motor part number (Vdc-GND / Vcc-GND / Vsp-GND / FG-GND): 1208502 = 1.04 megohm / 62.1k / 216k / open; 1192973 = 1.37 megohm / 43.7k / 119k / open; 1208504 = 1.22 megohm / 54.3k / 222k / open; 1192975 and 1208552 = 1.30 megohm / 45.9k / 119k / open.",
+   "Resistances are approximate and move with temperature - only declare the motor bad if results differ greatly from the table.",
+   "It is normal for the fan to stop during defrost and to cycle on and off (about a 40 second cycle) in low ambient cooling."
+  ],
+  "safety": "High voltage DC (240-373 VDC) is on the fan harness. Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   14,
+   22,
+   23,
+   29,
+   30
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.14, p.22, p.23, p.29, p.30",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-b5vs-charging",
+  "unit": "^B5(A1|H0|H3)V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Checking or adjusting charge - B5A1V / B5H0V / B5H3V",
+  "summary": "The Ion Black System Control is the source for charge: it shows the factory charge, the target subcooling and how much to add for this coil and line set.",
+  "steps": [
+   "Conditions must suit subcooling charging in cooling mode: outdoor 65 F to 105 F and indoor 65 F to 80 F. Outside those ranges weigh in charge only, and come back to verify subcooling when temperatures are in range.",
+   "The unit is factory charged for 15 ft of line set and the smallest internal volume AHRI-rated indoor coil. Enter the real indoor coil, line set dimensions, environment (Arid under 45% average annual relative humidity, Semi-Arid 45-65%, Humid 65% and over) and outdoor coil material at setup - the control calculates the target subcooling and the charge to add from them.",
+   "The control indicates when conditions are acceptable; subcool charging mode is not available when they are not.",
+   "Perform the final charge check only in cooling with the outdoor temperature between 65 F and 105 F.",
+   "R-454B is charged as a liquid. Use bubble point (saturated liquid) for subcooling and dew point (saturated vapor) for superheat.",
+   "To evacuate or recover on a heat pump, open the heating EXV first from the control: installation and service > refrigerant charging > evacuation, set the time (default 20 minutes), START, and wait for READY TO EVACUATE. The EXV keeps its open position with power off."
+  ],
+  "safety": "Do not overcharge the system. Do not operate the unit in a vacuum or at negative pressure. Do not disable the low pressure transducer, the discharge line thermistor or the high pressure switch. Do not use power tools to open and close service valves. Federal regulations require that you do not vent refrigerant - recover it.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   18,
+   54,
+   62
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.18, p.54, p.62",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-read-codes",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the fault code at the outdoor unit - N5H9V / Q5H9V",
+  "summary": "This unit runs from a two-stage thermostat, so the code is read at the outdoor board: a 5x7 LED display scrolls two-part numbers such as 31-16.",
+  "steps": [
+   "Active codes scroll continuously on the 5x7 matrix display on the PCM board - up to four at a time, highest priority first. A blank display means no code is active.",
+   "Amber STATUS light: On = standby with nothing wrong; 1 slow flash = running at low capacity; 2 slow flashes = high capacity; continuous slow flash = operation interrupted or limited; continuous fast flash = lockout (or recall mode); Off = no power to the PCM or a fundamental PCM fault.",
+   "COMM light on the board is the PCM-to-VFD link: flashing green = communicating, flashing red = failed communication, off = no communication after multiple failures (a fault code will be set).",
+   "A fault interrupts or limits operation but does not prevent it. A malfunction significantly limits or prevents operation and may be an escalation of a repeated fault.",
+   "To recall the last code: remove power, put a clip wire across the Forced Defrost pins, then apply power. The display scrolls RECALL and then the most recent, highest priority code from the last 240 hours of operation. The unit will not run in recall mode; remove the short to leave it (it also ends 15 minutes after power-up).",
+   "Toggle DIP switch #8 from low to high to scroll the PCM software version, VFD software version, unit tonnage and unit type (AC or HP)."
+  ],
+  "safety": "Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting. Toggling DIP switch #8 must only be performed by a trained technician with the required PPE.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   15,
+   16,
+   20,
+   39
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.15, p.16, p.20, p.39",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-charge-modes",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Check charge with DIP switch 1 (CCC / HCC) - N5H9V / Q5H9V",
+  "summary": "DIP switch 1 on the PCM runs the unit at fixed charge-check settings and scrolls its own subcooling reading.",
+  "steps": [
+   "Factory charge and target subcooling are on the unit rating plate; the charging method is on the information plate inside the unit. The unit is charged for 15 ft of line set - add or remove 0.6 oz per foot of 3/8 liquid line above or below 15 ft.",
+   "Switch DIP switch 1 (Refrigerant Charging Modes) to HIGH. The display scrolls CCC, HCC, EVAC and PUMP (Cooling Check Charge, Heating Check Charge, Evacuation, Pumpdown).",
+   "Switch it back to LOW while the mode you want is scrolling - that selects and enters the mode. If nothing is selected the scrolling times out after 60 seconds; then move the switch back to LOW.",
+   "CCC runs at fixed charge-mode settings and scrolls the subcooling the unit's own sensors calculate. It can only be entered with the outdoor sensor at 60-105 F and the indoor sensor (if applicable) at 65-80 F. Before adjusting charge, verify subcooling at the liquid service valve.",
+   "HCC is for heating and is used with the Heating Check Chart on the inside of the control box cover, to see if the system is significantly over or under charged from suction and discharge pressures and superheat at the vapor service valve. It can only be entered with the outdoor sensor at -8 to 75 F and the indoor sensor (if applicable) at 65-80 F.",
+   "Outside those temperature ranges, weigh in charge only.",
+   "To leave a charging mode switch DIP switch 1 from LOW to HIGH - the system returns to normal operation; after the 60 second timeout move the switch back to LOW."
+  ],
+  "safety": "DO NOT adjust charge using the Heating Check Chart - if the charge is suspect, recover the refrigerant and recharge with the full system charge / recharge method. Do not overcharge. Do not operate the unit in a vacuum or at negative pressure. Do not disable the low pressure transducer, discharge line thermistor or high pressure switch.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   18,
+   19
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.18, p.19",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-pumpdown-evac",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Pump down and evacuation (PUMP / EVAC modes) - N5H9V / Q5H9V",
+  "summary": "A conventional pump-down cannot be used on this VFD compressor, and the heating EXV must be opened before pulling a vacuum. The PCM has a mode for each.",
+  "steps": [
+   "PUMP: connect gauges to the liquid and vapor (or suction capillary) service ports. Set DIP switch 1 HIGH, and move it to LOW while PUMP is scrolling.",
+   "The unit starts in cooling after a brief delay. Close the liquid service valve.",
+   "The unit runs with the low pressure protection set to show pump down complete when suction drops below 20 psig. Compressor protections (high pressure, high current and so on) stay active.",
+   "When it indicates pump down complete, or it fails to complete and shuts down, close the vapor service valve.",
+   "A recovery system is still required to remove the final quantity of refrigerant from the indoor coil and line set. Follow the Service Manual's evacuation and purge steps after recovering the refrigerant and before making any repairs to the indoor unit or line set. Remove power from the indoor and outdoor units before servicing.",
+   "EVAC: connect gauges and the recovery machine or vacuum pump; the service valves must be open to evacuate the unit through the line set ports. Select EVAC with DIP switch 1 (LOW while EVAC is scrolling) - the PCM opens the EXV. Begin evacuation or recovery.",
+   "Remove power from the indoor and heat pump units before servicing - the EXV keeps its open position. If the EXV is not open, evacuation can take much longer or the vacuum can be inadequate."
+  ],
+  "safety": "Federal regulations require that you do not vent refrigerant to the atmosphere - recover during system repair. Wear safety glasses, protective clothing and gloves when handling refrigerant. Do not use power tools to open and close service valves.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   18,
+   19,
+   54
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.18, p.19, p.54",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-model-config",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "New PCM / VFD or code 25-62 / 25-63 - setting the model with DIP switch 2 - N5H9V / Q5H9V",
+  "summary": "The PCM must hold the right model configuration. On these units it is set with DIP switch 2.",
+  "steps": [
+   "Set PCM DIP switch #2 ON to enter the menu mode. The display scrolls the PCM models that are compatible with the VFD it detects.",
+   "Set the switch OFF while the right model is scrolling: 24K-HP, 36K-HP, 48K-HP or 60K-HP for the 24, 36, 48 or 60 size. The selected model stays on the display for 2 minutes.",
+   "Cycle power - a power cycle is required for the model configuration to be stored in the PCM memory.",
+   "A physical model plug at power-up takes precedence over the stored value: HK70EZ003 (24), HK70EZ015 (36), HK70EZ027 (48), HK70EZ039 (60).",
+   "25-63 (VFD / PCM model mismatch): the models that scroll are the ones valid for the detected VFD. If they do not include the unit's model, check and install the correct VFD, then set the model again.",
+   "25-62 (configuration missing): the equipment will not operate; it clears at power-down or when a model is selected electronically."
+  ],
+  "safety": "Do not attempt to operate the system with an incorrect model plug - this could cause equipment damage.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   21,
+   27
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.21, p.27",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-plc-comm",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Codes 19-06 / 21-06 - lost SmartSense (power line) communication - N5H9V / Q5H9V",
+  "summary": "With a SmartSense thermostat or indoor unit the outdoor unit talks over the power line (PLC). If that drops, the system keeps running on the 24 V wires.",
+  "steps": [
+   "With enhanced (PLC) control working, the 24 VAC control signals are ignored. If PLC communication is interrupted the system reverts to the 24 VAC control signals.",
+   "19-06: communication with a PLC capable thermostat lost for more than 2 minutes. 21-06: communication with a PLC capable indoor unit lost for more than 2 minutes. Either way the system continues to run and satisfy cooling and heating demands on 24 VAC, and enhanced control resumes when communication returns.",
+   "By default the outdoor unit does not display PLC communication faults, so systems without PLC equipment show no nuisance faults. DIP switches 3 and 4 turn the display on.",
+   "The two ICP documents disagree on which switch is which: the service manual says switch #3 HIGH = thermostat faults and switch #4 HIGH = indoor unit faults; the installation instructions' DIP switch table says 3 = IDU and 4 = TSTAT. Set the one that matches what is installed, and try the other if nothing displays.",
+   "If PLC communication is a persistent problem, the 24 VAC control wiring can be shielded with accessory EMI chokes - see the unit product data for compatible Accessory Choke Kits.",
+   "After a software update on a SmartSense thermostat system, a SmartSense reset / relearn is required - see the thermostat documentation."
+  ],
+  "safety": "Do not connect the outdoor R (Rc) to the indoor transformer (Rh) - doing so may destroy one or both transformers.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   10,
+   16,
+   26
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.10, p.16, p.26",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-usb-update",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Software update by USB and codes 79-01 / 79-02 / 79-03 - N5H9V / Q5H9V",
+  "summary": "PCM and VFD software can be updated from a USB memory device plugged into the PCM board.",
+  "steps": [
+   "Check the current versions first: toggle DIP switch #8 from low to high - the display scrolls PCM software version, VFD software version, tonnage and unit type.",
+   "Use a USB memory device between 4 GB and 32 GB formatted FAT32. Any other formatting (NTFS, exFAT, etc.) may result in an error. The software is downloaded from the manufacturer's product page - follow the instructions provided with the software.",
+   "Insert the USB device into the PCM board. The PCM begins the update automatically; the percentage of download scrolls, the PCM restarts and installs (the display gradually illuminates), then restarts once more.",
+   "If VFD software is also on the USB device it downloads automatically after the PCM installation; when it finishes you can remove the USB device.",
+   "79-01 (USB drive fault): remove and re-seat the drive; verify it is correctly formatted and contains the required files; retry with a good drive.",
+   "79-02 (file not found): verify the USB directory structure, reload the correct software package from an approved source, replace the drive if corruption persists.",
+   "79-03 (invalid update version): the version must be newer than the installed one - reload the correct update files and retry.",
+   "With a SmartSense thermostat, do a SmartSense reset / relearn after the update."
+  ],
+  "safety": "Toggling DIP switch #8 must only be performed by a trained technician with the required PPE. Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   16,
+   33
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.16, p.33",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-compressor-disconnect",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Codes 38-14 / 38-55 compressor disconnect - N5H9V / Q5H9V",
+  "summary": "The VFD has lost a phase to the compressor. Check the plug and harness before condemning the compressor or the drive.",
+  "steps": [
+   "38-14 sets when the VFD detects a loss of phase in one of the compressor windings. If it is intermittent, a loose compressor plug connection can cause it.",
+   "Three 38-14 in 1 hour give a 4 hour lockout and code 38-55 (compressor physical malfunction).",
+   "Inspect the compressor plug harness for any damage and verify continuity between the VFD side and the compressor side of the harness.",
+   "If the harness appears undamaged, check the compressor windings: at 68 F between T1, T2 and T3 the 24 and 36 sizes read 0.61 ohm and the 48 and 60 sizes read 0.18 ohm; terminal to ground more than 1 megohm.",
+   "If the compressor or the compressor plug harness is damaged, replace it. Otherwise the VFD should be replaced."
+  ],
+  "safety": "Do not use a megger for measuring the winding resistance. Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   22,
+   29
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.22, p.29",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-icp-n5h9v-thermistor-failed",
+  "unit": "^[NQ]5H9V",
+  "brand": "ICP",
+  "equipment": "Condenser/Heat Pump",
+  "title": "A temperature sensor failed - what the unit does and how to check it - N5H9V / Q5H9V",
+  "summary": "The unit keeps running on substitute values for most sensor failures, so the complaint can be poor performance rather than a dead unit.",
+  "steps": [
+   "All thermistors are 10K except the discharge (ODT), which is 50K. 10K: 77 F = 10.0 k, 32 F = 32.6 k, 0 F = 85.5 k. 50K ODT: 25 C = 50.15 k, 75 C = 7.565 k, 125 C = 1.7 k.",
+   "Outdoor air sensor (OAT) failed, 51-01 / 51-02: the code text says the coil sensor (OCT) value is substituted and compressor speed is limited to 2700 rpm; the failed-sensor defaults page says the unit runs at a fixed speed with the suction sensor (OST) value substituted in heating and the OCT value when not running or in cooling.",
+   "Coil sensor (OCT) failed, 52-01 / 52-02: every defrost runs for the maximum time allowed (the failed-sensor defaults page says defrost every 60 minutes for 10 minutes).",
+   "OAT and OCT both failed, 51-43: the system cannot safely run and shuts down until they are fixed.",
+   "Suction sensor (OST) failed, 53-01 / 53-02 and 53-41 / 53-42: heating is locked out (backup heat only); cooling still runs.",
+   "Discharge sensor (ODT) failed, 54-01 / 54-02: the system only runs at startup speed until a valid reading returns.",
+   "Liquid line sensor (LLT) failed: full operation continues but the subcooling reading in charge mode is not available.",
+   "Check each at the PCM connector: a 10K sensor above 465 kohm is open and below 1 kohm is shorted; the ODT is open above 310 kohm and shorted below 670 ohm. Bad reading: look for a break or short in the wiring or connector, then replace the sensor. Reading within range: the manual calls for the PCM (PCM-VFD on these models for the LLT codes)."
+  ],
+  "safety": "Make sure each thermistor's curved surface hugs the pipe and is tied tight through the original slot; the ODT belongs inside the compressor sound blanket. Do NOT remove the control box cover for 2 minutes after power has been removed, and verify the voltage at the VFD connections shown on the cover before touching electrical components. Only trained service personnel should perform electrical troubleshooting.",
+  "manual": "icp-vs-r454b-service-manual-smicpachpvsr454-02",
+  "pages": [
+   23,
+   24,
+   30,
+   31
+  ],
+  "source": "B5A1V / B5H0V / B5H3V / N5H9V / Q5H9V Variable Speed Air Conditioners and Heat Pumps Using R-454B Refrigerant - Service Manual (file SMICPACHPVSR454-02; back page prints Catalog No. SMICPVSACHPR454-02, Edition 07/26), p.23, p.24, p.30, p.31",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-mg1e-which-control-board",
+  "unit": "^MG1E",
+  "brand": "Nortek",
+  "equipment": "Gas Furnace",
+  "title": "Which control board to order (by build date) - MG1E",
+  "summary": "Nordyne changed the MG1E control in 2025. The parts list splits the furnace by date of manufacture.",
+  "steps": [
+   "Units manufactured on or after 07/29/2025: Integrated Control 1046397R.",
+   "Units manufactured on or before 07/28/2025: Integrated Control Kit 1050166.",
+   "The same parts list shows Flame Sensor 632484R (not shown on the drawing), Ignitor 903110B, Gas Valve 1046626, Pressure Switch 1010775R and Transformer 621807R for all four sizes (056, 070, 077, 090).",
+   "Order with the full model number and serial number, as the parts list asks."
+  ],
+  "manual": "nordyne-mg1e-parts-list-d315316a",
+  "pages": [
+   3
+  ],
+  "source": "MG1E (056 / 070 / 077 / 090) MG1E Series Direct Vent, Forced Air, Gas Furnaces - Replacement Parts List (D315316A, 09/25), p.3",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-mg2r-which-control-board",
+  "unit": "^MG2R",
+  "brand": "Nortek",
+  "equipment": "Gas Furnace",
+  "title": "Which control board to order (by build date) - MG2R",
+  "summary": "Nordyne changed the MG2R control in 2025. The parts list splits the furnace by date of manufacture.",
+  "steps": [
+   "Units manufactured on or after 07/08/2025: Control Board 1046397R.",
+   "Units manufactured on or before 07/07/2025: Control Board kit 1050166.",
+   "The same parts list shows Flame Sensor 903600, Ignitor 1046527S, Gas Valve 1046626, Fuse 632261R and Transformer 622341R for all six models (045F, 045T, 060F, 060T, 072F, 072T). The pressure switch is 632492R on the 045 and 072 and 632624R on the 060.",
+   "Order with the full model number and serial number, as the parts list asks."
+  ],
+  "manual": "nordyne-mg2r-parts-list-d315317a",
+  "pages": [
+   2
+  ],
+  "source": "MG2R (045F / 045T / 060F / 060T / 072F / 072T) MG2R Series Gas Furnace 95% AFUE - Replacement Parts List (D315317A, 09/25), p.2",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-mg1e-channel-board-swap",
+  "unit": "^MG1E",
+  "brand": "Nortek",
+  "equipment": "Gas Furnace",
+  "title": "Changing an Emerson or UTEC board to the Channel board - MG1E",
+  "summary": "The MG1E kit replaces an Emerson board (printed as 1041648 on p.1 of the instructions and as 1048648 in step 8) or UTEC board 1021575 with Channel board 1046397. Most of the old harnesses come out, and the furnace may need a flame sensor added.",
+  "steps": [
+   "Old harnesses that are NOT reused: the blower harness (6-pin plugs in the blower compartment and at the blower deck), the inducer and igniter harnesses (cut the ends to remove) and the 12-pin (Emerson) or 9-pin (UTEC) board plug with its wires.",
+   "Kept: the transformer wires, the thermostat wires, incoming L1 and N, the ground wire and any HUM or EAC accessory wires.",
+   "The new board uses the same standoff holes. The 6-pin blower plug only goes on one way - green wire in the T1 position.",
+   "Units that had the Emerson board need the 20 in. red and gray transformer wires from the kit. Wire everything to diagram 1051399 from the kit and put that diagram on the furnace in place of the old one.",
+   "Board 1046397 has flame sense and needs a flame sensor. Some MG1E units had none from the factory: gas off, pull the burner assembly, fit the kit bracket and sensor, connect the 6 in. red 150 C wire, and join it to the #7 pin wire.",
+   "The Y/Y2 terminal on the board must be connected to the thermostat for proper cooling mode operation.",
+   "Start-up: review the blower configuration, cycle HEAT, COOL and FAN, and check the air temperature rise."
+  ],
+  "safety": "Shut off all electrical power to the unit before any maintenance or service. Label all wires before disconnecting them - wiring errors can cause improper and dangerous operation. Verify proper operation after servicing.",
+  "manual": "nordyne-mg1e-channel-board-kit-install-10514360",
+  "pages": [
+   1,
+   2,
+   3,
+   5
+  ],
+  "source": "MG1E - Channel board replacement control kit MG1E Channel Board Replacement Control Kit - Installation Instructions (10514360, 08/25), p.1, p.2, p.3, p.5",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-mg1e-channel-blower-speeds",
+  "unit": "^MG1E",
+  "brand": "Nortek",
+  "equipment": "Gas Furnace",
+  "title": "Blower does not run or wrong speed after a board change - Channel board speed settings - MG1E",
+  "summary": "The Channel board sets heat and cool speed with speed-select switches and fan speed with a jumper. On an MG1E converted with the kit, two of the five positions have no wire (kit instructions 10514360 Table 1); this is not confirmed for a furnace built with the Channel board.",
+  "steps": [
+   "Five settings exist: L, ML, M, MH, H. HEAT and COOL: move the speed select slide switch up or down. FAN: move the jumper so its centre lines up with the speed wanted - covering the last 2 pins (H and MH) gives HIGH.",
+   "MG1E after the kit (10514360 Table 1): T1 L, T3 M and T5 H are Available. T2 ML and T4 MH are Do Not Use - no wire is connected, and if one is selected the blower motor will not operate.",
+   "The speed selector switches can be changed while the unit is operating.",
+   "Heating blower off delay jumper: 60, 90, 120 or 180 seconds, factory 120 (jumper on the 3rd and 4th pins from the bottom); the first 2 pins give 60 seconds.",
+   "For the right speed, the instructions say to refer to the document provided with the unit; then check the air temperature rise."
+  ],
+  "safety": "Shut off all electrical power to the unit before any maintenance or service. Label all wires before disconnecting them - wiring errors can cause improper and dangerous operation. Verify proper operation after servicing.",
+  "manual": "nordyne-mg1e-channel-board-kit-install-10514360",
+  "pages": [
+   2,
+   3
+  ],
+  "source": "MG1E - Channel board replacement control kit MG1E Channel Board Replacement Control Kit - Installation Instructions (10514360, 08/25), p.2, p.3",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-mg2r-cmf95-channel-board-swap",
+  "unit": "^(?:MG2R|CMF95)",
+  "brand": "Nortek",
+  "equipment": "Gas Furnace",
+  "title": "Changing an Emerson or UTEC board to the Channel board - MG2R / CMF95",
+  "summary": "The Channel board kit replaces the Emerson board or UTEC board 1021573 with board 1046397. MG2R and CMF95 have their own wiring diagram and harness set in the kit.",
+  "steps": [
+   "The kit carries two wiring diagrams: 1049933 is for *G7S(A,K,C,D), MGC2 and MG3P; 1051377 is for CMF95 and MG2R. Use 1051377 and the Figure 5 harnesses.",
+   "Old harnesses that are NOT reused: the blower harness (9-pin plugs), the inducer and igniter harnesses, the 12-pin (Emerson) or 9-pin (UTEC) board plug and the 4-pin transformer harness.",
+   "Kept: thermostat wires, incoming L1 and N, ground, and any HUM or EAC wires.",
+   "Same standoff holes. The 6-pin blower motor plug goes on one way - red wire in the T1 position. On MG2R and CMF95 the 9-pin blower-deck plug does NOT have wires in #7 and #8.",
+   "The igniter and inducer plugs are not interchangeable and only attach one way - match pin and socket. Then the 9-pin plug harness and the 4-pin transformer plug.",
+   "The Y/Y2 terminal on the board must be connected to the thermostat for proper cooling mode operation.",
+   "Restore power, review the blower configuration, cycle HEAT, COOL and FAN, and check the air temperature rise."
+  ],
+  "safety": "Shut off all electrical power to the unit before any maintenance or service. Label all wires before disconnecting them - wiring errors can cause improper and dangerous operation. Verify proper operation after servicing.",
+  "manual": "nordyne-channel-board-kit-install-10501530",
+  "pages": [
+   1,
+   4,
+   5,
+   6
+  ],
+  "source": "MG2R / CMF95 / MG3P / MGC2 / *G7S(A,K,C,D) - Channel board replacement control kit Channel Board Replacement Control Kit - Installation Instructions (10501530, 08/25), p.1, p.4, p.5, p.6",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-mg2r-cmf95-channel-blower-speeds",
+  "unit": "^(?:MG2R|CMF95)",
+  "brand": "Nortek",
+  "equipment": "Gas Furnace",
+  "title": "Blower does not run or wrong speed after a board change - Channel board speed settings - MG2R / CMF95",
+  "summary": "The Channel board can select five speeds. On an MG2R or CMF95 converted with the kit only four wires reach the blower (kit instructions 10501530 Table 2). The CMF95's own manual says the unit ships with four speeds pre-wired and the fifth needs wires changed at the motor connection (10501460 p.24).",
+  "steps": [
+   "HEAT and COOL: move the selector slide switch up or down to L, ML, M, MH or H. FAN: move the jumper - covering the last 2 pins (H and MH) gives HIGH.",
+   "MG2R and CMF95 after the kit (10501530 Table 2): T1 L, T2 ML, T4 MH and T5 H are Available. T3 M (Medium) is Do Not Use - no wire is connected, and if it is selected the blower motor will not operate.",
+   "The speed selector switches can be changed while the unit is operating.",
+   "Heating blower off delay jumper: 60, 90, 120 or 180 seconds, factory 120; moving the jumper to the first 2 pins gives 60 seconds.",
+   "For the right speed, the instructions say to refer to the blower document provided with the unit; then check the air temperature rise."
+  ],
+  "safety": "Shut off all electrical power to the unit before any maintenance or service. Label all wires before disconnecting them - wiring errors can cause improper and dangerous operation. Verify proper operation after servicing.",
+  "manual": "nordyne-channel-board-kit-install-10501530",
+  "pages": [
+   4
+  ],
+  "source": "MG2R / CMF95 / MG3P / MGC2 / *G7S(A,K,C,D) - Channel board replacement control kit Channel Board Replacement Control Kit - Installation Instructions (10501530, 08/25), p.4",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-sh4bf5m-defrost-board-display",
+  "unit": "^[A-Z]?SH4BF5M",
+  "brand": "Nortek",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the defrost board display and stored faults - SH4BF5M",
+  "summary": "The R-454B heat pump manual and wiring diagrams show no CoreSense module. The defrost control board shows the status and keeps the last ten faults.",
+  "steps": [
+   "Check for 18-30 VAC between R and C on the board first - it needs that to operate.",
+   "Status: C1 / C2 = cooling 1st / 2nd stage, H1 / H2 = heating 1st / 2nd stage, SC = anti short cycle timer, DF = defrost, _. = power on with no call.",
+   "Faults: 01 low pressure switch, 02 high pressure switch, 03 ambient temperature sensor, 04 coil temperature sensor, 05 board.",
+   "A code that stays on = the fault is still active. A flashing code = corrected, kept in memory. Faults list newest first, ten at most, and stay seven days after the last one is corrected.",
+   "To clear the memory, short the test terminal momentarily with no call for heating or cooling.",
+   "Waiting on SC: short the test terminals for less than 1 second during a call to bypass the anti-short-cycle timer."
+  ],
+  "safety": "Disconnect all electrical power before any maintenance or service; the unit may have more than one electrical supply.",
+  "manual": "nordyne-sh4bf5m-install-1050098b",
+  "pages": [
+   8,
+   9
+  ],
+  "source": "*SH4BF5M 15.2 SEER2 two-stage R-454B heat pump (2SX24K-2SX60K) *SH4BF5M2SX Split System Heat Pump, Single Phase Two-Stage Models - Installation Instructions (1050098B, 07/26, replaces 1050098A), p.8, p.9",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-sh4bf5m-forced-defrost",
+  "unit": "^[A-Z]?SH4BF5M",
+  "brand": "Nortek",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Forcing a defrost with the test pins - SH4BF5M",
+  "summary": "The test terminals on the defrost board start a defrost on demand.",
+  "steps": [
+   "With a call for heating or cooling present, short the test terminals for more than three seconds: forced defrost starts.",
+   "Remove the short and the defrost ends when its normal conditions are met.",
+   "Keep the short on and the defrost can be held for up to 11 minutes.",
+   "Held for over 11 minutes the unit stops; Table 2 lists the code as OF (flashing), Input Error, while the text says a flashing 'dF'.",
+   "Before blaming the board, the manual's pre-install check applies: the coil defrost sensor must be properly located or the defrost function will not work properly."
+  ],
+  "safety": "Disconnect all electrical power before any maintenance or service; the unit may have more than one electrical supply.",
+  "manual": "nordyne-sh4bf5m-install-1050098b",
+  "pages": [
+   4,
+   8,
+   9
+  ],
+  "source": "*SH4BF5M 15.2 SEER2 two-stage R-454B heat pump (2SX24K-2SX60K) *SH4BF5M2SX Split System Heat Pump, Single Phase Two-Stage Models - Installation Instructions (1050098B, 07/26, replaces 1050098A), p.4, p.8, p.9",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-sh4bf5m-pressure-switch-codes",
+  "unit": "^[A-Z]?SH4BF5M",
+  "brand": "Nortek",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Code 01 or 02 - what the pressure switches do - SH4BF5M",
+  "summary": "The manual prints the switch settings and the delays, which tells you what the board is waiting for.",
+  "steps": [
+   "02, high pressure switch: the switch is on the discharge line after the compressor. It opens at 650 psig and drops the contactor coil; it closes again when liquid pressure falls to 460 psig.",
+   "After the high-pressure switch closes the unit restarts after a 5 minute short cycle delay.",
+   "01, low pressure switch: fitted on certain models, inside the unit on the suction line. It opens if suction falls below 20 psig and closes again above 35 psig.",
+   "After the low-pressure switch opens and closes there is a 3 minute short cycling delay before the outdoor unit energizes. The manual says the switch is there to protect the compressor from a loss of charge.",
+   "Operating range to keep in mind: cooling 60 to 115 °F and heating -10 to 70 °F outdoor. Heating above 70 °F may need a Heat Pump Mild Weather Control Kit or a change to emergency or auxiliary heat."
+  ],
+  "safety": "R-454B is mildly flammable. If the outdoor unit must be pressure tested never exceed 450 psig.",
+  "manual": "nordyne-sh4bf5m-install-1050098b",
+  "pages": [
+   8,
+   10
+  ],
+  "source": "*SH4BF5M 15.2 SEER2 two-stage R-454B heat pump (2SX24K-2SX60K) *SH4BF5M2SX Split System Heat Pump, Single Phase Two-Stage Models - Installation Instructions (1050098B, 07/26, replaces 1050098A), p.8, p.10",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-sh4me5m-defrost-board-display",
+  "unit": "^[A-Z]?SH4ME5M",
+  "brand": "Nortek",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Reading the defrost board display, test pins and pressure switches - SH4ME5M (manufactured housing)",
+  "summary": "The manufactured-housing heat pump uses the same 2-character defrost board display.",
+  "steps": [
+   "Check for 18-30 VAC between R and C on the board.",
+   "Status: C1 / C2 cooling, H1 / H2 heating, SC anti short cycle timer, DF defrost, _. power on with no call. Faults: 01 low pressure switch, 02 high pressure switch, 03 ambient sensor, 04 coil sensor, 05 board.",
+   "Steady code = active fault; flashing = corrected but stored. Ten faults at most, newest first, kept seven days. Clear by shorting the test terminal momentarily with no call.",
+   "Test terminals with a call present: under 1 second bypasses the anti-short-cycle timer; over three seconds forces a defrost, which can be held up to 11 minutes.",
+   "High-pressure switch: opens 650 psig, closes 460 psig, 5 minute delay. Low-pressure switch (certain models): opens below 20 psig, closes above 35 psig, 3 minute delay."
+  ],
+  "safety": "Disconnect all electrical power before any maintenance or service; the unit may have more than one electrical supply.",
+  "manual": "nordyne-sh4me5m-install-1050038a",
+  "pages": [
+   9,
+   11
+  ],
+  "source": "*SH4ME5M 14.3 SEER2 R-454B heat pump for manufactured housing (1SP24K-1SP48K) *SH4ME5M Split System Heat Pump for Manufactured Housing - Installation Instructions (1050038A, 09/25, replaces 10500380), p.9, p.11",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-sh4me5m-outdoor-restrictor",
+  "unit": "^[A-Z]?SH4ME5M",
+  "brand": "Nortek",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Changing the outdoor restrictor for the indoor coil match - SH4ME5M",
+  "summary": "The outdoor orifice is sized for the most popular indoor match; some coils need a different one. The QRD says which.",
+  "steps": [
+   "Check the Quick Reference Data sheet supplied with the outdoor unit for the match.",
+   "If the unit has the liquid valve shown in the manual's Figure 3, the restrictor is inside the swivel nut connection of the liquid valve, not in the distributor.",
+   "Use two wrenches: loosen the nut and liquid valve, turning the assembly nut counter-clockwise until the orifice body halves separate.",
+   "Lift the restrictor out with a light-gauge wire hook without scratching either part.",
+   "Check the new orifice by the size stamped on its side - do not use pin gauges.",
+   "Insert it with the rounded end facing into the valve, hand tighten, mark a line across both bodies and tighten a further 1/4 turn with two wrenches."
+  ],
+  "safety": "CAUTION from the manual: to prevent damage to the unit or internal components use two wrenches when loosening or tightening nuts, and do not over tighten.",
+  "manual": "nordyne-sh4me5m-install-1050038a",
+  "pages": [
+   6
+  ],
+  "source": "*SH4ME5M 14.3 SEER2 R-454B heat pump for manufactured housing (1SP24K-1SP48K) *SH4ME5M Split System Heat Pump for Manufactured Housing - Installation Instructions (1050038A, 09/25, replaces 10500380), p.6",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-nortek-sh4be5m-charging",
+  "unit": "^[A-Z]?SH4BE5M",
+  "brand": "Nortek",
+  "equipment": "Condenser/Heat Pump",
+  "title": "Charging by outdoor temperature - SH4BE5M",
+  "summary": "The manual gives three procedures by outdoor temperature. The QRD charge is a starting point; the table inside the electrical box cover is the target.",
+  "steps": [
+   "Always first: weigh in the QRD charge addition for the indoor match, plus the allowance for the real lineset length.",
+   "65 °F or higher: in cooling, adjust to the superheat (fixed orifice) or subcooling (TXV) target on the table inside the electrical box cover, within 1 degree F.",
+   "35 to 65 °F: block off the outdoor fan discharge, one half of the unit covered corner to corner, then adjust in cooling using chargecalculator.com or the low ambient tables on the cover panel.",
+   "Below 35 °F: weigh in only, and come back at 35 °F or higher to finish.",
+   "Fixed orifice: superheat below target = remove refrigerant, above = add. TXV: subcooling below target = add, above = remove.",
+   "Record the final system charge on the outdoor unit's rating plate."
+  ],
+  "safety": "R-454B is mildly flammable: keep hoses short, do not overfill, earth the system before charging, and leak test again before leaving. Never exceed 450 psig on the outdoor unit.",
+  "manual": "nordyne-sh4be5m-install-1050012a",
+  "pages": [
+   10,
+   11,
+   12
+  ],
+  "source": "*SH4BE5M 14.3 SEER2 R-454B heat pump (1SP18K-1SP48K, 2SX60K) *SH4BE5M Split System Heat Pump - Installation Instructions (1050012A, 09/25, replaces 10500120), p.10, p.11, p.12",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-read-code",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "Operation lamp blinking - reading the error code with the remote - Daikin OTERRA BVJU9",
+  "summary": "The indoor operation lamp blinks on a protection trip, a thermistor fault or a transmission error. The code is read on the wireless remote; there are two methods.",
+  "steps": [
+   "The green operation lamp blinks when a protection device of the indoor or outdoor unit is activated, when a thermistor malfunctions, or on a signal transmission error between the indoor and outdoor units.",
+   "Method 1 (ARC480A83 / A84): hold the TIMER CANCEL button down for 5 seconds - 00 shows on the temperature display. Press TIMER CANCEL repeatedly until a long beep sounds: that is the code. A short beep or two consecutive beeps mean the code shown does not correspond.",
+   "To go back to normal mode hold TIMER CANCEL for 5 seconds, or leave the remote untouched for 60 seconds.",
+   "Not all the error codes are displayed with method 1. When you cannot find the code, use method 2.",
+   "Method 2: press the centre of the TEMP button and the OFF button at the same time - SC shows. Select SC (service check) with TEMP up or down and press FAN: 00 shows with the left-side number blinking.",
+   "Change the number with TEMP up / down. Beep = left number wrong; two consecutive beeps = left number right, right number wrong; long beep = both right.",
+   "Press FAN - the right-side number blinks. Change it with TEMP up / down until the long beep. The numbers shown at the long beep are the error code.",
+   "Press FAN for 5 seconds to leave the service check mode.",
+   "With the wired BRC073A6 controller: the error message or icon and the operation lamp blink; press the Menu/Enter button to show the error code.",
+   "At the outdoor unit: one green LED A on the PCB blinks when the microcomputer is working. It is off while the standby electricity saving function is active and when the power is off."
+  ],
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   79,
+   80,
+   81,
+   82,
+   84
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.79, p.80, p.81, p.82, p.84",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-u4",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "U4 - indoor and outdoor units not talking - Daikin OTERRA BVJU9",
+  "summary": "U4 means the indoor unit cannot read the data from the outdoor unit. The manual's check runs power, wiring, the voltage on terminal 3, then LED A at the outdoor board.",
+  "steps": [
+   "Check the power supply voltage: the fluctuation must be within ±10% of the rated value. If not, correct the power supply.",
+   "Check the indoor - outdoor connection wires for a wiring error (terminal numbers 1, 2, 3 must match) and correct it.",
+   "Check the voltage of the connection wires on the indoor terminal board between No. 1 and No. 3, and between No. 2 and No. 3. If the wires are not properly insulated, replace the connection wires between the indoor unit and outdoor unit.",
+   "Before checking LED A on the outdoor PCB, cancel the standby electricity saving function by starting fan operation with the remote controller, and wait at least 7 seconds after turning on the power.",
+   "LED A continuously ON or OFF: replace the outdoor unit PCB (main PCB).",
+   "LED A blinking: rotate the outdoor fan by hand. If it does not rotate smoothly, replace the outdoor fan motor and the outdoor unit PCB (main PCB).",
+   "If the fan rotates smoothly: check the power supply waveform (Check No. 11). If it is disturbed, locate the cause of the disturbance and correct it. If it is not, replace the indoor unit PCB (control PCB).",
+   "The outdoor installation manuals add: any splices in the wiring between the units can cause communication errors."
+  ],
+  "safety": "Be sure to turn off the power switch before connecting or disconnecting connectors, or parts may be damaged.",
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   94,
+   95,
+   127
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.94, p.95, p.127",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-low-ambient",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "Cooling a server or equipment room in cold weather - the facility setting - Daikin OTERRA BVJU9",
+  "summary": "Out of the box these units cool down to 50°F outdoor. A jumper on the outdoor PCB extends that - but only for equipment rooms.",
+  "steps": [
+   "The manual limits this function to facilities where the target of air conditioning is equipment such as computers. Never use it in a residence or office.",
+   "RXF09 / RKF09: remove the top plate (4 screws) and the front plate (5 screws) of the outdoor unit, then cut jumper J6 on the PCB.",
+   "RXF12 / RKF12: same covers, but cut jumper J7.",
+   "RXF18 / 24 and RKF18 / 24: remove the top plate (6 screws), the front plate (10 screws) and the anti-drip cover, then cut jumper J7.",
+   "With the jumper cut the operation range goes down to 14°F (-10°C). Installing an air direction adjustment grille (sold separately) extends it further to -4°F (-20°C).",
+   "In these cases the unit stops if the outdoor temperature falls below -4°F (-20°C) and restarts once the temperature rises above this level.",
+   "If the heat exchanger is exposed to direct wind, provide a windbreak wall.",
+   "Tell the user: the facility setting puts the indoor fan on the highest tap, the indoor unit may make intermittent noises as the outdoor fan turns on and off, and no humidifier should be used in the room.",
+   "Replace the PCB if you cut a jumper unintentionally."
+  ],
+  "safety": "Make sure to turn the power OFF before performing work.",
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   147,
+   148
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.147, p.148",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-pump-down",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "Pump-down and forced cooling - Daikin OTERRA BVJU9",
+  "summary": "Pump-down uses forced cooling started from the indoor unit's ON/OFF switch.",
+  "steps": [
+   "Forced cooling is allowed only when the outdoor unit is not abnormal, not in the 3-minute standby mode, and not operating.",
+   "Start: press the indoor unit ON/OFF switch for at least 5 seconds. Forced cooling stops automatically after about 15 minutes; to stop it sooner press the ON/OFF switch.",
+   "Pump-down: remove the valve caps from the liquid stop valve and the gas stop valve.",
+   "Carry out forced cooling operation.",
+   "After 5 to 10 minutes, close the liquid stop valve with a hexagonal wrench.",
+   "After 2 to 3 minutes, close the gas stop valve and stop the forced cooling operation.",
+   "Attach the valve caps once procedures are complete.",
+   "F8 (system shutdown due to temperature abnormality in the compressor) is set when the discharge pipe thermistor exceeds 261.5°F (127.5°C) during forced cooling operation; the manual lists air intrusion as a cause."
+  ],
+  "safety": "During pump down, stop the compressor before removing the refrigerant piping. If the compressor is still operating and the stop valve is open, air will be sucked in when the piping is removed, causing abnormal pressure in the refrigeration cycle (installation manual 3P740832-4K p.3). Do not open or close the stop valves when the outdoor temperature is -5°F (-21°C) or less.",
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   139,
+   140,
+   110
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.139, p.140, p.110",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-trial-operation",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "Trial operation - testing COOL in winter or HEAT in summer - Daikin OTERRA BVJU9",
+  "summary": "A trial operation mode on the wireless remote runs the unit regardless of room temperature for about 30 minutes.",
+  "steps": [
+   "Measure the supply voltage and make sure it is within the specified range.",
+   "Normal test: in cooling select the lowest programmable temperature; in heating select the highest.",
+   "To test COOL in winter or HEAT in summer use the trial operation mode: press the centre of the TEMP button and the OFF button on the remote controller at the same time.",
+   "Select T (trial operation) with the TEMP up or down button.",
+   "Press the FAN button to enter the trial operation mode.",
+   "FTXF: press COOL or HEAT to start. FTKF: press COOL.",
+   "Trial operation ends in about 30 minutes and switches into normal mode. To quit, press the OFF button.",
+   "For protection, the system disables restart for 3 minutes after it has been turned off.",
+   "When done, set the temperature to a normal level: 78 ~ 82°F in cooling, 68 ~ 75°F in heating."
+  ],
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   141,
+   142
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.141, p.142",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-two-units-one-room",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "Two indoor units in one room - one remote runs both - Daikin OTERRA BVJU9",
+  "summary": "Give one of the two units a different address so each wireless remote controls only its own unit.",
+  "steps": [
+   "Remove the battery cover of the remote controller and cut the address jumper (jumper present = address 1, cut = address 2).",
+   "Press the centre of the TEMP button and the OFF button on the remote controller at the same time.",
+   "Press TEMP up or down to select A (address setting).",
+   "Press the FAN button to enter the address setting mode. The indoor unit OPERATION lamp blinks for about 1 minute.",
+   "Press the indoor unit ON/OFF switch while the OPERATION lamp is blinking.",
+   "Press the FAN button on the remote controller for 5 seconds to return to the previous display.",
+   "If the setting was not completed while the lamp was blinking, start again from the beginning.",
+   "Replace the remote controller if you cut a jumper unintentionally."
+  ],
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   143
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.143",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-remote-field-settings",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "Fan keeps running with the thermostat off, no restart after a power cut, room reads warm or cool - remote field settings - Daikin OTERRA BVJU9",
+  "summary": "The wireless remote's field settings mode holds the settings techs get asked about. After an indoor PCB change they all go back to factory.",
+  "steps": [
+   "Enter the service mode by pressing the centre of the TEMP button together with OFF, then pick the field settings mode; listen for the beep each time a button is pressed.",
+   "Item 3, Suspend (standby electricity saving): 0 = power stays on the outdoor PCB after the unit stops; 1 = three minutes after the unit stops the power to the outdoor PCB is shut off (only on certain models).",
+   "Item 4, Dry keep: 0 = the indoor fan keeps running when the thermostat is OFF; 1 = the fan stops when the thermostat is OFF, to prevent an increase of room humidity.",
+   "Item 5, Preheating control: 0 = compressor preheating off; 1 = on.",
+   "Item 6, Room temperature adjustment (cooling) and item 7 (heating, FTXF only): 0 = Low 2 (-2°C), 1 = Low 1 (-1°C), 2 = Standard, 3 = High 1 (+1°C), 4 = High 2 (+2°C).",
+   "Item 10, Auto-restart: 0 = the unit stays stopped when power resumes; 1 = it resumes the operation it had before the power was shut down.",
+   "Item 12, Warmer airflow setting (FTXF only): 0 = OFF, 1 = ON. It can also be enabled by cutting jumper J5 on the outdoor PCB; either one enables it.",
+   "After replacing the indoor unit PCB all the values return to the factory settings - set them again with the remote. Replacing only the remote does not change the values stored in the PCB.",
+   "The factory value of each item is printed in the manual's table - read it there before changing anything."
+  ],
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   150,
+   151,
+   148
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.150, p.151, p.148",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-oterra-b-pcb-grease",
+  "unit": "^(FT[XK]F|R[XK]F)(09|12|18|24)BVJU",
+  "brand": "Daikin",
+  "equipment": "Mini-Split",
+  "title": "After an outdoor PCB change - L4, H7 or LA fin temperature codes - Daikin OTERRA BVJU9",
+  "summary": "The manual lists badly applied silicone grease after a PCB replacement as a cause of the fin temperature codes.",
+  "steps": [
+   "L4 (radiation fin temperature rise), and on RXF18/24BVJU9 H7 (fan IPM temperature error) and LA (IGBT temperature error), all list: silicone grease not applied properly on the radiation fin after replacing the outdoor unit PCB.",
+   "The chart for each of these codes starts with a power off / on restart. If the error is displayed again, it asks: has the PCB been replaced? If yes, check that silicone grease is applied properly on the radiation fin; if not, apply it.",
+   "When replacing an outdoor unit PCB: wipe off the old silicone grease completely.",
+   "Apply the specified silicone grease evenly to the heat generation part of the power transistor / diode bridge.",
+   "Tighten the screws of the power transistor / diode bridge and make sure the heat generation parts are firmly contacted to the radiation fin.",
+   "The manual warns that smoke emission may be caused by bad heat radiation when the silicone grease is not appropriately applied.",
+   "If grease is not the cause, the charts go on to the outdoor fan check, a dirty radiation fin and the installation condition."
+  ],
+  "safety": "Be sure to turn off the power switch before connecting or disconnecting connectors, or parts may be damaged.",
+  "manual": "daikin-ftkf-b-ftxf-b-service",
+  "pages": [
+   116,
+   121,
+   124,
+   152
+  ],
+  "source": "FTKF-B / FTXF-B + RKF / RXF BVJU9 Service Manual, Inverter Pair Wall Mounted Type FTKF-B, FTXF-B Series (SiUS042425E), p.116, p.121, p.124, p.152",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvt96-a2l-fan-only",
+  "unit": "^[GA][RD]VT96",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "No heat, blower runs by itself, EAF or EA0 on the display - GRVT96 / ARVT96",
+  "summary": "The board watches an R-32 leak sensor. With no sensor (coil is not R-32) or a leak signal it stops gas heat and runs the fan.",
+  "steps": [
+   "Read the display: EAF = lost communication with the R-32 sensor, EA0 = leak detected, EA1 = sensor fault, EA2 = A2L relay in the board.",
+   "Coil is NOT R-32: the R-32 function is ON by default and must be turned off. Press left or right until A2E shows, press center, choose no, press center to confirm.",
+   "Coil IS R-32 and EAF shows: check the sensor wire connection at the board is not loose and the wire is not damaged; the green LED by the connector blinks when the sensor is communicating and is off with no signal. Replace the R-32 sensor if necessary.",
+   "EA0: investigate the indoor coil for a refrigerant leak. In mitigation the furnace shuts down gas, energizes the optional ventilation and alarm outputs and runs the fan at maximum CFM.",
+   "After the sensor stops detecting a leak the fan keeps running 5 minutes, then the furnace goes back to the thermostat call.",
+   "EA2: disconnect any wire on the ALARM terminal and cycle power. If the code clears the fault is in that wiring; if not, replace the integrated control board.",
+   "To prove the function after a repair: menu A2u, select YES (5-minute test)."
+  ],
+  "safety": "EA0: the R-32 sensor has detected a refrigerant leak - investigate the indoor coil for a refrigerant leak (IOG-2044B p.52).",
+  "manual": "goodman-amana-rvt96-dvt96-install-iog-2044b",
+  "pages": [
+   27,
+   28,
+   52
+  ],
+  "source": "GRVT96 / GDVT96 / ARVT96 / ADVT96 Installation Instructions for *DVT96* & *RVT96* Two-Stage Gas Furnace (IOG-2044B, 10/2026), p.27, p.28, p.52",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-daikin-dr96tc-a2l-fan-only",
+  "unit": "^D[RD]96TC",
+  "brand": "Daikin",
+  "equipment": "Gas Furnace",
+  "title": "No heat, blower runs by itself, R-32 code on the display - DR96TC / DD96TC",
+  "summary": "The board watches an R-32 leak sensor. With no sensor (coil is not R-32) or a leak signal it stops gas heat and runs the fan.",
+  "steps": [
+   "Coil is NOT R-32: the R-32 function is ON by default and must be turned off. Press left or right until A2E shows, press center, choose no, press center to confirm.",
+   "On a leak signal the furnace shows the A2L refrigerant leakage code (EA0), shuts down gas, energizes the optional ventilation and alarm outputs and runs the fan at maximum CFM.",
+   "After the sensor stops detecting a leak the fan keeps running 5 minutes, then the furnace goes back to the thermostat call.",
+   "To prove the function: menu A2u, select YES (5-minute test).",
+   "The R-32 code rows (EAF, EA0, EA1, EA2) are on p.53 of this installation manual, where the codes are drawn as display graphics. The service manual RSD6612305r1 p.43 prints the newer EA2 action: disconnect any wire on the ALARM terminal, cycle power, and replace the integrated control board if the code does not clear."
+  ],
+  "safety": "EA0: the R-32 sensor has detected a refrigerant leak - investigate the indoor coil for a refrigerant leak (IOD-2044A p.53; RSD6612305r1 p.43).",
+  "manual": "daikin-dr96tc-dd96tc-install-iod-2044a",
+  "pages": [
+   27,
+   28,
+   53
+  ],
+  "source": "DR96TC / DD96TC Installation Instructions for DR96TC* & DD96TC* Two-Stage Gas Furnace (IOD-2044A, 02/2025), p.27, p.28, p.53",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvt80-a2l-fan-only",
+  "unit": "^[GA][RD]VT80",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "No heat, blower runs by itself, EAF or EA0 on the display - GRVT80 / ARVT80",
+  "summary": "The 80% furnace has the same R-32 leak function as the 96% one.",
+  "steps": [
+   "Coil is NOT R-32: turn the function off. Press left or right until A2E shows, press center, choose no, press center to confirm.",
+   "EAF: check the R-32 sensor wire connection and the wire; replace the sensor if necessary.",
+   "EA0: investigate the indoor coil for a refrigerant leak. The furnace shuts down gas, energizes the optional ventilation and alarm outputs and runs the fan at maximum CFM.",
+   "After the sensor stops detecting a leak the fan keeps running 5 minutes.",
+   "EA2: disconnect any wire on the ALARM terminal and cycle power. If the code clears, repair that wiring; if not, replace the integrated control board."
+  ],
+  "safety": "EA0 means the sensor reads R-32 at the coil - find the leak before putting the system back in service.",
+  "manual": "goodman-amana-rvt80-dvt80-install-iog-2043b",
+  "pages": [
+   26,
+   27,
+   37
+  ],
+  "source": "GRVT80 / GDVT80 / ARVT80 / ADVT80 Installation Instructions for *RVT80* & *DVT80* Gas Furnace Category I (IOG-2043B, 10/2026), p.26, p.27, p.37",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvm97-a2l-off",
+  "unit": "^[GA][RD]VM97",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Modulating furnace will not heat with a non-R-32 coil (EAF) - GRVM97 / ARVM97",
+  "summary": "The R-32 function is ON from the factory; with no R-32 sensor the furnace will not run properly.",
+  "steps": [
+   "If the cooling unit paired with the furnace does not use R-32, the R-32 functions must be turned off.",
+   "Press left or right until the display shows A2E. Press center; the display shows the selected option (yes or no).",
+   "Press left or right to pick no, press center to confirm. With the function disabled the control ignores all A2L functions.",
+   "R-32 coil and EAF: verify the wire connection to the R-32 sensor is not loose and the wire is not damaged; replace the sensor if necessary.",
+   "EA0: investigate the indoor coil for a refrigerant leak; normal operation resumes once no leak is detected and the 5 minute delay is over."
+  ],
+  "manual": "goodman-amana-rvm97-dvm97-install-iog-2045a",
+  "pages": [
+   24,
+   52
+  ],
+  "source": "GRVM97 / GDVM97 / ARVM97 / ADVM97 Installation Instructions for *DVM97* & *RVM97* Modulating Gas Furnace (IOG-2045A, 08/2026), p.24, p.52",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvt96-gas-pressure",
+  "unit": "^[GA][RD]VT96",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Checking and setting gas pressure - GRVT96 / ARVT96 (White-Rodgers 36J54)",
+  "summary": "Inlet and manifold figures and where to connect on the two-stage valve.",
+  "steps": [
+   "Inlet: natural 4.5 to 10.0\" w.c., LP 11.0 to 13.0\" w.c., measured with the burners firing and the other gas appliances on the line running.",
+   "Inlet tap on the 36J54 needs the 36G/J Valve Pressure Check Kit, part 0151K00000S; or use a fitting in the drip leg.",
+   "Manifold: turn off gas and all electrical power, back the outlet pressure test screw out one turn (not more), attach the hose and manometer, turn the gas on.",
+   "Natural gas: high 3.2 - 3.8\" (nominal 3.5\"), low 1.6 - 2.2\" (nominal 1.9\"). LP: high 9.7 - 10.3\" (nominal 10.0\"), low 5.7 - 6.3\" (nominal 6.0\").",
+   "Use the high-fire test (CoolCloud app or the gas pressure test menu) to hold 100% firing rate while you read high stage.",
+   "Final manifold pressure cannot vary by more than ± 0.3\" w.c. for natural and ± 0.5\" for LP from the specified setting.",
+   "Only small changes are made at the valve regulator. If the input is still off, consult the gas supplier.",
+   "When finished: turn OFF gas to the furnace at the manual shutoff valve and disconnect the manometer; reinstall the plug before turning the gas back on (IOG-2044B p.42). Turn on gas to the furnace and check for leaks (RS6612305r1 p.33). Neither manual prints a closing step for the outlet pressure test screw."
+  ],
+  "safety": "The gas manifold pressure must be as specified on the rating plate. Never exceed the rated input. Check for leaks with chloride-free soap solution or a gas detector.",
+  "manual": "goodman-amana-rvt96-dvt96-install-iog-2044b",
+  "pages": [
+   41,
+   42,
+   43
+  ],
+  "source": "GRVT96 / GDVT96 / ARVT96 / ADVT96 Installation Instructions for *DVT96* & *RVT96* Two-Stage Gas Furnace (IOG-2044B, 10/2026), p.41, p.42, p.43",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvt96-heat-sequence",
+  "unit": "^[GA][RD]VT96",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "No heat - walking the heat sequence - GRVT96 / ARVT96",
+  "summary": "What the control does on a W call and where each step shows up as a code.",
+  "steps": [
+   "After power is applied the furnace sits in a three-minute power-up delay; thermostat calls are not recognized. IdL shows while it waits for a call.",
+   "W closes: the control checks the safety circuits, then runs the inducer on HIGH for a 15-second prepurge.",
+   "Inducer steps to LOW; the low-stage pressure switch must be closed (EE2 if it stays open, EE1 if it was already closed at the start).",
+   "Igniter warm-up, then the gas valve opens and flame must be proven (EE0 after 3 tries; EE6 = weak flame signal).",
+   "The control decides low or high stage by its own algorithm. The first heat call after a power cycle always runs high stage.",
+   "Blower starts after the selected heat on delay and ramps up.",
+   "End of call: gas valve closes, 15-second post purge, blower runs the heat off delay."
+  ],
+  "safety": "This furnace lights itself - do not try to light the burner by hand.",
+  "manual": "goodman-amana-rvt96-dvt96-install-iog-2044b",
+  "pages": [
+   41,
+   43,
+   44,
+   50
+  ],
+  "source": "GRVT96 / GDVT96 / ARVT96 / ADVT96 Installation Instructions for *DVT96* & *RVT96* Two-Stage Gas Furnace (IOG-2044B, 10/2026), p.41, p.43, p.44, p.50",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvm97-gas-pressure",
+  "unit": "^[GA][RD]VM97",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Checking gas pressure on the modulating valve - GRVM97 / ARVM97 (White-Rodgers 36J27)",
+  "summary": "The modulating furnace is checked at 100% firing rate; low fire is 50%.",
+  "steps": [
+   "Inlet: natural 4.5 to 10.0\" w.c., LP 11.0 to 13.0\" w.c.",
+   "Outlet tap on the 36J27: remove the 1/8\" NPT plug with a 5/16\" Allen wrench and fit the proper adapter for the manometer.",
+   "Run the high-fire test (CoolCloud app or the gas pressure test menu) so the valve holds 100% firing rate.",
+   "Natural gas: 3.5\" w.c. at 100%, .9\" w.c. at 50%, range .6 - 3.8\". LP: 10.0\" at 100%, 2.5\" at 50%, range 2.2 - 10.3\".",
+   "The LP / altitude table in the same manual lists natural low stage (50%) as 1\" w.c. - both figures are printed.",
+   "Final manifold pressure cannot vary by more than ± 0.3\" w.c. for natural and ± 0.5\" for LP from the specified setting.",
+   "LP conversion: kit LPM-35 with 1.25 mm orifices; an LPLP04 low-pressure kit is strongly recommended."
+  ],
+  "safety": "The inlet gas supply pressure must be as specified on the unit rating plate with all other household gas fired appliances operating. Only small variations in gas pressure should be made by adjusting the gas valve pressure regulator. Reinstall the plug before turning on gas to the furnace.",
+  "manual": "goodman-amana-rvm97-dvm97-install-iog-2045a",
+  "pages": [
+   25,
+   41,
+   42,
+   43,
+   47
+  ],
+  "source": "GRVM97 / GDVM97 / ARVM97 / ADVM97 Installation Instructions for *DVM97* & *RVM97* Modulating Gas Furnace (IOG-2045A, 08/2026), p.25, p.41, p.42, p.43, p.47",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-gad-rvt96-vent-length",
+  "unit": "^[GA][RD]VT96",
+  "brand": "Goodman",
+  "equipment": "Gas Furnace",
+  "title": "Pressure switch trips on a long 2-inch vent - checking allowed vent length - GRVT96 / ARVT96",
+  "summary": "Several sizes allow little or no 2-inch pipe. Check the run against the table before changing parts.",
+  "steps": [
+   "Add up the equivalent length. 2\" pipe: long-radius 90 = 5 ft, 45 = 2.5 ft. 3\" pipe: long-radius 90 = 7 ft, 45 = 3.5 ft.",
+   "Sea level, upflow *RVT96: 0403 = 200 ft on 2\" or 3\"; 0603 = 150 ft on 2\", 200 on 3\"; 0803 = 65 ft on 2\", 200 on 3\"; 0804C = 165 ft on 2\", 200 on 3\".",
+   "Upflow 1005C, 1005D and 1205D: 2\" pipe is NOT allowed. 3\" pipe: 200 ft (1005C), 150 ft (1005D), 200 ft (1205D).",
+   "Sea level, downflow *DVT96: 0403 and 0603 = 200 ft on 2\" or 3\"; 0804C = only 25 ft on 2\", 200 on 3\"; 1005C and 1205D = 2\" not allowed, 200 ft on 3\".",
+   "EE2 / EE9 (pressure switch circuit open): the chart says to inspect the flue and / or inlet air piping for blockage, proper length, elbows and termination, and to check the drain system and the pressure switch hose - compare the run with the lengths above before anything else (IOG-2044B p.50-51)."
+  ],
+  "manual": "goodman-amana-rvt96-dvt96-install-iog-2044b",
+  "pages": [
+   13,
+   50,
+   51
+  ],
+  "source": "GRVT96 / GDVT96 / ARVT96 / ADVT96 Installation Instructions for *DVT96* & *RVT96* Two-Stage Gas Furnace (IOG-2044B, 10/2026), p.13, p.50, p.51",
   "confidence": "manual"
  }
 ];

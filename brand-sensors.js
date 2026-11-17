@@ -127745,6 +127745,280 @@ const BRAND_SENSOR_MAPS = [
     "what": "sensor list, protections, fault table, status codes, board overview, flow charts, resistance tables, wiring diagram"
    }
   ]
+ },
+ {
+  "id": "nordyne-channel-board-1046397-mh-furnace",
+  "title": "Nordyne Channel control board 1046397 (three LEDs, HEAT / COOL slide switches) - MG1E, MG2R, CMF95 manufactured-housing furnaces",
+  "side": "indoor",
+  "brand": "Nortek / Nordyne (Miller / Intertherm / Broan / Maytag)",
+  "models": "MG1E 056 / 070 / 077 / 090; MG2R 045F / 045T / 060F / 060T / 072F / 072T; CMF95 045 / 072. Only when the furnace carries the Channel board (factory on later builds or by replacement kit).",
+  "match": [
+   "MG1E",
+   "MG2R",
+   "CMF95"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Channel control board 1046397: thermostat strip R, C, Y/Y2, G, W; 3 AMP fuse; 24V and COM transformer terminals; HEAT and COOL speed-select slide switches; 6-pin FAN jumper block; BLOWER OFF DELAY (HTG) jumper block 60 / 90 / 120 / 180; TWIN terminal; STATUS LEDs (green, red) and FLAME LED (yellow); 9-pin and 6-pin plugs; NEUTRALS, HUM, XFMR, L1, EAC line-voltage terminals; motor speed tap connector COM / T1-T5",
+  "replacement": [
+   {
+    "board": "Channel control board 1046397 on an MG1E (replaces Emerson 1041648 or UTEC 1021575)",
+    "kit": "MG1E Channel Board Replacement Control Kit (instructions 10514360). The MG1E parts list gives Integrated Control Kit 1050166 for units manufactured on or before 07/28/2025 and Integrated Control 1046397R for units manufactured on or after 07/29/2025 (D315316A p.3). The kit instructions do not print the number 1050166, so which instruction sheet comes in kit 1050166 is not confirmed.",
+    "replaces": "Emerson control board 1041648 and UTEC board 1021575 (10514360 p.1). Step 8 of the same instructions prints the Emerson number as 1048648.",
+    "differences": "The old blower, inducer / igniter and 12-pin (Emerson) or 9-pin (UTEC) harnesses are not reused; the transformer wires, thermostat wires, L1, N and ground are. Board 1046397 needs a flame sensor: some MG1E units had none from the factory and the kit includes one. Heat and cool speeds are set by the speed-select switches and fan speed by a jumper. No refrigerant / A2L setting is printed for this board.",
+    "steps": [
+     "WARNING (risk of electrical shock): shut off all electrical power to the unit before any maintenance or service. CAUTION: label all wires before disconnection; wiring errors can cause improper and dangerous operation. Verify proper operation after servicing.",
+     "Kit contents: board 1046397, 3 quick-connect plug assemblies, 2 loose plugs to fit after wire routing, red and gray 20 in. transformer wires, wiring diagram 1051399, flame sensor, flame sensor bracket and 2 fasteners, red 6 in. 150 C high-temperature flame sensor wire, instructions.",
+     "Remove: power off and verified, doors and control panel off. Release the 6-pin plug in the blower compartment and the 6-pin plug at the blower deck, and remove that harness including the blower plug. Cut out the inducer and igniter harnesses. Remove the 12-pin (Emerson) or 9-pin (UTEC) plug and its wires. Take the transformer wires, thermostat wires, L1, N and any HUM / EAC wires off the board and set them aside. Remove the board (the new one has new standoffs).",
+     "Fit: the standoff pattern is the same. Attach the 6-pin blower plug to the board - it only goes on fully one way, with the green wire in the T1 position - and plug the other end into the blower deck.",
+     "Insert the 6-pin igniter and inducer plug, route the wires through the sheet-metal holes, fit the plug ends on the wires and connect them to the igniter and inducer per the wiring diagram. Insert the 9-pin plug harness.",
+     "Attach all wires including L1 and N per wiring diagram 1051399. Units that had the Emerson board need the 20 in. red and gray transformer wires from the kit. Attach the thermostat wires to the terminal strip. In the blower compartment, attach the 6-pin plug to the blower deck plug. The Y/Y2 terminal must be connected to the thermostat for proper cooling mode operation.",
+     "Attach the kit wiring diagram 1051399 in place of the existing wiring diagram. Then install the flame sensor if the furnace has none: gas supply off, remove the burner assembly, fit the bracket and sensor, attach the 6 in. red high-temperature wire and route it like the igniter wire, refit the burner assembly and connect the #7 pin wire to that red wire. Connect the gas line, restore power and cycle the unit to verify it functions properly.",
+     "Start-up: review the blower configuration, cycle HEAT, COOL and FAN to confirm the selector switch settings, and check the air temperature rise for proper airflow.",
+     "MG1E blower taps: T1 L, T3 M and T5 H are available; T2 ML and T4 MH have no wire and must not be selected - the blower motor will not operate."
+    ],
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.1-3, p.5; nordyne-mg1e-parts-list-d315316a.pdf p.3"
+   },
+   {
+    "board": "Channel control board 1046397 on an MG2R or CMF95 (replaces an Emerson board or UTEC 1021573)",
+    "kit": "Channel Board Replacement Control Kit (instructions 10501530). The MG2R parts list gives Control Board kit 1050166 for units manufactured on or before 07/07/2025 and Control Board 1046397R for units manufactured on or after 07/08/2025 (D315317A p.2). The kit instructions do not print the number 1050166, so which instruction sheet comes in kit 1050166 is not confirmed. No CMF95 parts list was read.",
+    "replaces": "Emerson control board (printed as 1048648 in 10501530 p.1) and UTEC board 1021573. The instructions list the models affected as *G7S(A,K,C,D), MGC2, MG3P, MG2R and CMF95.",
+    "differences": "The old blower, inducer / igniter, 12-pin (Emerson) or 9-pin (UTEC) and 4-pin transformer harnesses are not reused. MG2R and CMF95 use wiring diagram 1051377 and the Figure 5 harnesses; the 9-pin blower-deck plug has no wires in #7 and #8. Speeds are set by slide switches and a jumper. No refrigerant / A2L setting is printed for this board.",
+    "steps": [
+     "WARNING (risk of electrical shock): shut off all electrical power to the unit before any maintenance or service. CAUTION: label all wires before disconnection; wiring errors can cause improper and dangerous operation. Verify proper operation after servicing.",
+     "Kit contents: board 1046397, 5 quick-connect plug assemblies, wiring diagrams 1049933 and 1051377, instructions. Use diagram 1051377 for MG2R and CMF95.",
+     "Remove: power off and verified, doors off. Release the 9-pin plug in the blower compartment and at the blower deck and remove that harness. Release the inducer and igniter harnesses, the 12-pin (Emerson) or 9-pin (UTEC) plug and the 4-pin transformer plug - none are reused. Set aside the thermostat wires, L1, N, ground and any HUM / EAC wires. Remove the board (the new one has new standoffs).",
+     "Fit: same standoff pattern. Attach the 6-pin blower motor plug to the board - one way only, red wire in the T1 position - and the 9-pin end into the blower deck.",
+     "Insert the 6-pin igniter and inducer plug and connect the other ends (they are not interchangeable; match pin and socket). Insert the 9-pin plug harness and the 4-pin plug into the transformer plug.",
+     "Connect all wires including L1 and N per diagram 1051377, attach the thermostat wires, plug the 9-pin blower plug to the blower deck plug, and replace the wiring diagram on the furnace. The Y/Y2 terminal must be connected to the thermostat for proper cooling operation.",
+     "Restore power, review the blower configuration, cycle HEAT, COOL and FAN, and check the air temperature rise.",
+     "MG2R / CMF95 blower taps: T1 L, T2 ML, T4 MH and T5 H are available; T3 M has no wire and must not be selected - the blower motor will not operate."
+    ],
+    "source": "nordyne-channel-board-kit-install-10501530.pdf p.1, p.4-6; nordyne-mg2r-parts-list-d315317a.pdf p.2"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "9-pin plug",
+    "pins": "pin 7 = flame sensor (MG1E kit: the #7 pin wire connects to the red high-temperature flame sensor wire)",
+    "name": "Flame sensor",
+    "kind": "other",
+    "spec": "Board 1046397 requires a flame sensor. Yellow FLAME LED: ON = good flame signal, FLASHING = weak, OFF during trial for ignition = no flame signal. No microamp or DC volt figure and no test point is printed in the kit instructions.",
+    "errorCodes": [
+     "Green ON / Red ON / Yellow FLASHING: weak flame signal",
+     "Green ON / Red ON / Yellow OFF during trial for ignition: no flame signal",
+     "Alternating flash with Yellow FLASHING: undesired flame (1 hour soft lockout)"
+    ],
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.1, p.4, p.5"
+   },
+   {
+    "plug": "9-pin plug",
+    "pins": "two orange wires",
+    "name": "Pressure switch",
+    "kind": "switch",
+    "errorCodes": [
+     "Green FLASHING / Red ON: pressure switch open with inducer on (alternating flash after 80 seconds, 5 minute soft lockout)",
+     "Green ON / Red FLASHING: pressure switch closed with inducer off"
+    ],
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.4; nordyne-channel-board-kit-install-10501530.pdf p.6"
+   },
+   {
+    "plug": "9-pin plug",
+    "pins": "blue wires",
+    "name": "Limit circuit - MG1E: HI LIMIT and AUX LIMIT. MG2R / CMF95: SUPPLY AIR LIMIT, FLAME ROLLOUT, VENT LIMIT, BLOWER DECK LIMIT",
+    "kind": "switch",
+    "errorCodes": [
+     "Green FLASHING / Red OFF: limit switch open"
+    ],
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.4; nordyne-channel-board-kit-install-10501530.pdf p.6"
+   },
+   {
+    "plug": "9-pin plug",
+    "pins": "two yellow wires",
+    "name": "Gas valve",
+    "kind": "other",
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.4; nordyne-channel-board-kit-install-10501530.pdf p.6"
+   },
+   {
+    "plug": "6-pin plug",
+    "pins": "igniter plug and inducer plug, each 2-pin (black / white)",
+    "name": "Igniter and inducer",
+    "kind": "other",
+    "spec": "MG2R / CMF95 kit (10501530): the igniter and inducer plugs are not interchangeable and only attach one way - match pin and socket. MG1E kit (10514360): the plug ends are fitted on the wires after routing them through the sheet-metal holes, then connected to the igniter and inducer per the wiring diagram.",
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.2 Figure 2, p.4; nordyne-channel-board-kit-install-10501530.pdf p.4, p.5 Figure 5"
+   },
+   {
+    "plug": "Motor speed tap connector (COM, T1-T5)",
+    "pins": "6-pin; MG1E green wire in T1, MG2R / CMF95 red wire in T1",
+    "name": "Blower motor speed taps",
+    "kind": "other",
+    "spec": "T1 L, T2 ML, T3 M, T4 MH, T5 H. After a kit conversion - MG1E (10514360 Table 1): T2 and T4 Do Not Use; MG2R / CMF95 and G7S, MGC2, MG3P (10501530 Tables 1-2): T3 Do Not Use. A selected tap with no wire = blower does not run. These tables are printed in the kit instructions for converted furnaces. For a furnace built with the Channel board they are not confirmed: the CMF95 manual says the unit ships with 4 speeds pre-wired and the fifth needs wires changed at the motor connection (10501460 p.24, note 5) - check the wiring diagram on the furnace for which taps have a wire.",
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.1-2 Table 1; nordyne-channel-board-kit-install-10501530.pdf p.2 Table 1, p.4 Table 2"
+   },
+   {
+    "plug": "HEAT / COOL speed select",
+    "pins": "two slide switches",
+    "name": "Heating and cooling blower speed",
+    "kind": "other",
+    "spec": "Move the HEAT or COOL slide switch up or down to L, ML, M, MH or H. The switches can be changed while the unit is operating.",
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.2-3; nordyne-channel-board-kit-install-10501530.pdf p.4"
+   },
+   {
+    "plug": "FAN jumper",
+    "pins": "6 pins; the jumper centre lines up with the selected speed",
+    "name": "Continuous fan speed",
+    "kind": "other",
+    "spec": "Covering the last 2 pins (H and MH) gives H (HIGH).",
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.2 Figure 1; nordyne-channel-board-kit-install-10501530.pdf p.4 Figure 4"
+   },
+   {
+    "plug": "BLOWER OFF DELAY (HTG) jumper",
+    "pins": "60 / 90 / 120 / 180",
+    "name": "Heating blower off delay",
+    "kind": "other",
+    "spec": "60, 90, 120 or 180 seconds; factory setting 120 seconds (jumper on the 3rd and 4th pins from the bottom). Jumper on the first 2 pins = 60 seconds.",
+    "source": "nordyne-mg1e-channel-board-kit-install-10514360.pdf p.2-3; nordyne-channel-board-kit-install-10501530.pdf p.4"
+   }
+  ],
+  "test": "LEDs: Green ON / Red ON / Yellow OFF = idle. All off = no power or IFC hardware problem. Alternating = soft lockout (1 hour failed ignition, 5 minute pressure switch). Green flashing, red off = limit open. Green flashing, red on = pressure switch open with inducer on. Green on, red flashing = pressure switch closed with inducer off. Flash together = polarity / ground. Red flashing alone = twinning fault. Yellow on / flashing = good / weak flame.",
+  "notes": "Board drawing: 10514360 Figure 1 (p.2) and 10501530 Figure 4 (p.4). Wiring diagrams: 10513990 (MG1E), 10513770 (MG2R and CMF95), 10499330 (80+ single stage residential, G7S / MGC2 / MG3P). The Emerson board number is printed as 1041648 (10514360 p.1) and as 1048648 (10514360 p.2 step 8; 10501530 p.1).",
+  "gaps": [
+   "No flame-signal test point, microamp or DC volt value is printed in the kit instructions or in the CMF95 installation instructions.",
+   "Pin numbers for the pressure switch, limit and gas valve wires are drawn on the diagram but not listed in text; only pin 7 (flame sensor) is named.",
+   "No ignition timings are printed in the kit instructions."
+  ],
+  "sources": [
+   {
+    "file": "nordyne-mg1e-channel-board-kit-install-10514360.pdf",
+    "pages": "1-5",
+    "what": "MG1E kit: contents, removal, installation, Figure 1 board, Table 1 taps, wiring diagram 10513990 with LED table, flame sensor installation"
+   },
+   {
+    "file": "nordyne-channel-board-kit-install-10501530.pdf",
+    "pages": "1-6",
+    "what": "General kit: models affected, removal, installation for G7S / MGC2 / MG3P and for CMF95 / MG2R, Tables 1-2 taps, wiring diagrams 10499330 and 10513770 with LED table"
+   },
+   {
+    "file": "nordyne-mg1e-parts-list-d315316a.pdf",
+    "pages": "3",
+    "what": "MG1E Integrated Control 1046397R / Integrated Control Kit 1050166 by build date; flame sensor 632484R"
+   },
+   {
+    "file": "nordyne-mg2r-parts-list-d315317a.pdf",
+    "pages": "2",
+    "what": "MG2R Control Board 1046397R / Control Board kit 1050166 by build date"
+   }
+  ]
+ },
+ {
+  "id": "goodman-rvt96-comfortbridge-r32",
+  "title": "Goodman / Amana / Daikin R-32-era variable-speed furnace control (GRVT96 / ARVT96 / DR96TC family) - sensors and switches",
+  "side": "indoor",
+  "brand": "Goodman / Amana / Daikin",
+  "models": "GRVT96, GDVT96, ARVT96, ADVT96 (IOG-2044B, RS6612305r1); DR96TC, DD96TC (RSD6612305r1). The same sensor rows E15-E1A and EAF-EA2 are printed for the 80% (IOG-2043B p.36-37) and 97% (IOG-2045A p.51-52) furnaces.",
+  "match": [
+   "GRVT96",
+   "GDVT96",
+   "ARVT96",
+   "ADVT96",
+   "DR96TC",
+   "DD96TC"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "ComfortBridge integrated control: three 7-segment characters, Left / Center / Right buttons, Bluetooth module, R-32 sensor connector with a green LED, RA and SA sensor connectors, A2L ALARM (24 VAC) and VT IN / VT OUT (dry contact) terminals (IOG-2044B p.27, p.39-40).",
+  "sensors": [
+   {
+    "code": "E15 / E16",
+    "name": "Return air temperature sensor (external probe)",
+    "location": "Plugs into the RA sensor connector on the control board (IOG-2044B figure p.39)",
+    "kind": "thermistor",
+    "spec": "10k ohm at 77 F; resistance is lower above 77 F and higher below 77 F. No resistance table is printed.",
+    "errorCodes": "E15 open, E16 shorted",
+    "test": "Allow up to 90 seconds for the control to detect the sensor. Check that the probe is plugged in all the way and the connector is crimped; measure the probe. Shorted: check the probe terminals and the PCB connector with the probe unplugged.",
+    "source": "IOG-2044B p.51"
+   },
+   {
+    "code": "E17 / E18",
+    "name": "Supply air temperature sensor (external probe)",
+    "location": "Plugs into the SA sensor connector on the control board (IOG-2044B figure p.39)",
+    "kind": "thermistor",
+    "spec": "10k ohm at 77 F; resistance is lower above 77 F and higher below 77 F. No resistance table is printed.",
+    "errorCodes": "E17 open, E18 shorted",
+    "test": "Same checks as the return air probe.",
+    "source": "IOG-2044B p.51"
+   },
+   {
+    "code": "E19 / E1A",
+    "name": "Onboard return air temperature sensor (R311)",
+    "location": "On the control board itself",
+    "kind": "thermistor",
+    "spec": "Not printed.",
+    "errorCodes": "E19 unplugged, E1A shorted",
+    "test": "Power cycle the furnace (up to 90 seconds to detect). Look for damage or foreign objects at R311. Replace PCB.",
+    "source": "IOG-2044B p.51"
+   },
+   {
+    "code": "EAF / EA0 / EA1",
+    "name": "R-32 (A2L) refrigerant sensor",
+    "location": "On the indoor coil; its wire is routed with the thermostat wires through the low-voltage opening to the R-32 sensor connection on the furnace board",
+    "kind": "other",
+    "spec": "Read by the furnace control once per second. Green LED by the connector: on during start-up, then blinking = communicating, off = no signal.",
+    "errorCodes": "EAF lost communication, EA0 leak detected, EA1 sensor fault; EA2 = internal A2L relay on the board",
+    "test": "Menu A2u runs the 5-minute mitigation self test. Menu A2E set to no turns the function off when the coil is not R-32.",
+    "source": "IOG-2044B p.27-28, p.52"
+   },
+   {
+    "code": "EE1 / EE2 / EE8 / EE9",
+    "name": "Low-stage and high-stage pressure switches (two-stage assembly on the inducer) and front cover pressure switch",
+    "location": "Inducer taps and the coil front cover",
+    "kind": "switch",
+    "spec": "Normally open, closed during operation (negative air pressure-activated). Trip points are not printed in the manuals. The front cover switch is wired in series with the gas valve.",
+    "errorCodes": "EE1 / EE8 closed at start; EE2 / EE9 open",
+    "test": "Disconnect all power first (manual warning). Remove the wires from the pressure switch terminals and tee an inclined manometer into the pressure switch hose. With an ohm meter across the switch terminals and the inducer running, the switch should close and show a complete circuit. If it does not close, compare the negative pressure to the closing point specified for the particular switch (not printed in these manuals): either the switch is defective or the inducer / venting system is inadequate.",
+    "source": "RS6612305r1 p.19, p.35; IOG-2044B p.50-51"
+   },
+   {
+    "code": "EE0 / EE4 / EE6",
+    "name": "Flame sensor",
+    "location": "Burner / manifold assembly",
+    "kind": "other",
+    "spec": "1 to 8 microamps (RS6612305r1 p.36); the flowchart on p.44 says 1-2 microamps.",
+    "errorCodes": "EE6 low signal, EE4 flame with no call, EE0 lockout",
+    "test": "Microamp meter in series, positive lead to the sensor wire. Clean with steel wool.",
+    "source": "RS6612305r1 p.36, p.44; IOG-2044B p.46, p.50"
+   },
+   {
+    "code": "EE3 / EEd / E11",
+    "name": "Primary limit, auxiliary limit, rollout limits",
+    "location": "Heat exchanger / blower compartment / burner box",
+    "kind": "switch",
+    "spec": "Primary and auxiliary: automatic reset. Rollout: manual reset. Opening temperatures are not printed.",
+    "errorCodes": "EE3 primary, EEd auxiliary, E11 rollout",
+    "test": "See the code rows.",
+    "source": "RS6612305r1 p.19, p.29-30; IOG-2044B p.50-53"
+   }
+  ],
+  "gaps": [
+   "Pressure switch trip points",
+   "Limit and rollout opening temperatures",
+   "Thermistor resistance table (only 10k ohm at 77 F is printed)",
+   "Board part number and connector / pin names"
+  ],
+  "sources": [
+   {
+    "file": "goodman-amana-rvt96-dvt96-install-iog-2044b.pdf",
+    "pages": "27-28, 39-40, 46, 49-53",
+    "what": "chart, R-32 section, connections"
+   },
+   {
+    "file": "goodman-amana-grvt96-arvt96-service-rs6612305r1.pdf",
+    "pages": "19, 29-30, 35-36, 44",
+    "what": "switch checks, flame current"
+   }
+  ]
  }
 ];
 const BRAND_SENSOR_CHARTS = [
