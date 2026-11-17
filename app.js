@@ -10211,6 +10211,8 @@ const MODEL_PATTERNS = [
   { re: /^(CBA|CBX|CBK)[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox air handler", notes: ["Service manuals for CBA27UHE (R-410A, no leak-detection board) and CBK48MVT (R-454B) are in Manuals → Lennox.", "Communicating air handlers report the numbered alert codes in Error Codes.", "On ML15KSPV / ML16KP2 / SL22KLV systems the target subcooling is keyed by THIS indoor model - the matchup tables are in the Charging Calc."] },
   { re: /^C[XHR]3[0-9]/, brand: "Lennox", equipment: "Air Handler", series: "Lennox indoor coil (CX/CH/CR 3x series)", notes: ["CX35 aluminum coils with factory TXV: check that the copper flare seal bonnet was removed from the equalizer fitting — if left on, the TXV cannot control superheat (service note C-15-07). See Troubleshoot."] },
   // --- Trane / American Standard ---
+  // v447 (Andy 2026-11-17 "add the trane s9vm"): the 2026 modulating furnace; models from IOM FNR-SVX006B-EN p.1.
+  { re: /^S9VM/, brand: "Trane", equipment: "Gas Furnace", series: "Trane / American Standard S9VM 97% modulating gas furnace", notes: ["Modulating 40-100% furnace with a communicating gas valve, a variable-speed inducer and a pressure transducer - it does not use the S9V2 / A951X code table. Its own E-codes are in Error Codes.", "Manifold pressure is set electronically (Technician App, IFC menu or UX360 thermostat); there is no adjusting screw on the gas valve.", "Sold by American Standard as the Platinum 97 Modulating Variable Speed Gas Furnace under the same S9VM model numbers.", "S9VM IOM, product data and LP kit guide are in Manuals -> Trane."] },
   { re: /^S[89][VXB][12]|^L9X1/, brand: "Trane", equipment: "Gas Furnace", series: "Trane S-series gas furnace", notes: ["S9V2-VS install/operation manual is in Manuals → Trane.", "A951X IFC e-codes in Error Codes apply to current S-series boards."] },
   // v310 (Bryce, 10/16: TDX100C948D3 came back "not in library", so no Error Codes button): TDX / ADX are
   // the downflow twins of TUX / AUX - Trane XL90 / XR90 literature (22-1674-10; the library's own seed
@@ -15102,7 +15104,7 @@ function sqftCardLocate(a, cfg) {
   </div>`;
 }
 
-const APP_VERSION = "v446";
+const APP_VERSION = "v447";
 
 // ============================================================
 // Usage tracking — silent, posts to the office's Google Form

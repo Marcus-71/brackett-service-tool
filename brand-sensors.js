@@ -125312,6 +125312,392 @@ const BRAND_SENSOR_MAPS = [
     "what": "replacement kit 27P19 for control 107792 (does not name ML197)"
    }
   ]
+ },
+ {
+  "id": "trane-s9vm-furnace-ifc",
+  "title": "Trane / American Standard S9VM 97% modulating furnace IFC (communicating gas valve, VSIM inducer control, pressure transducer)",
+  "side": "indoor",
+  "brand": "Trane / American Standard",
+  "models": "S9VMB060U3VCAA, S9VMB060U4VCAA, S9VMB080U4VCAA, S9VMC100U5VCAA, S9VMD120U5VCAA (upflow / horizontal); S9VMB060D3VCAA, S9VMB080D4VCAA, S9VMC100D5VCAA, S9VMD120D5VCAA (downflow)",
+  "match": [
+   "S9VMB",
+   "S9VMC",
+   "S9VMD"
+  ],
+  "sizes": [
+   "all"
+  ],
+  "board": "Integrated furnace control (IFC) with 2-line display, MENU / OPTION buttons, 3 CAN comm ports (R, DH, DL, B), BLE_EN (BLE enable / radio), 24 V thermostat strip (BK W2 W1 R G B/C Y2 Y1 O) and a separate VSIM inducer control board. No DIP switches",
+  "replacement": [
+   {
+    "board": "Trane / American Standard S9VM replacement integrated furnace control (IFC)",
+    "kit": "",
+    "replaces": "The factory IFC (service part number not printed in the IOM).",
+    "differences": "A replacement IFC has no model number in it: E14 (configuration file error) or E24.1 shows until the furnace model number is programmed. The S9VM diagram shows no plug-in personality module. The manual prints no refrigerant, A2L or leak-sensor setting on the furnace IFC; for a flammable-refrigerant system it only says the furnace must be powered at all times except during servicing and wired per the evaporator coil's instructions.",
+    "steps": [
+     "Disconnect power and wait at least 10 seconds for the IFC power supply to discharge to 0 volts. Label all wires before disconnecting.",
+     "Fit the new IFC and reconnect every plug. The IFC is polarity sensitive - 120 V hot on the black lead.",
+     "Program the model number: connect the indoor unit to the hub and power cycle; if E24.1 still shows, configure the indoor control with the correct model number in the Technician App (p.107).",
+     "The wiring diagram also prints a 'Model Number Recovery - 24 Volt Operation ONLY' table of display numbers: 1 = S9VMB060U4VC, 2 = S9VMB080U4VC, 3 = S9VMC100U5VC, 4 = S9VMD120U5VC, 5 = S9VMB060D3VC, 6 = S9VMB080D4VC, 7 = S9VMC100D5VC, 8 = S9VMD120D5VC, 9 = S9VMB060U3VC (p.19). The IOM does not print the button steps for it.",
+     "The settings live in the Furnace Group (Orientation, Elevation, Lo / Hi Fire GV Adj), Airflow Group and Delay Group (p.96-97, p.100-101). The manual says the low / high fire manifold pressure must be checked and adjusted, if needed, per the unit nameplate (p.42).",
+     "E13 after the swap = wrong model number programmed or wrong blower motor horsepower (p.106).",
+     "24 V systems: leave the Y1-O jumper in place for cooling-only; remove it for heat pumps and connect thermostat O to O (diagram notes 5-6, p.19)."
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.3, p.4, p.6, p.19, p.96, p.106, p.107"
+   }
+  ],
+  "sensors": [
+   {
+    "plug": "E34 (3-pin)",
+    "pins": "1 = 5V (RD), 2 = IN (BK), 3 = GND (GR)",
+    "code": "E34",
+    "name": "Pressure transducer (dual port) - combustion / cold header pressure",
+    "location": "On the inducer assembly (Figure 102 labels the dual port pressure transducer with its positive and negative pressure hoses)",
+    "kind": "other",
+    "spec": "Source 5 VDC green to red. Signal green to black: 0.50 VDC at 0.00 in. w.c., +0.10 VDC per 0.10 in. w.c., 4.50 VDC at 4.00 in. w.c. Inducer off: 0.5 VDC or less. Drift check: ~0.90 VDC when the 0.40 pressure switch closes (Table 35)",
+    "errorCodes": [
+     "E3.0 combustion pressure alert",
+     "E3.5 combustion pressure low",
+     "E3.6 combustion pressure high",
+     "E3.7 transducer out of bounds too low or no output",
+     "E3.8 transducer out of bounds too high",
+     "E10.2 / E10.3 inducer at max / min speed limit"
+    ],
+    "test": "Go by wire colour: ~5 VDC green to red, then read green to black and compare with the Spec figures above against a manometer on the cold header. Table 35's heading gives pin numbers (1-2 source, 1-3 signal, '@ E18') that do not match the IFC layout or the wiring diagram, so do not rely on pin numbers. Do not alter any pressure switch or transducer tubing when removing the inducer.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.79, p.80, p.104, p.107, p.108"
+   },
+   {
+    "plug": "E19 FP (1-pin) + flame sense test pads (+ / -)",
+    "pins": "1",
+    "code": "FP",
+    "name": "Flame sensor (flame probe), WH wire 17",
+    "location": "Burner box, in the burner flame",
+    "kind": "other",
+    "spec": "Acceptable flame current 0.75-3 microamps. Test pads on the IFC: 1 VDC = 1 microamp (diagram note 2)",
+    "errorCodes": [
+     "E8.0 flame current low but strong enough to run",
+     "E8.1 retry, no flame detected",
+     "E8.2 recycle, unexpected flame loss",
+     "E2.1 retries exceeded, 1 hour lockout",
+     "E2.2 recycles exceeded, 1 hour lockout",
+     "E5.0 flame detected when it should not be"
+    ],
+    "test": "Meter on DC volts across the flame sense pads with the burners lit: above 0.75 VDC. Low: check sensor position, wire resistance, manifold pressure; clean or replace the sensor.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.104, p.106"
+   },
+   {
+    "plug": "E2 IGN (2-pin)",
+    "pins": "1 = IGN-H (BK 28), 2 = IGN-N (WH 27)",
+    "code": "IGN",
+    "name": "Hot surface igniter, 120 V silicon nitride",
+    "location": "Burner box",
+    "kind": "other",
+    "spec": "35-70 ohms cold. IGN output 2.0 A @ 120 VAC. Warm-up 20 seconds",
+    "errorCodes": [
+     "E6.3 igniter relay failure / igniter open",
+     "E8.1 (igniter has failed is a listed cause)"
+    ],
+    "test": "Power off, unplug, measure the igniter cold: 35-70 ohms. If it ohms out good on an E6.3, replace the IFC. Do not touch the igniter.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.5, p.19, p.20, p.105"
+   },
+   {
+    "plug": "E36 gas valve (5-pin)",
+    "pins": "1 = TH (RD 200), 2 = TXD (WH 201), 3 = RXD (WH 202), 4 = GND (BK 203), 5 = MV TH (RD 204)",
+    "code": "GV",
+    "name": "Modulating communicating gas valve",
+    "location": "Gas valve",
+    "kind": "other",
+    "spec": "Comm voltages 12 VDC on Rx and Tx, 24 VAC on TH. Manifold: natural gas ~3.5 in. w.c. at 100%, 1.6 at 65% (not adjustable), ~0.7 at 40%",
+    "errorCodes": [
+     "E2.3",
+     "E2.4 general gas valve lockout",
+     "E7.1 gas valve energized without request",
+     "E11.2 communication lost with the gas valve",
+     "E11.3 incorrect position information",
+     "E11.4 incorrect offset information (ERR 91.11)"
+    ],
+    "test": "Verify the 5-wire harness is connected, correct and intact, then the comm voltages. Disconnect this plug before an LP conversion (the kit guide warns the terminals can be damaged otherwise). The valve has its own on/off toggle switch.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.45, p.104, p.106; trane-s9vm-lp-kit-fnr-svn004a.pdf p.7"
+   },
+   {
+    "plug": "E15 inducer control (4-pin)",
+    "pins": "1 = 12V (BL 300), 2 = RX (WH 301), 3 = GND (BK 302), 4 = TX (WH 303)",
+    "code": "VSIM",
+    "name": "Serial link to the VSIM variable-speed inducer control board",
+    "location": "IFC to VSIM board; VSIM drives the 3-wire (U / V / W) inducer motor",
+    "kind": "other",
+    "spec": "12 VDC on Rx and Tx. VSIM line input 98-132 VAC (LINE BK 400, NEUTRAL WH 401, GND GR 402)",
+    "errorCodes": [
+     "E10.1 communication lost with the VSIM",
+     "E10.4 inducer control board or motor failed",
+     "E10.2 / E10.3 inducer max / min speed limit"
+    ],
+    "test": "Check the 4-wire harness, then 12 VDC on Rx and Tx, then 98-132 VAC at the VSIM line input.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.104, p.106"
+   },
+   {
+    "plug": "E25 serial motor (4-pin)",
+    "pins": "1 = 12V (BL 32), 2 = Rx (WH 30), 3 = GND (WH 31), 4 = Tx (BK 29)",
+    "code": "BLOWER",
+    "name": "Variable-speed blower motor serial link",
+    "location": "IFC to blower motor (via the 12-pin blower harness)",
+    "kind": "other",
+    "errorCodes": [
+     "E17 no communication response from the motor",
+     "E18 communication lost with blower (control side)",
+     "E13 blower HP / OEM ID does not match the model"
+    ],
+    "test": "E18: remove the 4-pin motor connector from the IFC. If the code changes to E17 (91.00) replace the motor; if it does not change, replace the IFC. E17: verify high and low voltage wiring to the motor; replace the motor if the wiring is correct.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.104, p.107"
+   },
+   {
+    "plug": "E21 RET_T (3-pin)",
+    "pins": "1 = RAT (GY 63), 3 = GND (GY 64)",
+    "code": "RAT",
+    "name": "Return air thermistor (in the furnace wiring harness, enabled by default)",
+    "location": "On the blower harness (RETURN AIR THERMISTOR on the diagram)",
+    "kind": "thermistor",
+    "spec": "5 VDC source with the sensor unplugged; 4.99 VDC = open sensor, 0 VDC = shorted sensor. No resistance chart is printed",
+    "errorCodes": [
+     "E27 return air thermistor out of range or enabled when not installed"
+    ],
+    "test": "Unplug the sensor and verify 5 VDC at the IFC pins; if 5 VDC is there, replace the sensor.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.97, p.104, p.107"
+   },
+   {
+    "plug": "E22 SUP_T (2-pin)",
+    "pins": "1 = SAT, 2 = GND",
+    "code": "SAT",
+    "name": "Supply air temperature sensor (BAYSENSC360; ships with the Link thermostat and System Controller, disabled by default)",
+    "location": "Field-installed in the supply air plenum",
+    "kind": "thermistor",
+    "spec": "5 VDC source with the sensor unplugged; 4.99 VDC = open sensor, 0 VDC = shorted sensor. No resistance chart is printed",
+    "errorCodes": [
+     "E28 supply air thermistor out of range or enabled when not installed"
+    ],
+    "test": "If no sensor is fitted, set Sup Air Temp to Disable (Sensor Group). Otherwise unplug and verify 5 VDC; replace the sensor if 5 VDC is measured.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.10, p.20, p.97, p.104, p.107"
+   },
+   {
+    "plug": "Not identified in the manual (an unnamed 3-pin GND / IN / 5V header is drawn at the bottom edge of the IFC layout with no wires on the diagram - not confirmed as this sensor)",
+    "code": "RSP",
+    "name": "Return static pressure transducer (Sensor Group: Rtn Static Press, shown as Enable by default)",
+    "location": "Not printed in the manual",
+    "kind": "pressure",
+    "spec": "5 VDC source with the sensor unplugged",
+    "errorCodes": [
+     "E26 static pressure transducer out of bounds or not responsive"
+    ],
+    "test": "E26 = enabled but not installed or connected: verify 5 VDC source with the sensor unplugged; replace the transducer if 5 VDC is measured. The manual does not say which plug this transducer uses - identify it on the board before measuring.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.97, p.104, p.107"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "1 = TH (RD 1)",
+    "code": "TH",
+    "name": "24 VAC hot from the transformer",
+    "location": "IFC 15-pin harness",
+    "kind": "other",
+    "spec": "24 VAC between TH and TR (pin 11, BL 11)",
+    "errorCodes": [
+     "E12 open low voltage fuse"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.104"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "2 = HLO (RD 2)",
+    "code": "HLO",
+    "name": "High limit output (redundant relay output to the safety switch strings)",
+    "location": "IFC 15-pin harness",
+    "kind": "other",
+    "errorCodes": [
+     "E7.2 redundant relay (HLO output) energized when it should be off",
+     "E11.1 (ERR.093.02) redundant relay (HLO output) not energized when it should be"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.105, p.106"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "3 = PSO (RD 3), 7 = PS1 (BL 501)",
+    "code": "PS1",
+    "name": "1st stage pressure switch: PSO = pressure switch output, PS1 = 1st stage pressure switch input",
+    "location": "Not stated in one place: Figure 102 labels a \"Dual Port Pressure Switch\" on the inducer assembly and the transducer table note mentions \"the 0.40 pressure switch\"; the manual does not say these are PS1",
+    "kind": "switch",
+    "spec": "The drift check expects ~0.90 VDC from the transducer when the 0.40 pressure switch closes. No other setting is printed",
+    "errorCodes": [
+     "E3.1 shorted pressure switch, 1st stage",
+     "E3.2 open pressure switch, 1st stage"
+    ],
+    "test": "E3.1: contacts stuck closed, inducer running with no call, or miswiring. E3.2: contacts stuck open, tubing off or restricted, vent restricted, condensate backing up in the secondary heat exchanger.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.80, p.105, p.108"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "4 = PS2, 5 = MVH, 14 = MVC, 15 = MVL",
+    "code": "PS2 / MVH / MVC / MVL",
+    "name": "Pins with no wire on the S9VM diagram (legend: MVH main valve high, MVC main valve common, MVL main valve low)",
+    "location": "IFC 15-pin harness",
+    "kind": "other",
+    "errorCodes": [
+     "E7.2 and E11.1 (ERR.093.04) tell you to check wiring to MVH for shorts"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.105, p.106"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "6 = RLI (YL 6)",
+    "code": "RLI",
+    "name": "Rollout limit switch input (flame rollout switches FRS-1 / FRS-2)",
+    "location": "On the burner harness (FRS-1 / FRS-2 on the diagram)",
+    "kind": "switch",
+    "errorCodes": [
+     "E4.2 open rollout limit"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.105"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "8 = RAF (YL 8)",
+    "code": "RAF",
+    "name": "Reverse airflow limit input (RAF-1 / RAF-2)",
+    "location": "On the blower harness (RAF-1 / RAF-2 on the diagram)",
+    "kind": "switch",
+    "errorCodes": [
+     "E4.1 open reverse airflow limit"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.105"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "9 = GND (GR 9)",
+    "code": "GND",
+    "name": "Burner box ground",
+    "location": "Burner box",
+    "kind": "other",
+    "errorCodes": [
+     "E6.2 insufficient / bad grounding"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.105"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "10 = HLI (YL 10)",
+    "code": "HLI",
+    "name": "High limit input (thermal limit)",
+    "location": "On the burner harness (THERMAL LIMIT on the diagram)",
+    "kind": "switch",
+    "errorCodes": [
+     "E4.0 open high limit"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.105"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "11 = TR (BL 11)",
+    "code": "TR",
+    "name": "24 VAC transformer common",
+    "location": "Transformer (TNS) 24 V side",
+    "kind": "other",
+    "spec": "24 VAC TH to TR. Transformer secondary current 600 mA + MV load",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "12 = ILI (PR 12)",
+    "code": "ILI",
+    "name": "Inducer limit switch input",
+    "location": "INDUCER LIMIT on the diagram (mounting location is not printed)",
+    "kind": "switch",
+    "errorCodes": [
+     "E9.1 open inducer limit switch"
+    ],
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.106"
+   },
+   {
+    "plug": "E24 24 V I/O (15-pin)",
+    "pins": "13 = CSI (PR 13)",
+    "code": "CSI",
+    "name": "Condensate switch input (condensate pressure switch)",
+    "location": "On the inducer assembly (Figure 102 labels the condensate pressure switch)",
+    "kind": "switch",
+    "errorCodes": [
+     "E9.2 open condensate switch",
+     "E9.3 condensate lockout (open three times in one call for heat)"
+    ],
+    "test": "Horizontal installs: the condensate pressure switch hose must be trimmed to fit; the overflow standpipe opening must be even with or slightly below the bottom of the condensate trap.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.20, p.76, p.80, p.106"
+   },
+   {
+    "plug": "E26 EXT SW (4-pin)",
+    "pins": "1 = EXT (RD 80), 2 = SW1 (WH 81), 3 = EXT (RD 82), 4 = SW2 (BK 83)",
+    "code": "EXT SW1 / SW2",
+    "name": "External switch inputs 1 and 2",
+    "location": "IFC",
+    "kind": "other",
+    "spec": "24 VAC source from the furnace; wire to the Normally Closed (NC) contact on the device, e.g. a smoke detector. Must be configured (Technician App; UX360 thermostat in Link mode)",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.71"
+   },
+   {
+    "plug": "ACC1 / ACC2",
+    "code": "ACC",
+    "name": "Accessory terminals 1 and 2 (humidifier / electronic air cleaner)",
+    "location": "IFC, top edge",
+    "kind": "other",
+    "spec": "Dry contacts - need source voltage from the accessory. Configured for EAC or HUM: EAC closes ~5 seconds after the blower starts, HUM closes ~1 second after the blower starts on any heating call",
+    "test": "Do not use the condensate cooling option in 24 V mode.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.71, p.109"
+   },
+   {
+    "plug": "Fuse",
+    "name": "5 A low-voltage fuse on the IFC (automotive type)",
+    "location": "IFC",
+    "kind": "other",
+    "spec": "5 A",
+    "errorCodes": [
+     "E12 open low voltage fuse"
+    ],
+    "test": "Causes listed: shorted low voltage field wiring, high amp draw from accessories, high resistance in field wiring.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.104, p.106"
+   },
+   {
+    "plug": "COMM PORTS (3 x 4-pin)",
+    "pins": "1 = R, 2 = DH, 3 = DL, 4 = B",
+    "code": "CAN",
+    "name": "Link communicating ports (CAN)",
+    "location": "IFC",
+    "kind": "other",
+    "spec": "Wire colours in the hook-up figure: R red, DH white, DL green, B blue (illustration only)",
+    "errorCodes": [
+     "E24.2 CAN communication lost"
+    ],
+    "test": "E24.2: indoor or outdoor unit powered down, or a loose / bad connection to the System Controller; cycle power.",
+    "source": "trane-s9vm-iom-fnr-svx006b.pdf p.19, p.70, p.104, p.107"
+   }
+  ],
+  "test": "Use the IFC display. Alarm Group: Active Alarms, Last 6 Faults, Clear L6 Faults. Monitor Group shows live GH Demand %, GV Setpoint %, Inducer RPM, Combustion Press (IWC), Blower CFM, static pressures, return / supply air temperature and fuel type. Test Group (24 V mode only): Simple Run Test and Third Party Test. Link systems: Technician App over Bluetooth, Test Modes > Test Indoor Heat.",
+  "notes": "No DIP switches - every setting is in the IFC menu, the Technician App or the UX360 thermostat. To change a setting first remove any call and let the fan off delay finish (display shows IDLE); Menu scrolls down, Option scrolls across, Menu again saves; [ ] marks the saved value. Furnace Group: Orientation Up / Down / Right / Left, Elevation 2000 / 5400 / 7800 / 10100 Ft, Min Fire Rate 40-65% (communicating menu), Lo / Hi Fire GV Adj -22 to +22. LEDs: green STATUS, amber COMM. Downflow and upflow share one diagram (D346795P01 Rev C).",
+  "gaps": [
+   "Pressure switch, limit, rollout, reverse-airflow and inducer-limit settings / trip temperatures are not printed",
+   "Thermistor resistance-temperature chart for the return / supply air sensors is not printed (only 5 VDC source, 4.99 VDC open, 0 VDC shorted)",
+   "Table 35's pin numbers ('Pins 1-2 (GR-RD)', 'Pins 1-3 (GR-BK @ E18)') do not match the IFC layout (E34: 1 = 5V, 2 = IN, 3 = GND) or Figure 148 (BK pin 1, GR pin 2, RD pin 4 at the transducer) - wire colours agree everywhere, so the entry goes by colour",
+   "Which plug the return static pressure transducer uses is not printed. Fig. 147 draws an unnamed 3-pin GND / IN / 5V header at the bottom edge of the IFC; nothing confirms it is this sensor",
+   "Service part numbers for the IFC, VSIM board, transducer, gas valve, igniter and flame sensor are not in these three documents",
+   "Button steps for the 'Model Number Recovery - 24 Volt Operation ONLY' table are not printed",
+   "How the furnace is switched between Link and 24 V mode is not described (the product data only says it ships ready for communicating mode and is field configurable to 24 V)"
+  ],
+  "sources": [
+   {
+    "file": "trane-s9vm-iom-fnr-svx006b.pdf",
+    "pages": "19-20, 70-72, 76, 79-80, 95-109",
+    "what": "wiring + ladder diagram (D346795P01 Rev C), IFC component layout (Fig. 147), error code table (Table 34), pressure transducer voltage table (Table 35), IFC menus, sequence of operation"
+   },
+   {
+    "file": "trane-s9vm-lp-kit-fnr-svn004a.pdf",
+    "pages": "7",
+    "what": "disconnect the gas valve connector before conversion"
+   }
+  ]
  }
 ];
 const BRAND_SENSOR_CHARTS = [

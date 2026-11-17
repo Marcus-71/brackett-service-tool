@@ -68517,3 +68517,2357 @@ const TSTAT_AUX_SOONER = {
     // not coming on"). The card is found by its name; the subject is found through the brand's Ask card.
   }
 })();
+
+// ============================================================
+// v447 (Andy 2026-11-17: "lets run all updates on our venders to catch anything new", then "add the trane s9vm
+// and new thermostats next"): five thermostats released since late 2024 that had no card - Trane Priority /
+// American Standard Gold Smart (replaces the XL824), Honeywell Home X8S / X8Q, FocusPRO P200 / S200, FocusPRO
+// N100 and X2S. Each card is written from that model's own installer manual and was checked claim by claim by a
+// second independent pass (428 claims, 12 corrected). Each carries its 'heat strips on sooner' topic under the
+// same rules as TSTAT_AUX_SOONER above: a setting only where the manual prints one, no recommended value.
+// ============================================================
+const TSTAT_NEW_1117 = {
+ "cards": [
+  {
+   "id": "tst-trane-priority-smart",
+   "brand": "Trane / American Standard",
+   "family": "Priority Smart Thermostat / Gold Smart Thermostat",
+   "aka": "TCONT24P1S52DA (Trane Priority) / ACONT24P1S52DA (American Standard Gold Smart) / *CONT24P",
+   "models": [
+    "TCONT24P1S52DA",
+    "ACONT24P1S52DA",
+    "TCONT24P",
+    "ACONT24P",
+    "CONT24P1S52DA"
+   ],
+   "type": "smart-wifi",
+   "stages": "Conventional: 2 heat / 2 cool. Heat pump: up to 5 stages heat / 2 stages cool (2 compressor stages plus 3 stages of auxiliary heat). Configurations: heat pump, heat/cool, dual fuel, heat only, cooling only; conventional boiler systems (forced air and radiant).",
+   "sort": 10,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "",
+    "notes": "24 VAC input. The B/C terminal (common wire, 24V) is marked Required in the terminal table. Power consumption 3.6W average typical, 4.32W peak typical at 24 VAC. Wire usage 18 AWG. No batteries are listed."
+   },
+   "terminals": [
+    {
+     "t": "RC",
+     "fn": "Power for cooling, 24V",
+     "notes": "Two transformer systems (separate RC and RH wires): clip the jumper on the backplate, to the right of the terminals."
+    },
+    {
+     "t": "RH/R",
+     "fn": "Power for heating, 24V",
+     "notes": "Same jumper note as RC."
+    },
+    {
+     "t": "B/C",
+     "fn": "Common wire, 24V",
+     "notes": "Required."
+    },
+    {
+     "t": "Y1",
+     "fn": "Conventional: 1st stage cool. Heat pump: 1st stage compressor operation",
+     "notes": ""
+    },
+    {
+     "t": "Y2",
+     "fn": "Conventional: 2nd stage cool. Heat pump: 2nd stage compressor operation",
+     "notes": ""
+    },
+    {
+     "t": "W1",
+     "fn": "Conventional: 1st stage heat. Heat pump: 1st stage auxiliary heat",
+     "notes": "On a heat pump the strips land here."
+    },
+    {
+     "t": "W2",
+     "fn": "Conventional: 2nd stage heat. Heat pump: 2nd stage auxiliary heat",
+     "notes": ""
+    },
+    {
+     "t": "W3",
+     "fn": "Conventional: 3rd stage heat. Heat pump: 3rd stage auxiliary heat",
+     "notes": ""
+    },
+    {
+     "t": "G",
+     "fn": "Indoor blower (fan)",
+     "notes": ""
+    },
+    {
+     "t": "O/B",
+     "fn": "Conventional: heat pump changeover, zone panel or 3-wire hot water zone valve connection. Heat pump: changeover (reversing valve) - position with cooling is an O signal, heating is a B signal",
+     "notes": "Which call energizes it is set with SOV Operation in Installer Setup."
+    },
+    {
+     "t": "AUX (+/-)",
+     "fn": "Used for accessory",
+     "notes": "One auxiliary dry contact: whole house humidifier, dehumidifier or ventilation system. What it runs is set with Aux Port in Installer Setup."
+    }
+   ],
+   "wiringNotes": [
+    "The Installer's Guide prints the terminal table but not the wiring diagrams - Figure 1 is a QR code that opens them, with the note that they are subject to change without notice.",
+    "Two transformer systems (separate RC and RH wires): clip the jumper located on the backplate to the right of the terminals.",
+    "Manufacturer WARNING - out of phase transformers: on two transformer systems the transformers MUST be in phase. Measure the voltage across RC and RH. If more than 12 Volts AC is present between RC and RH the transformers are NOT in phase - reverse the secondary low voltage connections at either the heating or the cooling transformer.",
+    "Manufacturer WARNING: disconnect electrical power before starting installation or servicing, and leave power disconnected until installation or service is completed.",
+    "Manufacturer WARNING: do not use on circuits exceeding the specified voltage - higher voltage will damage the control and could cause shock or fire hazard. The thermostat and all control system components shall conform to Class II circuits per the NEC.",
+    "Let the thermostat rest in the conditioned space for 5 minutes or longer before power up, to prevent a temperature out of range alert.",
+    "On a heat pump the auxiliary heat stages go on W1, W2 and W3 (1st, 2nd, 3rd stage auxiliary heat).",
+    "The feature list names a BK terminal for enhanced dehumidification, but the terminal table in the Installer's Guide does not list BK - check the wiring diagrams behind the QR code."
+   ],
+   "setup": {
+    "access": "On the thermostat press Menu > Service > Technician Access > Installer Setup. It can also be set up from a phone with the Trane Technician App over Bluetooth: the thermostat ships with Bluetooth set to Temporarily On; if the app does not find it, make sure Bluetooth is not set to Off under Menu > Settings > Connect > Bluetooth. The Technician App QR code is at Menu > Service > Technician Access > Get Technician App. Factory values are the ones shown in [brackets] below, as the guide prints them.",
+    "keySettings": [
+     {
+      "setting": "HVAC configuration - Outdoor Equipment Type",
+      "options": "None, [Cooling Only], Heat Pump",
+      "notes": "Type of outdoor unit installed. Ships as Cooling Only - a heat pump has to be set here."
+     },
+     {
+      "setting": "HVAC configuration - Outdoor Unit Stages",
+      "options": "[Single], Two Stage",
+      "notes": "Number of outdoor unit stages."
+     },
+     {
+      "setting": "HVAC configuration - Indoor Unit Type",
+      "options": "[Gas/Oil], Electric, Hydronic Radiant, Hydronic Forced Air",
+      "notes": "Type of indoor unit installed."
+     },
+     {
+      "setting": "HVAC configuration - Indoor Heat Stages",
+      "options": "[Single], Two Stage, Three Stage",
+      "notes": "Number of indoor heat stages."
+     },
+     {
+      "setting": "HVAC configuration - Indoor Blower Type",
+      "options": "[Non-Variable], Variable",
+      "notes": "Constant torque motors are considered non-variable speed."
+     },
+     {
+      "setting": "HVAC configuration - SOV Operation",
+      "options": "[with Cooling], with Heating",
+      "notes": "Which mode of operation energizes the switch-over valve."
+     },
+     {
+      "setting": "HVAC configuration - Low Stage Compressor Airflow - Comp Clg",
+      "options": "55% - 80%, [80%]",
+      "notes": "1st stage cooling airflow for a two stage single compressor unit."
+     },
+     {
+      "setting": "HVAC configuration - Low Stage Compressor Airflow - Comp Htg",
+      "options": "55% - 80%, [80%]",
+      "notes": "1st stage heating airflow for a two stage single compressor unit."
+     },
+     {
+      "setting": "Accessory configuration - Aux Port",
+      "options": "[None], Humidifier, Dehumidifier, Ventilator",
+      "notes": "What accessory is assigned to the Aux port."
+     },
+     {
+      "setting": "Accessory configuration - Filtration Type",
+      "options": "Air Cleaner, [Media Filter]",
+      "notes": "Filter type installed."
+     },
+     {
+      "setting": "Accessory configuration - UV Light Installed",
+      "options": "Yes, [No]",
+      "notes": ""
+     },
+     {
+      "setting": "Accessory configuration - Humidifier - Frost Control",
+      "options": "[Off], Low, High",
+      "notes": "How the humidifier will be controlled. If Off is selected, the humidifier uses RH% control (Humidified Target)."
+     },
+     {
+      "setting": "Accessory configuration - Humidifier - Fan Control",
+      "options": "[with Heat Call], without Heat Call",
+      "notes": "When the humidifier is allowed to operate."
+     },
+     {
+      "setting": "Accessory configuration - Dehumidifier - Control",
+      "options": "[Stand Alone], with Cooling Call",
+      "notes": "When the dehumidifier is allowed to operate."
+     },
+     {
+      "setting": "Accessory configuration - Dehumidifier - Fan Control Run Fan With Dehumidifier",
+      "options": "[Yes], No",
+      "notes": "Whether the indoor fan runs with a call for dehumidifier operation."
+     },
+     {
+      "setting": "Accessory configuration - Ventilator - Minimum Run Time",
+      "options": "0 - 60 minutes, [5 minutes]",
+      "notes": "Minimum runtime per hour for the ventilation system."
+     },
+     {
+      "setting": "Accessory configuration - Ventilator Fan Action",
+      "options": "[with Blower], without Blower",
+      "notes": "Whether the indoor fan runs with a call for ventilation."
+     },
+     {
+      "setting": "Accessory configuration - Outdoor Temperature Ventilation Override",
+      "options": "[Off], On",
+      "notes": "An outdoor temperature sensor must be connected and enabled before this can be selected."
+     },
+     {
+      "setting": "Accessory configuration - Minimum Outdoor Temperature",
+      "options": "-10 F - 50 F, [0 degrees]",
+      "notes": "Minimum outdoor temperature at which ventilation is allowed."
+     },
+     {
+      "setting": "Accessory configuration - Maximum Outdoor Temperature",
+      "options": "80 F - 110 F, [100 degrees]",
+      "notes": "Maximum outdoor temperature at which ventilation is allowed."
+     },
+     {
+      "setting": "Accessory configuration - Accumulate Overridden Runtime",
+      "options": "[4 hours recover based on outdoor conditions], 24 hours recover based on outdoor conditions, 4 hours recover to maintain minimum ventilation, 24 hours recover to maintain minimum ventilation",
+      "notes": "When to recover ventilation runtime missed because of the outdoor temperature limits. The guide notes the first two options will not meet the ASHRAE 62.2 minimum ventilation requirements."
+     },
+     {
+      "setting": "Sensor configuration - Outdoor Temperature Sensor",
+      "options": "[None], Internet ODT, Wired ODT",
+      "notes": "Internet ODT requires ZIP / Postal code entry."
+     },
+     {
+      "setting": "Sensor configuration - Outdoor Temperature Calibration - Wired Only",
+      "options": "-5 F to 5 F, [0 F]",
+      "notes": "Only when Wired ODT is chosen."
+     },
+     {
+      "setting": "Sensor configuration - Indoor Remote Sensor",
+      "options": "(no choices printed)",
+      "notes": "Requires a wireless indoor remote sensor to pair."
+     },
+     {
+      "setting": "Comfort settings - Enhanced Dehumidification",
+      "options": "[Off], On",
+      "notes": "Variable speed blower must be selected. Reduces variable speed blower airflow to remove moisture when indoor humidity has exceeded the dehumidified target."
+     },
+     {
+      "setting": "Comfort settings - Smart Continuous Fan",
+      "options": "[Off], On",
+      "notes": "Turns the indoor blower off when indoor humidity is above the dehumidification target and the fan mode is On or Circulate. Works only in Cooling mode with no active call for cooling."
+     },
+     {
+      "setting": "Comfort settings - Control Response Rate",
+      "options": "Slow, [Medium], Fast",
+      "notes": "Increases or decreases the responsiveness of the proportional-integral algorithm."
+     },
+     {
+      "setting": "Comfort settings - Aggressive Recovery",
+      "options": "[Off], On",
+      "notes": "Aggressive recovery with a setpoint change of 2 degrees or more. Increases the speed at which the proportional-integral algorithm adjusts the equipment staging."
+     },
+     {
+      "setting": "Comfort settings - Warm Air Discharge",
+      "options": "[Off], On",
+      "notes": "Variable speed blower must be selected. When On, indoor heating airflow is limited to 80% on a call for heat pump heating - only with no call for aux heat."
+     },
+     {
+      "setting": "Comfort settings - Optimal Start",
+      "options": "[Off], On",
+      "notes": "Starts the system ahead of time to reach setpoint at the start of a schedule period. A schedule must be set."
+     },
+     {
+      "setting": "Lockout settings - Auxillary Heat Lockout",
+      "options": "[Off], On",
+      "notes": "Enables auxiliary heat lockout. 10 degree minimum separation when both auxiliary heat lockout and compressor heat lockout are enabled."
+     },
+     {
+      "setting": "Lockout settings - Auxillary Heat Lockout Settings",
+      "options": "25 F - 70 F, [45 F]",
+      "notes": "Outdoor temperature above which auxiliary heat is prevented."
+     },
+     {
+      "setting": "Lockout settings - Compressor Lockout",
+      "options": "[Off], On",
+      "notes": "Enables compressor heat lockout. Same 10 degree minimum separation."
+     },
+     {
+      "setting": "Lockout settings - Compressor Lockout Setting",
+      "options": "5 F - 70 F, [30 F]",
+      "notes": "Outdoor temperature below which compressor heating is prevented. The specifications table gives 5 F resolution for this one and 1 F for auxiliary heat lockout."
+     },
+     {
+      "setting": "Lockout settings - Defrost Heater Balance Point W1",
+      "options": "[Off], On",
+      "notes": "Enables defrost heater balance for W1, W2 and W3. Only applicable when indoor heat is electric or hydronic."
+     },
+     {
+      "setting": "Lockout settings - Defrost Heater Balance Point W1 Setting",
+      "options": "40 F - 55 F, [55 F]",
+      "notes": "Outdoor temperature above which 1st, 2nd and 3rd stage indoor heat is not allowed during defrost."
+     },
+     {
+      "setting": "Lockout settings - Defrost Heater Balance Point W2",
+      "options": "[Off], On",
+      "notes": "Enables defrost heater balance for W1 and W2. Only applicable when indoor heat is electric or hydronic."
+     },
+     {
+      "setting": "Lockout settings - Defrost Heater Balance Point W2 Setting",
+      "options": "10 F - 50 F, [40 F]",
+      "notes": "Outdoor temperature above which 1st and 2nd stage indoor heat is not allowed during defrost."
+     },
+     {
+      "setting": "Lockout settings - Defrost Heater Balance Point W3",
+      "options": "[Off], On",
+      "notes": "Enables defrost heater balance for W3. Only applicable when indoor heat is electric or hydronic."
+     },
+     {
+      "setting": "Lockout settings - Defrost Heater Balance Point W3 Setting",
+      "options": "5 F - 45 F, [25 F]",
+      "notes": "Outdoor temperature above which 3rd stage indoor heat is not allowed during defrost."
+     },
+     {
+      "setting": "Software Update (SoftAP)",
+      "options": "Menu > Service > Technician Access > Software Update",
+      "notes": "Enables SoftAP so the Technician App can send a software update. When the thermostat is connected to a Trane Home account, updates happen automatically."
+     },
+     {
+      "setting": "Dealer Code",
+      "options": "The dealer's registered phone number listed on ComfortSite or ASDealerNet",
+      "notes": "Entered once the system is enrolled with a Home App account; fills in the dealer's contact information."
+     }
+    ],
+    "installerTest": "Test modes (Table 11 of the Installer's Guide): Blower - variable speed 35%, 50%, 75% or 100%, non-variable speed 100%. Cool - Stage 1, Stage 2 (the indoor blower runs at the speed the stage needs). Compressor Heat - Stage 1, Stage 2. Indoor Heat - Stage 1, Stage 2, Stage 3; blower depends on the indoor heat type: Electric - blower energized but its speed is controlled by the indoor unit; Fossil - blower controlled independently by the indoor unit; Hydronic - blower energized. Compressor + Indoor Heat - Stage 1, Stage 2, Stage 3: energizes compressor heat and the selected stage of indoor electric / hydronic heat, blower at the higher of the two airflows. More > Aux Relay - closes the normally open Aux contact; the blower is not energized. The guide lists the test modes but does not print the menu path to them or a time limit.",
+    "factoryReset": "The Installer's Guide (CNTR-SVN004A-EN) does not print a reset or restore-factory-defaults procedure."
+   },
+   "diagnostics": [],
+   "troubleshooting": [
+    {
+     "symptom": "Display will not come on",
+     "causes": [
+      "Loss of 24VAC between R & B at the control"
+     ],
+     "fixes": [
+      "Check R & B wiring",
+      "Check transformer for 24VAC output",
+      "Check for broken or shorted thermostat wire",
+      "Check for blown low voltage fuse",
+      "Check for tripped safety switch"
+     ]
+    },
+    {
+     "symptom": "Indoor temperature display is incorrect",
+     "causes": [
+      "Indoor temperature display needs calibration",
+      "Heat from the control is being trapped within the body or space of the control"
+     ],
+     "fixes": [
+      "Calibrate the temperature sensor from Menu > Settings > Thermostat, or use a remote temperature sensor",
+      "Move the control away from a competing air stream or use a remote indoor sensor"
+     ]
+    },
+    {
+     "symptom": "Indoor humidity display is incorrect",
+     "causes": [
+      "Indoor humidity display needs calibration"
+     ],
+     "fixes": [
+      "Calibrate the humidity sensor from Menu > Settings > Thermostat"
+     ]
+    },
+    {
+     "symptom": "Heating will not come on",
+     "causes": [
+      "System mode is not set to Heat / Auto or setpoint is set too low",
+      "Minimum off time delay is being enforced",
+      "Heating system may require service"
+     ],
+     "fixes": [
+      "Set mode to heat and raise the setpoint above the room temperature",
+      "Wait for 5 minutes and recheck heating equipment",
+      "Check / repair system"
+     ]
+    },
+    {
+     "symptom": "Cooling will not come on",
+     "causes": [
+      "System mode is not set to Cool / Auto or setpoint is set too high",
+      "Minimum off time delay is being enforced",
+      "Cooling system may require service"
+     ],
+     "fixes": [
+      "Set mode to cool and lower the setpoint below the room temperature",
+      "Wait for 5 minutes and recheck cooling equipment",
+      "Check / repair system"
+     ]
+    },
+    {
+     "symptom": "Heating or Cooling is displayed, but no warm or cool air is coming from registers",
+     "causes": [
+      "There is a fan delay as the heating or cooling equipment turns on",
+      "Equipment is not working properly"
+     ],
+     "fixes": [
+      "Wait a minute for blower delays and recheck registers",
+      "Check / repair system"
+     ]
+    },
+    {
+     "symptom": "Fan runs all the time",
+     "causes": [
+      "Fan mode is set to On or Circulate",
+      "Field wiring issue",
+      "There is a failure in the indoor unit"
+     ],
+     "fixes": [
+      "Check control settings to see if the fan is set to On or Circulate",
+      "Check field wiring",
+      "Check indoor unit for failures (such as a tripped heating limit)"
+     ]
+    },
+    {
+     "symptom": "Symbol on the screen while compressor heat and indoor heat run together (the guide leaves the symptom cell of this row blank - it prints no symbol and no words)",
+     "causes": [
+      "Both compressor heat and indoor heat are being called simultaneously"
+     ],
+     "fixes": [
+      "No action required - the symbol is for informational purposes only"
+     ]
+    },
+    {
+     "symptom": "Fan is set to ON but not running",
+     "causes": [
+      "Smart Continuous Fan is engaged",
+      "Field wiring issue",
+      "Blower motor is not functioning"
+     ],
+     "fixes": [
+      "If indoor humidity is higher than the desired target, the blower will cycle off with the equipment",
+      "Check field wiring",
+      "Check indoor unit for failures (such as tripped heating limit)"
+     ]
+    },
+    {
+     "symptom": "Cooling or heating cycles too fast or too slow (narrow or wide temperature swings)",
+     "causes": [
+      "Drafts at the control's location",
+      "Cycles per hour is improperly set"
+     ],
+     "fixes": [
+      "Seal air leaks behind the control. Relocate the control or apply a remote indoor temperature sensor",
+      "Adjust the control response rate in the Comfort Settings"
+     ]
+    },
+    {
+     "symptom": "Heat pump is not turning on; only furnace or electric heat strips are running",
+     "causes": [
+      "Outdoor temperature is below the compressor lockout temperature setting",
+      "System mode is set to Emergency Heat",
+      "Outdoor unit may require service"
+     ],
+     "fixes": [
+      "Adjust the compressor lockout temperature setting if desired",
+      "Check / repair outdoor temperature sensor or wiring"
+     ]
+    },
+    {
+     "symptom": "Cannot change system mode to desired setting",
+     "causes": [
+      "Equipment is not configured properly"
+     ],
+     "fixes": [
+      "Check the standard installer set up screen to make sure the equipment is properly configured"
+     ]
+    }
+   ],
+   "tips": [
+    "Replaces the XL824 / Gold 824: Trane says the Priority can be used for an XL824 warranty claim and is a drop-in replacement for most XL824 applications, excluding systems using IDS, demand response, or more than 1 auxiliary contact.",
+    "Ships set up as Cooling Only outdoor, Gas/Oil single stage indoor. A heat pump with strips needs Outdoor Equipment Type = Heat Pump, Indoor Unit Type = Electric and Indoor Heat Stages to match the heater.",
+    "Emergency Heating runs the indoor heat source only, and is only available when the outdoor unit type is a heat pump.",
+    "Auto mode keeps a minimum deadband of 3 F between heating and cooling setpoints (4 F when zoning is applied).",
+    "Minimum cycle off time: compressor 5 minutes.",
+    "Wi-Fi is 2.4 GHz and 5 GHz dual-band. For the Wi-Fi connection the guide lists the homeowner's iOS or Android device and the customer's network name (SSID) and password; it prints no app pairing steps.",
+    "Indoor remote sensor is wireless and has to be paired (Sensor configuration > Indoor Remote Sensor). Trane lists the Remote Temperature and Humidity Sensor as BAYSENSEAW00UA and says up to six sensors can be managed from one thermostat.",
+    "Setpoint ranges: cooling 60 F to 99 F, heating 55 F to 90 F."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "The Installer's Guide prints only the basics of day-to-day use. It prints no schedule or hold steps.",
+     "topics": [
+      {
+       "title": "System mode, fan mode and air cleaner mode",
+       "steps": [
+        "System Mode has five choices: Heating (heating only), Cooling (cooling only), Off (no heating or cooling), Emergency Heating (runs the indoor heat source only - only offered when the outdoor unit type is a heat pump) and Auto (switches between heating and cooling by itself).",
+        "In Auto there is a minimum deadband of 3 F between the heating and cooling setpoints (4 F when zoning is applied).",
+        "Fan Mode has three choices: Auto (fan runs only with a call for heating or cooling), On (fan runs continuously), Circ (fan runs a user-selected minimum amount of time each hour).",
+        "With an air cleaner installed there are three Air Cleaner modes: Auto (runs only with a call for fan operation), Quick (3 hours with the blower at 100%), Allergy (24 hours with the blower at 100%)."
+       ],
+       "notes": [
+        "Customer cannot pick the mode they want: the guide says to check the standard installer set up screen - the equipment is not configured properly."
+       ],
+       "source": "Trane / American Standard Smart Thermostat *CONT24P Installer's Guide CNTR-SVN004A-EN (May 2026), Basic Operation and Troubleshooting"
+      },
+      {
+       "title": "Installer setup, software update and the Technician App",
+       "steps": [
+        "Installer setup on the thermostat: Menu > Service > Technician Access > Installer Setup.",
+        "Setup from a phone: the Trane Technician App connects over Bluetooth. The thermostat ships with Bluetooth set to Temporarily On. If the app cannot find it, check Menu > Settings > Connect > Bluetooth is not Off.",
+        "Get the app: scan the QR code at Menu > Service > Technician Access > Get Technician App.",
+        "Software: once the thermostat is connected to a Trane Home account it updates by itself. To update by hand, open Menu > Service > Technician Access > Software Update - that turns on SoftAP so the Technician App can send the update.",
+        "Dealer Code: after the system is enrolled with a Home App account, enter the dealer's registered phone number (the one listed on ComfortSite or ASDealerNet) to fill in the dealer contact information."
+       ],
+       "notes": [],
+       "source": "Trane / American Standard Smart Thermostat *CONT24P Installer's Guide CNTR-SVN004A-EN (May 2026), Configuration and Software Updates"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "Smart Thermostat *CONT24P Installer's Guide (CNTR-SVN004A-EN, May 2026)",
+     "docType": "install",
+     "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-SVN004A-EN_05292026.pdf"
+    },
+    {
+     "title": "Trane Comfort Controls Product and Submittal Data (CNTR-PSD001A-EN, May 2026)",
+     "docType": "spec",
+     "url": "https://elibrary.tranetechnologies.com/public/residential-hvac/Literature/Installation/CNTR-PSD001A-EN_05292026.pdf"
+    }
+   ],
+   "sourceNotes": "CNTR-SVN004A-EN Installer's Guide Smart Thermostat *CONT24P (29 May 2026); CNTR-PSD001A-EN Product and Submittal Data Trane Comfort Controls (May 2026), Table 1 Model TCONT24P1S52DA; trane.com 'Introducing the Priority Smart Thermostat' (published August 6, 2026); trane.com product page 'Remote Temperature and Humidity Sensor' (Model BAYSENSEAW00UA - 'Pair with the Trane Priority Smart Thermostat', up to 6 sensors; read 17 Nov 2026); americanstandardair.com smart thermostats product listing (ACONT24P1S52DA, BAYSENSEAW00UA)",
+   "img": ""
+  },
+  {
+   "id": "tst-honeywell-x8s-x8q",
+   "brand": "Honeywell Home",
+   "family": "X8S / X8Q Smart Thermostat",
+   "aka": "X8VWF7W / X8VMC8B / X8VMC9W / X8VWF10B (X8S, video doorbell integration) / X8SWF5W / X8SMC6B (X8Q)",
+   "models": [
+    "X8VWF7W",
+    "X8VMC8B",
+    "X8VMC9W",
+    "X8VWF10B",
+    "X8SWF5W",
+    "X8SMC6B",
+    "X8VWF7WC",
+    "X8VMC8BC",
+    "X8S",
+    "X8Q"
+   ],
+   "type": "smart-wifi",
+   "stages": "Up to 3 Heat / 2 Cool heat pump with electric backup heat. Up to 2 Heat / 2 Cool conventional (gas or oil forced air and air conditioning). Radiant hot water or steam. One relay (U) for a humidifier, dehumidifier or ventilator. Only electric backup heat is supported on a heat pump.",
+   "sort": 10,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "",
+    "notes": "Required: 24 VAC power (C wire). Power consumption 3.0 VA max. No C wire and both Y and G in use: THP9045A C-wire adapter (THP9045A2098, ordered separately; a voucher for a free adapter is in the box). No batteries are listed for the thermostat; the wireless sensors take 2 AAA alkaline."
+   },
+   "terminals": [
+    {
+     "t": "R",
+     "fn": "24 VAC heating transformer",
+     "notes": "R switch UP for 1 R wire (R, Rh or Rc); DOWN for 2 R wires."
+    },
+    {
+     "t": "Rc",
+     "fn": "24 VAC cooling transformer",
+     "notes": ""
+    },
+    {
+     "t": "C",
+     "fn": "24VAC common wire from secondary side of cooling transformer (if 2 transformers)",
+     "notes": "Required."
+    },
+    {
+     "t": "Y",
+     "fn": "Compressor Stage 1",
+     "notes": ""
+    },
+    {
+     "t": "Y2",
+     "fn": "Compressor Stage 2",
+     "notes": ""
+    },
+    {
+     "t": "G",
+     "fn": "Fan relay",
+     "notes": ""
+    },
+    {
+     "t": "W",
+     "fn": "Heat Stage 1 (conventional)",
+     "notes": "Do NOT use W for heat pump applications."
+    },
+    {
+     "t": "W2 / AUX",
+     "fn": "Conventional: Heat Stage 2. Heat pump: AUX - auxiliary / emergency heat",
+     "notes": "Auxiliary heat must wire to AUX. Electrical ratings table calls it W2 (Aux) Heat."
+    },
+    {
+     "t": "E",
+     "fn": "Not used by this thermostat",
+     "notes": "If E was used on the old thermostat, that wire goes to AUX."
+    },
+    {
+     "t": "O/B",
+     "fn": "Changeover valve for heat pumps",
+     "notes": "O or B is picked with ISU 2060."
+    },
+    {
+     "t": "L/A",
+     "fn": "Heat pump fault (heat pump systems)",
+     "notes": "Not used on conventional systems."
+    },
+    {
+     "t": "U/U",
+     "fn": "Relay for humidifier, dehumidifier, ventilator",
+     "notes": ""
+    },
+    {
+     "t": "K",
+     "fn": "Connect to K on the C-wire adapter",
+     "notes": "With the THP9045A, K is used in place of Y and G so the freed wire becomes the common."
+    },
+    {
+     "t": "S/S",
+     "fn": "Not used by this thermostat",
+     "notes": "No input for wired indoor or outdoor sensors."
+    }
+   ],
+   "wiringNotes": [
+    "A C wire is required. No spare wire: use a THP9045A C-wire adapter - it needs both Y and G wires at the old thermostat.",
+    "R switch on the UWP: UP for 1 R wire (R, Rh or Rc) - the wire goes in R. DOWN for 2 R wires - Rc wire in Rc, R or Rh wire in R.",
+    "Conventional systems, when the old labels do not match: old thermostat had both R and Rh - R Slider Tab down (2 wires), R wire to the Rc terminal and Rh wire to the R terminal.",
+    "Conventional systems: one C or C1 wire goes to C. Two C or C1 wires: call Honeywell Home support or a qualified contractor.",
+    "Heat pump: do NOT use W. Auxiliary heat must wire to AUX. If E was used, that wire goes to AUX.",
+    "Heat pump alternate wiring: keep the R Slider Tab up (1 wire). V and VR wires - stop and contact a qualified contractor. Separate O and B wires - attach the B wire to the C terminal; if another wire is already on C, stop and contact a qualified contractor. Y1, W1 and W2 wires - stop and call Honeywell Home support or a qualified contractor.",
+    "This thermostat does not need jumpers.",
+    "Does not work with electric baseboard heat (120-240V). Does not support the S terminals for indoor and outdoor sensors.",
+    "Optional cover plates: THP2400WH (white), THP2400BL (black). A cover plate mounts differently than the UWP - do not drill until it arrives.",
+    "Manufacturer WARNING: improper wiring or configuring of the thermostat can cause unintended operation of the HVAC system which could lead to property damage, injury, including death."
+   ],
+   "setup": {
+    "access": "First power-up: pick the language, optionally connect wireless sensors, then choose setup using the app or on the device. The thermostat senses the wires attached and asks only what it needs; touch NEXT after each answer. After the first setup: touch the Menu icon (lower left of the display) > Advanced setup > Modify Configuration. Touch NEXT to step through the settings and DONE to save and exit. The manual's text also calls the menu 'Advanced Settings'; the screen picture and the Advanced Setup Options page show 'Advanced setup'. The Advanced Setup menu is only available after the initial setup is finished, and ISU numbers are not shown during the initial setup. The table prints no factory values except where noted.",
+    "keySettings": [
+     {
+      "setting": "ISU 1000 Language",
+      "options": "English, Francais, Espanol",
+      "notes": "ISU number not displayed during initial setup."
+     },
+     {
+      "setting": "ISU 1050 Temperature Format",
+      "options": "Fahrenheit, Celsius",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 2000 System Type",
+      "options": "Conventional Forced Air Heat, Heat Pump, Radiant Heat, None (Cool only)",
+      "notes": "Manual marks this IMPORTANT - it has to be set correctly."
+     },
+     {
+      "setting": "ISU 2010 Equipment type",
+      "options": "Conventional: Standard Efficiency Gas Forced Air, High Efficiency Gas Forced Air, Oil Forced Air, Electric Forced Air, Hot Water Fan Coil. Radiant: Hot water radiant heat, Steam",
+      "notes": "Not shown for heat pump applications."
+     },
+     {
+      "setting": "ISU 2060 Reversing Valve",
+      "options": "O (O/B on Cool) or B (O/B on Heat)",
+      "notes": "Shown when 2000 is Heat Pump. O/B wire goes to O at the heat pump = set O; goes to B at the heat pump = set B. If unsure, trace the O/B wire to the equipment."
+     },
+     {
+      "setting": "ISU 2070 Equipment stages",
+      "options": "Cool stages 0-2 (2000 other than Heat Pump); Heat stages 1-2 (conventional); Compressor Stages 1 or 2 (Heat Pump); Backup Heat Stages 0 or 1 (Heat Pump)",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 2180 Backup Heat Type",
+      "options": "Electric Heat Strips, Gas or Oil Furnace, Hot Water Fan Coil, Hot Water Radiant Heat, Other, I'm not sure",
+      "notes": "Shown when 2000 is Heat Pump and Backup Heat Stages is 1. Only electric backup is supported - any other choice brings up a not-compatible warning."
+     },
+     {
+      "setting": "ISU 3000 Changeover",
+      "options": "Manual, Automatic",
+      "notes": "Any system with at least 1 heat stage and 1 cool stage."
+     },
+     {
+      "setting": "ISU 3260 Extended fan run time in cool / in heat",
+      "options": "Off, 30 seconds, 60 seconds, 90 seconds, 2 to 15 minutes in 1 minute steps",
+      "notes": "Cool: at least 1 cool stage. Heat: at least 1 heat stage."
+     },
+     {
+      "setting": "ISU 4090 Adaptive Intelligent Recovery",
+      "options": "No, Yes",
+      "notes": "With a schedule, turns heating or cooling on early to reach the comfort setpoint by the scheduled time."
+     },
+     {
+      "setting": "ISU 4100 Temperature range stops",
+      "options": "Minimum cool setpoint 50F-99F; Maximum cool setpoint 90F-99F; Minimum heat setpoint 40F-50F; Maximum heat setpoint 40F-90F",
+      "notes": "The limits are tied together - example printed: if minimum cool is 50F, minimum heat cannot be set above 40F."
+     },
+     {
+      "setting": "ISU 4110 Keypad Lockout",
+      "options": "Unlocked, Partially Locked, Fully Locked",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 7000 Filter type",
+      "options": "None, Media",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 7110 Air Filter 1 replacement reminder",
+      "options": "Off; 10, 20, 30, 45, 60, 90, 120 or 150 run time days; 30, 45, 60 or 75 calendar days; 3, 4, 5, 6, 9, 12 or 15 calendar months",
+      "notes": "Shown when 7000 = Media."
+     },
+     {
+      "setting": "ISU 8000 Humidifier type",
+      "options": "None, Steam, Bypass or Fan powered",
+      "notes": "Needs the U contacts available."
+     },
+     {
+      "setting": "ISU 8030 Humidifier terminals",
+      "options": "Thermostat U",
+      "notes": "Selected automatically when 8000 is Steam or Bypass or Fan powered."
+     },
+     {
+      "setting": "ISU 8100 Humidifier Pad replacement reminder",
+      "options": "Off, 6 or 12 calendar months",
+      "notes": "Not shown if 8000 is None or Steam."
+     },
+     {
+      "setting": "ISU 8100 Clean tank / Water Filter replacement reminder",
+      "options": "Off, 60 or 90 run time days, 6 or 12 calendar months",
+      "notes": "8000 = Steam. The manual prints 8100 for both reminders."
+     },
+     {
+      "setting": "ISU 9000 Dehumidification equipment",
+      "options": "None, AC with High Speed fan, Whole House Dehumidifier",
+      "notes": "With AC with High Speed fan the air conditioner may cool up to 3 degrees below the cool setpoint when humidity is high."
+     },
+     {
+      "setting": "ISU 9040 Dehumidification terminals",
+      "options": "Thermostat U",
+      "notes": "Shown when 9000 = Whole House Dehumidifier."
+     },
+     {
+      "setting": "ISU 9210 Dehumidifier Filter replacement reminder",
+      "options": "Off, 30 or 60 calendar days, 3 to 12 calendar months",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 10000 Ventilation Type",
+      "options": "None, ERV/HRV, Fresh Air Damper",
+      "notes": "ERV/HRV or Damper needs the U contacts available."
+     },
+     {
+      "setting": "ISU 10005 Ventilator Model number",
+      "options": "Other model, VNT5070E1000, VNT5200E1000, VNT5150E2000, VNT5150H2000, VNT5200E2000, VNT5200H2000",
+      "notes": "10000 set to ERV/HRV."
+     },
+     {
+      "setting": "ISU 10020 Ventilation terminals",
+      "options": "None, Thermostat U",
+      "notes": "10000 other than None."
+     },
+     {
+      "setting": "ISU 10120 Ventilation Percent On Time",
+      "options": "10% - 100% (30% default)",
+      "notes": "ERV or Fresh Air Damper."
+     },
+     {
+      "setting": "ISU 10170 Ventilation Reminders",
+      "options": "Clean core: Off, 3, 6, 9, 12 calendar months. Clean filter: Off, 3, 6, 9, 12 calendar months",
+      "notes": "Core only shown if 10000 = ERV/HRV. Filter reminder always shown."
+     },
+     {
+      "setting": "ISU 10200 Ventilate on High Carbon Dioxide (CO2)",
+      "options": "Yes, No",
+      "notes": "When enabled, high CO2 runs the ventilator and blower fan. Models with air quality monitoring only. The manual's note on this row reads 'S1000 and S1200 models only'."
+     },
+     {
+      "setting": "ISU 11000 Number of UV Devices",
+      "options": "0, 1, 2",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 11050 UV Bulb Replacement Reminders",
+      "options": "Replace UV Bulb 1: Off, 6, 12, 24 calendar months. Replace UV Bulb 2: same",
+      "notes": "Bulb 1 when 11000 = 1 or 2; bulb 2 when 11000 = 2."
+     },
+     {
+      "setting": "ISU 14010 Clock Format",
+      "options": "12 hour clock, 24 hour clock",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 14015 Daylight Savings Time",
+      "options": "Off, On",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 14020 Indoor Display Offsets",
+      "options": "Indoor temperature -3 to 3 in 1F steps (-1.5 to 1.5 in 0.5C steps); indoor humidity -12% to 12% RH",
+      "notes": "Applied to the Home screen, not the Priority screen. Not tied to any one sensor."
+     }
+    ],
+    "installerTest": "Menu icon > Advanced setup > Equipment Test. Heat - select the heat stage(s) to test. Em heat - tests emergency heat (heat pumps with backup heat only). Cool - select the cool stage(s) to test. Fan - turn the fan on or off. Other - test humidifier, dehumidifier, ventilator. A timer shows the run time, and the equipment shuts off by itself after 30 minutes if the test is not ended. Manufacturer WARNING: compressor protection is bypassed during testing - to prevent equipment damage, avoid cycling the compressor quickly.",
+    "factoryReset": "Menu icon > Advanced setup > Reset. Choices: Reset Schedule; Delete all Devices (removes wireless sensors); Reset Matter; Reset WiFi (removes the thermostat from the network); Factory Reset (returns the thermostat to the state it was in before installation). Before a thermostat is replaced or left behind in a move, Resideo recommends resetting its WiFi and Matter settings."
+   },
+   "diagnostics": [
+    {
+     "code": "WAITING FOR EQUIPMENT",
+     "meaning": "The thermostat is delaying the heat or cool call to protect the equipment from short cycling, or holding it off because of an alert lockout.",
+     "action": "The short-cycle delay should not last more than 5 minutes. Longer than that: check for active alerts. As a test, remove all wires except R and C from the UWP and try heat or cool - if it then calls within 5 minutes, a shorted wire or high equipment draw may be dropping power to the thermostat at the start of a call."
+    },
+    {
+     "code": "Using Auxiliary heat",
+     "meaning": "Aux heat is running. Shown above the room temperature.",
+     "action": "Information only."
+    },
+    {
+     "code": "In Recovery",
+     "meaning": "Adaptive Recovery has turned the system on early to reach the scheduled temperature on time.",
+     "action": "To stop it: Menu > Preferences > Adaptive Recovery > Off."
+    },
+    {
+     "code": "WiFi signal lost",
+     "meaning": "The thermostat has lost the WiFi network.",
+     "action": "Cycle power to the thermostat (furnace switch, breaker, or pull it off the wall plate for 10 seconds or more). Wait 5 minutes for it to reconnect or pick another network in the Resideo Connect app. If it still cannot reconnect, troubleshoot the router."
+    },
+    {
+     "code": "Datasync",
+     "meaning": "Shown on the thermostat or in the app.",
+     "action": "Pull the thermostat off the wall plate, wait 30 seconds, put it back. If it stays: delete the thermostat from the app and add it again. Last step printed: connect it to a hotspot or other network for 24 hours, then do a WiFi reset and reconnect to the home network."
+    },
+    {
+     "code": "Connection Failed - Invalid Password",
+     "meaning": "The WiFi password entered is invalid.",
+     "action": "Check the password and try again."
+    },
+    {
+     "code": "Connection Failed - No IP Address",
+     "meaning": "The thermostat could not get an IP address from the router.",
+     "action": "Check the router is set to assign IP addresses automatically. It can take several minutes. Still nothing: pull the thermostat off the wall plate for 10 seconds, then snap it back."
+    },
+    {
+     "code": "Connection Failed - No Internet Link",
+     "meaning": "Connected to WiFi but could not reach the internet.",
+     "action": "Check the router settings, check the Ethernet cable is plugged into the router, reboot the router if needed."
+    },
+    {
+     "code": "Setting locked",
+     "meaning": "Shown when an arrow is touched while the screen lock is on.",
+     "action": "Menu > Screen lock. A passcode may have been set."
+    },
+    {
+     "code": "Warming Sen",
+     "meaning": "The thermostat is warming up its indoor air quality (IAQ) sensor. Usually shows briefly after power-up.",
+     "action": "None."
+    },
+    {
+     "code": "Calculating (Indoor Air Quality screen)",
+     "meaning": "After installation or a power-up the sensors are sampling the air before showing VOCs or estimated carbon dioxide.",
+     "action": "May take several minutes."
+    },
+    {
+     "code": "Honeywell Home startup screen keeps coming back",
+     "meaning": "Normal after a power outage or an over-the-air firmware update. If it happens regularly the thermostat is losing power - example printed: a limit tripping due to poor airflow.",
+     "action": "Replace the furnace filter and have the unit serviced if it keeps happening."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "Display is blank",
+     "causes": [
+      "Tripped breaker",
+      "System power switch off",
+      "Furnace door not closed",
+      "C wire not connected"
+     ],
+     "fixes": [
+      "Check the circuit breaker and reset if necessary",
+      "Make sure the power switch for the heating and cooling system is on",
+      "Make sure the furnace door is closed securely",
+      "Make sure the C wire is connected"
+     ]
+    },
+    {
+     "symptom": "Cannot change temperature setpoint",
+     "causes": [
+      "Wrong mode",
+      "Screen lock is on ('Setting locked')",
+      "Minimum / maximum temperature limits"
+     ],
+     "fixes": [
+      "Touch Mode and check the mode",
+      "Unlock at Menu > Screen lock",
+      "Check Menu > Preferences > Temperature limits. Default limits: Heat 40 F to 90 F, Cool 50 F to 99 F"
+     ]
+    },
+    {
+     "symptom": "Display temperature reads too high or too low",
+     "causes": [
+      "Feels Like Temperature is on (shows warmer when humidity is high)",
+      "An indoor display offset is set (up to 3 degrees, or +/- 12% RH)",
+      "A wireless sensor or an average is being used for the reading (Priority)"
+     ],
+     "fixes": [
+      "Menu > Preferences > Display > Feels Like Temperature",
+      "Menu > Preferences > Display > Indoor Display Offsets",
+      "Menu > Priority"
+     ]
+    },
+    {
+     "symptom": "Menu options are not shown",
+     "causes": [
+      "The thermostat is not set up for that function (for example humidification)",
+      "Screen lock is on"
+     ],
+     "fixes": [
+      "Check Modify Configuration",
+      "Menu > Screen Lock to view the lockout status"
+     ]
+    },
+    {
+     "symptom": "Heat runs with thermostat in cool or off mode",
+     "causes": [
+      "Right after installation: wired or configured incorrectly"
+     ],
+     "fixes": [
+      "Shut off power to the heating / cooling system at the breaker and check wiring and configuration"
+     ]
+    },
+    {
+     "symptom": "Heat doesn't come on",
+     "causes": [
+      "WAITING FOR EQUIPMENT delay",
+      "Mode or setpoint",
+      "Wiring or R/Rc slider"
+     ],
+     "fixes": [
+      "'Heat to' = not calling; 'Heating to' = calling",
+      "If 'Heating to' shows and no heat after a short delay, check wiring connections and the R/Rc slider switch on the UWP",
+      "If 'Heat to' shows with the setpoint above room temperature, look at Menu > Equipment Status for a reason, and check for active alerts"
+     ]
+    },
+    {
+     "symptom": "Cooling doesn't come on",
+     "causes": [
+      "WAITING FOR EQUIPMENT delay",
+      "Mode or setpoint",
+      "Wiring or R/Rc slider"
+     ],
+     "fixes": [
+      "'Cool to' = not calling; 'Cooling to' = calling",
+      "If 'Cooling to' shows and nothing runs, verify the wire connections and the R/Rc slider on the UWP",
+      "If 'Cool to' shows with the setpoint below room temperature, look at Menu > Equipment Status and check for active alerts"
+     ]
+    },
+    {
+     "symptom": "Cooling runs below set point",
+     "causes": [
+      "Set to over-cool when humidity is high (dehumidification with the AC)"
+     ],
+     "fixes": [
+      "If the display shows 'Cooling to', go to the Dehumidification menu and turn dehumidification off if over-cooling is not wanted",
+      "If the display shows 'Cool to' and cooling is running, something is wrong - turn off power to the cooling equipment"
+     ]
+    },
+    {
+     "symptom": "Heat runs when room temperature is above the heat setpoint",
+     "causes": [
+      "Thermostat calling ('Heating to')",
+      "Not calling ('Heat to') - wiring or equipment fault"
+     ],
+     "fixes": [
+      "'Heating to' and running: check Equipment Status",
+      "'Heat to' and heat is running: something is wrong - turn off power to the heating equipment"
+     ]
+    },
+    {
+     "symptom": "Fan will not run / fan runs unexpectedly",
+     "causes": [
+      "Heat-only system such as a boiler has no fan setting",
+      "Fan set to On, Auto or Circ per schedule period",
+      "Fan set to run with ventilation, humidification or dehumidification",
+      "Another control is running the fan"
+     ],
+     "fixes": [
+      "Check Menu > Equipment Status to see what the thermostat says it is running",
+      "Check the fan setting in each schedule period",
+      "If Equipment Status does not show the fan on, something else in the system is controlling it"
+     ]
+    },
+    {
+     "symptom": "Cannot pair a wireless sensor",
+     "causes": [
+      "Sensor was paired to another thermostat",
+      "Batteries",
+      "Sensor not compatible"
+     ],
+     "fixes": [
+      "Reset the sensor: remove the cover and press and hold the button about 15 seconds",
+      "On the thermostat touch Menu > Devices and sensors > Add. With the sensor at least 3 feet from the thermostat, press and release the sensor button",
+      "LED never flashes: check the batteries are fresh and in correctly",
+      "LED flashes but no connection: check the sensor model is compatible"
+     ]
+    }
+   ],
+   "tips": [
+    "Em Heat mode: the heat pump is locked out and emergency heat runs. It is only offered when the thermostat is set for a heat pump plus backup heat stages.",
+    "Circ fan setting runs the fan about 33% of the time.",
+    "After a power loss with no WiFi / app registration, the time and date must be set again before the schedule is followed; until then a scheduled thermostat holds 72F in heat and 78F in cool.",
+    "Wireless sensors: XRSENSOR-1PK / XRSENSOR-2PK (temperature, humidity and motion; up to 20 per thermostat; 200 foot range; 900 MHz; 2 AAA alkaline). The number inside the battery compartment does not carry the -1PK / -2PK.",
+    "Other sensors the manual lists: C7189R3010-2 (ElitePRO) and C7189R3002-2 (T10+) are compatible. RCHTSENSOR-1PK / -2PK (T9) - older ones will not work, an existing one can be tried. C7189R2002-2 (T10) will not work.",
+    "Sensor battery warning appears about 60 days before the batteries are depleted; a sensor light flashing red means 2-3 weeks left.",
+    "Video doorbell integration is X8S only: X8VMC8B, X8VWF7W, X8VMC9W, X8VWF10B, X8VMC8BC, X8VWF7WC. It is connected in the Resideo Connect app.",
+    "Firmware version: Menu > Thermostat Information. Updates arrive over WiFi by themselves.",
+    "The manual says to see ISU 14051 and 14052 to disable indoor air quality monitoring, but those two numbers are not in its Modify Configuration table."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "",
+     "topics": [
+      {
+       "title": "Connect it to WiFi and the Resideo Connect app",
+       "steps": [
+        "First install: after the installer setup the thermostat prompts for WiFi and walks through it.",
+        "Later: download the Resideo Connect app and create an account if there is none.",
+        "On the thermostat touch the Menu icon in the lower-left corner, then Connect App.",
+        "In the app touch the plus icon to add a thermostat and follow the instructions.",
+        "To change the network on the thermostat: Menu > WiFi. Make sure the Enable WiFi slider is to the right, touch Choose Network, pick the network and enter the password. The display shows a Success message when it connects.",
+        "Hidden network: Menu > WiFi > Other. Enter the network name, pick the security setting, touch Select, enter the password."
+       ],
+       "notes": [
+        "Works on a 2.4 GHz or 5 GHz WiFi network.",
+        "Matter: Menu > Matter, then scan the QR code on the thermostat with the phone."
+       ],
+       "source": "X8S & X8Q Smart Thermostats Installation and User Manual 33-00759-02 (10/26), WiFi Setup and Troubleshooting; Matter Setup"
+      },
+      {
+       "title": "Set a schedule or hold a temperature",
+       "steps": [
+        "Touch the Menu icon, then Schedule. Choose grouped days or single days.",
+        "Touch the period to edit: Wake, Away, Home or Sleep.",
+        "Touch Time to set the time, Priority to pick which sensors are used, Temperature for the heat and cool setpoints, Fan for On, Auto or Circulate in that period.",
+        "To hold a temperature: touch the up or down arrow to change the setpoint. With a schedule running, touch 'Hold until [time]' at the bottom and pick Next Period, A Specific Time, Permanently or Remove hold. Touch Save.",
+        "Auto-Away (geofencing): the manual says to use the Resideo Connect app to turn it on. A vacation hold is also set in the Resideo Connect app."
+       ],
+       "notes": [
+        "A fan change made on the home screen goes back to the scheduled fan setting at the next period - change it in the schedule to make it stick."
+       ],
+       "source": "X8S & X8Q Smart Thermostats Installation and User Manual 33-00759-02 (10/26), Scheduling and Auto-Away"
+      },
+      {
+       "title": "Add a wireless room sensor and choose which rooms count",
+       "steps": [
+        "Put 2 AAA alkaline batteries in the XRSENSOR.",
+        "At the thermostat touch Menu > Devices & Sensors > Add and follow the screen.",
+        "Mount it about 5 feet above the floor on an inside wall. Not behind furniture or doors, not in direct sunlight, not above air vents.",
+        "Menu > Priority: Selected Rooms uses the rooms picked (several are averaged). Active Rooms uses the thermostat and / or sensors that detect motion.",
+        "Menu > Preferences > Fallback Room sets what is used if no room is active or the chosen sensors drop out. Under Options, 'Never use thermostat' is for a thermostat mounted in a utility room."
+       ],
+       "notes": [],
+       "source": "X8S & X8Q Smart Thermostats Installation and User Manual 33-00759-02 (10/26), Sensor Installation; Using Priority; Fallback Room"
+      },
+      {
+       "title": "Lock the screen",
+       "steps": [
+        "Touch Menu, scroll to Screen Lock.",
+        "Unlocked: full access. Partially locked: only the temperature can be changed. Fully locked: no access.",
+        "The Screen Lock menu can require a passcode to change the lock. The thermostat provides the passcode - save it."
+       ],
+       "notes": [],
+       "source": "X8S & X8Q Smart Thermostats Installation and User Manual 33-00759-02 (10/26), Screen Lock setting"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "X8S & X8Q Smart Thermostats Installation and User Manual (33-00759-02, 10/26)",
+     "docType": "install",
+     "url": "https://digitalassets.resideo.com/damroot/Original/10012/33-00759.pdf"
+    }
+   ],
+   "sourceNotes": "33-00759-02 (10/26) X8S & X8Q Smart Thermostats Installation and User Manual, Resideo Technologies",
+   "img": ""
+  },
+  {
+   "id": "tst-honeywell-focuspro-p200-s200",
+   "brand": "Honeywell Home",
+   "family": "FocusPRO P200 (programmable) / S200 (smart)",
+   "aka": "TH2110U4004 / TH2210U4005 / TH2320U4006 (P200) / TH2110WF4008 / TH2320WF4010 / TH2320WF4011 (S200)",
+   "models": [
+    "TH2110U4004",
+    "TH2210U4005",
+    "TH2320U4006",
+    "TH2110WF4008",
+    "TH2320WF4010",
+    "TH2320WF4011",
+    "TH2110U",
+    "TH2210U",
+    "TH2320U",
+    "TH2110WF",
+    "TH2320WF",
+    "P200",
+    "S200"
+   ],
+   "type": "programmable",
+   "stages": "TH2110U4004 / TH2110WF4008: single-stage heating and cooling, heat pump WITHOUT auxiliary heat. TH2210U4005: heat pump with 1 compressor stage and auxiliary heat, dual fuel, single stage conventional. TH2320U4006 / TH2320WF4010 / TH2320WF4011: heat pump with 1 or 2 compressor stages and auxiliary heat (3H/2C), dual fuel, 1 or 2 stage conventional (2H/2C). All: radiant hydronic heat, hot water coil, 750 mV.",
+   "sort": 20,
+   "confidence": "verify",
+   "power": {
+    "cWire": "optional",
+    "batteries": "2 AA (P200 models only) - primary or backup power",
+    "notes": "P200: R and C wires for AC power, or 2 AA batteries for primary or backup power. S200 Smart: the C terminal is REQUIRED (the batteries are P200 only). No C wire and Y and G in use: THP9045A C-wire adapter (sold separately). Continuous backlight (ISU 14003) needs the common wire. Device input power 1.1 VA at 24 VAC nominal (20-30 VAC)."
+   },
+   "terminals": [
+    {
+     "t": "R",
+     "fn": "24VAC power from heating transformer",
+     "notes": "Can be jumped to Rc with the R Slider Tab."
+    },
+    {
+     "t": "Rc",
+     "fn": "24VAC power from cooling transformer",
+     "notes": "Can be jumped to R with the R Slider Tab."
+    },
+    {
+     "t": "C",
+     "fn": "24VAC common",
+     "notes": "For 2-transformer systems use the common wire from the cooling transformer. Required on S200."
+    },
+    {
+     "t": "Y",
+     "fn": "Compressor contactor (stage 1)",
+     "notes": ""
+    },
+    {
+     "t": "Y2",
+     "fn": "Compressor contactor (stage 2)",
+     "notes": "TH2320U4006, TH2320WF4010 and TH2320WF4011 only."
+    },
+    {
+     "t": "G",
+     "fn": "Fan",
+     "notes": ""
+    },
+    {
+     "t": "W",
+     "fn": "Heat (stage 1)",
+     "notes": "Do not connect any wire to W on a heat pump - it can cause heat to run continuously."
+    },
+    {
+     "t": "AUX-W2",
+     "fn": "Auxiliary heat / Heat (stage 2)",
+     "notes": "TH2210U4005, TH2320U4006, TH2320WF4010 and TH2320WF4011 only. On a heat pump the strips land here."
+    },
+    {
+     "t": "E",
+     "fn": "Emergency Heat",
+     "notes": "TH2210U4005, TH2320U4006, TH2320WF4010 and TH2320WF4011 only. Only used when emergency heat is a separate set of strips (ISU 2175)."
+    },
+    {
+     "t": "O/B",
+     "fn": "Changeover valve",
+     "notes": "O or B is picked with ISU 2060."
+    },
+    {
+     "t": "L/A-A",
+     "fn": "Heat pump fault input",
+     "notes": "Only connected if the heat pump has a fault terminal."
+    },
+    {
+     "t": "S / S",
+     "fn": "C7089U1006 wired outdoor sensor",
+     "notes": "TH2210U4005, TH2320U4006, TH2320WF4010 and TH2320WF4011 only."
+    },
+    {
+     "t": "K",
+     "fn": "To THP9045A C-Wire adapter if needed (S200 or P200)",
+     "notes": ""
+    },
+    {
+     "t": "U / U",
+     "fn": "Not used on these models",
+     "notes": "Leave the U slider tabs in place."
+    }
+   ],
+   "wiringNotes": [
+    "R Slider Tab UP (1 wire) when there is only one R wire, on R, Rc or RH. DOWN (2 wires) when one wire is on R and one on Rc.",
+    "Slider tabs for the U terminals should be left in place on P200 and S200 models.",
+    "Heat pump: IMPORTANT - do not connect any wire to W. This can cause heat to run continuously.",
+    "L is only connected if the heat pump has a fault terminal. Some heat pumps use B rather than O for the reversing valve.",
+    "Most heat pumps share the same set of heat strips for aux and em heat - then E is not used. For separate sets, wire one set of strips to E (energized in Em Heat) and a different set to AUX (energized in Aux Heat). The 2H/1C diagram note says TH2320 and TH2210 models can be configured this way; the 3H/2C note says TH2320.",
+    "C7089U1006 wired outdoor sensor on the S terminals can be used for balance point and aux heat lockout (TH2210U4005 and TH2320 models). The smart TH2320WF can use the app (Internet weather) instead.",
+    "Dual fuel: the heat pump and furnace have separate boards; W on the diagram is from the furnace board. Outdoor sensor can be used for balance point.",
+    "Which models take which diagram: heat only, cool only, 1H/1C, boiler, zone valve, 2-transformer and 1H/1C heat pump without aux - all P200 and S200. 2H/1C and 2H/2C gas furnace - TH2320 only. 2H/1C heat pump with electric aux and dual fuel 2H/1C - TH2320 and TH2210 only. 3H/2C heat pump with electric aux and dual fuel 3H/2C - TH2320 only.",
+    "Power open / power closed Series 20 zone valve: thermostat must be configured for Radiant Heat with 0 (zero) cool stages.",
+    "Heat only gas or oil furnace: G is used for independent fan control only - most do not use a fan (G) wire.",
+    "750 mV systems: wire to R and W. S200 smart models also need 24 VAC at Rc and C.",
+    "Manufacturer WARNING: this product must be installed by a trained, experienced HVAC professional. Improper wiring or configuring can cause unintended operation of the HVAC system which could lead to property damage, injury, including death."
+   ],
+   "setup": {
+    "access": "Press and hold the bottom left button and the Up arrow button for 5 seconds to open the INSTALLER MENU. Use the arrows to cycle through ISU (installer setup), TEST (installer test), INFO (a code Resideo technical support uses), RSET (reset) and REV (firmware version; WiFi version) and press SELECT on ISU. The ISU number shows on the left and its setting on the right. Arrows change the setting, NEXT goes to the next ISU, SAVE & EXIT saves and returns to the Home screen. On first power-up the thermostat goes to the ISU menu by itself; S200 models first ask whether to set up on the device or with the Resideo Technician app. Depending on system settings, not all options are shown. 'Factory' below is what the manual prints in bold.",
+    "keySettings": [
+     {
+      "setting": "ISU 1040 Scheduling options",
+      "options": "1 = 1 week (all days the same), 2 = 5-2 Programmable, 3 = 5-1-1 Programmable, 4 = 7-Day Programmable",
+      "notes": "Factory 2. The user turns the schedule on or off under Menu > Schedule."
+     },
+     {
+      "setting": "ISU 1050 Temperature Indication Scale",
+      "options": "F = Fahrenheit, C = Celsius",
+      "notes": "Factory F."
+     },
+     {
+      "setting": "ISU 1060 Outdoor Sensor",
+      "options": "0 = None, 1 = Wired Outdoor Sensor, 2 = Internet Weather (TH2320WF)",
+      "notes": "Factory 0. TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 2000 Heating System Type",
+      "options": "1 = Conventional Forced Air Heat, 2 = Heat Pump, 3 = Radiant Heat, 5 = None (Cool Only)",
+      "notes": "The default setting varies by model."
+     },
+     {
+      "setting": "ISU 2010 Heating Equipment Type",
+      "options": "Conventional: 1 = Standard Efficiency Gas Forced Air, 2 = High Efficiency Gas Forced Air, 3 = Oil Forced Air, 4 = Electric Forced Air, 5 = Hot Water Fan Coil. Heat pump: 7 = Air to Air Heat Pump, 8 = Geothermal Heat Pump. Radiant: 9 = Hot Water Radiant Heat, 12 = Steam",
+      "notes": "Factory 2 (conventional), 7 (heat pump), 9 (radiant)."
+     },
+     {
+      "setting": "ISU 2060 Reversing Valve O/B",
+      "options": "0 = O (O/B on Cool), 1 = B (O/B on Heat)",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 2070 Compressor Stages",
+      "options": "0, 1, 2",
+      "notes": "Factory 1. Only 1 compressor stage available on TH2110 and TH2210 models."
+     },
+     {
+      "setting": "ISU 2071 Heat Stages / Backup Heat Stages",
+      "options": "Heat Stages: 1, 2. Backup Heat Stages: 0, 1",
+      "notes": "Factory 1 heat stage, 1 backup heat stage. Backup heat stages on TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 2110 Fan Control in Heat",
+      "options": "1 = Equipment Controls Fan, 2 = Thermostat Controls Fan",
+      "notes": "Factory 2. Only shown if 2010 = 4 or 5."
+     },
+     {
+      "setting": "ISU 2175 Aux/E terminal control",
+      "options": "0 = Drive both Aux & E together, 1 = Aux and E independent",
+      "notes": "Factory 0. The table prints 'TH2310 & TH2320 models only'."
+     },
+     {
+      "setting": "ISU 2180 Backup Heat Source (Heat Pump Only)",
+      "options": "31 = Electric Forced Air, 32 = Standard Efficiency Gas Forced Air, 33 = High Efficiency Gas Forced Air, 34 = Oil Forced Air, Hot Water Fan Coil, 36 = Hot Water Radiant Heat",
+      "notes": "Factory 31. TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 2185 Emergency Heat Source",
+      "options": "Same list as 2180 (31, 32, 33, 34, 36)",
+      "notes": "TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 3000 System Changeover",
+      "options": "0 = Hidden (Manual only), 1 = Enabled (Automatic available)",
+      "notes": "Factory 0. Manual says automatic is not recommended if the outdoor temperature often stays below 50 F during winter months."
+     },
+     {
+      "setting": "ISU 3015 Auto Changeover Differential",
+      "options": "0 F to 5 F",
+      "notes": "Factory 0 F. Minimum number of degrees from setpoint needed to switch from the last mode running to the opposite mode in auto changeover."
+     },
+     {
+      "setting": "ISU 3020 Finish With High Heat Stage",
+      "options": "0 = No, 1 = Yes",
+      "notes": "Factory 0. TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 3021 Finish With High Cool Stage",
+      "options": "0 = No, 1 = Yes",
+      "notes": "Factory 0. TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 3090 Backup Heat Droop",
+      "options": "0 = Comfort, or 2 F to 15 F in 1 F increments",
+      "notes": "Factory 0 = Comfort. The 0 (Comfort) setting is only available if Backup Heat (ISU 2180) is set to Electric. TH2210 and TH2320 only."
+     },
+     {
+      "setting": "ISU 3110 Upstage Timer for Backup Heat",
+      "options": "0 = Off, 1 = 30 minutes, 2 = 45 minutes, 3 = 60 minutes, 4 = 75 minutes, 5 = 90 minutes, 6 = 2 hours, 7 = 3 hours, 8 = 4 hours, 9 = 5 hours, 10 = 6 hours, 11 = 8 hours, 12 = 10 hours, 13 = 12 hours, 14 = 14 hours, 15 = 16 hours",
+      "notes": "If 3090 = 0 and 2180 = 31, 3110 only has settings 0-3. No factory value is marked in bold."
+     },
+     {
+      "setting": "ISU 3120 Compressor Lockout / Balance Point",
+      "options": "Off, or -15 F to 60 F in 5 F increments",
+      "notes": "Factory Off. TH2210 and TH2320 models only. 1060 needs to be set to 1 or 2."
+     },
+     {
+      "setting": "ISU 3121 Outdoor Lockout Backup Heat",
+      "options": "Off, or 5 F to 65 F in 5 F increments",
+      "notes": "Factory Off. TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 3125 Lockout Fan after a Cool call",
+      "options": "0 = Off, 1 = 5 min up to 24 = 120 min in 5 minute steps",
+      "notes": "Factory 0 = Off."
+     },
+     {
+      "setting": "ISU 3140 / 3141 Compressor Cycle Rate (Stage 1 / Stage 2)",
+      "options": "1 - 6",
+      "notes": "Stage 2 on TH2320 models only. No factory value marked."
+     },
+     {
+      "setting": "ISU 3150 / 3151 Heating Cycle Rate (Stage 1 / Stage 2)",
+      "options": "1 - 12",
+      "notes": "Stage 2 on TH2320 models only. No factory value marked."
+     },
+     {
+      "setting": "ISU 3160 Heating Cycle Rate Auxiliary Heat",
+      "options": "1 - 12",
+      "notes": "TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 3165 Heating Cycle Rate Emergency Heat",
+      "options": "1 - 12",
+      "notes": "TH2210 and TH2320 models only."
+     },
+     {
+      "setting": "ISU 3240 Compressor Protection",
+      "options": "0 = Off, 1 - 5 minutes",
+      "notes": "Factory 5 minutes."
+     },
+     {
+      "setting": "ISU 4090 Adaptive Intelligent Recovery",
+      "options": "0 = No, 1 = Yes",
+      "notes": "Factory 1. Equipment turns on earlier so the room matches the setpoint at the scheduled time."
+     },
+     {
+      "setting": "ISU 4100 Maximum Cool Setpoint",
+      "options": "50 F to 99 F",
+      "notes": "Factory 99 F."
+     },
+     {
+      "setting": "ISU 4101 Minimum Cool Setpoint",
+      "options": "50 F to 99 F",
+      "notes": "Factory 50 F."
+     },
+     {
+      "setting": "ISU 4102 Maximum Heat Setpoint",
+      "options": "32 F to 90 F",
+      "notes": "Factory 90 F."
+     },
+     {
+      "setting": "ISU 4103 Minimum Heat Setpoint",
+      "options": "32 F to 90 F",
+      "notes": "Factory 40 F."
+     },
+     {
+      "setting": "ISU 4110 Keypad Lockout",
+      "options": "0 = Disabled, 1 = Enabled",
+      "notes": "Factory 0. Enabled only puts the LOCK choice in the user menu."
+     },
+     {
+      "setting": "ISU 7020 Number of Air Filters",
+      "options": "0 - 2",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 7110 / 7111 Air Filter 1 / Air Filter 2 Replacement Reminder",
+      "options": "0 = Off; 1-8 = 10, 20, 30, 45, 60, 90, 120, 150 run time days; 9-12 = 30, 45, 60, 75 calendar days; 13-19 = 3, 4, 5, 6, 9, 12, 15 calendar months",
+      "notes": "Factory 0 = Off."
+     },
+     {
+      "setting": "ISU 14003 Backlighting",
+      "options": "0 = On Demand, 1 = Continuous",
+      "notes": "Factory 0. Common wire needed for Continuous."
+     },
+     {
+      "setting": "ISU 14004 Backlight brightness",
+      "options": "1 - 5",
+      "notes": "Factory 5. Only displayed if Continuous backlight is selected."
+     },
+     {
+      "setting": "ISU 14005 Idle screen selection",
+      "options": "0 = Minimum information shown, 1 = Setpoint shown on idle screen, 2 = Maximum display information shown",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 14006 Idle screen message center (WiFi models only)",
+      "options": "1 = Time, 2 = Outdoor Temp (ISU 1060 = Internet, Wired), 3 = Outdoor Humidity (ISU 1060 = Internet), 4 = Indoor Humidity",
+      "notes": "Factory 1. When ISU 1060 = 1 the outdoor temperature can be viewed under MENU, then TEMP."
+     },
+     {
+      "setting": "ISU 14007 Home screen message center (WiFi models only)",
+      "options": "1 = Time, 2 = Outdoor Temp, 3 = Outdoor Humidity, 4 = Indoor Humidity",
+      "notes": "Factory 1."
+     },
+     {
+      "setting": "ISU 14010 Clock format",
+      "options": "12 / 24",
+      "notes": "Factory 12."
+     },
+     {
+      "setting": "ISU 14015 Daylight Saving Time",
+      "options": "0 = Off, 1 = On",
+      "notes": "Factory 1."
+     },
+     {
+      "setting": "ISU 14020 Temperature Display Offset",
+      "options": "-3 to 3 F",
+      "notes": "Factory 0."
+     }
+    ],
+    "installerTest": "Press and hold the bottom left button and the Up arrow button for 5 seconds to open the INSTALLER MENU. Arrow to TEST and press SELECT. The display shows the current test mode; press the Up arrow to test it. On multi-stage equipment a second press calls for Stage 2. NEXT moves to the next mode: Heat, Cool, Em Heat, Fan. EXIT when done. Only stages configured on the thermostat can be tested. Status numbers: Heat 0 = All Off, 1 = Heat Stage 1 On, 2 = Heat Stage 2 also On, 3 = Heat Stage 3 also On. Cool 0 = All Off, 1 = Cool Stage 1 On, 2 = Cool Stage 2 also On. Em Heat 0 = All Off, 1 = Em Heat On. Fan 0 = Fan Off, 1 = Fan On. Manufacturer CAUTION: compressor protection is bypassed during testing - avoid cycling the compressor quickly.",
+    "factoryReset": "INSTALLER MENU (hold the bottom left button and the Up arrow 5 seconds) > RSET > SELECT. Reset options: Reset Schedule, WiFi (S200) or perform a Factory Reset. The manual prints no further steps or screen names for the reset."
+   },
+   "diagnostics": [
+    {
+     "code": "164",
+     "meaning": "Heat Pump Fault. Heat pump is energizing the L terminal to indicate a fault.",
+     "action": "Service the heat pump."
+    },
+    {
+     "code": "170",
+     "meaning": "Thermostat Memory Failure. Internal problem with the thermostat memory.",
+     "action": ""
+    },
+    {
+     "code": "171",
+     "meaning": "Set Time and Date.",
+     "action": "Press MENU and set the time and date to clear it."
+    },
+    {
+     "code": "173",
+     "meaning": "Internal Sensor Error. Issue with the built-in temperature sensor.",
+     "action": ""
+    },
+    {
+     "code": "178",
+     "meaning": "Wired Outdoor Sensor Error.",
+     "action": "Check wires and connections to the outdoor sensor."
+    },
+    {
+     "code": "388",
+     "meaning": "Register online.",
+     "action": ""
+    },
+    {
+     "code": "399",
+     "meaning": "WiFi, internet connection lost.",
+     "action": "WiFi alerts are not shown when WiFi is set to Off under the WiFi menu."
+    },
+    {
+     "code": "400",
+     "meaning": "WiFi, no signal.",
+     "action": "WiFi alerts are not shown when WiFi is set to Off under the WiFi menu."
+    },
+    {
+     "code": "405",
+     "meaning": "Thermostat batteries are low.",
+     "action": "Replace batteries."
+    },
+    {
+     "code": "407",
+     "meaning": "Thermostat batteries are critically low.",
+     "action": "Replace batteries."
+    },
+    {
+     "code": "602",
+     "meaning": "Internal humidity sensor error.",
+     "action": ""
+    },
+    {
+     "code": "607",
+     "meaning": "WiFi network error.",
+     "action": "WiFi alerts are not shown when WiFi is set to Off under the WiFi menu."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "Display is blank",
+     "causes": [
+      "Tripped breaker",
+      "System power switch off",
+      "Furnace door not closed",
+      "Batteries (P200)"
+     ],
+     "fixes": [
+      "Check circuit breaker and reset if necessary",
+      "Make sure the power switch for the heating and cooling system is on",
+      "Make sure the furnace door is closed securely",
+      "Make sure fresh AA alkaline batteries are correctly installed"
+     ]
+    },
+    {
+     "symptom": "Heating or cooling does not run",
+     "causes": [
+      "Compressor delay (WAITING FOR EQUIPMENT)",
+      "Mode, setpoint or room temperature",
+      "No power to equipment"
+     ],
+     "fixes": [
+      "HEAT ON or COOL ON in the lower right of the display means the thermostat is calling",
+      "WAITING FOR EQUIPMENT under the temperature: wait 5 minutes to see if it makes a heat or cool call",
+      "No call and no WAITING FOR EQUIPMENT: verify the mode setting, temperature setpoint and room temperature",
+      "Check breaker, system power switch and furnace door"
+     ]
+    },
+    {
+     "symptom": "Heat or Aux Heat runs with cooling",
+     "causes": [
+      "Wire on W on a heat pump",
+      "Reversing valve setting wrong",
+      "Shorted wires"
+     ],
+     "fixes": [
+      "Verify there is not a wire attached to W for heat pump systems",
+      "Verify ISU 2060 is set correctly - the reversing valve is energized in Heat on some heat pumps and in Cool on others",
+      "Look for exposed sections of wire at the UWP wall plate"
+     ]
+    },
+    {
+     "symptom": "Heat or Aux heat runs with no call for heat or cooling",
+     "causes": [
+      "Wire on W on a heat pump",
+      "Shorted wires"
+     ],
+     "fixes": [
+      "Verify the display does not show HEAT ON, COOL ON or AUX HEAT ON",
+      "Verify there is not a wire attached to W for heat pump systems",
+      "Look for exposed sections of wire at the UWP wall plate"
+     ]
+    },
+    {
+     "symptom": "Cannot change setpoint to desired setting",
+     "causes": [
+      "Keypad locked (UNLOCK shows next to the left center button)",
+      "Wrong mode",
+      "Installer maximum heat / minimum cool setpoint"
+     ],
+     "fixes": [
+      "Unlock the keypad - the password is 1234",
+      "Verify the mode (Heat, Cool, Auto or Em Heat in the upper left)",
+      "Ranges: Heat or Em Heat 32 F to 90 F, Cool 50 F to 99 F. If it will not go the full range, check ISU 4100-4103"
+     ]
+    },
+    {
+     "symptom": "WAITING FOR EQUIPMENT shown under the room temperature",
+     "causes": [
+      "Compressor protection feature is engaged"
+     ],
+     "fixes": [
+      "Wait a few minutes for the system to safely restart"
+     ]
+    }
+   ],
+   "tips": [
+    "TH2110U4004 and TH2110WF4008 are for heat pumps WITHOUT auxiliary heat - they have no AUX-W2 or E output.",
+    "Keypad unlock: press the left center button until a 0 and three dashes show, then enter 1234 one digit at a time with the arrows, SELECT after each digit and SELECT once more.",
+    "The LOCK choice only shows in the user menu if the installer set ISU 4110 to Enabled.",
+    "Outdoor temperature shows under MENU > TEMP only if ISU 1060 is set to a wired outdoor sensor or Internet.",
+    "S200 smart models work on a 2.4 GHz or 5 GHz WiFi network. Installer setup can be done in the Resideo Technician app; the customer registers it in the Resideo Connect app, where Auto-Away can be used instead of a time schedule.",
+    "CIRC fan mode runs the fan about 33% of the time.",
+    "The package includes a decorative cover plate with J-box adapter. The accent piece pulls off and snaps on; private label accent pieces can be ordered.",
+    "5-year limited warranty."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "",
+     "topics": [
+      {
+       "title": "Get around the buttons and the menu",
+       "steps": [
+        "MODE button cycles the system mode: AUTO, HEAT, COOL, EM HEAT, OFF. Which ones show depends on the model and the system settings.",
+        "FAN button cycles the fan mode: AUTO (fan runs only when heating or cooling is on), ON (always on), CIRC (about 33% of the time).",
+        "MENU button opens the user menu. Use the arrows to move and SELECT to open: SCHEDULE, APP (S200), WIFI on or off (S200), TEMP (outdoor or indoor temperature), DATE, TIME, LOCK.",
+        "An active alert or reminder is the first item shown under MENU.",
+        "EXIT (upper left) goes back to the Home screen, or wait for it to time out."
+       ],
+       "notes": [
+        "TEMP shows the outdoor reading only if the installer set ISU 1060 to a wired outdoor sensor or Internet.",
+        "LOCK only shows if the installer set ISU 4110 to Enabled."
+       ],
+       "source": "FocusPRO P200 & S200 Series Thermostats Installation Manual 33-00680EFS, User Menu Options; System Operation Settings"
+      },
+      {
+       "title": "Set the schedule",
+       "steps": [
+        "Press MENU, then an arrow until SCHED is displayed.",
+        "A square shows around ON or OFF. Use an arrow to pick ON. Press SELECT to edit the schedule (EXIT leaves the menu).",
+        "Press SELECT to edit the day or days flashing.",
+        "Wake is flashing: press NEXT, then use an arrow to turn that period on or off. Press NEXT.",
+        "Set the time with the arrows, NEXT. Set the Heat setpoint, NEXT. Set the Cool setpoint, NEXT.",
+        "Repeat for Away, Home and Sleep, then for the other days.",
+        "Press SAVE & EXIT (upper left)."
+       ],
+       "notes": [
+        "How the days are grouped depends on ISU 1040.",
+        "An S200 registered in the Resideo Connect app can use Auto-Away instead of a time schedule."
+       ],
+       "source": "FocusPRO P200 & S200 Series Thermostats Installation Manual 33-00680EFS, Adjusting program schedules"
+      },
+      {
+       "title": "Hold a temperature",
+       "steps": [
+        "Temporary: press an arrow to the temperature wanted. Nothing more is needed - it holds until the next scheduled period. Press SAVE or let the display time out.",
+        "Permanent: press an arrow to the temperature wanted, then press and release the HOLD button until HOLD PERMANANTLY is selected. Press SAVE or let the display time out.",
+        "Cancel either one: press and release HOLD until CANCEL HOLD is selected."
+       ],
+       "notes": [],
+       "source": "FocusPRO P200 & S200 Series Thermostats Installation Manual 33-00680EFS, Program schedule override"
+      },
+      {
+       "title": "Lock and unlock the keypad",
+       "steps": [
+        "Press MENU, arrow to LOCK, press SELECT.",
+        "Arrow to OFF (unlocked), PART (only the temperature can be changed) or ON (no access), press SELECT, then SAVE & EXIT.",
+        "To unlock: UNLOCK shows next to the left center button. Press that button until a 0 and three dashes show.",
+        "Enter the password 1234: arrows change the digit, SELECT moves to the next. After the fourth digit press SELECT again.",
+        "Wrong digit: press BACK to go back a step."
+       ],
+       "notes": [
+        "LOCK is only in the menu if the installer set ISU 4110 Keypad Lockout to Enabled."
+       ],
+       "source": "FocusPRO P200 & S200 Series Thermostats Installation Manual 33-00680EFS, Keypad Lockout"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "FocusPRO P200 & S200 Series Thermostats Installation Manual (33-00680EFS)",
+     "docType": "install",
+     "url": "https://customer.resideo.com/resources/techlit/TechLitDocuments/33-00000s/33-00680EFS.pdf"
+    }
+   ],
+   "sourceNotes": "33-00680EFS FocusPRO P200 & S200 Series Thermostats Installation Manual (TH2110U4004, TH2210U4005, TH2320U4006, TH2110WF4008, TH2320WF4010, TH2320WF4011), Resideo Technologies",
+   "img": ""
+  },
+  {
+   "id": "tst-honeywell-focuspro-n100",
+   "brand": "Honeywell Home",
+   "family": "FocusPRO N100 (non-programmable)",
+   "aka": "TH1110U4000 / TH1210U4001 / TH1320U4002",
+   "models": [
+    "TH1110U4000",
+    "TH1210U4001",
+    "TH1320U4002",
+    "TH1110U",
+    "TH1210U",
+    "TH1320U",
+    "N100"
+   ],
+   "type": "non-programmable",
+   "stages": "From the installer sheet's setup list: compressor stages 0, 1 or 2 (2 for TH1320U4002 only); heat stages 1 or 2; backup heat stages 0 or 1 on TH1210 / TH1320 only. System types: conventional forced air, heat pump, radiant heat, cool only. The sheet prints no compatibility list - the full manual is behind its QR code.",
+   "sort": 20,
+   "confidence": "verify",
+   "power": {
+    "cWire": "",
+    "batteries": "",
+    "notes": "The English panel of the installer sheet prints only 'Device input power rating: 24V, 60Hz, 1.1VA' and contact ratings of up to 1A, inductive. It does not say whether a C wire is required. The Spanish panel adds a line for 2 AA alkaline batteries; the English panel does not print it."
+   },
+   "terminals": [],
+   "wiringNotes": [
+    "The installer sheet (33-00682EFS) prints no terminal table and no wiring diagrams. It mounts on a UWP wall plate. Scan the QR code on the sheet (info.honeywellhome.com/focuspro-n100-im) for the full manual.",
+    "The one wiring note printed: for heat pump systems do NOT attach a wire to the W terminal of the UWP wall plate.",
+    "Pull to remove the thermostat from the UWP."
+   ],
+   "setup": {
+    "access": "On initial setup the thermostat enters the ISU menu by itself. Afterwards: press and hold the bottom left button and the Up arrow button for 5 seconds to open INSTALLER SETUP (ISU). The ISU number is on the left and its setting on the right. Arrows change the setting, NEXT goes to the next ISU, SAVE & EXIT finishes. The installer sheet lists ISU 1050 to 3165 only; for 3240 to 14020 it says to use the online installation manual, or press SAVE and leave them at default. 'Factory' below is what the sheet prints in bold.",
+    "keySettings": [
+     {
+      "setting": "ISU 1050 Temperature Scale",
+      "options": "F = Fahrenheit, C = Celsius",
+      "notes": "Factory F."
+     },
+     {
+      "setting": "ISU 1060 Outdoor Sensor",
+      "options": "0 = None, 1 = Wired Outdoor Sensor",
+      "notes": "Factory 0. TH1210 / TH1320 only."
+     },
+     {
+      "setting": "ISU 2000 Heating System Type",
+      "options": "1 = Conventional Forced Air Heat, 2 = Heat Pump, 3 = Radiant Heat, 5 = None (Cool Only)",
+      "notes": "Default setting varies by model."
+     },
+     {
+      "setting": "ISU 2010 Heating Equipment Type",
+      "options": "Conventional: 1 = Standard Efficiency Gas Forced Air, 2 = High Efficiency Gas Forced Air, 3 = Oil Forced Air, 4 = Electric Forced Air, 5 = Hot Water Fan Coil. Heat pump: 7 = Air to Air Heat Pump, 8 = Geothermal Heat Pump. Radiant: 9 = Hot Water Radiant Heat, 12 = Steam",
+      "notes": "Factory 2 (conventional), 7 (heat pump), 9 (radiant)."
+     },
+     {
+      "setting": "ISU 2060 Reversing Valve O/B",
+      "options": "O = O (O/B in Cool), 1 = B (O/B in Heat)",
+      "notes": "Factory O = O (the sheet prints the first choice with a letter O)."
+     },
+     {
+      "setting": "ISU 2070 Compressor Stages",
+      "options": "0, 1, 2",
+      "notes": "Factory 1. 2 for TH1320U4002 only."
+     },
+     {
+      "setting": "ISU 2071 Heat Stages / Backup Heat Stages",
+      "options": "Heat Stages: 1, 2. Backup Heat Stages: 0, 1",
+      "notes": "Factory 1 heat stage, 1 backup heat stage. Backup heat stages on TH1210 / TH1320 only."
+     },
+     {
+      "setting": "ISU 2110 Fan Control in Heat",
+      "options": "1 = Equipment Controls Fan, 2 = Thermostat Controls Fan",
+      "notes": "Factory 2. Shown if 2010 = 4 or 5."
+     },
+     {
+      "setting": "ISU 2175 Aux / E Terminal Control",
+      "options": "0 = Drive both Aux & E together, 1 = Aux and E independent",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 2180 Backup Heat Source (Heat Pump Only)",
+      "options": "31 = Electric Forced Air, 32 = Standard Efficiency Gas Forced Air, 33 = High Efficiency Gas Forced Air, 34 = Oil Forced Air, 36 = Hot Water Radiant Heat",
+      "notes": "Factory 31. TH1210 / TH1320 only."
+     },
+     {
+      "setting": "ISU 2185 Emergency Heat Source",
+      "options": "Same list as 2180",
+      "notes": "TH1210 / TH1320 only."
+     },
+     {
+      "setting": "ISU 3000 System Changeover",
+      "options": "0 = Manual, 1 = Automatic",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 3015 Auto Changeover Differential",
+      "options": "0 F to 5 F",
+      "notes": "Factory 0 F."
+     },
+     {
+      "setting": "ISU 3020 Finish With High Cool Stage",
+      "options": "0 = No, 1 = Yes",
+      "notes": "Factory 0. Numbered as printed on the N100 sheet."
+     },
+     {
+      "setting": "ISU 3021 Finish With High Heat Stage",
+      "options": "0 = No, 1 = Yes",
+      "notes": "Factory 0. Numbered as printed on the N100 sheet."
+     },
+     {
+      "setting": "ISU 3090 Backup Heat Droop",
+      "options": "0 = Comfort, or 2 F to 15 F in 1 F increments",
+      "notes": "Factory 0 = Comfort. For heat pump with aux heat stage. 0 only for electric."
+     },
+     {
+      "setting": "ISU 3110 Upstage Timer for Backup Heat",
+      "options": "0 = Off, 1 = 30 minutes, 2 = 45 minutes, 3 = 60 minutes, 4 = 75 minutes, 5 = 90 minutes, 6 = 2 hours, 7 = 3 hours, 8 = 4 hours, 9 = 5 hours, 10 = 6 hours, 11 = 8 hours, 12 = 10 hours, 13 = 12 hours, 14 = 14 hours, 15 = 16 hours",
+      "notes": "If 3090 = 0 and 2180 = 31, 3110 only has settings 0-3. No factory value is marked in bold."
+     },
+     {
+      "setting": "ISU 3120 Compressor Lockout",
+      "options": "0 = Off, 1 = -15 F, 2 = -10 F, 3 = -5 F, 4 = 0 F, 5 = 5 F, then 10 = 10 F up to 60 = 60 F in 5 F steps",
+      "notes": "Factory 0 = Off. Wired outdoor sensor is needed. Setting 65 is not for 3120."
+     },
+     {
+      "setting": "ISU 3121 Outdoor Lockout Backup Heat",
+      "options": "0 = Off, 5 = 5 F, then 10 = 10 F up to 65 = 65 F in 5 F steps",
+      "notes": "Factory 0 = Off. Wired outdoor sensor is needed. Settings 1-4 are not for 3121."
+     },
+     {
+      "setting": "ISU 3125 Lockout Fan after a Cool Call",
+      "options": "0 = Off, 1 = 5 min to 24 = 120 min in 5 minute increments",
+      "notes": "Factory 0 = Off."
+     },
+     {
+      "setting": "ISU 3140 / 3141 Compressor Cycle Rate (Stage 1 / Stage 2)",
+      "options": "1-6",
+      "notes": "Stage 2 on TH1320U4002 only. No factory value marked."
+     },
+     {
+      "setting": "ISU 3150 / 3151 Heating Cycle Rate (Stage 1 / Stage 2)",
+      "options": "1-12",
+      "notes": "Stage 2 on TH1320U4002 only. No factory value marked."
+     },
+     {
+      "setting": "ISU 3160 Heating Cycle Rate Auxiliary Heat",
+      "options": "1-12",
+      "notes": "TH1210 / TH1320 only."
+     },
+     {
+      "setting": "ISU 3165 Heating Cycle Rate Emergency Heat",
+      "options": "1-12",
+      "notes": "TH1210 / TH1320 only."
+     },
+     {
+      "setting": "ISU 3240 - 14020",
+      "options": "Not printed on the installer sheet",
+      "notes": "Refer to the online installation manual (QR code on the sheet), or press SAVE and leave them at default settings."
+     }
+    ],
+    "installerTest": "The installer sheet (33-00682EFS) does not print a system test procedure. It carries the manufacturer CAUTION that compressor protection is bypassed during testing - avoid cycling the compressor quickly. See the full manual behind the QR code on the sheet.",
+    "factoryReset": "The installer sheet (33-00682EFS) does not print a reset procedure."
+   },
+   "diagnostics": [],
+   "troubleshooting": [],
+   "tips": [
+    "The paper in the box is a short installer sheet. The full ISU list and manual are at info.honeywellhome.com/focuspro-n100-im (QR code on the sheet).",
+    "TH1110U4000: the sheet gives backup heat stages, backup heat source, emergency heat source, the outdoor sensor and the aux / emergency cycle rates to TH1210 / TH1320 only.",
+    "Second compressor stage and second-stage cycle rates are TH1320U4002 only.",
+    "The sheet prints no alert codes, no terminal table and no system test.",
+    "Resideo Customer Care: 1-800-633-3991."
+   ],
+   "howTo": [],
+   "manuals": [
+    {
+     "title": "FocusPRO N100 Series Non-Programmable Thermostat Installer Guide (33-00682EFS-06, Rev 04-25)",
+     "docType": "install",
+     "url": "https://customer.resideo.com/resources/Techlit/TechLitDocuments/33-00000s/33-00682EFS.pdf"
+    },
+    {
+     "title": "FocusPRO N100 full ISU list and manual (online)",
+     "docType": "install",
+     "url": "https://info.honeywellhome.com/focuspro-n100-im"
+    }
+   ],
+   "sourceNotes": "33-00682EFS-06 (Rev 04-25) FocusPRO N100 Series Non-Programmable Thermostat TH1110U4000, TH1210U4001, TH1320U4002 Installer Guide, Resideo Technologies",
+   "img": ""
+  },
+  {
+   "id": "tst-honeywell-x2s",
+   "brand": "Honeywell Home",
+   "family": "X2S Smart / Programmable Thermostat",
+   "aka": "RTH2CWF / RTHC2CWF / RTH2SMC",
+   "models": [
+    "RTH2CWF",
+    "RTHC2CWF",
+    "RTH2SMC",
+    "X2S"
+   ],
+   "type": "smart-wifi",
+   "stages": "Conventional: 0, 1 or 2 cool stages and 1 or 2 heat stages. Heat pump: only 1 compressor stage is supported, with 0 or 1 backup heat stage - electric backup heat only. Radiant heat (boiler) and cool only are also system types.",
+   "sort": 10,
+   "confidence": "verify",
+   "power": {
+    "cWire": "required",
+    "batteries": "",
+    "notes": "Required: 24 VAC power (C wire). The wiring checklist marks C as Required. No batteries are listed for the thermostat."
+   },
+   "terminals": [
+    {
+     "t": "R",
+     "fn": "R wire (R, Rh or Rc) when there is 1 R wire; the R or Rh wire when there are 2",
+     "notes": "R switch UP for 1 R wire, DOWN for 2."
+    },
+    {
+     "t": "Rc",
+     "fn": "Rc wire when there are 2 R wires",
+     "notes": ""
+    },
+    {
+     "t": "C",
+     "fn": "Common - Required",
+     "notes": "One C or C1 wire goes here."
+    },
+    {
+     "t": "Y",
+     "fn": "On the wiring checklist (old-thermostat labels Y1 or M)",
+     "notes": "The guide prints no terminal description table."
+    },
+    {
+     "t": "Y2",
+     "fn": "On the wiring checklist",
+     "notes": "For heat pumps only 1 stage is supported (ISU 2070)."
+    },
+    {
+     "t": "G",
+     "fn": "On the wiring checklist (old-thermostat label F)",
+     "notes": ""
+    },
+    {
+     "t": "W",
+     "fn": "Conventional heat (old-thermostat labels W1 or H)",
+     "notes": "Do NOT use W for heat pump applications."
+    },
+    {
+     "t": "W2 / AUX",
+     "fn": "Conventional: W2. Heat pump: auxiliary heat",
+     "notes": "Auxiliary heat must wire to AUX or E."
+    },
+    {
+     "t": "E",
+     "fn": "Heat pump: auxiliary heat may wire to AUX or E",
+     "notes": ""
+    },
+    {
+     "t": "O/B",
+     "fn": "Reversing valve - O or B is set with ISU 2060",
+     "notes": ""
+    },
+    {
+     "t": "L/A",
+     "fn": "Heat pump fault input (alert 164: heat pump is energizing the L terminal)",
+     "notes": "Shown on the checklist as 'A or L/A'."
+    },
+    {
+     "t": "K",
+     "fn": "On the wiring checklist",
+     "notes": "The guide prints no description for K."
+    },
+    {
+     "t": "S / U",
+     "fn": "Not supported with this thermostat",
+     "notes": "No sensor input and no relay."
+    }
+   ],
+   "wiringNotes": [
+    "A C wire is required. The guide prints no C-wire adapter instructions.",
+    "S and U terminals are not supported: no input for indoor or outdoor sensors and no relay.",
+    "R switch: 1 R wire (R, Rh or Rc) - switch UP, wire in R. 2 R wires - switch DOWN, Rc wire in Rc, R or Rh wire in R.",
+    "Conventional alternate wiring: if both R and Rc must be connected, R Slider Tab down (2 wires). Old thermostat had both R and RH: slider down, R wire to the Rc terminal and RH wire to the R terminal. One C or C1 wire goes to C; two C or C1 wires - call support.",
+    "Heat pump: IMPORTANT - do NOT use W. Auxiliary heat must wire to AUX or E.",
+    "Heat pump alternate wiring: keep the R Slider Tab up (1 wire). V and VR wires - stop and contact a qualified contractor. Separate O and B wires - attach the B wire to the C terminal; if another wire is already on C, stop and contact a qualified contractor. Y1, W1 and W2 wires - stop and contact a qualified contractor.",
+    "This thermostat does not need jumpers.",
+    "Does not work with electric baseboard heat (120-240V).",
+    "Only electric backup heat is supported on a heat pump - the guide says not to use this thermostat if the heat pump uses a gas or oil backup heat source.",
+    "Mount the UWP with the 3 supplied screws; drill 3/16 inch holes for the anchors.",
+    "Manufacturer WARNING: improper wiring or configuring of the thermostat can cause unintended operation of the HVAC system which could lead to property damage, injury, including death."
+   ],
+   "setup": {
+    "access": "First power-up: the screen shows SETUP - pick USING APP (Resideo Connect app) or ON DEVICE. On the device it sets the time and date, then goes into the ISU menu. Afterwards: press and hold the bottom left button and the Up arrow button for 5 seconds to open INSTALLER SETUP. The ISU number shows on the left and its setting on the right. Arrows change the setting, NEXT goes to the next ISU, SAVE & EXIT saves and returns to the Home screen. Depending on system settings, not all options are shown. 'Factory' below is what the guide prints in bold.",
+    "keySettings": [
+     {
+      "setting": "ISU 1040 Scheduling Options",
+      "options": "1 = 1 week (all days the same), 2 = 5-2 Programmable, 3 = 5-1-1 Programmable, 4 = 7-Day Programmable",
+      "notes": "Factory 2. No schedule wanted: leave the default, then turn the schedule Off in the Schedule menu after setup."
+     },
+     {
+      "setting": "ISU 1050 Temperature Indication Scale",
+      "options": "F = Fahrenheit, C = Celsius",
+      "notes": "Default varies by model."
+     },
+     {
+      "setting": "ISU 2000 Heating System Type",
+      "options": "1 = Conventional Forced Air Heat, 2 = Heat Pump, 3 = Radiant Heat (Boiler), 5 = None (Cool Only)",
+      "notes": "Factory 1."
+     },
+     {
+      "setting": "ISU 2010 Heating Equipment Type",
+      "options": "Conventional: 1 = Standard Efficiency Gas Forced Air, 2 = High Efficiency Gas Forced Air, 3 = Oil Forced Air, 4 = Electric Forced Air, 5 = Hot Water Fan Coil. Radiant: 9 = Hot Water Radiant Heat, 12 = Steam",
+      "notes": "Factory 2 (conventional), 9 (radiant). ISU 2010 is not shown when 2000 = Heat Pump."
+     },
+     {
+      "setting": "ISU 2060 Reversing Valve Polarity",
+      "options": "0 = O (O/B on Cool), 1 = B (O/B on Heat)",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 2070 Cool / Compressor Stages",
+      "options": "0, 1, 2",
+      "notes": "Factory 1. For heat pumps only 1 stage is supported."
+     },
+     {
+      "setting": "ISU 2071 Heat / Backup Heat Stages",
+      "options": "Heat Stages: 1, 2. Backup Heat Stages: 0, 1",
+      "notes": "Factory 1 heat stage, 1 backup heat stage."
+     },
+     {
+      "setting": "ISU 2180 Aux Backup Heat Type (for heat pump systems)",
+      "options": "31 = Electric Forced Air",
+      "notes": "The only choice. If the heat pump uses a gas or oil backup heat source, this thermostat should not be used."
+     },
+     {
+      "setting": "ISU 3000 Auto Changeover",
+      "options": "0 = Hidden (Manual only), 1 = Enabled (Automatic available)",
+      "notes": "Factory 0. Guide says automatic is not recommended if the outdoor temperature often stays below 50 F during winter months."
+     },
+     {
+      "setting": "ISU 4090 Smart Response",
+      "options": "0 = No, 1 = Yes",
+      "notes": "Factory 1. Equipment turns on earlier so the room matches the setpoint at the scheduled time."
+     },
+     {
+      "setting": "ISU 4103 Minimum Heat Setpoint",
+      "options": "32 F to 50 F",
+      "notes": "Factory 40 F. Do not set lower than 40 F unless pipes are not at risk of freezing."
+     },
+     {
+      "setting": "ISU 7110 Air Filter Replacement Reminder",
+      "options": "0 = Off; 1-8 = 10, 20, 30, 45, 60, 90, 120, 150 run time days; 9-12 = 30, 45, 60, 75 calendar days; 13-19 = 3, 4, 5, 6, 9, 12, 15 calendar months",
+      "notes": "Run time only counts the time that Heat, Cool or Fan are running. No factory value marked."
+     },
+     {
+      "setting": "ISU 14003 Backlighting",
+      "options": "0 = On Demand, 1 = Continuous",
+      "notes": "Factory 0."
+     },
+     {
+      "setting": "ISU 14004 Backlight brightness",
+      "options": "1 - 5",
+      "notes": "Only displayed if Continuous backlight is selected."
+     },
+     {
+      "setting": "ISU 14005 Idle screen selection",
+      "options": "0 = Minimum information shown, 1 = Setpoint shown on idle screen, 2 = Maximum display information shown",
+      "notes": ""
+     },
+     {
+      "setting": "ISU 14006 Idle screen message center",
+      "options": "1 = Time, 2 = Outdoor Temp, 3 = Outdoor Humidity, 4 = Indoor Humidity",
+      "notes": "Only available if 0 or 1 is selected in 14005. Outdoor choices only show when the thermostat is registered to the app."
+     },
+     {
+      "setting": "ISU 14007 Home screen message center",
+      "options": "1 = Time, 2 = Outdoor Temp, 3 = Outdoor Humidity, 4 = Indoor Humidity",
+      "notes": "Outdoor choices only show when the thermostat is registered to the app."
+     },
+     {
+      "setting": "ISU 14010 Clock format",
+      "options": "12 / 24",
+      "notes": "Factory 12."
+     },
+     {
+      "setting": "ISU 14015 Daylight Saving Time",
+      "options": "0 = Off, 1 = On",
+      "notes": "Factory 1."
+     }
+    ],
+    "installerTest": "The X2S Installation and User Guide (33-00689EFS-01) does not print a system test procedure. It carries the manufacturer CAUTION that compressor protection is bypassed during testing - avoid cycling the compressor quickly.",
+    "factoryReset": "The X2S Installation and User Guide (33-00689EFS-01) does not print a reset procedure."
+   },
+   "diagnostics": [
+    {
+     "code": "164",
+     "meaning": "Heat Pump Fault. Heat pump is energizing the L terminal to indicate a fault.",
+     "action": "Service the heat pump."
+    },
+    {
+     "code": "170",
+     "meaning": "Thermostat Memory Failure. Internal problem with the thermostat memory.",
+     "action": ""
+    },
+    {
+     "code": "171",
+     "meaning": "Set Time and Date.",
+     "action": "MENU > TIME and MENU > DATE. Set automatically once the thermostat is registered in the Resideo Connect app."
+    },
+    {
+     "code": "173",
+     "meaning": "Internal Sensor Error. Issue with the built-in temperature sensor.",
+     "action": ""
+    },
+    {
+     "code": "388",
+     "meaning": "Register thermostat online.",
+     "action": "If the app is not used, WiFi and app messages can be dismissed by going into the WiFi menu and turning WiFi off."
+    },
+    {
+     "code": "399",
+     "meaning": "No internet connection.",
+     "action": "Same WiFi-off note as 388."
+    },
+    {
+     "code": "400",
+     "meaning": "WiFi signal lost.",
+     "action": "Wait for it to reconnect or select a new network in the Resideo Connect app configuration menu. If it cannot reconnect, troubleshoot the router. Same WiFi-off note as 388."
+    },
+    {
+     "code": "602",
+     "meaning": "Humidity sensor failure.",
+     "action": ""
+    },
+    {
+     "code": "607",
+     "meaning": "WiFi communication error.",
+     "action": "Same WiFi-off note as 388."
+    }
+   ],
+   "troubleshooting": [
+    {
+     "symptom": "Display is blank",
+     "causes": [
+      "Tripped breaker",
+      "System power switch off",
+      "Loose wire, especially C",
+      "R/Rc slider not set"
+     ],
+     "fixes": [
+      "Check circuit breaker and reset if necessary",
+      "Make sure the power switch for the heating and cooling system is on",
+      "Make sure wire connections (especially the C wire) are secure",
+      "Verify the R/Rc slider switch is set up if Rc does not have a separate wire attached"
+     ]
+    },
+    {
+     "symptom": "Heating or cooling does not run",
+     "causes": [
+      "Compressor delay (WAITING FOR EQUIPMENT)",
+      "Mode, setpoint or room temperature",
+      "No power to equipment"
+     ],
+     "fixes": [
+      "HEAT ON or COOL ON in the lower right of the display means the thermostat is calling",
+      "WAITING FOR EQUIPMENT under the temperature: wait 5 minutes to see if it makes a heat or cool call",
+      "No call and no WAITING FOR EQUIPMENT: verify the mode setting, temperature setpoint and room temperature",
+      "Check breaker, system power switch and furnace door"
+     ]
+    },
+    {
+     "symptom": "Heat or Aux Heat runs with cooling",
+     "causes": [
+      "Wire on W on a heat pump",
+      "Reversing valve setting wrong",
+      "Shorted wires"
+     ],
+     "fixes": [
+      "Verify there is not a wire attached to W for heat pump systems",
+      "Verify ISU 2060 is set correctly - the reversing valve is energized in Heat on some heat pumps and in Cool on others",
+      "Look for exposed sections of wire at the UWP"
+     ]
+    },
+    {
+     "symptom": "Heat or Aux Heat runs with no call for heat or cooling",
+     "causes": [
+      "Wire on W on a heat pump",
+      "Shorted wires"
+     ],
+     "fixes": [
+      "Verify the display does not show HEAT ON, COOL ON or AUX HEAT ON",
+      "Verify there is not a wire attached to W for heat pump systems",
+      "Look for exposed sections of wire at the UWP"
+     ]
+    },
+    {
+     "symptom": "Cannot change setpoint to desired setting",
+     "causes": [
+      "Wrong mode",
+      "Outside the setting range"
+     ],
+     "fixes": [
+      "Verify the mode (Heat, Cool, Auto or Em Heat in the upper left)",
+      "Ranges: Heat or Em Heat 32 F to 90 F, Cool 50 F to 99 F"
+     ]
+    },
+    {
+     "symptom": "WAITING FOR EQUIPMENT shown under the room temperature",
+     "causes": [
+      "Compressor protection feature is engaged"
+     ],
+     "fixes": [
+      "Wait a few minutes for the system to safely restart"
+     ]
+    },
+    {
+     "symptom": "Thermostat shows offline (strike-through WiFi icon)",
+     "causes": [
+      "Not connected to WiFi",
+      "Router off or not broadcasting"
+     ],
+     "fixes": [
+      "Make sure the router is powered and broadcasting",
+      "Power cycle the router; the thermostat reconnects by itself when the network is back"
+     ]
+    }
+   ],
+   "tips": [
+    "System modes: AUTO, HEAT, COOL, EM HEAT, OFF - which ones show depends on the model and system settings.",
+    "CIRC fan mode runs the fan about 33% of the time.",
+    "An alert cannot be dismissed on the thermostat; a reminder can (DISMISS resets it).",
+    "'Active Recovery' on the display means the system is running ahead of a scheduled period (Smart Response, ISU 4090).",
+    "Works on a 2.4 GHz or 5 GHz WiFi network. Time and date set themselves once it is registered in the Resideo Connect app.",
+    "One white and one grey accent piece come in the box; it pulls off and snaps on.",
+    "2-year limited warranty. Resideo Customer Care 1-800-633-3991."
+   ],
+   "howTo": [
+    {
+     "label": "",
+     "note": "",
+     "topics": [
+      {
+       "title": "Set it up in the Resideo Connect app",
+       "steps": [
+        "After power-up the screen shows SETUP. Touch USING APP on the thermostat.",
+        "Download the Resideo Connect App from the App Store or Google Play.",
+        "Open the app. The thermostat should appear under thermostat found - tap SET UP NOW. If it does not appear, create an account or sign in, then select the X2S thermostat to install.",
+        "The app walks through the rest of the setup."
+       ],
+       "notes": [
+        "To set it up on the thermostat instead, pick ON DEVICE: it asks for the time and date, then goes into the installer setup (ISU) list.",
+        "If the app is not going to be used, the WiFi and app alerts can be cleared by turning WiFi off in the WiFi menu."
+       ],
+       "source": "X2S Programmable Thermostat Installation and User Guide 33-00689EFS-01 (Rev. 4/26), Setup with Resideo Connect App"
+      },
+      {
+       "title": "Get around the buttons",
+       "steps": [
+        "MODE button cycles the system mode: AUTO, HEAT, COOL, EM HEAT, OFF.",
+        "FAN button cycles the fan mode: AUTO (fan runs only when heating or cooling is on), ON (always on), CIRC (about 33% of the time).",
+        "MENU button opens the options - TIME, DATE and SCHED among them. Arrows move, SELECT opens.",
+        "Active alerts and reminders are the first menu items shown. SELECT shows the alert number or the reminder text."
+       ],
+       "notes": [],
+       "source": "X2S Programmable Thermostat Installation and User Guide 33-00689EFS-01 (Rev. 4/26), System Operation"
+      },
+      {
+       "title": "Set the schedule",
+       "steps": [
+        "Press MENU, then an arrow until SCHED is displayed.",
+        "A square shows around ON or OFF. Use an arrow to pick ON. Press SELECT to edit the schedule (EXIT leaves the menu).",
+        "Press SELECT to edit the day or days flashing.",
+        "Wake is flashing: press NEXT, then use an arrow to turn that period on or off (OFF disables the period). Press NEXT.",
+        "Set the time with the arrows, NEXT. Set the Heat setpoint, NEXT. Set the Cool setpoint, NEXT.",
+        "Repeat for Away, Home and Sleep, then for the other days.",
+        "Press SAVE & EXIT (upper left)."
+       ],
+       "notes": [
+        "How the days are grouped depends on ISU 1040."
+       ],
+       "source": "X2S Programmable Thermostat Installation and User Guide 33-00689EFS-01 (Rev. 4/26), Adjusting Program Schedules"
+      },
+      {
+       "title": "Hold a temperature",
+       "steps": [
+        "Temporary: press an arrow to the temperature wanted. Nothing more is needed - it holds until the next scheduled period. Press SAVE or let the display time out.",
+        "Permanent: press an arrow to the temperature wanted, then press and release the HOLD button until HOLD PERMANANTLY is selected. Press SAVE or let the display time out.",
+        "Cancel either one: press and release HOLD until CANCEL HOLD is selected."
+       ],
+       "notes": [],
+       "source": "X2S Programmable Thermostat Installation and User Guide 33-00689EFS-01 (Rev. 4/26), Program Schedule Override"
+      }
+     ]
+    }
+   ],
+   "manuals": [
+    {
+     "title": "X2S Programmable Thermostat RTH2CWF / RTHC2CWF / RTH2SMC Installation and User Guide (33-00689EFS-01, Rev. 4/26)",
+     "docType": "install",
+     "url": "https://docs.honeywellhome.com/x2p-iug/en/X2S_PDF_EN.pdf"
+    }
+   ],
+   "sourceNotes": "33-00689EFS-01 (Rev. 4/26) X2S Programmable Thermostat RTH2CWF / RTHC2CWF / RTH2SMC Installation and User Guide, Resideo Technologies",
+   "img": ""
+  }
+ ],
+ "aux": {
+  "tst-trane-priority-smart": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Do this on the thermostat: press Menu > Service > Technician Access > Installer Setup. (The Trane Technician App can do the same setup over Bluetooth.)",
+    "Look at Lockout settings first. Auxillary Heat Lockout is Off or On and ships Off. When it is On, auxiliary heat is prevented any time it is warmer outside than Auxillary Heat Lockout Settings (25 F to 70 F, factory 45 F). If the strips are being held off on days the heat pump can't keep up, raise that temperature or turn the lockout Off.",
+    "Then Comfort settings > Aggressive Recovery (Off or On, ships Off). The guide says it enables aggressive recovery with a setpoint change of 2 degrees or more, and that it increases the speed at which the control adjusts the equipment staging. That is all the guide says: it is tied to a setpoint change of 2 degrees or more, and the guide does not say how much sooner the strips come on.",
+    "Comfort settings > Control Response Rate: Slow, Medium or Fast, ships Medium. The guide says only that it increases or decreases the responsiveness of the control's proportional-integral algorithm, and its troubleshooting table points to this setting when heating or cooling cycles too fast or too slow. It does not say which choice brings the strips on sooner.",
+    "Strips missing only during defrost: check Defrost Heater Balance Point W1, W2 and W3 in Lockout settings. All three ship Off. When one is On, indoor heat is not allowed during defrost while it is warmer outside than its setting: the W1 point holds off 1st, 2nd and 3rd stage (40 F to 55 F, factory 55 F), the W2 point holds off 1st and 2nd stage (10 F to 50 F, factory 40 F), the W3 point holds off 3rd stage (5 F to 45 F, factory 25 F).",
+    "Right now fix: set System Mode to Emergency Heating. It runs the indoor heat source only. It is only offered when the outdoor unit type is a heat pump."
+   ],
+   "notes": [
+    "When Auxillary Heat Lockout and Compressor Lockout are both enabled, the control keeps a 10 degree minimum separation between them.",
+    "The lockouts work from outdoor temperature. Sensor configuration > Outdoor Temperature Sensor ships set to None; the other choices are Internet ODT (needs the ZIP / Postal code) and Wired ODT.",
+    "No strips at all: check HVAC configuration. Outdoor Equipment Type ships as Cooling Only, Indoor Unit Type ships as Gas/Oil and Indoor Heat Stages ships as Single. For a heat pump with strips they have to be Heat Pump and Electric, with the heat stages matching the heater. On a heat pump the strip stages land on W1, W2 and W3.",
+    "The guide prints no droop, no stage timer and no stage inhibit time for this thermostat - the settings above are all it prints.",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "Trane / American Standard Smart Thermostat *CONT24P Installer's Guide (CNTR-SVN004A-EN, May 2026)"
+  },
+  "tst-honeywell-x8s-x8q": {
+   "applies": "no-setting",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "The manual prints no setting for when the strips come on. It says auxiliary heat runs with the heat pump when the thermostat is in Heat mode and 'load conditions determine Backup Heat is needed', and its Modify Configuration table lists no droop, no upstage timer and no outdoor lockout for the strips.",
+    "Make sure the thermostat knows the strips are there. Touch the Menu icon > Advanced setup > Modify Configuration. ISU 2000 System Type must be Heat Pump, and under ISU 2070 Backup Heat Stages must be 1 (choices 0 or 1).",
+    "ISU 2180 Backup Heat Type must be Electric Heat Strips. The manual says the thermostat only supports electric backup - any other choice brings up a not-compatible warning.",
+    "Check the wire. Auxiliary heat must be on AUX. W is not used on a heat pump, and E is not used by this thermostat - a wire that was on E goes to AUX.",
+    "Prove the strips: Menu icon > Advanced setup > Equipment Test > Em heat. The test shuts off by itself after 30 minutes.",
+    "Right now fix: touch Mode and pick Em Heat. Emergency heat runs and the heat pump is locked out. Put it back to Heat after."
+   ],
+   "notes": [
+    "The display shows 'Using Auxiliary heat' above the room temperature when the strips are on.",
+    "With a schedule and Adaptive Recovery on, the thermostat uses a second recovery ramp for the auxiliary heat: the strips come on during a recovery if the room is not rising quickly enough.",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "X8S & X8Q Smart Thermostats Installation and User Manual (33-00759-02, 10/26)"
+  },
+  "tst-honeywell-focuspro-p200-s200": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Which model: TH2110U4004 and TH2110WF4008 are for heat pumps WITHOUT auxiliary heat - they cannot run strips, and no setting changes that. The steps below are for the TH2210U4005 and the TH2320 models (TH2320U4006, TH2320WF4010, TH2320WF4011).",
+    "Press and hold the bottom left button and the Up arrow button for 5 seconds to open the INSTALLER MENU. Arrow to ISU and press SELECT. Arrows change a setting, NEXT goes to the next ISU, SAVE & EXIT saves.",
+    "ISU 3090 Backup Heat Droop: 0 = Comfort, or 2 F to 15 F in 1 F steps. Factory setting is 0 = Comfort. Comfort is only offered when ISU 2180 Backup Heat Source is Electric. The manual prints the choices without explaining what each one does.",
+    "ISU 3110 Upstage Timer for Backup Heat: 0 = Off, 1 = 30 minutes, 2 = 45, 3 = 60, 4 = 75, 5 = 90 minutes, then 2, 3, 4, 5, 6, 8, 10, 12, 14 and 16 hours (setting 15). When 3090 is 0 and 2180 is 31 only settings 0 to 3 are offered. The manual marks no factory value for this one and does not explain the timer.",
+    "ISU 3121 Outdoor Lockout Backup Heat: Off, or 5 F to 65 F in 5 F steps. Factory setting is Off. If it has been given a temperature and the strips are missing on days the heat pump can't keep up, Off takes the lockout away. It works from the outdoor temperature - a C7089U1006 wired outdoor sensor on the S terminals (ISU 1060 = 1), or Internet weather on the TH2320WF (ISU 1060 = 2).",
+    "Press SAVE & EXIT."
+   ],
+   "notes": [
+    "ISU 2071 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1) or the thermostat has no backup stage to call. ISU 2180 Backup Heat Source ships as 31 = Electric Forced Air.",
+    "ISU 2175 Aux/E terminal control: 0 = drive both Aux and E together (factory), 1 = Aux and E independent. It only matters when aux heat and emergency heat are two separate sets of strips.",
+    "On a heat pump nothing goes on W - the manual says it can cause heat to run continuously. The strip wire goes on AUX-W2.",
+    "Prove the strips: INSTALLER MENU > TEST > Em Heat (1 = Em Heat On).",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "FocusPRO P200 & S200 Series Thermostats Installation Manual (33-00680EFS)"
+  },
+  "tst-honeywell-focuspro-n100": {
+   "applies": "yes",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "Which model: the installer sheet gives backup heat stages to the TH1210 and TH1320 only. The TH1110U4000 has no backup heat stage in its setup list, so there is no strip setting on it. The steps below are for the TH1210U4001 and TH1320U4002.",
+    "Press and hold the bottom left button and the Up arrow button for 5 seconds to open INSTALLER SETUP (ISU). Arrows change a setting, NEXT goes to the next ISU, SAVE & EXIT finishes.",
+    "ISU 3090 Backup Heat Droop (for heat pump with aux heat stage): 0 = Comfort, or 2 F to 15 F in 1 F steps. Factory setting is 0 = Comfort; the sheet says 0 is only for electric. The sheet prints the choices without explaining what each one does.",
+    "ISU 3110 Upstage Timer for Backup Heat: 0 = Off, 1 = 30 minutes, 2 = 45, 3 = 60, 4 = 75, 5 = 90 minutes, then 2, 3, 4, 5, 6, 8, 10, 12, 14 and 16 hours (setting 15). When 3090 is 0 and 2180 is 31 only settings 0 to 3 are offered. No factory value is marked, and the sheet does not explain the timer.",
+    "ISU 3121 Outdoor Lockout Backup Heat: 0 = Off, or 5 F to 65 F in 5 F steps. Factory setting is 0 = Off. A wired outdoor sensor is needed (ISU 1060 = 1). If it has been given a temperature and the strips are missing on days the heat pump can't keep up, Off takes the lockout away.",
+    "Press SAVE & EXIT."
+   ],
+   "notes": [
+    "ISU 2071 Backup Heat Stages has to be 1 (choices 0 or 1; factory 1). ISU 2180 Backup Heat Source ships as 31 = Electric Forced Air.",
+    "ISU 2175 Aux / E Terminal Control: 0 = drive both Aux and E together (factory), 1 = Aux and E independent.",
+    "For heat pump systems do NOT attach a wire to the W terminal of the UWP wall plate.",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "FocusPRO N100 Series Non-Programmable Thermostat Installer Guide (33-00682EFS-06)"
+  },
+  "tst-honeywell-x2s": {
+   "applies": "no-setting",
+   "title": "Get the heat strips (aux heat) on sooner when the heat pump can't keep up",
+   "steps": [
+    "The X2S guide prints no setting for when the strips come on - no droop, no upstage timer and no outdoor lockout are in its installer setup list.",
+    "Make sure it knows the strips are there. Press and hold the bottom left button and the Up arrow button for 5 seconds to open INSTALLER SETUP. ISU 2000 Heating System Type must be 2 = Heat Pump.",
+    "ISU 2071 Backup Heat Stages must be 1 (choices 0 or 1; factory 1). ISU 2180 Aux Backup Heat Type has one choice, 31 = Electric Forced Air. Press SAVE & EXIT.",
+    "Check the wire. On a heat pump nothing goes on W - auxiliary heat must wire to AUX or E.",
+    "Right now fix: press MODE until EM HEAT shows. Put it back to HEAT after."
+   ],
+   "notes": [
+    "The display shows AUX HEAT ON as a system status when the strips are running.",
+    "This thermostat runs only 1 compressor stage on a heat pump and supports only electric backup heat.",
+    "If the heat pump cannot keep up when it is in the 40s or warmer outside, find the real problem before leaning on the strips: refrigerant charge, a dirty coil, defrost trouble or airflow."
+   ],
+   "source": "X2S Programmable Thermostat RTH2CWF / RTHC2CWF / RTH2SMC Installation and User Guide (33-00689EFS-01)"
+  }
+ },
+ "xl824Note": "Replaced by the Trane Priority Smart Thermostat TCONT24P1S52DA (American Standard: Gold Smart Thermostat ACONT24P1S52DA) - Trane says the XL824 stays supported but is being phased out for new installations, and the Priority can be used for an XL824 warranty claim as a drop-in replacement for most XL824 applications except systems using IDS, demand response, or more than 1 auxiliary contact."
+};
+(function () {
+  for (const n of TSTAT_NEW_1117.cards) {
+    if (THERMOSTATS.some(e => e.id === n.id)) continue;
+    const x = TSTAT_NEW_1117.aux[n.id];
+    const e = { ...n };
+    if (x) {
+      TSTAT_AUX_SOONER[n.id] = x;
+      const topic = { title: x.title, steps: x.steps, notes: x.notes, source: x.source };
+      const how = e.howTo || [];
+      if (how.length === 1) e.howTo = [{ ...how[0], topics: [...how[0].topics, topic] }];
+      else e.howTo = [...how, { label: how.length ? "All models on this card" : "", note: "", topics: [topic] }];
+    }
+    // Findable by the words a tech types ("installer setup", "aux heat lockout", "backup heat droop"): the
+    // search reads tips, not the setup table, so one tip repeats the card's own entry step and the names of
+    // its backup-heat settings - nothing that is not already on the card.
+    const sents = String((e.setup || {}).access || "").split(/(?<=\.)\s+/);
+    const how = sents.find(s => /press and hold|press Menu|Menu >|Menu icon/i.test(s)) || sents.find(s => /press|Menu/i.test(s)) || "";
+    const test0 = String((e.setup || {}).installerTest || "").split(/(?<=\.)\s+/)[0] || "";
+    const test = test0 === how ? "" : test0;
+    const names = ((e.setup || {}).keySettings || []).map(k => k.setting).filter(s => /aux|backup|droop|upstage|lockout|balance/i.test(s) && !/keypad|fan after/i.test(s));
+    const tip = [how && "Installer setup: " + how, test && !/does not print/i.test(test) && "System test / test mode: " + test, names.length && "Backup heat / auxiliary heat (aux heat) settings in this card's setup table: " + names.join("; ") + "."].filter(Boolean).join(" ");
+    if (tip) e.techTips = [...(e.techTips || []), { text: tip, source: "This card's Installer setup section" }];
+    THERMOSTATS.push(e);
+  }
+  const xl = THERMOSTATS.find(e => e.id === "tst-trane-xl824");
+  if (xl && !(xl.techTips || []).some(t => t.text === TSTAT_NEW_1117.xl824Note)) xl.techTips = [{ text: TSTAT_NEW_1117.xl824Note, source: "trane.com, 'Introducing the Priority Smart Thermostat' (August 6, 2026)" }, ...(xl.techTips || [])];
+})();

@@ -6079,5 +6079,254 @@ const UNIT_SCENARIOS = [
   ],
   "source": "ML197UHEK Upflow/Horizontal - Unit Information / Service Literature (100236, posted 10/22/2026), p.18, p.20, p.41, p.42, p.43, p.45, p.52",
   "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-ignition-sequence",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "No heat - walking the ignition sequence (it always lights at about 75%) - S9VM",
+  "summary": "The S9VM lights at ~75% firing rate, then modulates between 40% and 100%. Knowing each step and timing shows where it stops.",
+  "steps": [
+   "On a heat call the IFC checks that all thermal switches are closed.",
+   "On the first call after power-up or a power cycle, and every 20 gas heating cycles, it first runs a drift check: it watches for the pressure switch to close and compares the pressure transducer voltage. After a good drift check the inducer shuts down for a moment and then the heating cycle starts. That stop-and-restart is normal.",
+   "The inducer ramps up to the speed for the 75% firing rate. When it is up to speed and combustion pressure is within bounds, the hot surface igniter comes on.",
+   "After the 20 second igniter warm-up the communicating gas valve is energized. Trial for ignition is about 4 seconds.",
+   "Flame is proved by flame current. No flame: the sequence of operation says the IFC cycles the furnace three times, then locks out for one hour (E2.1). The wiring diagram prints RETRIES: 6 EACH - the two pages do not agree on the count.",
+   "Flame proved: after about 30 seconds the blower starts at the programmed ignition sequence speed, then the inducer, gas valve and blower ramp up or down to the capacity the thermostat asks for (minimum 40%).",
+   "24 V thermostat: it runs as a two-stage furnace - W1 holds 65%, W2 takes it to 100%.",
+   "End of call: gas valve off, the inducer stops after a post purge of about 5 seconds per the sequence of operation (the wiring diagram prints POST PURGE: 30 SEC), and the blower runs the selected heat off delay.",
+   "Stops before the igniter glows: look at combustion pressure - Monitor Group shows Inducer RPM and Combustion Press, and check Active Alarms for an E3.x or E10.x code."
+  ],
+  "safety": "Do NOT attempt to manually light the furnace. Do not touch the igniter - it is extremely hot.",
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   4,
+   5,
+   98,
+   104,
+   109,
+   110
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.4, p.5, p.98, p.104, p.109, p.110",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-pressure-transducer-inducer",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "E3.x combustion pressure or E10.x inducer faults - checking the pressure transducer and inducer - S9VM",
+  "summary": "The IFC reads combustion pressure from a pressure transducer and drives a variable-speed inducer. Trane's cause lists for E3.x / E10.2 / E10.3 are mostly vent, wind and pressure-hose items; the voltage table tells you whether the transducer is telling the truth.",
+  "steps": [
+   "Read the code and its meaning first: E3.0 alert, E3.5 pressure low, E3.6 pressure high, E3.7 transducer too low or no output, E3.8 transducer too high, E10.2 inducer at maximum speed, E10.3 inducer at minimum speed.",
+   "Low pressure / max speed (E3.5, E3.7, E10.2): check the vent for restriction, length, size and termination (positive pressure zone, wind into the termination); E3.0 also lists bird or rodent nesting. High pressure / min speed (E3.6, E3.8, E10.3): wind across the termination causing suction, or a termination in a negative pressure zone.",
+   "Check every pressure hose for leaks, the right port and a tight fit; confirm the condensate trap is connected and primed and the cold header plug / cap is in place.",
+   "Transducer source: about 5 VDC between the green and red wires at the transducer plug.",
+   "Transducer signal, green to black: 0.50 VDC at 0.00 in. w.c., rising 0.10 VDC for each 0.10 in. w.c. (1.00 in. = 1.50 VDC, 2.00 in. = 2.50 VDC). With the inducer off it should be 0.5 VDC or less. Compare with a manometer on the cold header and with Combustion Press in the Monitor Group.",
+   "During the drift check the signal should be about 0.90 VDC when the 0.40 pressure switch closes.",
+   "E10.1 (no communication with the inducer control) or E10.4 (inducer control or motor failed): check the harness between the IFC and the VSIM board, 12 VDC on Rx and Tx, and 98-132 VAC at the VSIM line input.",
+   "If the inducer assembly has to come out, disconnect only the tubing to the cold header - do not alter any pressure switch or transducer tubing."
+  ],
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   79,
+   98,
+   105,
+   106,
+   107,
+   108
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.79, p.98, p.105, p.106, p.107, p.108",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-flame-faults",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Lights then drops out, or locks out for an hour (E2.1 / E2.2 / E8.x) - flame signal checks - S9VM",
+  "summary": "E8.0 / E8.1 / E8.2 are flame alerts; E2.1 and E2.2 are the one-hour lockouts that follow. Flame current is read as DC volts on the IFC test pads.",
+  "steps": [
+   "E8.1 = retry, no flame detected; E2.1 = retries exceeded, 1 hour lockout. E8.2 = recycle, flame lost unexpectedly; E2.2 = recycles exceeded, 1 hour lockout. E8.0 = flame current low but still running.",
+   "Measure flame current on the flame sense test pads on the IFC with a DC voltmeter: 1 VDC = 1 microamp. The wiring diagram gives the acceptable range as 0.75-3 microamps and E8.0 says to verify above 0.75; the E2.1 lockout row words its cause as flame current less than 1 microamp. The reading varies with the meter and the supply voltage.",
+   "Low signal: check the sensor sits properly in the flame, the sensor wire for high resistance or a bad connection, then clean or replace the sensor.",
+   "No flame at all: confirm the on/off toggle switch on the gas valve is ON, purge air from the gas line (then leak-check the connections with a soapy solution and allow 5 minutes for any escaped gas to dissipate), and check the igniter (35-70 ohms cold).",
+   "Check inlet pressure: natural gas 5.0-13.8 in. w.c., propane 11.0-13.8 in. w.c. Watch for it dropping while the furnace runs (E2.2).",
+   "Check manifold pressure in the heat test mode: natural gas about 3.5 in. w.c. at 100% and about 0.7 in. w.c. at 40%. Adjustment is electronic only.",
+   "E2.1 also lists burner crossovers not aligned or restricted; E2.2 lists air impingement on the burners, debris in the gas valve screen, a supply blockage or a failing regulator or gas valve solenoid.",
+   "E5.0 (flame sensed when there should be none): gas valve not fully closing or debris in it; otherwise the IFC has failed."
+  ],
+  "safety": "Never test for gas leaks with an open flame; use a soap solution made for leak detection.",
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   3,
+   19,
+   41,
+   45,
+   104,
+   105,
+   106
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.3, p.19, p.41, p.45, p.104, p.105, p.106",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-limits-rollout",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Limit or rollout codes (E4.0 / E4.1 / E4.2 / E9.1) - S9VM",
+  "summary": "Four different switches report separately: high limit E4.0, reverse airflow E4.1, rollout E4.2 and inducer limit E9.1. Each has its own cause list.",
+  "steps": [
+   "E4.0 open high limit: low airflow across the heat exchanger - dirty filter, evaporator coil or blower wheel; manifold pressure set too high; return air above 80 F. Raise heating CFM if the duct system allows.",
+   "Heating CFM: IFC Airflow Group, Gas Ht CFM (or switch Airflow Method to Temp Rise). The values are at 100% firing rate and scale down automatically.",
+   "Check temperature rise against the rating plate. Printed ranges at 100%: 35-65 F for the 060 and 080; 30-60 F for the C100 upflow; 40-70 F for the D120 upflow; 35-65 F for the 100 and 120 downflow.",
+   "E4.1 open reverse airflow limit: blower not operating correctly, airflow setting too low, or the blower off delay too short - raise heating CFM or lengthen the heat off delay (60, 100, 140 or 180 seconds).",
+   "E4.2 open rollout limit: cold header plug or inducer caps missing, flame impingement, inducer not operating properly, restricted heat exchanger, low manifold pressure, or a gas valve not fully closing.",
+   "E4.2 on a horizontal furnace: a blocked main drain with an overflow standpipe higher than the bottom of the condensate trap can cause it in extreme cases - check the drain.",
+   "E9.1 open inducer limit switch: excessive temperature rise across the heat exchanger, or a restricted flue assembly.",
+   "Switch trip temperatures and reset types are not printed in the manual."
+  ],
+  "safety": "Should overheating occur or the gas supply fail to shut off, shut off the gas valve to the furnace before shutting off the electrical supply.",
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   5,
+   12,
+   13,
+   76,
+   96,
+   97,
+   105,
+   106
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.5, p.12, p.13, p.76, p.96, p.97, p.105, p.106",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-blower-ifc-config",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Blower will not run or E13 / E14 / E17 / E18 / E24.1 after a board or motor change - S9VM",
+  "summary": "The blower talks to the IFC over a 4-pin serial plug, and a replacement IFC has to be told which furnace it is in.",
+  "steps": [
+   "E17 = the IFC is not receiving a signal from the motor on RX: verify the high and low voltage wiring from the IFC to the motor; if the wiring is correct, replace the motor.",
+   "E18 = the IFC is not sensing a signal on its own TX: remove the 4-pin motor connector from the IFC. If the code changes to E17 (91.00), replace the motor. If it does not change, replace the IFC.",
+   "E13 = blower HP or OEM ID does not match the furnace model: wrong motor horsepower for the unit, or the wrong model number programmed into a replacement IFC. If the motor and model are both correct, replace the blower motor.",
+   "Printed motor sizes: 1/2 hp on S9VMB060U3 / B060D3; 3/4 hp on S9VMB060U4, B080U4 and B080D4; 1 hp on the C100 and D120.",
+   "E14 (configuration file error) or E24.1 (Modbus communication error) = a replacement IFC installed and the model number not programmed. Connect the indoor unit to the hub and power cycle; if it persists, configure the indoor control with the correct model number in the Technician App.",
+   "The wiring diagram also lists display numbers for 'Model Number Recovery - 24 Volt Operation ONLY' (1 = S9VMB060U4VC ... 9 = S9VMB060U3VC); the IOM does not give the steps, so confirm the procedure with Trane before using it.",
+   "In normal heat the blower starts about 30 seconds after flame is proved and runs the heat off delay after the burners stop."
+  ],
+  "safety": "Disconnect power before removing the blower door and wait at least 10 seconds for the IFC power supply to discharge to 0 volts. Do not bypass the door switch or the panel loop permanently.",
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   4,
+   12,
+   14,
+   19,
+   106,
+   107,
+   109
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.4, p.12, p.14, p.19, p.106, p.107, p.109",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-condensate",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "E9.2 open condensate switch / E9.3 condensate lockout - S9VM",
+  "summary": "The furnace has a condensate pressure switch (CSI input on the IFC). Three trips in one heat call locks the furnace out on E9.3.",
+  "steps": [
+   "E9.2 = open condensate switch. E9.3 = the switch opened three times during one call for heat (lockout).",
+   "Causes Trane lists: a common AC / furnace drain where AC condensate pressure trips the switch (relieve the static pressure from the AC condensate), a double-trapped condensate line, or flue gas condensate backing up into the trap.",
+   "Check the drain is open to an open / vented drain, 1/2 in. PVC minimum outside the furnace, and not frozen.",
+   "Horizontal installs - overflow standpipe: its opening must be even with or slightly below the bottom of the condensate trap. A blocked main drain with a standpipe higher than that can give E9.2, or in extreme cases an E4.2 rollout trip.",
+   "Horizontal installs: the condensate pressure switch hose must be trimmed to fit - an untrimmed hose can cause the same E9.2.",
+   "Where the coil and furnace drains are manifolded, a primary drain vent stack must be installed and end below the outlet of the secondary heat exchanger drain connection.",
+   "Check the trap is connected and primed (E3.0 lists a trap not connected or primed; the downward-venting notes say to prime it at initial start-up prior to heating season operation), and check the furnace is level (a slight tilt left / forward is the only allowed variation in upflow or downflow).",
+   "Where the drain can freeze: heat tape rated 5 or 6 watts per foot at 120 V, self-regulating or thermostatically controlled."
+  ],
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   16,
+   60,
+   73,
+   76,
+   106
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.16, p.60, p.73, p.76, p.106",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-fault-recall-clear",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Reading and clearing fault codes on the IFC, and what the two LEDs mean - S9VM",
+  "summary": "The IFC has a two-line display with Menu and Option buttons. Faults are in the Alarm Group; live readings are in the Monitor Group.",
+  "steps": [
+   "Menu scrolls down through the groups (Alarm, Furnace, Airflow, Delay, Sensor, Misc, Monitor; 24 V mode adds Test). Option enters a group and scrolls across its choices.",
+   "Alarm Group, press Option: Active Alarms. Press Menu for Last 6 Faults; Option steps through them.",
+   "To clear: in the Alarm Group press Menu 2 times to reach Clear L6 Faults, press Option 2 times to reach the double 'Clear L6 Faults', then press Menu to clear. 'Clear L6 Faults' appears 3 times to confirm.",
+   "Each code also has a Comm Code in Trane's table, for example E9.2 = ERR.026.06, and a priority (Normal, Major or Critical). The wiring diagram says to see the unit hang tag for error codes.",
+   "Green STATUS LED: slow flash (1 s on, 1 s off) = active demand; 2 flashes then a 3 second pause = active error; 3 flashes then a 3 second pause = internal (Modbus) communication lost. In 24 V mode it is off at idle.",
+   "Amber COMM LED: steady on in 24 V mode. In Link (CAN) mode it flashes the node count; fast flash = CAN communication lost.",
+   "To change a setting, first remove any call and wait for the fan off delay to finish - the display must show IDLE. Press Menu again to save; [ ] marks the saved value.",
+   "Monitor Group for live values: GH Demand, GV Setpoint, Inducer RPM, Combustion Press, Blower CFM, static pressures, return and supply air temperature, fuel type."
+  ],
+  "safety": "Do not touch any components other than the Menu and Option buttons on the IFC when setting up the system or during fault code recovery.",
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   4,
+   19,
+   95,
+   98,
+   99,
+   106
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.4, p.19, p.95, p.98, p.99, p.106",
+  "confidence": "manual"
+ },
+ {
+  "id": "u-trane-s9vm-link-vs-24v-setup",
+  "unit": "^S9VM",
+  "brand": "Trane",
+  "equipment": "Gas Furnace",
+  "title": "Link communicating or 24 V thermostat - wiring, staging and setting gas pressure - S9VM",
+  "summary": "On Link the furnace modulates 40-100%. On a 24 V thermostat it is a two-stage furnace (65% / 100%), and gas pressure is set through the Third Party Test.",
+  "steps": [
+   "Link: communicating terminals R, DH, DL, B join the thermostat / System Controller, the furnace and the outdoor unit. At the outdoor unit R is required only with an outdoor load shed device or a 24 VAC charging solenoid, and B is optional on 2-wire outdoor applications (recommended otherwise). Cooling and heat pump airflow is set automatically from the outdoor unit. The supply air sensor that ships with the Link thermostat and System Controller goes in the supply plenum and must be enabled.",
+   "24 V: thermostat strip BK, W2, W1, R, G, B/C, Y2, Y1, O. Y1 and/or Y2 must be wired to the IFC for proper cooling airflow. Cooling only: leave the Y1-O jumper. Heat pump: remove the Y1-O jumper and wire O to O.",
+   "24 V with a single-stage heat thermostat (or too few wires): jumper W1 to W2 at the IFC; second stage starts after the inter-stage delay (Delay Group: 0, 300, 600 default, or 900 seconds).",
+   "24 V staging: W1 = 65% firing rate, W2 = 100%. Set ODU Type, ODU Ton, CFM per ton, continuous fan and BK Input Config in the 24V Airflow Group.",
+   "Gas pressure on Link: Technician App > Test Modes > Test Indoor Heat > Start; slide to 40%, wait for the actual GV setpoint to read 40%, adjust Low Fire; slide to 100%, wait, adjust High Fire; cycle both again and recheck.",
+   "Gas pressure on 24 V: Test Group > Third Party Test > Start. The Comm and Status LEDs blink alternately for about 30 seconds; when the WAIT message goes away, jumper R to W1 and W2 on the low voltage strip - it lights and goes to 100%. Adjust high fire in the 24V Furnace Group (press Menu after each offset change). Remove the W2 jumper: it goes to 40%; when the valve position reads 40%, adjust low fire. Re-apply W2 to verify 100%. Cycle power off to end the test. (The same page lists the test inputs as R-W1 = 40%, R-W1+W2 = 100%, remove W1 = 65%.)",
+   "Targets: natural gas 3.5 in. w.c. at 100%, 1.6 at 65% (not adjustable), 0.7 at 40%. Propane 10.0 at 100%, 6.0 at 65%; 40% is printed as 2.1 in the IOM and ~1.4 in the LP kit guide - set per the nameplate.",
+   "Accessories (ACC1 / ACC2) and external switches must be configured in the Technician App (or the UX360 thermostat on Link). Do not use the condensate cooling option in 24 V mode."
+  ],
+  "safety": "Turn off all electrical power before loosening the pressure tap screw (one turn only, 3/32 in. hex). Afterward tighten it and leak-test the outlet boss and screw with leak detection solution.",
+  "manual": "trane-s9vm-iom-fnr-svx006b",
+  "pages": [
+   19,
+   42,
+   43,
+   44,
+   45,
+   70,
+   71,
+   72,
+   96,
+   97,
+   100,
+   101,
+   103,
+   110
+  ],
+  "source": "S9VM (97% modulating; American Standard Platinum 97 Modulating) Installation, Operation, and Maintenance - Upflow/Horizontal and Dedicated Downflow Gas-Fired, Direct/Non-Direct Vent, Modulating Condensing Variable Speed Furnaces with Variable Speed Draft Inducer (FNR-SVX006B-EN, 10/2026), p.19, p.42, p.43, p.44, p.45, p.70, p.71, p.72, p.96, p.97, p.100, p.101, p.103, p.110",
+  "confidence": "manual"
  }
 ];
